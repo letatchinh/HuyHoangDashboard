@@ -38,6 +38,7 @@ function* createProductConfig({payload}:any):any {
     
 }
 function* deleteProductConfig({payload:id}:any):any {
+    console.log(id);
     try {
         const data = yield call(apis.delete,id);
         yield put(productConfigSliceAction.deleteSuccess(data));
@@ -51,4 +52,5 @@ export default function* productConfigSaga() {
     yield takeLatest(productConfigSliceAction.getByIdRequest, getProductConfigById);
     yield takeLatest(productConfigSliceAction.updateRequest, updateProductConfig);
     yield takeLatest(productConfigSliceAction.createRequest, createProductConfig);
+    yield takeLatest(productConfigSliceAction.deleteRequest, deleteProductConfig);
 }

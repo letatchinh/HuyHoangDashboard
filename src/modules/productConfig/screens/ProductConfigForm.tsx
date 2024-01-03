@@ -1,13 +1,49 @@
-import { Button } from 'antd'
-import React from 'react'
+import { Button, Form, Input } from 'antd'
+import React, { useEffect } from 'react'
+import { useUpdateProductConfig } from '../productConfig.hook';
+export default function ProductConfigForm({id}: any, {callBack}: any) {
+const [,updateProductConfig] = useUpdateProductConfig(callBack)
+const [form] = Form.useForm();
+type FieldType = {
+  code?: string;
+  name?: string;
+};
+  useEffect(() => {
+    if(id){
+      const data:Object = {
+        // name,
+        // code,
+      }
+      updateProductConfig({data, id});
 
-export default function ProductConfigForm() {
+    }
+  }, [id]);
+  const onFinish = (values: any) => {
+    console.log('Success:', values);
+  };
   return (
     <>
-      
-        <p>Some contents...</p>
-        <p>Some contents...</p>
-        <p>Some contents...</p>
+       <Form
+        labelCol={{ span: 8 }}
+        // wrapperCol={{ span: 10 }}
+        layout="horizontal"
+        form={form}
+        onFinish={onFinish}
+        style={{ maxWidth: 600 }}
+      >
+        <Form.Item<FieldType> label="Mã nhóm danh mục" name="code">
+          <Input disabled/>
+        </Form.Item>
+        <Form.Item<FieldType> label="Tên danh mục" name="name">
+          <Input />
+        </Form.Item>
+        <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+      <Button type="primary" htmlType="submit">
+        Submit
+      </Button>
+    </Form.Item>
+
+        </Form>
  
     </>
   )
