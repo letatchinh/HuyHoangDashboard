@@ -1,0 +1,77 @@
+.layoutVertical {
+  &--header {
+    background-color: $color-primary;
+    position: sticky;
+    top: 0;
+    &__row {
+      padding-right: 10px;
+      padding-left: 10px;
+      height: $height-header;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      &__logo {
+        display: flex;
+        align-items: center;
+        width: 100px;
+      }
+    }
+  }
+  &--content {
+    background-color: $color-bg-grey;
+    display: flex;
+    align-items: flex-start;
+    min-height: calc(100vh - #{$height-header});
+    &__navbar {
+      width: 256px;
+      position: sticky;
+      top: $height-header + 10px;
+      &__wrapMenu {
+        user-select: none;
+        box-shadow: $default-box-shadow;
+        // border-radius: 0;
+        // border-top-left-radius: 0;
+        &__menu {
+          min-height: calc(100vh - #{$height-header});
+          max-height: calc(100vh - #{$height-header});
+          overflow-y: auto;
+          // border-radius: inherit;
+          padding-bottom: 10px;
+          padding-top: 10px;
+          & .ant-menu-title-content {
+            font-weight: 500!important;
+          }
+        }
+      }
+      &__navLink {
+        text-decoration: none;
+      }
+    }
+    &__mainContent {
+      flex: 1;
+      padding: 10px;
+      min-height: calc(100vh - #{$height-header});
+      max-height: calc(100vh - #{$height-header});
+      overflow-y: auto;
+    }
+  }
+}
+
+.profileBtn {
+  cursor: pointer;
+  border-radius: $default-border-radius;
+  transition: $default-transition-duration all;
+  padding: 5px;
+  & * {
+    color: white;
+  }
+  & span {
+    font-weight: 600;
+  }
+  &:hover {
+    background-color: white;
+    & * {
+      color: $color-primary-bold;
+    }
+  }
+}

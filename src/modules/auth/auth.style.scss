@@ -1,0 +1,34 @@
+
+.auth {
+    
+    &--login{
+        padding: 3rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 50px;
+        &__logo{
+            width: 180px;
+        }
+        &__welcome{
+            color: #5b73e8!important;
+        }
+        &__box{
+            width: 540px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        &__form{
+            width: 90%;
+            display: flex;
+            flex-direction: column;
+            & > div {
+                margin-bottom : 10px!important;
+                & .ant-form-item-label {
+                    padding: 0!important;
+                }
+            }
+        }
+    }
+}
