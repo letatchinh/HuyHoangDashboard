@@ -37,7 +37,7 @@ type FieldType = {
         <Form.Item<FieldType> label="Tên danh mục" name="name">
           <Input />
         </Form.Item>
-        <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+        <Form.Item wrapperCol={{ offset: 8, span: 12 }}>
       <Button type="primary" htmlType="submit">
         Submit
       </Button>

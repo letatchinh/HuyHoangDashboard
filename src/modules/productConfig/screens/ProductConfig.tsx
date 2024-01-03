@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Col, Row, Space, Input, Button, Form, Modal, Table, Tag, Switch } from 'antd';
+import { Col, Row, Space, Input, Button, Form, Modal, Table, Tag, Switch, message } from 'antd';
 import { SearchOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import Breadcrumb from '~/components/common/Breadcrumb';
 import useTranslate from '~/lib/translation';
@@ -41,6 +41,7 @@ export default function ProductConfig() {
     code: string;
     key: string;
     name: string;
+    isAction:String,
   }
 
   const handleOpenForm = (id: any) => {
@@ -59,7 +60,7 @@ export default function ProductConfig() {
       dataIndex: 'code',
       width: '200px',
       align: 'center',
-      key: 'code',
+      render: (text: string) => <a href='#' style={{textDecoration:'none'}}>{text}</a>,
     },
     {
       title: 'Tên danh mục sản phẩm',
@@ -74,19 +75,19 @@ export default function ProductConfig() {
       align: 'center',
       width: '120px',
       key: 'activity',
-      render: (text: string) => (
+      render: (_, record) => (
         // <WithPermission permission={POLICY.DELETE_WAREHOUSE}>
         <Switch
-          // checked={action === 'ACTIVE'}
+        checked={record?.isAction === 'ACTIVE'}
           onChange={(value: any) => {
             console.log(value);
-            // if (isAction) {
-            //   toastr.error(
-            //     'Không thể thực hiện thao tác này '
-            //   );
-            // } else {
+            if (record?.isAction) {
+              message.error(
+                'Không thể thực hiện thao tác này '
+              );
+            } else {
               // updateProductConfig({ action: value ? 'ACTIVE' : 'INACTIVE', id });
-            // }
+            }
           }}
           // loading={isSubmitUpdateLoading}
         />
@@ -115,16 +116,19 @@ export default function ProductConfig() {
     {
       code: 'DMSP00001',
       key: '1',
+      isAction:'ACTIVE',
       name: 'John Brown',
     },
     {
       code: 'DMSP00002',
       key: '2',
+      isAction:'ACTIVE',
       name: 'Jim Green',
     },
     {
       code: 'DMSP00003',
       key: '3',
+      isAction:'ACTIVE',
       name: 'Joe Black',
     },
   ];
