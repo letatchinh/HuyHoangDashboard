@@ -1,11 +1,13 @@
 import { LoadingOutlined } from "@ant-design/icons";
+import { ConfigProvider } from "antd";
 import { Suspense } from "react";
 import ReactDOM from "react-dom/client";
 import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
-import "~/core/i18n"
+import "~/core/i18n";
 import "~/styles/app.scss";
 import App from "./App";
+import { theme } from "./core/ProviderAntd";
 import store from "./redux/store";
 import reportWebVitals from "./reportWebVitals";
 import { NotificationProvider } from "./store/NotificationContext";
@@ -17,10 +19,13 @@ root.render(
   <Suspense fallback={<LoadingOutlined spin />}>
     <Provider store={store}>
       <BrowserRouter>
-        {/* Toast Notification Of Antd */}
-        <NotificationProvider>
-          <App />
-        </NotificationProvider>
+        {/* Config Provider Of Antd */}
+        <ConfigProvider theme={theme} >
+          {/* Toast Notification Of Antd */}
+          <NotificationProvider>
+            <App />
+          </NotificationProvider>
+        </ConfigProvider>
       </BrowserRouter>
     </Provider>
   </Suspense>

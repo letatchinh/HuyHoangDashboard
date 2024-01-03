@@ -29,14 +29,18 @@
       &__wrapMenu {
         user-select: none;
         box-shadow: $default-box-shadow;
-        border-radius: $default-border-radius;
+        // border-radius: 0;
+        // border-top-left-radius: 0;
         &__menu {
           min-height: calc(100vh - #{$height-header});
           max-height: calc(100vh - #{$height-header});
           overflow-y: auto;
-          border-radius: inherit;
+          // border-radius: inherit;
           padding-bottom: 10px;
           padding-top: 10px;
+          & .ant-menu-title-content {
+            font-weight: 500!important;
+          }
         }
       }
       &__navLink {
@@ -46,6 +50,9 @@
     &__mainContent {
       flex: 1;
       padding: 10px;
+      min-height: calc(100vh - #{$height-header});
+      max-height: calc(100vh - #{$height-header});
+      overflow-y: auto;
     }
   }
 }
