@@ -51,9 +51,15 @@ const NavbarVertical: React.FC = () => {
           icon : <SettingOutlined />,
           children : [
             getItem({
-              label : "Cấu hình danh mục",
+              label : t('product-config'),
               path : PATH_APP.worldPharma.productConfig,
               key : PATH_APP.worldPharma.productConfig,
+            }),
+            getItem({
+              label :  t('manufacturer'),
+              path : PATH_APP.worldPharma.manufacturer,
+              key : PATH_APP.worldPharma.manufacturer,
+
             })
           ]
         })
