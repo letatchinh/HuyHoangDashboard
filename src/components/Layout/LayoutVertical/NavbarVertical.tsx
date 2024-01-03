@@ -83,9 +83,13 @@ const NavbarVertical: React.FC = () => {
       ],
       icon :<AppstoreFilled />
     }),
+    getItem({
+      label : "Nhân viên",
+      icon : <i className="uil uil-users-alt "></i>,
+      path : PATH_APP.employee.root,
+      key : PATH_APP.employee.root,
+    }),
     
-    
-  
   ];
   return (
     <div className='layoutVertical--content__navbar'>

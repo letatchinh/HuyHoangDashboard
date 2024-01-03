@@ -21,18 +21,18 @@ export const auth = createSlice({
     initialState,
     reducers: {
         // LOGIN
-        loginRequest: (state, { payload }) => {
+        loginRequest: (state, { payload } : any) => {
             state.isLoading = true;
             state.token = null;
             state.loginFailed = null;
         },
-        loginSuccess: (state, { payload }) => {
+        loginSuccess: (state, { payload } : any) => {
             state.token = payload.token;
             setAxiosToken(payload.token);
             setAxiosCompanyId(payload.branchId)
             state.isLoading = false;
         },
-        loginFailed: (state, { payload }) => {
+        loginFailed: (state, { payload }  : any) => {
             state.loginFailed = payload;
             state.isLoading = false;
         },
@@ -47,11 +47,11 @@ export const auth = createSlice({
             state.isGetProfileLoading = true;
             state.getProfileFailed = null;
         },
-        getProfileSuccess: (state, { payload }) => {
+        getProfileSuccess: (state, { payload } : any,) => {
             state.isGetProfileLoading = false;
             state.profile = payload;
         },
-        getProfileFailed: (state, { payload }) => {
+        getProfileFailed: (state, { payload } : any) => {
             state.isGetProfileLoading = false;
             state.getProfileFailed = payload;
         },

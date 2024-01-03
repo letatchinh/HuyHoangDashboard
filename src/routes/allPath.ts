@@ -28,4 +28,7 @@ export const PATH_APP = {
     branch : {
       root: path(ROOTS.app, '/branch'),
     },
+    employee: {
+        root: path(ROOTS.app, '/employee'),
+    },
   };
