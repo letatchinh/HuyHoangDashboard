@@ -1,4 +1,4 @@
-.employee-form {
+.user-form {
   max-width: 980px;
   margin: 0 auto;
   .ant-form {
@@ -97,52 +97,3 @@
     }
   }
 };
-.employee-group {
-  min-height: 40vh;
-  display: flex;
-  ::-webkit-scrollbar {
-    -webkit-appearance: none;
-    width: 7px;
-  }
-  ::-webkit-scrollbar-thumb {
-   border-radius: 4px;
-   background-color: rgba(0, 0, 0, .5);
-   box-shadow: 0 0 1px rgba(255, 255, 255, .5);
- }
-  &__list-title {
-    margin-bottom: 1rem;
-  }
-
-  &__permission {
-    margin-left: 70px;
-    box-shadow: 0 2px 4px 3px rgba(15, 34, 58, 0.12);
-    padding: 20px;
-  }
-
-  &__header {
-    display: flex;
-    flex-direction: row;
-    margin-bottom: 10px;
-  }
-
-  &__list-title {
-    margin-right: auto;
-  }
-
-  &__search{
-    width: 300px;
-    margin-bottom: 10px;
-  }
-  &__list__menu{
-    width: 256px ;
-    height: 600px;
-    overflow-y: scroll;
-    overflow-x: hidden;
-    box-shadow: 0px -10px 14px -15px rgba(77, 77, 77, 0.856) inset !important;
-  }
-  &__list{
-    box-shadow: 0 2px 4px 3px rgba(15, 34, 58, 0.12);
-    padding: 10px;
-  }
-
-}

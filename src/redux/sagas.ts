@@ -4,6 +4,7 @@ import supplierModule from '~/modules/supplier';
 import branchModule from '~/modules/branch';
 import geoModule from '~/modules/geo';
 import employeeModule from '~/modules/employee';
+import userModule from '~/modules/user';
 export default function* rootSaga() {
   yield all([
     authModule.redux.saga(),
@@ -11,5 +12,6 @@ export default function* rootSaga() {
     branchModule.redux.saga(),
     geoModule.redux.saga(),
     employeeModule.redux.saga(),
+    userModule.redux.saga(),
   ]);
 };

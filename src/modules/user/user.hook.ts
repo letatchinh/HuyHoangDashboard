@@ -12,9 +12,9 @@ import {
   useSubmit,
   useSuccess,
 } from "~/utils/hook";
-import { employeeSliceAction } from "./redux/reducer";
-const MODULE  = "employee";
-const MODULE_VI  = "Nhân viên";
+import { userSliceAction } from "./redux/reducer";
+const MODULE  = "user";
+const MODULE_VI  = "Người dùng";
 
 const {
   loadingSelector,
@@ -33,11 +33,11 @@ const {
   pagingSelector,
 } = getSelectors(MODULE);
 
-export const useEmployeePaging = () => useSelector(pagingSelector);
+export const useUserPaging = () => useSelector(pagingSelector);
 
-// export const useGetEmployees = (params: any) => {
+// export const useGetUsers = (params: any) => {
 //   return useFetchByParam({
-//     action: employeeSliceAction.getListRequest,
+//     action: userSliceAction.getListRequest,
 //     loadingSelector: loadingSelector,
 //     dataSelector: listSelector,
 //     failedSelector: getListFailedSelector,
@@ -45,17 +45,17 @@ export const useEmployeePaging = () => useSelector(pagingSelector);
 //   });
 // };
 
-export const useGetEmployeees = () => {
+export const useGetUseres = () => {
   return useFetch({
-    action: employeeSliceAction.getListRequest,
+    action: userSliceAction.getListRequest,
     loadingSelector: loadingSelector,
     dataSelector: listSelector,
     failedSelector: getListFailedSelector,
   });
 };
-export const useGetEmployee = (id: any) => {
+export const useGetUser = (id: any) => {
   return useFetchByParam({
-    action: employeeSliceAction.getByIdRequest,
+    action: userSliceAction.getByIdRequest,
     loadingSelector: getByIdLoadingSelector,
     dataSelector: getByIdSelector,
     failedSelector: getByIdFailedSelector,
@@ -63,7 +63,7 @@ export const useGetEmployee = (id: any) => {
   });
 };
 
-export const useCreateEmployee = (callback?: any) => {
+export const useCreateUser = (callback?: any) => {
   useSuccess(
     createSuccessSelector,
     `Tạo mới ${MODULE_VI} thành công`,
@@ -72,12 +72,12 @@ export const useCreateEmployee = (callback?: any) => {
   useFailed(createFailedSelector);
 
   return useSubmit({
-    action: employeeSliceAction.createRequest,
+    action: userSliceAction.createRequest,
     loadingSelector: isSubmitLoadingSelector,
   });
 };
 
-export const useUpdateEmployee = (callback?: any) => {
+export const useUpdateUser = (callback?: any) => {
   useSuccess(
     updateSuccessSelector,
     `Cập nhật ${MODULE_VI} thành công`,
@@ -86,22 +86,22 @@ export const useUpdateEmployee = (callback?: any) => {
   useFailed(updateFailedSelector);
 
   return useSubmit({
-    action: employeeSliceAction.updateRequest,
+    action: userSliceAction.updateRequest,
     loadingSelector: isSubmitLoadingSelector,
   });
 };
 
-export const useDeleteEmployee = (callback?: any) => {
+export const useDeleteUser = (callback?: any) => {
   useSuccess(deleteSuccessSelector, `Xoá ${MODULE_VI} thành công`, callback);
   useFailed(deleteFailedSelector);
 
   return useSubmit({
-    action: employeeSliceAction.deleteRequest,
+    action: userSliceAction.deleteRequest,
     loadingSelector: isSubmitLoadingSelector,
   });
 };
 
-export const useEmployeeQueryParams = () => {
+export const useUserQueryParams = () => {
   const query = useQueryParams();
   const limit = query.get("limit") || 10;
   const page = query.get("page") || 1;
@@ -118,7 +118,7 @@ export const useEmployeeQueryParams = () => {
   }, [page, limit, keyword]);
 };
 
-export const useUpdateEmployeeParams = (
+export const useUpdateUserParams = (
   query: any,
   listOptionSearch?: any[]
 ) => {

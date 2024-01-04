@@ -5,7 +5,7 @@ import { authActions } from './reducer';
 function* login({ payload: user }: any){
   try {
     const { token, branchId } = yield call(authModule.api.login, user);
-    yield put(authActions.loginSuccess({token,branchId}));
+    // yield put(authActions.loginSuccess({token,branchId}));
   } catch (error: any) {
     yield put(authActions.loginFailed(error));
   }

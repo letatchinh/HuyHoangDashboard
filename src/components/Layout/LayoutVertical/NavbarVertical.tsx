@@ -8,7 +8,7 @@ import { NavLink } from 'react-router-dom';
 import useTranslate from '~/lib/translation';
 import { PATH_APP } from '~/routes/allPath';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUsers } from '@fortawesome/free-solid-svg-icons';
+import { faUsers, faUser } from '@fortawesome/free-solid-svg-icons';
 
 type MenuItem = Required<MenuProps>['items'][number];
 type ItemType = {
@@ -93,6 +93,14 @@ const NavbarVertical: React.FC = () => {
       icon: <FontAwesomeIcon icon ={faUsers} />,
       path : PATH_APP.employee.root,
       key : PATH_APP.employee.root,
+    }),
+
+    //Người dùng
+    getItem({
+      label : "Người dùng",
+      icon: <FontAwesomeIcon icon = {faUser} />,
+      path : PATH_APP.user.root,
+      key : PATH_APP.user.root,
     }),
     
   ];
