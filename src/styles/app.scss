@@ -5,8 +5,13 @@
 // Module 
 @import "~/modules/auth/auth.style.scss";
 @import "~/components/Layout/LayoutVertical/index.scss";
+@import "../modules//employee/employee.style.scss";
 
 // Component
 @import "component/whiteBox";
+@import "component/page";
+
+//Antd
+@import 'antd/modal.scss'
 
 
