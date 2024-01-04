@@ -14,8 +14,8 @@ import {
 } from '../productConfig.hook';
 import ProductConfigForm from './ProductConfigForm';
 import WhiteBox from '~/components/common/WhiteBox';
-import TableAnt from '~/components/Antd/TableAntd';
 import ColumnGroup from 'antd/es/table/ColumnGroup';
+import TableAnt from '~/components/Antd/TableAnt';
 
 const { Search } = Input;
 

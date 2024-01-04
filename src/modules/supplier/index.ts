@@ -6,7 +6,8 @@ import supplierService from "./supplier.service";
 import supplierModels from "./supplier.modal";
 import reducer from "./redux/reducer";
 import saga from "./redux/saga";
-export default {
+
+const supplierModule = {
     page : {
         index : SupplierScreen,
     },
@@ -17,3 +18,4 @@ export default {
     model : supplierModels,
     redux : {reducer,saga}
 }
+export default supplierModule;

@@ -3,11 +3,12 @@ import { Button, Col, Form, Modal, Row, Space, Switch, message } from 'antd';
 import Search from 'antd/es/input/Search';
 import { ColumnsType } from 'antd/es/table';
 import React, { useState } from 'react'
-import TableAnt from '~/components/Antd/TableAntd';
+
 import Breadcrumb from '~/components/common/Breadcrumb';
 import WhiteBox from '~/components/common/WhiteBox';
 import useTranslate from '~/lib/translation';
 import { useManufacturerPaging,useManufacturerParams,useGetManufacturerList, useManufacturerQueryParams } from '../manufacturer.hook';
+import TableAnt from '~/components/Antd/TableAnt';
 export default function Manufacturer() {
   const [showForm, setShowForm] = useState(false);
   const paging = useManufacturerPaging();
