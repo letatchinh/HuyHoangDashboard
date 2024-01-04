@@ -31,6 +31,7 @@ export type initStateSlice = {
     branch:'branch',
     geo:'geo',
     productConfig:'productConfig',
+    manufacturer:'manufacturer'
     }as const
     
     

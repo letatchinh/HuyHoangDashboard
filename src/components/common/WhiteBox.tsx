@@ -2,10 +2,13 @@ import React from 'react';
 type propsType = {
     children : React.ReactNode,
     className? : string,
+    style? :  React.CSSProperties 
 }
-export default function WhiteBox({children,className}:propsType) : React.JSX.Element {
+export default function WhiteBox({children,className,style = {}}:propsType) : React.JSX.Element {
     return (
-        <div className={`whiteBox ${className}`}>
+        <div 
+        style={style}
+        className={`whiteBox ${className}`}>
             {children}
         </div>
     )

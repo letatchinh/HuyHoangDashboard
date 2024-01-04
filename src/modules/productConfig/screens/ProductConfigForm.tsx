@@ -1,50 +1,72 @@
-import { Button, Form, Input } from 'antd'
-import React, { useEffect } from 'react'
-import { useUpdateProductConfig } from '../productConfig.hook';
-export default function ProductConfigForm({id}: any, {callBack}: any) {
-const [,updateProductConfig] = useUpdateProductConfig(callBack)
-const [form] = Form.useForm();
-type FieldType = {
-  code?: string;
-  name?: string;
-};
+import React, { useEffect } from 'react';
+import { Button, Form, Input } from 'antd';
+import { useGetlistProductConfigById, useUpdateProductConfig } from '../productConfig.hook';
+
+interface Props {
+  id?: any;
+  callBack?: () => void;
+}
+
+interface FieldType {
+  code: string
+  key: string
+  name: string
+  description: string
+  isAction:String
+}
+const { TextArea } = Input;
+const ProductConfigForm: React.FC<Props> = ({ id, callBack }) => {
+  const [, updateProductConfig] = useUpdateProductConfig(callBack);
+  const [productConfigById, isLoading] = useGetlistProductConfigById(id);
+  const [form] = Form.useForm();
+
   useEffect(() => {
-    if(id){
-      const data:Object = {
+    // const {code,name}: FieldType = productConfigById;
+    if (id&&productConfigById ) {
+      form.setFieldsValue({
         // name,
         // code,
-      }
-      updateProductConfig({data, id});
+      })
 
     }
-  }, [id]);
-  const onFinish = (values: any) => {
-    console.log('Success:', values);
+  }, [id,productConfigById,form]);
+
+  const onFinish = (values: FieldType) => {
+     const data: FieldType = {
+      ...values,
+      };
+      // updateProductConfig({ data, id });
+      console.log(data);
   };
+
   return (
     <>
-       <Form
-        labelCol={{ span: 8 }}
-        // wrapperCol={{ span: 10 }}
-        layout="horizontal"
+      <Form
+          name="basic"
+          labelCol={{ span: 8 }}
+          wrapperCol={{ span: 16 }}
+          style={{ maxWidth: 800 }}
         form={form}
         onFinish={onFinish}
-        style={{ maxWidth: 600 }}
+
       >
         <Form.Item<FieldType> label="Mã nhóm danh mục" name="code">
-          <Input disabled/>
+          <Input disabled />
         </Form.Item>
         <Form.Item<FieldType> label="Tên danh mục" name="name">
           <Input />
         </Form.Item>
+        <Form.Item<FieldType> label="Mô tả" name="description">
+          <TextArea rows={4}/>
+        </Form.Item>
         <Form.Item wrapperCol={{ offset: 8, span: 12 }}>
-      <Button type="primary" htmlType="submit">
-        Submit
-      </Button>
-    </Form.Item>
-
-        </Form>
- 
+          <Button type="primary" htmlType="submit">
+            {id ? 'Cập nhật' : 'Thêm mới'}
+          </Button>
+        </Form.Item>
+      </Form>
     </>
-  )
-}
+  );
+};
+
+export default ProductConfigForm;

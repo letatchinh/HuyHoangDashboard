@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Col, Row, Space, Input, Button, Form, Modal, Table, Tag, Switch, message } from 'antd';
+import { Col, Row, Space, Input, Button, Form, Modal, Table, Tag, Switch, message, Select, SelectProps } from 'antd';
 import { SearchOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import Breadcrumb from '~/components/common/Breadcrumb';
 import useTranslate from '~/lib/translation';
@@ -23,6 +23,7 @@ export default function ProductConfig() {
   const [showForm, setShowForm] = useState(false);
   const [id, setId] = useState(null);
   const [form] = Form.useForm();
+  const [search,setSearch]= useState(null)
   const callBack = () => {
     form.resetFields();
     setShowForm(false);
@@ -30,18 +31,17 @@ export default function ProductConfig() {
   };
 
   const [query] = useProductConfigQueryParams();
-  const [,deleteProductConfig] = useDeleteProductConfig(callBack);
-  const [isSubmitUpdateLoading,updateProductConfig] = useUpdateProductConfig(callBack);
-  const [listProductConfig, isLoading] = useGetlistProductConfig();
+  const [, deleteProductConfig] = useDeleteProductConfig(callBack);
+  const [isSubmitUpdateLoading, updateProductConfig] = useUpdateProductConfig(callBack);
+  const [listProductConfig, isLoading] = useGetlistProductConfig(query);
   const [keyword, { setKeyword, onParamChange }] = useUpdateProductConfigParams(query);
-
   const { t }: any = useTranslate();
 
   interface DataType {
     code: string;
     key: string;
     name: string;
-    isAction:String,
+    isAction: String,
   }
 
   const handleOpenForm = (id: any) => {
@@ -51,16 +51,20 @@ export default function ProductConfig() {
 
   const handleDelete = (id: any) => {
     deleteProductConfig(id);
-    
-  };
 
-  const columns:ColumnsType<DataType> = [
+  };
+  const handleCloseForm = () => {
+    setShowForm(false);
+    setId(null);
+  }
+
+  const columns: ColumnsType<DataType> = [
     {
       title: 'Mã danh mục sản phẩm',
       dataIndex: 'code',
       width: '200px',
       align: 'center',
-      render: (text: string) => <a href='#' style={{textDecoration:'none'}}>{text}</a>,
+      render: (text: string) => <a href='#' style={{ textDecoration: 'none' }}>{text}</a>,
     },
     {
       title: 'Tên danh mục sản phẩm',
@@ -78,7 +82,7 @@ export default function ProductConfig() {
       render: (_, record) => (
         // <WithPermission permission={POLICY.DELETE_WAREHOUSE}>
         <Switch
-        checked={record?.isAction === 'ACTIVE'}
+          checked={record?.isAction === 'ACTIVE'}
           onChange={(value: any) => {
             console.log(value);
             if (record?.isAction) {
@@ -89,9 +93,9 @@ export default function ProductConfig() {
               // updateProductConfig({ action: value ? 'ACTIVE' : 'INACTIVE', id });
             }
           }}
-          // loading={isSubmitUpdateLoading}
+        // loading={isSubmitUpdateLoading}
         />
-      // </WithPermission>
+        // </WithPermission>
       )
     },
     {
@@ -116,74 +120,111 @@ export default function ProductConfig() {
     {
       code: 'DMSP00001',
       key: '1',
-      isAction:'ACTIVE',
+      isAction: 'ACTIVE',
       name: 'John Brown',
     },
     {
       code: 'DMSP00002',
       key: '2',
-      isAction:'ACTIVE',
+      isAction: 'ACTIVE',
       name: 'Jim Green',
     },
     {
       code: 'DMSP00003',
       key: '3',
-      isAction:'ACTIVE',
+      isAction: 'ACTIVE',
       name: 'Joe Black',
     },
   ];
 
   const onSearch = (value: string) => {
-    onParamChange({ keyword: value });
+    onParamChange({ ['keyword']: value });
   };
+  const options: SelectProps['options'] = [
+    {
+      label: 'Active',
+      value: 'ACTIVE',
+    },
+    {
+      label: 'InActive',
+      value: 'INACTIVE',
+    },
+  ];
 
   return (
-    <>
+    <div className='product-config'>
+      <Breadcrumb title={t('product-config')} />
       <div>
-        <Breadcrumb title={t('product-config')} />
-        <div className="product-config-action" style={{ marginBottom: 16 }}>
-          <Row justify="space-between">
-            <Col span={8}>
-              <Search
-                style={{ height: '50px', padding: '5px 11px' }}
-                placeholder="Nhập bất kì để tìm..."
-                value={keyword}
-                onChange={(e) => setKeyword(e.target.value)}
-                onSearch={onSearch}
-                enterButton={<SearchOutlined />}
+        <div className='product-config-content' style={{ marginBottom: 16, display: 'flex', gap: '30px' }}>
+          {/* <div style={{ width: '20%',height: '100%' }}> */}
+            <WhiteBox style={{width:'20%'}}>
+              <label>Trang thái:</label>
+              <Select
+                style={{ height: '50px', padding: '5px 0px',width:'100%' }}
+                value={search}
+                // onChange={(e) => setKeyword(e.target.value)}
+                // value={keyword}
+                allowClear
+                onChange={(e) => {
+                  setSearch(e)
+                  onParamChange({ ['status']: e });
+                }}
+                options={options}
               />
-            </Col>
-            <Col>
-              <Button onClick={() => setShowForm(true)} type="primary">
-                Thêm mới
-              </Button>
-            </Col>
-          </Row>
+            </WhiteBox>
+          {/* </div> */}
+          <div style={{ width: '80%', height: '100%' }}>
+            <div className="product-config-action" >
+              <Row justify="space-between">
+                <Col span={8}>
+                  <Search
+                    style={{ height: '50px', padding: '5px 0px' }}
+                    placeholder="Nhập bất kì để tìm..."
+                    value={keyword}
+                    onChange={(e) => (setKeyword(e.target.value))
+                    
+                    }
+                    onSearch={onSearch}
+                    enterButton={<SearchOutlined />}
+                  />
+                </Col>
+                <Col>
+                  <Button onClick={() => setShowForm(true)} type="primary">
+                    Thêm mới
+                  </Button>
+                </Col>
+              </Row>
+            </div>
+            <WhiteBox>
+              <TableAnt
+                dataSource={data}
+                // loading={isLoading}
+                columns={columns}
+                size="small"
+                pagination={{
+                  // ...paging,
+                  onChange(page, pageSize) {
+                    // onParamChange({ page, limit: pageSize });
+                  },
+                }}
+              />
+            </WhiteBox>
+          </div>
+
         </div>
-        <WhiteBox>
-          <TableAnt
-            dataSource={data}
-            // loading={isLoading}
-            columns={columns}
-            size="small"
-            pagination={{
-              // ...paging,
-              onChange(page, pageSize) {
-                // onParamChange({ page, limit: pageSize });
-              },
-            }}
-          />
-        </WhiteBox>
       </div>
+
       <Modal
         visible={showForm}
         title="Thêm danh mục sản phẩm"
-        onCancel={() => setShowForm(false)}
+        onCancel={handleCloseForm}
         footer={null}
-        
+        destroyOnClose
+        width={800}
+
       >
         <ProductConfigForm id={id} callBack={callBack} />
       </Modal>
-    </>
+    </div>
   );
 }

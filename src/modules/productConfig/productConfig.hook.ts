@@ -12,6 +12,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { get, identity } from "lodash";
 import { clearQuerySearch, getExistProp } from "~/utils/helpers";
+import { useSelector } from "react-redux";
 const MODULE = "productConfig";
 const MODULE_VI = "Cấu hình danh mục";
 const {
@@ -36,16 +37,17 @@ const {
     const limit = query.get("limit") || 10;
     const page = query.get("page") || 1;
     const keyword = query.get("keyword");
-  
+    const status = query.get("status");
     return useMemo(() => {
       const queryParams = {
         page,
         limit,
         keyword,
+        status,
       };
       return [queryParams];
       //eslint-disable-next-line
-    }, [page, limit, keyword]);
+    }, [page, limit,status, keyword]);
   };
   
   export const useUpdateProductConfigParams = (
@@ -80,12 +82,13 @@ const {
   
     return [keyword, { setKeyword, onParamChange }];
   };
-  export const useGetlistProductConfig = () => {
-      return useFetch({
+  export const useGetlistProductConfig = (query: any) => {
+      return useFetchByParam({
         action: productConfigSliceAction.getListRequest,
         loadingSelector: loadingSelector,
         dataSelector: listSelector,
         failedSelector: getListFailedSelector,
+        param: query,
       })
   }
   export const useGetlistProductConfigById = (id: String) => {
@@ -114,6 +117,4 @@ const {
         loadingSelector: isSubmitLoadingSelector,
     })
   }
-  export const useProductConfigPaging = () => {
- 
-  }
+  export const useProductConfigPaging = () => useSelector(pagingSelector);
