@@ -119,3 +119,12 @@ const {
         loadingSelector: isSubmitLoadingSelector,
     })
   }
+
+  export const useUpdateManufacturer = (callBack:any) => {
+    useSuccess(updateSuccessSelector, `Cập nhật ${MODULE_VI} thành công`, callBack);
+    useFailed(updateFailedSelector);
+    return useSubmit({
+        action: manufacturerSliceAction.updateRequest,
+        loadingSelector: isSubmitLoadingSelector,
+    })
+  }

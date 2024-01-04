@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { Button, Form, Input } from 'antd';
-import { useGetlistProductConfigById, useUpdateProductConfig } from '../productConfig.hook';
+import { useGetlistProductConfigById, useUpdateProductConfig,useCreateProductConfig } from '../productConfig.hook';
 
 interface Props {
   id?: any;
@@ -17,6 +17,7 @@ interface FieldType {
 const { TextArea } = Input;
 const ProductConfigForm: React.FC<Props> = ({ id, callBack }) => {
   const [, updateProductConfig] = useUpdateProductConfig(callBack);
+  const [, createProductConfig] = useCreateProductConfig(callBack);
   const [productConfigById, isLoading] = useGetlistProductConfigById(id);
   const [form] = Form.useForm();
 
@@ -35,6 +36,11 @@ const ProductConfigForm: React.FC<Props> = ({ id, callBack }) => {
      const data: FieldType = {
       ...values,
       };
+      if (id) {
+        updateProductConfig({ data, id });
+      }else {
+        createProductConfig({ data });
+      }
       // updateProductConfig({ data, id });
       console.log(data);
   };

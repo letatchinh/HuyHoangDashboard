@@ -41,7 +41,8 @@ export default function ProductConfig() {
     code: string;
     key: string;
     name: string;
-    isAction: String,
+    isAction: boolean,
+    status: string,
   }
 
   const handleOpenForm = (id: any) => {
@@ -82,15 +83,15 @@ export default function ProductConfig() {
       render: (_, record) => (
         // <WithPermission permission={POLICY.DELETE_WAREHOUSE}>
         <Switch
-          checked={record?.isAction === 'ACTIVE'}
+          checked={record?.status === 'ACTIVE'}
           onChange={(value: any) => {
             console.log(value);
-            if (record?.isAction) {
+            if (!record?.isAction) {
               message.error(
                 'Không thể thực hiện thao tác này '
               );
             } else {
-              // updateProductConfig({ action: value ? 'ACTIVE' : 'INACTIVE', id });
+              // updateProductConfig({ stutus: value ? 'ACTIVE' : 'INACTIVE', id });
             }
           }}
         // loading={isSubmitUpdateLoading}
@@ -102,15 +103,15 @@ export default function ProductConfig() {
       title: 'Hành động',
       key: 'action',
       align: 'center',
-      width: '160px',
+      width: '180px',
       render: (_, record) => (
         <Space size="middle">
-          <a onClick={() => handleOpenForm(record.key)}>
-            <EditOutlined />
-          </a>
-          <a style={{ color: 'red' }} onClick={() => handleDelete(record.key)}>
-            <DeleteOutlined />
-          </a>
+          <Button type="primary" onClick={() => handleOpenForm(record.key)}>
+            Xem chi tiết
+          </Button>
+          <Button style={{ color: 'red' }} onClick={() => handleDelete(record.key)}>
+            Xóa
+          </Button>
         </Space>
       ),
     },
@@ -120,19 +121,22 @@ export default function ProductConfig() {
     {
       code: 'DMSP00001',
       key: '1',
-      isAction: 'ACTIVE',
+      status:'ACTIVE',
+      isAction: true,
       name: 'John Brown',
     },
     {
       code: 'DMSP00002',
       key: '2',
-      isAction: 'ACTIVE',
+      status:'ACTIVE',
+      isAction: true,
       name: 'Jim Green',
     },
     {
       code: 'DMSP00003',
       key: '3',
-      isAction: 'ACTIVE',
+      isAction: true,
+      status:'INACTIVE',
       name: 'Joe Black',
     },
   ];

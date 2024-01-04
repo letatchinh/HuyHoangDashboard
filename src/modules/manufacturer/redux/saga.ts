@@ -35,6 +35,7 @@ function* updateManufacturer({payload}:any):any {
     }
 };
 function* deleteManufacturer({payload:id}:any):any {
+    console.log('asdsd',id);
     try {
         const data = yield call(apis.delete,id);
         yield put(manufacturerSliceAction.deleteSuccess(data));

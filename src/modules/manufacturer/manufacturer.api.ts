@@ -7,7 +7,7 @@ const apis = {
     create: (data?: any) => requester.post(`/api/v1/manufacturer`, data),
     update: (data?: any) => requester.put(`/api/v1/manufacturer/${get(data,'_id')}`, data),
     delete: (id?: any) => {
-        console.log(id);
+        console.log('asd',id);
        return requester.delete(`/api/v1/product-config/${id}`)},
 }
 export default apis;

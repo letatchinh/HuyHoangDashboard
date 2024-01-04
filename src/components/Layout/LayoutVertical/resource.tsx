@@ -45,6 +45,11 @@ const resource: ItemType[] = [
             path: PATH_APP.worldPharma.productConfig,
             key: PATH_APP.worldPharma.productConfig,
           },
+          {
+            label: "Danh sách nhà sản xuất",
+            path: PATH_APP.worldPharma.manufacturer,
+            key: PATH_APP.worldPharma.manufacturer,
+          },
         ],
       },
     ],

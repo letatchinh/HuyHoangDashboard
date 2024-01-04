@@ -100,6 +100,14 @@ const {
       param: id,
     });
   };
+  export const useCreateProductConfig = (callBack:any) => {
+    useSuccess(createSuccessSelector, `Thêm ${MODULE_VI} thành công`, callBack);
+    useFailed(createFailedSelector);
+    return useSubmit({
+        action: productConfigSliceAction.createRequest,
+        loadingSelector: isSubmitLoadingSelector,
+    })
+  }
   export const useUpdateProductConfig = (callBack:any) => {
     useSuccess(updateSuccessSelector, `Cập nhật ${MODULE_VI} thành công`, callBack);
     useFailed(updateFailedSelector);
