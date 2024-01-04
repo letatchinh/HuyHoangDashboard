@@ -1,5 +1,4 @@
 import { ColumnsType } from "antd/es/table/InternalTable";
-import TableAnt from "~/components/Antd/TableAntd";
 import Breadcrumb from "~/components/common/Breadcrumb";
 import WhiteBox from "~/components/common/WhiteBox";
 import useTranslate from "~/lib/translation";
@@ -13,6 +12,7 @@ import {
 import { Button, Col, Modal, Row } from "antd";
 import { useState } from "react";
 import EmployeeForm from "../components/EmployeeForm";
+import TableAnt from "~/components/Antd/TableAnt";
 
 
 export default function Employee() {

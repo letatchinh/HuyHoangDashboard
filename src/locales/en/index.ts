@@ -1,5 +1,10 @@
 import dashboard from '../en/dashboard.json';
+import supplier from '../en/supplier.json';
 
-export default {
-    ...dashboard
+const en = {
+    ...dashboard,
+    ...supplier,
 }
+    
+
+export default en;

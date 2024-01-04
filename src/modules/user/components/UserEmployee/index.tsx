@@ -1,11 +1,11 @@
 import { Button, Col, Modal, Popconfirm, Row, Select, Tag } from "antd";
-import TableAnt from "~/components/Antd/TableAntd";
 import { useDeleteUser, useGetUseres, useUpdateUserParams, useUserPaging, useUserQueryParams } from "../../user.hook";
 import { useState } from "react";
 import UserForm from "../UserForm";
 import { ColumnsType } from "antd/es/table";
 import Search from "antd/es/input/Search";
 import SelectSearch from "~/components/common/SelectSearch";
+import TableAnt from "~/components/Antd/TableAnt";
 
 interface UserEmployeeProps {
   setId: any,

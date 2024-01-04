@@ -1,5 +1,5 @@
 import { ColumnsType } from "antd/es/table/InternalTable";
-import TableAnt from "~/components/Antd/TableAntd";
+import TableAnt from "~/components/Antd/TableAnt";
 import Breadcrumb from "~/components/common/Breadcrumb";
 import WhiteBox from "~/components/common/WhiteBox";
 import useTranslate from "~/lib/translation";
@@ -36,6 +36,7 @@ export default function Branch() {
         <TableAnt
           dataSource={data}
           loading={isLoading}
+          rowKey={rc => rc?._id}
           columns={columns}
           size='small'
           pagination={{

@@ -1,8 +1,12 @@
-import { useTranslation } from "react-i18next"
+import { useTranslation } from "react-i18next";
+import { TFunction } from "i18next";
+interface TranslateHook {
+  t: TFunction;
+}
 
- const useTranslate = () => {
-    const {t} : any  = useTranslation();
-    return {t}
+const useTranslate = (): TranslateHook => {
+  const { t }: TranslateHook = useTranslation();
+  return { t };
 };
 
 export default useTranslate;
