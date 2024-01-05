@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { InstanceModuleRedux } from "~/redux/instanceModuleRedux";
 
-class UserClassExtend extends InstanceModuleRedux {
+class ModuleExampleClassExtend extends InstanceModuleRedux {
   clone;
   cloneInitState;
   constructor() {
@@ -25,9 +25,9 @@ class UserClassExtend extends InstanceModuleRedux {
   
 }
 
-const newSlice = new UserClassExtend();
+const newSlice = new ModuleExampleClassExtend();
 const data = newSlice.createSlice();
 
 
-export const moduleExampleSliceAction = data.actions;
+export const moduleExampleActions = data.actions;
 export default data.reducer;

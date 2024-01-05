@@ -5,18 +5,18 @@ const branchSlice = new InstanceModuleRedux('branch');
 /**
  * Want to ADD more Slice or EXTEND for this module use This
  */
-branchSlice.extendsSlice({
-    getListSuccess: (state:any, { payload }:any) => {
-        state.isLoading = false;
-        state.list = payload;
-      },
-});
-/**
- * 
- * 
- * Want to Add more State for this module use This
- */
-branchSlice.extendsStates({});
+// branchSlice.extendsSlice({
+//     getListSuccess: (state:any, { payload }:any) => {
+//         state.isLoading = false;
+//         state.list = payload;
+//       },
+// });
+// /**
+//  * 
+//  * 
+//  * Want to Add more State for this module use This
+//  */
+// branchSlice.extendsStates({});
 // Start Create Slice
 const data = branchSlice.createSlice();
 

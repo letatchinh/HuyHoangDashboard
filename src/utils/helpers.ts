@@ -1,4 +1,5 @@
 import { forIn, get, groupBy, keys } from "lodash";
+import subvn from "~/core/subvn";
 
 export const getPaging = (response: any) => ({
   current: response.page,
@@ -46,11 +47,14 @@ export const getExistProp = (data: any) => {
 
 export const concatAddress = (address: any): string => {
   if (!address) return "";
-  const { street, ward, district, city } = address;
-  return [street, ward, district, city].filter(Boolean).join(",");
+  const { street, ward, district, districtId, city, cityId, wardId } = address;
+  let ward_ = ward ?? get(subvn.getWardsByCode(wardId), "name");
+  let district_ = district ?? get(subvn.getDistrictByCode(districtId), "name");
+  let city_ = city ?? get(subvn.getCityByCode(cityId), "name");
+  return [street, ward_, district_, city_].filter(Boolean).join(",");
 };
 
-export function removeAccents(str : any) {
+export function removeAccents(str: any) {
   return str
     .replace(/à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ/g, "a")
     .replace(/è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ/g, "e")
@@ -58,11 +62,14 @@ export function removeAccents(str : any) {
     .replace(/ò|ó|ọ|ỏ|õ|ô|ồ|ố|ộ|ổ|ỗ|ơ|ờ|ớ|ợ|ở|ỡ/g, "o")
     .replace(/ù|ú|ụ|ủ|ũ|ư|ừ|ứ|ự|ử|ữ/g, "u")
     .replace(/ỳ|ý|ỵ|ỷ|ỹ/g, "y")
-    .replace(/đ/g, "d")
+    .replace(/đ/g, "d");
 }
 
-export const filterAcrossAccents = (input:any, option:any) => {
+export const filterAcrossAccents = (input: any, option: any) => {
   return (
-    removeAccents(option.children.toLowerCase()).indexOf(removeAccents(input.toLowerCase())) >= 0
+    removeAccents(option.children.toLowerCase()).indexOf(
+      removeAccents(input.toLowerCase())
+    ) >= 0
   );
 };
+

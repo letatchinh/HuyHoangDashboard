@@ -18,3 +18,10 @@
         width: 25%!important;
     }
 }
+
+.ant-skeleton-element{
+    width: 100%!important;
+    & .ant-skeleton-input{
+        width: 100%!important;
+    }
+}

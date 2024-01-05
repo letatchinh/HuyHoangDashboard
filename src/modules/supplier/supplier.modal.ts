@@ -1,8 +1,17 @@
+import { initStateSlice } from "~/redux/models";
+
 export type propsTypeFormSupplier = {
-    id? : any
+  id? : any,
+  onCancel : () => void,
+  onUpdate : (p:any) => void,
+  isSubmitLoading : boolean,
 }
 export type propsTypeTabSupplier = {
-    id? : any
+    id? : any,
+    onCancel : () => void,
+    onUpdate : (p:any) => void,
+    isSubmitLoading : boolean,
+
 }
 export type addressType = {
     cityId: string;
@@ -16,3 +25,15 @@ export type addressType = {
     address: addressType;
   };
 
+
+  export interface cloneInitState<T = any> extends initStateSlice {
+    isLoadingGetProductSupplier?: boolean;
+    getProductSupplierFailed?: any;
+    productSupplier?: T[];
+    pagingProductSupplier?: any;
+  }
+
+  export type STATUS_SUPPLIER_TYPE =  {
+    ACTIVE : "ACTIVE",
+    INACTIVE : "INACTIVE",
+  }

@@ -1,26 +1,51 @@
 import { Button, Col, Divider, Form, Input, Row } from "antd";
 import React, { useState } from "react";
 import BaseBorderBox from "~/components/common/BaseBorderBox/index";
-import AddressFormSection from "~/modules/geo/components/AddressFormSection";
-import { useGetSupplier } from "../supplier.hook";
+import AddressFormSection from "~/components/common/AddressFormSection";
+import {
+  useGetSupplier,
+  useCreateSupplier,
+  useResetAction,
+} from "../supplier.hook";
 import { FieldType, propsTypeFormSupplier } from "../supplier.modal";
+import { useCallback } from "react";
+import { useEffect } from "react";
+import RenderLoading from "~/components/common/RenderLoading";
+import { validatePhoneNumberAntd } from "~/utils/validate";
 
-const onFinish = (values: any) => {
-  console.log("Success:", values);
-};
-
-
-
-const FormSupplier = ({id}:propsTypeFormSupplier) : React.JSX.Element => {
-    const [supplier, isLoading] = useGetSupplier(id);
-    
+const FormSupplier = ({
+  id,
+  onCancel,
+  onUpdate,
+}: propsTypeFormSupplier): React.JSX.Element => {
+  const [supplier, isLoading] = useGetSupplier(id);
+  
   const [form] = Form.useForm();
   const [cityCode, setCityCode]: any = useState();
   const [districtCode, setDistrictCode]: any = useState();
+  const [isSubmitLoading, onCreate] = useCreateSupplier(onCancel);
+
+  useResetAction();
+  const onFinish = useCallback(
+    (values: FieldType) => {
+      if (!id) {
+        onCreate(values);
+      } else {
+        onUpdate({ ...values, _id: id });
+      }
+    },
+    [id, onCreate, onUpdate]
+  );
+
+  useEffect(() => {
+    if (id && supplier) {
+      form.setFieldsValue(supplier);
+    }
+  }, [form, id, supplier]);
   return (
     <div className="flex-column-center">
       <Divider>
-        <h5 className="text-center">Tạo mới chi nhánh</h5>
+        <h5 className="text-center">{id ? "Cập nhật" : "Tạo mới"} chi nhánh</h5>
       </Divider>
       <Form
         form={form}
@@ -39,18 +64,16 @@ const FormSupplier = ({id}:propsTypeFormSupplier) : React.JSX.Element => {
                   { required: true, message: "Vui lòng nhập tên chi nhánh" },
                 ]}
               >
-                <Input />
+                {RenderLoading(isLoading,<Input />)}
               </Form.Item>
             </Col>
             <Col span={12}>
               <Form.Item<FieldType>
                 label="Số điện thoại"
                 name="phoneNumber"
-                rules={[
-                  { required: true, message: "Vui lòng nhập Số điện thoại" },
-                ]}
+                rules={validatePhoneNumberAntd}
               >
-                <Input />
+                {RenderLoading(isLoading,<Input />)}
               </Form.Item>
             </Col>
           </Row>
@@ -67,10 +90,15 @@ const FormSupplier = ({id}:propsTypeFormSupplier) : React.JSX.Element => {
           />
         </BaseBorderBox>
         <div className="btn-footer">
-          <Button block type="primary" htmlType="submit">
-            Tạo mới
+          <Button
+            loading={isSubmitLoading}
+            block
+            type="primary"
+            htmlType="submit"
+          >
+            {id ? "Cập nhật" : "Tạo mới"}
           </Button>
-          <Button block danger>
+          <Button onClick={onCancel} block danger>
             Huỷ
           </Button>
         </div>
