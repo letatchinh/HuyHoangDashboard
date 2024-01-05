@@ -1,56 +1,56 @@
 import { put, call, takeLatest } from 'redux-saga/effects';
 import api from '../moduleExample.api'; 
-import { moduleExampleActions } from './reducer';
+import { moduleExampleSliceAction } from './reducer';
 
 function* getListModuleExample({payload:query} : any) : any {
   try {
     const data = yield call(api.getAll,query);
-    yield put(moduleExampleActions.getListSuccess(data));
+    yield put(moduleExampleSliceAction.getListSuccess(data));
   } catch (error:any) {
-    yield put(moduleExampleActions.getListFailed(error));
+    yield put(moduleExampleSliceAction.getListFailed(error));
   }
 }
 
 function* getByIdModuleExample({payload:id} : any) : any {
   try {
     const data = yield call(api.getById,id);
-    yield put(moduleExampleActions.getByIdSuccess(data));
+    yield put(moduleExampleSliceAction.getByIdSuccess(data));
   } catch (error:any) {
-    yield put(moduleExampleActions.getByIdFailed(error));
+    yield put(moduleExampleSliceAction.getByIdFailed(error));
   }
 }
 
 function* createModuleExample({payload} : any) : any {
   try {
     const data = yield call(api.create,payload);
-    yield put(moduleExampleActions.createSuccess(data));
+    yield put(moduleExampleSliceAction.createSuccess(data));
   } catch (error:any) {
-    yield put(moduleExampleActions.createFailed(error));
+    yield put(moduleExampleSliceAction.createFailed(error));
   }
 }
 
 function* updateModuleExample({payload} : any) : any {
   try {
     const data = yield call(api.update,payload);
-    yield put(moduleExampleActions.updateSuccess(data));
+    yield put(moduleExampleSliceAction.updateSuccess(data));
   } catch (error:any) {
-    yield put(moduleExampleActions.updateFailed(error));
+    yield put(moduleExampleSliceAction.updateFailed(error));
   }
 }
 function* deleteModuleExample({payload : id} : any) : any {
   try {
     const data = yield call(api.delete,id);
-    yield put(moduleExampleActions.deleteSuccess(data));
+    yield put(moduleExampleSliceAction.deleteSuccess(data));
   } catch (error:any) {
-    yield put(moduleExampleActions.deleteFailed(error));
+    yield put(moduleExampleSliceAction.deleteFailed(error));
   }
 }
 
 
 export default function* moduleExampleSaga() {
-  yield takeLatest(moduleExampleActions.getListRequest, getListModuleExample);
-  yield takeLatest(moduleExampleActions.getByIdRequest, getByIdModuleExample);
-  yield takeLatest(moduleExampleActions.createRequest, createModuleExample);
-  yield takeLatest(moduleExampleActions.updateRequest, updateModuleExample);
-  yield takeLatest(moduleExampleActions.deleteRequest, deleteModuleExample);
+  yield takeLatest(moduleExampleSliceAction.getListRequest, getListModuleExample);
+  yield takeLatest(moduleExampleSliceAction.getByIdRequest, getByIdModuleExample);
+  yield takeLatest(moduleExampleSliceAction.createRequest, createModuleExample);
+  yield takeLatest(moduleExampleSliceAction.updateRequest, updateModuleExample);
+  yield takeLatest(moduleExampleSliceAction.deleteRequest, deleteModuleExample);
 }
