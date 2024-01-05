@@ -1,16 +1,14 @@
-import { Button, Col, Modal, Popconfirm, Row, Select, Tag } from "antd";
-import { useDeleteUser, useGetUsers, useUpdateUserParams, useUserPaging, useUserQueryParams } from "../../user.hook";
+import { Button, Col, Modal, Popconfirm, Row, Select, Switch, Tag } from "antd";
+import { useDeleteUser, useGetUsers, useUpdateUser, useUpdateUserParams, useUserPaging, useUserQueryParams } from "../../user.hook";
 import { useState } from "react";
 import UserForm from "../UserForm";
 import { ColumnsType } from "antd/es/table";
 import Search from "antd/es/input/Search";
 import SelectSearch from "~/components/common/SelectSearch";
 import TableAnt from "~/components/Antd/TableAnt";
-
-interface UserEmployeeProps {
-  setId: any,
-  id?: string | null,
-};
+import { useResetState } from "~/utils/hook";
+import { userSliceAction } from "../../redux/reducer";
+import { Link } from "react-router-dom";
 
 interface ColumnActionProps {
   _id : any,
@@ -44,17 +42,18 @@ const ColumnActions = ({
   );
 };
 
-const UserEmployee = ({setId, id}: UserEmployeeProps) => {
+const UserEmployee = () => {
+  useResetState(userSliceAction.resetAction);
+  const [id, setId] = useState(null)
   const [isOpenModal, setIsOpenModal] = useState(false);
 
   const [query] = useUserQueryParams();
-  const [keyword, { setKeyword, onParamChange }] =
-  useUpdateUserParams(query);
+  const [keyword, { setKeyword, onParamChange }] = useUpdateUserParams(query);
   const [data, isLoading] = useGetUsers(query);
   const paging = useUserPaging();
   const [, deleteUser] = useDeleteUser();
-  
-  const handleOpenModal = (id?: string) => {
+  const [, updateUser] = useUpdateUser();
+  const handleOpenModal = (id?: any) => {
     setIsOpenModal(true);
     setId(id);
   };
@@ -75,9 +74,9 @@ const UserEmployee = ({setId, id}: UserEmployeeProps) => {
     },
     {
       title: 'Tên người dùng',
-      dataIndex: 'username',
+      dataIndex: 'adapater',
       key: 'username',
-      render: (username) => <p>{username}</p>
+      render: (value) => <p>{value?.user?.username}</p>
     },
     {
       title: 'Email',
@@ -91,7 +90,7 @@ const UserEmployee = ({setId, id}: UserEmployeeProps) => {
       key: 'employeeGroup',
       render: (groups) => (
         <div className="speciality-tags">
-        {groups.map((group : any, index: number) => {
+        {groups?.map((group : any, index: number) => {
           return (
             <Tag color="blue" key={index}>
               {group?.name}
@@ -100,7 +99,22 @@ const UserEmployee = ({setId, id}: UserEmployeeProps) => {
         })}
       </div>
       )
-    },  
+    },
+    {
+      title: 'Trạng thái',
+      dataIndex: 'status',
+      key: 'status',
+      width: 90,
+      align: 'center',
+      render: (status, record: any) => (
+        <Switch
+            checked={status === 'ACTIVE'}
+            onChange={(value) =>
+              updateUser({ status: value ? 'ACTIVE' : 'INACTIVE', id: record?._id, userId: record?.adapater?.userId})
+            }
+          />
+      )
+    },
     {
       title: 'Thao tác',
       key: 'action',
@@ -136,7 +150,7 @@ const UserEmployee = ({setId, id}: UserEmployeeProps) => {
         </Col>
       </Row>
       <TableAnt
-        dataSource={[]}
+        dataSource={data?.length ? data : []}
         loading={isLoading}
         columns={columns}
         size="small"

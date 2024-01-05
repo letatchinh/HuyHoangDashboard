@@ -3,11 +3,8 @@ import api from '../user.api';
 import { userSliceAction } from './reducer';
 
 function* getListUser({ payload: query }: any): any {
-  console.log(1)
   try {
-    console.log(2)
     const data = yield call(api.getAll, query);
-    console.log(data)
     yield put(userSliceAction.getListSuccess(data));
   } catch (error:any) {
     yield put(userSliceAction.getListFailed(error));
@@ -16,7 +13,7 @@ function* getListUser({ payload: query }: any): any {
 
 function* getByIdUser({payload:id} : any) : any {
   try {
-    const data = yield call(api.getById,id);
+    const data = yield call(api.getById, id);
     yield put(userSliceAction.getByIdSuccess(data));
   } catch (error:any) {
     yield put(userSliceAction.getByIdFailed(error));

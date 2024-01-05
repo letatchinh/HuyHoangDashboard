@@ -100,6 +100,7 @@
 .employee-group {
   min-height: 40vh;
   display: flex;
+  flex-direction: column;
   ::-webkit-scrollbar {
     -webkit-appearance: none;
     width: 7px;

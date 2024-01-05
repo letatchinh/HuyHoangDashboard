@@ -1,7 +1,7 @@
 import { get, groupBy, last } from "lodash";
 import { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { clearQuerySearch, getExistProp, removeAccents } from "~/utils/helpers";
 import {
   getSelectors,
@@ -12,9 +12,10 @@ import {
   useSubmit,
   useSuccess,
 } from "~/utils/hook";
-import { userSliceAction } from "./redux/reducer";
-const MODULE  = "user";
-const MODULE_VI  = "Người dùng";
+import { userGroupSliceAction } from "./redux/reducer";
+import { useDispatch } from "react-redux";
+const MODULE  = "userGroup";
+const MODULE_VI  = "Nhân viên";
 
 const {
   loadingSelector,
@@ -32,25 +33,23 @@ const {
   updateFailedSelector,
   pagingSelector,
 } = getSelectors(MODULE);
-const getSelector = (key: string) => (state: any) => state.user[key];
-const policySelector = getSelector('policy');
-const profileSelector = getSelector('profile');
+ const getSelector = (key : string) => (state:any) => state.userGroup[key];
+const actionsSelector = getSelector('actions');
 
-export const useUserPaging = () => useSelector(pagingSelector);
+export const useUserGroupPaging = () => useSelector(pagingSelector);
 
-export const useGetUsers = (params: any) => {
-  return useFetchByParam({
-    action: userSliceAction.getListRequest,
+export const useGetUserGroups = (payload: object) => {
+  return useFetch({
+    action: userGroupSliceAction.getListRequest,
     loadingSelector: loadingSelector,
     dataSelector: listSelector,
     failedSelector: getListFailedSelector,
-    param: params,
+    payload
   });
 };
-
-export const useGetUser = (id: any) => {
+export const useGetUserGroup = (id: any) => {
   return useFetchByParam({
-    action: userSliceAction.getByIdRequest,
+    action: userGroupSliceAction.getByIdRequest,
     loadingSelector: getByIdLoadingSelector,
     dataSelector: getByIdSelector,
     failedSelector: getByIdFailedSelector,
@@ -58,7 +57,7 @@ export const useGetUser = (id: any) => {
   });
 };
 
-export const useCreateUser = (callback?: any) => {
+export const useCreateUserGroup = (callback?: any) => {
   useSuccess(
     createSuccessSelector,
     `Tạo mới ${MODULE_VI} thành công`,
@@ -67,12 +66,12 @@ export const useCreateUser = (callback?: any) => {
   useFailed(createFailedSelector);
 
   return useSubmit({
-    action: userSliceAction.createRequest,
+    action: userGroupSliceAction.createRequest,
     loadingSelector: isSubmitLoadingSelector,
   });
 };
 
-export const useUpdateUser = (callback?: any) => {
+export const useUpdateUserGroup = (callback?: any) => {
   useSuccess(
     updateSuccessSelector,
     `Cập nhật ${MODULE_VI} thành công`,
@@ -81,28 +80,26 @@ export const useUpdateUser = (callback?: any) => {
   useFailed(updateFailedSelector);
 
   return useSubmit({
-    action: userSliceAction.updateRequest,
+    action: userGroupSliceAction.updateRequest,
     loadingSelector: isSubmitLoadingSelector,
   });
 };
 
-export const useDeleteUser = (callback?: any) => {
+export const useDeleteUserGroup = (callback?: any) => {
   useSuccess(deleteSuccessSelector, `Xoá ${MODULE_VI} thành công`, callback);
   useFailed(deleteFailedSelector);
 
   return useSubmit({
-    action: userSliceAction.deleteRequest,
+    action: userGroupSliceAction.deleteRequest,
     loadingSelector: isSubmitLoadingSelector,
   });
 };
 
-export const useUserQueryParams = () => {
+export const useUserGroupQueryParams = () => {
   const query = useQueryParams();
   const limit = query.get("limit") || 10;
   const page = query.get("page") || 1;
   const keyword = query.get("keyword");
-
-  const createSuccess = useSelector(createSuccessSelector);
 
   return useMemo(() => {
     const queryParams = {
@@ -112,10 +109,10 @@ export const useUserQueryParams = () => {
     };
     return [queryParams];
     //eslint-disable-next-line
-  }, [page, limit, keyword, createSuccess]);
+  }, [page, limit, keyword]);
 };
 
-export const useUpdateUserParams = (
+export const useUpdateUserGroupParams = (
   query: any,
   listOptionSearch?: any[]
 ) => {
@@ -158,36 +155,45 @@ export const autoCreateUsername = async ({ fullName, callApi }: any) => {
   for (let i = 0; i <= splitFullName?.length - 2; i++) {
     const value = get(splitFullName, `${i}.[0]`, '')
     username += value
-  };
+  }
   const newUserName = await adapterValidateUsername(username, callApi)
   return newUserName
 };
- 
-//POLICY
-const isMatchPolicy = (policies : any, requiredPermission : any) => {
-  return !!requiredPermission?.reduce((policy : any , permission : any )=> {
-    return policy?.[permission];
-  }, policies);
-};
+
+// export const useResources = () => {
+//   const { id: branchId } = useParams();
+
+//   const branchParam = useMemo(() => ({ branchId }), [branchId]);
+
+//   return useFetchByParam({
+//     action: getResources,
+//     loadingSelector: getResourcesLoadingSelector,
+//     dataSelector: resourcesSelector,
+//     failedSelector: getResourcesFailedSelector,
+//     param: branchParam,
+//     // actionUpdate : updateResourceRedux,
+//   });
+// };
 
 
-export const useMatchPolicy = (requiredPermission : any) => {
-  const policies = useSelector(policySelector);
-  const profile = useSelector(profileSelector);
+export const useResourceColumns = (renderPermission: any) => {
+  const actions = useSelector(actionsSelector);
+  const actionColumns = actions.map(({ name, key } : any,index: number) => ({
+    title: name,
+    dataIndex: key,
+    key: key,
+    width : '13%',
+    align:'center',
+    render: renderPermission
+  }));
 
-  const isMatch = useMemo(() => {
-    if (profile?.isSuperAdmin) {
-      return true;
-    }
-    if (!requiredPermission) return true;
-
-    if (Array.isArray(requiredPermission[0])) {
-      return requiredPermission.reduce((isMatch : any , permissionItem : any ) => {
-        return isMatch && isMatchPolicy(policies, permissionItem);
-      }, true);
-    }
-
-    return isMatchPolicy(policies, requiredPermission);
-  }, [requiredPermission, policies]);
-  return isMatch;
+  return [
+    {
+      title: 'Chức năng',
+      dataIndex: ['resource', 'name'],
+      key: 'resource',
+      width : 'auto',
+    },
+    ...actionColumns
+  ];
 };

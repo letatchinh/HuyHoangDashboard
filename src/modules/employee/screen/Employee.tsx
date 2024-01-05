@@ -70,7 +70,7 @@ export default function Employee() {
       <Row gutter={16} align="middle">
         <Col span={21}></Col>
         <Col span={3}>
-          <Button type="primary" onClick={() => handleOpenModal()}>
+          <Button style={{marginBottom: 10}} type="primary" onClick={() => handleOpenModal()}>
             Thêm mới
           </Button>
         </Col>

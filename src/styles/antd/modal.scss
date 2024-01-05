@@ -7,4 +7,9 @@
   .ant-modal-footer {
     display: none;
   }
+  &__user-group {
+    :where(.css-dev-only-do-not-override-cc3nwb).ant-row{
+      width: 450px;
+    }
+  }
 };

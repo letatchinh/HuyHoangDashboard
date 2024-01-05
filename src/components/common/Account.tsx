@@ -1,5 +1,5 @@
-import React from 'react';
-import { Input, Row, Col, Skeleton, Form, Tooltip, Badge } from 'antd';
+import React, { useState } from 'react';
+import { Input, Row, Col, Skeleton, Form, Tooltip, Badge, Switch } from 'antd';
 import { InfoCircleOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 
 const formItemLayoutLong = {
@@ -10,14 +10,29 @@ const formItemLayoutLong = {
 interface Props{
   isLoading?: boolean,
   required?: boolean | true;
+  statusAccount?: string | undefined;
+  setStatusAccount?: any;
 };
 
-const Account = ({ isLoading, required }: Props) => {
-  
+const Account = ({ isLoading, required,statusAccount, setStatusAccount}: Props) => {
   return (
     <>
-      <h5 style={{ marginBottom: 20 }}>Thiết lập tài khoản:</h5>
-
+      <Row>
+        <Col span={5}>
+          <h5 style={{ marginBottom: 20 }}>Thiết lập tài khoản:</h5>
+        </Col>
+        <Col span={4}>
+        <Form.Item
+          name="updateAccount">
+          <Switch
+              checked={statusAccount === 'ACTIVE'}
+              onChange={(value) => setStatusAccount(value ? 'ACTIVE' : 'INACTIVE')}
+              unCheckedChildren='Cập nhật'
+              // checkedChildren='Không cập nhật'
+          />
+        </Form.Item>
+        </Col>
+      </Row>
       <Row gutter={48} align="middle" justify="space-between">
         <Col span={12}>
           <Form.Item
@@ -52,7 +67,9 @@ const Account = ({ isLoading, required }: Props) => {
             {isLoading ? (
               <Skeleton.Input active />
             ) : (
-              <Input disabled = {false} autoComplete="off" />
+              // <Tooltip title="Không thể chỉnh sửa tên tài khoản">
+                <Input readOnly autoComplete="off"/>
+            // </Tooltip>
             )}
           </Form.Item>
         </Col>

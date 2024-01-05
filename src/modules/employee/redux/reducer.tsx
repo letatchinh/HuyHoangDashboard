@@ -1,49 +1,35 @@
 import { get } from "lodash";
+import { PaginateResult } from "~/lib/@types";
 import { InstanceModuleRedux } from "~/redux/instanceModuleRedux";
+import { initStateSlice } from "~/redux/models";
+import { createSlice } from "@reduxjs/toolkit";
+import { UserResponseOne } from "~/modules/user/user.modal";
 
-// InstanceModuleRedux
-const employeeSlice = new InstanceModuleRedux('employee');
-
-
-/**
- * Want to ADD more Slice or EXTEND for this module use This
- */
-employeeSlice.extendsSlice({
-  getListSuccess: (state: any, { payload }: any) => {
+class EmployeeClassExtentd extends InstanceModuleRedux {
+  clone;
+  constructor() {
+    super('employee');
+    this.clone = {
+      ...this.initReducer,
+      getListSuccess: (state: initStateSlice, { payload }: { payload?: any }) => {
         state.isLoading = false;
-        state.list = get(payload, 'docs');
-  },
-  updateSuccess: (state: { isSubmitLoading: boolean; updateSuccess: any; list: any }, { payload }: any) => {
-    state.isSubmitLoading = false;
-    state.updateSuccess = payload;
-    state.list = state.list.map((item: any) => {
-      if (item._id === payload.data._id) {
-        return { ...item, ...payload.data };
-      }
-      return item;
+        state.list = get(payload, 'docs', []);
+      },
+    }
+  }
+  createSlice() {
+    return createSlice({
+      name: this.module,
+      initialState: this.initialState,
+      reducers:  this.clone,
     });
-    return;
-  },
-});
+  }
+  
+}
+
+const newSlice = new EmployeeClassExtentd();
+const data = newSlice.createSlice();
 
 
-
-/**
- * 
- * 
- * Want to Add more State for this module use This
- */
-employeeSlice.extendsStates({});
-
-
-// Start Create Slice
-const data = employeeSlice.createSlice();
-
-// export action and Reducer;
-
-// Want Suggettion ?
-// interface reducerType  extends voidReducer {
-//     // onR? : (state:any) => void
-// }
-export const employeeSliceAction = data.actions;
+export const employeeSliceAction   = data.actions;
 export default data.reducer;

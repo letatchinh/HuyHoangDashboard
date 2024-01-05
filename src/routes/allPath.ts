@@ -32,6 +32,9 @@ export const PATH_APP = {
         root: path(ROOTS.app, '/employee'),
     },
     user: {
-        root: path(ROOTS.app, '/user'),
+      root: path(ROOTS.app, '/user'),
+    },
+    userGroup: {
+        root: path(ROOTS.app, '/user/group'),
     },
   };

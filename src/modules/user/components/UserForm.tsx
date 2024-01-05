@@ -1,13 +1,18 @@
 import { Button, Col, Form, Input, Row, Select, Skeleton } from "antd";
 import React, { useEffect, useState } from "react";
 import UploadImage from "~/components/common/Upload/UploadImage";
-import AddressFormSection from "~/modules/geo/components/AddressFormSection";
-import { autoCreateUsername, useCreateUser, useUpdateUser } from "../user.hook";
+import AddressFormSection from "~/components/common/AddressFormSection";
+import { useCreateUser, useGetUser, useUpdateUser } from "../user.hook";
 import Account from "~/components/common/Account";
 import apis from "../user.api";
-import { removeAccents } from "~/utils/helpers";
 import toastr from "toastr";
+import { DEFAULT_BRANCH_ID } from "~/constants/defaultValue";
+import { useResetState } from "~/utils/hook";
+import { userSliceAction } from "../redux/reducer";
+import {omit} from "lodash";
+
 const { Option } = Select;
+
 
 const FormItem = Form.Item;
 
@@ -18,39 +23,61 @@ const verticalLayout = {
 interface IProps {
   id?: string | null;
   handleCloseModal: () => void;
-}
+};
 
 export default function UserForm(props: IProps) {
   const [form] = Form.useForm();
   const { id, handleCloseModal } = props;
-  const [isLoading, setIsLoading] = useState(false);
   const [imageUrl, setImageUrl] = useState<string>();
   const [loadingValidateUsername, setLoadingValidateUsername] =
     useState<boolean>(false);
+    const [statusAccount, setStatusAccount] = useState('ACTIVE');
   //address
-  const [cityCode, setCityCode] = useState();
-  const [districtCode, setDistrictCode] = useState();
+  const [cityCode, setCityCode] = useState<string>('');
+  const [districtCode, setDistrictCode] = useState<string>('');
+  const [wardCode, setWardCode] = useState<string>('');
 
   //hook user
   const [isUpdateLoading, handleUpdate] = useUpdateUser();
   const [isCreateLoading, handleCreate] = useCreateUser(handleCloseModal);
+  const [user, isLoading] = useGetUser(id);
+  useResetState(userSliceAction.resetAction);
 
-  const onFinish = (values: any) => {
-    console.log(values, "values");
-    const user = {
-      ...values,
-      avatar: imageUrl,
+  useEffect(() => {
+    if (user) {
+      form.setFieldsValue({
+        ...user,
+        username: user?.adapater?.user?.username,
+      });
+      setImageUrl(user?.avatar);
+      setCityCode(user?.address?.cityId);
+      setDistrictCode(user?.address?.districtId);
+      setWardCode(user?.address?.wardId);
     };
-
-    // if (id) {
-    //   handleUpdate({
-    //     ...user,
-    //     _id: id,
-    //     // userNumber: initUser.userNumber
-    //   });
-    // } else {
-    //   handleCreate(user);
-    // }
+  }, [id, user]);
+  
+  const onFinish = (values: any) => {
+    const user = {
+      ...omit(values, []),
+      avatar: imageUrl,
+      groups: [],
+      branchId: values?.branchId || DEFAULT_BRANCH_ID
+    };
+    if (id) {
+      const data: object = {
+        ...user,
+        _id: id
+      };
+      if (statusAccount === 'ACTIVE') {
+        handleUpdate({...data});
+      } else {
+        handleUpdate({
+          ...omit(data,['username', 'password', 'confirmPassword']),
+        });
+      }
+    } else {
+      handleCreate(user);
+    }
   };
 
   const onValuesChange = ({ address }: any) => {};
@@ -61,13 +88,8 @@ export default function UserForm(props: IProps) {
       // Only Create
       try {
         setLoadingValidateUsername(true);
-        const username = await autoCreateUsername({
-          fullName,
-          callApi: (query: any) => apis.validateUsername(query),
-        });
-        form.setFieldsValue({
-          username: removeAccents(username?.toLowerCase()),
-        });
+        const username = await apis.validateUsername({ fullName: fullName?.trim()});
+        form.setFieldsValue(username);
         setLoadingValidateUsername(false);
       } catch (error) {
         setLoadingValidateUsername(false);
@@ -76,15 +98,10 @@ export default function UserForm(props: IProps) {
     };
   };
 
-  // useEffect(() => {
-  //   form.setFieldsValue({
-  //   })
-  // },[])
-
   return (
     <div className="employee-form">
       <h4 style={{ marginRight: "auto", paddingLeft: 27 }}>
-        {`${!id ? "Tạo mới " : "Cập nhật"}`} nhân viên
+        {`${!id ? "Tạo mới " : "Cập nhật"} người dùng`}
       </h4>
       <Form
         form={form}
@@ -127,10 +144,10 @@ export default function UserForm(props: IProps) {
                 <Skeleton.Input active />
               ) : (
                 <Select>
-                  <Option value="male" key="male">
+                  <Option value="M" key="male">
                     Nam
                   </Option>
-                  <Option value="female" key="female">
+                  <Option value="F" key="female">
                     Nữ
                   </Option>
                 </Select>
@@ -176,7 +193,11 @@ export default function UserForm(props: IProps) {
           </Col>
           {/* <Col></Col> */}
         </Row>
-        <Account isLoading={isLoading} required={id ? false : true} />
+        <Account
+          isLoading={isLoading} required={id ? false : true}
+          setStatusAccount={setStatusAccount}
+          statusAccount={statusAccount}
+        />
         <Row gutter={10} align="middle" justify={"center"}>
           <Col span={2}>
             <Button>Huỷ</Button>

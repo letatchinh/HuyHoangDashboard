@@ -1,7 +1,7 @@
 import { Button, Col, Form, Input, Modal, Row, Select, Skeleton } from "antd";
 import React, { useEffect, useState } from "react";
 import UploadImage from "~/components/common/Upload/UploadImage";
-import AddressFormSection from "~/modules/geo/components/AddressFormSection";
+import AddressFormSection from "~/components/common/AddressFormSection";
 import { useCreateEmployee, useGetEmployee, useUpdateEmployee } from "../employee.hook";
 import { employeeSliceAction } from "../redux/reducer";
 import { useResetState } from "~/utils/hook";
