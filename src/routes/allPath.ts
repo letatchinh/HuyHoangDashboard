@@ -21,6 +21,7 @@ export const PATH_APP = {
       productConfig: path(ROOTS.app, '/productConfig'),
       manufacturer: path(ROOTS.app, '/manufacturer'),
       ranking: path(ROOTS.app, '/ranking'),
+      unit: path(ROOTS.app, '/unit'),
     },
 
     supplier : {

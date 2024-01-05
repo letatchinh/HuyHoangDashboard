@@ -55,6 +55,11 @@ const resource: ItemType[] = [
             path: PATH_APP.worldPharma.ranking,
             key: PATH_APP.worldPharma.ranking,
           },
+          {
+            label: "Đơn vị tính",
+            path: PATH_APP.worldPharma.unit,
+            key: PATH_APP.worldPharma.unit,
+          },
         ],
       },
     ],

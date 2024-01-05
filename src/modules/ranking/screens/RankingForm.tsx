@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 import { Button, Form, Input, Select, Spin } from 'antd';
 import { useGetlistRankingById, useDeleteRanking, useUpdateRanking,useCreateRanking } from '../ranking.hook';
 import {useGetManufacturerList} from '../../manufacturer/manufacturer.hook';
@@ -18,22 +18,30 @@ const RankingForm: React.FC<Props> = ({ id, callBack }) => {
     const query = useMemo(() => ({ limit: 10, page: 1 }), []);
     const [listManufacturer, isLoadingManufacturer] = useGetManufacturerList(query);
     console.log(listManufacturer,'listManufacturer');
-  const [, updateRanking] = useUpdateRanking(callBack);
-  const [, createRanking] = useCreateRanking(callBack);
+  const [, updateRanking] = useUpdateRanking(useCallback(() => {
+    if (callBack) {
+      callBack();
+    }
+  }, [callBack]));
+  const [, createRanking] = useCreateRanking(useCallback(() => {
+    if (callBack) {
+      callBack();
+    }
+  }, [callBack]));
   const [rankingConfigById, isLoading] = useGetlistRankingById(id);
   const [form] = Form.useForm();
-
   useEffect(() => {
-    if (id&&rankingConfigById ) { 
-      const {name,level}: FieldType = rankingConfigById;
+    if (id && rankingConfigById) { 
+      const { name, level }: FieldType = rankingConfigById;
       form.setFieldsValue({
         name,
         level,
-      })
+      });
     }
-  }, [id,rankingConfigById,form]);
+  }, [id]);
 
   const onFinish = (values: FieldType) => {
+    console.log('Received values of form: ');
      const data: FieldType = {
       ...values,
       // code:'DMT0001'

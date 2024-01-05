@@ -15,7 +15,9 @@ type propsType = {
 }
 export default function Ranking(props:propsType) : React.JSX.Element {
     const callBack = () => {
+      console.log('callBack');
         setShowForm(false);
+        form.resetFields();
       };
       const [query] = useRankingQueryParams();
       const [keyword,{setKeyword,onParamChange}] = useUpdateRankingParams(query)
@@ -64,14 +66,14 @@ export default function Ranking(props:propsType) : React.JSX.Element {
         },
       ];
       const handleOpenUpdate = (id: any) => {
+        console.log('2')
         setShowForm(true);
-        if (id) {
           setId(id);
-        }
       };
       const handleOpenFormCreate = () => {
+        console.log('3')
         setShowForm(true);
-        // setId(null);
+        setId(null);
       };
     
       const handleDelete = (id: any) => {

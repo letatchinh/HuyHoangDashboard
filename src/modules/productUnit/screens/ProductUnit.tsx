@@ -25,11 +25,9 @@ export default function ProductUnit(props:propsType) : React.JSX.Element {
     const { t }: any = useTranslate();
     const [form] = Form.useForm();
     interface DataType {
-        code: string;
         _id: string;
         name: string;
-        isAction: boolean,
-        note: string,
+        description: string,
         status: string,
       }
     
@@ -54,14 +52,7 @@ export default function ProductUnit(props:propsType) : React.JSX.Element {
       }
       const columns: ColumnsType<DataType> = [
         {
-          title: 'Mã danh mục thuốc',
-          dataIndex: 'code',
-          width: '200px',
-          align: 'center',
-          render: (text: string) => <a href='#' style={{ textDecoration: 'none' }}>{text}</a>,
-        },
-        {
-          title: 'Tên danh mục thuốc',
+          title: 'Tên đơn vị tính',
           dataIndex: 'name',
           align: 'center',
           key: 'name',
@@ -69,30 +60,10 @@ export default function ProductUnit(props:propsType) : React.JSX.Element {
         },
         {
           title: 'Ghi chú',
-          dataIndex: 'note',
+          dataIndex: 'description',
           align: 'center',
-          key: 'note',
+          key: 'description',
           render: (text: string) => <a>{text}</a>,
-        },
-        {
-          title: 'Thao tác',
-          dataIndex: 'status',
-          align: 'center',
-          width: '120px',
-          key: 'status',
-          render: (_, record) => (
-            // <WithPermission permission={POLICY.DELETE_WAREHOUSE}>
-            <Switch
-              checked={record?.status === 'ACTIVE'}
-              onChange={(value: any) => {
-    
-                //   updateProductConfig({ status: value ? 'ACTIVE' : 'INACTIVE',id:record?._id });
-                
-              }}
-            // loading={isSubmitUpdateLoading}
-            />
-            // </WithPermission>
-          )
         },
         {
           title: 'Hành động',
@@ -115,20 +86,9 @@ export default function ProductUnit(props:propsType) : React.JSX.Element {
       const onSearch = (value: string) => {
         onParamChange({ ['keyword']: value });
       };
-      const options: SelectProps['options'] = [
-        {
-          label: 'Active',
-          value: 'ACTIVE',
-        },
-        {
-          label: 'InActive',
-          value: 'INACTIVE',
-        },
-      ];
-    
       return (
         <div className='product-config'>
-          <Breadcrumb title={t('product-config')} />
+          <Breadcrumb title={t('unit')} />
         
                 <div className="product-config-action" >
                   <Row justify="space-between">

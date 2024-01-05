@@ -95,7 +95,6 @@ const {
       })
   }
   export const useGetlistRankingById = (id: string) => {
-    console.log(id)
     return useFetchByParam({
       action: rankingSliceAction.getByIdRequest,
       loadingSelector: getByIdLoadingSelector,

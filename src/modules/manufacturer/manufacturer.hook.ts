@@ -37,6 +37,7 @@ const {
     const limit = query.get("limit") || 10;
     const page = query.get("page") || 1;
     const keyword = query.get("keyword");
+    const status = query.get("status");
     const createSuccess = useSelector(createSuccessSelector);
     const updateSuccess = useSelector(updateSuccessSelector);
     const deleteSuccess = useSelector(deleteSuccessSelector);
@@ -45,10 +46,11 @@ const {
         page,
         limit,
         keyword,
+        status,
       };
       return [queryParams];
       //eslint-disable-next-line
-    }, [page, limit, keyword,createSuccess,updateSuccess,deleteSuccess]);
+    }, [page, limit,status, keyword,createSuccess,updateSuccess,deleteSuccess]);
   };
   
   export const useManufacturerParams = (
