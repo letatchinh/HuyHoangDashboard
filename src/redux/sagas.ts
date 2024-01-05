@@ -5,6 +5,7 @@ import branchModule from '~/modules/branch';
 import geoModule from '~/modules/geo';
 import productConfigModule from '~/modules/productConfig';
 import manuFacturerModule from '~/modules/manufacturer';
+import productUnitModule from '~/modules/productUnit';
 export default function* rootSaga() {
   yield all([
     authModule.redux.saga(),
@@ -13,6 +14,7 @@ export default function* rootSaga() {
     geoModule.redux.saga(),
     productConfigModule.redux.saga(),
     manuFacturerModule.redux.saga(),
+    productUnitModule.redux.saga(),
 
   ]);
 }

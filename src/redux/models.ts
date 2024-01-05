@@ -35,7 +35,8 @@ export type initStateSlice<T=any> = {
     branch:'branch',
     geo:'geo',
     productConfig:'productConfig',
-    manufacturer:'manufacturer'
+    manufacturer:'manufacturer',
+    productUnit:'productUnit',
     }as const
     
     

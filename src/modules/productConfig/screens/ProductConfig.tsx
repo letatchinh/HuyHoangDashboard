@@ -18,6 +18,7 @@ import ColumnGroup from 'antd/es/table/ColumnGroup';
 import TableAnt from '~/components/Antd/TableAnt';
 import ModalAnt from '~/components/Antd/ModalAnt';
 import { get } from 'lodash';
+import { useproductUnitQueryParams } from '~/modules/productUnit/productUnit.hook';
 
 const { Search } = Input;
 
@@ -30,8 +31,6 @@ export default function ProductConfig() {
   const callBack = () => {
     setShowForm(false);
   };
-
- 
   const [, deleteProductConfig] = useDeleteProductConfig(callBack);
   const [isSubmitUpdateLoading, updateProductConfig] = useUpdateProductConfig(callBack);
   const [listProductConfig, isLoading] = useGetlistProductConfig(query);
