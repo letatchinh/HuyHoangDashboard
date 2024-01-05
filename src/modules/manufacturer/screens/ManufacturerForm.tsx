@@ -16,7 +16,7 @@ interface FieldType {
 }
 const ManufacturerForm:React.FC<Props>=({id,callBack})=>{
     const [,updateManufacturer] = useUpdateManufacturer(callBack)
-    const [,createManufacturer] = useCreateManufacturer(callBack)
+    const [,createManufacturer] = useCreateManufacturer()
   const [form]=Form.useForm<FieldType>()
   useEffect(() => {
     if(id){

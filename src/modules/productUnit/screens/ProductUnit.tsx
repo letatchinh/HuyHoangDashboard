@@ -1,7 +1,7 @@
 import {Button, Col, Form, Row, Select, SelectProps, Space, Switch } from 'antd';
 import Search from 'antd/es/input/Search';
 import { ColumnsType } from 'antd/es/table';
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import ModalAnt from '~/components/Antd/ModalAnt';
 import TableAnt from '~/components/Antd/TableAnt';
 import Breadcrumb from '~/components/common/Breadcrumb';
@@ -9,19 +9,17 @@ import WhiteBox from '~/components/common/WhiteBox';
 import { SearchOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import useTranslate from '~/lib/translation';
 import {useGetlistProductUnit,useDeleteProductUnit, useProductUnitQueryParams, useUpdateProductUnitParams} from '../productUnit.hook';
+import ProductUnitForm from './ProductUnitForm';
 type propsType = {
 
 }
 export default function ProductUnit(props:propsType) : React.JSX.Element {
-    const callBack = () => {
-        setShowForm(false);
-      };
       const [query] =useProductUnitQueryParams();
       const [keyword,{setKeyword,onParamChange}] = useUpdateProductUnitParams(query)
     const [showForm, setShowForm] = useState(false);
     const [id, setId] = useState(null);
     const [listProductUnit, isLoading] = useGetlistProductUnit(query);
-    const [, deleteProductConfig] = useDeleteProductUnit(callBack);
+    const [, deleteProductConfig] = useDeleteProductUnit();
     const { t }: any = useTranslate();
     const [form] = Form.useForm();
     interface DataType {
@@ -31,25 +29,20 @@ export default function ProductUnit(props:propsType) : React.JSX.Element {
         status: string,
       }
     
-      const handleOpenUpdate = (id: any) => {
-        setShowForm(true);
-        if (id) {
-          setId(id);
-        }
-      };
-      const handleOpenFormCreate = () => {
-        setShowForm(true);
-        // setId(null);
-      };
-    
+      const handleOpenForm = useCallback ((id?: any) => {
+        if (id) setId(id);
+         setShowForm(true);
+      },[]);
       const handleDelete = (id: any) => {
         deleteProductConfig(id);
     
       };
-      const handleCloseForm = () => {
+      const handleCloseForm = useCallback(() => {
         setShowForm(false);
         setId(null);
-      }
+      }, []);
+
+      
       const columns: ColumnsType<DataType> = [
         {
           title: 'Tên đơn vị tính',
@@ -72,7 +65,7 @@ export default function ProductUnit(props:propsType) : React.JSX.Element {
           width: '180px',
           render: (_, record) => (
             <Space size="middle">
-              <Button type="primary" onClick={() => handleOpenUpdate(record?._id)}>
+              <Button type="primary" onClick={() => handleOpenForm(record?._id)}>
                 Xem chi tiết
               </Button>
               <Button style={{ color: 'red' }} onClick={() => handleDelete(record._id)}>
@@ -105,7 +98,7 @@ export default function ProductUnit(props:propsType) : React.JSX.Element {
                       />
                     </Col>
                     <Col>
-                      <Button onClick={handleOpenFormCreate} type="primary">
+                      <Button onClick={()=>handleOpenForm()} type="primary">
                         Thêm mới
                       </Button>
                     </Col>
@@ -127,14 +120,14 @@ export default function ProductUnit(props:propsType) : React.JSX.Element {
                 </WhiteBox>
           <ModalAnt
             visible={showForm}
-            title="Thêm danh mục sản phẩm"
+            title={id?'Sửa đơn vị tính':'Tạo đơn vị tính'}
             onCancel={handleCloseForm}
             footer={null}
             destroyOnClose
             width={800}
     
           >
-            {/* <ProductConfigForm id={id} callBack={callBack} /> */}
+            <ProductUnitForm id={id} callBack={handleCloseForm} />
           </ModalAnt>
         </div>
       );

@@ -103,7 +103,7 @@ const {
       param: id,
     });
   };
-  export const useCreateRanking = (callBack:any) => {
+  export const useCreateRanking = (callBack?:any) => {
     useSuccess(createSuccessSelector, `Thêm ${MODULE_VI} thành công`, callBack);
     useFailed(createFailedSelector);
     return useSubmit({
@@ -111,7 +111,7 @@ const {
         loadingSelector: isSubmitLoadingSelector,
     })
   }
-  export const useUpdateRanking = (callBack:any) => {
+  export const useUpdateRanking = (callBack?:any) => {
     useSuccess(updateSuccessSelector, `Cập nhật ${MODULE_VI} thành công`, callBack);
     useFailed(updateFailedSelector);
     return useSubmit({
@@ -120,7 +120,7 @@ const {
 
     })
   }
- export const useDeleteRanking =(callBack:any)=>{
+ export const useDeleteRanking =(callBack?:any)=>{
     useSuccess(deleteSuccessSelector, `Xóa ${MODULE_VI} thành công`, callBack);
     useFailed(deleteFailedSelector);
     return useSubmit({ 

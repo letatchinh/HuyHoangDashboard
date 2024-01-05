@@ -2,7 +2,7 @@ import { DeleteOutlined, EditOutlined, SearchOutlined } from '@ant-design/icons'
 import { Button, Col, Form, Row, Select, SelectProps, Space, Switch, message } from 'antd';
 import Search from 'antd/es/input/Search';
 import { ColumnsType } from 'antd/es/table';
-import React, { useState } from 'react'
+import React, { useCallback, useState } from 'react'
 
 import Breadcrumb from '~/components/common/Breadcrumb';
 import WhiteBox from '~/components/common/WhiteBox';
@@ -14,20 +14,19 @@ import ManufacturerForm from './ManufacturerForm';
 export default function Manufacturer() {
   const [showForm, setShowForm] = useState(false);
   const [search,setSearch]= useState(null) 
-  const callBack = () => {
-    form.resetFields();
-    setShowForm(false);
-    setId(null);
-  };
   const paging = useManufacturerPaging();
   const [query] = useManufacturerQueryParams();
   const [keyword,{setKeyword,onParamChange}]=useManufacturerParams(query);
   const [listManufacturer, isLoading] = useGetManufacturerList(query);
-  const [,updateManufacturer] = useUpdateManufacturer(callBack);
-  const [id, setId] = useState(null);
-  const [,deleteManufacturer] = useDeleteManufacturer(callBack);
-  const [form] = Form.useForm();
  
+  const [id, setId] = useState(null);
+  const handleCloseForm = useCallback(() => {
+    setShowForm(false);
+    setId(null);
+  }, []);
+  const [,deleteManufacturer] = useDeleteManufacturer();
+  const [form] = Form.useForm();
+  const [,updateManufacturer] = useUpdateManufacturer(handleCloseForm);
   const { t }: any = useTranslate();
 
   interface DataType {
@@ -39,19 +38,16 @@ export default function Manufacturer() {
     status:String,
   }
 
-  const handleOpenForm = (id: any) => {
-    setShowForm(true);
-    setId(id);
+  const handleOpenForm = useCallback ((id?: any) => {
+    if (id) setId(id);
+     setShowForm(true);
+  },[]);
+  const handleDelete = (id: any) => {
+    deleteManufacturer(id);
+
   };
 
-  const handleDelete = (id: any) => {
-    deleteManufacturer(id)
-    
-  };
-  const handleCloseForm = () => {
-    setShowForm(false);
-    setId(null);
-  }
+
 
   const columns:ColumnsType<DataType> = [
     {
@@ -159,7 +155,7 @@ export default function Manufacturer() {
                   />
                 </Col>
                 <Col>
-                  <Button onClick={() => setShowForm(true)} type="primary">
+                  <Button onClick={() => handleOpenForm()} type="primary">
                     Thêm mới
                   </Button>
                 </Col>
@@ -191,7 +187,7 @@ export default function Manufacturer() {
         destroyOnClose
         
       >
-        <ManufacturerForm id={id} callBack={callBack}/>
+        <ManufacturerForm id={id} callBack={handleCloseForm}/>
       </ModalAnt>
       </div>
     </>

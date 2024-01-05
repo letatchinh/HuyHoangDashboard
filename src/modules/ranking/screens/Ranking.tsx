@@ -1,6 +1,6 @@
 import { Button, Col, Form, Row, Space, Switch } from 'antd';
 import Search from 'antd/es/input/Search';
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import TableAnt from '~/components/Antd/TableAnt';
 import Breadcrumb from '~/components/common/Breadcrumb';
 import WhiteBox from '~/components/common/WhiteBox';
@@ -14,15 +14,10 @@ type propsType = {
 
 }
 export default function Ranking(props:propsType) : React.JSX.Element {
-    const callBack = () => {
-      console.log('callBack');
-        setShowForm(false);
-        form.resetFields();
-      };
       const [query] = useRankingQueryParams();
       const [keyword,{setKeyword,onParamChange}] = useUpdateRankingParams(query)
       const [listRanking,isLoading] = useGetlistRanking(query);
-      const [,deleteRanking] = useDeleteRanking(callBack);
+      const [isSubmit,deleteRanking] = useDeleteRanking();
     const [showForm, setShowForm] = useState(false);
     const [id, setId] = useState(null);
    const { t }: any = useTranslate();
@@ -55,7 +50,7 @@ export default function Ranking(props:propsType) : React.JSX.Element {
           width: '180px',
           render: (_, record) => (
             <Space size="middle">
-              <Button type="primary" onClick={() => handleOpenUpdate(record?._id)}>
+              <Button type="primary" onClick={() => handleOpenForm(record?._id)}>
                 Xem chi tiết
               </Button>
               <Button style={{ color: 'red' }} onClick={() => handleDelete(record._id)}>
@@ -65,25 +60,18 @@ export default function Ranking(props:propsType) : React.JSX.Element {
           ),
         },
       ];
-      const handleOpenUpdate = (id: any) => {
-        console.log('2')
-        setShowForm(true);
-          setId(id);
-      };
-      const handleOpenFormCreate = () => {
-        console.log('3')
-        setShowForm(true);
-        setId(null);
-      };
-    
+      const handleOpenForm = useCallback ((id?: any) => {
+        if (id) setId(id);
+         setShowForm(true);
+      },[]);
       const handleDelete = (id: any) => {
          deleteRanking(id);
     
       };
-      const handleCloseForm = () => {
+      const handleCloseForm = useCallback(() => {
         setShowForm(false);
         setId(null);
-      }
+      }, []);
       const onSearch = (value: string) => {
         onParamChange({ ['keyword']: value });
       };
@@ -106,7 +94,7 @@ export default function Ranking(props:propsType) : React.JSX.Element {
                     />
                   </Col>
                   <Col>
-                    <Button onClick={handleOpenFormCreate} type="primary">
+                    <Button onClick={()=>handleOpenForm()} type="primary">
                       Thêm mới
                     </Button>
                   </Col>
@@ -135,7 +123,7 @@ export default function Ranking(props:propsType) : React.JSX.Element {
           width={800}
   
         >
-          <RankingForm id={id} callBack={callBack} />
+          <RankingForm id={id} callBack={handleCloseForm} />
         </ModalAnt>
       </div>
     )

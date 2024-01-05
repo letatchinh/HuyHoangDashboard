@@ -106,7 +106,7 @@ const {
     });
   }
 
-  export const useCreateManufacturer = (callBack:any) => {
+  export const useCreateManufacturer = (callBack?:any) => {
     useSuccess(createSuccessSelector, `Thêm ${MODULE_VI} thành công`, callBack);
     useFailed(createFailedSelector);
     return useSubmit({
@@ -115,7 +115,7 @@ const {
   
 })
 }
-  export const useDeleteManufacturer =(callBack:any)=>{
+  export const useDeleteManufacturer =(callBack?:any)=>{
     useSuccess(deleteSuccessSelector, `Xoá ${MODULE_VI} thành công`, callBack);
     useFailed(deleteFailedSelector);
     return useSubmit({
@@ -124,7 +124,7 @@ const {
     })
   }
 
-  export const useUpdateManufacturer = (callBack:any) => {
+  export const useUpdateManufacturer = (callBack?:any) => {
     useSuccess(updateSuccessSelector, `Cập nhật ${MODULE_VI} thành công`, callBack);
     useFailed(updateFailedSelector);
     return useSubmit({

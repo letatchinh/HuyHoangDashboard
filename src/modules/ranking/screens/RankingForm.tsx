@@ -18,18 +18,11 @@ const RankingForm: React.FC<Props> = ({ id, callBack }) => {
     const query = useMemo(() => ({ limit: 10, page: 1 }), []);
     const [listManufacturer, isLoadingManufacturer] = useGetManufacturerList(query);
     console.log(listManufacturer,'listManufacturer');
-  const [, updateRanking] = useUpdateRanking(useCallback(() => {
-    if (callBack) {
-      callBack();
-    }
-  }, [callBack]));
-  const [, createRanking] = useCreateRanking(useCallback(() => {
-    if (callBack) {
-      callBack();
-    }
-  }, [callBack]));
+
+  const [, createRanking] = useCreateRanking();
   const [rankingConfigById, isLoading] = useGetlistRankingById(id);
-  const [form] = Form.useForm();
+  const [form] = Form.useForm(); 
+   const [, updateRanking] = useUpdateRanking();
   useEffect(() => {
     if (id && rankingConfigById) { 
       const { name, level }: FieldType = rankingConfigById;
@@ -38,9 +31,9 @@ const RankingForm: React.FC<Props> = ({ id, callBack }) => {
         level,
       });
     }
-  }, [id]);
+  }, [id,rankingConfigById]);
 
-  const onFinish = (values: FieldType) => {
+  const onFinish = useCallback((values: FieldType) => {
     console.log('Received values of form: ');
      const data: FieldType = {
       ...values,
@@ -49,11 +42,14 @@ const RankingForm: React.FC<Props> = ({ id, callBack }) => {
       };
       if (id) {
         updateRanking({ ...data, id });
+        if (typeof callBack === 'function') {
+          callBack();
+        }
       }else {
         createRanking({ ...data });
         
       }
-  };
+  },[updateRanking,createRanking,id]);
   const filterOption = (input: string, option?: { label: string; value: string }) =>
   (option?.label ?? '').toLowerCase().includes(input.toLowerCase());
   return (
