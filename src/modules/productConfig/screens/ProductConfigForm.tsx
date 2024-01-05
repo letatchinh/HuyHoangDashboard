@@ -9,9 +9,9 @@ interface Props {
 
 interface FieldType {
   code: string
-  key: string
+  id: string
   name: string
-  description: string
+  note: string
   isAction:String
 }
 const { TextArea } = Input;
@@ -19,30 +19,32 @@ const ProductConfigForm: React.FC<Props> = ({ id, callBack }) => {
   const [, updateProductConfig] = useUpdateProductConfig(callBack);
   const [, createProductConfig] = useCreateProductConfig(callBack);
   const [productConfigById, isLoading] = useGetlistProductConfigById(id);
+  console.log(productConfigById, 'productConfigById');
   const [form] = Form.useForm();
 
   useEffect(() => {
-    // const {code,name}: FieldType = productConfigById;
-    if (id&&productConfigById ) {
+    if (id&&productConfigById ) { 
+      const {code,name,note}: FieldType = productConfigById;
       form.setFieldsValue({
-        // name,
-        // code,
+        code,
+        name,
+        note,
       })
-
     }
   }, [id,productConfigById,form]);
 
   const onFinish = (values: FieldType) => {
      const data: FieldType = {
       ...values,
+      // code:'DMT0001'
+      // status:'',
       };
       if (id) {
         updateProductConfig({ data, id });
       }else {
-        createProductConfig({ data });
+        createProductConfig({ ...data });
+        
       }
-      // updateProductConfig({ data, id });
-      console.log(data);
   };
 
   return (
@@ -54,7 +56,6 @@ const ProductConfigForm: React.FC<Props> = ({ id, callBack }) => {
           style={{ maxWidth: 800 }}
         form={form}
         onFinish={onFinish}
-
       >
         <Form.Item<FieldType> label="Mã nhóm danh mục" name="code">
           <Input disabled />
@@ -62,7 +63,7 @@ const ProductConfigForm: React.FC<Props> = ({ id, callBack }) => {
         <Form.Item<FieldType> label="Tên danh mục" name="name">
           <Input />
         </Form.Item>
-        <Form.Item<FieldType> label="Mô tả" name="description">
+        <Form.Item<FieldType> label="Ghi chú" name="note">
           <TextArea rows={4}/>
         </Form.Item>
         <Form.Item wrapperCol={{ offset: 8, span: 12 }}>

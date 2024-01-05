@@ -16,38 +16,47 @@ import ProductConfigForm from './ProductConfigForm';
 import WhiteBox from '~/components/common/WhiteBox';
 import ColumnGroup from 'antd/es/table/ColumnGroup';
 import TableAnt from '~/components/Antd/TableAnt';
+import ModalAnt from '~/components/Antd/ModalAnt';
+import { get } from 'lodash';
 
 const { Search } = Input;
 
 export default function ProductConfig() {
   const [showForm, setShowForm] = useState(false);
+   const [query] = useProductConfigQueryParams();
   const [id, setId] = useState(null);
   const [form] = Form.useForm();
-  const [search,setSearch]= useState(null)
+  const [search,setSearch]= useState(get(query,'status')||'');
   const callBack = () => {
-    form.resetFields();
     setShowForm(false);
-    setId(null);
   };
 
-  const [query] = useProductConfigQueryParams();
+ 
   const [, deleteProductConfig] = useDeleteProductConfig(callBack);
   const [isSubmitUpdateLoading, updateProductConfig] = useUpdateProductConfig(callBack);
   const [listProductConfig, isLoading] = useGetlistProductConfig(query);
   const [keyword, { setKeyword, onParamChange }] = useUpdateProductConfigParams(query);
   const { t }: any = useTranslate();
+  
 
   interface DataType {
     code: string;
-    key: string;
+    _id: string;
     name: string;
     isAction: boolean,
+    note: string,
     status: string,
   }
 
-  const handleOpenForm = (id: any) => {
+  const handleOpenUpdate = (id: any) => {
     setShowForm(true);
-    setId(id);
+    if (id) {
+      setId(id);
+    }
+  };
+  const handleOpenFormCreate = () => {
+    setShowForm(true);
+    // setId(null);
   };
 
   const handleDelete = (id: any) => {
@@ -58,41 +67,42 @@ export default function ProductConfig() {
     setShowForm(false);
     setId(null);
   }
-
   const columns: ColumnsType<DataType> = [
     {
-      title: 'Mã danh mục sản phẩm',
+      title: 'Mã danh mục thuốc',
       dataIndex: 'code',
       width: '200px',
       align: 'center',
       render: (text: string) => <a href='#' style={{ textDecoration: 'none' }}>{text}</a>,
     },
     {
-      title: 'Tên danh mục sản phẩm',
+      title: 'Tên danh mục thuốc',
       dataIndex: 'name',
       align: 'center',
       key: 'name',
       render: (text: string) => <a>{text}</a>,
     },
     {
+      title: 'Ghi chú',
+      dataIndex: 'note',
+      align: 'center',
+      key: 'note',
+      render: (text: string) => <a>{text}</a>,
+    },
+    {
       title: 'Thao tác',
-      dataIndex: 'activity',
+      dataIndex: 'status',
       align: 'center',
       width: '120px',
-      key: 'activity',
+      key: 'status',
       render: (_, record) => (
         // <WithPermission permission={POLICY.DELETE_WAREHOUSE}>
         <Switch
           checked={record?.status === 'ACTIVE'}
           onChange={(value: any) => {
-            console.log(value);
-            if (!record?.isAction) {
-              message.error(
-                'Không thể thực hiện thao tác này '
-              );
-            } else {
-              // updateProductConfig({ stutus: value ? 'ACTIVE' : 'INACTIVE', id });
-            }
+
+              updateProductConfig({ status: value ? 'ACTIVE' : 'INACTIVE',id:record?._id });
+            
           }}
         // loading={isSubmitUpdateLoading}
         />
@@ -106,38 +116,14 @@ export default function ProductConfig() {
       width: '180px',
       render: (_, record) => (
         <Space size="middle">
-          <Button type="primary" onClick={() => handleOpenForm(record.key)}>
+          <Button type="primary" onClick={() => handleOpenUpdate(record?._id)}>
             Xem chi tiết
           </Button>
-          <Button style={{ color: 'red' }} onClick={() => handleDelete(record.key)}>
+          <Button style={{ color: 'red' }} onClick={() => handleDelete(record._id)}>
             Xóa
           </Button>
         </Space>
       ),
-    },
-  ];
-
-  const data: DataType[] = [
-    {
-      code: 'DMSP00001',
-      key: '1',
-      status:'ACTIVE',
-      isAction: true,
-      name: 'John Brown',
-    },
-    {
-      code: 'DMSP00002',
-      key: '2',
-      status:'ACTIVE',
-      isAction: true,
-      name: 'Jim Green',
-    },
-    {
-      code: 'DMSP00003',
-      key: '3',
-      isAction: true,
-      status:'INACTIVE',
-      name: 'Joe Black',
     },
   ];
 
@@ -193,7 +179,7 @@ export default function ProductConfig() {
                   />
                 </Col>
                 <Col>
-                  <Button onClick={() => setShowForm(true)} type="primary">
+                  <Button onClick={handleOpenFormCreate} type="primary">
                     Thêm mới
                   </Button>
                 </Col>
@@ -201,8 +187,8 @@ export default function ProductConfig() {
             </div>
             <WhiteBox>
               <TableAnt
-                dataSource={data}
-                // loading={isLoading}
+                dataSource={listProductConfig}
+                loading={isLoading}
                 columns={columns}
                 size="small"
                 pagination={{
@@ -218,7 +204,7 @@ export default function ProductConfig() {
         </div>
       </div>
 
-      <Modal
+      <ModalAnt
         visible={showForm}
         title="Thêm danh mục sản phẩm"
         onCancel={handleCloseForm}
@@ -228,7 +214,7 @@ export default function ProductConfig() {
 
       >
         <ProductConfigForm id={id} callBack={callBack} />
-      </Modal>
+      </ModalAnt>
     </div>
   );
 }

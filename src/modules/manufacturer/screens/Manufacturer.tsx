@@ -22,7 +22,7 @@ export default function Manufacturer() {
   const paging = useManufacturerPaging();
   const [query] = useManufacturerQueryParams();
   const [keyword,{setKeyword,onParamChange}]=useManufacturerParams(query);
-  const [listManufacturer, loading] = useGetManufacturerList(query);
+  const [listManufacturer, isLoading] = useGetManufacturerList(query);
   const [id, setId] = useState(null);
   const [,deleteManufacturer] = useDeleteManufacturer(callBack);
   const [form] = Form.useForm();
@@ -201,8 +201,8 @@ export default function Manufacturer() {
             </div>
             <WhiteBox>
               <TableAnt
-                dataSource={data}
-                // loading={isLoading}
+                dataSource={listManufacturer}
+                loading={isLoading}
                 columns={columns}
                 size="small"
                 pagination={{

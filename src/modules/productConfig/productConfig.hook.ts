@@ -34,10 +34,13 @@ const {
 
   export const useProductConfigQueryParams = () => {
     const query = useQueryParams();
-    const limit = query.get("limit") || 10;
-    const page = query.get("page") || 1;
+    const limit = query.get("limit") || null;
+    const page = query.get("page") || null;
     const keyword = query.get("keyword");
     const status = query.get("status");
+    const createSuccess = useSelector(createSuccessSelector);
+    const updateSuccess = useSelector(updateSuccessSelector);
+    const deleteSuccess = useSelector(deleteSuccessSelector);
     return useMemo(() => {
       const queryParams = {
         page,
@@ -47,7 +50,7 @@ const {
       };
       return [queryParams];
       //eslint-disable-next-line
-    }, [page, limit,status, keyword]);
+    }, [page, limit,status, keyword, createSuccess, updateSuccess, deleteSuccess]);
   };
   
   export const useUpdateProductConfigParams = (
@@ -91,7 +94,8 @@ const {
         param: query,
       })
   }
-  export const useGetlistProductConfigById = (id: String) => {
+  export const useGetlistProductConfigById = (id: string) => {
+    console.log(id)
     return useFetchByParam({
       action: productConfigSliceAction.getByIdRequest,
       loadingSelector: getByIdLoadingSelector,
