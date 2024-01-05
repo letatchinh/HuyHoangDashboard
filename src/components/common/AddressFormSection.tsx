@@ -1,8 +1,8 @@
-import { Col, Form, Input, Row, Select, Skeleton } from "antd";
-import { get } from "lodash";
-import { useMemo, useState } from "react";
-import { filterAcrossAccents } from "~/utils/helpers";
-import { useCities, useDistricts, useWards } from "../geo.hook";
+import { Col, Form, Input, Row, Select, Skeleton } from 'antd';
+import { get } from 'lodash';
+import { useMemo, useState } from 'react';
+import { filterAcrossAccents } from '~/utils/helpers';
+import subvn from '~/core/subvn';
 
 const FormItem = Form.Item;
 const { Option } = Select;
@@ -28,11 +28,11 @@ const AddressFormSection = (props: AddressFormSectionProps) => {
     allowPhoneNumber = true,
     allowEmail = true,
   } = props;
-  const [cities, isCitiesLoading] = useCities();
+  const cities = subvn.getProvinces();
   const [_cityCode, _setCityCode] = useState(cityCode);
   const newCityCode = useMemo(() => cityCode, [cityCode, _cityCode]);
-  const [districts, isDistrictsLoading] = useDistricts(newCityCode);
-  const [wards, isWardsLoading] = useWards(districtCode);
+  const districts = subvn.getDistrictsByProvinceCode(newCityCode);
+  const wards = subvn.getWardsByDistrictCode(districtCode);
   return (
     <>
       <Row gutter={48} align="middle" justify="space-between">
@@ -51,11 +51,11 @@ const AddressFormSection = (props: AddressFormSectionProps) => {
               <Skeleton.Input active />
             ) : (
               <Select
-                onChange={(e) => {
-                  setCityCode(e);
-                }}
-                disabled={isCitiesLoading}
-                loading={isCitiesLoading}
+                  onChange={(e) => {
+                    setCityCode(e)
+                  }}
+                // disabled={isCitiesLoading}
+                // loading={isCitiesLoading}
                 showSearch
                 filterOption={filterAcrossAccents}
               >
@@ -91,7 +91,6 @@ const AddressFormSection = (props: AddressFormSectionProps) => {
                   <Skeleton.Input active />
                 ) : (
                   <Select
-                    loading={isDistrictsLoading}
                     disabled={!form.getFieldValue(["address", "cityId"])}
                     onChange={setDistrictCode}
                     showSearch
@@ -134,7 +133,6 @@ const AddressFormSection = (props: AddressFormSectionProps) => {
                   <Skeleton.Input active />
                 ) : (
                   <Select
-                    loading={isWardsLoading}
                     disabled={!form.getFieldValue(["address", "districtId"])}
                     showSearch
                     filterOption={filterAcrossAccents}
