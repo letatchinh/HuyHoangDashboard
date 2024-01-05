@@ -30,7 +30,7 @@ const ManufacturerForm:React.FC<Props>=({id,callBack})=>{
      if (id) {
        updateManufacturer({ data, id });
      } else {
-       createManufacturer({ data });
+       createManufacturer({ ...data });
      }
      // updateProductConfig({ data, id });
      console.log(data);
@@ -47,10 +47,10 @@ const ManufacturerForm:React.FC<Props>=({id,callBack})=>{
         onFinish={onFinish}
 
       >
-        <Form.Item<FieldType> label="Mã nhóm danh mục" name="code">
+        {/* <Form.Item<FieldType> label="Mã " name="code">
           <Input disabled />
-        </Form.Item>
-        <Form.Item<FieldType> label="Tên danh mục" name="name">
+        </Form.Item> */}
+        <Form.Item<FieldType> label="Tên nhà cung cấp" name="name">
           <Input />
         </Form.Item>
         <Form.Item<FieldType> label="Mô tả" name="description">

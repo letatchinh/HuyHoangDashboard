@@ -1,7 +1,7 @@
 import React from 'react'
-import rankingManufacturerModule from '~/modules/rankingManufacturer'
+import rankingModule from '~/modules/ranking'
 export default function RankingManufacturerPage() {
   return (
-    <rankingManufacturerModule.page.index />
+    <rankingModule.page.index />
   )
 }

@@ -27,5 +27,5 @@ const productUnitSlice = new ProductUnitClassExtentd();
 const data = productUnitSlice.createSlice();
 
 
-export const productUnitSliceAction   = data.actions;
+export const productUnitActions   = data.actions;
 export default data.reducer;

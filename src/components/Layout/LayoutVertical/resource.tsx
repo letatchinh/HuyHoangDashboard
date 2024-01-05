@@ -52,8 +52,8 @@ const resource: ItemType[] = [
           },
           {
             label: "Xếp hạng nhà sản xuất",
-            path: PATH_APP.worldPharma.rankingManufacturer,
-            key: PATH_APP.worldPharma.rankingManufacturer,
+            path: PATH_APP.worldPharma.ranking,
+            key: PATH_APP.worldPharma.ranking,
           },
         ],
       },

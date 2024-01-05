@@ -6,6 +6,7 @@ import geoModule from '~/modules/geo';
 import productConfigModule from '~/modules/productConfig';
 import manuFacturerModule from '~/modules/manufacturer';
 import productUnitModule from '~/modules/productUnit';
+import rankModule from '~/modules/ranking';
 export default function* rootSaga() {
   yield all([
     authModule.redux.saga(),
@@ -15,6 +16,7 @@ export default function* rootSaga() {
     productConfigModule.redux.saga(),
     manuFacturerModule.redux.saga(),
     productUnitModule.redux.saga(),
+    rankModule.redux.saga(),
 
   ]);
 }

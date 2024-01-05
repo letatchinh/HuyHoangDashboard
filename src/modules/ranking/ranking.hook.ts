@@ -7,14 +7,14 @@ import {
     useSubmit,
     useSuccess,
  } from "~/utils/hook";
-import { manufacturerSliceAction } from "./redux/reducer";
+import { rankingSliceAction } from "./redux/reducer";
 import { useEffect, useMemo, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { get, identity } from "lodash";
 import { clearQuerySearch, getExistProp } from "~/utils/helpers";
 import { useSelector } from "react-redux";
-const MODULE = "manufacturer";
-const MODULE_VI = "Danh sách nhà sản xuất";
+const MODULE = "ranking";
+const MODULE_VI = "Xếp hạng nhà sản xuất";
 const {
     loadingSelector,
     listSelector,
@@ -32,11 +32,12 @@ const {
     pagingSelector,
   } = getSelectors(MODULE);
 
-  export const useManufacturerQueryParams = () => {
+  export const useRankingQueryParams = () => {
     const query = useQueryParams();
-    const limit = query.get("limit") || 10;
-    const page = query.get("page") || 1;
+    const limit = query.get("limit") || null;
+    const page = query.get("page") || null;
     const keyword = query.get("keyword");
+    const status = query.get("status");
     const createSuccess = useSelector(createSuccessSelector);
     const updateSuccess = useSelector(updateSuccessSelector);
     const deleteSuccess = useSelector(deleteSuccessSelector);
@@ -45,13 +46,14 @@ const {
         page,
         limit,
         keyword,
+        status,
       };
       return [queryParams];
       //eslint-disable-next-line
-    }, [page, limit, keyword,createSuccess,updateSuccess,deleteSuccess]);
+    }, [page, limit,status, keyword, createSuccess, updateSuccess, deleteSuccess]);
   };
   
-  export const useManufacturerParams = (
+  export const useUpdateRankingParams = (
     query: any,
     listOptionSearch?: any[]
   ) => {
@@ -83,50 +85,48 @@ const {
   
     return [keyword, { setKeyword, onParamChange }];
   };
-  export const useManufacturerPaging =()=> useSelector(pagingSelector)
-  export const useGetManufacturerList = (query:any) => {
+  export const useGetlistRanking = (query: any) => {
       return useFetchByParam({
-          action: manufacturerSliceAction.getListRequest,
-          loadingSelector,
-          dataSelector: listSelector,
-          failedSelector: getListFailedSelector,
-          param: query,
+        action: rankingSliceAction.getListRequest,
+        loadingSelector: loadingSelector,
+        dataSelector: listSelector,
+        failedSelector: getListFailedSelector,
+        param: query,
       })
   }
-
-  export const useGetManufacturerById = (id: String) => {
+  export const useGetlistRankingById = (id: string) => {
+    console.log(id)
     return useFetchByParam({
-      action: manufacturerSliceAction.getByIdRequest,
+      action: rankingSliceAction.getByIdRequest,
       loadingSelector: getByIdLoadingSelector,
       dataSelector: getByIdSelector,
       failedSelector: getByIdFailedSelector,
       param: id,
     });
-  }
-
-  export const useCreateManufacturer = (callBack:any) => {
+  };
+  export const useCreateRanking = (callBack:any) => {
     useSuccess(createSuccessSelector, `Thêm ${MODULE_VI} thành công`, callBack);
     useFailed(createFailedSelector);
     return useSubmit({
-        action: manufacturerSliceAction.createRequest,
-        loadingSelector: isSubmitLoadingSelector,
-  
-})
-}
-  export const useDeleteManufacturer =(callBack:any)=>{
-    useSuccess(deleteSuccessSelector, `Xoá ${MODULE_VI} thành công`, callBack);
-    useFailed(deleteFailedSelector);
-    return useSubmit({
-        action: manufacturerSliceAction.deleteRequest,
+        action: rankingSliceAction.createRequest,
         loadingSelector: isSubmitLoadingSelector,
     })
   }
-
-  export const useUpdateManufacturer = (callBack:any) => {
+  export const useUpdateRanking = (callBack:any) => {
     useSuccess(updateSuccessSelector, `Cập nhật ${MODULE_VI} thành công`, callBack);
     useFailed(updateFailedSelector);
     return useSubmit({
-        action: manufacturerSliceAction.updateRequest,
+        action: rankingSliceAction.updateRequest,
+        loadingSelector: isSubmitLoadingSelector,
+
+    })
+  }
+ export const useDeleteRanking =(callBack:any)=>{
+    useSuccess(deleteSuccessSelector, `Xóa ${MODULE_VI} thành công`, callBack);
+    useFailed(deleteFailedSelector);
+    return useSubmit({ 
+        action: rankingSliceAction.deleteRequest,
         loadingSelector: isSubmitLoadingSelector,
     })
   }
+  export const useRankingPaging = () => useSelector(pagingSelector);

@@ -7,7 +7,7 @@ import React, { useState } from 'react'
 import Breadcrumb from '~/components/common/Breadcrumb';
 import WhiteBox from '~/components/common/WhiteBox';
 import useTranslate from '~/lib/translation';
-import { useManufacturerPaging,useManufacturerParams,useGetManufacturerList, useManufacturerQueryParams,useDeleteManufacturer } from '../manufacturer.hook';
+import { useManufacturerPaging,useManufacturerParams,useGetManufacturerList, useManufacturerQueryParams,useDeleteManufacturer,useUpdateManufacturer } from '../manufacturer.hook';
 import TableAnt from '~/components/Antd/TableAnt';
 import ModalAnt from '~/components/Antd/ModalAnt';
 import ManufacturerForm from './ManufacturerForm';
@@ -23,6 +23,7 @@ export default function Manufacturer() {
   const [query] = useManufacturerQueryParams();
   const [keyword,{setKeyword,onParamChange}]=useManufacturerParams(query);
   const [listManufacturer, isLoading] = useGetManufacturerList(query);
+  const [,updateManufacturer] = useUpdateManufacturer(callBack);
   const [id, setId] = useState(null);
   const [,deleteManufacturer] = useDeleteManufacturer(callBack);
   const [form] = Form.useForm();
@@ -34,7 +35,8 @@ export default function Manufacturer() {
     key: string;
     name: string;
     description:string;
-    isAction:String,
+    _id:string;
+    status:String,
   }
 
   const handleOpenForm = (id: any) => {
@@ -43,7 +45,7 @@ export default function Manufacturer() {
   };
 
   const handleDelete = (id: any) => {
-    deleteManufacturer({id})
+    deleteManufacturer(id)
     
   };
   const handleCloseForm = () => {
@@ -52,13 +54,6 @@ export default function Manufacturer() {
   }
 
   const columns:ColumnsType<DataType> = [
-    {
-      title: 'Mã danh mục sản phẩm',
-      dataIndex: 'code',
-      width: '200px',
-      align: 'center',
-      render: (text: string) => <a href='#' style={{textDecoration:'none'}}>{text}</a>,
-    },
     {
       title: 'Tên nhà sản xuất',
       dataIndex: 'name',
@@ -82,19 +77,14 @@ export default function Manufacturer() {
       render: (_, record) => (
         // <WithPermission permission={POLICY.DELETE_WAREHOUSE}>
         <Switch
-        checked={record?.isAction === 'ACTIVE'}
-          onChange={(value: any) => {
-            console.log(value);
-            if (record?.isAction) {
-              message.error(
-                'Không thể thực hiện thao tác này '
-              );
-            } else {
-              // updateProductConfig({ action: value ? 'ACTIVE' : 'INACTIVE', id });
-            }
-          }}
-          // loading={isSubmitUpdateLoading}
-        />
+        checked={record?.status === 'ACTIVE'}
+        onChange={(value: any) => {
+
+          updateManufacturer({ status: value ? 'ACTIVE' : 'INACTIVE',id:record?._id });
+          
+        }}
+      // loading={isSubmitUpdateLoading}
+      />
       // </WithPermission>
       )
     },
@@ -105,38 +95,14 @@ export default function Manufacturer() {
       width: '180px',
       render: (_, record) => (
         <Space size="middle">
-          <Button type="primary" onClick={() => handleOpenForm(record.key)}>
+          <Button type="primary" onClick={() => handleOpenForm(record._id)}>
             Xem chi tiết
           </Button>
-          <Button style={{ color: 'red' }} onClick={() => handleDelete(record.key)}>
+          <Button style={{ color: 'red' }} onClick={() => handleDelete(record._id)}>
             Xóa
           </Button>
         </Space>
       ),
-    },
-  ];
-
-  const data: DataType[] = [
-    {
-      code: 'DMSP00001',
-      key: '1',
-      isAction:'ACTIVE',
-      description:'Danh mục sản phẩm',
-      name: 'John Brown',
-    },
-    {
-      code: 'DMSP00002',
-      key: '2',
-      isAction:'ACTIVE',
-      description:'Danh mục sản phẩm',
-      name: 'Jim Green',
-    },
-    {
-      code: 'DMSP00003',
-      key: '3',
-      isAction:'ACTIVE',
-      description:'Danh mục sản phẩm',
-      name: 'Joe Black',
     },
   ];
 

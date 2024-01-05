@@ -1,3 +1,4 @@
+
 import { persistReducer } from 'redux-persist';
 
 import { combineReducers } from "redux";
@@ -9,6 +10,7 @@ import productConfigModule from '~/modules/productConfig';
 import geoModule from '~/modules/geo';
 import manufacturerModule from '~/modules/manufacturer';
 import productUnitModule from '~/modules/productUnit';
+import rankingModule from '~/modules/ranking';
 const authPersistConfig = {
     key: 'auth',
     storage: localStorage,
@@ -29,7 +31,8 @@ const rootReducer = combineReducers({
     geo: geoModule.redux.reducer,
     productConfig:productConfigModule.redux.reducer,
     manufacturer:manufacturerModule.redux.reducer,
-    productUnit:productUnitModule.redux.reducer
+    productUnit:productUnitModule.redux.reducer,
+    ranking:rankingModule.redux.reducer,
 
 });
 export default rootReducer

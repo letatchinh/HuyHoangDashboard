@@ -7,12 +7,12 @@ import {
     useSubmit,
     useSuccess,
  } from "~/utils/hook";
-import { productUnitSliceAction } from "./redux/reducer";
+import { productUnitActions } from "./redux/reducer";
 import { useEffect, useMemo, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { get, identity } from "lodash";
 import { clearQuerySearch, getExistProp } from "~/utils/helpers";
-// import { useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 const MODULE = "productUnit";
 const MODULE_VI = "Đơn vị tính";
 const {
@@ -32,15 +32,15 @@ const {
     pagingSelector,
   } = getSelectors(MODULE);
 
-  export const useproductUnitQueryParams = () => {
+  export const useProductUnitQueryParams = () => {
     const query = useQueryParams();
     const limit = query.get("limit") || null;
     const page = query.get("page") || null;
     const keyword = query.get("keyword");
     const status = query.get("status");
-    const createSuccess = getSelectors(createSuccessSelector);
-    const updateSuccess = getSelectors(updateSuccessSelector);
-    const deleteSuccess = getSelectors(deleteSuccessSelector);
+    const createSuccess = useSelector(createSuccessSelector);
+    const updateSuccess = useSelector(updateSuccessSelector);
+    const deleteSuccess = useSelector(deleteSuccessSelector);
     return useMemo(() => {
       const queryParams = {
         page,
@@ -53,7 +53,7 @@ const {
     }, [page, limit,status, keyword, createSuccess, updateSuccess, deleteSuccess]);
   };
   
-  export const useUpdateproductUnitParams = (
+  export const useUpdateProductUnitParams = (
     query: any,
     listOptionSearch?: any[]
   ) => {
@@ -85,48 +85,48 @@ const {
   
     return [keyword, { setKeyword, onParamChange }];
   };
-  export const useGetlistproductUnit = (query: any) => {
+  export const useGetlistProductUnit = (query: any) => {
       return useFetchByParam({
-        action: productUnitSliceAction.getListRequest,
+        action: productUnitActions.getListRequest,
         loadingSelector: loadingSelector,
         dataSelector: listSelector,
         failedSelector: getListFailedSelector,
         param: query,
       })
   }
-  export const useGetlistproductUnitById = (id: string) => {
+  export const useGetlistProductUnitById = (id: string) => {
     console.log(id)
     return useFetchByParam({
-      action: productUnitSliceAction.getByIdRequest,
+      action: productUnitActions.getByIdRequest,
       loadingSelector: getByIdLoadingSelector,
       dataSelector: getByIdSelector,
       failedSelector: getByIdFailedSelector,
       param: id,
     });
   };
-  export const useCreateproductUnit = (callBack:any) => {
+  export const useCreateProductUnit = (callBack:any) => {
     useSuccess(createSuccessSelector, `Thêm ${MODULE_VI} thành công`, callBack);
     useFailed(createFailedSelector);
     return useSubmit({
-        action: productUnitSliceAction.createRequest,
+        action: productUnitActions.createRequest,
         loadingSelector: isSubmitLoadingSelector,
     })
   }
-  export const useUpdateproductUnit = (callBack:any) => {
+  export const useUpdateProductUnit = (callBack:any) => {
     useSuccess(updateSuccessSelector, `Cập nhật ${MODULE_VI} thành công`, callBack);
     useFailed(updateFailedSelector);
     return useSubmit({
-        action: productUnitSliceAction.updateRequest,
+        action: productUnitActions.updateRequest,
         loadingSelector: isSubmitLoadingSelector,
 
     })
   }
- export const useDeleteproductUnit =(callBack:any)=>{
+ export const useDeleteProductUnit =(callBack:any)=>{
     useSuccess(deleteSuccessSelector, `Xóa ${MODULE_VI} thành công`, callBack);
     useFailed(deleteFailedSelector);
     return useSubmit({ 
-        action: productUnitSliceAction.deleteRequest,
+        action: productUnitActions.deleteRequest,
         loadingSelector: isSubmitLoadingSelector,
     })
   }
-  export const useproductUnitPaging = () => useSelector(pagingSelector);
+  export const useProductUnitPaging = () => useSelector(pagingSelector);

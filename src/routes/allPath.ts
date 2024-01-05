@@ -20,7 +20,7 @@ export const PATH_APP = {
     worldPharma : {
       productConfig: path(ROOTS.app, '/productConfig'),
       manufacturer: path(ROOTS.app, '/manufacturer'),
-      rankingManufacturer: path(ROOTS.app, '/rankingManufacturer'),
+      ranking: path(ROOTS.app, '/ranking'),
     },
 
     supplier : {

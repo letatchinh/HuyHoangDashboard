@@ -18,7 +18,7 @@ import ColumnGroup from 'antd/es/table/ColumnGroup';
 import TableAnt from '~/components/Antd/TableAnt';
 import ModalAnt from '~/components/Antd/ModalAnt';
 import { get } from 'lodash';
-import { useproductUnitQueryParams } from '~/modules/productUnit/productUnit.hook';
+import { useProductUnitQueryParams } from '~/modules/productUnit/productUnit.hook';
 
 const { Search } = Input;
 

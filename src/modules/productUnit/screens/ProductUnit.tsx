@@ -8,7 +8,7 @@ import Breadcrumb from '~/components/common/Breadcrumb';
 import WhiteBox from '~/components/common/WhiteBox';
 import { SearchOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import useTranslate from '~/lib/translation';
-import {useGetlistproductUnit,useDeleteproductUnit, useproductUnitQueryParams, useUpdateproductUnitParams} from '../productUnit.hook';
+import {useGetlistProductUnit,useDeleteProductUnit, useProductUnitQueryParams, useUpdateProductUnitParams} from '../productUnit.hook';
 type propsType = {
 
 }
@@ -16,12 +16,12 @@ export default function ProductUnit(props:propsType) : React.JSX.Element {
     const callBack = () => {
         setShowForm(false);
       };
-      const [query] =useproductUnitQueryParams();
-      const [keyword,{setKeyword,onParamChange}] = useUpdateproductUnitParams(query)
+      const [query] =useProductUnitQueryParams();
+      const [keyword,{setKeyword,onParamChange}] = useUpdateProductUnitParams(query)
     const [showForm, setShowForm] = useState(false);
     const [id, setId] = useState(null);
-    const [listProductUnit, isLoading] = useGetlistproductUnit(query);
-    const [, deleteProductConfig] = useDeleteproductUnit(callBack);
+    const [listProductUnit, isLoading] = useGetlistProductUnit(query);
+    const [, deleteProductConfig] = useDeleteProductUnit(callBack);
     const { t }: any = useTranslate();
     const [form] = Form.useForm();
     interface DataType {

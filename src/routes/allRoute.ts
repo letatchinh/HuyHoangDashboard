@@ -12,7 +12,7 @@ export const mainRoutes :PathRouteProps[] = [
   { path: PATH_APP.supplier.root, Component: Supplier },
   { path: PATH_APP.worldPharma.productConfig, Component: ProductConfigPage },
   { path: PATH_APP.worldPharma.manufacturer, Component: ManufacturerPage },
-  { path: PATH_APP.worldPharma.rankingManufacturer, Component: RankingManufacturerPage },
+  { path: PATH_APP.worldPharma.ranking, Component: RankingManufacturerPage },
   { path: PATH_APP.branch.root, Component: Branch },
 
   { path: '/', Component: Homepage },
