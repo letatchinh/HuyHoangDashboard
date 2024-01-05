@@ -11,9 +11,9 @@ function* getListEmployee({payload:query} : any) : any {
   }
 }
 
-function* getByIdEmployee({payload:id} : any) : any {
+function* getByIdEmployee({ payload: id }: any): any {
   try {
-    const data = yield call(api.getById,id);
+    const data = yield call(api.getById, id);
     yield put(employeeSliceAction.getByIdSuccess(data));
   } catch (error:any) {
     yield put(employeeSliceAction.getByIdFailed(error));

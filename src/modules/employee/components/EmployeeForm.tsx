@@ -1,9 +1,10 @@
-import { Button, Col, Form, Input, Row, Select, Skeleton } from 'antd'
-import React, { useState } from 'react'
-import UploadImage from '~/components/common/Upload/UploadImage';
-import AddressFormSection from '~/modules/geo/components/AddressFormSection';
-import { useCreateEmployee, useUpdateEmployee } from '../employee.hook';
-
+import { Button, Col, Form, Input, Modal, Row, Select, Skeleton } from "antd";
+import React, { useEffect, useState } from "react";
+import UploadImage from "~/components/common/Upload/UploadImage";
+import AddressFormSection from "~/modules/geo/components/AddressFormSection";
+import { useCreateEmployee, useGetEmployee, useUpdateEmployee } from "../employee.hook";
+import { employeeSliceAction } from "../redux/reducer";
+import { useResetState } from "~/utils/hook";
 
 const { Option } = Select;
 
@@ -11,73 +12,98 @@ const FormItem = Form.Item;
 
 const verticalLayout = {
   labelCol: { span: 24 },
-  wrapperCol: { span: 24 }
+  wrapperCol: { span: 24 },
 };
 interface IProps {
-  id: string,
-  handleCloseModal: () => void
-};
+  id: string;
+  handleCloseModal: () => void;
+}
 
-export default function EmployeeForm(
-  props: IProps,
-) {
+export default function EmployeeForm(props: IProps) {
   const [form] = Form.useForm();
   const { id, handleCloseModal } = props;
-  const [isLoading, setIsLoading] = useState(false);
   const [imageUrl, setImageUrl] = useState<string>();
+  useResetState(employeeSliceAction.resetAction);
   //address
-  const [cityCode, setCityCode] = useState();
-  const [districtCode, setDistrictCode] = useState();
-
-  const [isUpdateLoading, handleUpdate] = useUpdateEmployee();
+  const [cityCode, setCityCode] = useState(null);
+  const [districtCode, setDistrictCode] = useState(null);
+  // hook
+  const [isUpdateLoading, handleUpdate] = useUpdateEmployee(handleCloseModal);
   const [isCreateLoading, handleCreate] = useCreateEmployee(handleCloseModal);
+  const [employee, isLoading] = useGetEmployee(id);
+  
+  useEffect(() => {
+    if (employee) {
+      setCityCode(employee?.address?.cityId);
+      setDistrictCode(employee?.address?.districtId);
+      form.setFieldsValue(employee);
+      setImageUrl(employee?.avatar);
+    };
+  }, [id, employee]);
 
   const onFinish = (values: any) => {
-    console.log(values,'values');
     const employee = {
       ...values,
       avatar: imageUrl,
     };
 
     if (id) {
-      handleUpdate({
+      const data : object = {
         ...employee,
         _id: id,
-        // employeeNumber: initEmployee.employeeNumber
-      });
+        avatar: imageUrl
+      };
+      handleUpdate({...data});
     } else {
       handleCreate(employee);
-    }
+    };
   };
 
   const onValuesChange = ({ address }: any) => {
+    if (address) {
+      if (address.cityId) {
+        form.setFieldsValue({
+          address: {
+            districtId: null,
+            wardId: null,
+          }
+        });
+      } else if (address.districtId) {
+        form.setFieldsValue({
+          address: {
+            wardId: null
+          }
+        });
+      };
+    };
   };
+  
 
   return (
-    <div className='employee-form'>
-        <h4 style={{ marginRight: 'auto', paddingLeft: 27 }}>
-          {`${!id ? 'Tạo mới ' : 'Cập nhật'}`} nhân viên
-        </h4>
-        <Form
-          form={form}
-          autoComplete="off"
-          onFinish={onFinish}
-          onValuesChange={onValuesChange}
-          scrollToFirstError
-          requiredMark={false}
-          // initialValues={initEmployee}
-          labelCol={{ sm: 24, md: 24, lg: 8, xl: 8 }}
-          wrapperCol={{ sm: 24, md: 24, lg: 16, xl: 16 }}
+    <div className="employee-form">
+      <h4 style={{ marginRight: "auto", paddingLeft: 27 }}>
+        {`${!id ? "Tạo mới " : "Cập nhật"}`} nhân viên
+      </h4>
+      <Form
+        form={form}
+        autoComplete="off"
+        onFinish={onFinish}
+        onValuesChange={onValuesChange}
+        scrollToFirstError
+        requiredMark={false}
+        // initialValues={initEmployee}
+        labelCol={{ sm: 24, md: 24, lg: 8, xl: 8 }}
+        wrapperCol={{ sm: 24, md: 24, lg: 16, xl: 16 }}
+      >
+        <Row
+          gutter={48}
+          align="middle"
+          justify="space-between"
+          className="employee-form__logo-row"
         >
-          <Row
-            gutter={48}
-            align="middle"
-            justify="space-between"
-            className="employee-form__logo-row"
-          >
-            <Col span={12}>
-              <Row gutter={36}>
-                {/* <Col span={24}>
+          <Col span={12}>
+            <Row gutter={36}>
+              {/* <Col span={24}>
                   <FormItem
                     label="Tên nhân viên"
                     name="firstName"
@@ -89,40 +115,37 @@ export default function EmployeeForm(
                   </FormItem>
                 </Col> */}
 
-                <Col span={24}>
-                  <FormItem
-                    label="Họ và tên nhân viên"
-                    name="fullName"
-                    rules={[
-                      { required: true, message: 'Xin mời nhập tên nhân viên!' }
-                    ]}
-                  >
-                    {isLoading ? <Skeleton.Input active /> : <Input />}
-                  </FormItem>
-                </Col>
-              </Row>
+              <Col span={24}>
+                <FormItem
+                  label="Họ và tên nhân viên"
+                  name="fullName"
+                  rules={[
+                    { required: true, message: "Xin mời nhập tên nhân viên!" },
+                  ]}
+                >
+                  {isLoading ? <Skeleton.Input active /> : <Input />}
+                </FormItem>
+              </Col>
+            </Row>
 
-              <FormItem label="Giới tính" name="gender">
-                {isLoading ? (
-                  <Skeleton.Input active />
-                ) : (
-                  <Select>
-                    <Option value="male" key="male">
-                      Nam
-                    </Option>
-                    <Option value="female" key="female">
-                      Nữ
-                    </Option>
-                  </Select>
-                )}
-              </FormItem>
-            </Col>
-            <Col span={12} className="employee-form__upload-logo">
-            <UploadImage
-              setImageUrl={setImageUrl}
-              imageUrl={imageUrl}
-            />
-            </Col>
+            <FormItem label="Giới tính" name="gender">
+              {isLoading ? (
+                <Skeleton.Input active />
+              ) : (
+                <Select>
+                  <Option value="male" key="male">
+                    Nam
+                  </Option>
+                  <Option value="female" key="female">
+                    Nữ
+                  </Option>
+                </Select>
+              )}
+            </FormItem>
+          </Col>
+          <Col span={12} className="employee-form__upload-logo">
+            <UploadImage setImageUrl={setImageUrl} imageUrl={imageUrl} />
+          </Col>
         </Row>
         <AddressFormSection
           isLoading={isLoading}
@@ -133,10 +156,10 @@ export default function EmployeeForm(
           districtCode={districtCode}
         />
         <Row
-            gutter={48}
-            align="middle"
-            justify="space-between"
-            className="employee-form__logo-row"
+          gutter={48}
+          align="middle"
+          justify="space-between"
+          className="employee-form__logo-row"
         >
           <Col span={12}>
             <Row gutter={36}>
@@ -148,27 +171,28 @@ export default function EmployeeForm(
                     {
                       required: false,
                       pattern: new RegExp(/^[0-9]{9,12}$/),
-                      message: 'Xin vui lòng nhập đúng số CMND/CCCD!'
-                    }
+                      message: "Xin vui lòng nhập đúng số CMND/CCCD!",
+                    },
                   ]}
                 >
                   {isLoading ? <Skeleton.Input active /> : <Input />}
                 </FormItem>
               </Col>
             </Row>
-
           </Col>
           {/* <Col></Col> */}
         </Row>
-        <Row gutter={10} align="middle" justify={'center'}>
+        <Row gutter={10} align="middle" justify={"center"}>
           <Col span={2}>
-            <Button>Huỷ</Button>
+            <Button onClick={handleCloseModal}>Huỷ</Button>
           </Col>
           <Col span={4}>
-          <Button type='primary' htmlType='submit'>{id ? 'Cập nhật' : 'Tạo mới'}</Button>
+            <Button type="primary" htmlType="submit">
+              {id ? "Cập nhật" : "Tạo mới"}
+            </Button>
           </Col>
         </Row>
       </Form>
     </div>
-  )
-};
+  );
+}

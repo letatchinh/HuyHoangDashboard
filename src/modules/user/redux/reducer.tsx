@@ -1,3 +1,4 @@
+import { get } from "lodash";
 import { InstanceModuleRedux } from "~/redux/instanceModuleRedux";
 
 // InstanceModuleRedux
@@ -10,7 +11,7 @@ const userSlice = new InstanceModuleRedux('user');
 userSlice.extendsSlice({
     getListSuccess: (state:any, { payload }:any) => {
         state.isLoading = false;
-        state.list = payload;
+        state.list = get(payload, 'docs', []);
       },
 });
 

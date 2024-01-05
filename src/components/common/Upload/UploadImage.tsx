@@ -1,7 +1,7 @@
 
 import React, { useState } from "react";
 import { LoadingOutlined, PlusOutlined } from "@ant-design/icons";
-import { message, Upload } from "antd";
+import { message, Modal, Upload } from "antd";
 import type { UploadChangeParam } from "antd/es/upload";
 import type { RcFile, UploadFile, UploadProps } from "antd/es/upload/interface";
 import {
@@ -59,6 +59,11 @@ const UploadImage = ({
   const [loading, setLoading] = useState(false);
   const [isCompressing, setIsCompressing] = useState<boolean>();
 
+  // preview
+  const [previewOpen, setPreviewOpen] = useState(false);
+  const [previewImage, setPreviewImage] = useState('');
+  const [previewTitle, setPreviewTitle] = useState('');
+
   const handleChange: UploadProps["onChange"] = (
     info: UploadChangeParam<UploadFile>
   ) => {
@@ -74,6 +79,19 @@ const UploadImage = ({
       });
     }
   };
+
+  const handleCancelPreview = () => setPreviewOpen(false);
+
+  // const handlePreview = async (file: UploadFile) => {
+  //   if (!file.url && !file.preview) {
+  //     file.preview = await getBase64(file.originFileObj as RcFile, ()=>({}));
+  //   }
+
+  //   setPreviewImage(file.url || (file.preview as string));
+  //   setPreviewOpen(true);
+  //   setPreviewTitle(file.name || file.url!.substring(file.url!.lastIndexOf('/') + 1));
+  // };
+
 
   const uploadButton = (
     <button style={{ border: 0, background: "none" }} type="button">
@@ -93,6 +111,7 @@ const UploadImage = ({
         action={`${DEFAULT_UPLOAD_ACTION}/${DEFAULT_RESOURCE}`}
         beforeUpload={(file) => beforeUpload(file, setIsCompressing)}
         onChange={handleChange}
+        // onPreview={handlePreview}
       >
         {imageUrl ? (
           <img src={imageUrl} alt="avatar" style={{ width: "100%" }} />
@@ -100,6 +119,9 @@ const UploadImage = ({
           uploadButton
         )}
       </Upload>
+      <Modal open={previewOpen} title={previewTitle} footer={null} onCancel={handleCancelPreview}>
+        <img alt="example" style={{ width: '100%' }} src={previewImage} />
+      </Modal>
     </>
   );
 };

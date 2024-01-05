@@ -13,6 +13,7 @@ import { Button, Col, Modal, Row } from "antd";
 import { useState } from "react";
 import EmployeeForm from "../components/EmployeeForm";
 import TableAnt from "~/components/Antd/TableAnt";
+import SelectSearch from "~/components/common/SelectSearch";
 
 
 export default function Employee() {
@@ -21,12 +22,13 @@ export default function Employee() {
   const [query] = useEmployeeQueryParams();
   const [keyword, { setKeyword, onParamChange }] =
     useUpdateEmployeeParams(query);
-  const [data, isLoading] = useGetEmployeees();
+  const [data, isLoading] = useGetEmployeees(query);
   const paging = useEmployeePaging();
   const [id, setId] = useState("");
   
-  const handleOpenModal = () => {
+  const handleOpenModal = (id?: any) => {
     setIsOpenModal(true);
+    setId(id);
   };
   const handleCloseModal = () => {
     setIsOpenModal(false);
@@ -37,7 +39,10 @@ export default function Employee() {
     {
       title: 'Mã nhân viên',
       dataIndex: 'employeeNumber',
-      key: 'employeeNumber'
+      key: 'employeeNumber',
+      render: (value: any, record: any) => (
+        <Button type="link" onClick={() => handleOpenModal(record._id)}>{value}</Button>
+      ),
     },
     {
       title: 'Tên nhân viên',
@@ -45,21 +50,14 @@ export default function Employee() {
       key: 'fullName'
     },
     {
-      title: 'Chứng chỉ',
-      dataIndex: 'certification',
-      key: 'certification',
-      render: (certification) => <p>{certification[0]?.name}</p>
-    },
-    {
-      title: 'Chứng chỉ',
-      dataIndex: 'certification',
-      key: 'certification',
-      render: (certification) => <p>{certification[0]?.name}</p>
-    },
-    {
       title: 'Số điện thoại',
       dataIndex: 'phoneNumber',
       key: 'phoneNumber',
+    },
+    {
+      title: 'Email',
+      dataIndex: 'email',
+      key: 'email',
     },
     {
       title: 'Thao tác',
@@ -78,8 +76,11 @@ export default function Employee() {
         </Col>
       </Row>
       <WhiteBox>
+        <SelectSearch
+          showSelect={false}
+        />
         <TableAnt
-          dataSource={[]}
+          dataSource={data?.length ? data  : []}
           // loading={isLoading}
           columns={columns}
           size="small"
@@ -100,7 +101,6 @@ export default function Employee() {
         width={1020}
         style={{ top: 50 }}
         destroyOnClose
-        // title= {`${id ? "Cập nhật" : "Thêm mới"} nhân viên`}
       >
         <EmployeeForm
           id={id}

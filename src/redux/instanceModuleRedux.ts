@@ -62,7 +62,7 @@ export class InstanceModuleRedux{
       state.isLoading = true;
       state.getListFailed = null;
     },
-    getListSuccess: (state:any, { payload }:any) => {
+    getListSuccess: (state: any, { payload }: any) => {
       state.isLoading = false;
       state.list = get(payload, "docs", []);
       state.paging = getPaging(payload);

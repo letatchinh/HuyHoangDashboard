@@ -10,12 +10,15 @@ interface Props {
   options?: [Option] | [],
   showSelect?: boolean,
   onSearch?: any,
+  optionsStatus?: [Option] | [],
+  showSearchStatus?: boolean,
+  placeholder?: string
 };
 
-const SelectSearch = ({ options, showSelect = true, onSearch}: Props) => {
+const SelectSearch = ({ options, showSelect = true, onSearch, optionsStatus,showSearchStatus, placeholder = 'bất kỳ...'}: Props) => {
   
   return (
-    <Row gutter={5}>
+    <Row gutter={5} style={{marginBottom: 10}}>
       {showSelect && <Col span={8}>
         <Select
           style={{
@@ -23,17 +26,27 @@ const SelectSearch = ({ options, showSelect = true, onSearch}: Props) => {
          }}
           options={options}
           showSearch
-          placeholder="Tìm..."
           allowClear
         />
       </Col>}
       <Col span={8}>
         <Search
-          placeholder="Tìm..."
+          placeholder= {`Tìm ${placeholder}`}
           onSearch={onSearch}
           allowClear
         />
       </Col>
+    {showSearchStatus &&  <Col span={8}>
+        <Select
+          placeholder="Tìm theo trạng thái"
+          style={{
+            width: '100%'
+          }}
+           options={optionsStatus}
+           showSearch
+           allowClear
+        />
+      </Col>}
     </Row>
   );
 };

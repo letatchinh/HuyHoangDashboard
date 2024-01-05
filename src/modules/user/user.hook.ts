@@ -35,24 +35,16 @@ const {
 
 export const useUserPaging = () => useSelector(pagingSelector);
 
-// export const useGetUsers = (params: any) => {
-//   return useFetchByParam({
-//     action: userSliceAction.getListRequest,
-//     loadingSelector: loadingSelector,
-//     dataSelector: listSelector,
-//     failedSelector: getListFailedSelector,
-//     param: params,
-//   });
-// };
-
-export const useGetUseres = () => {
-  return useFetch({
+export const useGetUsers = (params: any) => {
+  return useFetchByParam({
     action: userSliceAction.getListRequest,
     loadingSelector: loadingSelector,
     dataSelector: listSelector,
     failedSelector: getListFailedSelector,
+    param: params,
   });
 };
+
 export const useGetUser = (id: any) => {
   return useFetchByParam({
     action: userSliceAction.getByIdRequest,

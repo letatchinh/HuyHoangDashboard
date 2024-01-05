@@ -1,5 +1,5 @@
 import { Button, Col, Modal, Popconfirm, Row, Select, Tag } from "antd";
-import { useDeleteUser, useGetUseres, useUpdateUserParams, useUserPaging, useUserQueryParams } from "../../user.hook";
+import { useDeleteUser, useGetUsers, useUpdateUserParams, useUserPaging, useUserQueryParams } from "../../user.hook";
 import { useState } from "react";
 import UserForm from "../UserForm";
 import { ColumnsType } from "antd/es/table";
@@ -50,7 +50,7 @@ const UserEmployee = ({setId, id}: UserEmployeeProps) => {
   const [query] = useUserQueryParams();
   const [keyword, { setKeyword, onParamChange }] =
   useUpdateUserParams(query);
-  const [data, isLoading] = useGetUseres();
+  const [data, isLoading] = useGetUsers(query);
   const paging = useUserPaging();
   const [, deleteUser] = useDeleteUser();
   

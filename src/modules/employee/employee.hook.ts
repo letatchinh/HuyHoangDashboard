@@ -13,6 +13,7 @@ import {
   useSuccess,
 } from "~/utils/hook";
 import { employeeSliceAction } from "./redux/reducer";
+import { useDispatch } from "react-redux";
 const MODULE  = "employee";
 const MODULE_VI  = "Nhân viên";
 
@@ -35,22 +36,13 @@ const {
 
 export const useEmployeePaging = () => useSelector(pagingSelector);
 
-// export const useGetEmployees = (params: any) => {
-//   return useFetchByParam({
-//     action: employeeSliceAction.getListRequest,
-//     loadingSelector: loadingSelector,
-//     dataSelector: listSelector,
-//     failedSelector: getListFailedSelector,
-//     param: params,
-//   });
-// };
-
-export const useGetEmployeees = () => {
+export const useGetEmployeees = (payload: object) => {
   return useFetch({
     action: employeeSliceAction.getListRequest,
     loadingSelector: loadingSelector,
     dataSelector: listSelector,
     failedSelector: getListFailedSelector,
+    payload
   });
 };
 export const useGetEmployee = (id: any) => {

@@ -2,9 +2,12 @@ import { put, call, takeLatest } from 'redux-saga/effects';
 import api from '../user.api'; 
 import { userSliceAction } from './reducer';
 
-function* getListUser({payload:query} : any) : any {
+function* getListUser({ payload: query }: any): any {
+  console.log(1)
   try {
-    const data = yield call(api.getAll,query);
+    console.log(2)
+    const data = yield call(api.getAll, query);
+    console.log(data)
     yield put(userSliceAction.getListSuccess(data));
   } catch (error:any) {
     yield put(userSliceAction.getListFailed(error));
