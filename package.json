@@ -41,7 +41,8 @@
     "start": "craco start",
     "build": "craco build",
     "test": "craco test",
-    "eject": "craco eject"
+    "eject": "craco eject",
+    "semantic-release": "semantic-release"
   },
   "eslintConfig": {
     "extends": [
