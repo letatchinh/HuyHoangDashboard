@@ -1,28 +1,32 @@
-export type initStateSlice = {
-    isLoading: boolean;
-    list: [];
-    listSearch: [];
-    getListFailed: any;
+export type initStateSlice<T=any> = {
+    isLoading?: boolean;
+    list?: T[];
+    listSearch?: [];
+    getListFailed?: any;
 
-    paging : any;
+    paging?: {
+      current: number,
+      pageSize:number,
+      total: number,
+    }|null;
 
-    createSuccess: any;
-    createFailed: any;
+    createSuccess?: any;
+    createFailed?: any;
   
-    updateSuccess: any;
-    updateFailed: any;
+    updateSuccess?: any;
+    updateFailed?: any;
   
-    deleteSuccess: any;
-    deleteFailed: any;
+    deleteSuccess?: any;
+    deleteFailed?: any;
   
-    submitSuccess: any;
-    submitFailed: any;
+    submitSuccess?: any;
+    submitFailed?: any;
   
-    isSubmitLoading: boolean;
+    isSubmitLoading?: boolean;
   
-    byId: any;
-    isGetByIdLoading: boolean;
-    getByIdFailed: any;
+    byId?: any;
+    isGetByIdLoading?: boolean;
+    getByIdFailed?: any;
   };
 
   const moduleRedux ={
