@@ -52,7 +52,7 @@ const Account = ({ isLoading, required }: Props) => {
             {isLoading ? (
               <Skeleton.Input active />
             ) : (
-              <Input disabled autoComplete="off" />
+              <Input disabled = {false} autoComplete="off" />
             )}
           </Form.Item>
         </Col>
