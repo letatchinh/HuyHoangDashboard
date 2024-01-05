@@ -4305,7 +4305,7 @@
     "whatwg-mimetype" "^2.3.0"
     "whatwg-url" "^8.0.0"
 
-"dayjs@^1.11.1", "dayjs@^1.11.10", "dayjs@>= 1.x":
+"dayjs@^1.11.1", "dayjs@>= 1.x", "dayjs@1.11.10":
   "integrity" "sha512-vjAczensTgRcqDERK0SR2XMwsF/tSvnvlv6VcF2GIhg6Sx4yOIt/irsr1RDJsKiIyBzJDpCoXiWWq28MqH2cnQ=="
   "resolved" "https://registry.npmjs.org/dayjs/-/dayjs-1.11.10.tgz"
   "version" "1.11.10"
@@ -6067,7 +6067,7 @@
   dependencies:
     "ms" "^2.0.0"
 
-"i18next@^23.7.11", "i18next@>= 23.2.3":
+"i18next@>= 23.2.3", "i18next@23.7.11":
   "integrity" "sha512-A/vOkw8vY99YHU9A1Td3I1dcTiYaPnwBWzrpVzfXUXSYgogK3cmBcmop/0cnXPc6QpUWIyqaugKNxRUEZVk9Nw=="
   "resolved" "https://registry.npmjs.org/i18next/-/i18next-23.7.11.tgz"
   "version" "23.7.11"
@@ -7718,7 +7718,7 @@
   dependencies:
     "minimist" "^1.2.6"
 
-"moment@^2.30.1", "moment@>= 2.x":
+"moment@>= 2.x", "moment@2.30.1":
   "integrity" "sha512-uEmtNhbDOrWPFS+hdjFCBfy9f2YoyzRpwcl+DqpC6taX21FzsTLQVbMV/W7PzNSX6x/bhC1zA3c2UQ5NzH6how=="
   "resolved" "https://registry.npmjs.org/moment/-/moment-2.30.1.tgz"
   "version" "2.30.1"
@@ -9417,7 +9417,7 @@
   "resolved" "https://registry.npmjs.org/react-error-overlay/-/react-error-overlay-6.0.11.tgz"
   "version" "6.0.11"
 
-"react-i18next@^14.0.0":
+"react-i18next@14.0.0":
   "integrity" "sha512-OCrS8rHNAmnr8ggGRDxjakzihrMW7HCbsplduTm3EuuQ6fyvWGT41ksZpqbduYoqJurBmEsEVZ1pILSUWkHZng=="
   "resolved" "https://registry.npmjs.org/react-i18next/-/react-i18next-14.0.0.tgz"
   "version" "14.0.0"
@@ -11259,7 +11259,7 @@
   "resolved" "https://registry.npmjs.org/uuid/-/uuid-8.3.2.tgz"
   "version" "8.3.2"
 
-"uuid@^9.0.1":
+"uuid@9.0.1":
   "integrity" "sha512-b+1eJOlsR9K8HJpow9Ok3fiWOWSIcIzXodvv0rQjVoOVNpWMpxf1wZNpt4y9h10odCNrqnYp1OBzRktckBe3sA=="
   "resolved" "https://registry.npmjs.org/uuid/-/uuid-9.0.1.tgz"
   "version" "9.0.1"

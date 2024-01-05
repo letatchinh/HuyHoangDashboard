@@ -1,20 +1,21 @@
-import { get, groupBy } from "lodash";
+import { get } from "lodash";
 import { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
+import { RootState } from "~/redux/store";
 import { clearQuerySearch, getExistProp } from "~/utils/helpers";
 import {
   getSelectors,
   useFailed,
-  useFetch,
   useFetchByParam,
   useQueryParams,
   useSubmit,
-  useSuccess,
+  useSuccess
 } from "~/utils/hook";
 import { supplierSliceAction } from "./redux/reducer";
 const MODULE = "supplier";
 const MODULE_VI = "Chi nhánh";
+const getSelector = (key : any) => (state:any) => state[MODULE][key];
 
 const {
   loadingSelector,
@@ -33,7 +34,12 @@ const {
   pagingSelector,
 } = getSelectors(MODULE);
 
+const productSupplierSelector = getSelector('productSupplier');
+const getProductSupplierFailedSelector = getSelector('getProductSupplierFailed');
+const isLoadingGetProductSupplierSelector = getSelector('isLoadingGetProductSupplier');
+const pagingProductSupplierSelector = getSelector('pagingProductSupplier');
 export const useSupplierPaging = () => useSelector(pagingSelector);
+export const useProductSupplierPaging = () => useSelector(pagingProductSupplierSelector);
 
 export const useGetSuppliers = (param:any) => {
   return useFetchByParam({
@@ -140,4 +146,14 @@ export const useUpdateSupplierParams = (
   };
 
   return [keyword, { setKeyword, onParamChange }];
+};
+
+export const useGetProductSuppliers = (param:any) => {
+  return useFetchByParam({
+    action: supplierSliceAction.getProductSupplierRequest,
+    loadingSelector: isLoadingGetProductSupplierSelector,
+    dataSelector: productSupplierSelector,
+    failedSelector: getProductSupplierFailedSelector,
+    param
+  });
 };

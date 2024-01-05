@@ -1,4 +1,4 @@
-import { AppstoreFilled, AppstoreOutlined } from "@ant-design/icons";
+import { AppstoreFilled, AppstoreOutlined, ShopFilled } from "@ant-design/icons";
 import { MenuProps } from "antd";
 import React from "react";
 import { NavLink } from "react-router-dom";
@@ -53,7 +53,7 @@ const resource: ItemType[] = [
   // Nhà cung cấp
   {
     label: "Nhà cung cấp",
-    icon: <AppstoreOutlined />,
+    icon: <ShopFilled />,
     path: PATH_APP.supplier.root,
     key: PATH_APP.supplier.root,
   },

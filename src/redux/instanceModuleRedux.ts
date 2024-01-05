@@ -3,29 +3,6 @@ import { get, omit } from "lodash";
 import { getPaging } from "~/utils/helpers";
 import { initStateSlice } from "./models";
 
-export interface voidReducer {
-  getListRequest : (state:any) => void;
-  getListSuccess:(state:any,payload?:any)=>void;
-  getListFailed:(state:any,payload?:any)=>void;
-  getByIdRequest : (state:any) => void;
-  getByIdSuccess:(state:any,payload?:any)=>void;
-  getByIdFailed:(state:any,payload?:any)=>void;
-  createRequest:(state:any,payload?:any)=>void;
-  createSuccess:(state:any,payload?:any)=>void;
-  createFailed:(state:any,payload?:any)=>void;
-  updateRequest:(state:any,payload?:any)=>void;
-  updateSuccess:(state:any,payload?:any)=>void;
-  updateFailed:(state:any,payload?:any)=>void;
-  deleteRequest:(state:any,payload?:any)=>void;
-  deleteSuccess:(state:any,payload?:any)=>void;
-  deleteFailed:(state:any,payload?:any)=>void;
-  getRequest:(state:any,payload?:any)=>void;
-  getSuccess:(state:any,payload?:any)=>void;
-  getFailed:(state:any,payload?:any)=>void;
-  onSearch:(state:any,payload?:any)=>void;
-  resetAction:(state:any,payload?:any)=>void;
-  reset: () => void;
-}
 
 export class InstanceModuleRedux{
   module: string;
