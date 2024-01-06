@@ -1,4 +1,4 @@
-import { PlusCircleOutlined } from "@ant-design/icons";
+import { DeleteOutlined, InfoCircleTwoTone, PlusCircleOutlined } from "@ant-design/icons";
 import { Button, Col, Divider, Popconfirm, Row, Switch, Typography } from "antd";
 import Search from "antd/es/input/Search";
 import { ColumnsType } from "antd/es/table/InternalTable";
@@ -111,8 +111,8 @@ export default function Supplier(): React.JSX.Element {
         align: "center",
         render(_id) {
           return (
-            <Row justify={"center"} align={"middle"}>
-              <Button onClick={() => onOpenForm(_id)} type="primary">
+            <Row justify={"center"} align={"middle"} wrap={false}>
+              <Button icon={<InfoCircleTwoTone />} onClick={() => onOpenForm(_id)} type="primary" size="small">
                 Xem chi tiết
               </Button>
               <Divider type="vertical" />
@@ -125,6 +125,8 @@ export default function Supplier(): React.JSX.Element {
               <Button
                 loading={isSubmitLoading}
                 danger
+                size="small"
+                icon={<DeleteOutlined />}
               >
                 Xoá
               </Button>
