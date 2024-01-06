@@ -24,7 +24,6 @@
 
 // // Want Suggettion ?
 // // interface reducerType  extends voidReducer {
-// //     // onR? : (state:any) => void
 // // }
 // export const branchSliceAction = data.actions;
 // export default data.reducer;
