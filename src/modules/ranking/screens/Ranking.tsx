@@ -123,7 +123,7 @@ export default function Ranking(props:propsType) : React.JSX.Element {
           width={800}
   
         >
-          <RankingForm id={id} callBack={handleCloseForm} />
+          <RankingForm id={id} handleCloseForm={handleCloseForm} />
         </ModalAnt>
       </div>
     )

@@ -5,7 +5,8 @@ import {useGetManufacturerList} from '../../manufacturer/manufacturer.hook';
 import { filterAcrossAccents } from '~/utils/helpers';
 interface Props {
   id?: any;
-  callBack?: () => void;
+  handleCloseForm?: () => void;
+  
 }
 
 interface FieldType {
@@ -15,15 +16,15 @@ interface FieldType {
   level: string
 }
 const { TextArea } = Input;
-const RankingForm: React.FC<Props> = ({ id, callBack }) => {
+const RankingForm: React.FC<Props> = ({ id, handleCloseForm }) => {
     const query = useMemo(() => ({ limit: 10, page: 1 }), []);
     const [listManufacturer, isLoadingManufacturer] = useGetManufacturerList(query);
     console.log(listManufacturer,'listManufacturer');
     const [selectedValue, setSelectedValue] = useState(null);
-  const [, createRanking] = useCreateRanking();
+  const [, createRanking] = useCreateRanking(handleCloseForm);
   const [rankingConfigById, isLoading] = useGetlistRankingById(id);
   const [form] = Form.useForm(); 
-   const [, updateRanking] = useUpdateRanking();
+   const [, updateRanking] = useUpdateRanking(handleCloseForm);
   useEffect(() => {
     if (id && rankingConfigById) { 
       const { name, level }: FieldType = rankingConfigById;
@@ -43,14 +44,9 @@ const RankingForm: React.FC<Props> = ({ id, callBack }) => {
       };
       if (id) {
         updateRanking({ ...data, id });
-        if (typeof callBack === 'function') {
-          callBack();
-        }
       }else {
         createRanking({ ...data });
-        if (typeof callBack === 'function') {
-          callBack();
-        }
+
       }
   },[updateRanking,createRanking,id]);
   const filterOption = (input: string, option?: { label: string; value: string }) =>

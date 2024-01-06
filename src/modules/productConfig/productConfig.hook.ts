@@ -113,7 +113,7 @@ const {
     })
   }
   export const useUpdateProductConfig = (callBack?:any) => {
-    useSuccess(updateSuccessSelector, callBack);
+    useSuccess(updateSuccessSelector,`Cập nhật ${MODULE_VI} thành công`, callBack);
     useFailed(updateFailedSelector);
     return useSubmit({
         action: productConfigSliceAction.updateRequest,
