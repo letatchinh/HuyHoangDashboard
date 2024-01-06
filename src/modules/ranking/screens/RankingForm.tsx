@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Button, Form, Input, Select, Spin } from 'antd';
-import { useGetlistRankingById, useDeleteRanking, useUpdateRanking,useCreateRanking } from '../ranking.hook';
+import { useGetlistRankingById, useDeleteRanking, useUpdateRanking,useCreateRanking,useResetAction } from '../ranking.hook';
 import {useGetManufacturerList} from '../../manufacturer/manufacturer.hook';
 import { filterAcrossAccents } from '~/utils/helpers';
 interface Props {
@@ -21,10 +21,12 @@ const RankingForm: React.FC<Props> = ({ id, handleCloseForm }) => {
     const [listManufacturer, isLoadingManufacturer] = useGetManufacturerList(query);
     console.log(listManufacturer,'listManufacturer');
     const [selectedValue, setSelectedValue] = useState(null);
+
   const [, createRanking] = useCreateRanking(handleCloseForm);
   const [rankingConfigById, isLoading] = useGetlistRankingById(id);
   const [form] = Form.useForm(); 
    const [, updateRanking] = useUpdateRanking(handleCloseForm);
+   useResetAction();
   useEffect(() => {
     if (id && rankingConfigById) { 
       const { name, level }: FieldType = rankingConfigById;
@@ -49,8 +51,6 @@ const RankingForm: React.FC<Props> = ({ id, handleCloseForm }) => {
 
       }
   },[updateRanking,createRanking,id]);
-  const filterOption = (input: string, option?: { label: string; value: string }) =>
-  (option?.label ?? '').toLowerCase().includes(input.toLowerCase());
   return (
     <>
       <Form

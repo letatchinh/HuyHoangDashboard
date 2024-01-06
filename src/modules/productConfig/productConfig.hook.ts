@@ -1,9 +1,11 @@
+
 import { 
     getSelectors,
     useFailed,
     useFetch,
     useFetchByParam,
     useQueryParams,
+    useResetState,
     useSubmit,
     useSuccess,
  } from "~/utils/hook";
@@ -130,3 +132,6 @@ const {
     })
   }
   export const useProductConfigPaging = () => useSelector(pagingSelector);
+  export const useResetAction = () => {
+    return useResetState(productConfigSliceAction.resetAction);
+  }

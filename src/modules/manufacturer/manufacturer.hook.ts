@@ -4,6 +4,7 @@ import {
     useFetch,
     useFetchByParam,
     useQueryParams,
+    useResetState,
     useSubmit,
     useSuccess,
  } from "~/utils/hook";
@@ -132,3 +133,6 @@ const {
         loadingSelector: isSubmitLoadingSelector,
     })
   }
+  export const useResetAction = () => {
+    return useResetState(manufacturerSliceAction.resetAction);
+  };

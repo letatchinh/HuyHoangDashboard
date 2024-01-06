@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect } from 'react';
 import { Button, Form, Input } from 'antd';
-import { useGetlistProductUnitById, useUpdateProductUnit,useCreateProductUnit } from '../productUnit.hook';
+import { useGetlistProductUnitById, useUpdateProductUnit,useCreateProductUnit, useResetAction } from '../productUnit.hook';
 
 interface Props {
   id?: any;
@@ -16,11 +16,11 @@ interface FieldType {
 }
 const { TextArea } = Input;
 const ProductUnitForm: React.FC<Props> = ({ id, callBack }) => {
-  const [, updateProductUnit] = useUpdateProductUnit();
-  const [, createProductUnit] = useCreateProductUnit();
+  const [, updateProductUnit] = useUpdateProductUnit(callBack);
+  const [, createProductUnit] = useCreateProductUnit(callBack);
   const [productUnitById, isLoading] = useGetlistProductUnitById(id);
   const [form] = Form.useForm();
-
+  useResetAction();
   useEffect(() => {
     if (id&&productUnitById ) { 
       const {code,name,note}: FieldType = productUnitById;
@@ -41,14 +41,8 @@ const ProductUnitForm: React.FC<Props> = ({ id, callBack }) => {
       };
       if (id) {
         updateProductUnit({ ...data, id });
-        if (typeof callBack === 'function') {
-          callBack();
-        }
       }else {
         createProductUnit({ ...data });
-        if (typeof callBack === 'function') {
-          callBack();
-        }
         
       }
   },[updateProductUnit,createProductUnit,id])

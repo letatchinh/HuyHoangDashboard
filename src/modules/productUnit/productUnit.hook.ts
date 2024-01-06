@@ -4,6 +4,7 @@ import {
     useFetch,
     useFetchByParam,
     useQueryParams,
+    useResetState,
     useSubmit,
     useSuccess,
  } from "~/utils/hook";
@@ -130,3 +131,6 @@ const {
     })
   }
   export const useProductUnitPaging = () => useSelector(pagingSelector);
+  export const useResetAction = () => {
+    return useResetState(productUnitActions.resetAction);
+  };

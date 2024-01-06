@@ -18,11 +18,6 @@ const ManufacturerForm:React.FC<Props>=({id,callBack})=>{
     const [,updateManufacturer] = useUpdateManufacturer()
     const [,createManufacturer] = useCreateManufacturer()
   const [form]=Form.useForm<FieldType>()
-  useEffect(() => {
-    if(id){
-
-    }
-  }, []);
   const onFinish = (values: FieldType) => {
     const data: FieldType = {
      ...values,

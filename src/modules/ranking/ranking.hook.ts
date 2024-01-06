@@ -4,6 +4,7 @@ import {
     useFetch,
     useFetchByParam,
     useQueryParams,
+    useResetState,
     useSubmit,
     useSuccess,
  } from "~/utils/hook";
@@ -129,3 +130,6 @@ const {
     })
   }
   export const useRankingPaging = () => useSelector(pagingSelector);
+  export const useResetAction = () => {
+    return useResetState(rankingSliceAction.resetAction);
+  };
