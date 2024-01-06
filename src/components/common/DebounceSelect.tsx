@@ -8,6 +8,7 @@ export interface DebounceSelectProps<ValueType = any>
   fetchOptions: (search?: string) => Promise<ValueType[]>;
   debounceTimeout?: number;
   initOptions? : any[]
+  value?:any
 }
 
 function DebounceSelect<
@@ -20,6 +21,7 @@ function DebounceSelect<
   fetchOptions,
   debounceTimeout = 800,
   initOptions,
+  value,
   ...props
 }: DebounceSelectProps<ValueType>) {
   const [fetching, setFetching] = useState(false);
@@ -62,6 +64,7 @@ function DebounceSelect<
       onSearch={debounceFetcher}
       notFoundContent={fetching ? <Spin size="small" /> : <Empty />}
       {...props}
+      {...value && {value}}
       options={options}
       showSearch
       style={{ minWidth: 300 }}
