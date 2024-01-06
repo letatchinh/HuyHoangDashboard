@@ -204,7 +204,7 @@ export default function ProductConfig() {
       </div>
 
       <ModalAnt
-        visible={showForm}
+        open={showForm}
         title="Thêm danh mục sản phẩm"
         onCancel={handleCloseForm}
         footer={null}

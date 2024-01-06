@@ -60,6 +60,11 @@ const resource: ItemType[] = [
             path: PATH_APP.worldPharma.unit,
             key: PATH_APP.worldPharma.unit,
           },
+          {
+            label: "Danh sách thuốc",
+            path: PATH_APP.worldPharma.medicine,
+            key: PATH_APP.worldPharma.medicine,
+          },
         ],
       },
     ],

@@ -15,7 +15,7 @@ interface FieldType {
   isAction:String
 }
 const ManufacturerForm:React.FC<Props>=({id,callBack})=>{
-    const [,updateManufacturer] = useUpdateManufacturer(callBack)
+    const [,updateManufacturer] = useUpdateManufacturer()
     const [,createManufacturer] = useCreateManufacturer()
   const [form]=Form.useForm<FieldType>()
   useEffect(() => {
@@ -28,9 +28,15 @@ const ManufacturerForm:React.FC<Props>=({id,callBack})=>{
      ...values,
      };
      if (id) {
-       updateManufacturer({ data, id });
+       updateManufacturer({ ...data, id });
+       if (typeof callBack === 'function') {
+        callBack();
+      }
      } else {
        createManufacturer({ ...data });
+       if (typeof callBack === 'function') {
+        callBack();
+      }
      }
      // updateProductConfig({ data, id });
      console.log(data);
@@ -40,8 +46,9 @@ const ManufacturerForm:React.FC<Props>=({id,callBack})=>{
     <>
       <Form
           name="basic"
-          labelCol={{ span: 8 }}
-          wrapperCol={{ span: 16 }}
+          labelCol={{ sm: 24, md: 24, lg: 8, xl: 8 }}
+          wrapperCol={{ sm: 24, md: 24, lg: 16, xl: 16 }}
+          labelAlign="left"
           style={{ maxWidth: 800 }}
         form={form}
         onFinish={onFinish}

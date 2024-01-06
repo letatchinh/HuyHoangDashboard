@@ -1,7 +1,8 @@
-import React, { useCallback, useEffect, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Button, Form, Input, Select, Spin } from 'antd';
 import { useGetlistRankingById, useDeleteRanking, useUpdateRanking,useCreateRanking } from '../ranking.hook';
 import {useGetManufacturerList} from '../../manufacturer/manufacturer.hook';
+import { filterAcrossAccents } from '~/utils/helpers';
 interface Props {
   id?: any;
   callBack?: () => void;
@@ -18,7 +19,7 @@ const RankingForm: React.FC<Props> = ({ id, callBack }) => {
     const query = useMemo(() => ({ limit: 10, page: 1 }), []);
     const [listManufacturer, isLoadingManufacturer] = useGetManufacturerList(query);
     console.log(listManufacturer,'listManufacturer');
-
+    const [selectedValue, setSelectedValue] = useState(null);
   const [, createRanking] = useCreateRanking();
   const [rankingConfigById, isLoading] = useGetlistRankingById(id);
   const [form] = Form.useForm(); 
@@ -47,7 +48,9 @@ const RankingForm: React.FC<Props> = ({ id, callBack }) => {
         }
       }else {
         createRanking({ ...data });
-        
+        if (typeof callBack === 'function') {
+          callBack();
+        }
       }
   },[updateRanking,createRanking,id]);
   const filterOption = (input: string, option?: { label: string; value: string }) =>
@@ -56,14 +59,32 @@ const RankingForm: React.FC<Props> = ({ id, callBack }) => {
     <>
       <Form
           name="basic"
-          labelCol={{ span: 8 }}
-          wrapperCol={{ span: 16 }}
+          labelCol={{ sm: 24, md: 24, lg: 8, xl: 8 }}
+          wrapperCol={{ sm: 24, md: 24, lg: 16, xl: 16 }}
+          labelAlign="left"
           style={{ maxWidth: 800 }}
         form={form}
         onFinish={onFinish}
       >
         <Form.Item<FieldType> label="Tên hãng" name="name">
-        {isLoadingManufacturer&&listManufacturer ? <Spin>Loading...</Spin>: <Select filterOption={filterOption} showSearch options={listManufacturer?.map((item: any) => ({ label: item.name, value: item.id }))}/>} 
+        {isLoadingManufacturer && listManufacturer ? (
+  <Spin>Loading...</Spin>
+) : (
+  <Select
+    filterOption={filterAcrossAccents}  // Ensure that the filterOption function is correctly defined
+    showSearch
+    disabled={id?true:false}
+    options={listManufacturer?.map((item: any) => ({
+      label: item.name,
+      value: item.name
+    }))}
+    onChange={(value: any) => {
+      setSelectedValue(value)
+    }}
+    value={selectedValue}
+  />
+)}
+
         </Form.Item>
         <Form.Item<FieldType> label="Xếp hạng ranking" name="level">
           <Input />

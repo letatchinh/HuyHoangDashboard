@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { Button, Form, Input } from 'antd';
 import { useGetlistProductUnitById, useUpdateProductUnit,useCreateProductUnit } from '../productUnit.hook';
 
@@ -16,10 +16,9 @@ interface FieldType {
 }
 const { TextArea } = Input;
 const ProductUnitForm: React.FC<Props> = ({ id, callBack }) => {
-  const [, updateProductUnit] = useUpdateProductUnit(callBack);
-  const [, createProductUnit] = useCreateProductUnit(callBack);
+  const [, updateProductUnit] = useUpdateProductUnit();
+  const [, createProductUnit] = useCreateProductUnit();
   const [productUnitById, isLoading] = useGetlistProductUnitById(id);
-  console.log(productUnitById, 'productUnitById');
   const [form] = Form.useForm();
 
   useEffect(() => {
@@ -33,26 +32,34 @@ const ProductUnitForm: React.FC<Props> = ({ id, callBack }) => {
     }
   }, [id,productUnitById,form]);
 
-  const onFinish = (values: FieldType) => {
+  const onFinish = useCallback((values: FieldType) => {
+    console.log('s');
      const data: FieldType = {
       ...values,
       // code:'DMT0001'
       // status:'',
       };
       if (id) {
-        updateProductUnit({ data, id });
+        updateProductUnit({ ...data, id });
+        if (typeof callBack === 'function') {
+          callBack();
+        }
       }else {
         createProductUnit({ ...data });
+        if (typeof callBack === 'function') {
+          callBack();
+        }
         
       }
-  };
+  },[updateProductUnit,createProductUnit,id])
 
   return (
     <>
       <Form
           name="basic"
-          labelCol={{ span: 8 }}
-          wrapperCol={{ span: 16 }}
+          labelCol={{ sm: 24, md: 24, lg: 8, xl: 8 }}
+          wrapperCol={{ sm: 24, md: 24, lg: 16, xl: 16 }}
+          labelAlign="left"
           style={{ maxWidth: 800 }}
         form={form}
         onFinish={onFinish}

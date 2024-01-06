@@ -180,7 +180,7 @@ export default function Manufacturer() {
         </div>
       </div>
       <ModalAnt
-        visible={showForm}
+        open={showForm}
         title="Thêm nhà sản xuất"
         onCancel={handleCloseForm}
         footer={null}

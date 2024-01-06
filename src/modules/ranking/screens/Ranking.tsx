@@ -115,7 +115,7 @@ export default function Ranking(props:propsType) : React.JSX.Element {
                 />
               </WhiteBox>
         <ModalAnt
-          visible={showForm}
+          open={showForm}
           title={id?'Cap nhap ranking':'Tao moi ranking'}
           onCancel={handleCloseForm}
           footer={null}

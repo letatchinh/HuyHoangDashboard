@@ -7,6 +7,7 @@ import productConfigModule from '~/modules/productConfig';
 import manuFacturerModule from '~/modules/manufacturer';
 import productUnitModule from '~/modules/productUnit';
 import rankModule from '~/modules/ranking';
+import medicineModule from '~/modules/medicine';
 export default function* rootSaga() {
   yield all([
     authModule.redux.saga(),
@@ -17,6 +18,7 @@ export default function* rootSaga() {
     manuFacturerModule.redux.saga(),
     productUnitModule.redux.saga(),
     rankModule.redux.saga(),
+    medicineModule.redux.saga(),
 
   ]);
 }

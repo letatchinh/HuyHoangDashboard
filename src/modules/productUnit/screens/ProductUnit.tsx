@@ -25,7 +25,7 @@ export default function ProductUnit(props:propsType) : React.JSX.Element {
     interface DataType {
         _id: string;
         name: string;
-        description: string,
+        note: string,
         status: string,
       }
     
@@ -53,9 +53,9 @@ export default function ProductUnit(props:propsType) : React.JSX.Element {
         },
         {
           title: 'Ghi chú',
-          dataIndex: 'description',
+          dataIndex: 'note',
           align: 'center',
-          key: 'description',
+          key: 'note',
           render: (text: string) => <a>{text}</a>,
         },
         {
@@ -119,7 +119,7 @@ export default function ProductUnit(props:propsType) : React.JSX.Element {
                   />
                 </WhiteBox>
           <ModalAnt
-            visible={showForm}
+            open={showForm}
             title={id?'Sửa đơn vị tính':'Tạo đơn vị tính'}
             onCancel={handleCloseForm}
             footer={null}

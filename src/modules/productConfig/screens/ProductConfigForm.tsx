@@ -51,8 +51,9 @@ const ProductConfigForm: React.FC<Props> = ({ id, callBack }) => {
     <>
       <Form
           name="basic"
-          labelCol={{ span: 8 }}
-          wrapperCol={{ span: 16 }}
+          labelCol={{ sm: 24, md: 24, lg: 8, xl: 8 }}
+          wrapperCol={{ sm: 24, md: 24, lg: 16, xl: 16 }}
+          labelAlign="left"
           style={{ maxWidth: 800 }}
         form={form}
         onFinish={onFinish}
