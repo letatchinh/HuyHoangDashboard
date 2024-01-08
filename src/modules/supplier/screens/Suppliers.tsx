@@ -30,7 +30,6 @@ export default function Supplier() : React.JSX.Element {
     useUpdateSupplierParams(query);
   const [data, isLoading] = useGetSuppliers(query);
   const paging = useSupplierPaging();
-  console.log(data, "data");
   return (
     <div>
       <Breadcrumb title={t("list-supplier")} />

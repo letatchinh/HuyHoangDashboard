@@ -3,6 +3,8 @@ import { MenuProps } from "antd";
 import React from "react";
 import { NavLink } from "react-router-dom";
 import { PATH_APP } from "~/routes/allPath";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUsers, faUser } from '@fortawesome/free-solid-svg-icons';
 type MenuItem = Required<MenuProps>["items"][number];
 function getItem({ label, icon, children, path, key }: ItemType): any {
   return {
@@ -72,6 +74,22 @@ const resource: ItemType[] = [
       ],
       icon :<AppstoreFilled />
     }),
+      //Nhân viên
+      getItem({
+        label : "Nhân viên",
+        icon: <FontAwesomeIcon icon ={faUsers} />,
+        path : PATH_APP.employee.root,
+        key : PATH_APP.employee.root,
+      }),
+  
+      //Người dùng
+      getItem({
+        label : "Người dùng",
+        icon: <FontAwesomeIcon icon = {faUser} />,
+        path : PATH_APP.user.root,
+        key : PATH_APP.user.root,
+      }),
+      
 ];
 
 const NavbarItems = resource.map((first) => {
