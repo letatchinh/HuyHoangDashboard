@@ -89,6 +89,7 @@ export default function Ranking(props:propsType) : React.JSX.Element {
                       onChange={(e) => (setKeyword(e.target.value))
                       
                       }
+                      allowClear
                       onSearch={onSearch}
                       enterButton={<SearchOutlined />}
                     />

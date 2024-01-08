@@ -128,8 +128,6 @@ export default function Manufacturer() {
               <Select
                 style={{ height: '50px', padding: '5px 0px',width:'100%' }}
                 value={search}
-                // onChange={(e) => setKeyword(e.target.value)}
-                // value={keyword}
                 allowClear
                 onChange={(e) => {
                   setSearch(e)
@@ -150,6 +148,7 @@ export default function Manufacturer() {
                     onChange={(e) => (setKeyword(e.target.value))
                     
                     }
+                    allowClear
                     onSearch={onSearch}
                     enterButton={<SearchOutlined />}
                   />

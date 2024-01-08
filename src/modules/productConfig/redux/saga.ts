@@ -19,6 +19,15 @@ function* getProductConfigById({payload:id}: any):any {
        yield put(productConfigSliceAction.getByIdFailed(error)); 
     }
 }
+function* updateListProduct({payload}:any):any {
+    try {
+        const data = yield call(apis.update,payload);
+        yield put(productConfigSliceAction.updateSuccess(data));
+    } catch (error:any) {
+        yield put(productConfigSliceAction.updateFailed(error));
+    }
+    
+}
 function * updateProductConfig({payload}:any):any {
     try {
         const data = yield call(apis.update,payload);

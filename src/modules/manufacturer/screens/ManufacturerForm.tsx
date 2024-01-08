@@ -1,7 +1,7 @@
 import { Button, Form, Input } from 'antd'
 import TextArea from 'antd/es/input/TextArea'
 import React, { useEffect } from 'react'
-import { useUpdateManufacturer,useCreateManufacturer } from '../manufacturer.hook'
+import { useUpdateManufacturer,useCreateManufacturer,useGetManufacturerById,useResetAction } from '../manufacturer.hook'
 
 interface Props {
     id?: any
@@ -15,23 +15,28 @@ interface FieldType {
   isAction:String
 }
 const ManufacturerForm:React.FC<Props>=({id,callBack})=>{
-    const [,updateManufacturer] = useUpdateManufacturer()
-    const [,createManufacturer] = useCreateManufacturer()
-  const [form]=Form.useForm<FieldType>()
+  const [manufacturer,loading] = useGetManufacturerById(id)
+    const [,updateManufacturer] = useUpdateManufacturer(callBack)
+    const [,createManufacturer] = useCreateManufacturer(callBack)
+  const [form]=Form.useForm<FieldType>();
+  useResetAction();
+  useEffect(()=>{
+    if(id&&manufacturer){
+      const {name,description} = manufacturer
+      form.setFieldsValue({
+        name,
+        description,
+      })
+    }
+  },[id,manufacturer])
   const onFinish = (values: FieldType) => {
     const data: FieldType = {
      ...values,
      };
      if (id) {
        updateManufacturer({ ...data, id });
-       if (typeof callBack === 'function') {
-        callBack();
-      }
      } else {
        createManufacturer({ ...data });
-       if (typeof callBack === 'function') {
-        callBack();
-      }
      }
      // updateProductConfig({ data, id });
      console.log(data);
@@ -46,6 +51,7 @@ const ManufacturerForm:React.FC<Props>=({id,callBack})=>{
           labelAlign="left"
           style={{ maxWidth: 800 }}
         form={form}
+        
         onFinish={onFinish}
 
       >
