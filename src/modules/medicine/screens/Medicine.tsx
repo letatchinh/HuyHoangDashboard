@@ -27,6 +27,7 @@ export default function Medicine() {
   const [, deleteMedicine] = useDeleteMedicine(callBack);
   const [isSubmitUpdateLoading, updateMedicine] = useUpdateMedicine(callBack);
   const [listMedicine, isLoading] = useGetListMeddicine(query);
+  console.log(listMedicine)
   const [keyword, { setKeyword, onParamChange }] = useUpdateMedicineParams(query);
   const { t }: any = useTranslate();
   
@@ -63,14 +64,14 @@ export default function Medicine() {
   }
   const columns: ColumnsType<DataType> = [
     {
-      title: 'Mã danh mục thuốc',
+      title: 'Mã thuốc',
       dataIndex: 'code',
       width: '200px',
       align: 'center',
       render: (text: string) => <a href='#' style={{ textDecoration: 'none' }}>{text}</a>,
     },
     {
-      title: 'Tên danh mục thuốc',
+      title: 'Tên thuốc',
       dataIndex: 'name',
       align: 'center',
       key: 'name',

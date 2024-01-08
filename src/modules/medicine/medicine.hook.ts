@@ -85,15 +85,15 @@ export const useUpdateMedicineParams = (
 
   return [keyword, { setKeyword, onParamChange }];
 };
-export const useGetlistProductConfig = (query: any) => {
-    return useFetchByParam({
-      action: medicineSliceAction.getListRequest,
-      loadingSelector: loadingSelector,
-      dataSelector: listSelector,
-      failedSelector: getListFailedSelector,
-      param: query,
-    })
-}
+// export const useGetlistProductConfig = (query: any) => {
+//     return useFetchByParam({
+//       action: medicineSliceAction.getListRequest,
+//       loadingSelector: loadingSelector,
+//       dataSelector: listSelector,
+//       failedSelector: getListFailedSelector,
+//       param: query,
+//     })
+// }
 export const useGetListMeddicine = (query: any) => {
   return useFetchByParam({
     action: medicineSliceAction.getListRequest,
@@ -101,6 +101,15 @@ export const useGetListMeddicine = (query: any) => {
     dataSelector: listSelector,
     failedSelector: getListFailedSelector,
     param: query,
+  });
+}
+export const useGetMedicineById = (id: String) => {
+  return useFetchByParam({
+    action: medicineSliceAction.getByIdRequest,
+    loadingSelector: getByIdLoadingSelector,
+    dataSelector: getByIdSelector,
+    failedSelector: getByIdFailedSelector,
+    param: id,
   });
 }
 export const useUpdateMedicine=(callBack?:any)=>{
