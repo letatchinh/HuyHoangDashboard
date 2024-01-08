@@ -33,8 +33,6 @@ const {
   pagingSelector,
 } = getSelectors(MODULE);
 const getSelector = (key: string) => (state: any) => state.user[key];
-const policySelector = getSelector('policy');
-const profileSelector = getSelector('profile');
 
 export const useUserPaging = () => useSelector(pagingSelector);
 
@@ -164,30 +162,3 @@ export const autoCreateUsername = async ({ fullName, callApi }: any) => {
 };
  
 //POLICY
-const isMatchPolicy = (policies : any, requiredPermission : any) => {
-  return !!requiredPermission?.reduce((policy : any , permission : any )=> {
-    return policy?.[permission];
-  }, policies);
-};
-
-
-export const useMatchPolicy = (requiredPermission : any) => {
-  const policies = useSelector(policySelector);
-  const profile = useSelector(profileSelector);
-
-  const isMatch = useMemo(() => {
-    if (profile?.isSuperAdmin) {
-      return true;
-    }
-    if (!requiredPermission) return true;
-
-    if (Array.isArray(requiredPermission[0])) {
-      return requiredPermission.reduce((isMatch : any , permissionItem : any ) => {
-        return isMatch && isMatchPolicy(policies, permissionItem);
-      }, true);
-    }
-
-    return isMatchPolicy(policies, requiredPermission);
-  }, [requiredPermission, policies]);
-  return isMatch;
-};

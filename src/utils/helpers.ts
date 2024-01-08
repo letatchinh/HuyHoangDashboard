@@ -66,3 +66,7 @@ export const filterAcrossAccents = (input:any, option:any) => {
     removeAccents(option.children.toLowerCase()).indexOf(removeAccents(input.toLowerCase())) >= 0
   );
 };
+export const StringToSlug = (str: string) => {
+  const result = removeAccents(str)
+  return result.replaceAll(/\s+/g,'-')
+}

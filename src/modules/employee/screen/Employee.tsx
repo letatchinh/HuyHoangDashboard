@@ -67,17 +67,11 @@ export default function Employee() {
   return (
     <div>
       <Breadcrumb title={t("Quản lý nhân viên")} />
-      <Row gutter={16} align="middle">
-        <Col span={21}></Col>
-        <Col span={3}>
-          <Button style={{marginBottom: 10}} type="primary" onClick={() => handleOpenModal()}>
-            Thêm mới
-          </Button>
-        </Col>
-      </Row>
       <WhiteBox>
         <SelectSearch
           showSelect={false}
+          isShowButtonAdd
+          handleOnClickButton={handleOpenModal}
         />
         <TableAnt
           dataSource={data?.length ? data  : []}

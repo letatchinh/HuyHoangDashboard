@@ -1,6 +1,6 @@
 import React from 'react';
 import { Route, useNavigate } from 'react-router-dom';
-import { useMatchPolicy } from '~/modules/user/user.hook';
+import { useMatchPolicy } from '~/modules/policy/policy.hook';
 
 const RedirectTo = ({ path }: any) => {
   const navigate = useNavigate();

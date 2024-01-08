@@ -9,7 +9,11 @@ import TableAnt from "~/components/Antd/TableAnt";
 import { useResetState } from "~/utils/hook";
 import { userSliceAction } from "../../redux/reducer";
 import { Link } from "react-router-dom";
+import POLICIES from "~/modules/policy/policy.auth";
 
+interface UserProps {
+  activeTab: string,
+};
 interface ColumnActionProps {
   _id : any,
   deleteUserEmployee : any,
@@ -42,7 +46,7 @@ const ColumnActions = ({
   );
 };
 
-const UserEmployee = () => {
+const UserEmployee = ({activeTab}: UserProps) => {
   useResetState(userSliceAction.resetAction);
   const [id, setId] = useState(null)
   const [isOpenModal, setIsOpenModal] = useState(false);
@@ -131,7 +135,7 @@ const UserEmployee = () => {
       }
     }
   ];
-
+console.log(POLICIES,'POLICIES.WRITE_USER')
 
   return (
     <div>
@@ -141,12 +145,9 @@ const UserEmployee = () => {
             showSelect = {false}
             options={[]}
             onSearch={onSearch}
+            isShowButtonAdd
+            permissionKey={POLICIES.WRITE_USER}
           />
-        </Col>
-        <Col span={3}>
-          <Button type="primary" onClick={() => handleOpenModal()}>
-            Thêm mới
-          </Button>
         </Col>
       </Row>
       <TableAnt

@@ -9,6 +9,7 @@ import geoModule from '~/modules/geo';
 import employeeModule from '~/modules/employee';
 import userModule from '~/modules/user';
 import userGroupModule from '~/modules/userGroup';
+import policy from '~/modules/policy';
 const authPersistConfig = {
     key: 'auth',
     storage: localStorage,
@@ -30,5 +31,6 @@ const rootReducer = combineReducers({
     employee: employeeModule.redux.reducer,
     user: userModule.redux.reducer,
     userGroup: userGroupModule.redux.reducer,
+    policy: policy.redux.reducer,
 });
 export default rootReducer

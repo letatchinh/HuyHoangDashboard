@@ -26,12 +26,13 @@ export const auth = createSlice({
             state.token = null;
             state.loginFailed = null;
         },
-        loginSuccess: (state, { payload } : any) => {
-            state.token = payload.token;
-            setAxiosToken(payload.token);
-            setAxiosCompanyId(payload.branchId)
+        loginSuccess: (state, action: { payload: { token: any; branchId: any } }) => {
+            const { token, branchId } = action.payload;
+            state.token = token;
+            setAxiosToken(token);
+            setAxiosCompanyId(branchId); // Assuming branchId is the correct property name
             state.isLoading = false;
-        },
+          },
         loginFailed: (state, { payload }  : any) => {
             state.loginFailed = payload;
             state.isLoading = false;

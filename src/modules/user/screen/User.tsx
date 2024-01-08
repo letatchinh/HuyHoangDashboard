@@ -14,7 +14,6 @@ export default function User() {
   const [activeTab, setActiveTab] = useState("user");
   const navigate = useNavigate();
   const {pathname} = useLocation();
-
   const onChange = (key: string) => {
     setActiveTab(key);
     navigate(`/${key}`);
@@ -25,14 +24,10 @@ export default function User() {
       <WhiteBox>
         <Tabs activeKey={activeTab} onChange={(key) => onChange(key)}>
           <TabPane tab="Người dùng" key="user">
-            <Routes>
-              <Route path="/" element={<UserEmployee />} />
-            </Routes>
+            <UserEmployee activeTab = {activeTab}/>
           </TabPane>
           <TabPane tab="Nhóm người dùng" key="user/group">
-            <Routes>
-              <Route path = "/group" element={<UserGroup />} />
-            </Routes>
+            <UserGroup />
           </TabPane>
         </Tabs>
         {/* <PermissionGate

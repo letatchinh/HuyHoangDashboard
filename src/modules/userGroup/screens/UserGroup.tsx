@@ -1,26 +1,34 @@
 import { DeleteOutlined, EditOutlined, PlusOutlined } from "@ant-design/icons";
 import { Button, Checkbox, Col, Flex, Menu, Popconfirm, Row, Skeleton, Table } from "antd";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useParams, useNavigate,useLocation } from "react-router-dom";
 import SelectSearch from "~/components/common/SelectSearch";
 import UserGroupForm from "../components/UserGroupForm";
 import { get } from "lodash";
+import {  onSearchPermissions, useGetUserGroup, useGetUserGroups, useResourceColumns } from "../userGroup.hook";
+import { getNewPolicies, useResources, useUpdatePolicy } from "~/modules/policy/policy.hook";
+import { DEFAULT_BRANCH_ID } from "~/constants/defaultValue";
+import toastr from "toastr";
+import { useProfile } from "~/modules/auth/auth.hook";
+import POLICIES from "~/modules/policy/policy.auth";
 
 const styleButton = {
   alignContent: "center",
 };
-interface UserGroupProps {}
-
-interface PermissionProps {
-  isActive: boolean;
-  onChange: any;
-  disabled: boolean;
+interface UserGroupProps { 
+  activeTab: string;
 };
 
-interface onPermisionChangeProps {
-  resource: any;
-  action: any;
-  isAssgined: boolean;
+interface PermissionProps {
+  isActive?: boolean;
+  onChange?: any;
+  disabled?: boolean;
+};
+
+interface onPermissionChangeProps {
+  resource?: any;
+  action?: any;
+  isAssgined?: boolean;
 };
 const Permission = ({ isActive, onChange,disabled }: PermissionProps) => {
   return (
@@ -40,19 +48,36 @@ const getNextPath = (url: string) => {
 
   return `/${nextPath}`;
 };
-const UserGroup = ({ }: UserGroupProps) => {
-  const { groupId }: any = useParams();
+
+const UserGroup = () => {
+  const {branchId, groupId }: any = useParams();
   const navigate = useNavigate();
   const { pathname } = useLocation();
+  const branchIdParam = useMemo(() => ({ branchId : branchId ? branchId : DEFAULT_BRANCH_ID }), [branchId]);
+  const [groups, isLoading] = useGetUserGroups(branchIdParam);
+  const params = useMemo(() => {
+    return groupId ? { groupId, branchId } : null;
+  }, [groupId, branchId]);
+  const [group, isLoadingGroup, updateGroup] = useGetUserGroup(params);
+  const [, handleUpdate] = useUpdatePolicy();
   
   //State
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [id, setId] = useState<any>(null);
   const [dataShow,setDataShow] = useState(null)
-
+  const canUpdate = true;
   // Action
 
-  // const [resources, isResourcesLoading] = useResources();
+  const profile = useProfile();
+  console.log(profile,'profile')
+
+  const [resources, isResourcesLoading] = useResources();
+
+  useEffect(() => {
+    if (!groupId && groups.length) {
+      navigate(`${pathname}/${groups[0]._id}`);
+    };
+  }, [groups, pathname, groupId]);
 
   const onOpenForm = (id?: any) => {
     setId(id);
@@ -64,36 +89,32 @@ const UserGroup = ({ }: UserGroupProps) => {
     setId(null);
   };
   const onSelectGroup = ({ key }: any) => {
-    const nextPath = `${getNextPath(pathname)}/${key}`;
+    const nextPath = `${pathname}/${key}`;
     navigate(nextPath);
   };
 
-  // const onPermisionChange = ({isAssgined, resource, action}: onPermisionChangeProps) => {
-  //   try {
-  //     // if(!canUpdate) return
-  //     const newPolicies = getNewPolicies(group,isAssgined, resource, action)
-  //     // updateGroup({...group,policies :newPolicies }) // update Group in store redux
-  //     // handleUpdate({ isAssgined, resource, action, groupId });
-  //   } catch (error) {
-  //     toastr.error(get(error,'message','Some error'))
-  //   }
-  // };
-
-  // const renderPermission = (action : any, rc:any) => {
-  //   const admin = group?.policies?.[rc.resource.key]?.['admin'];
-  //   return (
-  //     <Permission
-  //       isActive={group?.policies?.[rc.resource.key]?.[action.key]}
-  //       onChange={(event :any ) =>
-  //         onPermisionChange(event.target.checked, rc.resource.key, action.key)
-  //       }
-  //       // disabled={(!canUpdate || admin) && action.key !== 'admin'}
-  //     />
-  //   );
-  // };
-
-  // const columns = useResourceColumns(renderPermission);
-
+  const onPermisionChange = ({ isAssgined, resource, action }: onPermissionChangeProps) => {
+    try {
+      if (!canUpdate) return;
+      updateGroup({isAssgined, resource, action }) // update Group in store redux
+      handleUpdate({ isAssgined, resource, action, groupId });
+    } catch (error) {
+      toastr.error(get(error,'message','Some error'))
+    }
+  };
+  const renderPermission = (key: string) => (action: any, rc: any) => {
+    const admin = group?.policies?.[rc.key]?.includes('admin');
+    return (
+      <Permission
+        isActive={group?.policies?.[rc.key]?.includes(key)}
+        onChange={(event: any) =>{
+          onPermisionChange({ isAssgined: event.target.checked, resource: rc.key, action: key })}
+        }
+        disabled={(!canUpdate || admin) && key !== 'admin'}
+      />
+    );
+  };
+  const columns = useResourceColumns(renderPermission);
 
   return (
     <div className="employee-group">
@@ -109,7 +130,7 @@ const UserGroup = ({ }: UserGroupProps) => {
               theme="light"
               onSelect={onSelectGroup}
             >
-              {/* {isLoading
+              {isLoading
                 ? [1, 2, 3, 4].map((index) => (
                     <Skeleton.Input
                       active
@@ -119,12 +140,14 @@ const UserGroup = ({ }: UserGroupProps) => {
                   ))
                 : groups.map(({ name, _id } : any) => (
                     <Menu.Item key={_id}>{name} </Menu.Item>
-                  ))} */}
+                  ))}
             </Menu>
           </div>
         </Col>
-
+        
         <Col span={17}>
+      <div className="employee-group__content">
+
           <div className="employee-group__header">
             <h5 className="employee-group__list-title ">Thiết lập quyền</h5>
             <Flex
@@ -166,12 +189,20 @@ const UserGroup = ({ }: UserGroupProps) => {
               {/* </WithPermission> */}
             </Flex>
           </div>
-          <SelectSearch showSelect={false} placeholder="tên quyền"/>
+            <SelectSearch
+              showSelect={false}
+              placeholder="tên quyền"
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => onSearchPermissions(e.target.value, resources, setDataShow)}
+              permissionKey={POLICIES.WRITE_USER}
+            />
+          <Table
+            columns={columns}
+              dataSource={resources}
+              className="employee-group__table"
+            />
+            </div>
         </Col>
       </Row>
-      <Table
-      columns={[]}
-      />
       <UserGroupForm
         isOpen={isOpen}
         onClose={onClose}

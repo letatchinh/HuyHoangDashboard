@@ -33,8 +33,10 @@ export const PATH_APP = {
     },
     user: {
       root: path(ROOTS.app, '/user'),
+      // detail: path(ROOTS.app, '/user/:groupId'),  
     },
     userGroup: {
-        root: path(ROOTS.app, '/user/group'),
+      root: path(ROOTS.app, '/user/group'),
+      detail: path(ROOTS.app, '/user/group/:groupId'),
     },
   };

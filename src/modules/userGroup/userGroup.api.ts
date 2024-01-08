@@ -3,7 +3,7 @@ import requester from "~/api/requester";
 
 const apis = {
     getAll: (query?: any) => requester.get(`/api/v1/user-group`, query),
-    getById: (id?: any) => requester.get(`/api/v1/user-group/${id}`),
+    getById: (query?: any) => requester.get(`/api/v1/user-group/${query.groupId}`),
     create: (data?: any) => requester.post(`/api/v1/user-group`, data),
     update: (data?: any) => requester.put(`/api/v1/user-group/${get(data, '_id')}`, data),
     delete: (id?: any) => requester.delete(`/api/v1/user-group/${id}`),

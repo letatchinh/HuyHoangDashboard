@@ -1,8 +1,8 @@
-import { get, groupBy, last } from "lodash";
+import { get, groupBy, isNil, last } from "lodash";
 import { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { clearQuerySearch, getExistProp, removeAccents } from "~/utils/helpers";
+import { StringToSlug, clearQuerySearch, getExistProp, removeAccents } from "~/utils/helpers";
 import {
   getSelectors,
   useFailed,
@@ -14,6 +14,7 @@ import {
 } from "~/utils/hook";
 import { userGroupSliceAction } from "./redux/reducer";
 import { useDispatch } from "react-redux";
+import { policySliceAction } from "../policy/redux/reducer";
 const MODULE  = "userGroup";
 const MODULE_VI  = "Nhân viên";
 
@@ -33,29 +34,40 @@ const {
   updateFailedSelector,
   pagingSelector,
 } = getSelectors(MODULE);
- const getSelector = (key : string) => (state:any) => state.userGroup[key];
-const actionsSelector = getSelector('actions');
+ const getSelector = (key : string) => (state:any) => state[MODULE][key];
+ const getSelectorPolicy = (key : string) => (state:any) => state.policy[key];
+const actionsSelector = getSelectorPolicy('actions');
 
 export const useUserGroupPaging = () => useSelector(pagingSelector);
 
 export const useGetUserGroups = (payload: object) => {
+  const createSuccess = useSelector(createSuccessSelector);
+  const updateSuccess = useSelector(updateSuccessSelector);
+  const deleteSuccess = useSelector(deleteSuccessSelector);
+
+  const memoParam : object = useMemo(() => {
+    return { ...payload };
+    //eslint-disable-next-line
+  }, [createSuccess, updateSuccess, deleteSuccess, payload]);
   return useFetch({
     action: userGroupSliceAction.getListRequest,
     loadingSelector: loadingSelector,
     dataSelector: listSelector,
     failedSelector: getListFailedSelector,
-    payload
+    payload: memoParam,
   });
 };
-export const useGetUserGroup = (id: any) => {
+export const useGetUserGroup = (params: any) => {
   return useFetchByParam({
     action: userGroupSliceAction.getByIdRequest,
     loadingSelector: getByIdLoadingSelector,
     dataSelector: getByIdSelector,
     failedSelector: getByIdFailedSelector,
-    param: id,
+    param: params,
+    actionUpdate : userGroupSliceAction.updatePolicyById,
   });
 };
+
 
 export const useCreateUserGroup = (callback?: any) => {
   useSuccess(
@@ -160,40 +172,39 @@ export const autoCreateUsername = async ({ fullName, callApi }: any) => {
   return newUserName
 };
 
-// export const useResources = () => {
-//   const { id: branchId } = useParams();
-
-//   const branchParam = useMemo(() => ({ branchId }), [branchId]);
-
-//   return useFetchByParam({
-//     action: getResources,
-//     loadingSelector: getResourcesLoadingSelector,
-//     dataSelector: resourcesSelector,
-//     failedSelector: getResourcesFailedSelector,
-//     param: branchParam,
-//     // actionUpdate : updateResourceRedux,
-//   });
-// };
-
-
 export const useResourceColumns = (renderPermission: any) => {
   const actions = useSelector(actionsSelector);
-  const actionColumns = actions.map(({ name, key } : any,index: number) => ({
+  const actionColumns = (actions || [])?.map(({ name, key }: any, index: number) => ({
     title: name,
-    dataIndex: key,
+    dataIndex: 'key',
     key: key,
     width : '13%',
-    align:'center',
-    render: renderPermission
+    align: 'center',
+    render: renderPermission(key)
   }));
-
   return [
     {
       title: 'Chức năng',
-      dataIndex: ['resource', 'name'],
+      dataIndex: 'name',
       key: 'resource',
       width : 'auto',
     },
     ...actionColumns
   ];
 };
+interface Resource {
+  resource: {
+    name?: string;
+    key?: string
+  };
+}
+
+export const onSearchPermissions = (keyword: string = '', resource: any[] = [], updateResources: (data: any) => void) => {
+  if (isNil(keyword) || keyword === '') return updateResources(resource);
+  const resultSearch = resource?.filter(item => {
+    return StringToSlug(get(item, 'resource.name', '')?.toLowerCase())?.includes(StringToSlug(keyword?.trim()?.toLowerCase()));
+  });
+
+  updateResources(resultSearch);
+};
+
