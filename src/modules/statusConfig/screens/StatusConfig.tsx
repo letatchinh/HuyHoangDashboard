@@ -1,9 +1,12 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import type { InputRef } from 'antd';
-import { Button, ColorPicker, Form, Input, Popconfirm, Table } from 'antd';
+import { Button, Checkbox, ColorPicker, Form, Input, Popconfirm, Table, Tag, Tooltip } from 'antd';
 import type { FormInstance } from 'antd/es/form';
 import { Color } from 'antd/es/color-picker';
-
+import { useUpdateStatusConfig } from '../statusConfig.hook';
+import { ExclamationCircleOutlined } from "@ant-design/icons";
+import Breadcrumb from '~/components/common/Breadcrumb';
+import useTranslate from '~/lib/translation';
 const EditableContext = React.createContext<FormInstance<any> | null>(null);
 
 interface Item {
@@ -11,6 +14,7 @@ interface Item {
   name: string;
   age: string;
   address: string;
+  priority: boolean;
 }
 
 interface EditableRowProps {
@@ -105,25 +109,28 @@ interface DataType {
   name: string;
   color: string;
   backgroundColor: string;
+  priority: boolean;
 }
 
 type ColumnTypes = Exclude<EditableTableProps['columns'], undefined>;
 
 const StatusConfig: React.FC = () => {
+  const { t }: any = useTranslate();
      const [colorHex, setColorHex] = useState<Color | string>("#1677ff");
   const [dataSource, setDataSource] = useState<DataType[]>([
     {
       key: '0',
       name: 'Edward King 0',
-      color: '#1677ff',
-      backgroundColor: '#fff',
+      backgroundColor: '#1677ff',
+      color: '#fff',
+      priority: false,
     },
     {
       key: '1',
       name: 'Edward King 1',
       color: '#1677ff',
-      backgroundColor: '#fff',
-
+      backgroundColor: 'red',
+      priority: true,
     },
   ]);
 
@@ -145,13 +152,26 @@ const StatusConfig: React.FC = () => {
   
   const defaultColumns: (ColumnTypes[number] & { editable?: boolean; dataIndex: string })[] = [
     {
+      title: "Trạng thái",
+      dataIndex: "name",
+      width: "100px",
+      key:'valueStatus',
+      align: "center",
+      // editable: true,
+      render: (value, record) => (
+        <Tag color={record.backgroundColor} style={{ color: record.color }}>
+          {value}
+        </Tag>
+      )
+    },
+    {
       title: 'name',
       dataIndex: 'name',
       width: '30%',
       editable: true,
     },
     {
-    title:'color',
+    title:'Màu chữ',
     dataIndex:'color',
     // editable: true,
     render: (_, record:any) => {
@@ -165,7 +185,7 @@ const StatusConfig: React.FC = () => {
     }
     },
     {
-        title:'background color',
+        title:'Màu nền',
         dataIndex:'backgroundColor',
         // editable: true,
         render: (_, record:any) => {
@@ -179,14 +199,95 @@ const StatusConfig: React.FC = () => {
         }
     },
     {
-      title: 'operation',
-      dataIndex: 'operation',
-    //   render: (_, record: { key: React.Key }) =>
-    //     dataSource.length >= 1 ? (
-    //       <Popconfirm title="Sure to delete?" onConfirm={() => handleDelete(record.key)}>
-    //         <a>Delete</a>
-    //       </Popconfirm>
-    //     ) : null,
+      title: <Tooltip title='Giá trị trạng thái này sẽ được ưu tiên chọn khi công việc được tạo mới'><span style={{cursor:'pointer'}}>Ưu tiên <ExclamationCircleOutlined/></span></Tooltip>,
+      dataIndex: "priority",
+      width: "100px",
+      key:'priority',
+      align: "center",
+      render:(value,record)=>(
+          <Checkbox
+            checked={value}
+            onChange={(e) => {
+              if (value) return;
+              // updateStatusConfig({
+              //   priority: e.target.checked,
+              //   isDefault:true,
+              //   statusHidden:false,
+              //   id: record._id
+              // });
+            }}
+          />
+        )      
+    },
+    {
+      title:'Mặc định',
+      dataIndex:'isDefault',
+      key:'isDefault',
+      align: "center",
+      width:80,
+      render: (value, record) => {
+        const disable = Boolean(record.priority) &&Boolean(record.isDefault)
+        const title = disable? 'Không thể thực hiện thao tác vì trạng thái hiện tại đang được ưu tiên' :'';
+        return (
+          <Tooltip title={title} >
+            <Checkbox
+            disabled={disable}
+              checked={value}
+              onChange={(e) => {
+                // updateStatusConfig({
+                //   isDefault: e.target.checked,
+                //   id: record._id
+                // });
+              }}
+            />
+          </Tooltip>
+        );
+      }
+    },
+    {
+      title:'Quyền quản trị',
+      dataIndex:'justAdmin',
+      key:'justAdmin',
+      align: "center",
+      width:80,
+      render: (value, record) => (
+        <Checkbox checked={value} onChange={(e)=>{
+          // if(!canUpdate) return 
+          // updateStatusConfig({justAdmin:e.target.checked,id:record._id})
+        }}/>
+      )
+    },
+    {
+      title:'Ẩn',
+      dataIndex:'statusHidden',
+      key:'statusHidden',
+      align: "center",
+      width:60,
+      render: (value, record) => (
+        <Tooltip  title={!record?.justAdmin? 'Quyền quản trị phải được bật': (record.priority === true )? 'Không thể thực hiện thao tác vì trạng thái này là "Ưu tiên"':''}>
+          <Checkbox disabled={!record?.justAdmin||record.priority} checked={value} defaultChecked={value} onChange={(e)=>{
+            // if(!canUpdate) return 
+            // updateStatusConfig({statusHidden:e.target.checked,id:record._id})
+          }}/>
+        </Tooltip>
+      )
+    },
+    // canDelete?
+    {
+      title: "Hành động",
+      dataIndex: "operation",
+      key: "operation",
+      align: "center",
+      width:80,
+      render: (_, record) =>
+      // listStatusConfig?.length >= 1 ? (
+          <Popconfirm
+            title="Sure to delete?"
+            onConfirm={() => handleDelete(record._id)}
+          >
+            <Button type="dashed" style={{color:'red'}} size="small">Xoá</Button>
+          </Popconfirm>
+        // ) : null,
     },
   ];
 
@@ -194,8 +295,9 @@ const StatusConfig: React.FC = () => {
     const newData: DataType = {
       key: count,
       name: `Edward King ${count}`,
-    color:'#1677ff',
-    backgroundColor: '#fff',
+    color:'#fff',
+    backgroundColor: '#f1677f',
+    priority: false,
     };
     setDataSource([...dataSource, newData]);
     setCount(count + 1);
@@ -237,8 +339,9 @@ const StatusConfig: React.FC = () => {
 
   return (
     <div>
+      <Breadcrumb title={t('statusConfig')} />
       <Button onClick={handleAdd} type="primary" style={{ marginBottom: 16 }}>
-        Add a row
+        Thêm cấu hình trạng thái
       </Button>
       <Table
         components={components}
