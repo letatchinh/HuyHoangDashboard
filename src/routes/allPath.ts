@@ -28,4 +28,8 @@ export const PATH_APP = {
     branch : {
       root: path(ROOTS.app, '/branch'),
     },
+    todoList: {
+      statusConfig: path(ROOTS.app, '/statusConfig'),
+      list: path(ROOTS.app, '/todoList'),
+    }
   };

@@ -72,6 +72,21 @@ const resource: ItemType[] = [
       ],
       icon :<AppstoreFilled />
     }),
+    {
+      label: "Quản lý công việc",
+      key: "todoList",
+      icon: <AppstoreFilled />,
+      children: [
+        {
+          label: "Cấu hình trạng thái",
+          // key: "statusConfig",
+          icon: <AppstoreFilled />,
+          path: PATH_APP.todoList.statusConfig,
+          key: PATH_APP.todoList.statusConfig,
+          
+        },
+      ],
+    },
 ];
 
 const NavbarItems = resource.map((first) => {
