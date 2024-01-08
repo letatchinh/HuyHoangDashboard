@@ -4,6 +4,7 @@ import manufacturer from '../en/manufacturer.json';
 import supplier from '../en/supplier.json';
 import rankingManufacturer from '../en/rankingManufacturer.json';
 import unit from '../en/unit.json';
+import medicine from '../en/medicine.json';
 const en = {
     ...dashboard,
     ...supplier,
@@ -11,5 +12,6 @@ const en = {
     ...manufacturer,
     ...rankingManufacturer,
     ...unit,
+    ...medicine,
 }
 export default en;
