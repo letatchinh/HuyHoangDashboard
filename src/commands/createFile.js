@@ -42,6 +42,8 @@ function copyAndRenameFiles(source, destination) {
             replaceStringInFile(destinationFilePath, moduleExampleUpperCase, newModuleUpperCase);
         }
     });
+
+
 }
 
 function replaceStringInFile(filePath, searchString, replaceString) {
@@ -51,4 +53,9 @@ function replaceStringInFile(filePath, searchString, replaceString) {
 }
 
 copyAndRenameFiles(folderPath, modulePath + newModule, newModule);
+console.log("Create Module" + newModule + "Success");
+console.log("Please UnComment Code in file " +newModule+ ".hook.ts");
+console.log("Then Add reducer and saga to '~/redux/reducers' and ~/redux/sagas");
+console.log("Then Add module in '~/redux/models/moduleRedux'");
+console.log("DONE!!");
 

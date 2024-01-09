@@ -1,12 +1,15 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { InstanceModuleRedux } from "~/redux/instanceModuleRedux";
-
-class UserClassExtend extends InstanceModuleRedux {
-  clone;
-  cloneInitState;
+import { initStateSlice } from "~/redux/models";
+interface cloneInitState extends initStateSlice {
+ // Add cloneInitState Type Here
+}
+class ModuleExampleClassExtend extends InstanceModuleRedux {
+  cloneReducer;
+  cloneInitState : cloneInitState;
   constructor() {
     super('moduleExample');
-    this.clone = {
+    this.cloneReducer = {
       ...this.initReducer,
       // Want Add more reducer Here...
     }
@@ -19,13 +22,13 @@ class UserClassExtend extends InstanceModuleRedux {
     return createSlice({
       name: this.module,
       initialState: this.cloneInitState,
-      reducers:  this.clone,
+      reducers:  this.cloneReducer,
     });
   }
   
 }
 
-const newSlice = new UserClassExtend();
+const newSlice = new ModuleExampleClassExtend();
 const data = newSlice.createSlice();
 
 

@@ -1,12 +1,14 @@
-import React, { useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import debounce from "lodash/debounce";
 import { Empty, Select, Spin } from "antd";
 import type { SelectProps } from "antd/es/select";
 
 export interface DebounceSelectProps<ValueType = any>
   extends Omit<SelectProps<ValueType | ValueType[]>, "options" | "children"> {
-  fetchOptions: (search: string) => Promise<ValueType[]>;
+  fetchOptions: (search?: string) => Promise<ValueType[]>;
   debounceTimeout?: number;
+  initOptions? : any[]
+  value?:any
 }
 
 function DebounceSelect<
@@ -18,12 +20,20 @@ function DebounceSelect<
 >({
   fetchOptions,
   debounceTimeout = 800,
+  initOptions,
+  value,
   ...props
 }: DebounceSelectProps<ValueType>) {
   const [fetching, setFetching] = useState(false);
   const [options, setOptions] = useState<ValueType[]>([]);
   const fetchRef = useRef(0);
 
+  useEffect(() => {
+    if (initOptions) {
+      setOptions(initOptions);
+    }
+  }, [initOptions]);
+  
   const debounceFetcher = useMemo(() => {
     const loadOptions = (value: string) => {
     
@@ -49,14 +59,20 @@ function DebounceSelect<
 
   return (
     <Select
-      labelInValue
+    allowClear
       filterOption={false}
       onSearch={debounceFetcher}
       notFoundContent={fetching ? <Spin size="small" /> : <Empty />}
       {...props}
+      {...value && {value}}
       options={options}
       showSearch
-      style={{ width: 300 }}
+      style={{ minWidth: 300 }}
+      onFocus={() => {
+        if(!initOptions){
+          debounceFetcher('');
+        }
+      }}
     />
   );
 }
