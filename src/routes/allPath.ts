@@ -30,6 +30,6 @@ export const PATH_APP = {
     },
     todoList: {
       statusConfig: path(ROOTS.app, '/statusConfig'),
-      list: path(ROOTS.app, '/todoList'),
+      workBoard: path(ROOTS.app, '/workBoard'),
     }
   };

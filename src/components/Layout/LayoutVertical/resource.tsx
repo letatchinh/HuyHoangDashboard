@@ -1,4 +1,4 @@
-import { AppstoreFilled, AppstoreOutlined, ShopFilled } from "@ant-design/icons";
+import { AppstoreFilled, AppstoreOutlined, ShopFilled,ApartmentOutlined } from "@ant-design/icons";
 import { MenuProps } from "antd";
 import React from "react";
 import { NavLink } from "react-router-dom";
@@ -77,6 +77,14 @@ const resource: ItemType[] = [
       key: "todoList",
       icon: <AppstoreFilled />,
       children: [
+        {
+          label: "Quản lý công việc",
+          // key: "statusConfig",
+          icon: <ApartmentOutlined />,
+          path: PATH_APP.todoList.workBoard,
+          key: PATH_APP.todoList.workBoard,
+          
+        },
         {
           label: "Cấu hình trạng thái",
           // key: "statusConfig",
