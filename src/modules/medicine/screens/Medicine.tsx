@@ -73,9 +73,10 @@ export default function Medicine() {
                     placeholder="Nhập bất kì để tìm..."
                     value={keyword}
                     onChange={(e) => (setKeyword(e.target.value))
-                    
+                     
                     }
-                    onSearch={onSearch}
+                    onSearch={onSearch} 
+                    allowClear
                     enterButton={<SearchOutlined />}
                   />
                 </Col>
