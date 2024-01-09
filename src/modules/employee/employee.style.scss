@@ -1,0 +1,158 @@
+.employee-form {
+  max-width: 980px;
+  margin: 0 auto;
+  .ant-form {
+    padding: 30px;
+    padding-top: 10px;
+
+    .ant-form-item-label {
+      label {
+        width: 100%;
+      }
+    }
+  }
+
+  .ant-skeleton {
+    width: 100%;
+  }
+
+  &__select-langue-btn {
+    width: 80px;
+    text-align: center;
+  }
+
+  &__upload-logo {
+    display: flex;
+    justify-content: flex-end;
+    padding: 0;
+    margin-bottom: 24px;
+
+    .ant-upload.ant-upload-select-picture-card {
+      margin: 0;
+      width: 160px;
+      height: 160px;
+    }
+
+    .ant-upload-picture-card-wrapper {
+      display: flex;
+      justify-content: flex-end;
+    }
+  }
+
+  &__section-title {
+    margin-bottom: 5px;
+
+    h4 {
+      margin-bottom: 0;
+    }
+  }
+
+  .ant-input-number {
+    width: 100%;
+  }
+
+  .ant-picker {
+    width: 182px;
+  }
+
+  &__images {
+    .ant-upload,
+    .ant-upload-list-picture-card-container {
+      width: 160px;
+      height: 160px;
+    }
+  }
+
+  &__submit-box {
+    margin-top: 30px;
+    display: flex;
+    justify-content: center;
+
+    & > * {
+      margin: 0 20px;
+      min-width: 100px;
+    }
+
+    button {
+      min-width: 100px;
+    }
+  }
+
+  .hiden {
+    display: none;
+  }
+
+  &__description {
+    width: 100%;
+  }
+
+  .top-5 {
+    position: relative;
+    top: -3px;
+  }
+
+  &__dynamic-form-item:first-child {
+    .ant-col-2 {
+      padding-top: 15px;
+    }
+  }
+};
+.employee-group {
+  min-height: 40vh;
+  display: flex;
+  flex-direction: column;
+  margin: 10px;
+  ::-webkit-scrollbar {
+    -webkit-appearance: none;
+    width: 7px;
+  }
+  ::-webkit-scrollbar-thumb {
+   border-radius: 4px;
+   background-color: rgba(0, 0, 0, .5);
+   box-shadow: 0 0 1px rgba(255, 255, 255, .5);
+ }
+  &__list-title {
+    margin-bottom: 1rem;
+  }
+
+  &__permission {
+    margin-left: 70px;
+    box-shadow: 0 2px 4px 3px rgba(15, 34, 58, 0.12);
+    padding: 20px;
+  }
+
+  &__header {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 10px;
+  }
+
+  &__list-title {
+    margin-right: auto;
+  }
+
+  &__search{
+    width: 300px;
+    margin-bottom: 10px;
+  }
+  &__list__menu{
+    width: 256px ;
+    height: 600px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    box-shadow: 0px -10px 14px -15px rgba(77, 77, 77, 0.856) inset !important;
+  }
+  &__list{
+    box-shadow: 0 2px 4px 3px rgba(15, 34, 58, 0.12);
+    padding: 10px;
+    background-color: white;
+  };
+  &__content{
+    box-shadow: 0 2px 4px 3px rgba(15, 34, 58, 0.12);
+    padding: 10px;
+    background-color: white;
+  };
+  &__table{
+    box-shadow: 0 2px 4px 3px rgba(15, 34, 58, 0.12);
+  };
+}

@@ -1,30 +1,37 @@
+
+
+import { get } from "lodash";
+import { PaginateResult } from "~/lib/@types";
 import { InstanceModuleRedux } from "~/redux/instanceModuleRedux";
+import { initStateSlice } from "~/redux/models";
+import { createSlice } from "@reduxjs/toolkit";
+import { UserResponseOne } from "~/modules/user/user.modal";
 
-// InstanceModuleRedux
-const branchSlice = new InstanceModuleRedux('branch');
-/**
- * Want to ADD more Slice or EXTEND for this module use This
- */
-// branchSlice.extendsSlice({
-//     getListSuccess: (state:any, { payload }:any) => {
-//         state.isLoading = false;
-//         state.list = payload;
-//       },
-// });
-// /**
-//  * 
-//  * 
-//  * Want to Add more State for this module use This
-//  */
-// branchSlice.extendsStates({});
-// Start Create Slice
-const data = branchSlice.createSlice();
+class BranchClassExtentd extends InstanceModuleRedux {
+  clone;
+  constructor() {
+    super('branch');
+    this.clone = {
+      ...this.initReducer,
+      getListSuccess: (state: initStateSlice<UserResponseOne>, { payload }: { payload?: PaginateResult<UserResponseOne> }) => {
+        state.isLoading = false;
+        state.list = get(payload, 'docs', []);
+      },
+    }
+  }
+  createSlice() {
+    return createSlice({
+      name: this.module,
+      initialState: this.initialState,
+      reducers:  this.clone,
+    });
+  }
+  
+}
 
-// export action and Reducer;
+const newSlice = new BranchClassExtentd();
+const data = newSlice.createSlice();
 
-// Want Suggettion ?
-// interface reducerType  extends voidReducer {
-//     // onR? : (state:any) => void
-// }
-export const branchSliceAction = data.actions;
+
+export const branchSliceAction   = data.actions;
 export default data.reducer;

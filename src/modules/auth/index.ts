@@ -15,4 +15,4 @@ const ModuleAuth = {
     model : authModels,
     redux : {reducer,saga},
 }
-export default ModuleAuth
+export default ModuleAuth;
