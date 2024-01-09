@@ -1,6 +1,9 @@
 # Create Module Command
 
-npm run createModule moduleName
+## `npm run createModule moduleName`
+Then Add reducer and saga to '~/redux/reducers' and ~/redux/sagas'
+Then Add module in '~/redux/models/moduleRedux'
+DONE!!
 
 # Getting Started with Create React App
 
