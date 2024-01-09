@@ -2,6 +2,7 @@ import { Button, Col, Row, Select } from "antd";
 import Search from "antd/es/input/Search";
 import WithOrPermission from "./WithOrPermission";
 import POLICY from "../../modules/policy/policy.auth";
+import { PlusCircleOutlined } from "@ant-design/icons";
 
 interface Option {
   value: string;
@@ -76,73 +77,20 @@ const SelectSearch = ({
           <Col span={18}></Col>
           {isShowButtonAdd && (
             <Col span={4} className="select-search__button">
-              <WithOrPermission permission={[permissionKey]} >
+              {/* <WithOrPermission permission={[permissionKey]} > */}
               <Button
                 style={{ marginBottom: 10 }}
                 type="primary"
                 onClick={handleOnClickButton}
+                icon={<PlusCircleOutlined/>}
               >
                 Thêm mới
               </Button>
-              </WithOrPermission>
+              {/* </WithOrPermission> */}
             </Col>
           )}
         </Row>
     </div>
-    {/* <Row gutter={5} style={{ marginBottom: 10 }}>
-      <Col span={16}>
-        <Row gutter={5}>
-          {showSelect && (
-            <Col span={8}>
-              <Select
-                style={{
-                  width: "100%",
-                }}
-                options={options}
-                showSearch
-                allowClear
-              />
-            </Col>
-          )}
-          <Col span={8}>
-            <Search
-              placeholder={`Tìm ${placeholder}`}
-              onSearch={onSearch}
-              allowClear
-            />
-          </Col>
-          {showSearchStatus && (
-            <Col span={8}>
-              <Select
-                placeholder="Tìm theo trạng thái"
-                style={{
-                  width: "100%",
-                }}
-                options={optionsStatus}
-                showSearch
-                allowClear
-              />
-            </Col>
-          )}
-        </Row>
-      </Col>
-      <Col span={8}>
-        <Row gutter={5}>
-          <Col span={18}></Col>
-          {isShowButtonAdd && (
-            <Col span={4} className="select-search__button">
-              <Button
-                style={{ marginBottom: 10 }}
-                type="primary"
-                onClick={handleOnClickButton}
-              >
-                Thêm mới
-              </Button>
-            </Col>
-          )}
-        </Row>
-      </Col>
-    </Row> */}
   </div>
   );
 };
