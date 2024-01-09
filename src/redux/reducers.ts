@@ -5,6 +5,7 @@ import localStorage from 'redux-persist/es/storage';
 import authModule from '~/modules/auth';
 import supplierModule from '~/modules/supplier';
 import branchModule from '~/modules/branch';
+import pharmacyModule from '~/modules/pharmacy';
 import geoModule from '~/modules/geo';
 const authPersistConfig = {
     key: 'auth',
@@ -24,6 +25,7 @@ const rootReducer = combineReducers({
     supplier: supplierModule.redux.reducer,
     branch: branchModule.redux.reducer,
     geo: geoModule.redux.reducer,
+    pharmacy: pharmacyModule.redux.reducer
 
 });
 export default rootReducer

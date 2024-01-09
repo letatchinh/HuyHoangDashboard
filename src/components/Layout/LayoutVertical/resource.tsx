@@ -58,20 +58,26 @@ const resource: ItemType[] = [
     key: PATH_APP.supplier.root,
   },
 
-      // Chi nhánh
-    getItem({
-      label : "Chi nhánh",
-      key : "branch",
-      // Children
-      children : [
-        getItem({
-          label : "Danh sách chi nhánh",
-          path : PATH_APP.branch.root,
-          key : PATH_APP.branch.root,
-        })
-      ],
-      icon :<AppstoreFilled />
-    }),
+  // Chi nhánh
+  getItem({
+    label: "Chi nhánh",
+    key: "branch",
+    // Children
+    children: [
+      getItem({
+        label: "Danh sách chi nhánh",
+        path: PATH_APP.branch.root,
+        key: PATH_APP.branch.root,
+      })
+    ],
+    icon: <AppstoreFilled />
+  }),
+  {
+    label: "Nhà thuốc",
+    icon: <AppstoreOutlined />,
+    path: PATH_APP.pharmacy.root,
+    key: PATH_APP.pharmacy.root,
+  },
 ];
 
 const NavbarItems = resource.map((first) => {

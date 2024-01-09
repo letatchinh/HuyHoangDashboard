@@ -29,12 +29,12 @@ export type initStateSlice<T=any> = {
     getByIdFailed?: any;
   };
 
-  const moduleRedux ={
-    auth:'auth',
-    supplier:'supplier',
-    branch:'branch',
-    geo:'geo',
-    }as const
-    
-    
-  export type ModuleRedux = keyof typeof moduleRedux;
+const moduleRedux = {
+  auth: "auth",
+  supplier: "supplier",
+  branch: "branch",
+  geo: "geo",
+  pharmacy: "pharmacy",
+    }as const;
+
+export type ModuleRedux = keyof typeof moduleRedux;

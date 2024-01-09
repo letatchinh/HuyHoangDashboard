@@ -28,4 +28,9 @@ export const PATH_APP = {
     branch : {
       root: path(ROOTS.app, '/branch'),
     },
+    pharmacy : {
+      root:  path(ROOTS.app, '/pharmacy'),
+      detail: path(ROOTS.app, '/pharmacy/:id'),
+    },
+    
   };
