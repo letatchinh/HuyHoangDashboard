@@ -134,3 +134,12 @@ const {
   export const useResetAction = () => {
     return useResetState(productUnitActions.resetAction);
   };
+
+  export const useGetListProductUnitNoParam = () => {
+    return useFetch({
+      action: productUnitActions.getListRequest,
+      loadingSelector: loadingSelector,
+      dataSelector: listSelector,
+      failedSelector: getListFailedSelector,
+    })
+}

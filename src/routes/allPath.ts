@@ -32,4 +32,9 @@ export const PATH_APP = {
     branch : {
       root: path(ROOTS.app, '/branch'),
     },
+
+    product : {
+      root: path(ROOTS.app, '/product'),
+      edit: path(ROOTS.app, '/product/:supplierId'),
+    },
   };

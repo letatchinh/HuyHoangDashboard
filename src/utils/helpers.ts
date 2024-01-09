@@ -1,4 +1,5 @@
 import { forIn, get, groupBy, keys } from "lodash";
+import { STATUS } from "~/constants/defaultValue";
 import subvn from "~/core/subvn";
 
 export const getPaging = (response: any) => ({
@@ -73,8 +74,18 @@ export const filterAcrossAccents = (input: any, option: any) => {
   );
 };
 
+export const filterSelectWithLabel = (input: any, option: any) => {
+  return (
+    removeAccents(option?.label?.toLowerCase()).indexOf(
+      removeAccents(input?.toLowerCase())
+    ) >= 0
+  );
+};
+
 export const formatter = (value:number) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
 
 export const floorFormatter = (value:number) => `${Math.floor(value)}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
 
 export const ceilFormatter = (value:number) => `${Math.ceil(value)}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+
+export const getActive = (list : []) => list?.filter((item:any) => get(item,'status') === STATUS.ACTIVE);

@@ -2,7 +2,6 @@ import { Tabs,TabsProps } from 'antd';
 import React, { useMemo } from 'react';
 import { propsTypeTabSupplier } from '../supplier.modal';
 import FormSupplier from './FormSupplier';
-import ListProduct from './ListProduct';
 import Report from './Report';
 
 
@@ -16,20 +15,15 @@ export default function TabSupplier({id,onCancel,onUpdate,isSubmitLoading}:props
             },
         ];
         if(id){
-            items = [...items,{
-                label : "Danh sách sản phẩm",
-                key : '1',
-                children : <ListProduct />
-            },
+            items = [...items,
             {
                 label : "Báo cáo",
-                key : '2',
+                key : '1',
                 children : <Report />
             },]
         }
         return items
-    },[id]);
-    console.log(id,'id');
+    },[id, isSubmitLoading, onCancel, onUpdate]);
     
     return (
         <Tabs
