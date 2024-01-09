@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Button, Checkbox, Form, Input, Modal, Row, Skeleton } from "antd";
 import { useParams } from "react-router-dom";
-import { useCreateUserGroup, useUpdateUserGroup } from "../userGroup.hook";
+import { useCreateUserGroup, useGetUserGroup, useUpdateUserGroup } from "../userGroup.hook";
 import toastr from "toastr";
 import { DEFAULT_BRANCH_ID } from "~/constants/defaultValue";
 
@@ -9,51 +9,49 @@ type propsType = {
   isOpen?: boolean;
   onClose?: any;
   initGroup?: any;
-  _id?: string;
+  id?: string;
 };
 
 const FormItem = Form.Item;
 export default function UserGroupForm(props: propsType): React.JSX.Element {
-  const { isOpen, onClose, initGroup, _id } = props;
-  const { id: branchId } = useParams();
-  // const { _id } = initGroup || {};
+  const { isOpen, onClose, initGroup, id } = props;
+  const { groupId } = useParams();
   const [form] = Form.useForm();
+  const [userGroup, isLoading] = useGetUserGroup(groupId);
   const [isSubmitLoading, handleCreate] = useCreateUserGroup(onClose);
   const [, handleUpdate] = useUpdateUserGroup(onClose);
-  const isLoading = false;
 
   useEffect(() => {
-    form.resetFields();
-  }, [initGroup, form]);
+    if (userGroup) {
+      form.setFieldsValue(userGroup);
+    } else {
+      form.resetFields();
+    };
+  }, [groupId,userGroup, form]);
 
   const onFinish = (values: any) => {
-    // handleCreate({
-    //   ...values,
-    //   branchId: branchId || DEFAULT_BRANCH_ID,
-    // });
-  };
-
-  const onFinishFailed = (errorInfo: any) => {
-    toastr.error(errorInfo);
-    console.log("Failed:", errorInfo);
+    if (id) {
+      handleUpdate({
+        ...values,
+        id: id,
+        branchId: DEFAULT_BRANCH_ID,
+      });
+    } else {
+      handleCreate({
+        ...values,
+        branchId: DEFAULT_BRANCH_ID,
+      });
+    }
   };
 
   return (
-    <Modal
-      open={isOpen}
-      footer={[]}
-      onCancel={onClose}
-      className="form-modal__user-group"
-    >
-      <Form
+    <Form
+        form={form}
         name="basic"
-        // labelCol={{ sm: 24, md: 24, lg: 8, xl: 8 }}
-        // wrapperCol={{ sm: 24, md: 24, lg: 16, xl: 16 }}
         labelCol={{ span: 8 }}
         wrapperCol={{ span: 16 }}
         style={{ maxWidth: 600 }}
         onFinish={onFinish}
-        onFinishFailed={onFinishFailed}
         autoComplete="off"
         labelAlign="left"
         >
@@ -68,7 +66,7 @@ export default function UserGroupForm(props: propsType): React.JSX.Element {
             rules={[
               {
                 required: true,
-                message: "Xin mời nhập tên nhóm nhân viên!"
+                message: "Xin mời nhập tên nhóm nhân viên!",
               },
             ]}
           >
@@ -88,10 +86,9 @@ export default function UserGroupForm(props: propsType): React.JSX.Element {
             <Button onClick={onClose}>Huỷ</Button>
           )}
           <Button type="primary" htmlType="submit" loading={isSubmitLoading}>
-            {_id ? "Cập nhật" : "Tạo mới"}
+            {id ? "Cập nhật" : "Tạo mới"}
           </Button>
         </Row>
       </Form>
-    </Modal>
   );
 }

@@ -75,7 +75,7 @@ export const useCreateUserGroup = (callback?: any) => {
     `Tạo mới ${MODULE_VI} thành công`,
     callback
   );
-  useFailed(createFailedSelector);
+  // useFailed(createFailedSelector);
 
   return useSubmit({
     action: userGroupSliceAction.createRequest,
@@ -89,7 +89,7 @@ export const useUpdateUserGroup = (callback?: any) => {
     `Cập nhật ${MODULE_VI} thành công`,
     callback
   );
-  useFailed(updateFailedSelector);
+  // useFailed(updateFailedSelector);
 
   return useSubmit({
     action: userGroupSliceAction.updateRequest,
@@ -99,7 +99,7 @@ export const useUpdateUserGroup = (callback?: any) => {
 
 export const useDeleteUserGroup = (callback?: any) => {
   useSuccess(deleteSuccessSelector, `Xoá ${MODULE_VI} thành công`, callback);
-  useFailed(deleteFailedSelector);
+  // useFailed(deleteFailedSelector);
 
   return useSubmit({
     action: userGroupSliceAction.deleteRequest,
