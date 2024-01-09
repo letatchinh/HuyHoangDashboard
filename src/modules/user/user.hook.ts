@@ -35,6 +35,9 @@ const {
 const getSelector = (key: string) => (state: any) => state.user[key];
 
 export const useUserPaging = () => useSelector(pagingSelector);
+const policySelector = getSelector('policy');
+const isGetPolicyLoadingSelector = getSelector('isGetPolicyLoading');
+const getPolicyFailedSelector = getSelector('getPolicyFailedSelector');
 
 export const useGetUsers = (params: any) => {
   return useFetchByParam({
@@ -162,3 +165,13 @@ export const autoCreateUsername = async ({ fullName, callApi }: any) => {
 };
  
 //POLICY
+
+export const useGetPolicyCheckAllPage = (param?: any) => {
+  return useFetch({
+    action: userSliceAction.getPolicyRequest,
+    loadingSelector: isGetPolicyLoadingSelector,
+    dataSelector: policySelector,
+    failedSelector: getPolicyFailedSelector,
+    // param: param,
+  });
+};

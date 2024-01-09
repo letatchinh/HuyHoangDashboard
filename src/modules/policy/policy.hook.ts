@@ -15,6 +15,7 @@ import {
 import { policySliceAction } from "./redux/reducer";
 import { ACTIONS } from "./policy.auth";
 import { ACTIONS_REDUX, DEFAULT_BRANCH_ID } from "~/constants/defaultValue";
+import { userSliceAction } from "../user/redux/reducer";
 const MODULE  = "policy";
 const MODULE_VI  = "Người dùng";
 
@@ -35,12 +36,15 @@ const {
   pagingSelector,
 } = getSelectors(MODULE);
 const getSelector = (key: string) => (state: any) => state.policy[key];
-const getSelectorUser = (key: string) => (state: any) => state.user[key];
-const policySelector = getSelectorUser('policy');
 const profileSelector = getSelector('profile');
 const getResourcesLoadingSelector = getSelector('isGetResourcesLoading');
 const resourcesSelector = getSelector('resources');
 const getResourcesFailedSelector = getSelector('getResourcesFailed');
+
+const getSelectorUser = (key: string) => (state: any) => state.user[key];
+const policySelector = getSelectorUser('policy');
+const isGetPolicyLoadingSelector = getSelectorUser('isGetPolicyLoading');
+const getPolicyFailedSelector = getSelectorUser('getPolicyFailedSelector');
 
 export const usePolicyPaging = () => useSelector(pagingSelector);
 
@@ -181,7 +185,6 @@ export const useResources = () => {
 };
 
 export const useMatchOrPolicy = (requiredPermission: string[][]) => {
-  console.log(requiredPermission,'requiredPermission')
   const policies = useSelector(policySelector);
   const profile = useSelector(profileSelector);
   const isMatch = useMemo(() => {
@@ -200,4 +203,24 @@ export const useMatchOrPolicy = (requiredPermission: string[][]) => {
   }, [requiredPermission, policies]);
 
   return isMatch;
+};
+
+export const useUserPolicy = () => {
+  const [isLoading, handleGetPolicy] = useSubmit({
+    loadingSelector: isGetPolicyLoadingSelector,
+    action: userSliceAction.getPolicyRequest,
+  });
+
+  const policies = useSelector(policySelector);
+
+  useEffect(() => {
+    if (!Object.keys(policies || {}).length && !isLoading) {
+      handleGetPolicy(DEFAULT_BRANCH_ID);
+    }
+    //eslint-disable-next-line
+  }, []);
+
+  useFailed(getPolicyFailedSelector);
+
+  return [isLoading, handleGetPolicy, policies];
 };

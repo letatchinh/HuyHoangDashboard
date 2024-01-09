@@ -7,7 +7,7 @@ import { concatAddress } from "~/utils/helpers";
 import {
   useBranchPaging, useGetBranches
 } from "../branch.hook";
-import SelectSearch from "~/components/common/SelectSearch";
+import SelectSearch from "~/components/common/SelectSearch/SelectSearch";
 const columns : ColumnsType = [
   {
     title : "Tên chi nhánh",

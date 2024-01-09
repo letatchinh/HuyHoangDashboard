@@ -4,7 +4,7 @@ import { useState } from "react";
 import UserForm from "../UserForm";
 import { ColumnsType } from "antd/es/table";
 import Search from "antd/es/input/Search";
-import SelectSearch from "~/components/common/SelectSearch";
+import SelectSearch from "~/components/common/SelectSearch/SelectSearch";
 import TableAnt from "~/components/Antd/TableAnt";
 import { useResetState } from "~/utils/hook";
 import { userSliceAction } from "../../redux/reducer";
@@ -12,7 +12,7 @@ import { Link } from "react-router-dom";
 import POLICIES from "~/modules/policy/policy.auth";
 
 interface UserProps {
-  activeTab: string,
+  currentTab: string,
 };
 interface ColumnActionProps {
   _id : any,
@@ -46,7 +46,7 @@ const ColumnActions = ({
   );
 };
 
-const UserEmployee = ({activeTab}: UserProps) => {
+const UserEmployee = ({currentTab}: UserProps) => {
   useResetState(userSliceAction.resetAction);
   const [id, setId] = useState(null)
   const [isOpenModal, setIsOpenModal] = useState(false);
@@ -135,12 +135,9 @@ const UserEmployee = ({activeTab}: UserProps) => {
       }
     }
   ];
-console.log(POLICIES,'POLICIES.WRITE_USER')
 
   return (
     <div>
-      <Row gutter={10} align="middle" style={{marginBottom: 10}}>
-        <Col span={21}>
           <SelectSearch
             showSelect = {false}
             options={[]}
@@ -148,8 +145,6 @@ console.log(POLICIES,'POLICIES.WRITE_USER')
             isShowButtonAdd
             permissionKey={POLICIES.WRITE_USER}
           />
-        </Col>
-      </Row>
       <TableAnt
         dataSource={data?.length ? data : []}
         loading={isLoading}

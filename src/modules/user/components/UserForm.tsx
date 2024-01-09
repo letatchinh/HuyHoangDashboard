@@ -38,7 +38,7 @@ export default function UserForm(props: IProps) {
   const [wardCode, setWardCode] = useState<string>('');
 
   //hook user
-  const [isUpdateLoading, handleUpdate] = useUpdateUser();
+  const [isUpdateLoading, handleUpdate] = useUpdateUser(handleCloseModal);
   const [isCreateLoading, handleCreate] = useCreateUser(handleCloseModal);
   const [user, isLoading] = useGetUser(id);
   useResetState(userSliceAction.resetAction);
@@ -66,7 +66,7 @@ export default function UserForm(props: IProps) {
     if (id) {
       const data: object = {
         ...user,
-        _id: id
+        id: id
       };
       if (statusAccount === 'ACTIVE') {
         handleUpdate({...data});

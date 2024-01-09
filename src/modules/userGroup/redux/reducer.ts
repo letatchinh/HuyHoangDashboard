@@ -15,23 +15,22 @@ class UserClassExtend extends InstanceModuleRedux {
         state.isLoading = false;
       },
       updatePolicyById: (state: initStateSlice, { payload }: any) => {
-        var policies = state.byId?.policies?.[payload.resource];
+        var policies = state.byId?.policies?.[payload.resource] ?? [];
         var pAction = payload.action;
         var isAssgined = payload.isAssgined;
-        const handleAction = (pAction: string, param:any=undefined) => {
+        const handleAction = (pAction: string, param: any = undefined) => {
           if (!Boolean(Object.hasOwn(state.byId.policies, payload.resource))) {
-              Object.assign(state.byId.policies,{[payload.resource]:[]})
-          }
-          state.byId.policies[payload.resource] = param ?? ((policies.includes(pAction)) ? policies.filter((action: any) => action !== pAction) : policies.concat(pAction))
-          return 
-        }
+            Object.assign(state.byId.policies, { [payload.resource]: [] })
+          };
+          state.byId.policies[payload.resource] = param ?? ((policies?.includes(pAction)) ? policies?.filter((action: any) => action !== pAction) : policies.concat(pAction));
+          return;
+        };
         if (pAction === 'admin') {
           handleAction('' ,isAssgined?ACTIONS_REDUX:[] )
-          return
-        }
+          return;
+        };
 
         handleAction(pAction);
-
       },
       // Want Add more reducer Here...
     };

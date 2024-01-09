@@ -1,7 +1,7 @@
 import { Menu } from 'antd';
 import React, { useState } from 'react';
 import NavbarItems from './resource';
-
+import { useGetPolicyCheckAllPage } from '~/modules/user/user.hook';
 
 
 
@@ -12,13 +12,10 @@ import NavbarItems from './resource';
  */
 const NavbarVertical: React.FC = () => {
   const [collapsed, setCollapsed] = useState(false);
-
+  const [isLoading, policy] = useGetPolicyCheckAllPage();
   const toggleCollapsed = () => {
     setCollapsed(!collapsed);
-
   };
-
-
   
   return (
     <div className='layoutVertical--content__navbar'>
@@ -26,7 +23,6 @@ const NavbarVertical: React.FC = () => {
       <div className='layoutVertical--content__navbar__wrapMenu'>
     
       <Menu
-      
       className='layoutVertical--content__navbar__wrapMenu__menu'
         mode="inline"
         inlineCollapsed={collapsed}
