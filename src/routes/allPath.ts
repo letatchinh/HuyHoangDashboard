@@ -31,5 +31,16 @@ export const PATH_APP = {
     todoList: {
       statusConfig: path(ROOTS.app, '/statusConfig'),
       workBoard: path(ROOTS.app, '/workBoard'),
-    }
+    },
+    employee: {
+        root: path(ROOTS.app, '/employee'),
+    },
+    user: {
+      root: path(ROOTS.app, '/user'),
+      // detail: path(ROOTS.app, '/user/:groupId'),  
+    },
+    userGroup: {
+      root: path(ROOTS.app, '/user/group'),
+      detail: path(ROOTS.app, '/user/group/:groupId'),
+    },
   };
