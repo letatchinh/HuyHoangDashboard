@@ -1,21 +1,15 @@
-import { useResetState } from "~/utils/hook";
-import { medicineSliceAction } from "./redux/reducer";
-import { 
-  getSelectors,
-  useFailed,
-  useFetch,
-  useFetchByParam,
-  useQueryParams,
-  useSubmit,
-  useSuccess,
-} from "~/utils/hook";
+import { get } from "lodash";
 import { useEffect, useMemo, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import { get, identity } from "lodash";
-import { clearQuerySearch, getExistProp } from "~/utils/helpers";
 import { useSelector } from "react-redux";
-const MODULE = "productConfig";
-const MODULE_VI = "Cấu hình danh mục";
+import { useLocation, useNavigate } from "react-router-dom";
+import { clearQuerySearch, getExistProp } from "~/utils/helpers";
+import {
+  getSelectors, useFetchByParam,
+  useQueryParams, useResetState
+} from "~/utils/hook";
+import { medicineSliceAction } from "./redux/reducer";
+const MODULE = "medicine";
+const MODULE_VI = "thuốc";
 const {
   loadingSelector,
   listSelector,
@@ -23,13 +17,6 @@ const {
   getByIdLoadingSelector,
   getByIdSelector,
   getByIdFailedSelector,
-  deleteSuccessSelector,
-  deleteFailedSelector,
-  isSubmitLoadingSelector,
-  createSuccessSelector,
-  createFailedSelector,
-  updateSuccessSelector,
-  updateFailedSelector,
   pagingSelector,
 } = getSelectors(MODULE);
 
@@ -39,9 +26,6 @@ export const useMedicineQueryParams = () => {
   const page = query.get("page") || null;
   const keyword = query.get("keyword");
   const status = query.get("status");
-  const createSuccess = useSelector(createSuccessSelector);
-  const updateSuccess = useSelector(updateSuccessSelector);
-  const deleteSuccess = useSelector(deleteSuccessSelector);
   return useMemo(() => {
     const queryParams = {
       page,
@@ -51,7 +35,7 @@ export const useMedicineQueryParams = () => {
     };
     return [queryParams];
     //eslint-disable-next-line
-  }, [page, limit,status, keyword, createSuccess, updateSuccess, deleteSuccess]);
+  }, [page, limit,status, keyword]);
 };
 
 export const useUpdateMedicineParams = (
@@ -85,19 +69,10 @@ export const useUpdateMedicineParams = (
 
   return [keyword, { setKeyword, onParamChange }];
 };
-// export const useGetlistProductConfig = (query: any) => {
-//     return useFetchByParam({
-//       action: medicineSliceAction.getListRequest,
-//       loadingSelector: loadingSelector,
-//       dataSelector: listSelector,
-//       failedSelector: getListFailedSelector,
-//       param: query,
-//     })
-// }
 export const useGetListMeddicine = (query: any) => {
   return useFetchByParam({
     action: medicineSliceAction.getListRequest,
-    loadingSelector: loadingSelector,
+    loadingSelector,
     dataSelector: listSelector,
     failedSelector: getListFailedSelector,
     param: query,
@@ -112,31 +87,8 @@ export const useGetMedicineById = (id: String) => {
     param: id,
   });
 }
-export const useUpdateMedicine=(callBack?:any)=>{
-  useSuccess(updateSuccessSelector,`Cập nhật ${MODULE_VI} thành công`, callBack);
-  useFailed(updateFailedSelector);
-  return useSubmit({
-      action: medicineSliceAction.updateRequest,
-      loadingSelector: isSubmitLoadingSelector,
-  })
-}
-export const useCreateMedicine=(callBack?:any)=>{
-  useSuccess(createSuccessSelector,`Tạo ${MODULE_VI} thành công`, callBack);
-  useFailed(createFailedSelector);
-  return useSubmit({
-      action: medicineSliceAction.createRequest,
-      loadingSelector: isSubmitLoadingSelector,
-  })
-}
-
-export const useDeleteMedicine =(callBack?:any)=>{
-   useSuccess(deleteSuccessSelector, `Xóa ${MODULE_VI} thành công`, callBack);
-   useFailed(deleteFailedSelector);
-   return useSubmit({ 
-       action: medicineSliceAction.deleteRequest,
-       loadingSelector: isSubmitLoadingSelector,
-   })
-}
 export const useResetAction = () => {
     return useResetState(medicineSliceAction.resetAction);
   };
+
+export const useMedicinePaging =()=> useSelector(pagingSelector)

@@ -5,7 +5,6 @@ import { medicineSliceAction } from './reducer';
 function* getListMedicine({payload:query} : any) : any {
   try {
     const data = yield call(api.getAll,query);
-    console.log(data)
     yield put(medicineSliceAction.getListSuccess(data));
   } catch (error:any) {
     yield put(medicineSliceAction.getListFailed(error));

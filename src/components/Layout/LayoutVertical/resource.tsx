@@ -1,4 +1,4 @@
-import { AppstoreFilled, AppstoreOutlined } from "@ant-design/icons";
+import { AppstoreFilled, AppstoreOutlined, DatabaseOutlined, DollarOutlined, HddOutlined, HomeOutlined, TrophyOutlined } from "@ant-design/icons";
 import { MenuProps } from "antd";
 import React from "react";
 import { NavLink } from "react-router-dom";
@@ -44,26 +44,31 @@ const resource: ItemType[] = [
             label: "Cấu hình danh mục",
             path: PATH_APP.worldPharma.productConfig,
             key: PATH_APP.worldPharma.productConfig,
+            icon:<HddOutlined />
           },
           {
             label: "Danh sách nhà sản xuất",
             path: PATH_APP.worldPharma.manufacturer,
             key: PATH_APP.worldPharma.manufacturer,
+            icon:<HomeOutlined />
           },
           {
             label: "Xếp hạng nhà sản xuất",
             path: PATH_APP.worldPharma.ranking,
             key: PATH_APP.worldPharma.ranking,
+            icon:<TrophyOutlined />
           },
           {
             label: "Đơn vị tính",
             path: PATH_APP.worldPharma.unit,
             key: PATH_APP.worldPharma.unit,
+            icon:<DollarOutlined />
           },
           {
             label: "Danh sách thuốc",
             path: PATH_APP.worldPharma.medicine,
             key: PATH_APP.worldPharma.medicine,
+            icon:<DatabaseOutlined />
           },
         ],
       },

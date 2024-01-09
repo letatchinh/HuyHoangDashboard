@@ -1,67 +1,24 @@
-import React, { useState } from 'react';
-import { Col, Row, Space, Input, Button, Form, Modal, Table, Tag, Switch, message, Select, SelectProps } from 'antd';
-import { SearchOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
-import Breadcrumb from '~/components/common/Breadcrumb';
-import useTranslate from '~/lib/translation';
+import { SearchOutlined } from '@ant-design/icons';
+import { Col, Form, Input, Row } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
-
-import WhiteBox from '~/components/common/WhiteBox';
-import ColumnGroup from 'antd/es/table/ColumnGroup';
-import TableAnt from '~/components/Antd/TableAnt';
-import ModalAnt from '~/components/Antd/ModalAnt';
 import { get } from 'lodash';
-import { useDeleteMedicine, useGetListMeddicine, useMedicineQueryParams, useUpdateMedicine, useUpdateMedicineParams } from '../medicine.hook';
+import { useState } from 'react';
+import TableAnt from '~/components/Antd/TableAnt';
+import Breadcrumb from '~/components/common/Breadcrumb';
+import WhiteBox from '~/components/common/WhiteBox';
+import useTranslate from '~/lib/translation';
+import { useGetListMeddicine, useMedicineQueryParams, useUpdateMedicineParams,useMedicinePaging } from '../medicine.hook';
+import { DataType } from '../medicine.modal';
 
 const { Search } = Input;
 
 export default function Medicine() {
-  const [showForm, setShowForm] = useState(false);
    const [query] = useMedicineQueryParams();
-  const [id, setId] = useState(null);
-  const [form] = Form.useForm();
-  const [search,setSearch]= useState(get(query,'status')||'');
-  const callBack = () => {
-    setShowForm(false);
-    setId(null)
-  };
-  const [, deleteMedicine] = useDeleteMedicine(callBack);
-  const [isSubmitUpdateLoading, updateMedicine] = useUpdateMedicine(callBack);
   const [listMedicine, isLoading] = useGetListMeddicine(query);
-  console.log(listMedicine)
+  const paging = useMedicinePaging();
   const [keyword, { setKeyword, onParamChange }] = useUpdateMedicineParams(query);
   const { t }: any = useTranslate();
-  
 
-  interface DataType {
-    code: string;
-    _id: string;
-    name: string;
-    package: string;
-    manufacturer: string;
-    country: string;
-    note: string,
-    status: string,
-  }
-
-  const handleOpenUpdate = (id: any) => {
-    setShowForm(true);
-    if (id) {
-      setId(id);
-    }
-  };
-  const handleOpenFormCreate = () => {
-    setShowForm(true);
-    // setId(null);
-  };
-
-  const handleDelete = (id: any) => {
-    deleteMedicine(id);
-
-  };
-  const handleCloseForm = () => {
-    setShowForm(false);
-    setId(null);
-  }
   const columns: ColumnsType<DataType> = [
     {
       title: 'Mã thuốc',
@@ -78,63 +35,31 @@ export default function Medicine() {
       render: (text: string) => <a>{text}</a>,
     },
     {
+      title: 'Tên hãng sản xuất',
+      dataIndex: 'manufacturer',
+      align: 'center',
+      key: 'manufacturer',
+      render: (text: string) => <a>{text}</a>,
+    },
+    {
+      title: 'Đơn vị tính',
+      dataIndex: 'unit',
+      align: 'center',
+      key: 'unit',
+      render: (text: string) => <a>{text}</a>,
+    },
+    {
       title: 'Ghi chú',
       dataIndex: 'note',
       align: 'center',
       key: 'note',
       render: (text: string) => <a>{text}</a>,
     },
-    {
-      title: 'Thao tác',
-      dataIndex: 'status',
-      align: 'center',
-      width: '120px',
-      key: 'status',
-      render: (_, record) => (
-        // <WithPermission permission={POLICY.DELETE_WAREHOUSE}>
-        <Switch
-          checked={record?.status === 'ACTIVE'}
-          onChange={(value: any) => {
-
-              updateMedicine({ status: value ? 'ACTIVE' : 'INACTIVE',id:record?._id });
-            
-          }}
-        // loading={isSubmitUpdateLoading}
-        />
-        // </WithPermission>
-      )
-    },
-    {
-      title: 'Hành động',
-      key: 'action',
-      align: 'center',
-      width: '180px',
-      render: (_, record) => (
-        <Space size="middle">
-          <Button type="primary" onClick={() => handleOpenUpdate(record?._id)}>
-            Xem chi tiết
-          </Button>
-          <Button style={{ color: 'red' }} onClick={() => handleDelete(record._id)}>
-            Xóa
-          </Button>
-        </Space>
-      ),
-    },
   ];
 
   const onSearch = (value: string) => {
     onParamChange({ ['keyword']: value });
   };
-  const options: SelectProps['options'] = [
-    {
-      label: 'Active',
-      value: 'ACTIVE',
-    },
-    {
-      label: 'InActive',
-      value: 'INACTIVE',
-    },
-  ];
 
   return (
     <div className='product-config'>
@@ -154,11 +79,6 @@ export default function Medicine() {
                     enterButton={<SearchOutlined />}
                   />
                 </Col>
-                <Col>
-                  <Button onClick={handleOpenFormCreate} type="primary">
-                    Thêm mới
-                  </Button>
-                </Col>
               </Row>
             </div>
             <WhiteBox>
@@ -168,25 +88,14 @@ export default function Medicine() {
                 columns={columns}
                 size="small"
                 pagination={{
-                  // ...paging,
+                  ...paging,
                   onChange(page, pageSize) {
-                    // onParamChange({ page, limit: pageSize });
+                    onParamChange({ page, limit: pageSize });
                   },
                 }}
               />
             </WhiteBox>
           </div>
-      <ModalAnt
-        open={showForm}
-        title="Thêm danh mục sản phẩm"
-        onCancel={handleCloseForm}
-        footer={null}
-        destroyOnClose
-        width={800}
-
-      >
-        {/* <ProductConfigForm id={id} callBack={callBack} /> */}
-      </ModalAnt>
     </div>
   );
 }
