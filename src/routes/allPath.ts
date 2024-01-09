@@ -28,4 +28,7 @@ export const PATH_APP = {
     branch : {
       root: path(ROOTS.app, '/branch'),
     },
+    configDiscount: {
+      root: path(ROOTS.app, '/config-discount'),
+    },
   };

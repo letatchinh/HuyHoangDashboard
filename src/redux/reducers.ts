@@ -6,6 +6,7 @@ import authModule from '~/modules/auth';
 import supplierModule from '~/modules/supplier';
 import branchModule from '~/modules/branch';
 import geoModule from '~/modules/geo';
+import configDiscount from '~/modules/configDiscount';
 const authPersistConfig = {
     key: 'auth',
     storage: localStorage,
@@ -24,6 +25,6 @@ const rootReducer = combineReducers({
     supplier: supplierModule.redux.reducer,
     branch: branchModule.redux.reducer,
     geo: geoModule.redux.reducer,
-
+    configDiscount: configDiscount.redux.reducer,
 });
 export default rootReducer
