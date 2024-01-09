@@ -8,6 +8,11 @@ import employeeModule from '~/modules/employee';
 import userModule from '~/modules/user';
 import userGroupModule from '~/modules/userGroup';
 import policyModule from '~/modules/policy';
+import productConfigModule from '~/modules/productConfig';
+import manuFacturerModule from '~/modules/manufacturer';
+import productUnitModule from '~/modules/productUnit';
+import rankModule from '~/modules/ranking';
+import medicineModule from '~/modules/medicine';
 export default function* rootSaga() {
   yield all([
     authModule.redux.saga(),
@@ -19,5 +24,11 @@ export default function* rootSaga() {
     userModule.redux.saga(),
     userGroupModule.redux.saga(),
     policyModule.redux.saga(),
+    productConfigModule.redux.saga(),
+    manuFacturerModule.redux.saga(),
+    productUnitModule.redux.saga(),
+    rankModule.redux.saga(),
+    medicineModule.redux.saga(),
+
   ]);
 };
