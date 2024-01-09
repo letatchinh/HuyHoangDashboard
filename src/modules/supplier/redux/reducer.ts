@@ -7,15 +7,15 @@ const supplierSlice = new InstanceModuleRedux('supplier');
 /**
  * Want to Add more Slice for this module use This
  */
-supplierSlice.extendsSlice({});
+// supplierSlice.extendsSlice({});
 
 
-/**
- * 
- * 
- * Want to Add more State for this module use This
- */
-supplierSlice.extendsStates({});
+// /**
+//  * 
+//  * 
+//  * Want to Add more State for this module use This
+//  */
+// supplierSlice.extendsStates({});
 
 
 // Start Create Slice

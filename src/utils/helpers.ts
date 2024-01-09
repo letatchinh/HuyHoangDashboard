@@ -66,3 +66,9 @@ export const filterAcrossAccents = (input:any, option:any) => {
     removeAccents(option.children.toLowerCase()).indexOf(removeAccents(input.toLowerCase())) >= 0
   );
 };
+
+export const formatter = (value:number) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+
+export const floorFormatter = (value:number) => `${Math.floor(value)}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+
+export const ceilFormatter = (value:number) => `${Math.ceil(value)}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
