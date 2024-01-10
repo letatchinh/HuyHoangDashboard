@@ -8,7 +8,7 @@ import Breadcrumb from '~/components/common/Breadcrumb';
 import WhiteBox from '~/components/common/WhiteBox';
 import { SearchOutlined, DeleteOutlined, EditOutlined,InfoCircleTwoTone,PlusCircleOutlined } from '@ant-design/icons';
 import useTranslate from '~/lib/translation';
-import {useGetlistProductUnit,useDeleteProductUnit, useProductUnitQueryParams, useUpdateProductUnitParams} from '../productUnit.hook';
+import {useGetlistProductUnit,useDeleteProductUnit, useProductUnitQueryParams, useUpdateProductUnitParams, useProductUnitPaging} from '../productUnit.hook';
 import ProductUnitForm from './ProductUnitForm';
 type propsType = {
 
@@ -21,6 +21,7 @@ export default function ProductUnit(props:propsType) : React.JSX.Element {
     const [listProductUnit, isLoading] = useGetlistProductUnit(query);
     const [, deleteProductConfig] = useDeleteProductUnit();
     const { t }: any = useTranslate();
+    const paging = useProductUnitPaging();
     const [form] = Form.useForm();
     interface DataType {
         _id: string;
@@ -111,9 +112,9 @@ export default function ProductUnit(props:propsType) : React.JSX.Element {
                     columns={columns}
                     size="small"
                     pagination={{
-                      // ...paging,
+                      ...paging,
                       onChange(page, pageSize) {
-                        // onParamChange({ page, limit: pageSize });
+                        onParamChange({ page, limit: pageSize });
                       },
                     }}
                   />

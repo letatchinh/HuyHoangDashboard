@@ -5,7 +5,7 @@ import TableAnt from '~/components/Antd/TableAnt';
 import Breadcrumb from '~/components/common/Breadcrumb';
 import WhiteBox from '~/components/common/WhiteBox';
 import useTranslate from '~/lib/translation';
-import { useGetlistRanking, useGetlistRankingById, useCreateRanking, useRankingQueryParams, useUpdateRankingParams,useDeleteRanking } from '../ranking.hook';
+import { useGetlistRanking, useGetlistRankingById, useCreateRanking, useRankingQueryParams, useUpdateRankingParams,useDeleteRanking, useRankingPaging } from '../ranking.hook';
 import { ColumnsType } from 'antd/es/table';
 import { SearchOutlined, DeleteOutlined, EditOutlined,InfoCircleTwoTone,PlusCircleOutlined } from '@ant-design/icons';
 import ModalAnt from '~/components/Antd/ModalAnt';
@@ -20,6 +20,7 @@ export default function Ranking(props:propsType) : React.JSX.Element {
       const [isSubmit,deleteRanking] = useDeleteRanking();
     const [showForm, setShowForm] = useState(false);
     const [id, setId] = useState(null);
+    const paging  = useRankingPaging();
    const { t }: any = useTranslate();
     const [form] = Form.useForm();
     interface DataType {
@@ -108,9 +109,9 @@ export default function Ranking(props:propsType) : React.JSX.Element {
                   columns={columns}
                   size="small"
                   pagination={{
-                    // ...paging,
+                    ...paging,
                     onChange(page, pageSize) {
-                      // onParamChange({ page, limit: pageSize });
+                      onParamChange({ page, limit: pageSize });
                     },
                   }}
                 />

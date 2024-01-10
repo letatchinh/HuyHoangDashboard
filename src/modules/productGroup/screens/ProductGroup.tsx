@@ -11,6 +11,7 @@ import {
   useUpdateProductConfigParams,
   useUpdateProductConfig,
   useDeleteProductConfig,
+  useProductConfigPaging,
 } from '../productGroup.hook';
 import ProductGroupForm from './ProductGroupForm';
 import WhiteBox from '~/components/common/WhiteBox';
@@ -31,6 +32,7 @@ export default function ProductConfig() {
   const callBack = () => {
     setShowForm(false);
   };
+  const paging = useProductConfigPaging();
   const [, deleteProductConfig] = useDeleteProductConfig(callBack);
   const [isSubmitUpdateLoading, updateProductConfig] = useUpdateProductConfig(callBack);
   const [listProductConfig, isLoading] = useGetlistProductConfig(query);
@@ -191,9 +193,9 @@ export default function ProductConfig() {
                 columns={columns}
                 size="small"
                 pagination={{
-                  // ...paging,
+                  ...paging,
                   onChange(page, pageSize) {
-                    // onParamChange({ page, limit: pageSize });
+                    onParamChange({ page, limit: pageSize });
                   },
                 }}
               />
