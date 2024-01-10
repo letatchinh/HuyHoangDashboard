@@ -7,6 +7,7 @@ import Branch from "~/pages/Dashboard/Branch";
 import EmployeePage from "~/pages/Dashboard/Employee";
 import UserPage from "~/pages/Dashboard/User";
 import UserGroupPage from "~/pages/Dashboard/UserGroup";
+import ConfigDiscountPage from "~/pages/Dashboard/ConfigDiscount";
 export const mainRoutes :PathRouteProps[] = [
   { path: PATH_APP.main.root, Component: Homepage },
   { path: PATH_APP.supplier.root, Component: Supplier },
@@ -15,6 +16,7 @@ export const mainRoutes :PathRouteProps[] = [
   { path: PATH_APP.user.root, Component: UserPage },
   { path: PATH_APP.userGroup.root, Component: UserPage },
   { path: PATH_APP.userGroup.detail, Component: UserPage },
+  { path: PATH_APP.configDiscount.root, Component: ConfigDiscountPage },
 
   { path: '/', Component: Homepage },
 ]

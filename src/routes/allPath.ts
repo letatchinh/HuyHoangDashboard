@@ -37,5 +37,7 @@ export const PATH_APP = {
     userGroup: {
       root: path(ROOTS.app, '/user/group'),
       detail: path(ROOTS.app, '/user/group/:groupId'),
+    configDiscount: {
+      root: path(ROOTS.app, '/config-discount'),
     },
   };
