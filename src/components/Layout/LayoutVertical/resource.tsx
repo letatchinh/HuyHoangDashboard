@@ -1,8 +1,21 @@
-import { AppstoreFilled, AppstoreOutlined, DatabaseOutlined, DollarOutlined, HddOutlined, HomeOutlined, TrophyOutlined } from "@ant-design/icons";
+// import { AppstoreFilled, AppstoreOutlined, ShopFilled,ApartmentOutlined } from "@ant-design/icons";
+import {
+  AppstoreFilled,
+  AppstoreOutlined,
+  DatabaseOutlined,
+  DollarOutlined,
+  HddOutlined,
+  HomeOutlined,
+  TrophyOutlined,
+  ApartmentOutlined,
+  ShopFilled,
+} from "@ant-design/icons";
 import { MenuProps } from "antd";
 import React from "react";
 import { NavLink } from "react-router-dom";
 import { PATH_APP } from "~/routes/allPath";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUsers, faUser } from '@fortawesome/free-solid-svg-icons';
 type MenuItem = Required<MenuProps>["items"][number];
 function getItem({ label, icon, children, path, key }: ItemType): any {
   return {
@@ -42,33 +55,33 @@ const resource: ItemType[] = [
         children: [
           {
             label: "Cấu hình danh mục",
-            path: PATH_APP.worldPharma.productConfig,
-            key: PATH_APP.worldPharma.productConfig,
-            icon:<HddOutlined />
+            path: PATH_APP.worldPharma.productGroup,
+            key: PATH_APP.worldPharma.productGroup,
+            icon: <HddOutlined />,
           },
           {
             label: "Danh sách nhà sản xuất",
             path: PATH_APP.worldPharma.manufacturer,
             key: PATH_APP.worldPharma.manufacturer,
-            icon:<HomeOutlined />
+            icon: <HomeOutlined />,
           },
           {
             label: "Xếp hạng nhà sản xuất",
             path: PATH_APP.worldPharma.ranking,
             key: PATH_APP.worldPharma.ranking,
-            icon:<TrophyOutlined />
+            icon: <TrophyOutlined />,
           },
           {
             label: "Đơn vị tính",
             path: PATH_APP.worldPharma.unit,
             key: PATH_APP.worldPharma.unit,
-            icon:<DollarOutlined />
+            icon: <DollarOutlined />,
           },
           {
             label: "Danh sách thuốc",
             path: PATH_APP.worldPharma.medicine,
             key: PATH_APP.worldPharma.medicine,
-            icon:<DatabaseOutlined />
+            icon: <DatabaseOutlined />,
           },
         ],
       },
@@ -78,7 +91,7 @@ const resource: ItemType[] = [
   // Nhà cung cấp
   {
     label: "Nhà cung cấp",
-    icon: <AppstoreOutlined />,
+    icon: <ShopFilled />,
     path: PATH_APP.supplier.root,
     key: PATH_APP.supplier.root,
   },
@@ -97,6 +110,45 @@ const resource: ItemType[] = [
       ],
       icon :<AppstoreFilled />
     }),
+    {
+      label: "Quản lý công việc",
+      key: "todoList",
+      icon: <AppstoreFilled />,
+      children: [
+        {
+          label: "Quản lý công việc",
+          // key: "statusConfig",
+          icon: <ApartmentOutlined />,
+          path: PATH_APP.todoList.workBoard,
+          key: PATH_APP.todoList.workBoard,
+          
+        },
+        {
+          label: "Cấu hình trạng thái",
+          // key: "statusConfig",
+          icon: <AppstoreFilled />,
+          path: PATH_APP.todoList.statusConfig,
+          key: PATH_APP.todoList.statusConfig,
+          
+        },
+      ],
+    },
+      //Nhân viên
+      getItem({
+        label : "Nhân viên",
+        icon: <FontAwesomeIcon icon ={faUsers} />,
+        path : PATH_APP.employee.root,
+        key : PATH_APP.employee.root,
+      }),
+  
+      //Người dùng
+      getItem({
+        label : "Người dùng",
+        icon: <FontAwesomeIcon icon = {faUser} />,
+        path : PATH_APP.user.root,
+        key : PATH_APP.user.root,
+      }),
+      
 ];
 
 const NavbarItems = resource.map((first) => {
