@@ -16,6 +16,7 @@ import {
   useSuccess,
 } from "~/utils/hook";
 import { statusConfigActions } from "./redux/reducer";
+import { cloneInitState } from "./statusConfig.modal";
 
 const MODULE = "statusConfig";
 const MODULE_VI = "Cấu hình trạng thái";
@@ -37,7 +38,15 @@ const {
   pagingSelector,
 } = getSelectors(MODULE);
 
-
+const getSelector = (key: keyof cloneInitState) => (state: RootState) =>
+  state[MODULE][key];
+  const statusConfigSelector = getSelector("statusConfig");
+const getStatusConfigFailedSelector = getSelector(
+  "getStatusConfigFailed"
+);
+const isLoadingGetStatusConfigSelector = getSelector(
+  "isLoadingGetStatusConfig"
+);
 export const useStatusConfigQueryParams = () => {
   const query = useQueryParams();
   const limit = query.get("limit") || 10;
@@ -45,6 +54,7 @@ export const useStatusConfigQueryParams = () => {
   const keyword = query.get("keyword");
   const createSuccess = useSelector(createSuccessSelector);
   const deleteSuccess = useSelector(deleteSuccessSelector);
+  const updateSuccess = useSelector(updateSuccessSelector);
   return useMemo(() => {
     const queryParams = {
       page,
@@ -58,6 +68,7 @@ export const useStatusConfigQueryParams = () => {
      keyword,
      createSuccess,
      deleteSuccess,
+     updateSuccess
     ]);
 };
 export const useGetPaging = () => useSelector(pagingSelector);
@@ -94,12 +105,13 @@ export const useUpdateStatusConfigParams = (
   return [keyword, { setKeyword, onParamChange }];
 };
 export const useStatusConfigPaging = () => useSelector(pagingSelector);
-export const useGetListStatusConfig = () => {
-  return useFetch({
-    action: statusConfigActions.getListRequest,
-    dataSelector: listSelector,
-    failedSelector: getListFailedSelector,
-    loadingSelector,
+export const useGetListStatusConfig = (query: any) => {
+  return useFetchByParam({
+    action: statusConfigActions.getStatusConfigRequest,
+    dataSelector: statusConfigSelector,
+    failedSelector: getStatusConfigFailedSelector,
+    loadingSelector: isLoadingGetStatusConfigSelector,
+    param: query,
   });
 }
 export const useCreateStatusConfig = (callBack?: any) => {

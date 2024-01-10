@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { Button, Form, Input } from 'antd';
-import { useGetlistProductConfigById, useUpdateProductConfig,useCreateProductConfig, useResetAction } from '../productConfig.hook';
+import { useGetlistProductConfigById, useUpdateProductConfig,useCreateProductConfig, useResetAction } from '../productGroup.hook';
 
 interface Props {
   id?: any;

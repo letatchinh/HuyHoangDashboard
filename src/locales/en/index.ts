@@ -1,5 +1,5 @@
 import dashboard from '../en/dashboard.json';
-import productConfig from '../en/productConfig.json';
+import productGroup from '../en/productGroup.json';
 import manufacturer from '../en/manufacturer.json';
 import supplier from '../en/supplier.json';
 import statusConfig from '../en/starusConfig.json';
@@ -12,7 +12,7 @@ const en = {
     ...statusConfig,
     ...dashboard,
     ...supplier,
-    ...productConfig,
+    ...productGroup,
     ...manufacturer,
     ...rankingManufacturer,
     ...unit,

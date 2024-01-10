@@ -9,13 +9,13 @@ import {
     useSubmit,
     useSuccess,
  } from "~/utils/hook";
-import { productConfigSliceAction } from "./redux/reducer";
+import { productGroupSliceAction } from "./redux/reducer";
 import { useEffect, useMemo, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { get, identity } from "lodash";
 import { clearQuerySearch, getExistProp } from "~/utils/helpers";
 import { useSelector } from "react-redux";
-const MODULE = "productConfig";
+const MODULE = "productGroup";
 const MODULE_VI = "Cấu hình danh mục";
 const {
     loadingSelector,
@@ -89,7 +89,7 @@ const {
   };
   export const useGetlistProductConfig = (query: any) => {
       return useFetchByParam({
-        action: productConfigSliceAction.getListRequest,
+        action: productGroupSliceAction.getListRequest,
         loadingSelector: loadingSelector,
         dataSelector: listSelector,
         failedSelector: getListFailedSelector,
@@ -99,7 +99,7 @@ const {
   export const useGetlistProductConfigById = (id: string) => {
     console.log(id)
     return useFetchByParam({
-      action: productConfigSliceAction.getByIdRequest,
+      action: productGroupSliceAction.getByIdRequest,
       loadingSelector: getByIdLoadingSelector,
       dataSelector: getByIdSelector,
       failedSelector: getByIdFailedSelector,
@@ -110,7 +110,7 @@ const {
     useSuccess(createSuccessSelector, `Thêm ${MODULE_VI} thành công`, callBack);
     useFailed(createFailedSelector);
     return useSubmit({
-        action: productConfigSliceAction.createRequest,
+        action: productGroupSliceAction.createRequest,
         loadingSelector: isSubmitLoadingSelector,
     })
   }
@@ -118,7 +118,7 @@ const {
     useSuccess(updateSuccessSelector,`Cập nhật ${MODULE_VI} thành công`, callBack);
     useFailed(updateFailedSelector);
     return useSubmit({
-        action: productConfigSliceAction.updateRequest,
+        action: productGroupSliceAction.updateRequest,
         loadingSelector: isSubmitLoadingSelector,
 
     })
@@ -127,11 +127,11 @@ const {
     useSuccess(deleteSuccessSelector, `Xóa ${MODULE_VI} thành công`, callBack);
     useFailed(deleteFailedSelector);
     return useSubmit({ 
-        action: productConfigSliceAction.deleteRequest,
+        action: productGroupSliceAction.deleteRequest,
         loadingSelector: isSubmitLoadingSelector,
     })
   }
   export const useProductConfigPaging = () => useSelector(pagingSelector);
   export const useResetAction = () => {
-    return useResetState(productConfigSliceAction.resetAction);
+    return useResetState(productGroupSliceAction.resetAction);
   }

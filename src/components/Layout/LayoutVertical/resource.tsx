@@ -55,8 +55,8 @@ const resource: ItemType[] = [
         children: [
           {
             label: "Cấu hình danh mục",
-            path: PATH_APP.worldPharma.productConfig,
-            key: PATH_APP.worldPharma.productConfig,
+            path: PATH_APP.worldPharma.productGroup,
+            key: PATH_APP.worldPharma.productGroup,
             icon: <HddOutlined />,
           },
           {

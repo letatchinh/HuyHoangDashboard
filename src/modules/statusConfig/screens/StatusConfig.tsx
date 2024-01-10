@@ -1,9 +1,10 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
+import { filter, head, keys, parseInt, range } from "lodash";
 import type { InputRef } from 'antd';
 import { Button, Checkbox, ColorPicker, Form, Input, Popconfirm, Table, Tag, Tooltip } from 'antd';
 import type { FormInstance } from 'antd/es/form';
 import { Color } from 'antd/es/color-picker';
-import { useUpdateStatusConfig } from '../statusConfig.hook';
+import { useUpdateStatusConfig,useCreateStatusConfig, useGetListStatusConfig,useResetAction, useDeleteStatusConfig, useStatusConfigQueryParams } from '../statusConfig.hook';
 import { ExclamationCircleOutlined } from "@ant-design/icons";
 import Breadcrumb from '~/components/common/Breadcrumb';
 import useTranslate from '~/lib/translation';
@@ -14,7 +15,13 @@ interface Item {
   name: string;
   age: string;
   address: string;
+  _id: string;
   priority: boolean;
+  color: string;
+  backgroundColor: string;
+  onPressEnter: () => void;
+  isDefault: boolean;
+  onBlur: () => void;
 }
 
 interface EditableRowProps {
@@ -36,8 +43,9 @@ interface EditableCellProps {
   title: React.ReactNode;
   editable: boolean;
   children: React.ReactNode;
-  dataIndex: keyof Item;
-  record: Item;
+  dataIndex: string;
+  record: any;
+  max?: number;
   handleSave: (record: Item) => void;
 }
 
@@ -48,12 +56,13 @@ const EditableCell: React.FC<EditableCellProps> = ({
   dataIndex,
   record,
   handleSave,
+  max,
   ...restProps
 }) => {
   const [editing, setEditing] = useState(false);
   const inputRef = useRef<InputRef>(null);
   const form = useContext(EditableContext)!;
-
+  const [,updateStatusConfig] = useUpdateStatusConfig();
   useEffect(() => {
     if (editing) {
       inputRef.current!.focus();
@@ -65,14 +74,19 @@ const EditableCell: React.FC<EditableCellProps> = ({
     form.setFieldsValue({ [dataIndex]: record[dataIndex] });
   };
 
-  const save = async () => {
+  const save = async (field:any) => {
     try {
       const values = await form.validateFields();
-
+      console.log("Received values of form: ", values);
       toggleEdit();
-      handleSave({ ...record, ...values });
+      // if((record[field]) !== (values[field])){
+      //    console.log(values);
+        updateStatusConfig({...values,id: record._id});
+      // }
+      setEditing(false)
+
     } catch (errInfo) {
-      console.log('Save failed:', errInfo);
+      console.log("Save failed:", errInfo);
     }
   };
 
@@ -105,11 +119,14 @@ const EditableCell: React.FC<EditableCellProps> = ({
 type EditableTableProps = Parameters<typeof Table>[0];
 
 interface DataType {
-  key: React.Key;
-  name: string;
-  color: string;
-  backgroundColor: string;
-  priority: boolean;
+  key?: React.Key;
+  _id?: string;
+  value?: string;
+  color?: string;
+  justAdmin?: boolean;
+  backgroundColor?: string;
+  priority?: boolean;
+  isDefault?: boolean;
 }
 
 type ColumnTypes = Exclude<EditableTableProps['columns'], undefined>;
@@ -117,43 +134,28 @@ type ColumnTypes = Exclude<EditableTableProps['columns'], undefined>;
 const StatusConfig: React.FC = () => {
   const { t }: any = useTranslate();
      const [colorHex, setColorHex] = useState<Color | string>("#1677ff");
-  const [dataSource, setDataSource] = useState<DataType[]>([
-    {
-      key: '0',
-      name: 'Edward King 0',
-      backgroundColor: '#1677ff',
-      color: '#fff',
-      priority: false,
-    },
-    {
-      key: '1',
-      name: 'Edward King 1',
-      color: '#1677ff',
-      backgroundColor: 'red',
-      priority: true,
-    },
-  ]);
-
-  const handleColorChange = (color: Color, dataIndex: keyof DataType, key: React.Key) => {
+     const [,createStatusConfig] =useCreateStatusConfig(useResetAction());
+     const [,deleteStatusConfig] =useDeleteStatusConfig(useResetAction());
+     const [,updateStatusConfig] = useUpdateStatusConfig(useResetAction());
+     const [query] = useStatusConfigQueryParams();
+    const [listStatusConfig, isLoading] = useGetListStatusConfig(query); 
+    
+  const handleColorChange = (color: Color, dataIndex: keyof DataType, key:  keyof DataType) => {
     const hexColor = color.toHexString();
     // Update the state based on the key and dataIndex
-    setDataSource((prevData) =>
-      prevData.map((item) =>
-        item.key === key ? { ...item, [dataIndex]: hexColor } : item
-      )
-    );
+    updateStatusConfig({[dataIndex]: hexColor,id: key});
   };
   const [count, setCount] = useState(2);
 
-  const handleDelete = (key: React.Key) => {
-    const newData = dataSource.filter((item) => item.key !== key);
-    setDataSource(newData);
+  const handleDelete = (_id: keyof DataType) => {
+    deleteStatusConfig(_id);
+    console.log(_id)
   };
   
   const defaultColumns: (ColumnTypes[number] & { editable?: boolean; dataIndex: string })[] = [
     {
       title: "Trạng thái",
-      dataIndex: "name",
+      dataIndex: "value",
       width: "100px",
       key:'valueStatus',
       align: "center",
@@ -165,8 +167,8 @@ const StatusConfig: React.FC = () => {
       )
     },
     {
-      title: 'name',
-      dataIndex: 'name',
+      title: 'Tên trạng thái',
+      dataIndex: 'value',
       width: '30%',
       editable: true,
     },
@@ -179,7 +181,7 @@ const StatusConfig: React.FC = () => {
         <ColorPicker
   showText
   value={record?.color}
-  onChange={(color) => handleColorChange(color, 'color', record.key)}
+  onChange={(color) => handleColorChange(color, 'color', record._id)}
 />
       );
     }
@@ -193,7 +195,7 @@ const StatusConfig: React.FC = () => {
             <ColorPicker
             showText
             value={record?.backgroundColor}
-            onChange={(color) => handleColorChange(color, 'backgroundColor', record.key)}
+            onChange={(color) => handleColorChange(color, 'backgroundColor', record._id)}
           />
           );
         }
@@ -280,39 +282,40 @@ const StatusConfig: React.FC = () => {
       align: "center",
       width:80,
       render: (_, record) =>
-      // listStatusConfig?.length >= 1 ? (
-          <Popconfirm
-            title="Sure to delete?"
-            onConfirm={() => handleDelete(record._id)}
-          >
-            <Button type="dashed" style={{color:'red'}} size="small">Xoá</Button>
-          </Popconfirm>
-        // ) : null,
+      listStatusConfig?.length >= 1 ? (
+          // <Popconfirm
+          //   title="Sure to delete?"
+          //   onConfirm={() => handleDelete(record._id)}
+          // >
+            <Button onClick={() => handleDelete(record._id)} type="dashed" style={{color:'red'}} size="small">Xoá</Button>
+         
+        ) : null,
     },
   ];
 
   const handleAdd = () => {
     const newData: DataType = {
-      key: count,
-      name: `Edward King ${count}`,
-    color:'#fff',
-    backgroundColor: '#f1677f',
-    priority: false,
+      value: 'Mặc định',
+      key:'DEFAULT',
+      backgroundColor: "#0040ffff",
+      color: '#ffffffff',
+      justAdmin:false,
+      isDefault:false,
     };
-    setDataSource([...dataSource, newData]);
-    setCount(count + 1);
+    createStatusConfig(newData)
   };
 
-  const handleSave = (row: DataType) => {
-    const newData = [...dataSource];
-    const index = newData.findIndex((item) => row.key === item.key);
-    const item = newData[index];
-    newData.splice(index, 1, {
-      ...item,
-      ...row,
-    });
-    setDataSource(newData);
-  };
+  // const handleSave = (row: DataType) => {
+  //   const newData: DataType = {
+  //     name: 'Mặc định',
+  //     key:'DEFAULT',
+  //     backgroundColor: "#0040ffff",
+  //     color: '#ffffffff',
+  //     justAdmin:false,
+  //     isDefault:false,
+  //   };
+  //   createStatusConfig(newData)
+
 
   const components = {
     body: {
@@ -332,7 +335,7 @@ const StatusConfig: React.FC = () => {
         editable: col.editable,
         dataIndex: col.dataIndex,
         title: col.title,
-        handleSave,
+        // handleSave,
       }),
     };
   });
@@ -347,7 +350,7 @@ const StatusConfig: React.FC = () => {
         components={components}
         rowClassName={() => 'editable-row'}
         bordered
-        dataSource={dataSource}
+        dataSource={listStatusConfig}
         columns={columns as ColumnTypes}
       />
     </div>

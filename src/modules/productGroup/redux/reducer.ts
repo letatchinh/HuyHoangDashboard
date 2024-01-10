@@ -5,13 +5,13 @@ import { initStateSlice } from "~/redux/models";
 
 import { createSlice } from "@reduxjs/toolkit";
 
-class ProductConfigClassExtentd extends InstanceModuleRedux {
+class ProductGroupClassExtentd extends InstanceModuleRedux {
   clone;
   constructor() {
-    super('productConfig');
+    super('productGroup');
     this.clone = {
       ...this.initReducer,
-      getListProductConfigSuccess: (state: initStateSlice, action: any) => {
+      getListProductGroupSuccess: (state: initStateSlice, action: any) => {
                 state.isLoading = false;
                 state.list = action.payload;
             }
@@ -27,9 +27,9 @@ class ProductConfigClassExtentd extends InstanceModuleRedux {
   
 }
 
-const productConfigSlice = new ProductConfigClassExtentd();
-const data = productConfigSlice.createSlice();
+const productGroupSlice = new ProductGroupClassExtentd();
+const data = productGroupSlice.createSlice();
 
 
-export const productConfigSliceAction   = data.actions;
+export const productGroupSliceAction   = data.actions;
 export default data.reducer;

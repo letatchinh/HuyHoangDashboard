@@ -11,8 +11,8 @@ import {
   useUpdateProductConfigParams,
   useUpdateProductConfig,
   useDeleteProductConfig,
-} from '../productConfig.hook';
-import ProductConfigForm from './ProductConfigForm';
+} from '../productGroup.hook';
+import ProductGroupForm from './ProductGroupForm';
 import WhiteBox from '~/components/common/WhiteBox';
 import ColumnGroup from 'antd/es/table/ColumnGroup';
 import TableAnt from '~/components/Antd/TableAnt';
@@ -212,7 +212,7 @@ export default function ProductConfig() {
         width={800}
 
       >
-        <ProductConfigForm id={id} callBack={callBack} />
+        <ProductGroupForm id={id} callBack={callBack} />
       </ModalAnt>
     </div>
   );

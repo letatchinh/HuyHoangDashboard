@@ -5,9 +5,9 @@ import { statusConfigActions } from './reducer';
 function* getListStatusConfig({payload:query} : any) : any {
   try {
     const data = yield call(api.getAll,query);
-    yield put(statusConfigActions.getListSuccess(data));
+    yield put(statusConfigActions.getStatusConfigSuccess(data));
   } catch (error:any) {
-    yield put(statusConfigActions.getListFailed(error));
+    yield put(statusConfigActions.getStatusConfigFailed(error));
   }
 }
 
@@ -48,7 +48,7 @@ function* deleteStatusConfig({payload : id} : any) : any {
 
 
 export default function* statusConfigSaga() {
-  yield takeLatest(statusConfigActions.getListRequest, getListStatusConfig);
+  yield takeLatest(statusConfigActions.getStatusConfigRequest, getListStatusConfig);
   yield takeLatest(statusConfigActions.getByIdRequest, getByIdStatusConfig);
   yield takeLatest(statusConfigActions.createRequest, createStatusConfig);
   yield takeLatest(statusConfigActions.updateRequest, updateStatusConfig);
