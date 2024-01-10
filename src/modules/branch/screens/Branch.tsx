@@ -34,7 +34,7 @@ export default function Branch() {
       <Breadcrumb title={t("list-branch")} />
       <WhiteBox>
         <TableAnt
-          dataSource={data}
+          dataSource={[]}
           loading={isLoading}
           rowKey={rc => rc?._id}
           columns={columns}

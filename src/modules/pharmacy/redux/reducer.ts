@@ -2,9 +2,9 @@ import { createSlice } from "@reduxjs/toolkit";
 import { InstanceModuleRedux } from "~/redux/instanceModuleRedux";
 import { initStateSlice } from "~/redux/models";
 
-type anyyy ={
-aa:string
-}
+type anyyy = {
+  aa: string;
+};
 // InstanceModuleRedux
 class CloneModule extends InstanceModuleRedux {
   clone;
@@ -13,16 +13,14 @@ class CloneModule extends InstanceModuleRedux {
     super("pharmacy");
     this.clone = {
       ...this.initReducer,
-      getListSuccess: (state: initStateSlice, { payload }: any) => {
-        state.isLoading = false;
-        state.list = payload;
-      }
+      // getListSuccess: (state: initStateSlice, { payload }: any) => {
+      //   state.isLoading = false;
+      //   state.list = payload;
+      // }
     };
-
 
     this.cloneInitialState = {
       ...this.initialState,
-
     };
   }
   createSlice() {

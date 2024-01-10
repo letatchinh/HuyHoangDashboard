@@ -5,6 +5,7 @@ import {
   useFetch,
   useFetchByParam,
   useQueryParams,
+  useResetState,
   useSubmit,
   useSuccess,
 } from "~/utils/hook";
@@ -13,6 +14,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useMemo, useState } from "react";
 import { get } from "lodash";
 import { clearQuerySearch, getExistProp } from "~/utils/helpers";
+import { STATUS } from "~/constants/defaultValue";
 
 const MODULE = "pharmacy";
 const MODULE_VI = "nhà thuốc";
@@ -98,7 +100,7 @@ export const usePharmacyQueryParams = () => {
   const limit = query.get("limit") || 10;
   const page = query.get("page") || 1;
   const keyword = query.get("keyword");
-  const status = query.get('status');
+  const status = query.get("status");
 
   return useMemo(() => {
     const queryParams = {
@@ -139,3 +141,20 @@ export const useUpdatePharmacyParams = (
 
   return [keyword, { setKeyword, onParamChange }];
 };
+
+export const useInitPharmacy = (pharmacy: any, id: any) => {
+  return useMemo(() => {
+    if (!pharmacy || !id) {
+      return { status: true };
+    }
+
+    return {
+      ...pharmacy,
+      status: pharmacy.status === STATUS.ACTIVE ? true : false,
+    };
+  }, [pharmacy, id]);
+};
+
+// export const useResetManufacture = () => {
+//   useResetState(resetPharmacyReducer);
+// };
