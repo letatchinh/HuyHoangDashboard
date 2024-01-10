@@ -7,7 +7,7 @@ import WhiteBox from '~/components/common/WhiteBox';
 import useTranslate from '~/lib/translation';
 import { useGetlistRanking, useGetlistRankingById, useCreateRanking, useRankingQueryParams, useUpdateRankingParams,useDeleteRanking } from '../ranking.hook';
 import { ColumnsType } from 'antd/es/table';
-import { SearchOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import { SearchOutlined, DeleteOutlined, EditOutlined,InfoCircleTwoTone,PlusCircleOutlined } from '@ant-design/icons';
 import ModalAnt from '~/components/Antd/ModalAnt';
 import RankingForm from './RankingForm';
 type propsType = {
@@ -50,10 +50,10 @@ export default function Ranking(props:propsType) : React.JSX.Element {
           width: '180px',
           render: (_, record) => (
             <Space size="middle">
-              <Button type="primary" onClick={() => handleOpenForm(record?._id)}>
+              <Button  icon={<InfoCircleTwoTone />} type="primary" onClick={() => handleOpenForm(record?._id)}>
                 Xem chi tiết
               </Button>
-              <Button style={{ color: 'red' }} onClick={() => handleDelete(record._id)}>
+              <Button icon={<DeleteOutlined />} style={{ color: 'red' }} onClick={() => handleDelete(record._id)}>
                 Xóa
               </Button>
             </Space>
@@ -95,7 +95,7 @@ export default function Ranking(props:propsType) : React.JSX.Element {
                     />
                   </Col>
                   <Col>
-                    <Button onClick={()=>handleOpenForm()} type="primary">
+                    <Button icon={<PlusCircleOutlined />} onClick={()=>handleOpenForm()} type="primary">
                       Thêm mới
                     </Button>
                   </Col>

@@ -6,7 +6,7 @@ import ModalAnt from '~/components/Antd/ModalAnt';
 import TableAnt from '~/components/Antd/TableAnt';
 import Breadcrumb from '~/components/common/Breadcrumb';
 import WhiteBox from '~/components/common/WhiteBox';
-import { SearchOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import { SearchOutlined, DeleteOutlined, EditOutlined,InfoCircleTwoTone,PlusCircleOutlined } from '@ant-design/icons';
 import useTranslate from '~/lib/translation';
 import {useGetlistProductUnit,useDeleteProductUnit, useProductUnitQueryParams, useUpdateProductUnitParams} from '../productUnit.hook';
 import ProductUnitForm from './ProductUnitForm';
@@ -65,10 +65,10 @@ export default function ProductUnit(props:propsType) : React.JSX.Element {
           width: '180px',
           render: (_, record) => (
             <Space size="middle">
-              <Button type="primary" onClick={() => handleOpenForm(record?._id)}>
+              <Button icon={<InfoCircleTwoTone />} type="primary" onClick={() => handleOpenForm(record?._id)}>
                 Xem chi tiết
               </Button>
-              <Button style={{ color: 'red' }} onClick={() => handleDelete(record._id)}>
+              <Button icon={<DeleteOutlined />} style={{ color: 'red' }} onClick={() => handleDelete(record._id)}>
                 Xóa
               </Button>
             </Space>
@@ -98,7 +98,7 @@ export default function ProductUnit(props:propsType) : React.JSX.Element {
                       />
                     </Col>
                     <Col>
-                      <Button onClick={()=>handleOpenForm()} type="primary">
+                      <Button icon={<PlusCircleOutlined />} onClick={()=>handleOpenForm()} type="primary">
                         Thêm mới
                       </Button>
                     </Col>

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Col, Row, Space, Input, Button, Form, Modal, Table, Tag, Switch, message, Select, SelectProps } from 'antd';
-import { SearchOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import { SearchOutlined, DeleteOutlined,InfoCircleTwoTone, EditOutlined,PlusCircleOutlined } from '@ant-design/icons';
 import Breadcrumb from '~/components/common/Breadcrumb';
 import useTranslate from '~/lib/translation';
 import type { ColumnsType } from 'antd/es/table';
@@ -115,10 +115,10 @@ export default function ProductConfig() {
       width: '180px',
       render: (_, record) => (
         <Space size="middle">
-          <Button type="primary" onClick={() => handleOpenUpdate(record?._id)}>
+          <Button icon={<InfoCircleTwoTone />} type="primary" onClick={() => handleOpenUpdate(record?._id)}>
             Xem chi tiết
           </Button>
-          <Button style={{ color: 'red' }} onClick={() => handleDelete(record._id)}>
+          <Button icon={<DeleteOutlined />} style={{ color: 'red' }} onClick={() => handleDelete(record._id)}>
             Xóa
           </Button>
         </Space>
@@ -178,7 +178,7 @@ export default function ProductConfig() {
                   />
                 </Col>
                 <Col>
-                  <Button onClick={handleOpenFormCreate} type="primary">
+                  <Button icon={<PlusCircleOutlined />} onClick={handleOpenFormCreate} type="primary">
                     Thêm mới
                   </Button>
                 </Col>

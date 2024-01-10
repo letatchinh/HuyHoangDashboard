@@ -1,4 +1,4 @@
-import { DeleteOutlined, EditOutlined, SearchOutlined } from '@ant-design/icons';
+import { DeleteOutlined, EditOutlined,InfoCircleTwoTone, SearchOutlined,PlusCircleOutlined } from '@ant-design/icons';
 import { Button, Col, Form, Row, Select, SelectProps, Space, Switch, message } from 'antd';
 import Search from 'antd/es/input/Search';
 import { ColumnsType } from 'antd/es/table';
@@ -91,10 +91,10 @@ export default function Manufacturer() {
       width: '180px',
       render: (_, record) => (
         <Space size="middle">
-          <Button type="primary" onClick={() => handleOpenForm(record._id)}>
+          <Button  icon={<InfoCircleTwoTone />} type="primary" onClick={() => handleOpenForm(record._id)}>
             Xem chi tiết
           </Button>
-          <Button style={{ color: 'red' }} onClick={() => handleDelete(record._id)}>
+          <Button icon={<DeleteOutlined />} style={{ color: 'red' }} onClick={() => handleDelete(record._id)}>
             Xóa
           </Button>
         </Space>
@@ -154,7 +154,7 @@ export default function Manufacturer() {
                   />
                 </Col>
                 <Col>
-                  <Button onClick={() => handleOpenForm()} type="primary">
+                  <Button icon={<PlusCircleOutlined />} onClick={() => handleOpenForm()} type="primary">
                     Thêm mới
                   </Button>
                 </Col>
