@@ -211,12 +211,12 @@ const StatusConfig: React.FC = () => {
             checked={value}
             onChange={(e) => {
               if (value) return;
-              // updateStatusConfig({
-              //   priority: e.target.checked,
-              //   isDefault:true,
-              //   statusHidden:false,
-              //   id: record._id
-              // });
+              updateStatusConfig({
+                priority: e.target.checked,
+                isDefault:true,
+                statusHidden:false,
+                id: record._id
+              });
             }}
           />
         )      
@@ -236,10 +236,10 @@ const StatusConfig: React.FC = () => {
             disabled={disable}
               checked={value}
               onChange={(e) => {
-                // updateStatusConfig({
-                //   isDefault: e.target.checked,
-                //   id: record._id
-                // });
+                updateStatusConfig({
+                  isDefault: e.target.checked,
+                  id: record._id
+                });
               }}
             />
           </Tooltip>

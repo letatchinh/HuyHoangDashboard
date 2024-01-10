@@ -18,6 +18,7 @@ import {
 import { DataTypeStatusConfig } from '~/modules/statusConfig/statusConfig.modal';
 import { filterAcrossAccents } from '~/utils/helpers';
 import DebounceSelect from '~/components/common/DebounceSelect';
+import apis from '~/modules/statusConfig/statusConfig.api';
 
 interface BoardFormProps {
   id?: string;
@@ -85,6 +86,12 @@ const BoardForm: React.FC<BoardFormProps> = ({ id, setOpen, handleCloseForm }) =
     }
   };
 
+  const fetchOptions = async() => {
+    const res = await apis.getAll();
+    console.log(res)
+    const options = get(res,'docs',[])?.map((item:any) => ({label : get(item,'name.vi'),value : get(item,'_id')}))
+    return options
+  }
   return (
     <Form
     form={form}
@@ -158,6 +165,7 @@ const BoardForm: React.FC<BoardFormProps> = ({ id, setOpen, handleCloseForm }) =
     <Form.Item shouldUpdate={(pre, cur) => pre.listStatus !== cur.listStatus} noStyle>
       {() => (
         <Form.Item label="Cấu hình trạng thái" name="listStatus">
+          <DebounceSelect debounceTimeout={300} initOptions={listAllStatus} fetchOptions={fetchOptions} />
           {/* <Select
             mode="multiple"
             style={{ width: '100%' }}

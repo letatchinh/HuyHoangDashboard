@@ -167,9 +167,9 @@ export default function Manufacturer() {
                 columns={columns}
                 size="small"
                 pagination={{
-                  // ...paging,
+                  ...paging,
                   onChange(page, pageSize) {
-                    // onParamChange({ page, limit: pageSize });
+                    onParamChange({ page, limit: pageSize });
                   },
                 }}
               />
