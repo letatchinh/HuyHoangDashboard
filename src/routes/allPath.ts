@@ -34,10 +34,11 @@ export const PATH_APP = {
     user: {
       root: path(ROOTS.app, '/user/list'),
     },
-    userGroup: {
-      root: path(ROOTS.app, '/user/group'),
-      detail: path(ROOTS.app, '/user/group/:groupId'),
-    configDiscount: {
-      root: path(ROOTS.app, '/config-discount'),
-    },
+  userGroup: {
+    root: path(ROOTS.app, '/user/group'),
+    detail: path(ROOTS.app, '/user/group/:groupId'),
+  },
+  configDiscount: {
+    root: path(ROOTS.app, '/config-discount'),
+  },
   };
