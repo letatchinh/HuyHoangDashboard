@@ -9,6 +9,7 @@ import {
   useFetch,
   useFetchByParam,
   useQueryParams,
+  useResetState,
   useSubmit,
   useSuccess,
 } from "~/utils/hook";
@@ -42,13 +43,13 @@ export const useUserGroupPaging = () => useSelector(pagingSelector);
 
 export const useGetUserGroups = (payload: object) => {
   const createSuccess = useSelector(createSuccessSelector);
-  const updateSuccess = useSelector(updateSuccessSelector);
+  // const updateSuccess = useSelector(updateSuccessSelector);
   const deleteSuccess = useSelector(deleteSuccessSelector);
 
   const memoParam : object = useMemo(() => {
     return { ...payload };
     //eslint-disable-next-line
-  }, [createSuccess, updateSuccess, deleteSuccess, payload]);
+  }, [createSuccess, deleteSuccess, payload]);
   return useFetch({
     action: userGroupSliceAction.getListRequest,
     loadingSelector: loadingSelector,
@@ -206,5 +207,9 @@ export const onSearchPermissions = (keyword: string = '', resource: any[] = [], 
   });
 
   updateResources(resultSearch);
+};
+
+export const useResetUserGroups = () => {
+  return useResetState(userGroupSliceAction.resetAction);
 };
 

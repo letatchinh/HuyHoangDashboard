@@ -21,6 +21,7 @@ import {
   useDeleteUserGroup,
   useGetUserGroup,
   useGetUserGroups,
+  useResetUserGroups,
   useResourceColumns,
 } from "../userGroup.hook";
 import {
@@ -73,7 +74,7 @@ const getNextPath = (url: string) => {
 };
 
 const UserGroup = ({ currentTab }: UserGroupProps) => {
-  useResetState(userGroupSliceAction.reset);
+  useResetUserGroups();
   const { branchId, groupId }: any = useParams();
   const navigate = useNavigate();
   const { pathname } = useLocation();
@@ -81,8 +82,9 @@ const UserGroup = ({ currentTab }: UserGroupProps) => {
     () => ({ branchId: branchId ? branchId : DEFAULT_BRANCH_ID }),
     [branchId]
   );
+  const [reFetch, setReFetch] = useState(false);
   const [groups, isLoading] = useGetUserGroups(branchIdParam);
-  const param = useMemo(() => (groupId), [groupId]);
+  const param = useMemo(() => (groupId), [groupId, reFetch]);
   const [group, isLoadingGroup, updateGroup] = useGetUserGroup(param);
   const [, handleUpdate] = useUpdatePolicy();
   const [, deleteGroup] = useDeleteUserGroup();
@@ -217,7 +219,7 @@ const UserGroup = ({ currentTab }: UserGroupProps) => {
                 <Button
                   style={styleButton}
                   size="small"
-                  onClick={() => onOpenForm()}
+                  onClick={() => onOpenForm(null)}
                   type="primary"
                 >
                   <PlusOutlined /> Tạo mới
@@ -231,7 +233,7 @@ const UserGroup = ({ currentTab }: UserGroupProps) => {
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                 onSearchPermissions(e.target.value, resources, setDataShow)
               }
-              permissionKey={POLICIES.WRITE_USER}
+              // permissionKey={POLICIES.WRITE_USER}
             />
             <Table
               columns={columns}
@@ -246,8 +248,9 @@ const UserGroup = ({ currentTab }: UserGroupProps) => {
             footer={[]}
             onCancel={onClose}
             className="form-modal__user-group"
+        // destroyOnClose
       >
-        <UserGroupForm isOpen={isOpen} onClose={onClose} id={id} />
+        <UserGroupForm isOpen={isOpen} onClose={onClose} id={id} setReFetch = {setReFetch} reFetch = {reFetch} />
         </Modal>
     </div>
   );

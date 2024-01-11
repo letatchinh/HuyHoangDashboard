@@ -9,10 +9,10 @@ const { Option } = Select;
 interface AddressFormSectionProps {
   isLoading?: boolean;
   form: any; // Replace 'any' with the actual type of your form
-  cityCode: string;
-  setCityCode: (code: string) => void;
-  districtCode: string;
-  setDistrictCode: (code: string) => void;
+  cityCode?: string | null;
+  setCityCode?: any;
+  districtCode?: string | null;
+  setDistrictCode?: any;
   span?: number;
   allowPhoneNumber?: boolean;
   allowEmail?: boolean;
@@ -31,8 +31,8 @@ const AddressFormSection = (props: AddressFormSectionProps) => {
   const cities = subvn.getProvinces();
   const [_cityCode, _setCityCode] = useState(cityCode);
   const newCityCode = useMemo(() => cityCode, [cityCode, _cityCode]);
-  const districts = subvn.getDistrictsByProvinceCode(newCityCode);
-  const wards = subvn.getWardsByDistrictCode(districtCode);
+  const districts = subvn.getDistrictsByProvinceCode(newCityCode as string);
+  const wards = subvn.getWardsByDistrictCode(districtCode as string);
   return (
     <>
       <Row gutter={48} align="middle" justify="space-between">

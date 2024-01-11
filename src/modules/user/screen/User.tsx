@@ -8,6 +8,8 @@ import UserEmployee from "../components/UserEmployee";
 import UserGroup from "~/modules/userGroup/screens/UserGroup";
 import { Routes, Route, Link, useNavigate, useLocation, useParams } from "react-router-dom";
 import PermissionGate from "~/routes/middleware/PermissionGate";
+import WithOrPermission from "~/components/common/WithOrPermission";
+import POLICIES from "~/modules/policy/policy.auth";
 
 export default function User() {
   const { t }: any = useTranslate();
@@ -26,23 +28,17 @@ export default function User() {
     <div>
       <WhiteBox>
         <Tabs activeKey={currentTab} onChange={(key) => onChange(key)} defaultActiveKey="user/list">
-          <TabPane tab="Người dùng" key="user/list">
-            <UserEmployee currentTab = {currentTab}/>
-          </TabPane>
-          <TabPane tab="Nhóm người dùng" key="user/group">
-            <UserGroup currentTab = {currentTab} />
-          </TabPane>
+          {/* <WithOrPermission permission={[POLICIES.READ_USER]}> */}
+              <TabPane  tab="Người dùng" key="user/list">
+                <UserEmployee currentTab = {currentTab}/>
+              </TabPane>
+          {/* </WithOrPermission> */}
+          {/* <WithOrPermission permission={[POLICIES.READ_USERGROUP]}> */}
+              <TabPane tab="Nhóm người dùng" key="user/group">
+              <UserGroup currentTab = {currentTab} />
+              </TabPane>
+            {/* </WithOrPermission> */}
         </Tabs>
-        {/* <PermissionGate
-          path={`${pathname}/user`}
-          component={UserEmployee}
-          // permission={POLICY.READ_USER}
-        />
-        <PermissionGate
-          path={`${pathname}/user-group`}
-          component={UserGroup}
-          // permission={POLICY.READ_USERGROUP}
-        /> */}
       </WhiteBox>
     </div>
   );

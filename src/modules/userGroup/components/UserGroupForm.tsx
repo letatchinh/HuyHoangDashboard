@@ -4,30 +4,42 @@ import { useParams } from "react-router-dom";
 import { useCreateUserGroup, useGetUserGroup, useUpdateUserGroup } from "../userGroup.hook";
 import toastr from "toastr";
 import { DEFAULT_BRANCH_ID } from "~/constants/defaultValue";
+import { useDispatch } from "react-redux";
+import { userGroupSliceAction } from "../redux/reducer";
 
 type propsType = {
   isOpen?: boolean;
   onClose?: any;
   initGroup?: any;
   id?: string;
+  setReFetch?: any,
+  reFetch?: any
 };
 
 const FormItem = Form.Item;
 export default function UserGroupForm(props: propsType): React.JSX.Element {
-  const { isOpen, onClose, initGroup, id } = props;
+  const { isOpen, onClose, initGroup, id , setReFetch, reFetch} = props;
+  const dispatch = useDispatch();
+  const resetAction = () => {
+    return dispatch(userGroupSliceAction.resetAction());
+  };
   const { groupId } = useParams();
   const [form] = Form.useForm();
   const [userGroup, isLoading] = useGetUserGroup(groupId);
   const [isSubmitLoading, handleCreate] = useCreateUserGroup(onClose);
-  const [, handleUpdate] = useUpdateUserGroup(onClose);
+  const [, handleUpdate] = useUpdateUserGroup(() => {
+    onClose();
+    resetAction();
+    setReFetch(!reFetch);
+  });
 
   useEffect(() => {
-    if (userGroup) {
+    if (userGroup && id) {
       form.setFieldsValue(userGroup);
     } else {
       form.resetFields();
     };
-  }, [groupId,userGroup, form]);
+  }, [groupId,userGroup, form, id]);
 
   const onFinish = (values: any) => {
     if (id) {

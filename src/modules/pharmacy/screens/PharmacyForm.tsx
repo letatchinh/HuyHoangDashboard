@@ -5,7 +5,7 @@ import {
   useInitPharmacy,
 } from "../pharmacy.hook";
 import { useCallback, useEffect, useState } from "react";
-import { useCities, useDistricts, useWards } from "~/modules/geo/geo.hook";
+import { useCities, useWards } from "~/modules/geo/geo.hook";
 import { get } from "lodash";
 import { filterAcrossAccents } from "~/utils/helpers";
 import { Link } from "react-router-dom";

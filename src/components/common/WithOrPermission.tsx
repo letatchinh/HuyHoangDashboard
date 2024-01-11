@@ -3,7 +3,7 @@ import { useMatchOrPolicy } from '~/modules/policy/policy.hook';
 
 interface WithOrPermissionProps {
   children: React.ReactNode;
-  permission: string[][];
+  permission?: string[][] | any;
 };
 const WithOrPermission = ({ children, permission }: WithOrPermissionProps) => {
   const isMatchPolicy = useMatchOrPolicy(permission);
