@@ -8,6 +8,7 @@ import userModule from '~/modules/user';
 import userGroupModule from '~/modules/userGroup';
 import policyModule from '~/modules/policy';
 import configDiscountModule from '~/modules/configDiscount';
+import pharmacyModule from '~/modules/pharmacy';
 export default function* rootSaga() {
   yield all([
     authModule.redux.saga(),
@@ -19,5 +20,6 @@ export default function* rootSaga() {
     userGroupModule.redux.saga(),
     policyModule.redux.saga(),
     configDiscountModule.redux.saga(),
+    pharmacyModule.redux.saga(),
   ]);
 };

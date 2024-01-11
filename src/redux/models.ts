@@ -39,6 +39,7 @@ export type initStateSlice<T=any> = {
     userGroup: 'userGroup',
     policy: 'policy',
     configDiscount: 'configDiscount',
+    pharmacy: "pharmacy",
     }as const
     
     

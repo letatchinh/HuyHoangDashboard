@@ -2,7 +2,7 @@
 @import "abstract/base";
 @import "abstract/custom";
 
-// Module 
+// Module
 @import "~/modules/auth/auth.style.scss";
 @import "~/components/Layout/LayoutVertical/index.scss";
 @import "../modules//employee/employee.style.scss";
@@ -19,3 +19,4 @@
 @import 'antd/modal.scss'
 
 
+@import "component/columnAction";

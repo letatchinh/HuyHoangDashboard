@@ -19,6 +19,8 @@ interface Props {
   handleOnClickButton?: any;
   onChange?: any;
   permissionKey?: any
+  onChangeSelect?: any
+  onSelect?: any
 }
 
 const SelectSearch = ({
@@ -31,6 +33,8 @@ const SelectSearch = ({
   isShowButtonAdd = false,
   handleOnClickButton,
   onChange,
+  onChangeSelect,
+  onSelect,
   permissionKey
 }: Props) => {
   return (
@@ -46,6 +50,8 @@ const SelectSearch = ({
                 options={options}
                 showSearch
                 allowClear
+                onChange={onChangeSelect}
+                onSelect={onSelect}
               />
             </Col>
           )}

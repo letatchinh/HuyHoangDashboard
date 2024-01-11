@@ -41,4 +41,9 @@ export const PATH_APP = {
   configDiscount: {
     root: path(ROOTS.app, '/config-discount'),
   },
+    pharmacy : {
+      root:  path(ROOTS.app, '/pharmacy'),
+      detail: path(ROOTS.app, '/pharmacy/:id'),
+    },
+    
   };

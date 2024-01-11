@@ -5,6 +5,7 @@ import localStorage from 'redux-persist/es/storage';
 import authModule from '~/modules/auth';
 import supplierModule from '~/modules/supplier';
 import branchModule from '~/modules/branch';
+import pharmacyModule from '~/modules/pharmacy';
 import geoModule from '~/modules/geo';
 import employeeModule from '~/modules/employee';
 import userModule from '~/modules/user';
@@ -34,5 +35,7 @@ const rootReducer = combineReducers({
     userGroup: userGroupModule.redux.reducer,
     policy: policy.redux.reducer,
     configDiscount: configDiscount.redux.reducer,
+    pharmacy: pharmacyModule.redux.reducer
+
 });
 export default rootReducer

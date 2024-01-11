@@ -3,8 +3,8 @@ import { MenuProps } from "antd";
 import React from "react";
 import { NavLink } from "react-router-dom";
 import { PATH_APP } from "~/routes/allPath";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUsers, faUser } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faUsers, faUser } from "@fortawesome/free-solid-svg-icons";
 type MenuItem = Required<MenuProps>["items"][number];
 function getItem({ label, icon, children, path, key }: ItemType): any {
   return {
@@ -65,36 +65,43 @@ const resource: ItemType[] = [
     key: PATH_APP.supplier.root,
   },
 
-      // Chi nhánh
-    getItem({
-      label : "Chi nhánh",
-      key : "branch",
-      // Children
-      children : [
-        getItem({
-          label : "Danh sách chi nhánh",
-          path : PATH_APP.branch.root,
-          key : PATH_APP.branch.root,
-        })
-      ],
-      icon :<AppstoreFilled />
-    }),
-      //Nhân viên
+  // Chi nhánh
+  getItem({
+    label: "Chi nhánh",
+    key: "branch",
+    // Children
+    children: [
       getItem({
-        label : "Nhân viên",
-        icon: <FontAwesomeIcon icon ={faUsers} />,
-        path : PATH_APP.employee.root,
-        key : PATH_APP.employee.root,
+        label: "Danh sách chi nhánh",
+        path: PATH_APP.branch.root,
+        key: PATH_APP.branch.root,
       }),
-  
-      //Người dùng
-      getItem({
-        label : "Người dùng",
-        icon: <FontAwesomeIcon icon = {faUser} />,
-        path : PATH_APP.user.root,
-        key : PATH_APP.user.root,
-      }),
-      
+    ],
+    icon: <AppstoreFilled />,
+  }),
+  //Nhân viên
+  getItem({
+    label: "Nhân viên",
+    icon: <FontAwesomeIcon icon={faUsers} />,
+    path: PATH_APP.employee.root,
+    key: PATH_APP.employee.root,
+  }),
+
+  //Người dùng
+  getItem({
+    label: "Người dùng",
+    icon: <FontAwesomeIcon icon={faUser} />,
+    path: PATH_APP.user.root,
+    key: PATH_APP.user.root,
+  }),
+
+  //Nhà thuốc
+  {
+    label: "Nhà thuốc",
+    icon: <AppstoreOutlined />,
+    path: PATH_APP.pharmacy.root,
+    key: PATH_APP.pharmacy.root,
+  },
 ];
 
 const NavbarItems = resource.map((first) => {
