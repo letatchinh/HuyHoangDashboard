@@ -31,6 +31,7 @@ export default function ProductConfig() {
   const [search,setSearch]= useState(get(query,'status')||'');
   const callBack = () => {
     setShowForm(false);
+    setId(null)
   };
   const paging = useProductConfigPaging();
   const [, deleteProductConfig] = useDeleteProductConfig(callBack);
@@ -214,7 +215,7 @@ export default function ProductConfig() {
         width={800}
 
       >
-        <ProductGroupForm id={id} callBack={callBack} />
+        <ProductGroupForm id={id} callBack={callBack} updateProductConfig={updateProductConfig}/>
       </ModalAnt>
     </div>
   );

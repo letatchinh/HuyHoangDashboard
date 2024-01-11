@@ -7,7 +7,7 @@ import React, { useCallback, useState } from 'react'
 import Breadcrumb from '~/components/common/Breadcrumb';
 import WhiteBox from '~/components/common/WhiteBox';
 import useTranslate from '~/lib/translation';
-import { useManufacturerPaging,useManufacturerParams,useGetManufacturerList, useManufacturerQueryParams,useDeleteManufacturer,useUpdateManufacturer } from '../manufacturer.hook';
+import { useManufacturerPaging,useManufacturerParams,useGetManufacturerList, useManufacturerQueryParams,useDeleteManufacturer,useUpdateManufacturer, useResetAction } from '../manufacturer.hook';
 import TableAnt from '~/components/Antd/TableAnt';
 import ModalAnt from '~/components/Antd/ModalAnt';
 import ManufacturerForm from './ManufacturerForm';
@@ -26,9 +26,9 @@ export default function Manufacturer() {
   }, []);
   const [,deleteManufacturer] = useDeleteManufacturer();
   const [form] = Form.useForm();
-  const [,updateManufacturer] = useUpdateManufacturer(handleCloseForm);
+  const [isSubmitUpdateLoading,updateManufacturer] = useUpdateManufacturer(handleCloseForm);
   const { t }: any = useTranslate();
-
+  useResetAction();
   interface DataType {
     code: string;
     key: string;
@@ -39,7 +39,7 @@ export default function Manufacturer() {
   }
 
   const handleOpenForm = useCallback ((id?: any) => {
-    if (id) setId(id);
+    if (id){ setId(id);}
      setShowForm(true);
   },[]);
   const handleDelete = (id: any) => {
@@ -47,7 +47,12 @@ export default function Manufacturer() {
 
   };
 
-
+  // const onUpdateStatus = useCallback((status:any,idUpdate:any) => {
+  //   updateManufacturer({
+  //     id : idUpdate,
+  //     status
+  //   })
+  // },[updateManufacturer])
 
   const columns:ColumnsType<DataType> = [
     {
@@ -79,7 +84,7 @@ export default function Manufacturer() {
           updateManufacturer({ status: value ? 'ACTIVE' : 'INACTIVE',id:record?._id });
           
         }}
-      // loading={isSubmitUpdateLoading}
+      loading={isSubmitUpdateLoading}
       />
       // </WithPermission>
       )
@@ -91,10 +96,10 @@ export default function Manufacturer() {
       width: '180px',
       render: (_, record) => (
         <Space size="middle">
-          <Button  icon={<InfoCircleTwoTone />} type="primary" onClick={() => handleOpenForm(record._id)}>
+          <Button  icon={<InfoCircleTwoTone />} type="primary" onClick={() => handleOpenForm(record?._id)}>
             Xem chi tiết
           </Button>
-          <Button icon={<DeleteOutlined />} style={{ color: 'red' }} onClick={() => handleDelete(record._id)}>
+          <Button icon={<DeleteOutlined />} style={{ color: 'red' }} onClick={() => handleDelete(record?._id)}>
             Xóa
           </Button>
         </Space>
@@ -186,7 +191,7 @@ export default function Manufacturer() {
         destroyOnClose
         
       >
-        <ManufacturerForm id={id} callBack={handleCloseForm}/>
+        <ManufacturerForm id={id} callBack={handleCloseForm} updateManufacturer={updateManufacturer}/>
       </ModalAnt>
       </div>
     </>

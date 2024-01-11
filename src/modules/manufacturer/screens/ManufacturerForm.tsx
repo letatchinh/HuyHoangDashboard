@@ -6,6 +6,7 @@ import { useUpdateManufacturer,useCreateManufacturer,useGetManufacturerById,useR
 interface Props {
     id?: any
     callBack:()=>void
+    updateManufacturer:(data:any)=>void,
 }
 interface FieldType {
   code: string
@@ -14,9 +15,9 @@ interface FieldType {
   description: string
   isAction:String
 }
-const ManufacturerForm:React.FC<Props>=({id,callBack})=>{
+const ManufacturerForm:React.FC<Props>=({id,callBack,updateManufacturer})=>{
   const [manufacturer,loading] = useGetManufacturerById(id)
-    const [,updateManufacturer] = useUpdateManufacturer(callBack)
+    // const [,updateManufacturer] = useUpdateManufacturer(callBack)
     const [,createManufacturer] = useCreateManufacturer(callBack)
   const [form]=Form.useForm<FieldType>();
   useResetAction();

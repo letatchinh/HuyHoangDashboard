@@ -5,6 +5,7 @@ import { useGetlistProductConfigById, useUpdateProductConfig,useCreateProductCon
 interface Props {
   id?: any;
   callBack?: () => void;
+  updateProductConfig: (data:any)=>void;
 }
 
 interface FieldType {
@@ -15,8 +16,8 @@ interface FieldType {
   isAction:String
 }
 const { TextArea } = Input;
-const ProductConfigForm: React.FC<Props> = ({ id, callBack }) => {
-  const [, updateProductConfig] = useUpdateProductConfig(callBack);
+const ProductConfigForm: React.FC<Props> = ({ id, callBack,updateProductConfig }) => {
+  // const [, updateProductConfig] = useUpdateProductConfig(callBack);
   const [, createProductConfig] = useCreateProductConfig(callBack);
   const [productConfigById, isLoading] = useGetlistProductConfigById(id);
   console.log(productConfigById, 'productConfigById');
