@@ -1,7 +1,7 @@
 import { Button, Col, Row, Select } from "antd";
 import Search from "antd/es/input/Search";
-// import WithOrPermission from "../WithOrPermission";
-// import POLICY from "../../../modules/policy/policy.auth";
+// import WithOrPermission from "./WithOrPermission";
+// import POLICY from "../../modules/policy/policy.auth";
 import { PlusCircleOutlined } from "@ant-design/icons";
 import './index.scss'
 interface Option {
@@ -11,7 +11,7 @@ interface Option {
 interface Props {
   options?: [Option] | [];
   showSelect?: boolean;
-  onSearch?: any;
+  onSearch?: (value?:string) => void;
   optionsStatus?: [Option] | [];
   showSearchStatus?: boolean;
   placeholder?: string;
@@ -86,7 +86,7 @@ const SelectSearch = ({
       <Row gutter={5} justify='end'>
           {isShowButtonAdd && (
             <Col  className="select-search__button">
-               {/* <WithOrPermission permission={[permissionKey]} >  */}
+              {/* <WithOrPermission permission={[permissionKey]} > */}
               <Button
                 type="primary"
                 onClick={handleOnClickButton}
@@ -94,7 +94,7 @@ const SelectSearch = ({
               >
                 Thêm mới
               </Button>
-              {/* </WithOrPermission>  */}
+              {/* </WithOrPermission> */}
             </Col>
           )}
         </Row>
@@ -104,5 +104,3 @@ const SelectSearch = ({
 };
 
 export default SelectSearch;
-
-

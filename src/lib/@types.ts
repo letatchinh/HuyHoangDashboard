@@ -11,3 +11,8 @@ export interface PaginateResult<T> {
   hasNextPage: boolean;
   meta?: any;
 }
+
+export type ItemOptionsAnt = {
+  label : string,
+  value : string,
+}

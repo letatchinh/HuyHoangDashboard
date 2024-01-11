@@ -1,0 +1,11 @@
+#medicine-autocomple-container {
+    .ant-select-dropdown {
+      top: -20px !important;
+    }
+  
+    .ant-table {
+      overflow-y: auto;
+      max-width: 880px;
+      max-height: 700px;
+    }
+  }
