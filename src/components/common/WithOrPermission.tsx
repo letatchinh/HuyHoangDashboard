@@ -7,7 +7,6 @@ interface WithOrPermissionProps {
 };
 const WithOrPermission = ({ children, permission }: WithOrPermissionProps) => {
   const isMatchPolicy = useMatchOrPolicy(permission);
-
   return <>{isMatchPolicy && children}</>;
 };
 

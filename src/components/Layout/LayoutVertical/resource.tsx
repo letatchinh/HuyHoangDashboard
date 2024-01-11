@@ -6,9 +6,6 @@ import { PATH_APP } from "~/routes/allPath";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUsers, faUser } from '@fortawesome/free-solid-svg-icons';
 import POLICIES from "~/modules/policy/policy.auth";
-import WithOrPermission from "~/components/common/WithOrPermission";
-import { useMatchOrPolicy } from "~/modules/policy/policy.hook";
-import { policyType } from "~/modules/policy/policy.modal";
 
 type MenuItem = Required<MenuProps>["items"][number];
 function getItem({ label, icon, children, path, key, permission }: ItemType): any {
@@ -38,7 +35,7 @@ type ItemType = {
   key: string;
   permission?: any; 
 };
- const resource: ItemType[] = [
+export const resource: ItemType[] = [
   {
     label: "WorldPharmaVN",
     key: "WorldPharmaVN",
@@ -48,11 +45,13 @@ type ItemType = {
         label: "Cài đặt",
         key: "WorldPharmaVN-setting",
         icon: <AppstoreFilled />,
+        // permission :[POLICIES.READ_USERGROUP],
         children: [
           {
             label: "Cấu hình danh mục",
             path: PATH_APP.worldPharma.productConfig,
             key: PATH_APP.worldPharma.productConfig,
+            // permission :[POLICIES.READ_USERGROUP],
           },
         ],
       },
@@ -65,6 +64,7 @@ type ItemType = {
     icon: <AppstoreOutlined />,
     path: PATH_APP.supplier.root,
     key: PATH_APP.supplier.root,
+    // permission :[POLICIES.READ_USER],
   },
 
       // Chi nhánh
@@ -79,7 +79,7 @@ type ItemType = {
           key : PATH_APP.branch.root,
         }
       ],
-      icon :<AppstoreFilled />
+      icon :<AppstoreFilled />,
     },
       //Nhân viên
       {
@@ -87,7 +87,7 @@ type ItemType = {
         icon: <FontAwesomeIcon icon ={faUsers} />,
         path : PATH_APP.employee.root,
         key: PATH_APP.employee.root,
-        permission :[POLICIES.READ_USER],
+        permission :[POLICIES.READ_EMPLOYEE],
       },
       //Người dùng
       {
@@ -98,6 +98,7 @@ type ItemType = {
       },
       
  ];
+
 //Required permission is string[][]; 
 const NavbarItems = resource.map((first) => {
       if (first.children?.length) {
