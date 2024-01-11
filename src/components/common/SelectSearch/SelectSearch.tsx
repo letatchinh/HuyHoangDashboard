@@ -1,24 +1,32 @@
-import { Button, Col, Row, Select } from "antd";
+import { Button, Col, Radio, Row, Select } from "antd";
 import Search from "antd/es/input/Search";
-// import WithOrPermission from "../WithOrPermission";
-// import POLICY from "../../../modules/policy/policy.auth";
+import WithOrPermission from "../WithOrPermission";
 import { PlusCircleOutlined } from "@ant-design/icons";
-import './index.scss'
+import { OptionSelect, OptionStatus } from "~/constants/defaultValue";
+
+import "./index.scss";
 interface Option {
   value: string;
   label: string;
-}
+};
 interface Props {
-  options?: [Option] | [];
+  options?: OptionSelect[];
   showSelect?: boolean;
   onSearch?: any;
-  optionsStatus?: [Option] | [];
+  optionsStatus?: Option[];
   showSearchStatus?: boolean;
   placeholder?: string;
   isShowButtonAdd?: boolean;
   handleOnClickButton?: any;
   onChange?: any;
-  permissionKey?: any
+  permissionKey?: string[][];
+  onSelect?: any;
+  onChangeSelect?: any;
+  keyword?: any;
+  placeholderSelect?: string;
+  mode?: "multiple" | "tags" | undefined;
+  onChangeStatus?: any;
+  valueStatus?: any;
 }
 
 const SelectSearch = ({
@@ -28,75 +36,94 @@ const SelectSearch = ({
   optionsStatus,
   showSearchStatus,
   placeholder = "bất kỳ...",
+  placeholderSelect = "Tìm theo nhóm...",
   isShowButtonAdd = false,
   handleOnClickButton,
   onChange,
-  permissionKey
+  onSelect,
+  onChangeSelect,
+  keyword,
+  mode = "multiple",
+  onChangeStatus,
+  valueStatus,
+  permissionKey,
 }: Props) => {
   return (
-  <div className="select-search">
+    <div className="select-search">
       <div className="select-search__left">
-      <Row gutter={5}>
+        <Row gutter={5}>
           {showSelect && (
-            <Col span={8}>
+            <Col>
               <Select
+                mode={mode}
                 style={{
-                  width : 300
+                  width: 300,
                 }}
                 options={options}
                 showSearch
                 allowClear
+                onChange={onChangeSelect}
+                onSelect={onSelect}
+                placeholder={placeholderSelect}
               />
             </Col>
           )}
-          <Col span={8}>
+          <Col>
             <Search
               placeholder={`Tìm ${placeholder}`}
               onSearch={onSearch}
               onChange={onChange}
               style={{
-                width : 300
+                width: 300,
               }}
               allowClear
               enterButton
+              value={keyword}
             />
           </Col>
           {showSearchStatus && (
-            <Col span={8}>
-              <Select
-                placeholder="Tìm theo trạng thái"
-                style={{
-                  width: "100%",
-                }}
-                options={optionsStatus}
-                showSearch
-                allowClear
+            // <Col span={6} className="select-search__status">
+            //   <Select
+            //     placeholder="Tìm theo trạng thái"
+            //     style={{
+            //       width: "100%",
+            //     }}
+            //     options={optionsStatus}
+            //     showSearch
+            //     allowClear
+            //   />
+            // </Col>
+            <Col className="select-search__status">
+              <Radio.Group
+                options={OptionStatus as any}
+                onChange={onChangeStatus}
+                value={valueStatus}
+                optionType="button"
+                buttonStyle="solid"
               />
             </Col>
           )}
         </Row>
-    </div>
+      </div>
       <div className="select-search__right">
-      <Row gutter={5} justify='end'>
+        <Row justify="end">
           {isShowButtonAdd && (
-            <Col  className="select-search__button">
-               {/* <WithOrPermission permission={[permissionKey]} >  */}
-              <Button
-                type="primary"
-                onClick={handleOnClickButton}
-                icon={<PlusCircleOutlined/>}
-              >
-                Thêm mới
-              </Button>
-              {/* </WithOrPermission>  */}
+            <Col className="select-search__button">
+              <WithOrPermission permission={permissionKey}>
+                <Button
+                  type="primary"
+                  onClick={handleOnClickButton}
+                  icon={<PlusCircleOutlined />}
+                >
+                  Thêm mới
+                </Button>
+              </WithOrPermission>
             </Col>
           )}
         </Row>
+      </div>
     </div>
-  </div>
   );
 };
 
 export default SelectSearch;
-
-

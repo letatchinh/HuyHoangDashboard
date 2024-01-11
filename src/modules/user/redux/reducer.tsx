@@ -6,7 +6,7 @@ import { UserResponseOne } from "../user.modal";
 import { createSlice } from "@reduxjs/toolkit";
 
 interface UserState extends initStateSlice{
-  policy?: [],
+  policy?: {},
   isGetPolicyLoading?: boolean,
   getPolicyFailed?: any,
 };
@@ -22,7 +22,7 @@ class UserClassExtend extends InstanceModuleRedux {
         state.list = get(payload, 'docs', []);
       },
       getPolicyRequest: (state: UserState, { payload }: any) => {
-        state.policy = [];
+        state.policy = {};
         state.isGetPolicyLoading = true;
       },
       getPolicySuccess: (state: UserState, { payload }: any) => {
@@ -36,7 +36,7 @@ class UserClassExtend extends InstanceModuleRedux {
     };
     this.cloneInitState = {
       ...this.initialState,
-      policy: [],
+      policy: {},
       isGetPolicyLoading: false,
       getPolicyFailed: false
       // Want Add more State Here...

@@ -33,16 +33,6 @@ export default function User() {
             <UserGroup currentTab = {currentTab} />
           </TabPane>
         </Tabs>
-        {/* <PermissionGate
-          path={`${pathname}/user`}
-          component={UserEmployee}
-          // permission={POLICY.READ_USER}
-        />
-        <PermissionGate
-          path={`${pathname}/user-group`}
-          component={UserGroup}
-          // permission={POLICY.READ_USERGROUP}
-        /> */}
       </WhiteBox>
     </div>
   );

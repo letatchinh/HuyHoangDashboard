@@ -32,6 +32,15 @@ class UserClassExtend extends InstanceModuleRedux {
 
         handleAction(pAction);
       },
+
+      updateSuccess: (state: initStateSlice, { payload }: any) => {
+        state.isSubmitLoading = false;
+        state.updateSuccess = payload;
+        state.list = state.list?.map((item: any) => {
+          if (item?._id === payload?.data?._id) return payload?.data;
+          return item;
+        });
+      },
       // Want Add more reducer Here...
     };
 

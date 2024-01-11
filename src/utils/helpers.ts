@@ -68,5 +68,5 @@ export const filterAcrossAccents = (input:any, option:any) => {
 };
 export const StringToSlug = (str: string) => {
   const result = removeAccents(str)
-  return result.replaceAll(/\s+/g,'-')
-}
+  return result.replaceAll(/\s+/g, '-')
+};
