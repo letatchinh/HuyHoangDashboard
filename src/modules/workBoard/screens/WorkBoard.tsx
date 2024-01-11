@@ -13,8 +13,14 @@ import useTranslate from '~/lib/translation';
 import { ColumnsType } from 'antd/es/table';
 import { DataType } from '../workBoard.modal';
 import moment from 'moment';
-// const BoardForm = lazy(() => import('./TaskForm/BoardForm.js'));
-// const BoardFormDetail = lazy(() => import('./TaskForm/BoardFormDetail.js'));
+import BoardForm from '../components/BoardForm';
+import BoardFormDetail from '../components/BoardFormDetail';
+// const BoardForm = lazy(() => import('../components/BoardForm.tsx'));
+// const BoardForm = lazy(() =>
+//   import('../components/BoardForm.tsx')
+//     .then(({ BoardForm }) => ({ default: BoardForm })),
+// );
+// const BoardFormDetail = lazy(() => import('../components/BoardFormDetail.tsx'));
 
 interface WorkFlowProps {}
 
@@ -23,7 +29,7 @@ const WorkBoard: React.FC<WorkFlowProps> = () => {
   const [form] = Form.useForm();
   const { select, setSelect, onClick } = useExpandrowTableClick();
   const [isOpenForm, setOpen] = useState(false);
-  const [id, setId] = useState<string | null>(null);
+  const [id, setId]:any = useState(null);
   const [query] = useWorkBoardQueryParams();
   const [keyword, { onParamChange, setKeyword }] = useUpdateWorkBoardParams(query);
   const [isSubmitLoading, deleteWorkList] = useDeleteWorkBoard();
@@ -185,12 +191,12 @@ const onSearch = (value: string) => {
       {/* </TabBranch> */}
       <Modal open={isOpenForm} footer={null} onCancel={() => setOpen(false)} width={700} destroyOnClose={true}>
         <Suspense fallback={<div>...</div>}>
-          {/* <BoardForm id={id} handleCloseForm={handleCloseForm} /> */}
+          <BoardForm id={id} handleCloseForm={handleCloseForm} />
         </Suspense>
       </Modal>
       <Modal open={openDetail} footer={null} onCancel={() => setOpenDetail(false)} width={1200} destroyOnClose>
         <Suspense fallback={<div>...</div>}>
-          {/* <BoardFormDetail id={id} setOpenDetail={setOpenDetail} /> */}
+          <BoardFormDetail id={id} setOpenDetail={setOpenDetail} />
         </Suspense>
       </Modal>
     </div>

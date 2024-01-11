@@ -22,11 +22,10 @@ import apis from '~/modules/statusConfig/statusConfig.api';
 
 interface BoardFormProps {
   id?: string;
-  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   handleCloseForm: () => void;
 }
 
-const BoardForm: React.FC<BoardFormProps> = ({ id, setOpen, handleCloseForm }) => {
+const BoardForm: React.FC<BoardFormProps> = ({ id, handleCloseForm }) => {
   const _id = useMemo(() => id, [id]);
   const [form] = Form.useForm();
   const { Option } = Select;

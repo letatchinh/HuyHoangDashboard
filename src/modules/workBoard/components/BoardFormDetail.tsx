@@ -18,7 +18,8 @@ import {
 import { BOARD_SECURITY_TYPE, PERMISSION } from '../workBoard.modal';
 
 interface BoardFormDetailProps {
-  id: string;
+  id?: string;
+  setOpenDetail?: (value: boolean) => void;
 }
 
 const BoardFormDetail: React.FC<BoardFormDetailProps> = ({ id }) => {
