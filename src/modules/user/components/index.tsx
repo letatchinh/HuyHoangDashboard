@@ -69,8 +69,9 @@ const UserEmployee = ({ currentTab }: UserProps) => {
   const [keyword, { setKeyword, onParamChange }] = useUpdateUserParams(query);
   const [data, isLoading] = useGetUsers(query);
   const paging = useUserPaging();
-  const shouldShowDevider = useMatchPolicy(POLICIES.DELETE_USER);
-  
+  const isCanUpdate = useMatchPolicy(POLICIES.UPDATE_USER);
+  const isCanDelete = useMatchPolicy(POLICIES.DELETE_USER);
+  const shouldShowDevider = useMemo(() => isCanDelete && isCanUpdate, [isCanDelete, isCanUpdate]);
 
   // groups
   const { branchId }: any = useParams();
@@ -161,11 +162,11 @@ const UserEmployee = ({ currentTab }: UserProps) => {
         />
       ),
     },
-    {
+    ...(isCanUpdate || isCanDelete ?[{
       title: "Thao tác",
       key: "action",
       width: "110px",
-      render: (record) => {
+      render: (record : any) => {
         return (
           <ColumnActions
             {...record}
@@ -175,7 +176,7 @@ const UserEmployee = ({ currentTab }: UserProps) => {
           />
         );
       },
-    },
+    }] : [])
   ];
   return (
     <div>
@@ -216,7 +217,7 @@ const UserEmployee = ({ currentTab }: UserProps) => {
         destroyOnClose
         // title= {`${id ? "Cập nhật" : "Thêm mới"} nhân viên`}
       >
-        <UserForm id={id} handleCloseModal={handleCloseModal} updateUser={updateUser} />
+        <UserForm id={id} handleCloseModal={handleCloseModal} updateUser={updateUser} resetAction={resetAction} />
       </Modal>
     </div>
   );

@@ -20,11 +20,12 @@ interface IProps {
   id?: string | null;
   handleCloseModal: () => void;
   updateUser?: any;
+  resetAction?: any;
 };
 
 export default function UserForm(props: IProps) {
   const [form] = Form.useForm();
-  const { id, handleCloseModal, updateUser: handleUpdate } = props;
+  const { id, handleCloseModal, updateUser: handleUpdate , resetAction} = props;
   const [imageUrl, setImageUrl] = useState<string>();
   const [loadingValidateUsername, setLoadingValidateUsername] =
     useState<boolean>(false);
@@ -35,7 +36,10 @@ export default function UserForm(props: IProps) {
   const [wardCode, setWardCode] = useState<string>('');
 
   //hook user
-  const [, handleCreate] = useCreateUser(handleCloseModal);
+  const [, handleCreate] = useCreateUser(() => {
+    handleCloseModal();
+    resetAction();
+  });
   const [user, isLoading] = useGetUser(id);
 
   //fetch user groups
@@ -45,7 +49,6 @@ export default function UserForm(props: IProps) {
     [branchId]
   );
   const [groups, isLoadingGroups] = useGetUserGroups(branchIdParam);
-
   useResetState(userSliceAction.resetAction);
 
   useEffect(() => {
