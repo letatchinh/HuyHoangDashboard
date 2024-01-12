@@ -47,6 +47,7 @@ export type initStateSlice<T=any> = {
     workBoard:'workBoard',
     workSprint:'workSprint',
     workList:'workList',
+    workTask:'workTask'
     }as const
     
     

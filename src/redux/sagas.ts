@@ -16,6 +16,7 @@ import medicineModule from '~/modules/medicine';
 import workBoardModule from '~/modules/workBoard';
 import workSprintModule from '~/modules/workSprint';
 import workListModule from '~/modules/workList';
+import workTaskModule from '~/modules/workTask';
 export default function* rootSaga() {
   yield all([
     authModule.redux.saga(),
@@ -35,5 +36,6 @@ export default function* rootSaga() {
     workBoardModule.redux.saga(),
     workSprintModule.redux.saga(),
     workListModule.redux.saga(),
+    workTaskModule.redux.saga(),
   ]);
 };

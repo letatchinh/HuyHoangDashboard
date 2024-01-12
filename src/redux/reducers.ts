@@ -20,6 +20,7 @@ import medicineModule from '~/modules/medicine';
 import workBoardModule from '~/modules/workBoard';
 import workSprintModule from '~/modules/workSprint';
 import workListModule from '~/modules/workList';
+import workTaskModule from '~/modules/workTask';
 const authPersistConfig = {
     key: 'auth',
     storage: localStorage,
@@ -51,6 +52,7 @@ const rootReducer = combineReducers({
     workBoard:workBoardModule.redux.reducer,
     workSprint:workSprintModule.redux.reducer,
     workList:workListModule.redux.reducer,
+    workTask:workTaskModule.redux.reducer
 
 });
 export default rootReducer

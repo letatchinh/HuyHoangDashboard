@@ -1,10 +1,10 @@
 import React, { createContext, useContext, useEffect, useMemo, useRef, useState, lazy, Suspense } from 'react';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { useParams } from 'react-router-dom';
-import { Button, Drawer, Modal, Space, Spin, ResizableBox } from 'antd';
+import { Button, Drawer, Modal, Space, Spin } from 'antd';
 import { ArrowLeftOutlined, CloseOutlined } from '@ant-design/icons';
+import { ResizableBox } from 'react-resizable';
 import Text from 'antd/lib/typography/Text';
-import { useCreateBoardWork, useCreateTask, useDeleteBoardWork, useDeleteTask, useGetBoardById, useListBoardConfig, useListBoardConfigItem, useUpdatePosition, useUpdateTask } from '~/hooks/workFlow';
 import { get } from 'lodash';
 import { useWorkListQueryParams } from '../workList.hook';
 import Menufilter from '../components/Menufilter';
@@ -12,6 +12,7 @@ import { useGetWorkSprint } from '~/modules/workSprint/workSprint.hook';
 import MenuListBoard from '~/modules/workSprint/components/MenuListBoard';
 import BoardConfig from '../components/WorkListConfig';
 import { FormTaskContextProps } from '../workList.modal';
+import { useCreateWorkTask, useDeleteWorkTask, useUpdateWorkTask } from '~/modules/workTask/workTask.hook';
 // import { useGetSprintInfo } from '~/hooks/workSprint';
 // import { useWorkListQueryParams } from '~/hooks/workList';
 // import { WithOrPermission } from '../Common';
@@ -34,9 +35,9 @@ const WorkList = () => {
   const idBoard = useMemo(() => sprintInfo?.boardId, [sprintInfo]);
   const [query] = useWorkListQueryParams(sprintId);
   const [visibleModal, setVisibleModal] = useState(false);
-  const [boardConfig] = useListBoardConfig(query);
-  const boardConfigMemo = useMemo(() => (boardConfig ?? []).map(({ name, _id }:any) => ({ name, _id })), [boardConfig]);
-  const [data] = useListBoardConfigItem();
+  // const [boardConfig] = useListBoardConfig(query);
+  // const boardConfigMemo = useMemo(() => (boardConfig ?? []).map(({ name, _id }:any) => ({ name, _id })), [boardConfig]);
+  // const [data] = useListBoardConfigItem();
   const [propsModal, setPropsModal] = useState({});
   const [visibleInfo, setVisibleInfo] = useState(false);
 const [lengthList, setLength] = useState<number>(
@@ -47,14 +48,14 @@ const [lengthList, setLength] = useState<number>(
   const [taskData, setTaskData] = useState('');
   const [visibleListBoard, setVisibleListBoard] = useState(false);
   const [idVisibleInfo, setIdVisibleInfo] = useState('');
-  const [, updateTask] = useUpdateTask();
-  const [, updatePosition] = useUpdatePosition();
-  const [, handleCreateTask] = useCreateTask();
-  const [, handleDeleteTask] = useDeleteTask();
-  const [, handleCreateWork] = useCreateBoardWork();
-  const [, handleDeleteWork] = useDeleteBoardWork();
+  const [, updateTask] = useUpdateWorkTask();
+  // const [, updatePosition] = useUpdatePosition();
+  const [, handleCreateTask] = useCreateWorkTask();
+  const [, handleDeleteTask] = useDeleteWorkTask();
+  // const [, handleCreateWork] = useCreateBoardWork();
+  // const [, handleDeleteWork] = useDeleteBoardWork();
   const [tasksAllBoard, setTasksAllBoard] = useState({});
-  const [boardData] = useGetBoardById(idBoard);
+  // const [boardData] = useGetBoardById(idBoard);
 
   const showDrawer = (param?:any) => {
     setVisibleListBoard((val) => param ?? !val);
