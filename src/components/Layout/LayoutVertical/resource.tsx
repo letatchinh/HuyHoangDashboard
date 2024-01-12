@@ -45,7 +45,6 @@ export const resource: ItemType[] = [
         label: "Cài đặt",
         key: "WorldPharmaVN-setting",
         icon: <AppstoreFilled />,
-        // permission :[POLICIES.READ_USERGROUP],
         children: [
           {
             label: "Cấu hình danh mục",
@@ -64,14 +63,13 @@ export const resource: ItemType[] = [
     icon: <AppstoreOutlined />,
     path: PATH_APP.supplier.root,
     key: PATH_APP.supplier.root,
-    // permission :[POLICIES.READ_USER],
   },
 
       // Chi nhánh
     {
       label : "Chi nhánh",
-      key : "branch",
-      // Children
+      key: "branch",
+      permission :[POLICIES.READ_BRANCH],
       children : [
         {
           label : "Danh sách chi nhánh",
@@ -94,9 +92,9 @@ export const resource: ItemType[] = [
         label : "Người dùng",
         icon: <FontAwesomeIcon icon = {faUser} />,
         path : PATH_APP.user.root,
-        key : PATH_APP.user.root,
+        key: PATH_APP.user.root,
+        permission :[POLICIES.READ_USER, POLICIES.READ_USERGROUP],
       },
-      
  ];
 
 //Required permission is string[][]; 
