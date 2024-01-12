@@ -10,7 +10,7 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import React, { useEffect, useState } from "react";
-import { Checkbox, Radio, Table } from "antd";
+import { Checkbox, message, Radio, Table } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import {
   useGetConfigDiscounts,
@@ -19,6 +19,10 @@ import {
 import { ConfigItem } from "../configDiscount.modal";
 import Breadcrumb from "~/components/common/Breadcrumb";
 import WhiteBox from "~/components/common/WhiteBox";
+import toastr from "toastr";
+import { useDispatch } from "react-redux";
+import { useResetState } from "~/utils/hook";
+import { configDiscountSliceAction } from "../redux/reducer";
 
 interface RowProps extends React.HTMLAttributes<HTMLTableRowElement> {
   "data-row-key": string;
@@ -78,22 +82,54 @@ const Row = ({ children, ...props }: RowProps) => {
 };
 
 const ConfigDiscount: React.FC = () => {
+  const dispatch = useDispatch();
+  const resetState = () => {
+    return dispatch(configDiscountSliceAction.resetAction());
+  };
   const [dataSource, setDataSource] = useState([]);
   const [data, isLoading] = useGetConfigDiscounts();
-  const [, updateConfig] = useUpdateConfigDiscount();
+  const [, updateConfig] = useUpdateConfigDiscount(() => resetState());
   useEffect(() => {
     if (data?.length) {
       setDataSource(data);
     }
   }, [data]);
 
-  const onDragEnd = ({ active, over }: DragEndEvent) => {
-    if (active.id !== over?.id) {
-      setDataSource((previous) => {
-        const activeIndex = previous.findIndex((i: any) => i.key === active.id);
-        const overIndex = previous.findIndex((i: any) => i.key === over?.id);
-        return arrayMove(previous, activeIndex, overIndex);
+  const handleCheckbox = (e: any, item: any, index?: number) => {
+    try {
+      const cloneData = [...dataSource];
+      const newData : any  = cloneData?.map((i: any, indexx: number) => {
+        if (indexx === index) {
+          return {
+            ...i,
+            status: e.target.checked,
+          };
+        };
+        return i;
       });
+      updateConfig(newData);
+      setDataSource(newData);
+    } catch (error) {
+      console.log(error);
+    };
+  };
+
+  const onDragEnd = ({ active, over }: DragEndEvent) => {
+    // if (!isMath) { // check permission
+    //   return;
+    // };
+    if (active.id !== over?.id) {
+      try {
+        updateConfig(dataSource);
+        setDataSource((previous) => {
+          const activeIndex = previous.findIndex((i: any) => i.key === active.id);
+          const overIndex = previous.findIndex((i: any) => i.key === over?.id);
+          return arrayMove(previous, activeIndex, overIndex);
+        });
+      } catch (error: any) {
+        console.log(error);
+        // toastr.error(error.message || "Có lỗi xảy ra" );
+      };
     }
   };
   const columns: ColumnsType<ConfigItem> = [
@@ -117,7 +153,7 @@ const ConfigDiscount: React.FC = () => {
       dataIndex: "status",
       align: "center",
       width: 100,
-      render: (value, rc, index) => <Checkbox checked={value} />,
+      render: (value, rc, index) => <Checkbox onChange={(e : any) => handleCheckbox(e,rc,index)} checked={value} />,
     },
   ];
 
@@ -142,6 +178,7 @@ const ConfigDiscount: React.FC = () => {
               rowKey="key"
               columns={columns}
               dataSource={dataSource}
+              loading={isLoading}
             />
           </SortableContext>
         </DndContext>

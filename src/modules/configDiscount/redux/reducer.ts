@@ -23,7 +23,7 @@ class ConfigDiscountClassExtend extends InstanceModuleRedux {
       },
       updateListSuccess: (state: cloneInitState, { payload }: any) => {
         state.isLoading = false;
-        state.updateListSuccess = true;
+        state.updateListSuccess = payload;
       },
       updateListFailed: (state: cloneInitState, { payload }: any) => {
         state.isLoading = false;
