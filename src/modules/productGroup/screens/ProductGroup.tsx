@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { Col, Row, Space, Input, Button, Form, Modal, Table, Tag, Switch, message, Select, SelectProps } from 'antd';
-import { SearchOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import { SearchOutlined, DeleteOutlined, EditOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import Breadcrumb from '~/components/common/Breadcrumb';
 import useTranslate from '~/lib/translation';
 import type { ColumnsType } from 'antd/es/table';
+import permissions from '../productGroup.auth';
 import {
   useGetlistProductConfig,
   useGetlistProductConfigById,
@@ -12,6 +13,7 @@ import {
   useUpdateProductConfig,
   useDeleteProductConfig,
   useProductConfigPaging,
+  useResetAction,
 } from '../productGroup.hook';
 import ProductGroupForm from './ProductGroupForm';
 import WhiteBox from '~/components/common/WhiteBox';
@@ -20,6 +22,8 @@ import TableAnt from '~/components/Antd/TableAnt';
 import ModalAnt from '~/components/Antd/ModalAnt';
 import { get } from 'lodash';
 import { useProductUnitQueryParams } from '~/modules/productUnit/productUnit.hook';
+import WithOrPermission from '~/components/common/WithOrPermission';
+import POLICIES from '~/modules/policy/policy.auth';
 
 const { Search } = Input;
 
@@ -38,7 +42,6 @@ export default function ProductConfig() {
   const [listProductConfig, isLoading] = useGetlistProductConfig(query);
   const [keyword, { setKeyword, onParamChange }] = useUpdateProductConfigParams(query);
   const { t }: any = useTranslate();
-  
 
   interface DataType {
     code: string;
@@ -101,11 +104,9 @@ export default function ProductConfig() {
         <Switch
           checked={record?.status === 'ACTIVE'}
           onChange={(value: any) => {
-
               updateProductConfig({ status: value ? 'ACTIVE' : 'INACTIVE',id:record?._id });
-            
           }}
-        // loading={isSubmitUpdateLoading}
+        loading={isSubmitUpdateLoading}
         />
         // </WithPermission>
       )
@@ -180,9 +181,12 @@ export default function ProductConfig() {
                   />
                 </Col>
                 <Col>
-                  <Button onClick={handleOpenFormCreate} type="primary">
+                {/* <WithOrPermission permission={POLICIES.permissions[WRITE]}> */}
+                      <Button icon={<PlusCircleOutlined />} onClick={handleOpenFormCreate} type="primary">
                     Thêm mới
                   </Button>
+                {/* </WithOrPermission> */}
+              
                 </Col>
               </Row>
             </div>

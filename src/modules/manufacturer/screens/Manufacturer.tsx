@@ -1,4 +1,4 @@
-import { DeleteOutlined, EditOutlined, SearchOutlined } from '@ant-design/icons';
+import { DeleteOutlined, EditOutlined, PlusCircleOutlined, SearchOutlined } from '@ant-design/icons';
 import { Button, Col, Form, Row, Select, SelectProps, Space, Switch, message } from 'antd';
 import Search from 'antd/es/input/Search';
 import { ColumnsType } from 'antd/es/table';
@@ -7,7 +7,7 @@ import React, { useCallback, useState } from 'react'
 import Breadcrumb from '~/components/common/Breadcrumb';
 import WhiteBox from '~/components/common/WhiteBox';
 import useTranslate from '~/lib/translation';
-import { useManufacturerPaging,useManufacturerParams,useGetManufacturerList, useManufacturerQueryParams,useDeleteManufacturer,useUpdateManufacturer } from '../manufacturer.hook';
+import { useManufacturerPaging,useManufacturerParams,useGetManufacturerList, useManufacturerQueryParams,useDeleteManufacturer,useUpdateManufacturer, useResetAction } from '../manufacturer.hook';
 import TableAnt from '~/components/Antd/TableAnt';
 import ModalAnt from '~/components/Antd/ModalAnt';
 import ManufacturerForm from './ManufacturerForm';
@@ -18,7 +18,7 @@ export default function Manufacturer() {
   const [query] = useManufacturerQueryParams();
   const [keyword,{setKeyword,onParamChange}]=useManufacturerParams(query);
   const [listManufacturer, isLoading] = useGetManufacturerList(query);
- 
+  useResetAction();
   const [id, setId] = useState(null);
   const handleCloseForm = useCallback(() => {
     setShowForm(false);
@@ -154,7 +154,8 @@ export default function Manufacturer() {
                   />
                 </Col>
                 <Col>
-                  <Button onClick={() => handleOpenForm()} type="primary">
+                
+                  <Button icon={<PlusCircleOutlined />} onClick={() => handleOpenForm()} type="primary">
                     Thêm mới
                   </Button>
                 </Col>

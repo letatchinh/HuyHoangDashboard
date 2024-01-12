@@ -1,4 +1,6 @@
 
+
+
 import { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -10,9 +12,9 @@ import {
     useSubmit,
     useSuccess
 } from "~/utils/hook";
-import { workSprintActions } from "./redux/reducer";
+import { workListActions } from "./redux/reducer";
 import { get } from "lodash";
-const MODULE = "workSprint";
+const MODULE = "workList";
 const MODULE_VI = "";
 
 const {
@@ -32,20 +34,20 @@ const {
   pagingSelector,
 } = getSelectors(MODULE);
 
-export const useWorkSprintPaging = () => useSelector(pagingSelector);
+export const useWorkListPaging = () => useSelector(pagingSelector);
 
-export const useGetWorkSprints = (param:any) => {
+export const useGetWorkLists = (param:any) => {
   return useFetchByParam({
-    action: workSprintActions.getListRequest,
+    action: workListActions.getListRequest,
     loadingSelector: loadingSelector,
     dataSelector: listSelector,
     failedSelector: getListFailedSelector,
     param
   });
 };
-export const useGetWorkSprint = (id: any) => {
+export const useGetWorkList = (id: any) => {
   return useFetchByParam({
-    action: workSprintActions.getByIdRequest,
+    action: workListActions.getByIdRequest,
     loadingSelector: getByIdLoadingSelector,
     dataSelector: getByIdSelector,
     failedSelector: getByIdFailedSelector,
@@ -53,7 +55,7 @@ export const useGetWorkSprint = (id: any) => {
   });
 };
 
-export const useCreateWorkSprint = (callback?: any) => {
+export const useCreateWorkList = (callback?: any) => {
   useSuccess(
     createSuccessSelector,
     `Tạo mới ${MODULE_VI} thành công`,
@@ -62,12 +64,12 @@ export const useCreateWorkSprint = (callback?: any) => {
   useFailed(createFailedSelector);
 
   return useSubmit({
-    action: workSprintActions.createRequest,
+    action: workListActions.createRequest,
     loadingSelector: isSubmitLoadingSelector,
   });
 };
 
-export const useUpdateWorkSprint = (callback?: any) => {
+export const useUpdateWorkList = (callback?: any) => {
   useSuccess(
     updateSuccessSelector,
     `Cập nhật ${MODULE_VI} thành công`,
@@ -76,22 +78,22 @@ export const useUpdateWorkSprint = (callback?: any) => {
   useFailed(updateFailedSelector);
 
   return useSubmit({
-    action: workSprintActions.updateRequest,
+    action: workListActions.updateRequest,
     loadingSelector: isSubmitLoadingSelector,
   });
 };
 
-export const useDeleteWorkSprint = (callback?: any) => {
+export const useDeleteWorkList = (callback?: any) => {
   useSuccess(deleteSuccessSelector, `Xoá ${MODULE_VI} thành công`, callback);
   useFailed(deleteFailedSelector);
 
   return useSubmit({
-    action: workSprintActions.deleteRequest,
+    action: workListActions.deleteRequest,
     loadingSelector: isSubmitLoadingSelector,
   });
 };
 
-export const useWorkSprintQueryParams = () => {
+export const useWorkListQueryParams = (sprintId?: any) => {
   const query = useQueryParams();
   const limit = query.get("limit") || 10;
   const page = query.get("page") || 1;
@@ -105,11 +107,11 @@ export const useWorkSprintQueryParams = () => {
       keyword,
     };
     return [queryParams];
-    //eslint-disable-next-line
+
   }, [page, limit, keyword, createSuccess, deleteSuccess]);
 };
 
-export const useUpdateWorkSprintParams = (
+export const useUpdateWorkListParams = (
   query: any,
   listOptionSearch?: any[]
 ) => {
@@ -120,21 +122,20 @@ export const useUpdateWorkSprintParams = (
     setKeyword(get(query, "keyword"));
   }, [query]);
   const onParamChange = (param: any) => {
-    // Clear Search Query when change Params
+
     clearQuerySearch(listOptionSearch, query, param);
 
     if (!param.page) {
       query.page = 1;
     };
 
-    // Convert Query and Params to Search Url Param
+
     const searchString = new URLSearchParams(
       getExistProp({
         ...query,
         ...param,
       })
     ).toString();
-
 
     navigate(`${pathname}?${searchString}`);
   };

@@ -45,6 +45,8 @@ export type initStateSlice<T=any> = {
     ranking:'ranking',
     medicine:'medicine',
     workBoard:'workBoard',
+    workSprint:'workSprint',
+    workList:'workList',
     }as const
     
     

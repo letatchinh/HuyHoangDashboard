@@ -28,7 +28,7 @@ const ManufacturerForm:React.FC<Props>=({id,callBack})=>{
         description,
       })
     }
-  },[id,manufacturer])
+  },[id,manufacturer,form])
   const onFinish = (values: FieldType) => {
     const data: FieldType = {
      ...values,

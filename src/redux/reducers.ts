@@ -18,6 +18,8 @@ import productUnitModule from '~/modules/productUnit';
 import rankingModule from '~/modules/ranking';
 import medicineModule from '~/modules/medicine';
 import workBoardModule from '~/modules/workBoard';
+import workSprintModule from '~/modules/workSprint';
+import workListModule from '~/modules/workList';
 const authPersistConfig = {
     key: 'auth',
     storage: localStorage,
@@ -47,6 +49,8 @@ const rootReducer = combineReducers({
     ranking:rankingModule.redux.reducer,
     medicine:medicineModule.redux.reducer,
     workBoard:workBoardModule.redux.reducer,
+    workSprint:workSprintModule.redux.reducer,
+    workList:workListModule.redux.reducer,
 
 });
 export default rootReducer
