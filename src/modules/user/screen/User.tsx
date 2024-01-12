@@ -4,7 +4,7 @@ import useTranslate from "~/lib/translation";
 import { Tabs } from "antd";
 import { useState } from "react";
 import TabPane from "antd/es/tabs/TabPane";
-import UserEmployee from "../components/UserEmployee";
+import UserEmployee from "../components";
 import UserGroup from "~/modules/userGroup/screens/UserGroup";
 import {
   Routes,

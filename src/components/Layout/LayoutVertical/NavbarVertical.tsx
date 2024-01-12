@@ -58,7 +58,7 @@ const NavbarVertical: React.FC = () => {
       };
     };
     return false
-  }, [policies, profile?.isSuperAdmin]);
+  }, [policies, profile?.user?.isSuperAdmin]);
 
   const filterItems = (items: any) => {
     return items.filter((item: any) => {

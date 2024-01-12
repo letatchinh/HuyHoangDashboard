@@ -166,7 +166,7 @@ export const useMatchPolicy = (requiredPermission : [string, policyType]) => {
   const policies = useSelector(policySelector);
   const profile = useSelector(profileSelector);
   const isMatch = useMemo(() => {
-    if (!requiredPermission ||profile?.isSuperAdmin) return true;
+    if (!requiredPermission ||profile?.user?.isSuperAdmin) return true;
     return isMatchPolicy(policies, requiredPermission);
 
   }, [requiredPermission, policies]);
@@ -176,7 +176,7 @@ export const useMatchOrPolicy = (requiredPermission: [string,policyType][]) => {
   const policies = useSelector(policySelector);
   const profile = useSelector(profileSelector);
   const isMatch = useMemo(() => {
-    if (!requiredPermission || profile?.isSuperAdmin) return true;
+    if (!requiredPermission || profile?.user?.isSuperAdmin) return true;
 
     for (const permissionItem of requiredPermission) {
         if (isMatchPolicy(policies, permissionItem)) {
