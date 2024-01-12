@@ -9,6 +9,7 @@ const user = 'user';
 const userGroup = 'userGroup';
 const pharmacy = 'pharmacy';
 const bill = 'bill';
+const manuFacturer = 'manufacturer';
 
 const RESOURCES = [
   branch,
@@ -18,6 +19,7 @@ const RESOURCES = [
   userGroup,
   // pharmacy,
   // bill,
+  manuFacturer,
 ];
 
 //ACTIONS
@@ -50,19 +52,29 @@ const POLICIES : PoliciesType = RESOURCES.reduce((policies, resource) => {
 }, {} as PoliciesType);
 
 export default POLICIES;
-const RESOURCE = () : ResourceType => {
+const RESOURCE = (): ResourceType => {
+  const GROUP_WHSETTING : string[] = [];
   
   const GROUP_USER : string[] = [
     user,
     userGroup
   ];
-  const GROUP_WHBILL = [
+  const GROUP_WHBILL: string[] = [
     bill
   ];
+  const GROUP_EMPLOYEE : string[] = [
+    employee
+  ];
+  const GROUP_MANUFACTURER : string[] = [
+    manuFacturer
+  ]
 
   return {
     GROUP_USER,
-    GROUP_WHBILL
+    GROUP_EMPLOYEE,
+    GROUP_WHBILL,
+    GROUP_WHSETTING,
+    GROUP_MANUFACTURER,
   };
 };
 
@@ -71,7 +83,7 @@ const RESOURCE = () : ResourceType => {
  * @param {String} action CORE_ACTION [READ, WRITE, UPDATE, DELETE]
  * @returns {Array} [POLICIES.action_resources]
  */
-export const GROUP_POLICY = (action: any): void => {
+export const GROUP_POLICY : any = (action: any): void => {
   forIn(RESOURCE(), (value, key, object : any) => {
     object[key] = [];
     if (Array.isArray(value)) {
@@ -94,3 +106,4 @@ export const CORE_ACTION = {
   ADMIN: 'ADMIN',
   DOWNLOAD: 'DOWNLOAD',
 };
+

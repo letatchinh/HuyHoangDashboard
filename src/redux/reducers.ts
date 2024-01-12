@@ -7,6 +7,7 @@ import authModule from '~/modules/auth';
 import supplierModule from '~/modules/supplier';
 import branchModule from '~/modules/branch';
 import productGroupModule from '~/modules/productGroup';
+import pharmacyModule from '~/modules/pharmacy';
 import geoModule from '~/modules/geo';
 import statusModule from '~/modules/statusConfig';
 import employeeModule from '~/modules/employee';
@@ -18,6 +19,7 @@ import productUnitModule from '~/modules/productUnit';
 import rankingModule from '~/modules/ranking';
 import medicineModule from '~/modules/medicine';
 import workBoardModule from '~/modules/workBoard';
+import configDiscount from '~/modules/configDiscount';
 const authPersistConfig = {
     key: 'auth',
     storage: localStorage,
@@ -47,6 +49,8 @@ const rootReducer = combineReducers({
     ranking:rankingModule.redux.reducer,
     medicine:medicineModule.redux.reducer,
     workBoard:workBoardModule.redux.reducer,
+    configDiscount: configDiscount.redux.reducer,
+    pharmacy: pharmacyModule.redux.reducer
 
 });
 export default rootReducer

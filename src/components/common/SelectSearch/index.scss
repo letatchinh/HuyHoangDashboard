@@ -1,0 +1,15 @@
+.select-search {
+  width: 100%;
+  min-width: 500px;
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  &__left {
+    flex: 1;
+    display: flex;
+  }
+  &__right {
+    flex: 1;
+    max-width: 20%;
+  };
+}

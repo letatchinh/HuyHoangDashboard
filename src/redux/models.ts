@@ -45,6 +45,8 @@ export type initStateSlice<T=any> = {
     ranking:'ranking',
     medicine:'medicine',
     workBoard:'workBoard',
+    configDiscount: 'configDiscount',
+    pharmacy: "pharmacy",
     }as const
     
     

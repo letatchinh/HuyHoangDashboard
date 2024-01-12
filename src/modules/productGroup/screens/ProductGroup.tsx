@@ -20,6 +20,8 @@ import TableAnt from '~/components/Antd/TableAnt';
 import ModalAnt from '~/components/Antd/ModalAnt';
 import { get } from 'lodash';
 import { useProductUnitQueryParams } from '~/modules/productUnit/productUnit.hook';
+import WithPermission from '~/components/common/WithPermission';
+import POLICIES from '~/modules/policy/policy.auth';
 
 const { Search } = Input;
 
@@ -98,7 +100,7 @@ export default function ProductConfig() {
       width: '120px',
       key: 'status',
       render: (_, record) => (
-        // <WithPermission permission={POLICY.DELETE_WAREHOUSE}>
+        <WithPermission permission={POLICIES.UPDATE_PRODUCTGROUP}>
         <Switch
           checked={record?.status === 'ACTIVE'}
           onChange={(value: any) => {
@@ -108,7 +110,7 @@ export default function ProductConfig() {
           }}
         // loading={isSubmitUpdateLoading}
         />
-        // </WithPermission>
+        </WithPermission>
       )
     },
     {
@@ -118,12 +120,16 @@ export default function ProductConfig() {
       width: '180px',
       render: (_, record) => (
         <Space size="middle">
-          <Button icon={<InfoCircleTwoTone />} type="primary" onClick={() => handleOpenUpdate(record?._id)}>
+          <WithPermission permission={POLICIES.UPDATE_PRODUCTGROUP}>
+                     <Button icon={<InfoCircleTwoTone />} type="primary" onClick={() => handleOpenUpdate(record?._id)}>
             Xem chi tiết
-          </Button>
+          </Button> 
+          </WithPermission>
+<WithPermission permission={POLICIES.DELETE_PRODUCTGROUP}>
           <Button icon={<DeleteOutlined />} style={{ color: 'red' }} onClick={() => handleDelete(record._id)}>
             Xóa
           </Button>
+          </WithPermission>
         </Space>
       ),
     },
@@ -181,9 +187,12 @@ export default function ProductConfig() {
                   />
                 </Col>
                 <Col>
+                <WithPermission permission={POLICIES.CREATE_PRODUCTGROUP}>
                   <Button icon={<PlusCircleOutlined />} onClick={handleOpenFormCreate} type="primary">
                     Thêm mới
                   </Button>
+                </WithPermission>
+
                 </Col>
               </Row>
             </div>
