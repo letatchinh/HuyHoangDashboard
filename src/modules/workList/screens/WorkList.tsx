@@ -6,13 +6,14 @@ import { ArrowLeftOutlined, CloseOutlined } from '@ant-design/icons';
 import { ResizableBox } from 'react-resizable';
 import Text from 'antd/lib/typography/Text';
 import { get } from 'lodash';
-import { useWorkListQueryParams } from '../workList.hook';
+import { useCreateWorkList, useDeleteWorkList, useGetListWorkConfig, useWorkListQueryParams } from '../workList.hook';
 import Menufilter from '../components/Menufilter';
 import { useGetWorkSprint } from '~/modules/workSprint/workSprint.hook';
 import MenuListBoard from '~/modules/workSprint/components/MenuListBoard';
 import BoardConfig from '../components/WorkListConfig';
 import { FormTaskContextProps } from '../workList.modal';
 import { useCreateWorkTask, useDeleteWorkTask, useUpdateWorkTask } from '~/modules/workTask/workTask.hook';
+import { useGetlistWorkBoardById } from '~/modules/workBoard/workBoard.hook';
 // import { useGetSprintInfo } from '~/hooks/workSprint';
 // import { useWorkListQueryParams } from '~/hooks/workList';
 // import { WithOrPermission } from '../Common';
@@ -35,15 +36,15 @@ const WorkList = () => {
   const idBoard = useMemo(() => sprintInfo?.boardId, [sprintInfo]);
   const [query] = useWorkListQueryParams(sprintId);
   const [visibleModal, setVisibleModal] = useState(false);
-  // const [boardConfig] = useListBoardConfig(query);
-  // const boardConfigMemo = useMemo(() => (boardConfig ?? []).map(({ name, _id }:any) => ({ name, _id })), [boardConfig]);
+  const [boardConfig] = useGetListWorkConfig(query);
+  const boardConfigMemo = useMemo(() => (boardConfig ?? []).map(({ name, _id }:any) => ({ name, _id })), [boardConfig]);
   // const [data] = useListBoardConfigItem();
   const [propsModal, setPropsModal] = useState({});
   const [visibleInfo, setVisibleInfo] = useState(false);
 const [lengthList, setLength] = useState<number>(
   workflowRef?.current?.offsetWidth ?? window.innerWidth
 );
-
+  let data = boardConfigMemo;
   
   const [taskData, setTaskData] = useState('');
   const [visibleListBoard, setVisibleListBoard] = useState(false);
@@ -52,10 +53,10 @@ const [lengthList, setLength] = useState<number>(
   // const [, updatePosition] = useUpdatePosition();
   const [, handleCreateTask] = useCreateWorkTask();
   const [, handleDeleteTask] = useDeleteWorkTask();
-  // const [, handleCreateWork] = useCreateBoardWork();
-  // const [, handleDeleteWork] = useDeleteBoardWork();
+  const [, handleCreateWork] = useCreateWorkList();
+  const [, handleDeleteWork] = useDeleteWorkList();
   const [tasksAllBoard, setTasksAllBoard] = useState({});
-  // const [boardData] = useGetBoardById(idBoard);
+  const [boardData] = useGetlistWorkBoardById(idBoard);
 
   const showDrawer = (param?:any) => {
     setVisibleListBoard((val) => param ?? !val);
@@ -103,12 +104,12 @@ const [lengthList, setLength] = useState<number>(
     Object.assign(itemBeRemove ?? {}, { ordinal: newOrdinal });
 
     updateTask({ id: itemBeRemove._id, ordinal: newOrdinal, boardConfigId: colAfter });
-    updatePosition({
-      colBefore,
-      indexBefore,
-      colAfter,
-      indexAfter,
-    });
+    // updatePosition({
+    //   colBefore,
+    //   indexBefore,
+    //   colAfter,
+    //   indexAfter,
+    // });
   };
 
   return (

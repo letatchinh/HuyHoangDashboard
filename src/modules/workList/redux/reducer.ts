@@ -1,36 +1,53 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { get } from "lodash";
 import { InstanceModuleRedux } from "~/redux/instanceModuleRedux";
-import { initStateSlice } from "~/redux/models";
-interface cloneInitState extends initStateSlice {
- // Add cloneInitState Type Here
-}
+import { cloneInitState } from "../workList.modal";
+
 class WorkListClassExtend extends InstanceModuleRedux {
   cloneReducer;
-  cloneInitState : cloneInitState;
+  cloneInitState: cloneInitState;
+
   constructor() {
     super('workList');
     this.cloneReducer = {
       ...this.initReducer,
-      // Want Add more reducer Here...
-    }
+      getListWorkConfigRequest: (state: cloneInitState) => {
+        state.isLoadingListWorkConfig = true;
+        state.getListWorkConfigFailed = null;
+      },
+      getListWorkConfigSuccess: (state: cloneInitState, { payload }: { payload?: any }) => {
+        state.isLoadingListWorkConfig = false;
+        state.listWorkConfig = get(payload, 'docs', []);
+        state.getListWorkConfigFailed = null;
+      },
+      getListWorkConfigFailed: (state: cloneInitState, { payload }: { payload?: any }) => {
+        state.isLoadingListWorkConfig = false;
+        state.getListWorkConfigFailed = payload;
+      },
+      // Want to add more reducers here...
+    };
+
     this.cloneInitState = {
       ...this.initialState,
-      // Want Add more State Here...
-    }
+      isLoadingListWorkConfig: false,
+      getListWorkConfigFailed: null,
+      listWorkConfig: [],
+      
+      // Want to add more state here...
+    };
   }
+
   createSlice() {
     return createSlice({
       name: this.module,
       initialState: this.cloneInitState,
-      reducers:  this.cloneReducer,
+      reducers: this.cloneReducer,
     });
   }
-  
 }
 
-const newSlice = new WorkListClassExtend();
-const data = newSlice.createSlice();
+const newSliceWorkList = new WorkListClassExtend();
+const dataWorkList = newSliceWorkList.createSlice();
 
-
-export const workListActions = data.actions;
-export default data.reducer;
+export const workListActions = dataWorkList.actions;
+export default dataWorkList.reducer;

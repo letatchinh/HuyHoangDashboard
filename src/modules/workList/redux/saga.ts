@@ -46,11 +46,19 @@ function* deleteWorkList({payload : id} : any) : any {
   }
 }
 
-
+function* getListWorkConfig({payload:query} : any) : any {
+  try {
+    const data = yield call(api.getListWorkConfig,query);
+    yield put(workListActions.getListWorkConfigSuccess(data));
+  } catch (error:any) {
+    yield put(workListActions.getListWorkConfigFailed(error));
+  }
+}
 export default function* workListSaga() {
   yield takeLatest(workListActions.getListRequest, getListWorkList);
   yield takeLatest(workListActions.getByIdRequest, getByIdWorkList);
   yield takeLatest(workListActions.createRequest, createWorkList);
   yield takeLatest(workListActions.updateRequest, updateWorkList);
   yield takeLatest(workListActions.deleteRequest, deleteWorkList);
+  yield takeLatest(workListActions.getListWorkConfigRequest, getListWorkConfig);
 }

@@ -7,16 +7,22 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { clearQuerySearch, getExistProp } from "~/utils/helpers";
 import {
     getSelectors,
-    useFailed, useFetchByParam,
+    useFailed, useFetch, useFetchByParam,
     useQueryParams,
     useSubmit,
     useSuccess
 } from "~/utils/hook";
 import { workListActions } from "./redux/reducer";
 import { get } from "lodash";
+import { cloneInitState } from "./workList.modal";
+import { RootState } from "~/redux/store";
 const MODULE = "workList";
 const MODULE_VI = "";
-
+const getSelector = (key: keyof cloneInitState) => (state: RootState) =>
+  state[MODULE][key];
+  const listWorkConfig = getSelector('listWorkConfig');
+  const loadingListWorkConfig = getSelector('isLoadingListWorkConfig');
+  const getListWorkConfigFailed = getSelector('getListWorkConfigFailed');
 const {
   loadingSelector,
   listSelector,
@@ -36,13 +42,13 @@ const {
 
 export const useWorkListPaging = () => useSelector(pagingSelector);
 
-export const useGetWorkLists = (param:any) => {
+export const useGetWorkLists = (query?:any) => {
   return useFetchByParam({
     action: workListActions.getListRequest,
     loadingSelector: loadingSelector,
     dataSelector: listSelector,
     failedSelector: getListFailedSelector,
-    param
+    param:query
   });
 };
 export const useGetWorkList = (id: any) => {
@@ -54,6 +60,15 @@ export const useGetWorkList = (id: any) => {
     param: id,
   });
 };
+export const useGetListWorkConfig = (query?:any) => {
+  return useFetchByParam({
+    action: workListActions.getListWorkConfigRequest,
+    loadingSelector: loadingListWorkConfig,
+    dataSelector: listWorkConfig,
+    failedSelector: getListWorkConfigFailed,
+    param:query
+  });
+}
 
 export const useCreateWorkList = (callback?: any) => {
   useSuccess(
