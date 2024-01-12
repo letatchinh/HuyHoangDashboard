@@ -20,6 +20,9 @@ import { ConfigItem } from "../configDiscount.modal";
 import Breadcrumb from "~/components/common/Breadcrumb";
 import WhiteBox from "~/components/common/WhiteBox";
 import toastr from "toastr";
+import { useDispatch } from "react-redux";
+import { useResetState } from "~/utils/hook";
+import { configDiscountSliceAction } from "../redux/reducer";
 
 interface RowProps extends React.HTMLAttributes<HTMLTableRowElement> {
   "data-row-key": string;
@@ -79,9 +82,13 @@ const Row = ({ children, ...props }: RowProps) => {
 };
 
 const ConfigDiscount: React.FC = () => {
+  const dispatch = useDispatch();
+  const resetState = () => {
+    return dispatch(configDiscountSliceAction.resetAction());
+  };
   const [dataSource, setDataSource] = useState([]);
   const [data, isLoading] = useGetConfigDiscounts();
-  const [, updateConfig] = useUpdateConfigDiscount();
+  const [, updateConfig] = useUpdateConfigDiscount(() => resetState());
   useEffect(() => {
     if (data?.length) {
       setDataSource(data);

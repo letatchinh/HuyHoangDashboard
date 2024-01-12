@@ -16,7 +16,6 @@ export const useSuccess = (
 ): void => {
     const {onNotify} = useNotificationStore();
   const success = useSelector(successSelector);
-
   useEffect(() => {
     if (success) {
       if (mess) {
