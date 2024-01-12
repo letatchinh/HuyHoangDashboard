@@ -1,17 +1,21 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useMemo, useRef, useState } from "react";
 
 import {
+  ColorPicker,
+  ColorPickerProps,
   DatePicker,
   Form,
   FormInstance,
   Input,
   InputNumber,
   Select,
+  Space,
   TimePicker,
 } from "antd";
 import { filter, head, keys, parseInt, range } from "lodash";
 import { formatter } from "~/utils/helpers";
 import dayjs from "dayjs";
+import { Color } from "antd/es/color-picker";
 
 const EditableContext = React.createContext<FormInstance | null>(null);
 
@@ -61,7 +65,11 @@ const EditableCell = ({
   const [editing, setEditing] = useState(false);
   const inputRef: any = useRef(null);
   const form = useContext(EditableContext);
-
+  const [colorHex, setColorHex] = useState<Color | string>("#1677ff");
+  const handleColorChange = (color: Color) => {
+    console.log(color.toHexString());
+    setColorHex(color);
+  };
   useEffect(() => {
     if (editing) {
       inputRef.current.focus();
@@ -226,6 +234,9 @@ const EditableCell = ({
                 onBlur={save}
               />
             ),
+            ColorPicker:(
+              <ColorPicker value={colorHex} onChange={handleColorChange} />
+            )
           }[component]
         }
       </Form.Item>
@@ -246,3 +257,4 @@ const EditableCell = ({
 };
 
 export { EditableCell, EditableRow };
+

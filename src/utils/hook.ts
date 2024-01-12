@@ -11,8 +11,8 @@ type ActionUpdateFunction = (dataUpdate: any) => void;
 
 export const useSuccess = (
   successSelector: SuccessSelector,
-  mess: string | undefined,
-  onSuccess: (success: any) => void
+  mess?: string | undefined,
+  onSuccess?: (success: any) => void
 ): void => {
     const {onNotify} = useNotificationStore();
   const success = useSelector(successSelector);
@@ -163,3 +163,4 @@ export const useSubmit = ({ loadingSelector, action }:UseSubmitProps) : [boolean
       pagingSelector: getSelector('paging')
     };
   };
+  

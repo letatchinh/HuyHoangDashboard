@@ -1,4 +1,15 @@
-import { AppstoreFilled, AppstoreOutlined } from "@ant-design/icons";
+// import { AppstoreFilled, AppstoreOutlined, ShopFilled,ApartmentOutlined } from "@ant-design/icons";
+import {
+  AppstoreFilled,
+  AppstoreOutlined,
+  DatabaseOutlined,
+  DollarOutlined,
+  HddOutlined,
+  HomeOutlined,
+  TrophyOutlined,
+  ApartmentOutlined,
+  ShopFilled,
+} from "@ant-design/icons";
 import { MenuProps } from "antd";
 import React, { useCallback } from "react";
 import { NavLink } from "react-router-dom";
@@ -48,15 +59,41 @@ export const resource: ItemType[] = [
         // permission :[POLICIES.READ_USERGROUP],
         children: [
           {
-            label: "Cấu hình danh mục",
-            path: PATH_APP.worldPharma.productConfig,
-            key: PATH_APP.worldPharma.productConfig,
+            label: "Nhóm sản phẩm",
+            path: PATH_APP.worldPharma.productGroup,
+            key: PATH_APP.worldPharma.productGroup,
+            icon: <HddOutlined />,
+          },
+          {
+            label: "Danh sách nhà sản xuất",
+            path: PATH_APP.worldPharma.manufacturer,
+            key: PATH_APP.worldPharma.manufacturer,
+            icon: <HomeOutlined />,
+          },
+          {
+            label: "Xếp hạng nhà sản xuất",
+            path: PATH_APP.worldPharma.ranking,
+            key: PATH_APP.worldPharma.ranking,
+            icon: <TrophyOutlined />,
+          },
+          {
+            label: "Đơn vị tính",
+            path: PATH_APP.worldPharma.unit,
+            key: PATH_APP.worldPharma.unit,
+            icon: <DollarOutlined />,
+          },
+          {
+            label: "Danh sách thuốc",
+            path: PATH_APP.worldPharma.medicine,
+            key: PATH_APP.worldPharma.medicine,
+            icon: <DatabaseOutlined />,
             // permission :[POLICIES.READ_USERGROUP],
           },
           {
             label: "Cấu hình giảm giá",
             path: PATH_APP.configDiscount.root,
             key: PATH_APP.configDiscount.root,
+            // permission :[POLICIES.READ_USERGROUP],
           },
         ],
       },
@@ -66,7 +103,7 @@ export const resource: ItemType[] = [
   // Nhà cung cấp
   {
     label: "Nhà cung cấp",
-    icon: <AppstoreOutlined />,
+    icon: <ShopFilled />,
     path: PATH_APP.supplier.root,
     key: PATH_APP.supplier.root,
     // permission :[POLICIES.READ_USER],
@@ -84,7 +121,30 @@ export const resource: ItemType[] = [
           key : PATH_APP.branch.root,
         }
       ],
-      icon :<AppstoreFilled />,
+      icon :<AppstoreFilled />
+    },
+    {
+      label: "Quản lý công việc",
+      key: "todoList",
+      icon: <AppstoreFilled />,
+      children: [
+        {
+          label: "Quản lý công việc",
+          // key: "statusConfig",
+          icon: <ApartmentOutlined />,
+          path: PATH_APP.todoList.workBoard,
+          key: PATH_APP.todoList.workBoard,
+          
+        },
+        {
+          label: "Cấu hình trạng thái",
+          // key: "statusConfig",
+          icon: <AppstoreFilled />,
+          path: PATH_APP.todoList.statusConfig,
+          key: PATH_APP.todoList.statusConfig,
+          
+        },
+      ],
     },
       //Nhân viên
       {
