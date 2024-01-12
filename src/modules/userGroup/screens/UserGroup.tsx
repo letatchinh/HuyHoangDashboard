@@ -1,36 +1,60 @@
 import { DeleteOutlined, EditOutlined, PlusOutlined } from "@ant-design/icons";
-import { Button, Checkbox, Col, Flex, Menu, Popconfirm, Row, Skeleton, Table } from "antd";
+import {
+  Button,
+  Checkbox,
+  Col,
+  Flex,
+  Menu,
+  Modal,
+  Popconfirm,
+  Row,
+  Skeleton,
+  Table,
+} from "antd";
 import { useEffect, useMemo, useState } from "react";
-import { useParams, useNavigate,useLocation } from "react-router-dom";
-import SelectSearch from "~/components/common/SelectSearch";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
+import SelectSearch from "~/components/common/SelectSearch/SelectSearch";
 import UserGroupForm from "../components/UserGroupForm";
 import { get } from "lodash";
-import {  onSearchPermissions, useGetUserGroup, useGetUserGroups, useResourceColumns } from "../userGroup.hook";
-import { getNewPolicies, useResources, useUpdatePolicy } from "~/modules/policy/policy.hook";
+import {
+  onSearchPermissions,
+  useDeleteUserGroup,
+  useGetUserGroup,
+  useGetUserGroups,
+  useResetUserGroups,
+  useResourceColumns,
+} from "../userGroup.hook";
+import {
+  useResources,
+  useUpdatePolicy,
+} from "~/modules/policy/policy.hook";
 import { DEFAULT_BRANCH_ID } from "~/constants/defaultValue";
 import toastr from "toastr";
-import { useProfile } from "~/modules/auth/auth.hook";
 import POLICIES from "~/modules/policy/policy.auth";
+import { useResetState } from "~/utils/hook";
+import { userGroupSliceAction } from "../redux/reducer";
 
 const styleButton = {
   alignContent: "center",
+  display: "flex",
+  alignItems: "center",
 };
-interface UserGroupProps { 
-  activeTab: string;
+interface UserGroupProps {
+  currentTab?: string;
 };
 
 interface PermissionProps {
   isActive?: boolean;
   onChange?: any;
   disabled?: boolean;
-};
+}
 
 interface onPermissionChangeProps {
   resource?: any;
   action?: any;
   isAssgined?: boolean;
-};
-const Permission = ({ isActive, onChange,disabled }: PermissionProps) => {
+}
+const Permission = ({ isActive, onChange, disabled }: PermissionProps) => {
   return (
     <Checkbox
       checked={isActive}
@@ -49,32 +73,33 @@ const getNextPath = (url: string) => {
   return `/${nextPath}`;
 };
 
-const UserGroup = () => {
-  const {branchId, groupId }: any = useParams();
+const UserGroup = ({ currentTab }: UserGroupProps) => {
+  useResetUserGroups();
+  const { branchId, groupId }: any = useParams();
   const navigate = useNavigate();
   const { pathname } = useLocation();
-  const branchIdParam = useMemo(() => ({ branchId : branchId ? branchId : DEFAULT_BRANCH_ID }), [branchId]);
+  const branchIdParam = useMemo(
+    () => ({ branchId: branchId ? branchId : DEFAULT_BRANCH_ID }),
+    [branchId]
+  );
+  const [reFetch, setReFetch] = useState(false);
   const [groups, isLoading] = useGetUserGroups(branchIdParam);
-  const params = useMemo(() => {
-    return groupId ? { groupId, branchId } : null;
-  }, [groupId, branchId]);
-  const [group, isLoadingGroup, updateGroup] = useGetUserGroup(params);
+  const param = useMemo(() => (groupId), [groupId, reFetch]);
+  const [group, isLoadingGroup, updateGroup] = useGetUserGroup(param);
   const [, handleUpdate] = useUpdatePolicy();
-  
+  const [, deleteGroup] = useDeleteUserGroup();
+
   //State
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [id, setId] = useState<any>(null);
-  const [dataShow,setDataShow] = useState(null)
+  const [dataShow, setDataShow] = useState(null);
   const canUpdate = true;
   // Action
-
-  const profile = useProfile();
-  console.log(profile,'profile')
 
   const [resources, isResourcesLoading] = useResources();
 
   useEffect(() => {
-    if (!groupId && groups.length) {
+    if (!groupId && groups.length && currentTab === 'user/group') {
       navigate(`${pathname}/${groups[0]._id}`);
     };
   }, [groups, pathname, groupId]);
@@ -89,33 +114,40 @@ const UserGroup = () => {
     setId(null);
   };
   const onSelectGroup = ({ key }: any) => {
-    const nextPath = `${pathname}/${key}`;
+    const nextPath = `/user/group/${key}`;
     navigate(nextPath);
   };
 
-  const onPermisionChange = ({ isAssgined, resource, action }: onPermissionChangeProps) => {
+  const onPermisionChange = ({
+    isAssgined,
+    resource,
+    action,
+  }: onPermissionChangeProps) => {
     try {
       if (!canUpdate) return;
-      updateGroup({isAssgined, resource, action }) // update Group in store redux
+      updateGroup({ isAssgined, resource, action }); // update Group in store redux
       handleUpdate({ isAssgined, resource, action, groupId });
     } catch (error) {
-      toastr.error(get(error,'message','Some error'))
+      toastr.error(get(error, "message", "Some error"));
     }
   };
   const renderPermission = (key: string) => (action: any, rc: any) => {
-    const admin = group?.policies?.[rc.key]?.includes('admin');
+    const admin = group?.policies?.[rc.key]?.includes("admin");
     return (
       <Permission
         isActive={group?.policies?.[rc.key]?.includes(key)}
-        onChange={(event: any) =>{
-          onPermisionChange({ isAssgined: event.target.checked, resource: rc.key, action: key })}
-        }
-        disabled={(!canUpdate || admin) && key !== 'admin'}
+        onChange={(event: any) => {
+          onPermisionChange({
+            isAssgined: event.target.checked,
+            resource: rc.key,
+            action: key,
+          });
+        }}
+        disabled={(!canUpdate || admin) && key !== "admin"}
       />
     );
   };
   const columns = useResourceColumns(renderPermission);
-
   return (
     <div className="employee-group">
       <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
@@ -138,75 +170,88 @@ const UserGroup = () => {
                       style={{ marginBottom: 10 }}
                     />
                   ))
-                : groups.map(({ name, _id } : any) => (
+                : groups.map(({ name, _id }: any) => (
                     <Menu.Item key={_id}>{name} </Menu.Item>
                   ))}
             </Menu>
           </div>
         </Col>
-        
-        <Col span={17}>
-      <div className="employee-group__content">
 
-          <div className="employee-group__header">
-            <h5 className="employee-group__list-title ">Thiết lập quyền</h5>
-            <Flex
-              gap="small"
-              wrap="wrap"
-              style={{
-                alignContent: "center",
-              }}
-            >
-              {/* <WithPermission permission={POLICY.DELETE_USERGROUP}> */}
-              <Popconfirm
-                title="Bạn muốn xoá chi nhánh này?"
-                // onConfirm={() => deleteGroup(group._id)}
-                okText="Xoá"
-                cancelText="Huỷ"
+        <Col span={17}>
+          <div className="employee-group__content">
+            <div className="employee-group__header">
+              <h5 className="employee-group__list-title ">Thiết lập quyền</h5>
+              <Flex
+                gap="small"
+                wrap="wrap"
+                style={{
+                  alignContent: "center",
+                }}
               >
-                <Button size="small" type="primary" danger style={styleButton}>
-                  <DeleteOutlined /> Xoá
+                {/* <WithPermission permission={POLICY.DELETE_USERGROUP}> */}
+                <Popconfirm
+                  title="Bạn muốn xoá chi nhánh này?"
+                  onConfirm={() => deleteGroup(groupId)}
+                  okText="Xoá"
+                  cancelText="Huỷ"
+                >
+                  <Button
+                    size="small"
+                    type="primary"
+                    danger
+                    style={styleButton}
+                  >
+                    <DeleteOutlined /> Xoá
+                  </Button>
+                </Popconfirm>{" "}
+                {/* </WithPermission> */}
+                {/* <WithPermission permission={POLICY.UPDATE_USERGROUP}> */}
+                <Button
+                  size="small"
+                  onClick={() => onOpenForm(groupId)}
+                  type="primary"
+                  style={styleButton}
+                >
+                  <EditOutlined /> Cập nhật
                 </Button>
-              </Popconfirm>{" "}
-              {/* </WithPermission> */}
-              {/* <WithPermission permission={POLICY.UPDATE_USERGROUP}> */}
-              <Button
-                size="small"
-                // onClick={() => onOpenForm(group)}
-                type="primary"
-              >
-                <EditOutlined /> Cập nhật
-              </Button>
-              {/* </WithPermission> */}
-              {/* <WithPermission permission={POLICY.WRITE_USERGROUP}> */}
-              <Button
-                size="small"
-                onClick={() => onOpenForm({})}
-                type="primary"
-              >
-                <PlusOutlined /> Tạo mới
-              </Button>
-              {/* </WithPermission> */}
-            </Flex>
-          </div>
+                {/* </WithPermission> */}
+                {/* <WithPermission permission={POLICY.WRITE_USERGROUP}> */}
+                <Button
+                  style={styleButton}
+                  size="small"
+                  onClick={() => onOpenForm(null)}
+                  type="primary"
+                >
+                  <PlusOutlined /> Tạo mới
+                </Button>
+                {/* </WithPermission> */}
+              </Flex>
+            </div>
             <SelectSearch
               showSelect={false}
               placeholder="tên quyền"
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => onSearchPermissions(e.target.value, resources, setDataShow)}
-              permissionKey={POLICIES.WRITE_USER}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                onSearchPermissions(e.target.value, resources, setDataShow)
+              }
+              // permissionKey={POLICIES.WRITE_USER}
             />
-          <Table
-            columns={columns}
-              dataSource={resources}
+            <Table
+              columns={columns}
+              dataSource={dataShow ?? resources}
               className="employee-group__table"
             />
-            </div>
+          </div>
         </Col>
       </Row>
-      <UserGroupForm
-        isOpen={isOpen}
-        onClose={onClose}
-      />
+        <Modal
+            open={isOpen}
+            footer={[]}
+            onCancel={onClose}
+            className="form-modal__user-group"
+        // destroyOnClose
+      >
+        <UserGroupForm isOpen={isOpen} onClose={onClose} id={id} setReFetch = {setReFetch} reFetch = {reFetch} />
+        </Modal>
     </div>
   );
 };

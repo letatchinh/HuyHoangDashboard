@@ -15,6 +15,8 @@ import {
 import { policySliceAction } from "./redux/reducer";
 import { ACTIONS } from "./policy.auth";
 import { ACTIONS_REDUX, DEFAULT_BRANCH_ID } from "~/constants/defaultValue";
+import { userSliceAction } from "../user/redux/reducer";
+import { policyType } from "./policy.modal";
 const MODULE  = "policy";
 const MODULE_VI  = "Người dùng";
 
@@ -35,12 +37,17 @@ const {
   pagingSelector,
 } = getSelectors(MODULE);
 const getSelector = (key: string) => (state: any) => state.policy[key];
-const getSelectorUser = (key: string) => (state: any) => state.user[key];
-const policySelector = getSelectorUser('policy');
-const profileSelector = getSelector('profile');
 const getResourcesLoadingSelector = getSelector('isGetResourcesLoading');
 const resourcesSelector = getSelector('resources');
 const getResourcesFailedSelector = getSelector('getResourcesFailed');
+
+const getSelectorUser = (key: string) => (state: any) => state.user[key];
+const policySelector = getSelectorUser('policy');
+const isGetPolicyLoadingSelector = getSelectorUser('isGetPolicyLoading');
+const getPolicyFailedSelector = getSelectorUser('getPolicyFailedSelector');
+
+const getSelectorAuth = (key: string) => (state: any) => state.auth[key];
+const profileSelector = getSelectorAuth('profile');
 
 export const usePolicyPaging = () => useSelector(pagingSelector);
 
@@ -135,36 +142,6 @@ export const autoCreatePolicyname = async ({ fullName, callApi }: any) => {
   const newPolicyName = await adapterValidatePolicyname(policyname, callApi)
   return newPolicyName
 };
- 
-//POLICY
-const isMatchPolicy = (policies : any, requiredPermission : any) => {
-  return !!requiredPermission?.reduce((policy : any , permission : any )=> {
-    return policy?.[permission];
-  }, policies);
-};
-
-
-export const useMatchPolicy = (requiredPermission : any) => {
-  const policies = useSelector(policySelector);
-  const profile = useSelector(profileSelector);
-
-  const isMatch = useMemo(() => {
-    if (profile?.isSuperAdmin) {
-      return true;
-    }
-    if (!requiredPermission) return true;
-
-    if (Array.isArray(requiredPermission[0])) {
-      return requiredPermission.reduce((isMatch : any , permissionItem : any ) => {
-        return isMatch && isMatchPolicy(policies, permissionItem);
-      }, true);
-    }
-
-    return isMatchPolicy(policies, requiredPermission);
-  }, [requiredPermission, policies]);
-  return isMatch;
-};
-
 export const useResources = () => {
   const { id: branchId } = useParams();
 
@@ -180,24 +157,53 @@ export const useResources = () => {
   });
 };
 
-export const useMatchOrPolicy = (requiredPermission: string[][]) => {
-  console.log(requiredPermission,'requiredPermission')
+//POLICY
+export const isMatchPolicy = (policies: any, requiredPermission: any) => {
+  return  Boolean(policies?.[requiredPermission?.[0]]?.includes(requiredPermission[1]))
+};
+
+export const useMatchPolicy = (requiredPermission : [string, policyType]) => {
   const policies = useSelector(policySelector);
   const profile = useSelector(profileSelector);
   const isMatch = useMemo(() => {
-    if (profile?.isSuperAdmin) {
-      return true;
-    };
-    if (!requiredPermission) return true;
+    if (!requiredPermission ||profile?.isSuperAdmin) return true;
+    return isMatchPolicy(policies, requiredPermission);
+
+  }, [requiredPermission, policies]);
+  return isMatch;
+};
+export const useMatchOrPolicy = (requiredPermission: [string,policyType][]) => {
+  const policies = useSelector(policySelector);
+  const profile = useSelector(profileSelector);
+  const isMatch = useMemo(() => {
+    if (!requiredPermission || profile?.isSuperAdmin) return true;
 
     for (const permissionItem of requiredPermission) {
         if (isMatchPolicy(policies, permissionItem)) {
           return true;
         }
     }
-
-    return isMatchPolicy(policies, requiredPermission);
+    return false
   }, [requiredPermission, policies]);
-
   return isMatch;
+};
+
+export const useUserPolicy = () => {
+  const [isLoading, handleGetPolicy] = useSubmit({
+    loadingSelector: isGetPolicyLoadingSelector,
+    action: userSliceAction.getPolicyRequest,
+  });
+
+  const policies = useSelector(policySelector);
+
+  useEffect(() => {
+    if (!Object.keys(policies || {}).length && !isLoading) {
+      handleGetPolicy(DEFAULT_BRANCH_ID);
+    }
+    //eslint-disable-next-line
+  }, []);
+
+  useFailed(getPolicyFailedSelector);
+
+  return [isLoading, handleGetPolicy, policies];
 };

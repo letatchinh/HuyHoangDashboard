@@ -4,16 +4,16 @@ import { userGroupSliceAction } from './reducer';
 
 function* getListUserGroup({payload:query} : any) : any {
   try {
-    const data = yield call(api.getAll,query);
+    const data = yield call(api.getAll, query);
     yield put(userGroupSliceAction.getListSuccess(data));
   } catch (error:any) {
     yield put(userGroupSliceAction.getListFailed(error));
   }
 }
 
-function* getByIdUserGroup({payload:id} : any) : any {
+function* getByIdUserGroup({ payload}: any): any {
   try {
-    const data = yield call(api.getById,id);
+    const data = yield call(api.getById,payload);
     yield put(userGroupSliceAction.getByIdSuccess(data));
   } catch (error:any) {
     yield put(userGroupSliceAction.getByIdFailed(error));

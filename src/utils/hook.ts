@@ -23,7 +23,9 @@ export const useSuccess = (
         onNotify?.success(mess)
       }
 
-      if (onSuccess) onSuccess(success);
+      if (onSuccess) {
+        onSuccess(success)
+      };
     }
   }, [success, mess, onSuccess, onNotify]);
 };

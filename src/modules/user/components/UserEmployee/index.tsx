@@ -1,62 +1,83 @@
 import { Button, Col, Modal, Popconfirm, Row, Select, Switch, Tag } from "antd";
-import { useDeleteUser, useGetUsers, useUpdateUser, useUpdateUserParams, useUserPaging, useUserQueryParams } from "../../user.hook";
-import { useState } from "react";
+import {
+  useDeleteUser,
+  useGetUsers,
+  useResetGroups,
+  useUpdateUser,
+  useUpdateUserParams,
+  useUserPaging,
+  useUserQueryParams,
+} from "../../user.hook";
+import { useEffect, useMemo, useState } from "react";
 import UserForm from "../UserForm";
 import { ColumnsType } from "antd/es/table";
-import Search from "antd/es/input/Search";
-import SelectSearch from "~/components/common/SelectSearch";
+import SelectSearch from "~/components/common/SelectSearch/SelectSearch";
 import TableAnt from "~/components/Antd/TableAnt";
-import { useResetState } from "~/utils/hook";
 import { userSliceAction } from "../../redux/reducer";
-import { Link } from "react-router-dom";
-import POLICIES from "~/modules/policy/policy.auth";
-
+import { useParams } from "react-router-dom";
+import POLICIES, { CORE_ACTION, GROUP_POLICY } from "~/modules/policy/policy.auth";
+import { DEFAULT_BRANCH_ID, } from "~/constants/defaultValue";
+import { useGetUserGroups, } from "~/modules/userGroup/userGroup.hook";
+import { get } from "lodash";
+import { useDispatch } from "react-redux";
 interface UserProps {
-  activeTab: string,
-};
+  currentTab: string;
+}
 interface ColumnActionProps {
-  _id : any,
-  deleteUserEmployee : any,
-  shouldShowDevider : any,
-  onOpenForm : any
-};
+  _id: any;
+  deleteUserEmployee: any;
+  shouldShowDevider: any;
+  onOpenForm: any;
+}
 const ColumnActions = ({
   _id,
   deleteUserEmployee,
   shouldShowDevider,
-  onOpenForm
+  onOpenForm,
 }: ColumnActionProps) => {
   return (
     <div className="custom-table__actions">
       {/* <WithPermission permission={POLICY.UPDATE_USER}> */}
-        <p onClick={() => onOpenForm(_id)}>Sửa</p>
+      <p onClick={() => onOpenForm(_id)}>Sửa</p>
       {/* </WithPermission> */}
       {/* {shouldShowDevider && <p>|</p>} */}
       {/* <WithPermission permission={POLICY.DELETE_USER}> */}
-        <Popconfirm
-          title="Bạn muốn xoá người dùng này?"
-          onConfirm={() => deleteUserEmployee(_id)}
-          okText="Xoá"
-          cancelText="Huỷ"
-        >
-          <p>Xóa</p>
-        </Popconfirm>{' '}
+      <Popconfirm
+        title="Bạn muốn xoá người dùng này?"
+        onConfirm={() => deleteUserEmployee(_id)}
+        okText="Xoá"
+        cancelText="Huỷ"
+      >
+        <p>Xóa</p>
+      </Popconfirm>{" "}
       {/* </WithPermission> */}
     </div>
   );
 };
 
-const UserEmployee = ({activeTab}: UserProps) => {
-  useResetState(userSliceAction.resetAction);
-  const [id, setId] = useState(null)
+const UserEmployee = ({ currentTab }: UserProps) => {
+  useResetGroups();
+  const dispatch = useDispatch();
+  const resetAction = () => {
+    return dispatch(userSliceAction.resetAction());
+  };
+  const [id, setId] = useState(null);
   const [isOpenModal, setIsOpenModal] = useState(false);
-
-  const [query] = useUserQueryParams();
+  const [query, onTableChange] = useUserQueryParams();
   const [keyword, { setKeyword, onParamChange }] = useUpdateUserParams(query);
   const [data, isLoading] = useGetUsers(query);
   const paging = useUserPaging();
-  const [, deleteUser] = useDeleteUser();
-  const [, updateUser] = useUpdateUser();
+  
+
+  // groups
+  const { branchId }: any = useParams();
+  const branchIdParam = useMemo(
+    () => ({ branchId: branchId ? branchId : DEFAULT_BRANCH_ID }),
+    [branchId]
+  );
+  const [groups, isLoadingGroups] = useGetUserGroups(branchIdParam);
+  const [options, setOptions] = useState([]);
+
   const handleOpenModal = (id?: any) => {
     setIsOpenModal(true);
     setId(id);
@@ -66,90 +87,109 @@ const UserEmployee = ({activeTab}: UserProps) => {
     setId(null);
   };
 
+  const [, deleteUser] = useDeleteUser();
+  const [, updateUser] = useUpdateUser(()=> {
+    handleCloseModal();
+    resetAction();
+  });
+
   const onSearch = (e: any) => {
-    console.log(e)
+    setKeyword(e);
+    onParamChange({ keyword: e });
   };
+
+  useEffect(() => {
+    setKeyword("");
+  }, [currentTab]);
+  useEffect(() => {
+  setOptions(groups?.map((group: any) => ({ label: group?.name, value: group?._id }))); 
+  }, [groups]);
 
   const columns: ColumnsType = [
     {
-      title: 'Tên nhân viên',
-      dataIndex: 'fullName',
-      key: 'fullName'
+      title: "Tên nhân viên",
+      dataIndex: "fullName",
+      key: "fullName",
     },
     {
-      title: 'Tên người dùng',
-      dataIndex: 'adapater',
-      key: 'username',
-      render: (value) => <p>{value?.user?.username}</p>
+      title: "Tên người dùng",
+      dataIndex: "adapater",
+      key: "username",
+      render: (value) => <p>{value?.user?.username}</p>,
     },
     {
-      title: 'Email',
-      dataIndex: 'email',
-      key: 'email',
-      render: (value) => <p>{value}</p>
+      title: "Email",
+      dataIndex: "email",
+      key: "email",
+      render: (value) => <p>{value}</p>,
     },
     {
-      title: 'Nhóm người dùng	',
-      dataIndex: 'employeeGroup',
-      key: 'employeeGroup',
-      render: (groups) => (
+      title: "Nhóm người dùng	",
+      dataIndex: "adapater",
+      key: "groups",
+      render: (adapater, rc) => (
         <div className="speciality-tags">
-        {groups?.map((group : any, index: number) => {
-          return (
-            <Tag color="blue" key={index}>
-              {group?.name}
-            </Tag>
-          );
-        })}
-      </div>
-      )
+          {adapater?.groups?.map((group: any, index: number) => {
+            return (
+              <Tag color="blue" key={index}>
+                {group?.name}
+              </Tag>
+            );
+          })}
+        </div>
+      ),
     },
     {
-      title: 'Trạng thái',
-      dataIndex: 'status',
-      key: 'status',
+      title: "Trạng thái",
+      dataIndex: "status",
+      key: "status",
       width: 90,
-      align: 'center',
+      align: "center",
       render: (status, record: any) => (
         <Switch
-            checked={status === 'ACTIVE'}
-            onChange={(value) =>
-              updateUser({ status: value ? 'ACTIVE' : 'INACTIVE', id: record?._id, userId: record?.adapater?.userId})
-            }
-          />
-      )
+          checked={status === "ACTIVE"}
+          onChange={() =>
+            updateUser({
+              status: status === 'INACTIVE' ? "ACTIVE" : "INACTIVE",
+              id: record?._id,
+              userId: record?.adapater?.userId,
+            })
+          }
+        />
+      ),
     },
     {
-      title: 'Thao tác',
-      key: 'action',
-      width: '110px',
+      title: "Thao tác",
+      key: "action",
+      width: "110px",
       render: (record) => {
         return (
           <ColumnActions
             {...record}
             deleteUserEmployee={deleteUser}
             // shouldShowDevider={shouldShowDevider}
-            onOpenForm={()=> handleOpenModal(record?._id)}
+            onOpenForm={() => handleOpenModal(record?._id)}
           />
         );
-      }
-    }
+      },
+    },
   ];
-console.log(POLICIES,'POLICIES.WRITE_USER')
-
   return (
     <div>
-      <Row gutter={10} align="middle" style={{marginBottom: 10}}>
-        <Col span={21}>
-          <SelectSearch
-            showSelect = {false}
-            options={[]}
-            onSearch={onSearch}
-            isShowButtonAdd
-            permissionKey={POLICIES.WRITE_USER}
-          />
-        </Col>
-      </Row>
+      <SelectSearch
+        showSelect={true}
+        onSearch={onSearch}
+        isShowButtonAdd
+        permissionKey={[POLICIES.WRITE_USER, POLICIES.READ_USER]}
+        handleOnClickButton={() => handleOpenModal()}
+        keyword={keyword}
+        onChange={(e: any) => setKeyword(e.target.value)}
+        options={options}
+        onChangeSelect={(e: any) => onParamChange({ groupIds: e })}
+        showSearchStatus
+        onChangeStatus={(e: any) => onParamChange({ status: e.target.value })}
+        valueStatus={get(query,"status",null)}
+      />
       <TableAnt
         dataSource={data?.length ? data : []}
         loading={isLoading}
@@ -157,12 +197,11 @@ console.log(POLICIES,'POLICIES.WRITE_USER')
         size="small"
         pagination={{
           ...paging,
-          onChange(page, pageSize) {
-            // onParamChange({ page, limit: pageSize });
-          },
+          showTotal: (total) => `Tổng cộng: ${total}`,
         }}
+        onChange={({current, pageSize}: any)=> onTableChange({current, pageSize})}
       />
-        <Modal
+      <Modal
         open={isOpenModal}
         onCancel={() => setIsOpenModal(false)}
         onOk={() => setIsOpenModal(false)}
@@ -173,10 +212,7 @@ console.log(POLICIES,'POLICIES.WRITE_USER')
         destroyOnClose
         // title= {`${id ? "Cập nhật" : "Thêm mới"} nhân viên`}
       >
-        <UserForm
-          id={id}
-          handleCloseModal={handleCloseModal}
-        />
+        <UserForm id={id} handleCloseModal={handleCloseModal} updateUser={updateUser} />
       </Modal>
     </div>
   );

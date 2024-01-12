@@ -13,7 +13,7 @@ import { Button, Col, Modal, Row } from "antd";
 import { useState } from "react";
 import EmployeeForm from "../components/EmployeeForm";
 import TableAnt from "~/components/Antd/TableAnt";
-import SelectSearch from "~/components/common/SelectSearch";
+import SelectSearch from "~/components/common/SelectSearch/SelectSearch";
 
 
 export default function Employee() {

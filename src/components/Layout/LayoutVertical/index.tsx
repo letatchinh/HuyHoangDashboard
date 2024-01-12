@@ -3,7 +3,7 @@ import logo from '~/assets/images/header/logo-white.svg';
 import NavbarVertical from './NavbarVertical';
 import ProfileMenu from './ProfileMenu';
 
-export default function LayoutVertical({children} : {children : React.JSX.Element}) {
+export default function LayoutVertical({ children }: { children: React.JSX.Element }) {
   return (
     <div className='layoutVertical'>
         <header className='layoutVertical--header'>
