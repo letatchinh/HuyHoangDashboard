@@ -2,7 +2,7 @@ import { Menu, MenuProps } from 'antd';
 import React, { useCallback, useMemo, useState , isValidElement} from 'react';
 import NavbarItems, { resource } from './resource';
 import { useGetPolicyCheckAllPage } from '~/modules/user/user.hook';
-import { useProfile } from '~/modules/auth/auth.hook';
+import { useGetProfile, useProfile } from '~/modules/auth/auth.hook';
 import { isMatchPolicy, useUserPolicy } from '~/modules/policy/policy.hook';
 import { NavLink } from 'react-router-dom';
 
@@ -47,18 +47,18 @@ const NavbarVertical: React.FC = () => {
   const toggleCollapsed = () => {
     setCollapsed(!collapsed);
   };
-  const [profile] = useProfile();
+  const profile = useGetProfile();
   const [, , policies] = useUserPolicy();
   const checkPermission = useCallback((permission: any) => {
-    if (!permission ) return true;
-
+    if (!permission || profile?.user?.isSuperAdmin ) return true;
+    
     for (const permissionItem of permission) {
         if (isMatchPolicy(policies, permissionItem)) {
           return true;
       };
     };
     return false
-  }, [policies, profile?.isSuperAdmin]);
+  }, [policies, profile?.user?.isSuperAdmin]);
 
   const filterItems = (items: any) => {
     return items.filter((item: any) => {

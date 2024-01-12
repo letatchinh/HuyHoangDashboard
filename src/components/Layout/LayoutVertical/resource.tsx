@@ -93,6 +93,7 @@ export const resource: ItemType[] = [
             label: "Cấu hình giảm giá",
             path: PATH_APP.configDiscount.root,
             key: PATH_APP.configDiscount.root,
+            // permission :[POLICIES.READ_USERGROUP],
           },
         ],
       },
@@ -111,8 +112,8 @@ export const resource: ItemType[] = [
       // Chi nhánh
     {
       label : "Chi nhánh",
-      key : "branch",
-      // Children
+      key: "branch",
+      permission :[POLICIES.READ_BRANCH],
       children : [
         {
           label : "Danh sách chi nhánh",
@@ -158,8 +159,10 @@ export const resource: ItemType[] = [
         label : "Người dùng",
         icon: <FontAwesomeIcon icon = {faUser} />,
         path : PATH_APP.user.root,
-        key : PATH_APP.user.root,
-    },
+        key : PATH_APP.user.root, 
+        permission :[POLICIES.READ_USER, POLICIES.READ_USERGROUP],
+      },
+
         //Nhà thuốc
     {
       label: "Nhà thuốc",
@@ -168,6 +171,7 @@ export const resource: ItemType[] = [
       key: PATH_APP.pharmacy.root,
     },
       
+       
  ];
 
 //Required permission is string[][]; 

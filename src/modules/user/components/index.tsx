@@ -7,21 +7,23 @@ import {
   useUpdateUserParams,
   useUserPaging,
   useUserQueryParams,
-} from "../../user.hook";
+} from "../user.hook";
 import { useEffect, useMemo, useState } from "react";
-import UserForm from "../UserForm";
+import UserForm from "./UserForm";
 import { ColumnsType } from "antd/es/table";
 import SelectSearch from "~/components/common/SelectSearch/SelectSearch";
 import TableAnt from "~/components/Antd/TableAnt";
-import { userSliceAction } from "../../redux/reducer";
+import { userSliceAction } from "../redux/reducer";
 import { useParams } from "react-router-dom";
 import POLICIES, { CORE_ACTION, GROUP_POLICY } from "~/modules/policy/policy.auth";
 import { DEFAULT_BRANCH_ID, } from "~/constants/defaultValue";
 import { useGetUserGroups, } from "~/modules/userGroup/userGroup.hook";
 import { get } from "lodash";
 import { useDispatch } from "react-redux";
+import WithOrPermission from "~/components/common/WithOrPermission";
+import { useMatchPolicy } from "~/modules/policy/policy.hook";
 interface UserProps {
-  currentTab: string;
+  currentTab: string | undefined;
 }
 interface ColumnActionProps {
   _id: any;
@@ -37,11 +39,11 @@ const ColumnActions = ({
 }: ColumnActionProps) => {
   return (
     <div className="custom-table__actions">
-      {/* <WithPermission permission={POLICY.UPDATE_USER}> */}
+      <WithOrPermission permission={[POLICIES.UPDATE_USER]}>
       <p onClick={() => onOpenForm(_id)}>Sửa</p>
-      {/* </WithPermission> */}
-      {/* {shouldShowDevider && <p>|</p>} */}
-      {/* <WithPermission permission={POLICY.DELETE_USER}> */}
+      </WithOrPermission>
+      {shouldShowDevider && <p>|</p>}
+      <WithOrPermission permission={[POLICIES.DELETE_USER]}>
       <Popconfirm
         title="Bạn muốn xoá người dùng này?"
         onConfirm={() => deleteUserEmployee(_id)}
@@ -50,7 +52,7 @@ const ColumnActions = ({
       >
         <p>Xóa</p>
       </Popconfirm>{" "}
-      {/* </WithPermission> */}
+      </WithOrPermission>
     </div>
   );
 };
@@ -67,6 +69,7 @@ const UserEmployee = ({ currentTab }: UserProps) => {
   const [keyword, { setKeyword, onParamChange }] = useUpdateUserParams(query);
   const [data, isLoading] = useGetUsers(query);
   const paging = useUserPaging();
+  const shouldShowDevider = useMatchPolicy(POLICIES.DELETE_USER);
   
 
   // groups
@@ -167,7 +170,7 @@ const UserEmployee = ({ currentTab }: UserProps) => {
           <ColumnActions
             {...record}
             deleteUserEmployee={deleteUser}
-            // shouldShowDevider={shouldShowDevider}
+            shouldShowDevider={shouldShowDevider}
             onOpenForm={() => handleOpenModal(record?._id)}
           />
         );
@@ -180,7 +183,7 @@ const UserEmployee = ({ currentTab }: UserProps) => {
         showSelect={true}
         onSearch={onSearch}
         isShowButtonAdd
-        permissionKey={[POLICIES.WRITE_USER, POLICIES.READ_USER]}
+        permissionKey={[POLICIES.WRITE_USER]}
         handleOnClickButton={() => handleOpenModal()}
         keyword={keyword}
         onChange={(e: any) => setKeyword(e.target.value)}
@@ -191,6 +194,7 @@ const UserEmployee = ({ currentTab }: UserProps) => {
         valueStatus={get(query,"status",null)}
       />
       <TableAnt
+        className="custom-table__shadow"
         dataSource={data?.length ? data : []}
         loading={isLoading}
         columns={columns}
