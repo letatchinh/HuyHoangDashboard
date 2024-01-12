@@ -201,11 +201,11 @@ interface Resource {
 }
 
 export const onSearchPermissions = (keyword: string = '', resource: any[] = [], updateResources: (data: any) => void) => {
+  console.log(keyword, resource)
   if (isNil(keyword) || keyword === '') return updateResources(resource);
   const resultSearch = resource?.filter(item => {
-    return StringToSlug(get(item, 'resource.name', '')?.toLowerCase())?.includes(StringToSlug(keyword?.trim()?.toLowerCase()));
+    return StringToSlug(get(item, 'name', '')?.toLowerCase())?.includes(StringToSlug(keyword?.trim()?.toLowerCase()));
   });
-
   updateResources(resultSearch);
 };
 
