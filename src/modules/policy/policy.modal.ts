@@ -6,7 +6,11 @@ export type ResourceType = {
   GROUP_EMPLOYEE: string[],
   GROUP_WHBILL: string[],
   GROUP_WHSETTING:  string[]
-  GROUP_MANUFACTURER: string[]
+  GROUP_MANUFACTURER: string[],
+  UNIT: string[],
+  GROUP_PRODUCTGROUP: string[],
+  GROUP_RANKING: string[],
+  MEDICINE: string[]
 };
 
 export type policyType = 'write' | 'read' | 'update' | 'delete' | 'download' | 'admin';
@@ -44,7 +48,7 @@ export type PoliciesType = {
   "DELETE_USERGROUP" |
   "DOWNLOAD_USERGROUP" |
   "ADMIN_USERGROUP" |
-  "USERGROUP"
+  "USERGROUP" |
   //MANUFACTURER
   "READ_MANUFACTURER" |
   "WRITE_MANUFACTURER" |
@@ -52,7 +56,38 @@ export type PoliciesType = {
   "DELETE_MANUFACTURER" |
   "DOWNLOAD_MANUFACTURER" |
   "ADMIN_MANUFACTURER" |
-  "MANUFACTURER"
-  //
+  "MANUFACTURER"|
+  //UNIT
+  "READ_UNIT" |
+  "WRITE_UNIT" |
+  "UPDATE_UNIT" |
+  "DELETE_UNIT" |
+  "DOWNLOAD_UNIT" |
+  "ADMIN_UNIT" |
+  "UNIT"|
+  //PRODUCTGROUP
+  "READ_PRODUCTGROUP" |
+  "WRITE_PRODUCTGROUP" |
+  "UPDATE_PRODUCTGROUP" |
+  "DELETE_PRODUCTGROUP" |
+  "DOWNLOAD_PRODUCTGROUP" |
+  "ADMIN_PRODUCTGROUP" |
+  "PRODUCTGROUP"|
+  //RANKING
+  "READ_RANKING" |
+  "WRITE_RANKING" |
+  "UPDATE_RANKING" |
+  "DELETE_RANKING" |
+  "DOWNLOAD_RANKING" |
+  "ADMIN_RANKING" |
+  "RANKING"|
+  //MEDICINE
+  "READ_MEDICINE" |
+  "WRITE_MEDICINE" |
+  "UPDATE_MEDICINE" |
+  "DELETE_MEDICINE" |
+  "DOWNLOAD_MEDICINE" |
+  "ADMIN_MEDICINE" |
+  "MEDICINE"
   ]: [string, policyType];
 };

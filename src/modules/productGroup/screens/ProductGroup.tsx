@@ -22,6 +22,7 @@ import { get } from 'lodash';
 import { useProductUnitQueryParams } from '~/modules/productUnit/productUnit.hook';
 import WithPermission from '~/components/common/WithPermission';
 import POLICIES from '~/modules/policy/policy.auth';
+import { useMatchPolicy } from '~/modules/policy/policy.hook';
 
 const { Search } = Input;
 
@@ -41,7 +42,7 @@ export default function ProductConfig() {
   const [listProductConfig, isLoading] = useGetlistProductConfig(query);
   const [keyword, { setKeyword, onParamChange }] = useUpdateProductConfigParams(query);
   const { t }: any = useTranslate();
-  
+  const canUpdate = useMatchPolicy(POLICIES.UPDATE_PRODUCTGROUP);
 
   interface DataType {
     code: string;
@@ -100,17 +101,17 @@ export default function ProductConfig() {
       width: '120px',
       key: 'status',
       render: (_, record) => (
-        <WithPermission permission={POLICIES.UPDATE_PRODUCTGROUP}>
+        
         <Switch
           checked={record?.status === 'ACTIVE'}
           onChange={(value: any) => {
-
+              if(!canUpdate) return message.warning('Bạn không có quyền thay đổi');
               updateProductConfig({ status: value ? 'ACTIVE' : 'INACTIVE',id:record?._id });
             
           }}
         // loading={isSubmitUpdateLoading}
         />
-        </WithPermission>
+        
       )
     },
     {
@@ -187,7 +188,7 @@ export default function ProductConfig() {
                   />
                 </Col>
                 <Col>
-                <WithPermission permission={POLICIES.CREATE_PRODUCTGROUP}>
+                <WithPermission permission={POLICIES.WRITE_PRODUCTGROUP}>
                   <Button icon={<PlusCircleOutlined />} onClick={handleOpenFormCreate} type="primary">
                     Thêm mới
                   </Button>

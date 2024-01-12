@@ -41,7 +41,7 @@ const {
     const keyword = query.get("keyword");
     const status = query.get("status");
     const createSuccess = useSelector(createSuccessSelector);
-    // const updateSuccess = useSelector(updateSuccessSelector);
+    const updateSuccess = useSelector(updateSuccessSelector);
     const deleteSuccess = useSelector(deleteSuccessSelector);
     return useMemo(() => {
       const queryParams = {
@@ -52,7 +52,7 @@ const {
       };
       return [queryParams];
       //eslint-disable-next-line
-    }, [page, limit,status, keyword, createSuccess, deleteSuccess]);
+    }, [page, limit,status, keyword, createSuccess, deleteSuccess, updateSuccess]);
   };
   
   export const useUpdateProductConfigParams = (

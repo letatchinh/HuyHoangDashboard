@@ -10,6 +10,10 @@ const userGroup = 'userGroup';
 const pharmacy = 'pharmacy';
 const bill = 'bill';
 const manuFacturer = 'manufacturer';
+const unit = 'unit';
+const productGroup='productGroup';
+const ranking = 'ranking';
+const medicine = 'medicine';
 
 const RESOURCES = [
   branch,
@@ -20,6 +24,13 @@ const RESOURCES = [
   // pharmacy,
   // bill,
   manuFacturer,
+  unit,
+  ranking,
+  // productGroup
+  productGroup,
+  //
+  medicine
+
 ];
 
 //ACTIONS
@@ -67,7 +78,19 @@ const RESOURCE = (): ResourceType => {
   ];
   const GROUP_MANUFACTURER : string[] = [
     manuFacturer
-  ]
+  ];
+  const UNIT : string[] = [
+    unit
+  ];
+  const MEDICINE : string[] = [
+    medicine
+  ];
+  const GROUP_PRODUCTGROUP : string[] = [
+    productGroup
+  ];
+  const GROUP_RANKING : string[] = [
+    ranking
+  ];
 
   return {
     GROUP_USER,
@@ -75,6 +98,10 @@ const RESOURCE = (): ResourceType => {
     GROUP_WHBILL,
     GROUP_WHSETTING,
     GROUP_MANUFACTURER,
+    UNIT,
+    GROUP_PRODUCTGROUP,
+    GROUP_RANKING,
+    MEDICINE,
   };
 };
 

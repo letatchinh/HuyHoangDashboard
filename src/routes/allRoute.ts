@@ -27,11 +27,10 @@ export const mainRoutes :PathRouteProps[] = [
   { path: PATH_APP.todoList.statusConfig, Component: StatusConfig },
   { path: PATH_APP.employee.root, Component: EmployeePage },
   { path: PATH_APP.user.root, Component: UserPage },
-  { path: PATH_APP.userGroup.root, Component: UserPage },
-  { path: PATH_APP.userGroup.detail, Component: UserPage },
   { path: PATH_APP.configDiscount.root, Component: ConfigDiscountPage },
   { path: PATH_APP.pharmacy.root, Component: Pharmacy },
-
+  { path: PATH_APP.pharmacy.root, Component: UserGroupPage },
+ 
   { path: '/', Component: Homepage },
 ]
 

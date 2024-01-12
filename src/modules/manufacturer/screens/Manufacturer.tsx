@@ -21,7 +21,7 @@ export default function Manufacturer() {
   const [query] = useManufacturerQueryParams();
   const [keyword, { setKeyword, onParamChange }] = useManufacturerParams(query);
   const [listManufacturer, isLoading] = useGetManufacturerList(query);
-  // const canDelete = useMatchPolicy(POLICIES.DELETE_MANUFACTURER);
+  const canUpdate = useMatchPolicy(POLICIES.UPDATE_MANUFACTURER);
   const [id, setId] = useState(null);
   const handleCloseForm = useCallback(() => {
     setShowForm(false);
@@ -79,17 +79,17 @@ export default function Manufacturer() {
       width: '120px',
       key: 'activity',
       render: (_, record) => (
-        <WithPermission permission={POLICIES.UPDATE_MANUFACTURER}>
+ 
           <Switch
             checked={record?.status === 'ACTIVE'}
             onChange={(value: any) => {
-
+              if(!canUpdate) return message.warning('Bạn không có quyền thay đổi');
               updateManufacturer({ status: value ? 'ACTIVE' : 'INACTIVE', id: record?._id });
 
             }}
             loading={isSubmitUpdateLoading}
           />
-        </WithPermission>
+        
       )
     },
     {
@@ -171,7 +171,7 @@ export default function Manufacturer() {
                   </Col>
 
                   <Col>
-                    <WithPermission permission={POLICIES.CREATE_MANUFACTURER}>
+                    <WithPermission permission={POLICIES.WRITE_MANUFACTURER}>
                       <Button icon={<PlusCircleOutlined />} onClick={() => handleOpenForm()} type="primary">
                         Thêm mới
                       </Button>

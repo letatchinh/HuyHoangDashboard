@@ -59,7 +59,7 @@ export const resource: ItemType[] = [
         // permission :[POLICIES.READ_USERGROUP],
         children: [
           {
-            label: "Cấu hình danh mục",
+            label: "Nhóm sản phẩm",
             path: PATH_APP.worldPharma.productGroup,
             key: PATH_APP.worldPharma.productGroup,
             icon: <HddOutlined />,
