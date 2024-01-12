@@ -7,6 +7,7 @@ import authModule from '~/modules/auth';
 import supplierModule from '~/modules/supplier';
 import branchModule from '~/modules/branch';
 import productConfigModule from '~/modules/productConfig';
+import pharmacyModule from '~/modules/pharmacy';
 import geoModule from '~/modules/geo';
 import manufacturerModule from '~/modules/manufacturer';
 import productUnitModule from '~/modules/productUnit';
@@ -37,6 +38,7 @@ const rootReducer = combineReducers({
     ranking:rankingModule.redux.reducer,
     medicine:medicineModule.redux.reducer,
     product:productModule.redux.reducer,
+    pharmacy: pharmacyModule.redux.reducer
 
 });
 export default rootReducer

@@ -2,12 +2,11 @@
 @import "abstract/base";
 @import "abstract/custom";
 
-// Module 
+// Module
 @import "~/modules/auth/auth.style.scss";
 @import "~/modules/product/product.style.scss";
 @import "~/components/Layout/LayoutVertical/index.scss";
 
 // Component
 @import "component/whiteBox";
-
-
+@import "component/columnAction";
