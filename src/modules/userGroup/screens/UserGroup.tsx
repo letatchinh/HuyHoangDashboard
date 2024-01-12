@@ -33,6 +33,7 @@ import toastr from "toastr";
 import POLICIES from "~/modules/policy/policy.auth";
 import { useResetState } from "~/utils/hook";
 import { userGroupSliceAction } from "../redux/reducer";
+import WithOrPermission from "~/components/common/WithOrPermission";
 
 const styleButton = {
   alignContent: "center",
@@ -188,7 +189,7 @@ const UserGroup = ({ currentTab }: UserGroupProps) => {
                   alignContent: "center",
                 }}
               >
-                {/* <WithPermission permission={POLICY.DELETE_USERGROUP}> */}
+                <WithOrPermission permission={[POLICIES.DELETE_USERGROUP]}>
                 <Popconfirm
                   title="Bạn muốn xoá chi nhánh này?"
                   onConfirm={() => deleteGroup(groupId)}
@@ -204,8 +205,8 @@ const UserGroup = ({ currentTab }: UserGroupProps) => {
                     <DeleteOutlined /> Xoá
                   </Button>
                 </Popconfirm>{" "}
-                {/* </WithPermission> */}
-                {/* <WithPermission permission={POLICY.UPDATE_USERGROUP}> */}
+                </WithOrPermission>
+                <WithOrPermission permission={[POLICIES.UPDATE_USERGROUP]}>
                 <Button
                   size="small"
                   onClick={() => onOpenForm(groupId)}
@@ -214,8 +215,8 @@ const UserGroup = ({ currentTab }: UserGroupProps) => {
                 >
                   <EditOutlined /> Cập nhật
                 </Button>
-                {/* </WithPermission> */}
-                {/* <WithPermission permission={POLICY.WRITE_USERGROUP}> */}
+                </WithOrPermission>
+                <WithOrPermission permission={[POLICIES.WRITE_USERGROUP]}>
                 <Button
                   style={styleButton}
                   size="small"
@@ -224,7 +225,7 @@ const UserGroup = ({ currentTab }: UserGroupProps) => {
                 >
                   <PlusOutlined /> Tạo mới
                 </Button>
-                {/* </WithPermission> */}
+                </WithOrPermission>
               </Flex>
             </div>
             <SelectSearch
@@ -233,7 +234,7 @@ const UserGroup = ({ currentTab }: UserGroupProps) => {
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                 onSearchPermissions(e.target.value, resources, setDataShow)
               }
-              // permissionKey={POLICIES.WRITE_USER}
+              permissionKey={[POLICIES.WRITE_USER]}
             />
             <Table
               columns={columns}

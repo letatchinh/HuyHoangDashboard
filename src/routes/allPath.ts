@@ -32,12 +32,9 @@ export const PATH_APP = {
         root: path(ROOTS.app, '/employee'),
     },
     user: {
-      root: path(ROOTS.app, '/user/list'),
+      root: path(ROOTS.app, '/user/*'),
     },
-  userGroup: {
-    root: path(ROOTS.app, '/user/group'),
-    detail: path(ROOTS.app, '/user/group/:groupId'),
-  },
+
   configDiscount: {
     root: path(ROOTS.app, '/config-discount'),
   },
@@ -45,5 +42,4 @@ export const PATH_APP = {
       root:  path(ROOTS.app, '/pharmacy'),
       detail: path(ROOTS.app, '/pharmacy/:id'),
     },
-    
   };
