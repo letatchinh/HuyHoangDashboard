@@ -127,7 +127,7 @@ export default function Ranking(props: propsType): React.JSX.Element {
       </WhiteBox>
       <ModalAnt
         open={showForm}
-        title={id ? 'Cap nhap ranking' : 'Tao moi ranking'}
+        title={id ? 'Cập nhật ranking' : 'Tạo mới ranking'}
         onCancel={handleCloseForm}
         footer={null}
         destroyOnClose

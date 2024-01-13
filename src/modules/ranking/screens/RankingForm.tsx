@@ -59,7 +59,7 @@ const RankingForm: React.FC<Props> = ({ id, handleCloseForm }) => {
         <Form.Item<FieldType> label="Xếp hạng ranking" name="level">
           <Input />
         </Form.Item>
-        <Form.Item wrapperCol={{ offset: 8, span: 12 }}>
+        <Form.Item style={{ width: '950px'}} wrapperCol={{ offset: 8, span: 12 }}>
           <Button type="primary" htmlType="submit">
             {id ? 'Cập nhật' : 'Thêm mới'}
           </Button>
