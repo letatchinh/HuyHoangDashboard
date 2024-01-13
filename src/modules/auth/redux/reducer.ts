@@ -21,18 +21,19 @@ export const auth = createSlice({
     initialState,
     reducers: {
         // LOGIN
-        loginRequest: (state, { payload }) => {
+        loginRequest: (state, { payload } : any) => {
             state.isLoading = true;
             state.token = null;
             state.loginFailed = null;
         },
-        loginSuccess: (state, { payload }) => {
-            state.token = payload.token;
-            setAxiosToken(payload.token);
-            setAxiosCompanyId(payload.branchId)
+        loginSuccess: (state, action: { payload: { token: any; branchId: any, } }) => {
+            const { token, branchId } = action.payload;
+            state.token = token;
+            setAxiosToken(token);
+            setAxiosCompanyId(branchId); // Assuming branchId is the correct property name
             state.isLoading = false;
-        },
-        loginFailed: (state, { payload }) => {
+          },
+        loginFailed: (state, { payload }  : any) => {
             state.loginFailed = payload;
             state.isLoading = false;
         },
@@ -47,11 +48,11 @@ export const auth = createSlice({
             state.isGetProfileLoading = true;
             state.getProfileFailed = null;
         },
-        getProfileSuccess: (state, { payload }) => {
+        getProfileSuccess: (state, { payload } : any,) => {
             state.isGetProfileLoading = false;
             state.profile = payload;
         },
-        getProfileFailed: (state, { payload }) => {
+        getProfileFailed: (state, { payload } : any) => {
             state.isGetProfileLoading = false;
             state.getProfileFailed = payload;
         },
