@@ -5,8 +5,9 @@
 // Module
 @import "~/modules/auth/auth.style.scss";
 @import "~/modules/product/product.style.scss";
-@import "~/components/Layout/LayoutVertical/index.scss";
+@import "~/modules/bill/bill.style.scss";
 
 // Component
+@import "~/components/Layout/LayoutVertical/index.scss";
 @import "component/whiteBox";
 @import "component/columnAction";

@@ -41,5 +41,10 @@ export const PATH_APP = {
       root:  path(ROOTS.app, '/pharmacy'),
       detail: path(ROOTS.app, '/pharmacy/:id'),
     },
-    
+
+    bill : {
+      root:  path(ROOTS.app, '/bill'),
+      update: path(ROOTS.app, '/bill/:id'),
+      create: path(ROOTS.app, '/bill/create'),
+    },
   };

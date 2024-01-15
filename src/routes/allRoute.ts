@@ -11,6 +11,8 @@ import Unit from "~/pages/Dashboard/Unit";
 import MedicinePage from "~/pages/Dashboard/Medicine";
 import ProductPage from "~/pages/Dashboard/Product";
 import Pharmacy from "~/pages/Dashboard/Pharmacy";
+import Bill from "~/pages/Dashboard/Bill";
+import CreateBill from "~/pages/Dashboard/Bill/CreateBill";
 export const mainRoutes :PathRouteProps[] = [
   { path: PATH_APP.main.root, Component: Homepage },
   { path: PATH_APP.supplier.root, Component: Supplier },
@@ -22,6 +24,8 @@ export const mainRoutes :PathRouteProps[] = [
   { path: PATH_APP.branch.root, Component: Branch },
   { path: PATH_APP.product.edit, Component: ProductPage },
   { path: PATH_APP.pharmacy.root, Component: Pharmacy },
+  { path: PATH_APP.bill.root, Component: Bill },
+  { path: PATH_APP.bill.create, Component: CreateBill },
 
   { path: '/', Component: Homepage },
 ]

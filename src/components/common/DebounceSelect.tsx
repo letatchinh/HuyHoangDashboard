@@ -59,7 +59,7 @@ function DebounceSelect<
 
   return (
     <Select
-    allowClear
+      allowClear
       filterOption={false}
       onSearch={debounceFetcher}
       notFoundContent={fetching ? <Spin size="small" /> : <Empty />}

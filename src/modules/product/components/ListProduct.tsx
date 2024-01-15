@@ -101,7 +101,7 @@ export default function ListProduct({
       isShowButtonAdd
       showSelect={false}
       handleOnClickButton={() => onOpenForm()}
-      onSearch={(value) => onParamChange({keyword: value?.trim()})
+      onSearch={(value : any) => onParamChange({keyword: value?.trim()})
       }
       />
 

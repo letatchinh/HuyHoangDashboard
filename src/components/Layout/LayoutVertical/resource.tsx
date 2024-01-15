@@ -93,24 +93,44 @@ const resource: ItemType[] = [
   },
 
   // Chi nhánh
-  getItem({
+  {
     label: "Chi nhánh",
     key: "branch",
     // Children
     children: [
-      getItem({
+      {
         label: "Danh sách chi nhánh",
         path: PATH_APP.branch.root,
         key: PATH_APP.branch.root,
-      })
+      },
     ],
-    icon: <AppstoreFilled />
-  }),
+    icon: <AppstoreFilled />,
+  },
   {
     label: "Nhà thuốc",
     icon: <AppstoreOutlined />,
     path: PATH_APP.pharmacy.root,
     key: PATH_APP.pharmacy.root,
+  },
+
+  // Đơn hàng
+  {
+    label: "Đơn hàng",
+    key: "bill",
+    // Children
+    children: [
+      {
+        label: "Danh sách đơn hàng",
+        path: PATH_APP.bill.root,
+        key: PATH_APP.bill.root,
+      },
+      {
+        label: "Tạo đơn hàng",
+        path: PATH_APP.bill.create,
+        key: PATH_APP.bill.create,
+      },
+    ],
+    icon: <AppstoreFilled />,
   },
 ];
 

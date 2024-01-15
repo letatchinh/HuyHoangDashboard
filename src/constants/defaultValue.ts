@@ -1,4 +1,5 @@
-export const BASE_URL = process.env.REACT_APP_BASE_URL;
+// export const BASE_URL = process.env.REACT_APP_BASE_URL;
+export const BASE_URL = "http://192.168.77.129:7006";
 
 export const STATUS = {
   ACTIVE: "ACTIVE",

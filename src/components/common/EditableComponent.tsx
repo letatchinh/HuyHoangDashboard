@@ -9,7 +9,7 @@ import {
   Select,
   TimePicker,
 } from "antd";
-import { filter, head, keys, parseInt, range } from "lodash";
+import { filter, get, head, isArray, keys, parseInt, range } from "lodash";
 import { formatter } from "~/utils/helpers";
 import dayjs from "dayjs";
 
@@ -64,11 +64,12 @@ const EditableCell = ({
 
   useEffect(() => {
     if (editing) {
-      inputRef.current.focus();
+      inputRef?.current?.focus();
     }
   }, [editing]);
 
   const toggleEdit = () => {
+    if(!editable) return;
     setEditing(!editing);
 
     let value;
@@ -135,7 +136,7 @@ const EditableCell = ({
   };
 
   let childNode = children;
-
+  
   if (editable) {
     childNode = editing ? (
       <Form.Item
@@ -235,14 +236,14 @@ const EditableCell = ({
         style={{
           paddingRight: 24,
         }}
-        onClick={toggleEdit}
+        // onClick={toggleEdit}
       >
         {children}
       </div>
     );
   }
 
-  return <td {...restProps}>{childNode}</td>;
+  return <td {...editable && !editing && {onClick : toggleEdit}} {...restProps}>{childNode}</td>;
 };
 
 export { EditableCell, EditableRow };
