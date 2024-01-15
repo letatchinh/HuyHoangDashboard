@@ -110,7 +110,7 @@ export default function PharmacyForm({
           >
             <FormItem
               label="Tên nhà thuốc"
-              name="fullName"
+              name="name"
               labelCol={{ sm: 24, md: 24, lg: 3 }}
               wrapperCol={{ sm: 24, md: 24, lg: 21 }}
               rules={[
@@ -121,7 +121,7 @@ export default function PharmacyForm({
             </FormItem>
             <FormItem
               label="Tên người đại diện"
-              name="name"
+              name="fullName"
               labelCol={{ sm: 24, md: 24, lg: 3 }}
               wrapperCol={{ sm: 24, md: 24, lg: 21 }}
               rules={[
