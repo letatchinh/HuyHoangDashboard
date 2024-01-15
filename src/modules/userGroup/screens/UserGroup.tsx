@@ -34,6 +34,7 @@ import POLICIES from "~/modules/policy/policy.auth";
 import { useResetState } from "~/utils/hook";
 import { userGroupSliceAction } from "../redux/reducer";
 import WithOrPermission from "~/components/common/WithOrPermission";
+import { useGetProfile, useProfile } from "~/modules/auth/auth.hook";
 
 const styleButton = {
   alignContent: "center",
@@ -89,7 +90,6 @@ const UserGroup = ({ currentTab }: UserGroupProps) => {
   const [group, isLoadingGroup, updateGroup] = useGetUserGroup(param);
   const [, handleUpdate] = useUpdatePolicy();
   const [, deleteGroup] = useDeleteUserGroup();
-
   //State
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [id, setId] = useState<any>(null);
@@ -182,7 +182,7 @@ const UserGroup = ({ currentTab }: UserGroupProps) => {
           <div className="employee-group__content">
             <div className="employee-group__header">
               <h5 className="employee-group__list-title ">Thiết lập quyền</h5>
-              <Flex
+            { group && <Flex
                 gap="small"
                 wrap="wrap"
                 style={{
@@ -195,6 +195,7 @@ const UserGroup = ({ currentTab }: UserGroupProps) => {
                   onConfirm={() => deleteGroup(groupId)}
                   okText="Xoá"
                   cancelText="Huỷ"
+                  disabled = {group?.user?.isSuperAdmin}
                 >
                   <Button
                     size="small"
@@ -212,6 +213,7 @@ const UserGroup = ({ currentTab }: UserGroupProps) => {
                   onClick={() => onOpenForm(groupId)}
                   type="primary"
                   style={styleButton}
+                  disabled = {group?.user?.isSuperAdmin}
                 >
                   <EditOutlined /> Cập nhật
                 </Button>
@@ -226,7 +228,7 @@ const UserGroup = ({ currentTab }: UserGroupProps) => {
                   <PlusOutlined /> Tạo mới
                 </Button>
                 </WithOrPermission>
-              </Flex>
+              </Flex>}
             </div>
             <SelectSearch
               showSelect={false}

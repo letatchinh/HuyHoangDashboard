@@ -78,7 +78,7 @@ export default function User() {
             >
               <Route
                 path={`:id`}
-                element={<UserGroup currentTab={currentTab} />}
+                element={<UserEmployee currentTab={currentTab} />}
               />
             </Route>
           ) : (

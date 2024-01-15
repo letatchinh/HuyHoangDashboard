@@ -50,12 +50,12 @@ export const useGetUserGroups = (payload: object) => {
     return { ...payload };
     //eslint-disable-next-line
   }, [createSuccess, deleteSuccess, payload]);
-  return useFetch({
+  return useFetchByParam({
     action: userGroupSliceAction.getListRequest,
     loadingSelector: loadingSelector,
     dataSelector: listSelector,
     failedSelector: getListFailedSelector,
-    payload: memoParam,
+    param: memoParam,
   });
 };
 export const useGetUserGroup = (params: any) => {
@@ -201,7 +201,6 @@ interface Resource {
 }
 
 export const onSearchPermissions = (keyword: string = '', resource: any[] = [], updateResources: (data: any) => void) => {
-  console.log(keyword, resource)
   if (isNil(keyword) || keyword === '') return updateResources(resource);
   const resultSearch = resource?.filter(item => {
     return StringToSlug(get(item, 'name', '')?.toLowerCase())?.includes(StringToSlug(keyword?.trim()?.toLowerCase()));

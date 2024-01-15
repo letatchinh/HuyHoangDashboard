@@ -9,6 +9,7 @@ import {
   useFetch,
   useFetchByParam,
   useQueryParams,
+  useResetState,
   useSubmit,
   useSuccess,
 } from "~/utils/hook";
@@ -37,12 +38,12 @@ const {
 export const useEmployeePaging = () => useSelector(pagingSelector);
 
 export const useGetEmployeees = (payload: object) => {
-  return useFetch({
+  return useFetchByParam({
     action: employeeSliceAction.getListRequest,
     loadingSelector: loadingSelector,
     dataSelector: listSelector,
     failedSelector: getListFailedSelector,
-    payload
+    param: payload
   });
 };
 export const useGetEmployee = (id: any) => {
@@ -95,19 +96,26 @@ export const useDeleteEmployee = (callback?: any) => {
 
 export const useEmployeeQueryParams = () => {
   const query = useQueryParams();
-  const limit = query.get("limit") || 10;
-  const page = query.get("page") || 1;
+  const [page, setPage] = useState(query.get("page") || 1);
+  const [limit, setLimit] = useState(query.get("limit") || 10);
   const keyword = query.get("keyword");
 
+  const onTableChange: any = ({ current, pageSize }: any) => {
+    setPage(current);
+    setLimit(pageSize);
+  };
+  
+  const createSuccess = useSelector(createSuccessSelector);
+  const deleteSuccess = useSelector(deleteSuccessSelector);
   return useMemo(() => {
     const queryParams = {
       page,
       limit,
       keyword,
     };
-    return [queryParams];
+    return [queryParams, onTableChange];
     //eslint-disable-next-line
-  }, [page, limit, keyword]);
+  }, [page, limit, keyword, createSuccess, deleteSuccess]);
 };
 
 export const useUpdateEmployeeParams = (
@@ -156,4 +164,8 @@ export const autoCreateUsername = async ({ fullName, callApi }: any) => {
   }
   const newUserName = await adapterValidateUsername(username, callApi)
   return newUserName
+};
+
+export const useResetStateEmployee = () => {
+  return useResetState(employeeSliceAction.resetAction);
 };
