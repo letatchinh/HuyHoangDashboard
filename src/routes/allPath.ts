@@ -32,9 +32,9 @@ export const PATH_APP = {
     branch : {
       root: path(ROOTS.app, '/branch'),
     },
-    todoList: {
-      statusConfig: path(ROOTS.app, '/statusConfig'),
-      workBoard: path(ROOTS.app, '/workBoard'),
+  todoList: {
+    statusConfig: path(ROOTS.app, '/statusConfig'),
+    workBoard: path(ROOTS.app, '/workBoard'),
     },
     employee: {
         root: path(ROOTS.app, '/employee'),
@@ -42,7 +42,6 @@ export const PATH_APP = {
     user: {
       root: path(ROOTS.app, '/user/*'),
     },
-
   configDiscount: {
     root: path(ROOTS.app, '/config-discount'),
   },

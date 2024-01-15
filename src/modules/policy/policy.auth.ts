@@ -14,13 +14,20 @@ const unit = 'unit';
 const productGroup='productGroup';
 const ranking = 'ranking';
 const medicine = 'medicine';
+const configDiscount = 'configDiscount';
 
 const RESOURCES = [
+  //Setting
+  configDiscount,
+
+  //User
   branch,
   // company,
   // employee,
   user,
   userGroup,
+
+
   // pharmacy,
   // bill,
   manuFacturer,
@@ -64,7 +71,9 @@ const POLICIES : PoliciesType = RESOURCES.reduce((policies, resource) => {
 
 export default POLICIES;
 const RESOURCE = (): ResourceType => {
-  const GROUP_WHSETTING : string[] = [];
+  const GROUP_WHSETTING: string[] = [
+    configDiscount,
+  ];
   
   const GROUP_USER : string[] = [
     user,

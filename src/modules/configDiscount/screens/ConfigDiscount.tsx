@@ -23,6 +23,8 @@ import toastr from "toastr";
 import { useDispatch } from "react-redux";
 import { useResetState } from "~/utils/hook";
 import { configDiscountSliceAction } from "../redux/reducer";
+import POLICIES from "~/modules/policy/policy.auth";
+import { useMatchPolicy } from "~/modules/policy/policy.hook";
 
 interface RowProps extends React.HTMLAttributes<HTMLTableRowElement> {
   "data-row-key": string;
@@ -89,6 +91,7 @@ const ConfigDiscount: React.FC = () => {
   const [dataSource, setDataSource] = useState([]);
   const [data, isLoading] = useGetConfigDiscounts();
   const [, updateConfig] = useUpdateConfigDiscount(() => resetState());
+  const canUpdate = useMatchPolicy(POLICIES.UPDATE_CONFIGDISCOUNT);
   useEffect(() => {
     if (data?.length) {
       setDataSource(data);
@@ -115,9 +118,9 @@ const ConfigDiscount: React.FC = () => {
   };
 
   const onDragEnd = ({ active, over }: DragEndEvent) => {
-    // if (!isMath) { // check permission
-    //   return;
-    // };
+    if (!canUpdate) { // check permission
+      return;
+    };
     if (active.id !== over?.id) {
       try {
         updateConfig(dataSource);
@@ -153,7 +156,12 @@ const ConfigDiscount: React.FC = () => {
       dataIndex: "status",
       align: "center",
       width: 100,
-      render: (value, rc, index) => <Checkbox onChange={(e : any) => handleCheckbox(e,rc,index)} checked={value} />,
+      render: (value, rc, index) => {
+        return <Checkbox
+          disabled={!canUpdate}
+          onChange={(e: any) => handleCheckbox(e, rc, index)} checked={value}
+        />
+      },
     },
   ];
 
