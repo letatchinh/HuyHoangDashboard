@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { InstanceModuleRedux } from "~/redux/instanceModuleRedux";
+// import { InstanceModuleRedux } from "~/redux/instanceModuleRedux";
 import { initStateSlice } from "~/redux/models";
+import { InstanceModuleRedux } from "../workSprint.modal";
 interface cloneInitState extends initStateSlice {
  // Add cloneInitState Type Here
 }

@@ -7,7 +7,7 @@ import { ResizableBox } from 'react-resizable';
 import Text from 'antd/lib/typography/Text';
 import { get } from 'lodash';
 import { useCreateWorkList, useDeleteWorkList, useGetListWorkConfig, useWorkListQueryParams } from '../workList.hook';
-import Menufilter from '../components/Menufilter';
+// import Menufilter from '../components/Menufilter';
 import { useGetWorkSprint } from '~/modules/workSprint/workSprint.hook';
 import MenuListBoard from '~/modules/workSprint/components/MenuListBoard';
 import BoardConfig from '../components/WorkListConfig';
@@ -24,7 +24,7 @@ import { useGetlistWorkBoardById } from '~/modules/workBoard/workBoard.hook';
 // import TaskTabDetail from './TaskTabs/TaskTabDetail';
 // import MenuFilter from './MenuFilter';
 
-const FormTaskContext = createContext();
+const FormTaskContext = createContext({});
 export const useFormTaskContext = () => useContext<FormTaskContextProps|any>(FormTaskContext);
 
 const WorkList = () => {
@@ -145,7 +145,7 @@ const [lengthList, setLength] = useState<number>(
           )}
         </Space>
         <Suspense fallback={<p>...</p>}>
-          <Menufilter />
+          {/* <Menufilter /> */}
         </Suspense>
         <hr />
         <div className="workflow" ref={workflowRef}>

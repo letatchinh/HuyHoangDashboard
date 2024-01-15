@@ -37,23 +37,24 @@ const BoardForm: React.FC<BoardFormProps> = ({ id, handleCloseForm }) => {
   const [listManagers, isLoadingManager] = useGetAllManagers();
   const [listStaffs, isLoadingStaffs] = useGetAllEmployee();
   const [listBoardGroup, isLoadingGetListBoard] =useGetListBoard()
-  const [listStaffsById, isLoadingStaffById] = useGetListEmployeeById(id);
-  const [listManagersByBoard, isLoadingManagerByBoard] = useGetListManagerById(id);
-  const listStaffFilter = useMemo(() => xorBy(listStaffs,listManagersByBoard,(item:any)=>item._id), [ listStaffs,listManagersByBoard]);
-  const initListStatusCreate:DataTypeStatusConfig | false = useMemo(() => {
-    if (listAllStatus?.length) {
-      return listAllStatus
-        .filter((status: DataTypeStatusConfig) => status.isDefault)
-        .map((status: DataTypeStatusConfig) => status._id);
-    }
-    return false;
-  }, [listAllStatus]);
+  // const [listStaffsById, isLoadingStaffById] = useGetListEmployeeById(id);
+  // const [listManagersByBoard, isLoadingManagerByBoard] = useGetListManagerById(id);
+  console.log(listStaffs,listManagers)
+  // const listStaffFilter = useMemo(() => xorBy(listStaffs,listManagersByBoard,(item:any)=>item._id), [ listStaffs,listManagersByBoard]);
+  // const initListStatusCreate:DataTypeStatusConfig | false = useMemo(() => {
+  //   if (listAllStatus?.length) {
+  //     return listAllStatus
+  //       .filter((status: DataTypeStatusConfig) => status.isDefault)
+  //       .map((status: DataTypeStatusConfig) => status._id);
+  //   }
+  //   return false;
+  // }, [listAllStatus]);
   
-  useEffect(() => {
-    if (!_id && initListStatusCreate) {
-      form.setFieldsValue({ listStatus: initListStatusCreate });
-    }
-  }, [initListStatusCreate, _id, form]);
+  // useEffect(() => {
+  //   if (!_id && initListStatusCreate) {
+  //     form.setFieldsValue({ listStatus: initListStatusCreate });
+  //   }
+  // }, [initListStatusCreate, _id, form]);
 
   useEffect(() => {
     if (_id) {
@@ -121,7 +122,7 @@ const BoardForm: React.FC<BoardFormProps> = ({ id, handleCloseForm }) => {
       label="Người quản lý"
       name="managers"
     >
-      {listManagersByBoard ? <Select
+      {listManagers ? <Select
         mode="multiple"
         showSearch
         loading={isLoadingManager}
@@ -141,14 +142,14 @@ const BoardForm: React.FC<BoardFormProps> = ({ id, handleCloseForm }) => {
       label="Danh sách thành viên"
       name="staffs"
     >
-      {listStaffsById ? <Select
+      {listStaffs ? <Select
         mode="multiple"
         loading={isLoadingStaffs}
         showSearch
         // autoComplete="off"
         filterOption={filterAcrossAccents}
       >
-        {listStaffFilter?.map(({ id, _id, fullName }:any) => (
+        {listStaffs?.map(({ id, _id, fullName }:any) => (
           <Option key={id || _id} value={id || _id}>
             {fullName}
           </Option>
@@ -165,30 +166,6 @@ const BoardForm: React.FC<BoardFormProps> = ({ id, handleCloseForm }) => {
       {() => (
         <Form.Item label="Cấu hình trạng thái" name="listStatus">
           <DebounceSelect debounceTimeout={300} initOptions={listAllStatus} fetchOptions={fetchOptions} />
-          {/* <Select
-            mode="multiple"
-            style={{ width: '100%' }}
-            placeholder="Vui lòng chọn trạng thái"
-            allowClear
-            showSearch
-            // autoComplete="off"
-            filterOption={filterAcrossAccents}
-          >
-            {transform(
-              // boardById?.listStatusConfig,
-              listAllStatus,
-              (result, value:any, key) => result.push(value),
-              []
-            )?.map((e) => (
-              <Select.Option
-                key={get(e, '_id', '')}
-                value={get(e, '_id', '')}
-                label={get(e, 'value', '')}
-              >
-                <p style={{ color: 'black' }}>{get(e, 'value')}</p>
-              </Select.Option>
-            ))}
-          </Select> */}
         </Form.Item>
       )}
     </Form.Item>

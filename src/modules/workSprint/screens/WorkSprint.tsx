@@ -1,10 +1,9 @@
 import React, { Suspense, createContext, lazy, memo, useCallback, useContext, useMemo, useState } from 'react';
 import { Route, Routes, useLocation, useMatch, useMatches, useNavigate } from 'react-router-dom';
-// import { useGetAllBoard } from '~/hooks';
 import { clone } from 'lodash';
-import SprintList from '../components/SprintList.js';
-import NavBoard from '../components/NavBoard.js';
-import { useGetlistWorkBoard } from '~/modules/workBoard/workBoard.hook.js';
+import NavBoard from '../components/NavBoard';
+import SprintList from '../components/SprintList';
+import { useGetlistWorkBoard } from '~/modules/workBoard/workBoard.hook';
 
 // const NavBoard = lazy(() => import('./NavBoard.js'))
 const SprintPageProvider = createContext<{

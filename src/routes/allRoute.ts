@@ -14,6 +14,7 @@ import UserGroupPage from "~/pages/Dashboard/UserGroup";
 import Unit from "~/pages/Dashboard/Unit";
 import MedicinePage from "~/pages/Dashboard/Medicine";
 import WorkBoardPage from "~/pages/Dashboard/WorkBoard";
+// import WorkSprintPage from "~/pages/Dashboard/WorkSprint";
 export const mainRoutes :PathRouteProps[] = [
   { path: PATH_APP.main.root, Component: Homepage },
   { path: PATH_APP.supplier.root, Component: Supplier },

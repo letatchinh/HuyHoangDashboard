@@ -90,7 +90,15 @@ export const useDeleteWorkTask = (callback?: any) => {
     loadingSelector: isSubmitLoadingSelector,
   });
 };
+// export const useCopyTask = () => {
+//   useSuccess(createSuccessSelector);
+//   useFailed(createFailedSelector, 'Đã thêm công việc thất bại');
 
+//     return useSubmit({
+//       loadingSelector: isSubmitLoadingSelector,
+//       action: workTaskActions.copyTask
+//     })
+// }
 export const useWorkTaskQueryParams = () => {
   const query = useQueryParams();
   const limit = query.get("limit") || 10;

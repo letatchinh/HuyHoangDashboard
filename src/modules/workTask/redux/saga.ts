@@ -45,8 +45,65 @@ function* deleteWorkTask({payload : id} : any) : any {
     yield put(workTaskActions.deleteFailed(error));
   }
 }
+// function* copyTask ({ payload }:any):any {
+//   try {
+//       const data = yield call(api.copyTask, payload);
+//       yield put({type:Types.COPY_TASK_SUCCESS,payload:{data:data?.data}});
+//       yield put({ type: Types.ADD_BOARD_CONFIG_ITEM_REQUEST, payload: { id: data?.data.boardConfigId } });
+//   } catch (error) {
+//       yield put({ type: Types.COPY_TASK_FAILED, payload: error });
+//   }
+// }
+// function* getHistoryActivityTaskById({ payload }: any):any {
+//   try {
+//       const data = yield call(api.getHistoryTaskById, payload.id);
+//       yield put({ type: Types.GET_HISTORY_ACTIVITY_SUCCESS, payload: data });
+//   } catch (error:any) {
+//       yield put({ type: Types.GET_HISTORY_ACTIVITY_FAILED, payload: error.message });
+//   }
+// }
 
+// function* onAssign({ payload }: any):any {
+//   try {
+//       const data = yield call(api.update, payload);
+//       yield put({ type: Types.ASSIGN_TASK_SUCCESS, payload: data });
+//   } catch (error) {
+//       yield put({ type: Types.ASSIGN_TASK_FAILED, payload: error });
+//   }
+// }
+// function* commentPushTask({payload}){
+//   try {
+//     const data = yield call(api.pushComment, payload);
+//     yield put({ type: Types.COMMENT_SUCCESS, payload: data });
+//   } catch (error:any) {
+//     yield put({ type: Types.COMMENT_FAILED, payload: error.message });
+//   }
+// }
 
+// function* pushEmtionTask({payload}:any):any{
+//   try {
+//     const data = yield call(api.pushEmotion, payload);
+//     yield put({ type: Types.EMOTION_SUCCESS, payload: data });
+//   } catch (error:any) {
+//     yield put({ type: Types.EMOTION_FAILED, payload: error.message });
+//   }
+// }
+// function* deleteCommentTask({payload}:any):any{
+//   try {
+//     const data = yield call(api.deleteComment, payload);
+//     yield put({ type: Types.COMMENT_DELETE_SUCCESS, payload: data });
+//   } catch (error:any) {
+//     yield put({ type: Types.COMMENT_DELETE_FAILED, payload: error.message });
+//   }
+// }
+// function* updateCommentTask({payload}){
+//   try {
+//     const data = yield call(api.updateCommentById, payload);
+//     yield put({ type: Types.COMMENT_UPDATE_SUCCESS, payload: data });
+//   } catch (error) {
+//     yield put({ type: Types.COMMENT_UPDATE_FAILED, payload: error.message });
+//   }
+// }
 export default function* workTaskSaga() {
   yield takeLatest(workTaskActions.getListRequest, getListWorkTask);
   yield takeLatest(workTaskActions.getByIdRequest, getByIdWorkTask);

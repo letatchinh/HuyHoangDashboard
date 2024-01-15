@@ -15,6 +15,7 @@ import { DataType } from '../workBoard.modal';
 import moment from 'moment';
 import BoardForm from '../components/BoardForm';
 import BoardFormDetail from '../components/BoardFormDetail';
+import { SearchOutlined } from '@ant-design/icons';
 // const BoardForm = lazy(() => import('../components/BoardForm.tsx'));
 // const BoardForm = lazy(() =>
 //   import('../components/BoardForm.tsx')
@@ -34,6 +35,7 @@ const WorkBoard: React.FC<WorkFlowProps> = () => {
   const [keyword, { onParamChange, setKeyword }] = useUpdateWorkBoardParams(query);
   const [isSubmitLoading, deleteWorkList] = useDeleteWorkBoard();
   const [board, isLoadingList] = useGetlistWorkBoard(query);
+  console.log(board)
   const [openDetail, setOpenDetail] = useState(false);
   const paging = useWorkBoardPaging();
   const { t }: any = useTranslate();
@@ -70,7 +72,13 @@ const WorkBoard: React.FC<WorkFlowProps> = () => {
       dataIndex: 'name',
       align: 'center',
       key: 'name',
-      render: (text: string) => <a>{text}</a>,
+      render: (value, record) => {
+        return (
+          <Button type="link" href={`/work-flow/sprint/${record._id}`} >
+            {value}
+          </Button>
+        );
+      }
     },
     {
       title: 'Người tạo',
@@ -87,22 +95,6 @@ const WorkBoard: React.FC<WorkFlowProps> = () => {
       render: (item, record, index) => moment(item)?.format('YYYY-MM-DD HH:mm'),
     },
     {
-      title: 'Thao tác',
-      dataIndex: 'status',
-      align: 'center',
-      width: '120px',
-      key: 'status',
-      render: (_, record) => (
-        <Switch
-          checked={record?.status === 'ACTIVE'}
-          onChange={(value: boolean) => {
-            // Update your logic here based on the switch value
-            // updateProductConfig({ status: value ? 'ACTIVE' : 'INACTIVE', id: record?._id });
-          }}
-        />
-      ),
-    },
-    {
       title: 'Xem chi tiết',
       key: 'detail',
       width: '130px',
@@ -110,7 +102,7 @@ const WorkBoard: React.FC<WorkFlowProps> = () => {
       render: (_, record) => (
         <Space size="small">
           <Button
-            size="small"
+            size="middle"
             type="link"
             style={{ background: '#1890ff', borderRadius: '10px', color: 'white' }}
             onClick={(e) => {
@@ -131,9 +123,9 @@ const WorkBoard: React.FC<WorkFlowProps> = () => {
           align: 'center',
           width: '180px',
           render: (_, record) => (
-            <Space size="middle">
+            <Space size="small">
               <Button type="primary" onClick={() => handleOpenUpdate(record?._id)}>
-                Xem chi tiết
+                Chinh sửa
               </Button>
               <Button style={{ color: 'red' }} onClick={() => handleDelete(record._id)}>
                 Xóa
@@ -154,7 +146,28 @@ const onSearch = (value: string) => {
       {/* <TabBranch> */}
         <div className="container-fluid">
           <Breadcrumb title={t("workBoard")} />
-          <SelectSearch onSearch = {onSearch} isShowButtonAdd={true} showSelect={false} />
+          {/* <SelectSearch onSearch = {onSearch} isShowButtonAdd={true} showSelect={false} /> 
+           */}
+            <Row justify="space-between">
+                  <Col span={8}>
+                    <Search
+                      style={{ height: '50px', padding: '5px 0px' }}
+                      placeholder="Nhập bất kì để tìm..."
+                      value={keyword}
+                      onChange={(e) => (setKeyword(e.target.value))
+                      
+                      }
+                      allowClear
+                      onSearch={onSearch}
+                      enterButton={<SearchOutlined />}
+                    />
+                  </Col>
+                  <Col>
+                    <Button onClick={()=>handleOpenFormCreate()} type="primary">
+                      Thêm mới
+                    </Button>
+                  </Col>
+                </Row>
           {/* {isLoadingList && !(board ?? []).length ? (
             <SkeletonTable
               columns={columns.concat(canUpdateAndDelete ? columnsAction : [])}
