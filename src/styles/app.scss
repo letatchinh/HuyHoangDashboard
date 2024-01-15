@@ -6,8 +6,16 @@
 @import "~/modules/auth/auth.style.scss";
 @import "~/components/Layout/LayoutVertical/index.scss";
 @import "../modules/configDiscount/configDiscount.style.scss";
+@import "../modules//employee/employee.style.scss";
+@import "../modules/user/user.style.scss";
+@import "../modules/userGroup/userGroup.style.scss";
 
 // Component
 @import "component/whiteBox";
+@import "component/page";
+@import "component/table";
+
+//Antd
+@import 'antd/modal.scss'
 
 

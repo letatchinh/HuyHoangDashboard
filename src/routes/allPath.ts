@@ -31,4 +31,11 @@ export const PATH_APP = {
     configDiscount: {
       root: path(ROOTS.app, '/config-discount'),
     },
+    employee: {
+        root: path(ROOTS.app, '/employee'),
+    },
+    user: {
+      root: path(ROOTS.app, '/user/*'),
+    },
+  
   };
