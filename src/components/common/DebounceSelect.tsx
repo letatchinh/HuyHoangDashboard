@@ -19,7 +19,7 @@ function DebounceSelect<
   } = any
 >({
   fetchOptions,
-  debounceTimeout = 800,
+  debounceTimeout = 500,
   initOptions,
   value,
   ...props
@@ -35,12 +35,12 @@ function DebounceSelect<
   }, [initOptions]);
   
   const debounceFetcher = useMemo(() => {
+    setFetching(true);
     const loadOptions = (value: string) => {
     
       fetchRef.current += 1;
       const fetchId = fetchRef.current;
       setOptions([]);
-      setFetching(true);
 
       fetchOptions(value).then((newOptions) => {
         
@@ -69,9 +69,7 @@ function DebounceSelect<
       showSearch
       style={{ minWidth: 300 }}
       onFocus={() => {
-        if(!initOptions){
           debounceFetcher('');
-        }
       }}
     />
   );

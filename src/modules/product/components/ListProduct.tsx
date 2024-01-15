@@ -1,0 +1,134 @@
+import { Modal } from "antd";
+import { ColumnsType } from "antd/es/table/InternalTable";
+import { get } from "lodash";
+import React, { useCallback, useState } from "react";
+import TableAnt from "~/components/Antd/TableAnt";
+import ActionColumn from "~/components/common/ActionColumn/index";
+import SelectSearch from "~/components/common/SelectSearch/SelectSearch";
+import WhiteBox from "~/components/common/WhiteBox";
+import {
+  useDeleteProduct,
+  useGetProducts,
+  useProductPaging,
+  useProductQueryParams,
+  useUpdateProductParams
+} from "../product.hook";
+import { TypePropsListProduct } from "../product.modal";
+import FormProduct from "./FormProduct";
+export default function ListProduct({
+  supplierId,
+}: TypePropsListProduct): React.JSX.Element {
+  const [openForm, setOpenForm] = useState(false);
+  const [id, setId]: any = useState();
+  // Hook
+  const [query] = useProductQueryParams(supplierId);
+  const [keyword, { setKeyword, onParamChange }] =
+    useUpdateProductParams(query);
+  const [data, isLoading] = useGetProducts(query);
+  console.log(data,'data');
+  
+  const [isSubmitLoading, onDelete] = useDeleteProduct();
+  const paging = useProductPaging();
+
+  const onOpenForm = useCallback((id?: string) => {
+    if (id) {
+      setId(id);
+    }
+    setOpenForm(true);
+  }, []);
+
+  const onCloseForm = useCallback(() => {
+    setId(null);
+    setOpenForm(false);
+  }, []);
+  const columns: ColumnsType = [
+    {
+      title: "Tên sản phẩm",
+      dataIndex: "name",
+      key: "name",
+    },
+    {
+      title: "Nhóm sản phẩm",
+      dataIndex: "productGroup",
+      key: "productGroup",
+      render(value, record, index) {
+        return get(value,'name')
+      },
+    },
+    {
+      title: "Hãng sản xuất",
+      dataIndex: "manufacturer",
+      key: "manufacturer",
+      render(value, record, index) {
+        return get(value,'name')
+      },
+    },
+    {
+      title: "Quy cách đóng gói",
+      dataIndex: "productDetail",
+      key: "productDetail.package",
+      render(value, record, index) {
+        return get(value,'package')
+      },
+    },
+    {
+      title: "Thành phần",
+      dataIndex: "productDetail",
+      key: "productDetail.element",
+      render(value, record, index) {
+        return get(value,'element')
+      },
+    },
+    {
+      title: "Thao tác",
+      dataIndex: "_id",
+      key: "_id",
+      align: "center",
+      render(_id, record, index) {
+        return <ActionColumn 
+        _id={_id}
+        onDetailClick={onOpenForm}
+        onDelete={onDelete}
+        />
+      },
+    },
+  ];
+
+  return (
+    <div>
+      <WhiteBox>
+      <SelectSearch 
+      isShowButtonAdd
+      showSelect={false}
+      handleOnClickButton={() => onOpenForm()}
+      onSearch={(value: any) => onParamChange({keyword: value?.trim()})
+      }
+      />
+
+        <TableAnt
+          dataSource={data}
+          loading={isLoading}
+          rowKey={(rc) => rc?._id}
+          columns={columns}
+          size="small"
+          pagination={{
+            ...paging,
+            onChange(page, pageSize) {
+              onParamChange({ page, limit: pageSize });
+            },
+          }}
+        />
+
+        <Modal
+          open={openForm}
+          destroyOnClose
+          width={1500}
+          footer={null}
+          onCancel={onCloseForm}
+        >
+          <FormProduct id={id} supplierId={supplierId} onCancel={onCloseForm} />
+        </Modal>
+      </WhiteBox>
+    </div>
+  );
+}

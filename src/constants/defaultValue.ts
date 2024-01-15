@@ -32,3 +32,5 @@ export const OptionStatus : OptionSelect[] = [
     label: 'KHĐ',
   }
 ];
+export const MAX_LIMIT = 200;
+

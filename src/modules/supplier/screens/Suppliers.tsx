@@ -4,12 +4,14 @@ import Search from "antd/es/input/Search";
 import { ColumnsType } from "antd/es/table/InternalTable";
 import { get } from "lodash";
 import { useCallback, useMemo, useState } from "react";
+import { Link } from "react-router-dom";
 import ModalAnt from "~/components/Antd/ModalAnt";
 import TableAnt from "~/components/Antd/TableAnt";
 import Breadcrumb from "~/components/common/Breadcrumb";
 import Vnd from "~/components/common/Vnd/index";
 import WhiteBox from "~/components/common/WhiteBox";
 import useTranslate from "~/lib/translation";
+import { PATH_APP } from "~/routes/allPath";
 import { concatAddress } from "~/utils/helpers";
 import TabSupplier from "../components/TabSupplier";
 import { STATUS_SUPPLIER } from "../constants";
@@ -67,6 +69,15 @@ export default function Supplier(): React.JSX.Element {
         key: "name",
       },
       {
+        title: "Danh sách sản phẩm",
+        dataIndex: "_id",
+        key: "listProduct",
+        align: "center",
+        render(_id) {
+          return <Link to={PATH_APP.product.root + "/" + _id}>Xem chi tiết sản phẩm</Link>
+        },
+      },
+      {
         title: "Số điện thoại",
         dataIndex: "phoneNumber",
         key: "phoneNumber",
@@ -104,11 +115,13 @@ export default function Supplier(): React.JSX.Element {
           return concatAddress(address);
         },
       },
+      
       {
         title: "Thao tác",
         dataIndex: "_id",
         key: "_id",
         align: "center",
+        fixed: 'right',
         render(_id) {
           return (
             <Row justify={"center"} align={"middle"} wrap={false}>
@@ -165,6 +178,7 @@ export default function Supplier(): React.JSX.Element {
           loading={isLoading}
           columns={columns}
           rowKey={(rc) => rc?._id}
+          scroll={{x : 1500}}
           stickyTop
           size="small"
           pagination={{

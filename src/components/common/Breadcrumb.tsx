@@ -1,8 +1,8 @@
 import { Breadcrumb as BreadcrumbAntd, Col, Row } from 'antd';
-import { useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 
-const Breadcrumb = ({ title, linkTo }: { title: string, linkTo?: string }) => {
+const Breadcrumb = ({ title, linkTo }: { title: any, linkTo?: string }) => {
     const items : {title : any}[]= useMemo(() => [
         {
           title: <Link className="text-decoration-none" to={'/'}>Trang chủ</Link>,

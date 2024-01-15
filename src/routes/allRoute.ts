@@ -15,6 +15,7 @@ import Unit from "~/pages/Dashboard/Unit";
 import MedicinePage from "~/pages/Dashboard/Medicine";
 import ConfigDiscountPage from "~/pages/Dashboard/ConfigDiscount";
 import Pharmacy from "~/pages/Dashboard/Pharmacy";
+import ProductPage from "~/pages/Dashboard/Product";
 export const mainRoutes :PathRouteProps[] = [
   { path: PATH_APP.main.root, Component: Homepage },
   { path: PATH_APP.supplier.root, Component: Supplier },
@@ -30,6 +31,8 @@ export const mainRoutes :PathRouteProps[] = [
   { path: PATH_APP.configDiscount.root, Component: ConfigDiscountPage },
   { path: PATH_APP.pharmacy.root, Component: Pharmacy },
  
+  { path: PATH_APP.product.edit, Component: ProductPage },
+
   { path: '/', Component: Homepage },
 ]
 

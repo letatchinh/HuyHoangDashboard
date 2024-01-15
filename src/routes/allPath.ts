@@ -50,4 +50,9 @@ export const PATH_APP = {
       detail: path(ROOTS.app, '/pharmacy/:id'),
     },
   
+
+    product : {
+      root: path(ROOTS.app, '/product'),
+      edit: path(ROOTS.app, '/product/:supplierId'),
+    },
   };

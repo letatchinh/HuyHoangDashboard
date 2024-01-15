@@ -1,4 +1,5 @@
-import { forIn, get, groupBy, keys,flattenDeep,compact,uniq } from "lodash";
+import { forIn, get, groupBy, keys, flattenDeep, compact, uniq } from "lodash";
+import { STATUS } from "~/constants/defaultValue";
 import { useState } from "react";
 import subvn from "~/core/subvn";
 
@@ -78,6 +79,14 @@ export const StringToSlug = (str: string) => {
   return result.replaceAll(/\s+/g, '-')
 };
 
+export const filterSelectWithLabel = (input: any, option: any) => {
+  return (
+    removeAccents(option?.label?.toLowerCase()).indexOf(
+      removeAccents(input?.toLowerCase())
+    ) >= 0
+  );
+};
+
 export const formatter = (value:number) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
 
 export const floorFormatter = (value:number) => `${Math.floor(value)}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
@@ -123,3 +132,5 @@ export const useExpandrowTableClick: () => UseExpandrowTableClick = () => {
 
   return { select, setSelect, onClick };
 };
+
+export const getActive = (list : []) => list?.filter((item:any) => get(item,'status') === STATUS.ACTIVE);
