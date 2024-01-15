@@ -1,6 +1,8 @@
 import { forIn, get, groupBy, keys, flattenDeep, compact, uniq } from "lodash";
 import { STATUS } from "~/constants/defaultValue";
 import { useState } from "react";
+import { STATUS } from "~/constants/defaultValue";
+
 import subvn from "~/core/subvn";
 
 export const getPaging = (response: any) => ({
@@ -92,6 +94,8 @@ export const formatter = (value:number) => `${value}`.replace(/\B(?=(\d{3})+(?!\
 export const floorFormatter = (value:number) => `${Math.floor(value)}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
 
 export const ceilFormatter = (value:number) => `${Math.ceil(value)}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+
+export const getActive = (list : []) => list?.filter((item:any) => get(item,'status') === STATUS.ACTIVE);
 interface UseExpandrowTableClick {
   select: string[];
   setSelect: React.Dispatch<React.SetStateAction<string[]>>;

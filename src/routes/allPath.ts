@@ -32,9 +32,14 @@ export const PATH_APP = {
     branch : {
       root: path(ROOTS.app, '/branch'),
     },
-  todoList: {
-    statusConfig: path(ROOTS.app, '/statusConfig'),
-    workBoard: path(ROOTS.app, '/workBoard'),
+
+    product : {
+      root: path(ROOTS.app, '/product'),
+      edit: path(ROOTS.app, '/product/:supplierId'),
+    },
+    todoList: {
+      statusConfig: path(ROOTS.app, '/statusConfig'),
+      workBoard: path(ROOTS.app, '/workBoard'),
     },
     employee: {
         root: path(ROOTS.app, '/employee'),
@@ -51,8 +56,4 @@ export const PATH_APP = {
     },
   
 
-    product : {
-      root: path(ROOTS.app, '/product'),
-      edit: path(ROOTS.app, '/product/:supplierId'),
-    },
   };

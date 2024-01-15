@@ -14,6 +14,7 @@ import manuFacturerModule from '~/modules/manufacturer';
 import productUnitModule from '~/modules/productUnit';
 import rankModule from '~/modules/ranking';
 import medicineModule from '~/modules/medicine';
+import productModule from '~/modules/product';
 import workBoardModule from '~/modules/workBoard';
 import pharmacyModule from '~/modules/pharmacy';
 import productModule from '~/modules/product';
@@ -34,6 +35,8 @@ export default function* rootSaga() {
     productUnitModule.redux.saga(),
     rankModule.redux.saga(),
     medicineModule.redux.saga(),
+    productModule.redux.saga(),
+
     workBoardModule.redux.saga(),
     pharmacyModule.redux.saga(),
     productModule.redux.saga(),

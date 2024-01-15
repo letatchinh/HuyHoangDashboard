@@ -10,7 +10,7 @@ const Breadcrumb = ({ title, linkTo }: { title: any, linkTo?: string }) => {
         {
           title : <Link className="text-decoration-none" to={`${linkTo}` ?? '/'}>{title}</Link>,
         },
-      ],[title])
+      ],[linkTo, title])
   return (
       <div className='pb-4'>
         <div className="d-flex align-items-center justify-content-between">

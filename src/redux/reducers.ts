@@ -19,6 +19,7 @@ import manufacturerModule from '~/modules/manufacturer';
 import productUnitModule from '~/modules/productUnit';
 import rankingModule from '~/modules/ranking';
 import medicineModule from '~/modules/medicine';
+import productModule from '~/modules/product';
 import workBoardModule from '~/modules/workBoard';
 import productModule from '~/modules/product';
 const authPersistConfig = {
@@ -50,6 +51,7 @@ const rootReducer = combineReducers({
     productUnit:productUnitModule.redux.reducer,
     ranking:rankingModule.redux.reducer,
     medicine:medicineModule.redux.reducer,
+    product:productModule.redux.reducer,
     workBoard:workBoardModule.redux.reducer,
     pharmacy: pharmacyModule.redux.reducer,
     product:productModule.redux.reducer,

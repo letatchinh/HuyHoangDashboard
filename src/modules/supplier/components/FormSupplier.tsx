@@ -12,6 +12,11 @@ import { useCallback } from "react";
 import { useEffect } from "react";
 import RenderLoading from "~/components/common/RenderLoading";
 import { validatePhoneNumberAntd } from "~/utils/validate";
+import { GiftTwoTone } from "@ant-design/icons";
+import DiscountList from "~/modules/product/components/DiscountList";
+import ProductModule from "~/modules/product";
+import { get } from "lodash";
+import { convertSubmitData } from "../supplier.service";
 
 const FormSupplier = ({
   id,
@@ -26,12 +31,14 @@ const FormSupplier = ({
   const [isSubmitLoading, onCreate] = useCreateSupplier(onCancel);
 
   useResetAction();
+
   const onFinish = useCallback(
     (values: FieldType) => {
+      const submitData = convertSubmitData(values)
       if (!id) {
-        onCreate(values);
+        onCreate(submitData);
       } else {
-        onUpdate({ ...values, _id: id });
+        onUpdate({ ...submitData, _id: id });
       }
     },
     [id, onCreate, onUpdate]
@@ -42,10 +49,27 @@ const FormSupplier = ({
       form.setFieldsValue(supplier);
     }
   }, [form, id, supplier]);
+
+  const onValuesChange = (value: any, values: any) => {
+    const key = Object.keys(value)[0];
+    switch (key) {
+      case "cumulativeDiscount":
+        const cumulativeDiscount = ProductModule.service.onDiscountChange(values[key]);
+        console.log(cumulativeDiscount,'cumulativeDiscount');
+        
+        form.setFieldsValue({
+          cumulativeDiscount,
+        });
+        break;
+
+      default:
+        break;
+    }
+  };
   return (
     <div className="flex-column-center">
       <Divider>
-        <h5 className="text-center">{id ? "Cập nhật" : "Tạo mới"} chi nhánh</h5>
+        <h5 className="text-center">{id ? "Cập nhật" : "Tạo mới"} nhà cung cấp</h5>
       </Divider>
       <Form
         form={form}
@@ -53,6 +77,7 @@ const FormSupplier = ({
         wrapperCol={{ sm: 24, md: 24, lg: 16, xl: 16 }}
         labelAlign="left"
         onFinish={onFinish}
+        onValuesChange={onValuesChange}
       >
         <BaseBorderBox title={"Thông tin"}>
           <Row justify={"space-between"} align="middle" gutter={48}>
@@ -88,6 +113,15 @@ const FormSupplier = ({
             allowPhoneNumber={false}
             allowEmail={false}
           />
+        </BaseBorderBox>
+        <BaseBorderBox
+          title={
+            <span>
+              Chiết khấu <GiftTwoTone />
+            </span>
+          }
+        >
+          <DiscountList target={ProductModule.constants.TARGET.supplier} loading={isLoading} form={form} />
         </BaseBorderBox>
         <div className="btn-footer">
           <Button

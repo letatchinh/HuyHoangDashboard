@@ -65,7 +65,7 @@ const ManufacturerForm:React.FC<Props>=({id,callBack,updateManufacturer})=>{
         <Form.Item<FieldType> label="Mô tả" name="description">
           <TextArea rows={4}/>
         </Form.Item>
-        <Form.Item wrapperCol={{ offset: 8, span: 12 }}>
+        <Form.Item style={{ width: '550px'}} wrapperCol={{ offset: 8, span: 12 }}>
           <Button type="primary" htmlType="submit">
             {id ? 'Cập nhật' : 'Thêm mới'}
           </Button>

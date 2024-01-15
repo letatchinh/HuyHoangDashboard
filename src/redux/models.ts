@@ -45,6 +45,7 @@ export type initStateSlice<T=any> = {
     productUnit:'productUnit',
     ranking:'ranking',
     medicine:'medicine',
+    product:'product',
     workBoard:'workBoard',
     pharmacy: "pharmacy",
     product:'product',

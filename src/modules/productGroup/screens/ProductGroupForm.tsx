@@ -68,7 +68,7 @@ const ProductConfigForm: React.FC<Props> = ({ id, callBack,updateProductConfig }
         <Form.Item<FieldType> label="Ghi chú" name="note">
           <TextArea rows={4}/>
         </Form.Item>
-        <Form.Item wrapperCol={{ offset: 8, span: 12 }}>
+        <Form.Item style={{ width: '950px'}} wrapperCol={{ offset: 8, span: 12 }}>
           <Button type="primary" htmlType="submit">
             {id ? 'Cập nhật' : 'Thêm mới'}
           </Button>

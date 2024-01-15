@@ -13,6 +13,7 @@ import UserPage from "~/pages/Dashboard/User";
 import UserGroupPage from "~/pages/Dashboard/UserGroup";
 import Unit from "~/pages/Dashboard/Unit";
 import MedicinePage from "~/pages/Dashboard/Medicine";
+import ProductPage from "~/pages/Dashboard/Product";
 import ConfigDiscountPage from "~/pages/Dashboard/ConfigDiscount";
 import Pharmacy from "~/pages/Dashboard/Pharmacy";
 import ProductPage from "~/pages/Dashboard/Product";
@@ -25,6 +26,8 @@ export const mainRoutes :PathRouteProps[] = [
   { path: PATH_APP.worldPharma.unit, Component:Unit  },
   { path: PATH_APP.worldPharma.medicine, Component:MedicinePage  },
   { path: PATH_APP.branch.root, Component: Branch },
+  { path: PATH_APP.product.edit, Component: ProductPage },
+
   { path: PATH_APP.todoList.statusConfig, Component: StatusConfig },
   { path: PATH_APP.employee.root, Component: EmployeePage },
   { path: PATH_APP.user.root, Component: UserPage },

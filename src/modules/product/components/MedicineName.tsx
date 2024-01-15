@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Form, AutoComplete, Table } from 'antd';
+import { AutoComplete, Form, Table } from 'antd';
+import { useEffect, useRef, useState } from 'react';
 import { useGetListMeddicine } from '~/modules/medicine/medicine.hook';
 
 let timeOut : any = null;
