@@ -1,24 +1,35 @@
+import { GiftTwoTone } from "@ant-design/icons";
 import { Button, Col, Form, Input, Row, Select } from "antd";
+import dayjs from "dayjs";
 import { get, keys } from "lodash";
 import React, { useEffect, useMemo } from "react";
 import BaseBorderBox from "~/components/common/BaseBorderBox/index";
 import RenderLoading from "~/components/common/RenderLoading";
-import { PRODUCT_TYPE, PRODUCT_TYPE_VI, SALE_LEVEL, SALE_LEVEL_VI } from "../constants";
+import {
+  PRODUCT_TYPE,
+  PRODUCT_TYPE_VI,
+  SALE_LEVEL,
+  SALE_LEVEL_VI,
+  TARGET,
+  TYPE_DISCOUNT
+} from "../constants";
 import {
   useCreateProduct,
   useGetProduct,
   useResetAction,
   useUpdateProduct
 } from "../product.hook";
-import { cumulativeDiscountType, FieldTypeFormProduct, TypePropsFormProduct } from "../product.modal";
+import {
+  FieldTypeFormProduct,
+  TypePropsFormProduct
+} from "../product.modal";
+import { convertInitProduct, convertSubmitData, onDiscountChange } from "../product.service";
+import DiscountList from "./DiscountList";
 import MedicineName from "./MedicineName";
 import SelectCountry from "./SelectCountry";
 import SelectManufacturer from "./SelectManufacturer";
 import SelectProductGroup from "./SelectProductGroup";
 import Variants from "./Variants";
-import DiscountList from "./DiscountList";
-import { GiftTwoTone } from "@ant-design/icons";
-import dayjs from "dayjs";
 const CLONE_PRODUCT_TYPE_VI: any = PRODUCT_TYPE_VI;
 const CLONE_SALE_LEVEL_VI: any = SALE_LEVEL_VI;
 const layoutRow = {
@@ -36,28 +47,12 @@ export default function FormProduct({
   const [product, isLoading] = useGetProduct(id);
   useResetAction();
   const onFinish = (values: FieldTypeFormProduct) => {
-    const cumulativeDiscount = values?.cumulativeDiscount?.map((item : cumulativeDiscountType) => {
-      const applyTimeSheet = get(item,'applyTimeSheet');
-      return {
-        ...item,
-        applyTimeSheet : {
-          ...applyTimeSheet,
-          gte : dayjs.isDayjs(get(applyTimeSheet,'gte')) ? dayjs(get(applyTimeSheet,'gte')).format("YYYY-MM-DD") : null,
-          lte : dayjs.isDayjs(get(applyTimeSheet,'lte')) ? dayjs(get(applyTimeSheet,'lte')).format("YYYY-MM-DD") : null,
-        }
-      }
-    });
-    const submitData = {
-      ...values,
-      cumulativeDiscount,
-      supplierId,
-    };
-    console.log(submitData, "submitData");
-    // if (id) {
-    //   onUpdate({ ...submitData, _id: id });
-    // } else {
-    //   onCreate(submitData);
-    // }
+    const submitData = convertSubmitData({values,supplierId});
+    if (id) {
+      onUpdate({ ...submitData, _id: id });
+    } else {
+      onCreate(submitData);
+    }
   };
 
   const optionsType = useMemo(
@@ -79,32 +74,25 @@ export default function FormProduct({
 
   useEffect(() => {
     if (product && id) {
-      form.setFieldsValue(product);
+    const initProduct = convertInitProduct(product);
+      form.setFieldsValue(initProduct);
     }
   }, [product, id, form]);
 
-  const onValuesChange = (value : any,values : FieldTypeFormProduct) => {
+  const onValuesChange = (value: any, values: FieldTypeFormProduct) => {
     const key = Object.keys(value)[0];
     switch (key) {
-      case 'cumulativeDiscount':
-        const newCumulativeDiscount = values[key]?.map((item : any) => {
-          const condition = get(item,'condition');
-          return {
-            ...item,
-            condition : {...condition,isRanger : get(condition,'lte') > 0},
-          }
-        });
+      case "cumulativeDiscount":
+        const cumulativeDiscount = onDiscountChange(values[key])
         form.setFieldsValue({
-          cumulativeDiscount : newCumulativeDiscount
-        })
+          cumulativeDiscount,
+        });
         break;
-    
+
       default:
         break;
     }
-    
-    
-  }
+  };
   return (
     <div>
       <h5>Tạo mới thuốc</h5>
@@ -132,10 +120,7 @@ export default function FormProduct({
               {RenderLoading(isLoading, <MedicineName form={form} />)}
             </Col>
             <Col span={12}>
-              <Form.Item<FieldTypeFormProduct>
-                label="Hình thức"
-                name="type"
-              >
+              <Form.Item<FieldTypeFormProduct> label="Hình thức" name="type">
                 {RenderLoading(isLoading, <Select options={optionsType} />)}
               </Form.Item>
             </Col>
@@ -146,7 +131,10 @@ export default function FormProduct({
                 label="Mức độ đẩy hàng"
                 name="saleLevel"
               >
-                {RenderLoading(isLoading, <Select options={optionsSaleLevel} />)}
+                {RenderLoading(
+                  isLoading,
+                  <Select options={optionsSaleLevel} />
+                )}
               </Form.Item>
             </Col>
           </Row>
@@ -173,30 +161,34 @@ export default function FormProduct({
           </Row>
           <Row {...layoutRow}>
             <Col span={12}>
-            <SelectCountry isLoading={isLoading}/>
+              <SelectCountry isLoading={isLoading} />
             </Col>
             <Col span={12}>
-            <SelectManufacturer isLoading={isLoading} product={product}/>
+              <SelectManufacturer isLoading={isLoading} product={product} />
             </Col>
           </Row>
 
           <Row {...layoutRow}>
-          
             <Col span={12}>
-              <SelectProductGroup product={product} isLoading={isLoading}/>
+              <SelectProductGroup product={product} isLoading={isLoading} />
             </Col>
           </Row>
         </BaseBorderBox>
 
         <BaseBorderBox title={"Đơn vị"}>
-          <Col style={{paddingBottom : 10}} span={24}>
+          <Col style={{ paddingBottom: 10 }} span={24}>
             <Variants form={form} isLoading={isLoading} />
           </Col>
         </BaseBorderBox>
 
-        <BaseBorderBox title={<span>Chiết khấu <GiftTwoTone /></span>}>
-            <DiscountList product={product} loading={isLoading} form={form}/>
-
+        <BaseBorderBox
+          title={
+            <span>
+              Chiết khấu <GiftTwoTone />
+            </span>
+          }
+        >
+          <DiscountList target={TARGET.product} loading={isLoading} form={form} />
         </BaseBorderBox>
 
         <Row justify={"end"} gutter={16}>

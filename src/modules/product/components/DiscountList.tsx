@@ -19,7 +19,6 @@ import BaseBorderBox from "~/components/common/BaseBorderBox/index";
 import RenderLoading from "~/components/common/RenderLoading";
 import { useGetListProductUnitNoParam } from "~/modules/productUnit/productUnit.hook";
 import {
-  TARGET,
   TYPE_DISCOUNT,
   TYPE_DISCOUNT_VI,
   TYPE_REWARD,
@@ -29,17 +28,22 @@ import {
 import { TypePropsDiscountList } from "../product.modal";
 const CLONE_TYPE_DISCOUNT_VI: any = TYPE_DISCOUNT_VI;
 const CLONE_TYPE_REWARD_VI: any = TYPE_REWARD_VI;
-const defaultValueDiscount = {
-  typeDiscount: TYPE_DISCOUNT.CORE,
-  valueType: TYPE_VALUE.VALUE,
-  typeReward: TYPE_REWARD.VALUE,
-  target: TARGET.product,
-};
+
 export default function DiscountList({
-  product,
   loading,
   form,
+  target,
 }: TypePropsDiscountList): React.JSX.Element {
+  const defaultValueDiscount = useMemo(
+    () => ({
+      typeDiscount: TYPE_DISCOUNT["DISCOUNT.CORE"],
+      valueType: TYPE_VALUE.VALUE,
+      typeReward: TYPE_REWARD.VALUE,
+      target,
+    }),
+    [target]
+  );
+
   const [units, isLoading] = useGetListProductUnitNoParam();
   const [isSelectUnit, setIsSelectUnit] = useState(false);
   const optionsTypeDiscount = useMemo(
@@ -65,7 +69,7 @@ export default function DiscountList({
         return (
           <>
             {fields.map(({ key, name, fieldKey, ...restField }: any, index) => (
-              <>
+              <React.Fragment key={key}>
                 <Form.Item hidden name={[name, "target"]} />
                 <Form.Item hidden name={[name, "targetId"]} />
                 <Divider orientation="left">Chiết khấu {index + 1}</Divider>
@@ -109,32 +113,91 @@ export default function DiscountList({
                         </BaseBorderBox>
                       </Col>
                       {/* Giá trị Chiết khấu */}
-                      <Col span={9}>
+                      <Col lg={10} md={24} sm={24}>
                         <BaseBorderBox title={"Giá trị chiết khấu"}>
+                          <Form.Item shouldUpdate noStyle>
+                            {() =>
+                              form.getFieldValue([
+                                "cumulativeDiscount",
+                                name,
+                                "typeDiscount",
+                              ]) === TYPE_DISCOUNT.LK && (
+                                <Form.Item
+                                  style={{ marginBottom: 0 }}
+                                  {...restField}
+                                  label={"Loại thưởng"}
+                                  name={[name, "typeReward"]}
+                                >
+                                  {RenderLoading(
+                                    loading,
+                                    <Radio.Group
+                                      size="small"
+                                      options={optionsTypeReward}
+                                      optionType="button"
+                                      buttonStyle="solid"
+                                    />
+                                  )}
+                                </Form.Item>
+                              )
+                            }
+                          </Form.Item>
                           <Row>
                             <Col flex={1}>
-                              <Form.Item
-                                {...restField}
-                                label={"Giá trị"}
-                                name={[name, "value"]}
-                                rules={[
-                                  {
-                                    required: true,
-                                    message: "Xin vui nhập!",
-                                  },
-                                ]}
-                              >
-                                {RenderLoading(
-                                  loading,
-                                  <InputNumberAnt
-                                    min={0}
-                                    style={{ width: "100%" }}
-                                  />
+                              <Form.Item shouldUpdate noStyle>
+                                {({getFieldValue}) => getFieldValue([
+                                "cumulativeDiscount",
+                                name,
+                                "typeReward",
+                              ]) === TYPE_REWARD.VALUE && (
+                                  <Form.Item
+                                    {...restField}
+                                    label={"Giá trị"}
+                                    name={[name, "value"]}
+                                    rules={[
+                                      {
+                                        required: true,
+                                        message: "Xin vui nhập!",
+                                      },
+                                      {
+                                        type: "number",
+                                        max:
+                                          form.getFieldValue([
+                                            "cumulativeDiscount",
+                                            name,
+                                            "valueType",
+                                          ]) === TYPE_VALUE.PERCENT
+                                            ? 100
+                                            : Infinity,
+                                        message: "Vui lòng nhập bé hơn 100%",
+                                      },
+                                    ]}
+                                  >
+                                    {RenderLoading(
+                                      loading,
+                                      <InputNumberAnt
+                                        max={
+                                          form.getFieldValue([
+                                            "cumulativeDiscount",
+                                            name,
+                                            "valueType",
+                                          ]) === TYPE_VALUE.PERCENT
+                                            ? 100
+                                            : Infinity
+                                        }
+                                        style={{ width: "100%" }}
+                                      />
+                                    )}
+                                  </Form.Item>
                                 )}
                               </Form.Item>
                             </Col>
                             <Col span={8}>
-                              <Form.Item
+                              <Form.Item shouldUpdate noStyle>
+                                {({getFieldValue}) => getFieldValue([
+                                "cumulativeDiscount",
+                                name,
+                                "typeReward",
+                              ]) === TYPE_REWARD.VALUE && <Form.Item
                                 {...restField}
                                 name={[name, "valueType"]}
                               >
@@ -153,34 +216,10 @@ export default function DiscountList({
                                     </Radio.Button>
                                   </Radio.Group>
                                 )}
+                              </Form.Item>}
                               </Form.Item>
                             </Col>
                           </Row>
-                          <Form.Item shouldUpdate noStyle>
-                            {() =>
-                              form.getFieldValue([
-                                "cumulativeDiscount",
-                                name,
-                                "typeDiscount",
-                              ]) !== TYPE_DISCOUNT.CORE && (
-                                <Form.Item
-                                  style={{ marginBottom: 0 }}
-                                  {...restField}
-                                  label={"Loại phần thưởng"}
-                                  name={[name, "typeReward"]}
-                                >
-                                  {RenderLoading(
-                                    loading,
-                                    <Radio.Group
-                                      options={optionsTypeReward}
-                                      optionType="button"
-                                      buttonStyle="solid"
-                                    />
-                                  )}
-                                </Form.Item>
-                              )
-                            }
-                          </Form.Item>
                         </BaseBorderBox>
                       </Col>
                       {/* Điều kiện */}
@@ -191,9 +230,13 @@ export default function DiscountList({
                               "cumulativeDiscount",
                               name,
                               "typeDiscount",
-                            ]) !== TYPE_DISCOUNT.CORE && (
+                            ]) === TYPE_DISCOUNT.LK && (
                               <BaseBorderBox title={"Điều kiện"}>
-                                <Row style={{marginBottom : 5}} gutter={8} align={"middle"}>
+                                <Row
+                                  style={{ marginBottom: 5 }}
+                                  gutter={8}
+                                  align={"middle"}
+                                >
                                   <Col span={7}>
                                     <Form.Item
                                       style={{ marginBottom: 0 }}
@@ -328,7 +371,7 @@ export default function DiscountList({
                                     <Form.Item
                                       style={{ marginBottom: 0 }}
                                       {...restField}
-                                      label={"lặp hàng tháng"}
+                                      label={"Dùng lại"}
                                       name={[
                                         name,
                                         "applyTimeSheet",
@@ -353,7 +396,7 @@ export default function DiscountList({
                     />
                   </Col>
                 </Row>
-              </>
+              </React.Fragment>
             ))}
             <Button
               onClick={() => add(defaultValueDiscount)}

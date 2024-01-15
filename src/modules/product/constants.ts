@@ -8,13 +8,13 @@ export const PRODUCT_TYPE_VI = {
 } as const;
 
 export const TYPE_DISCOUNT = {
-  CORE : "CORE",
-  SOFT : "SOFT",
+  'DISCOUNT.CORE': "DISCOUNT.CORE",
+  'DISCOUNT.SOFT' : "DISCOUNT.SOFT",
   LK : "LK",
 }
 export const TYPE_DISCOUNT_VI = {
-  CORE : "Chiết khấu cứng",
-  SOFT : "Chiết khấu mềm",
+  'DISCOUNT.CORE' : "Chiết khấu cứng",
+  'DISCOUNT.SOFT' : "Chiết khấu mềm",
   LK : "Luỹ kế",
 }
 

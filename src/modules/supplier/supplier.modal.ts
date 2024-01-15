@@ -1,5 +1,5 @@
 import { initStateSlice } from "~/redux/models";
-
+import { cumulativeDiscountType } from "../product/product.modal";
 export type propsTypeFormSupplier = {
   id? : any,
   onCancel : () => void,
@@ -23,6 +23,7 @@ export type addressType = {
     name: string;
     phoneNumber: string;
     address: addressType;
+    cumulativeDiscount : cumulativeDiscountType[]
   };
 
 

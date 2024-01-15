@@ -61,7 +61,7 @@ export type FieldTypeFormProduct = {
   }
 
   export type TypePropsDiscountList = {
-    product?: any,
     loading? : any,
-    form : any
+    form : any,
+    target : string
   }
