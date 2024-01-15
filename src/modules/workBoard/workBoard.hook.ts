@@ -112,7 +112,7 @@ const {
         param: query,
       })
   }
-  export const useGetlistWorkBoardById = (id?: string) => {
+  export const useGetBoardById = (id?: string) => {
     console.log(id)
     return useFetchByParam({
       action: workBoardActions.getByIdRequest,

@@ -6,7 +6,7 @@ import { BOARD_SECURITY } from '../constants';
 import { useEffect } from 'react';
 import {
     useCreateWorkBoard,
-    useGetlistWorkBoardById,
+    useGetBoardById,
     useUpdateWorkBoard,
     useGetlistWorkBoard,
     useGetListBoard,
@@ -24,7 +24,7 @@ interface BoardFormDetailProps {
 
 const BoardFormDetail: React.FC<BoardFormDetailProps> = ({ id }) => {
   const [form] = Form.useForm();
-  const [boardById, isLoading] = useGetlistWorkBoardById(id);
+  const [boardById, isLoading] = useGetBoardById(id);
   const [listStaffsById, isLoadingStaff] = useGetListStaffsByIdBoard(id);
   const [listBoardGroup] = useGetListBoard();
   const [listManagersByBoard, isLoadingManagerByBoard] = useGetListManagersByIdBoard(id);

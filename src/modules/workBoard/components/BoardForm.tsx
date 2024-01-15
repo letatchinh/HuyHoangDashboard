@@ -3,7 +3,7 @@ import { Button, Col, Form, Input, Radio, Row, Select, Skeleton } from 'antd';
 import { get, transform, xorBy } from 'lodash';
 import {
   useCreateWorkBoard,
-  useGetlistWorkBoardById,
+  useGetBoardById,
   useUpdateWorkBoard,
   useGetListBoard,
   useGetListManagersByIdBoard,
@@ -31,7 +31,7 @@ const BoardForm: React.FC<BoardFormProps> = ({ id, handleCloseForm }) => {
   const { Option } = Select;
   const [isSubmitLoading, createBoard] = useCreateWorkBoard();
   const [isSubmit, updateBoard] = useUpdateWorkBoard();
-  const [boardById, isLoading] = useGetlistWorkBoardById(id);
+  const [boardById, isLoading] = useGetBoardById(id);
   const [query] = useStatusConfigQueryParams();
   const [listAllStatus] = useGetListStatusConfig(query);
   const [listManagers, isLoadingManager] = useGetListManagers();
