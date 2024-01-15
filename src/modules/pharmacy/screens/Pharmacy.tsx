@@ -77,10 +77,9 @@ const ColumnActions = ({ _id, deletePharmacy, onOpenForm }: propsType) => {
 
 export default function Pharmacy() {
   const { t }: any = useTranslate();
-  const [pharmacies, isLoading] = useGetPharmacies();
   const [query] = usePharmacyQueryParams();
-  const [keyword, { setKeyword, onParamChange }] =
-    useUpdatePharmacyParams(query);
+  const [keyword, { setKeyword, onParamChange }] = useUpdatePharmacyParams(query);
+  const [pharmacies, isLoading] = useGetPharmacies(query);
   const [, updatePharmacy] = useUpdatePharmacy();
   const [, deletePharmacy] = useDeletePharmacy();
   const [pharmacyId, setPharmacyId] = useState(null);
@@ -104,18 +103,19 @@ export default function Pharmacy() {
       title: "Mã nhà thuốc",
       dataIndex: "code",
       key: "code",
-      width: 150,
+      width: 120,
     },
     {
       title: "Tên nhà thuốc",
-      dataIndex: "fullName",
-      key: "fullName",
+      dataIndex: "name",
+      key: "name",
+      width: 180,
     },
     {
       title: "Số điện thoại",
       dataIndex: "phoneNumber",
       key: "phoneNumber",
-      width: 150,
+      width: 120,
     },
     {
       title: "Địa chỉ",
@@ -130,7 +130,7 @@ export default function Pharmacy() {
       title: "Ngày tạo",
       dataIndex: "createdAt",
       key: "createdAt",
-      width: 150,
+      width: 120,
       render: (record) => {
         return moment(record).format("DD/MM/YYYY");
       },
@@ -160,7 +160,7 @@ export default function Pharmacy() {
     {
       title: "Thao tác",
       key: "action",
-      width: 200,
+      width: 150,
       align : 'center',
       render: (record) => {
         return (
@@ -227,10 +227,10 @@ export default function Pharmacy() {
         </Col>
       </Row>
       <Space style={{ marginBottom: 20 }}>
-        <Typography style={{ fontSize: 18, marginRight: 20 }}>
+        <Typography style={{ fontSize: 14, marginRight: 20 }}>
           Phân loại trạng thái theo :
         </Typography>
-        <Row gutter={20}>
+        <Row gutter={14}>
           <Radio.Group
             onChange={onChange}
             optionType="button"

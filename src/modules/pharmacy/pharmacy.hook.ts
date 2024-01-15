@@ -38,12 +38,13 @@ const {
 
 export const usePharmacyPaging = () => useSelector(pagingSelector);
 
-export const useGetPharmacies = () => {
-  return useFetch({
+export const useGetPharmacies = (query : any) => {
+  return useFetchByParam({
     action: pharmacySliceAction.getListRequest,
     loadingSelector: loadingSelector,
     dataSelector: listSelector,
     failedSelector: getListFailedSelector,
+    param: query,
   });
 };
 
