@@ -1,0 +1,24 @@
+.custom-table__actions {
+  display: flex;
+  width: 60px;
+  align-items: center;
+  p {
+    cursor: pointer;
+    color: #1890ff;
+    padding: 0px;
+    margin-bottom: 0px;
+
+    &:not(:last-child) {
+      margin-right: 10px;
+    }
+  }
+
+  a {
+    margin-right: 10px;
+  };
+};
+.custom-table{
+  &__shadow{
+      box-shadow: $default-box-shadow;
+  };
+}

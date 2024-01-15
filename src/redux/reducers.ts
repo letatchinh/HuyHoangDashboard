@@ -7,6 +7,10 @@ import supplierModule from '~/modules/supplier';
 import branchModule from '~/modules/branch';
 import pharmacyModule from '~/modules/pharmacy';
 import geoModule from '~/modules/geo';
+import employeeModule from '~/modules/employee';
+import userModule from '~/modules/user';
+import userGroupModule from '~/modules/userGroup';
+import policy from '~/modules/policy';
 const authPersistConfig = {
     key: 'auth',
     storage: localStorage,
@@ -25,7 +29,10 @@ const rootReducer = combineReducers({
     supplier: supplierModule.redux.reducer,
     branch: branchModule.redux.reducer,
     geo: geoModule.redux.reducer,
-    pharmacy: pharmacyModule.redux.reducer
-
+    pharmacy: pharmacyModule.redux.reducer,
+    employee: employeeModule.redux.reducer,
+    user: userModule.redux.reducer,
+    userGroup: userGroupModule.redux.reducer,
+    policy: policy.redux.reducer,
 });
 export default rootReducer

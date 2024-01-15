@@ -33,4 +33,11 @@ export const PATH_APP = {
       detail: path(ROOTS.app, '/pharmacy/:id'),
     },
     
+    employee: {
+        root: path(ROOTS.app, '/employee'),
+    },
+    user: {
+      root: path(ROOTS.app, '/user/*'),
+    },
+  
   };
