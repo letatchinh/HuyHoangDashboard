@@ -7,6 +7,7 @@ import { concatAddress } from "~/utils/helpers";
 import {
   useBranchPaging, useGetBranches
 } from "../branch.hook";
+import SelectSearch from "~/components/common/SelectSearch/SelectSearch";
 const columns : ColumnsType = [
   {
     title : "Tên chi nhánh",
@@ -28,13 +29,16 @@ export default function Branch() {
   // const [keyword, { setKeyword, onParamChange }] = useUpdateBranchParams(query);
   const [data, isLoading] = useGetBranches();
   const paging = useBranchPaging();
-  console.log(data,'data');
   return (
     <div>
       <Breadcrumb title={t("list-branch")} />
       <WhiteBox>
+        <SelectSearch
+        showSelect = {false}
+        isShowButtonAdd
+        />
         <TableAnt
-          dataSource={data}
+          dataSource={[]}
           loading={isLoading}
           rowKey={rc => rc?._id}
           columns={columns}

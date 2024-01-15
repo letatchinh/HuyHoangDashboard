@@ -1,0 +1,30 @@
+.auth--login {
+  padding: 3rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 50px;
+}
+.auth--login__logo {
+  width: 180px;
+}
+.auth--login__welcome {
+  color: #5b73e8 !important;
+}
+.auth--login__box {
+  width: 540px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.auth--login__form {
+  width: 90%;
+  display: flex;
+  flex-direction: column;
+}
+.auth--login__form > div {
+  margin-bottom: 10px !important;
+}
+.auth--login__form > div .ant-form-item-label {
+  padding: 0 !important;
+}/*# sourceMappingURL=auth.style.css.map */

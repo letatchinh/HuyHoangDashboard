@@ -1,0 +1,24 @@
+.employee-group-form {
+  width: 100%;
+
+  .ant-row {
+    width: 100%;
+  }
+
+  .ant-form {
+    margin-top: 30px;
+
+    .ant-form-item-label {
+      label {
+        width: 100%;
+      }
+    }
+  }
+
+  &__submit-box {
+    justify-content: flex-end;
+    margin: 10px 0 !important;
+    display: flex;
+    gap: 10px;
+  }
+}

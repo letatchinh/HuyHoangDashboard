@@ -18,7 +18,7 @@ export const PATH_APP = {
     },
 
     worldPharma : {
-      productConfig: path(ROOTS.app, '/productConfig'),
+      productGroup: path(ROOTS.app, '/productGroup'),
       manufacturer: path(ROOTS.app, '/manufacturer'),
       ranking: path(ROOTS.app, '/ranking'),
       unit: path(ROOTS.app, '/unit'),
@@ -37,4 +37,24 @@ export const PATH_APP = {
       root: path(ROOTS.app, '/product'),
       edit: path(ROOTS.app, '/product/:supplierId'),
     },
+    todoList: {
+      statusConfig: path(ROOTS.app, '/statusConfig'),
+      workBoard: path(ROOTS.app, '/workBoard'),
+    },
+    employee: {
+        root: path(ROOTS.app, '/employee'),
+    },
+
+  configDiscount: {
+    root: path(ROOTS.app, '/config-discount'),
+  },
+    pharmacy : {
+      root:  path(ROOTS.app, '/pharmacy'),
+      detail: path(ROOTS.app, '/pharmacy/:id'),
+    },
+     user: {
+      root: path(ROOTS.app, '/user/*'),
+   
+    },
+  
   };
