@@ -9,6 +9,7 @@ import {
   useFetch,
   useFetchByParam,
   useQueryParams,
+  useResetState,
   useSubmit,
   useSuccess,
 } from "~/utils/hook";
@@ -42,13 +43,13 @@ export const useUserGroupPaging = () => useSelector(pagingSelector);
 
 export const useGetUserGroups = (payload: object) => {
   const createSuccess = useSelector(createSuccessSelector);
-  const updateSuccess = useSelector(updateSuccessSelector);
+  // const updateSuccess = useSelector(updateSuccessSelector);
   const deleteSuccess = useSelector(deleteSuccessSelector);
 
   const memoParam : object = useMemo(() => {
     return { ...payload };
     //eslint-disable-next-line
-  }, [createSuccess, updateSuccess, deleteSuccess, payload]);
+  }, [createSuccess, deleteSuccess, payload]);
   return useFetch({
     action: userGroupSliceAction.getListRequest,
     loadingSelector: loadingSelector,
@@ -75,7 +76,7 @@ export const useCreateUserGroup = (callback?: any) => {
     `Tạo mới ${MODULE_VI} thành công`,
     callback
   );
-  useFailed(createFailedSelector);
+  // useFailed(createFailedSelector);
 
   return useSubmit({
     action: userGroupSliceAction.createRequest,
@@ -89,7 +90,7 @@ export const useUpdateUserGroup = (callback?: any) => {
     `Cập nhật ${MODULE_VI} thành công`,
     callback
   );
-  useFailed(updateFailedSelector);
+  // useFailed(updateFailedSelector);
 
   return useSubmit({
     action: userGroupSliceAction.updateRequest,
@@ -99,7 +100,7 @@ export const useUpdateUserGroup = (callback?: any) => {
 
 export const useDeleteUserGroup = (callback?: any) => {
   useSuccess(deleteSuccessSelector, `Xoá ${MODULE_VI} thành công`, callback);
-  useFailed(deleteFailedSelector);
+  // useFailed(deleteFailedSelector);
 
   return useSubmit({
     action: userGroupSliceAction.deleteRequest,
@@ -200,11 +201,15 @@ interface Resource {
 }
 
 export const onSearchPermissions = (keyword: string = '', resource: any[] = [], updateResources: (data: any) => void) => {
+  console.log(keyword, resource)
   if (isNil(keyword) || keyword === '') return updateResources(resource);
   const resultSearch = resource?.filter(item => {
-    return StringToSlug(get(item, 'resource.name', '')?.toLowerCase())?.includes(StringToSlug(keyword?.trim()?.toLowerCase()));
+    return StringToSlug(get(item, 'name', '')?.toLowerCase())?.includes(StringToSlug(keyword?.trim()?.toLowerCase()));
   });
-
   updateResources(resultSearch);
+};
+
+export const useResetUserGroups = () => {
+  return useResetState(userGroupSliceAction.resetAction);
 };
 

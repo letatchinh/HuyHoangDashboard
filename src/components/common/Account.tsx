@@ -38,13 +38,8 @@ const Account = ({ isLoading, required,statusAccount, setStatusAccount}: Props) 
           <Form.Item
             name="username"
             label={<Tooltip
-              placement='topRight'
+              placement='topLeft'
               zIndex={2001}
-              // title={<div>
-              //   <p >- Chỉ được nhập: kí tự hoa, thường, số, @ _ .</p>
-              //   <p >- Tối thiểu 4, tối đa 30 ký tự </p>
-              //   <p >- Không được chứa dấu cách </p>
-              // </div>}
               title={<p>Hệ thống tự động tạo</p>}
             >
               <Badge
@@ -67,9 +62,7 @@ const Account = ({ isLoading, required,statusAccount, setStatusAccount}: Props) 
             {isLoading ? (
               <Skeleton.Input active />
             ) : (
-              // <Tooltip title="Không thể chỉnh sửa tên tài khoản">
-                <Input readOnly autoComplete="off"/>
-            // </Tooltip>
+                <Input disabled autoComplete="off"/>
             )}
           </Form.Item>
         </Col>
@@ -91,7 +84,7 @@ const Account = ({ isLoading, required,statusAccount, setStatusAccount}: Props) 
             {isLoading ? (
               <Skeleton.Input active />
             ) : (
-              <Input.Password autoComplete="off" />
+              <Input.Password disabled = {statusAccount === 'INACTIVE'} autoComplete="off" />
             )}
           </Form.Item>
         </Col>
@@ -120,7 +113,7 @@ const Account = ({ isLoading, required,statusAccount, setStatusAccount}: Props) 
             {isLoading ? (
               <Skeleton.Input active />
             ) : (
-              <Input.Password autoComplete="new-password" />
+              <Input.Password disabled = {statusAccount === 'INACTIVE'} autoComplete="new-password" />
             )}
           </Form.Item>
         </Col>

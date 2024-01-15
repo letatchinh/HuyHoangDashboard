@@ -1,5 +1,5 @@
 import { Button, Col, Form, Input, Row, Select, Skeleton } from "antd";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import UploadImage from "~/components/common/Upload/UploadImage";
 import AddressFormSection from "~/components/common/AddressFormSection";
 import { useCreateUser, useGetUser, useUpdateUser } from "../user.hook";
@@ -10,24 +10,21 @@ import { DEFAULT_BRANCH_ID } from "~/constants/defaultValue";
 import { useResetState } from "~/utils/hook";
 import { userSliceAction } from "../redux/reducer";
 import {omit} from "lodash";
+import { useParams } from "react-router-dom";
+import { useGetUserGroups } from "~/modules/userGroup/userGroup.hook";
 
 const { Option } = Select;
 
-
 const FormItem = Form.Item;
-
-const verticalLayout = {
-  labelCol: { span: 24 },
-  wrapperCol: { span: 24 },
-};
 interface IProps {
   id?: string | null;
   handleCloseModal: () => void;
+  updateUser?: any;
 };
 
 export default function UserForm(props: IProps) {
   const [form] = Form.useForm();
-  const { id, handleCloseModal } = props;
+  const { id, handleCloseModal, updateUser: handleUpdate } = props;
   const [imageUrl, setImageUrl] = useState<string>();
   const [loadingValidateUsername, setLoadingValidateUsername] =
     useState<boolean>(false);
@@ -38,9 +35,17 @@ export default function UserForm(props: IProps) {
   const [wardCode, setWardCode] = useState<string>('');
 
   //hook user
-  const [isUpdateLoading, handleUpdate] = useUpdateUser();
-  const [isCreateLoading, handleCreate] = useCreateUser(handleCloseModal);
+  const [, handleCreate] = useCreateUser(handleCloseModal);
   const [user, isLoading] = useGetUser(id);
+
+  //fetch user groups
+  const { branchId }: any = useParams();
+  const branchIdParam = useMemo(
+    () => ({ branchId: branchId ? branchId : DEFAULT_BRANCH_ID }),
+    [branchId]
+  );
+  const [groups, isLoadingGroups] = useGetUserGroups(branchIdParam);
+
   useResetState(userSliceAction.resetAction);
 
   useEffect(() => {
@@ -48,6 +53,8 @@ export default function UserForm(props: IProps) {
       form.setFieldsValue({
         ...user,
         username: user?.adapater?.user?.username,
+        groups: user?.adapater?.groups,
+        userId: user?.adapater?.userId
       });
       setImageUrl(user?.avatar);
       setCityCode(user?.address?.cityId);
@@ -58,15 +65,14 @@ export default function UserForm(props: IProps) {
   
   const onFinish = (values: any) => {
     const user = {
-      ...omit(values, []),
+      ...values,
       avatar: imageUrl,
-      groups: [],
       branchId: values?.branchId || DEFAULT_BRANCH_ID
     };
     if (id) {
       const data: object = {
         ...user,
-        _id: id
+        id: id
       };
       if (statusAccount === 'ACTIVE') {
         handleUpdate({...data});
@@ -74,10 +80,10 @@ export default function UserForm(props: IProps) {
         handleUpdate({
           ...omit(data,['username', 'password', 'confirmPassword']),
         });
-      }
+      };
     } else {
-      handleCreate(user);
-    }
+      handleCreate({...omit(user, ['userId'])});
+    };
   };
 
   const onValuesChange = ({ address }: any) => {};
@@ -191,7 +197,40 @@ export default function UserForm(props: IProps) {
               </Col>
             </Row>
           </Col>
-          {/* <Col></Col> */}
+          <Col span={12}>
+              <FormItem
+                  label="Nhóm người dùng"
+                  name="groups"
+                  // rules={[
+                  //   {
+                  //     required: false,
+                  //     message: "Xin vui lòng chọn nhóm người dùng!",
+                  //   },
+                  // ]}
+                >
+              {isLoading || isLoadingGroups ? <Skeleton.Input active /> : (
+                <Select
+                  mode="multiple"
+                  allowClear
+                >
+                  {
+                      groups?.map(({ _id, name }: any) => (
+                        <Select.Option value={_id} key={_id}>
+                          {name}
+                        </Select.Option>
+                      ))
+                  }
+                </Select>
+                  )}
+            </FormItem> 
+                <FormItem
+                  hidden 
+                  //save state userId when id is exits and not show on form
+                  label="Nhóm người dùng"
+                  name="userId"
+                >
+                </FormItem> 
+          </Col>
         </Row>
         <Account
           isLoading={isLoading} required={id ? false : true}

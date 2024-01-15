@@ -15,5 +15,10 @@
 
   a {
     margin-right: 10px;
-  }
+  };
+};
+.custom-table{
+  &__shadow{
+      box-shadow: $default-box-shadow;
+  };
 }

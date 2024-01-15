@@ -9,6 +9,7 @@ import {
   useFetch,
   useFetchByParam,
   useQueryParams,
+  useResetState,
   useSubmit,
   useSuccess,
 } from "~/utils/hook";
@@ -35,6 +36,9 @@ const {
 const getSelector = (key: string) => (state: any) => state.user[key];
 
 export const useUserPaging = () => useSelector(pagingSelector);
+const policySelector = getSelector('policy');
+const isGetPolicyLoadingSelector = getSelector('isGetPolicyLoading');
+const getPolicyFailedSelector = getSelector('getPolicyFailedSelector');
 
 export const useGetUsers = (params: any) => {
   return useFetchByParam({
@@ -96,21 +100,30 @@ export const useDeleteUser = (callback?: any) => {
 
 export const useUserQueryParams = () => {
   const query = useQueryParams();
-  const limit = query.get("limit") || 10;
-  const page = query.get("page") || 1;
+  const [limit, setLimit] = useState<any>(query.get("limit") || 10);
+  const [page, setPage] = useState<any>(query.get("page") || 1);
   const keyword = query.get("keyword");
+  const groupIds = query.get("groupIds") || null;
+  const status = query.get("status") || null;
 
   const createSuccess = useSelector(createSuccessSelector);
+  const updateSuccess = useSelector(updateSuccessSelector);
+  const onTableChange : any = ({ current, pageSize }: any) => {
+    setLimit(pageSize);
+    setPage(current);
+  };
 
   return useMemo(() => {
     const queryParams = {
       page,
       limit,
       keyword,
+      groupIds,
+      status
     };
-    return [queryParams];
+    return [queryParams,onTableChange];
     //eslint-disable-next-line
-  }, [page, limit, keyword, createSuccess]);
+  }, [page, limit, keyword, createSuccess, groupIds,status, updateSuccess]);
 };
 
 export const useUpdateUserParams = (
@@ -142,7 +155,6 @@ export const useUpdateUserParams = (
     // Navigate
     navigate(`${pathname}?${searchString}`);
   };
-
   return [keyword, { setKeyword, onParamChange }];
 };
 
@@ -162,3 +174,17 @@ export const autoCreateUsername = async ({ fullName, callApi }: any) => {
 };
  
 //POLICY
+
+export const useGetPolicyCheckAllPage = (param?: any) => {
+  return useFetch({
+    action: userSliceAction.getPolicyRequest,
+    loadingSelector: isGetPolicyLoadingSelector,
+    dataSelector: policySelector,
+    failedSelector: getPolicyFailedSelector,
+    // param: param,
+  });
+};
+
+export const useResetGroups = () => {
+  return useResetState(userSliceAction.resetAction);
+};

@@ -28,9 +28,6 @@ export const mainRoutes :PathRouteProps[] = [
   { path: PATH_APP.todoList.workBoard, Component: WorkBoardPage },
   { path: PATH_APP.employee.root, Component: EmployeePage },
   { path: PATH_APP.user.root, Component: UserPage },
-  { path: PATH_APP.userGroup.root, Component: UserGroupPage },
-  { path: PATH_APP.userGroup.detail, Component: UserGroupPage },
-
   { path: '/', Component: Homepage },
 ]
 
