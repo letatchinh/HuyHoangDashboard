@@ -44,7 +44,7 @@ export const TYPE_VALUE = {
   PERCENT : "PERCENT",
 }
 export const TYPE_VALUE_VI = {
-  VALUE : "Giá trị",
+  VALUE : "Đ",
   PERCENT : "%",
 }
 

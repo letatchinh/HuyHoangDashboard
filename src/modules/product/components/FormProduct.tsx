@@ -75,8 +75,9 @@ export default function FormProduct({
   useEffect(() => {
     if (product && id) {
     const initProduct = convertInitProduct(product);
+    console.log(initProduct,'initProduct')
       form.setFieldsValue(initProduct);
-    }
+    };
   }, [product, id, form]);
 
   const onValuesChange = (value: any, values: FieldTypeFormProduct) => {
