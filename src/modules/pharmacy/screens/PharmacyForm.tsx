@@ -11,7 +11,8 @@ import { filterAcrossAccents } from "~/utils/helpers";
 import { Link } from "react-router-dom";
 import { PATH_APP } from "~/routes/allPath";
 import AddressFormSection from "~/components/common/AddressFormSection";
-
+import CumulativeDiscountModule from '~/modules/cumulativeDiscount';
+import { convertInitPharmacy, convertSubmitData } from "../pharmacy.service";
 const FormItem = Form.Item;
 const { Option } = Select;
 interface Props {
@@ -39,50 +40,38 @@ export default function PharmacyForm({
     if (!id) {
       form.resetFields();
     } else {
-      form.setFieldsValue(initPharmacyProfile);
+      const initPharmacy = convertInitPharmacy(initPharmacyProfile);
+      form.setFieldsValue(initPharmacy);
 
-      if (initPharmacyProfile) {
-        const { address } = initPharmacyProfile;
-
-        // if (address) {
-        //   setSelectedCityCode(address.cityId);
-        //   setSelectedDistrictCode(address.districtId);
-        // }
-      }
     }
   }, [initPharmacyProfile, id, form]);
 
-  const onValuesChange = ({ address }: any) => {
-    const shouldResetDistrictAndWards = address && address.cityId;
-    if (shouldResetDistrictAndWards) {
-      form.setFieldsValue({
-        address: {
-          districtId: null,
-          wardId: null,
-        },
-      });
-    }
+  const onValuesChange = (value: any,values : any) => {
+    const key = Object.keys(value)[0];
+    switch (key) {
+      case "cumulativeDiscount":
+        const cumulativeDiscount = CumulativeDiscountModule.service.onDiscountChange(values[key]);
+        form.setFieldsValue({
+          cumulativeDiscount,
+        });
+        break;
 
-    const shouldResetWards = address && address.districtId;
-    if (shouldResetWards) {
-      form.setFieldsValue({
-        address: {
-          wardId: null,
-        },
-      });
+      default:
+        break;
     }
   };
 
   const onFinish = useCallback(
     (values: any) => {
+      const submitData = convertSubmitData(values);
       if (id) {
-        handleUpdate({ ...values, id: id });
+        handleUpdate({ ...submitData, id: id });
       } else {
-        handleCreate({ ...values });
+        handleCreate({ ...submitData });
       }
       onClose();
     },
-    [handleCreate, handleUpdate, id]
+    [handleCreate, handleUpdate, id, onClose]
   );
   return (
     <Modal
@@ -172,6 +161,8 @@ export default function PharmacyForm({
               allowPhoneNumber={false}
               allowEmail={false}
             />
+
+          <CumulativeDiscountModule.components.DiscountList target={CumulativeDiscountModule.constants.TARGET.supplier} loading={isLoading} form={form} />
 
             <Row className="form__submit-box">
               {isSubmitLoading ? (

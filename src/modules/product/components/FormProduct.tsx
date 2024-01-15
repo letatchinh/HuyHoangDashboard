@@ -1,7 +1,6 @@
 import { GiftTwoTone } from "@ant-design/icons";
 import { Button, Col, Form, Input, Row, Select } from "antd";
-import dayjs from "dayjs";
-import { get, keys } from "lodash";
+import { keys } from "lodash";
 import React, { useEffect, useMemo } from "react";
 import BaseBorderBox from "~/components/common/BaseBorderBox/index";
 import RenderLoading from "~/components/common/RenderLoading";
@@ -9,9 +8,7 @@ import {
   PRODUCT_TYPE,
   PRODUCT_TYPE_VI,
   SALE_LEVEL,
-  SALE_LEVEL_VI,
-  TARGET,
-  TYPE_DISCOUNT
+  SALE_LEVEL_VI
 } from "../constants";
 import {
   useCreateProduct,
@@ -23,13 +20,15 @@ import {
   FieldTypeFormProduct,
   TypePropsFormProduct
 } from "../product.modal";
-import { convertInitProduct, convertSubmitData, onDiscountChange } from "../product.service";
-import DiscountList from "./DiscountList";
+import { convertInitProduct, convertSubmitData } from "../product.service";
 import MedicineName from "./MedicineName";
 import SelectCountry from "./SelectCountry";
 import SelectManufacturer from "./SelectManufacturer";
 import SelectProductGroup from "./SelectProductGroup";
 import Variants from "./Variants";
+import CumulativeDiscountModule from '~/modules/cumulativeDiscount';
+
+
 const CLONE_PRODUCT_TYPE_VI: any = PRODUCT_TYPE_VI;
 const CLONE_SALE_LEVEL_VI: any = SALE_LEVEL_VI;
 const layoutRow = {
@@ -75,7 +74,6 @@ export default function FormProduct({
   useEffect(() => {
     if (product && id) {
     const initProduct = convertInitProduct(product);
-    console.log(initProduct,'initProduct')
       form.setFieldsValue(initProduct);
     };
   }, [product, id, form]);
@@ -84,7 +82,7 @@ export default function FormProduct({
     const key = Object.keys(value)[0];
     switch (key) {
       case "cumulativeDiscount":
-        const cumulativeDiscount = onDiscountChange(values[key])
+        const cumulativeDiscount = CumulativeDiscountModule.service.onDiscountChange(values[key])
         form.setFieldsValue({
           cumulativeDiscount,
         });
@@ -189,7 +187,7 @@ export default function FormProduct({
             </span>
           }
         >
-          <DiscountList target={TARGET.product} loading={isLoading} form={form} />
+          <CumulativeDiscountModule.components.DiscountList target={CumulativeDiscountModule.constants.TARGET.supplier} loading={isLoading} form={form} />
         </BaseBorderBox>
 
         <Row justify={"end"} gutter={16}>

@@ -7,7 +7,7 @@ import { useGetListProductUnitNoParam } from "~/modules/productUnit/productUnit.
 import {
   TYPE_DISCOUNT, TYPE_REWARD, TYPE_VALUE
 } from "../constants";
-import { TypePropsDiscountList } from "../product.modal";
+import { TypePropsDiscountList } from "../cumulativeDiscount.modal";
 import DiscountItem from "./DiscountItem";
 
 export default function DiscountList({
