@@ -1,7 +1,6 @@
 import { forIn, get, groupBy, keys, flattenDeep, compact, uniq } from "lodash";
 import { STATUS } from "~/constants/defaultValue";
 import { useState } from "react";
-import { STATUS } from "~/constants/defaultValue";
 
 import subvn from "~/core/subvn";
 
@@ -137,4 +136,3 @@ export const useExpandrowTableClick: () => UseExpandrowTableClick = () => {
   return { select, setSelect, onClick };
 };
 
-export const getActive = (list : []) => list?.filter((item:any) => get(item,'status') === STATUS.ACTIVE);
