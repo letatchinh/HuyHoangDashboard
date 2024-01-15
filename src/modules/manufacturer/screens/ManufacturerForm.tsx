@@ -6,6 +6,7 @@ import { useUpdateManufacturer,useCreateManufacturer,useGetManufacturerById,useR
 interface Props {
     id?: any
     callBack:()=>void
+    updateManufacturer:(data:any)=>void,
 }
 interface FieldType {
   code: string
@@ -14,9 +15,9 @@ interface FieldType {
   description: string
   isAction:String
 }
-const ManufacturerForm:React.FC<Props>=({id,callBack})=>{
+const ManufacturerForm:React.FC<Props>=({id,callBack,updateManufacturer})=>{
   const [manufacturer,loading] = useGetManufacturerById(id)
-    const [,updateManufacturer] = useUpdateManufacturer(callBack)
+    // const [,updateManufacturer] = useUpdateManufacturer(callBack)
     const [,createManufacturer] = useCreateManufacturer(callBack)
   const [form]=Form.useForm<FieldType>();
   useResetAction();
@@ -64,7 +65,7 @@ const ManufacturerForm:React.FC<Props>=({id,callBack})=>{
         <Form.Item<FieldType> label="Mô tả" name="description">
           <TextArea rows={4}/>
         </Form.Item>
-        <Form.Item wrapperCol={{ offset: 8, span: 12 }}>
+        <Form.Item style={{ width: '550px'}} wrapperCol={{ offset: 8, span: 12 }}>
           <Button type="primary" htmlType="submit">
             {id ? 'Cập nhật' : 'Thêm mới'}
           </Button>

@@ -21,13 +21,19 @@ export default function Variants({
           <>
             {fields.map(({ key, name, fieldKey, ...restField }: any, index) =>
               index === 0 ? (
-                <Row className="mb-2" gutter={48} key={key} align="middle">
+                <Row className="mb-2" gutter={8} key={key} align="middle">
                   <Col span={6}>
                     <Form.Item
                       style={{ marginBottom: 0 }}
                       {...restField}
                       label={"Đơn vị cơ bản"}
                       name={[name, "productUnit"]}
+                      rules={[
+                        {
+                          required: true,
+                          message: "Xin vui lòng chọn!",
+                        },
+                      ]}
                     >
                       {RenderLoading(loading,<Select
                         options={units?.filter((item:any) => !isUsed(form.getFieldValue(['variants',name,'productUnit']),get(item,'_id')))?.map((item: any) => ({
@@ -37,25 +43,47 @@ export default function Variants({
                       />)}
                     </Form.Item>
                   </Col>
-                  <Col span={6}>
+                  <Col span={4}>
                     <Form.Item
                       style={{ marginBottom: 0 }}
                       {...restField}
                       label={"Giá bán"}
                       name={[name, "price"]}
+                      rules={[
+                        {
+                          required: true,
+                          message: "Xin vui lòng nhập!",
+                        },
+                      ]}
+                    >
+                      {RenderLoading(loading,<InputNumberAnt min={0} />)}
+                    </Form.Item>
+                  </Col>
+                  <Col span={4}>
+                    <Form.Item
+                      style={{ marginBottom: 0 }}
+                      {...restField}
+                      label={"Giá nhập"}
+                      name={[name, "cose"]}
                     >
                       {RenderLoading(loading,<InputNumberAnt min={0} />)}
                     </Form.Item>
                   </Col>
                 </Row>
               ) : (
-                <Row className="mb-2" gutter={48} key={key} align="middle">
+                <Row className="mb-2" gutter={8} key={key} align="middle">
                   <Col span={6}>
                     <Form.Item
                       style={{ marginBottom: 0 }}
                       {...restField}
                       label={"Đơn vị"}
                       name={[name, "productUnit"]}
+                      rules={[
+                        {
+                          required: true,
+                          message: "Xin vui lòng chọn!",
+                        },
+                      ]}
                     >
                         {RenderLoading(loading,<Select
                         options={units?.filter((item:any) => !isUsed(form.getFieldValue(['variants',name,'productUnit']),get(item,'_id')))?.map((item: any) => ({
@@ -65,12 +93,28 @@ export default function Variants({
                       />)}
                     </Form.Item>
                   </Col>
-                  <Col span={6}>
+                  <Col span={4}>
                     <Form.Item
                       style={{ marginBottom: 0 }}
                       {...restField}
                       label={"Giá bán"}
                       name={[name, "price"]}
+                      rules={[
+                        {
+                          required: true,
+                          message: "Xin vui lòng nhập!",
+                        },
+                      ]}
+                    >
+                      {RenderLoading(loading,<InputNumberAnt min={0} />)}
+                    </Form.Item>
+                  </Col>
+                  <Col span={4}>
+                    <Form.Item
+                      style={{ marginBottom: 0 }}
+                      {...restField}
+                      label={"Giá nhập"}
+                      name={[name, "cost"]}
                     >
                       {RenderLoading(loading,<InputNumberAnt min={0} />)}
                     </Form.Item>
@@ -81,12 +125,18 @@ export default function Variants({
                       {...restField}
                       label={"Giá trị quy đổi"}
                       name={[name, "exchangeValue"]}
+                      rules={[
+                        {
+                          required: true,
+                          message: "Xin vui lòng nhập!",
+                        },
+                      ]}
                     >
                       {RenderLoading(loading,<InputNumberAnt min={0} />)}
                     </Form.Item>
                   </Col>
 
-                  <Col span={2}>
+                  <Col>
                     <MinusCircleOutlined onClick={() => remove(name)} />
                   </Col>
                 </Row>

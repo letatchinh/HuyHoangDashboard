@@ -8,9 +8,8 @@ import {
   DEFAULT_UPLOAD_ACTION,
   MAX_UPLOAD_FILE_SIZE_IN_MB,
 } from "~/constants/defaultValue";
-import imageCompression from "browser-image-compression";
 
-const BYTES_PER_MB = 1024 * 1024; 
+const BYTES_PER_MB = 1024 * 1024;
 
 const getBase64 = (img: RcFile, callback: (url: string) => void) => {
   const reader = new FileReader();

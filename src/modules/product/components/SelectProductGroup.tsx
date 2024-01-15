@@ -4,7 +4,7 @@ import React, { useCallback, useMemo } from "react";
 import DebounceSelect from "~/components/common/DebounceSelect";
 import RenderLoading from "~/components/common/RenderLoading";
 import { MAX_LIMIT } from "~/constants/defaultValue";
-import ProductGroupModule from "~/modules/productConfig";
+import ProductGroupModule from "~/modules/productGroup";
 import { getActive } from "~/utils/helpers";
 
 type propsType = {

@@ -1,28 +1,26 @@
 import { Button, Col, Form, Input, Row, Select } from "antd";
 import { get, keys } from "lodash";
-import React, { useCallback, useEffect, useMemo } from "react";
-import api from "~/api";
+import React, { useEffect, useMemo } from "react";
 import BaseBorderBox from "~/components/common/BaseBorderBox/index";
-import DebounceSelect from "~/components/common/DebounceSelect";
 import RenderLoading from "~/components/common/RenderLoading";
-import { MAX_LIMIT } from "~/constants/defaultValue";
-import ManufacturerModule from "~/modules/manufacturer";
-import ProductConfigModule from "~/modules/productConfig";
-import { getActive } from "~/utils/helpers";
-import { PRODUCT_TYPE, PRODUCT_TYPE_VI } from "../constants";
+import { PRODUCT_TYPE, PRODUCT_TYPE_VI, SALE_LEVEL, SALE_LEVEL_VI } from "../constants";
 import {
   useCreateProduct,
   useGetProduct,
   useResetAction,
-  useUpdateProduct,
+  useUpdateProduct
 } from "../product.hook";
-import { FieldTypeFormProduct, TypePropsFormProduct } from "../product.modal";
+import { cumulativeDiscountType, FieldTypeFormProduct, TypePropsFormProduct } from "../product.modal";
 import MedicineName from "./MedicineName";
 import SelectCountry from "./SelectCountry";
 import SelectManufacturer from "./SelectManufacturer";
 import SelectProductGroup from "./SelectProductGroup";
 import Variants from "./Variants";
+import DiscountList from "./DiscountList";
+import { GiftTwoTone } from "@ant-design/icons";
+import dayjs from "dayjs";
 const CLONE_PRODUCT_TYPE_VI: any = PRODUCT_TYPE_VI;
+const CLONE_SALE_LEVEL_VI: any = SALE_LEVEL_VI;
 const layoutRow = {
   gutter: 16,
 };
@@ -38,17 +36,28 @@ export default function FormProduct({
   const [product, isLoading] = useGetProduct(id);
   useResetAction();
   const onFinish = (values: FieldTypeFormProduct) => {
+    const cumulativeDiscount = values?.cumulativeDiscount?.map((item : cumulativeDiscountType) => {
+      const applyTimeSheet = get(item,'applyTimeSheet');
+      return {
+        ...item,
+        applyTimeSheet : {
+          ...applyTimeSheet,
+          gte : dayjs.isDayjs(get(applyTimeSheet,'gte')) ? dayjs(get(applyTimeSheet,'gte')).format("YYYY-MM-DD") : null,
+          lte : dayjs.isDayjs(get(applyTimeSheet,'lte')) ? dayjs(get(applyTimeSheet,'lte')).format("YYYY-MM-DD") : null,
+        }
+      }
+    });
     const submitData = {
       ...values,
+      cumulativeDiscount,
       supplierId,
     };
     console.log(submitData, "submitData");
-
-    if (id) {
-      onUpdate({ ...submitData, _id: id });
-    } else {
-      onCreate(submitData);
-    }
+    // if (id) {
+    //   onUpdate({ ...submitData, _id: id });
+    // } else {
+    //   onCreate(submitData);
+    // }
   };
 
   const optionsType = useMemo(
@@ -59,76 +68,43 @@ export default function FormProduct({
       })),
     []
   );
-
-  const fetchOptionsManufacturer = useCallback(async (keyword?: string) => {
-    const res = await ManufacturerModule.api.getAll({
-      keyword,
-      limit: MAX_LIMIT,
-    });
-    return getActive(get(res, "docs", []))?.map((item: any) => ({
-      label: get(item, "name"),
-      value: get(item, "_id"),
-    }));
-  }, []);
-
-  const initManufacturer = useMemo(
+  const optionsSaleLevel = useMemo(
     () =>
-      product && [
-        {
-          label: get(product, "manufacturer.name"),
-          value: get(product, "manufacturerId"),
-        },
-      ],
-    [product]
+      keys(SALE_LEVEL).map((key) => ({
+        label: CLONE_SALE_LEVEL_VI[key],
+        value: key,
+      })),
+    []
   );
 
-  const fetchOptionsProductConfig = useCallback(async (keyword?: string) => {
-    const res = await ProductConfigModule.api.getAll({
-      keyword,
-      limit: MAX_LIMIT,
-    });
-    return getActive(get(res, "docs", []))?.map((item: any) => ({
-      label: get(item, "name"),
-      value: get(item, "_id"),
-    }));
-  }, []);
-
-  console.log(product, "product");
-
-  const initProductConfig = useMemo(
-    () =>
-      product && [
-        {
-          label: get(product, "productGroup.name"),
-          value: get(product, "productGroupId"),
-        },
-      ],
-    [product]
-  );
-  // const fetchOptionsCountry = useCallback(async () => {
-  //   const res = await api.country.getAll();
-  //   return res?.map((item: any) => ({
-  //     label: get(item, "name", "")?.trim(),
-  //     value: get(item, "_id"),
-  //   }));
-  // }, []);
-
-  // const initCountry = useMemo(
-  //   () =>
-  //     product && [
-  //       {
-  //         label: get(product, "productDetail.country._id"),
-  //         value: get(product, "productDetail.country.name"),
-  //       },
-  //     ],
-  //   [product]
-  // );
   useEffect(() => {
     if (product && id) {
       form.setFieldsValue(product);
     }
   }, [product, id, form]);
 
+  const onValuesChange = (value : any,values : FieldTypeFormProduct) => {
+    const key = Object.keys(value)[0];
+    switch (key) {
+      case 'cumulativeDiscount':
+        const newCumulativeDiscount = values[key]?.map((item : any) => {
+          const condition = get(item,'condition');
+          return {
+            ...item,
+            condition : {...condition,isRanger : get(condition,'lte') > 0},
+          }
+        });
+        form.setFieldsValue({
+          cumulativeDiscount : newCumulativeDiscount
+        })
+        break;
+    
+      default:
+        break;
+    }
+    
+    
+  }
   return (
     <div>
       <h5>Tạo mới thuốc</h5>
@@ -139,7 +115,6 @@ export default function FormProduct({
         wrapperCol={{ span: 16 }}
         labelAlign="left"
         initialValues={{
-          type: PRODUCT_TYPE.exclusive,
           variants: [
             {
               exchangeValue: 1,
@@ -147,6 +122,7 @@ export default function FormProduct({
             },
           ],
         }}
+        onValuesChange={onValuesChange}
       >
         <Form.Item<FieldTypeFormProduct> name="medicalCode" hidden />
 
@@ -157,13 +133,20 @@ export default function FormProduct({
             </Col>
             <Col span={12}>
               <Form.Item<FieldTypeFormProduct>
-                label="Loại sản phẩm"
+                label="Hình thức"
                 name="type"
-                rules={[
-                  { required: true, message: "Vui lòng chọn loại sản phẩm!" },
-                ]}
               >
                 {RenderLoading(isLoading, <Select options={optionsType} />)}
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row {...layoutRow}>
+            <Col span={12}>
+              <Form.Item<FieldTypeFormProduct>
+                label="Mức độ đẩy hàng"
+                name="saleLevel"
+              >
+                {RenderLoading(isLoading, <Select options={optionsSaleLevel} />)}
               </Form.Item>
             </Col>
           </Row>
@@ -175,9 +158,6 @@ export default function FormProduct({
               <Form.Item<FieldTypeFormProduct>
                 label="Quy cách đóng gói"
                 name={["productDetail", "package"]}
-                rules={[
-                  { required: true, message: "Vui lòng nhập cách đóng gói!" },
-                ]}
               >
                 {RenderLoading(isLoading, <Input />)}
               </Form.Item>
@@ -186,9 +166,6 @@ export default function FormProduct({
               <Form.Item<FieldTypeFormProduct>
                 label="Hoạt chất"
                 name={["productDetail", "element"]}
-                rules={[
-                  { required: true, message: "Vui lòng nhập hoạt chất!" },
-                ]}
               >
                 {RenderLoading(isLoading, <Input />)}
               </Form.Item>
@@ -198,12 +175,13 @@ export default function FormProduct({
             <Col span={12}>
             <SelectCountry isLoading={isLoading}/>
             </Col>
-          </Row>
-
-          <Row {...layoutRow}>
             <Col span={12}>
             <SelectManufacturer isLoading={isLoading} product={product}/>
             </Col>
+          </Row>
+
+          <Row {...layoutRow}>
+          
             <Col span={12}>
               <SelectProductGroup product={product} isLoading={isLoading}/>
             </Col>
@@ -211,10 +189,16 @@ export default function FormProduct({
         </BaseBorderBox>
 
         <BaseBorderBox title={"Đơn vị"}>
-          <Col span={24}>
+          <Col style={{paddingBottom : 10}} span={24}>
             <Variants form={form} isLoading={isLoading} />
           </Col>
         </BaseBorderBox>
+
+        <BaseBorderBox title={<span>Chiết khấu <GiftTwoTone /></span>}>
+            <DiscountList product={product} loading={isLoading} form={form}/>
+
+        </BaseBorderBox>
+
         <Row justify={"end"} gutter={16}>
           <Col>
             <Button size="large" onClick={onCancel}>
