@@ -56,6 +56,7 @@ export const resource: ItemType[] = [
             label: "Cấu hình giảm giá",
             path: PATH_APP.configDiscount.root,
             key: PATH_APP.configDiscount.root,
+            permission :[POLICIES.READ_CONFIGDISCOUNT],
           },
         ],
       },
