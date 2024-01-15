@@ -1,29 +1,24 @@
 import React, { Suspense, lazy, memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { Button, Col, Dropdown, Menu, Row, Select, Space } from 'antd';
 import { DownOutlined, PlusOutlined } from '@ant-design/icons';
-// import { useParams, useHistory, Redirect, useRouteMatch } from 'react-router-dom';
-// import { useCreateSprint, useDeleteSprint, useGetSprints, useUpdateSprint } from '~/hooks/workSprint';
-// import { WithOrPermission, WithPermission } from '~/components/Common';
-// import POLICIES from '~/constants/policy';
-// import { useSprintContext } from './Sprint';
-// import { useGetListManagersByIdBoard, useProfile } from '~/hooks';
 import { get } from 'lodash';
-import { useGetListManagerById } from '~/modules/workBoard/workBoard.hook';
+import { useGetListManagersByIdBoard } from '~/modules/workBoard/workBoard.hook';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useProfile } from '~/modules/auth/auth.hook';
 import { useCreateWorkSprint, useDeleteWorkSprint, useGetWorkSprints, useUpdateWorkSprint } from '../workSprint.hook';
 import SprintCard from './SprintCard';
 import { useSprintContext } from '../screens/WorkSprint';
 
-// const SprintCard = lazy(() => import('./SprintCard.js'));
+// const SprintCard = lazy(() => import('./SprintCard.jsx'));
 const layoutCol = { lg: { span: 6 }, xl: { span: 6 }, xxl: { span: 4 }, sm: { span: 12 }, md: { span: 8 }, style: { height: 'auto' } };
 
 const SprintList: React.FC = memo(() => {
+  console.log('spritn')
   const { boardId } = useParams();
   const { showDrawer, board } = useSprintContext();
-  const [listManagersByBoard,] = useGetListManagerById(boardId);
+  const [listManagersByBoard,] = useGetListManagersByIdBoard(boardId);
   const [profile] = useProfile();
-  const userIsAdminforBoard = useMemo(() => get(profile, 'isSuperAdmin', false) || listManagersByBoard.some(({ _id }:any) => String(_id) === String(profile?._id)), [listManagersByBoard, profile]);
+  const userIsAdminforBoard = useMemo(() => get(profile, 'isSuperAdmin', false) || listManagersByBoard?.some(({ _id }:any) => String(_id) === String(profile?._id)), [listManagersByBoard, profile]);
 
   const query = useMemo(() => {
     if (!boardId) {
@@ -33,10 +28,10 @@ const SprintList: React.FC = memo(() => {
       boardId
     };
   }, [boardId]);
-
   const [sprintByBoardID,] = useGetWorkSprints(query);
+  
   const [dataSource, setDataSource] = useState(sprintByBoardID);
-
+  console.log('sprintByBoardID',dataSource)
   const boardNow = useMemo(() => {
     const item = (board ?? []).find(({ _id }) => String(_id) === String(boardId))
     return item;
@@ -45,7 +40,7 @@ const SprintList: React.FC = memo(() => {
   useEffect(() => {
     setDataSource(sprintByBoardID);
   }, [sprintByBoardID])
-
+// console.log("first",dataSource)
   const [, handleCreate] = useCreateWorkSprint()
   const [, handleUpdate] = useUpdateWorkSprint()
   const [, handleDelete] = useDeleteWorkSprint()
@@ -55,7 +50,6 @@ const SprintList: React.FC = memo(() => {
   const handleSelect = (value: string, option: React.ReactElement) => {
     navigate(value)
   }
-
   return (
     <div style={{ width: 'auto', height: '100%' }}>
       <Space align='center' style={{ position: 'sticky', top: 0, width: '100%', backgroundColor: 'white', zIndex: 2 }}>
@@ -64,7 +58,7 @@ const SprintList: React.FC = memo(() => {
           type='primary'
           onClick={(e) => {
             e.preventDefault();
-            // showDrawer()
+            showDrawer()
           }}
         >=</Button>
         <h4 style={{ margin: 0 }}>Danh mục: </h4>
@@ -96,11 +90,11 @@ const SprintList: React.FC = memo(() => {
             <Col {...layoutCol} key={index}>
               <Suspense fallback={<p>Loading...</p>}>
                 <SprintCard
-                  key={value._id}
+                  key={value?._id}
                   style={{ '--duration': (Math.round(Math.sqrt(index)) * 130) + 'ms' }}
-                  onCreate={(data) => handleCreate({ ...data, boardId })}
-                  onSave={(data) => { handleUpdate({ ...data, boardId }) }}
-                  onDelete={(data) => { handleDelete({ ...data, boardId }) }}
+                  onCreate={(data: any) => handleCreate({ ...data, boardId })}
+                  onSave={(data: any) => { handleUpdate({ ...data, boardId }) }}
+                  onDelete={(data: any) => { handleDelete({ ...data, boardId }) }}
                   name={value.name}
                   id={value._id}
                   boardId={boardId}

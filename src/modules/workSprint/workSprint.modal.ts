@@ -74,6 +74,7 @@ export class InstanceModuleRedux{
     },
     getListFailed: (state:initStateSlice, { payload }:{payload:any}) => {
       state.isLoading = false;
+      
       state.getListFailed = payload;
       
     },
@@ -98,7 +99,8 @@ export class InstanceModuleRedux{
     },
     createSuccess: (state:initStateSlice, { payload }:{payload:any}) => {
       state.isSubmitLoading = false;
-      state.createSuccess = payload;
+      state.createSuccess = payload; 
+      state.createFailed = null;
     },
     createFailed: (state:initStateSlice, { payload }:{payload:any}) => {
       state.isSubmitLoading = false;

@@ -4,6 +4,8 @@ export type TypeProps = {
 export type ResourceType = {
   GROUP_USER: string[]
 GROUP_WHBILL:string[]
+// GROUP_STATUSCONFIG:string[]
+TODOSTATUSCONFIG:string[]
 // GROUP_WHSETTING:
 }
 
@@ -34,6 +36,15 @@ export type PoliciesType = {
   DOWNLOAD_USERGROUP : string[],
   ADMIN_USERGROUP : string[],
   USERGROUP: string[],
+
+  // STATUSCONFIG
+  READ_TODOSTATUSCONFIG : string[],
+  WRITE_TODOSTATUSCONFIG : string[],
+  UPDATE_TODOSTATUSCONFIG : string[],
+  DELETE_TODOSTATUSCONFIG : string[],
+  DOWNLOAD_TODOSTATUSCONFIG : string[],
+  ADMIN_TODOSTATUSCONFIG : string[],
+  TODOSTATUSCONFIG: string[],
   
   // ORTHER
 }

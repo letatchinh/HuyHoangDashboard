@@ -10,8 +10,8 @@ import {
     useUpdateWorkBoard,
     useGetlistWorkBoard,
     useGetListBoard,
-    useGetListManagerById,
-    useGetListEmployeeById
+    useGetListManagersByIdBoard,
+    useGetListStaffsByIdBoard
 
   } from '../workBoard.hook';
   import { DataTypeStatusConfig } from '~/modules/statusConfig/statusConfig.modal';
@@ -25,14 +25,14 @@ interface BoardFormDetailProps {
 const BoardFormDetail: React.FC<BoardFormDetailProps> = ({ id }) => {
   const [form] = Form.useForm();
   const [boardById, isLoading] = useGetlistWorkBoardById(id);
-  const [listStaffsById, isLoadingStaff] = useGetListEmployeeById(id);
+  const [listStaffsById, isLoadingStaff] = useGetListStaffsByIdBoard(id);
   const [listBoardGroup] = useGetListBoard();
-  const [listManagersByBoard, isLoadingManagerByBoard] = useGetListManagerById(id);
+  const [listManagersByBoard, isLoadingManagerByBoard] = useGetListManagersByIdBoard(id);
 
   useEffect(() => {
     if (id) {
-    //   if (boardById && listManagersByBoard && listStaffsById) {
-      if (boardById ) {
+      if (boardById && listManagersByBoard && listStaffsById) {
+      // if (boardById ) {
         const { name, security, parentId } = boardById;
         form.setFieldsValue({
           name,
@@ -43,16 +43,18 @@ const BoardFormDetail: React.FC<BoardFormDetailProps> = ({ id }) => {
     } else {
       form.resetFields();
     }
-//   }, [boardById, form, id, listManagersByBoard, listStaffsById]);
-  }, [boardById, form, id]);
+  }, [boardById, form, id, listManagersByBoard, listStaffsById]);
+  // }, [boardById, form, id]);
 
   return (
     <Form
       form={form}
       name="basic"
-      labelCol={{ span: 6 }}
-      wrapperCol={{ span: 16 }}
+      labelCol={{ sm: 24, md: 24, lg: 8, xl: 8 }}
+      wrapperCol={{ sm: 24, md: 24, lg: 16, xl: 16 }}
+      labelAlign="left"
       autoComplete="off"
+      style={{ width: 700 }}
     >
       <Form.Item label="Tên" name="name">
         {isLoading ? <Skeleton.Input active /> : <Input readOnly />}

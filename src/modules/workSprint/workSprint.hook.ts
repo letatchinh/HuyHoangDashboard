@@ -34,7 +34,7 @@ const {
 
 export const useWorkSprintPaging = () => useSelector(pagingSelector);
 
-export const useGetWorkSprints = (param:any) => {
+export const useGetWorkSprints = (param?:any) => {
   return useFetchByParam({
     action: workSprintActions.getListRequest,
     loadingSelector: loadingSelector,

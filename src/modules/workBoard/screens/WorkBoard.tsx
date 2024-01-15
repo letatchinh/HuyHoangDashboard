@@ -40,7 +40,7 @@ const WorkBoard: React.FC<WorkFlowProps> = () => {
   const paging = useWorkBoardPaging();
   const { t }: any = useTranslate();
   const handleDelete = (id: string) => {
-    deleteWorkList({ id });
+    deleteWorkList( id );
   };
 
   const handleOpenUpdate = (id: string) => {
@@ -74,7 +74,7 @@ const WorkBoard: React.FC<WorkFlowProps> = () => {
       key: 'name',
       render: (value, record) => {
         return (
-          <Button type="link" href={`/work-flow/sprint/${record._id}`} >
+          <Button type="link" href={`/work-board/sprint/${record._id}`} >
             {value}
           </Button>
         );
@@ -181,33 +181,43 @@ const onSearch = (value: string) => {
               }}
             />
           ) : ( */}
-            <Table
-              rowKey={(rc) => rc._id}
-              columns={columns}
-              dataSource={board}
-              onRow={(item) => ({
-                onClick: onClick(item),
-              })}
-              pagination={false}
-              expandable={{
-                expandedRowKeys: select,
-                onExpandedRowsChange: (e:any) => {
-                  setSelect(e);
-                },
-              }}
-              onChange={({ current }) => {
-                onParamChange({ page: current });
-              }}
-            />
+ <Table
+      rowKey={(rc) => rc._id}
+      columns={columns}
+      dataSource={board}
+      onRow={(item) => ({
+        onClick: () => onClick(item),
+      })}
+      pagination={{
+        current: 1, // Assuming the current page is 1 by default
+        pageSize: 10, // Set your preferred page size
+        total: board.length, // Total number of items in your 'board' array
+        showSizeChanger: false, // Disable page size changer
+      }}
+      expandable={{
+        expandedRowKeys: select,
+        onExpandedRowsChange: (e:any) => {
+          onParamChange({ page: 1 }); // Reset to the first page when expanding rows
+          setSelect(e);
+        },
+      }}
+      onChange={({ current }) => {
+        onParamChange({ page: current });
+      }}
+    />
           {/* )} */}
         </div>
       {/* </TabBranch> */}
-      <Modal open={isOpenForm} footer={null} onCancel={() => setOpen(false)} width={700} destroyOnClose={true}>
+      <Modal open={isOpenForm} footer={null} onCancel={() => setOpen(false)} width={700} destroyOnClose
+      title={id ? 'Chinh sửa không gian làm việc' : 'Thêm không gian làm việc'}
+      >
         <Suspense fallback={<div>...</div>}>
           <BoardForm id={id} handleCloseForm={handleCloseForm} />
         </Suspense>
       </Modal>
-      <Modal open={openDetail} footer={null} onCancel={() => setOpenDetail(false)} width={1200} destroyOnClose>
+      <Modal open={openDetail} footer={null} onCancel={() => setOpenDetail(false)} width={1200} destroyOnClose
+      title={ 'Xem chi tiết'}
+      >
         <Suspense fallback={<div>...</div>}>
           <BoardFormDetail id={id} setOpenDetail={setOpenDetail} />
         </Suspense>
