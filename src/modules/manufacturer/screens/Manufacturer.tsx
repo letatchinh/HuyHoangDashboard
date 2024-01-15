@@ -39,8 +39,7 @@ export default function Manufacturer() {
     description: string;
     _id: string;
     status: String,
-  }
-
+  };
   const handleOpenForm = useCallback((id?: any) => {
     if (id) { setId(id); }
     setShowForm(true);
@@ -49,14 +48,6 @@ export default function Manufacturer() {
     deleteManufacturer(id);
 
   };
-
-  // const onUpdateStatus = useCallback((status:any,idUpdate:any) => {
-  //   updateManufacturer({
-  //     id : idUpdate,
-  //     status
-  //   })
-  // },[updateManufacturer])
-
   const columns: ColumnsType<DataType> = [
     {
       title: 'Tên nhà sản xuất',
@@ -79,17 +70,15 @@ export default function Manufacturer() {
       width: '120px',
       key: 'activity',
       render: (_, record) => (
- 
-          <Switch
-            checked={record?.status === 'ACTIVE'}
-            onChange={(value: any) => {
-              if(!canUpdate) return message.warning('Bạn không có quyền thay đổi');
-              updateManufacturer({ status: value ? 'ACTIVE' : 'INACTIVE', id: record?._id });
+        <Switch
+          checked={record?.status === 'ACTIVE'}
+          onChange={(value: any) => {
+            if (!canUpdate) return message.warning('Bạn không có quyền thay đổi');
+            updateManufacturer({ status: value ? 'ACTIVE' : 'INACTIVE', id: record?._id });
 
-            }}
-            loading={isSubmitUpdateLoading}
-          />
-        
+          }}
+          loading={isSubmitUpdateLoading}
+        />
       )
     },
     {
@@ -99,25 +88,24 @@ export default function Manufacturer() {
       width: '180px',
       render: (_, record) => (
         <>
-        <Space size="middle">
-          <WithPermission permission={POLICIES.UPDATE_MANUFACTURER}>
-           <Button icon={<InfoCircleTwoTone />} type="primary" onClick={() => handleOpenForm(record?._id)}>
-            Xem chi tiết
-          </Button>
-          </WithPermission>
+          <Space size="middle">
+            <WithPermission permission={POLICIES.UPDATE_MANUFACTURER}>
+              <Button icon={<InfoCircleTwoTone />} type="primary" onClick={() => handleOpenForm(record?._id)}>
+                Xem chi tiết
+              </Button>
+            </WithPermission>
             <WithPermission permission={POLICIES.DELETE_MANUFACTURER}>
-          <Button icon={<DeleteOutlined />} style={{ color: 'red' }} onClick={() => handleDelete(record?._id)}>
-            Xóa
-          </Button>
+              <Button icon={<DeleteOutlined />} style={{ color: 'red' }} onClick={() => handleDelete(record?._id)}>
+                Xóa
+              </Button>
             </WithPermission>
 
-        </Space>
+          </Space>
         </>
 
       ),
     },
   ];
-
   const onSearch = (value: string) => {
     onParamChange({ ['keyword']: value });
   };
@@ -131,7 +119,6 @@ export default function Manufacturer() {
       value: 'INACTIVE',
     },
   ];
-
   return (
     <>
       <div>
@@ -140,7 +127,7 @@ export default function Manufacturer() {
           <div className='product-config-content' style={{ marginBottom: 16, display: 'flex', gap: '30px' }}>
             {/* <div style={{ width: '20%',height: '100%' }}> */}
             <WhiteBox style={{ width: '20%' }}>
-              <label>Trang thái:</label>
+              <label>Trạng thái:</label>
               <Select
                 style={{ height: '50px', padding: '5px 0px', width: '100%' }}
                 value={search}
@@ -169,14 +156,12 @@ export default function Manufacturer() {
                       enterButton={<SearchOutlined />}
                     />
                   </Col>
-
                   <Col>
                     <WithPermission permission={POLICIES.WRITE_MANUFACTURER}>
                       <Button icon={<PlusCircleOutlined />} onClick={() => handleOpenForm()} type="primary">
                         Thêm mới
                       </Button>
                     </WithPermission>
-
                   </Col>
                 </Row>
               </div>
@@ -195,7 +180,6 @@ export default function Manufacturer() {
                 />
               </WhiteBox>
             </div>
-
           </div>
         </div>
         <ModalAnt
@@ -204,7 +188,6 @@ export default function Manufacturer() {
           onCancel={handleCloseForm}
           footer={null}
           destroyOnClose
-
         >
           <ManufacturerForm id={id} callBack={handleCloseForm} updateManufacturer={updateManufacturer} />
         </ModalAnt>

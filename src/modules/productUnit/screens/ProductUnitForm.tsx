@@ -1,19 +1,17 @@
 import React, { useCallback, useEffect } from 'react';
 import { Button, Form, Input } from 'antd';
 import { useGetlistProductUnitById, useUpdateProductUnit,useCreateProductUnit, useResetAction } from '../productUnit.hook';
-
 interface Props {
   id?: any;
   callBack?: () => void;
-}
-
+};
 interface FieldType {
   code: string
   id: string
   name: string
   note: string
   isAction:String
-}
+};
 const { TextArea } = Input;
 const ProductUnitForm: React.FC<Props> = ({ id, callBack }) => {
   const [, updateProductUnit] = useUpdateProductUnit(callBack);
@@ -31,20 +29,16 @@ const ProductUnitForm: React.FC<Props> = ({ id, callBack }) => {
       })
     }
   }, [id,productUnitById,form]);
-
   const onFinish = useCallback((values: FieldType) => {
     console.log('s');
      const data: FieldType = {
       ...values,
-      // code:'DMT0001'
-      // status:'',
       };
       if (id) {
         updateProductUnit({ ...data, id });
       }else {
-        createProductUnit({ ...data });
-        
-      }
+        createProductUnit({ ...data });     
+      };
   },[updateProductUnit,createProductUnit,id])
 
   return (

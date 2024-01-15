@@ -1,4 +1,5 @@
-import { Button, Col, Form, Row, Select, SelectProps, Space, Switch } from 'antd';
+import { DeleteOutlined, InfoCircleTwoTone, PlusCircleOutlined, SearchOutlined } from '@ant-design/icons';
+import { Button, Col, Form, Row, Space } from 'antd';
 import Search from 'antd/es/input/Search';
 import { ColumnsType } from 'antd/es/table';
 import React, { useCallback, useState } from 'react';
@@ -6,13 +7,11 @@ import ModalAnt from '~/components/Antd/ModalAnt';
 import TableAnt from '~/components/Antd/TableAnt';
 import Breadcrumb from '~/components/common/Breadcrumb';
 import WhiteBox from '~/components/common/WhiteBox';
-import { SearchOutlined, DeleteOutlined, EditOutlined, InfoCircleTwoTone, PlusCircleOutlined } from '@ant-design/icons';
-import useTranslate from '~/lib/translation';
-import { useGetlistProductUnit, useDeleteProductUnit, useProductUnitQueryParams, useUpdateProductUnitParams, useProductUnitPaging } from '../productUnit.hook';
-import ProductUnitForm from './ProductUnitForm';
-import POLICIES from "~/modules/policy/policy.auth";
-import { useMatchPolicy } from "~/modules/policy/policy.hook";
 import WithPermission from '~/components/common/WithPermission';
+import useTranslate from '~/lib/translation';
+import POLICIES from "~/modules/policy/policy.auth";
+import { useDeleteProductUnit, useGetlistProductUnit, useProductUnitPaging, useProductUnitQueryParams, useUpdateProductUnitParams } from '../productUnit.hook';
+import ProductUnitForm from './ProductUnitForm';
 type propsType = {
 
 }
@@ -31,22 +30,18 @@ export default function ProductUnit(props: propsType): React.JSX.Element {
     name: string;
     note: string,
     status: string,
-  }
-
+  };
   const handleOpenForm = useCallback((id?: any) => {
     if (id) setId(id);
     setShowForm(true);
   }, []);
   const handleDelete = (id: any) => {
     deleteProductConfig(id);
-
   };
   const handleCloseForm = useCallback(() => {
     setShowForm(false);
     setId(null);
   }, []);
-
-
   const columns: ColumnsType<DataType> = [
     {
       title: 'Tên đơn vị tính',
@@ -90,7 +85,6 @@ export default function ProductUnit(props: propsType): React.JSX.Element {
   return (
     <div className='product-config'>
       <Breadcrumb title={t('unit')} />
-
       <div className="product-config-action" >
         <Row justify="space-between">
           <Col span={8}>
@@ -99,7 +93,6 @@ export default function ProductUnit(props: propsType): React.JSX.Element {
               placeholder="Nhập bất kì để tìm..."
               value={keyword}
               onChange={(e) => (setKeyword(e.target.value))
-
               }
               onSearch={onSearch}
               enterButton={<SearchOutlined />}
@@ -135,7 +128,6 @@ export default function ProductUnit(props: propsType): React.JSX.Element {
         footer={null}
         destroyOnClose
         width={800}
-
       >
         <ProductUnitForm id={id} callBack={handleCloseForm} />
       </ModalAnt>
