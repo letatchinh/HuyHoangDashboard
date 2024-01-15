@@ -40,7 +40,7 @@ const rootReducer = combineReducers({
     branch: branchModule.redux.reducer,
     geo: geoModule.redux.reducer,
     statusConfig: statusModule.redux.reducer,
-    configDiscount: configDiscount.redux.reducer,
+    pharmacy: pharmacyModule.redux.reducer,
     employee: employeeModule.redux.reducer,
     user: userModule.redux.reducer,
     userGroup: userGroupModule.redux.reducer,
@@ -52,7 +52,7 @@ const rootReducer = combineReducers({
     medicine:medicineModule.redux.reducer,
     product:productModule.redux.reducer,
     workBoard:workBoardModule.redux.reducer,
-    pharmacy: pharmacyModule.redux.reducer,
+    configDiscount: configDiscount.redux.reducer,
 
 });
 export default rootReducer

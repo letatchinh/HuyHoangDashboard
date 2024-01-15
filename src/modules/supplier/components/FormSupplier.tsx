@@ -13,10 +13,9 @@ import { useEffect } from "react";
 import RenderLoading from "~/components/common/RenderLoading";
 import { validatePhoneNumberAntd } from "~/utils/validate";
 import { GiftTwoTone } from "@ant-design/icons";
-import DiscountList from "~/modules/product/components/DiscountList";
-import ProductModule from "~/modules/product";
 import { get } from "lodash";
-import { convertSubmitData } from "../supplier.service";
+import { convertInitSupplier, convertSubmitData } from "../supplier.service";
+import CumulativeDiscountModule from '~/modules/cumulativeDiscount';
 
 const FormSupplier = ({
   id,
@@ -46,7 +45,8 @@ const FormSupplier = ({
 
   useEffect(() => {
     if (id && supplier) {
-      form.setFieldsValue(supplier);
+      const initSupplier = convertInitSupplier(supplier);
+      form.setFieldsValue(initSupplier);
     }
   }, [form, id, supplier]);
 
@@ -54,7 +54,7 @@ const FormSupplier = ({
     const key = Object.keys(value)[0];
     switch (key) {
       case "cumulativeDiscount":
-        const cumulativeDiscount = ProductModule.service.onDiscountChange(values[key]);
+        const cumulativeDiscount = CumulativeDiscountModule.service.onDiscountChange(values[key]);
         console.log(cumulativeDiscount,'cumulativeDiscount');
         
         form.setFieldsValue({
@@ -121,7 +121,7 @@ const FormSupplier = ({
             </span>
           }
         >
-          <DiscountList target={ProductModule.constants.TARGET.supplier} loading={isLoading} form={form} />
+          <CumulativeDiscountModule.components.DiscountList target={CumulativeDiscountModule.constants.TARGET.supplier} loading={isLoading} form={form} />
         </BaseBorderBox>
         <div className="btn-footer">
           <Button

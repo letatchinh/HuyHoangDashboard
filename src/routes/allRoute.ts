@@ -33,7 +33,6 @@ export const mainRoutes :PathRouteProps[] = [
   { path: PATH_APP.configDiscount.root, Component: ConfigDiscountPage },
   { path: PATH_APP.pharmacy.root, Component: Pharmacy },
  
-
   { path: '/', Component: Homepage },
 ]
 

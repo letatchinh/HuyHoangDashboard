@@ -161,7 +161,8 @@ export const resource: ItemType[] = [
         path : PATH_APP.user.root,
         key: PATH_APP.user.root,
         permission :[POLICIES.READ_USER, POLICIES.READ_USERGROUP],
-    },
+      },
+
         //Nhà thuốc
     {
       label: "Nhà thuốc",
@@ -169,6 +170,8 @@ export const resource: ItemType[] = [
       path: PATH_APP.pharmacy.root,
       key: PATH_APP.pharmacy.root,
     },
+      
+       
  ];
 
 //Required permission is string[][]; 

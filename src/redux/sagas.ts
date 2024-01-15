@@ -4,7 +4,7 @@ import supplierModule from '~/modules/supplier';
 import branchModule from '~/modules/branch';
 import geoModule from '~/modules/geo';
 import statusModule from '~/modules/statusConfig';
-import configDiscountModule from '~/modules/configDiscount';
+import pharmacyModule from '~/modules/pharmacy';
 import employeeModule from '~/modules/employee';
 import userModule from '~/modules/user';
 import userGroupModule from '~/modules/userGroup';
@@ -16,7 +16,7 @@ import rankModule from '~/modules/ranking';
 import medicineModule from '~/modules/medicine';
 import productModule from '~/modules/product';
 import workBoardModule from '~/modules/workBoard';
-import pharmacyModule from '~/modules/pharmacy';
+import configDiscountModule from '~/modules/configDiscount';
 export default function* rootSaga() {
   yield all([
     authModule.redux.saga(),
@@ -38,6 +38,5 @@ export default function* rootSaga() {
 
     workBoardModule.redux.saga(),
     pharmacyModule.redux.saga(),
-
   ]);
 };
