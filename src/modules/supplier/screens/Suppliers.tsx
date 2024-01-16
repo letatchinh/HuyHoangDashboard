@@ -64,6 +64,11 @@ export default function Supplier(): React.JSX.Element {
   const columns: ColumnsType = useMemo(
     () => [
       {
+        title: "Mã nhà cung cấp",
+        dataIndex: "code",
+        key: "code",
+      },
+      {
         title: "Nhà cung cấp",
         dataIndex: "name",
         key: "name",
@@ -74,7 +79,7 @@ export default function Supplier(): React.JSX.Element {
         key: "listProduct",
         align: "center",
         render(_id) {
-          return <Link to={PATH_APP.product.root + "/" + _id}>Xem chi tiết sản phẩm</Link>
+          return <Link target={'_blank'} to={PATH_APP.product.root + "/" + _id}>Xem chi tiết sản phẩm</Link>
         },
       },
       {
@@ -89,11 +94,7 @@ export default function Supplier(): React.JSX.Element {
         key: "name",
         align: "center",
         render(value) {
-          return (
-            <Typography.Text strong>
-              100.000 <Vnd />
-            </Typography.Text>
-          );
+          return 0
         },
       },
       {
@@ -157,6 +158,7 @@ export default function Supplier(): React.JSX.Element {
       <Row className="mb-3" justify={"space-between"}>
         <Col span={8}>
           <Search
+            allowClear
             onSearch={(value) => onParamChange({ keyword: value?.trim() })}
             enterButton="Tìm kiếm"
             placeholder="Nhập để tìm kiếm"

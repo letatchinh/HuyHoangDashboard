@@ -4,9 +4,11 @@ import * as productConfigHook from "./productConfig.hook";
 import reducer from "./redux/reducer";
 import saga from "./redux/saga";
 import productConfigAuth from "./productConfig.auth";
+import ProductConfigForm from "./screens/ProductConfigForm";
 const moduleExport ={
     page:{
         index : ProductConfig,
+        form : ProductConfigForm
     },
     api : productApi,
     hook : productConfigHook,

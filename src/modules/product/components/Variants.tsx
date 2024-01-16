@@ -1,20 +1,23 @@
 import { MinusCircleOutlined, PlusCircleOutlined } from "@ant-design/icons";
-import { Button, Col, Form, Row, Select } from "antd";
+import { Button, Col, Form, Modal, Row, Select } from "antd";
 import { get } from "lodash";
-import React from "react";
+import React, { useCallback, useState } from "react";
 import InputNumberAnt from "~/components/Antd/InputNumberAnt";
 import RenderLoading from "~/components/common/RenderLoading";
-import { useGetListProductUnitNoParam } from "~/modules/productUnit/productUnit.hook";
 import { TypePropVariants } from "../product.modal";
+import UnitModule from "~/modules/productUnit";
 export default function Variants({
   form,
   isLoading : loading,
 }: TypePropVariants): React.JSX.Element {
-  const [units, isLoading] = useGetListProductUnitNoParam();
+  const [units, isLoading] = UnitModule.hook.useGetListProductUnitNoParam();
   const variants = Form.useWatch("variants", form);
-
+  const [open, setOpen] = useState(false);
+  const onOpen = useCallback(() => setOpen(true), []);
+  const onClose = useCallback(() => setOpen(false), []);
   const isUsed = (cur : string,unitId:String) => (unitId !== cur) && (variants?.some((variant:any) => get(variant,'productUnit') === unitId))
   return (
+  <>
     <Form.List name={"variants"}>
       {(fields, { add, remove }) => {
         return (
@@ -102,9 +105,16 @@ export default function Variants({
             >
               Thêm đơn vị
             </Button>
+            <Button onClick={onOpen}>
+              +
+            </Button>
           </>
         );
       }}
     </Form.List>
+    <Modal destroyOnClose open={open} onCancel={onClose} footer={null}>
+        <UnitModule.page.form callBack={onClose} />
+      </Modal>
+  </>
   );
 }
