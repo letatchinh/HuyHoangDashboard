@@ -129,3 +129,12 @@ export const getShortName = (name: string): string => {
   if (!arrName.length) return "";
   return (arrName[arrName.length - 2]?.charAt(0) || "") + (arrName[arrName.length - 1]?.charAt(0) || "");
 };
+export function convertQueryToObject(){
+  const queryString = window.location.search;
+  const urlParams = new URLSearchParams(queryString);
+  const paramsObject: any = {};
+  urlParams.forEach((value, key) => {
+    paramsObject[key] = value;
+  });
+  return paramsObject
+}

@@ -24,7 +24,13 @@ const BoardConfig: FC<BoardConfigProps> = ({ name, id, dataBoardConfigItem }) =>
   const [visible, setVisible] = useState(false);
   const [inputValue, setInputValue] = useState(name);
   const navigate = useNavigate();
+  const [dropdownVisible, setDropdownVisible] = useState(false);
 
+  const handleButtonClick = () => {
+    // Handle button click if needed
+    openForm(id);
+    setDropdownVisible(true); // Close the dropdown after clicking the button
+  };
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value);
   };
@@ -42,12 +48,9 @@ const BoardConfig: FC<BoardConfigProps> = ({ name, id, dataBoardConfigItem }) =>
       console.log(error);
     }
   };
-  const handleButtonClick = () => {
-    // Xử lý logic khi nút được click, nếu cần.
-  };
 
-  const menu = (
-   <TaskForm/>
+  const menu : any = (
+    <TaskForm />
   );
   return (
     <div className="work-list-main">
@@ -88,15 +91,20 @@ const BoardConfig: FC<BoardConfigProps> = ({ name, id, dataBoardConfigItem }) =>
             {/* </WithOrPermission> */}
           </Row>
           <Tooltip title="Thêm mới công việc" color="blue" placement="bottom" mouseEnterDelay={0.2}>
-      <Dropdown trigger={['click']} overlay={menu}>
-        <Button
-          type="primary"
-          className="add-task"
-          icon={<PlusOutlined />}
-          onClick={() => openForm(id)}
-        />
-      </Dropdown>
-    </Tooltip>
+            <Dropdown
+              trigger={['click']}
+              open={dropdownVisible}
+              overlay={menu}
+              onOpenChange={(visible) => setDropdownVisible(visible)}
+            >
+              <Button
+                type="primary"
+                className="add-task"
+                icon={<PlusOutlined />}
+                onClick={handleButtonClick}
+              />
+            </Dropdown>
+          </Tooltip>
         </Space>
       </div>
       <Droppable key={id} droppableId={id} type={'ROW'}>

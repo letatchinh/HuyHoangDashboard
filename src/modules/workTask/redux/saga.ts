@@ -25,7 +25,7 @@ function* createWorkTask({payload} : any) : any {
   try {
     const data = yield call(api.create,payload);
     yield put(workTaskActions.createSuccess(data));
-    const dataType:any ={ id: payload.sprintId } 
+    const dataType:any ={ id: payload.boardConfigId } 
     yield put(workListActions.addBoardConfigItemRequest(dataType))
   } catch (error:any) {
     yield put(workTaskActions.createFailed(error));

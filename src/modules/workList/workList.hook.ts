@@ -139,7 +139,7 @@ export const useWorkListQueryParams = (sprintId?: any) => {
 };
 
 export const useUpdateWorkListParams = (
-  query: any,
+  query?: any,
   listOptionSearch?: any[]
 ) => {
   const navigate = useNavigate();

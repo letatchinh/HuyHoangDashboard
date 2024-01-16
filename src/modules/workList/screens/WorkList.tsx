@@ -14,6 +14,7 @@ import BoardConfig from '../components/WorkListConfig';
 import { FormTaskContextProps } from '../workList.modal';
 import { useCreateTask, useDeleteTask, useUpdateTask } from '~/modules/workTask/workTask.hook';
 import { useGetBoardById } from '~/modules/workBoard/workBoard.hook';
+import Menufilter from '../components/Menufilter';
 // import { useGetSprintInfo } from '~/hooks/workSprint';
 // import { useWorkListQueryParams } from '~/hooks/workList';
 // import { WithOrPermission } from '../Common';
@@ -146,7 +147,7 @@ const [lengthList, setLength] = useState<number>(
           )}
         </Space>
         <Suspense fallback={<p>...</p>}>
-          {/* <Menufilter /> */}
+          <Menufilter />
         </Suspense>
         <hr />
         <div className="workflow" ref={workflowRef}>
