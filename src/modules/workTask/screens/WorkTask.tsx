@@ -12,11 +12,11 @@ import { TaskItemProvider } from '~/store/TaskItemContext'
 interface Props{
   idTask?: any
 };
-const UploadfileTaskItem = lazy(() =>
-import('../components/Upload/index.js').then((module: any) => ({
-    default: module.UploadfileTaskItem,
-  }))
-);
+// const UploadfileTaskItem = lazy(() =>
+// import('../components/Upload/index.js').then((module: any) => ({
+//     default: module.UploadfileTaskItem,
+//   }))
+// );
 // const SelectStatusTask = lazy(()=>import('./common/SelectStatusTask.js'));
 // const RelationTask = lazy(()=>import('./Detail/RelationTask.js'));
 // const ActivityTask = lazy(()=>import('./Detail/ActivityTask.js'));

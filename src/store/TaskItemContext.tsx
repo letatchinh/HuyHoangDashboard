@@ -1,6 +1,8 @@
 import { get } from 'lodash';
 import { createContext, useContext, useMemo } from 'react';
-import { useGetHistoryActivityTaskById, useGetListManagersByIdBoard, useGetListStaffsByIdBoard, useMatchPolicy, useProfile } from '~/modules/workTask/workTask.hook';
+import { useProfile } from '~/modules/auth/auth.hook';
+import { useGetListManagersByIdBoard, useGetListStaffsByIdBoard } from '~/modules/workBoard/workBoard.hook';
+import { useGetHistoryActivityTaskById} from '~/modules/workTask/workTask.hook';
 const ROLE = {
     manage: 'manage',
     member: 'member',
@@ -58,9 +60,9 @@ export function TaskItemProvider({
                 assign: {users, isLoading, canAssign,staffs,managers},
                 ROLE,
                 ROLE_VI,
-                allHistoryTaskById,
-                dataTask,
-                profile,
+                // allHistoryTaskById,
+                // dataTask,
+                // profile,
             }}
             
             // allHistoryTaskById={allHistoryTaskById}
