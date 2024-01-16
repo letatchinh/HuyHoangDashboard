@@ -6,7 +6,7 @@ import { ArrowLeftOutlined, CloseOutlined } from '@ant-design/icons';
 import { ResizableBox } from 'react-resizable';
 import Text from 'antd/lib/typography/Text';
 import { get } from 'lodash';
-import { useCreateWorkList, useDeleteWorkList, useGetListBoardConfig, useWorkListQueryParams } from '../workList.hook';
+import { useCreateWorkList, useDeleteWorkList, useGetListBoardConfig, useListBoardConfigItem, useWorkListQueryParams } from '../workList.hook';
 // import Menufilter from '../components/Menufilter';
 import { useGetWorkSprint } from '~/modules/workSprint/workSprint.hook';
 import MenuListBoard from '~/modules/workSprint/components/MenuListBoard';
@@ -38,13 +38,14 @@ const WorkList = () => {
   const [visibleModal, setVisibleModal] = useState(false);
   const [boardConfig] = useGetListBoardConfig(query);
   const boardConfigMemo = useMemo(() => (boardConfig ?? []).map(({ name, _id }:any) => ({ name, _id })), [boardConfig]);
-  // const [data] = useListBoardConfigItem();
+  const [data] = useListBoardConfigItem();
+  console.log(data,'ádsd');
   const [propsModal, setPropsModal] = useState({});
   const [visibleInfo, setVisibleInfo] = useState(false);
 const [lengthList, setLength] = useState<number>(
   workflowRef?.current?.offsetWidth ?? window.innerWidth
 );
-  let data = boardConfigMemo;
+  // let data = boardConfigMemo;
   
   const [taskData, setTaskData] = useState('');
   const [visibleListBoard, setVisibleListBoard] = useState(false);
@@ -62,6 +63,7 @@ const [lengthList, setLength] = useState<number>(
   };
 
   const openFormTask = (id:any, data:any) => {
+    
     setPropsModal({ boardConfigId: id });
     setVisibleModal(true);
   };
@@ -236,17 +238,6 @@ const [lengthList, setLength] = useState<number>(
             </Suspense>
           </ResizableBox>
         </Drawer>
-        <Modal
-          visible={visibleModal}
-          onCancel={() => setVisibleModal(false)}
-          footer={false}
-          closable={false}
-          destroyOnClose
-        >
-          <Suspense fallback={<p>...</p>}>
-            {/* <TaskForm /> */}
-          </Suspense>
-        </Modal>
       </FormTaskContext.Provider>
     </div>
   );

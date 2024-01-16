@@ -3,8 +3,12 @@ import requester from "~/api/requester";
 
 const apis = {
     getAll: (query?: any) => requester.get(`/api/v1/task-item`, query),
+    
     getById: (id?: any) => requester.get(`/api/v1/task-item/${id}`),
-    create: (data?: any) => requester.post(`/api/v1/task-item`, data),
+    create: (data?: any) =>{
+        console.log(data)
+       return requester.post(`/api/v1/task-item`, data)
+    },
     update: (data?: any) => requester.put(`/api/v1/task-item/${get(data,'_id')}`, data),
     delete: (id?: any) => requester.delete(`/api/v1/task-item/${id}`),
     copyTask: ({id,...data}:any) => requester.post(`/task-item-copy/${id}`,data),

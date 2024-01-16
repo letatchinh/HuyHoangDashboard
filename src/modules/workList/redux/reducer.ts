@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { get } from "lodash";
+import { get, sortBy } from "lodash";
 import { InstanceModuleRedux } from "~/redux/instanceModuleRedux";
 import { cloneInitState } from "../workList.modal";
 
@@ -24,6 +24,19 @@ class WorkListClassExtend extends InstanceModuleRedux {
         state.isLoadingListWorkConfig = false;
         state.getListWorkConfigFailed = payload;
       },
+      addBoardConfigItemRequest: (state: cloneInitState, { payload }: { payload: {id:string,[key:string]:any } }) => {
+        // if(!state.dataBoardConfig?.[payload.id]){
+        //   const id :string = payload.id;
+        //   Object.assign(state.dataBoardConfig,{[id]:[]})
+        // }
+        state.dataBoardConfig[payload.id] = []
+      },
+      addBoardConfigItemSuccess: (state: any, { payload }: { payload?: any }) => {
+        state.dataBoardConfig[payload?.id] = sortBy(payload.data, [function (o) { return o.ordinal }]);
+      },
+      addBoardConfigItemFaled: (state: any, { payload }: { payload?: any }) => {
+        state.dataBoardConfig[payload.id] = []
+      },
       // Want to add more reducers here...
     };
 
@@ -32,6 +45,7 @@ class WorkListClassExtend extends InstanceModuleRedux {
       isLoadingListWorkConfig: false,
       getListWorkConfigFailed: null,
       listWorkConfig: [],
+      dataBoardConfig:{}
       
       // Want to add more state here...
     };

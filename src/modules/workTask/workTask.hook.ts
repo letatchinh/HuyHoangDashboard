@@ -7,6 +7,7 @@ import {
     getSelectors,
     useFailed, useFetchByParam,
     useQueryParams,
+    useResetState,
     useSubmit,
     useSuccess
 } from "~/utils/hook";
@@ -148,4 +149,7 @@ export const useUpdateWorkTaskParams = (
   };
 
   return [keyword, { setKeyword, onParamChange }];
+};
+export const useResetAction = () => {
+  return useResetState(workTaskActions.resetAction);
 };

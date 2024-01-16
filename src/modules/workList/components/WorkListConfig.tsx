@@ -8,6 +8,7 @@ import { Droppable, Draggable } from 'react-beautiful-dnd';
 import { useNavigate } from 'react-router-dom';
 import { useFormTaskContext } from '../screens/WorkList';
 import TaskForm from '~/modules/workTask/components/TaskForm';
+import Task from '~/modules/workTask/screens/WorkTask';
 
 // const Task = Suspense.lazy(() => import('./Workitem.js'));
 
@@ -87,25 +88,15 @@ const BoardConfig: FC<BoardConfigProps> = ({ name, id, dataBoardConfigItem }) =>
             {/* </WithOrPermission> */}
           </Row>
           <Tooltip title="Thêm mới công việc" color="blue" placement="bottom" mouseEnterDelay={0.2}>
-            {/* <Button
-              type="primary"
-              onClick={() => {
-                setVisible(true);
-              }}
-              className="add-task"
-              icon={<PlusOutlined />}
-            /> */}
-             <Dropdown trigger={['click']} overlay={menu}>
-      <Button
-        type="primary"
-        className="add-task"
-        icon={<PlusOutlined />}
-        onClick={handleButtonClick}
-      >
-        
-      </Button>
-    </Dropdown>
-          </Tooltip>
+      <Dropdown trigger={['click']} overlay={menu}>
+        <Button
+          type="primary"
+          className="add-task"
+          icon={<PlusOutlined />}
+          onClick={() => openForm(id)}
+        />
+      </Dropdown>
+    </Tooltip>
         </Space>
       </div>
       <Droppable key={id} droppableId={id} type={'ROW'}>
@@ -131,13 +122,10 @@ const BoardConfig: FC<BoardConfigProps> = ({ name, id, dataBoardConfigItem }) =>
                       className="task-list__item"
                     >
                       <Suspense fallback={<div >...</div>}>
-                        {/* <Task
+                        <Task
                           key={task._id}
                           task={task}
-                          idBoard={id}
-                          nameBoard={name}
-                          tasks={tasks}
-                        /> */}
+                        />
                       </Suspense>
                     </div>
                   )}

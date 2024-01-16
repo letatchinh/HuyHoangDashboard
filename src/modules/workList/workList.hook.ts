@@ -23,6 +23,7 @@ const getSelector = (key: keyof cloneInitState) => (state: RootState) =>
   const listWorkConfig = getSelector('listWorkConfig');
   const loadingListWorkConfig = getSelector('isLoadingListWorkConfig');
   const getListWorkConfigFailed = getSelector('getListWorkConfigFailed');
+  const dataBoardConfig = getSelector('dataBoardConfig')
 const {
   loadingSelector,
   listSelector,
@@ -83,7 +84,17 @@ export const useCreateWorkList = (callback?: any) => {
     loadingSelector: isSubmitLoadingSelector,
   });
 };
-
+export const useListBoardConfigItem = (query?:any) => {
+  const data = useSelector(dataBoardConfig);
+  // const _clone = useMemo(()=>{
+  //   let clonedata = {};
+  //   for (const key in data) {
+  //     clonedata[key] = sortBy(data[key],[function(o){return o.ordinal}])
+  //   }
+  //   return clonedata
+  // },[data])
+   return [data]
+};
 export const useUpdateWorkList = (callback?: any) => {
   useSuccess(
     updateSuccessSelector,

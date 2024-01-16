@@ -1,6 +1,7 @@
 import { put, call, takeLatest } from 'redux-saga/effects';
 import api from '../workTask.api'; 
 import { workTaskActions } from './reducer';
+import { workListActions } from '~/modules/workList/redux/reducer';
 
 function* getListWorkTask({payload:query} : any) : any {
   try {
@@ -24,6 +25,8 @@ function* createWorkTask({payload} : any) : any {
   try {
     const data = yield call(api.create,payload);
     yield put(workTaskActions.createSuccess(data));
+    const dataType:any ={ id: payload.sprintId } 
+    yield put(workListActions.addBoardConfigItemRequest(dataType))
   } catch (error:any) {
     yield put(workTaskActions.createFailed(error));
   }
@@ -37,10 +40,12 @@ function* updateWorkTask({payload} : any) : any {
     yield put(workTaskActions.updateFailed(error));
   }
 }
-function* deleteWorkTask({payload : id} : any) : any {
+function* deleteWorkTask({payload} : any) : any {
   try {
-    const data = yield call(api.delete,id);
+    const data = yield call(api.delete,payload.id);
     yield put(workTaskActions.deleteSuccess(data));
+    const dataType:any ={ id: payload.boardConfigId } 
+    yield put(workListActions.addBoardConfigItemRequest(dataType))
   } catch (error:any) {
     yield put(workTaskActions.deleteFailed(error));
   }
