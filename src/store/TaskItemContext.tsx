@@ -14,11 +14,20 @@ const ROLE_VI = {
     member: 'Thành viên',
     default: 'Mặc định',
 
-}
-const TaskItem = createContext({
+};
+interface PropsContext {
+    assign?: any;
+    ROLE?: any;
+    ROLE_VI?: any;
+    allHistoryTaskById?: any;
+    dataTask?: any;
+};
+const TaskItem = createContext<PropsContext>({
     assign: {},
     ROLE,
-    ROLE_VI
+    ROLE_VI,
+    allHistoryTaskById: [],
+    dataTask: undefined,
 });
 
 export function TaskItemProvider({
@@ -60,12 +69,10 @@ export function TaskItemProvider({
                 assign: {users, isLoading, canAssign,staffs,managers},
                 ROLE,
                 ROLE_VI,
-                // allHistoryTaskById,
-                // dataTask,
+                allHistoryTaskById,
+                dataTask,
                 // profile,
             }}
-            
-            // allHistoryTaskById={allHistoryTaskById}
         >
             {children}
         </TaskItem.Provider>

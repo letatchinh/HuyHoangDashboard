@@ -21,7 +21,20 @@ interface cloneInitState extends initStateSlice {
 
   isLoadingCommentList?: boolean,
   listComment?: any,
+
+  isloadingRelationTask?: boolean,
+  listTaskRelation?: any[],
+  getListTaskRelationFailed?: any,
+
+  isUpdateRelation?: boolean,
+  updateRelationSuccess?: any,
+  updateRelationFailed?: any,
+
+  isloadingSearchTask?: boolean,
+  getSearchListTaskFailed?: any, 
+  listTaskSearch?: any[] ,
 };
+
 const calculateProgress = (progressList = []) => {
   const newProgressList = progressList?.map((progress : any) => {
       const listDone = get(progress, 'progress',[])?.filter((item: any) => !!get(item,'[1].check'));
@@ -98,6 +111,45 @@ class WorkTaskClassExtend extends InstanceModuleRedux {
         state.updateProgressFailed = payload;
       },
 
+      getRelationTaskRequest: (state: cloneInitState, { payload }: { payload?: any }) => {
+        state.isloadingRelationTask = true;
+        state.updateRelationSuccess= null;
+        state.updateRelationFailed= null;
+      },
+      getRelationTaskSuccess: (state: cloneInitState, { payload }: { payload?: any }) => {
+        state.isloadingRelationTask = false;
+        state.listTaskRelation = payload;
+      },
+      getRelationTaskFailed: (state: cloneInitState, { payload }: { payload?: any }) => {
+        state.isloadingRelationTask = false;
+        state.getListTaskRelationFailed = payload;
+      },
+
+      searchTaskRequest: (state: cloneInitState, { payload }: { payload?: any }) => {
+        state.isloadingSearchTask = true;
+      },
+      searchTaskSuccess: (state: cloneInitState, { payload }: { payload?: any }) => {
+        state.isloadingSearchTask = false;
+        state.listTaskSearch = payload;
+      },
+      searchTaskFailed: (state: cloneInitState, { payload }: { payload?: any }) => {
+        state.isloadingSearchTask = false;
+        state.getSearchListTaskFailed = payload;
+      },
+
+      updateRelationTaskRequest: (state: cloneInitState, { payload }: { payload?: any }) => {
+        state.isUpdateRelation = true;
+        state.updateRelationSuccess= null;
+        state.updateRelationFailed= null;
+      },
+      updateRelationTaskSuccess: (state: cloneInitState, { payload }: { payload?: any }) => {
+        state.isUpdateRelation = false;
+        state.updateRelationSuccess = payload;
+      },
+      updateRelationTaskFailed: (state: cloneInitState, { payload }: { payload?: any }) => {
+        state.isUpdateRelation = false;
+        state.updateRelationFailed = payload;
+      },
 
       // Want Add more reducer Here...
     }
@@ -116,6 +168,18 @@ class WorkTaskClassExtend extends InstanceModuleRedux {
 
       isLoadingCommentList: false,
       listComment: [],
+
+      listTaskRelation: [],
+      isloadingRelationTask: false,
+      getListTaskRelationFailed: null,
+      
+      isUpdateRelation: false,
+      updateRelationSuccess: null,
+      updateRelationFailed: null,
+
+      listTaskSearch: [],
+      isloadingSearchTask: false,
+      getSearchListTaskFailed:null,
       // Want Add more State Here...
     };
   }

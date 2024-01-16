@@ -193,44 +193,35 @@ export const useCopyTask = () => {
   })
 };
 
-export const useResetComment =()=>{
+export const useResetComment = () => {
   return useSubmit({
-    loadingSelector: ()=> false,
+    loadingSelector: () => false,
     action: workTaskSliceAction.resetComment,
   })
+};
+
+export const useSearchTask = () => {
+  useFailed(getSearchListTaskFailed, 'Tìm kiếm liên kết bị lỗi!');
+  return useSubmit({
+    loadingSelector: () => false,
+    action: workTaskSliceAction.searchTaskRequest,
+  })
+};
+
+export const useGetRelationTask = (query: any) => {
+  return useFetchByParam({
+    action: workTaskSliceAction.getRelationTaskRequest,
+    loadingSelector: loadingGetTaskRelation,
+    dataSelector: listRelation,
+    failedSelector: getListTaskRelationFailed,
+    param: query
+  })
+};
+
+export const useUpdateRelationTask =()=>{
+  return useSubmit({
+    loadingSelector:()=> false,
+    action : workTaskSliceAction.updateRelationTaskRequest,
+  })
 }
-// export const useGetListManagersByIdBoard = (params: any) => {
-//   return useFetchByParam({
-//     action: workBo,
-//     loadingSelector: isLoadingManagerByBoard,
-//     dataSelector: listManagersByIdBoard,
-//     failedSelector: getListManagerByBoardFailed,
-//     param: params
-//   })
-// };
 
-// export const useHandleAssign = () => {
-//   useFailed(assignFailedSelector);
-//   return useSubmit({
-//     loadingSelector: isLoadingAssignSelector,
-//     action: assignTask
-//   })
-// }
-
-// export const useUpdateProgress = (callback) => {
-//   useSuccess(updateProgressSuccessSelector, 'Cập nhật công việc thành công',callback);
-//   useFailed(updateProgressFailedSelector);
-//   return useSubmit({
-//     loadingSelector: isSubmitLoadingSelector,
-//     action: updateProgressTask,
-//   })
-// }
-// export const useCopyTask = () => {
-//   useSuccess(createSuccessSelector);
-//   useFailed(createFailedSelector, 'Đã thêm công việc thất bại');
-
-//     return useSubmit({
-//       loadingSelector: isSubmitLoadingSelector,
-//       action: copyTask
-//     })
-// }

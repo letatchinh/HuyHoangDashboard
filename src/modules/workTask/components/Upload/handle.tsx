@@ -4,12 +4,12 @@ import { Modal, notification } from 'antd';
 
 interface Props {
   dataTask?: any;
-  handlFinshed?: any;
+  handleFinshed?: any;
   fileList_?: any;
   setFileList?: any;
 };
 
-export const useHookUpload=({dataTask,handlFinshed,fileList_,setFileList}: Props)=>{
+export const useHookUpload=({dataTask,handleFinshed,fileList_,setFileList}: Props)=>{
   const [modal,contentProvider] = Modal.useModal()
   const [preview, setPreview] =useState(false);
   const [current, setSrc] =useState(0);
@@ -76,7 +76,7 @@ export const useHookUpload=({dataTask,handlFinshed,fileList_,setFileList}: Props
         setTimeout(()=>{
           setFileListTemp([])
         },1000)
-        handlFinshed(tempMemoryFileList,'fileList')
+        handleFinshed(tempMemoryFileList,'fileList')
       notification.success({message:`${file.name} tải lên thành công.`});
     } else if (file?.status === 'error') {
       notification.error({message:`${file.name} tải lên thất bại.`});
@@ -96,7 +96,7 @@ export const useHookUpload=({dataTask,handlFinshed,fileList_,setFileList}: Props
     const removeItem = tempMemoryFileList.findIndex( (val) => val.name === itemRemove.name );    
     tempMemoryFileList.splice(removeItem, 1);
 
-    handlFinshed(tempMemoryFileList,'fileList')
+    handleFinshed(tempMemoryFileList,'fileList')
     setFileList(tempMemoryFileList);
   }
 

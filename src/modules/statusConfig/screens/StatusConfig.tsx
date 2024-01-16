@@ -153,8 +153,8 @@ const StatusConfig: React.FC = () => {
     deleteStatusConfig(_id);
     console.log(_id)
   };
-  const canDelete = useMatchPolicy(POLICIES.DELETE_WORKMANAGERMENT)
-  const canUpdate = useMatchPolicy(POLICIES.UPDATE_WORKMANAGERMENT)
+  const canDelete = useMatchPolicy(POLICIES.DELETE_WORKMANAGEMENT)
+  const canUpdate = useMatchPolicy(POLICIES.UPDATE_WORKMANAGEMENT)
   const defaultColumns: (ColumnTypes[number] & { editable?: boolean; dataIndex: string })[] = [
     {
       title: "Trạng thái",

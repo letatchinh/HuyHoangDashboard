@@ -5,12 +5,12 @@ import { BASE_URL } from '~/constants/defaultValue';
 
 interface Props {
   dataTask?: any;
-  handlFinshed?: any;
+  handleFinshed?: any;
   fileList_?: any;
   setFileList?: any;
 };
 
-function UploadfileTaskItem({dataTask,handlFinshed,fileList_,setFileList}: Props) {
+function UploadfileTaskItem({dataTask,handleFinshed,fileList_,setFileList}: Props) {
 
   const {
     onPreview,
@@ -27,7 +27,7 @@ function UploadfileTaskItem({dataTask,handlFinshed,fileList_,setFileList}: Props
       setSrc,
     },
     contentProvider
-  } = useHookUpload({dataTask,handlFinshed,fileList_,setFileList});
+  } = useHookUpload({dataTask,handleFinshed,fileList_,setFileList});
   return (
     <>
       <Upload
