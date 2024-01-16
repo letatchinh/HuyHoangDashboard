@@ -95,6 +95,7 @@ export default function ProductUnit(props: propsType): React.JSX.Element {
               onChange={(e) => (setKeyword(e.target.value))
               }
               onSearch={onSearch}
+              allowClear
               enterButton={<SearchOutlined />}
             />
           </Col>
@@ -115,6 +116,7 @@ export default function ProductUnit(props: propsType): React.JSX.Element {
           size="small"
           pagination={{
             ...paging,
+            showTotal: (total) => `Tổng cộng: ${total} `,
             onChange(page, pageSize) {
               onParamChange({ page, limit: pageSize });
             },

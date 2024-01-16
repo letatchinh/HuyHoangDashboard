@@ -2,7 +2,7 @@ import { DeleteOutlined, InfoCircleTwoTone, PlusCircleOutlined, SearchOutlined }
 import { Button, Col, Form, Input, Row, Select, SelectProps, Space, Switch, message } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { get } from 'lodash';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import ModalAnt from '~/components/Antd/ModalAnt';
 import TableAnt from '~/components/Antd/TableAnt';
 import Breadcrumb from '~/components/common/Breadcrumb';
@@ -29,13 +29,13 @@ export default function ProductConfig() {
   const [id, setId] = useState(null);
   const [form] = Form.useForm();
   const [search, setSearch] = useState(get(query, 'status') || '');
-  const callBack = () => {
+  const handleCloseForm = useCallback(() => {
     setShowForm(false);
-    setId(null)
-  };
+    setId(null);
+  }, []);
   const paging = useProductConfigPaging();
-  const [, deleteProductConfig] = useDeleteProductConfig(callBack);
-  const [isSubmitUpdateLoading, updateProductConfig] = useUpdateProductConfig(callBack);
+  const [, deleteProductConfig] = useDeleteProductConfig(handleCloseForm);
+  const [isSubmitUpdateLoading, updateProductConfig] = useUpdateProductConfig(handleCloseForm);
   const [listProductConfig, isLoading] = useGetlistProductConfig(query);
   const [keyword, { setKeyword, onParamChange }] = useUpdateProductConfigParams(query);
   const { t }: any = useTranslate();
@@ -63,7 +63,7 @@ export default function ProductConfig() {
     deleteProductConfig(id);
 
   };
-  const handleCloseForm = () => {
+  const handleCloseForm1 = () => {
     setShowForm(false);
     setId(null);
   }
@@ -131,11 +131,11 @@ export default function ProductConfig() {
   };
   const options: SelectProps['options'] = [
     {
-      label: 'Active',
+      label: 'Hoạt động',
       value: 'ACTIVE',
     },
     {
-      label: 'InActive',
+      label: 'Không hoạt động',
       value: 'INACTIVE',
     },
   ];
@@ -169,6 +169,7 @@ export default function ProductConfig() {
                     style={{ height: '50px', padding: '5px 0px' }}
                     placeholder="Nhập bất kì để tìm..."
                     value={keyword}
+                    allowClear
                     onChange={(e) => (setKeyword(e.target.value))
                     }
                     onSearch={onSearch}
@@ -192,6 +193,7 @@ export default function ProductConfig() {
                 size="small"
                 pagination={{
                   ...paging,
+                  showTotal: (total) => `Tổng cộng: ${total} `,
                   onChange(page, pageSize) {
                     onParamChange({ page, limit: pageSize });
                   },
@@ -203,13 +205,13 @@ export default function ProductConfig() {
       </div>
       <ModalAnt
         open={showForm}
-        title="Thêm danh mục sản phẩm"
-        onCancel={handleCloseForm}
+        title={id ? 'Cập nhật danh sản phẩm' : 'Tạo mới danh mục sản phẩm'}
+        onCancel={handleCloseForm1}
         footer={null}
         destroyOnClose
         width={800}
       >
-        <ProductGroupForm id={id} callBack={callBack} updateProductConfig={updateProductConfig} />
+        <ProductGroupForm id={id} callBack={handleCloseForm} updateProductConfig={updateProductConfig} />
       </ModalAnt>
     </div>
   );

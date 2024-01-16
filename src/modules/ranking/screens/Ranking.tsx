@@ -119,6 +119,7 @@ export default function Ranking(props: propsType): React.JSX.Element {
           size="small"
           pagination={{
             ...paging,
+            showTotal: (total) => `Tổng cộng: ${total} `,
             onChange(page, pageSize) {
               onParamChange({ page, limit: pageSize });
             },
@@ -127,7 +128,7 @@ export default function Ranking(props: propsType): React.JSX.Element {
       </WhiteBox>
       <ModalAnt
         open={showForm}
-        title={id ? 'Cập nhật ranking' : 'Tạo mới ranking'}
+        title={id ? 'Cập nhật hãng sản xuất' : 'Tạo mới hãng sản xuất'}
         onCancel={handleCloseForm}
         footer={null}
         destroyOnClose

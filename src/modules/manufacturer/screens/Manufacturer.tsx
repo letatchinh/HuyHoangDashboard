@@ -173,6 +173,7 @@ export default function Manufacturer() {
                   size="small"
                   pagination={{
                     ...paging,
+                    showTotal: (total) => `Tổng cộng: ${total} `,
                     onChange(page, pageSize) {
                       onParamChange({ page, limit: pageSize });
                     },

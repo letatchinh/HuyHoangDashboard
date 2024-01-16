@@ -17,7 +17,6 @@ const { TextArea } = Input;
 const ProductConfigForm: React.FC<Props> = ({ id, callBack, updateProductConfig }) => {
   const [, createProductConfig] = useCreateProductConfig(callBack);
   const [productConfigById, isLoading] = useGetlistProductConfigById(id);
-  console.log(productConfigById, 'productConfigById');
   const [form] = Form.useForm();
   useResetAction();
   useEffect(() => {
@@ -29,13 +28,13 @@ const ProductConfigForm: React.FC<Props> = ({ id, callBack, updateProductConfig 
         note,
       })
     }
-  }, [id, productConfigById, form]);
+  }, [id, productConfigById]);
   const onFinish = (values: FieldType) => {
     const data: FieldType = {
       ...values,
     };
     if (id) {
-      updateProductConfig({ data, id });
+      updateProductConfig({ ...data, id });
     } else {
       createProductConfig({ ...data });
 
