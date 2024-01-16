@@ -4,7 +4,7 @@ import React, { useCallback, useMemo, useState } from "react";
 import DebounceSelect from "~/components/common/DebounceSelect";
 import RenderLoading from "~/components/common/RenderLoading";
 import { MAX_LIMIT } from "~/constants/defaultValue";
-import ProductGroupModule from "~/modules/productConfig";
+import ProductGroupModule from "~/modules/productGroup";
 import { getActive } from "~/utils/helpers";
 
 type propsType = {
@@ -72,7 +72,7 @@ export default function SelectProductGroup({
     
     </Form.Item>
       <Modal destroyOnClose open={open} onCancel={onClose} footer={null}>
-      <ProductGroupModule.page.form callBack={onClose} />
+      <ProductGroupModule.page.form callBack={onClose} updateProductConfig={() => {}}/>
     </Modal>
     </>
   );

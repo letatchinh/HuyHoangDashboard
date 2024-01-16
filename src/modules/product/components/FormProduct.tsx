@@ -7,7 +7,7 @@ import DebounceSelect from "~/components/common/DebounceSelect";
 import RenderLoading from "~/components/common/RenderLoading";
 import { MAX_LIMIT } from "~/constants/defaultValue";
 import ManufacturerModule from "~/modules/manufacturer";
-import ProductConfigModule from "~/modules/productConfig";
+import ProductConfigModule from "~/modules/productGroup";
 import { getActive } from "~/utils/helpers";
 import { PRODUCT_TYPE, PRODUCT_TYPE_VI } from "../constants";
 import {

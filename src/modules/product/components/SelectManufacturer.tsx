@@ -70,7 +70,7 @@ export default function SelectManufacturer({
         </Row>
       </Form.Item>
       <Modal destroyOnClose open={open} onCancel={onClose} footer={null}>
-        <ManufacturerModule.page.form callBack={onClose} />
+        <ManufacturerModule.page.form callBack={onClose} updateManufacturer={() => {}}/>
       </Modal>
     </>
   );
