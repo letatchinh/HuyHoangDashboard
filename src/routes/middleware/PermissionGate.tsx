@@ -1,29 +1,23 @@
-import React from 'react';
-import { Route, useNavigate } from 'react-router-dom';
-import { useMatchPolicy } from '~/modules/policy/policy.hook';
+import React, { useMemo } from "react";
+import { Route, Navigate } from "react-router-dom";
+import { useMatchPolicy } from "~/modules/policy/policy.hook";
+interface PermissionGateProps {
+  path?: string;
+  component?: any;
+  permission?: any;
+}
 
-const RedirectTo = ({ path }: any) => {
-  const navigate = useNavigate();
-  React.useEffect(() => {
-    navigate(path, { state: { from: window.location.pathname } });
-  }, [navigate, path]);
-  return null;
-};
-
-const PermissionGate = ({ component: Component, permission, ...rest }: any) => {
+const PermissionGate = ({ component: Component, permission, ...rest }: PermissionGateProps) => {
   const isMatchPolicy = useMatchPolicy(permission);
+  const render = useMemo(() => {
+    if (isMatchPolicy) {
+      return <Component />;
+    } else {
+      return <Navigate to="/" replace={true} />;
+    }
+  }, [isMatchPolicy, Component]);
 
-  return (
-    <Route
-      {...rest}
-      render={(props: any) => {
-        if (!isMatchPolicy) {
-          return <RedirectTo path="/" {...props} />;
-        };
-        return <Component {...props} />;
-      }}
-    />
-  );
+  return <Route {...rest} element={render} />;
 };
 
 export default PermissionGate;

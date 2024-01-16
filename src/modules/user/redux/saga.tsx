@@ -1,6 +1,7 @@
 import { put, call, takeLatest } from 'redux-saga/effects';
 import api from '../user.api'; 
 import { userSliceAction } from './reducer';
+import { setAxiosCompanyId } from '~/api/requester';
 
 function* getListUser({ payload: query }: any): any {
   try {
@@ -44,6 +45,17 @@ function* deleteUser({payload : id} : any) : any {
   } catch (error:any) {
     yield put(userSliceAction.deleteFailed(error));
   }
+};
+
+function* getPolicy({ payload: branchId}: any): any {
+  try {
+    // setAxiosCompanyId(branchId);
+    const policy = yield call(api.getPolicy, branchId);
+    yield put(userSliceAction.getPolicySuccess(policy));
+  } catch (error: any) {
+    // setAxiosCompanyId(null);
+    yield put(userSliceAction.getPolicyFailed(error));
+  }
 }
 
 
@@ -53,4 +65,5 @@ export default function* userSaga() {
   yield takeLatest(userSliceAction.createRequest, createUser);
   yield takeLatest(userSliceAction.updateRequest, updateUser);
   yield takeLatest(userSliceAction.deleteRequest, deleteUser);
+  yield takeLatest(userSliceAction.getPolicyRequest,getPolicy );
 }
