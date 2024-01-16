@@ -162,7 +162,7 @@ export default function PharmacyForm({
               allowEmail={false}
             />
 
-          <CumulativeDiscountModule.components.DiscountList target={CumulativeDiscountModule.constants.TARGET.supplier} loading={isLoading} form={form} />
+          <CumulativeDiscountModule.components.DiscountList target={CumulativeDiscountModule.constants.TARGET.pharma_profile} loading={isLoading} form={form} />
 
             <Row className="form__submit-box">
               {isSubmitLoading ? (

@@ -64,7 +64,7 @@ export default function Variants({
                       style={{ marginBottom: 0 }}
                       {...restField}
                       label={"Giá nhập"}
-                      name={[name, "cose"]}
+                      name={[name, "cost"]}
                     >
                       {RenderLoading(loading,<InputNumberAnt min={0} />)}
                     </Form.Item>

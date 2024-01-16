@@ -187,7 +187,7 @@ export default function FormProduct({
             </span>
           }
         >
-          <CumulativeDiscountModule.components.DiscountList target={CumulativeDiscountModule.constants.TARGET.supplier} loading={isLoading} form={form} />
+          <CumulativeDiscountModule.components.DiscountList target={CumulativeDiscountModule.constants.TARGET.product} loading={isLoading} form={form} />
         </BaseBorderBox>
 
         <Row justify={"end"} gutter={16}>
