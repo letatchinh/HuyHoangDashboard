@@ -336,28 +336,23 @@ export default function DiscountItem({
                                 {...restField}
                                 label={"Đến"}
                                 name={[name, "condition", "lte"]}
-                                rules={[
-                                  {
-                                    type: "number",
-                                    max:
-                                      form.getFieldValue([
-                                        "cumulativeDiscount",
-                                        name,
-                                        "condition",
-                                        "gte",
-                                      ]),
-                                    message: "Vui lòng nhập bé hơn Từ",
-                                  },
-                                ]}
+                                // rules={[
+                                //   {
+                                //     type: "number",
+                                //     max:
+                                //       form.getFieldValue([
+                                //         "cumulativeDiscount",
+                                //         name,
+                                //         "condition",
+                                //         "gte",
+                                //       ]),
+                                //     message: "Vui lòng nhập bé hơn Từ",
+                                //   },
+                                // ]}
                               >
                                 {RenderLoading(
                                   loading,
-                                  <InputNumberAnt min={0} max={form.getFieldValue([
-                                    "cumulativeDiscount",
-                                    name,
-                                    "condition",
-                                    "gte",
-                                  ])}/>
+                                  <InputNumberAnt min={0} />
                                 )}
                               </Form.Item>
                             </Col>
@@ -413,13 +408,13 @@ export default function DiscountItem({
                                 {RenderLoading(
                                   loading,
                                   <DatePicker
-                                    disabledDate={(current) => {
-                                      // Can not select days before lte and today
-                                      return (
-                                        current &&
-                                        current < dayjs().endOf("day")
-                                      );
-                                    }}
+                                    // disabledDate={(current) => {
+                                    //   // Can not select days before lte and today
+                                    //   return (
+                                    //     current &&
+                                    //     current < dayjs().endOf("day")
+                                    //   );
+                                    // }}
                                     format={"YYYY-MM-DD"}
                                   />
                                 )}
