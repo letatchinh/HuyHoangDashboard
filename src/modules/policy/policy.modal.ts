@@ -53,6 +53,5 @@ export type PoliciesType = {
   "DOWNLOAD_TODOSTATUSCONFIG" |
   "ADMIN_TODOSTATUSCONFIG" |
   "TODOSTATUSCONFIG"
-
   ]: [string, policyType];
 };
