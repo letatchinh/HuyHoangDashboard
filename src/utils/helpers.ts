@@ -88,7 +88,7 @@ export const filterSelectWithLabel = (input: any, option: any) => {
   );
 };
 
-export const formatter = (value:number) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+export const formatter = (value:any) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
 
 export const floorFormatter = (value:number) => `${Math.floor(value)}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
 

@@ -11,7 +11,7 @@ export default function SelectPharmacy(props: propsType): React.JSX.Element {
   const options = useMemo(
     () =>
       pharmacies?.map((item: any) => ({
-        label: get(item, "fullName"),
+        label: get(item, "name"),
         value: get(item, "_id"),
       })),
     [pharmacies]

@@ -39,7 +39,6 @@ export const mainRoutes :PathRouteProps[] = [
 
   // Bill
   { path: PATH_APP.bill.root, Component: Bill },
-  { path: PATH_APP.bill.create, Component: CreateBill },
 
   // TodoList
   { path: PATH_APP.todoList.statusConfig, Component: StatusConfig },
