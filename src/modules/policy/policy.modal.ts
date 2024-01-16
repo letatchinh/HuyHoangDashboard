@@ -5,7 +5,8 @@ export type ResourceType = {
   GROUP_USER: string[],
   GROUP_EMPLOYEE: string[],
   GROUP_WHBILL: string[],
-  GROUP_WHSETTING:  string[]
+  GROUP_WHSETTING: string[]
+  GROUP_WORK_MANAGERMENT: string[],
 };
 
 export type policyType = 'write' | 'read' | 'update' | 'delete' | 'download' | 'admin';
@@ -43,6 +44,14 @@ export type PoliciesType = {
   "DELETE_USERGROUP" |
   "DOWNLOAD_USERGROUP" |
   "ADMIN_USERGROUP" |
-  "USERGROUP"
+  "USERGROUP" | 
+  
+  //WORK_MANAGERMENT
+  'READ_WORK_MANAGERMENT' |
+  'WRITE_WORK_MANAGERMENT' |
+  'UPDATE_WORK_MANAGERMENT' |
+  'DELETE_WORK_MANAGERMENT' |
+  'DOWNLOAD_WORK_MANAGERMENT' |
+  'ADMIN_WORK_MANAGERMENT' 
   ]: [string, policyType];
 };

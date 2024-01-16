@@ -14,7 +14,7 @@ import UserGroupPage from "~/pages/Dashboard/UserGroup";
 import Unit from "~/pages/Dashboard/Unit";
 import MedicinePage from "~/pages/Dashboard/Medicine";
 import WorkBoardPage from "~/pages/Dashboard/WorkBoard";
-// import WorkSprintPage from "~/pages/Dashboard/WorkSprint";
+import WorkSprintPage from "~/pages/Dashboard/WorkSprint";
 export const mainRoutes :PathRouteProps[] = [
   { path: PATH_APP.main.root, Component: Homepage },
   { path: PATH_APP.supplier.root, Component: Supplier },
@@ -28,6 +28,8 @@ export const mainRoutes :PathRouteProps[] = [
   { path: PATH_APP.todoList.workBoard, Component: WorkBoardPage },
   { path: PATH_APP.employee.root, Component: EmployeePage },
   { path: PATH_APP.user.root, Component: UserPage },
+  { path: PATH_APP.todoList.workSprint, Component: WorkSprintPage },
+  
   { path: '/', Component: Homepage },
 ]
 

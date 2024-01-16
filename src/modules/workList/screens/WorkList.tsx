@@ -12,8 +12,8 @@ import { useGetWorkSprint } from '~/modules/workSprint/workSprint.hook';
 import MenuListBoard from '~/modules/workSprint/components/MenuListBoard';
 import BoardConfig from '../components/WorkListConfig';
 import { FormTaskContextProps } from '../workList.modal';
-import { useCreateWorkTask, useDeleteWorkTask, useUpdateWorkTask } from '~/modules/workTask/workTask.hook';
-import { useGetlistWorkBoardById } from '~/modules/workBoard/workBoard.hook';
+import { useCreateTask, useDeleteTask, useUpdateTask } from '~/modules/workTask/workTask.hook';
+import { useGetBoardById } from '~/modules/workBoard/workBoard.hook';
 // import { useGetSprintInfo } from '~/hooks/workSprint';
 // import { useWorkListQueryParams } from '~/hooks/workList';
 // import { WithOrPermission } from '../Common';
@@ -49,14 +49,13 @@ const [lengthList, setLength] = useState<number>(
   const [taskData, setTaskData] = useState('');
   const [visibleListBoard, setVisibleListBoard] = useState(false);
   const [idVisibleInfo, setIdVisibleInfo] = useState('');
-  const [, updateTask] = useUpdateWorkTask();
+  const [, updateTask] = useUpdateTask();
   // const [, updatePosition] = useUpdatePosition();
-  const [, handleCreateTask] = useCreateWorkTask();
-  const [, handleDeleteTask] = useDeleteWorkTask();
+  const [, handleCreateTask] = useCreateTask();
+  const [, handleDeleteTask] = useDeleteTask();
   const [, handleCreateWork] = useCreateWorkList();
   const [, handleDeleteWork] = useDeleteWorkList();
-  const [tasksAllBoard, setTasksAllBoard] = useState({});
-  const [boardData] = useGetlistWorkBoardById(idBoard);
+  const [boardData] = useGetBoardById(idBoard);
 
   const showDrawer = (param?:any) => {
     setVisibleListBoard((val) => param ?? !val);

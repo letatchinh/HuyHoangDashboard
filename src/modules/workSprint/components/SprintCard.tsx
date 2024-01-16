@@ -1,16 +1,14 @@
-/* eslint-disable jsx-a11y/no-access-key */
+
 import React, { useEffect, useState } from 'react';
 import { CloseCircleFilled, FormOutlined } from '@ant-design/icons';
 import { Button, Form, Input, Space, Tooltip, Typography } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import POLICIES from '~/modules/policy/policy.auth';
-// import { WithPermission } from '~/components/Common';
-// import POLICIES from '~/constants/policy';
-
 interface SprintCardProps {
   name: string;
   note: string;
   type: string;
+  key: string;
   onCreate: (data: { name: string; note: string }) => void;
   onSave: (data: { name: string; note: string; id: string }) => void;
   onDelete: (data: { id: string }) => void;
@@ -20,68 +18,63 @@ interface SprintCardProps {
   userIsAdminforBoard: boolean;
 }
 
-const SprintCard: React.FC<SprintCardProps> = ({
-  name,
-  note,
-  type,
-  onCreate,
-  onSave,
-  onDelete,
-  id,
-  boardId,
-  style,
-  userIsAdminforBoard,
-}) => {
-  const [note_, setNote] = useState(note);
-  const [name_, setName] = useState(name);
-  const [vis, setVis] = useState(false);
-  const navigate = useNavigate();
-
-  function handleSaveNote() {
-    setVis(false);
-    if (type === 'CREATE') {
-      onCreate({ name: name_, note: note_ });
-    } else if (name_ !== name || note_ !== note) {
-      onSave({ name: name_, note: note_, id });
-    } else {
-      console.log('out');
+// const SprintCard: React.FC<SprintCardProps> = ({
+  export default function SprintCard({
+    name,
+    note,
+    type,
+    onCreate,
+    onSave,
+    onDelete,
+    id,
+    boardId,
+    style,
+    userIsAdminforBoard,
+  }: SprintCardProps): React.JSX.Element {
+    const [note_, setNote] = useState(note);
+    const [name_, setName] = useState(name);
+    const [vis, setVis] = useState(false);
+    const navigate = useNavigate();
+    function handleSaveNote() {
+      setVis(false);
+      if (type === 'CREATE') {
+        onCreate({ name: name_, note: note_ });
+      } else if (name_ !== name || note_ !== note) {
+        onSave({ name: name_, note: note_, id });
+      } else {
+        console.log('out');
+      }
     }
-  }
-
-  useEffect(() => {
-    setName(name);
-    setNote(note);
-  }, [name, note]);
-
-  const validNote = () => {
-    setVis(false);
+    useEffect(() => {
+      setName(name);
+      setNote(note);
+    }, [name, note]);
+  
+    const validNote = () => {
+      setVis(false);
+    };
+  
+    if (type === 'CREATE') return <Create handleSaveNote={handleSaveNote} />;
+    return (
+      <Detail
+        {...{
+          name_,
+          note_,
+          setName,
+          setNote,
+          setVis,
+          vis,
+          handleSaveNote,
+          note,
+          id,
+          boardId,
+          onDelete,
+          style,
+          userIsAdminforBoard,
+        }}
+      />
+    );
   };
-
-  if (type === 'CREATE') return <Create handleSaveNote={handleSaveNote} />;
-
-  return (
-    <Detail
-      {...{
-        name_,
-        note_,
-        setName,
-        setNote,
-        setVis,
-        vis,
-        handleSaveNote,
-        note,
-        id,
-        boardId,
-        onDelete,
-        style,
-        userIsAdminforBoard,
-      }}
-    />
-  );
-};
-
-export default SprintCard;
-
 interface CreateProps {
   handleSaveNote: () => void;
 }
@@ -174,32 +167,30 @@ const Detail: React.FC<DetailProps> = ({
           e.stopPropagation();
           e.preventDefault();
           if (e.currentTarget.accessKey === 'true') {
-            navigate(`/work-flow/detail/${id}`);
+            navigate(`/work-board/detail/${id}`);
           }
         }}
         style={{ cursor: 'pointer' }}
       >
-        {!focusName ? (
-          <>
-            <Tooltip title={name_} mouseEnterDelay={1.2} overlayStyle={{ fontSize: 12 }}>
-              <Typography.Title accessKey="true" className="sprint-card-title_link">
-                {name_}
-              </Typography.Title>
-            </Tooltip>
-            {userIsAdminforBoard && (
-              <FormOutlined
-                onClick={() => {
+       { !focusName ? <>
+            <Tooltip
+            title={name_}
+            mouseEnterDelay={1.2}
+            overlayStyle={{ fontSize: 12 }}
+          >
+            <Typography.Title accessKey='true' className='sprint-card-title_link'>{name_}</Typography.Title>
+          </Tooltip>
+          {
+              // userIsAdminforBoard &&(
+                <FormOutlined onClick={()=>{
                   setVis(true);
-                  setFocusName(true);
-                }}
-                color="blue"
-                className="sprint-card-title_editor"
-              />
-            )}
-          </>
-        ) : (
-          <Input value={name_} onChange={(value) => setName(value.target.value)} style={{ width: '100%' }} />
-        )}
+                  setFocusName(true)
+                }} color='blue' className='sprint-card-title_editor' />
+              // )
+          }
+
+          </> : <Input value={name_} onChange={(value)=>setName(value.target.value)} style={{width:'100%'}}></Input>}
+         
       </div>
 
       <Input.TextArea

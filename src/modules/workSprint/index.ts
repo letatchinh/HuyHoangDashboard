@@ -17,5 +17,6 @@ const moduleExport = {
     service : workSprintService,
     model : workSprintModels,
     redux : {reducer,saga}
+    
 };
 export default moduleExport;

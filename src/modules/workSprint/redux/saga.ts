@@ -23,6 +23,7 @@ function* getByIdWorkSprint({payload:id} : any) : any {
 function* createWorkSprint({payload} : any) : any {
   try {
     const data = yield call(api.create,payload);
+    console.log(data)
     yield put(workSprintActions.createSuccess(data));
   } catch (error:any) {
     yield put(workSprintActions.createFailed(error));

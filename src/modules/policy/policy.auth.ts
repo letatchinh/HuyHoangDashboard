@@ -9,6 +9,7 @@ const user = 'user';
 const userGroup = 'userGroup';
 const pharmacy = 'pharmacy';
 const bill = 'bill';
+const todoStatusConfig = 'todoStatusConfig';
 
 const RESOURCES = [
   branch,
@@ -18,6 +19,7 @@ const RESOURCES = [
   userGroup,
   // pharmacy,
   // bill,
+  todoStatusConfig,
 ];
 
 //ACTIONS
@@ -63,12 +65,16 @@ const RESOURCE = (): ResourceType => {
   const GROUP_EMPLOYEE : string[] = [
     employee
   ];
+  const GROUP_WORK_MANAGERMENT: string[] = [
+    todoStatusConfig,
+  ];
 
   return {
     GROUP_USER,
     GROUP_EMPLOYEE,
     GROUP_WHBILL,
     GROUP_WHSETTING,
+    GROUP_WORK_MANAGERMENT,
   };
 };
 

@@ -8,6 +8,8 @@ import { useUpdateStatusConfig,useCreateStatusConfig, useGetListStatusConfig,use
 import { ExclamationCircleOutlined } from "@ant-design/icons";
 import Breadcrumb from '~/components/common/Breadcrumb';
 import useTranslate from '~/lib/translation';
+import { useMatchPolicy } from '~/modules/policy/policy.hook';
+import POLICIES from '~/modules/policy/policy.auth';
 const EditableContext = React.createContext<FormInstance<any> | null>(null);
 
 interface Item {
@@ -151,7 +153,8 @@ const StatusConfig: React.FC = () => {
     deleteStatusConfig(_id);
     console.log(_id)
   };
-  
+  const canDelete = useMatchPolicy(POLICIES.DELETE_TODOSTATUSCONFIG)
+  const canUpdate = useMatchPolicy(POLICIES.UPDATE_TODOSTATUSCONFIG)
   const defaultColumns: (ColumnTypes[number] & { editable?: boolean; dataIndex: string })[] = [
     {
       title: "Trạng thái",
@@ -170,12 +173,12 @@ const StatusConfig: React.FC = () => {
       title: 'Tên trạng thái',
       dataIndex: 'value',
       width: '30%',
-      editable: true,
+      editable: canUpdate,
     },
     {
     title:'Màu chữ',
     dataIndex:'color',
-    // editable: true,
+    editable: canUpdate,
     render: (_, record:any) => {
       return (
         <ColorPicker
@@ -189,7 +192,7 @@ const StatusConfig: React.FC = () => {
     {
         title:'Màu nền',
         dataIndex:'backgroundColor',
-        // editable: true,
+        editable: true,
         render: (_, record:any) => {
           return (
             <ColorPicker
@@ -254,8 +257,8 @@ const StatusConfig: React.FC = () => {
       width:80,
       render: (value, record) => (
         <Checkbox checked={value} onChange={(e)=>{
-          // if(!canUpdate) return 
-          // updateStatusConfig({justAdmin:e.target.checked,id:record._id})
+          if(!canUpdate) return 
+          updateStatusConfig({justAdmin:e.target.checked,id:record._id})
         }}/>
       )
     },
@@ -268,8 +271,8 @@ const StatusConfig: React.FC = () => {
       render: (value, record) => (
         <Tooltip  title={!record?.justAdmin? 'Quyền quản trị phải được bật': (record.priority === true )? 'Không thể thực hiện thao tác vì trạng thái này là "Ưu tiên"':''}>
           <Checkbox disabled={!record?.justAdmin||record.priority} checked={value} defaultChecked={value} onChange={(e)=>{
-            // if(!canUpdate) return 
-            // updateStatusConfig({statusHidden:e.target.checked,id:record._id})
+            if(!canUpdate) return 
+            updateStatusConfig({statusHidden:e.target.checked,id:record._id})
           }}/>
         </Tooltip>
       )
@@ -287,7 +290,7 @@ const StatusConfig: React.FC = () => {
           //   title="Sure to delete?"
           //   onConfirm={() => handleDelete(record._id)}
           // >
-            <Button onClick={() => handleDelete(record._id)} type="dashed" style={{color:'red'}} size="small">Xoá</Button>
+          canDelete ?  <Button onClick={() => handleDelete(record._id)} type="dashed" style={{color:'red'}} size="small">Xoá</Button> : null
          
         ) : null,
     },

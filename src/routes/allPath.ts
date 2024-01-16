@@ -35,7 +35,7 @@ export const PATH_APP = {
     todoList: {
       statusConfig: path(ROOTS.app, '/statusConfig'),
       workBoard: path(ROOTS.app, '/workBoard'),
-      workSprint: path(ROOTS.app, '/workSprint'),
+      workSprint: path(ROOTS.app, '/work-board/sprint/:boardId'),
     },
     employee: {
         root: path(ROOTS.app, '/employee'),

@@ -34,7 +34,7 @@ const {
 
 export const useWorkTaskPaging = () => useSelector(pagingSelector);
 
-export const useGetWorkTasks = (param:any) => {
+export const useGetAllTask = (param:any) => {
   return useFetchByParam({
     action: workTaskActions.getListRequest,
     loadingSelector: loadingSelector,
@@ -43,7 +43,7 @@ export const useGetWorkTasks = (param:any) => {
     param
   });
 };
-export const useGetWorkTask = (id: any) => {
+export const useGetTaskById = (id: any) => {
   return useFetchByParam({
     action: workTaskActions.getByIdRequest,
     loadingSelector: getByIdLoadingSelector,
@@ -53,7 +53,7 @@ export const useGetWorkTask = (id: any) => {
   });
 };
 
-export const useCreateWorkTask = (callback?: any) => {
+export const useCreateTask = (callback?: any) => {
   useSuccess(
     createSuccessSelector,
     `Tạo mới ${MODULE_VI} thành công`,
@@ -67,7 +67,7 @@ export const useCreateWorkTask = (callback?: any) => {
   });
 };
 
-export const useUpdateWorkTask = (callback?: any) => {
+export const useUpdateTask = (callback?: any) => {
   useSuccess(
     updateSuccessSelector,
     `Cập nhật ${MODULE_VI} thành công`,
@@ -81,7 +81,7 @@ export const useUpdateWorkTask = (callback?: any) => {
   });
 };
 
-export const useDeleteWorkTask = (callback?: any) => {
+export const useDeleteTask = (callback?: any) => {
   useSuccess(deleteSuccessSelector, `Xoá ${MODULE_VI} thành công`, callback);
   useFailed(deleteFailedSelector);
 

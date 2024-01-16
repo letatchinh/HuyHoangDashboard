@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowLeftOutlined } from '@ant-design/icons';
 import { useGetWorkSprints } from '../workSprint.hook';
+import { useFormTaskContext } from '~/modules/workList/screens/WorkList';
 
 interface Sprint {
   _id: string;
@@ -9,21 +10,21 @@ interface Sprint {
 }
 
 function MenuListBoard() {
-//   const { boardId } = useFormTaskContext();
+  const { boardId } = useFormTaskContext();
   const query = useMemo(() => {
-    // if (boardId) {
+    if (boardId) {
       return {
         page: 1,
         limit: 30,
-        // boardId,
+        boardId,
       };
-    // }
-    // return null;
-//   }, [boardId]);
-  }, []);
-
+    }
+    return null;
+  }, [boardId]);
+  // }, []);
+  
   const [sprints] = useGetWorkSprints(query);
-
+console.log(sprints)
   return (
     <div className="menu_list_board-container">
       {sprints &&
