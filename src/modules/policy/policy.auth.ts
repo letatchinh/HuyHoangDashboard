@@ -14,11 +14,11 @@ const todoStatusConfig = 'todoStatusConfig';
 const RESOURCES = [
   branch,
   // company,
-  // employee,
+  employee,
   user,
   userGroup,
   // pharmacy,
-  // bill,
+  bill,
   todoStatusConfig,
 ];
 
@@ -71,8 +71,8 @@ const RESOURCE = (): ResourceType => {
 
   return {
     GROUP_USER,
-    GROUP_EMPLOYEE,
     GROUP_WHBILL,
+    GROUP_EMPLOYEE,
     GROUP_WHSETTING,
     GROUP_WORK_MANAGERMENT,
   };

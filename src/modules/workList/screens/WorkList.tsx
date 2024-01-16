@@ -6,13 +6,13 @@ import { ArrowLeftOutlined, CloseOutlined } from '@ant-design/icons';
 import { ResizableBox } from 'react-resizable';
 import Text from 'antd/lib/typography/Text';
 import { get } from 'lodash';
-import { useCreateWorkList, useDeleteWorkList, useGetListWorkConfig, useWorkListQueryParams } from '../workList.hook';
+import { useCreateWorkList, useDeleteWorkList, useGetListBoardConfig, useWorkListQueryParams } from '../workList.hook';
 // import Menufilter from '../components/Menufilter';
 import { useGetWorkSprint } from '~/modules/workSprint/workSprint.hook';
 import MenuListBoard from '~/modules/workSprint/components/MenuListBoard';
 import BoardConfig from '../components/WorkListConfig';
 import { FormTaskContextProps } from '../workList.modal';
-import { useCreateTask, useDeleteTask, useUpdateTask } from '~/modules/workTask/workTask.hook';
+import { useCreateTask, useUpdateTask } from '~/modules/workTask/workTask.hook';
 import { useGetBoardById } from '~/modules/workBoard/workBoard.hook';
 // import { useGetSprintInfo } from '~/hooks/workSprint';
 // import { useWorkListQueryParams } from '~/hooks/workList';
@@ -32,11 +32,11 @@ const WorkList = () => {
 
   const { sprintId: sprintId_ } = useParams();
   const sprintId = useMemo(() => sprintId_, [sprintId_]);
-  const [sprintInfo] = useGetWorkSprint(sprintId);
+  const [sprintInfo,] = useGetWorkSprint(sprintId);
   const idBoard = useMemo(() => sprintInfo?.boardId, [sprintInfo]);
   const [query] = useWorkListQueryParams(sprintId);
   const [visibleModal, setVisibleModal] = useState(false);
-  const [boardConfig] = useGetListWorkConfig(query);
+  const [boardConfig] = useGetListBoardConfig(query);
   const boardConfigMemo = useMemo(() => (boardConfig ?? []).map(({ name, _id }:any) => ({ name, _id })), [boardConfig]);
   // const [data] = useListBoardConfigItem();
   const [propsModal, setPropsModal] = useState({});
@@ -52,7 +52,7 @@ const [lengthList, setLength] = useState<number>(
   const [, updateTask] = useUpdateTask();
   // const [, updatePosition] = useUpdatePosition();
   const [, handleCreateTask] = useCreateTask();
-  const [, handleDeleteTask] = useDeleteTask();
+  // const [, handleDeleteTask] = useDeleteTask();
   const [, handleCreateWork] = useCreateWorkList();
   const [, handleDeleteWork] = useDeleteWorkList();
   const [boardData] = useGetBoardById(idBoard);
@@ -125,7 +125,7 @@ const [lengthList, setLength] = useState<number>(
           handleCreateTask,
           handleDeleteWork,
           setVisibleModal,
-          handleDeleteTask,
+          // handleDeleteTask,
           setVisibleInfo,
           setIdVisibleInfo,
           setTaskData,

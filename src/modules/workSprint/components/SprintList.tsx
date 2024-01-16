@@ -97,7 +97,7 @@ const SprintList: React.FC = memo(() => {
                   onDelete={(data: any) => { handleDelete({ ...data, boardId }) }}
                   name={value.name}
                   id={value._id}
-                  boardId={boardId}
+                  // boardId={boardId}
                   type={value?.type ?? false}
                   userIsAdminforBoard={userIsAdminforBoard}
                   note={

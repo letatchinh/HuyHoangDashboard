@@ -122,7 +122,7 @@ const BoardForm: React.FC<BoardFormProps> = ({ id, handleCloseForm }) => {
         label="Người quản lý"
         name="managers"
       >
-        {listManagersByBoard ? <Select
+        {listManagers ? <Select
           mode="multiple"
           showSearch
           loading={isLoadingManager}
@@ -143,7 +143,7 @@ const BoardForm: React.FC<BoardFormProps> = ({ id, handleCloseForm }) => {
         label="Danh sách thành viên"
         name="staffs"
       >
-        {listStaffsById ? <Select
+        {listStaffs ? <Select
           mode="multiple"
           loading={isLoadingStaffs}
           showSearch
@@ -196,7 +196,7 @@ const BoardForm: React.FC<BoardFormProps> = ({ id, handleCloseForm }) => {
         )}
     </Form.Item>
 
-    <Form.Item >
+    <Form.Item wrapperCol={{ offset: 10, span: 18 }}>
       <Row style={{ width: '639px' }}>
         <Col span={4}>
           <Button htmlType="submit" type="primary"  >

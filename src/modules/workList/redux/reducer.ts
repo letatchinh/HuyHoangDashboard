@@ -11,16 +11,16 @@ class WorkListClassExtend extends InstanceModuleRedux {
     super('workList');
     this.cloneReducer = {
       ...this.initReducer,
-      getListWorkConfigRequest: (state: cloneInitState) => {
+      getListBoardConfigRequest: (state: cloneInitState) => {
         state.isLoadingListWorkConfig = true;
         state.getListWorkConfigFailed = null;
       },
-      getListWorkConfigSuccess: (state: cloneInitState, { payload }: { payload?: any }) => {
+      getListBoardConfigSuccess: (state: cloneInitState, { payload }: { payload?: any }) => {
         state.isLoadingListWorkConfig = false;
-        state.listWorkConfig = get(payload, 'docs', []);
+        state.listWorkConfig = payload;
         state.getListWorkConfigFailed = null;
       },
-      getListWorkConfigFailed: (state: cloneInitState, { payload }: { payload?: any }) => {
+      getListBoardConfigFailed: (state: cloneInitState, { payload }: { payload?: any }) => {
         state.isLoadingListWorkConfig = false;
         state.getListWorkConfigFailed = payload;
       },

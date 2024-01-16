@@ -73,7 +73,7 @@ export const useGetTaskById = (id: any) => {
   });
 };
 
-export const useCreateTask = (callback: any) => {
+export const useCreateTask = (callback?: any) => {
   useSuccess(createSuccessSelector, 'Tạo mới công việc thành công', callback);
   useFailed(createFailedSelector, 'Tạo mới công việc thất bại');
 

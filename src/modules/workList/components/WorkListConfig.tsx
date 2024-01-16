@@ -1,5 +1,5 @@
 import { DeleteFilled, PlusOutlined } from '@ant-design/icons';
-import { Button, Col, Input, Row, Space, Tooltip, Popconfirm } from 'antd';
+import { Button, Col, Input, Row, Space, Tooltip, Popconfirm, Dropdown, Menu } from 'antd';
 import { Suspense, useMemo, useState, FC, ChangeEvent } from 'react';
 import { Droppable, Draggable } from 'react-beautiful-dnd';
 // import { useFormTaskContext } from './WorkList';
@@ -7,6 +7,7 @@ import { Droppable, Draggable } from 'react-beautiful-dnd';
 // import POLICIES from '~/constants/policy';
 import { useNavigate } from 'react-router-dom';
 import { useFormTaskContext } from '../screens/WorkList';
+import TaskForm from '~/modules/workTask/components/TaskForm';
 
 // const Task = Suspense.lazy(() => import('./Workitem.js'));
 
@@ -19,6 +20,7 @@ interface BoardConfigProps {
 const BoardConfig: FC<BoardConfigProps> = ({ name, id, dataBoardConfigItem }) => {
   const tasks = useMemo(() => dataBoardConfigItem, [dataBoardConfigItem]);
   const { openForm, handleDeleteWork, sprintId } = useFormTaskContext();
+  const [visible, setVisible] = useState(false);
   const [inputValue, setInputValue] = useState(name);
   const navigate = useNavigate();
 
@@ -39,7 +41,13 @@ const BoardConfig: FC<BoardConfigProps> = ({ name, id, dataBoardConfigItem }) =>
       console.log(error);
     }
   };
+  const handleButtonClick = () => {
+    // Xử lý logic khi nút được click, nếu cần.
+  };
 
+  const menu = (
+   <TaskForm/>
+  );
   return (
     <div className="work-list-main">
       <div className="work-list-column work-list-column_header">
@@ -64,29 +72,39 @@ const BoardConfig: FC<BoardConfigProps> = ({ name, id, dataBoardConfigItem }) =>
               />
             </Col>
             {/* <WithOrPermission permission={[POLICIES.ADMIN_TODOLIST, POLICIES.WRITE_TODOLIST]}> */}
-              <Col style={{ width: 20 }} className="work-item-top_delete-button">
-                <Popconfirm
-                  title="Bạn có chắc chắn muốn cột này ?"
-                  onConfirm={() => {
-                    handleDeleteWork({ id, sprintId });
-                  }}
-                  okText="Xác nhận"
-                  cancelText="Huỷ"
-                >
-                  <DeleteFilled style={{ color: '#DC3535' }} />
-                </Popconfirm>
-              </Col>
+            <Col style={{ width: 20 }} className="work-item-top_delete-button">
+              <Popconfirm
+                title="Bạn có chắc chắn muốn cột này ?"
+                onConfirm={() => {
+                  handleDeleteWork(id);
+                }}
+                okText="Xác nhận"
+                cancelText="Huỷ"
+              >
+                <DeleteFilled style={{ color: '#DC3535' }} />
+              </Popconfirm>
+            </Col>
             {/* </WithOrPermission> */}
           </Row>
           <Tooltip title="Thêm mới công việc" color="blue" placement="bottom" mouseEnterDelay={0.2}>
-            <Button
+            {/* <Button
               type="primary"
               onClick={() => {
-                openForm(id);
+                setVisible(true);
               }}
               className="add-task"
               icon={<PlusOutlined />}
-            />
+            /> */}
+             <Dropdown trigger={['click']} overlay={menu}>
+      <Button
+        type="primary"
+        className="add-task"
+        icon={<PlusOutlined />}
+        onClick={handleButtonClick}
+      >
+        
+      </Button>
+    </Dropdown>
           </Tooltip>
         </Space>
       </div>
@@ -104,7 +122,7 @@ const BoardConfig: FC<BoardConfigProps> = ({ name, id, dataBoardConfigItem }) =>
             <div className="task-list">
               {tasks?.map((task: any, index: number) => (
                 <Draggable key={task._id} draggableId={task._id} index={index}>
-                  {(provided:any) => (
+                  {(provided: any) => (
                     <div
                       ref={provided.innerRef}
                       key={task._id}
