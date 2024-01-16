@@ -1,5 +1,7 @@
-import { forIn, get, groupBy, keys } from "lodash";
+import { forIn, get, groupBy, keys,flattenDeep,compact,uniq } from "lodash";
+import { useState } from "react";
 import { STATUS } from "~/constants/defaultValue";
+
 import subvn from "~/core/subvn";
 
 export const getPaging = (response: any) => ({
@@ -73,6 +75,10 @@ export const filterAcrossAccents = (input: any, option: any) => {
     ) >= 0
   );
 };
+export const StringToSlug = (str: string) => {
+  const result = removeAccents(str)
+  return result.replaceAll(/\s+/g, '-')
+};
 
 export const filterSelectWithLabel = (input: any, option: any) => {
   return (
@@ -89,3 +95,43 @@ export const floorFormatter = (value:number) => `${Math.floor(value)}`.replace(/
 export const ceilFormatter = (value:number) => `${Math.ceil(value)}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
 
 export const getActive = (list : []) => list?.filter((item:any) => get(item,'status') === STATUS.ACTIVE);
+interface UseExpandrowTableClick {
+  select: string[];
+  setSelect: React.Dispatch<React.SetStateAction<string[]>>;
+  onClick: (item: any) => () => void;
+}
+
+export const useExpandrowTableClick: () => UseExpandrowTableClick = () => {
+  const [select, setSelect] = useState<string[]>([]);
+
+  const onClick = (item: any) => () => {
+    const parentId = item.parentId;
+    let children = item?.children ?? [];
+    const id = item._id;
+
+    if (children.length && id) {
+      function repeat(value: any): string[] {
+        let res = [value._id];
+        if (value?.children) {
+          let child = value?.children.map(repeat);
+          res = flattenDeep([...res, ...child]);
+        }
+        return res;
+      }
+
+      children = children.map(repeat);
+
+      if (select.includes(id)) {
+        let filter = select.filter((_id) => _id !== id);
+        filter = filter.filter(
+          (_id) => !flattenDeep(children).includes(_id),
+        );
+        setSelect(filter);
+      } else {
+        setSelect(uniq(compact([...select, id, parentId])));
+      }
+    }
+  };
+
+  return { select, setSelect, onClick };
+};

@@ -17,11 +17,6 @@ interface FieldType {
 }
 const { TextArea } = Input;
 const RankingForm: React.FC<Props> = ({ id, handleCloseForm }) => {
-    const query = useMemo(() => ({ limit: 10, page: 1 }), []);
-    const [listManufacturer, isLoadingManufacturer] = useGetManufacturerList(query);
-    console.log(listManufacturer,'listManufacturer');
-    const [selectedValue, setSelectedValue] = useState(null);
-
   const [, createRanking] = useCreateRanking(handleCloseForm);
   const [rankingConfigById, isLoading] = useGetlistRankingById(id);
   const [form] = Form.useForm(); 
@@ -36,13 +31,9 @@ const RankingForm: React.FC<Props> = ({ id, handleCloseForm }) => {
       });
     }
   }, [id,rankingConfigById]);
-
   const onFinish = useCallback((values: FieldType) => {
-    console.log('Received values of form: ');
      const data: FieldType = {
       ...values,
-      // code:'DMT0001'
-      // status:'',
       };
       if (id) {
         updateRanking({ ...data, id });
@@ -62,30 +53,13 @@ const RankingForm: React.FC<Props> = ({ id, handleCloseForm }) => {
         form={form}
         onFinish={onFinish}
       >
-        <Form.Item<FieldType> label="Tên hãng" name="name">
-        {isLoadingManufacturer && listManufacturer ? (
-  <Spin>Loading...</Spin>
-) : (
-  <Select
-    filterOption={filterAcrossAccents}  // Ensure that the filterOption function is correctly defined
-    showSearch
-    disabled={id?true:false}
-    options={listManufacturer?.map((item: any) => ({
-      label: item.name,
-      value: item.name
-    }))}
-    onChange={(value: any) => {
-      setSelectedValue(value)
-    }}
-    value={selectedValue}
-  />
-)}
-
-        </Form.Item>
-        <Form.Item<FieldType> label="Xếp hạng ranking" name="level">
+        <Form.Item<FieldType> label="Tên hạng" name="name">
           <Input />
         </Form.Item>
-        <Form.Item wrapperCol={{ offset: 8, span: 12 }}>
+        <Form.Item<FieldType> label="Xếp hạng hãng sản xuất" name="level">
+          <Input />
+        </Form.Item>
+        <Form.Item style={{ width: '950px'}} wrapperCol={{ offset: 8, span: 12 }}>
           <Button type="primary" htmlType="submit">
             {id ? 'Cập nhật' : 'Thêm mới'}
           </Button>

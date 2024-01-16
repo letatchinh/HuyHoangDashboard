@@ -51,7 +51,7 @@ const {
       };
       return [queryParams];
       //eslint-disable-next-line
-    }, [page, limit,status, keyword, createSuccess, updateSuccess, deleteSuccess]);
+    }, [page, limit,status, keyword, createSuccess,updateSuccess, deleteSuccess]);
   };
   
   export const useUpdateProductUnitParams = (
