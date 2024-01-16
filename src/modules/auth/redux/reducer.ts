@@ -26,7 +26,7 @@ export const auth = createSlice({
             state.token = null;
             state.loginFailed = null;
         },
-        loginSuccess: (state, action: { payload: { token: any; branchId: any } }) => {
+        loginSuccess: (state, action: { payload: { token: any; branchId: any, } }) => {
             const { token, branchId } = action.payload;
             state.token = token;
             setAxiosToken(token);

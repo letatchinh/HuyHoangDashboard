@@ -4,7 +4,10 @@ import { authActions } from './reducer';
 
 function* login({ payload: user }: any){
   try {
-    const { token, branchId } = yield call(authModule.api.login, user);
+    const { token, branchId, adapater } = yield call(authModule.api.login, user);
+    if (adapater !== 'staff') {
+      throw new Error('Invalid adapter'); // user is not staff of WC
+    };
     yield put(authActions.loginSuccess({token,branchId}));
   } catch (error: any) {
     yield put(authActions.loginFailed(error));
@@ -22,7 +25,6 @@ function* loginSuccess({ payload } : any) {
 
 function* getProfile({payload : id} : any): any {
   try {
-    console.log(11111)
     const profile = yield call(authModule.api.getProfile,id);
     yield put(authActions.getProfileSuccess(profile));
   } catch (error: any) {

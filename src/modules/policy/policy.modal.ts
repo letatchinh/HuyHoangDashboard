@@ -2,49 +2,57 @@ export type TypeProps = {
     
 };
 export type ResourceType = {
-  GROUP_USER: string[]
-GROUP_WHBILL:string[]
-// GROUP_STATUSCONFIG:string[]
-TODOSTATUSCONFIG:string[]
-// GROUP_WHSETTING:
-}
+  GROUP_USER: string[],
+  GROUP_EMPLOYEE: string[],
+  GROUP_WHBILL: string[],
+  GROUP_WHSETTING:  string[]
+  TODOSTATUSCONFIG: string[]
+};
+
+export type policyType = 'write' | 'read' | 'update' | 'delete' | 'download' | 'admin';
 
 export type PoliciesType = {
-  // BRANCH
-  READ_BRANCH : string[],
-  WRITE_BRANCH : string[],
-  UPDATE_BRANCH : string[],
-  DELETE_BRANCH : string[],
-  DOWNLOAD_BRANCH : string[],
-  ADMIN_BRANCH : string[],
-  BRANCH: string[],
-
-  // USER
-  READ_USER : string[],
-  WRITE_USER : string[],
-  UPDATE_USER : string[],
-  DELETE_USER : string[],
-  DOWNLOAD_USER : string[],
-  ADMIN_USER : string[],
-  USER: string[],
+  [key in
+  //BRANCH
+  "READ_BRANCH" |
+  "WRITE_BRANCH" |
+  "UPDATE_BRANCH" |
+  "DELETE_BRANCH" |
+  "DOWNLOAD_BRANCH" |
+  "ADMIN_BRANCH" |
+  "BRANCH" |
+  //EMPLOYEE
+  "READ_EMPLOYEE" |
+  "WRITE_EMPLOYEE" |
+  "UPDATE_EMPLOYEE" |
+  "DELETE_EMPLOYEE" |
+  "DOWNLOAD_EMPLOYEE" |
+  "ADMIN_EMPLOYEE" |
+  "EMPLOYEE" |
+  //USER
+  "READ_USER" |
+  "WRITE_USER" |
+  "UPDATE_USER" |
+  "DELETE_USER" |
+  "DOWNLOAD_USER" |
+  "ADMIN_USER" |
+  "USER" |
+  //USERGROUP
+  "READ_USERGROUP" |
+  "WRITE_USERGROUP" |
+  "UPDATE_USERGROUP" |
+  "DELETE_USERGROUP" |
+  "DOWNLOAD_USERGROUP" |
+  "ADMIN_USERGROUP" |
+  "USERGROUP"|
+  //TODOSTATUSCONFIG
+  "READ_TODOSTATUSCONFIG" |
+  "WRITE_TODOSTATUSCONFIG" |
+  "UPDATE_TODOSTATUSCONFIG" |
+  "DELETE_TODOSTATUSCONFIG" |
+  "DOWNLOAD_TODOSTATUSCONFIG" |
+  "ADMIN_TODOSTATUSCONFIG" |
+  "TODOSTATUSCONFIG"
   
-  // USERGROUP
-  READ_USERGROUP : string[],
-  WRITE_USERGROUP : string[],
-  UPDATE_USERGROUP : string[],
-  DELETE_USERGROUP : string[],
-  DOWNLOAD_USERGROUP : string[],
-  ADMIN_USERGROUP : string[],
-  USERGROUP: string[],
-
-  // STATUSCONFIG
-  READ_TODOSTATUSCONFIG : string[],
-  WRITE_TODOSTATUSCONFIG : string[],
-  UPDATE_TODOSTATUSCONFIG : string[],
-  DELETE_TODOSTATUSCONFIG : string[],
-  DOWNLOAD_TODOSTATUSCONFIG : string[],
-  ADMIN_TODOSTATUSCONFIG : string[],
-  TODOSTATUSCONFIG: string[],
-  
-  // ORTHER
-}
+  ]: [string, policyType];
+};
