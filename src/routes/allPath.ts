@@ -36,6 +36,7 @@ export const PATH_APP = {
       statusConfig: path(ROOTS.app, '/statusConfig'),
       workBoard: path(ROOTS.app, '/workBoard'),
       workSprint: path(ROOTS.app, '/work-board/sprint/:boardId'),
+      workList: path(ROOTS.app, '/work-board/detail/:sprintId'),
     },
     employee: {
         root: path(ROOTS.app, '/employee'),

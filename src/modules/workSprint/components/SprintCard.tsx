@@ -146,7 +146,12 @@ const Detail: React.FC<DetailProps> = ({
 }) => {
   // const history = useHistory();
   const [focusName, setFocusName] = useState<boolean>(false);
-const navigate = useNavigate()
+const navigate = useNavigate();
+
+const handleClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    navigate(`/work-board/detail/${id}`);
+
+};
   return (
     <div className="sprint-card-container detail" style={{ ...style }}>
       {/* <WithPermission permission={POLICIES.DELETE_TODOLIST}> */}
@@ -162,13 +167,7 @@ const navigate = useNavigate()
       {/* </WithPermission> */}
       <div
         className="sprint-card-title"
-        onClick={(e) => {
-          e.stopPropagation();
-          e.preventDefault();
-          if (e.currentTarget.accessKey === 'true') {
-            navigate(`/work-flow/detail/${id}`);
-          }
-        }}
+        onClick={handleClick}
         style={{ cursor: 'pointer' }}
       >
         {!focusName ? (

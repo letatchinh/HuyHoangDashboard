@@ -6,7 +6,7 @@ import { ArrowLeftOutlined, CloseOutlined } from '@ant-design/icons';
 import { ResizableBox } from 'react-resizable';
 import Text from 'antd/lib/typography/Text';
 import { get } from 'lodash';
-import { useCreateWorkList, useDeleteWorkList, useGetListWorkConfig, useWorkListQueryParams } from '../workList.hook';
+import { useCreateWorkList, useDeleteWorkList, useGetListBoardConfig, useWorkListQueryParams } from '../workList.hook';
 // import Menufilter from '../components/Menufilter';
 import { useGetWorkSprint } from '~/modules/workSprint/workSprint.hook';
 import MenuListBoard from '~/modules/workSprint/components/MenuListBoard';
@@ -32,11 +32,11 @@ const WorkList = () => {
 
   const { sprintId: sprintId_ } = useParams();
   const sprintId = useMemo(() => sprintId_, [sprintId_]);
-  const [sprintInfo] = useGetWorkSprint(sprintId);
+  const [sprintInfo,] = useGetWorkSprint(sprintId);
   const idBoard = useMemo(() => sprintInfo?.boardId, [sprintInfo]);
   const [query] = useWorkListQueryParams(sprintId);
   const [visibleModal, setVisibleModal] = useState(false);
-  const [boardConfig] = useGetListWorkConfig(query);
+  const [boardConfig] = useGetListBoardConfig(query);
   const boardConfigMemo = useMemo(() => (boardConfig ?? []).map(({ name, _id }:any) => ({ name, _id })), [boardConfig]);
   // const [data] = useListBoardConfigItem();
   const [propsModal, setPropsModal] = useState({});

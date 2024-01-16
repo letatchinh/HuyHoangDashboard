@@ -24,6 +24,7 @@ function* createWorkList({payload} : any) : any {
   try {
     const data = yield call(api.create,payload);
     yield put(workListActions.createSuccess(data));
+    yield put(workListActions.getListBoardConfigRequest(payload.sprintId));
   } catch (error:any) {
     yield put(workListActions.createFailed(error));
   }
@@ -49,9 +50,9 @@ function* deleteWorkList({payload : id} : any) : any {
 function* getListWorkConfig({payload:query} : any) : any {
   try {
     const data = yield call(api.getListWorkConfig,query);
-    yield put(workListActions.getListWorkConfigSuccess(data));
+    yield put(workListActions.getListBoardConfigSuccess(data));
   } catch (error:any) {
-    yield put(workListActions.getListWorkConfigFailed(error));
+    yield put(workListActions.getListBoardConfigFailed(error));
   }
 }
 export default function* workListSaga() {
@@ -60,5 +61,5 @@ export default function* workListSaga() {
   yield takeLatest(workListActions.createRequest, createWorkList);
   yield takeLatest(workListActions.updateRequest, updateWorkList);
   yield takeLatest(workListActions.deleteRequest, deleteWorkList);
-  yield takeLatest(workListActions.getListWorkConfigRequest, getListWorkConfig);
+  yield takeLatest(workListActions.getListBoardConfigRequest, getListWorkConfig);
 }

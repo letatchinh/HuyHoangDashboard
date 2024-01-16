@@ -60,9 +60,9 @@ export const useGetWorkList = (id: any) => {
     param: id,
   });
 };
-export const useGetListWorkConfig = (query?:any) => {
+export const useGetListBoardConfig = (query?:any) => {
   return useFetchByParam({
-    action: workListActions.getListWorkConfigRequest,
+    action: workListActions.getListBoardConfigRequest,
     loadingSelector: loadingListWorkConfig,
     dataSelector: listWorkConfig,
     failedSelector: getListWorkConfigFailed,
@@ -120,10 +120,11 @@ export const useWorkListQueryParams = (sprintId?: any) => {
       page,
       limit,
       keyword,
+      sprintId
     };
     return [queryParams];
 
-  }, [page, limit, keyword, createSuccess, deleteSuccess]);
+  }, [page, limit,sprintId, keyword, createSuccess, deleteSuccess]);
 };
 
 export const useUpdateWorkListParams = (
