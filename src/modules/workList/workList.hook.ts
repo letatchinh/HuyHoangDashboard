@@ -118,6 +118,13 @@ export const useDeleteWorkList = (callback?: any) => {
     loadingSelector: isSubmitLoadingSelector,
   });
 };
+export const useUpdatePosition = (payload?: any) => {
+  return useSubmit({
+    action: workListActions.updatePosition,
+    loadingSelector: isSubmitLoadingSelector,
+    
+  })
+}
 
 export const useWorkListQueryParams = (sprintId?: any) => {
   const query = useQueryParams();

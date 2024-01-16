@@ -6,7 +6,7 @@ import { ArrowLeftOutlined, CloseOutlined } from '@ant-design/icons';
 import { ResizableBox } from 'react-resizable';
 import Text from 'antd/lib/typography/Text';
 import { get } from 'lodash';
-import { useCreateWorkList, useDeleteWorkList, useGetListBoardConfig, useListBoardConfigItem, useWorkListQueryParams } from '../workList.hook';
+import { useCreateWorkList, useDeleteWorkList, useGetListBoardConfig, useListBoardConfigItem, useUpdatePosition, useWorkListQueryParams } from '../workList.hook';
 // import Menufilter from '../components/Menufilter';
 import { useGetWorkSprint } from '~/modules/workSprint/workSprint.hook';
 import MenuListBoard from '~/modules/workSprint/components/MenuListBoard';
@@ -52,7 +52,7 @@ const [lengthList, setLength] = useState<number>(
   const [visibleListBoard, setVisibleListBoard] = useState(false);
   const [idVisibleInfo, setIdVisibleInfo] = useState('');
   const [, updateTask] = useUpdateTask();
-  // const [, updatePosition] = useUpdatePosition();
+  const [, updatePosition] = useUpdatePosition();
   const [, handleCreateTask] = useCreateTask();
   const [, handleDeleteTask] = useDeleteTask();
   const [, handleCreateWork] = useCreateWorkList();
@@ -106,12 +106,12 @@ const [lengthList, setLength] = useState<number>(
     Object.assign(itemBeRemove ?? {}, { ordinal: newOrdinal });
 
     updateTask({ id: itemBeRemove._id, ordinal: newOrdinal, boardConfigId: colAfter });
-    // updatePosition({
-    //   colBefore,
-    //   indexBefore,
-    //   colAfter,
-    //   indexAfter,
-    // });
+    updatePosition({
+      colBefore,
+      indexBefore,
+      colAfter,
+      indexAfter,
+    });
   };
 
   return (

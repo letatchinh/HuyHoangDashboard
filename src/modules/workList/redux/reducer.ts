@@ -37,6 +37,34 @@ class WorkListClassExtend extends InstanceModuleRedux {
       addBoardConfigItemFaled: (state: any, { payload }: { payload?: any }) => {
         state.dataBoardConfig[payload.id] = []
       },
+      updatePosition: (state: any, { payload }: { payload?: any }) => {
+        var {
+          colBefore,
+          indexBefore,
+          colAfter,
+          indexAfter,
+        } = payload;
+  
+        if (!colAfter) {
+          return
+        }
+        if (colBefore === colAfter) {
+          if (indexBefore === indexAfter) {
+            return
+          }
+  
+        }
+        var valueIdxUp = get(state.dataBoardConfig[colAfter][indexAfter - 1], 'ordinal', 0);
+        var valueIdxDown = get(state.dataBoardConfig[colAfter][indexAfter], 'ordinal', valueIdxUp + 10);
+        var newOrdinal = (valueIdxUp + valueIdxDown) / 2;
+  
+        var [{ ...itemBeRemove }] = state.dataBoardConfig[colBefore].splice(indexBefore, 1);
+  
+        Object.assign(itemBeRemove ?? {}, { ordinal: newOrdinal });
+  
+  
+        state.dataBoardConfig[colAfter].splice(indexAfter, 0, itemBeRemove);
+      }
       // Want to add more reducers here...
     };
 
