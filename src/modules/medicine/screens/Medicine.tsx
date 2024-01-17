@@ -65,7 +65,7 @@ export default function Medicine() {
 
   return (
     <div className='product-config'>
-      <Breadcrumb title={t('medicine')} />
+      <Breadcrumb title={t('Quản lý thuốc')} />
       <div>
         <div className="product-config-action" >
           <Row justify="space-between">

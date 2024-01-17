@@ -85,7 +85,7 @@ export default function Ranking(props: propsType): React.JSX.Element {
   const pageSizeOptions = ['10', '20', '50', '100'];
   return (
     <div className='product-config'>
-      <Breadcrumb title={t('ranking')} />
+      <Breadcrumb title={t('Quản lý xếp hạng nhà sản xuất')} />
 
       <div className="product-config-action" >
         <Row justify="space-between">

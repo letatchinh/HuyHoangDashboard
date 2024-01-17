@@ -86,7 +86,7 @@ const {
   
     return [keyword, { setKeyword, onParamChange }];
   };
-  export const useGetlistProductUnit = (query: any) => {
+  export const useGetlistProductUnit = (query?: any) => {
       return useFetchByParam({
         action: productUnitActions.getListRequest,
         loadingSelector: loadingSelector,

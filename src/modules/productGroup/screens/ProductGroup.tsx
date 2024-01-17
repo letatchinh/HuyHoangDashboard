@@ -143,7 +143,7 @@ export default function ProductConfig() {
   const pageSizeOptions = ['10', '20', '50', '100'];
   return (
     <div className='product-config'>
-      <Breadcrumb title={t('product-config')} />
+      <Breadcrumb title={t('Quản lý danh mục nhóm sản phẩm')} />
       <div>
         <div className='product-config-content' style={{ marginBottom: 16, display: 'flex', gap: '30px' }}>
           {/* <div style={{ width: '20%',height: '100%' }}> */}

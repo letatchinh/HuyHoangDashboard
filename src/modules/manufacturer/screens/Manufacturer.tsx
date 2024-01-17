@@ -123,7 +123,7 @@ export default function Manufacturer() {
   return (
     <>
       <div>
-        <Breadcrumb title={t('manufacturer')} />
+        <Breadcrumb title={t('Quản lý hãng sản xuất')} />
         <div>
           <div className='product-config-content' style={{ marginBottom: 16, display: 'flex', gap: '30px' }}>
             {/* <div style={{ width: '20%',height: '100%' }}> */}
