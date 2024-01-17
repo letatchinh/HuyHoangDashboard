@@ -50,7 +50,7 @@ const ManufacturerForm: React.FC<Props> = ({ id, callBack, updateManufacturer })
         form={form}
         onFinish={onFinish}
       >
-        <Form.Item<FieldType> label="Tên hãng sản xuất" name="name">
+        <Form.Item<FieldType> label="Tên nhà cung cấp" name="name">
           <Input />
         </Form.Item>
         <Form.Item<FieldType> label="Mô tả" name="description">

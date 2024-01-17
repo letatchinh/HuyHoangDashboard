@@ -132,7 +132,7 @@ export default function Ranking(props: propsType): React.JSX.Element {
       </WhiteBox>
       <ModalAnt
         open={showForm}
-        title={id ? 'Cập nhật hãng sản xuất' : 'Tạo mới hãng sản xuất'}
+        title={id ? 'Cập nhật nhà cung cấp' : 'Tạo mới nhà cung cấp'}
         onCancel={handleCloseForm}
         footer={null}
         // destroyOnClose
