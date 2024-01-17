@@ -8,7 +8,7 @@ import { Droppable, Draggable } from 'react-beautiful-dnd';
 import { useNavigate } from 'react-router-dom';
 import { useFormTaskContext } from '../screens/WorkList';
 import TaskForm from '~/modules/workTask/components/TaskForm';
-import Task from '~/modules/workTask/screens/WorkTask';
+import TaskItem from '~/modules/workTask/components/TaskItem';
 
 // const Task = Suspense.lazy(() => import('./Workitem.js'));
 
@@ -130,7 +130,7 @@ const BoardConfig: FC<BoardConfigProps> = ({ name, id, dataBoardConfigItem }) =>
                       className="task-list__item"
                     >
                       <Suspense fallback={<div >...</div>}>
-                        <Task
+                        <TaskItem
                           key={task._id}
                           task={task}
                         />
