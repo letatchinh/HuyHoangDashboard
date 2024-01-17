@@ -1,10 +1,10 @@
-import { TaskRelationOption } from "./../../../../.history/src/modules/workTask/components/RrelationTask_20240116151409";
+// import { TaskRelationOption } from "./../../../../.history/src/modules/workTask/components/RrelationTask_20240116151409";
 import { put, call, takeLatest, select } from "redux-saga/effects";
 import api from "../workTask.api";
 import { workTaskSliceAction } from "./reducer";
 import { get } from "lodash";
 import { Empty } from "antd";
-
+import { workListActions } from "~/modules/workList/redux/reducer";
 function* getListWorkTask({ payload: query }: any): any {
   try {
     const data = yield call(api.getAll, query);
@@ -25,9 +25,11 @@ function* getByIdWorkTask({ payload: id }: any): any {
 
 function* createWorkTask({ payload }: any): any {
   try {
-    const data = yield call(api.create, payload);
+    const data = yield call(api.create,payload);
     yield put(workTaskSliceAction.createSuccess(data));
-  } catch (error: any) {
+    const dataType:any ={ id: payload.boardConfigId } 
+    yield put(workListActions.addBoardConfigItemRequest(dataType))
+  } catch (error:any) {
     yield put(workTaskSliceAction.createFailed(error));
   }
 }
@@ -40,11 +42,13 @@ function* updateWorkTask({ payload }: any): any {
     yield put(workTaskSliceAction.updateFailed(error));
   }
 }
-function* deleteWorkTask({ payload: id }: any): any {
+function* deleteWorkTask({payload} : any) : any {
   try {
-    const data = yield call(api.delete, id);
+    const data = yield call(api.delete,payload.id);
     yield put(workTaskSliceAction.deleteSuccess(data));
-  } catch (error: any) {
+    const dataType:any ={ id: payload.boardConfigId } 
+    yield put(workListActions.addBoardConfigItemRequest(dataType))
+  } catch (error:any) {
     yield put(workTaskSliceAction.deleteFailed(error));
   }
 }

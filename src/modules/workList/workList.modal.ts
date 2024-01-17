@@ -26,4 +26,5 @@ export interface FormTaskContextProps {
     isLoadingListWorkConfig?: boolean;
     listWorkConfig?: T[];
     getListWorkConfigFailed?: any;
+    dataBoardConfig?:any ;
   }

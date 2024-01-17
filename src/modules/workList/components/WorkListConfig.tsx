@@ -8,6 +8,7 @@ import { Droppable, Draggable } from 'react-beautiful-dnd';
 import { useNavigate } from 'react-router-dom';
 import { useFormTaskContext } from '../screens/WorkList';
 import TaskForm from '~/modules/workTask/components/TaskForm';
+import Task from '~/modules/workTask/screens/WorkTask';
 
 // const Task = Suspense.lazy(() => import('./Workitem.js'));
 
@@ -23,7 +24,13 @@ const BoardConfig: FC<BoardConfigProps> = ({ name, id, dataBoardConfigItem }) =>
   const [visible, setVisible] = useState(false);
   const [inputValue, setInputValue] = useState(name);
   const navigate = useNavigate();
+  const [dropdownVisible, setDropdownVisible] = useState(false);
 
+  const handleButtonClick = () => {
+    // Handle button click if needed
+    openForm(id);
+    setDropdownVisible(true); // Close the dropdown after clicking the button
+  };
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value);
   };
@@ -41,12 +48,9 @@ const BoardConfig: FC<BoardConfigProps> = ({ name, id, dataBoardConfigItem }) =>
       console.log(error);
     }
   };
-  const handleButtonClick = () => {
-    // Xử lý logic khi nút được click, nếu cần.
-  };
 
-  const menu = (
-   <TaskForm/>
+  const menu : any = (
+    <TaskForm />
   );
   return (
     <div className="work-list-main">
@@ -87,24 +91,19 @@ const BoardConfig: FC<BoardConfigProps> = ({ name, id, dataBoardConfigItem }) =>
             {/* </WithOrPermission> */}
           </Row>
           <Tooltip title="Thêm mới công việc" color="blue" placement="bottom" mouseEnterDelay={0.2}>
-            {/* <Button
-              type="primary"
-              onClick={() => {
-                setVisible(true);
-              }}
-              className="add-task"
-              icon={<PlusOutlined />}
-            /> */}
-             <Dropdown trigger={['click']} overlay={menu}>
-      <Button
-        type="primary"
-        className="add-task"
-        icon={<PlusOutlined />}
-        onClick={handleButtonClick}
-      >
-        
-      </Button>
-    </Dropdown>
+            <Dropdown
+              trigger={['click']}
+              open={dropdownVisible}
+              overlay={menu}
+              onOpenChange={(visible) => setDropdownVisible(visible)}
+            >
+              <Button
+                type="primary"
+                className="add-task"
+                icon={<PlusOutlined />}
+                onClick={handleButtonClick}
+              />
+            </Dropdown>
           </Tooltip>
         </Space>
       </div>
@@ -131,13 +130,10 @@ const BoardConfig: FC<BoardConfigProps> = ({ name, id, dataBoardConfigItem }) =>
                       className="task-list__item"
                     >
                       <Suspense fallback={<div >...</div>}>
-                        {/* <Task
+                        <Task
                           key={task._id}
                           task={task}
-                          idBoard={id}
-                          nameBoard={name}
-                          tasks={tasks}
-                        /> */}
+                        />
                       </Suspense>
                     </div>
                   )}
