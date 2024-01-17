@@ -40,18 +40,19 @@ export function TaskItemProvider({
     const { _id, assignUser = [], boardId } = dataTask || {};
 
     const newQuery = useMemo(() => {
-        if(!_id) return undefined;
+        if (!_id) return undefined;
         return {
-          id:get(dataTask,'_id')
+            id: get(dataTask, '_id')
         }
-      },[_id])
+    }, [_id]);
+    
     const [managers, isLoadingManagers] = useGetListManagersByIdBoard(boardId);
     const [staffs, isLoadingStaffs] = useGetListStaffsByIdBoard(boardId);
     const [allHistoryTaskById,isLoadingHis] = useGetHistoryActivityTaskById(newQuery);
     const {users, isLoading, canAssign} = useMemo(() => {
         let mergeUsers : any = [];
-        let canAssign = !!get(profile, 'isSuperAdmin') || // is Super Admin
-         managers?.some((item: any) => get(item, '_id') === get(profile, '_id')) // Include Manager
+        let canAssign = !!get(profile?.user, 'isSuperAdmin') || // is Super Admin
+         managers?.some((item: any) => get(item, '_id') === get(profile?.user, '_id')) // Include Manager
           // isAdmin // have permission Administrator
         staffs?.forEach((item: any) => {
             mergeUsers.push({ ...item, role: ROLE.member });
@@ -63,7 +64,7 @@ export function TaskItemProvider({
 
 
         return {users:mergeUsers, isLoading : isLoadingStaffs, canAssign};
-    }, [staffs,profile,assignUser,managers]);
+    }, [staffs, profile?.user, assignUser, managers]);
     return (
         <TaskItem.Provider
             value={{

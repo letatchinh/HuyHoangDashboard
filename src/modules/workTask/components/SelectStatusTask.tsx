@@ -63,7 +63,7 @@ function SelectStatusTask({
     <Select
       className="selectTask-custom"
       style={{
-        width: "max-content",
+        width: 'max-content',
         ...customStyles,
         borderRadius: "9px",
       }}
@@ -79,7 +79,7 @@ function SelectStatusTask({
           value={status}
           style={{ width: "fill-content" }}
         >
-          <Space style={{ width: "100%" }}>
+          <Space style={{ width: "max-content" }}>
             <Space>
               <div
                 className="select_option_circle"

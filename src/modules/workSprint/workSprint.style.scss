@@ -689,40 +689,40 @@
             }
         }
     }
-}
-.page-content.page-task-detail {
-    $task-detail-header: 60;
-    --task-detail-header: #{$task-detail-header}px;
-    // width: 100%;
-    position: relative;
-    padding-top: calc(var(--flexBody) + #{$task-detail-header}px) !important;
-    padding-bottom: 0 !important;
-    margin-top: 0 !important;
-    height: 100vh;
-    .page-task-detail_container {
-        width: auto;
-        height: 100%;
-        padding: 0 20px;
-        overflow-y: auto;
-        .task-detail-header {
-            position: fixed;
-            top: var(--flexBody);
-            width: 100%;
-            height: $task-detail-header + px;
-            display: flex;
-            align-items: center;
-            background-color: #fff;
-            z-index: 999;
-            border-bottom: 1px solid rgba(23, 21, 21, 0.448);
+    .page-content.page-task-detail {
+        $task-detail-header: 60;
+        --task-detail-header: #{$task-detail-header}px;
+        width: 100%;
+        position: relative;
+        padding-top: calc(var(--flexBody) + #{$task-detail-header}px) !important;
+        padding-bottom: 0 !important;
+        margin-top: 0 !important;
+        height: 100vh;
+        .page-task-detail_container {
+            width: auto;
+            height: 100%;
+            padding: 0 20px;
+            overflow-y: auto;
+            .task-detail-header {
+                position: fixed;
+                top: var(--flexBody);
+                width: 100%;
+                height: $task-detail-header + px;
+                display: flex;
+                align-items: center;
+                background-color: #fff;
+                z-index: 999;
+                border-bottom: 1px solid rgba(23, 21, 21, 0.448);
+            }
+        };
+        .selectTask-custom {
+            .ant-select-selector {
+                background-color: var(--select-by-status-bg) !important;
+                color: var(--select-by-status-color) !important;
+            }
         }
     }
-    .selectTask-custom {
-        .ant-select-selector {
-            background-color: var(--select-by-status-bg) !important;
-            color: var(--select-by-status-color) !important;
-        }
-    }
-}
+};
 
 //task --------------------------------
 .task-option-label-item{

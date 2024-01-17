@@ -70,4 +70,21 @@
         };
     };
     };
+    .selectTask-custom {
+        .ant-select-selector {
+            background-color: var(--select-by-status-bg);
+            color: var(--select-by-status-color);
+        }
+    };
 };
+.previewDescription {
+    width: 100%;
+    min-height: 100px;
+    cursor: text !important;
+
+    &:hover {
+        // border-width: 1px;
+        // border-color: rgb(243, 243, 243);
+        // border-style: solid;
+    }
+}

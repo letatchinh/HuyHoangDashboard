@@ -1,5 +1,5 @@
 import { UserOutlined, UsergroupAddOutlined } from '@ant-design/icons'
-import { Button, Col, Dropdown, Row, Tag, Typography , MenuProps} from 'antd'
+import { Button, Col, Dropdown, Row, Tag, Typography , MenuProps, Menu} from 'antd'
 import Text from 'antd/lib/typography/Text'
 import { get } from 'lodash'
 import React, { useMemo } from 'react'
@@ -26,7 +26,14 @@ export default function Assigner({ dataTask }: Props) {
         };
 
         onAssign(submitData)
-    }
+    };
+    const dropdownMenu : any = (
+        <Menu>
+            <Menu.Item>
+                <p>dajdsjdjsad</p>
+            </Menu.Item>
+        </Menu>
+      );
     return (
         <div>
             <BaseBorderBox title={<span><UserOutlined /> <Text strong>Thành viên tham gia</Text></span>}>
@@ -43,7 +50,7 @@ export default function Assigner({ dataTask }: Props) {
                 </div>
                 &nbsp; &nbsp;
                 <div className='task-detail-content-left-button-tab add-member'>
-                    <Dropdown menu={<MenuAssign dataTask={dataTask}/>  as MenuProps} trigger={['click']} >
+                    <Dropdown trigger={['click']} dropdownRender={() => <MenuAssign dataTask={dataTask} />}>
                       <Button type='primary' icon={<UsergroupAddOutlined />}>Thêm thành viên tham gia</Button>
                     </Dropdown>
                   </div>

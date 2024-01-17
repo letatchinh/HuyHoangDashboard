@@ -8,7 +8,8 @@ interface Props {
   handleFinshed?: any
 };
 
-export default function EditerDetail({ dataTask,onCancel,handleFinshed }: Props) {
+export default function EditerDetail({ dataTask, onCancel, handleFinshed }: Props) {
+    console.log('first')
     const [inputValue, setInputValue] = useState('');
     const handleCancel = useCallback(() => {
         setInputValue(dataTask?.description || "");
@@ -24,7 +25,7 @@ export default function EditerDetail({ dataTask,onCancel,handleFinshed }: Props)
     
     return (
         <div className='flex-column-center'>
-            {/* <Editor
+            {/* <Editors
                 value={inputValue}
                 onChange={(e: any) => {
                     setInputValue(e)
