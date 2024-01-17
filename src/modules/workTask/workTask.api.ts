@@ -18,16 +18,16 @@ const apis = {
     copyTask: ({ id, ...data }: any) => requester.post(`/task-item-copy/${id}`, data),
     
     //UPDATE
-    pushComment: ({ taskId, content }: any) => requester.post(`/process-add-comment-task-item/${taskId}`, { content }),
-    pushEmotion: ({ taskId, user, commentId }: any) => requester.put(`/process-emotion-comment-task-item/${taskId}?commentId=${commentId}`, user),
-    updateRelationTask: (body: any) => requester.put(`/update-relation-task-item/${body.taskItemId}`, pick(body, ['typeRequest', 'taskId'])),
-    updateTask: ({ id, ...data }: any) => requester.put(`/task-item/${id}`, data),
-    updateCommentById: ({ taskId, content, commentId }: any) => requester.put(`/process-update-comment-task-item/${taskId}?commentId=${commentId}`, { content }),
-    updateProgressTask: ({ id, ...data }: any) => requester.put(`/task-item-progress/${id}`, data),
+    pushComment: ({ taskId, content }: any) => requester.post(`/api/v1/process-add-comment-task-item/${taskId}`, { content }),
+    pushEmotion: ({ taskId, user, commentId }: any) => requester.put(`/api/v1/process-emotion-comment-task-item/${taskId}?commentId=${commentId}`, user),
+    updateRelationTask: (body: any) => requester.put(`/api/v1/update-relation-task-item/${body.taskItemId}`, pick(body, ['typeRequest', 'taskId'])),
+    updateTask: ({ id, ...data }: any) => requester.put(`/api/v1/task-item/${id}`, data),
+    updateCommentById: ({ taskId, content, commentId }: any) => requester.put(`/api/v1/process-update-comment-task-item/${taskId}?commentId=${commentId}`, { content }),
+    updateProgressTask: ({ id, ...data }: any) => requester.put(`/api/v1/task-item-progress/${id}`, data),
     
     //DELETE
     delete: (id?: any) => requester.delete(`/api/v1/task-item/${id}`),
-    deleteComment: ({ taskId, commentId }: any) => requester.delete(`/process-delete-comment-task-item/${taskId}?commentId=${commentId}`),
+    deleteComment: ({ taskId, commentId }: any) => requester.delete(`/api/v1/process-delete-comment-task-item/${taskId}?commentId=${commentId}`),
 
 };
 export default apis;
