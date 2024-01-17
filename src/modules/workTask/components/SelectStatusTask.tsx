@@ -1,50 +1,75 @@
-import { Select, Space } from 'antd';
-import { get } from 'lodash';
-import React, { useMemo } from 'react';
-// import { TASK_ITEM_STATUS_NAME } from '~/constants/defaultValue';
+import React, { useMemo } from "react";
+import { Select, Space } from "antd";
+import { get } from "lodash";
+
+interface StatusItem {
+  _id: string;
+  value: string;
+  backgroundColor: string;
+  color: string;
+  name: string;
+  justAdmin: boolean;
+};
 
 interface SelectStatusTaskProps {
   handleChange: (value: string) => void;
   defaultValue: string;
   value: string;
-  listStatus: any[]; // Replace 'any' with the actual type of your 'listStatus' array
-  initStatusValue: any; // Replace 'any' with the actual type of your 'initStatusValue' object
-}
+  listStatus: StatusItem[];
+  initStatusValue?: StatusItem | object;
+};
 
-const SelectStatusTask: React.FC<SelectStatusTaskProps> = ({ handleChange, defaultValue, value, listStatus, initStatusValue }) => {
+interface CSSProperties {
+  "--select-by-status-bg"?: string;
+  "--select-by-status-color"?: string;
+};
+
+function SelectStatusTask({
+  handleChange,
+  defaultValue,
+  value,
+  listStatus,
+  initStatusValue = {},
+}: SelectStatusTaskProps) {
 
   const listStatusMap = useMemo(() => {
-    return listStatus?.reduce((result, item) => {
+    return listStatus?.reduce((result: any, item) => {
       result[item._id] = {
         value: item?.value,
         backgroundColor: item.backgroundColor,
         color: item.color,
         name: item.value,
-        justAdmin: item.justAdmin
+        justAdmin: item.justAdmin,
       };
       return result;
-    }, {})
+    }, {});
   }, [listStatus]);
 
-  const styleListStatus = useMemo(() => ({
-    ...{ [get(initStatusValue, 'value', 'không xác định')]: initStatusValue },
-    ...listStatusMap
-  }), [initStatusValue, listStatusMap]);
+  const styleListStatus = useMemo(
+    () => ({
+      ...{ [get(initStatusValue, "value", "không xác định")]: initStatusValue },
+      ...listStatusMap,
+    }),
+    [initStatusValue, listStatusMap]
+  );
 
   if (!listStatus?.length) return null;
-  const customStyle = {
-    width: 'max-content',
-    '--select-by-status-bg': styleListStatus?.[value]?.backgroundColor,
-    '--select-by-status-color': styleListStatus?.[value]?.color,
-    borderRadius: '9px'
+
+  const customStyles: CSSProperties = {
+    "--select-by-status-bg": styleListStatus?.[value]?.backgroundColor,
+    "--select-by-status-color": styleListStatus?.[value]?.color,
   };
   return (
     <Select
       className="selectTask-custom"
-      style={customStyle}
+      style={{
+        width: "max-content",
+        ...customStyles,
+        borderRadius: "9px",
+      }}
       defaultValue={defaultValue}
       onSelect={handleChange}
-      placement={'bottomLeft'}
+      placement={"bottomLeft"}
       value={value}
     >
       {Object.keys(listStatusMap).map((status) => (
@@ -52,13 +77,15 @@ const SelectStatusTask: React.FC<SelectStatusTaskProps> = ({ handleChange, defau
           label={listStatusMap?.[status]?.value}
           key={status}
           value={status}
-          style={{ width: 'fill-content' }}
+          style={{ width: "fill-content" }}
         >
-          <Space style={{ width: '100%' }}>
+          <Space style={{ width: "100%" }}>
             <Space>
               <div
                 className="select_option_circle"
-                style={{ backgroundColor: listStatusMap?.[status]?.backgroundColor }}
+                style={{
+                  backgroundColor: listStatusMap?.[status]?.backgroundColor,
+                }}
               ></div>
             </Space>
             <Space style={{ flexGrow: 1 }}>

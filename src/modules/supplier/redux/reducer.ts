@@ -47,6 +47,5 @@ class SupplierClassExtend extends InstanceModuleRedux {
 const newSlice = new SupplierClassExtend();
 const data = newSlice.createSlice();
 
-
-export const supplierSliceAction   = data.actions;
+export const supplierSliceAction = data.actions;
 export default data.reducer;

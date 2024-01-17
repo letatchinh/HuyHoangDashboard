@@ -1,118 +1,272 @@
-import { put, call, takeLatest } from 'redux-saga/effects';
-import api from '../workTask.api'; 
-import { workTaskActions } from './reducer';
-import { workListActions } from '~/modules/workList/redux/reducer';
-
-function* getListWorkTask({payload:query} : any) : any {
+// import { TaskRelationOption } from "./../../../../.history/src/modules/workTask/components/RrelationTask_20240116151409";
+import { put, call, takeLatest, select } from "redux-saga/effects";
+import api from "../workTask.api";
+import { workTaskSliceAction } from "./reducer";
+import { get } from "lodash";
+import { Empty } from "antd";
+import { workListActions } from "~/modules/workList/redux/reducer";
+function* getListWorkTask({ payload: query }: any): any {
   try {
-    const data = yield call(api.getAll,query);
-    yield put(workTaskActions.getListSuccess(data));
-  } catch (error:any) {
-    yield put(workTaskActions.getListFailed(error));
+    const data = yield call(api.getAll, query);
+    yield put(workTaskSliceAction.getListSuccess(data));
+  } catch (error: any) {
+    yield put(workTaskSliceAction.getListFailed(error));
   }
 }
 
-function* getByIdWorkTask({payload:id} : any) : any {
+function* getByIdWorkTask({ payload: id }: any): any {
   try {
-    const data = yield call(api.getById,id);
-    yield put(workTaskActions.getByIdSuccess(data));
-  } catch (error:any) {
-    yield put(workTaskActions.getByIdFailed(error));
+    const data = yield call(api.getById, id);
+    yield put(workTaskSliceAction.getByIdSuccess(data));
+  } catch (error: any) {
+    yield put(workTaskSliceAction.getByIdFailed(error));
   }
 }
 
-function* createWorkTask({payload} : any) : any {
+function* createWorkTask({ payload }: any): any {
   try {
     const data = yield call(api.create,payload);
-    yield put(workTaskActions.createSuccess(data));
+    yield put(workTaskSliceAction.createSuccess(data));
     const dataType:any ={ id: payload.boardConfigId } 
     yield put(workListActions.addBoardConfigItemRequest(dataType))
   } catch (error:any) {
-    yield put(workTaskActions.createFailed(error));
+    yield put(workTaskSliceAction.createFailed(error));
   }
 }
 
-function* updateWorkTask({payload} : any) : any {
+function* updateWorkTask({ payload }: any): any {
   try {
-    const data = yield call(api.update,payload);
-    yield put(workTaskActions.updateSuccess(data));
-  } catch (error:any) {
-    yield put(workTaskActions.updateFailed(error));
+    const data = yield call(api.update, payload);
+    yield put(workTaskSliceAction.updateSuccess(data));
+  } catch (error: any) {
+    yield put(workTaskSliceAction.updateFailed(error));
   }
 }
 function* deleteWorkTask({payload} : any) : any {
   try {
     const data = yield call(api.delete,payload.id);
-    yield put(workTaskActions.deleteSuccess(data));
+    yield put(workTaskSliceAction.deleteSuccess(data));
     const dataType:any ={ id: payload.boardConfigId } 
     yield put(workListActions.addBoardConfigItemRequest(dataType))
   } catch (error:any) {
-    yield put(workTaskActions.deleteFailed(error));
+    yield put(workTaskSliceAction.deleteFailed(error));
   }
 }
-// function* copyTask ({ payload }:any):any {
-//   try {
-//       const data = yield call(api.copyTask, payload);
-//       yield put({type:Types.COPY_TASK_SUCCESS,payload:{data:data?.data}});
-//       yield put({ type: Types.ADD_BOARD_CONFIG_ITEM_REQUEST, payload: { id: data?.data.boardConfigId } });
-//   } catch (error) {
-//       yield put({ type: Types.COPY_TASK_FAILED, payload: error });
-//   }
-// }
-// function* getHistoryActivityTaskById({ payload }: any):any {
-//   try {
-//       const data = yield call(api.getHistoryTaskById, payload.id);
-//       yield put({ type: Types.GET_HISTORY_ACTIVITY_SUCCESS, payload: data });
-//   } catch (error:any) {
-//       yield put({ type: Types.GET_HISTORY_ACTIVITY_FAILED, payload: error.message });
-//   }
-// }
 
-// function* onAssign({ payload }: any):any {
-//   try {
-//       const data = yield call(api.update, payload);
-//       yield put({ type: Types.ASSIGN_TASK_SUCCESS, payload: data });
-//   } catch (error) {
-//       yield put({ type: Types.ASSIGN_TASK_FAILED, payload: error });
-//   }
-// }
-// function* commentPushTask({payload}){
-//   try {
-//     const data = yield call(api.pushComment, payload);
-//     yield put({ type: Types.COMMENT_SUCCESS, payload: data });
-//   } catch (error:any) {
-//     yield put({ type: Types.COMMENT_FAILED, payload: error.message });
-//   }
-// }
+function* updateTask({ payload }: any): any {
+  try {
+    const data = yield call(api.updateTask, payload);
+    console.log(data);
+    yield put(
+      workTaskSliceAction.updateSuccess(get(data.data, "boardConfigId"))
+    );
+    // yield put({ type: Types.UPDATE_TASK_INIT_SUCCESS, payload: {dataTask:data.data,boardId: get(data.data, 'boardConfigId'),idTask :get(data.data,'_id')}});
+    // const profile = yield select((state) => state.user.profile);
+    // const response= get(data,'data')
+    // const managers = yield call(Api.workFlow.getAllManagersByIdBoard, get(response, 'boardId'));
+    // const res = yield call(Api.workFlow.getByIdTask, get(response, '_id'));
 
-// function* pushEmtionTask({payload}:any):any{
-//   try {
-//     const data = yield call(api.pushEmotion, payload);
-//     yield put({ type: Types.EMOTION_SUCCESS, payload: data });
-//   } catch (error:any) {
-//     yield put({ type: Types.EMOTION_FAILED, payload: error.message });
-//   }
-// }
-// function* deleteCommentTask({payload}:any):any{
-//   try {
-//     const data = yield call(api.deleteComment, payload);
-//     yield put({ type: Types.COMMENT_DELETE_SUCCESS, payload: data });
-//   } catch (error:any) {
-//     yield put({ type: Types.COMMENT_DELETE_FAILED, payload: error.message });
-//   }
-// }
-// function* updateCommentTask({payload}){
-//   try {
-//     const data = yield call(api.updateCommentById, payload);
-//     yield put({ type: Types.COMMENT_UPDATE_SUCCESS, payload: data });
-//   } catch (error) {
-//     yield put({ type: Types.COMMENT_UPDATE_FAILED, payload: error.message });
-//   }
-// }
+    // Check if User is a Super admin or manager assigned
+    // if (!!get(profile, 'isSuperAdmin') || managers?.some(item => get(item, '_id') === get(profile, '_id'))) {
+    //     yield put({ type: Types.UPDATE_TASK_SUCCESS, payload: { ...response, progressListShow: get(response, 'progressList') } });
+    // } else {
+    //     const progressListShow = get(response, 'progressList', [])?.map(item => {
+    //         let progressShow = get(item, 'progress', [])?.filter(progress => get(progress, '[0].assign', '')?.includes(get(profile, '_id'))||get(progress, '[0].assign', '')==='');
+    //         return { ...item, progress: progressShow }
+    //     });
+    //     yield put({ type: Types.UPDATE_TASK_SUCCESS, payload: { ...response, progressListShow } });
+    // }
+  } catch (error) {
+    yield put(workTaskSliceAction.updateFailed(error));
+  }
+}
+
+//history
+function* getHistoryActivityTaskById({ payload }: any): any {
+  try {
+    const data = yield call(api.getHistoryTaskById, payload.id);
+    yield put(workTaskSliceAction.getHistoryActivityTaskByIdSuccess(data));
+  } catch (error: any) {
+    yield put(workTaskSliceAction.getHistoryActivityTaskByIdFailed(error));
+  }
+}
+
+function* updateProgressTask({ payload }: any): any {
+  try {
+    const data = yield call(api.updateProgressTask, payload);
+    const profile = yield select((state) => state.user.profile);
+    const response = get(data, "data");
+    const managers = yield call(
+      api.getAllManagersByIdBoard,
+      get(response, "boardId")
+    );
+    // Check if User is a Super admin or manager assigned
+    if (
+      !!get(profile, "isSuperAdmin") ||
+      managers?.some((item: any) => get(item, "_id") === get(profile, "_id"))
+    ) {
+      yield put(
+        workTaskSliceAction.updateProgressTaskSuccess({
+          ...response,
+          progressListShow: get(response, "progressList"),
+        })
+      );
+    } else {
+      const progressListShow = get(response, "progressList", [])?.map(
+        (item: any) => {
+          let progressShow = get(item, "progress", [])?.filter(
+            (progress: any) =>
+              get(progress, "[0].assign", "")?.includes(get(profile, "_id")) ||
+              get(progress, "[0].assign", "") === ""
+          );
+          return { ...item, progress: progressShow };
+        }
+      );
+      yield put(
+        workTaskSliceAction.updateProgressTaskSuccess({
+          ...response,
+          progressListShow,
+        })
+      );
+    }
+  } catch (error: any) {
+    yield put(workTaskSliceAction.updateProgressTaskFailed(error));
+  }
+}
+function* copyTask({ payload }: any): any {
+  try {
+    const data = yield call(api.copyTask, payload);
+    yield put(workTaskSliceAction.copyTaskSuccess(data?.data));
+    // yield put({ type: Types.ADD_BOARD_CONFIG_ITEM_REQUEST, payload: { id: data?.data.boardConfigId } }); action getWorkListConfig
+  } catch (error: any) {
+    yield put(workTaskSliceAction.copyTaskFailed(error));
+  }
+}
+
+function* searchTaskItemTask({ payload }: any): any {
+  try {
+    const data = yield call(api.searchTaskByBoardId, payload);
+    // let convertDatatoOption : any = data.map((task: any)=>({
+    //   value:task._id,
+    //   label:<TaskRelationOption task={task}/>
+    // }));
+
+    // if (!data?.length) {
+    //   convertDatatoOption = [{
+    //     value: 'unkow',
+    //     label: <Empty style = {{width: 40}} />}]
+    // };
+    // payload.action(convertDatatoOption)
+    yield put(workTaskSliceAction.searchTaskSuccess(data));
+  } catch (error: any) {
+    yield put(workTaskSliceAction.searchTaskFailed(error));
+  }
+}
+
+function* getRelationTaskItemTask({ payload }: any): any {
+  try {
+    const data = yield call(api.getRelationTask, get(payload, "taskId", ""));
+    yield put(workTaskSliceAction.getRelationTaskSuccess(data));
+  } catch (error: any) {
+    yield put(workTaskSliceAction.getRelationTaskFailed(error));
+  }
+}
+
+function* updateRelationTaskItemTask({ payload }: any): any {
+  try {
+    const data = yield call(api.updateRelationTask, payload);
+    const listTask = yield call(
+      api.getRelationTask,
+      get(payload, "taskItemId", "")
+    );
+    yield put(workTaskSliceAction.getRelationTaskSuccess(listTask));
+    yield put(workTaskSliceAction.updateRelationTaskSuccess(data));
+  } catch (error: any) {
+    yield put(workTaskSliceAction.updateRelationTaskFailed(error));
+  }
+};
+function* onAssign({ payload }: any): any{
+  try {
+      const data = yield call(api.updateTask, payload);
+      yield put(workTaskSliceAction.assignTaskSuccess(data));
+  } catch (error: any) {
+      yield put(workTaskSliceAction.assignTaskFailed(error));
+  }
+};
+
+//COMMENT
+function* commentPushTask({payload}: any): any{
+  try {
+    const data = yield call(api.pushComment, payload);
+    yield put(workTaskSliceAction.commentSuccess(data));
+  } catch (error: any) {
+    yield put(workTaskSliceAction.commentFailed(error));
+  }
+};
+
+function* pushEmtionTask({payload}: any): any{
+  try {
+    const data = yield call(api.pushEmotion, payload);
+    // yield put();
+  } catch (error: any) {
+    console.log(error)
+    // yield put({ type: Types.EMOTION_FAILED, payload: error.message });
+  }
+};
+function* deleteCommentTask({payload}: any): any{
+  try {
+    const data = yield call(api.deleteComment, payload);
+    yield put(workTaskSliceAction.commentSuccess(data));
+  } catch (error: any) {
+    yield put(workTaskSliceAction.commentFailed(error));
+  }
+};
+function* updateCommentTask({payload}: any): any{
+  try {
+    const data = yield call(api.updateCommentById, payload);
+    // yield put(workTaskSliceAction.commen);
+  } catch (error: any) {
+    console.log(error)
+    // yield put({ type: Types.COMMENT_UPDATE_FAILED, payload: error.message });
+  }
+};
+//
+
 export default function* workTaskSaga() {
-  yield takeLatest(workTaskActions.getListRequest, getListWorkTask);
-  yield takeLatest(workTaskActions.getByIdRequest, getByIdWorkTask);
-  yield takeLatest(workTaskActions.createRequest, createWorkTask);
-  yield takeLatest(workTaskActions.updateRequest, updateWorkTask);
-  yield takeLatest(workTaskActions.deleteRequest, deleteWorkTask);
+  //Get
+  yield takeLatest(workTaskSliceAction.getListRequest, getListWorkTask);
+  yield takeLatest(workTaskSliceAction.getByIdRequest, getByIdWorkTask);
+  yield takeLatest(
+    workTaskSliceAction.getHistoryActivityTaskByIdRequest,
+    getHistoryActivityTaskById
+  );
+  yield takeLatest(workTaskSliceAction.searchTaskRequest, searchTaskItemTask);
+  yield takeLatest(workTaskSliceAction.assignTaskRequest, onAssign);
+  yield takeLatest(
+    workTaskSliceAction.getRelationTaskRequest,
+    getRelationTaskItemTask
+  );
+  yield takeLatest(
+    workTaskSliceAction.updateRelationTaskRequest,
+    updateRelationTaskItemTask
+  );
+
+  //Create
+  yield takeLatest(workTaskSliceAction.createRequest, createWorkTask);
+  yield takeLatest(workTaskSliceAction.copyTaskRequest, copyTask);
+
+  //Update
+  yield takeLatest(workTaskSliceAction.updateRequest, updateWorkTask);
+  yield takeLatest(workTaskSliceAction.updateCommentRequest, updateCommentTask);
+  yield takeLatest(workTaskSliceAction.pushEmotionRequest, pushEmtionTask);
+  yield takeLatest(
+    workTaskSliceAction.updateProgressTaskRequest,
+    updateProgressTask
+  );
+  yield takeLatest(workTaskSliceAction.commentRequest, commentPushTask);
+
+  //Delete
+  yield takeLatest(workTaskSliceAction.deleteRequest, deleteWorkTask);
+  yield takeLatest(workTaskSliceAction.deleteCommentRequest, deleteCommentTask);
+  
 }

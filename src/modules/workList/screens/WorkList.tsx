@@ -12,7 +12,7 @@ import { useGetWorkSprint } from '~/modules/workSprint/workSprint.hook';
 import MenuListBoard from '~/modules/workSprint/components/MenuListBoard';
 import BoardConfig from '../components/WorkListConfig';
 import { FormTaskContextProps } from '../workList.modal';
-import { useCreateTask, useDeleteTask, useUpdateTask } from '~/modules/workTask/workTask.hook';
+import { useCreateTask, useUpdateTask } from '~/modules/workTask/workTask.hook';
 import { useGetBoardById } from '~/modules/workBoard/workBoard.hook';
 import Menufilter from '../components/Menufilter';
 // import { useGetSprintInfo } from '~/hooks/workSprint';
@@ -54,7 +54,7 @@ const [lengthList, setLength] = useState<number>(
   const [, updateTask] = useUpdateTask();
   const [, updatePosition] = useUpdatePosition();
   const [, handleCreateTask] = useCreateTask();
-  const [, handleDeleteTask] = useDeleteTask();
+  // const [, handleDeleteTask] = useDeleteTask();
   const [, handleCreateWork] = useCreateWorkList();
   const [, handleDeleteWork] = useDeleteWorkList();
   const [boardData] = useGetBoardById(idBoard);
@@ -128,7 +128,7 @@ const [lengthList, setLength] = useState<number>(
           handleCreateTask,
           handleDeleteWork,
           setVisibleModal,
-          handleDeleteTask,
+          // handleDeleteTask,
           setVisibleInfo,
           setIdVisibleInfo,
           setTaskData,

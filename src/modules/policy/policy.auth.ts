@@ -62,19 +62,19 @@ const RESOURCE = (): ResourceType => {
   const GROUP_WHBILL: string[] = [
     bill
   ];
-  const TODOSTATUSCONFIG: string[] = [
-    todoStatusConfig,
-  ];
   const GROUP_EMPLOYEE : string[] = [
     employee
+  ];
+  const GROUP_WORK_MANAGERMENT: string[] = [
+    todoStatusConfig,
   ];
 
   return {
     GROUP_USER,
     GROUP_WHBILL,
-    TODOSTATUSCONFIG,
     GROUP_EMPLOYEE,
     GROUP_WHSETTING,
+    GROUP_WORK_MANAGERMENT,
   };
 };
 
