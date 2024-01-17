@@ -82,6 +82,8 @@ export default function ProductUnit(props: propsType): React.JSX.Element {
   const onSearch = (value: string) => {
     onParamChange({ ['keyword']: value });
   };
+
+  const pageSizeOptions = ['10', '20', '50', '100'];
   return (
     <div className='product-config'>
       <Breadcrumb title={t('unit')} />
@@ -116,6 +118,9 @@ export default function ProductUnit(props: propsType): React.JSX.Element {
           size="small"
           pagination={{
             ...paging,
+            pageSizeOptions: pageSizeOptions,
+                    showSizeChanger: true, // Hiển thị dropdown chọn kích thước trang
+                    defaultPageSize: 10, 
             showTotal: (total) => `Tổng cộng: ${total} `,
             onChange(page, pageSize) {
               onParamChange({ page, limit: pageSize });
@@ -128,7 +133,7 @@ export default function ProductUnit(props: propsType): React.JSX.Element {
         title={id ? 'Sửa đơn vị tính' : 'Tạo đơn vị tính'}
         onCancel={handleCloseForm}
         footer={null}
-        destroyOnClose
+        // destroyOnClose
         width={800}
       >
         <ProductUnitForm id={id} callBack={handleCloseForm} />

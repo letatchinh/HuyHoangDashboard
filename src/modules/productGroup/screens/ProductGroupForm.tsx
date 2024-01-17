@@ -28,7 +28,8 @@ const ProductConfigForm: React.FC<Props> = ({ id, callBack, updateProductConfig 
         note,
       })
     }
-  }, [id, productConfigById]);
+    else form.resetFields();
+  }, [id, productConfigById,form]);
   const onFinish = (values: FieldType) => {
     const data: FieldType = {
       ...values,

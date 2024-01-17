@@ -27,6 +27,8 @@ const ProductUnitForm: React.FC<Props> = ({ id, callBack }) => {
         name,
         note,
       })
+    } else {
+      form.resetFields();
     }
   }, [id,productUnitById,form]);
   const onFinish = useCallback((values: FieldType) => {

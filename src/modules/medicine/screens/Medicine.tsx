@@ -7,13 +7,13 @@ import TableAnt from '~/components/Antd/TableAnt';
 import Breadcrumb from '~/components/common/Breadcrumb';
 import WhiteBox from '~/components/common/WhiteBox';
 import useTranslate from '~/lib/translation';
-import { useGetListMeddicine, useMedicineQueryParams, useUpdateMedicineParams,useMedicinePaging } from '../medicine.hook';
+import { useGetListMeddicine, useMedicineQueryParams, useUpdateMedicineParams, useMedicinePaging } from '../medicine.hook';
 import { DataType } from '../medicine.modal';
 
 const { Search } = Input;
 
 export default function Medicine() {
-   const [query] = useMedicineQueryParams();
+  const [query] = useMedicineQueryParams();
   const [listMedicine, isLoading] = useGetListMeddicine(query);
   const paging = useMedicinePaging();
   const [keyword, { setKeyword, onParamChange }] = useUpdateMedicineParams(query);
@@ -61,42 +61,47 @@ export default function Medicine() {
     onParamChange({ ['keyword']: value });
   };
 
+  const pageSizeOptions = ['10', '20', '50', '100'];
+
   return (
     <div className='product-config'>
       <Breadcrumb title={t('medicine')} />
       <div>
-            <div className="product-config-action" >
-              <Row justify="space-between">
-                <Col span={8}>
-                  <Search
-                    style={{ height: '50px', padding: '5px 0px' }}
-                    placeholder="Nhập bất kì để tìm..."
-                    value={keyword}
-                    onChange={(e) => (setKeyword(e.target.value))
-                     
-                    }
-                    onSearch={onSearch} 
-                    allowClear
-                    enterButton={<SearchOutlined />}
-                  />
-                </Col>
-              </Row>
-            </div>
-            <WhiteBox>
-              <TableAnt
-                dataSource={listMedicine}
-                loading={isLoading}
-                columns={columns}
-                size="small"
-                pagination={{
-                  ...paging,
-                  onChange(page, pageSize) {
-                    onParamChange({ page, limit: pageSize });
-                  },
-                }}
+        <div className="product-config-action" >
+          <Row justify="space-between">
+            <Col span={8}>
+              <Search
+                style={{ height: '50px', padding: '5px 0px' }}
+                placeholder="Nhập bất kì để tìm..."
+                value={keyword}
+                onChange={(e) => (setKeyword(e.target.value))
+
+                }
+                onSearch={onSearch}
+                allowClear
+                enterButton={<SearchOutlined />}
               />
-            </WhiteBox>
-          </div>
+            </Col>
+          </Row>
+        </div>
+        <WhiteBox>
+          <TableAnt
+            dataSource={listMedicine}
+            loading={isLoading}
+            columns={columns}
+            size="small"
+            pagination={{
+              ...paging,
+              pageSizeOptions: pageSizeOptions,
+              showSizeChanger: true, // Hiển thị dropdown chọn kích thước trang
+              defaultPageSize: 10,
+              onChange(page, pageSize) {
+                onParamChange({ page, limit: pageSize });
+              },
+            }}
+          />
+        </WhiteBox>
+      </div>
     </div>
   );
 }

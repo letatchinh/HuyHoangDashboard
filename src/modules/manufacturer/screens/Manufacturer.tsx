@@ -119,6 +119,7 @@ export default function Manufacturer() {
       value: 'INACTIVE',
     },
   ];
+  const pageSizeOptions = ['10', '20', '50', '100'];
   return (
     <>
       <div>
@@ -173,6 +174,9 @@ export default function Manufacturer() {
                   size="small"
                   pagination={{
                     ...paging,
+                    pageSizeOptions: pageSizeOptions,
+                    showSizeChanger: true, // Hiển thị dropdown chọn kích thước trang
+                    defaultPageSize: 10, // Kích thước trang mặc định
                     showTotal: (total) => `Tổng cộng: ${total} `,
                     onChange(page, pageSize) {
                       onParamChange({ page, limit: pageSize });
@@ -188,7 +192,7 @@ export default function Manufacturer() {
           title="Thêm nhà sản xuất"
           onCancel={handleCloseForm}
           footer={null}
-          destroyOnClose
+        // destroyOnClose
         >
           <ManufacturerForm id={id} callBack={handleCloseForm} updateManufacturer={updateManufacturer} />
         </ModalAnt>
