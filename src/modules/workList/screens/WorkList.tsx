@@ -6,7 +6,7 @@ import { ArrowLeftOutlined, CloseOutlined } from '@ant-design/icons';
 import { ResizableBox } from 'react-resizable';
 import Text from 'antd/lib/typography/Text';
 import { get } from 'lodash';
-import { useCreateWorkList, useDeleteWorkList, useGetListBoardConfig, useWorkListQueryParams } from '../workList.hook';
+import { useCreateWorkList, useDeleteWorkList, useGetListBoardConfig, useListBoardConfigItem, useUpdatePosition, useWorkListQueryParams } from '../workList.hook';
 // import Menufilter from '../components/Menufilter';
 import { useGetWorkSprint } from '~/modules/workSprint/workSprint.hook';
 import MenuListBoard from '~/modules/workSprint/components/MenuListBoard';
@@ -14,6 +14,7 @@ import BoardConfig from '../components/WorkListConfig';
 import { FormTaskContextProps } from '../workList.modal';
 import { useCreateTask, useUpdateTask } from '~/modules/workTask/workTask.hook';
 import { useGetBoardById } from '~/modules/workBoard/workBoard.hook';
+import Menufilter from '../components/Menufilter';
 // import { useGetSprintInfo } from '~/hooks/workSprint';
 // import { useWorkListQueryParams } from '~/hooks/workList';
 // import { WithOrPermission } from '../Common';
@@ -38,19 +39,20 @@ const WorkList = () => {
   const [visibleModal, setVisibleModal] = useState(false);
   const [boardConfig] = useGetListBoardConfig(query);
   const boardConfigMemo = useMemo(() => (boardConfig ?? []).map(({ name, _id }:any) => ({ name, _id })), [boardConfig]);
-  // const [data] = useListBoardConfigItem();
+  const [data] = useListBoardConfigItem();
+  console.log(data,'ádsd');
   const [propsModal, setPropsModal] = useState({});
   const [visibleInfo, setVisibleInfo] = useState(false);
 const [lengthList, setLength] = useState<number>(
   workflowRef?.current?.offsetWidth ?? window.innerWidth
 );
-  let data = boardConfigMemo;
+  // let data = boardConfigMemo;
   
   const [taskData, setTaskData] = useState('');
   const [visibleListBoard, setVisibleListBoard] = useState(false);
   const [idVisibleInfo, setIdVisibleInfo] = useState('');
   const [, updateTask] = useUpdateTask();
-  // const [, updatePosition] = useUpdatePosition();
+  const [, updatePosition] = useUpdatePosition();
   const [, handleCreateTask] = useCreateTask();
   // const [, handleDeleteTask] = useDeleteTask();
   const [, handleCreateWork] = useCreateWorkList();
@@ -62,6 +64,7 @@ const [lengthList, setLength] = useState<number>(
   };
 
   const openFormTask = (id:any, data:any) => {
+    
     setPropsModal({ boardConfigId: id });
     setVisibleModal(true);
   };
@@ -103,12 +106,12 @@ const [lengthList, setLength] = useState<number>(
     Object.assign(itemBeRemove ?? {}, { ordinal: newOrdinal });
 
     updateTask({ id: itemBeRemove._id, ordinal: newOrdinal, boardConfigId: colAfter });
-    // updatePosition({
-    //   colBefore,
-    //   indexBefore,
-    //   colAfter,
-    //   indexAfter,
-    // });
+    updatePosition({
+      colBefore,
+      indexBefore,
+      colAfter,
+      indexAfter,
+    });
   };
 
   return (
@@ -144,7 +147,7 @@ const [lengthList, setLength] = useState<number>(
           )}
         </Space>
         <Suspense fallback={<p>...</p>}>
-          {/* <Menufilter /> */}
+          <Menufilter />
         </Suspense>
         <hr />
         <div className="workflow" ref={workflowRef}>
@@ -236,17 +239,6 @@ const [lengthList, setLength] = useState<number>(
             </Suspense>
           </ResizableBox>
         </Drawer>
-        <Modal
-          visible={visibleModal}
-          onCancel={() => setVisibleModal(false)}
-          footer={false}
-          closable={false}
-          destroyOnClose
-        >
-          <Suspense fallback={<p>...</p>}>
-            {/* <TaskForm /> */}
-          </Suspense>
-        </Modal>
       </FormTaskContext.Provider>
     </div>
   );

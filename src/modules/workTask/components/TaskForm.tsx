@@ -9,14 +9,15 @@ import { useGetWorkSprints } from '~/modules/workSprint/workSprint.hook';
 import { useFormTaskContext } from '~/modules/workList/screens/WorkList';
 // import SelectStatusTask from '../common/SelectStatusTask';
 // import { useGetBoardById, useGetListTaskBySprints, useCopyTask } from '~/hooks';
-
+import { useResetAction } from '../workTask.hook';
 const TaskForm: React.FC = () => {
   const { Option } = Select;
   const { boardConfigId, boardId, id, handleCreateTask, setVisibleModal, sprintId, boardData } = useFormTaskContext();
   const [form] = Form.useForm();
+  console.log(boardConfigId, 'ksksk');
   const [keyword, setKeyword] = useState<string | null>(null);
   const [idSprint, setIdSprint] = useState<string>('');
-//   const [, copyTask] = useCopyTask();
+  //   const [, copyTask] = useCopyTask();
   const query = useMemo(() => {
     if (boardId) {
       return {
@@ -32,8 +33,8 @@ const TaskForm: React.FC = () => {
     id: idSprint ? idSprint : sprintId,
     keyword: keyword,
   }), [idSprint, keyword]);
-
-//   const [sprint, isLoadingSprint] = useGetListTaskBySprints(querySearch);
+  useResetAction();
+  //   const [sprint, isLoadingSprint] = useGetListTaskBySprints(querySearch);
 
   const navigate = useNavigate();
 
@@ -77,14 +78,14 @@ const TaskForm: React.FC = () => {
 
   return (
     <>
-    <div style={{width: '100%',backgroundColor: 'lightgray',height:'120px' }}>
-        <Radio.Group onChange={(e: any) => onChange(e)} value={value} style={{ marginBottom: 20, display: 'flex', alignItems: 'center',justifyContent: 'center' }}>
-  <Radio value='new'>Tạo mới</Radio>
-  <Radio value='existed'>Chọn công việc đã có</Radio>
-</Radio.Group>
-      {value === 'existed' ? (
-        <>
-          {/* <Row gutter={48} align="middle" justify="space-between">
+      <div style={{ width: '100%', backgroundColor: 'lightgray', height: '120px' }}>
+        <Radio.Group onChange={(e: any) => onChange(e)} value={value} style={{ marginBottom: 20, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <Radio value='new'>Tạo mới</Radio>
+          <Radio value='existed'>Chọn công việc đã có</Radio>
+        </Radio.Group>
+        {value === 'existed' ? (
+          <>
+            {/* <Row gutter={48} align="middle" justify="space-between">
             <Col flex={1}>
               <Form.Item
                 label="Tên danh mục"
@@ -165,23 +166,23 @@ const TaskForm: React.FC = () => {
               </Form.Item>
             </Col>
           </Row> */}
-        </>
-      ) : (
-        <Form
-          form={form}
-          onFinish={onFinish}
-          layout="horizontal"
-        >
-          <Form.Item style={{ marginBottom: 0,width: '90%' }} label="Tên task" name="name" rules={[{ required: true, message: 'Vui lòng nhập tên task' }]}>
-            <Input />
-          </Form.Item>
-          <Form.Item style={{justifyContent: 'center', display: 'flex',marginTop:'10px'}}>
-                <Button htmlType="submit" type="primary">
-                  {id ? 'Cập nhật' : 'Thêm mới'}</Button>
-          </Form.Item>
-        </Form>
-      )}
-    </div>
+          </>
+        ) : (
+          <Form
+            form={form}
+            onFinish={onFinish}
+            layout="horizontal"
+          >
+            <Form.Item style={{ marginBottom: 0, width: '90%' }} label="Tên task" name="name" rules={[{ required: true, message: 'Vui lòng nhập tên task' }]}>
+              <Input />
+            </Form.Item>
+            <Form.Item style={{ justifyContent: 'center', display: 'flex', marginTop: '10px' }}>
+              <Button htmlType="submit" type="primary">
+                {id ? 'Cập nhật' : 'Thêm mới'}</Button>
+            </Form.Item>
+          </Form>
+        )}
+      </div>
 
     </>
   );

@@ -9,6 +9,7 @@ import {
   useFetch,
   useFetchByParam,
   useQueryParams,
+  useResetState,
   useSubmit,
   useSuccess,
 } from "~/utils/hook";
@@ -317,4 +318,7 @@ export const useUpdateComment = () => {
     loadingSelector: () => false,
     action: workTaskSliceAction.updateCommentRequest,
   })
+};
+export const useResetAction = () => {
+  return useResetState(workTaskSliceAction.resetAction);
 };
