@@ -180,7 +180,53 @@ function* updateRelationTaskItemTask({ payload }: any): any {
   } catch (error: any) {
     yield put(workTaskSliceAction.updateRelationTaskFailed(error));
   }
-}
+};
+function* onAssign({ payload }: any): any{
+  try {
+      const data = yield call(api.updateTask, payload);
+      yield put(workTaskSliceAction.assignTaskSuccess(data));
+  } catch (error: any) {
+      yield put(workTaskSliceAction.assignTaskFailed(error));
+  }
+};
+
+//COMMENT
+function* commentPushTask({payload}: any): any{
+  try {
+    const data = yield call(api.pushComment, payload);
+    yield put(workTaskSliceAction.commentSuccess(data));
+  } catch (error: any) {
+    yield put(workTaskSliceAction.commentFailed(error));
+  }
+};
+
+function* pushEmtionTask({payload}: any): any{
+  try {
+    const data = yield call(api.pushEmotion, payload);
+    // yield put();
+  } catch (error: any) {
+    console.log(error)
+    // yield put({ type: Types.EMOTION_FAILED, payload: error.message });
+  }
+};
+function* deleteCommentTask({payload}: any): any{
+  try {
+    const data = yield call(api.deleteComment, payload);
+    yield put(workTaskSliceAction.commentSuccess(data));
+  } catch (error: any) {
+    yield put(workTaskSliceAction.commentFailed(error));
+  }
+};
+function* updateCommentTask({payload}: any): any{
+  try {
+    const data = yield call(api.updateCommentById, payload);
+    // yield put(workTaskSliceAction.commen);
+  } catch (error: any) {
+    console.log(error)
+    // yield put({ type: Types.COMMENT_UPDATE_FAILED, payload: error.message });
+  }
+};
+//
 
 export default function* workTaskSaga() {
   //Get
@@ -191,6 +237,7 @@ export default function* workTaskSaga() {
     getHistoryActivityTaskById
   );
   yield takeLatest(workTaskSliceAction.searchTaskRequest, searchTaskItemTask);
+  yield takeLatest(workTaskSliceAction.assignTaskRequest, onAssign);
   yield takeLatest(
     workTaskSliceAction.getRelationTaskRequest,
     getRelationTaskItemTask
@@ -206,11 +253,16 @@ export default function* workTaskSaga() {
 
   //Update
   yield takeLatest(workTaskSliceAction.updateRequest, updateWorkTask);
+  yield takeLatest(workTaskSliceAction.updateCommentRequest, updateCommentTask);
+  yield takeLatest(workTaskSliceAction.pushEmotionRequest, pushEmtionTask);
   yield takeLatest(
     workTaskSliceAction.updateProgressTaskRequest,
     updateProgressTask
   );
+  yield takeLatest(workTaskSliceAction.commentRequest, commentPushTask);
 
   //Delete
   yield takeLatest(workTaskSliceAction.deleteRequest, deleteWorkTask);
+  yield takeLatest(workTaskSliceAction.deleteCommentRequest, deleteCommentTask);
+  
 }

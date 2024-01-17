@@ -18,6 +18,9 @@ import ActivityTask from "../components/ActivityTask";
 import SelectStatusTask from "../components/SelectStatusTask";
 import WhiteBox from "~/components/common/WhiteBox";
 import RelationTask from "../components/RrelationTask";
+import Assigner from "../components/Assigner";
+import TodoList from "../components/TodoList";
+import ComponentComment from "../components/ComponentComment";
 
 interface Props {
   idTask?: any;
@@ -141,11 +144,11 @@ export default function TaskItem({ idTask }: Props) {
           <div className="task-detail-content">
             <Row gutter={[16, 16]} justify="center" wrap={false}>
               <Col flex={1} style={{ maxWidth: 1300, minWidth: "370px" }}>
-                <div className="task-detail-content-left">
+                <div className="task-detail-content__left">
                   <Tabs
                     type="card"
                     defaultActiveKey="description"
-                    className="tabs_detail_task"
+                    className="task-detail-content__tabs"
                   >
                     <Tabs.TabPane tab={"Ghi chú công việc"} key="description">
                       {/* <Suspense fallback={<div>Mô tả...</div>}> */}
@@ -158,7 +161,9 @@ export default function TaskItem({ idTask }: Props) {
                     <Tabs.TabPane
                       tab={
                         <Badge count={fileList_?.length ?? 0}>
-                          <p style={{ padding: "2px 6px" }}>Tệp đính kèm</p>
+                            <p style={{
+                              padding: "2px 6px",
+                            }}>Tệp đính kèm</p>
                         </Badge>
                       }
                       key="files"
@@ -186,6 +191,8 @@ export default function TaskItem({ idTask }: Props) {
                   </Tabs>
                   {/* <Suspense fallback={<div>Trảng thái...</div>}><Assigner dataTask={dataTask} /></Suspense>
                   <Suspense fallback={<div>Trảng thái...</div>}><TodoList updateProgressTask={updateProgressTask} dataTask={dataTask} /></Suspense> */}
+                    <Assigner dataTask={dataTask} />
+                    <TodoList updateProgressTask={updateProgressTask} dataTask={dataTask} />
                 </div>
               </Col>
             </Row>
@@ -199,8 +206,8 @@ export default function TaskItem({ idTask }: Props) {
                 style={{ marginTop: 20, marginBottom: 20 }}
               >
                 <Tabs.TabPane tab="Nội dung trao đổi" key={"comment"}>
-                  {/* <Suspense fallback={<div>Trao đổi...</div>}>
                     <ComponentComment/>
+                  {/* <Suspense fallback={<div>Trao đổi...</div>}>
                     </Suspense> */}
                 </Tabs.TabPane>
               </Tabs>

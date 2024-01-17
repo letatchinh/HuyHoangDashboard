@@ -21,6 +21,7 @@ interface PropsContext {
     ROLE_VI?: any;
     allHistoryTaskById?: any;
     dataTask?: any;
+    profile?: any;
 };
 const TaskItem = createContext<PropsContext>({
     assign: {},
@@ -71,7 +72,7 @@ export function TaskItemProvider({
                 ROLE_VI,
                 allHistoryTaskById,
                 dataTask,
-                // profile,
+                profile,
             }}
         >
             {children}

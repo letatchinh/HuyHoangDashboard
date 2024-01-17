@@ -32,7 +32,11 @@ interface cloneInitState extends initStateSlice {
 
   isloadingSearchTask?: boolean,
   getSearchListTaskFailed?: any, 
-  listTaskSearch?: any[] ,
+  listTaskSearch?: any[],
+  
+  isLoadingComment?: boolean,
+  commentSuccess?: any,
+  commentFailed?: any,
 };
 
 const calculateProgress = (progressList = []) => {
@@ -65,56 +69,10 @@ class WorkTaskClassExtend extends InstanceModuleRedux {
         state.listHistory = [];
       },
 
-      getListManagersByIdBoardRequest: (state: cloneInitState, { payload }: { payload?: any }) => {
-        
-      },
-      getListManagersByIdBoardSuccess: (state: cloneInitState, { payload }: { payload?: any }) => {
-        
-      },
-      getListManagersByIdBoardFailed: (state: cloneInitState, { payload }: { payload?: any }) => {
-        
-      },
-
-      resetComment: (state: cloneInitState, { payload }: { payload?: any }) => {
-        state.listComment = [];
-        state.isLoadingCommentList = false;
-      },
-
-      //CREATE
-
-      copyTaskRequest : (state: cloneInitState, { payload }: { payload?: any }) => {
-        state.isSubmitLoading = true;
-        state.createSuccess = null;
-      },
-      copyTaskSuccess: (state: cloneInitState, { payload }: { payload?: any }) => {
-        state.isSubmitLoading = false;
-        state.createSuccess = payload;
-      },
-      copyTaskFailed: (state: cloneInitState, { payload }: { payload?: any }) => {
-        state.isSubmitLoading = false;
-        state.createFailed = payload;
-      },
-
-      //UPDATE
-
-      updateProgressTaskRequest : (state: cloneInitState, { payload }: { payload?: any }) => {
-        state.isSubmitLoading = true;
-        state.updateProgressFailed = null;
-      },
-      updateProgressTaskSuccess: (state: cloneInitState, { payload }: { payload?: any }) => {
-        state.isSubmitLoading = false;
-        state.byId = {...payload,progressListShow : calculateProgress(get(payload,'progressListShow'))};
-        state.updateProgressSuccess = payload;
-      },
-      updateProgressTaskFailed: (state: cloneInitState, { payload }: { payload?: any }) => {
-        state.isSubmitLoading = false;
-        state.updateProgressFailed = payload;
-      },
-
       getRelationTaskRequest: (state: cloneInitState, { payload }: { payload?: any }) => {
         state.isloadingRelationTask = true;
-        state.updateRelationSuccess= null;
-        state.updateRelationFailed= null;
+        state.updateRelationSuccess = null;
+        state.updateRelationFailed = null;
       },
       getRelationTaskSuccess: (state: cloneInitState, { payload }: { payload?: any }) => {
         state.isloadingRelationTask = false;
@@ -137,10 +95,41 @@ class WorkTaskClassExtend extends InstanceModuleRedux {
         state.getSearchListTaskFailed = payload;
       },
 
+      //CREATE
+
+      copyTaskRequest: (state: cloneInitState, { payload }: { payload?: any }) => {
+        state.isSubmitLoading = true;
+        state.createSuccess = null;
+      },
+      copyTaskSuccess: (state: cloneInitState, { payload }: { payload?: any }) => {
+        state.isSubmitLoading = false;
+        state.createSuccess = payload;
+      },
+      copyTaskFailed: (state: cloneInitState, { payload }: { payload?: any }) => {
+        state.isSubmitLoading = false;
+        state.createFailed = payload;
+      },
+
+      //UPDATE
+
+      updateProgressTaskRequest: (state: cloneInitState, { payload }: { payload?: any }) => {
+        state.isSubmitLoading = true;
+        state.updateProgressFailed = null;
+      },
+      updateProgressTaskSuccess: (state: cloneInitState, { payload }: { payload?: any }) => {
+        state.isSubmitLoading = false;
+        state.byId = { ...payload, progressListShow: calculateProgress(get(payload, 'progressListShow')) };
+        state.updateProgressSuccess = payload;
+      },
+      updateProgressTaskFailed: (state: cloneInitState, { payload }: { payload?: any }) => {
+        state.isSubmitLoading = false;
+        state.updateProgressFailed = payload;
+      },
+
       updateRelationTaskRequest: (state: cloneInitState, { payload }: { payload?: any }) => {
         state.isUpdateRelation = true;
-        state.updateRelationSuccess= null;
-        state.updateRelationFailed= null;
+        state.updateRelationSuccess = null;
+        state.updateRelationFailed = null;
       },
       updateRelationTaskSuccess: (state: cloneInitState, { payload }: { payload?: any }) => {
         state.isUpdateRelation = false;
@@ -151,6 +140,79 @@ class WorkTaskClassExtend extends InstanceModuleRedux {
         state.updateRelationFailed = payload;
       },
 
+      assignTaskRequest: (state: cloneInitState, { payload }: { payload?: any }) => {
+        state.isLoadingAssign = true;
+        state.assignFailed = null;
+      },
+      assignTaskSuccess: (state: cloneInitState, { payload }: { payload?: any }) => {
+        state.isLoadingAssign = false;
+        state.byId = { ...state.byId, assignUser: get(payload, 'data.assignUser') }
+        state.assignSuccess = payload;
+      },
+      assignTaskFailed: (state: cloneInitState, { payload }: { payload?: any }) => {
+        state.isLoadingAssign = false;
+        state.assignFailed = payload;
+      },
+
+      commentList: (state: cloneInitState, { payload }: { payload?: any }) => {
+        state.listComment = [...state.listComment, ...payload]
+      },
+      commentPush: (state: cloneInitState, { payload }: { payload?: any }) => {
+        state.listComment = [payload, ...state.listComment];
+      },
+      commentEmotion: (state: cloneInitState, { payload }: { payload?: any }) => {
+        const index = state.listComment.findIndex((item: any) => item._id === payload._id)
+        if (index < 0) {
+          state.listComment = [payload, ...state.listComment]
+        } else {
+          state.listComment[index] = payload
+        };
+      },
+      updateComment: (state: cloneInitState, { payload }: { payload?: any }) => {
+        const index = state.listComment.findIndex((item: any) => item._id === payload._id)
+        if (index >= 0) {
+          state.listComment[index] = payload;
+        }
+      },
+
+      commentRequest: (state: cloneInitState, { payload }: { payload?: any }) => {
+        state.isLoadingComment = true;
+        state.commentFailed= null;
+      },
+      commentSuccess: (state: cloneInitState, { payload }: { payload?: any }) => {
+        state.isLoadingComment = false;
+        state.listComment = payload;
+      },
+      commentFailed: (state: cloneInitState, { payload }: { payload?: any }) => {
+        state.isLoadingComment = false;
+        state.commentFailed = payload;
+      },
+
+      pushEmotionRequest: (state: cloneInitState, { payload }: { payload?: any }) => {
+         // not set state
+      },
+
+      updateCommentRequest: (state: cloneInitState, { payload }: { payload?: any }) => {
+        // not set state
+       },
+
+      //DELETE
+      deleteComment: (state: cloneInitState, { payload }: { payload?: any }) => {
+        const index = state.listComment.findIndex((item: any)=>item._id===payload._id)
+          if(index>=0){
+            state.listComment.splice(index, 1)
+          }
+      },
+      deleteCommentRequest: (state: cloneInitState, { payload }: { payload?: any }) => {
+       // not set state
+      },
+
+      //RESET
+      resetComment: (state: cloneInitState, { payload }: { payload?: any }) => {
+        state.listComment = [];
+        state.isLoadingCommentList = false;
+      },
+
       // Want Add more reducer Here...
     }
     this.cloneInitState = {
@@ -159,9 +221,9 @@ class WorkTaskClassExtend extends InstanceModuleRedux {
       getListHistoryFailed: undefined,
       listHistory: [],
 
+      isLoadingAssign: false,
       assignSuccess: null,
       assignFailed: null,
-      isLoadingAssign: false,
   
       updateProgressSuccess: null,
       updateProgressFailed: null,
@@ -179,7 +241,11 @@ class WorkTaskClassExtend extends InstanceModuleRedux {
 
       listTaskSearch: [],
       isloadingSearchTask: false,
-      getSearchListTaskFailed:null,
+      getSearchListTaskFailed: null,
+      
+      isLoadingComment: false,
+      commentSuccess: null,
+      commentFailed: null,      
       // Want Add more State Here...
     };
   }

@@ -1,4 +1,4 @@
-import { get, groupBy, isString, last } from "lodash";
+import { get, groupBy, isArray, isString, last } from "lodash";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -13,7 +13,7 @@ import {
   useSuccess,
 } from "~/utils/hook";
 import { useDispatch } from "react-redux";
-import { DEFAULT_BRANCH_ID } from "~/constants/defaultValue";
+import { BASE_URL, DEFAULT_BRANCH_ID } from "~/constants/defaultValue";
 import { workTaskSliceAction } from "./redux/reducer";
 const MODULE  = "workTask";
 const MODULE_VI  = "Nhân viên";
@@ -218,10 +218,103 @@ export const useGetRelationTask = (query: any) => {
   })
 };
 
-export const useUpdateRelationTask =()=>{
+export const useUpdateRelationTask = () => {
   return useSubmit({
-    loadingSelector:()=> false,
-    action : workTaskSliceAction.updateRelationTaskRequest,
+    loadingSelector: () => false,
+    action: workTaskSliceAction.updateRelationTaskRequest,
   })
+};
+
+export const useHandleAssign = () => {
+  useFailed(assignFailedSelector);
+  return useSubmit({
+    loadingSelector: isLoadingAssignSelector,
+    action: workTaskSliceAction.assignTaskRequest
+  })
+};
+
+export const TASK_ITEM_API = {
+  FETCH: 'FETCH',
+  PUSH: 'PUSH',
+  EMOTION: 'EMOTION',
+  COMMENT: 'COMMENT',
+  DELETE_COMMENT: 'DELETE_COMMENT',
+};
+
+export const useListenComment= (taskId: any)=>{
+  const taskIdmemo =useMemo(()=>taskId,[taskId]);
+  const dispatch = useDispatch();
+  const data = useSelector(listComment); 
+  useEffect(()=>{
+    let eventListener : any;
+    if(taskIdmemo){
+      eventListener = new EventSource(BASE_URL+'/api/v1/process-task-item-listen?taskItemId='+taskIdmemo);
+
+      eventListener.onmessage = function(event: any){
+        const parsedData = JSON.parse(event.data);
+
+        switch (parsedData?.case) {
+          case TASK_ITEM_API['FETCH']:{
+              if(isArray(get(parsedData?.data,'comment',parsedData?.data))){
+                dispatch(workTaskSliceAction.commentList(get(parsedData?.data,'comment',parsedData?.data)));
+              }
+              break;
+            }
+            case TASK_ITEM_API['PUSH']:{
+              dispatch(workTaskSliceAction.commentPush(parsedData?.data));
+            break;
+          }
+          case TASK_ITEM_API['EMOTION']:{
+            dispatch(workTaskSliceAction.commentEmotion(parsedData?.data));
+            break;
+          }
+          case TASK_ITEM_API['DELETE_COMMENT']:{
+            dispatch(workTaskSliceAction.deleteComment(parsedData?.data));
+            break;
+          }
+          case TASK_ITEM_API['COMMENT']:{
+            dispatch(workTaskSliceAction.updateComment(parsedData?.data));
+            break;
+          }
+          default:
+            break;
+        }
+      }
+
+      eventListener.addEventListener('error', (e: any) => {
+        eventListener.close();
+      });
+    }
+    return () => {
+      if(eventListener){
+        eventListener.close();
+      }
+    };
+  },[taskIdmemo,dispatch])
+  return [data]
 }
 
+export const useSendComment =()=>{
+  return useSubmit({
+    loadingSelector:isLoadingComment,
+    action :workTaskSliceAction.commentRequest,
+  })
+}
+export const useUpdateEmotionComment = () => {
+  return useSubmit({
+    loadingSelector: () => false,
+    action: workTaskSliceAction.pushEmotionRequest,
+  })
+};
+export const useDeleteComment = () => {
+  return useSubmit({
+    loadingSelector: () => false,
+    action: workTaskSliceAction.deleteCommentRequest,
+  })
+};
+export const useUpdateComment = () => {
+  return useSubmit({
+    loadingSelector: () => false,
+    action: workTaskSliceAction.updateCommentRequest,
+  })
+};
