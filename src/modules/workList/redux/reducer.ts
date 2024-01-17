@@ -3,6 +3,22 @@ import { get, sortBy } from "lodash";
 import { InstanceModuleRedux } from "~/redux/instanceModuleRedux";
 import { cloneInitState } from "../workList.modal";
 
+
+interface Progress {
+  progress: any;
+  progressValue: string;
+}
+
+const calculateProgress = (progressList: Progress[] = []): Progress[] => {
+  const newProgressList = progressList?.map((progress: Progress) => {
+    const listDone = get(progress, 'progress', [])?.filter((item: any) => !!get(item, '[1].check'));
+    const progressValue =
+      (parseInt(listDone?.length ?? '0') / parseInt(get(progress, 'progress', [])?.length)) * 100;
+    return { ...progress, progressValue: isNaN(progressValue) ? '0' : progressValue.toFixed(0) };
+  });
+
+  return newProgressList || [];
+};
 class WorkListClassExtend extends InstanceModuleRedux {
   cloneReducer;
   cloneInitState: cloneInitState;
@@ -36,6 +52,12 @@ class WorkListClassExtend extends InstanceModuleRedux {
       },
       addBoardConfigItemFaled: (state: any, { payload }: { payload?: any }) => {
         state.dataBoardConfig[payload.id] = []
+      },
+      updateTaskInitSuccess: (state: any, { payload }: { payload?: any }) => {
+        state.isSubmitLoading = false;
+        const data = payload;
+        state.byId = {...data,progressListShow : calculateProgress(get(data,'progressListShow'))};
+        state.updateSuccess = payload;
       },
       updatePosition: (state: any, { payload }: { payload?: any }) => {
         var {
