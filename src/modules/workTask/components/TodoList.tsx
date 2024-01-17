@@ -199,7 +199,7 @@ export default function TodoList({ dataTask, updateProgressTask }: PropsTodoList
   return (
     <BaseBorderBox title={<span><MenuOutlined /> <Text strong>Danh sách công việc</Text></span>}>
        <div className='task-detail-content-left-button-tab add-job my-2'>
-        <Dropdown onOpenChange={setActiveAddTodo} open={activeAddTodo} menu={<AddTodo updateProgressTask={updateProgressTask} dataTask={dataTask} setActiveAddTodo={setActiveAddTodo}/> as MenuProps} trigger={['click']}>
+        <Dropdown onOpenChange={setActiveAddTodo} open={activeAddTodo} dropdownRender={()=><AddTodo updateProgressTask={updateProgressTask} dataTask={dataTask} setActiveAddTodo={setActiveAddTodo}/>} getPopupContainer={() => document.querySelector('.task-detail-content-left-button-tab.add-job') as HTMLElement} trigger={['click']}>
           <Button type='primary' icon={<PlusCircleOutlined />}>Thêm công việc</Button>
         </Dropdown>
       </div>

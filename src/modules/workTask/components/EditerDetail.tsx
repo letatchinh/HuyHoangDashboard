@@ -1,7 +1,6 @@
 import { Button, Row } from 'antd';
 import { useCallback, useEffect, useState } from 'react';
-// import Editor from '~/utils/editor';
-
+// import Editors from '~/utils/Editors';
 interface Props {
   dataTask?: any
   onCancel?: any

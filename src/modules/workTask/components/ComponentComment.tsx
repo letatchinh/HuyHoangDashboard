@@ -49,7 +49,7 @@ function ComponentComment() {
         />
       </div>
       <div className="comment-body">
-        {(dataComment).map(
+        {(dataComment)?.map(
           (value: any, index: any) => (
             <CommentItem
               key={value._id}

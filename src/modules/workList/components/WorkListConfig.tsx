@@ -129,12 +129,12 @@ const BoardConfig: FC<BoardConfigProps> = ({ name, id, dataBoardConfigItem }) =>
                       {...provided.dragHandleProps}
                       className="task-list__item"
                     >
-                      <Suspense fallback={<div >...</div>}>
+                      {/* <Suspense fallback={<div >...</div>}>
                         <Task
                           key={task._id}
                           task={task}
                         />
-                      </Suspense>
+                      </Suspense> */}
                     </div>
                   )}
                 </Draggable>

@@ -12,7 +12,10 @@ import useTaskItemStore from '~/store/TaskItemContext'
 interface Props {
   dataTask?: any
 };
-
+type DropdownProps = {
+    getPopupContainer: (triggerNode: HTMLElement) => HTMLElement;
+  };
+  
 export default function Assigner({ dataTask }: Props) {
     const { _id } = dataTask || {};
     const { assign: { canAssign } } = useTaskItemStore();
@@ -27,13 +30,6 @@ export default function Assigner({ dataTask }: Props) {
 
         onAssign(submitData)
     };
-    const dropdownMenu : any = (
-        <Menu>
-            <Menu.Item>
-                <p>dajdsjdjsad</p>
-            </Menu.Item>
-        </Menu>
-      );
     return (
         <div>
             <BaseBorderBox title={<span><UserOutlined /> <Text strong>Thành viên tham gia</Text></span>}>
@@ -50,7 +46,7 @@ export default function Assigner({ dataTask }: Props) {
                 </div>
                 &nbsp; &nbsp;
                 <div className='task-detail-content-left-button-tab add-member'>
-                    <Dropdown trigger={['click']} dropdownRender={() => <MenuAssign dataTask={dataTask} />}>
+                    <Dropdown trigger={['click']} dropdownRender={() => <MenuAssign dataTask={dataTask} />}  getPopupContainer={ () =>  document.querySelector('.task-detail-content-left-button-tab.add-member') as HTMLElement}>
                       <Button type='primary' icon={<UsergroupAddOutlined />}>Thêm thành viên tham gia</Button>
                     </Dropdown>
                   </div>

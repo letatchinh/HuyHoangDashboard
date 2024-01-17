@@ -49,7 +49,9 @@ const MenuAssign: React.FC<MenuAssignProps> = ({ dataTask }) => {
         split={false}
         renderItem={item => (
           <List.Item
-            style={{ padding: 0 }}
+            style={{
+              padding: 0,
+            }}
           >
             <Button onClick={() => handleAssign(get(item, '_id'))} style={{ width: '100%', justifyContent: 'space-between', textTransform: 'unset', }}>
               {get(item, 'fullName', '')}
