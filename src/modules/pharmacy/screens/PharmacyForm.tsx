@@ -49,12 +49,12 @@ export default function PharmacyForm({
   const onValuesChange = (value: any,values : any) => {
     const key = Object.keys(value)[0];
     switch (key) {
-      case "cumulativeDiscount":
-        const cumulativeDiscount = CumulativeDiscountModule.service.onDiscountChange(values[key]);
-        form.setFieldsValue({
-          cumulativeDiscount,
-        });
-        break;
+      // case "cumulativeDiscount":
+      //   const cumulativeDiscount = CumulativeDiscountModule.service.onDiscountChange(values[key]);
+      //   form.setFieldsValue({
+      //     cumulativeDiscount,
+      //   });
+      //   break;
 
       default:
         break;
@@ -162,7 +162,7 @@ export default function PharmacyForm({
               allowEmail={false}
             />
 
-          <CumulativeDiscountModule.components.DiscountList target={CumulativeDiscountModule.constants.TARGET.pharma_profile} loading={isLoading} form={form} />
+          {/* <CumulativeDiscountModule.components.DiscountList target={CumulativeDiscountModule.constants.TARGET.pharma_profile} loading={isLoading} form={form} /> */}
 
             <Row className="form__submit-box">
               {isSubmitLoading ? (

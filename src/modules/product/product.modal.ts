@@ -53,6 +53,7 @@ export type FieldTypeFormProduct = {
     medicalCode : string,
     variants : variantType[],
     cumulativeDiscount : cumulativeDiscountType[]
+    codeBySupplier : string
   };
 
   export type TypePropVariants = {

@@ -1,14 +1,14 @@
 import { GiftTwoTone } from "@ant-design/icons";
 import { Button, Col, Form, Input, Row, Select } from "antd";
-import { keys } from "lodash";
-import React, { useEffect, useMemo } from "react";
+import { get, keys } from "lodash";
+import React, { useCallback, useEffect, useMemo } from "react";
 import BaseBorderBox from "~/components/common/BaseBorderBox/index";
 import RenderLoading from "~/components/common/RenderLoading";
-import {
-  PRODUCT_TYPE,
-  PRODUCT_TYPE_VI,
+import { 
+  PRODUCT_TYPE, 
+  PRODUCT_TYPE_VI,  
   SALE_LEVEL,
-  SALE_LEVEL_VI
+  SALE_LEVEL_VI 
 } from "../constants";
 import {
   useCreateProduct,
@@ -134,6 +134,18 @@ export default function FormProduct({
                   isLoading,
                   <Select options={optionsSaleLevel} />
                 )}
+                </Form.Item>
+              </Col>
+              <Col span={12}>
+                <Form.Item<FieldTypeFormProduct>
+                label="Mã sản phẩm"
+                name="codeBySupplier"
+                tooltip="Mã dành cho nhà cung cấp"
+                rules={[
+                  { required: true, message: "Vui lòng nhập mã sản phẩm" },
+                ]}
+              >
+                {RenderLoading(isLoading, <Input />)}
               </Form.Item>
             </Col>
           </Row>

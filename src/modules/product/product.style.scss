@@ -9,3 +9,16 @@
       max-height: 700px;
     }
   }
+  .right{
+    &--parent{
+      position: relative;
+      width: 90%!important;
+    }
+    &--child {
+      position: absolute;
+      left: calc(100% - 50px);
+      top: 0;
+      bottom: 0;
+      z-index: 2;
+    }
+  }

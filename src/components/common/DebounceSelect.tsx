@@ -59,7 +59,7 @@ function DebounceSelect<
 
   return (
     <Select
-    allowClear
+      allowClear
       filterOption={false}
       onSearch={debounceFetcher}
       notFoundContent={fetching ? <Spin size="small" /> : <Empty />}
@@ -67,7 +67,7 @@ function DebounceSelect<
       {...value && {value}}
       options={options}
       showSearch
-      style={{ minWidth: 300 }}
+      style={{ minWidth: 250 }}
       onFocus={() => {
           debounceFetcher('');
       }}

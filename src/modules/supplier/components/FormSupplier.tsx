@@ -83,10 +83,10 @@ const FormSupplier = ({
           <Row justify={"space-between"} align="middle" gutter={48}>
             <Col span={12}>
               <Form.Item<FieldType>
-                label="Tên chi nhánh"
+                label="Tên nhà cung cấp"
                 name="name"
                 rules={[
-                  { required: true, message: "Vui lòng nhập tên chi nhánh" },
+                  { required: true, message: "Vui lòng nhập tên nhà cung cấp" },
                 ]}
               >
                 {RenderLoading(isLoading,<Input />)}
@@ -106,10 +106,10 @@ const FormSupplier = ({
         <BaseBorderBox title={"Địa chỉ"}>
           <AddressFormSection
             form={form}
-            cityCode={cityCode}
-            setCityCode={setCityCode}
-            districtCode={districtCode}
-            setDistrictCode={setDistrictCode}
+            // cityCode={cityCode}
+            // setCityCode={setCityCode}
+            // districtCode={districtCode}
+            // setDistrictCode={setDistrictCode}
             allowPhoneNumber={false}
             allowEmail={false}
           />

@@ -6,10 +6,12 @@ import * as productUnitService from "./productUnit.service";
 import * as productUnitModels from "./productUnit.modal";
 import reducer from "./redux/reducer";
 import saga from "./redux/saga";
+import ProductUnitForm from "./screens/ProductUnitForm";
 
 const moduleExport = {
     page : {
         index : ProductUnitScreen,
+        form : ProductUnitForm
     },
     api : productUnitApi,
     auth : productUnitAuth,

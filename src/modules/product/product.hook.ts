@@ -1,16 +1,18 @@
-
 import { get } from "lodash";
 import { useEffect, useMemo, useState } from "react";
+import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import { clearQuerySearch, getExistProp } from "~/utils/helpers";
 import {
-    getSelectors,
-    useFailed, useFetchByParam,
-    useQueryParams,
-    useResetState,
-    useSubmit,
-    useSuccess
+  getSelectors,
+  useAction,
+  useFailed,
+  useFetchByParam,
+  useQueryParams,
+  useResetState,
+  useSubmit,
+  useSuccess,
 } from "~/utils/hook";
 import { productActions } from "./redux/reducer";
 const MODULE = "product";
@@ -35,13 +37,13 @@ const {
 
 export const useProductPaging = () => useSelector(pagingSelector);
 
-export const useGetProducts = (param:any) => {
+export const useGetProducts = (param: any) => {
   return useFetchByParam({
     action: productActions.getListRequest,
     loadingSelector: loadingSelector,
     dataSelector: listSelector,
     failedSelector: getListFailedSelector,
-    param
+    param,
   });
 };
 export const useGetProduct = (id: any) => {
@@ -92,7 +94,7 @@ export const useDeleteProduct = (callback?: any) => {
   });
 };
 
-export const useProductQueryParams = (supplierId?:any) => {
+export const useProductQueryParams = (supplierId?: any) => {
   const query = useQueryParams();
   const limit = query.get("limit") || 10;
   const page = query.get("page") || 1;
@@ -108,7 +110,7 @@ export const useProductQueryParams = (supplierId?:any) => {
     };
     return [queryParams];
     //eslint-disable-next-line
-  }, [page, limit, keyword, createSuccess, deleteSuccess,supplierId]);
+  }, [page, limit, keyword, createSuccess, deleteSuccess, supplierId]);
 };
 
 export const useUpdateProductParams = (
@@ -127,7 +129,7 @@ export const useUpdateProductParams = (
 
     if (!param.page) {
       query.page = 1;
-    };
+    }
 
     // Convert Query and Params to Search Url Param
     const searchString = new URLSearchParams(
@@ -145,4 +147,24 @@ export const useUpdateProductParams = (
 };
 export const useResetAction = () => {
   return useResetState(productActions.resetAction);
+};
+
+// export const useChangeVariantDefault = () => {
+//   const Dispatch = useDispatch();
+//   const onChange = ({
+//     productId,
+//     variantId,
+//   }: {
+//     productId: string;
+//     variantId: string;
+//   }) => {
+//     Dispatch(productActions.changeVariantDefault());
+//   };
+//   return onchange;
+// };
+
+export const useChangeVariantDefault = () => {
+  return useAction({
+    action: productActions.changeVariantDefault,
+  });
 };
