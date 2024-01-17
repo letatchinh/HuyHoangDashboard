@@ -29,8 +29,10 @@ const RankingForm: React.FC<Props> = ({ id, handleCloseForm }) => {
         name,
         level,
       });
+    }else {
+      form.resetFields();
     }
-  }, [id,rankingConfigById]);
+  }, [id,rankingConfigById,form]);
   const onFinish = useCallback((values: FieldType) => {
      const data: FieldType = {
       ...values,
@@ -56,7 +58,7 @@ const RankingForm: React.FC<Props> = ({ id, handleCloseForm }) => {
         <Form.Item<FieldType> label="Tên hạng" name="name">
           <Input />
         </Form.Item>
-        <Form.Item<FieldType> label="Xếp hạng ranking" name="level">
+        <Form.Item<FieldType> label="Xếp hạng hãng sản xuất" name="level">
           <Input />
         </Form.Item>
         <Form.Item style={{ width: '950px'}} wrapperCol={{ offset: 8, span: 12 }}>

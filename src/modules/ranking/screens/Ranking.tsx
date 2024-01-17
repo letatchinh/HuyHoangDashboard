@@ -82,9 +82,10 @@ export default function Ranking(props: propsType): React.JSX.Element {
   const onSearch = (value: string) => {
     onParamChange({ ['keyword']: value });
   };
+  const pageSizeOptions = ['10', '20', '50', '100'];
   return (
     <div className='product-config'>
-      <Breadcrumb title={t('ranking')} />
+      <Breadcrumb title={t('Quản lý xếp hạng nhà sản xuất')} />
 
       <div className="product-config-action" >
         <Row justify="space-between">
@@ -119,6 +120,10 @@ export default function Ranking(props: propsType): React.JSX.Element {
           size="small"
           pagination={{
             ...paging,
+            pageSizeOptions: pageSizeOptions,
+                    showSizeChanger: true, // Hiển thị dropdown chọn kích thước trang
+                    defaultPageSize: 10, 
+            showTotal: (total) => `Tổng cộng: ${total} `,
             onChange(page, pageSize) {
               onParamChange({ page, limit: pageSize });
             },
@@ -127,10 +132,10 @@ export default function Ranking(props: propsType): React.JSX.Element {
       </WhiteBox>
       <ModalAnt
         open={showForm}
-        title={id ? 'Cập nhật ranking' : 'Tạo mới ranking'}
+        title={id ? 'Cập nhật hãng sản xuất' : 'Tạo mới hãng sản xuất'}
         onCancel={handleCloseForm}
         footer={null}
-        destroyOnClose
+        // destroyOnClose
         width={800}
 
       >

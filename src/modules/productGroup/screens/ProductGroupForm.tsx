@@ -1,61 +1,54 @@
 import React, { useEffect } from 'react';
 import { Button, Form, Input } from 'antd';
-import { useGetlistProductConfigById, useUpdateProductConfig,useCreateProductConfig, useResetAction } from '../productGroup.hook';
-
+import { useGetlistProductConfigById, useUpdateProductConfig, useCreateProductConfig, useResetAction } from '../productGroup.hook';
 interface Props {
   id?: any;
   callBack?: () => void;
-  updateProductConfig: (data:any)=>void;
-}
-
+  updateProductConfig: (data: any) => void;
+};
 interface FieldType {
   code: string
   id: string
   name: string
   note: string
-  isAction:String
-}
+  isAction: String
+};
 const { TextArea } = Input;
-const ProductConfigForm: React.FC<Props> = ({ id, callBack,updateProductConfig }) => {
-  // const [, updateProductConfig] = useUpdateProductConfig(callBack);
+const ProductConfigForm: React.FC<Props> = ({ id, callBack, updateProductConfig }) => {
   const [, createProductConfig] = useCreateProductConfig(callBack);
   const [productConfigById, isLoading] = useGetlistProductConfigById(id);
-  console.log(productConfigById, 'productConfigById');
   const [form] = Form.useForm();
   useResetAction();
   useEffect(() => {
-    if (id&&productConfigById ) { 
-      const {code,name,note}: FieldType = productConfigById;
+    if (id && productConfigById) {
+      const { code, name, note }: FieldType = productConfigById;
       form.setFieldsValue({
         code,
         name,
         note,
       })
     }
-  }, [id,productConfigById,form]);
-
+    else form.resetFields();
+  }, [id, productConfigById,form]);
   const onFinish = (values: FieldType) => {
-     const data: FieldType = {
+    const data: FieldType = {
       ...values,
-      // code:'DMT0001'
-      // status:'',
-      };
-      if (id) {
-        updateProductConfig({ data, id });
-      }else {
-        createProductConfig({ ...data });
-        
-      }
-  };
+    };
+    if (id) {
+      updateProductConfig({ ...data, id });
+    } else {
+      createProductConfig({ ...data });
 
+    }
+  };
   return (
     <>
       <Form
-          name="basic"
-          labelCol={{ sm: 24, md: 24, lg: 8, xl: 8 }}
-          wrapperCol={{ sm: 24, md: 24, lg: 16, xl: 16 }}
-          labelAlign="left"
-          style={{ maxWidth: 800 }}
+        name="basic"
+        labelCol={{ sm: 24, md: 24, lg: 8, xl: 8 }}
+        wrapperCol={{ sm: 24, md: 24, lg: 16, xl: 16 }}
+        labelAlign="left"
+        style={{ maxWidth: 800 }}
         form={form}
         onFinish={onFinish}
       >
@@ -66,9 +59,9 @@ const ProductConfigForm: React.FC<Props> = ({ id, callBack,updateProductConfig }
           <Input />
         </Form.Item>
         <Form.Item<FieldType> label="Ghi chú" name="note">
-          <TextArea rows={4}/>
+          <TextArea rows={4} />
         </Form.Item>
-        <Form.Item style={{ width: '950px'}} wrapperCol={{ offset: 8, span: 12 }}>
+        <Form.Item style={{ width: '950px' }} wrapperCol={{ offset: 8, span: 12 }}>
           <Button type="primary" htmlType="submit">
             {id ? 'Cập nhật' : 'Thêm mới'}
           </Button>
