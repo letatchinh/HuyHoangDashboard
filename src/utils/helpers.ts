@@ -54,7 +54,7 @@ export const concatAddress = (address: any): string => {
   let ward_ = ward ?? get(subvn.getWardsByCode(wardId), "name");
   let district_ = district ?? get(subvn.getDistrictByCode(districtId), "name");
   let city_ = city ?? get(subvn.getCityByCode(cityId), "name");
-  return [street, ward_, district_, city_].filter(Boolean).join(",");
+  return [street, ward_, district_, city_].filter(Boolean).join(", ");
 };
 
 export function removeAccents(str: any) {

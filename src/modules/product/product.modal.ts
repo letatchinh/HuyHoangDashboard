@@ -25,7 +25,8 @@ export type FieldTypeFormProduct = {
     manufacturerId : string,
     productGroupId : string,
     medicalCode : string,
-    variants : variantType[]
+    variants : variantType[],
+    codeBySupplier : string
   };
 
   export type TypePropVariants = {

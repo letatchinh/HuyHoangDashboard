@@ -7,10 +7,12 @@ import * as productModels from "./product.modal";
 import  productComponents from "./components";
 import reducer from "./redux/reducer";
 import saga from "./redux/saga";
+import FormProduct from "./components/FormProduct";
 
 const moduleExport = {
     page : {
         index : ProductScreen,
+        form : FormProduct
     },
     api : productApi,
     auth : productAuth,

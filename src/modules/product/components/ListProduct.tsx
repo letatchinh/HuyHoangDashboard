@@ -1,4 +1,4 @@
-import { Modal } from "antd";
+import { Col, Modal, Row, Select } from "antd";
 import { ColumnsType } from "antd/es/table/InternalTable";
 import { get } from "lodash";
 import React, { useCallback, useState } from "react";
@@ -6,7 +6,9 @@ import TableAnt from "~/components/Antd/TableAnt";
 import ActionColumn from "~/components/common/ActionColumn/index";
 import SelectSearch from "~/components/common/SelectSearch/SelectSearch";
 import WhiteBox from "~/components/common/WhiteBox";
+import { formatter } from "~/utils/helpers";
 import {
+  useChangeVariantDefault,
   useDeleteProduct,
   useGetProducts,
   useProductPaging,
@@ -26,7 +28,8 @@ export default function ListProduct({
     useUpdateProductParams(query);
   const [data, isLoading] = useGetProducts(query);
   console.log(data,'data');
-  
+  const onChangeVariantDefault = useChangeVariantDefault();
+
   const [isSubmitLoading, onDelete] = useDeleteProduct();
   const paging = useProductPaging();
 
@@ -43,9 +46,62 @@ export default function ListProduct({
   }, []);
   const columns: ColumnsType = [
     {
+      title: "Mã thuốc",
+      dataIndex: "variant",
+      key: "variant",
+      render : (variant) => {
+        return get(variant,'variantCode','')
+      }
+    },
+    {
       title: "Tên sản phẩm",
       dataIndex: "name",
       key: "name",
+      width : 300,
+      render(name, record) {
+        if (get(record, "variants", [])?.length > 1) {
+          const options = get(record, "variants", [])?.map((item) => ({
+            label: get(item, "unit.name"),
+            value: get(item, "_id"),
+          }));
+          return (
+            <Row align={"middle"} gutter={4} wrap={false}>
+              <Col>{name}</Col>
+              <Col>
+                <Select
+                  style={{minWidth : 50}}
+                  value={get(record,'variant._id')}
+                  options={options}
+                  onChange={(value) =>
+                    onChangeVariantDefault({
+                      productId: get(record, "_id"),
+                      variantId: value,
+                    })
+                  }
+                />
+              </Col>
+            </Row>
+          );
+        } else {
+          return name + " " + `(${get(record, "variant.unit.name")})`;
+        }
+      },
+    },
+    {
+      title: "Giá bán",
+      dataIndex: "variant",
+      key: "variant",
+      render(variant, record, index) {
+        return formatter(get(variant,'price'))
+      },
+    },
+    {
+      title: "Giá Vốn",
+      dataIndex: "variant",
+      key: "variant",
+      render(variant, record, index) {
+        return formatter(get(variant,'cost',0))
+      },
     },
     {
       title: "Nhóm sản phẩm",

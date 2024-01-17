@@ -31,8 +31,7 @@ export default function SelectProductGroup({
       }));
     } catch (error) {
       console.log(error);
-      return []
-      
+      return [];
     }
   }, []);
 
@@ -46,34 +45,34 @@ export default function SelectProductGroup({
       ],
     [product]
   );
+
   return (
     <>
-    <Form.Item
-      label="Nhóm thuốc"
-      name="productGroupId"
-      rules={[{ required: true, message: "Vui lòng chọn Nhóm thuốc!" }]}
-    >
-      <Row>
-          <Col flex={1}>
-          {RenderLoading(
-        isLoading,
-        <DebounceSelect
-          placeholder="Nhóm thuốc"
-          fetchOptions={fetchOptionsProductGroup}
-          style={{ width: "100%" }}
-          initOptions={initProductGroup}
-        />
-      )}
-          </Col>
-          <Col>
-            <Button onClick={onOpen}>+</Button>
-          </Col>
-        </Row>
-    
-    </Form.Item>
+      <Form.Item
+        label="Nhóm thuốc"
+        name="productGroupId"
+        rules={[{ required: true, message: "Vui lòng chọn Nhóm thuốc!" }]}
+      >
+        {RenderLoading(
+          isLoading,
+          <DebounceSelect
+            className="right--parent"
+            placeholder="Nhóm thuốc"
+            fetchOptions={fetchOptionsProductGroup}
+            style={{ width: "100%" }}
+            initOptions={initProductGroup}
+          />
+        )}
+      </Form.Item>
+      <Button className="right--child" onClick={onOpen}>
+        +
+      </Button>
       <Modal destroyOnClose open={open} onCancel={onClose} footer={null}>
-      <ProductGroupModule.page.form callBack={onClose} updateProductConfig={() => {}}/>
-    </Modal>
+        <ProductGroupModule.page.form
+          callBack={onClose}
+          updateProductConfig={() => {}}
+        />
+      </Modal>
     </>
   );
 }

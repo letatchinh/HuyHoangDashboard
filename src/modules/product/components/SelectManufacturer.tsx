@@ -52,25 +52,25 @@ export default function SelectManufacturer({
         name="manufacturerId"
         rules={[{ required: true, message: "Vui lòng chọn hãng sản xuất!" }]}
       >
-        <Row>
-          <Col flex={1}>
-            {RenderLoading(
-              isLoading,
-              <DebounceSelect
-                placeholder="Hãng sản xuất"
-                fetchOptions={fetchOptionsManufacturer}
-                style={{ width: "100%" }}
-                initOptions={initManufacturer}
-              />
-            )}
-          </Col>
-          <Col>
-            <Button onClick={onOpen}>+</Button>
-          </Col>
-        </Row>
+        {RenderLoading(
+          isLoading,
+          <DebounceSelect
+            className="right--parent"
+            placeholder="Hãng sản xuất"
+            fetchOptions={fetchOptionsManufacturer}
+            style={{ width: "100%" }}
+            initOptions={initManufacturer}
+          />
+        )}
       </Form.Item>
+      <Button className="right--child" onClick={onOpen}>
+        +
+      </Button>
       <Modal destroyOnClose open={open} onCancel={onClose} footer={null}>
-        <ManufacturerModule.page.form callBack={onClose} updateManufacturer={() => {}}/>
+        <ManufacturerModule.page.form
+          callBack={onClose}
+          updateManufacturer={() => {}}
+        />
       </Modal>
     </>
   );

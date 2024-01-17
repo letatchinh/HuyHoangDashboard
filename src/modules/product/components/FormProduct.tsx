@@ -1,9 +1,7 @@
 import { Button, Col, Form, Input, Row, Select } from "antd";
 import { get, keys } from "lodash";
 import React, { useCallback, useEffect, useMemo } from "react";
-import api from "~/api";
 import BaseBorderBox from "~/components/common/BaseBorderBox/index";
-import DebounceSelect from "~/components/common/DebounceSelect";
 import RenderLoading from "~/components/common/RenderLoading";
 import { MAX_LIMIT } from "~/constants/defaultValue";
 import ManufacturerModule from "~/modules/manufacturer";
@@ -14,7 +12,7 @@ import {
   useCreateProduct,
   useGetProduct,
   useResetAction,
-  useUpdateProduct,
+  useUpdateProduct
 } from "../product.hook";
 import { FieldTypeFormProduct, TypePropsFormProduct } from "../product.modal";
 import MedicineName from "./MedicineName";
@@ -164,6 +162,20 @@ export default function FormProduct({
                 ]}
               >
                 {RenderLoading(isLoading, <Select options={optionsType} />)}
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row {...layoutRow}>
+            <Col span={12}>
+              <Form.Item<FieldTypeFormProduct>
+                label="Mã sản phẩm"
+                name="codeBySupplier"
+                tooltip="Mã dành cho nhà cung cấp"
+                rules={[
+                  { required: true, message: "Vui lòng nhập mã sản phẩm" },
+                ]}
+              >
+                {RenderLoading(isLoading, <Input />)}
               </Form.Item>
             </Col>
           </Row>

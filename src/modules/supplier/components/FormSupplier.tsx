@@ -81,10 +81,10 @@ const FormSupplier = ({
         <BaseBorderBox title={"Địa chỉ"}>
           <AddressFormSection
             form={form}
-            cityCode={cityCode}
-            setCityCode={setCityCode}
-            districtCode={districtCode}
-            setDistrictCode={setDistrictCode}
+            // cityCode={cityCode}
+            // setCityCode={setCityCode}
+            // districtCode={districtCode}
+            // setDistrictCode={setDistrictCode}
             allowPhoneNumber={false}
             allowEmail={false}
           />

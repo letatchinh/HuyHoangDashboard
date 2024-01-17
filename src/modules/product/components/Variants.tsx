@@ -10,11 +10,16 @@ export default function Variants({
   form,
   isLoading : loading,
 }: TypePropVariants): React.JSX.Element {
-  const [units, isLoading] = UnitModule.hook.useGetListProductUnitNoParam();
+  const [reFetch,setReFetch] = useState(false);
+  const [units, isLoading] = UnitModule.hook.useGetListProductUnitNoParam(reFetch);
   const variants = Form.useWatch("variants", form);
   const [open, setOpen] = useState(false);
   const onOpen = useCallback(() => setOpen(true), []);
   const onClose = useCallback(() => setOpen(false), []);
+  const onCreateSuccess = useCallback(() => {
+    setReFetch(!reFetch);
+    onClose();
+  },[reFetch]);
   const isUsed = (cur : string,unitId:String) => (unitId !== cur) && (variants?.some((variant:any) => get(variant,'productUnit') === unitId))
   return (
   <>
@@ -113,7 +118,7 @@ export default function Variants({
       }}
     </Form.List>
     <Modal destroyOnClose open={open} onCancel={onClose} footer={null}>
-        <UnitModule.page.form callBack={onClose} />
+        <UnitModule.page.form callBack={onCreateSuccess} />
       </Modal>
   </>
   );

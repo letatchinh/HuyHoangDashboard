@@ -124,6 +124,20 @@ export const useSubmit = ({ loadingSelector, action }:UseSubmitProps) : [boolean
   
     return [isLoading, handleSubmit];
   };
+
+interface UseActionProps {
+    action: any // Adjust the values type based on your action requirements
+  }
+
+export const useAction = ({ action }:UseActionProps) : (v:any) => void => {
+    const dispatch = useDispatch();
+  
+    const handleAction = (values:any) => {
+      dispatch(action(values));
+    };
+  
+    return handleAction;
+  };
   
   
   
