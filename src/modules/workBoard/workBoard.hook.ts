@@ -17,7 +17,7 @@ import { useSelector } from "react-redux";
 import { cloneInitState } from "./workBoard.modal";
 import { RootState } from "~/redux/store";
 const MODULE = "workBoard";
-const MODULE_VI = "Đơn vị tính";
+const MODULE_VI = "Không gian làm việc";
 const {
     loadingSelector,
     listSelector,

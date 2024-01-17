@@ -104,6 +104,7 @@ class WorkTaskClassExtend extends InstanceModuleRedux {
       copyTaskSuccess: (state: cloneInitState, { payload }: { payload?: any }) => {
         state.isSubmitLoading = false;
         state.createSuccess = payload;
+        state.createFailed = null;
       },
       copyTaskFailed: (state: cloneInitState, { payload }: { payload?: any }) => {
         state.isSubmitLoading = false;

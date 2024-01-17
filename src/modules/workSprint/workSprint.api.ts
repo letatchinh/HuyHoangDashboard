@@ -7,5 +7,6 @@ const apis = {
     create: (data?: any) => requester.post(`/api/v1/board-sprint/sprint-create`, data),
     update: (body?: any)=>requester.put(`/api/v1/board-sprint/update/${get(body,'_id',get(body,'id'))}`,body),
     delete: (body: any)=>requester.delete(`/api/v1/board-sprint/delete/${get(body,'_id',get(body,'id',body))}`),
+    getTaskInSprints: (query?:any) => requester.get(`api/v1/task-item-board-config-all-sprint/${get(query,'id')}`, omit(query, ['id'])),
 }
 export default apis;

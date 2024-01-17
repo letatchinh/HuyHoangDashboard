@@ -12,6 +12,8 @@ import {
 } from "~/utils/hook";
 import { workSprintActions } from "./redux/reducer";
 import { get } from "lodash";
+import { RootState } from "~/redux/store";
+import { cloneInitState } from "./workSprint.modal";
 const MODULE = "workSprint";
 const MODULE_VI = "";
 
@@ -33,7 +35,10 @@ const {
 } = getSelectors(MODULE);
 
 export const useWorkSprintPaging = () => useSelector(pagingSelector);
-
+const getSelector = (key: keyof cloneInitState) => (state: RootState) =>
+state[MODULE][key];
+const loadingTaskBySprintsSelector = getSelector("loadingTaskBySprint");
+const listTaskBySprintsSelector = getSelector("listTaskBySprints");
 export const useGetWorkSprints = (param?:any) => {
   return useFetchByParam({
     action: workSprintActions.getListRequest,
@@ -90,7 +95,16 @@ export const useDeleteWorkSprint = (callback?: any) => {
     loadingSelector: isSubmitLoadingSelector,
   });
 };
-
+export const useGetListTaskBySprints = (query?:any) => {
+  return useFetchByParam({
+    action: workSprintActions.getListTaskBySprintRequest,
+    loadingSelector:loadingTaskBySprintsSelector,
+    dataSelector: listTaskBySprintsSelector,
+    failedSelector: getListFailedSelector,
+    // actionUpdate:getListTaskBySprints,
+    param: query
+  })
+};
 export const useWorkSprintQueryParams = () => {
   const query = useQueryParams();
   const limit = query.get("limit") || 10;

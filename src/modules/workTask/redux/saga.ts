@@ -1,3 +1,4 @@
+import { DataType } from './../../workBoard/workBoard.modal';
 // import { TaskRelationOption } from "./../../../../.history/src/modules/workTask/components/RrelationTask_20240116151409";
 import { put, call, takeLatest, select } from "redux-saga/effects";
 import api from "../workTask.api";
@@ -59,7 +60,8 @@ function* updateTask({ payload }: any): any {
   try {
     const data = yield call(api.updateTask, payload);
         yield put(workListActions.addBoardConfigItemSuccess(get(data.data, 'boardConfigId')));
-        // yield put(workListActions.update(get(data.data, 'boardConfigId')));
+        const dataType :any ={ dataTask: data.data,boardId: get(data.data, 'boardConfigId'), idTask: get(data.data, '_id') }
+        yield put(workListActions.updateTaskInitSuccess(dataType));
         const profile = yield select((state) => state.user.profile);
         const response = get(data, 'data');
         const managers = yield call(api.getAllManagersByIdBoard, get(response, 'boardId'));
@@ -98,6 +100,7 @@ function* getHistoryActivityTaskById({ payload }: any): any {
 function* updateProgressTask({ payload }: any): any {
   try {
     const data = yield call(api.updateProgressTask, payload);
+    
     const profile = yield select((state) => state.user.profile);
     const response = get(data, "data");
     const managers = yield call(
@@ -142,6 +145,8 @@ function* copyTask({ payload }: any): any {
   try {
     const data = yield call(api.copyTask, payload);
     yield put(workTaskSliceAction.copyTaskSuccess(data?.data));
+    const DataType:any = {id: get(data?.data, 'boardConfigId','')}
+    yield put(workListActions.addBoardConfigItemRequest(DataType));
     // yield put({ type: Types.ADD_BOARD_CONFIG_ITEM_REQUEST, payload: { id: data?.data.boardConfigId } }); action getWorkListConfig
   } catch (error: any) {
     yield put(workTaskSliceAction.copyTaskFailed(error));

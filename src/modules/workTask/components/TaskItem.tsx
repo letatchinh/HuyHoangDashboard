@@ -21,12 +21,11 @@ const TaskItem: React.FC<TaskProps> = ({ task }) => {
     updateTask,
     boardData: boardById,
   } = useFormTaskContext();
-console.log('task',task,boardById)
   const [selected, setSelected] = useState('Không xác định');
 
   const handleChange = async (value: string) => {
     setSelected(value);
-    const res = await apis.update({ statusId: value, id: task._id });
+    const res = await apis.update({ statusId: value, _id: task._id });
     setTaskData(res?.data);
   };
 

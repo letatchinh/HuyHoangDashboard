@@ -30,7 +30,7 @@ console.log(sprints)
       {sprints &&
         sprints.map(({ _id, name }: Sprint) => (
           <div key={_id} className="menu_list_board_content">
-            <Link className="menu_list_board_content_link" to={`/work-flow/detail/${_id}`} replace>
+            <Link className="menu_list_board_content_link" to={`/work-board/detail/${_id}`} replace>
               - {name}
             </Link>
           </div>

@@ -20,13 +20,12 @@ interface BoardConfigProps {
 
 const BoardConfig: FC<BoardConfigProps> = ({ name, id, dataBoardConfigItem }) => {
   const tasks = useMemo(() => dataBoardConfigItem, [dataBoardConfigItem]);
-  const { openForm, handleDeleteWork, sprintId } = useFormTaskContext();
-  const [visible, setVisible] = useState(false);
+  const { openForm, handleDeleteWork,handleButtonClick, sprintId } = useFormTaskContext();
   const [inputValue, setInputValue] = useState(name);
   const navigate = useNavigate();
   const [dropdownVisible, setDropdownVisible] = useState(false);
 
-  const handleButtonClick = () => {
+  const handleButtonClickOpen = () => {
     // Handle button click if needed
     openForm(id);
     setDropdownVisible(true); // Close the dropdown after clicking the button
@@ -48,9 +47,8 @@ const BoardConfig: FC<BoardConfigProps> = ({ name, id, dataBoardConfigItem }) =>
       console.log(error);
     }
   };
-
   const menu : any = (
-    <TaskForm />
+    <TaskForm setDropdownVisible={setDropdownVisible} dropdownVisible={dropdownVisible}/>
   );
   return (
     <div className="work-list-main">
@@ -96,12 +94,13 @@ const BoardConfig: FC<BoardConfigProps> = ({ name, id, dataBoardConfigItem }) =>
               open={dropdownVisible}
               overlay={menu}
               onOpenChange={(visible) => setDropdownVisible(visible)}
+              // dropdownRender={()=>()}
             >
               <Button
                 type="primary"
                 className="add-task"
                 icon={<PlusOutlined />}
-                onClick={handleButtonClick}
+                onClick={handleButtonClickOpen}
               />
             </Dropdown>
           </Tooltip>
