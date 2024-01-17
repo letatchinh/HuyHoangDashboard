@@ -203,12 +203,7 @@ export default function ProductConfig() {
                     onParamChange({ page, limit: pageSize });
                   },
                 }}
-              // showSizeChanger={true}
-
               />
-              <Table
-
-              ></Table>
             </WhiteBox>
           </div>
         </div>

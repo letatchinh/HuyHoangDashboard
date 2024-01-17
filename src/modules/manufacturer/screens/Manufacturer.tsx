@@ -50,7 +50,7 @@ export default function Manufacturer() {
   };
   const columns: ColumnsType<DataType> = [
     {
-      title: 'Tên nhà sản xuất',
+      title: 'Tên nhà cung cấp',
       dataIndex: 'name',
       align: 'center',
       key: 'name',
@@ -99,10 +99,8 @@ export default function Manufacturer() {
                 Xóa
               </Button>
             </WithPermission>
-
           </Space>
         </>
-
       ),
     },
   ];
@@ -111,11 +109,11 @@ export default function Manufacturer() {
   };
   const options: SelectProps['options'] = [
     {
-      label: 'Active',
+      label: 'Hoạt động',
       value: 'ACTIVE',
     },
     {
-      label: 'InActive',
+      label: 'Không hoạt động',
       value: 'INACTIVE',
     },
   ];
@@ -123,7 +121,7 @@ export default function Manufacturer() {
   return (
     <>
       <div>
-        <Breadcrumb title={t('Quản lý hãng sản xuất')} />
+        <Breadcrumb title={t('Quản lý nhà cung cấp')} />
         <div>
           <div className='product-config-content' style={{ marginBottom: 16, display: 'flex', gap: '30px' }}>
             {/* <div style={{ width: '20%',height: '100%' }}> */}

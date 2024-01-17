@@ -10,7 +10,7 @@ import WhiteBox from '~/components/common/WhiteBox';
 import WithPermission from '~/components/common/WithPermission';
 import useTranslate from '~/lib/translation';
 import POLICIES from "~/modules/policy/policy.auth";
-import { useDeleteProductUnit, useGetlistProductUnit, useProductUnitPaging,useUpdateProductUnit, useProductUnitQueryParams, useUpdateProductUnitParams } from '../productUnit.hook';
+import { useDeleteProductUnit, useGetlistProductUnit, useProductUnitPaging, useUpdateProductUnit, useProductUnitQueryParams, useUpdateProductUnitParams } from '../productUnit.hook';
 import ProductUnitForm from './ProductUnitForm';
 import { useMatchPolicy } from '~/modules/policy/policy.hook';
 type propsType = {
@@ -30,7 +30,7 @@ export default function ProductUnit(props: propsType): React.JSX.Element {
   const [, deleteProductConfig] = useDeleteProductUnit();
   const { t }: any = useTranslate();
   const paging = useProductUnitPaging();
-  const [,updateProductUnit] = useUpdateProductUnit(handleCloseForm);
+  const [, updateProductUnit] = useUpdateProductUnit(handleCloseForm);
   const [form] = Form.useForm();
   const canUpdate = useMatchPolicy(POLICIES.UPDATE_UNIT);
   interface DataType {
@@ -98,11 +98,9 @@ export default function ProductUnit(props: propsType): React.JSX.Element {
       ),
     },
   ];
-
   const onSearch = (value: string) => {
     onParamChange({ ['keyword']: value });
   };
-
   const pageSizeOptions = ['10', '20', '50', '100'];
   return (
     <div className='product-config'>
@@ -139,8 +137,8 @@ export default function ProductUnit(props: propsType): React.JSX.Element {
           pagination={{
             ...paging,
             pageSizeOptions: pageSizeOptions,
-                    showSizeChanger: true, // Hiển thị dropdown chọn kích thước trang
-                    defaultPageSize: 10, 
+            showSizeChanger: true, // Hiển thị dropdown chọn kích thước trang
+            defaultPageSize: 10,
             showTotal: (total) => `Tổng cộng: ${total} `,
             onChange(page, pageSize) {
               onParamChange({ page, limit: pageSize });
@@ -150,13 +148,13 @@ export default function ProductUnit(props: propsType): React.JSX.Element {
       </WhiteBox>
       <ModalAnt
         open={showForm}
-        title={id ? 'Sửa đơn vị tính' : 'Tạo đơn vị tính'}
+        title={id ? 'Cập nhật đơn vị tính' : 'Tạo đơn vị tính'}
         onCancel={handleCloseForm}
         footer={null}
         // destroyOnClose
         width={800}
       >
-        <ProductUnitForm id={id} updateProductUnit ={updateProductUnit} callBack={handleCloseForm} />
+        <ProductUnitForm id={id} updateProductUnit={updateProductUnit} callBack={handleCloseForm} />
       </ModalAnt>
     </div>
   );
