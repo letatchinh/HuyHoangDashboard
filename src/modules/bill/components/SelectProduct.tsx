@@ -61,7 +61,7 @@ export default function SelectProduct({dataCurrent,onChangeBill}:propsType) : Re
             productId,
             variantId : get(variant, "_id"),
             quantity : 1,
-            totalPrice : get(variant, "price",0),
+            price : get(variant, "price",0),
             supplierId,
           };
           onAdd(submitData)

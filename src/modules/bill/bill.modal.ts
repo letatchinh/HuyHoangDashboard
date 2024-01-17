@@ -24,7 +24,10 @@ export type billItem = {
 }
 export type FormFieldCreateBill = {
     pharmacyId : string,
-    billItems : billItem[]
+    // billItems : billItem[],
+    // totalPrice : number,
+    // pair : number,
+    // createById : string,
 }
 type supplier = {
     name : string,

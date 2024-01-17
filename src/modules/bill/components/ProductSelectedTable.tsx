@@ -45,15 +45,15 @@ export default function ProductSelectedTable(
     // },
     {
       title: "Giá bán",
-      dataIndex: "totalPrice",
-      key: "totalPrice",
+      dataIndex: "price",
+      key: "price",
       render : (item : any,record : any) => {
         return formatter(item)
       }
     },
     {
       title: "Thành tiền",
-      dataIndex: "totalPrice",
+      dataIndex: "price",
       key: "total",
       render : (item : any,record : any) => {
         return formatter(item * get(record,'quantity',1))

@@ -7,9 +7,15 @@ import SelectPharmacy from "../SelectPharmacy";
 import TotalBill from "./TotalBill";
 type propsType = {};
 export default function ChildTab(props: propsType): React.JSX.Element {
- const {form,onValueChange} = useCreateBillStore();
+ const {form,onValueChange,clonedDataSource} = useCreateBillStore();
   const onFinish = (values: FormFieldCreateBill) => {
     console.log(values);
+    const submitData = {
+      billItems : clonedDataSource,
+      ...values
+    };
+    console.log(submitData,'submitData');
+    
   };
   return (
     <Form className="form-create-bill" form={form} onFinish={onFinish} onValuesChange={onValueChange}>
