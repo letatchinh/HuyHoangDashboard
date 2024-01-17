@@ -27,8 +27,8 @@ const ManufacturerForm: React.FC<Props> = ({ id, callBack, updateManufacturer })
         name,
         description,
       })
-    }
-  }, [id, manufacturer])
+    }else form.resetFields();
+  }, [id, manufacturer,form])
   const onFinish = (values: FieldType) => {
     const data: FieldType = {
       ...values,

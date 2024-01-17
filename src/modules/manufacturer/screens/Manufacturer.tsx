@@ -119,10 +119,11 @@ export default function Manufacturer() {
       value: 'INACTIVE',
     },
   ];
+  const pageSizeOptions = ['10', '20', '50', '100'];
   return (
     <>
       <div>
-        <Breadcrumb title={t('manufacturer')} />
+        <Breadcrumb title={t('Quản lý hãng sản xuất')} />
         <div>
           <div className='product-config-content' style={{ marginBottom: 16, display: 'flex', gap: '30px' }}>
             {/* <div style={{ width: '20%',height: '100%' }}> */}
@@ -173,6 +174,9 @@ export default function Manufacturer() {
                   size="small"
                   pagination={{
                     ...paging,
+                    pageSizeOptions: pageSizeOptions,
+                    showSizeChanger: true, // Hiển thị dropdown chọn kích thước trang
+                    defaultPageSize: 10, // Kích thước trang mặc định
                     showTotal: (total) => `Tổng cộng: ${total} `,
                     onChange(page, pageSize) {
                       onParamChange({ page, limit: pageSize });
@@ -188,7 +192,7 @@ export default function Manufacturer() {
           title="Thêm nhà sản xuất"
           onCancel={handleCloseForm}
           footer={null}
-          destroyOnClose
+        // destroyOnClose
         >
           <ManufacturerForm id={id} callBack={handleCloseForm} updateManufacturer={updateManufacturer} />
         </ModalAnt>

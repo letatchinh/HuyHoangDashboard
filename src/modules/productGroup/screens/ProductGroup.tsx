@@ -1,5 +1,5 @@
 import { DeleteOutlined, InfoCircleTwoTone, PlusCircleOutlined, SearchOutlined } from '@ant-design/icons';
-import { Button, Col, Form, Input, Row, Select, SelectProps, Space, Switch, message } from 'antd';
+import { Button, Col, Form, Input, Row, Select, SelectProps, Space, Switch, Table, message } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { get } from 'lodash';
 import { useCallback, useState } from 'react';
@@ -31,6 +31,7 @@ export default function ProductConfig() {
   const [search, setSearch] = useState(get(query, 'status') || '');
   const handleCloseForm = useCallback(() => {
     setShowForm(false);
+    form.resetFields();
     setId(null);
   }, []);
   const paging = useProductConfigPaging();
@@ -139,9 +140,10 @@ export default function ProductConfig() {
       value: 'INACTIVE',
     },
   ];
+  const pageSizeOptions = ['10', '20', '50', '100'];
   return (
     <div className='product-config'>
-      <Breadcrumb title={t('product-config')} />
+      <Breadcrumb title={t('Quản lý danh mục nhóm sản phẩm')} />
       <div>
         <div className='product-config-content' style={{ marginBottom: 16, display: 'flex', gap: '30px' }}>
           {/* <div style={{ width: '20%',height: '100%' }}> */}
@@ -193,22 +195,30 @@ export default function ProductConfig() {
                 size="small"
                 pagination={{
                   ...paging,
+                  pageSizeOptions: pageSizeOptions,
+                  showSizeChanger: true, // Hiển thị dropdown chọn kích thước trang
+                  defaultPageSize: 10, // Kích thước trang mặc định
                   showTotal: (total) => `Tổng cộng: ${total} `,
                   onChange(page, pageSize) {
                     onParamChange({ page, limit: pageSize });
                   },
                 }}
+              // showSizeChanger={true}
+
               />
+              <Table
+
+              ></Table>
             </WhiteBox>
           </div>
         </div>
       </div>
       <ModalAnt
         open={showForm}
-        title={id ? 'Cập nhật danh sản phẩm' : 'Tạo mới danh mục sản phẩm'}
-        onCancel={handleCloseForm1}
+        title={id ? 'Cập nhật danh mục sản phẩm' : 'Tạo mới danh mục sản phẩm'}
+        onCancel={handleCloseForm}
         footer={null}
-        destroyOnClose
+        // destroyOnClose
         width={800}
       >
         <ProductGroupForm id={id} callBack={handleCloseForm} updateProductConfig={updateProductConfig} />

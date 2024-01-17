@@ -118,7 +118,7 @@ export default function Variants({
       }}
     </Form.List>
     <Modal destroyOnClose open={open} onCancel={onClose} footer={null}>
-        <UnitModule.page.form callBack={onCreateSuccess} />
+        <UnitModule.page.form callBack={onCreateSuccess} updateProductUnit={() => {}}/>
       </Modal>
   </>
   );

@@ -29,8 +29,10 @@ const RankingForm: React.FC<Props> = ({ id, handleCloseForm }) => {
         name,
         level,
       });
+    }else {
+      form.resetFields();
     }
-  }, [id,rankingConfigById]);
+  }, [id,rankingConfigById,form]);
   const onFinish = useCallback((values: FieldType) => {
      const data: FieldType = {
       ...values,
