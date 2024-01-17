@@ -4,13 +4,10 @@
   position: relative;
   display: flex;
   justify-content: space-between;
-  margin-bottom: 10px;
   &__left {
     flex: 1;
-    display: flex;
   }
   &__right {
     flex: 1;
-    max-width: 20%;
-  };
+  }
 }

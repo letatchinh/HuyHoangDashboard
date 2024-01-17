@@ -135,11 +135,12 @@ const {
     return useResetState(productUnitActions.resetAction);
   };
 
-  export const useGetListProductUnitNoParam = () => {
+  export const useGetListProductUnitNoParam = (reFetch? : boolean) => {
     return useFetch({
       action: productUnitActions.getListRequest,
       loadingSelector: loadingSelector,
       dataSelector: listSelector,
       failedSelector: getListFailedSelector,
+      payload : reFetch
     })
 }
