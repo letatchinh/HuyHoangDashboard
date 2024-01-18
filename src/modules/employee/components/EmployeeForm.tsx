@@ -22,11 +22,12 @@ interface IProps {
   handleUpdate?: any;
   resetAction?: any;
   handleCreate?: any;
+  isSubmitLoading?: boolean;
 };
 
 export default function EmployeeForm(props: IProps) {
   const [form] = Form.useForm();
-  const { id, handleCloseModal,  handleUpdate,handleCreate} = props;
+  const { id, handleCloseModal,  handleUpdate,handleCreate, isSubmitLoading} = props;
   const [imageUrl, setImageUrl] = useState<string>();
   useResetState(employeeSliceAction.resetAction);
   //address
@@ -210,13 +211,12 @@ export default function EmployeeForm(props: IProps) {
           <Col span={2}>
             <Button
               onClick={handleCloseModal}
-              loading={isLoading}
             >Huỷ</Button>
           </Col>
           <Col span={4}>
             <Button
               type="primary" htmlType="submit"
-              loading={isLoading}
+              loading={isSubmitLoading}
             >
               {id ? "Cập nhật" : "Tạo mới"}
             </Button>
