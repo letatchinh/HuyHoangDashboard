@@ -3,10 +3,10 @@ import { get, keys } from "lodash";
 import React, { useCallback, useEffect, useMemo } from "react";
 import BaseBorderBox from "~/components/common/BaseBorderBox/index";
 import RenderLoading from "~/components/common/RenderLoading";
-import { MAX_LIMIT } from "~/constants/defaultValue";
-import ManufacturerModule from "~/modules/manufacturer";
-import ProductConfigModule from "~/modules/productGroup";
-import { getActive } from "~/utils/helpers";
+// import { MAX_LIMIT } from "~/constants/defaultValue";
+// import ManufacturerModule from "~/modules/manufacturer";
+// import ProductConfigModule from "~/modules/productGroup";
+// import { getActive } from "~/utils/helpers";
 import { PRODUCT_TYPE, PRODUCT_TYPE_VI } from "../constants";
 import {
   useCreateProduct,
@@ -58,51 +58,51 @@ export default function FormProduct({
     []
   );
 
-  const fetchOptionsManufacturer = useCallback(async (keyword?: string) => {
-    const res = await ManufacturerModule.api.getAll({
-      keyword,
-      limit: MAX_LIMIT,
-    });
-    return getActive(get(res, "docs", []))?.map((item: any) => ({
-      label: get(item, "name"),
-      value: get(item, "_id"),
-    }));
-  }, []);
+  // const fetchOptionsManufacturer = useCallback(async (keyword?: string) => {
+  //   const res = await ManufacturerModule.api.getAll({
+  //     keyword,
+  //     limit: MAX_LIMIT,
+  //   });
+  //   return getActive(get(res, "docs", []))?.map((item: any) => ({
+  //     label: get(item, "name"),
+  //     value: get(item, "_id"),
+  //   }));
+  // }, []);
 
-  const initManufacturer = useMemo(
-    () =>
-      product && [
-        {
-          label: get(product, "manufacturer.name"),
-          value: get(product, "manufacturerId"),
-        },
-      ],
-    [product]
-  );
+  // const initManufacturer = useMemo(
+  //   () =>
+  //     product && [
+  //       {
+  //         label: get(product, "manufacturer.name"),
+  //         value: get(product, "manufacturerId"),
+  //       },
+  //     ],
+  //   [product]
+  // );
 
-  const fetchOptionsProductConfig = useCallback(async (keyword?: string) => {
-    const res = await ProductConfigModule.api.getAll({
-      keyword,
-      limit: MAX_LIMIT,
-    });
-    return getActive(get(res, "docs", []))?.map((item: any) => ({
-      label: get(item, "name"),
-      value: get(item, "_id"),
-    }));
-  }, []);
+  // const fetchOptionsProductConfig = useCallback(async (keyword?: string) => {
+  //   const res = await ProductConfigModule.api.getAll({
+  //     keyword,
+  //     limit: MAX_LIMIT,
+  //   });
+  //   return getActive(get(res, "docs", []))?.map((item: any) => ({
+  //     label: get(item, "name"),
+  //     value: get(item, "_id"),
+  //   }));
+  // }, []);
 
-  console.log(product, "product");
+  // console.log(product, "product");
 
-  const initProductConfig = useMemo(
-    () =>
-      product && [
-        {
-          label: get(product, "productGroup.name"),
-          value: get(product, "productGroupId"),
-        },
-      ],
-    [product]
-  );
+  // const initProductConfig = useMemo(
+  //   () =>
+  //     product && [
+  //       {
+  //         label: get(product, "productGroup.name"),
+  //         value: get(product, "productGroupId"),
+  //       },
+  //     ],
+  //   [product]
+  // );
   // const fetchOptionsCountry = useCallback(async () => {
   //   const res = await api.country.getAll();
   //   return res?.map((item: any) => ({

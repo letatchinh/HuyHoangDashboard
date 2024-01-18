@@ -6,12 +6,13 @@ import InputNumberAnt from "~/components/Antd/InputNumberAnt";
 import RenderLoading from "~/components/common/RenderLoading";
 import { TypePropVariants } from "../product.modal";
 import UnitModule from "~/modules/productUnit";
+import { useFetchState } from "~/utils/hook";
 export default function Variants({
   form,
   isLoading : loading,
 }: TypePropVariants): React.JSX.Element {
   const [reFetch,setReFetch] = useState(false);
-  const [units, isLoading] = UnitModule.hook.useGetListProductUnitNoParam(reFetch);
+  const [units, isLoading] = useFetchState({api : UnitModule.api.getAllPublic,useDocs : false});
   const variants = Form.useWatch("variants", form);
   const [open, setOpen] = useState(false);
   const onOpen = useCallback(() => setOpen(true), []);
