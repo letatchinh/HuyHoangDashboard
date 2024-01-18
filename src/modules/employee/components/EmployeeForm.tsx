@@ -43,6 +43,16 @@ export default function EmployeeForm(props: IProps) {
       form.setFieldsValue(employee);
       setImageUrl(employee?.avatar);
     };
+    if (!id) {
+      form.setFieldsValue({
+        address: {
+          cityId: null,
+          districtId: null,
+          wardId: null
+        }
+      });
+      form.resetFields();
+    };
   }, [id, employee]);
 
   const onFinish = (values: any) => {
@@ -198,10 +208,16 @@ export default function EmployeeForm(props: IProps) {
         </Row>
         <Row gutter={10} align="middle" justify={"center"}>
           <Col span={2}>
-            <Button onClick={handleCloseModal}>Huỷ</Button>
+            <Button
+              onClick={handleCloseModal}
+              loading={isLoading}
+            >Huỷ</Button>
           </Col>
           <Col span={4}>
-            <Button type="primary" htmlType="submit">
+            <Button
+              type="primary" htmlType="submit"
+              loading={isLoading}
+            >
               {id ? "Cập nhật" : "Tạo mới"}
             </Button>
           </Col>
