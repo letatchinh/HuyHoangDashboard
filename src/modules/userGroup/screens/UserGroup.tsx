@@ -87,16 +87,19 @@ const UserGroup = ({ currentTab }: UserGroupProps) => {
   const { branchId, groupId }: any = useParams();
   const navigate = useNavigate();
   const { pathname } = useLocation();
+  const [reFetch, setReFetch] = useState(false);
   const branchIdParam = useMemo(
     () => ({ branchId: branchId ? branchId : DEFAULT_BRANCH_ID }),
-    [branchId]
+    [branchId, reFetch]
   );
-  const [reFetch, setReFetch] = useState(false);
   const [groups, isLoading] = useGetUserGroups(branchIdParam);
   const param = useMemo(() => (groupId), [groupId, reFetch]);
   const [group, isLoadingGroup, updateGroup] = useGetUserGroup(param);
   const [, handleUpdate] = useUpdatePolicy();
   const [, deleteGroup] = useDeleteUserGroup();
+  const reFeatchGroup = () => {
+    return dispatch(userGroupSliceAction.getByIdRequest(param));
+  };
   //State
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [id, setId] = useState<any>(null);
@@ -123,8 +126,8 @@ const UserGroup = ({ currentTab }: UserGroupProps) => {
   const [resources, isResourcesLoading] = useResources();
 
   useEffect(() => {
-    if (!groupId && groups.length && currentTab === 'user/group') {
-      navigate(`${pathname}/${groups[0]._id}`);
+    if (groups.length && currentTab === 'user/group') {
+      navigate(`/user/group/${groups[0]._id}`);
     };
   }, [groups, pathname, groupId]);
 
@@ -163,6 +166,7 @@ const UserGroup = ({ currentTab }: UserGroupProps) => {
     );
   };
   const columns = useResourceColumns(renderPermission);
+  
   return (
     <div className="employee-group">
       <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
@@ -264,7 +268,8 @@ const UserGroup = ({ currentTab }: UserGroupProps) => {
             onCancel={onClose}
             className="form-modal__user-group"
             afterClose={() => {
-              setReFetch(!reFetch)
+              setReFetch(!reFetch);
+              reFeatchGroup();
               }}
         // destroyOnClose
       >

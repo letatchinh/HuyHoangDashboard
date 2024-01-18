@@ -26,33 +26,36 @@ interface UserProps {
   currentTab: string | undefined;
 }
 interface ColumnActionProps {
-  _id: any;
+  _id?: any;
   deleteUserEmployee: any;
   shouldShowDevider: any;
-  onOpenForm: any;
+  onOpenForm?: any;
+  adapater?: any
 }
 const ColumnActions = ({
   _id,
   deleteUserEmployee,
   shouldShowDevider,
   onOpenForm,
+  adapater
 }: ColumnActionProps) => {
   return (
     <div className="custom-table__actions">
       <WithOrPermission permission={[POLICIES.UPDATE_USER]}>
       <p onClick={() => onOpenForm(_id)}>Sửa</p>
       </WithOrPermission>
-      {shouldShowDevider && <p>|</p>}
-      <WithOrPermission permission={[POLICIES.DELETE_USER]}>
-      <Popconfirm
+      {  !adapater?.user?.isSuperAdmin && shouldShowDevider && <p>|</p>}
+    {!adapater?.user?.isSuperAdmin &&   <WithOrPermission permission={[POLICIES.DELETE_USER]}>
+        <Popconfirm
         title="Bạn muốn xoá người dùng này?"
         onConfirm={() => deleteUserEmployee(_id)}
         okText="Xoá"
         cancelText="Huỷ"
+        disabled
       >
         <p>Xóa</p>
       </Popconfirm>{" "}
-      </WithOrPermission>
+      </WithOrPermission>}
     </div>
   );
 };
@@ -149,8 +152,10 @@ const UserEmployee = ({ currentTab }: UserProps) => {
       key: "status",
       width: 90,
       align: "center",
-      render: (status, record: any) => (
-        <Switch
+      render: (status, record: any) => {
+        return(
+          <Switch
+          disabled={record?.adapater?.user?.isSuperAdmin}
           checked={status === "ACTIVE"}
           onChange={() =>
             updateUser({
@@ -160,7 +165,7 @@ const UserEmployee = ({ currentTab }: UserProps) => {
             })
           }
         />
-      ),
+      )},
     },
     ...(isCanUpdate || isCanDelete ?[{
       title: "Thao tác",
@@ -173,6 +178,7 @@ const UserEmployee = ({ currentTab }: UserProps) => {
             deleteUserEmployee={deleteUser}
             shouldShowDevider={shouldShowDevider}
             onOpenForm={() => handleOpenModal(record?._id)}
+            adapater={record?.adapater}
           />
         );
       },

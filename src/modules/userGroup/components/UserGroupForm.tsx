@@ -56,16 +56,16 @@ export default function UserGroupForm(props: propsType): React.JSX.Element {
         name="basic"
         labelCol={{ span: 8 }}
         wrapperCol={{ span: 16 }}
-        style={{ maxWidth: 600 }}
+        style={{ width: '95%' }}
         onFinish={onFinish}
         autoComplete="off"
         labelAlign="left"
         >
-        <Row
+        {/* <Row
           align="middle"
           justify="space-between"
           className="employee-group-form__logo-row"
-        >
+        > */}
           <FormItem
             label="Tên nhóm nhân viên"
             name="name"
@@ -83,7 +83,7 @@ export default function UserGroupForm(props: propsType): React.JSX.Element {
           >
             {isLoading ? <Skeleton.Input active /> : <Input />}
           </FormItem>
-        </Row>
+        {/* </Row> */}
 
         <Row className="employee-group-form__submit-box">
           {isSubmitLoading ? (

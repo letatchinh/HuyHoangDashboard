@@ -26,7 +26,7 @@ interface IProps {
 export default function UserForm(props: IProps) {
   const [form] = Form.useForm();
   const { id, handleCloseModal, updateUser: handleUpdate, resetAction } = props;
-  const [imageUrl, setImageUrl] = useState<string>();
+  const [imageUrl, setImageUrl] = useState<string>('');
   const [loadingValidateUsername, setLoadingValidateUsername] =
     useState<boolean>(false);
   const [statusAccount, setStatusAccount] = useState('ACTIVE');
@@ -75,6 +75,7 @@ export default function UserForm(props: IProps) {
     const user = {
       ...values,
       avatar: imageUrl,
+      idNumber: values?.idNumber || '',
       branchId: values?.branchId || DEFAULT_BRANCH_ID
     };
     if (id) {
@@ -90,7 +91,7 @@ export default function UserForm(props: IProps) {
         });
       };
     } else {
-      handleCreate({...omit(user, ['userId'])});
+      handleCreate({...omit(user, ['userId','updateAccount'])});
     };
   };
 
