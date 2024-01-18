@@ -16,6 +16,7 @@ export type billItem = {
     cumulativeDiscount : typeCumulativeDiscount[],
     productId : string,
     variantId : string,
+    price : number,
     totalPrice : number,
     quantity : number,
     supplierId : string,
@@ -24,10 +25,13 @@ export type billItem = {
 }
 export type FormFieldCreateBill = {
     pharmacyId : string,
-    // billItems : billItem[],
-    // totalPrice : number,
-    // pair : number,
-    // createById : string,
+    debtType : string,
+}
+export type PayloadCreateBill = {
+    pharmacyId : string,
+    billItems : billItem[],
+    totalPrice : number,
+    pair : number,
 }
 type supplier = {
     name : string,
@@ -79,4 +83,12 @@ export type ItemSearchProduct = {
     productGroupId : string,
     manufacturerId : string,
     manufacturer : manufacturerType
+}
+
+export type DebtType = {
+    alias : string,
+    key : string,
+    name : string,
+    id : number,
+
 }

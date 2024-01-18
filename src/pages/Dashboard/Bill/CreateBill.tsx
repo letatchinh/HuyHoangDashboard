@@ -5,8 +5,9 @@ import Bill from "~/modules/bill";
 import SelectProduct from "~/modules/bill/components/SelectProduct";
 import { CreateBillProvider } from "~/store/createBillContext";
 import { v4 } from "uuid";
-import { concat, forIn, get, unset } from "lodash";
+import { compact, concat, forIn, get, unset } from "lodash";
 import { billItem } from "~/modules/bill/bill.modal";
+import BillModule from '~/modules/bill'
 const KEY_DATA_PHARMACY = "bill-pharmacy";
 type ItemDataSource = {
   billItems: billItem[];
@@ -92,33 +93,60 @@ const CreateBillPage = (): React.JSX.Element => {
     }
     onRemoveDataSource(targetKey);
   };
-
-  const onChangeTab = (newActiveKey: string) => {
-    setActiveKey(newActiveKey);
-  };
-
   const onChangeBill = (
     activeKey: any,
     newData: ItemDataSource
   ) => {
-    const newDataSource = {
-      ...dataSource,
-      [activeKey]: {
-        ...dataSource[activeKey],
-        ...newData,
-      },
-    };
-
-    setDataSource(newDataSource);
+    console.log(newData,dataSource,'newData');
+    
+      if(dataSource){
+        const newDataSource = {
+          ...dataSource,
+          [activeKey]: { // Change Data of key is activeKey
+            ...dataSource[activeKey], // Inherited from Old Data
+            ...newData, // Change New Data Source
+          },
+        };
+        console.log(newDataSource,'newDataSource');
+        
+        setDataSource(newDataSource);
+      }else{
+        const newDataSource = {
+          [activeKey] : newData
+        };
+        setDataSource(newDataSource);
+      };
+      console.log(activeKey,dataSource,'activeKeyactiveKey');
+      
+  };
+  const verifyData = (newActiveKey : string,callback?:() => void) => {
+    const billCurrent = dataSource[newActiveKey];
+    BillModule.service.onVerifyData({
+      bill : billCurrent,
+      keyActive : newActiveKey,
+      onChangeBill,
+      callback,
+    });
+  }
+  const onChangeTab = (newActiveKey: string) => {
+    setActiveKey(newActiveKey);
+  
+    // ReVerify when onChangeTab is called
+    verifyData(newActiveKey)
+    
   };
 
+// Initialize DataSource
   useEffect(() => {
-    // Initialize DataSource
+    // Not Have DataSource  initialize new Data
     const dataFromLocalStorage = localStorage.getItem(KEY_DATA_PHARMACY);
     if (
       !dataFromLocalStorage ||
-      Object.keys(dataFromLocalStorage).length === 0 ||
-      dataFromLocalStorage === "{}"
+      Object.keys(dataFromLocalStorage).length === 0
+      || dataFromLocalStorage === "{}" 
+      || dataFromLocalStorage === "undefined" 
+      || dataFromLocalStorage === "null" 
+      || dataFromLocalStorage === "" 
     ) {
       let newDataSource: DataSourceType = {};
       items?.forEach((tab) => {
@@ -130,7 +158,17 @@ const CreateBillPage = (): React.JSX.Element => {
       localStorage.setItem(KEY_DATA_PHARMACY, JSON.stringify(newDataSource));
       setTabs(items);
     } else {
+      // Data source is Ready
       const dataReady = JSON.parse(dataFromLocalStorage);
+      const keyFirst = Object.keys(dataReady)[0];
+      const dataFirst = dataReady[keyFirst];
+      // Verify when Initialize DataSource
+      BillModule.service.onVerifyData({
+        bill : dataFirst,
+        keyActive : keyFirst,
+        onChangeBill
+      })
+      
       let newTabs: any = [];
       forIn(dataReady, (value, key) => {
         newTabs.push({
@@ -143,10 +181,12 @@ const CreateBillPage = (): React.JSX.Element => {
     }
   }, []);
 
+  // Auto setData For Local Storage When Data Source Change
   useEffect(() => {
     localStorage.setItem(KEY_DATA_PHARMACY, JSON.stringify(dataSource));
   }, [dataSource]);
 
+  // Auto Set Active key if First tabs
   useEffect(() => {
     if (!activeKey) {
       setActiveKey(tabs?.[0].key);
@@ -167,6 +207,7 @@ const CreateBillPage = (): React.JSX.Element => {
           }}
         >
           <Tabs
+          destroyInactiveTabPane
             className="createBill__tabs"
             tabBarExtraContent={{
               left: (
@@ -210,6 +251,7 @@ const CreateBillPage = (): React.JSX.Element => {
                   onChangeBill={(newData: any) =>
                     onChangeBill(get(tab, "key"), newData)
                   }
+                  verifyData={(callback?:() => void) => verifyData(activeKey,callback)}
                 >
                   <Bill.page.create />
                 </CreateBillProvider>

@@ -21,6 +21,7 @@ import medicineModule from '~/modules/medicine';
 import productModule from '~/modules/product';
 import workBoardModule from '~/modules/workBoard';
 import configDiscount from '~/modules/configDiscount';
+import billModule from '~/modules/bill';
 const authPersistConfig = {
     key: 'auth',
     storage: localStorage,
@@ -52,7 +53,8 @@ const rootReducer = combineReducers({
     product:productModule.redux.reducer,
     workBoard:workBoardModule.redux.reducer,
     configDiscount: configDiscount.redux.reducer,
-    pharmacy: pharmacyModule.redux.reducer
+    pharmacy: pharmacyModule.redux.reducer,
+    bill: billModule.redux.reducer,
 
 });
 export default rootReducer

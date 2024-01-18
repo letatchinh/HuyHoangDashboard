@@ -1,56 +1,66 @@
 import { put, call, takeLatest } from 'redux-saga/effects';
 import api from '../bill.api'; 
-import { billActions } from './reducer';
+import { billSliceAction } from './reducer';
 
 function* getListBill({payload:query} : any) : any {
   try {
     const data = yield call(api.getAll,query);
-    yield put(billActions.getListSuccess(data));
+    yield put(billSliceAction.getListSuccess(data));
   } catch (error:any) {
-    yield put(billActions.getListFailed(error));
+    yield put(billSliceAction.getListFailed(error));
+  }
+}
+
+function* getListDebt() : any {
+  try {
+    const data = yield call(api.getDebtRule);
+    yield put(billSliceAction.getDebtSuccess(data));
+  } catch (error:any) {
+    yield put(billSliceAction.getDebtFailed(error));
   }
 }
 
 function* getByIdBill({payload:id} : any) : any {
   try {
     const data = yield call(api.getById,id);
-    yield put(billActions.getByIdSuccess(data));
+    yield put(billSliceAction.getByIdSuccess(data));
   } catch (error:any) {
-    yield put(billActions.getByIdFailed(error));
+    yield put(billSliceAction.getByIdFailed(error));
   }
 }
 
 function* createBill({payload} : any) : any {
   try {
     const data = yield call(api.create,payload);
-    yield put(billActions.createSuccess(data));
+    yield put(billSliceAction.createSuccess(data));
   } catch (error:any) {
-    yield put(billActions.createFailed(error));
+    yield put(billSliceAction.createFailed(error));
   }
 }
 
 function* updateBill({payload} : any) : any {
   try {
     const data = yield call(api.update,payload);
-    yield put(billActions.updateSuccess(data));
+    yield put(billSliceAction.updateSuccess(data));
   } catch (error:any) {
-    yield put(billActions.updateFailed(error));
+    yield put(billSliceAction.updateFailed(error));
   }
 }
 function* deleteBill({payload : id} : any) : any {
   try {
     const data = yield call(api.delete,id);
-    yield put(billActions.deleteSuccess(data));
+    yield put(billSliceAction.deleteSuccess(data));
   } catch (error:any) {
-    yield put(billActions.deleteFailed(error));
+    yield put(billSliceAction.deleteFailed(error));
   }
 }
 
 
 export default function* billSaga() {
-  yield takeLatest(billActions.getListRequest, getListBill);
-  yield takeLatest(billActions.getByIdRequest, getByIdBill);
-  yield takeLatest(billActions.createRequest, createBill);
-  yield takeLatest(billActions.updateRequest, updateBill);
-  yield takeLatest(billActions.deleteRequest, deleteBill);
+  yield takeLatest(billSliceAction.getListRequest, getListBill);
+  yield takeLatest(billSliceAction.getDebtRequest, getListDebt);
+  yield takeLatest(billSliceAction.getByIdRequest, getByIdBill);
+  yield takeLatest(billSliceAction.createRequest, createBill);
+  yield takeLatest(billSliceAction.updateRequest, updateBill);
+  yield takeLatest(billSliceAction.deleteRequest, deleteBill);
 }

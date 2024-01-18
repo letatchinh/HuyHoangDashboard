@@ -1,4 +1,5 @@
-import { GifOutlined, GiftOutlined, GiftTwoTone, UpCircleTwoTone } from "@ant-design/icons";
+import { GifOutlined, GiftOutlined, GiftTwoTone, MinusCircleTwoTone, UpCircleTwoTone } from "@ant-design/icons";
+import { Typography } from "antd";
 import dayjs from "dayjs";
 import { get } from "lodash";
 import React from "react";
@@ -15,8 +16,7 @@ type propsType = {};
 export default function ProductSelectedTable(
   props: propsType
 ): React.JSX.Element {
-  const { clonedDataSource, onSave } = useCreateBillStore();
-  console.log(clonedDataSource, "clonedDataSource");
+  const { billItems, onSave,onRemove } = useCreateBillStore();
 
   const columns = [
     {
@@ -31,6 +31,12 @@ export default function ProductSelectedTable(
       key: "name",
     },
     {
+      title: "Chiết khấu",
+      dataIndex: "totalDiscount",
+      key: "totalDiscount",
+      render : (totalDiscount : number) => formatter(totalDiscount)
+    },
+    {
       title: "Số lượng",
       dataIndex: "quantity",
       key: "quantity",
@@ -38,11 +44,6 @@ export default function ProductSelectedTable(
       component: "InputNumber",
       required: true,
     },
-    // {
-    //   title: "Chiết khấu",
-    //   dataIndex: "name",
-    //   key: "name",
-    // },
     {
       title: "Giá bán",
       dataIndex: "price",
@@ -53,10 +54,18 @@ export default function ProductSelectedTable(
     },
     {
       title: "Thành tiền",
-      dataIndex: "price",
-      key: "total",
+      dataIndex: "totalPrice",
+      key: "totalPrice",
       render : (item : any,record : any) => {
-        return formatter(item * get(record,'quantity',1))
+        return <Typography.Text strong>{formatter(item)}</Typography.Text>
+      }
+    },
+    {
+      title: "",
+      dataIndex: "key",
+      key: "action",
+      render : (key : any,record : any) => {
+        return <MinusCircleTwoTone onClick={() => onRemove(key)}/>
       }
     },
   ];
@@ -99,9 +108,8 @@ export default function ProductSelectedTable(
     }),
 
     // use cloned data source so that it can be submitted when complete
-    dataSource: clonedDataSource,
+    dataSource: billItems,
   };
-console.log(clonedDataSource,'clonedDataSource');
 
   return (
     <TableAnt
@@ -115,13 +123,14 @@ console.log(clonedDataSource,'clonedDataSource');
         ),
         defaultExpandAllRows: true,
         rowExpandable: (record: billItem) =>
-          !!get(record, "cumulativeDiscount", [])?.length,
-        expandIcon: ({ expanded, onExpand, record }) =>
+          !!get(record, "cumulativeDiscount", []).length,
+        expandIcon: ({ expanded, onExpand, record ,expandable}) =>
+        expandable ? 
           expanded ? (
             <UpCircleTwoTone onClick={(e: any) => onExpand(record, e)} />
           ) : (
             <GiftTwoTone onClick={(e: any) => onExpand(record, e)} />
-          ),
+          ) : null,
       }}
     />
   );

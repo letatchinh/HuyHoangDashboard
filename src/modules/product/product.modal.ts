@@ -33,9 +33,8 @@ export type cumulativeDiscountType = {
   valueType : string,
   typeReward : string,
   condition : conditionType | null,
-  applyUnit : string | null,
+  applyVariantId : string | null,
   applyTimeSheet : applyTimeSheetType | null
-
 
 }
 export type FieldTypeFormProduct = {

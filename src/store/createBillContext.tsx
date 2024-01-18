@@ -1,73 +1,123 @@
 import { Form } from "antd";
-import { get } from "lodash";
-import { createContext, ReactNode, useContext, useEffect, useState } from "react";
-
-
-type typeCumulativeDiscount = {
-  typeReward: string;
-  value: string;
-  name: string;
-  valueType: string;
-  target: string;
-  targetId: string;
-  typeDiscount: string;
-  session: string;
-  code: string;
+import { compact, concat, forIn, get } from "lodash";
+import {
+  createContext,
+  ReactNode,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
+import {
+  cumulativeDiscountType,
+  conditionType,
+} from "~/modules/product/product.modal";
+import BillModule from "~/modules/bill";
+import { v4 } from "uuid";
+import { useGetDebtRule } from "~/modules/bill/bill.hook";
+import { DebtType } from "~/modules/bill/bill.modal";
+const TYPE_DISCOUNT = {
+  "DISCOUNT.CORE": "DISCOUNT.CORE",
+  "DISCOUNT.SOFT": "DISCOUNT.SOFT",
+  LK: "LK",
 };
+const TARGET = {
+  product : "product",
+  supplier : "supplier",
+}
+// type typeCumulativeDiscount = {
+//   typeReward: string;
+//   value: string;
+//   name: string;
+//   valueType: string;
+//   target: string;
+//   targetId: string;
+//   typeDiscount: string;
+//   session: string;
+//   code: string;
+//   _id: string;
+// };
 type billItem = {
-  cumulativeDiscount?: typeCumulativeDiscount[];
+  cumulativeDiscount?: cumulativeDiscountType[];
   productId: string;
   variantId: string;
   quantity: number;
+  price: number;
+  totalDiscount: number;
   totalPrice: number;
   supplierId: string;
   lotNumber?: string;
   expirationDate?: string;
 };
-type DataItem = billItem & {
+export type DataItem = billItem & {
   key: number;
   name: string;
 };
 type Bill = {
-  billItems : DataItem[];
-  pharmacyId : string
-}
+  billItems: DataItem[];
+  pharmacyId: string;
+};
 
+type DiscountDetail = {
+  ["DISCOUNT.CORE"]: number;
+  ["DISCOUNT.SOFT"]: number;
+  ["LK"]: number;
+};
 export type GlobalCreateBill = {
-  clonedDataSource: DataItem[];
+  billItems: DataItem[];
   onSave: (newRow: DataItem) => void;
   onAdd: (newRow: Omit<DataItem, "key">) => void;
-  form : any,
-  onValueChange : (newValue: any,allValues : any) => void
-
+  onRemove: (productId: string) => void;
+  form: any;
+  onValueChange: (newValue: any, allValues: any) => void;
+  totalPrice: number;
+  totalQuantity: number;
+  totalPriceAfterDiscount: number;
+  totalDiscount: number;
+  totalDiscountFromProduct: DiscountDetail | null;
+  totalDiscountFromSupplier: DiscountDetail | null;
+  verifyData : (callback?:any) => void,
+  debt : DebtType[];
 };
 const CreateBill = createContext<GlobalCreateBill>({
-  clonedDataSource: [],
+  billItems: [],
   onSave: () => {},
   onAdd: () => {},
-  form : null,
-  onValueChange : () => {}
+  onRemove: () => {},
+  form: null,
+  onValueChange: () => {},
+  totalPrice: 0,
+  totalQuantity: 0,
+  totalPriceAfterDiscount: 0,
+  totalDiscount : 0,
+  totalDiscountFromProduct : null,
+  totalDiscountFromSupplier: null,
+  verifyData: () => {},
+  debt : [],
 });
 
 type CreateBillProviderProps = {
   children: ReactNode;
-  bill : Bill,
-  onChangeBill : (newObjData:any) => void
+  bill: Bill;
+  onChangeBill: (newObjData: any) => void;
+  verifyData : () => void
 };
-
 
 export function CreateBillProvider({
   children,
   bill,
-  onChangeBill ,
-}: CreateBillProviderProps): JSX.Element {  
-  const [clonedDataSource, setClonedDataSource] = useState<DataItem[]>([]);
-  const [form] = Form.useForm();
+  onChangeBill,
+  verifyData,
+}: CreateBillProviderProps): JSX.Element {
   
-
+  const [billItems, setBillItems] = useState<DataItem[]>([]);
+  const [form] = Form.useForm();
+  const [debt,isLoadingDebt] = useGetDebtRule();
+  
   // Controller Data
   const onSave = (row: DataItem) => {
-    const newData: DataItem[] = [...clonedDataSource];
+    const newData: DataItem[] = [...billItems];
     const index = newData.findIndex((item) => row.key === item.key);
     const item = newData[index];
 
@@ -76,50 +126,214 @@ export function CreateBillProvider({
     };
 
     newData.splice(index, 1, { ...item, ...computedRow });
-    // setClonedDataSource(newData);
     onChangeBill({
-      billItems : newData
-    })
+      billItems: newData,
+    });
   };
 
   const onAdd = (row: Omit<DataItem, "key">) => {
-    const newData = [
-      ...clonedDataSource,
-      { ...row, key: clonedDataSource.length + 1 },
-    ];
+    console.log(row, "row");
+    console.log(billItems, "billItems");
+
+    const newData = [...billItems, { ...row, key: v4() }];
     onChangeBill({
-      billItems : newData
-    })
+      billItems: newData,
+    });
+  };
+
+  const onRemove = (key: string) => {
+    const newData = billItems?.filter(
+      (item: billItem) => get(item, "key") !== key
+    );
+    onChangeBill({
+      billItems: newData,
+    });
   };
 
   useEffect(() => {
-    setClonedDataSource(get(bill,'billItems',[]));
-    form.setFieldsValue(bill)
-  },[bill,form]);
+    setBillItems(get(bill, "billItems", []));
+    const initDebt = debt?.find((debt : DebtType) => get(debt, "key") === "COD");
+    form.setFieldsValue({
+      ...bill,
+      debtType : get(initDebt,'key')
+    });
+  }, [bill, form,debt]);
 
-  const onValueChange = (value : any,values : any) => {
-    const key : any = Object.keys(value)[0];
+  const onValueChange = (value: any, values: any) => {
+    const key: any = Object.keys(value)[0];
     switch (key) {
-      case 'pharmacyId':
+      case "pharmacyId":
         onChangeBill({
-          pharmacyId : value[key]
-        })
+          pharmacyId: value[key],
+        });
         break;
-    
+
       default:
         break;
     }
-    
-  } ;
-  
+  };
+
+  const totalPrice = useMemo(
+    () =>
+      billItems?.reduce(
+        (sum: number, cur: any) =>
+          sum + get(cur, "price") * get(cur, "quantity"),
+        0
+      ),
+    [billItems]
+  );
+  const totalPriceAfterDiscount = useMemo(
+    () =>
+      billItems?.reduce(
+        (sum: number, cur: any) => sum + get(cur, "totalPrice"),
+        0
+      ),
+    [billItems]
+  );
+  const totalDiscount = useMemo(
+    () =>
+      billItems?.reduce(
+        (sum: number, cur: any) => sum + get(cur, "totalDiscount"),
+        0
+      ),
+    [billItems]
+  );
+  const totalDiscountFromProduct = useMemo(
+    () =>
+      billItems?.reduce(
+        (sum: any, cur: any) => {
+          console.log(cur,'current');
+          
+          const newSum : any = {};
+          forIn(TYPE_DISCOUNT,(value : any,key : any) => {
+            newSum[key] = sum[key] +  get(cur,['totalDiscountDetailFromProduct',key],0)
+          })
+          return newSum
+        },
+        {
+          [TYPE_DISCOUNT["DISCOUNT.CORE"]]: 0,
+          [TYPE_DISCOUNT["DISCOUNT.SOFT"]]: 0,
+          [TYPE_DISCOUNT.LK]: 0,
+        }
+      ),
+    [billItems]
+  );
+  const totalDiscountFromSupplier = useMemo(
+    () =>
+      billItems?.reduce(
+        (sum: any, cur: any) => {
+          const newSum : any = {};
+          forIn(TYPE_DISCOUNT,(value : any,key : any) => {
+            newSum[key] = sum[key] +  get(cur,['totalDiscountDetailFromSupplier',key],0)
+          })
+          return newSum
+        },
+        {
+          [TYPE_DISCOUNT["DISCOUNT.CORE"]]: 0,
+          [TYPE_DISCOUNT["DISCOUNT.SOFT"]]: 0,
+          [TYPE_DISCOUNT.LK]: 0,
+        }
+      ),
+    [billItems]
+  );
+
+  const totalQuantity = useMemo(
+    () =>
+      billItems?.reduce(
+        (sum: number, cur: any) => sum + get(cur, "quantity"),
+        0
+      ),
+    [billItems]
+  );
+
+  useEffect(() => {
+    if (get(bill, "billItems", [])?.length) {
+      const newBillItems: DataItem[] = get(bill, "billItems", [])?.map(
+        (billItem: DataItem) => {
+          const cumulativeDiscount = get(
+            billItem,
+            "cumulativeDiscount",
+            []
+          )?.map((discount: cumulativeDiscountType) => {
+            const discountAmount = BillModule.service.getDiscountAmount(
+              discount,
+              get(billItem, "price", 1)
+            );
+            return {
+              ...discount,
+              discountAmount,
+            };
+          });
+          const totalDiscountDetailFromProduct = cumulativeDiscount?.reduce(
+            (sum: any, cur: cumulativeDiscountType) => {
+              return get(cur,'target') === TARGET.product ? {
+                ...sum,
+                [get(cur,'typeDiscount')]:
+                  sum[get(cur,'typeDiscount')] +
+                  get(cur, "discountAmount", 0),
+              } : sum
+            },
+            {
+              [TYPE_DISCOUNT["DISCOUNT.CORE"]]: 0,
+              [TYPE_DISCOUNT["DISCOUNT.SOFT"]]: 0,
+              [TYPE_DISCOUNT.LK]: 0,
+            }
+          );
+          const totalDiscountDetailFromSupplier = cumulativeDiscount?.reduce(
+            (sum: any, cur: cumulativeDiscountType) => {
+              return get(cur,'target') === TARGET.supplier ? {
+                ...sum,
+                [get(cur,'typeDiscount')]:
+                  sum[get(cur,'typeDiscount')] +
+                  get(cur, "discountAmount", 0),
+              } : sum
+            },
+            {
+              [TYPE_DISCOUNT["DISCOUNT.CORE"]]: 0,
+              [TYPE_DISCOUNT["DISCOUNT.SOFT"]]: 0,
+              [TYPE_DISCOUNT.LK]: 0,
+            }
+          );
+          const totalDiscount = cumulativeDiscount?.reduce(
+            (sum: number, cur: cumulativeDiscountType) =>
+              sum + get(cur, "discountAmount", 0),
+            0
+          );
+
+          const totalPrice =
+            get(billItem, "price", 1) * get(billItem, "quantity", 1) -
+            totalDiscount;
+          return {
+            ...billItem,
+            cumulativeDiscount,
+            totalDiscount,
+            totalPrice: totalPrice > 0 ? totalPrice : 0,
+            totalDiscountDetailFromProduct,
+            totalDiscountDetailFromSupplier,
+          };
+        }
+      );
+      setBillItems(newBillItems);
+    }
+  }, [totalPrice, bill]);
+
   return (
     <CreateBill.Provider
       value={{
-        clonedDataSource,
+        billItems,
         onSave,
         onAdd,
+        onRemove,
         form,
         onValueChange,
+        totalPrice,
+        totalQuantity,
+        totalPriceAfterDiscount,
+        totalDiscount,
+        totalDiscountFromProduct,
+        totalDiscountFromSupplier,
+        verifyData,
+        debt,
       }}
     >
       {children}

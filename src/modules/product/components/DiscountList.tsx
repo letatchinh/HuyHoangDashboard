@@ -6,6 +6,7 @@ import {
   Divider,
   Form,
   Input,
+  Popconfirm,
   Radio,
   Row,
   Select,
@@ -193,7 +194,11 @@ export default function DiscountList({
                               "typeDiscount",
                             ]) !== TYPE_DISCOUNT.CORE && (
                               <BaseBorderBox title={"Điều kiện"}>
-                                <Row style={{marginBottom : 5}} gutter={8} align={"middle"}>
+                                <Row
+                                  style={{ marginBottom: 5 }}
+                                  gutter={8}
+                                  align={"middle"}
+                                >
                                   <Col span={7}>
                                     <Form.Item
                                       style={{ marginBottom: 0 }}
@@ -232,7 +237,7 @@ export default function DiscountList({
                                         style={{ marginBottom: 0 }}
                                         {...restField}
                                         label={"Đơn vị"}
-                                        name={[name, "applyUnit"]}
+                                        name={[name, "applyVariantId"]}
                                       >
                                         {RenderLoading(
                                           loading,
@@ -347,10 +352,17 @@ export default function DiscountList({
                     </Row>
                   </Col>
                   <Col span={1}>
-                    <CloseSquareOutlined
-                      style={{ fontSize: 18, color: "red" }}
-                      onClick={() => remove(name)}
-                    />
+                    <Popconfirm
+                      title="Bạn muốn xoá đơn vị này?"
+                      onConfirm={() => remove(name)}
+                      okText="Xoá"
+                      cancelText="Huỷ"
+                    >
+                      <CloseSquareOutlined
+                        style={{ fontSize: 18, color: "red" }}
+                        onClick={() => remove(name)}
+                      />
+                    </Popconfirm>
                   </Col>
                 </Row>
               </>

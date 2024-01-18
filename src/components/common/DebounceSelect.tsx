@@ -19,7 +19,7 @@ function DebounceSelect<
   } = any
 >({
   fetchOptions,
-  debounceTimeout = 500,
+  debounceTimeout = 300,
   initOptions,
   value,
   ...props
