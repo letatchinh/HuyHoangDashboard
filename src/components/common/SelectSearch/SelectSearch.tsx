@@ -82,26 +82,28 @@ const SelectSearch = ({
             />
           </Col>
           {showSearchStatus && (
-            // <Col span={6} className="select-search__status">
-            //   <Select
-            //     placeholder="Tìm theo trạng thái"
-            //     style={{
-            //       width: "100%",
-            //     }}
-            //     options={optionsStatus}
-            //     showSearch
-            //     allowClear
-            //   />
-            // </Col>
             <Col className="select-search__status">
-              <Radio.Group
+              <Select
+                placeholder="Tìm theo trạng thái"
+                style={{
+                  width: "150px",
+                }}
                 options={OptionStatus as any}
                 onChange={onChangeStatus}
-                value={valueStatus}
-                optionType="button"
-                buttonStyle="solid"
+                showSearch
+                allowClear
+                // defaultValue={OptionStatus[0]}
               />
             </Col>
+            // <Col className="select-search__status">
+            //   <Radio.Group
+            //     options={OptionStatus as any}
+            //     onChange={onChangeStatus}
+            //     value={valueStatus}
+            //     optionType="button"
+            //     buttonStyle="solid"
+            //   />
+            // </Col>
           )}
         </Row>
       </div>

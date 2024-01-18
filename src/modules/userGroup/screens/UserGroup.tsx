@@ -209,7 +209,6 @@ const UserGroup = ({ currentTab }: UserGroupProps) => {
                   onConfirm={() => deleteGroup(groupId)}
                   okText="Xoá"
                   cancelText="Huỷ"
-                  disabled = {group?.user?.isSuperAdmin}
                 >
                   <Button
                     size="small"
@@ -227,7 +226,6 @@ const UserGroup = ({ currentTab }: UserGroupProps) => {
                   onClick={() => onOpenForm(groupId)}
                   type="primary"
                   style={styleButton}
-                  disabled = {group?.user?.isSuperAdmin}
                 >
                   <EditOutlined /> Cập nhật
                 </Button>
@@ -266,8 +264,7 @@ const UserGroup = ({ currentTab }: UserGroupProps) => {
             onCancel={onClose}
             className="form-modal__user-group"
             afterClose={() => {
-              console.log(1)
-              resetAction();
+              setReFetch(!reFetch)
               }}
         // destroyOnClose
       >

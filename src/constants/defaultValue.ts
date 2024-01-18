@@ -13,14 +13,14 @@ export interface OptionSelect {
 export const OptionStatus : OptionSelect[] = [
   {
     value:  null,
-    label: 'TC',
+    label: 'Tất cả',
   },
   {
     value: 'ACTIVE',
-    label: 'HĐ',
+    label: 'Hoạt động',
   },
   {
     value: 'INACTIVE',
-    label: 'KHĐ',
+    label: 'Không hoạt động',
   }
 ];

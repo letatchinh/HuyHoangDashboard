@@ -191,7 +191,7 @@ const UserEmployee = ({ currentTab }: UserProps) => {
         options={options}
         onChangeSelect={(e: any) => onParamChange({ groupIds: e })}
         showSearchStatus
-        onChangeStatus={(e: any) => onParamChange({ status: e.target.value })}
+        onChangeStatus={(e: any) => onParamChange({ status: e})}
         valueStatus={get(query,"status",null)}
       />
       <TableAnt

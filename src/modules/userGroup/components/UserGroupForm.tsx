@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Button, Checkbox, Form, Input, Modal, Row, Skeleton } from "antd";
 import { useParams } from "react-router-dom";
 import { useCreateUserGroup, useGetUserGroup, useUpdateUserGroup } from "../userGroup.hook";
@@ -21,18 +21,18 @@ type propsType = {
 
 const FormItem = Form.Item;
 export default function UserGroupForm(props: propsType): React.JSX.Element {
-  const { isOpen, onClose, initGroup, id , setReFetch,isSubmitLoading, handleCreate,handleUpdateUser} = props;
+  const { isOpen, onClose, initGroup, id ,isSubmitLoading, handleCreate,handleUpdateUser} = props;
   const { groupId } = useParams();
   const [form] = Form.useForm();
   const [userGroup, isLoading] = useGetUserGroup(groupId);
-
+  const [data, setData] = useState<any>();
   useEffect(() => {
     if (userGroup && id) {
       form.setFieldsValue(userGroup);
     } else {
       form.resetFields();
     };
-  }, [groupId,userGroup, form, id]);
+  }, [groupId, userGroup, form, id]);
 
   const onFinish = (values: any) => {
     if (id) {
@@ -48,6 +48,7 @@ export default function UserGroupForm(props: propsType): React.JSX.Element {
       });
     }
   };
+
 
   return (
     <Form

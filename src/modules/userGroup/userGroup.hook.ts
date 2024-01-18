@@ -17,7 +17,7 @@ import { userGroupSliceAction } from "./redux/reducer";
 import { useDispatch } from "react-redux";
 import { policySliceAction } from "../policy/redux/reducer";
 const MODULE  = "userGroup";
-const MODULE_VI  = "Nhân viên";
+const MODULE_VI  = "Nhóm người dùng";
 
 const {
   loadingSelector,
@@ -76,7 +76,7 @@ export const useCreateUserGroup = (callback?: any) => {
     `Tạo mới ${MODULE_VI} thành công`,
     callback
   );
-  // useFailed(createFailedSelector);
+  useFailed(createFailedSelector);
 
   return useSubmit({
     action: userGroupSliceAction.createRequest,
@@ -90,7 +90,7 @@ export const useUpdateUserGroup = (callback?: any) => {
     `Cập nhật ${MODULE_VI} thành công`,
     callback
   );
-  // useFailed(updateFailedSelector);
+  useFailed(updateFailedSelector);
 
   return useSubmit({
     action: userGroupSliceAction.updateRequest,
@@ -100,7 +100,7 @@ export const useUpdateUserGroup = (callback?: any) => {
 
 export const useDeleteUserGroup = (callback?: any) => {
   useSuccess(deleteSuccessSelector, `Xoá ${MODULE_VI} thành công`, callback);
-  // useFailed(deleteFailedSelector);
+  useFailed(deleteFailedSelector);
 
   return useSubmit({
     action: userGroupSliceAction.deleteRequest,
