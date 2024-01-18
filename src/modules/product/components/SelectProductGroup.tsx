@@ -1,4 +1,4 @@
-import { Button, Col, Form, Modal, Row } from "antd";
+import { Button, Col, Form, Modal, Row, Select } from "antd";
 import { get } from "lodash";
 import React, { useCallback, useMemo, useState } from "react";
 import DebounceSelect from "~/components/common/DebounceSelect";
@@ -6,6 +6,7 @@ import RenderLoading from "~/components/common/RenderLoading";
 import { MAX_LIMIT } from "~/constants/defaultValue";
 import ProductGroupModule from "~/modules/productGroup";
 import { getActive } from "~/utils/helpers";
+import { useFetchState } from "~/utils/hook";
 
 type propsType = {
   isLoading: boolean;
@@ -19,33 +20,11 @@ export default function SelectProductGroup({
   const [open, setOpen] = useState(false);
   const onOpen = useCallback(() => setOpen(true), []);
   const onClose = useCallback(() => setOpen(false), []);
-  const fetchOptionsProductGroup = useCallback(async (keyword?: string) => {
-    try {
-      const res = await ProductGroupModule.api.getAll({
-        keyword,
-        limit: MAX_LIMIT,
-      });
-      return getActive(get(res, "docs", []))?.map((item: any) => ({
-        label: get(item, "name"),
-        value: get(item, "_id"),
-      }));
-    } catch (error) {
-      console.log(error);
-      return [];
-    }
-  }, []);
-
-  const initProductGroup = useMemo(
-    () =>
-      product && [
-        {
-          label: get(product, "productGroup.name"),
-          value: get(product, "productGroupId"),
-        },
-      ],
-    [product]
-  );
-
+  const [productGroups,loading] = useFetchState({api : ProductGroupModule.api.getAllPublic,useDocs : false});
+  const options = useMemo(() => productGroups?.map((item:any) => ({
+    label : get(item,'name'),
+    value : get(item,'_id'),
+  })),[productGroups]);
   return (
     <>
       <Form.Item
@@ -55,12 +34,11 @@ export default function SelectProductGroup({
       >
         {RenderLoading(
           isLoading,
-          <DebounceSelect
+          <Select 
             className="right--parent"
             placeholder="Nhóm thuốc"
-            fetchOptions={fetchOptionsProductGroup}
+            options={options}
             style={{ width: "100%" }}
-            initOptions={initProductGroup}
           />
         )}
       </Form.Item>
@@ -76,3 +54,11 @@ export default function SelectProductGroup({
     </>
   );
 }
+
+  // <DebounceSelect
+          //   className="right--parent"
+          //   placeholder="Nhóm thuốc"
+          //   fetchOptions={fetchOptionsProductGroup}
+          //   style={{ width: "100%" }}
+          //   initOptions={initProductGroup}
+          // />

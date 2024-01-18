@@ -32,5 +32,5 @@ export const OptionStatus : OptionSelect[] = [
     label: 'Không hoạt động',
   }
 ];
-export const MAX_LIMIT = 200;
 
+export const MAX_LIMIT = 200;
