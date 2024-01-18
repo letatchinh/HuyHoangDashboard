@@ -15,6 +15,7 @@ const productGroup='productGroup';
 const ranking = 'ranking';
 const medicine = 'medicine';
 const configDiscount = 'configDiscount';
+const pharmaProfile = 'pharmaProfile';
 
 const RESOURCES = [
   //Setting
@@ -36,8 +37,10 @@ const RESOURCES = [
   // productGroup
   productGroup,
   //
-  medicine
+  medicine,
 
+  // Pharmacy Profile
+  pharmaProfile,
 ];
 
 //ACTIONS
@@ -101,6 +104,10 @@ const RESOURCE = (): ResourceType => {
     ranking
   ];
 
+  const PHARMA_PROFILE: string[] = [
+    pharmaProfile
+  ];
+
   return {
     GROUP_USER,
     GROUP_EMPLOYEE,
@@ -111,6 +118,7 @@ const RESOURCE = (): ResourceType => {
     GROUP_PRODUCTGROUP,
     GROUP_RANKING,
     MEDICINE,
+    PHARMA_PROFILE,
   };
 };
 

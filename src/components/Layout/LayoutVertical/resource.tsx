@@ -14,13 +14,19 @@ import { MenuProps } from "antd";
 import React, { useCallback } from "react";
 import { NavLink } from "react-router-dom";
 import { PATH_APP } from "~/routes/allPath";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUsers, faUser } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faUsers, faUser } from "@fortawesome/free-solid-svg-icons";
 import POLICIES from "~/modules/policy/policy.auth";
 
 type MenuItem = Required<MenuProps>["items"][number];
-function getItem({ label, icon, children, path, key, permission }: ItemType): any {
-  
+function getItem({
+  label,
+  icon,
+  children,
+  path,
+  key,
+  permission,
+}: ItemType): any {
   return {
     key,
     icon,
@@ -36,15 +42,15 @@ function getItem({ label, icon, children, path, key, permission }: ItemType): an
     ) : (
       label
     ),
-  } as MenuItem 
-};
+  } as MenuItem;
+}
 type ItemType = {
   label: string;
   icon?: React.ReactNode;
   children?: ItemType[];
   path?: string;
   key: string;
-  permission?: any; 
+  permission?: any;
 };
 export const resource: ItemType[] = [
   {
@@ -93,7 +99,7 @@ export const resource: ItemType[] = [
             label: "Cấu hình giảm giá",
             path: PATH_APP.configDiscount.root,
             key: PATH_APP.configDiscount.root,
-            permission :[POLICIES.READ_CONFIGDISCOUNT],
+            permission: [POLICIES.READ_CONFIGDISCOUNT],
           },
         ],
       },
@@ -109,84 +115,80 @@ export const resource: ItemType[] = [
     // permission :[POLICIES.READ_USER],
   },
 
-      // Chi nhánh
-    {
-      label : "Chi nhánh",
-      key: "branch",
-      permission :[POLICIES.READ_BRANCH],
-      children : [
-        {
-          label : "Danh sách chi nhánh",
-          path : PATH_APP.branch.root,
-          key : PATH_APP.branch.root,
-        }
-      ],
-      icon :<AppstoreFilled />
-    },
-    {
-      label: "Quản lý công việc",
-      key: "todoList",
-      icon: <AppstoreFilled />,
-      children: [
-        {
-          label: "Quản lý công việc",
-          // key: "statusConfig",
-          icon: <ApartmentOutlined />,
-          path: PATH_APP.todoList.workBoard,
-          key: PATH_APP.todoList.workBoard,
-          
-        },
-        {
-          label: "Cấu hình trạng thái",
-          // key: "statusConfig",
-          icon: <AppstoreFilled />,
-          path: PATH_APP.todoList.statusConfig,
-          key: PATH_APP.todoList.statusConfig,
-          
-        },
-      ],
-    },
-      //Nhân viên
+  // Chi nhánh
+  {
+    label: "Chi nhánh",
+    key: "branch",
+    permission: [POLICIES.READ_BRANCH],
+    children: [
       {
-        label : "Nhân viên",
-        icon: <FontAwesomeIcon icon ={faUsers} />,
-        path : PATH_APP.employee.root,
-        key: PATH_APP.employee.root,
-        permission :[POLICIES.READ_EMPLOYEE],
+        label: "Danh sách chi nhánh",
+        path: PATH_APP.branch.root,
+        key: PATH_APP.branch.root,
       },
-      //Người dùng
+    ],
+    icon: <AppstoreFilled />,
+  },
+  {
+    label: "Quản lý công việc",
+    key: "todoList",
+    icon: <AppstoreFilled />,
+    children: [
       {
-        label : "Người dùng",
-        icon: <FontAwesomeIcon icon = {faUser} />,
-        path : PATH_APP.user.root,
-        key: PATH_APP.user.root,
-        permission :[POLICIES.READ_USER, POLICIES.READ_USERGROUP],
+        label: "Quản lý công việc",
+        // key: "statusConfig",
+        icon: <ApartmentOutlined />,
+        path: PATH_APP.todoList.workBoard,
+        key: PATH_APP.todoList.workBoard,
       },
+      {
+        label: "Cấu hình trạng thái",
+        // key: "statusConfig",
+        icon: <AppstoreFilled />,
+        path: PATH_APP.todoList.statusConfig,
+        key: PATH_APP.todoList.statusConfig,
+      },
+    ],
+  },
+  //Nhân viên
+  {
+    label: "Nhân viên",
+    icon: <FontAwesomeIcon icon={faUsers} />,
+    path: PATH_APP.employee.root,
+    key: PATH_APP.employee.root,
+    permission: [POLICIES.READ_EMPLOYEE],
+  },
+  //Người dùng
+  {
+    label: "Người dùng",
+    icon: <FontAwesomeIcon icon={faUser} />,
+    path: PATH_APP.user.root,
+    key: PATH_APP.user.root,
+    permission: [POLICIES.READ_USER, POLICIES.READ_USERGROUP],
+  },
+  {
+    label: "Nhà thuốc",
+    icon: <AppstoreOutlined />,
+    path: PATH_APP.pharmacy.root,
+    key: PATH_APP.pharmacy.root,
+    permission: [POLICIES.READ_PHARMAPROFILE],
+  },
+];
 
-        //Nhà thuốc
-    {
-      label: "Nhà thuốc",
-      icon: <AppstoreOutlined />,
-      path: PATH_APP.pharmacy.root,
-      key: PATH_APP.pharmacy.root,
-    },
-      
-       
- ];
-
-//Required permission is string[][]; 
+//Required permission is string[][];
 const NavbarItems = resource.map((first) => {
-      if (first.children?.length) {
-        const newChildFirst = first.children.map((second) => {
-          if (second.children?.length) {
-            const newChildSecond = second.children.map((third) => getItem(third));
-            return getItem({ ...second, children: newChildSecond });
-          } else {
-            return getItem(second)};
-        })
-        return getItem({ ...first, children: newChildFirst })
+  if (first.children?.length) {
+    const newChildFirst = first.children.map((second) => {
+      if (second.children?.length) {
+        const newChildSecond = second.children.map((third) => getItem(third));
+        return getItem({ ...second, children: newChildSecond });
       } else {
-        return getItem(first)
-      };
+        return getItem(second);
+      }
+    });
+    return getItem({ ...first, children: newChildFirst });
+  } else {
+    return getItem(first);
+  }
 });
 export default NavbarItems;

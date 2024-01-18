@@ -103,6 +103,9 @@ export const usePharmacyQueryParams = () => {
   const keyword = query.get("keyword");
   const status = query.get("status");
 
+  const createSuccess = useSelector(createSuccessSelector);
+  const updateSuccess = useSelector(updateSuccessSelector);
+  const deleteSuccess = useSelector(deleteSuccessSelector);
   return useMemo(() => {
     const queryParams = {
       page,
@@ -112,7 +115,7 @@ export const usePharmacyQueryParams = () => {
     };
     return [queryParams];
     //eslint-disable-next-line
-  }, [page, limit, keyword, status]);
+  }, [page, limit, keyword, status, createSuccess, updateSuccess, deleteSuccess]);
 };
 
 export const useUpdatePharmacyParams = (
@@ -156,6 +159,6 @@ export const useInitPharmacy = (pharmacy: any, id: any) => {
   }, [pharmacy, id]);
 };
 
-// export const useResetManufacture = () => {
-//   useResetState(resetPharmacyReducer);
-// };
+export const useResetPharmacyAction = () => {
+  useResetState(pharmacySliceAction.resetAction);
+};

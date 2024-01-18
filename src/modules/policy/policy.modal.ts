@@ -11,6 +11,7 @@ export type ResourceType = {
   GROUP_PRODUCTGROUP: string[],
   GROUP_RANKING: string[],
   MEDICINE: string[]
+  PHARMA_PROFILE: string[],
 };
 
 export type policyType = 'write' | 'read' | 'update' | 'delete' | 'download' | 'admin';
@@ -96,6 +97,14 @@ export type PoliciesType = {
   "DELETE_CONFIGDISCOUNT" |
   "DOWNLOAD_CONFIGDISCOUNT" |
   "ADMIN_CONFIGDISCOUNT" |
-  "CONFIGDISCOUNT"
+  "CONFIGDISCOUNT" |
+  // PHARMACY PROFILE
+  "READ_PHARMAPROFILE" |
+  "WRITE_PHARMAPROFILE" |
+  "UPDATE_PHARMAPROFILE" |
+  "DELETE_PHARMAPROFILE" |
+  "DOWNLOAD_PHARMAPROFILE" |
+  "ADMIN_PHARMAPROFILE" |
+  "PHARMAPROFILE"
   ]: [string, policyType];
 };
