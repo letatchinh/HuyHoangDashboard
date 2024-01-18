@@ -69,7 +69,6 @@ export default function Employee() {
   //State
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [id, setId] = useState(null);
-console.log(isOpenModal,'isOpenModal')
   //Fetch
   const dispatch = useDispatch();
   const resetAction = () => {
@@ -100,7 +99,10 @@ console.log(isOpenModal,'isOpenModal')
     // resetAction();
   });
   const [, handleDelete] = useDeleteEmployee(resetAction);
-  const [, handleCreate] = useCreateEmployee(handleCloseModal);
+  const [, handleCreate] = useCreateEmployee(() => {
+    handleCloseModal();
+    resetAction();
+  });
 
   const columns: ColumnsType = [
     {
@@ -177,7 +179,6 @@ console.log(isOpenModal,'isOpenModal')
         width={1020}
         style={{ top: 50 }}
         afterClose={() => {
-          resetAction();
           setIsOpenModal(false)
         }}
       >
