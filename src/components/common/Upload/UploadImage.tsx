@@ -1,9 +1,7 @@
-
-import React, { useState } from "react";
-import { LoadingOutlined, PlusOutlined } from "@ant-design/icons";
-import { message, Modal, Upload } from "antd";
-import type { UploadChangeParam } from "antd/es/upload";
-import type { RcFile, UploadFile, UploadProps } from "antd/es/upload/interface";
+import React, { useState, useCallback } from 'react';
+import { Progress, Upload, message } from 'antd';
+import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
+import imageCompression from 'browser-image-compression';
 import {
   DEFAULT_UPLOAD_ACTION,
   MAX_UPLOAD_FILE_SIZE_IN_MB,
@@ -11,117 +9,126 @@ import {
 
 const BYTES_PER_MB = 1024 * 1024;
 
-const getBase64 = (img: RcFile, callback: (url: string) => void) => {
-  const reader = new FileReader();
-  reader.addEventListener("load", () => callback(reader.result as string));
-  reader.readAsDataURL(img);
+const allowedImageExtensions: string[] = ['image/jpeg', 'image/png'];
+
+interface UploadImageProps {
+  index?: number;
+  onChange?: any;
+  imgUrl: string | undefined;
+  title?: string;
+  action?: string;
+  children?: React.ReactNode;
+  disabled?: boolean;
 };
 
-const beforeUpload = (file: RcFile, setIsCompressing?: any) => {
-  const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png";
-  if (!isJpgOrPng) {
-    message.error("You can only upload JPG/PNG file!");
-  }
-  const isLt2M = file.size / 1024 / 1024 < 2;
-  if (!isLt2M) {
-    message.error("Image must smaller than 2MB!");
-  }
-  const isLtMaxFileSize = file.size / BYTES_PER_MB < MAX_UPLOAD_FILE_SIZE_IN_MB;
-    if (!isLtMaxFileSize && isJpgOrPng) {
-      message.error(`Image must smaller than ${MAX_UPLOAD_FILE_SIZE_IN_MB}MB!`);
-      const options: any = {
+const DEFAULT_RESOURCE: string = 'pharma';
+
+const UploadImage: React.FC<UploadImageProps> = ({
+  index,
+  onChange,
+  imgUrl,
+  title,
+  action = `${DEFAULT_UPLOAD_ACTION}/${DEFAULT_RESOURCE}`,
+  children,
+  disabled = false,
+}) => {
+  const [isCompressing, setIsCompressing] = useState(false);
+  const [compressPercent, setCompressPercent] = useState<number>(0);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const beforeUpload = async (file: File) => {
+    const isImage: boolean = allowedImageExtensions.includes(file.type);
+    
+    if (!isImage) {
+      message.error(`
+        You can only upload ${allowedImageExtensions
+          .map((item) => item.split('/')[1].toUpperCase())
+          .join('/')} file!
+      `);
+      return false;
+    }
+
+    const isLtMaxFileSize: boolean = file.size / BYTES_PER_MB < MAX_UPLOAD_FILE_SIZE_IN_MB;
+
+    if (!isLtMaxFileSize && isImage) {
+      const options = {
         maxSizeMB: MAX_UPLOAD_FILE_SIZE_IN_MB,
-        // onProgress: onProgress,
+        onProgress: (progress: number) => setCompressPercent(progress),
         useWebWorker: true,
       };
-      // return new Promise((resolve, reject) => {
-      //   (async () => {
-      //     try {
-      //       setIsCompressing(true);
-      //       const compressedFile = await imageCompression(file, options);
-      //       resolve(compressedFile);
-      //       setIsCompressing(false);
-      //     } catch (error) {
-      //       reject(error);
-      //       setIsCompressing(false);
-      //     }
-      //   })();
-      // });
-    };
-  return isJpgOrPng && isLt2M;
-};
 
-const UploadImage = ({
-  setImageUrl,
-  imageUrl,
-}: any) => {
-  const [loading, setLoading] = useState(false);
-  const [isCompressing, setIsCompressing] = useState<boolean>();
-
-  // preview
-  const [previewOpen, setPreviewOpen] = useState(false);
-  const [previewImage, setPreviewImage] = useState('');
-  const [previewTitle, setPreviewTitle] = useState('');
-
-  const handleChange: UploadProps["onChange"] = (
-    info: UploadChangeParam<UploadFile>
-  ) => {
-    if (info.file.status === "uploading") {
-      setLoading(true);
-      return;
+      try {
+        setIsCompressing(true);
+        const compressedFile: File = await imageCompression(file, options);
+        onChange(URL.createObjectURL(compressedFile));
+        setIsCompressing(false);
+      } catch (error) {
+        message.error('Error compressing image');
+        setIsCompressing(false);
+        return false;
+      }
     }
-    if (info.file.status === "done") {
-      // Get this url from response in real world.
-      getBase64(info.file.originFileObj as RcFile, (url) => {
-        setLoading(false);
-        setImageUrl(url);
-      });
-    }
+
+    return isImage && isLtMaxFileSize;
   };
 
-  const handleCancelPreview = () => setPreviewOpen(false);
-
-  // const handlePreview = async (file: UploadFile) => {
-  //   if (!file.url && !file.preview) {
-  //     file.preview = await getBase64(file.originFileObj as RcFile, ()=>({}));
-  //   }
-
-  //   setPreviewImage(file.url || (file.preview as string));
-  //   setPreviewOpen(true);
-  //   setPreviewTitle(file.name || file.url!.substring(file.url!.lastIndexOf('/') + 1));
-  // };
-
+  const handleChange = useCallback(
+    (info: any) => {
+      if (info.file.status === 'uploading') {
+        setIsLoading(true);
+        return;
+      }
+      if (info.file.status === 'done') {
+        const imageUrl: string | undefined = info.file?.response?.url;
+        setIsLoading(false);
+        if (imageUrl) {
+          onChange(imageUrl);
+        };
+      }
+    },
+    [onChange]
+  );
 
   const uploadButton = (
-    <button style={{ border: 0, background: "none" }} type="button">
-      {loading ? <LoadingOutlined /> : <PlusOutlined />}
-      <div style={{ marginTop: 8 }}>Avatar</div>
-    </button>
+    <div>
+      {isCompressing || isLoading ? <LoadingOutlined /> : <PlusOutlined />}
+      <div style={{ marginTop: 8 }}>
+        {isCompressing ? (
+          <>
+            <p>Đang nén hình ảnh</p>
+            <Progress percent={compressPercent} status="active" />
+          </>
+        ) : isLoading ? (
+          'Đang tải lên'
+        ) : (
+          title || 'Logo'
+        )}
+      </div>
+    </div>
   );
-  const DEFAULT_RESOURCE = `pharma`;
 
   return (
-    <>
-      <Upload
-        name="file"
-        listType="picture-card"
-        className="avatar-uploader"
-        showUploadList={false}
-        action={`${DEFAULT_UPLOAD_ACTION}/${DEFAULT_RESOURCE}`}
-        beforeUpload={(file) => beforeUpload(file, setIsCompressing)}
-        onChange={handleChange}
-        // onPreview={handlePreview}
-      >
-        {imageUrl ? (
-          <img src={imageUrl} alt="avatar" style={{ width: "100%" }} />
-        ) : (
-          uploadButton
-        )}
-      </Upload>
-      <Modal open={previewOpen} title={previewTitle} footer={null} onCancel={handleCancelPreview}>
-        <img alt="example" style={{ width: '100%' }} src={previewImage} />
-      </Modal>
-    </>
+    <Upload
+      name="file"
+      listType="picture-card"
+      className="avatar-uploader"
+      showUploadList={false}
+      action={action}
+      beforeUpload={beforeUpload}
+      onChange={handleChange}
+      disabled={disabled}
+    >
+      {imgUrl && !isCompressing && !isLoading ? (
+        <img
+          src={imgUrl}
+          alt="avatar"
+          style={{ maxWidth: '100%', maxHeight: '100%' }}
+        />
+      ) : (
+        uploadButton
+      )}
+      {children}
+    </Upload>
   );
 };
 
