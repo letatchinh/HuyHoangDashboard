@@ -9,6 +9,7 @@ const user = 'user';
 const userGroup = 'userGroup';
 const pharmacy = 'pharmacy';
 const bill = 'bill';
+const pharmaProfile = 'pharmaProfile';
 
 const RESOURCES = [
   branch,
@@ -18,6 +19,8 @@ const RESOURCES = [
   userGroup,
   // pharmacy,
   // bill,
+  // Pharmacy Profile
+  pharmaProfile,
 ];
 
 //ACTIONS
@@ -64,11 +67,16 @@ const RESOURCE = (): ResourceType => {
     employee
   ];
 
+  const PHARMA_PROFILE: string[] = [
+    pharmaProfile
+  ];
+
   return {
     GROUP_USER,
     GROUP_EMPLOYEE,
     GROUP_WHBILL,
     GROUP_WHSETTING,
+    PHARMA_PROFILE,
   };
 };
 

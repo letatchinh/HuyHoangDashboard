@@ -100,6 +100,7 @@ export const resource: ItemType[] = [
         icon: <AppstoreOutlined />,
         path: PATH_APP.pharmacy.root,
         key: PATH_APP.pharmacy.root,
+        permission :[POLICIES.READ_PHARMAPROFILE],
       },
  ];
 

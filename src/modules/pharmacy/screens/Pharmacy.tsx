@@ -12,11 +12,11 @@ import {
 import Breadcrumb from "~/components/common/Breadcrumb";
 import WhiteBox from "~/components/common/WhiteBox";
 import TableAnt from "~/components/Antd/TableAnt";
-import { omit, get } from "lodash";
+import { omit, get, head } from "lodash";
 import { STATUS, STATUS_NAMES } from "~/constants/defaultValue";
 import moment from "moment";
 // import ColumnActions from "~/components/common/ColumnAction";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import {
   Button,
   Col,
@@ -26,77 +26,44 @@ import {
   Space,
   Switch,
   Typography,
+  message,
 } from "antd";
 import Search from "antd/es/input/Search";
 import { PlusCircleOutlined } from "@ant-design/icons";
 import PharmacyForm from "./PharmacyForm";
 import { propsType } from "../pharmacy.modal";
-
-const dataFake = [
-  {
-    id: 1,
-    code: "P01",
-    fullName: "Pharmacy 01",
-    phoneNumber: "0123456789",
-    createdAt: "2022-07-29T14:18:34.552Z",
-    address: "HCM",
-  },
-  {
-    id: 2,
-    code: "P02",
-    fullName: "Pharmacy 02",
-    phoneNumber: "0123456789",
-    createdAt: "2023-07-11T03:30:01.624Z",
-    address: "HCM",
-  },
-  {
-    id: 3,
-    code: "P03",
-    fullName: "Pharmacy 03",
-    phoneNumber: "0123456789",
-    address: "HCM",
-  },
-];
-
-const ColumnActions = ({ _id, deletePharmacy, onOpenForm }: propsType) => {
-  return (
-    <div className="custom-table__actions">
-      <p onClick={() => onOpenForm && onOpenForm(_id)}>Sửa</p>
-      <p>|</p>
-      <Popconfirm
-        title={`Bạn muốn xoá nhà thuốc này?`}
-        onConfirm={() => deletePharmacy && deletePharmacy(_id)}
-        okText="Xoá"
-        cancelText="Huỷ"
-      >
-        <p>Xóa</p>
-      </Popconfirm>{" "}
-    </div>
-  );
-};
+import WithPermission from "~/components/common/WithPermission";
+import POLICIES from "~/modules/policy/policy.auth";
+import { useMatchPolicy } from "~/modules/policy/policy.hook";
+import ModalAnt from "~/components/Antd/ModalAnt";
 
 export default function Pharmacy() {
   const { t }: any = useTranslate();
   const [query] = usePharmacyQueryParams();
-  const [keyword, { setKeyword, onParamChange }] = useUpdatePharmacyParams(query);
+  const [keyword, { setKeyword, onParamChange }] =
+    useUpdatePharmacyParams(query);
   const [pharmacies, isLoading] = useGetPharmacies(query);
-  const [, updatePharmacy] = useUpdatePharmacy();
-  const [, deletePharmacy] = useDeletePharmacy();
+
+  const onCloseForm = useCallback(() => {
+    setPharmacyId(null);
+    setIsOpenForm(false);
+  }, []);
+
+  const [, updatePharmacy] = useUpdatePharmacy(onCloseForm);
+  const [isSubmitLoading, deletePharmacy] = useDeletePharmacy();
   const [pharmacyId, setPharmacyId] = useState(null);
   const [isOpenForm, setIsOpenForm] = useState(false);
   const paging = usePharmacyPaging();
 
-  const onOpenForm = (id?: any) => {
-    if (id) {
-      setPharmacyId(id);
-    }
-    setIsOpenForm(true);
-  };
-
-  const onCloseForm = () => {
-    setPharmacyId(null);
-    setIsOpenForm(false);
-  };
+  const onOpenForm = useCallback(
+    (id?: any) => {
+      if (id) {
+        setPharmacyId(id);
+      }
+      setIsOpenForm(true);
+    },
+    [setPharmacyId, setIsOpenForm]
+  );
 
   const columns: ColumnsType = [
     {
@@ -143,32 +110,46 @@ export default function Pharmacy() {
       align: "center",
       render: (status, record) => {
         return (
-          <Switch
-            checked={status === "ACTIVE"}
-            onChange={(value) =>
-              onChangeStatus(
-                get(record, "_id"),
-                value ? STATUS["ACTIVE"] : STATUS["INACTIVE"],
-                isLoading,
-                record
-              )
-            }
-          />
+          <WithPermission permission={POLICIES.UPDATE_PHARMAPROFILE}>
+            <Switch
+              checked={status === "ACTIVE"}
+              onChange={(value) =>
+                onChangeStatus(
+                  get(record, "_id"),
+                  value ? STATUS["ACTIVE"] : STATUS["INACTIVE"],
+                  isLoading,
+                  record
+                )
+              }
+            />
+          </WithPermission>
         );
       },
     },
     {
       title: "Thao tác",
-      key: "action",
+      dataIndex: "_id",
+      // key: "actions",
       width: 150,
-      align : 'center',
+      align: "center",
       render: (record) => {
         return (
-          <ColumnActions
-            {...record}
-            onOpenForm={onOpenForm}
-            deletePharmacy={deletePharmacy}
-          />
+          <div className="custom-table__actions">
+            <WithPermission permission={POLICIES.UPDATE_PHARMAPROFILE}>
+              <p onClick={() => onOpenForm(record)}>Sửa</p>
+            </WithPermission>
+            <WithPermission permission={POLICIES.DELETE_PHARMAPROFILE}>
+              <p>|</p>
+              <Popconfirm
+                title={`Bạn muốn xoá nhà thuốc này?`}
+                onConfirm={() => deletePharmacy(record)}
+                okText="Xoá"
+                cancelText="Huỷ"
+              >
+                <p>Xóa</p>
+              </Popconfirm>{" "}
+            </WithPermission>
+          </div>
         );
       },
     },
@@ -216,42 +197,46 @@ export default function Pharmacy() {
             value={keyword}
           />
         </Col>
-        <Col>
-          <Button
-            icon={<PlusCircleOutlined />}
-            type="primary"
-            onClick={() => onOpenForm()}
-          >
-            Thêm mới
-          </Button>
-        </Col>
+        <WithPermission permission={POLICIES.WRITE_PHARMAPROFILE}>
+          <Col>
+            <Button
+              icon={<PlusCircleOutlined />}
+              type="primary"
+              onClick={() => onOpenForm()}
+            >
+              Thêm mới
+            </Button>
+          </Col>
+        </WithPermission>
       </Row>
-      <Space style={{ marginBottom: 20 }}>
-        <Typography style={{ fontSize: 14, marginRight: 20 }}>
-          Phân loại trạng thái theo :
-        </Typography>
-        <Row gutter={14}>
-          <Radio.Group
-            onChange={onChange}
-            optionType="button"
-            buttonStyle="solid"
-            defaultValue={(() => {
-              switch (query?.status) {
-                case "ACTIVE":
-                  return 2;
-                case "INACTIVE":
-                  return 3;
-                default:
-                  return 1;
-              }
-            })()}
-          >
-            <Radio.Button value={1}>Tất cả</Radio.Button>
-            <Radio.Button value={2}>{STATUS_NAMES["ACTIVE"]}</Radio.Button>
-            <Radio.Button value={3}>{STATUS_NAMES["INACTIVE"]}</Radio.Button>
-          </Radio.Group>
-        </Row>
-      </Space>
+      <WithPermission permission={POLICIES.UPDATE_PHARMAPROFILE}>
+        <Space style={{ marginBottom: 20 }}>
+          <Typography style={{ fontSize: 14, marginRight: 20 }}>
+            Phân loại trạng thái theo :
+          </Typography>
+          <Row gutter={14}>
+            <Radio.Group
+              onChange={onChange}
+              optionType="button"
+              buttonStyle="solid"
+              defaultValue={(() => {
+                switch (query?.status) {
+                  case "ACTIVE":
+                    return 2;
+                  case "INACTIVE":
+                    return 3;
+                  default:
+                    return 1;
+                }
+              })()}
+            >
+              <Radio.Button value={1}>Tất cả</Radio.Button>
+              <Radio.Button value={2}>{STATUS_NAMES["ACTIVE"]}</Radio.Button>
+              <Radio.Button value={3}>{STATUS_NAMES["INACTIVE"]}</Radio.Button>
+            </Radio.Group>
+          </Row>
+        </Space>
+      </WithPermission>
       <WhiteBox>
         <TableAnt
           dataSource={pharmacies}
@@ -265,17 +250,23 @@ export default function Pharmacy() {
               onParamChange({ page, limit: pageSize });
             },
             showSizeChanger: true,
-            // pageSizeOptions: ["10", "20", "50", "100", paging?.total],
             showTotal: (total) => `Tổng cộng: ${total} `,
           }}
         />
       </WhiteBox>
-      <PharmacyForm
-        isOpen={isOpenForm}
-        onClose={onCloseForm}
-        id={pharmacyId}
-        handleUpdate={updatePharmacy}
-      />
+      <ModalAnt
+        width={1100}
+        open={isOpenForm}
+        onCancel={onCloseForm}
+        footer={[]}
+        destroyOnClose
+      >
+        <PharmacyForm
+          onClose={onCloseForm}
+          id={pharmacyId}
+          handleUpdate={updatePharmacy}
+        />
+      </ModalAnt>
     </div>
   );
 }

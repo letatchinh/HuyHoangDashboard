@@ -6,6 +6,7 @@ export type ResourceType = {
   GROUP_EMPLOYEE: string[],
   GROUP_WHBILL: string[],
   GROUP_WHSETTING:  string[]
+  PHARMA_PROFILE: string[],
 };
 
 export type policyType = 'write' | 'read' | 'update' | 'delete' | 'download' | 'admin';
@@ -43,6 +44,14 @@ export type PoliciesType = {
   "DELETE_USERGROUP" |
   "DOWNLOAD_USERGROUP" |
   "ADMIN_USERGROUP" |
-  "USERGROUP"
+  "USERGROUP" |
+  // PHARMACY PROFILE
+  "READ_PHARMAPROFILE" |
+  "WRITE_PHARMAPROFILE" |
+  "UPDATE_PHARMAPROFILE" |
+  "DELETE_PHARMAPROFILE" |
+  "DOWNLOAD_PHARMAPROFILE" |
+  "ADMIN_PHARMAPROFILE" |
+  "PHARMAPROFILE"
   ]: [string, policyType];
 };

@@ -1,6 +1,8 @@
 .custom-table__actions {
   display: flex;
   justify-content: center;
+  align-items: center;
+  margin-left: 25%;
   gap: 5px;
   & p {
     color: $color-primary;
