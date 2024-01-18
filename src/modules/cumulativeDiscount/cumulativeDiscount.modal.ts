@@ -19,7 +19,7 @@ export type conditionType = {
     condition : conditionType | null,
     applyUnit : string | null,
     applyTimeSheet : applyTimeSheetType | null
-  
+    status:"ACTIVE" | "INACTIVE"
   
   }
   export type TypePropsDiscountList = {

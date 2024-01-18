@@ -6,6 +6,7 @@ import {
   Divider,
   Form,
   Input,
+  Popconfirm,
   Radio,
   Row,
   Select,
@@ -97,6 +98,8 @@ export default function DiscountItem({
       setEditing(false);
     }
   }, [form, name]);
+  const variants = Form.useWatch('variants',form);
+  
   return (
     <>
       <Divider orientation="left">
@@ -114,8 +117,13 @@ export default function DiscountItem({
                   )
                 }
               />
+              <Popconfirm
+              title="Xác nhận xoá"
+              okText="Xoá"
+              cancelText="Huỷ"
+              onConfirm={() => remove(name)}
+              >
               <Button
-                onClick={() => remove(name)}
                 icon={
                   <CloseSquareTwoTone
                     twoToneColor={"red"}
@@ -123,6 +131,7 @@ export default function DiscountItem({
                   />
                 }
               />
+              </Popconfirm>
             </ButtonGroup>
           ) : (
             "(Chiết khấu của nhà cung cấp)"
@@ -133,6 +142,8 @@ export default function DiscountItem({
         <DiscountView
           data={form.getFieldValue(["cumulativeDiscount", name])}
           units={units}
+          name={name}
+          isSameTarget={isSameTarget}
         />
       ) : (
         <React.Fragment key={key}>
@@ -179,9 +190,11 @@ export default function DiscountItem({
                   </BaseBorderBox>
                 </Col>
                 {/* Giá trị Chiết khấu */}
-                <Col lg={10} md={24} sm={24}>
+                <Col lg={24} md={24} sm={24}>
                   <BaseBorderBox title={"Giá trị chiết khấu"}>
-                    <Form.Item shouldUpdate noStyle>
+                    <Row>
+                      <Col span={8}>
+                      <Form.Item shouldUpdate noStyle>
                       {() =>
                         form.getFieldValue([
                           "cumulativeDiscount",
@@ -193,6 +206,7 @@ export default function DiscountItem({
                             {...restField}
                             label={"Loại thưởng"}
                             name={[name, "typeReward"]}
+                            labelCol={{span : 6}}
                           >
                             {RenderLoading(
                               loading,
@@ -207,8 +221,10 @@ export default function DiscountItem({
                         )
                       }
                     </Form.Item>
+                      </Col>
+                    </Row>
                     <Row>
-                      <Col flex={1}>
+                      <Col span={8}>
                         <Form.Item shouldUpdate noStyle>
                           {({ getFieldValue }) =>
                             getFieldValue([
@@ -238,6 +254,8 @@ export default function DiscountItem({
                                     message: "Vui lòng nhập bé hơn 100%",
                                   },
                                 ]}
+                                labelCol={{span : 6}}
+                                wrapperCol={{span : 20}}
                               >
                                 {RenderLoading(
                                   loading,
@@ -296,6 +314,7 @@ export default function DiscountItem({
                 </Col>
                 {/* Điều kiện */}
                 <Col flex={1}>
+                
                   <Form.Item shouldUpdate noStyle>
                     {() =>
                       form.getFieldValue([
@@ -304,6 +323,7 @@ export default function DiscountItem({
                         "typeDiscount",
                       ]) === TYPE_DISCOUNT.LK && (
                         <BaseBorderBox title={"Điều kiện"}>
+                            <Divider orientation="left"><h6>Giá trị tích luỹ</h6></Divider>
                           <Row
                             style={{ marginBottom: 5 }}
                             gutter={8}
@@ -336,19 +356,6 @@ export default function DiscountItem({
                                 {...restField}
                                 label={"Đến"}
                                 name={[name, "condition", "lte"]}
-                                // rules={[
-                                //   {
-                                //     type: "number",
-                                //     max:
-                                //       form.getFieldValue([
-                                //         "cumulativeDiscount",
-                                //         name,
-                                //         "condition",
-                                //         "gte",
-                                //       ]),
-                                //     message: "Vui lòng nhập bé hơn Từ",
-                                //   },
-                                // ]}
                               >
                                 {RenderLoading(
                                   loading,
@@ -367,7 +374,8 @@ export default function DiscountItem({
                                   {RenderLoading(
                                     loading,
                                     <Select
-                                      options={units?.map((item: any) => ({
+                                    // Always Get Unit from Variants Selected and Validate them
+                                      options={units?.filter((unit : any) => variants?.some((variant : any) => !!get(variant,'productUnit') && !!get(variant,'price') && !!get(variant,'exchangeValue') && (get(variant,'productUnit') === get(unit,'_id'))))?.map((item: any) => ({
                                         label: get(item, "name"),
                                         value: get(item, "_id"),
                                       }))}
@@ -387,6 +395,75 @@ export default function DiscountItem({
                               />
                             </Col>
                           </Row>
+                          <Divider orientation="left"><h6> Thời gian áp dụng</h6></Divider>
+                          <Row
+                            gutter={8}
+                            align={"middle"}
+                            justify="space-between"
+                          >
+                            <Col span={7}>
+                              <Form.Item
+                                style={{ marginBottom: 0 }}
+                                {...restField}
+                                label={"Từ ngày"}
+                                name={[name, "cumulativeTimeSheet", "gte"]}
+                                rules={[
+                                  {
+                                    required: true,
+                                    message: "Xin vui nhập!",
+                                  },
+                                ]}
+                              >
+                                {RenderLoading(
+                                  loading,
+                                  <DatePicker
+                                    format={"YYYY-MM-DD"}
+                                  />
+                                )}
+                              </Form.Item>
+                            </Col>
+                            <Col span={7}>
+                              <Form.Item shouldUpdate noStyle>
+                                {() => (
+                                  <Form.Item
+                                    style={{ marginBottom: 0 }}
+                                    {...restField}
+                                    label={"Đến ngày"}
+                                    name={[name, "cumulativeTimeSheet", "lte"]}
+                                  >
+                                    {RenderLoading(
+                                      loading,
+                                      <DatePicker
+                                        disabledDate={(current) =>
+                                          current <=
+                                          dayjs(
+                                            form.getFieldValue([
+                                              "cumulativeDiscount",
+                                              name,
+                                              "cumulativeTimeSheet",
+                                              "gte",
+                                            ])
+                                          )
+                                        }
+                                        format={"YYYY-MM-DD"}
+                                      />
+                                    )}
+                                  </Form.Item>
+                                )}
+                              </Form.Item>
+                            </Col>
+                            <Col span={10}>
+                              <Form.Item
+                                style={{ marginBottom: 0 }}
+                                {...restField}
+                                label={"Dùng lại"}
+                                name={[name, "cumulativeTimeSheet", "isRepeat"]}
+                              >
+                                {RenderLoading(loading, <Switch />)}
+                              </Form.Item>
+                            </Col>
+                          </Row>
+                          <Divider orientation="left"><h6> Thời gian tích luỹ</h6></Divider>
                           <Row
                             gutter={8}
                             align={"middle"}

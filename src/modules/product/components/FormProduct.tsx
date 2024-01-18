@@ -101,6 +101,7 @@ export default function FormProduct({
         labelCol={{ span: 8 }}
         wrapperCol={{ span: 16 }}
         labelAlign="left"
+        scrollToFirstError
         initialValues={{
           variants: [
             {
