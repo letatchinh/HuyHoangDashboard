@@ -99,7 +99,7 @@ export default function Employee() {
     // resetAction();
   });
   const [, handleDelete] = useDeleteEmployee(resetAction);
-  const [, handleCreate] = useCreateEmployee(() => {
+  const [isSubmitLoading, handleCreate] = useCreateEmployee(() => {
     handleCloseModal();
     resetAction();
   });
@@ -188,6 +188,7 @@ export default function Employee() {
           handleUpdate={handleUpdate}
           resetAction={resetAction}
           handleCreate = {handleCreate}
+          isSubmitLoading = {isSubmitLoading}
         />
       </Modal>
     </div>
