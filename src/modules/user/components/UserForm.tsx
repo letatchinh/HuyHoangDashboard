@@ -1,5 +1,5 @@
 import { Button, Col, Form, Input, Row, Select, Skeleton } from "antd";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import UploadImage from "~/components/common/Upload/UploadImage";
 import AddressFormSection from "~/components/common/AddressFormSection";
 import { useCreateUser, useGetUser, useUpdateUser } from "../user.hook";
@@ -25,11 +25,13 @@ interface IProps {
 
 export default function UserForm(props: IProps) {
   const [form] = Form.useForm();
-  const { id, handleCloseModal, updateUser: handleUpdate , resetAction} = props;
+  const { id, handleCloseModal, updateUser: handleUpdate, resetAction } = props;
   const [imageUrl, setImageUrl] = useState<string>();
   const [loadingValidateUsername, setLoadingValidateUsername] =
     useState<boolean>(false);
-    const [statusAccount, setStatusAccount] = useState('ACTIVE');
+  const [statusAccount, setStatusAccount] = useState('ACTIVE');
+  const [isLoadingAvatar, setIsLoading] = useState(false);
+  
   //address
   const [cityCode, setCityCode] = useState<string>('');
   const [districtCode, setDistrictCode] = useState<string>('');
@@ -63,6 +65,9 @@ export default function UserForm(props: IProps) {
       setCityCode(user?.address?.cityId);
       setDistrictCode(user?.address?.districtId);
       setWardCode(user?.address?.wardId);
+    };
+    if (!id) {
+      form.setFieldsValue({ groups: [] });
     };
   }, [id, user]);
   
@@ -106,6 +111,14 @@ export default function UserForm(props: IProps) {
       };
     };
   };
+
+  //Handle avatar
+  const handleChange = useCallback(
+    (imageUrl: string) => {
+        setImageUrl(imageUrl);
+    },
+    [setImageUrl]
+  );
 
   return (
     <div className="employee-form">
@@ -164,7 +177,10 @@ export default function UserForm(props: IProps) {
             </FormItem>
           </Col>
           <Col span={12} className="employee-form__upload-logo">
-            <UploadImage setImageUrl={setImageUrl} imageUrl={imageUrl} />
+            <UploadImage
+              imgUrl={imageUrl}
+              onChange={handleChange}
+            />
           </Col>
         </Row>
         <AddressFormSection

@@ -4,6 +4,7 @@ import WhiteBox from "~/components/common/WhiteBox";
 import useTranslate from "~/lib/translation";
 import { concatAddress } from "~/utils/helpers";
 import {
+  useCreateEmployee,
   useDeleteEmployee,
   useEmployeePaging,
   useEmployeeQueryParams,
@@ -68,7 +69,7 @@ export default function Employee() {
   //State
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [id, setId] = useState(null);
-
+console.log(isOpenModal,'isOpenModal')
   //Fetch
   const dispatch = useDispatch();
   const resetAction = () => {
@@ -96,9 +97,11 @@ export default function Employee() {
 
   const [, handleUpdate] = useUpdateEmployee(() => {
     handleCloseModal();
-    resetAction();
+    // resetAction();
   });
   const [, handleDelete] = useDeleteEmployee(resetAction);
+  const [, handleCreate] = useCreateEmployee(handleCloseModal);
+
   const columns: ColumnsType = [
     {
       title: 'Mã nhân viên',
@@ -173,13 +176,17 @@ export default function Employee() {
         footer={null}
         width={1020}
         style={{ top: 50 }}
-        destroyOnClose
+        afterClose={() => {
+          resetAction();
+          setIsOpenModal(false)
+        }}
       >
         <EmployeeForm
           id={id}
           handleCloseModal={handleCloseModal}
           handleUpdate={handleUpdate}
-          resetAction = {resetAction}
+          resetAction={resetAction}
+          handleCreate = {handleCreate}
         />
       </Modal>
     </div>

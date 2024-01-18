@@ -208,8 +208,8 @@ const UserEmployee = ({ currentTab }: UserProps) => {
       />
       <Modal
         open={isOpenModal}
-        onCancel={() => setIsOpenModal(false)}
-        onOk={() => setIsOpenModal(false)}
+        onCancel={handleCloseModal}
+        onOk={handleCloseModal}
         className="form-modal"
         footer={null}
         width={1020}

@@ -1,8 +1,8 @@
 import { Button, Col, Form, Input, Modal, Popconfirm, Row, Select, Skeleton } from "antd";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import UploadImage from "~/components/common/Upload/UploadImage";
 import AddressFormSection from "~/components/common/AddressFormSection";
-import { useCreateEmployee, useGetEmployee, useUpdateEmployee } from "../employee.hook";
+import {useGetEmployee, useUpdateEmployee } from "../employee.hook";
 import { employeeSliceAction } from "../redux/reducer";
 import { useResetState } from "~/utils/hook";
 import WithOrPermission from "~/components/common/WithOrPermission";
@@ -21,21 +21,19 @@ interface IProps {
   handleCloseModal: () => void;
   handleUpdate?: any;
   resetAction?: any;
+  handleCreate?: any;
 };
 
 export default function EmployeeForm(props: IProps) {
   const [form] = Form.useForm();
-  const { id, handleCloseModal,  handleUpdate, resetAction} = props;
+  const { id, handleCloseModal,  handleUpdate,handleCreate} = props;
   const [imageUrl, setImageUrl] = useState<string>();
   useResetState(employeeSliceAction.resetAction);
   //address
   const [cityCode, setCityCode] = useState(null);
   const [districtCode, setDistrictCode] = useState(null);
   // hook
-  const [, handleCreate] = useCreateEmployee(() => {
-    handleCloseModal();
-    resetAction();
-  });
+
   const [employee, isLoading] = useGetEmployee(id);
   
   useEffect(() => {
@@ -83,7 +81,14 @@ export default function EmployeeForm(props: IProps) {
       };
     };
   };
-  
+
+  //Handle avatar
+  const handleChange = useCallback(
+    (imageUrl: string) => {
+        setImageUrl(imageUrl);
+    },
+    [setImageUrl]
+  );
 
   return (
     <div className="employee-form">
@@ -150,7 +155,10 @@ export default function EmployeeForm(props: IProps) {
             </FormItem>
           </Col>
           <Col span={12} className="employee-form__upload-logo">
-            <UploadImage setImageUrl={setImageUrl} imageUrl={imageUrl} />
+          <UploadImage
+              imgUrl={imageUrl}
+              onChange={handleChange}
+            />
           </Col>
         </Row>
         <AddressFormSection

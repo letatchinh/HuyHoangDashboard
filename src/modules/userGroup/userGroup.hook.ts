@@ -43,13 +43,13 @@ export const useUserGroupPaging = () => useSelector(pagingSelector);
 
 export const useGetUserGroups = (payload: object) => {
   const createSuccess = useSelector(createSuccessSelector);
-  // const updateSuccess = useSelector(updateSuccessSelector);
+  const updateSuccess = useSelector(updateSuccessSelector);
   const deleteSuccess = useSelector(deleteSuccessSelector);
 
   const memoParam : object = useMemo(() => {
     return { ...payload };
     //eslint-disable-next-line
-  }, [createSuccess, deleteSuccess, payload]);
+  }, [createSuccess, deleteSuccess, payload, updateSuccess]);
   return useFetchByParam({
     action: userGroupSliceAction.getListRequest,
     loadingSelector: loadingSelector,

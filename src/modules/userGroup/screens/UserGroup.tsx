@@ -18,11 +18,13 @@ import UserGroupForm from "../components/UserGroupForm";
 import { get } from "lodash";
 import {
   onSearchPermissions,
+  useCreateUserGroup,
   useDeleteUserGroup,
   useGetUserGroup,
   useGetUserGroups,
   useResetUserGroups,
   useResourceColumns,
+  useUpdateUserGroup,
 } from "../userGroup.hook";
 import {
   useResources,
@@ -35,6 +37,7 @@ import { useResetState } from "~/utils/hook";
 import { userGroupSliceAction } from "../redux/reducer";
 import WithOrPermission from "~/components/common/WithOrPermission";
 import { useGetProfile, useProfile } from "~/modules/auth/auth.hook";
+import { useDispatch } from "react-redux";
 
 const styleButton = {
   alignContent: "center",
@@ -77,6 +80,10 @@ const getNextPath = (url: string) => {
 
 const UserGroup = ({ currentTab }: UserGroupProps) => {
   useResetUserGroups();
+  const dispatch = useDispatch();
+  const resetAction = () => {
+    return dispatch(userGroupSliceAction.resetAction());
+  };
   const { branchId, groupId }: any = useParams();
   const navigate = useNavigate();
   const { pathname } = useLocation();
@@ -96,15 +103,6 @@ const UserGroup = ({ currentTab }: UserGroupProps) => {
   const [dataShow, setDataShow] = useState(null);
   const canUpdate = true;
   // Action
-
-  const [resources, isResourcesLoading] = useResources();
-
-  useEffect(() => {
-    if (!groupId && groups.length && currentTab === 'user/group') {
-      navigate(`${pathname}/${groups[0]._id}`);
-    };
-  }, [groups, pathname, groupId]);
-
   const onOpenForm = (id?: any) => {
     setId(id);
     setIsOpen(true);
@@ -114,6 +112,22 @@ const UserGroup = ({ currentTab }: UserGroupProps) => {
     setIsOpen(false);
     setId(null);
   };
+  const [, handleUpdateUser] = useUpdateUserGroup(() => {
+    onClose();
+    resetAction();
+  });
+  const [isSubmitLoading, handleCreate] = useCreateUserGroup(() => {
+    onClose();
+    resetAction();
+  });
+  const [resources, isResourcesLoading] = useResources();
+
+  useEffect(() => {
+    if (!groupId && groups.length && currentTab === 'user/group') {
+      navigate(`${pathname}/${groups[0]._id}`);
+    };
+  }, [groups, pathname, groupId]);
+
   const onSelectGroup = ({ key }: any) => {
     const nextPath = `/user/group/${key}`;
     navigate(nextPath);
@@ -182,7 +196,7 @@ const UserGroup = ({ currentTab }: UserGroupProps) => {
           <div className="employee-group__content">
             <div className="employee-group__header">
               <h5 className="employee-group__list-title ">Thiết lập quyền</h5>
-            { group && <Flex
+            { !isLoading && <Flex
                 gap="small"
                 wrap="wrap"
                 style={{
@@ -251,9 +265,20 @@ const UserGroup = ({ currentTab }: UserGroupProps) => {
             footer={[]}
             onCancel={onClose}
             className="form-modal__user-group"
+            afterClose={() => {
+              console.log(1)
+              resetAction();
+              }}
         // destroyOnClose
       >
-        <UserGroupForm isOpen={isOpen} onClose={onClose} id={id} setReFetch = {setReFetch} reFetch = {reFetch} />
+        <UserGroupForm
+          isOpen={isOpen} 
+          onClose={onClose} id={id} 
+          setReFetch={setReFetch} 
+          reFetch={reFetch}
+          handleCreate={handleCreate}
+          handleUpdateUser={handleUpdateUser}
+        />
         </Modal>
     </div>
   );

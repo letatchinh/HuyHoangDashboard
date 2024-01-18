@@ -14,24 +14,17 @@ type propsType = {
   id?: string;
   setReFetch?: any,
   reFetch?: any
+  isSubmitLoading?: boolean,
+  handleCreate?: any,
+  handleUpdateUser?: any
 };
 
 const FormItem = Form.Item;
 export default function UserGroupForm(props: propsType): React.JSX.Element {
-  const { isOpen, onClose, initGroup, id , setReFetch, reFetch} = props;
-  const dispatch = useDispatch();
-  const resetAction = () => {
-    return dispatch(userGroupSliceAction.resetAction());
-  };
+  const { isOpen, onClose, initGroup, id , setReFetch,isSubmitLoading, handleCreate,handleUpdateUser} = props;
   const { groupId } = useParams();
   const [form] = Form.useForm();
   const [userGroup, isLoading] = useGetUserGroup(groupId);
-  const [isSubmitLoading, handleCreate] = useCreateUserGroup(onClose);
-  const [, handleUpdate] = useUpdateUserGroup(() => {
-    onClose();
-    resetAction();
-    setReFetch(!reFetch);
-  });
 
   useEffect(() => {
     if (userGroup && id) {
@@ -43,7 +36,7 @@ export default function UserGroupForm(props: propsType): React.JSX.Element {
 
   const onFinish = (values: any) => {
     if (id) {
-      handleUpdate({
+      handleUpdateUser({
         ...values,
         id: id,
         branchId: DEFAULT_BRANCH_ID,
