@@ -126,7 +126,7 @@ const UserGroup = ({ currentTab }: UserGroupProps) => {
   const [resources, isResourcesLoading] = useResources();
 
   useEffect(() => {
-    if (groups.length && currentTab === 'user/group') {
+    if (!groupId && groups.length && currentTab === 'user/group') {
       navigate(`/user/group/${groups[0]._id}`);
     };
   }, [groups, pathname, groupId]);
