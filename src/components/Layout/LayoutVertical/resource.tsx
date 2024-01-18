@@ -65,13 +65,13 @@ export const resource: ItemType[] = [
             icon: <HddOutlined />,
           },
           {
-            label: "Danh sách nhà sản xuất",
+            label: "Danh sách hãng sản xuất",
             path: PATH_APP.worldPharma.manufacturer,
             key: PATH_APP.worldPharma.manufacturer,
             icon: <HomeOutlined />,
           },
           {
-            label: "Xếp hạng nhà sản xuất",
+            label: "Xếp hạng nhà cung cấp",
             path: PATH_APP.worldPharma.ranking,
             key: PATH_APP.worldPharma.ranking,
             icon: <TrophyOutlined />,
