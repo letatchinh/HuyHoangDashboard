@@ -50,7 +50,7 @@ export default function Manufacturer() {
   };
   const columns: ColumnsType<DataType> = [
     {
-      title: 'Tên nhà cung cấp',
+      title: 'Tên hãng sản xuất',
       dataIndex: 'name',
       align: 'center',
       key: 'name',
@@ -121,7 +121,7 @@ export default function Manufacturer() {
   return (
     <>
       <div>
-        <Breadcrumb title={t('Quản lý nhà cung cấp')} />
+        <Breadcrumb title={t('Quản lý hãng sản xuất')} />
         <div>
           <div className='product-config-content' style={{ marginBottom: 16, display: 'flex', gap: '30px' }}>
             {/* <div style={{ width: '20%',height: '100%' }}> */}
@@ -187,7 +187,7 @@ export default function Manufacturer() {
         </div>
         <ModalAnt
           open={showForm}
-          title="Thêm nhà sản xuất"
+          title="Thêm hãng sản xuất"
           onCancel={handleCloseForm}
           footer={null}
         // destroyOnClose
