@@ -19,7 +19,14 @@ function* getByIdWorkSprint({payload:id} : any) : any {
     yield put(workSprintActions.getByIdFailed(error));
   }
 }
-
+function* getListTaskBySprint({payload} : any) : any {
+  try {
+    const data = yield call(api.getTaskInSprints,payload);
+    yield put(workSprintActions.getListTaskBySprintSuccess(data));
+  } catch (error:any) {
+    yield put(workSprintActions.getListTaskBySprintFailed(error));
+  }
+}
 function* createWorkSprint({payload} : any) : any {
   try {
     const data = yield call(api.create,payload);
@@ -54,4 +61,5 @@ export default function* workSprintSaga() {
   yield takeLatest(workSprintActions.createRequest, createWorkSprint);
   yield takeLatest(workSprintActions.updateRequest, updateWorkSprint);
   yield takeLatest(workSprintActions.deleteRequest, deleteWorkSprint);
+  yield takeLatest(workSprintActions.getListTaskBySprintRequest, getListTaskBySprint);
 }

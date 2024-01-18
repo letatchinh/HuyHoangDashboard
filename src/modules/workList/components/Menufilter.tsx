@@ -1,15 +1,14 @@
-import React, { memo, useEffect, useState } from 'react';
 import { Col, DatePicker, Input, Row, Select } from 'antd';
-import { get, head, transform } from 'lodash';
-import moment, { Moment } from 'moment';
-import { useUpdateWorkListParams } from '../workList.hook';
-import { useFormTaskContext } from '../screens/WorkList';
-import { convertQueryToObject } from '~/utils/helpers';
 import { Dayjs } from 'dayjs';
+import { get, head, transform } from 'lodash';
+import React, { memo, useEffect, useState } from 'react';
+import { convertQueryToObject } from '~/utils/helpers';
+import { useFormTaskContext } from '../screens/WorkList';
+import { useUpdateWorkListParams } from '../workList.hook';
 // import { useFormTaskContext } from './WorkList';
 // import { useUpdateWorkListParams } from '~/hooks/workList';
 // import { convertQueryToObject } from '~/utils/helper';
-
+import { RangePickerProps } from 'antd/es/date-picker';
 const { RangePicker } = DatePicker;
 
 const listOptionsSearch = [
@@ -51,22 +50,34 @@ const MenuFilter = () => {
 
   const [inputValue, setInputValue] = React.useState<[Dayjs | null, Dayjs | null]>([null, null]);
 
-  const handleDateChange = (dates: [Dayjs | null, Dayjs | null], dateStrings: [string, string]) => {
-  const [startDate, endDate] = dateStrings;
-    onParamChange({
-      startDate: startDate || null,
-      endDate: endDate || null,
-    });
-    setKeyword('date');
-    setInputValue(dates);
+  // const onRangeChange = (dates: null | (Dayjs | null)[], dateStrings: string[]) => {
+  //   const [startDate, endDate] = dateStrings;
+  //   onParamChange({
+  //     startDate: startDate || null,
+  //     endDate: endDate || null,
+  //   });
+  //   setKeyword('date');
+  //   setInputValue(dates);
+  // };
+  const onRangeChange = (dates: [Dayjs | null, Dayjs | null] | null, dateStrings: string[]) => {
+    if (dates) {
+      const [startDate, endDate] = dateStrings;
+      onParamChange({
+        startDate: startDate || null,
+        endDate: endDate || null,
+      });
+      setKeyword('date');
+      setInputValue(dates);
+    }
   };
+  
   return (
     <div
       className="menu-filter"
       style={{
         width: '100%',
         borderRadius: '10px',
-        backgroundColor: '#f4f4f4e0',
+        backgroundColor: '#ffffff',
         margin: '10px 5px',
         padding: '10px',
         alignItems: 'center',
@@ -85,7 +96,7 @@ const MenuFilter = () => {
       <Row gutter={8} style={{ width: '100%' }}>
         <Col span={4}>
           <Select
-            style={{ width: '100%' }}
+            style={{ width: '100%',outline:'black' }}
             value={searchBy}
             options={listOptionsSearch}
             onChange={(e) => {
@@ -93,7 +104,7 @@ const MenuFilter = () => {
               setKeyword('');
             }}
             dropdownMatchSelectWidth={false}
-            bordered={false}
+            // bordered={false}
             allowClear
           />
         </Col>
@@ -103,7 +114,8 @@ const MenuFilter = () => {
               value={inputValue}
               allowEmpty={[true, true]}
               style={{ width: '98%' }}
-            //   onChange={handleDateChange}
+              allowClear
+              onChange={onRangeChange}
             />
           </Col>
         ) : searchBy === 'statusId' ? (
@@ -120,7 +132,7 @@ const MenuFilter = () => {
                 setKeyword(e?.join(','));
               }}
               dropdownMatchSelectWidth={false}
-              bordered={false}
+              // bordered={false}
             >
               {transform(
                 listStatusMap,
@@ -158,7 +170,7 @@ const MenuFilter = () => {
                   onParamChange({ [searchBy]: "" });
                 }
               }}
-              bordered={false}
+              // bordered={false}
             />
           </Col>
         )}

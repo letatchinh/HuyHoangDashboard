@@ -1,3 +1,4 @@
+import { DataType } from './../../workBoard/workBoard.modal';
 // import { TaskRelationOption } from "./../../../../.history/src/modules/workTask/components/RrelationTask_20240116151409";
 import { put, call, takeLatest, select } from "redux-saga/effects";
 import api from "../workTask.api";
@@ -34,14 +35,16 @@ function* createWorkTask({ payload }: any): any {
   }
 }
 
-function* updateWorkTask({ payload }: any): any {
-  try {
-    const data = yield call(api.update, payload);
-    yield put(workTaskSliceAction.updateSuccess(data));
-  } catch (error: any) {
-    yield put(workTaskSliceAction.updateFailed(error));
-  }
-}
+// function* updateWorkTask({ payload }: any): any {
+//   try {
+//     const data = yield call(api.update, payload);
+//     const dataType:any = get(data.data, 'boardConfigId') 
+//     yield put(workListActions.addBoardConfigItemRequest(dataType))
+//     yield put(workTaskSliceAction.updateSuccess(data));
+//   } catch (error: any) {
+//     yield put(workTaskSliceAction.updateFailed(error));
+//   }
+// }
 function* deleteWorkTask({payload} : any) : any {
   try {
     const data = yield call(api.delete,payload.id);
@@ -56,31 +59,34 @@ function* deleteWorkTask({payload} : any) : any {
 function* updateTask({ payload }: any): any {
   try {
     const data = yield call(api.updateTask, payload);
-    console.log(data);
-    yield put(
-      workTaskSliceAction.updateSuccess(get(data.data, "boardConfigId"))
-    );
-    // yield put({ type: Types.UPDATE_TASK_INIT_SUCCESS, payload: {dataTask:data.data,boardId: get(data.data, 'boardConfigId'),idTask :get(data.data,'_id')}});
-    // const profile = yield select((state) => state.user.profile);
-    // const response= get(data,'data')
-    // const managers = yield call(Api.workFlow.getAllManagersByIdBoard, get(response, 'boardId'));
-    // const res = yield call(Api.workFlow.getByIdTask, get(response, '_id'));
-
-    // Check if User is a Super admin or manager assigned
-    // if (!!get(profile, 'isSuperAdmin') || managers?.some(item => get(item, '_id') === get(profile, '_id'))) {
-    //     yield put({ type: Types.UPDATE_TASK_SUCCESS, payload: { ...response, progressListShow: get(response, 'progressList') } });
-    // } else {
-    //     const progressListShow = get(response, 'progressList', [])?.map(item => {
-    //         let progressShow = get(item, 'progress', [])?.filter(progress => get(progress, '[0].assign', '')?.includes(get(profile, '_id'))||get(progress, '[0].assign', '')==='');
-    //         return { ...item, progress: progressShow }
-    //     });
-    //     yield put({ type: Types.UPDATE_TASK_SUCCESS, payload: { ...response, progressListShow } });
-    // }
-  } catch (error) {
+        yield put(workListActions.addBoardConfigItemSuccess(get(data.data, 'boardConfigId')));
+        const dataType :any ={ dataTask: data.data,boardId: get(data.data, 'boardConfigId'), idTask: get(data.data, '_id') }
+        yield put(workListActions.updateTaskInitSuccess(dataType));
+        const profile = yield select((state) => state.user.profile);
+        const response = get(data, 'data');
+        const managers = yield call(api.getAllManagersByIdBoard, get(response, 'boardId'));
+        if (
+          !!get(profile?.user, 'isSuperAdmin') ||
+          managers?.some((item: any) => get(item, '_id') === get(profile, '_id'))
+        ) {
+          yield put( workTaskSliceAction.updateSuccess( get(response, 'progressList')));
+        }else {
+          const progressListShow = get(response, 'progressList', [])?.map(
+            (item: any) => {
+              let progressShow = get(item, 'progress', [])?.filter(
+                (progress: any) =>
+                  get(progress, '[0].assign', '')?.includes(get(profile, '_id')) ||
+                  get(progress, '[0].assign', '') === ''
+              );
+              return { ...item, progress: progressShow };
+            }
+          );
+          yield put(workTaskSliceAction.updateSuccess({...response, progressListShow }));
+         };
+} catch (error) {
     yield put(workTaskSliceAction.updateFailed(error));
-  }
-}
-
+  };
+};
 //history
 function* getHistoryActivityTaskById({ payload }: any): any {
   try {
@@ -94,6 +100,7 @@ function* getHistoryActivityTaskById({ payload }: any): any {
 function* updateProgressTask({ payload }: any): any {
   try {
     const data = yield call(api.updateProgressTask, payload);
+    
     const profile = yield select((state) => state.user.profile);
     const response = get(data, "data");
     const managers = yield call(
@@ -128,6 +135,7 @@ function* updateProgressTask({ payload }: any): any {
           progressListShow,
         })
       );
+      // yield put({ type: Types.UPDATE_TASK_SUCCESS, payload: { ...response, progressListShow } });
     }
   } catch (error: any) {
     yield put(workTaskSliceAction.updateProgressTaskFailed(error));
@@ -137,6 +145,8 @@ function* copyTask({ payload }: any): any {
   try {
     const data = yield call(api.copyTask, payload);
     yield put(workTaskSliceAction.copyTaskSuccess(data?.data));
+    const DataType:any = {id: get(data?.data, 'boardConfigId','')}
+    yield put(workListActions.addBoardConfigItemRequest(DataType));
     // yield put({ type: Types.ADD_BOARD_CONFIG_ITEM_REQUEST, payload: { id: data?.data.boardConfigId } }); action getWorkListConfig
   } catch (error: any) {
     yield put(workTaskSliceAction.copyTaskFailed(error));
@@ -256,7 +266,8 @@ export default function* workTaskSaga() {
   yield takeLatest(workTaskSliceAction.copyTaskRequest, copyTask);
 
   //Update
-  yield takeLatest(workTaskSliceAction.updateRequest, updateWorkTask);
+  // yield takeLatest(workTaskSliceAction.updateRequest, updateTask);
+  yield takeLatest(workTaskSliceAction.updateRequest, updateTask);
   yield takeLatest(workTaskSliceAction.updateCommentRequest, updateCommentTask);
   yield takeLatest(workTaskSliceAction.pushEmotionRequest, pushEmtionTask);
   yield takeLatest(

@@ -7,7 +7,7 @@ const apis = {
     getAll: (query?: any) => requester.get(`/api/v1/task-item`, query),
     
     getById: (id?: any) => requester.get(`/api/v1/task-item/${id}`),
-    getAllManagersByIdBoard: (id: any) => requester.get(`/auth-todo-list-role-admin/${id}`),
+    getAllManagersByIdBoard: (id: any) => requester.get(`/api/v1/auth-todo-list-role-admin/${id}`),
     getHistoryTaskById: (id:any) => requester.get(`history-todo-task/${id}`),
     searchTaskByBoardId:({boardId,keyword,taskId}:any)=> requester.post(`/search-board-task-item/${boardId}`,{keyword,taskId}),
     getRelationTask: (taskId:any) => requester.get(`/relation-task-item/${taskId}`),
@@ -15,7 +15,7 @@ const apis = {
     //CREATE
     create: (data?: any) => requester.post(`/api/v1/task-item`, data),
     update: (data?: any) => requester.put(`/api/v1/task-item/${get(data, '_id')}`, data),
-    copyTask: ({ id, ...data }: any) => requester.post(`/task-item-copy/${id}`, data),
+    copyTask: ({ id, ...data }: any) => requester.post(`api/v1/task-item-copy/${id}`, data),
     
     //UPDATE
     pushComment: ({ taskId, content }: any) => requester.post(`/api/v1/process-add-comment-task-item/${taskId}`, { content }),

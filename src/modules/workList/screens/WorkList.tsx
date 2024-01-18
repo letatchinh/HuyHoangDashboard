@@ -1,7 +1,7 @@
-import React, { createContext, useContext, useEffect, useMemo, useRef, useState, lazy, Suspense } from 'react';
+import React, { createContext, useContext, useEffect, useMemo, useRef, useState, lazy, Suspense, useCallback } from 'react';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { useParams } from 'react-router-dom';
-import { Button, Drawer, Modal, Space, Spin } from 'antd';
+import { Button, Drawer, Form, Modal, Space, Spin } from 'antd';
 import { ArrowLeftOutlined, CloseOutlined } from '@ant-design/icons';
 import { ResizableBox } from 'react-resizable';
 import Text from 'antd/lib/typography/Text';
@@ -12,7 +12,7 @@ import { useGetWorkSprint } from '~/modules/workSprint/workSprint.hook';
 import MenuListBoard from '~/modules/workSprint/components/MenuListBoard';
 import BoardConfig from '../components/WorkListConfig';
 import { FormTaskContextProps } from '../workList.modal';
-import { useCreateTask, useUpdateTask } from '~/modules/workTask/workTask.hook';
+import { useCreateTask, useDeleteTask, useUpdateTask } from '~/modules/workTask/workTask.hook';
 import { useGetBoardById } from '~/modules/workBoard/workBoard.hook';
 import Menufilter from '../components/Menufilter';
 // import { useGetSprintInfo } from '~/hooks/workSprint';
@@ -37,24 +37,28 @@ const WorkList = () => {
   const idBoard = useMemo(() => sprintInfo?.boardId, [sprintInfo]);
   const [query] = useWorkListQueryParams(sprintId);
   const [visibleModal, setVisibleModal] = useState(false);
+  const [dropdownVisible, setDropdownVisible] = useState(false);
+ const [form] = Form.useForm();
   const [boardConfig] = useGetListBoardConfig(query);
   const boardConfigMemo = useMemo(() => (boardConfig ?? []).map(({ name, _id }:any) => ({ name, _id })), [boardConfig]);
   const [data] = useListBoardConfigItem();
-  console.log(data,'ádsd');
   const [propsModal, setPropsModal] = useState({});
   const [visibleInfo, setVisibleInfo] = useState(false);
 const [lengthList, setLength] = useState<number>(
   workflowRef?.current?.offsetWidth ?? window.innerWidth
 );
   // let data = boardConfigMemo;
-  
+   const handleButtonClick = useCallback(() => {
+    form.resetFields();
+    setDropdownVisible(false); // Close the dropdown after clicking the button
+  },[]);
   const [taskData, setTaskData] = useState('');
   const [visibleListBoard, setVisibleListBoard] = useState(false);
   const [idVisibleInfo, setIdVisibleInfo] = useState('');
   const [, updateTask] = useUpdateTask();
   const [, updatePosition] = useUpdatePosition();
   const [, handleCreateTask] = useCreateTask();
-  // const [, handleDeleteTask] = useDeleteTask();
+  const [, handleDeleteTask] = useDeleteTask();
   const [, handleCreateWork] = useCreateWorkList();
   const [, handleDeleteWork] = useDeleteWorkList();
   const [boardData] = useGetBoardById(idBoard);
@@ -64,9 +68,7 @@ const [lengthList, setLength] = useState<number>(
   };
 
   const openFormTask = (id:any, data:any) => {
-    
     setPropsModal({ boardConfigId: id });
-    setVisibleModal(true);
   };
 
   useEffect(() => {
@@ -128,11 +130,14 @@ const [lengthList, setLength] = useState<number>(
           handleCreateTask,
           handleDeleteWork,
           setVisibleModal,
-          // handleDeleteTask,
+          handleDeleteTask,
           setVisibleInfo,
           setIdVisibleInfo,
           setTaskData,
           taskData,
+          dropdownVisible,
+          setDropdownVisible,
+          handleButtonClick,
         }}
       >
         <Space style={{ width: '100%', height: 40, justifyContent: 'start', alignItems: 'center' }}>
@@ -199,7 +204,7 @@ const [lengthList, setLength] = useState<number>(
         <Drawer
           title={
             <p style={{ whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>
-              <Button type="dashed" href={`/work-flow/sprint/${idBoard}`}><ArrowLeftOutlined style={{ color: 'black', fontSize: 16 }} /></Button>
+              <Button type="dashed" href={`/work-board/sprint/${idBoard}`}><ArrowLeftOutlined style={{ color: 'black', fontSize: 16 }} /></Button>
               &nbsp; Danh sách nhóm
             </p>
           }

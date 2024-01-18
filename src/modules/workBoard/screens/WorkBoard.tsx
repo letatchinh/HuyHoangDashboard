@@ -1,5 +1,5 @@
 
-import React, { Suspense, useState, lazy } from 'react';
+import React, { Suspense, useState, lazy, useCallback } from 'react';
 import { Button, Col, Form, Modal, Row, Select, Space, Switch, Table } from 'antd';
 import Search from 'antd/lib/input/Search';
 // import POLICY from '~/constants/policy';
@@ -61,10 +61,11 @@ const WorkBoard: React.FC<WorkFlowProps> = () => {
     setId(null);
   };
 
-  const handleCloseForm = () => {
+  const handleCloseForm = useCallback(() => {
     setOpen(false);
+    setId(null);
     form.resetFields();
-  };
+  }, []);
   const columns: ColumnsType<DataType> = [
     {
       title: 'Tên nhóm',
@@ -214,7 +215,7 @@ const onSearch = (value: string) => {
           <BoardForm id={id} handleCloseForm={handleCloseForm} />
         </Suspense>
       </Modal>
-      <Modal open={openDetail} footer={null} onCancel={() => setOpenDetail(false)} width={1200} destroyOnClose
+      <Modal open={openDetail} footer={null} onCancel={() => setOpenDetail(false)} width={750} destroyOnClose
       title={ 'Xem chi tiết'}
       >
         <Suspense fallback={<div>...</div>}>

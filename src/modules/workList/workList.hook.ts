@@ -131,6 +131,14 @@ export const useWorkListQueryParams = (sprintId?: any) => {
   const limit = query.get("limit") || 10;
   const page = query.get("page") || 1;
   const keyword = query.get("keyword");
+  const code = query.get('code');
+  const name = query.get('name');
+  const createdAt = query.get('createdAt');
+  const taskId = query.get('taskId')
+  const statusId = query.get("statusId");
+  const assignUser = query.get("assignUser");
+  const startDate = query.get("startDate");
+  const endDate = query.get("endDate");
   const createSuccess = useSelector(createSuccessSelector);
   const deleteSuccess = useSelector(deleteSuccessSelector);
   return useMemo(() => {
@@ -138,11 +146,19 @@ export const useWorkListQueryParams = (sprintId?: any) => {
       page,
       limit,
       keyword,
-      sprintId
+      sprintId,
+      code,
+      name,
+      createdAt,
+      taskId,
+      statusId,
+      assignUser,
+      startDate,
+      endDate,
     };
     return [queryParams];
 
-  }, [page, limit,sprintId, keyword, createSuccess, deleteSuccess]);
+  }, [page, limit,sprintId, keyword, createSuccess,code,name,createdAt,taskId,statusId,startDate,endDate,assignUser, deleteSuccess]);
 };
 
 export const useUpdateWorkListParams = (
@@ -159,9 +175,9 @@ export const useUpdateWorkListParams = (
 
     clearQuerySearch(listOptionSearch, query, param);
 
-    if (!param.page) {
-      query.page = 1;
-    };
+    // if (!param.page) {
+    //   query.page = 1;
+    // };
 
 
     const searchString = new URLSearchParams(

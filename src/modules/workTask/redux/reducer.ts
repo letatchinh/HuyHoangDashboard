@@ -104,6 +104,7 @@ class WorkTaskClassExtend extends InstanceModuleRedux {
       copyTaskSuccess: (state: cloneInitState, { payload }: { payload?: any }) => {
         state.isSubmitLoading = false;
         state.createSuccess = payload;
+        state.createFailed = null;
       },
       copyTaskFailed: (state: cloneInitState, { payload }: { payload?: any }) => {
         state.isSubmitLoading = false;
@@ -111,7 +112,12 @@ class WorkTaskClassExtend extends InstanceModuleRedux {
       },
 
       //UPDATE
-
+      updateSuccess: (state: cloneInitState, { payload }: { payload?: any }) => {
+        state.isSubmitLoading = false;
+        const data = payload;
+        state.byId = {...data,progressListShow : calculateProgress(get(data,'progressListShow'))};
+        state.updateSuccess = payload;
+      },
       updateProgressTaskRequest: (state: cloneInitState, { payload }: { payload?: any }) => {
         state.isSubmitLoading = true;
         state.updateProgressFailed = null;

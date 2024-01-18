@@ -9,7 +9,8 @@ import {
   useGetListManagersByIdBoard,
   useGetListStaffsByIdBoard,
   useGetListManagers,
-  useGetListStaffs
+  useGetListStaffs,
+  useResetAction,
 } from '../workBoard.hook';
 import {
   useGetListStatusConfig,
@@ -29,8 +30,8 @@ const BoardForm: React.FC<BoardFormProps> = ({ id, handleCloseForm }) => {
   const _id = useMemo(() => id, [id]);
   const [form] = Form.useForm();
   const { Option } = Select;
-  const [isSubmitLoading, createBoard] = useCreateWorkBoard();
-  const [isSubmit, updateBoard] = useUpdateWorkBoard();
+  const [isSubmitLoading, createBoard] = useCreateWorkBoard(handleCloseForm);
+  const [isSubmit, updateBoard] = useUpdateWorkBoard(handleCloseForm);
   const [boardById, isLoading] = useGetBoardById(id);
   const [query] = useStatusConfigQueryParams();
   const [listAllStatus] = useGetListStatusConfig(query);
@@ -57,12 +58,16 @@ const BoardForm: React.FC<BoardFormProps> = ({ id, handleCloseForm }) => {
 
   useEffect(() => {
     if (_id) {
-      if (boardById) {
+      if (boardById&&listManagersByBoard&&listStaffsById) {
         const { name, security, parentId, listStatusConfig } = boardById;
-        const listStatusConfigId = listStatusConfig.map((status: any) => status._id);
+        const listStatusConfigId = listStatusConfig?.map((status: any) => status._id);
+        const managerNames = listManagersByBoard?.map((manager:any) => manager._id);
+        const staffNames = listStaffsById?.map((staff:any) => staff._id);
         form.setFieldsValue({
           name,
           security: security ?? 'private',
+          managers: managerNames,
+          staffs: staffNames,
           parentId,
           listStatus: listStatusConfigId,
         });
@@ -70,21 +75,17 @@ const BoardForm: React.FC<BoardFormProps> = ({ id, handleCloseForm }) => {
     } else {
       form.resetFields();
     }
-  }, [boardById, form, _id]);
+  }, [boardById, form, _id, listManagersByBoard, listStaffsById]);
 
   const onFinish = (values: any) => {
     values.parentId = values.parentId ?? false;
     if (id) {
       updateBoard({ ...values, id });
-      handleCloseForm();
-      form.resetFields();
     } else {
       createBoard(values);
-      handleCloseForm();
-      form.resetFields();
     }
   };
-
+  useResetAction()
   const fetchOptions = async() => {
     const res = await apis.getAll();
     console.log(res)
