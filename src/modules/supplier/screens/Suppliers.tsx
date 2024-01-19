@@ -231,7 +231,7 @@ export default function Supplier(): React.JSX.Element {
       </ModalAnt>
 
       <ModalAnt
-        width={900}
+        width={'auto'}
         open={isOpenFormProduct}
         onCancel={onCloseFormProduct}
         footer={null}

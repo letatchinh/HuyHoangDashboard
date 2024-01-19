@@ -11,6 +11,7 @@ import {
   Row,
   Select,
   Switch,
+  Tooltip,
 } from "antd";
 import ButtonGroup from "antd/es/button/button-group";
 import dayjs from "dayjs";
@@ -20,6 +21,7 @@ import InputNumberAnt from "~/components/Antd/InputNumberAnt";
 import BaseBorderBox from "~/components/common/BaseBorderBox/index";
 import RenderLoading from "~/components/common/RenderLoading";
 import {
+  TARGET,
   TYPE_DISCOUNT,
   TYPE_DISCOUNT_VI,
   TYPE_REWARD,
@@ -387,12 +389,15 @@ export default function DiscountItem({
                               )}
                             </Col>
                             <Col>
+                              <Tooltip title={target === TARGET.supplier && "Nhà cung cấp chỉ được phép chọn VNĐ"}>
                               <Switch
+                                disabled={target === TARGET.supplier}
                                 value={isSelectUnit}
                                 onChange={(checked) => setIsSelectUnit(checked)}
                                 unCheckedChildren="VND"
                                 checkedChildren="Đơn vị"
                               />
+                              </Tooltip>
                             </Col>
                           </Row>
                           <Divider orientation="left"><h6> Thời gian áp dụng</h6></Divider>
