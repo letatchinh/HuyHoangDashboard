@@ -6,8 +6,8 @@ let timeOut : any = null;
 const FormItem = Form.Item;
 
 const MedicineName = ({ form } : any) => {
-  const [search, setSearch] = useState({keyword:''});
-  const [medicineOptions, isLoading] = useGetListMeddicine(search);
+  const [search, setSearch] = useState({});
+  const [medicineOptions, isLoading] = useGetListMeddicine(Object.keys(search).length === 0 ? null : search);
 
   const inputEl : any = useRef(null);
 
@@ -24,7 +24,7 @@ const MedicineName = ({ form } : any) => {
       if (timeOut) {
         setSearch({keyword:value});
       }
-    }, 800);
+    }, 500);
   };
 
   const handleSelect = (value:any) => {
@@ -64,6 +64,11 @@ const MedicineName = ({ form } : any) => {
         <AutoComplete
           style={{ width: '100%' }}
           onSearch={onSearch}
+          onFocus={(e : any) => {
+            if(Object.keys(search).length === 0){
+              onSearch(e.target.value);
+            }
+          }}
           onSelect={handleSelect}
           options={medicineOptions || []}
           ref={inputEl}
