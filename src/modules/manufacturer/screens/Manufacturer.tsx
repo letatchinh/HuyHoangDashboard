@@ -124,7 +124,6 @@ export default function Manufacturer() {
         <Breadcrumb title={t('Quản lý hãng sản xuất')} />
         <div>
           <div className='product-config-content' style={{ marginBottom: 16, display: 'flex', gap: '30px' }}>
-            {/* <div style={{ width: '20%',height: '100%' }}> */}
             <WhiteBox style={{ width: '20%' }}>
               <label>Trạng thái:</label>
               <Select
@@ -138,7 +137,6 @@ export default function Manufacturer() {
                 options={options}
               />
             </WhiteBox>
-            {/* </div> */}
             <div style={{ width: '80%', height: '100%' }}>
               <div className="product-config-action" >
                 <Row justify="space-between">
@@ -187,7 +185,7 @@ export default function Manufacturer() {
         </div>
         <ModalAnt
           open={showForm}
-          title="Thêm hãng sản xuất"
+          title={id? 'Cập nhật hãng sản xuất':'Thêm hãng sản xuất'}
           onCancel={handleCloseForm}
           footer={null}
         // destroyOnClose

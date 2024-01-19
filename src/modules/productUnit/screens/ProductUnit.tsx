@@ -1,5 +1,5 @@
 import { DeleteOutlined, InfoCircleTwoTone, PlusCircleOutlined, SearchOutlined } from '@ant-design/icons';
-import { Button, Col, Form, Row, Space, Switch, message } from 'antd';
+import { Button, Col, Form, Row, Select, Space, Switch, message } from 'antd';
 import Search from 'antd/es/input/Search';
 import { ColumnsType } from 'antd/es/table';
 import React, { useCallback, useState } from 'react';
@@ -13,6 +13,7 @@ import POLICIES from "~/modules/policy/policy.auth";
 import { useDeleteProductUnit, useGetlistProductUnit, useProductUnitPaging, useUpdateProductUnit, useProductUnitQueryParams, useUpdateProductUnitParams } from '../productUnit.hook';
 import ProductUnitForm from './ProductUnitForm';
 import { useMatchPolicy } from '~/modules/policy/policy.hook';
+import { SelectProps } from 'antd/lib';
 type propsType = {
 
 }
@@ -33,6 +34,7 @@ export default function ProductUnit(props: propsType): React.JSX.Element {
   const [, updateProductUnit] = useUpdateProductUnit(handleCloseForm);
   const [form] = Form.useForm();
   const canUpdate = useMatchPolicy(POLICIES.UPDATE_UNIT);
+  const [search, setSearch] = useState(null);
   interface DataType {
     _id: string;
     name: string;
@@ -101,61 +103,91 @@ export default function ProductUnit(props: propsType): React.JSX.Element {
   const onSearch = (value: string) => {
     onParamChange({ ['keyword']: value });
   };
+  const options: SelectProps['options'] = [
+    {
+      label: 'Hoạt động',
+      value: 'ACTIVE',
+    },
+    {
+      label: 'Không hoạt động',
+      value: 'INACTIVE',
+    },
+  ];
   const pageSizeOptions = ['10', '20', '50', '100'];
   return (
-    <div className='product-config'>
+    <>
       <Breadcrumb title={t('Quản lý đơn vị tính')} />
-      <div className="product-config-action" >
-        <Row justify="space-between">
-          <Col span={8}>
-            <Search
-              style={{ height: '50px', padding: '5px 0px' }}
-              placeholder="Nhập bất kì để tìm..."
-              value={keyword}
-              onChange={(e) => (setKeyword(e.target.value))
-              }
-              onSearch={onSearch}
-              allowClear
-              enterButton={<SearchOutlined />}
+      <div className='product-config' style={{ marginBottom: 16, display: 'flex', gap: '30px' }}>
+
+        <WhiteBox style={{ width: '20%' }}>
+          <label>Trạng thái:</label>
+          <Select
+            style={{ height: '50px', padding: '5px 0px', width: '100%' }}
+            value={search}
+            allowClear
+            onChange={(e) => {
+              setSearch(e)
+              onParamChange({ ['status']: e });
+            }}
+            options={options}
+          />
+        </WhiteBox>
+        <div style={{ width: '80%', height: '100%' }}>
+          <div className="product-config-action" >
+            <Row justify="space-between">
+              <Col span={8}>
+                <Search
+                  style={{ height: '50px', padding: '5px 0px' }}
+                  placeholder="Nhập bất kì để tìm..."
+                  value={keyword}
+                  onChange={(e) => (setKeyword(e.target.value))
+                  }
+                  onSearch={onSearch}
+                  allowClear
+                  enterButton={<SearchOutlined />}
+                />
+              </Col>
+              <Col>
+                <WithPermission permission={POLICIES.WRITE_UNIT}>
+                  <Button icon={<PlusCircleOutlined />} onClick={() => handleOpenForm()} type="primary">
+                    Thêm mới
+                  </Button>
+                </WithPermission>
+              </Col>
+            </Row>
+          </div>
+          <WhiteBox>
+            <TableAnt
+              dataSource={listProductUnit}
+              loading={isLoading}
+              columns={columns}
+              size="small"
+              pagination={{
+                ...paging,
+                pageSizeOptions: pageSizeOptions,
+                showSizeChanger: true, // Hiển thị dropdown chọn kích thước trang
+                defaultPageSize: 10,
+                showTotal: (total) => `Tổng cộng: ${total} `,
+                onChange(page, pageSize) {
+                  onParamChange({ page, limit: pageSize });
+                },
+              }}
             />
-          </Col>
-          <Col>
-            <WithPermission permission={POLICIES.WRITE_UNIT}>
-              <Button icon={<PlusCircleOutlined />} onClick={() => handleOpenForm()} type="primary">
-                Thêm mới
-              </Button>
-            </WithPermission>
-          </Col>
-        </Row>
+          </WhiteBox>
+        </div>
+
+        <ModalAnt
+          open={showForm}
+          title={id ? 'Cập nhật đơn vị tính' : 'Tạo đơn vị tính'}
+          onCancel={handleCloseForm}
+          footer={null}
+          // destroyOnClose
+          width={800}
+        >
+          <ProductUnitForm id={id} updateProductUnit={updateProductUnit} callBack={handleCloseForm} />
+        </ModalAnt>
       </div>
-      <WhiteBox>
-        <TableAnt
-          dataSource={listProductUnit}
-          loading={isLoading}
-          columns={columns}
-          size="small"
-          pagination={{
-            ...paging,
-            pageSizeOptions: pageSizeOptions,
-            showSizeChanger: true, // Hiển thị dropdown chọn kích thước trang
-            defaultPageSize: 10,
-            showTotal: (total) => `Tổng cộng: ${total} `,
-            onChange(page, pageSize) {
-              onParamChange({ page, limit: pageSize });
-            },
-          }}
-        />
-      </WhiteBox>
-      <ModalAnt
-        open={showForm}
-        title={id ? 'Cập nhật đơn vị tính' : 'Tạo đơn vị tính'}
-        onCancel={handleCloseForm}
-        footer={null}
-        // destroyOnClose
-        width={800}
-      >
-        <ProductUnitForm id={id} updateProductUnit={updateProductUnit} callBack={handleCloseForm} />
-      </ModalAnt>
-    </div>
+    </>
+
   );
 }
