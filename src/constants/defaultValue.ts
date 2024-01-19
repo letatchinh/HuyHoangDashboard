@@ -1,11 +1,7 @@
-// export const BASE_URL = process.env.REACT_APP_BASE_URL;
-// export const BASE_URL = 'http://192.168.77.129:7006';
-export const BASE_URL = 'http://192.168.77.157:8555';
-
+export const BASE_URL = process.env.REACT_APP_BASE_URL;
 export const DEFAULT_UPLOAD_ACTION = `${BASE_URL}/api/v1/file`;
 export const MAX_UPLOAD_FILE_SIZE_IN_MB = 2;
 
-export const MAX_LIMIT = 200;
 
 export const DEFAULT_BRANCH_ID = 99999;
 export const STATUS = {
@@ -36,3 +32,5 @@ export const OptionStatus : OptionSelect[] = [
     label: 'KHĐ',
   }
 ];
+
+export const MAX_LIMIT = 200;

@@ -1,20 +1,29 @@
-import { MinusCircleOutlined, PlusCircleOutlined } from "@ant-design/icons";
-import { Button, Col, Form, Row, Select } from "antd";
+import { CloseSquareOutlined, MinusCircleOutlined, PlusCircleOutlined } from "@ant-design/icons";
+import { Button, Col, Form, Modal, Popconfirm, Row, Select } from "antd";
 import { get } from "lodash";
-import React from "react";
+import React, { useCallback, useState } from "react";
 import InputNumberAnt from "~/components/Antd/InputNumberAnt";
 import RenderLoading from "~/components/common/RenderLoading";
-import { useGetListProductUnitNoParam } from "~/modules/productUnit/productUnit.hook";
 import { TypePropVariants } from "../product.modal";
+import UnitModule from "~/modules/productUnit";
+import { useFetchState } from "~/utils/hook";
 export default function Variants({
   form,
   isLoading : loading,
 }: TypePropVariants): React.JSX.Element {
-  const [units, isLoading] = useGetListProductUnitNoParam();
+  const [reFetch,setReFetch] = useState(false);
+  const [units, isLoading] = useFetchState({api : UnitModule.api.getAllPublic,useDocs : false});
   const variants = Form.useWatch("variants", form);
-
+  const [open, setOpen] = useState(false);
+  const onOpen = useCallback(() => setOpen(true), []);
+  const onClose = useCallback(() => setOpen(false), []);
+  const onCreateSuccess = useCallback(() => {
+    setReFetch(!reFetch);
+    onClose();
+  },[reFetch]);
   const isUsed = (cur : string,unitId:String) => (unitId !== cur) && (variants?.some((variant:any) => get(variant,'productUnit') === unitId))
   return (
+  <>
     <Form.List name={"variants"}>
       {(fields, { add, remove }) => {
         return (
@@ -64,7 +73,7 @@ export default function Variants({
                       style={{ marginBottom: 0 }}
                       {...restField}
                       label={"Giá nhập"}
-                      name={[name, "cose"]}
+                      name={[name, "cost"]}
                     >
                       {RenderLoading(loading,<InputNumberAnt min={0} />)}
                     </Form.Item>
@@ -136,8 +145,17 @@ export default function Variants({
                     </Form.Item>
                   </Col>
 
-                  <Col>
-                    <MinusCircleOutlined onClick={() => remove(name)} />
+                  <Col span={1}>
+                    <Popconfirm
+                      title="Bạn muốn xoá đơn vị này?"
+                      onConfirm={() => remove(name)}
+                      okText="Xoá"
+                      cancelText="Huỷ"
+                    >
+                      <CloseSquareOutlined
+                        style={{ fontSize: 18, color: "red" }}
+                      />
+                    </Popconfirm>
                   </Col>
                 </Row>
               )
@@ -152,9 +170,16 @@ export default function Variants({
             >
               Thêm đơn vị
             </Button>
+            <Button onClick={onOpen}>
+              +
+            </Button>
           </>
         );
       }}
     </Form.List>
+    <Modal destroyOnClose open={open} onCancel={onClose} footer={null}>
+        <UnitModule.page.form callBack={onCreateSuccess} updateProductUnit={() => {}}/>
+      </Modal>
+  </>
   );
 }

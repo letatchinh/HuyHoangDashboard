@@ -1,4 +1,5 @@
-import { Button, Col, Form, Row, Select, SelectProps, Space, Switch } from 'antd';
+import { DeleteOutlined, InfoCircleTwoTone, PlusCircleOutlined, SearchOutlined } from '@ant-design/icons';
+import { Button, Col, Form, Row, Space, Switch, message } from 'antd';
 import Search from 'antd/es/input/Search';
 import { ColumnsType } from 'antd/es/table';
 import React, { useCallback, useState } from 'react';
@@ -6,13 +7,12 @@ import ModalAnt from '~/components/Antd/ModalAnt';
 import TableAnt from '~/components/Antd/TableAnt';
 import Breadcrumb from '~/components/common/Breadcrumb';
 import WhiteBox from '~/components/common/WhiteBox';
-import { SearchOutlined, DeleteOutlined, EditOutlined, InfoCircleTwoTone, PlusCircleOutlined } from '@ant-design/icons';
-import useTranslate from '~/lib/translation';
-import { useGetlistProductUnit, useDeleteProductUnit, useProductUnitQueryParams, useUpdateProductUnitParams, useProductUnitPaging } from '../productUnit.hook';
-import ProductUnitForm from './ProductUnitForm';
-import POLICIES from "~/modules/policy/policy.auth";
-import { useMatchPolicy } from "~/modules/policy/policy.hook";
 import WithPermission from '~/components/common/WithPermission';
+import useTranslate from '~/lib/translation';
+import POLICIES from "~/modules/policy/policy.auth";
+import { useDeleteProductUnit, useGetlistProductUnit, useProductUnitPaging,useUpdateProductUnit, useProductUnitQueryParams, useUpdateProductUnitParams } from '../productUnit.hook';
+import ProductUnitForm from './ProductUnitForm';
+import { useMatchPolicy } from '~/modules/policy/policy.hook';
 type propsType = {
 
 }
@@ -21,32 +21,31 @@ export default function ProductUnit(props: propsType): React.JSX.Element {
   const [keyword, { setKeyword, onParamChange }] = useUpdateProductUnitParams(query)
   const [showForm, setShowForm] = useState(false);
   const [id, setId] = useState(null);
+  const handleCloseForm = useCallback(() => {
+    setShowForm(false);
+    form.resetFields();
+    setId(null);
+  }, []);
   const [listProductUnit, isLoading] = useGetlistProductUnit(query);
   const [, deleteProductConfig] = useDeleteProductUnit();
   const { t }: any = useTranslate();
   const paging = useProductUnitPaging();
+  const [,updateProductUnit] = useUpdateProductUnit(handleCloseForm);
   const [form] = Form.useForm();
+  const canUpdate = useMatchPolicy(POLICIES.UPDATE_UNIT);
   interface DataType {
     _id: string;
     name: string;
     note: string,
     status: string,
-  }
-
+  };
   const handleOpenForm = useCallback((id?: any) => {
     if (id) setId(id);
     setShowForm(true);
   }, []);
   const handleDelete = (id: any) => {
     deleteProductConfig(id);
-
   };
-  const handleCloseForm = useCallback(() => {
-    setShowForm(false);
-    setId(null);
-  }, []);
-
-
   const columns: ColumnsType<DataType> = [
     {
       title: 'Tên đơn vị tính',
@@ -61,6 +60,22 @@ export default function ProductUnit(props: propsType): React.JSX.Element {
       align: 'center',
       key: 'note',
       render: (text: string) => <a>{text}</a>,
+    },
+    {
+      title: 'Thao tác',
+      dataIndex: 'status',
+      align: 'center',
+      width: '120px',
+      key: 'status',
+      render: (_, record) => (
+        <Switch
+          checked={record?.status === 'ACTIVE'}
+          onChange={(value: any) => {
+            if (!canUpdate) return message.warning('Bạn không có quyền thay đổi');
+            updateProductUnit({ status: value ? 'ACTIVE' : 'INACTIVE', id: record?._id });
+          }}
+        />
+      )
     },
     {
       title: 'Hành động',
@@ -87,10 +102,11 @@ export default function ProductUnit(props: propsType): React.JSX.Element {
   const onSearch = (value: string) => {
     onParamChange({ ['keyword']: value });
   };
+
+  const pageSizeOptions = ['10', '20', '50', '100'];
   return (
     <div className='product-config'>
-      <Breadcrumb title={t('unit')} />
-
+      <Breadcrumb title={t('Quản lý đơn vị tính')} />
       <div className="product-config-action" >
         <Row justify="space-between">
           <Col span={8}>
@@ -99,9 +115,9 @@ export default function ProductUnit(props: propsType): React.JSX.Element {
               placeholder="Nhập bất kì để tìm..."
               value={keyword}
               onChange={(e) => (setKeyword(e.target.value))
-
               }
               onSearch={onSearch}
+              allowClear
               enterButton={<SearchOutlined />}
             />
           </Col>
@@ -122,6 +138,10 @@ export default function ProductUnit(props: propsType): React.JSX.Element {
           size="small"
           pagination={{
             ...paging,
+            pageSizeOptions: pageSizeOptions,
+                    showSizeChanger: true, // Hiển thị dropdown chọn kích thước trang
+                    defaultPageSize: 10, 
+            showTotal: (total) => `Tổng cộng: ${total} `,
             onChange(page, pageSize) {
               onParamChange({ page, limit: pageSize });
             },
@@ -133,11 +153,10 @@ export default function ProductUnit(props: propsType): React.JSX.Element {
         title={id ? 'Sửa đơn vị tính' : 'Tạo đơn vị tính'}
         onCancel={handleCloseForm}
         footer={null}
-        destroyOnClose
+        // destroyOnClose
         width={800}
-
       >
-        <ProductUnitForm id={id} callBack={handleCloseForm} />
+        <ProductUnitForm id={id} updateProductUnit ={updateProductUnit} callBack={handleCloseForm} />
       </ModalAnt>
     </div>
   );

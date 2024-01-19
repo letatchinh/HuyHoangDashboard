@@ -1,22 +1,21 @@
 import React, { useCallback, useEffect } from 'react';
 import { Button, Form, Input } from 'antd';
-import { useGetlistProductUnitById, useUpdateProductUnit,useCreateProductUnit, useResetAction } from '../productUnit.hook';
-
+import { useGetlistProductUnitById,useCreateProductUnit, useResetAction } from '../productUnit.hook';
 interface Props {
   id?: any;
   callBack?: () => void;
-}
-
+  updateProductUnit: (data: any) => void;
+};
 interface FieldType {
   code: string
   id: string
   name: string
   note: string
   isAction:String
-}
+};
 const { TextArea } = Input;
-const ProductUnitForm: React.FC<Props> = ({ id, callBack }) => {
-  const [, updateProductUnit] = useUpdateProductUnit(callBack);
+const ProductUnitForm: React.FC<Props> = ({ id, callBack,updateProductUnit }) => {
+  // const [, updateProductUnit] = useUpdateProductUnit(callBack);
   const [, createProductUnit] = useCreateProductUnit(callBack);
   const [productUnitById, isLoading] = useGetlistProductUnitById(id);
   const [form] = Form.useForm();
@@ -29,22 +28,20 @@ const ProductUnitForm: React.FC<Props> = ({ id, callBack }) => {
         name,
         note,
       })
+    } else {
+      form.resetFields();
     }
   }, [id,productUnitById,form]);
-
   const onFinish = useCallback((values: FieldType) => {
     console.log('s');
      const data: FieldType = {
       ...values,
-      // code:'DMT0001'
-      // status:'',
       };
       if (id) {
         updateProductUnit({ ...data, id });
       }else {
-        createProductUnit({ ...data });
-        
-      }
+        createProductUnit({ ...data });     
+      };
   },[updateProductUnit,createProductUnit,id])
 
   return (

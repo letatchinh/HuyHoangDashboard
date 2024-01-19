@@ -7,17 +7,6 @@ export const PRODUCT_TYPE_VI = {
   agency: "Đại lý",
 } as const;
 
-export const TYPE_DISCOUNT = {
-  CORE : "CORE",
-  SOFT : "SOFT",
-  LK : "LK",
-}
-export const TYPE_DISCOUNT_VI = {
-  CORE : "Chiết khấu cứng",
-  SOFT : "Chiết khấu mềm",
-  LK : "Luỹ kế",
-}
-
 export const SALE_LEVEL = {
   CORE : "CORE",
   NORMAL : "NORMAL",
@@ -29,27 +18,3 @@ export const SALE_LEVEL_VI = {
   LOW : "Hàng bán chậm",
 }
 
-export const TYPE_REWARD = {
-  VALUE : "VALUE",
-  PRODUCT : "PRODUCT",
-  BONUS : "BONUS",
-}
-export const TYPE_REWARD_VI = {
-  VALUE : "Tiền",
-  PRODUCT : "Hàng hoá",
-  BONUS : "Vật phẩm",
-}
-export const TYPE_VALUE = {
-  VALUE : "VALUE",
-  PERCENT : "PERCENT",
-}
-export const TYPE_VALUE_VI = {
-  VALUE : "Giá trị",
-  PERCENT : "%",
-}
-
-export const TARGET = {
-  product : "product",
-  supplier : "supplier",
-  pharma_profile : "pharma_profile",
-}

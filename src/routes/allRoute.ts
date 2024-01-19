@@ -55,7 +55,6 @@ export const mainRoutes :PathRouteProps[] = [
 
   // Pharmacy
   { path: PATH_APP.pharmacy.root, Component: Pharmacy },
-
  
   { path: '/', Component: Homepage },
 ]

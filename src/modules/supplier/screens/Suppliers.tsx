@@ -1,5 +1,5 @@
-import { DeleteOutlined, InfoCircleTwoTone, PlusCircleOutlined } from "@ant-design/icons";
-import { Button, Col, Divider, Popconfirm, Row, Switch, Typography } from "antd";
+import { DeleteOutlined, InfoCircleOutlined, InfoCircleTwoTone, PlusCircleOutlined, PlusCircleTwoTone } from "@ant-design/icons";
+import { Button, Col, Divider, Popconfirm, Row, Space, Switch, Typography } from "antd";
 import Search from "antd/es/input/Search";
 import { ColumnsType } from "antd/es/table/InternalTable";
 import { get } from "lodash";
@@ -24,7 +24,7 @@ import {
   useUpdateSupplierParams,
 } from "../supplier.hook";
 import { STATUS_SUPPLIER_TYPE } from "../supplier.modal";
-
+import ProductModule from '~/modules/product';
 export default function Supplier(): React.JSX.Element {
   // Translate
   const { t }: any = useTranslate();
@@ -32,6 +32,8 @@ export default function Supplier(): React.JSX.Element {
   // State Form
   const [id, setId]: any = useState();
   const [isOpenForm, setIsOpenForm]: any = useState(false);
+  const [idSupplierCreateProduct, setIdSupplierCreateProduct]: any = useState();
+  const [isOpenFormProduct, setIsOpenFormProduct]: any = useState(false);
 
   // Control form
   const onOpenForm = useCallback((idSelect?: any) => {
@@ -43,6 +45,17 @@ export default function Supplier(): React.JSX.Element {
   const onCloseForm = useCallback(() => {
     setIsOpenForm(false);
     setId(null);
+  }, []);
+  // Control form Product
+  const onOpenFormProduct = useCallback((idSelect?: any) => {
+    if (idSelect) {
+      setIdSupplierCreateProduct(idSelect);
+    }
+    setIsOpenFormProduct(true);
+  }, []);
+  const onCloseFormProduct = useCallback(() => {
+    setIsOpenFormProduct(false);
+    setIdSupplierCreateProduct(null);
   }, []);
 
   // Hook
@@ -64,6 +77,11 @@ export default function Supplier(): React.JSX.Element {
   const columns: ColumnsType = useMemo(
     () => [
       {
+        title: "Mã nhà cung cấp",
+        dataIndex: "code",
+        key: "code",
+      },
+      {
         title: "Nhà cung cấp",
         dataIndex: "name",
         key: "name",
@@ -74,7 +92,7 @@ export default function Supplier(): React.JSX.Element {
         key: "listProduct",
         align: "center",
         render(_id) {
-          return <Link to={PATH_APP.product.root + "/" + _id}>Xem chi tiết sản phẩm</Link>
+          return <Link target={'_blank'} to={PATH_APP.product.root + "/" + _id}>Xem chi tiết sản phẩm</Link>
         },
       },
       {
@@ -89,11 +107,7 @@ export default function Supplier(): React.JSX.Element {
         key: "name",
         align: "center",
         render(value) {
-          return (
-            <Typography.Text strong>
-              100.000 <Vnd />
-            </Typography.Text>
-          );
+          return 0
         },
       },
       {
@@ -124,27 +138,41 @@ export default function Supplier(): React.JSX.Element {
         fixed: 'right',
         render(_id) {
           return (
-            <Row justify={"center"} align={"middle"} wrap={false}>
-              <Button icon={<InfoCircleTwoTone />} onClick={() => onOpenForm(_id)} type="primary" size="small">
+            <Space direction="vertical">
+              <Button
+                block
+                icon={<PlusCircleTwoTone />}
+                onClick={() => onOpenFormProduct(_id)}
+                type="primary"
+                size="small"
+              >
+                Thêm sản phẩm
+              </Button>
+              <Button
+                block
+                icon={<InfoCircleOutlined />}
+                onClick={() => onOpenForm(_id)}
+                size="small"
+              >
                 Xem chi tiết
               </Button>
-              <Divider type="vertical" />
               <Popconfirm
                 title="Bạn muốn xoá nhà cung cấp này?"
                 onConfirm={() => onDelete(_id)}
                 okText="Xoá"
                 cancelText="Huỷ"
               >
-              <Button
-                loading={isSubmitLoading}
-                danger
-                size="small"
-                icon={<DeleteOutlined />}
-              >
-                Xoá
-              </Button>
+                <Button
+                  block
+                  loading={isSubmitLoading}
+                  danger
+                  size="small"
+                  icon={<DeleteOutlined />}
+                >
+                  Xoá
+                </Button>
               </Popconfirm>
-            </Row>
+            </Space>
           );
         },
       },
@@ -157,6 +185,7 @@ export default function Supplier(): React.JSX.Element {
       <Row className="mb-3" justify={"space-between"}>
         <Col span={8}>
           <Search
+            allowClear
             onSearch={(value) => onParamChange({ keyword: value?.trim() })}
             enterButton="Tìm kiếm"
             placeholder="Nhập để tìm kiếm"
@@ -192,13 +221,23 @@ export default function Supplier(): React.JSX.Element {
         />
       </WhiteBox>
       <ModalAnt
-        width={900}
+        width={'auto'}
         open={isOpenForm}
         onCancel={onCloseForm}
         footer={null}
         destroyOnClose
       >
         <TabSupplier id={id} onCancel={onCloseForm} onUpdate={onUpdate} isSubmitLoading={isSubmitLoading}/>
+      </ModalAnt>
+
+      <ModalAnt
+        width={'auto'}
+        open={isOpenFormProduct}
+        onCancel={onCloseFormProduct}
+        footer={null}
+        destroyOnClose
+      >
+        <ProductModule.page.form supplierId={idSupplierCreateProduct} onCancel={onCloseFormProduct}/>
       </ModalAnt>
     </div>
   );

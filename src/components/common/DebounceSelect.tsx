@@ -67,7 +67,7 @@ function DebounceSelect<
       {...value && {value}}
       options={options}
       showSearch
-      style={{ minWidth: 300 }}
+      style={{ minWidth: 250 }}
       onFocus={() => {
           debounceFetcher('');
       }}

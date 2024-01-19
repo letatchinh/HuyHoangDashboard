@@ -3,7 +3,7 @@ import PharmacyScreen from "./screens/Pharmacy";
 import reducer from "./redux/reducer";
 import saga from "./redux/saga";
 import * as pharmacyHook from "./pharmacy.hook";
-import pharmacyService from "./pharmacy.service";
+import * as pharmacyService from "./pharmacy.service";
 import * as pharmacyModals from "./pharmacy.modal";
 import pharmacyAuth from "./pharmacy.auth";
 
