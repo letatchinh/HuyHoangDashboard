@@ -1,6 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { get } from "lodash";
+import { cumulativeDiscountType } from "~/modules/product/product.modal";
 import { InstanceModuleRedux } from "~/redux/instanceModuleRedux";
 import { initStateSlice } from "~/redux/models";
+import { getDiscountAmount } from "../bill.service";
 interface cloneInitState extends initStateSlice {
  // Add cloneInitState Type Here
  isGetDebtLoading? : boolean,
@@ -27,6 +30,23 @@ class BillClassExtend extends InstanceModuleRedux {
     getDebtFailed: (state:cloneInitState, { payload }:{payload:any}) => {
       state.isGetDebtLoading = false;
       state.getDebtFailed = payload;
+    },
+    getByIdSuccess: (state:cloneInitState, { payload }:{payload?:any}) => {
+      state.isGetByIdLoading = false;
+      const billItems = get(payload,'billItems',[])?.map((billItem : any) => {
+        const price : number = get(billItem, 'variant.price',0);
+        const totalDiscount : number = get(billItem,'cumulativeDiscount',[])?.reduce((sum:number,cur : cumulativeDiscountType) => sum + getDiscountAmount(cur,price),0);
+        const remainAmount = price - totalDiscount;
+        return {
+          ...billItem,
+          totalDiscount,
+          remainAmount : remainAmount > 0 ? remainAmount : 0
+        }
+      });
+      state.byId = {
+        ...payload,
+        billItems
+      }
     },
     };
 

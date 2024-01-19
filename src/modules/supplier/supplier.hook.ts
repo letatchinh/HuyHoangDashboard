@@ -16,7 +16,7 @@ import {
 import { supplierSliceAction } from "./redux/reducer";
 import { cloneInitState } from "./supplier.modal";
 const MODULE = "supplier";
-const MODULE_VI = "Chi nhánh";
+const MODULE_VI = "Nhà cung cấp";
 const getSelector = (key: keyof cloneInitState) => (state: RootState) =>
   state[MODULE][key];
 

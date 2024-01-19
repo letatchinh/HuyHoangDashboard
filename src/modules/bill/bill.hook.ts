@@ -97,11 +97,12 @@ export const useDeleteBill = (callback?: any) => {
   });
 };
 
-export const useBillQueryParams = () => {
+export const useBillQueryParams = (status? : string) => {
   const query = useQueryParams();
   const limit = query.get("limit") || 10;
   const page = query.get("page") || 1;
   const keyword = query.get("keyword");
+  const supplierIds = query.get("supplierIds");
   const createSuccess = useSelector(createSuccessSelector);
   const deleteSuccess = useSelector(deleteSuccessSelector);
   return useMemo(() => {
@@ -109,10 +110,12 @@ export const useBillQueryParams = () => {
       page,
       limit,
       keyword,
+      status,
+      supplierIds,
     };
     return [queryParams];
     //eslint-disable-next-line
-  }, [page, limit, keyword, createSuccess, deleteSuccess]);
+  }, [page, limit, keyword, createSuccess, deleteSuccess,status,supplierIds]);
 };
 
 export const useUpdateBillParams = (query: any, listOptionSearch?: any[]) => {
@@ -120,7 +123,9 @@ export const useUpdateBillParams = (query: any, listOptionSearch?: any[]) => {
   const { pathname } = useLocation();
   const [keyword, setKeyword] = useState(get(query, "keyword"));
   useEffect(() => {
+    console.log(query,'query');
     setKeyword(get(query, "keyword"));
+    
   }, [query]);
   const onParamChange = (param: any) => {
     // Clear Search Query when change Params

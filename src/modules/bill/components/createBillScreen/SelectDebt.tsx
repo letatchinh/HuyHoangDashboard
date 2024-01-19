@@ -1,8 +1,8 @@
 import { Form, Select } from 'antd';
 import { get } from 'lodash';
 import React, { useMemo } from 'react';
-import useCreateBillStore from '~/store/createBillContext';
 import { DebtType } from '../../bill.modal';
+import useCreateBillStore from '../../storeContext/CreateBillContext';
 type propsType = {
 
 }

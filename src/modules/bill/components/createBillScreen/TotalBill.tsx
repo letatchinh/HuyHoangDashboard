@@ -1,7 +1,7 @@
 import { Col, Row, Typography } from "antd";
 import React from "react";
-import useCreateBillStore from "~/store/createBillContext";
 import { formatter } from "~/utils/helpers";
+import useCreateBillStore from "../../storeContext/CreateBillContext";
 type propsType = {};
 const Layout = ({
   label,

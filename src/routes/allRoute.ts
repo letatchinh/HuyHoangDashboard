@@ -17,7 +17,7 @@ import ProductPage from "~/pages/Dashboard/Product";
 import ConfigDiscountPage from "~/pages/Dashboard/ConfigDiscount";
 import Pharmacy from "~/pages/Dashboard/Pharmacy";
 import Bill from "~/pages/Dashboard/Bill";
-import CreateBill from "~/pages/Dashboard/Bill/CreateBill";
+import UpdateBill from "~/pages/Dashboard/Bill/UpdateBill";
 export const mainRoutes :PathRouteProps[] = [
   { path: PATH_APP.main.root, Component: Homepage },
 
@@ -39,6 +39,7 @@ export const mainRoutes :PathRouteProps[] = [
 
   // Bill
   { path: PATH_APP.bill.root, Component: Bill },
+  { path: PATH_APP.bill.update, Component: UpdateBill },
 
   // TodoList
   { path: PATH_APP.todoList.statusConfig, Component: StatusConfig },

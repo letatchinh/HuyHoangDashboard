@@ -1,23 +1,22 @@
-import { GifOutlined, GiftOutlined, GiftTwoTone, MinusCircleTwoTone, UpCircleTwoTone } from "@ant-design/icons";
+import { GiftTwoTone, MinusCircleTwoTone, UpCircleTwoTone } from "@ant-design/icons";
 import { Typography } from "antd";
-import dayjs from "dayjs";
 import { get } from "lodash";
 import React from "react";
 import TableAnt from "~/components/Antd/TableAnt";
 import {
   EditableCell,
-  EditableRow,
+  EditableRow
 } from "~/components/common/EditableComponent";
-import useCreateBillStore from "~/store/createBillContext";
 import { formatter } from "~/utils/helpers";
 import { billItem } from "../bill.modal";
+import useCreateBillStore from "../storeContext/CreateBillContext";
 import ExpandRowDiscount from "./ExpandRowDiscount";
 type propsType = {};
 export default function ProductSelectedTable(
   props: propsType
 ): React.JSX.Element {
   const { billItems, onSave,onRemove } = useCreateBillStore();
-
+  
   const columns = [
     {
       title: "STT",
@@ -29,6 +28,16 @@ export default function ProductSelectedTable(
       title: "Tên thuốc",
       dataIndex: "name",
       key: "name",
+      render : (name : string,record : any) => <div>
+        <Typography.Text strong>{get(record,'codeBySupplier')}</Typography.Text>
+        <p className="m-0">{name}</p>
+      </div>
+    },
+    {
+      title: "Nhà cung cấp",
+      dataIndex: "totalDiscount",
+      key: "totalDiscount",
+      render : (totalDiscount : number) => formatter(totalDiscount)
     },
     {
       title: "Chiết khấu",
@@ -110,7 +119,8 @@ export default function ProductSelectedTable(
     // use cloned data source so that it can be submitted when complete
     dataSource: billItems,
   };
-
+  console.log(billItems,'billItems');
+  
   return (
     <TableAnt
       className="table-selected-product"

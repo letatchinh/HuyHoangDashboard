@@ -22,6 +22,7 @@ export type billItem = {
     supplierId : string,
     lotNumber : string,
     expirationDate : string,
+    codeBySupplier : string,
 }
 export type FormFieldCreateBill = {
     pharmacyId : string,

@@ -35,7 +35,7 @@ export default function SelectProduct({dataCurrent,onChangeBill}:propsType) : Re
           console.log(dataCurrent,'dataCurrent');
           
           const newOptions = products?.map((item: ItemSearchProduct) => ({
-            label: `${get(item, "name")} - ${get(item, "supplier.name")}`,
+            label: `${get(item, "codeBySupplier","")} - ${get(item, "name")}`,
             value: get(item, "selectVariant"),
             data : item,
             disabled : get(dataCurrent,'billItems',[])?.some((billItem : any) => get(billItem, "variantId") === get(item, "selectVariant")),

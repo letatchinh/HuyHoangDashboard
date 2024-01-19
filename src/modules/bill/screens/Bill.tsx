@@ -1,16 +1,40 @@
-import { PlusCircleFilled } from '@ant-design/icons';
-import { Button } from 'antd';
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import { PATH_APP } from '~/routes/allPath';
-type propsType = {
-
-}
-export default function Bill(props:propsType) : React.JSX.Element {
-    const navigate = useNavigate();
-    return (
-        <div>
-            Danh sách đơn hàng
-        </div>
-    )
+import { Tabs, Typography } from "antd";
+import { keys } from "lodash";
+import React, { useState } from "react";
+import WhiteBox from "~/components/common/WhiteBox";
+import ListBill from "../components/ListBill";
+import { STATUS_BILL, STATUS_BILL_VI } from "../constants";
+type propsType = {};
+const CLONE_STATUS_BILL_VI: any = STATUS_BILL_VI;
+export default function Bill(props: propsType): React.JSX.Element {
+  const [activeKey, setActiveKey] = useState<string>("ALL");
+  
+  const onChangeTab = (tab: string) => {
+    setActiveKey(tab);
+  };
+  return (
+    <div>
+      <Typography.Title level={3}>Danh sách đơn hàng</Typography.Title>
+      <WhiteBox>
+        <Tabs
+          defaultActiveKey={activeKey}
+          destroyInactiveTabPane
+          onChange={onChangeTab}
+        >
+          <Tabs.TabPane active={"ALL" === activeKey} tab={"Tất cả đơn hàng"}>
+            <ListBill />
+          </Tabs.TabPane>
+          {keys(STATUS_BILL).map((status) => (
+            <Tabs.TabPane
+              key={status}
+              active={status === activeKey}
+              tab={CLONE_STATUS_BILL_VI[status]}
+            >
+              <ListBill status={status}/>
+            </Tabs.TabPane>
+          ))}
+        </Tabs>
+      </WhiteBox>
+    </div>
+  );
 }

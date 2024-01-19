@@ -15,8 +15,9 @@ import {
 } from "~/modules/product/product.modal";
 import BillModule from "~/modules/bill";
 import { v4 } from "uuid";
-import { useGetDebtRule } from "~/modules/bill/bill.hook";
-import { DebtType } from "~/modules/bill/bill.modal";
+import { useGetDebtRule } from "../bill.hook";
+import { billItem, DebtType } from "../bill.modal";
+import { reducerDiscountBillItems } from "../bill.service";
 const TYPE_DISCOUNT = {
   "DISCOUNT.CORE": "DISCOUNT.CORE",
   "DISCOUNT.SOFT": "DISCOUNT.SOFT",
@@ -38,18 +39,6 @@ const TARGET = {
 //   code: string;
 //   _id: string;
 // };
-type billItem = {
-  cumulativeDiscount?: cumulativeDiscountType[];
-  productId: string;
-  variantId: string;
-  quantity: number;
-  price: number;
-  totalDiscount: number;
-  totalPrice: number;
-  supplierId: string;
-  lotNumber?: string;
-  expirationDate?: string;
-};
 export type DataItem = billItem & {
   key: number;
   name: string;
@@ -112,6 +101,7 @@ export function CreateBillProvider({
 }: CreateBillProviderProps): JSX.Element {
   
   const [billItems, setBillItems] = useState<DataItem[]>([]);
+  
   const [form] = Form.useForm();
   const [debt,isLoadingDebt] = useGetDebtRule();
   
@@ -132,9 +122,6 @@ export function CreateBillProvider({
   };
 
   const onAdd = (row: Omit<DataItem, "key">) => {
-    console.log(row, "row");
-    console.log(billItems, "billItems");
-
     const newData = [...billItems, { ...row, key: v4() }];
     onChangeBill({
       billItems: newData,
@@ -248,71 +235,7 @@ export function CreateBillProvider({
 
   useEffect(() => {
     if (get(bill, "billItems", [])?.length) {
-      const newBillItems: DataItem[] = get(bill, "billItems", [])?.map(
-        (billItem: DataItem) => {
-          const cumulativeDiscount = get(
-            billItem,
-            "cumulativeDiscount",
-            []
-          )?.map((discount: cumulativeDiscountType) => {
-            const discountAmount = BillModule.service.getDiscountAmount(
-              discount,
-              get(billItem, "price", 1)
-            );
-            return {
-              ...discount,
-              discountAmount,
-            };
-          });
-          const totalDiscountDetailFromProduct = cumulativeDiscount?.reduce(
-            (sum: any, cur: cumulativeDiscountType) => {
-              return get(cur,'target') === TARGET.product ? {
-                ...sum,
-                [get(cur,'typeDiscount')]:
-                  sum[get(cur,'typeDiscount')] +
-                  get(cur, "discountAmount", 0),
-              } : sum
-            },
-            {
-              [TYPE_DISCOUNT["DISCOUNT.CORE"]]: 0,
-              [TYPE_DISCOUNT["DISCOUNT.SOFT"]]: 0,
-              [TYPE_DISCOUNT.LK]: 0,
-            }
-          );
-          const totalDiscountDetailFromSupplier = cumulativeDiscount?.reduce(
-            (sum: any, cur: cumulativeDiscountType) => {
-              return get(cur,'target') === TARGET.supplier ? {
-                ...sum,
-                [get(cur,'typeDiscount')]:
-                  sum[get(cur,'typeDiscount')] +
-                  get(cur, "discountAmount", 0),
-              } : sum
-            },
-            {
-              [TYPE_DISCOUNT["DISCOUNT.CORE"]]: 0,
-              [TYPE_DISCOUNT["DISCOUNT.SOFT"]]: 0,
-              [TYPE_DISCOUNT.LK]: 0,
-            }
-          );
-          const totalDiscount = cumulativeDiscount?.reduce(
-            (sum: number, cur: cumulativeDiscountType) =>
-              sum + get(cur, "discountAmount", 0),
-            0
-          );
-
-          const totalPrice =
-            get(billItem, "price", 1) * get(billItem, "quantity", 1) -
-            totalDiscount;
-          return {
-            ...billItem,
-            cumulativeDiscount,
-            totalDiscount,
-            totalPrice: totalPrice > 0 ? totalPrice : 0,
-            totalDiscountDetailFromProduct,
-            totalDiscountDetailFromSupplier,
-          };
-        }
-      );
+      const newBillItems: any[] = reducerDiscountBillItems(get(bill, "billItems", []))
       setBillItems(newBillItems);
     }
   }, [totalPrice, bill]);

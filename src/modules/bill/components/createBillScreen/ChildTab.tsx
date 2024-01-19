@@ -1,6 +1,5 @@
 import { Button, Col, ColProps, Form, Modal, Row, RowProps } from "antd";
 import React, { useCallback, useState } from "react";
-import useCreateBillStore from "~/store/createBillContext";
 import { billItem, FormFieldCreateBill, PayloadCreateBill } from "~/modules/bill/bill.modal";
 import ProductSelectedTable from "../ProductSelectedTable";
 import SelectPharmacy from "../SelectPharmacy";
@@ -9,6 +8,7 @@ import { omit, pick } from "lodash";
 import ModalAnt from "~/components/Antd/ModalAnt";
 import SelectDebt from "./SelectDebt";
 import { useCreateBill } from "../../bill.hook";
+import useCreateBillStore from "../../storeContext/CreateBillContext";
 type propsType = {};
 export default function ChildTab(props: propsType): React.JSX.Element {
  const {form,onValueChange,billItems,totalPriceAfterDiscount,verifyData,debt} = useCreateBillStore();
@@ -29,6 +29,7 @@ export default function ChildTab(props: propsType): React.JSX.Element {
         'supplierId',
         'lotNumber',
         'expirationDate',
+        'codeBySupplier'
       ])
     }));
     // FixME : Verify Component not Updated data

@@ -3,7 +3,6 @@ import { Col, ConfigProvider, Row, Tabs, TabsProps } from "antd";
 import React, { useEffect, useState } from "react";
 import Bill from "~/modules/bill";
 import SelectProduct from "~/modules/bill/components/SelectProduct";
-import { CreateBillProvider } from "~/store/createBillContext";
 import { v4 } from "uuid";
 import { compact, concat, forIn, get, unset } from "lodash";
 import { billItem } from "~/modules/bill/bill.modal";
@@ -46,7 +45,8 @@ const CreateBillPage = (): React.JSX.Element => {
   const [tabs, setTabs] = useState<TabsProps["items"]>();
   const [activeKey, setActiveKey]: any = useState();
   const [dataSource, setDataSource]: any = useState<DataSourceType>();
-
+  console.log(dataSource,'dataSource');
+  
   // Controller DataSource
   const onAddDataSource = (key: any) => {
     setDataSource({ ...dataSource, [key]: initData });
@@ -107,8 +107,6 @@ const CreateBillPage = (): React.JSX.Element => {
             ...newData, // Change New Data Source
           },
         };
-        console.log(newDataSource,'newDataSource');
-        
         setDataSource(newDataSource);
       }else{
         const newDataSource = {
@@ -116,7 +114,6 @@ const CreateBillPage = (): React.JSX.Element => {
         };
         setDataSource(newDataSource);
       };
-      console.log(activeKey,dataSource,'activeKeyactiveKey');
       
   };
   const verifyData = (newActiveKey : string,callback?:() => void) => {
@@ -246,7 +243,7 @@ const CreateBillPage = (): React.JSX.Element => {
                   />
                 }
               >
-                <CreateBillProvider
+                <BillModule.storeProvider.CreateBillProvider
                   bill={get(dataSource, activeKey)}
                   onChangeBill={(newData: any) =>
                     onChangeBill(get(tab, "key"), newData)
@@ -254,7 +251,7 @@ const CreateBillPage = (): React.JSX.Element => {
                   verifyData={(callback?:() => void) => verifyData(activeKey,callback)}
                 >
                   <Bill.page.create />
-                </CreateBillProvider>
+                </BillModule.storeProvider.CreateBillProvider>
               </Tabs.TabPane>
             ))}
           </Tabs>
