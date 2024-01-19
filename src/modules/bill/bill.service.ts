@@ -1,6 +1,6 @@
 import { compact, get } from "lodash";
 import { v4 } from "uuid";
-import { cumulativeDiscountType } from "../product/product.modal";
+import { cumulativeDiscountType } from "../cumulativeDiscount/cumulativeDiscount.modal";
 import apis from "./bill.api";
 import { billItem } from "./bill.modal";
 import { DataItem } from "./storeContext/CreateBillContext";
