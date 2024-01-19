@@ -18,7 +18,8 @@ export type conditionType = {
     typeReward : string,
     condition : conditionType | null,
     applyUnit : string | null,
-    applyTimeSheet : applyTimeSheetType | null
+    applyTimeSheet : applyTimeSheetType | null,
+    cumulativeTimeSheet : applyTimeSheetType | null,
     status:"ACTIVE" | "INACTIVE"
   
   }
