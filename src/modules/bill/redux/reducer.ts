@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { get } from "lodash";
-import { cumulativeDiscountType } from "~/modules/product/product.modal";
+import { cumulativeDiscountType } from "~/modules/cumulativeDiscount/cumulativeDiscount.modal";
 import { InstanceModuleRedux } from "~/redux/instanceModuleRedux";
 import { initStateSlice } from "~/redux/models";
 import { getDiscountAmount } from "../bill.service";

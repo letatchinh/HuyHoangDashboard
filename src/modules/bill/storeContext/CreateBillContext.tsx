@@ -9,11 +9,6 @@ import {
   useMemo,
   useState,
 } from "react";
-import {
-  cumulativeDiscountType,
-  conditionType,
-} from "~/modules/product/product.modal";
-import BillModule from "~/modules/bill";
 import { v4 } from "uuid";
 import { useGetDebtRule } from "../bill.hook";
 import { billItem, DebtType } from "../bill.modal";
