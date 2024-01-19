@@ -13,7 +13,6 @@ import { useSprintContext } from '../screens/WorkSprint';
 const layoutCol = { lg: { span: 6 }, xl: { span: 6 }, xxl: { span: 4 }, sm: { span: 12 }, md: { span: 8 }, style: { height: 'auto' } };
 
 const SprintList: React.FC = memo(() => {
-  console.log('spritn')
   const { boardId } = useParams();
   const { showDrawer, board } = useSprintContext();
   const [listManagersByBoard,] = useGetListManagersByIdBoard(boardId);
@@ -31,7 +30,6 @@ const SprintList: React.FC = memo(() => {
   const [sprintByBoardID,] = useGetWorkSprints(query);
   
   const [dataSource, setDataSource] = useState(sprintByBoardID);
-  console.log('sprintByBoardID',dataSource)
   const boardNow = useMemo(() => {
     const item = (board ?? []).find(({ _id }) => String(_id) === String(boardId))
     return item;
@@ -40,7 +38,6 @@ const SprintList: React.FC = memo(() => {
   useEffect(() => {
     setDataSource(sprintByBoardID);
   }, [sprintByBoardID])
-// console.log("first",dataSource)
   const [, handleCreate] = useCreateWorkSprint()
   const [, handleUpdate] = useUpdateWorkSprint()
   const [, handleDelete] = useDeleteWorkSprint()

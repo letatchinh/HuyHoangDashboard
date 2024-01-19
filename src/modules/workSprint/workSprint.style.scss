@@ -1,6 +1,6 @@
 .sprint-page{
     width: 100%;
-    height : 100%;
+    height : 100vh;
     padding: 0 36px;
     position: relative;
     .ant-drawer-body {
@@ -345,7 +345,7 @@
     display: flex;
     padding-top: 5px;
     box-shadow: 2px 3px 4px #616161;
-    overflow-y: auto;
+    // overflow-y: auto;
     // .react-resizable_custom{
     //     display: flex;
     //     height: 100%;
@@ -384,6 +384,7 @@
             width: 100%;
             margin: auto;
             height: 100%;
+            // overflow-x: auto;
         }
 
         .work-list-column {

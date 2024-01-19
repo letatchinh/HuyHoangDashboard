@@ -9,22 +9,20 @@ import { useNavigate } from 'react-router-dom';
 import { useFormTaskContext } from '../screens/WorkList';
 import TaskForm from '~/modules/workTask/components/TaskForm';
 import TaskItem from '~/modules/workTask/components/TaskItem';
-
-// const Task = Suspense.lazy(() => import('./Workitem.js'));
-
+import apis from '../workList.api';
+import POLICIES from '~/modules/policy/policy.auth';
+import WithOrPermission from '~/components/common/WithOrPermission';
 interface BoardConfigProps {
   name?: string;
   id?: string;
   dataBoardConfigItem?: any; // Change the type to your actual type
 }
-
 const BoardConfig: FC<BoardConfigProps> = ({ name, id, dataBoardConfigItem }) => {
   const tasks = useMemo(() => dataBoardConfigItem, [dataBoardConfigItem]);
-  const { openForm, handleDeleteWork,handleButtonClick, sprintId } = useFormTaskContext();
+  const { openForm, handleDeleteWork, handleButtonClick, sprintId } = useFormTaskContext();
   const [inputValue, setInputValue] = useState(name);
   const navigate = useNavigate();
   const [dropdownVisible, setDropdownVisible] = useState(false);
-
   const handleButtonClickOpen = () => {
     // Handle button click if needed
     openForm(id);
@@ -33,7 +31,6 @@ const BoardConfig: FC<BoardConfigProps> = ({ name, id, dataBoardConfigItem }) =>
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value);
   };
-
   const handleInputConfirm = async () => {
     if (!inputValue) {
       setInputValue(name);
@@ -42,17 +39,17 @@ const BoardConfig: FC<BoardConfigProps> = ({ name, id, dataBoardConfigItem }) =>
       return;
     }
     try {
-      // await api.workFlow.updateWorkFlow({ name: inputValue ?? name, id });
+      await apis.update({ name: inputValue ?? name, id });
     } catch (error) {
       console.log(error);
     }
   };
-  const menu : any = (
-    <TaskForm setDropdownVisible={setDropdownVisible} dropdownVisible={dropdownVisible}/>
+  const menu: any = (
+    <TaskForm setDropdownVisible={setDropdownVisible} dropdownVisible={dropdownVisible} />
   );
   return (
-    <div className="work-list-main">
-      <div className="work-list-column work-list-column_header">
+    <div className="work-list-main" style={{ height: '100vh' }}>
+      <div className="work-list-column work-list-column_header" style={{ marginBottom: 10 }}>
         <Space direction="vertical" style={{ width: '100%' }}>
           <Row className="work-item-top" justify="center" align="middle" gutter={4}>
             <Col flex={1}>
@@ -73,7 +70,7 @@ const BoardConfig: FC<BoardConfigProps> = ({ name, id, dataBoardConfigItem }) =>
                 onPressEnter={handleInputConfirm}
               />
             </Col>
-            {/* <WithOrPermission permission={[POLICIES.ADMIN_TODOLIST, POLICIES.WRITE_TODOLIST]}> */}
+            <WithOrPermission permission={[POLICIES.ADMIN_WORKMANAGEMENT, POLICIES.WRITE_WORKMANAGEMENT]}>
             <Col style={{ width: 20 }} className="work-item-top_delete-button">
               <Popconfirm
                 title="Bạn có chắc chắn muốn cột này ?"
@@ -86,7 +83,7 @@ const BoardConfig: FC<BoardConfigProps> = ({ name, id, dataBoardConfigItem }) =>
                 <DeleteFilled style={{ color: '#DC3535' }} />
               </Popconfirm>
             </Col>
-            {/* </WithOrPermission> */}
+            </WithOrPermission>
           </Row>
           <Tooltip title="Thêm mới công việc" color="blue" placement="bottom" mouseEnterDelay={0.2}>
             <Dropdown
@@ -94,7 +91,7 @@ const BoardConfig: FC<BoardConfigProps> = ({ name, id, dataBoardConfigItem }) =>
               open={dropdownVisible}
               overlay={menu}
               onOpenChange={(visible) => setDropdownVisible(visible)}
-              // dropdownRender={()=>()}
+            // dropdownRender={()=>()}
             >
               <Button
                 type="primary"
@@ -106,8 +103,8 @@ const BoardConfig: FC<BoardConfigProps> = ({ name, id, dataBoardConfigItem }) =>
           </Tooltip>
         </Space>
       </div>
-      <Droppable key={id} droppableId={id as string} type={'ROW'}>
-        {(provided:any) => (
+      <Droppable key={id} droppableId={id as string} type={'TASK'} typeItem='task'>
+        {(provided: any) => (
           <div
             key={id}
             {...provided.droppableProps}
@@ -115,11 +112,12 @@ const BoardConfig: FC<BoardConfigProps> = ({ name, id, dataBoardConfigItem }) =>
             className="work-list-column work-list-column_body"
             style={{
               height: '100%',
+              background: 'rgb(82 146 234 / 88%)',
             }}
           >
             <div className="task-list">
               {tasks?.map((task: any, index: number) => (
-                <Draggable key={task._id} draggableId={task._id} index={index}>
+                <Draggable key={task._id} draggableId={task._id} index={index} >
                   {(provided: any) => (
                     <div
                       ref={provided.innerRef}

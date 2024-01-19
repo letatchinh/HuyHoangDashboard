@@ -123,7 +123,7 @@ export const useCreateStatusConfig = (callBack?: any) => {
   })
 }
 export const useUpdateStatusConfig = (callBack?: any) => {
-  useSuccess(updateSuccessSelector, `Cập nhật ${MODULE_VI} thành công`,callBack);
+  useSuccess(updateSuccessSelector,callBack);
   useFailed(updateFailedSelector);
   return useSubmit({
     action: statusConfigActions.updateRequest,
