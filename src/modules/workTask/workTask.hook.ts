@@ -193,7 +193,14 @@ export const useCopyTask = () => {
     action: workTaskSliceAction.copyTaskRequest
   })
 };
-
+export const useDeleteTask = () => {
+  useSuccess(deleteSuccessSelector);
+  useFailed(deleteFailedSelector);
+  return useSubmit({
+    loadingSelector: isSubmitLoadingSelector,
+    action: workTaskSliceAction.deleteRequest
+  })
+}
 export const useResetComment = () => {
   return useSubmit({
     loadingSelector: () => false,

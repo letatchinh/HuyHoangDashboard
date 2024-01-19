@@ -8,7 +8,7 @@ import { Droppable, Draggable } from 'react-beautiful-dnd';
 import { useNavigate } from 'react-router-dom';
 import { useFormTaskContext } from '../screens/WorkList';
 import TaskForm from '~/modules/workTask/components/TaskForm';
-import Task from '~/modules/workTask/screens/WorkTask';
+import TaskItem from '~/modules/workTask/components/TaskItem';
 
 // const Task = Suspense.lazy(() => import('./Workitem.js'));
 
@@ -20,13 +20,12 @@ interface BoardConfigProps {
 
 const BoardConfig: FC<BoardConfigProps> = ({ name, id, dataBoardConfigItem }) => {
   const tasks = useMemo(() => dataBoardConfigItem, [dataBoardConfigItem]);
-  const { openForm, handleDeleteWork, sprintId } = useFormTaskContext();
-  const [visible, setVisible] = useState(false);
+  const { openForm, handleDeleteWork,handleButtonClick, sprintId } = useFormTaskContext();
   const [inputValue, setInputValue] = useState(name);
   const navigate = useNavigate();
   const [dropdownVisible, setDropdownVisible] = useState(false);
 
-  const handleButtonClick = () => {
+  const handleButtonClickOpen = () => {
     // Handle button click if needed
     openForm(id);
     setDropdownVisible(true); // Close the dropdown after clicking the button
@@ -48,9 +47,8 @@ const BoardConfig: FC<BoardConfigProps> = ({ name, id, dataBoardConfigItem }) =>
       console.log(error);
     }
   };
-
   const menu : any = (
-    <TaskForm />
+    <TaskForm setDropdownVisible={setDropdownVisible} dropdownVisible={dropdownVisible}/>
   );
   return (
     <div className="work-list-main">
@@ -96,12 +94,13 @@ const BoardConfig: FC<BoardConfigProps> = ({ name, id, dataBoardConfigItem }) =>
               open={dropdownVisible}
               overlay={menu}
               onOpenChange={(visible) => setDropdownVisible(visible)}
+              // dropdownRender={()=>()}
             >
               <Button
                 type="primary"
                 className="add-task"
                 icon={<PlusOutlined />}
-                onClick={handleButtonClick}
+                onClick={handleButtonClickOpen}
               />
             </Dropdown>
           </Tooltip>
@@ -129,12 +128,12 @@ const BoardConfig: FC<BoardConfigProps> = ({ name, id, dataBoardConfigItem }) =>
                       {...provided.dragHandleProps}
                       className="task-list__item"
                     >
-                      {/* <Suspense fallback={<div >...</div>}>
-                        <Task
+                      <Suspense fallback={<div >...</div>}>
+                        <TaskItem
                           key={task._id}
                           task={task}
                         />
-                      </Suspense> */}
+                      </Suspense> 
                     </div>
                   )}
                 </Draggable>

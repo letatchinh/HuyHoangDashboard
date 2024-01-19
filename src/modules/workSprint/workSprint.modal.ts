@@ -175,3 +175,7 @@ export class InstanceModuleRedux{
     });
   }
 }
+export interface cloneInitState extends initStateSlice {
+  loadingTaskBySprint?: any,
+  listTaskBySprints?: any,
+}

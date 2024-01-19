@@ -2,7 +2,6 @@ import { createSlice } from "@reduxjs/toolkit";
 import { get, sortBy } from "lodash";
 import { InstanceModuleRedux } from "~/redux/instanceModuleRedux";
 import { cloneInitState } from "../workList.modal";
-
 class WorkListClassExtend extends InstanceModuleRedux {
   cloneReducer;
   cloneInitState: cloneInitState;
@@ -36,6 +35,16 @@ class WorkListClassExtend extends InstanceModuleRedux {
       },
       addBoardConfigItemFaled: (state: any, { payload }: { payload?: any }) => {
         state.dataBoardConfig[payload.id] = []
+      },
+      updateTaskInitSuccess: (state: any, { payload }: { payload?: any }) => {
+        state.isSubmitLoading = false;
+      const { idTask, dataTask, boardId } = payload;
+      state.dataBoardConfig[boardId] = state.dataBoardConfig[boardId]?.map((item:any) => {
+        if (item._id === idTask) {
+          return dataTask;
+        }
+        return item;
+      });
       },
       updatePosition: (state: any, { payload }: { payload?: any }) => {
         var {

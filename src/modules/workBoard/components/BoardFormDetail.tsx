@@ -11,7 +11,8 @@ import {
     useGetlistWorkBoard,
     useGetListBoard,
     useGetListManagersByIdBoard,
-    useGetListStaffsByIdBoard
+    useGetListStaffsByIdBoard,
+    useResetAction,
 
   } from '../workBoard.hook';
   import { DataTypeStatusConfig } from '~/modules/statusConfig/statusConfig.modal';
@@ -28,7 +29,7 @@ const BoardFormDetail: React.FC<BoardFormDetailProps> = ({ id }) => {
   const [listStaffsById, isLoadingStaff] = useGetListStaffsByIdBoard(id);
   const [listBoardGroup] = useGetListBoard();
   const [listManagersByBoard, isLoadingManagerByBoard] = useGetListManagersByIdBoard(id);
-
+  useResetAction()
   useEffect(() => {
     if (id) {
       if (boardById && listManagersByBoard && listStaffsById) {

@@ -3,7 +3,8 @@ import { createSlice } from "@reduxjs/toolkit";
 import { initStateSlice } from "~/redux/models";
 import { InstanceModuleRedux } from "../workSprint.modal";
 interface cloneInitState extends initStateSlice {
-  // Add cloneInitState Type Here
+  loadingTaskBySprint?: any,
+  listTaskBySprints?: any,
 }
 class WorkSprintClassExtend extends InstanceModuleRedux {
   cloneReducer;
@@ -31,12 +32,26 @@ class WorkSprintClassExtend extends InstanceModuleRedux {
         state.deleteSuccess = payload;
         state.list = state.list.filter(({ _id }: any) => _id !== payload._id)
         state.deleteFailed = null;
+      },
+      getListTaskBySprintRequest: (state: any) => {
+        state.loadingTaskBySprint = true;
+        state.listTaskBySprints = [];
+      },
+      getListTaskBySprintSuccess: (state: any, { payload }: { payload: any }) => {
+        state.loadingTaskBySprint = false;
+        state.listTaskBySprints = payload;
+      },
+      getListTaskBySprintFailed: (state: any, { payload }: { payload: any }) => {
+        state.loadingTaskBySprint = false;
+        state.listTaskBySprints = [];
       }
       // Want Add more reducer Here...
 
     }
     this.cloneInitState = {
       ...this.initialState,
+      loadingTaskBySprint: false,
+      listTaskBySprints: [],
       // Want Add more State Here...
     }
   }
