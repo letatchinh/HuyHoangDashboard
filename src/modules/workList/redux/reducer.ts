@@ -73,6 +73,15 @@ class WorkListClassExtend extends InstanceModuleRedux {
   
   
         state.dataBoardConfig[colAfter].splice(indexAfter, 0, itemBeRemove);
+      },
+      updatePositionBoardConfig: (state: any, { payload }: { payload?: any }) => {
+        var {
+          newData,
+          destinationIndex,
+          sourceIndex,
+        } = payload;
+        if(destinationIndex === sourceIndex) return;
+        state.listWorkConfig=newData
       }
       // Want to add more reducers here...
     };

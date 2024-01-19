@@ -46,7 +46,7 @@ const Sprint: React.FC = () => {
 
   return (
     <div >
-    <div className="sprint-page">
+    <div className="sprint-page" style={{ height: '100vh', overflow: 'hidden' }}>
       <SprintPageProvider.Provider value={memoizedProps}>
       <NavBoard />
         <Suspense fallback={<div>...</div>}>

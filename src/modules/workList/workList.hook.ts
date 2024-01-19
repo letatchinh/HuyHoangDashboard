@@ -1,3 +1,4 @@
+// import { useUpdatePosition } from './workList.hook';
 
 
 
@@ -125,7 +126,13 @@ export const useUpdatePosition = (payload?: any) => {
     
   })
 }
-
+export const useUpdatePositionBoardConfig = (payload?: any) => {
+  return useSubmit({
+    action: workListActions.updatePositionBoardConfig,
+    loadingSelector: isSubmitLoadingSelector,
+    
+  })
+}
 export const useWorkListQueryParams = (sprintId?: any) => {
   const query = useQueryParams();
   const limit = query.get("limit") || 10;
