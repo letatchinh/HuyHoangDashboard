@@ -181,6 +181,7 @@ export default function Employee() {
         afterClose={() => {
           setIsOpenModal(false)
         }}
+        destroyOnClose
       >
         <EmployeeForm
           id={id}
@@ -188,7 +189,7 @@ export default function Employee() {
           handleUpdate={handleUpdate}
           resetAction={resetAction}
           handleCreate = {handleCreate}
-          isSubmitLoading = {isSubmitLoading}
+          isSubmitLoading={isSubmitLoading}
         />
       </Modal>
     </div>
