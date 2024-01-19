@@ -1,3 +1,5 @@
+import { cumulativeDiscountType } from "../cumulativeDiscount/cumulativeDiscount.modal"
+
 export type TypePropsFormProduct = {
     supplierId?:string,
     id?:string,
@@ -23,20 +25,21 @@ export type applyTimeSheetType = {
   lte?:number,
   isRepeat : boolean,
 }
-export type cumulativeDiscountType = {
-  target : string,
-  targetId : string,
-  name : string,
-  typeDiscount : string,
-  value : number,
-  valueType : string,
-  typeReward : string,
-  condition : conditionType | null,
-  applyUnit : string | null,
-  applyTimeSheet : applyTimeSheetType | null
+// export type cumulativeDiscountType = {
+//   target : string,
+//   targetId : string,
+//   name : string,
+//   typeDiscount : string,
+//   value : number,
+//   valueType : string,
+//   typeReward : string,
+//   condition : conditionType | null,
+//   applyUnit : string | null,
+//   applyTimeSheet : applyTimeSheetType | null,
+//   status: "ACTIVE" | "INACTIVE"
 
 
-}
+// }
 export type FieldTypeFormProduct = {
     name: string;
     type: string;

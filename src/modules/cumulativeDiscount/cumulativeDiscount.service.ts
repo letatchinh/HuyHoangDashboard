@@ -37,36 +37,24 @@ export const convertSubmitDiscount = (
   );
   return newCumulativeDiscount;
 };
+const rootField = [
+  "name",
+  "target",
+  "targetId",
+  "typeDiscount",
+  "typeReward",
+  "value",
+  "valueType",
+  "status"
+]
 export const pickCore = (submitData: any) =>
-  pick(submitData, [
-    "name",
-    "target",
-    "targetId",
-    "typeDiscount",
-    "typeReward",
-    "value",
-    "valueType",
-  ]);
+  pick(submitData, rootField);
 
 export const pickSoft = (submitData: any) =>
-  pick(submitData, [
-    "name",
-    "target",
-    "targetId",
-    "typeDiscount",
-    "typeReward",
-    "value",
-    "valueType",
-  ]);
+  pick(submitData, rootField);
 export const pickLK = (submitData: any) =>
   pick(submitData, [
-    "name",
-    "target",
-    "targetId",
-    "typeDiscount",
-    "typeReward",
-    "value",
-    "valueType",
+    ...rootField,
     "condition",
     "applyTimeSheet",
   ]);
