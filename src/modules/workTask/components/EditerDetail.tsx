@@ -8,7 +8,6 @@ interface Props {
 };
 
 export default function EditerDetail({ dataTask, onCancel, handleFinshed }: Props) {
-    console.log('first')
     const [inputValue, setInputValue] = useState('');
     const handleCancel = useCallback(() => {
         setInputValue(dataTask?.description || "");

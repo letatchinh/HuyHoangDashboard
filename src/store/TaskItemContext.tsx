@@ -1,6 +1,6 @@
 import { get } from 'lodash';
 import { createContext, useContext, useMemo } from 'react';
-import { useProfile } from '~/modules/auth/auth.hook';
+import { useGetProfile } from '~/modules/auth/auth.hook';
 import { useGetListManagersByIdBoard, useGetListStaffsByIdBoard } from '~/modules/workBoard/workBoard.hook';
 import { useGetHistoryActivityTaskById} from '~/modules/workTask/workTask.hook';
 const ROLE = {
@@ -35,7 +35,7 @@ export function TaskItemProvider({
     dataTask,
     children
 }: any) {
-    const [profile] = useProfile();
+    const profile = useGetProfile();
     // const isAdmin = useMatchPolicy(POLICIES.ADMIN_TODOLIST);
     const { _id, assignUser = [], boardId } = dataTask || {};
 

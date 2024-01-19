@@ -55,6 +55,11 @@ class WorkTaskClassExtend extends InstanceModuleRedux {
     this.cloneReducer = {
       ...this.initReducer,
       //GET
+      getByIdSuccess: (state: cloneInitState, { payload }: { payload?: any }) => {
+        state.isGetByIdLoading = false;
+        state.byId = {...payload,progressListShow : calculateProgress(get(payload,'progressListShow',[]))};
+        state.getByIdFailed = null;
+      },
       getHistoryActivityTaskByIdRequest: (state: cloneInitState, { payload }: { payload?: any }) => {
         state.isLoadingHistory = true;
         state.getListHistoryFailed = null;
@@ -187,7 +192,7 @@ class WorkTaskClassExtend extends InstanceModuleRedux {
       },
       commentSuccess: (state: cloneInitState, { payload }: { payload?: any }) => {
         state.isLoadingComment = false;
-        state.listComment = payload;
+        state.commentSuccess = payload;
       },
       commentFailed: (state: cloneInitState, { payload }: { payload?: any }) => {
         state.isLoadingComment = false;
@@ -198,7 +203,7 @@ class WorkTaskClassExtend extends InstanceModuleRedux {
          // not set state
       },
 
-      updateCommentRequest: (state: cloneInitState, { payload }: { payload?: any }) => {
+      commentUpdateRequest: (state: cloneInitState, { payload }: { payload?: any }) => {
         // not set state
        },
 
@@ -218,6 +223,9 @@ class WorkTaskClassExtend extends InstanceModuleRedux {
         state.listComment = [];
         state.isLoadingCommentList = false;
       },
+      commentReset: (state: cloneInitState, { payload }: { payload?: any }) => {
+        state.listComment = [];
+      }
 
       // Want Add more reducer Here...
     }

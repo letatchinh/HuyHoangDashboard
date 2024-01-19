@@ -206,9 +206,9 @@ export default function TaskItem({ idTask }: Props) {
                 style={{ marginTop: 20, marginBottom: 20 }}
               >
                 <Tabs.TabPane tab="Nội dung trao đổi" key={"comment"}>
+                  <Suspense fallback={<div>Trao đổi...</div>}>
                     <ComponentComment/>
-                  {/* <Suspense fallback={<div>Trao đổi...</div>}>
-                    </Suspense> */}
+                    </Suspense>
                 </Tabs.TabPane>
               </Tabs>
             </Col>

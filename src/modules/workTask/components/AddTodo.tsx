@@ -16,21 +16,21 @@ export default function AddTodo({ dataTask,updateProgressTask,setActiveAddTodo }
     const [text,setText] = useState('');
     const {progressList = []} = dataTask;
     const onAdd = useCallback(() => {
-        const newProgressList = 
-            {
-                progress : [],
-                name : text || "(Công việc)"
-            }
+        const newProgressList =
+        {
+            progress: [],
+            name: text || "(Công việc)"
+        }
         
-        const submitData = [...progressList,newProgressList];
+        const submitData = [...progressList, newProgressList];
         updateProgressTask({
-            id : get(dataTask, '_id'),
-            progressList : submitData
+            id: get(dataTask, '_id'),
+            progressList: submitData
         });
         setActiveAddTodo(false)
         setText('');
-    },[text])
-    // if(!canAssign) return null;
+    }, [text]);
+    
     return (
         <div className='addTodo--container'>
             <h5>Thêm công việc</h5>
@@ -43,9 +43,6 @@ export default function AddTodo({ dataTask,updateProgressTask,setActiveAddTodo }
                 placeholder='Nhập nội dung công việc'
             />
             <Button disabled={!text} onClick={onAdd} type='primary'>Thêm</Button>
-            {/* {!canAssign && <div className='menuAssign--overlayDisabled'>
-        <Typography.Title level={5} style={{textAlign : 'center'}}>Bạn Phải là quản lý mới được phép thêm công việc</Typography.Title>
-      </div>} */}
         </div>
     )
 }

@@ -1,5 +1,5 @@
 import { CheckOutlined } from '@ant-design/icons'
-import { Button, List, Typography } from 'antd'
+import { Button, ConfigProvider, List, Typography } from 'antd'
 import Search from 'antd/lib/input/Search'
 import { get } from 'lodash'
 import { useState } from 'react'
@@ -40,6 +40,11 @@ const MenuAssign: React.FC<MenuAssignProps> = ({ dataTask }) => {
   }
   return (
     <div className='menuAssign'>
+      <ConfigProvider
+        theme={{
+          components: {},
+        }}
+      >
       <h6 style={{ textAlign: 'center' }}>Các thành viên</h6>
       <Search allowClear onChange={(e) => onSearchUsers(e.target.value)} onSearch={(value) => onSearchUsers(value)} placeholder='Tìm kiếm thành viên' enterButton={false} />
       <List
@@ -53,7 +58,16 @@ const MenuAssign: React.FC<MenuAssignProps> = ({ dataTask }) => {
               padding: 0,
             }}
           >
-            <Button onClick={() => handleAssign(get(item, '_id'))} style={{ width: '100%', justifyContent: 'space-between', textTransform: 'unset', }}>
+            <Button onClick={() => handleAssign(get(item, '_id'))}
+              style={{
+                display: 'flex',
+                width: '100%',
+                justifyContent: 'space-between', 
+                textTransform: 'unset',
+                borderColor: 'transparent',
+              }}
+            
+            >
               {get(item, 'fullName', '')}
               {assignUser?.some((e: any) => get(e, 'userId') === get(item, '_id')) && <CheckOutlined />}
             </Button>
@@ -63,6 +77,8 @@ const MenuAssign: React.FC<MenuAssignProps> = ({ dataTask }) => {
       {!canAssign && <div className='menuAssign--overlayDisabled'>
         <Typography.Title level={5} style={{ textAlign: 'center' }}>Bạn Phải là quản lý mới được phép thêm người tham gia</Typography.Title>
       </div>}
+
+      </ConfigProvider>
     </div>
   )
 };

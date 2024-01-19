@@ -142,9 +142,45 @@ const TaskRelationItem = memo(({ task }: any) => {
     </div>
   );
 });
-export const TaskRelationOption = memo(({task}: any) => {
+interface taskRelationOptionProps{
+  task?: any,
+}
+// export const TaskRelationOption = memo(({task}: taskRelationOptionProps) => {
 
-  const statusBackGround = get(task,'statusId.backgroundColor','gray') 
+//   const statusBackGround = get(task,'statusId.backgroundColor','gray') 
+//   const statusValue = get(task,'statusId.value',  'Không xác định')
+
+//   return (
+//     <div className="relation-task-item flex-fill">
+//       <Avatar.Group
+//         size="large"
+//         maxCount={1}
+//         className="relation-task-item-avatar"
+//       >
+//         {
+//           get(task,'assignUser',[{user:{avatar:'',fullName:'No Name'}}]).map(({user}: any)=><Avatar src={user?.avatar} >{getShortName(user?.fullName)}</Avatar>)
+//         }
+//       </Avatar.Group>
+//       <div className="relation-task-item-info d-flex">
+//         <Text ellipsis={true} className="relation-task-item-info-tag">
+//          {get(task,'code','#...')}
+//         </Text>
+//         <Text ellipsis={true} className="relation-task-item-info-name">
+//          {get(task,'name','Name ...jack plenty asleep oil water greatly step percent native train man shall back building space common poor pond rock tell clay mean fear college')}
+//         </Text>
+//         <Text className="relation-task-item-info-status"> <Tag color={statusBackGround}>{statusValue} </Tag></Text>
+//       </div>
+//     </div>
+//   );
+// });
+
+interface TaskRelationOptionProps {
+  task?: any; 
+}
+
+
+const TaskRelationOption: React.FC<TaskRelationOptionProps> = ({ task }) => {
+    const statusBackGround = get(task,'statusId.backgroundColor','gray') 
   const statusValue = get(task,'statusId.value',  'Không xác định')
 
   return (
@@ -169,4 +205,6 @@ export const TaskRelationOption = memo(({task}: any) => {
       </div>
     </div>
   );
-});
+};
+
+export {TaskRelationOption};
