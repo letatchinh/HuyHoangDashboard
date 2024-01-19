@@ -15,7 +15,7 @@ import { get, identity } from "lodash";
 import { clearQuerySearch, getExistProp } from "~/utils/helpers";
 import { useSelector } from "react-redux";
 const MODULE = "productUnit";
-const MODULE_VI = "Đơn vị tính";
+const MODULE_VI = "đơn vị tính";
 const {
     loadingSelector,
     listSelector,
