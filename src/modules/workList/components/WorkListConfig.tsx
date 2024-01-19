@@ -9,22 +9,20 @@ import { useNavigate } from 'react-router-dom';
 import { useFormTaskContext } from '../screens/WorkList';
 import TaskForm from '~/modules/workTask/components/TaskForm';
 import TaskItem from '~/modules/workTask/components/TaskItem';
-
-// const Task = Suspense.lazy(() => import('./Workitem.js'));
-
+import apis from '../workList.api';
+import POLICIES from '~/modules/policy/policy.auth';
+import WithOrPermission from '~/components/common/WithOrPermission';
 interface BoardConfigProps {
   name?: string;
   id?: string;
   dataBoardConfigItem?: any; // Change the type to your actual type
 }
-
 const BoardConfig: FC<BoardConfigProps> = ({ name, id, dataBoardConfigItem }) => {
   const tasks = useMemo(() => dataBoardConfigItem, [dataBoardConfigItem]);
   const { openForm, handleDeleteWork, handleButtonClick, sprintId } = useFormTaskContext();
   const [inputValue, setInputValue] = useState(name);
   const navigate = useNavigate();
   const [dropdownVisible, setDropdownVisible] = useState(false);
-
   const handleButtonClickOpen = () => {
     // Handle button click if needed
     openForm(id);
@@ -33,7 +31,6 @@ const BoardConfig: FC<BoardConfigProps> = ({ name, id, dataBoardConfigItem }) =>
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value);
   };
-
   const handleInputConfirm = async () => {
     if (!inputValue) {
       setInputValue(name);
@@ -42,7 +39,7 @@ const BoardConfig: FC<BoardConfigProps> = ({ name, id, dataBoardConfigItem }) =>
       return;
     }
     try {
-      // await api.workFlow.updateWorkFlow({ name: inputValue ?? name, id });
+      await apis.update({ name: inputValue ?? name, id });
     } catch (error) {
       console.log(error);
     }
@@ -73,7 +70,7 @@ const BoardConfig: FC<BoardConfigProps> = ({ name, id, dataBoardConfigItem }) =>
                 onPressEnter={handleInputConfirm}
               />
             </Col>
-            {/* <WithOrPermission permission={[POLICIES.ADMIN_TODOLIST, POLICIES.WRITE_TODOLIST]}> */}
+            <WithOrPermission permission={[POLICIES.ADMIN_WORKMANAGEMENT, POLICIES.WRITE_WORKMANAGEMENT]}>
             <Col style={{ width: 20 }} className="work-item-top_delete-button">
               <Popconfirm
                 title="Bạn có chắc chắn muốn cột này ?"
@@ -86,7 +83,7 @@ const BoardConfig: FC<BoardConfigProps> = ({ name, id, dataBoardConfigItem }) =>
                 <DeleteFilled style={{ color: '#DC3535' }} />
               </Popconfirm>
             </Col>
-            {/* </WithOrPermission> */}
+            </WithOrPermission>
           </Row>
           <Tooltip title="Thêm mới công việc" color="blue" placement="bottom" mouseEnterDelay={0.2}>
             <Dropdown

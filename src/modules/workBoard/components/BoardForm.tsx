@@ -88,7 +88,6 @@ const BoardForm: React.FC<BoardFormProps> = ({ id, handleCloseForm }) => {
   useResetAction()
   const fetchOptions = async() => {
     const res = await apis.getAll();
-    console.log(res)
     const options = get(res,'docs',[])?.map((item:any) => ({label : get(item,'name.vi'),value : get(item,'_id')}))
     return options
   }

@@ -22,40 +22,36 @@ import { SearchOutlined } from '@ant-design/icons';
 // );
 // const BoardFormDetail = lazy(() => import('../components/BoardFormDetail.tsx'));
 
-interface WorkFlowProps {}
+interface WorkFlowProps { }
 
 const WorkBoard: React.FC<WorkFlowProps> = () => {
-//   const canUpdateAndDelete = useMatchOrPolicy([POLICY.UPDATE_TODOLIST, POLICY.DELETE_TODOLIST]);
+  //   const canUpdateAndDelete = useMatchOrPolicy([POLICY.UPDATE_TODOLIST, POLICY.DELETE_TODOLIST]);
   const [form] = Form.useForm();
   const { select, setSelect, onClick } = useExpandrowTableClick();
   const [isOpenForm, setOpen] = useState(false);
-  const [id, setId]:any = useState(null);
+  const [id, setId]: any = useState(null);
   const [query] = useWorkBoardQueryParams();
   const [keyword, { onParamChange, setKeyword }] = useUpdateWorkBoardParams(query);
   const [isSubmitLoading, deleteWorkList] = useDeleteWorkBoard();
   const [board, isLoadingList] = useGetlistWorkBoard(query);
-  console.log(board)
   const [openDetail, setOpenDetail] = useState(false);
   const paging = useWorkBoardPaging();
   const { t }: any = useTranslate();
   const handleDelete = (id: string) => {
-    deleteWorkList( id );
+    deleteWorkList(id);
   };
-
   const handleOpenUpdate = (id: string) => {
     setOpen(true);
     if (id) {
       setId(id);
     }
   };
-
   const handleOpenFormDetail = (id: string) => {
     setOpenDetail(true);
     if (id) {
       setId(id);
     }
   };
-
   const handleOpenFormCreate = () => {
     setOpen(true);
     setId(null);
@@ -117,106 +113,88 @@ const WorkBoard: React.FC<WorkFlowProps> = () => {
     },
     // canUpdateAndDelete
     //   ? 
-      {
-          title: 'Hành động',
-          key: 'action',
-          align: 'center',
-          width: '180px',
-          render: (_, record) => (
-            <Space size="small">
-              <Button type="primary" onClick={() => handleOpenUpdate(record?._id)}>
-                Chinh sửa
-              </Button>
-              <Button style={{ color: 'red' }} onClick={() => handleDelete(record._id)}>
-                Xóa
-              </Button>
-            </Space>
-          ),
-        }
-      // : null,
+    {
+      title: 'Hành động',
+      key: 'action',
+      align: 'center',
+      width: '180px',
+      render: (_, record) => (
+        <Space size="small">
+          <Button type="primary" onClick={() => handleOpenUpdate(record?._id)}>
+            Chinh sửa
+          </Button>
+          <Button style={{ color: 'red' }} onClick={() => handleDelete(record._id)}>
+            Xóa
+          </Button>
+        </Space>
+      ),
+    }
+    // : null,
   ];
-  
-//   const columns = useColumnsBoard({ handleOpenFormDetail });
-//   const columnsAction = useActionColumn({ handleDelete, handleOpenUpdate });
-const onSearch = (value: string) => {
-  onParamChange({ ['keyword']: value });
-};
+  const onSearch = (value: string) => {
+    onParamChange({ ['keyword']: value });
+  };
   return (
     <div className="branch-detail page-wraper page-content page-workflow">
       {/* <TabBranch> */}
-        <div className="container-fluid">
-          <Breadcrumb title={t("workBoard")} />
-          {/* <SelectSearch onSearch = {onSearch} isShowButtonAdd={true} showSelect={false} /> 
-           */}
-            <Row justify="space-between">
-                  <Col span={8}>
-                    <Search
-                      style={{ height: '50px', padding: '5px 0px' }}
-                      placeholder="Nhập bất kì để tìm..."
-                      value={keyword}
-                      onChange={(e) => (setKeyword(e.target.value))
-                      
-                      }
-                      allowClear
-                      onSearch={onSearch}
-                      enterButton={<SearchOutlined />}
-                    />
-                  </Col>
-                  <Col>
-                    <Button onClick={()=>handleOpenFormCreate()} type="primary">
-                      Thêm mới
-                    </Button>
-                  </Col>
-                </Row>
-          {/* {isLoadingList && !(board ?? []).length ? (
-            <SkeletonTable
-              columns={columns.concat(canUpdateAndDelete ? columnsAction : [])}
-              dataSource={[]}
-              pagination={{
-                ...paging,
-                showTotal: (total) => `Tổng cộng: ${total} `,
-              }}
-              onChange={({ current }) => {
-                onParamChange({ page: current });
-              }}
+      <div className="container-fluid">
+        <Breadcrumb title={t("workBoard")} />
+        <Row justify="space-between">
+          <Col span={8}>
+            <Search
+              style={{ height: '50px', padding: '5px 0px' }}
+              placeholder="Nhập bất kì để tìm..."
+              value={keyword}
+              onChange={(e) => (setKeyword(e.target.value))
+
+              }
+              allowClear
+              onSearch={onSearch}
+              enterButton={<SearchOutlined />}
             />
-          ) : ( */}
- <Table
-      rowKey={(rc) => rc._id}
-      columns={columns}
-      dataSource={board}
-      onRow={(item) => ({
-        onClick: () => onClick(item),
-      })}
-      pagination={{
-        current: 1, // Assuming the current page is 1 by default
-        pageSize: 10, // Set your preferred page size
-        total: board.length, // Total number of items in your 'board' array
-        showSizeChanger: false, // Disable page size changer
-      }}
-      expandable={{
-        expandedRowKeys: select,
-        onExpandedRowsChange: (e:any) => {
-          onParamChange({ page: 1 }); // Reset to the first page when expanding rows
-          setSelect(e);
-        },
-      }}
-      onChange={({ current }) => {
-        onParamChange({ page: current });
-      }}
-    />
-          {/* )} */}
-        </div>
+          </Col>
+          <Col>
+            <Button onClick={() => handleOpenFormCreate()} type="primary">
+              Thêm mới
+            </Button>
+          </Col>
+        </Row>
+        <Table
+          rowKey={(rc) => rc._id}
+          columns={columns}
+          dataSource={board}
+          onRow={(item) => ({
+            onClick: () => onClick(item),
+          })}
+          pagination={{
+            current: 1, // Assuming the current page is 1 by default
+            pageSize: 10, // Set your preferred page size
+            total: board.length, // Total number of items in your 'board' array
+            showSizeChanger: false, // Disable page size changer
+          }}
+          expandable={{
+            expandedRowKeys: select,
+            onExpandedRowsChange: (e: any) => {
+              onParamChange({ page: 1 }); // Reset to the first page when expanding rows
+              setSelect(e);
+            },
+          }}
+          onChange={({ current }) => {
+            onParamChange({ page: current });
+          }}
+        />
+        {/* )} */}
+      </div>
       {/* </TabBranch> */}
       <Modal open={isOpenForm} footer={null} onCancel={() => setOpen(false)} width={700} destroyOnClose
-      title={id ? 'Chinh sửa không gian làm việc' : 'Thêm không gian làm việc'}
+        title={id ? 'Chinh sửa không gian làm việc' : 'Thêm không gian làm việc'}
       >
         <Suspense fallback={<div>...</div>}>
           <BoardForm id={id} handleCloseForm={handleCloseForm} />
         </Suspense>
       </Modal>
       <Modal open={openDetail} footer={null} onCancel={() => setOpenDetail(false)} width={750} destroyOnClose
-      title={ 'Xem chi tiết'}
+        title={'Xem chi tiết'}
       >
         <Suspense fallback={<div>...</div>}>
           <BoardFormDetail id={id} setOpenDetail={setOpenDetail} />

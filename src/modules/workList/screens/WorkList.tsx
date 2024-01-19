@@ -6,7 +6,7 @@ import { ArrowLeftOutlined, CloseOutlined } from '@ant-design/icons';
 import { ResizableBox } from 'react-resizable';
 import Text from 'antd/lib/typography/Text';
 import { get } from 'lodash';
-import { useUpdatePositionBoardConfig,useCreateWorkList, useDeleteWorkList, useGetListBoardConfig, useListBoardConfigItem, useUpdatePosition, useWorkListQueryParams } from '../workList.hook';
+import { useUpdatePositionBoardConfig,useCreateWorkList, useDeleteWorkList, useGetListBoardConfig, useListBoardConfigItem, useUpdatePosition, useWorkListQueryParams, useUpdateWorkList } from '../workList.hook';
 // import Menufilter from '../components/Menufilter';
 import { useGetWorkSprint } from '~/modules/workSprint/workSprint.hook';
 import MenuListBoard from '~/modules/workSprint/components/MenuListBoard';
@@ -40,8 +40,7 @@ const WorkList = () => {
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const [form] = Form.useForm();
   const [boardConfig] = useGetListBoardConfig(query);
-  const boardConfigMemo = useMemo(() => (boardConfig ?? []).map(({ name, _id }: any) => ({ name, _id })), [boardConfig]);
-   console.log(boardConfigMemo, 'boardConfig');
+  const boardConfigMemo = useMemo(() => (boardConfig ?? []).map(({ name, _id,ordinal }: any) => ({ name, _id,ordinal })), [boardConfig]);
   const [data] = useListBoardConfigItem();
   const [propsModal, setPropsModal] = useState({});
   const [visibleInfo, setVisibleInfo] = useState(false);
@@ -63,6 +62,7 @@ const WorkList = () => {
   const [, handleDeleteTask] = useDeleteTask();
   const [, handleCreateWork] = useCreateWorkList();
   const [, handleDeleteWork] = useDeleteWorkList();
+  const [, updateBoardConfig] = useUpdateWorkList()
   const [boardData] = useGetBoardById(idBoard);
   const [data1, setData1] = useState<any>(data);
   const showDrawer = (param?: any) => {
@@ -80,32 +80,24 @@ const WorkList = () => {
       setLength(workflowRef?.current?.offsetWidth * 0.7);
     }
   }, [visibleInfo]);
-  interface Data {
-    [key: string]: any;
-  }
   const changePosition = (sourceIndex: any, destinationIndex: any) => {
     const newData: any = [...boardConfigMemo];
   const sourceItem = newData?.[sourceIndex];
   const destinationItem = newData?.[destinationIndex];
-
   if (sourceItem && destinationItem) {
-    // Thực hiện đổi vị trí giữa hai phần tử
     newData[sourceIndex] = destinationItem;
     newData[destinationIndex] = sourceItem;
-    let valueIdxUp = get(destinationItem[destinationIndex - 1], 'ordinal', 0);
-    let valueIdxDown = get(destinationItem[destinationIndex], 'ordinal', valueIdxUp + 10);
-
+    let valueIdxUp = get(newData[destinationIndex - 1], 'ordinal', 0);
+    let valueIdxDown = get(newData[destinationIndex], 'ordinal', valueIdxUp + 5);
     let newOrdinal = (valueIdxUp + valueIdxDown) / 2;
-    Object.assign(destinationItem ?? {}, { ordinal: newOrdinal });
-    setData1(newData);
+    Object.assign(sourceItem ?? {}, { ordinal: newOrdinal });
+    updateBoardConfig({id:get(sourceItem,'_id',''),ordinal:newOrdinal});
     updatePositionBoardConfig({ newData, destinationIndex, sourceIndex });
   };
-  console.log(newData, 'newData');
 };
   const onDragEndv2 = (result: any) => {
     const { source, destination, draggableId } = result;
     if (result.type === 'TASK') {
-      console.log(result);
       let colBefore = result?.source?.droppableId,
         indexBefore = result?.source?.index,
         colAfter = result?.destination?.droppableId,
@@ -123,16 +115,12 @@ const WorkList = () => {
           return;
         }
         dataAfter.splice(indexBefore, 1);
-      }
-
+      };
       let valueIdxUp = get(dataAfter[indexAfter - 1], 'ordinal', 0);
       let valueIdxDown = get(dataAfter[indexAfter], 'ordinal', valueIdxUp + 10);
-
       let newOrdinal = (valueIdxUp + valueIdxDown) / 2;
-
       let [{ ...itemBeRemove }] = dataBefore.splice(indexBefore, 1);
       Object.assign(itemBeRemove ?? {}, { ordinal: newOrdinal });
-
       updateTask({ id: itemBeRemove._id, ordinal: newOrdinal, boardConfigId: colAfter });
       updatePosition({
         colBefore,
@@ -142,15 +130,9 @@ const WorkList = () => {
       });
     }
     else {
-      console.log(result);
       changePosition(source?.index, destination?.index);
-      // const reorderedorder = reorder(ordered, source.index, destination.index);
-      // const [itemToMove] = data.splice(source.index, 1);   
-      // data.splice(destination.index, 0, itemToMove);
     }
-
   };
-  console.log(data, 'ordered');
   return (
     <div className="branch-detail page-wraper page-content page-workflow">
       <FormTaskContext.Provider
