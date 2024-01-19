@@ -34,7 +34,7 @@ export default function ExpandRowDiscount({
               </Col>
               <Col span={4}>
                 {/* <Typography.Text strong>{formatter(get(item, 'value')) + " " +CLONE_TYPE_VALUE_VI[get(item,'valueType')]}</Typography.Text> */}
-                <Typography.Text strong type="success">- {formatter(get(item, 'actualValue'))} Đ</Typography.Text>
+                <Typography.Text strong type="warning">- {formatter(get(item, 'actualValue'))}</Typography.Text>
               </Col>
             </Row>
           ))}

@@ -25,7 +25,6 @@ export default function ListBillItem(props:propsType) : React.JSX.Element {
     const {
       billItems
     } = bill || {};
-    console.log(billItems,'billItems');
     
     const columns : ColumnsType = [
         {

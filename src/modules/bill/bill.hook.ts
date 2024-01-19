@@ -10,6 +10,7 @@ import {
   useFetch,
   useFetchByParam,
   useQueryParams,
+  useResetState,
   useSubmit,
   useSuccess,
 } from "~/utils/hook";
@@ -63,13 +64,14 @@ export const useCreateBill = (callback?: any) => {
   useSuccess(
     createSuccessSelector,
     `Tạo mới ${MODULE_VI} thành công`,
-    callback
+    // callback
   );
   useFailed(createFailedSelector);
 
   return useSubmit({
     action: billSliceAction.createRequest,
     loadingSelector: isSubmitLoadingSelector,
+    callback
   });
 };
 
@@ -157,4 +159,8 @@ export const useGetDebtRule = () => {
     dataSelector: getListDebtSelector,
     failedSelector: getDebtFailedSelector,
   });
+};
+
+export const useResetBillAction = () => {
+  return useResetState(billSliceAction.resetAction);
 };
