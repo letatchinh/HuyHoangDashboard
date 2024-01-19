@@ -173,9 +173,31 @@ export const resource: ItemType[] = [
     key: PATH_APP.pharmacy.root,
     permission: [POLICIES.READ_PHARMAPROFILE],
   },
-];
 
-//Required permission is string[][];
+      
+    // Đơn hàng
+  {
+    label: "Đơn hàng",
+    key: "bill",
+    // Children
+    children: [
+      {
+        label: "Danh sách đơn hàng",
+        path: PATH_APP.bill.root,
+        key: PATH_APP.bill.root,
+      },
+      {
+        label: "Tạo đơn hàng",
+        path: PATH_APP.bill.create,
+        key: PATH_APP.bill.create,
+      },
+    ],
+    icon: <AppstoreFilled />,
+  },
+       
+ ];
+
+//Required permission is string[][]; 
 const NavbarItems = resource.map((first) => {
   if (first.children?.length) {
     const newChildFirst = first.children.map((second) => {

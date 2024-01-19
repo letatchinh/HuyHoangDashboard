@@ -6,12 +6,14 @@
 @import "~/modules/auth/auth.style.scss";
 @import "~/modules/product/product.style.scss";
 @import "~/components/Layout/LayoutVertical/index.scss";
-@import "../modules//employee/employee.style.scss";
-@import "../modules/user/user.style.scss";
-@import "../modules/userGroup/userGroup.style.scss";
-@import "../modules/configDiscount/configDiscount.style.scss";
+@import "~/modules//employee/employee.style.scss";
+@import "~/modules/user/user.style.scss";
+@import "~/modules/userGroup/userGroup.style.scss";
+@import "~/modules/configDiscount/configDiscount.style.scss";
+@import "~/modules/bill/bill.style.scss";
 
 // Component
+@import "~/components/Layout/LayoutVertical/index.scss";
 @import "component/whiteBox";
 @import "component/page";
 @import "component/table";

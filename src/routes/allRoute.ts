@@ -16,21 +16,44 @@ import MedicinePage from "~/pages/Dashboard/Medicine";
 import ProductPage from "~/pages/Dashboard/Product";
 import ConfigDiscountPage from "~/pages/Dashboard/ConfigDiscount";
 import Pharmacy from "~/pages/Dashboard/Pharmacy";
+import Bill from "~/pages/Dashboard/Bill";
+import UpdateBill from "~/pages/Dashboard/Bill/UpdateBill";
 export const mainRoutes :PathRouteProps[] = [
   { path: PATH_APP.main.root, Component: Homepage },
+
+  // Supplier
   { path: PATH_APP.supplier.root, Component: Supplier },
+
+  // worldPharma
   { path: PATH_APP.worldPharma.productGroup, Component: ProductGroupPage },
   { path: PATH_APP.worldPharma.manufacturer, Component: ManufacturerPage },
   { path: PATH_APP.worldPharma.ranking, Component: RankingManufacturerPage },
   { path: PATH_APP.worldPharma.unit, Component:Unit  },
   { path: PATH_APP.worldPharma.medicine, Component:MedicinePage  },
+
+  // Branch
   { path: PATH_APP.branch.root, Component: Branch },
+
+  // Product
   { path: PATH_APP.product.edit, Component: ProductPage },
 
+  // Bill
+  { path: PATH_APP.bill.root, Component: Bill },
+  { path: PATH_APP.bill.update, Component: UpdateBill },
+
+  // TodoList
   { path: PATH_APP.todoList.statusConfig, Component: StatusConfig },
+
+  // Employee
   { path: PATH_APP.employee.root, Component: EmployeePage },
+
+  // User
   { path: PATH_APP.user.root, Component: UserPage },
+
+  //ConfigDiscount
   { path: PATH_APP.configDiscount.root, Component: ConfigDiscountPage },
+
+  // Pharmacy
   { path: PATH_APP.pharmacy.root, Component: Pharmacy },
  
   { path: '/', Component: Homepage },
