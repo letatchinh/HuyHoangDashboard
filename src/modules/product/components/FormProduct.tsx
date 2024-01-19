@@ -1,26 +1,36 @@
+import { GiftTwoTone } from "@ant-design/icons";
 import { Button, Col, Form, Input, Row, Select } from "antd";
 import { get, keys } from "lodash";
 import React, { useCallback, useEffect, useMemo } from "react";
 import BaseBorderBox from "~/components/common/BaseBorderBox/index";
 import RenderLoading from "~/components/common/RenderLoading";
-// import { MAX_LIMIT } from "~/constants/defaultValue";
-// import ManufacturerModule from "~/modules/manufacturer";
-// import ProductConfigModule from "~/modules/productGroup";
-// import { getActive } from "~/utils/helpers";
-import { PRODUCT_TYPE, PRODUCT_TYPE_VI } from "../constants";
+import { 
+  PRODUCT_TYPE, 
+  PRODUCT_TYPE_VI,  
+  SALE_LEVEL,
+  SALE_LEVEL_VI 
+} from "../constants";
 import {
   useCreateProduct,
   useGetProduct,
   useResetAction,
   useUpdateProduct
 } from "../product.hook";
-import { FieldTypeFormProduct, TypePropsFormProduct } from "../product.modal";
+import {
+  FieldTypeFormProduct,
+  TypePropsFormProduct
+} from "../product.modal";
+import { convertInitProduct, convertSubmitData } from "../product.service";
 import MedicineName from "./MedicineName";
 import SelectCountry from "./SelectCountry";
 import SelectManufacturer from "./SelectManufacturer";
 import SelectProductGroup from "./SelectProductGroup";
 import Variants from "./Variants";
+import CumulativeDiscountModule from '~/modules/cumulativeDiscount';
+
+
 const CLONE_PRODUCT_TYPE_VI: any = PRODUCT_TYPE_VI;
+const CLONE_SALE_LEVEL_VI: any = SALE_LEVEL_VI;
 const layoutRow = {
   gutter: 16,
 };
@@ -36,12 +46,7 @@ export default function FormProduct({
   const [product, isLoading] = useGetProduct(id);
   useResetAction();
   const onFinish = (values: FieldTypeFormProduct) => {
-    const submitData = {
-      ...values,
-      supplierId,
-    };
-    console.log(submitData, "submitData");
-
+    const submitData = convertSubmitData({values,supplierId});
     if (id) {
       onUpdate({ ...submitData, _id: id });
     } else {
@@ -57,76 +62,36 @@ export default function FormProduct({
       })),
     []
   );
+  const optionsSaleLevel = useMemo(
+    () =>
+      keys(SALE_LEVEL).map((key) => ({
+        label: CLONE_SALE_LEVEL_VI[key],
+        value: key,
+      })),
+    []
+  );
 
-  // const fetchOptionsManufacturer = useCallback(async (keyword?: string) => {
-  //   const res = await ManufacturerModule.api.getAll({
-  //     keyword,
-  //     limit: MAX_LIMIT,
-  //   });
-  //   return getActive(get(res, "docs", []))?.map((item: any) => ({
-  //     label: get(item, "name"),
-  //     value: get(item, "_id"),
-  //   }));
-  // }, []);
-
-  // const initManufacturer = useMemo(
-  //   () =>
-  //     product && [
-  //       {
-  //         label: get(product, "manufacturer.name"),
-  //         value: get(product, "manufacturerId"),
-  //       },
-  //     ],
-  //   [product]
-  // );
-
-  // const fetchOptionsProductConfig = useCallback(async (keyword?: string) => {
-  //   const res = await ProductConfigModule.api.getAll({
-  //     keyword,
-  //     limit: MAX_LIMIT,
-  //   });
-  //   return getActive(get(res, "docs", []))?.map((item: any) => ({
-  //     label: get(item, "name"),
-  //     value: get(item, "_id"),
-  //   }));
-  // }, []);
-
-  // console.log(product, "product");
-
-  // const initProductConfig = useMemo(
-  //   () =>
-  //     product && [
-  //       {
-  //         label: get(product, "productGroup.name"),
-  //         value: get(product, "productGroupId"),
-  //       },
-  //     ],
-  //   [product]
-  // );
-  // const fetchOptionsCountry = useCallback(async () => {
-  //   const res = await api.country.getAll();
-  //   return res?.map((item: any) => ({
-  //     label: get(item, "name", "")?.trim(),
-  //     value: get(item, "_id"),
-  //   }));
-  // }, []);
-
-  // const initCountry = useMemo(
-  //   () =>
-  //     product && [
-  //       {
-  //         label: get(product, "productDetail.country._id"),
-  //         value: get(product, "productDetail.country.name"),
-  //       },
-  //     ],
-  //   [product]
-  // );
   useEffect(() => {
     if (product && id) {
-      form.setFieldsValue(product);
-    }
+    const initProduct = convertInitProduct(product);
+      form.setFieldsValue(initProduct);
+    };
   }, [product, id, form]);
 
+  const onValuesChange = (value: any, values: FieldTypeFormProduct) => {
+    const key = Object.keys(value)[0];
+    switch (key) {
+      case "cumulativeDiscount":
+        const cumulativeDiscount = CumulativeDiscountModule.service.onDiscountChange(values[key])
+        form.setFieldsValue({
+          cumulativeDiscount,
+        });
+        break;
+
+      default:
+        break;
+    }
+  };
   return (
     <div>
       <h5>Tạo mới thuốc</h5>
@@ -136,8 +101,8 @@ export default function FormProduct({
         labelCol={{ span: 8 }}
         wrapperCol={{ span: 16 }}
         labelAlign="left"
+        scrollToFirstError
         initialValues={{
-          type: PRODUCT_TYPE.exclusive,
           variants: [
             {
               exchangeValue: 1,
@@ -145,6 +110,7 @@ export default function FormProduct({
             },
           ],
         }}
+        onValuesChange={onValuesChange}
       >
         <Form.Item<FieldTypeFormProduct> name="medicalCode" hidden />
 
@@ -154,13 +120,7 @@ export default function FormProduct({
               {RenderLoading(isLoading, <MedicineName form={form} />)}
             </Col>
             <Col span={12}>
-              <Form.Item<FieldTypeFormProduct>
-                label="Loại sản phẩm"
-                name="type"
-                rules={[
-                  { required: true, message: "Vui lòng chọn loại sản phẩm!" },
-                ]}
-              >
+              <Form.Item<FieldTypeFormProduct> label="Hình thức" name="type">
                 {RenderLoading(isLoading, <Select options={optionsType} />)}
               </Form.Item>
             </Col>
@@ -168,6 +128,17 @@ export default function FormProduct({
           <Row {...layoutRow}>
             <Col span={12}>
               <Form.Item<FieldTypeFormProduct>
+                label="Mức độ đẩy hàng"
+                name="saleLevel"
+              >
+                {RenderLoading(
+                  isLoading,
+                  <Select options={optionsSaleLevel} />
+                )}
+                </Form.Item>
+              </Col>
+              <Col span={12}>
+                <Form.Item<FieldTypeFormProduct>
                 label="Mã sản phẩm"
                 name="codeBySupplier"
                 tooltip="Mã dành cho nhà cung cấp"
@@ -187,9 +158,6 @@ export default function FormProduct({
               <Form.Item<FieldTypeFormProduct>
                 label="Quy cách đóng gói"
                 name={["productDetail", "package"]}
-                rules={[
-                  { required: true, message: "Vui lòng nhập cách đóng gói!" },
-                ]}
               >
                 {RenderLoading(isLoading, <Input />)}
               </Form.Item>
@@ -198,9 +166,6 @@ export default function FormProduct({
               <Form.Item<FieldTypeFormProduct>
                 label="Hoạt chất"
                 name={["productDetail", "element"]}
-                rules={[
-                  { required: true, message: "Vui lòng nhập hoạt chất!" },
-                ]}
               >
                 {RenderLoading(isLoading, <Input />)}
               </Form.Item>
@@ -208,25 +173,36 @@ export default function FormProduct({
           </Row>
           <Row {...layoutRow}>
             <Col span={12}>
-            <SelectCountry isLoading={isLoading}/>
+              <SelectCountry isLoading={isLoading} />
+            </Col>
+            <Col span={12}>
+              <SelectManufacturer isLoading={isLoading} product={product} />
             </Col>
           </Row>
 
           <Row {...layoutRow}>
             <Col span={12}>
-            <SelectManufacturer isLoading={isLoading} product={product}/>
-            </Col>
-            <Col span={12}>
-              <SelectProductGroup product={product} isLoading={isLoading}/>
+              <SelectProductGroup product={product} isLoading={isLoading} />
             </Col>
           </Row>
         </BaseBorderBox>
 
         <BaseBorderBox title={"Đơn vị"}>
-          <Col span={24}>
+          <Col style={{ paddingBottom: 10 }} span={24}>
             <Variants form={form} isLoading={isLoading} />
           </Col>
         </BaseBorderBox>
+
+        <BaseBorderBox
+          title={
+            <span>
+              Chiết khấu <GiftTwoTone />
+            </span>
+          }
+        >
+          <CumulativeDiscountModule.components.DiscountList target={CumulativeDiscountModule.constants.TARGET.product} loading={isLoading} form={form} />
+        </BaseBorderBox>
+
         <Row justify={"end"} gutter={16}>
           <Col>
             <Button size="large" onClick={onCancel}>

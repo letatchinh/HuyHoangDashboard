@@ -1,5 +1,6 @@
 import ProductScreen from "./screens/Product";
 import productApi from "./product.api";
+import * as constants from "./constants";
 import * as productAuth from "./product.auth";
 import * as productHook from "./product.hook";
 import * as productService from "./product.service";
@@ -21,5 +22,6 @@ const moduleExport = {
     model : productModels,
     redux : {reducer,saga},
     components : productComponents,
+    constants,
 };
 export default moduleExport;

@@ -221,7 +221,7 @@ export default function Supplier(): React.JSX.Element {
         />
       </WhiteBox>
       <ModalAnt
-        width={900}
+        width={'auto'}
         open={isOpenForm}
         onCancel={onCloseForm}
         footer={null}
