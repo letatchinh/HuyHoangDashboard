@@ -182,6 +182,7 @@ export default function Employee() {
           setIsOpenModal(false);
           setId(null);
         }}
+        destroyOnClose
       >
         <EmployeeForm
           id={id}
