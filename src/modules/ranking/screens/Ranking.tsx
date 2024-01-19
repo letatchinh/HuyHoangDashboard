@@ -85,7 +85,7 @@ export default function Ranking(props: propsType): React.JSX.Element {
   const pageSizeOptions = ['10', '20', '50', '100'];
   return (
     <div className='product-config'>
-      <Breadcrumb title={t('Quản lý xếp hạng nhà sản xuất')} />
+      <Breadcrumb title={t('Xếp hạng nhà cung cấp')} />
 
       <div className="product-config-action" >
         <Row justify="space-between">
@@ -132,7 +132,7 @@ export default function Ranking(props: propsType): React.JSX.Element {
       </WhiteBox>
       <ModalAnt
         open={showForm}
-        title={id ? 'Cập nhật nhà cung cấp' : 'Tạo mới nhà cung cấp'}
+        title={id ? 'Cập nhật xếp hạng nhà cung cấp' : 'Tạo mới xếp hạng nhà cung cấp'}
         onCancel={handleCloseForm}
         footer={null}
         // destroyOnClose
