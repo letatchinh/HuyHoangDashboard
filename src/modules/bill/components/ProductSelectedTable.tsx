@@ -34,12 +34,6 @@ export default function ProductSelectedTable(
       </div>
     },
     {
-      title: "Nhà cung cấp",
-      dataIndex: "totalDiscount",
-      key: "totalDiscount",
-      render : (totalDiscount : number) => formatter(totalDiscount)
-    },
-    {
       title: "Chiết khấu",
       dataIndex: "totalDiscount",
       key: "totalDiscount",
@@ -119,7 +113,6 @@ export default function ProductSelectedTable(
     // use cloned data source so that it can be submitted when complete
     dataSource: billItems,
   };
-  console.log(billItems,'billItems');
   
   return (
     <TableAnt

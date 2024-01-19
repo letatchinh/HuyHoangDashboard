@@ -25,7 +25,7 @@ import { PATH_APP } from "~/routes/allPath";
 import { concatAddress, formatter } from "~/utils/helpers";
 import ListBillItem from "../components/ListBillitem";
 import StepStatus from "../components/StepStatus";
-import { STATUS_BILL, STATUS_BILL_VI } from "../constants";
+import { STATUS_BILL, STATUS_BILLITEM, STATUS_BILL_VI } from "../constants";
 import useUpdateBillStore from "../storeContext/UpdateBillContext";
 type propsType = {};
 const Layout = ({ label, children }: { label: any; children: any }) => (
@@ -58,7 +58,7 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
     {
       key: "1",
       label: <a>Huỷ đơn hàng</a>,
-      disabled : get(billItems,'')
+      disabled : billItems?.every((item : any) => get(item,'status') === STATUS_BILLITEM.ORDERING)
     },
   ],[])
 

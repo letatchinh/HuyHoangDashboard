@@ -1,56 +1,61 @@
-import { Button, Col, ColProps, Form, Modal, Row, RowProps } from "antd";
+import { Button, Col, Form, Row } from "antd";
+import { pick } from "lodash";
 import React, { useCallback, useState } from "react";
-import { billItem, FormFieldCreateBill, PayloadCreateBill } from "~/modules/bill/bill.modal";
-import ProductSelectedTable from "../ProductSelectedTable";
-import SelectPharmacy from "../SelectPharmacy";
-import TotalBill from "./TotalBill";
-import { omit, pick } from "lodash";
 import ModalAnt from "~/components/Antd/ModalAnt";
-import SelectDebt from "./SelectDebt";
+import { billItem, FormFieldCreateBill, PayloadCreateBill } from "~/modules/bill/bill.modal";
+import useNotificationStore from "~/store/NotificationContext";
 import { useCreateBill } from "../../bill.hook";
 import useCreateBillStore from "../../storeContext/CreateBillContext";
+import ProductSelectedTable from "../ProductSelectedTable";
+import SelectPharmacy from "../SelectPharmacy";
+import SelectDebt from "./SelectDebt";
+import TotalBill from "./TotalBill";
 type propsType = {};
 export default function ChildTab(props: propsType): React.JSX.Element {
- const {form,onValueChange,billItems,totalPriceAfterDiscount,verifyData,debt} = useCreateBillStore();
- const [isSubmitLoading,onCreateBill] = useCreateBill();
+ const {form,onValueChange,billItems,totalPriceAfterDiscount,verifyData,onRemoveTab} = useCreateBillStore();
+ const {onNotify} = useNotificationStore();
+ const [isSubmitLoading,onCreateBill] = useCreateBill(onRemoveTab);
  const [openDebt,setOpenDebt] = useState(false);
  const onOpenDebt = useCallback(() => setOpenDebt(true),[]);
  const onCloseDebt = useCallback(() => setOpenDebt(false),[]);
   const onFinish = (values: FormFieldCreateBill) => {
-    console.log(values);
-    const billItemsSubmit : billItem[] = billItems?.map((billItem : any) => ({
-      ...pick(billItem,[
-        'cumulativeDiscount',
-        'productId',
-        'variantId',
-        'price',
-        'totalPrice',
-        'quantity',
-        'supplierId',
-        'lotNumber',
-        'expirationDate',
-        'codeBySupplier'
-      ])
-    }));
-    // FixME : Verify Component not Updated data
-    // verifyData(() => {
-    //   const submitData : PayloadCreateBill = {
-    //     ...values,
-    //     billItems : billItemsSubmit,
-    //     pair : 0,
-    //     totalPrice : totalPriceAfterDiscount
-    //   };
-  
-    //   console.log(submitData,'submitData');
-    // });
-    const submitData : PayloadCreateBill = {
-        ...values,
-        billItems : billItemsSubmit,
-        pair : 0,
-        totalPrice : totalPriceAfterDiscount
-      };
-      onCreateBill(submitData);
-    console.log(submitData,'submitData');
+try {
+  console.log(values);
+  const billItemsSubmit : billItem[] = billItems?.map((billItem : any) => ({
+    ...pick(billItem,[
+      'cumulativeDiscount',
+      'productId',
+      'variantId',
+      'price',
+      'totalPrice',
+      'quantity',
+      'supplierId',
+      'lotNumber',
+      'expirationDate',
+      'codeBySupplier'
+    ])
+  }));
+  // FixME : Verify Component not Updated data
+  // verifyData(() => {
+  //   const submitData : PayloadCreateBill = {
+  //     ...values,
+  //     billItems : billItemsSubmit,
+  //     pair : 0,
+  //     totalPrice : totalPriceAfterDiscount
+  //   };
+
+  //   console.log(submitData,'submitData');
+  // });
+  const submitData : PayloadCreateBill = {
+      ...values,
+      billItems : billItemsSubmit,
+      pair : 0,
+      totalPrice : totalPriceAfterDiscount
+    };
+    onCreateBill(submitData);
+} catch (error : any) {
+  onNotify?.error(error?.response?.data?.message || "Có lỗi gì đó xảy ra")
+}
     
   };
   return (
@@ -66,7 +71,7 @@ export default function ChildTab(props: propsType): React.JSX.Element {
         </Col>
         <Col span={8} className="form-create-bill--payment">
           <div>
-            <SelectPharmacy />
+            <SelectPharmacy form={form}/>
             <TotalBill />
           </div>
           <div className="form-create-bill--payment__actions">
@@ -77,7 +82,7 @@ export default function ChildTab(props: propsType): React.JSX.Element {
                   className="form-create-bill--payment__actions__btnDebt"
                   onClick={onOpenDebt}
                 >
-                  Thanh toán nhiều hình thức
+                  Hình thức thanh toán
                 </Button>
               </Col>
               <Col span={14}>
