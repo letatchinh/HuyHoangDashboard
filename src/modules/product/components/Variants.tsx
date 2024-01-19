@@ -1,5 +1,5 @@
-import { MinusCircleOutlined, PlusCircleOutlined } from "@ant-design/icons";
-import { Button, Col, Form, Modal, Row, Select } from "antd";
+import { CloseSquareOutlined, MinusCircleOutlined, PlusCircleOutlined } from "@ant-design/icons";
+import { Button, Col, Form, Modal, Popconfirm, Row, Select } from "antd";
 import { get } from "lodash";
 import React, { useCallback, useState } from "react";
 import InputNumberAnt from "~/components/Antd/InputNumberAnt";
@@ -145,8 +145,17 @@ export default function Variants({
                     </Form.Item>
                   </Col>
 
-                  <Col>
-                    <MinusCircleOutlined onClick={() => remove(name)} />
+                  <Col span={1}>
+                    <Popconfirm
+                      title="Bạn muốn xoá đơn vị này?"
+                      onConfirm={() => remove(name)}
+                      okText="Xoá"
+                      cancelText="Huỷ"
+                    >
+                      <CloseSquareOutlined
+                        style={{ fontSize: 18, color: "red" }}
+                      />
+                    </Popconfirm>
                   </Col>
                 </Row>
               )

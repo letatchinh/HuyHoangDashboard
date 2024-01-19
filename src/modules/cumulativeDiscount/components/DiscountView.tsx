@@ -1,7 +1,8 @@
-import { Divider, Typography } from "antd";
+import { Divider, Form, Radio, Switch, Typography } from "antd";
 import dayjs from "dayjs";
 import { get } from "lodash";
 import React, { useMemo } from "react";
+import { STATUS, STATUS_NAMES } from "~/constants/defaultValue";
 import { formatter } from "~/utils/helpers";
 import {
   TYPE_DISCOUNT,
@@ -13,6 +14,8 @@ import {
 type propsType = {
   data: any;
   units: any;
+  name : any;
+  isSameTarget : boolean;
 };
 const Layout = ({ label, value }: { label: string; value: any }) => (
   <p>
@@ -26,9 +29,9 @@ const CLONE_TYPE_REWARD_VI: any = TYPE_REWARD_VI;
 export default function DiscountView({
   data,
   units,
+  name,
+  isSameTarget,
 }: propsType): React.JSX.Element {
-  console.log(data, "data");
-  console.log(units, "units");
 
   const conditionText = useMemo(() => {
     const applyUnit = units?.find(
@@ -87,6 +90,24 @@ export default function DiscountView({
           <Layout label="Thời gian áp dụng" value={TimeText} />
         </>
       )}
+      <Form.Item
+      name={[name,"status"]}
+      label="Trạng thái"
+      labelCol={{span : 2}}
+      >
+        <Radio.Group
+        size="small"
+        options={[{
+          label : STATUS_NAMES.ACTIVE,
+          value : STATUS.ACTIVE
+        },{
+          label : STATUS_NAMES.INACTIVE,
+          value : STATUS.INACTIVE
+        }]}
+        optionType="button"
+        buttonStyle="solid"
+      />
+      </Form.Item>
     </div>
   );
 }
