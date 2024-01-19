@@ -14,6 +14,7 @@ type ItemSearch = {
 };
 export default function SelectPharmacy({form}: propsType): React.JSX.Element {
   const { onNotify } = useNotificationStore();
+  const [loading,setLoading] = useState(false);
   const [initOption,setInitOption] = useState([]);
   const fetchOptions : any = async (keyword : string) => {
     try {
@@ -34,6 +35,7 @@ export default function SelectPharmacy({form}: propsType): React.JSX.Element {
   useEffect(() => {
     const fetchInit = async() => {
     try {
+      setLoading(true);
       const pharmacies = await PharmacyModule.api.search({
         id : form.getFieldValue("pharmacyId"),
         keyword : ''
@@ -43,10 +45,11 @@ export default function SelectPharmacy({form}: propsType): React.JSX.Element {
         value: get(item, "_id"),
       }));
       setInitOption(newOptions);
+      setLoading(false);
       await form.validateFields(['pharmacyId']);
     
     } catch (error) {
-      
+      setLoading(false);
     }
     };
     fetchInit();
@@ -63,6 +66,7 @@ export default function SelectPharmacy({form}: propsType): React.JSX.Element {
       ]}
     >
       <DebounceSelect
+        loading={loading}
         placeholder="Chọn nhà thuốc"
         fetchOptions={fetchOptions}
         style={{ width: "100%" }}
