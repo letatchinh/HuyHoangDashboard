@@ -2,7 +2,7 @@ import { Button, Col, Form, Row } from "antd";
 import { pick } from "lodash";
 import React, { useCallback, useState } from "react";
 import ModalAnt from "~/components/Antd/ModalAnt";
-import { billItem, FormFieldCreateBill, PayloadCreateBill } from "~/modules/bill/bill.modal";
+import { billItem, FormFieldCreateBill, PayloadCreateBill } from "~/modules/sale/bill/bill.modal";
 import useNotificationStore from "~/store/NotificationContext";
 import { useCreateBill } from "../../bill.hook";
 import useCreateBillStore from "../../storeContext/CreateBillContext";

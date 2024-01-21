@@ -1,6 +1,7 @@
-import { compact, get } from "lodash";
+import { compact, get, unset } from "lodash";
 import { v4 } from "uuid";
-import { cumulativeDiscountType } from "../cumulativeDiscount/cumulativeDiscount.modal";
+import { DataSourceType, ItemDataSource, KEY_DATA_PHARMACY, KEY_PRIORITY } from "~/pages/Dashboard/Bill/CreateBill";
+import { cumulativeDiscountType } from "../../cumulativeDiscount/cumulativeDiscount.modal";
 import apis from "./bill.api";
 import { billItem } from "./bill.modal";
 import { DataItem } from "./storeContext/CreateBillContext";
@@ -222,3 +223,50 @@ export const reducerDiscountBillItems = (billItems: any[]) => {
 
   return newBillItems;
 };
+
+export const validateDataStorage = (dataFromLocalStorage : any) : boolean => 
+        dataFromLocalStorage === null ||
+        !dataFromLocalStorage ||
+        Object.keys(dataFromLocalStorage).length === 0 ||
+        dataFromLocalStorage === "{}" ||
+        dataFromLocalStorage === "undefined" ||
+        dataFromLocalStorage === "null" ||
+        dataFromLocalStorage === ""
+
+
+// Controller LocalStorage
+
+const onAddLocalStorage = (newDataSource : DataSourceType) => {
+  const dataSourceStorage : any = localStorage.getItem(KEY_DATA_PHARMACY);
+  const isInValidDataSource = validateDataStorage(dataSourceStorage);
+  if(isInValidDataSource){
+    localStorage.setItem(KEY_DATA_PHARMACY, JSON.stringify(newDataSource));
+  }else{
+    const dataSource = JSON.parse(dataSourceStorage);
+    localStorage.setItem(KEY_DATA_PHARMACY, JSON.stringify({
+      ...dataSource,
+      ...newDataSource
+    }));
+  };
+};
+
+const onUseKeyPriority = (key : string) => {
+  localStorage.setItem(KEY_PRIORITY,JSON.stringify(key));
+}
+const onRemoveLocalStorage = (key: any) => {
+  const dataFromLocalStorage = localStorage.getItem(KEY_DATA_PHARMACY) || "";
+  const dataParse = JSON.parse(dataFromLocalStorage) || {};
+  if (dataParse.hasOwnProperty(key)) {
+    unset(dataParse,key)
+  }
+  localStorage.setItem(KEY_DATA_PHARMACY, JSON.stringify(dataParse));
+};
+
+export const addDataToSaleScreen = (data : ItemDataSource) => {
+  const newKey : string = v4();
+  const newDataSource :DataSourceType = {
+    [newKey]: data
+  };
+  onAddLocalStorage(newDataSource); // Add new DataSource
+  onUseKeyPriority(newKey); // use priority key to active Tab
+}

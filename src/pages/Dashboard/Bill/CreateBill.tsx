@@ -4,20 +4,29 @@ import { concat, forIn, get, unset } from "lodash";
 import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { v4 } from "uuid";
-import { default as Bill, default as BillModule } from "~/modules/bill";
-import { billItem } from "~/modules/bill/bill.modal";
-import SelectProduct from "~/modules/bill/components/SelectProduct";
+import { default as Bill, default as BillModule } from "~/modules/sale/bill";
+import { billItem } from "~/modules/sale/bill/bill.modal";
+import SelectProduct from "~/modules/sale/bill/components/SelectProduct";
 import logo from '~/assets/images/header/logo-white.svg';
 
-const KEY_DATA_PHARMACY = "bill-pharmacy";
-type ItemDataSource = {
+export const KEY_DATA_PHARMACY = "bill-pharmacy";
+export const KEY_PRIORITY = "key-priority"; // Tab Will Use this key and Remove then (If Have)
+type DataUpdateQuotationType = {
+  billItems : billItem[],
+  id : string,
+  code : string
+}
+export type ItemDataSource = {
+  typeTab : "createQuotation" | "updateQuotation",
   billItems: billItem[];
   pharmacyId: string | null;
+  dataUpdateQuotation? : DataUpdateQuotationType;
 };
-type DataSourceType = {
+export type DataSourceType = {
   [key: string]: ItemDataSource;
 };
 const initData: ItemDataSource = {
+  typeTab : "createQuotation",
   billItems: [],
   pharmacyId: null,
 };
@@ -45,6 +54,7 @@ const CreateBillPage = (): React.JSX.Element => {
     const newKey = v4();
     let newDataSource: DataSourceType = {
       [newKey]: {
+        typeTab : "createQuotation",
         billItems: [],
         pharmacyId: null,
       },
@@ -73,7 +83,6 @@ const CreateBillPage = (): React.JSX.Element => {
     } else {
       setDataSource(newDataSource);
     }
-    console.log(newDataSource, "newDataSource");
   };
   // Controller Tabs
   const onAddTab = () => {
@@ -144,25 +153,36 @@ const CreateBillPage = (): React.JSX.Element => {
   useEffect(() => {
     try {
       // Not Have DataSource  initialize new Data
-      const dataFromLocalStorage = localStorage.getItem(KEY_DATA_PHARMACY);
+      const dataFromLocalStorage : any  = localStorage.getItem(KEY_DATA_PHARMACY);
+      const isInValidDataSource : boolean = BillModule.service.validateDataStorage(dataFromLocalStorage);
       if (
-        !dataFromLocalStorage ||
-        Object.keys(dataFromLocalStorage).length === 0 ||
-        dataFromLocalStorage === "{}" ||
-        dataFromLocalStorage === "undefined" ||
-        dataFromLocalStorage === "null" ||
-        dataFromLocalStorage === ""
-      ) {
+        isInValidDataSource
+        ) {
         initDatSource();
       } else {
         // Data source is Ready
-        const dataReady: any = JSON.parse(dataFromLocalStorage);
-        let newTabs: any = [];
+        const dataReady: DataSourceType = JSON.parse(dataFromLocalStorage);
+        let newTabs: TabsProps['items'] = [];
         forIn(dataReady, (value, key) => {
-          newTabs.push({
-            key,
-            label: `Đơn hàng ${newTabs?.length + 1}`,
-          });
+          switch (get(value,'typeTab')) {
+            case 'createQuotation':
+              newTabs?.push({
+                key,
+                label: `Đơn hàng ${newTabs?.length + 1}`,
+              });
+              break;
+            case 'updateQuotation':
+              const {dataUpdateQuotation} = value;
+              newTabs?.push({
+                key,
+                label: `Cập nhật ĐHT ${get(dataUpdateQuotation,'code','')}`,
+              });
+              break;
+          
+            default:
+              break;
+          }
+
         });
         setTabs(newTabs);
 
@@ -187,10 +207,20 @@ const CreateBillPage = (): React.JSX.Element => {
     localStorage.setItem(KEY_DATA_PHARMACY, JSON.stringify(dataSource));
   }, [dataSource]);
 
-  // Auto Set Active key if First tabs
+
   useEffect(() => {
+    // If Have key Priority will Set Key and Remove Then
+    const keyPriorityStorage = localStorage.getItem(KEY_PRIORITY);
+    if(keyPriorityStorage){
+      const keyPriority = JSON.parse(keyPriorityStorage);
+      setActiveKey(keyPriority);
+      localStorage.removeItem(KEY_PRIORITY); // Remove after set 
+      return;
+    };
+      // Auto Set Active key if First tabs
     if (!activeKey) {
       setActiveKey(tabs?.[0].key);
+      return;
     }
   }, [activeKey, tabs]);
   return (
@@ -274,22 +304,3 @@ const CreateBillPage = (): React.JSX.Element => {
 };
 
 export default CreateBillPage;
-
-// Controller LocalStorage
-
-// const onAddLocalStorage = (key: any) => {
-//   const dataFromLocalStorage = localStorage.getItem(KEY_DATA_PHARMACY) || "";
-//   const dataParse = JSON.parse(dataFromLocalStorage) || {};
-//   localStorage.setItem(
-//     KEY_DATA_PHARMACY,
-//     JSON.stringify({ ...dataParse, [key] : initData })
-//   );
-// };
-// const onRemoveLocalStorage = (key: any) => {
-//   const dataFromLocalStorage = localStorage.getItem(KEY_DATA_PHARMACY) || "";
-//   const dataParse = JSON.parse(dataFromLocalStorage) || {};
-//   if (dataParse.hasOwnProperty(key)) {
-//     unset(dataParse,key)
-//   }
-//   localStorage.setItem(KEY_DATA_PHARMACY, JSON.stringify(dataParse));
-// };

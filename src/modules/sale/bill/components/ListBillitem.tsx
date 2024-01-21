@@ -1,6 +1,6 @@
-import { Dropdown, Space, Typography } from 'antd';
+import { EditTwoTone } from '@ant-design/icons';
+import { Button, Typography } from 'antd';
 import { ColumnsType } from 'antd/es/table/InternalTable';
-import { MenuProps } from 'antd/lib/index';
 import { get } from 'lodash';
 import React from 'react';
 import TableAnt from '~/components/Antd/TableAnt';
@@ -13,12 +13,6 @@ type propsType = {
 
 }
 
-const items: MenuProps['items'] = [
-  {
-    label: 'Submit and continue',
-    key: '1',
-  },
-];
 const CLONE_STATUS_BILLITEM_VI : any = STATUS_BILLITEM_VI;
 export default function ListBillItem(props:propsType) : React.JSX.Element {
     const {bill} = useUpdateBillStore();
@@ -89,22 +83,16 @@ export default function ListBillItem(props:propsType) : React.JSX.Element {
                 return <Typography.Text strong>{formatter(remainAmount)}</Typography.Text>
             },
         },
-        // {
-        //     title : "Thao tác",
-        //     dataIndex : '_id',
-        //     key : 'action',
-        //     align : 'center',
-        //     render(_id, record, index) {
-        //         return <Dropdown.Button
-        //         type="primary"
-        //         menu={{
-        //           items,
-        //         }}
-        //       >
-        //         Cập nhật
-        //       </Dropdown.Button>
-        //     },
-        // },
+        {
+            title : "Thao tác",
+            dataIndex : '_id',
+            key : 'action',
+            align : 'center',
+            render(_id, record, index) {
+                // return <Button type='primary'>Cập nhật</Button>
+                return <EditTwoTone />
+            },
+        },
         
     ]
     return (

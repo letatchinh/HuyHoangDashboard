@@ -1,4 +1,4 @@
-import Bill from "~/modules/bill";
+import Bill from "~/modules/sale/bill";
 
 const BillPage = () =>  {
   return (

@@ -2,13 +2,13 @@ export const STATUS_BILL = {
   NEW: "NEW",
   PROCESSING: "PROCESSING",
   COMPLETED: "COMPLETED",
-  CANCELED: "CANCELED",
+  CANCELLED: "CANCELLED",
 };
 export const STATUS_BILL_VI = {
   NEW: "Đã tiếp nhận",
   PROCESSING: "Đang xử lý",
   COMPLETED: "Đã hoàn thành",
-  CANCELED: "Đã huỷ",
+  CANCELLED: "Đã huỷ",
 };
 
 export const STATUS_BILLITEM = {
@@ -19,7 +19,7 @@ export const STATUS_BILLITEM = {
   PACKAGED: "PACKAGED",
   SHIPPING: "SHIPPING",
   COMPLETED: "COMPLETED",
-  CANCELED: "CANCELED",
+  CANCELLED: "CANCELLED",
 };
 
 export const STATUS_BILLITEM_VI = {
@@ -30,5 +30,5 @@ export const STATUS_BILLITEM_VI = {
   PACKAGED: "Đã đóng gói",
   SHIPPING: "Đang giao",
   COMPLETED: "Đã hoàn thành",
-  CANCELED: "Đã huỷ",
+  CANCELLED: "Đã huỷ",
 };
