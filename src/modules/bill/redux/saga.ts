@@ -55,6 +55,15 @@ function* deleteBill({payload : id} : any) : any {
   }
 }
 
+function* getListProductSuggest({payload:query} : any) : any {
+  try {
+    const data = yield call(api.getListProductSuggest,query);
+    yield put(billSliceAction.getListProductSuggestSuccess(data));
+  } catch (error:any) {
+    yield put(billSliceAction.getListProductSuggestFailed(error));
+  }
+};
+
 
 export default function* billSaga() {
   yield takeLatest(billSliceAction.getListRequest, getListBill);
@@ -63,4 +72,5 @@ export default function* billSaga() {
   yield takeLatest(billSliceAction.createRequest, createBill);
   yield takeLatest(billSliceAction.updateRequest, updateBill);
   yield takeLatest(billSliceAction.deleteRequest, deleteBill);
+  yield takeLatest(billSliceAction.getListProductSuggestRequest, getListProductSuggest);
 }

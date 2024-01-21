@@ -38,6 +38,11 @@ const {
 const getListDebtSelector = getSelector('debt');
 const isGetDebtLoadingSelector = getSelector('isGetDebtLoading');
 const getDebtFailedSelector = getSelector('getDebtFailed');
+
+const getListProductSuggestSuccessSelector = getSelector('listProductSuggest');
+const getListProductSuggestFailedSelector = getSelector('getProductSuggestFailed');
+const listProductSuggestLoadingSelector = getSelector('isProductSuggestLoading');
+
 export const useBillPaging = () => useSelector(pagingSelector);
 
 export const useGetBills = (param: any) => {
@@ -156,5 +161,15 @@ export const useGetDebtRule = () => {
     loadingSelector: isGetDebtLoadingSelector,
     dataSelector: getListDebtSelector,
     failedSelector: getDebtFailedSelector,
+  });
+};
+
+export const useGetProductListSuggest = (param?: any) => {
+  return useFetchByParam({
+    action: billSliceAction.getListProductSuggestRequest,
+    loadingSelector: listProductSuggestLoadingSelector,
+    dataSelector: getListProductSuggestSuccessSelector,
+    failedSelector: getListProductSuggestFailedSelector,
+    param,
   });
 };

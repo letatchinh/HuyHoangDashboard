@@ -8,7 +8,10 @@ interface cloneInitState extends initStateSlice {
  // Add cloneInitState Type Here
  isGetDebtLoading? : boolean,
  getDebtFailed? : any,
- debt? : any,
+  debt?: any,
+  listProductSuggest?:any,
+  isProductSuggestLoading?: boolean,
+  getProductSuggestFailed?: any,
 }
 class BillClassExtend extends InstanceModuleRedux {
   cloneReducer;
@@ -47,6 +50,17 @@ class BillClassExtend extends InstanceModuleRedux {
         ...payload,
         billItems
       }
+      },
+    getListProductSuggestRequest: (state:cloneInitState) => {
+      state.isProductSuggestLoading = true;
+      },
+    getListProductSuggestSuccess: (state:cloneInitState, { payload }:{payload?:any}) => {
+      state.isProductSuggestLoading = false;
+      state.listProductSuggest = payload;
+      },
+    getListProductSuggestFailed: (state:cloneInitState, { payload }:{payload:any}) => {
+      state.isProductSuggestLoading = false;
+      state.getProductSuggestFailed = payload;
     },
     };
 
@@ -54,7 +68,11 @@ class BillClassExtend extends InstanceModuleRedux {
       ...this.initialState,
       isGetDebtLoading : false,
       getDebtFailed : null,
-      debt : null,
+      debt: null,
+      
+      listProductSuggest: [],
+      isProductSuggestLoading: false,
+      getProductSuggestFailed: null,
       // Want Add more State Here...
     }
   }

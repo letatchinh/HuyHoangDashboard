@@ -6,7 +6,8 @@ import { FormFieldCreateBill } from "../bill.modal";
 
 type propsType = {};
 export default function SelectPharmacy(props: propsType): React.JSX.Element {
-  const [pharmacies, isLoading] = PharmacyModule.hook.useGetPharmacies();
+  const key = useMemo(() => ({ keyword: '' }), []); //
+  const [pharmacies, isLoading] = PharmacyModule.hook.useGetPharmacies(key);
 
   const options = useMemo(
     () =>

@@ -11,6 +11,7 @@ import { formatter } from "~/utils/helpers";
 import { billItem } from "../bill.modal";
 import useCreateBillStore from "../storeContext/CreateBillContext";
 import ExpandRowDiscount from "./ExpandRowDiscount";
+import ProductListSuggest from "./productSuggest";
 type propsType = {};
 export default function ProductSelectedTable(
   props: propsType
@@ -122,26 +123,29 @@ export default function ProductSelectedTable(
   console.log(billItems,'billItems');
   
   return (
-    <TableAnt
-      className="table-selected-product"
-      {...tableProps}
-      size="small"
-      pagination={false}
-      expandable={{
-        expandedRowRender: (record: billItem) => (
-          <ExpandRowDiscount data={get(record, "cumulativeDiscount")} />
-        ),
-        defaultExpandAllRows: true,
-        rowExpandable: (record: billItem) =>
-          !!get(record, "cumulativeDiscount", []).length,
-        expandIcon: ({ expanded, onExpand, record ,expandable}) =>
-        expandable ? 
-          expanded ? (
-            <UpCircleTwoTone onClick={(e: any) => onExpand(record, e)} />
-          ) : (
-            <GiftTwoTone onClick={(e: any) => onExpand(record, e)} />
-          ) : null,
-      }}
-    />
+    <>
+      <TableAnt
+        className="table-selected-product"
+        {...tableProps}
+        size="small"
+        pagination={false}
+        expandable={{
+          expandedRowRender: (record: billItem) => (
+            <ExpandRowDiscount data={get(record, "cumulativeDiscount")} />
+          ),
+          defaultExpandAllRows: true,
+          rowExpandable: (record: billItem) =>
+            !!get(record, "cumulativeDiscount", []).length,
+          expandIcon: ({ expanded, onExpand, record ,expandable}) =>
+          expandable ? 
+            expanded ? (
+              <UpCircleTwoTone onClick={(e: any) => onExpand(record, e)} />
+            ) : (
+              <GiftTwoTone onClick={(e: any) => onExpand(record, e)} />
+            ) : null,
+        }}
+      />
+      <ProductListSuggest/>
+    </>
   );
 }
