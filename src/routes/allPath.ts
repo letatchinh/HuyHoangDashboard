@@ -34,5 +34,8 @@ export const PATH_APP = {
     user: {
       root: path(ROOTS.app, '/user/*'),
     },
+    vouchers: {
+      root: path(ROOTS.app, '/vouchers'),
+    },
   
   };
