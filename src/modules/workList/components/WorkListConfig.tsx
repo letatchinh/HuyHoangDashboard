@@ -89,6 +89,7 @@ const BoardConfig: FC<BoardConfigProps> = ({ name, id, dataBoardConfigItem }) =>
             <Dropdown
               trigger={['click']}
               open={dropdownVisible}
+              destroyPopupOnHide
               onOpenChange={(visible) => setDropdownVisible(visible)}
               dropdownRender={() => (menu)}
             >
