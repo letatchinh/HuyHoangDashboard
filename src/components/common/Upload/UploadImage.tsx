@@ -20,6 +20,7 @@ interface UploadImageProps {
   children?: React.ReactNode;
   disabled?: boolean;
   className?: string;
+  isShowImg?: boolean
 };
 
 const DEFAULT_RESOURCE: string = 'pharma';
@@ -33,6 +34,7 @@ const UploadImage: React.FC<UploadImageProps> = ({
   children,
   disabled = false,
   className,
+  isShowImg = true
 }) => {
   const [isCompressing, setIsCompressing] = useState(false);
   const [compressPercent, setCompressPercent] = useState<number>(0);
@@ -108,7 +110,7 @@ const UploadImage: React.FC<UploadImageProps> = ({
       </div>
     </div>
   );
-
+console.log(isShowImg,'isShowImg')
   return (
     <Upload
       name="file"
@@ -120,7 +122,7 @@ const UploadImage: React.FC<UploadImageProps> = ({
       onChange={handleChange}
       disabled={disabled}
     >
-      {imgUrl && !isCompressing && !isLoading ? (
+      { isShowImg &&(imgUrl && !isCompressing && !isLoading ? (
         <img
           src={imgUrl}
           alt="avatar"
@@ -128,7 +130,7 @@ const UploadImage: React.FC<UploadImageProps> = ({
         />
       ) : (
         uploadButton
-      )}
+        ))}
       {children}
     </Upload>
   );

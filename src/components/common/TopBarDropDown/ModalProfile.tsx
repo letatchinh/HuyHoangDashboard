@@ -56,38 +56,30 @@ interface ModalProfileProps {
       });
     }
   };
-
   const onFinish = (values: any) => {
     const { groups, ...rest } = values;
     const user = {
       ...rest,
       avatar: logo,
+      userId: profile?.userId,
     };
     if (statusAccount === 'INACTIVE') {
       unset(user, 'password');
       unset(user, 'confirmPassword');
-      unset(user, 'updateAccount');
+      // unset(user, 'updateAccount');
     };
-    console.log(user)
-    // handleUpdateProfile({ user, groups });
+    handleUpdateProfile(user);
     // onCloseForm()
   };
-
+     
+   //Handle avatar
   const handleChange = useCallback(
-    (info: any) => {
-      if (info.file.status === 'uploading') {
-        setIsLoading(true);
-        return;
-      }
-      if (info.file.status === 'done') {
-        const imageUrl = info.file?.response?.url;
-        setIsLoading(false);
+    (imageUrl: string) => {
         setLogo(imageUrl);
-      }
     },
-    [setLogo]
+    [logo]
   );
-  
+
   useEffect(() => {
     form.resetFields();
     const { avatar, address, profile, user } = initUserProfile;
@@ -103,6 +95,7 @@ interface ModalProfileProps {
       form.setFieldsValue(newData);
       setDistrictCode(profile?.address?.districtId);
       setCityCode(profile?.address?.cityId);
+      setLogo(profile?.avatar);
     };
     
     if (avatar) {
@@ -123,22 +116,17 @@ interface ModalProfileProps {
     <div className='modal-profile'>
       <Row align='top' justify='center' wrap={false}>
         <Col sm={{ span: 24 }} md={{ span: 9 }} style={{ alignSelf: 'center', textAlign: 'center' }}>
-          {render(
           <Avatar src={logo} shape='circle' style={{ objectFit: 'contain', fontSize: 80, textTransform: 'uppercase' }} size={280}>
             {/* {getShortName(get(initUserEmployee, 'fullName', ''))} */}
           </Avatar>
-          )}
-          {
-            render(
             <UploadImage
               className='upLoadAvatar'
               imgUrl={logo}
-              // onChange={handleChange}
+              onChange={handleChange}
+              isShowImg={false}
             >
-              <Button loading={isLoadingAvatar} type='text' style={{ backgroundColor: '#c8c8c8', borderRadius: 10 }} icon={<UploadOutlined />}></Button>
+              {render(<Button loading={isLoadingAvatar} type='text' style={{ backgroundColor: '#c8c8c8', borderRadius: 10 }} icon={<UploadOutlined />}></Button>)}
             </UploadImage>
-            )
-          }
         </Col>
         <Col flex={1}>
           <Form
@@ -152,12 +140,12 @@ interface ModalProfileProps {
             initialValues={initUserProfile}
           >
             {
-              render(
               <BaseBorderBox style={{ paddingBottom: 8 }} title={<h5>Thông tin người dùng</h5>}>
                 <Form.Item name={'fullName'} label='Tên nhân viên'>
-                  <Input></Input>
+                  {render(<Input></Input>)}
                 </Form.Item>
                 <Form.Item name={'gender'} label='Giới tính'>
+                  {render(
                     <Select>
                       <Option value='M' key='male'>
                         Nam
@@ -165,12 +153,12 @@ interface ModalProfileProps {
                       <Option value='F' key='female'>
                         Nữ
                       </Option>
-                    </Select>
+                    </Select>)}
                 </Form.Item>
 
                 <AddressFormSection
                   span={24}
-                  // isLoading={isGetUserEmployeeLoading}
+                  isLoading={isLoadingSubmit || isLoading}
                   form={form}
                   cityCode={cityCode}
                   setCityCode={setCityCode}
@@ -178,21 +166,19 @@ interface ModalProfileProps {
                   setDistrictCode={setDistrictCode}
                 />
               </BaseBorderBox>
-              )
             }
-            {render(
               <BaseBorderBox title={<h5>Thông tin tài khoản </h5>}>
-                <Account
+                {render(<Account
+                  required = {statusAccount === 'ACTIVE'}
                   setStatusAccount={setStatusAccount}
                   statusAccount={statusAccount}
-                />
+                />)}
               </BaseBorderBox>
-            )}
               <Space style={{ width: '100%', justifyContent: 'flex-end', marginTop: 14 }}>
                 <Button htmlType='submit' type='primary' loading={isLoadingSubmit}>
                   Cập nhật
                 </Button>
-              <Button htmlType='button' loading={isLoadingSubmit}>Huỷ</Button>
+              <Button htmlType='button' loading={isLoadingSubmit} onClick={onCloseForm}>Huỷ</Button>
             </Space>
           </Form>
         </Col>

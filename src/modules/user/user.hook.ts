@@ -46,6 +46,8 @@ const isGetProfileLoadingSelector = getSelector('isGetProfileLoading');
 const getProfileFailedSelector = getSelector('getProfileFailed');
 
 const isSubmitProfileLoadingSelector = getSelector('isSubmitUpdateProfileLoading');
+const updateProfileSuccessSelector = getSelector('updateProfileSuccess');
+const updateProfileFailedSelector = getSelector('updateProfileFailed');
 
 export const useGetUsers = (params: any) => {
   return useFetchByParam({
@@ -77,11 +79,11 @@ export const useGetProfileUser = () => {
 
 export const useUpdateProfile = (callback?: any) => {
   useSuccess(
-    updateSuccessSelector,
+    updateProfileSuccessSelector,
     `Cập nhật ${MODULE_VI} thành công`,
     callback
   );
-  useFailed(updateFailedSelector);
+  useFailed(updateProfileFailedSelector);
 
   return useSubmit({
     action: userSliceAction.updateProfileRequest,

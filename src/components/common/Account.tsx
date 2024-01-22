@@ -27,7 +27,7 @@ const Account = ({ isLoading, required, statusAccount, setStatusAccount }: Props
           <Switch
               checked={statusAccount === 'ACTIVE'}
               onChange={(value) => setStatusAccount(value ? 'ACTIVE' : 'INACTIVE')}
-              unCheckedChildren='Cập nhật'
+              // unCheckedChildren='Cập nhật'
               // checkedChildren='Không cập nhật'
           />
         </Form.Item>

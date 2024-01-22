@@ -6,7 +6,9 @@ import { useDispatch } from "react-redux";
 import ModalProfile from "~/components/common/TopBarDropDown/ModalProfile";
 import AuthModule from "~/modules/auth";
 import { authActions } from "~/modules/auth/redux/reducer";
+import { userSliceAction } from "~/modules/user/redux/reducer";
 import { useUpdateProfile } from "~/modules/user/user.hook";
+import { useResetState } from "~/utils/hook";
 type propsType = {};
 type LayoutItemProps = {
     icon : React.JSX.Element,
@@ -21,16 +23,22 @@ const LayoutItem = ({icon,title,onClick}:LayoutItemProps) => <div className="d-f
 export default function ProfileMenu(props: propsType): React.JSX.Element {
   const [,onLogout] = AuthModule.hook.useLogout();
   const profile = AuthModule.hook.useGetProfile();
-  const dispath = useDispatch();
+  const dispatch = useDispatch();
   useEffect(() => {;
-    dispath(authActions.getProfileRequest());
+    dispatch(authActions.getProfileRequest());
   }, []);
+
+  const resetStateUpdateProfile = () => dispatch(userSliceAction.reset());
 
   const [isOpen, setIsOpen] = useState(false);
   const onClose = () => {
     setIsOpen(false);
+    resetStateUpdateProfile();
   };
-  const [isLoadingSubmit, handleUpdateProfile] = useUpdateProfile(onClose);
+  
+  const [isLoadingSubmit, handleUpdateProfile] = useUpdateProfile(() => {
+    onClose();
+  });
 
   const items: any[] = useMemo(() => [
     {
@@ -67,6 +75,7 @@ export default function ProfileMenu(props: propsType): React.JSX.Element {
         width={1020}
         footer={null}
         className="form-modal"
+        destroyOnClose
       >
         <ModalProfile handleUpdateProfile = {handleUpdateProfile} onCloseForm={() => setIsOpen(false)} isLoadingSubmit = {isLoadingSubmit} />
       </Modal>
