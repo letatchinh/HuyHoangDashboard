@@ -5,12 +5,7 @@ import React, { memo, useEffect, useState } from 'react';
 import { convertQueryToObject } from '~/utils/helpers';
 import { useFormTaskContext } from '../screens/WorkList';
 import { useUpdateWorkListParams } from '../workList.hook';
-// import { useFormTaskContext } from './WorkList';
-// import { useUpdateWorkListParams } from '~/hooks/workList';
-// import { convertQueryToObject } from '~/utils/helper';
-import { RangePickerProps } from 'antd/es/date-picker';
 const { RangePicker } = DatePicker;
-
 const listOptionsSearch = [
   { value: 'assignUser', label: 'Tên người tạo' },
   { value: 'name', label: 'Tên công việc' },
@@ -18,9 +13,7 @@ const listOptionsSearch = [
   { value: 'startDate', label: 'Ngày tạo' },
   { value: 'code', label: 'Mã công việc' },
 ];
-
 const headValue = head(listOptionsSearch)?.value;
-
 const MenuFilter = () => {
 //   const [inputValue, setInputValue] = useState<[Moment | null, Moment | null]>([null, null]);
   const { boardData } = useFormTaskContext();
@@ -35,30 +28,15 @@ const MenuFilter = () => {
     };
     return result;
   }, {});
-
   const [searchBy, setSearchBy] = useState<any>(headValue);
-
   const [keyword, { setKeyword, onParamChange }] = useUpdateWorkListParams();
-
   useEffect(() => {
     const searchValue = convertQueryToObject();
     const keySearch:any = head(Object.keys(searchValue));
     setSearchBy(keySearch ?? headValue);
     setKeyword(searchValue[keySearch]);
   }, [setKeyword]);
-
-
   const [inputValue, setInputValue] = React.useState<[Dayjs | null, Dayjs | null]>([null, null]);
-
-  // const onRangeChange = (dates: null | (Dayjs | null)[], dateStrings: string[]) => {
-  //   const [startDate, endDate] = dateStrings;
-  //   onParamChange({
-  //     startDate: startDate || null,
-  //     endDate: endDate || null,
-  //   });
-  //   setKeyword('date');
-  //   setInputValue(dates);
-  // };
   const onRangeChange = (dates: [Dayjs | null, Dayjs | null] | null, dateStrings: string[]) => {
     if (dates) {
       const [startDate, endDate] = dateStrings;
@@ -69,8 +47,15 @@ const MenuFilter = () => {
       setKeyword('date');
       setInputValue(dates);
     }
+    else {
+      onParamChange({
+        startDate: null,
+        endDate: null,
+      });
+      setInputValue([null, null]);
+    }
   };
-  
+
   return (
     <div
       className="menu-filter"

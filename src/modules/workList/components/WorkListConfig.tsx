@@ -71,27 +71,26 @@ const BoardConfig: FC<BoardConfigProps> = ({ name, id, dataBoardConfigItem }) =>
               />
             </Col>
             <WithOrPermission permission={[POLICIES.ADMIN_WORKMANAGEMENT, POLICIES.WRITE_WORKMANAGEMENT]}>
-            <Col style={{ width: 20 }} className="work-item-top_delete-button">
-              <Popconfirm
-                title="Bạn có chắc chắn muốn cột này ?"
-                onConfirm={() => {
-                  handleDeleteWork(id);
-                }}
-                okText="Xác nhận"
-                cancelText="Huỷ"
-              >
-                <DeleteFilled style={{ color: '#DC3535' }} />
-              </Popconfirm>
-            </Col>
+              <Col style={{ width: 20 }} className="work-item-top_delete-button">
+                <Popconfirm
+                  title="Bạn có chắc chắn muốn cột này ?"
+                  onConfirm={() => {
+                    handleDeleteWork(id);
+                  }}
+                  okText="Xác nhận"
+                  cancelText="Huỷ"
+                >
+                  <DeleteFilled style={{ color: '#DC3535' }} />
+                </Popconfirm>
+              </Col>
             </WithOrPermission>
           </Row>
           <Tooltip title="Thêm mới công việc" color="blue" placement="bottom" mouseEnterDelay={0.2}>
             <Dropdown
               trigger={['click']}
               open={dropdownVisible}
-              overlay={menu}
               onOpenChange={(visible) => setDropdownVisible(visible)}
-            // dropdownRender={()=>()}
+              dropdownRender={() => (menu)}
             >
               <Button
                 type="primary"

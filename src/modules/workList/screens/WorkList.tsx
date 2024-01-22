@@ -72,7 +72,6 @@ const WorkList = () => {
   const openFormTask = (id: any, data: any) => {
     setPropsModal({ boardConfigId: id });
   };
-
   useEffect(() => {
     if (!visibleInfo) {
       setLength(workflowRef?.current?.offsetWidth ?? window.innerWidth);
@@ -83,12 +82,11 @@ const WorkList = () => {
   const changePosition = (sourceIndex: any, destinationIndex: any) => {
     const newData: any = [...boardConfigMemo];
   const sourceItem = newData?.[sourceIndex];
-  const destinationItem = newData?.[destinationIndex];
-  if (sourceItem && destinationItem) {
-    newData[sourceIndex] = destinationItem;
-    newData[destinationIndex] = sourceItem;
-    let valueIdxUp = get(newData[destinationIndex - 1], 'ordinal', 0);
-    let valueIdxDown = get(newData[destinationIndex], 'ordinal', valueIdxUp + 5);
+  if ( sourceIndex !== destinationIndex) {
+    newData.splice(sourceIndex, 1);
+    newData.splice(destinationIndex, 0, sourceItem);
+    let valueIdxUp = get(newData[destinationIndex-1], 'ordinal', 0);
+    let valueIdxDown = get(newData[destinationIndex+1], 'ordinal', valueIdxUp + 5);
     let newOrdinal = (valueIdxUp + valueIdxDown) / 2;
     Object.assign(sourceItem ?? {}, { ordinal: newOrdinal });
     updateBoardConfig({id:get(sourceItem,'_id',''),ordinal:newOrdinal});
