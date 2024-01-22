@@ -9,6 +9,14 @@ interface UserState extends initStateSlice{
   policy?: {},
   isGetPolicyLoading?: boolean,
   getPolicyFailed?: any,
+
+  profile?: {},
+  isGetProfileLoading?: boolean,
+  getProfileFailed?: any,
+
+  isSubmitUpdateProfileLoading?: boolean,
+  updateProfileSuccess?: any,
+  updateProfileFailed?: any,
 };
 class UserClassExtend extends InstanceModuleRedux {
   clone;
@@ -33,12 +41,47 @@ class UserClassExtend extends InstanceModuleRedux {
         state.isGetPolicyLoading = false;
         state.getPolicyFailed = payload
       },
+
+      getProfileRequest: (state: UserState, { payload }: any) => {
+        state.profile = {};
+        state.isGetProfileLoading = true;
+      },
+      getProfileSuccess: (state: UserState, { payload }: any) => {
+        state.isGetProfileLoading = false;
+        state.profile = payload;
+      },
+      getProfileFailed: (state: UserState, { payload }: any) => {
+        state.isGetProfileLoading = false;
+        state.getProfileFailed = payload
+      },
+
+      updateProfileRequest: (state: UserState, { payload }: any) => {
+        state.updateProfileSuccess = undefined;
+        state.isSubmitUpdateProfileLoading = true;
+        state.updateProfileFailed = undefined;
+      },
+      updateProfileSuccess: (state: UserState, { payload }: any) => {
+        state.isSubmitUpdateProfileLoading = false;
+        state.updateProfileSuccess = payload
+      },
+      updateProfileFailed: (state: UserState, { payload }: any) => {
+        state.isSubmitUpdateProfileLoading = false;
+        state.updateProfileFailed = payload;
+      },
     };
     this.cloneInitState = {
       ...this.initialState,
       policy: {},
       isGetPolicyLoading: false,
-      getPolicyFailed: false
+      getPolicyFailed: false,
+
+      profile: {},
+      isGetProfileLoading: false,
+      getProfileFailed: undefined,
+
+      updateProfileSuccess: undefined,
+      updateProfileFailed: undefined,
+      isSubmitUpdateProfileLoading: false
       // Want Add more State Here...
     };
   };

@@ -196,3 +196,10 @@ export const useFetchState = ({ api, query, useDocs = true, init = [], fieldGet,
   const dataReturn = useMemo(() => data, [data])
   return [dataReturn, loading]
 };
+
+export const getShortName = (name: any) => {
+  if (!!!name) return "";
+  const arrName = (name).trim()?.split(' ');
+  if (!arrName.length) return "";
+  return (arrName[arrName.length - 2]?.charAt(0) || "") + (arrName[arrName.length - 1]?.charAt(0) || "");
+};
