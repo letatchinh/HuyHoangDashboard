@@ -7,6 +7,7 @@ import employeeModule from '~/modules/employee';
 import userModule from '~/modules/user';
 import userGroupModule from '~/modules/userGroup';
 import policyModule from '~/modules/policy';
+import vouchers from '~/modules/vouchers';
 export default function* rootSaga() {
   yield all([
     authModule.redux.saga(),
@@ -17,5 +18,6 @@ export default function* rootSaga() {
     userModule.redux.saga(),
     userGroupModule.redux.saga(),
     policyModule.redux.saga(),
+    vouchers.redux.saga(),
   ]);
 };
