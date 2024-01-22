@@ -7,6 +7,7 @@ import RenderLoading from "~/components/common/RenderLoading";
 import { TypePropVariants } from "../product.modal";
 import UnitModule from "~/modules/productUnit";
 import { useFetchState } from "~/utils/hook";
+import { filterSelectWithLabel } from "~/utils/helpers";
 export default function Variants({
   form,
   isLoading : loading,
@@ -49,6 +50,8 @@ export default function Variants({
                           label: get(item, "name"),
                           value: get(item, "_id"),
                         }))}
+                        showSearch
+                        filterOption={filterSelectWithLabel}
                       />)}
                     </Form.Item>
                   </Col>

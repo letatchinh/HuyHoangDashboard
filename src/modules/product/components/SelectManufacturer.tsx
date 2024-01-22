@@ -20,11 +20,11 @@ export default function SelectManufacturer({
   const [open, setOpen] = useState(false);
   const onOpen = useCallback(() => setOpen(true), []);
   const onClose = useCallback(() => setOpen(false), []);
-  const [manufacturers,loading] = useFetchState({api : ManufacturerModule.api.getAllPublic,useDocs : false});
-  const options = useMemo(() => manufacturers?.map((item:any) => ({
-    label : get(item,'name'),
-    value : get(item,'_id'),
-  })),[manufacturers]);
+  // const [manufacturers,loading] = useFetchState({api : ManufacturerModule.api.getAllPublic,useDocs : false});
+  // const options = useMemo(() => manufacturers?.map((item:any) => ({
+  //   label : get(item,'name'),
+  //   value : get(item,'_id'),
+  // })),[manufacturers]);
   const fetchOptionsManufacturer = useCallback(async (keyword?: string) => {
     try {
       const res = await ManufacturerModule.api.getAll({
@@ -60,11 +60,12 @@ export default function SelectManufacturer({
       >
       {RenderLoading(
           isLoading,
-          <Select 
+          <DebounceSelect 
             className="right--parent"
             placeholder="Hãng sản xuất"
-            options={options}
+            fetchOptions={fetchOptionsManufacturer}
             style={{ width: "100%" }}
+            initOptions={initManufacturer}
           />
         )}
       </Form.Item>
