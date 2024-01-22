@@ -14,7 +14,7 @@ interface Props{
   setStatusAccount?: any;
 };
 
-const Account = ({ isLoading, required,statusAccount, setStatusAccount}: Props) => {
+const Account = ({ isLoading, required, statusAccount, setStatusAccount }: Props) => {
   return (
     <>
       <Row>

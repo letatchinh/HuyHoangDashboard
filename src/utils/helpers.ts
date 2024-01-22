@@ -75,4 +75,11 @@ export const formatter = (value:number) => `${value}`.replace(/\B(?=(\d{3})+(?!\
 
 export const floorFormatter = (value:number) => `${Math.floor(value)}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
 
-export const ceilFormatter = (value:number) => `${Math.ceil(value)}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+export const ceilFormatter = (value: number) => `${Math.ceil(value)}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+
+export const getShortName = (name: any) => {
+  if (!!!name) return "";
+  const arrName = (name).trim()?.split(' ');
+  if (!arrName.length) return "";
+  return (arrName[arrName.length - 2]?.charAt(0) || "") + (arrName[arrName.length - 1]?.charAt(0) || "");
+};
