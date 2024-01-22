@@ -1,4 +1,4 @@
-import { AppstoreFilled, AppstoreOutlined } from "@ant-design/icons";
+import { AppstoreFilled, AppstoreOutlined, MoneyCollectOutlined } from "@ant-design/icons";
 import { MenuProps } from "antd";
 import React, { useCallback } from "react";
 import { NavLink } from "react-router-dom";
@@ -94,6 +94,13 @@ export const resource: ItemType[] = [
         path : PATH_APP.user.root,
         key: PATH_APP.user.root,
         permission :[POLICIES.READ_USER, POLICIES.READ_USERGROUP],
+      },
+      {
+        label : "Sổ quỹ",
+        icon: <MoneyCollectOutlined />,
+        path : PATH_APP.vouchers.root,
+        key: PATH_APP.vouchers.root,
+        // permission :[POLICIES.READ_USER, POLICIES.READ_USERGROUP],
       },
  ];
 
