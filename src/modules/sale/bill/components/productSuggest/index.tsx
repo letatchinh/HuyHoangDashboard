@@ -84,16 +84,24 @@ const ProductListSuggest: React.FC = () => {
             onClick={() => console.log(item)}
           >
             <Card
-              title={item.name}
+              title={item?.productGroup?.name}
               headStyle={{
                 fontSize: 12,
               }}
+              onScroll={(e) => e.stopPropagation()}
               bodyStyle={{
-                width: '100px',
-                height: '100px',
+                width: '100%',
+                minWidth: '100px',
+                minHeight: '100px',
+                // height: 'max-content',
+                padding: 5, 
+                overflow: 'hidden',
+                fontSize: 12,
               }}
             >
-              {item?.productGroup?.name}
+              <p>{`- ${item?.name}`}</p>
+              <p>{`- ${item?.variants[0]?.price}`}</p>
+              <p>{`Ncc: ${item?.manufacturer?.name}`}</p>
             </Card>
           </List.Item>
         )}
@@ -115,9 +123,9 @@ const ProductListSuggest: React.FC = () => {
   ];
   return (
     <div className="product-suggest">
-        <Collapse
+      <Collapse
         bordered={false}
-        defaultActiveKey={['1']}
+        // defaultActiveKey={['1']}
         expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}
         items={getItems()}
       />
