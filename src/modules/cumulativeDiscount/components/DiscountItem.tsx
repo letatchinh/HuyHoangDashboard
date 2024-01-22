@@ -101,6 +101,7 @@ export default function DiscountItem({
     }
   }, [form, name]);
   const variants = Form.useWatch('variants',form);
+  const cumulativeDiscount = Form.useWatch('cumulativeDiscount',form);
   
   return (
     <>
@@ -347,22 +348,37 @@ export default function DiscountItem({
                               >
                                 {RenderLoading(
                                   loading,
-                                  <InputNumberAnt min={0} />
+                                  <InputNumberAnt min={0} 
+                                  {... !form.getFieldValue([
+                                    "cumulativeDiscount",
+                                    name,
+                                    "applyUnit",
+                                  ]) && {addonAfter : <div>VNĐ</div>}}
+                                  />
                                 )}
                               </Form.Item>
                             </Col>
                             <Col span={7}>
-                              <Form.Item
-                              colon={false}
+                              <Form.Item shouldUpdate noStyle>
+                                {({getFieldValue}) => <Form.Item
+                                colon={false}
                                 style={{ marginBottom: 0 }}
                                 {...restField}
                                 label={"Đến"}
                                 name={[name, "condition", "lte"]}
+                                
                               >
                                 {RenderLoading(
                                   loading,
-                                  <InputNumberAnt min={0} />
+                                  <InputNumberAnt min={0} 
+                                  {... !getFieldValue([
+                                    "cumulativeDiscount",
+                                    name,
+                                    "applyUnit",
+                                  ]) && {addonAfter : <div>VNĐ</div>}}
+                                  />
                                 )}
+                              </Form.Item>}
                               </Form.Item>
                             </Col>
                             <Col span={7}>
@@ -393,7 +409,16 @@ export default function DiscountItem({
                               <Switch
                                 disabled={target === TARGET.supplier}
                                 value={isSelectUnit}
-                                onChange={(checked) => setIsSelectUnit(checked)}
+                                onChange={(checked) => {
+                                  if(!checked){
+                                    const newCumulativeDiscount = cumulativeDiscount?.map((item:any,index:number) => index === name ? {...item,applyUnit : null}  : item);
+
+                                    form.setFieldsValue({
+                                      cumulativeDiscount : newCumulativeDiscount
+                                    })
+                                  }
+                                  setIsSelectUnit(checked);
+                                }}
                                 unCheckedChildren="VND"
                                 checkedChildren="Đơn vị"
                               />
@@ -435,6 +460,12 @@ export default function DiscountItem({
                                     {...restField}
                                     label={"Đến ngày"}
                                     name={[name, "cumulativeTimeSheet", "lte"]}
+                                    rules={[
+                                      {
+                                        required: true,
+                                        message: "Xin vui nhập!",
+                                      },
+                                    ]}
                                   >
                                     {RenderLoading(
                                       loading,
@@ -510,6 +541,12 @@ export default function DiscountItem({
                                     {...restField}
                                     label={"Đến ngày"}
                                     name={[name, "applyTimeSheet", "lte"]}
+                                    rules={[
+                                      {
+                                        required: true,
+                                        message: "Xin vui nhập!",
+                                      },
+                                    ]}
                                   >
                                     {RenderLoading(
                                       loading,

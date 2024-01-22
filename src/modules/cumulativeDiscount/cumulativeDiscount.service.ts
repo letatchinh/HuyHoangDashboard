@@ -12,6 +12,7 @@ export const convertSubmitDiscount = (
       switch (typeDiscount) {
         case TYPE_DISCOUNT.LK:
           const applyTimeSheet = get(item, "applyTimeSheet");
+          const cumulativeTimeSheet = get(item, "cumulativeTimeSheet");
           const newItem = {
             ...item,
             applyTimeSheet: {
@@ -23,6 +24,16 @@ export const convertSubmitDiscount = (
                 ? dayjs(get(applyTimeSheet, "lte")).format("YYYY-MM-DD")
                 : null,
               isRepeat: get(applyTimeSheet, "isRepeat") ?? false,
+            },
+            cumulativeTimeSheet: {
+              ...cumulativeTimeSheet,
+              gte: dayjs.isDayjs(get(cumulativeTimeSheet, "gte"))
+                ? dayjs(get(cumulativeTimeSheet, "gte")).format("YYYY-MM-DD")
+                : null,
+              lte: dayjs.isDayjs(get(cumulativeTimeSheet, "lte"))
+                ? dayjs(get(cumulativeTimeSheet, "lte")).format("YYYY-MM-DD")
+                : null,
+              isRepeat: get(cumulativeTimeSheet, "isRepeat") ?? false,
             },
           };
           return pickLK(newItem);
@@ -57,6 +68,7 @@ export const pickLK = (submitData: any) =>
     ...rootField,
     "condition",
     "applyTimeSheet",
+    "cumulativeTimeSheet",
   ]);
 
 export const convertInitDiscount = (
@@ -66,6 +78,7 @@ export const convertInitDiscount = (
     (value: cumulativeDiscountType) => {
       // Convert To Dayjs gte and lte
       const applyTimeSheet = get(value, "applyTimeSheet");
+      const cumulativeTimeSheet = get(value, "cumulativeTimeSheet");
       if (applyTimeSheet) {
         return {
           ...value,
@@ -73,6 +86,11 @@ export const convertInitDiscount = (
             ...applyTimeSheet,
             gte: dayjs(get(applyTimeSheet, "gte")),
             lte: dayjs(get(applyTimeSheet, "lte")),
+          },
+          cumulativeTimeSheet: {
+            ...cumulativeTimeSheet,
+            gte: dayjs(get(cumulativeTimeSheet, "gte")),
+            lte: dayjs(get(cumulativeTimeSheet, "lte")),
           },
         };
       }

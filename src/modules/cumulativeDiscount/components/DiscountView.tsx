@@ -76,6 +76,22 @@ export default function DiscountView({
     return text;
   }, [data]);
 
+  const CumulativeText = useMemo(() => {
+    let text = "";
+    if (get(data, "cumulativeTimeSheet.isRepeat")) {
+      text = `Lặp lại hằng tháng từ ngày ${dayjs(
+        get(data, "cumulativeTimeSheet.gte")
+      ).format("DD")} đến ngày ${dayjs(get(data, "cumulativeTimeSheet.lte")).format(
+        "DD"
+      )}`;
+    } else {
+      text = `Từ ${dayjs(get(data, "cumulativeTimeSheet.gte")).format(
+        "DD-MM-YYYY"
+      )} đến ${dayjs(get(data, "cumulativeTimeSheet.lte")).format("DD-MM-YYYY")}`;
+    }
+    return text;
+  }, [data]);
+
   return (
     <div>
       <Layout label="Tên chiết khấu" value={get(data, "name", "")} />
@@ -87,6 +103,7 @@ export default function DiscountView({
       {get(data, "typeDiscount") === TYPE_DISCOUNT.LK && (
         <>
           <Layout label="Điều kiện nhận" value={conditionText} />
+          <Layout label="Thời gian tích luỹ" value={CumulativeText} />
           <Layout label="Thời gian áp dụng" value={TimeText} />
         </>
       )}

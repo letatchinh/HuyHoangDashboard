@@ -25,6 +25,32 @@ export default function SelectProductGroup({
     label : get(item,'name'),
     value : get(item,'_id'),
   })),[productGroups]);
+  const fetchOptionsProductGroup = useCallback(async (keyword?: string) => {
+    try {
+      const res = await ProductGroupModule.api.getAll({
+        keyword,
+        limit: MAX_LIMIT,
+      });
+      return getActive(get(res, "docs", []))?.map((item: any) => ({
+        label: get(item, "name"),
+        value: get(item, "_id"),
+      }));
+    } catch (error) {
+      console.log(error);
+      return [];
+    }
+  }, []);
+
+  const initProductGroup = useMemo(
+    () =>
+      product && [
+        {
+          label: get(product, "manufacturer.name"),
+          value: get(product, "manufacturerId"),
+        },
+      ],
+    [product]
+  );
   return (
     <>
       <Form.Item
@@ -34,11 +60,18 @@ export default function SelectProductGroup({
       >
         {RenderLoading(
           isLoading,
-          <Select 
+          // <Select 
+          //   className="right--parent"
+          //   placeholder="Nhóm thuốc"
+          //   options={options}
+          //   style={{ width: "100%" }}
+          // />
+            <DebounceSelect
             className="right--parent"
             placeholder="Nhóm thuốc"
-            options={options}
+            fetchOptions={fetchOptionsProductGroup}
             style={{ width: "100%" }}
+            initOptions={initProductGroup}
           />
         )}
       </Form.Item>
@@ -55,10 +88,3 @@ export default function SelectProductGroup({
   );
 }
 
-  // <DebounceSelect
-          //   className="right--parent"
-          //   placeholder="Nhóm thuốc"
-          //   fetchOptions={fetchOptionsProductGroup}
-          //   style={{ width: "100%" }}
-          //   initOptions={initProductGroup}
-          // />
