@@ -31,7 +31,11 @@ function* getByIdBill({payload:id} : any) : any {
 
 function* createBill({payload} : any) : any {
   try {
-    const data = yield call(api.create,payload);
+    const {callback,...params} = payload
+    const data = yield call(api.create,params);
+    if(callback){
+      callback()
+    }
     yield put(billSliceAction.createSuccess(data));
   } catch (error:any) {
     yield put(billSliceAction.createFailed(error));

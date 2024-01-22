@@ -1,5 +1,5 @@
 import React from 'react';
-import BillModule from "~/modules/bill";
+import BillModule from "~/modules/sale/bill";
 type propsType = {
 
 }

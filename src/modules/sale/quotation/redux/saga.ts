@@ -1,0 +1,56 @@
+import { put, call, takeLatest } from 'redux-saga/effects';
+import api from '../quotation.api'; 
+import { quotationActions } from './reducer';
+
+function* getListQuotation({payload:query} : any) : any {
+  try {
+    const data = yield call(api.getAll,query);
+    yield put(quotationActions.getListSuccess(data));
+  } catch (error:any) {
+    yield put(quotationActions.getListFailed(error));
+  }
+}
+
+function* getByIdQuotation({payload:id} : any) : any {
+  try {
+    const data = yield call(api.getById,id);
+    yield put(quotationActions.getByIdSuccess(data));
+  } catch (error:any) {
+    yield put(quotationActions.getByIdFailed(error));
+  }
+}
+
+function* createQuotation({payload} : any) : any {
+  try {
+    const data = yield call(api.create,payload);
+    yield put(quotationActions.createSuccess(data));
+  } catch (error:any) {
+    yield put(quotationActions.createFailed(error));
+  }
+}
+
+function* updateQuotation({payload} : any) : any {
+  try {
+    const data = yield call(api.update,payload);
+    yield put(quotationActions.updateSuccess(data));
+  } catch (error:any) {
+    yield put(quotationActions.updateFailed(error));
+  }
+}
+function* deleteQuotation({payload : id} : any) : any {
+  try {
+    const data = yield call(api.delete,id);
+    yield put(quotationActions.deleteSuccess(data));
+  } catch (error:any) {
+    yield put(quotationActions.deleteFailed(error));
+  }
+}
+
+
+export default function* quotationSaga() {
+  yield takeLatest(quotationActions.getListRequest, getListQuotation);
+  yield takeLatest(quotationActions.getByIdRequest, getByIdQuotation);
+  yield takeLatest(quotationActions.createRequest, createQuotation);
+  yield takeLatest(quotationActions.updateRequest, updateQuotation);
+  yield takeLatest(quotationActions.deleteRequest, deleteQuotation);
+}

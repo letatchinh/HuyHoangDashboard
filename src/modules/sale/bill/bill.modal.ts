@@ -34,6 +34,10 @@ export type PayloadCreateBill = {
     totalPrice : number,
     pair : number,
 }
+export type PayloadUpdateBill = {
+    note : string,
+    status : "CANCELLED",
+}
 type supplier = {
     name : string,
     code : string,

@@ -1,21 +1,32 @@
 import { CloseCircleOutlined, PlusOutlined } from "@ant-design/icons";
-import { Col, ConfigProvider, Row, Tabs, TabsProps } from "antd";
-import React, { useEffect, useState } from "react";
-import Bill from "~/modules/bill";
-import SelectProduct from "~/modules/bill/components/SelectProduct";
+import { Col, ConfigProvider, Row, Space, Tabs, TabsProps } from "antd";
+import { concat, forIn, get, unset } from "lodash";
+import React, { useCallback, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { v4 } from "uuid";
-import { compact, concat, forIn, get, unset } from "lodash";
-import { billItem } from "~/modules/bill/bill.modal";
-import BillModule from '~/modules/bill'
-const KEY_DATA_PHARMACY = "bill-pharmacy";
-type ItemDataSource = {
+import { default as Bill, default as BillModule } from "~/modules/sale/bill";
+import { billItem } from "~/modules/sale/bill/bill.modal";
+import SelectProduct from "~/modules/sale/bill/components/SelectProduct";
+import logo from '~/assets/images/header/logo-white.svg';
+
+export const KEY_DATA_PHARMACY = "bill-pharmacy";
+export const KEY_PRIORITY = "key-priority"; // Tab Will Use this key and Remove then (If Have)
+type DataUpdateQuotationType = {
+  billItems : billItem[],
+  id : string,
+  code : string
+}
+export type ItemDataSource = {
+  typeTab : "createQuotation" | "updateQuotation",
   billItems: billItem[];
   pharmacyId: string | null;
-}
-type DataSourceType = {
+  dataUpdateQuotation? : DataUpdateQuotationType;
+};
+export type DataSourceType = {
   [key: string]: ItemDataSource;
 };
-const initData : ItemDataSource = {
+const initData: ItemDataSource = {
+  typeTab : "createQuotation",
   billItems: [],
   pharmacyId: null,
 };
@@ -34,19 +45,29 @@ const Label = ({ label, onRemove }: { label?: any; onRemove: () => void }) => (
   </Row>
 );
 
-const items: TabsProps["items"] = new Array(1).fill(null).map((_, i) => {
-  const id: string = String(i + 1);
-  return {
-    label: `Đơn hàng ${id}`,
-    key: v4(),
-  };
-});
 const CreateBillPage = (): React.JSX.Element => {
+  const navigate = useNavigate();
   const [tabs, setTabs] = useState<TabsProps["items"]>();
   const [activeKey, setActiveKey]: any = useState();
-  const [dataSource, setDataSource]: any = useState<DataSourceType>();
-  console.log(dataSource,'dataSource');
-  
+  const [dataSource, setDataSource]: any = useState<DataSourceType>({});
+  const initDatSource = useCallback(() => {
+    const newKey = v4();
+    let newDataSource: DataSourceType = {
+      [newKey]: {
+        typeTab : "createQuotation",
+        billItems: [],
+        pharmacyId: null,
+      },
+    };
+    setDataSource(newDataSource);
+    setTabs([
+      {
+        label: `Đơn hàng 1`,
+        key: newKey,
+      },
+    ]);
+    setActiveKey(newKey);
+  }, [setDataSource, setTabs]);
   // Controller DataSource
   const onAddDataSource = (key: any) => {
     setDataSource({ ...dataSource, [key]: initData });
@@ -57,7 +78,11 @@ const CreateBillPage = (): React.JSX.Element => {
     if (newDataSource.hasOwnProperty(key)) {
       unset(newDataSource, key);
     }
-    setDataSource(newDataSource);
+    if (Object.keys(newDataSource).length === 0) {
+      initDatSource();
+    } else {
+      setDataSource(newDataSource);
+    }
   };
   // Controller Tabs
   const onAddTab = () => {
@@ -73,6 +98,8 @@ const CreateBillPage = (): React.JSX.Element => {
   };
 
   const onRemoveTab = (targetKey: any) => {
+    console.log(targetKey, "targetKey");
+
     const newPanes = tabs?.filter((item) => item.key !== targetKey);
     if (!newPanes?.length) {
       const newId = v4();
@@ -93,88 +120,85 @@ const CreateBillPage = (): React.JSX.Element => {
     }
     onRemoveDataSource(targetKey);
   };
-  const onChangeBill = (
-    activeKey: any,
-    newData: ItemDataSource
-  ) => {
-    console.log(newData,dataSource,'newData');
-    
-      if(dataSource){
-        const newDataSource = {
-          ...dataSource,
-          [activeKey]: { // Change Data of key is activeKey
-            ...dataSource[activeKey], // Inherited from Old Data
-            ...newData, // Change New Data Source
-          },
-        };
-        setDataSource(newDataSource);
-      }else{
-        const newDataSource = {
-          [activeKey] : newData
-        };
-        setDataSource(newDataSource);
-      };
-      
+  const onChangeBill = (activeKey: any, newData: ItemDataSource) => {
+    const dataFromLocalStorage = localStorage.getItem(KEY_DATA_PHARMACY);
+    const dataReady = JSON.parse(dataFromLocalStorage || "");
+    const newDataSource = {
+      ...dataReady,
+      [activeKey]: {
+        // Change Data of key is activeKey
+        ...dataReady[activeKey], // Inherited from Old Data
+        ...newData, // Change New Data Source
+      },
+    };
+    setDataSource(newDataSource);
   };
-  const verifyData = (newActiveKey : string,callback?:() => void) => {
+  const verifyData = (newActiveKey: string, callback?: () => void) => {
     const billCurrent = dataSource[newActiveKey];
     BillModule.service.onVerifyData({
-      bill : billCurrent,
-      keyActive : newActiveKey,
+      bill: billCurrent,
+      keyActive: newActiveKey,
       onChangeBill,
       callback,
     });
-  }
+  };
   const onChangeTab = (newActiveKey: string) => {
     setActiveKey(newActiveKey);
-  
+
     // ReVerify when onChangeTab is called
-    verifyData(newActiveKey)
-    
+    verifyData(newActiveKey);
   };
 
-// Initialize DataSource
+  // Initialize DataSource
   useEffect(() => {
-    // Not Have DataSource  initialize new Data
-    const dataFromLocalStorage = localStorage.getItem(KEY_DATA_PHARMACY);
-    if (
-      !dataFromLocalStorage ||
-      Object.keys(dataFromLocalStorage).length === 0
-      || dataFromLocalStorage === "{}" 
-      || dataFromLocalStorage === "undefined" 
-      || dataFromLocalStorage === "null" 
-      || dataFromLocalStorage === "" 
-    ) {
-      let newDataSource: DataSourceType = {};
-      items?.forEach((tab) => {
-        newDataSource[get(tab, "key")] = {
-          billItems: [],
-          pharmacyId: null,
-        };
-      });
-      localStorage.setItem(KEY_DATA_PHARMACY, JSON.stringify(newDataSource));
-      setTabs(items);
-    } else {
-      // Data source is Ready
-      const dataReady = JSON.parse(dataFromLocalStorage);
-      const keyFirst = Object.keys(dataReady)[0];
-      const dataFirst = dataReady[keyFirst];
-      // Verify when Initialize DataSource
-      BillModule.service.onVerifyData({
-        bill : dataFirst,
-        keyActive : keyFirst,
-        onChangeBill
-      })
-      
-      let newTabs: any = [];
-      forIn(dataReady, (value, key) => {
-        newTabs.push({
-          key,
-          label: `Đơn hàng ${newTabs?.length + 1}`,
+    try {
+      // Not Have DataSource  initialize new Data
+      const dataFromLocalStorage : any  = localStorage.getItem(KEY_DATA_PHARMACY);
+      const isInValidDataSource : boolean = BillModule.service.validateDataStorage(dataFromLocalStorage);
+      if (
+        isInValidDataSource
+        ) {
+        initDatSource();
+      } else {
+        // Data source is Ready
+        const dataReady: DataSourceType = JSON.parse(dataFromLocalStorage);
+        let newTabs: TabsProps['items'] = [];
+        forIn(dataReady, (value, key) => {
+          switch (get(value,'typeTab')) {
+            case 'createQuotation':
+              newTabs?.push({
+                key,
+                label: `Đơn hàng ${newTabs?.length + 1}`,
+              });
+              break;
+            case 'updateQuotation':
+              const {dataUpdateQuotation} = value;
+              newTabs?.push({
+                key,
+                label: `Cập nhật ĐHT ${get(dataUpdateQuotation,'code','')}`,
+              });
+              break;
+          
+            default:
+              break;
+          }
+
         });
-      });
-      setTabs(newTabs);
-      setDataSource(dataReady);
+        setTabs(newTabs);
+
+        const keyFirst = Object.keys(dataReady)[0];
+        const dataFirst = dataReady[keyFirst];
+        setDataSource(dataReady);
+        // Verify when Initialize DataSource
+        BillModule.service.onVerifyData({
+          bill: dataFirst,
+          keyActive: keyFirst,
+          onChangeBill,
+        });
+      }
+    } catch (error) {
+      // Catch Will Reset all DataSource
+      initDatSource();
     }
   }, []);
 
@@ -183,10 +207,20 @@ const CreateBillPage = (): React.JSX.Element => {
     localStorage.setItem(KEY_DATA_PHARMACY, JSON.stringify(dataSource));
   }, [dataSource]);
 
-  // Auto Set Active key if First tabs
+
   useEffect(() => {
+    // If Have key Priority will Set Key and Remove Then
+    const keyPriorityStorage = localStorage.getItem(KEY_PRIORITY);
+    if(keyPriorityStorage){
+      const keyPriority = JSON.parse(keyPriorityStorage);
+      setActiveKey(keyPriority);
+      localStorage.removeItem(KEY_PRIORITY); // Remove after set 
+      return;
+    };
+      // Auto Set Active key if First tabs
     if (!activeKey) {
       setActiveKey(tabs?.[0].key);
+      return;
     }
   }, [activeKey, tabs]);
   return (
@@ -204,16 +238,21 @@ const CreateBillPage = (): React.JSX.Element => {
           }}
         >
           <Tabs
-          destroyInactiveTabPane
+            destroyInactiveTabPane
             className="createBill__tabs"
             tabBarExtraContent={{
               left: (
-                <SelectProduct
+                <Space>
+                  <div className='layoutVertical--header__row__logo' onClick={() => navigate("/")}>
+              <img src={logo}/>
+            </div>
+                  <SelectProduct
                   dataCurrent={dataSource?.[activeKey]}
                   onChangeBill={(newData: any) =>
                     onChangeBill(activeKey, newData)
                   }
                 />
+                </Space>
               ),
               right: (
                 <PlusOutlined
@@ -248,7 +287,10 @@ const CreateBillPage = (): React.JSX.Element => {
                   onChangeBill={(newData: any) =>
                     onChangeBill(get(tab, "key"), newData)
                   }
-                  verifyData={(callback?:() => void) => verifyData(activeKey,callback)}
+                  verifyData={(callback?: () => void) =>
+                    verifyData(activeKey, callback)
+                  }
+                  onRemoveTab={() => onRemoveTab(get(tab, "key"))}
                 >
                   <Bill.page.create />
                 </BillModule.storeProvider.CreateBillProvider>
@@ -262,22 +304,3 @@ const CreateBillPage = (): React.JSX.Element => {
 };
 
 export default CreateBillPage;
-
-// Controller LocalStorage
-
-// const onAddLocalStorage = (key: any) => {
-//   const dataFromLocalStorage = localStorage.getItem(KEY_DATA_PHARMACY) || "";
-//   const dataParse = JSON.parse(dataFromLocalStorage) || {};
-//   localStorage.setItem(
-//     KEY_DATA_PHARMACY,
-//     JSON.stringify({ ...dataParse, [key] : initData })
-//   );
-// };
-// const onRemoveLocalStorage = (key: any) => {
-//   const dataFromLocalStorage = localStorage.getItem(KEY_DATA_PHARMACY) || "";
-//   const dataParse = JSON.parse(dataFromLocalStorage) || {};
-//   if (dataParse.hasOwnProperty(key)) {
-//     unset(dataParse,key)
-//   }
-//   localStorage.setItem(KEY_DATA_PHARMACY, JSON.stringify(dataParse));
-// };

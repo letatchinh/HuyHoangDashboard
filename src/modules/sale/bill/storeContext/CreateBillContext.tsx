@@ -10,7 +10,7 @@ import {
   useState,
 } from "react";
 import { v4 } from "uuid";
-import { useGetDebtRule } from "../bill.hook";
+import { useGetDebtRule, useResetBillAction } from "../bill.hook";
 import { billItem, DebtType } from "../bill.modal";
 import { reducerDiscountBillItems } from "../bill.service";
 const TYPE_DISCOUNT = {
@@ -62,6 +62,7 @@ export type GlobalCreateBill = {
   totalDiscountFromProduct: DiscountDetail | null;
   totalDiscountFromSupplier: DiscountDetail | null;
   verifyData : (callback?:any) => void,
+  onRemoveTab : () => void,
   debt : DebtType[];
 };
 const CreateBill = createContext<GlobalCreateBill>({
@@ -78,6 +79,7 @@ const CreateBill = createContext<GlobalCreateBill>({
   totalDiscountFromProduct : null,
   totalDiscountFromSupplier: null,
   verifyData: () => {},
+  onRemoveTab: () => {},
   debt : [],
 });
 
@@ -86,6 +88,7 @@ type CreateBillProviderProps = {
   bill: Bill;
   onChangeBill: (newObjData: any) => void;
   verifyData : () => void
+  onRemoveTab : () => void
 };
 
 export function CreateBillProvider({
@@ -93,8 +96,9 @@ export function CreateBillProvider({
   bill,
   onChangeBill,
   verifyData,
+  onRemoveTab,
 }: CreateBillProviderProps): JSX.Element {
-  
+  useResetBillAction();
   const [billItems, setBillItems] = useState<DataItem[]>([]);
   
   const [form] = Form.useForm();
@@ -132,15 +136,9 @@ export function CreateBillProvider({
     });
   };
 
-  useEffect(() => {
-    setBillItems(get(bill, "billItems", []));
-    const initDebt = debt?.find((debt : DebtType) => get(debt, "key") === "COD");
-    form.setFieldsValue({
-      ...bill,
-      debtType : get(initDebt,'key')
-    });
-  }, [bill, form,debt]);
 
+
+  
   const onValueChange = (value: any, values: any) => {
     const key: any = Object.keys(value)[0];
     switch (key) {
@@ -184,8 +182,6 @@ export function CreateBillProvider({
     () =>
       billItems?.reduce(
         (sum: any, cur: any) => {
-          console.log(cur,'current');
-          
           const newSum : any = {};
           forIn(TYPE_DISCOUNT,(value : any,key : any) => {
             newSum[key] = sum[key] +  get(cur,['totalDiscountDetailFromProduct',key],0)
@@ -228,12 +224,18 @@ export function CreateBillProvider({
     [billItems]
   );
 
+  // Initalize Data And Calculate Discount
   useEffect(() => {
+    const initDebt = debt?.find((debt : DebtType) => get(debt, "key") === "COD");
+    form.setFieldsValue({
+      ...bill,
+      debtType : get(initDebt,'key')
+    });
     if (get(bill, "billItems", [])?.length) {
-      const newBillItems: any[] = reducerDiscountBillItems(get(bill, "billItems", []))
+      const newBillItems: any[] = reducerDiscountBillItems(get(bill, "billItems", []));
       setBillItems(newBillItems);
     }
-  }, [totalPrice, bill]);
+  }, [bill,debt,form,totalPrice]);
 
   return (
     <CreateBill.Provider
@@ -252,6 +254,7 @@ export function CreateBillProvider({
         totalDiscountFromSupplier,
         verifyData,
         debt,
+        onRemoveTab,
       }}
     >
       {children}

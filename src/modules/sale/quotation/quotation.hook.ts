@@ -1,56 +1,52 @@
-import { useSelector } from "react-redux";
-import {
-  getSelectors,
-  useFailed,
-  useFetch,
-  useFetchByParam,
-  useQueryParams,
-  useResetState,
-  useSubmit,
-  useSuccess,
-} from "~/utils/hook";
-import { pharmacySliceAction } from "./redux/reducer";
-import { useLocation, useNavigate } from "react-router-dom";
-import { useEffect, useMemo, useState } from "react";
-import { get } from "lodash";
-import { clearQuerySearch, getExistProp } from "~/utils/helpers";
-import { STATUS } from "~/constants/defaultValue";
+// Please UnComment To use
 
-const MODULE = "pharmacy";
-const MODULE_VI = "nhà thuốc";
+import { get } from "lodash";
+import { useEffect, useMemo, useState } from "react";
+import { useSelector } from "react-redux";
+import { useLocation, useNavigate } from "react-router-dom";
+import { clearQuerySearch, getExistProp } from "~/utils/helpers";
+import {
+    getSelectors,
+    useFailed, useFetchByParam,
+    useQueryParams,
+    useSubmit,
+    useSuccess
+} from "~/utils/hook";
+import { quotationActions } from "./redux/reducer";
+const MODULE = "quotation";
+const MODULE_VI = "Đơn hàng tạm";
 
 const {
   loadingSelector,
   listSelector,
   getListFailedSelector,
-  getByIdSelector,
   getByIdLoadingSelector,
+  getByIdSelector,
   getByIdFailedSelector,
+  deleteSuccessSelector,
+  deleteFailedSelector,
+  isSubmitLoadingSelector,
   createSuccessSelector,
   createFailedSelector,
   updateSuccessSelector,
   updateFailedSelector,
-  deleteSuccessSelector,
-  deleteFailedSelector,
-  isSubmitLoadingSelector,
   pagingSelector,
 } = getSelectors(MODULE);
 
-export const usePharmacyPaging = () => useSelector(pagingSelector);
+export const useQuotationPaging = () => useSelector(pagingSelector);
 
-export const useGetPharmacies = (query? : any) => {
+export const useGetQuotations = (param:any) => {
   return useFetchByParam({
-    action: pharmacySliceAction.getListRequest,
+    action: quotationActions.getListRequest,
     loadingSelector: loadingSelector,
     dataSelector: listSelector,
     failedSelector: getListFailedSelector,
-    param: query,
+    param
   });
 };
-
-export const useGetPharmacyId = (id: any) => {
+export const useGetQuotation = (id: any) => {
   return useFetchByParam({
-    action: pharmacySliceAction.getByIdRequest,
+    action: quotationActions.getByIdRequest,
     loadingSelector: getByIdLoadingSelector,
     dataSelector: getByIdSelector,
     failedSelector: getByIdFailedSelector,
@@ -58,7 +54,7 @@ export const useGetPharmacyId = (id: any) => {
   });
 };
 
-export const useCreatePharmacy = (callback?: any) => {
+export const useCreateQuotation = (callback?: any) => {
   useSuccess(
     createSuccessSelector,
     `Tạo mới ${MODULE_VI} thành công`,
@@ -67,12 +63,12 @@ export const useCreatePharmacy = (callback?: any) => {
   useFailed(createFailedSelector);
 
   return useSubmit({
-    action: pharmacySliceAction.createRequest,
+    action: quotationActions.createRequest,
     loadingSelector: isSubmitLoadingSelector,
   });
 };
 
-export const useUpdatePharmacy = (callback?: any) => {
+export const useUpdateQuotation = (callback?: any) => {
   useSuccess(
     updateSuccessSelector,
     `Cập nhật ${MODULE_VI} thành công`,
@@ -81,28 +77,28 @@ export const useUpdatePharmacy = (callback?: any) => {
   useFailed(updateFailedSelector);
 
   return useSubmit({
-    action: pharmacySliceAction.updateRequest,
+    action: quotationActions.updateRequest,
     loadingSelector: isSubmitLoadingSelector,
   });
 };
 
-export const useDeletePharmacy = (callback?: any) => {
-  useSuccess(deleteSuccessSelector, `Xóa ${MODULE_VI} thành công`, callback);
+export const useDeleteQuotation = (callback?: any) => {
+  useSuccess(deleteSuccessSelector, `Xoá ${MODULE_VI} thành công`, callback);
   useFailed(deleteFailedSelector);
 
   return useSubmit({
-    action: pharmacySliceAction.deleteRequest,
+    action: quotationActions.deleteRequest,
     loadingSelector: isSubmitLoadingSelector,
   });
 };
 
-export const usePharmacyQueryParams = () => {
+export const useQuotationQueryParams = (status? : string) => {
   const query = useQueryParams();
   const limit = query.get("limit") || 10;
   const page = query.get("page") || 1;
   const keyword = query.get("keyword");
-  const status = query.get("status");
-
+  const createSuccess = useSelector(createSuccessSelector);
+  const deleteSuccess = useSelector(deleteSuccessSelector);
   return useMemo(() => {
     const queryParams = {
       page,
@@ -112,10 +108,10 @@ export const usePharmacyQueryParams = () => {
     };
     return [queryParams];
     //eslint-disable-next-line
-  }, [page, limit, keyword, status]);
+  }, [page, limit, keyword, createSuccess, deleteSuccess,status]);
 };
 
-export const useUpdatePharmacyParams = (
+export const useUpdateQuotationParams = (
   query: any,
   listOptionSearch?: any[]
 ) => {
@@ -126,10 +122,14 @@ export const useUpdatePharmacyParams = (
     setKeyword(get(query, "keyword"));
   }, [query]);
   const onParamChange = (param: any) => {
+    // Clear Search Query when change Params
     clearQuerySearch(listOptionSearch, query, param);
+
     if (!param.page) {
       query.page = 1;
-    }
+    };
+
+    // Convert Query and Params to Search Url Param
     const searchString = new URLSearchParams(
       getExistProp({
         ...query,
@@ -137,25 +137,9 @@ export const useUpdatePharmacyParams = (
       })
     ).toString();
 
+    // Navigate
     navigate(`${pathname}?${searchString}`);
   };
 
   return [keyword, { setKeyword, onParamChange }];
 };
-
-export const useInitPharmacy = (pharmacy: any, id: any) => {
-  return useMemo(() => {
-    if (!pharmacy || !id) {
-      return { status: true };
-    }
-
-    return {
-      ...pharmacy,
-      status: pharmacy.status === STATUS.ACTIVE ? true : false,
-    };
-  }, [pharmacy, id]);
-};
-
-// export const useResetManufacture = () => {
-//   useResetState(resetPharmacyReducer);
-// };

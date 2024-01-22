@@ -187,6 +187,11 @@ export const resource: ItemType[] = [
         path: PATH_APP.bill.create,
         key: PATH_APP.bill.create,
       },
+      {
+        label: "Danh sách đơn hàng tạm",
+        path: PATH_APP.quotation.root,
+        key: PATH_APP.quotation.root,
+      },
     ],
     icon: <AppstoreFilled />,
   },

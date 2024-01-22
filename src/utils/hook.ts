@@ -17,7 +17,6 @@ export const useSuccess = (
 ): void => {
     const {onNotify} = useNotificationStore();
   const success = useSelector(successSelector);
-
   useEffect(() => {
     if (success) {
       if (mess) {
@@ -28,7 +27,7 @@ export const useSuccess = (
         onSuccess(success)
       };
     }
-  }, [success, mess, onSuccess, onNotify]);
+  }, [success, mess, onSuccess]);
 };
 
 export const useFailed = (
@@ -113,14 +112,19 @@ export const useFetchByParam = (props: UseFetchByParamProps): [any, boolean, Act
 interface UseSubmitProps {
     loadingSelector: (state: any) => boolean; // Adjust the state type based on your Redux store
     action: any // Adjust the values type based on your action requirements
+    callback? : (p?:any) => void // Callback After Submit
   }
 
-export const useSubmit = ({ loadingSelector, action }:UseSubmitProps) : [boolean,(v:any) => void] => {
+export const useSubmit = ({ loadingSelector, action ,callback}:UseSubmitProps) : [boolean,(v:any) => void] => {
     const dispatch = useDispatch();
     const isLoading = useSelector(loadingSelector);
   
     const handleSubmit = (values:any) => {
-      dispatch(action(values));
+      if(callback && typeof callback === 'function'){
+        dispatch(action({...values,callback}));
+      }else{
+        dispatch(action(values));
+      }
     };
   
     return [isLoading, handleSubmit];
