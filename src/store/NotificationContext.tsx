@@ -17,6 +17,9 @@ const Notification = createContext<GlobalNotification>({
   onNotify: null,
 });
 
+const defaultOptions : Omit<ArgsProps,"message"> = {
+  placement : 'bottomRight'
+}
 export function NotificationProvider({
   children,
 }: {
@@ -28,6 +31,7 @@ export function NotificationProvider({
   const success : any  = useCallback((message?: string,moreOptions? : ArgsProps) => {
     const options : ArgsProps = {
       message,
+      ...defaultOptions,
       ...moreOptions,
     }
     return msg.success(options);
@@ -35,6 +39,7 @@ export function NotificationProvider({
   const error : any = useCallback((message?: string,moreOptions? : ArgsProps) => {
     const options : ArgsProps = {
       message,
+      ...defaultOptions,
       ...moreOptions,
     }
     msg.error(options);
@@ -42,6 +47,7 @@ export function NotificationProvider({
   const warning : any = useCallback((message?: string,moreOptions? : ArgsProps) => {
     const options : ArgsProps = {
       message,
+      ...defaultOptions,
       ...moreOptions,
     }
     msg.warning(options);
@@ -49,6 +55,7 @@ export function NotificationProvider({
   const info : any = useCallback((message?: string,moreOptions? : ArgsProps) => {
     const options : ArgsProps = {
       message,
+      ...defaultOptions,
       ...moreOptions,
     }
     msg.info(options);

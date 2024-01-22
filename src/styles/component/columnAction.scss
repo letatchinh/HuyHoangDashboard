@@ -1,0 +1,13 @@
+.custom-table__actions {
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+  & p {
+    color: $color-primary;
+    font-weight: 500;
+    font-size: 14px;
+    &:hover{
+        cursor: pointer;
+    }
+  }
+}
