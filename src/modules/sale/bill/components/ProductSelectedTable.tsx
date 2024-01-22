@@ -128,7 +128,6 @@ export default function ProductSelectedTable(
     // use cloned data source so that it can be submitted when complete
     dataSource: quotationItems,
   };
-  console.log(quotationItems,'quotationItems');
   
   return (
     <TableAnt
