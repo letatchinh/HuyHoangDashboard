@@ -63,7 +63,6 @@ const TaskForm: React.FC<TaskFormProps> = ({setDropdownVisible, dropdownVisible}
       statusId: '',
     };
     handleCreateTask(data);
-    form.resetFields();
     setDropdownVisible(false);
   };
   const handleChangeTask = async (value: string) => {
@@ -73,7 +72,6 @@ const TaskForm: React.FC<TaskFormProps> = ({setDropdownVisible, dropdownVisible}
     };
     copyTask({ id: value, ...data });
     handleButtonClick();
-    form.resetFields();
     setDropdownVisible(false);
   };
   return (
