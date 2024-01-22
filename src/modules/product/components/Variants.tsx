@@ -13,7 +13,7 @@ export default function Variants({
   isLoading : loading,
 }: TypePropVariants): React.JSX.Element {
   const [reFetch,setReFetch] = useState(false);
-  const [units, isLoading] = useFetchState({api : UnitModule.api.getAllPublic,useDocs : false});
+  const [units, isLoading] = useFetchState({api : UnitModule.api.getAllPublic,useDocs : false,reFetch});
   const variants = Form.useWatch("variants", form);
   const [open, setOpen] = useState(false);
   const onOpen = useCallback(() => setOpen(true), []);
