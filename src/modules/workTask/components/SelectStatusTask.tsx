@@ -77,9 +77,9 @@ function SelectStatusTask({
           label={listStatusMap?.[status]?.value}
           key={status}
           value={status}
-          style={{ width: "fill-content" }}
+          style={{ width: "fill", cursor: "pointer" }}
         >
-          <Space style={{ width: "100%" }}>
+          <Space style={{ width: "120%" }}>
             <Space>
               <div
                 className="select_option_circle"

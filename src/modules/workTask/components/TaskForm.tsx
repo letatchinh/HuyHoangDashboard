@@ -73,6 +73,7 @@ const TaskForm: React.FC<TaskFormProps> = ({setDropdownVisible, dropdownVisible}
     };
     copyTask({ id: value, ...data });
     handleButtonClick();
+    form.resetFields();
     setDropdownVisible(false);
   };
   return (
@@ -84,6 +85,7 @@ const TaskForm: React.FC<TaskFormProps> = ({setDropdownVisible, dropdownVisible}
         </Radio.Group>
         {value === 'existed' ? (
           <>
+          <Form>
             <Row gutter={48} align="middle" justify="space-between">
             <Col flex={1}>
               <Form.Item
@@ -94,6 +96,7 @@ const TaskForm: React.FC<TaskFormProps> = ({setDropdownVisible, dropdownVisible}
                     message: 'Vui lòng chọn danh mục',
                   },
                 ]}
+                name='sprint'
               >
                 {sprints?.length === 0 ? (
                   <Skeleton.Input active />
@@ -121,6 +124,7 @@ const TaskForm: React.FC<TaskFormProps> = ({setDropdownVisible, dropdownVisible}
                     message: 'Vui lòng chọn ',
                   },
                 ]}
+                name='boardConfig'
               >
                 {isLoadingSprint ? (
                   <Skeleton.Input active />
@@ -128,8 +132,6 @@ const TaskForm: React.FC<TaskFormProps> = ({setDropdownVisible, dropdownVisible}
                   <Select
                     showSearch
                     disabled={!idSprint}
-                    // autoComplete="off"
-                    // height='auto'
                     filterOption={false}
                     onSearch={debounce((value) => {
                       setKeyword(value);
@@ -165,6 +167,7 @@ const TaskForm: React.FC<TaskFormProps> = ({setDropdownVisible, dropdownVisible}
               </Form.Item>
             </Col>
           </Row>
+          </Form>
           </>
         ) : (
           <Form
