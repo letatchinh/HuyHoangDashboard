@@ -75,10 +75,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
     try {
       const values = await form.validateFields();
       toggleEdit();
-      // if((record[field]) !== (values[field])){
-      //    console.log(values);
       updateStatusConfig({ ...values, id: record._id });
-      // }
       setEditing(false)
 
     } catch (errInfo) {
@@ -105,7 +102,6 @@ const EditableCell: React.FC<EditableCellProps> = ({
       </div>
     );
   }
-
   return <td {...restProps}>{childNode}</td>;
 };
 type EditableTableProps = Parameters<typeof Table>[0];
@@ -122,7 +118,6 @@ interface DataType {
 type ColumnTypes = Exclude<EditableTableProps['columns'], undefined>;
 const StatusConfig: React.FC = () => {
   const { t }: any = useTranslate();
-  const [colorHex, setColorHex] = useState<Color | string>("#1677ff");
   const [, createStatusConfig] = useCreateStatusConfig(useResetAction());
   const [, deleteStatusConfig] = useDeleteStatusConfig(useResetAction());
   const [, updateStatusConfig] = useUpdateStatusConfig(useResetAction());
@@ -130,18 +125,12 @@ const StatusConfig: React.FC = () => {
   const [listStatusConfig, isLoading] = useGetListStatusConfig(query);
   const canDelelte = useMatchPolicy(POLICIES.DELETE_WORKMANAGEMENT);
   const canUpdate = useMatchPolicy(POLICIES.UPDATE_WORKMANAGEMENT);
-  const handleColorChange = (color: Color, dataIndex: keyof DataType, key: keyof DataType) => {
-    const hexColor = color.toHexString();
-    // Update the state based on the key and dataIndex
-    updateStatusConfig({ [dataIndex]: hexColor, id: key });
-  };
   const [count, setCount] = useState(2);
   useResetAction()
   const handleDelete = (_id: keyof DataType) => {
     deleteStatusConfig(_id);
     console.log(_id)
   };
-
   const defaultColumns: (ColumnTypes[number] & { editable?: boolean; dataIndex: string })[] = [
     {
       title: "Trạng thái",
@@ -280,7 +269,6 @@ const StatusConfig: React.FC = () => {
       render: (_, record) =>
         listStatusConfig?.length >= 1 ? (
           <Button onClick={() => handleDelete(record._id)} type="dashed" style={{ color: 'red' }} size="small">Xoá</Button>
-
         ) : null,
     },
   ];
@@ -296,7 +284,6 @@ const StatusConfig: React.FC = () => {
     };
     createStatusConfig(newData)
   };
-
   const components = {
     body: {
       row: EditableRow,
@@ -314,7 +301,6 @@ const StatusConfig: React.FC = () => {
         editable: col.editable,
         dataIndex: col.dataIndex,
         title: col.title,
-        // handleSave,
       }),
     };
   });

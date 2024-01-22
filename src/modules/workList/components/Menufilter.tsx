@@ -15,7 +15,6 @@ const listOptionsSearch = [
 ];
 const headValue = head(listOptionsSearch)?.value;
 const MenuFilter = () => {
-//   const [inputValue, setInputValue] = useState<[Moment | null, Moment | null]>([null, null]);
   const { boardData } = useFormTaskContext();
   const listStatusMap = get(boardData, 'listStatusConfig', [])?.reduce((result:any, item:any) => {
     result[item._id] = {
@@ -55,7 +54,6 @@ const MenuFilter = () => {
       setInputValue([null, null]);
     }
   };
-
   return (
     <div
       className="menu-filter"
@@ -89,7 +87,6 @@ const MenuFilter = () => {
               setKeyword('');
             }}
             dropdownMatchSelectWidth={false}
-            // bordered={false}
             allowClear
           />
         </Col>
@@ -155,7 +152,6 @@ const MenuFilter = () => {
                   onParamChange({ [searchBy]: "" });
                 }
               }}
-              // bordered={false}
             />
           </Col>
         )}

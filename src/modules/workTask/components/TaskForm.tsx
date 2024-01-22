@@ -1,14 +1,9 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import { Button, Col, Form, Input, Radio, RadioChangeEvent, Row, Select, Skeleton } from 'antd';
-import { PlusOutlined } from '@ant-design/icons';
-import { Link, useNavigate } from 'react-router-dom';
-// import { useFormTaskContext } from '../WorkList';
-// import { useGetSprints } from '~/hooks/workSprint';
+import { Button, Col, Form, Input, Radio, Row, Select, Skeleton } from 'antd';
 import { debounce, get } from 'lodash';
-import { useGetListTaskBySprints, useGetWorkSprints } from '~/modules/workSprint/workSprint.hook';
+import React, { useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useFormTaskContext } from '~/modules/workList/screens/WorkList';
-// import SelectStatusTask from '../common/SelectStatusTask';
-// import { useGetBoardById, useGetListTaskBySprints, useCopyTask } from '~/hooks';
+import { useGetListTaskBySprints, useGetWorkSprints } from '~/modules/workSprint/workSprint.hook';
 import { useCopyTask, useResetAction } from '../workTask.hook';
 interface TaskFormProps {
   dropdownVisible?: boolean;

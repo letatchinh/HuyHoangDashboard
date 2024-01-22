@@ -80,7 +80,7 @@ function SelectStatusTask({
           value={status}
           style={{ width: "fill", cursor: "pointer" }}
         >
-          <Space style={{ width: "100%" }}>
+          <Space >
             <Space>
               <div
                 className="select_option_circle"
