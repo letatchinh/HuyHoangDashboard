@@ -13,7 +13,7 @@ const bill = 'bill';
 const RESOURCES = [
   branch,
   // company,
-  // employee,
+  employee,
   user,
   userGroup,
   // pharmacy,

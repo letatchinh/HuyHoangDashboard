@@ -85,7 +85,8 @@ const NavbarVertical: React.FC = () => {
   } else {
     return getItem(first)
   };
-});
+  });
+  
   return (
     <div className='layoutVertical--content__navbar'>
       {/* <button onClick={toggleCollapsed}>asd</button> */}
