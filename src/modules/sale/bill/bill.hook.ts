@@ -76,7 +76,6 @@ export const useCreateBill = (callback?: any) => {
   return useSubmit({
     action: billSliceAction.createRequest,
     loadingSelector: isSubmitLoadingSelector,
-    callback
   });
 };
 

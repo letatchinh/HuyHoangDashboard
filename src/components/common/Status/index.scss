@@ -23,7 +23,7 @@
         background-color: #1890ff;
         color: #fff;
       }
-    &.completed {
+    &.completed ,&.confirmed {
       background-color: #52c41a;
       color: #fff;
     }

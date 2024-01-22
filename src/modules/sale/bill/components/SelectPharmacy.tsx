@@ -6,13 +6,14 @@ import useNotificationStore from "~/store/NotificationContext";
 import { FormFieldCreateBill } from "../bill.modal";
 import DebounceSelect from "~/components/common/DebounceSelect";
 type propsType = {
-  form? : any
+  form? : any,
+  onChange? : (p:any) => void,
 };
 type ItemSearch = {
   name: string;
   value: string;
 };
-export default function SelectPharmacy({form}: propsType): React.JSX.Element {
+export default function SelectPharmacy({form,onChange = () => {}}: propsType): React.JSX.Element {
   const { onNotify } = useNotificationStore();
   const [loading,setLoading] = useState(false);
   const [initOption,setInitOption] = useState([]);
@@ -57,6 +58,7 @@ export default function SelectPharmacy({form}: propsType): React.JSX.Element {
   },[]);
   return (
     <Form.Item<FormFieldCreateBill>
+      
       name={"pharmacyId"}
       rules={[
         {
@@ -64,6 +66,7 @@ export default function SelectPharmacy({form}: propsType): React.JSX.Element {
           message: "Vui lòng chọn nhà thuốc",
         },
       ]}
+      style={{marginBottom: 'unset'}}
     >
       <DebounceSelect
         loading={loading}
@@ -71,6 +74,7 @@ export default function SelectPharmacy({form}: propsType): React.JSX.Element {
         fetchOptions={fetchOptions}
         style={{ width: "100%" }}
         initOptions={initOption}
+        {...onChange && {onChange : (value : any) => onChange(value)}}
 
       />
     </Form.Item>

@@ -5,20 +5,19 @@ import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { v4 } from "uuid";
 import { default as Bill, default as BillModule } from "~/modules/sale/bill";
-import { billItem } from "~/modules/sale/bill/bill.modal";
+import { quotation } from "~/modules/sale/bill/bill.modal";
 import SelectProduct from "~/modules/sale/bill/components/SelectProduct";
 import logo from '~/assets/images/header/logo-white.svg';
 
 export const KEY_DATA_PHARMACY = "bill-pharmacy";
 export const KEY_PRIORITY = "key-priority"; // Tab Will Use this key and Remove then (If Have)
 type DataUpdateQuotationType = {
-  billItems : billItem[],
   id : string,
   code : string
 }
 export type ItemDataSource = {
-  typeTab : "createQuotation" | "updateQuotation",
-  billItems: billItem[];
+  typeTab : "createQuotation" | "updateQuotation" | "convertQuotation",
+  quotationItems: quotation[];
   pharmacyId: string | null;
   dataUpdateQuotation? : DataUpdateQuotationType;
 };
@@ -27,7 +26,7 @@ export type DataSourceType = {
 };
 const initData: ItemDataSource = {
   typeTab : "createQuotation",
-  billItems: [],
+  quotationItems: [],
   pharmacyId: null,
 };
 
@@ -47,15 +46,19 @@ const Label = ({ label, onRemove }: { label?: any; onRemove: () => void }) => (
 
 const CreateBillPage = (): React.JSX.Element => {
   const navigate = useNavigate();
+  
   const [tabs, setTabs] = useState<TabsProps["items"]>();
   const [activeKey, setActiveKey]: any = useState();
   const [dataSource, setDataSource]: any = useState<DataSourceType>({});
+
+
+
   const initDatSource = useCallback(() => {
     const newKey = v4();
     let newDataSource: DataSourceType = {
       [newKey]: {
         typeTab : "createQuotation",
-        billItems: [],
+        quotationItems: [],
         pharmacyId: null,
       },
     };
@@ -162,6 +165,7 @@ const CreateBillPage = (): React.JSX.Element => {
       } else {
         // Data source is Ready
         const dataReady: DataSourceType = JSON.parse(dataFromLocalStorage);
+        
         let newTabs: TabsProps['items'] = [];
         forIn(dataReady, (value, key) => {
           switch (get(value,'typeTab')) {
@@ -172,10 +176,16 @@ const CreateBillPage = (): React.JSX.Element => {
               });
               break;
             case 'updateQuotation':
-              const {dataUpdateQuotation} = value;
               newTabs?.push({
                 key,
-                label: `Cập nhật ĐHT ${get(dataUpdateQuotation,'code','')}`,
+                label: `Cập nhật ĐHT ${get(value,'dataUpdateQuotation.code','')}`,
+              });
+              break;
+
+            case 'convertQuotation':
+              newTabs?.push({
+                key,
+                label: `Chuyển đổi ĐHT ${get(value,'dataUpdateQuotation.code','')}`,
               });
               break;
           
@@ -188,7 +198,7 @@ const CreateBillPage = (): React.JSX.Element => {
 
         const keyFirst = Object.keys(dataReady)[0];
         const dataFirst = dataReady[keyFirst];
-        setDataSource(dataReady);
+        setDataSource(BillModule.service.onConvertInitQuantity(dataReady));
         // Verify when Initialize DataSource
         BillModule.service.onVerifyData({
           bill: dataFirst,
@@ -211,18 +221,26 @@ const CreateBillPage = (): React.JSX.Element => {
   useEffect(() => {
     // If Have key Priority will Set Key and Remove Then
     const keyPriorityStorage = localStorage.getItem(KEY_PRIORITY);
+    console.log(keyPriorityStorage,'keyPriorityStorage');
+    
     if(keyPriorityStorage){
       const keyPriority = JSON.parse(keyPriorityStorage);
+      console.log(keyPriority,'keyPrioritykeyPriority');
+      
       setActiveKey(keyPriority);
       localStorage.removeItem(KEY_PRIORITY); // Remove after set 
       return;
     };
       // Auto Set Active key if First tabs
     if (!activeKey) {
+      console.log("VO ADY KO");
+      
       setActiveKey(tabs?.[0].key);
       return;
     }
   }, [activeKey, tabs]);
+  console.log(activeKey);
+  
   return (
     <div>
       <div className="createBill">
@@ -238,6 +256,7 @@ const CreateBillPage = (): React.JSX.Element => {
           }}
         >
           <Tabs
+          activeKey={activeKey}
             destroyInactiveTabPane
             className="createBill__tabs"
             tabBarExtraContent={{

@@ -22,7 +22,11 @@ function* getByIdQuotation({payload:id} : any) : any {
 
 function* createQuotation({payload} : any) : any {
   try {
-    const data = yield call(api.create,payload);
+    const {callbackSubmit,...params} = payload
+    const data = yield call(api.create,params);
+    if(callbackSubmit){
+      callbackSubmit()
+    }
     yield put(quotationActions.createSuccess(data));
   } catch (error:any) {
     yield put(quotationActions.createFailed(error));
@@ -31,10 +35,27 @@ function* createQuotation({payload} : any) : any {
 
 function* updateQuotation({payload} : any) : any {
   try {
-    const data = yield call(api.update,payload);
+    const {callbackSubmit,...params} = payload
+    const data = yield call(api.update,params);
+    if(callbackSubmit){
+      callbackSubmit()
+    }
     yield put(quotationActions.updateSuccess(data));
   } catch (error:any) {
     yield put(quotationActions.updateFailed(error));
+  }
+}
+
+function* convertQuotation({payload} : any) : any {
+  try {
+    const {callbackSubmit,...params} = payload
+    const data = yield call(api.convert,params);
+    if(callbackSubmit){
+      callbackSubmit()
+    }
+    yield put(quotationActions.convertSuccess(data));
+  } catch (error:any) {
+    yield put(quotationActions.convertFailed(error));
   }
 }
 function* deleteQuotation({payload : id} : any) : any {
@@ -52,5 +73,6 @@ export default function* quotationSaga() {
   yield takeLatest(quotationActions.getByIdRequest, getByIdQuotation);
   yield takeLatest(quotationActions.createRequest, createQuotation);
   yield takeLatest(quotationActions.updateRequest, updateQuotation);
+  yield takeLatest(quotationActions.convertRequest, convertQuotation);
   yield takeLatest(quotationActions.deleteRequest, deleteQuotation);
 }

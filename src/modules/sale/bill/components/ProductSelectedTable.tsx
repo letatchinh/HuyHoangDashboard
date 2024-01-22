@@ -1,14 +1,14 @@
 import { GiftTwoTone, MinusCircleTwoTone, UpCircleTwoTone } from "@ant-design/icons";
-import { Typography } from "antd";
+import { Select, Typography } from "antd";
 import { get } from "lodash";
-import React from "react";
+import React, { useMemo } from "react";
 import TableAnt from "~/components/Antd/TableAnt";
 import {
   EditableCell,
   EditableRow
 } from "~/components/common/EditableComponent";
 import { formatter } from "~/utils/helpers";
-import { billItem } from "../bill.modal";
+import { quotation, variant } from "../bill.modal";
 import useCreateBillStore from "../storeContext/CreateBillContext";
 import ExpandRowDiscount from "./ExpandRowDiscount";
 import ProductListSuggest from "./productSuggest";
@@ -16,8 +16,12 @@ type propsType = {};
 export default function ProductSelectedTable(
   props: propsType
 ): React.JSX.Element {
-  const { billItems, onSave,onRemove } = useCreateBillStore();
-  
+  const { quotationItems, onSave,onRemove } = useCreateBillStore();
+  const onSelect = (value : string,options : any) => {
+    if(!options) return;
+    const {data} = options;
+    
+  }
   const columns = [
     {
       title: "STT",
@@ -29,10 +33,20 @@ export default function ProductSelectedTable(
       title: "Tên thuốc",
       dataIndex: "name",
       key: "name",
-      render : (name : string,record : any) => <div>
-        <Typography.Text strong>{get(record,'codeBySupplier')}</Typography.Text>
+      render : (name : string,record : any) => {
+        const optionsVariant = get(record, "variants",[])?.map((variant : variant) => ({
+          label : get(variant, "unit.name",""),
+          value : get(variant, "_id",""),
+          data : variant
+        }))
+      return <div>
+        <Typography.Text strong>{get(record,'codeBySupplier')} 
+        <Select options={optionsVariant}
+        onSelect={onSelect}
+        /></Typography.Text>
         <p className="m-0">{name}</p>
       </div>
+      }
     },
     {
       title: "Chiết khấu",
@@ -112,33 +126,31 @@ export default function ProductSelectedTable(
     }),
 
     // use cloned data source so that it can be submitted when complete
-    dataSource: billItems,
+    dataSource: quotationItems,
   };
+  console.log(quotationItems,'quotationItems');
   
   return (
-    <>
-      <TableAnt
-        className="table-selected-product"
-        {...tableProps}
-        size="small"
-        pagination={false}
-        expandable={{
-          expandedRowRender: (record: billItem) => (
-            <ExpandRowDiscount data={get(record, "cumulativeDiscount")} />
-          ),
-          defaultExpandAllRows: true,
-          rowExpandable: (record: billItem) =>
-            !!get(record, "cumulativeDiscount", []).length,
-          expandIcon: ({ expanded, onExpand, record ,expandable}) =>
-          expandable ? 
-            expanded ? (
-              <UpCircleTwoTone onClick={(e: any) => onExpand(record, e)} />
-            ) : (
-              <GiftTwoTone onClick={(e: any) => onExpand(record, e)} />
-            ) : null,
-        }}
-      />
-      <ProductListSuggest/>
-    </>
+    <TableAnt
+      className="table-selected-product"
+      {...tableProps}
+      size="small"
+      pagination={false}
+      expandable={{
+        expandedRowRender: (record: quotation) => (
+          <ExpandRowDiscount data={get(record, "cumulativeDiscount")} />
+        ),
+        defaultExpandAllRows: true,
+        rowExpandable: (record: quotation) =>
+          !!get(record, "cumulativeDiscount", []).length,
+        expandIcon: ({ expanded, onExpand, record ,expandable}) =>
+        expandable ? 
+          expanded ? (
+            <UpCircleTwoTone onClick={(e: any) => onExpand(record, e)} />
+          ) : (
+            <GiftTwoTone onClick={(e: any) => onExpand(record, e)} />
+          ) : null,
+      }}
+    />
   );
 }

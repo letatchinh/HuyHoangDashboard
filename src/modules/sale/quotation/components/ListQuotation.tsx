@@ -1,21 +1,26 @@
 import React, { useMemo } from "react";
 import TableAnt from "~/components/Antd/TableAnt";
 import {
-    useGetQuotations, useQuotationPaging,
-    useQuotationQueryParams, useUpdateQuotationParams
+  useDeleteQuotation,
+  useGetQuotations,
+  useQuotationPaging,
+  useQuotationQueryParams,
+  useUpdateQuotationParams
 } from "../quotation.hook";
 
-import { Dropdown, Space, Typography } from "antd";
+import { Button, Popconfirm, Space, Typography } from "antd";
 import { ColumnsType } from "antd/es/table/InternalTable";
-import { MenuProps } from "antd/lib/index";
 import dayjs from "dayjs";
 import { get } from "lodash";
 import { Link } from "react-router-dom";
 import SearchAnt from "~/components/Antd/SearchAnt";
 import Status from "~/components/common/Status/index";
+import BillModule from "~/modules/sale/bill";
+import { ItemDataSource } from "~/pages/Dashboard/Bill/CreateBill";
 import { PATH_APP } from "~/routes/allPath";
 import { pagingTable } from "~/utils/helpers";
-import { STATUS_QUOTATION_VI } from "../constants";
+import SelectPharmacy from "../../bill/components/SelectPharmacy";
+import { STATUS_QUOTATION, STATUS_QUOTATION_VI } from "../constants";
 type propsType = {
   status?: string;
 };
@@ -24,36 +29,57 @@ export default function ListQuotation({
   status,
 }: propsType): React.JSX.Element {
   const [query] = useQuotationQueryParams(status);
+  console.log(query,'query');
+  
   const [keyword, { setKeyword, onParamChange }] =
     useUpdateQuotationParams(query);
   const [quotations, isLoading] = useGetQuotations(query);
   const paging = useQuotationPaging();
-  const items: MenuProps['items'] = useMemo(() => [
-    {
-      label: 'Cập nhật',
-      key: '1',
-    },
-    {
-      label: 'Xoá',
-      key: '2',
-    },
-  ],[]);
+  const [, onDelete] = useDeleteQuotation();
+  const onUpdateQuotation = (data: Omit<ItemDataSource, "typeTab">) => {
+    BillModule.service.addDataToSaleScreen({
+      typeTab: "updateQuotation",
+      ...data,
+    });
+    window.open(PATH_APP.bill.create)
+  };
+  const onConvertQuotation = (data: Omit<ItemDataSource, "typeTab">) => {
+    BillModule.service.addDataToSaleScreen({
+      typeTab: "convertQuotation",
+      ...data,
+    });
+    window.open(PATH_APP.bill.create)
+  };
   const columns: ColumnsType = useMemo(
     () => [
       {
         title: "Mã đơn hàng tạm",
-        dataIndex: "codeSequence",
-        key: "codeSequence",
+        dataIndex: "code",
+        key: "code",
         align: "center",
-        render(codeSequence, record, index) {
-          return (
-            <Link
+        // render(code, record, index) {
+        //   return (
+        //     <Link
+        //       className="link_"
+        //       to={PATH_APP.quotation.root + "/" + get(record, "_id")}
+        //     >
+        //       {code}
+        //     </Link>
+        //   );
+        // },
+      },
+      {
+        title: "Mã đơn hàng",
+        dataIndex: "bill",
+        key: "bill",
+        align: "center",
+        render(bill, record, index) {
+        return  <Link
               className="link_"
-              to={PATH_APP.quotation.root + "/" + get(record, "_id")}
+              to={PATH_APP.bill.root + "/" + get(record, "bill._id")}
             >
-              {codeSequence}
+              {get(record,'bill.codeSequence')}
             </Link>
-          );
         },
       },
       {
@@ -63,10 +89,30 @@ export default function ListQuotation({
         align: "center",
         render(createdAt, record, index) {
           return (
-            <Typography.Text>
+            <div>
+              <Typography.Text>
               {dayjs(createdAt).format("DD/MM/YYYY HH:mm")}
             </Typography.Text>
+            <p>-</p>
+            Bởi: <Typography.Text strong>{get(record,'createBy.fullName')}</Typography.Text>
+            </div>
           );
+        },
+      },
+      {
+        title: "Ngày chuyển đổi",
+        dataIndex: "historyStatus",
+        key: "historyStatus",
+        align: "center",
+        render(historyStatus, record, index) {
+          return historyStatus?.[STATUS_QUOTATION.CONFIRMED] && <div>
+            <Typography.Text>
+              {dayjs(historyStatus?.[STATUS_QUOTATION.CONFIRMED]).format("DD/MM/YYYY HH:mm")}
+            </Typography.Text>
+            <p>-</p>
+            Bởi: <Typography.Text strong>{get(record,'confirmBy.fullName')}</Typography.Text>
+          </div>
+        ;
         },
       },
       {
@@ -74,6 +120,7 @@ export default function ListQuotation({
         dataIndex: "pharmacy",
         key: "pharmacy",
         align: "center",
+        width : '30%',
         render(pharmacy, record, index) {
           return <Typography.Text>{get(pharmacy, "name", "")}</Typography.Text>;
         },
@@ -97,16 +144,53 @@ export default function ListQuotation({
         dataIndex: "_id",
         key: "action",
         align: "center",
-        render(_id, record, index) {
+        render(_id, record: any, index) {
           return (
-            <Dropdown.Button
-              type="primary"
-              menu={{
-                items,
-              }}
-            >
-              Chuyển đổi
-            </Dropdown.Button>
+            <Space direction="vertical">
+              <Button
+                block
+                onClick={() => {
+                  onConvertQuotation({
+                    quotationItems: get(record, "quotationItems", []),
+                    pharmacyId: get(record, "pharmacyId"),
+                    dataUpdateQuotation: {
+                      id: _id,
+                      code: get(record, "code"),
+                    },
+                  });
+                }}
+                type="primary"
+                size="small"
+              >
+                Chuyển đổi
+              </Button>
+              <Button
+                block
+                onClick={() => {
+                  onUpdateQuotation({
+                    quotationItems: get(record, "quotationItems", []),
+                    pharmacyId: get(record, "pharmacyId"),
+                    dataUpdateQuotation: {
+                      id: _id,
+                      code: get(record, "code"),
+                    },
+                  });
+                }}
+                size="small"
+              >
+                Cập nhật
+              </Button>
+              <Popconfirm
+                title="Bạn muốn xoá nhà cung cấp này?"
+                onConfirm={() => onDelete(_id)}
+                okText="Xoá"
+                cancelText="Huỷ"
+              >
+                <Button block danger size="small">
+                  Xoá
+                </Button>
+              </Popconfirm>
+            </Space>
           );
         },
       },
@@ -115,13 +199,14 @@ export default function ListQuotation({
   );
   return (
     <div className="quotation-page">
-      <Space>
-        <SearchAnt onParamChange={onParamChange} />
+      <Space align="center">
+      <SelectPharmacy onChange={(value) => onParamChange({pharmacyId : value})}/>
+      <SearchAnt onParamChange={onParamChange} />
       </Space>
       <TableAnt
         columns={columns}
         dataSource={quotations}
-        loading={isLoading}
+        // loading={isLoading}
         pagination={pagingTable(paging, onParamChange)}
       />
     </div>
