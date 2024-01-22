@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { get } from "lodash";
+import { get, omit} from "lodash";
 import { cumulativeDiscountType } from "~/modules/cumulativeDiscount/cumulativeDiscount.modal";
 import { InstanceModuleRedux } from "~/redux/instanceModuleRedux";
 import { initStateSlice } from "~/redux/models";
@@ -12,6 +12,7 @@ interface cloneInitState extends initStateSlice {
   listProductSuggest?:any,
   isProductSuggestLoading?: boolean,
   getProductSuggestFailed?: any,
+  pagingProductSuggest?:any ;
 }
 class BillClassExtend extends InstanceModuleRedux {
   cloneReducer;
@@ -57,6 +58,12 @@ class BillClassExtend extends InstanceModuleRedux {
     getListProductSuggestSuccess: (state:cloneInitState, { payload }:{payload?:any}) => {
       state.isProductSuggestLoading = false;
       state.listProductSuggest = payload;
+      state.pagingProductSuggest = {
+        current : payload?.page,
+        pageSize : payload?.limit,
+        total: payload?.totalDocs,
+        ...omit(payload,'docs','page','limit','totalDocs')
+      }
       },
     getListProductSuggestFailed: (state:cloneInitState, { payload }:{payload:any}) => {
       state.isProductSuggestLoading = false;

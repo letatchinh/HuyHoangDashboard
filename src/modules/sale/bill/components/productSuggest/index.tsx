@@ -1,8 +1,11 @@
-import React, { CSSProperties, useMemo, useState } from "react";
-import { useGetProductListSuggest } from "../../bill.hook";
+import React, { CSSProperties, useMemo, useRef, useState } from "react";
+import { useBillProductSuggestPaging, useGetProductListSuggest } from "../../bill.hook";
 import { Button, Card, Carousel, Collapse, List, Row } from "antd";
 import { CaretLeftOutlined, CaretRightOutlined } from "@ant-design/icons";
 import { CollapseProps } from "antd/lib";
+import useCreateBillStore from "../../storeContext/CreateBillContext";
+import { getCumulativeDiscount, selectProductSearch } from "../../bill.service";
+import { get } from "lodash";
 
 const contentStyle: React.CSSProperties = {
   margin: 0,
@@ -13,55 +16,40 @@ const contentStyle: React.CSSProperties = {
   background: '#364d79',
 };
 
-type propsType = {};
 const ProductListSuggest: React.FC = () => {
   const [page, setPage] = useState(1)
   const [limit, setLimit] = useState(10)
+  const [keyword, setKeyword] = useState("");
   const query = useMemo(
     () => ({
-      keyword: "",
-      page:page ,
+      keyword,
+      page: page,
       limit: limit,
     }),
-    [page, limit]
+    [page, limit, keyword]
   );
   const [products, isLoading] = useGetProductListSuggest(query);
-  console.log(products,'products')
-  const productsConfig = [
-    {
-      title: "Title 1",
-    },
-    {
-      title: "Title 2",
-    },
-    {
-      title: "Title 3",
-    },
-    {
-      title: "Title 4",
-    },
-    {
-      title: "Title 5",
-    },
-    {
-      title: "Title 3",
-    },
-    {
-      title: "Title 4",
-    },
-    {
-      title: "Title 5",
-    },
-  ];
-
-  const onChangeData = (e: boolean) => {
-    if (e) {
-      setPage(page + 1);
-      setLimit(limit + 10);
-    } else {
-      setPage(page - 1);
-      setLimit(limit - 10);
+  const paging = useBillProductSuggestPaging();
+  console.log(paging,'paging')
+  const inputEl : any = useRef(null);
+  const { quotationItems, onAdd , bill} = useCreateBillStore();
+  const onSelect = async(data:any) => {
+    // inputEl.current.blur();
+    const billItem: any = selectProductSearch(data);
+    const cumulativeDiscount = await getCumulativeDiscount({pharmacyId : get(bill,'pharmacyId'),quotationItems : [billItem]});
+    const billItemWithCumulative = {
+      ...billItem,
+      cumulativeDiscount: cumulativeDiscount?.[get(billItem, 'productId')] ?? []
     };
+    onAdd(billItemWithCumulative)
+  };
+
+  const onChangeData = (e: any) => {
+    if (e) {
+      setPage(paging?.current + 1)
+    } else {
+      setPage(paging?.current - 1)
+    }
   };
   const ListItem = () => {
     return (
@@ -81,7 +69,7 @@ const ProductListSuggest: React.FC = () => {
         renderItem={(item: any) => (
           <List.Item
             className="product-suggest__item"
-            onClick={() => console.log(item)}
+            onClick={() => onSelect(item)}
           >
             <Card
               title={item?.productGroup?.name}
@@ -93,7 +81,6 @@ const ProductListSuggest: React.FC = () => {
                 width: '100%',
                 minWidth: '100px',
                 minHeight: '100px',
-                // height: 'max-content',
                 padding: 5, 
                 overflow: 'hidden',
                 fontSize: 12,
@@ -107,8 +94,8 @@ const ProductListSuggest: React.FC = () => {
         )}
         />
         <Row align={"middle"} justify={"center"}>
-          <Button type="link" icon={<CaretLeftOutlined />} disabled={!products?.length ?? page === 1} />
-          <Button type="link" icon={<CaretRightOutlined />} disabled={ !products?.length ?? products?.length < 10 ?? products?.totalDocs/10 < page} />
+          <Button type="link" icon={<CaretLeftOutlined />} disabled={ !paging?.hasPrevPage } onClick={()=> onChangeData(false)}/>
+          <Button type="link" icon={<CaretRightOutlined />} disabled={ !paging?.hasNextPage} onClick={()=> onChangeData(true)} />
       </Row>
       </>
     )

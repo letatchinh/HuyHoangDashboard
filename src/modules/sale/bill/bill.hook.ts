@@ -44,6 +44,9 @@ const getListProductSuggestSuccessSelector = getSelector('listProductSuggest');
 const getListProductSuggestFailedSelector = getSelector('getProductSuggestFailed');
 const listProductSuggestLoadingSelector = getSelector('isProductSuggestLoading');
 
+const pagingProductSuggestSelector = getSelector('pagingProductSuggest');
+export const useBillProductSuggestPaging = () => useSelector(pagingProductSuggestSelector);
+
 export const useBillPaging = () => useSelector(pagingSelector);
 
 export const useGetBills = (param: any) => {

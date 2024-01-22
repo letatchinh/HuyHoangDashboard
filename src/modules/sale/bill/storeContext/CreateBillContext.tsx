@@ -90,7 +90,7 @@ type CreateBillProviderProps = {
   bill: Bill;
   onChangeBill: (newObjData: any) => void;
   verifyData : () => void
-  onRemoveTab : () => void
+  onRemoveTab: () => void
 };
 
 export function CreateBillProvider({

@@ -130,6 +130,7 @@ export default function ProductSelectedTable(
   };
   
   return (
+    <>
     <TableAnt
       className="table-selected-product"
       {...tableProps}
@@ -151,5 +152,7 @@ export default function ProductSelectedTable(
           ) : null,
       }}
     />
+      <ProductListSuggest/>
+    </>
   );
 }
