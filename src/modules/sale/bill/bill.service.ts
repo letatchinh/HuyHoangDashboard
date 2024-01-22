@@ -1,12 +1,14 @@
-import { compact, get, unset } from "lodash";
+import { compact, forIn, get, unset } from "lodash";
 import { v4 } from "uuid";
 import { DataSourceType, ItemDataSource, KEY_DATA_PHARMACY, KEY_PRIORITY } from "~/pages/Dashboard/Bill/CreateBill";
 import { cumulativeDiscountType } from "../../cumulativeDiscount/cumulativeDiscount.modal";
 import apis from "./bill.api";
-import { billItem } from "./bill.modal";
+import { quotation } from "./bill.modal";
 import { DataItem } from "./storeContext/CreateBillContext";
-
-export const selectProductSearch = (data: any) => {
+import CumulativeDiscountModule from '~/modules/cumulativeDiscount';
+const TYPE_DISCOUNT : any = CumulativeDiscountModule.constants.TYPE_DISCOUNT;
+const TARGET : any = CumulativeDiscountModule.constants.TARGET;
+ export const selectProductSearch = (data: any) => {
   const {
     name,
     cumulativeDiscount,
@@ -19,32 +21,35 @@ export const selectProductSearch = (data: any) => {
   } = data;
   const variant = variants?.find(
     (item: any) => get(item, "_id") === selectVariant
-  );
+    );
   const submitData = {
     name,
     cumulativeDiscount, // Fixme
     productId,
     variantId: get(variant, "_id"),
     quantity: quantity ?? 1,
+    exchangeValue : get(variant, "exchangeValue",1),
     price: get(variant, "price", 0),
     supplierId,
     codeBySupplier,
+    variant,
+    variants,
   };
   return submitData;
 };
 
 type paramsGetDiscount = {
   pharmacyId: string;
-  billItems: billItem[];
+  quotationItems: quotation[];
 };
 
 export const getCumulativeDiscount = async ({
   pharmacyId,
-  billItems,
+  quotationItems,
 }: paramsGetDiscount) => {
   let payloadSubmit: any = {};
   let productIds: any = {};
-  billItems?.forEach((item) => {
+  quotationItems?.forEach((item) => {
     productIds[get(item, "productId")] = {
       supplierId: get(item, "supplierId"),
       variantId: get(item, "variantId"),
@@ -71,7 +76,7 @@ export const onVerifyData = ({
   if (get(bill, "pharmacyId") ) {
     const billSample: { productId: string; variantId: string }[] = get(
       bill,
-      "billItems",
+      "quotationItems",
       []
     )?.map((item: any) => ({
       productId: get(item, "productId"),
@@ -80,7 +85,7 @@ export const onVerifyData = ({
     const verify = async () => {
       try {
         const response = await apis.verify({ billSample });
-        const concatQuantity = get(bill, "billItems", [])?.map((item: any) => {
+        const concatQuantity = get(bill, "quotationItems", [])?.map((item: any) => {
           const findInResponse = response?.find(
             (res: any) => get(item, "variantId") === get(res, "selectVariant")
           );
@@ -89,6 +94,7 @@ export const onVerifyData = ({
             return {
               ...findInResponse,
               quantity: get(item, "quantity", 1),
+              // quantity: Number((get(item, "quantity", 1) / get(item, "exchangeValue", 1)).toFixed(1)),
               // Inherit More here
             };
           } else {
@@ -96,8 +102,8 @@ export const onVerifyData = ({
           }
         });
 
-        let items: any = compact(concatQuantity)?.map((billItem: any) => {
-          const dataSearch = selectProductSearch(billItem);
+        let items: any = compact(concatQuantity)?.map((quotation: any) => {
+          const dataSearch = selectProductSearch(quotation);
 
           return {
             ...dataSearch,
@@ -105,7 +111,7 @@ export const onVerifyData = ({
           };
         });
         const cumulativeDiscount = await getCumulativeDiscount({
-          billItems: items,
+          quotationItems: items,
           pharmacyId: get(bill, "pharmacyId"),
         });
         const newItems = items?.map((item: any) => ({
@@ -115,13 +121,13 @@ export const onVerifyData = ({
         }));
         onChangeBill(keyActive, {
           pharmacyId: get(bill, "pharmacyId"),
-          billItems: newItems,
+          quotationItems: newItems,
         });
         if (callback && typeof callback === "function") {
           callback({
             [keyActive]: {
               pharmacyId: get(bill, "pharmacyId"),
-              billItems: newItems,
+              quotationItems: newItems,
             },
           });
         }
@@ -148,22 +154,13 @@ export const getDiscountAmount = (
   return discountAmount;
 };
 
-export const reducerDiscountBillItems = (billItems: any[]) => {
-  const TYPE_DISCOUNT = {
-    "DISCOUNT.CORE": "DISCOUNT.CORE",
-    "DISCOUNT.SOFT": "DISCOUNT.SOFT",
-    LK: "LK",
-  };
-  const TARGET = {
-    product: "product",
-    supplier: "supplier",
-  };
-  const newBillItems: any[] = billItems?.map((billItem: DataItem) => {
-    const cumulativeDiscount = get(billItem, "cumulativeDiscount", [])?.map(
+export const reducerDiscountQuotationItems = (quotationItems: any[]) => {
+  const newQuotationItems: any[] = quotationItems?.map((quotation: DataItem) => {
+    const cumulativeDiscount = get(quotation, "cumulativeDiscount", [])?.map(
       (discount: any) => {
         const discountAmount = getDiscountAmount(
           discount,
-          get(billItem, "price", 1)
+          get(quotation, "price", 1)
         );
         return {
           ...discount,
@@ -210,9 +207,9 @@ export const reducerDiscountBillItems = (billItems: any[]) => {
     );
 
     const totalPrice =
-      get(billItem, "price", 1) * get(billItem, "quantity", 1) - totalDiscount;
+      get(quotation, "price", 1) * get(quotation, "quantity", 1) - totalDiscount;
     return {
-      ...billItem,
+      ...quotation,
       cumulativeDiscount,
       totalDiscount,
       totalPrice: totalPrice > 0 ? totalPrice : 0,
@@ -221,7 +218,7 @@ export const reducerDiscountBillItems = (billItems: any[]) => {
     };
   });
 
-  return newBillItems;
+  return newQuotationItems;
 };
 
 export const validateDataStorage = (dataFromLocalStorage : any) : boolean => 
@@ -269,4 +266,24 @@ export const addDataToSaleScreen = (data : ItemDataSource) => {
   };
   onAddLocalStorage(newDataSource); // Add new DataSource
   onUseKeyPriority(newKey); // use priority key to active Tab
+}
+
+export const onConvertInitQuantity = (newDataSource : DataSourceType) => {
+  // Clone
+  const cloneNewDataSource :DataSourceType = {...newDataSource};
+
+  // Processing Here
+  forIn(newDataSource, (value, key : any) => {
+    const quotationItems = get(value,'quotationItems',[])?.map((item:any) => ({
+      ...item,
+      quantity : Number((get(value,'quantity',1) / get(value,'exchangeValue',1)).toFixed(1)),
+    }))
+    cloneNewDataSource[key] = {
+      ...newDataSource[key],
+      quotationItems
+    }
+  });
+
+  // Return
+  return cloneNewDataSource;
 }

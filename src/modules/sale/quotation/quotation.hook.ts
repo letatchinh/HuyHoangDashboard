@@ -4,6 +4,7 @@ import { get } from "lodash";
 import { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
+import { RootState } from "~/redux/store";
 import { clearQuerySearch, getExistProp } from "~/utils/helpers";
 import {
     getSelectors,
@@ -12,10 +13,11 @@ import {
     useSubmit,
     useSuccess
 } from "~/utils/hook";
-import { quotationActions } from "./redux/reducer";
+import { cloneInitState, quotationActions } from "./redux/reducer";
 const MODULE = "quotation";
 const MODULE_VI = "Đơn hàng tạm";
-
+const getSelector = (key: keyof cloneInitState) => (state: RootState) =>
+  state[MODULE][key];
 const {
   loadingSelector,
   listSelector,
@@ -32,6 +34,8 @@ const {
   updateFailedSelector,
   pagingSelector,
 } = getSelectors(MODULE);
+const convertSuccessSelector = getSelector("convertSuccess");
+const convertFailedSelector = getSelector("convertFailed");
 
 export const useQuotationPaging = () => useSelector(pagingSelector);
 
@@ -54,31 +58,45 @@ export const useGetQuotation = (id: any) => {
   });
 };
 
-export const useCreateQuotation = (callback?: any) => {
+export const useCreateQuotation = (callbackSubmit?: any) => {
   useSuccess(
     createSuccessSelector,
     `Tạo mới ${MODULE_VI} thành công`,
-    callback
   );
   useFailed(createFailedSelector);
 
   return useSubmit({
     action: quotationActions.createRequest,
     loadingSelector: isSubmitLoadingSelector,
+    callbackSubmit,
   });
 };
 
-export const useUpdateQuotation = (callback?: any) => {
+export const useUpdateQuotation = (callbackSubmit?: any) => {
   useSuccess(
     updateSuccessSelector,
     `Cập nhật ${MODULE_VI} thành công`,
-    callback
   );
   useFailed(updateFailedSelector);
 
   return useSubmit({
     action: quotationActions.updateRequest,
     loadingSelector: isSubmitLoadingSelector,
+    callbackSubmit,
+  });
+};
+
+export const useConvertQuotation = (callbackSubmit?: any) => {
+  useSuccess(
+    convertSuccessSelector,
+    `Chuyển đổi ${MODULE_VI} thành công`,
+  );
+  useFailed(convertFailedSelector);
+
+  return useSubmit({
+    action: quotationActions.convertRequest,
+    loadingSelector: isSubmitLoadingSelector,
+    callbackSubmit,
   });
 };
 
@@ -92,11 +110,14 @@ export const useDeleteQuotation = (callback?: any) => {
   });
 };
 
+
+
 export const useQuotationQueryParams = (status? : string) => {
   const query = useQueryParams();
   const limit = query.get("limit") || 10;
   const page = query.get("page") || 1;
   const keyword = query.get("keyword");
+  const pharmacyId = query.get("pharmacyId");
   const createSuccess = useSelector(createSuccessSelector);
   const deleteSuccess = useSelector(deleteSuccessSelector);
   return useMemo(() => {
@@ -105,10 +126,11 @@ export const useQuotationQueryParams = (status? : string) => {
       limit,
       keyword,
       status,
+      pharmacyId,
     };
     return [queryParams];
     //eslint-disable-next-line
-  }, [page, limit, keyword, createSuccess, deleteSuccess,status]);
+  }, [page, limit, keyword, createSuccess, deleteSuccess,status,pharmacyId]);
 };
 
 export const useUpdateQuotationParams = (

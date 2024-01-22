@@ -11,8 +11,8 @@ import {
 } from "react";
 import { v4 } from "uuid";
 import { useGetDebtRule, useResetBillAction } from "../bill.hook";
-import { billItem, DebtType } from "../bill.modal";
-import { reducerDiscountBillItems } from "../bill.service";
+import { quotation, DebtType } from "../bill.modal";
+import { reducerDiscountQuotationItems } from "../bill.service";
 const TYPE_DISCOUNT = {
   "DISCOUNT.CORE": "DISCOUNT.CORE",
   "DISCOUNT.SOFT": "DISCOUNT.SOFT",
@@ -34,12 +34,12 @@ const TARGET = {
 //   code: string;
 //   _id: string;
 // };
-export type DataItem = billItem & {
+export type DataItem = quotation & {
   key: number;
   name: string;
 };
 type Bill = {
-  billItems: DataItem[];
+  quotationItems: DataItem[];
   pharmacyId: string;
 };
 
@@ -49,7 +49,7 @@ type DiscountDetail = {
   ["LK"]: number;
 };
 export type GlobalCreateBill = {
-  billItems: DataItem[];
+  quotationItems: DataItem[];
   onSave: (newRow: DataItem) => void;
   onAdd: (newRow: Omit<DataItem, "key">) => void;
   onRemove: (productId: string) => void;
@@ -64,9 +64,10 @@ export type GlobalCreateBill = {
   verifyData : (callback?:any) => void,
   onRemoveTab : () => void,
   debt : DebtType[];
+  bill : any
 };
 const CreateBill = createContext<GlobalCreateBill>({
-  billItems: [],
+  quotationItems: [],
   onSave: () => {},
   onAdd: () => {},
   onRemove: () => {},
@@ -81,6 +82,7 @@ const CreateBill = createContext<GlobalCreateBill>({
   verifyData: () => {},
   onRemoveTab: () => {},
   debt : [],
+  bill : null
 });
 
 type CreateBillProviderProps = {
@@ -99,40 +101,40 @@ export function CreateBillProvider({
   onRemoveTab,
 }: CreateBillProviderProps): JSX.Element {
   useResetBillAction();
-  const [billItems, setBillItems] = useState<DataItem[]>([]);
-  
+  const [quotationItems, setQuotationItems] = useState<DataItem[]>([]);
   const [form] = Form.useForm();
   const [debt,isLoadingDebt] = useGetDebtRule();
   
   // Controller Data
   const onSave = (row: DataItem) => {
-    const newData: DataItem[] = [...billItems];
+    const newData: DataItem[] = [...quotationItems];
     const index = newData.findIndex((item) => row.key === item.key);
     const item = newData[index];
 
     const computedRow = {
       ...row,
     };
-
+    console.log(computedRow,'computedRow');
+    
     newData.splice(index, 1, { ...item, ...computedRow });
     onChangeBill({
-      billItems: newData,
+      quotationItems: newData,
     });
   };
 
   const onAdd = (row: Omit<DataItem, "key">) => {
-    const newData = [...billItems, { ...row, key: v4() }];
+    const newData = [...quotationItems, { ...row, key: v4() }];
     onChangeBill({
-      billItems: newData,
+      quotationItems: newData,
     });
   };
 
   const onRemove = (key: string) => {
-    const newData = billItems?.filter(
-      (item: billItem) => get(item, "key") !== key
+    const newData = quotationItems?.filter(
+      (item: quotation) => get(item, "key") !== key
     );
     onChangeBill({
-      billItems: newData,
+      quotationItems: newData,
     });
   };
 
@@ -155,32 +157,32 @@ export function CreateBillProvider({
 
   const totalPrice = useMemo(
     () =>
-      billItems?.reduce(
+      quotationItems?.reduce(
         (sum: number, cur: any) =>
           sum + get(cur, "price") * get(cur, "quantity"),
         0
       ),
-    [billItems]
+    [quotationItems]
   );
   const totalPriceAfterDiscount = useMemo(
     () =>
-      billItems?.reduce(
+      quotationItems?.reduce(
         (sum: number, cur: any) => sum + get(cur, "totalPrice"),
         0
       ),
-    [billItems]
+    [quotationItems]
   );
   const totalDiscount = useMemo(
     () =>
-      billItems?.reduce(
+      quotationItems?.reduce(
         (sum: number, cur: any) => sum + get(cur, "totalDiscount"),
         0
       ),
-    [billItems]
+    [quotationItems]
   );
   const totalDiscountFromProduct = useMemo(
     () =>
-      billItems?.reduce(
+      quotationItems?.reduce(
         (sum: any, cur: any) => {
           const newSum : any = {};
           forIn(TYPE_DISCOUNT,(value : any,key : any) => {
@@ -194,11 +196,11 @@ export function CreateBillProvider({
           [TYPE_DISCOUNT.LK]: 0,
         }
       ),
-    [billItems]
+    [quotationItems]
   );
   const totalDiscountFromSupplier = useMemo(
     () =>
-      billItems?.reduce(
+      quotationItems?.reduce(
         (sum: any, cur: any) => {
           const newSum : any = {};
           forIn(TYPE_DISCOUNT,(value : any,key : any) => {
@@ -212,16 +214,16 @@ export function CreateBillProvider({
           [TYPE_DISCOUNT.LK]: 0,
         }
       ),
-    [billItems]
+    [quotationItems]
   );
 
   const totalQuantity = useMemo(
     () =>
-      billItems?.reduce(
+      quotationItems?.reduce(
         (sum: number, cur: any) => sum + get(cur, "quantity"),
         0
       ),
-    [billItems]
+    [quotationItems]
   );
 
   // Initalize Data And Calculate Discount
@@ -231,16 +233,16 @@ export function CreateBillProvider({
       ...bill,
       debtType : get(initDebt,'key')
     });
-    if (get(bill, "billItems", [])?.length) {
-      const newBillItems: any[] = reducerDiscountBillItems(get(bill, "billItems", []));
-      setBillItems(newBillItems);
+    if (get(bill, "quotationItems", [])?.length) {
+      const newQuotationItems: any[] = reducerDiscountQuotationItems(get(bill, "quotationItems", []));
+      setQuotationItems(newQuotationItems);
     }
   }, [bill,debt,form,totalPrice]);
 
   return (
     <CreateBill.Provider
       value={{
-        billItems,
+        quotationItems,
         onSave,
         onAdd,
         onRemove,
@@ -255,6 +257,7 @@ export function CreateBillProvider({
         verifyData,
         debt,
         onRemoveTab,
+        bill,
       }}
     >
       {children}

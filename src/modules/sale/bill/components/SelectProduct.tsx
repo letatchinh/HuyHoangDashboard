@@ -20,13 +20,13 @@ export default function SelectProduct({dataCurrent,onChangeBill}:propsType) : Re
   const inputEl : any = useRef(null);
 
   const onAdd = (row: any) => {
-    const billItems = get(dataCurrent,'billItems',[]);
+    const quotationItems = get(dataCurrent,'quotationItems',[]);
     const newData = [
-      ...billItems,
+      ...quotationItems,
       { ...row, key: v4() },
     ];
     onChangeBill({
-      billItems : newData
+      quotationItems : newData
     })
   };
   
@@ -53,17 +53,17 @@ export default function SelectProduct({dataCurrent,onChangeBill}:propsType) : Re
       const debounceFetcher = debounce(fetchOptions, 300);
       const onSelect = async(data:any) => {
           inputEl.current.blur();
-          const billItem : any = selectProductSearch(data);
-          const cumulativeDiscount = await getCumulativeDiscount({pharmacyId : get(dataCurrent,'pharmacyId'),billItems : [billItem]});
-          const billItemWithCumulative = {
-            ...billItem,
-            cumulativeDiscount : cumulativeDiscount?.[get(billItem,'productId')] ?? []
+          const quotation : any = selectProductSearch(data);
+          const cumulativeDiscount = await getCumulativeDiscount({pharmacyId : get(dataCurrent,'pharmacyId'),quotationItems : [quotation]});
+          const quotationWithCumulative = {
+            ...quotation,
+            cumulativeDiscount : cumulativeDiscount?.[get(quotation,'productId')] ?? []
           }
-          onAdd(billItemWithCumulative)
+          onAdd(quotationWithCumulative)
       };
       useEffect(() => {
         debounceFetcher('')
-      },[])
+      },[]);
     return (
         <AutoComplete
         allowClear
@@ -81,7 +81,7 @@ export default function SelectProduct({dataCurrent,onChangeBill}:propsType) : Re
               scroll={{ y: 450 }}
               className="table-searchProduct"
               rowClassName={(record) => {
-                const isDisabled = get(dataCurrent,'billItems',[])?.some((billItem : any) => get(billItem, "variantId") === get(record, "selectVariant"));
+                const isDisabled = get(dataCurrent,'quotationItems',[])?.some((quotation : any) => get(quotation, "variantId") === get(record, "selectVariant"));
                 return isDisabled ? "disabled-row" : ""}}
               size="small"
               loading={loading}
@@ -94,7 +94,7 @@ export default function SelectProduct({dataCurrent,onChangeBill}:propsType) : Re
                   dataIndex: 'name',
                   key: 'name',
                   render(name, record, index) {
-                    const isDisabled = get(dataCurrent,'billItems',[])?.some((billItem : any) => get(billItem, "variantId") === get(record, "selectVariant"));
+                    const isDisabled = get(dataCurrent,'quotationItems',[])?.some((quotation : any) => get(quotation, "variantId") === get(record, "selectVariant"));
                     return <span>
                       <Typography.Text strong>{get(record,'codeBySupplier','')}</Typography.Text>
                       <span> - {name}</span>

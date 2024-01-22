@@ -112,16 +112,16 @@ export const useFetchByParam = (props: UseFetchByParamProps): [any, boolean, Act
 interface UseSubmitProps {
     loadingSelector: (state: any) => boolean; // Adjust the state type based on your Redux store
     action: any // Adjust the values type based on your action requirements
-    callback? : (p?:any) => void // Callback After Submit
+    callbackSubmit? : (p?:any) => void // Callback After Submit
   }
 
-export const useSubmit = ({ loadingSelector, action ,callback}:UseSubmitProps) : [boolean,(v:any) => void] => {
+export const useSubmit = ({ loadingSelector, action ,callbackSubmit}:UseSubmitProps) : [boolean,(v:any) => void] => {
     const dispatch = useDispatch();
     const isLoading = useSelector(loadingSelector);
   
     const handleSubmit = (values:any) => {
-      if(callback && typeof callback === 'function'){
-        dispatch(action({...values,callback}));
+      if(callbackSubmit && typeof callbackSubmit === 'function'){
+        dispatch(action({...values,callbackSubmit}));
       }else{
         dispatch(action(values));
       }

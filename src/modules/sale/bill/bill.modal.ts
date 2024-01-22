@@ -1,43 +1,3 @@
-export type TypeProps = {
-    
-}
-export type typeCumulativeDiscount = {
-    typeReward : string,
-    value : string,
-    name : string,
-    valueType : string,
-    target : string,
-    targetId : string,
-    typeDiscount : string,
-    session : string,
-    code : string,
-}
-export type billItem = {
-    cumulativeDiscount : typeCumulativeDiscount[],
-    productId : string,
-    variantId : string,
-    price : number,
-    totalPrice : number,
-    quantity : number,
-    supplierId : string,
-    lotNumber : string,
-    expirationDate : string,
-    codeBySupplier : string,
-}
-export type FormFieldCreateBill = {
-    pharmacyId : string,
-    debtType : string,
-}
-export type PayloadCreateBill = {
-    pharmacyId : string,
-    billItems : billItem[],
-    totalPrice : number,
-    pair : number,
-}
-export type PayloadUpdateBill = {
-    note : string,
-    status : "CANCELLED",
-}
 type supplier = {
     name : string,
     code : string,
@@ -50,14 +10,7 @@ type unit = {
     name : string,
     _id : string,
 }
-type variant = {
-    exchangeValue : number,
-    price : number,
-    productUnit : string,
-    unit : unit,
-    variantIsDefault : boolean,
-    _id : string,
-}
+
 type productDetailType = {
     country : number,
     element : string,
@@ -74,6 +27,55 @@ type manufacturerType = {
     _id : string,
     name : string
 }
+export type variant = {
+    exchangeValue : number,
+    price : number,
+    productUnit : string,
+    unit : unit,
+    variantIsDefault : boolean,
+    _id : string,
+}
+export type typeCumulativeDiscount = {
+    typeReward : string,
+    value : string,
+    name : string,
+    valueType : string,
+    target : string,
+    targetId : string,
+    typeDiscount : string,
+    session : string,
+    code : string,
+}
+export type quotation = {
+    cumulativeDiscount : typeCumulativeDiscount[],
+    productId : string,
+    variantId : string,
+    variant : variant,
+    variants : variant[],
+    price : number,
+    totalPrice : number,
+    quantity : number,
+    supplierId : string,
+    lotNumber : string,
+    expirationDate : string,
+    codeBySupplier : string,
+}
+export type FormFieldCreateBill = {
+    pharmacyId : string,
+    debtType : string,
+}
+export type PayloadCreateBill = {
+    pharmacyId : string,
+    quotationItems : Omit<quotation,'variant' | 'variants'>[],
+    totalPrice : number,
+    pair : number,
+    _id? : any,
+}
+export type PayloadUpdateBill = {
+    note : string,
+    status : "CANCELLED",
+}
+
 export type ItemSearchProduct = {
     cumulativeDiscount : typeCumulativeDiscount[],
     medicalCode : string,
