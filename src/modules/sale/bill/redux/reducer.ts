@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { get } from "lodash";
+import { get, omit } from "lodash";
 import { cumulativeDiscountType } from "~/modules/cumulativeDiscount/cumulativeDiscount.modal";
 import { InstanceModuleRedux } from "~/redux/instanceModuleRedux";
 import { initStateSlice } from "~/redux/models";
@@ -91,6 +91,10 @@ class BillClassExtend extends InstanceModuleRedux {
       state.isSubmitLoading = false;
       state.updateBillItemFailed = payload;
     },
+    resetAction: (state:any) => ({
+      ...state,
+      ...omit(this.cloneInitState, ["list"]),
+    }),
     };
 
     this.cloneInitState = {

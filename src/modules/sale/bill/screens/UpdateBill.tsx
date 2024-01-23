@@ -17,7 +17,7 @@ import { Link } from "react-router-dom";
 import ModalAnt from "~/components/Antd/ModalAnt";
 import Status from "~/components/common/Status/index";
 import WhiteBox from "~/components/common/WhiteBox";
-import { useUpdateBill } from "~/modules/sale/bill/bill.hook";
+import { useResetBillAction, useUpdateBill } from "~/modules/sale/bill/bill.hook";
 import { PATH_APP } from "~/routes/allPath";
 import { concatAddress, formatter } from "~/utils/helpers";
 import { PayloadUpdateBill } from "../bill.modal";
@@ -41,6 +41,7 @@ const Layout = ({ label, children }: { label: any; children: any }) => (
 const CLONE_STATUS_BILL_VI: any = STATUS_BILL_VI;
 const CLONE_STATUS_BILL: any = STATUS_BILL;
 export default function UpdateBill(props: propsType): React.JSX.Element {
+  useResetBillAction();
   const { bill,isLoading } = useUpdateBillStore();
   const {
     codeSequence,

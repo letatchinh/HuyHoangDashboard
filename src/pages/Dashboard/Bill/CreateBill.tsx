@@ -22,6 +22,8 @@ export type ItemDataSource = {
   pharmacyId: string | null;
   dataUpdateQuotation? : DataUpdateQuotationType;
 };
+export const keyValid = ['typeTab','quotationItems','pharmacyId','dataUpdateQuotation'];
+
 export type DataSourceType = {
   [key: string]: ItemDataSource;
 };
@@ -174,7 +176,7 @@ const CreateBillPage = (): React.JSX.Element => {
     try {
       // Not Have DataSource  initialize new Data
       const dataFromLocalStorage : any  = localStorage.getItem(KEY_DATA_PHARMACY);
-      const isInValidDataSource : boolean = BillModule.service.validateDataStorage(dataFromLocalStorage);
+      const isInValidDataSource : boolean = BillModule.service.validateDataStorageREINS(dataFromLocalStorage);
       if (
         isInValidDataSource
         ) {
@@ -246,20 +248,14 @@ const CreateBillPage = (): React.JSX.Element => {
   useEffect(() => {
     // If Have key Priority will Set Key and Remove Then
     const keyPriorityStorage = localStorage.getItem(KEY_PRIORITY);
-    console.log(keyPriorityStorage,'keyPriorityStorage');
-    
     if(keyPriorityStorage){
       const keyPriority = JSON.parse(keyPriorityStorage);
-      console.log(keyPriority,'keyPrioritykeyPriority');
-      
       setActiveKey(keyPriority);
       localStorage.removeItem(KEY_PRIORITY); // Remove after set 
       return;
     };
       // Auto Set Active key if First tabs
     if (!activeKey) {
-      console.log("VO ADY KO");
-      
       setActiveKey(tabs?.[0].key);
       return;
     }

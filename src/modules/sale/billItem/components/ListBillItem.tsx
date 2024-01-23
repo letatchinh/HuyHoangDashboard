@@ -1,5 +1,5 @@
 import { ArrowUpOutlined, EditTwoTone } from '@ant-design/icons';
-import { Button, Popconfirm, Tooltip, Typography } from 'antd';
+import { Button, Flex, Popconfirm, Space, Tooltip, Typography } from 'antd';
 import { ColumnsType } from 'antd/es/table/InternalTable';
 import { forIn, get } from 'lodash';
 import React, { useMemo } from 'react';
@@ -31,7 +31,6 @@ export default function ListBillItem({statusBill}:propsType) : React.JSX.Element
     const getNextStatus = ({status,expirationDate,lotNumber}:{status:string,lotNumber?:any,expirationDate:any}) => {
         let nextStatus : any = null;
         let message;
-        let typeError;
         let isSame = false;
         forIn(STATUS_BILLITEM,(value,key) => {
             
@@ -44,7 +43,6 @@ export default function ListBillItem({statusBill}:propsType) : React.JSX.Element
                 nextStatus = value;
                 if(value === STATUS_BILLITEM.PACKAGED && !expirationDate && !lotNumber){
                     message = "Chưa nhập lô và hạn sử dụng";
-                    typeError = 'notLotNumber';
                 }
                 return
             }
@@ -55,7 +53,6 @@ export default function ListBillItem({statusBill}:propsType) : React.JSX.Element
         return {
             nextStatus,
             message,
-            typeError,
         };
     };
 
@@ -101,12 +98,11 @@ export default function ListBillItem({statusBill}:propsType) : React.JSX.Element
             key : 'status',
             align : 'center',
             render(status, record, index) {
-                console.log(status,'status');
-                
                 const {nextStatus,message} = getNextStatus({status,lotNumber:get(record,'lotNumber'),expirationDate:get(record,'expirationDate')});
                 return <div className='d-flex flex-column'>
                     <Status status={status} statusVi={CLONE_STATUS_BILLITEM_VI?.[status]}/>
-                    {nextStatus && <Popconfirm
+                    {nextStatus && <Flex align='center' justify={'center'} >
+                        <Popconfirm
                     title={"Chuyển đổi sang trạng thái " + CLONE_STATUS_BILLITEM_VI[nextStatus]}
                     okText="Ok"
                     cancelText="Huỷ"
@@ -117,7 +113,18 @@ export default function ListBillItem({statusBill}:propsType) : React.JSX.Element
                         {CLONE_STATUS_BILLITEM_VI[nextStatus]}
                     </Button>
                         </Tooltip>
+                        </Popconfirm>
+                        {status === STATUS_BILLITEM.ORDERING && <Popconfirm
+                    title={"Chuyển đổi sang trạng thái Huỷ"}
+                    okText="Ok"
+                    cancelText="Huỷ"
+                    onConfirm={() => onChangeStatusBillItem({id : get(record,'_id',''),status : STATUS_BILLITEM.CANCELLED})}
+                    >
+                        <Button block danger>
+                        Huỷ đơn
+                    </Button>
                         </Popconfirm>}
+                        </Flex>}
                 </div>
             },
         },
