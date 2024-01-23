@@ -3,13 +3,12 @@ import {
   Button, Form
 } from "antd";
 import React, { useMemo } from "react";
-import { useGetListProductUnitNoParam } from "~/modules/productUnit/productUnit.hook";
+import UnitModule from '~/modules/productUnit';
 import {
   TYPE_DISCOUNT, TYPE_REWARD, TYPE_VALUE
 } from "../constants";
 import { TypePropsDiscountList } from "../cumulativeDiscount.modal";
 import DiscountItem from "./DiscountItem";
-
 export default function DiscountList({
   loading,
   form,
@@ -25,7 +24,7 @@ export default function DiscountList({
     [target]
   );
 
-  const [units, isLoading] = useGetListProductUnitNoParam();
+  const [units,isLoading] = UnitModule.hook.useGetListProductUnitAll();
 
   return (
     <Form.List name={"cumulativeDiscount"}>

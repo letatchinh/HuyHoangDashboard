@@ -4,8 +4,8 @@ import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import imageCompression from 'browser-image-compression';
 import {
   DEFAULT_UPLOAD_ACTION,
-  MAX_UPLOAD_FILE_SIZE_IN_MB,
-} from "~/constants/defaultValue";
+  MAX_UPLOAD_FILE_SIZE_IN_MB
+} from '~/constants/defaultValue';
 
 const BYTES_PER_MB = 1024 * 1024;
 
