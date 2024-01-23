@@ -2,7 +2,7 @@ import { put, call, takeLatest } from 'redux-saga/effects';
 import api from '../employee.api'; 
 import { employeeSliceAction } from './reducer';
 
-function* getListEmployee({payload:query} : any) : any {
+function* getListEmployee({ payload: query }: any): any {
   try {
     const data = yield call(api.getAll,query);
     yield put(employeeSliceAction.getListSuccess(data));
@@ -29,7 +29,7 @@ function* createEmployee({payload} : any) : any {
   }
 }
 
-function* updateEmployee({payload} : any) : any {
+function* updateEmployee({ payload }: any): any {
   try {
     const data = yield call(api.update,payload);
     yield put(employeeSliceAction.updateSuccess(data));

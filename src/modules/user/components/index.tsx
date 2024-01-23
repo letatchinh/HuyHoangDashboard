@@ -26,33 +26,36 @@ interface UserProps {
   currentTab: string | undefined;
 }
 interface ColumnActionProps {
-  _id: any;
+  _id?: any;
   deleteUserEmployee: any;
   shouldShowDevider: any;
-  onOpenForm: any;
+  onOpenForm?: any;
+  adapater?: any
 }
 const ColumnActions = ({
   _id,
   deleteUserEmployee,
   shouldShowDevider,
   onOpenForm,
+  adapater
 }: ColumnActionProps) => {
   return (
     <div className="custom-table__actions">
       <WithOrPermission permission={[POLICIES.UPDATE_USER]}>
       <p onClick={() => onOpenForm(_id)}>Sửa</p>
       </WithOrPermission>
-      {shouldShowDevider && <p>|</p>}
-      <WithOrPermission permission={[POLICIES.DELETE_USER]}>
-      <Popconfirm
+      {  !adapater?.user?.isSuperAdmin && shouldShowDevider && <p>|</p>}
+    {!adapater?.user?.isSuperAdmin &&   <WithOrPermission permission={[POLICIES.DELETE_USER]}>
+        <Popconfirm
         title="Bạn muốn xoá người dùng này?"
         onConfirm={() => deleteUserEmployee(_id)}
         okText="Xoá"
         cancelText="Huỷ"
+        disabled
       >
         <p>Xóa</p>
       </Popconfirm>{" "}
-      </WithOrPermission>
+      </WithOrPermission>}
     </div>
   );
 };
@@ -69,8 +72,9 @@ const UserEmployee = ({ currentTab }: UserProps) => {
   const [keyword, { setKeyword, onParamChange }] = useUpdateUserParams(query);
   const [data, isLoading] = useGetUsers(query);
   const paging = useUserPaging();
-  const shouldShowDevider = useMatchPolicy(POLICIES.DELETE_USER);
-  
+  const isCanUpdate = useMatchPolicy(POLICIES.UPDATE_USER);
+  const isCanDelete = useMatchPolicy(POLICIES.DELETE_USER);
+  const shouldShowDevider = useMemo(() => isCanDelete && isCanUpdate, [isCanDelete, isCanUpdate]);
 
   // groups
   const { branchId }: any = useParams();
@@ -148,8 +152,10 @@ const UserEmployee = ({ currentTab }: UserProps) => {
       key: "status",
       width: 90,
       align: "center",
-      render: (status, record: any) => (
-        <Switch
+      render: (status, record: any) => {
+        return(
+          <Switch
+          disabled={record?.adapater?.user?.isSuperAdmin}
           checked={status === "ACTIVE"}
           onChange={() =>
             updateUser({
@@ -159,23 +165,24 @@ const UserEmployee = ({ currentTab }: UserProps) => {
             })
           }
         />
-      ),
+      )},
     },
-    {
+    ...(isCanUpdate || isCanDelete ?[{
       title: "Thao tác",
       key: "action",
       width: "110px",
-      render: (record) => {
+      render: (record : any) => {
         return (
           <ColumnActions
             {...record}
             deleteUserEmployee={deleteUser}
             shouldShowDevider={shouldShowDevider}
             onOpenForm={() => handleOpenModal(record?._id)}
+            adapater={record?.adapater}
           />
         );
       },
-    },
+    }] : [])
   ];
   return (
     <div>
@@ -190,7 +197,7 @@ const UserEmployee = ({ currentTab }: UserProps) => {
         options={options}
         onChangeSelect={(e: any) => onParamChange({ groupIds: e })}
         showSearchStatus
-        onChangeStatus={(e: any) => onParamChange({ status: e.target.value })}
+        onChangeStatus={(e: any) => onParamChange({ status: e})}
         valueStatus={get(query,"status",null)}
       />
       <TableAnt
@@ -207,8 +214,8 @@ const UserEmployee = ({ currentTab }: UserProps) => {
       />
       <Modal
         open={isOpenModal}
-        onCancel={() => setIsOpenModal(false)}
-        onOk={() => setIsOpenModal(false)}
+        onCancel={handleCloseModal}
+        onOk={handleCloseModal}
         className="form-modal"
         footer={null}
         width={1020}
@@ -216,7 +223,7 @@ const UserEmployee = ({ currentTab }: UserProps) => {
         destroyOnClose
         // title= {`${id ? "Cập nhật" : "Thêm mới"} nhân viên`}
       >
-        <UserForm id={id} handleCloseModal={handleCloseModal} updateUser={updateUser} />
+        <UserForm id={id} handleCloseModal={handleCloseModal} updateUser={updateUser} resetAction={resetAction} />
       </Modal>
     </div>
   );
