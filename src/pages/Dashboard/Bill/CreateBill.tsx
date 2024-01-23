@@ -8,6 +8,7 @@ import { default as Bill, default as BillModule } from "~/modules/sale/bill";
 import { quotation } from "~/modules/sale/bill/bill.modal";
 import SelectProduct from "~/modules/sale/bill/components/SelectProduct";
 import logo from '~/assets/images/header/logo-white.svg';
+import ModalAnt from "~/components/Antd/ModalAnt";
 
 export const KEY_DATA_PHARMACY = "bill-pharmacy";
 export const KEY_PRIORITY = "key-priority"; // Tab Will Use this key and Remove then (If Have)
@@ -30,6 +31,11 @@ const initData: ItemDataSource = {
   pharmacyId: null,
 };
 
+export type DataResultType = {
+  type : 'createQuotation' | 'convertQuotation' | 'updateQuotation',
+  code : string
+}
+
 const Label = ({ label, onRemove }: { label?: any; onRemove: () => void }) => (
   <Row justify={"space-between"} align="middle" gutter={16}>
     <Col>{label}</Col>
@@ -47,11 +53,22 @@ const Label = ({ label, onRemove }: { label?: any; onRemove: () => void }) => (
 const CreateBillPage = (): React.JSX.Element => {
   const navigate = useNavigate();
   
+  
   const [tabs, setTabs] = useState<TabsProps["items"]>();
   const [activeKey, setActiveKey]: any = useState();
   const [dataSource, setDataSource]: any = useState<DataSourceType>({});
 
+  const [dataResult,setDataResult] = useState<DataResultType | null>();
+  const [openModalResult,setOpenModalResult] = useState(false);
 
+  const onOpenModalResult = useCallback((dataRs:DataResultType) => {    
+    setOpenModalResult(true);
+    setDataResult(dataRs);
+  },[]);
+  const onCloseModalResult = useCallback(() => {
+    setOpenModalResult(false);
+    setDataResult(null);
+  },[]);
 
   const initDatSource = useCallback(() => {
     const newKey = v4();
@@ -318,6 +335,7 @@ const CreateBillPage = (): React.JSX.Element => {
                     verifyData(activeKey, callback)
                   }
                   onRemoveTab={() => onRemoveTab(get(tab, "key"))}
+                  onOpenModalResult={onOpenModalResult}
                 >
                   <Bill.page.create />
                 </BillModule.storeProvider.CreateBillProvider>
@@ -326,6 +344,9 @@ const CreateBillPage = (): React.JSX.Element => {
           </Tabs>
         </ConfigProvider>
       </div>
+      <ModalAnt width={'max-content'} open={openModalResult} onCancel={onCloseModalResult} afterClose={onCloseModalResult} footer={null} centered>
+        <BillModule.components.ModalCreateQuotationSuccess data={dataResult} onCancel={onCloseModalResult}/>
+      </ModalAnt>
     </div>
   );
 };

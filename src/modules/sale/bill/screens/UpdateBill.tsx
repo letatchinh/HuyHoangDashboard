@@ -70,18 +70,17 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
   }
 
 
-  const items: MenuProps["items"] = useMemo(
-    () => [
-      {
-        key: "1",
-        label: <span onClick={onOpenCancel}>Huỷ đơn</span>,
-        disabled: billItems?.some(
-          (item: any) => get(item, "status") !== BillItemModule.constants.STATUS_BILLITEM.ORDERING
-        ),
-      },
-    ],
-    [billItems]
-  );
+  const items: MenuProps["items"] = useMemo(() => [
+    {
+      key: "1",
+      onClick : () => onOpenCancel(),
+      label: <span >Huỷ đơn</span>,
+      disabled: billItems?.some(
+        (item: any) => get(item, "status") !== BillItemModule.constants.STATUS_BILLITEM.ORDERING
+      ),
+      
+    },
+  ],[onOpenCancel,billItems])
 
   return (
     <div className="bill-page-update">

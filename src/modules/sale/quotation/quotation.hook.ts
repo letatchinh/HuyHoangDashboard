@@ -62,7 +62,7 @@ export const useGetQuotation = (id: any) => {
 export const useCreateQuotation = (callbackSubmit?: any) => {
   useSuccess(
     createSuccessSelector,
-    `Tạo mới ${MODULE_VI} thành công`,
+    // `Tạo mới ${MODULE_VI} thành công`,
   );
   useFailed(createFailedSelector);
 
@@ -76,7 +76,7 @@ export const useCreateQuotation = (callbackSubmit?: any) => {
 export const useUpdateQuotation = (callbackSubmit?: any) => {
   useSuccess(
     updateSuccessSelector,
-    `Cập nhật ${MODULE_VI} thành công`,
+    // `Cập nhật ${MODULE_VI} thành công`,
   );
   useFailed(updateFailedSelector);
 
@@ -90,7 +90,7 @@ export const useUpdateQuotation = (callbackSubmit?: any) => {
 export const useConvertQuotation = (callbackSubmit?: any) => {
   useSuccess(
     convertSuccessSelector,
-    `Chuyển đổi ${MODULE_VI} thành công`,
+    // `Chuyển đổi ${MODULE_VI} thành công`,
   );
   useFailed(convertFailedSelector);
 

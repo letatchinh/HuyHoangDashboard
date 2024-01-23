@@ -78,6 +78,7 @@ export default function ListQuotation({
         return  <Link
               className="link_"
               to={PATH_APP.bill.root + "/" + get(record, "bill._id")}
+              target="_blank"
             >
               {get(record,'bill.codeSequence')}
             </Link>
@@ -206,7 +207,7 @@ export default function ListQuotation({
     <div className="quotation-page">
       <Row align="middle" gutter={8}>
       <SelectPharmacy onChange={(value) => onParamChange({pharmacyId : value})}/>
-      <SearchAnt onParamChange={onParamChange} />
+      <SearchAnt value={keyword} onChange={(e) => setKeyword(e.target.value)} onParamChange={onParamChange} />
       <Button style={{marginLeft : 'auto'}} onClick={() => window.open(PATH_APP.bill.create)} type="primary" icon={<PlusCircleTwoTone />}>
         Tạo đơn hàng tạm
       </Button>

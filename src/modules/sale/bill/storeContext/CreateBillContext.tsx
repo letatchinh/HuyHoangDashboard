@@ -1,40 +1,23 @@
 import { Form } from "antd";
-import { compact, concat, forIn, get } from "lodash";
+import { forIn, get } from "lodash";
 import {
   createContext,
-  ReactNode,
-  useCallback,
-  useContext,
+  ReactNode, useContext,
   useEffect,
   useMemo,
-  useState,
+  useState
 } from "react";
 import { v4 } from "uuid";
-import { useGetDebtRule, useResetBillAction } from "../bill.hook";
-import { quotation, DebtType } from "../bill.modal";
-import { reducerDiscountQuotationItems } from "../bill.service";
 import QuotationModule from '~/modules/sale/quotation';
+import { useGetDebtRule } from "../bill.hook";
+import { DebtType, quotation } from "../bill.modal";
+import { reducerDiscountQuotationItems } from "../bill.service";
 const TYPE_DISCOUNT = {
   "DISCOUNT.CORE": "DISCOUNT.CORE",
   "DISCOUNT.SOFT": "DISCOUNT.SOFT",
   LK: "LK",
 };
-const TARGET = {
-  product : "product",
-  supplier : "supplier",
-}
-// type typeCumulativeDiscount = {
-//   typeReward: string;
-//   value: string;
-//   name: string;
-//   valueType: string;
-//   target: string;
-//   targetId: string;
-//   typeDiscount: string;
-//   session: string;
-//   code: string;
-//   _id: string;
-// };
+
 export type DataItem = quotation & {
   key: number;
   name: string;
@@ -65,7 +48,8 @@ export type GlobalCreateBill = {
   verifyData : (callback?:any) => void,
   onRemoveTab : () => void,
   debt : DebtType[];
-  bill : any
+  bill : any,
+  onOpenModalResult : (data:any) => void
 };
 const CreateBill = createContext<GlobalCreateBill>({
   quotationItems: [],
@@ -83,7 +67,8 @@ const CreateBill = createContext<GlobalCreateBill>({
   verifyData: () => {},
   onRemoveTab: () => {},
   debt : [],
-  bill : null
+  bill : null,
+  onOpenModalResult: () => {},
 });
 
 type CreateBillProviderProps = {
@@ -92,6 +77,7 @@ type CreateBillProviderProps = {
   onChangeBill: (newObjData: any) => void;
   verifyData : () => void
   onRemoveTab : () => void
+  onOpenModalResult : (data:any) => void
 };
 
 export function CreateBillProvider({
@@ -100,12 +86,13 @@ export function CreateBillProvider({
   onChangeBill,
   verifyData,
   onRemoveTab,
+  onOpenModalResult,
 }: CreateBillProviderProps): JSX.Element {
   QuotationModule.hook.useResetQuotation();
   const [quotationItems, setQuotationItems] = useState<DataItem[]>([]);
   const [form] = Form.useForm();
   const [debt,isLoadingDebt] = useGetDebtRule();
-  
+
   // Controller Data
   const onSave = (row: DataItem) => {
     const newData: DataItem[] = [...quotationItems];
@@ -262,6 +249,7 @@ export function CreateBillProvider({
         debt,
         onRemoveTab,
         bill,
+        onOpenModalResult,
       }}
     >
       {children}

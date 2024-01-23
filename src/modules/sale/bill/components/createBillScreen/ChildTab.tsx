@@ -10,13 +10,18 @@ import SelectPharmacy from "../SelectPharmacy";
 import SelectDebt from "./SelectDebt";
 import TotalBill from "./TotalBill";
 import QuotationModule from '~/modules/sale/quotation';
+import { DataResultType } from "~/pages/Dashboard/Bill/CreateBill";
 type propsType = {};
 export default function ChildTab(props: propsType): React.JSX.Element {
- const {form,onValueChange,quotationItems,totalPriceAfterDiscount,verifyData,onRemoveTab,bill} = useCreateBillStore();
+ const {form,onValueChange,quotationItems,totalPriceAfterDiscount,verifyData,onRemoveTab,bill,onOpenModalResult} = useCreateBillStore();
  const {onNotify} = useNotificationStore();
- const [isSubmitLoading,onCreateQuotation] = QuotationModule.hook.useCreateQuotation(onRemoveTab);
- const [,onUpdateQuotation] = QuotationModule.hook.useUpdateQuotation(onRemoveTab);
- const [,onConvertQuotation] = QuotationModule.hook.useConvertQuotation(onRemoveTab);
+ const callBackAfterSuccess = (newData : DataResultType) => {
+  onRemoveTab();
+  onOpenModalResult(newData);
+ };
+ const [isSubmitLoading,onCreateQuotation] = QuotationModule.hook.useCreateQuotation(callBackAfterSuccess);
+ const [,onUpdateQuotation] = QuotationModule.hook.useUpdateQuotation(callBackAfterSuccess);
+ const [,onConvertQuotation] = QuotationModule.hook.useConvertQuotation(callBackAfterSuccess);
  const [openDebt,setOpenDebt] = useState(false);
  const onOpenDebt = useCallback(() => setOpenDebt(true),[]);
  const onCloseDebt = useCallback(() => setOpenDebt(false),[]);

@@ -84,6 +84,7 @@ export const onVerifyData = ({
     }));
     const verify = async () => {
       try {
+        // Get Variants
         const response = await apis.verify({ billSample });
         const concatQuantity = get(bill, "quotationItems", [])?.map((item: any) => {
           const findInResponse = response?.find(
@@ -94,14 +95,12 @@ export const onVerifyData = ({
             return {
               ...findInResponse,
               quantity: get(item, "quantity", 1),
-              // quantity: Number((get(item, "quantity", 1) / get(item, "variant.exchangeValue", 1)).toFixed(1)),
               // Inherit More here
             };
           } else {
             return null;
           }
         });
-        console.log(concatQuantity,'concatQuantity');
         let items: any = compact(concatQuantity)?.map((quotation: any) => {
           const dataSearch = selectProductSearch(quotation);
 
@@ -110,7 +109,8 @@ export const onVerifyData = ({
             key: v4(),
           };
         });
-        console.log(items,'items');
+
+        // Validate Discount
         const cumulativeDiscount = await getCumulativeDiscount({
           quotationItems: items,
           pharmacyId: get(bill, "pharmacyId"),
