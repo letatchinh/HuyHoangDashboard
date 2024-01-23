@@ -11,6 +11,7 @@ export default function ExpandRowBillItem({historyStatus,status}:propsType) : Re
     return (
         <div>
             <StepStatus
+              size="small"
               statuses={
                 status !== STATUS_BILLITEM.CANCELLED
                   ? omit(STATUS_BILLITEM, ["CANCELLED"])

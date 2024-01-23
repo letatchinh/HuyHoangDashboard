@@ -7,12 +7,10 @@ const Layout = ({
   label,
   children,
   isLarge,
-  type,
 }: {
   label: any;
   children: any;
   isLarge?: boolean;
-  type? : string
 }) => (
   <Row justify={"space-between"} align="middle">
     <Col>

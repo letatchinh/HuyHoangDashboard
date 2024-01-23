@@ -23,8 +23,8 @@ const CLONE_STATUS_BILLITEM : any = STATUS_BILLITEM;
 const CLONE_STATUS_BILLITEM_LEVEL : any = STATUS_BILLITEM_LEVEL;
 export default function ListBillItem({statusBill}:propsType) : React.JSX.Element {
     const isDisabledAll = useMemo(() => statusBill === STATUS_BILL.CANCELLED, [statusBill]);
-    const {bill,mutate} = useUpdateBillStore();
-    const [isSubmitLoading,updateBillItem] = BillModule.hook.useUpdateBillItem(mutate);
+    const {bill,mutateBill} = useUpdateBillStore();
+    const [isSubmitLoading,updateBillItem] = BillModule.hook.useUpdateBillItem(mutateBill);
     const {
       billItems
     } = bill || {};
@@ -81,8 +81,8 @@ export default function ListBillItem({statusBill}:propsType) : React.JSX.Element
             dataIndex : 'product',
             key : 'product.name',
             render(product, record, index) {
-                const status = get(record,'status','');
-                const lotNumber = get(record,'lotNumber');
+                const status : any = get(record,'status','');
+                const lotNumber = get(record,'lotNumber','');
                 const expirationDate = get(record,'expirationDate');
                 const _id = get(record,'_id','');
                 // const {nextStatus,message} = getNextStatus({status,lotNumber,expirationDate});
