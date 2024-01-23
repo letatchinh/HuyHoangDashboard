@@ -152,7 +152,7 @@
 //     try {
 //       // Not Have DataSource  initialize new Data
 //       const dataFromLocalStorage : any  = localStorage.getItem(KEY_DATA_PHARMACY);
-//       const isInValidDataSource : boolean = BillModule.service.validateDataStorage(dataFromLocalStorage);
+//       const isInValidDataSource : boolean = BillModule.service.validateDataStorageREINS(dataFromLocalStorage);
 //       if (
 //         isInValidDataSource
 //         ) {

@@ -1,6 +1,6 @@
-import { compact, forIn, get, unset } from "lodash";
-import { v4 } from "uuid";
-import { DataSourceType, ItemDataSource, KEY_DATA_PHARMACY, KEY_PRIORITY } from "~/pages/Dashboard/Bill/CreateBill";
+import { compact, forIn, get, keys, unset } from "lodash";
+import { v4 ,validate} from "uuid";
+import { DataSourceType, ItemDataSource, keyValid, KEY_DATA_PHARMACY, KEY_PRIORITY } from "~/pages/Dashboard/Bill/CreateBill";
 import { cumulativeDiscountType } from "../../cumulativeDiscount/cumulativeDiscount.modal";
 import apis from "./bill.api";
 import { quotation } from "./bill.modal";
@@ -226,21 +226,37 @@ export const reducerDiscountQuotationItems = (quotationItems: any[]) => {
   return newQuotationItems;
 };
 
-export const validateDataStorage = (dataFromLocalStorage : any) : boolean => 
-        dataFromLocalStorage === null ||
-        !dataFromLocalStorage ||
-        Object.keys(dataFromLocalStorage).length === 0 ||
-        dataFromLocalStorage === "{}" ||
-        dataFromLocalStorage === "undefined" ||
-        dataFromLocalStorage === "null" ||
-        dataFromLocalStorage === ""
+export const validateDataStorageREINS = (dataFromLocalStorage : any) : boolean => {
+
+  if   (dataFromLocalStorage === null ||
+  !dataFromLocalStorage ||
+  Object.keys(dataFromLocalStorage).length === 0 ||
+  dataFromLocalStorage === "{}" ||
+  dataFromLocalStorage === "undefined" ||
+  dataFromLocalStorage === "null" ||
+  dataFromLocalStorage === "") return true;
+
+  // Validate the Key of item BillDatSource
+  const toJson = JSON.parse(dataFromLocalStorage);
+  const isInvalid = keys(toJson).some((key:string) => {
+    if(validate(key)){
+      const value = toJson[key];
+      return keys(value)?.some((keyItem:string) => !keyValid.includes(keyItem))
+    }else{
+      return true;
+    }
+  })
+return isInvalid;
+
+}
+      
 
 
 // Controller LocalStorage
 
 const onAddLocalStorage = (newDataSource : DataSourceType) => {
   const dataSourceStorage : any = localStorage.getItem(KEY_DATA_PHARMACY);
-  const isInValidDataSource = validateDataStorage(dataSourceStorage);
+  const isInValidDataSource = validateDataStorageREINS(dataSourceStorage);
   if(isInValidDataSource){
     localStorage.setItem(KEY_DATA_PHARMACY, JSON.stringify(newDataSource));
   }else{

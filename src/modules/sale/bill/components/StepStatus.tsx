@@ -22,7 +22,7 @@ export default function StepStatus({
       return {
         title: get(statusesVi,status,''),
         description: get(historyStatus, status)
-          ? dayjs(get(historyStatus, status)).format("DD/MM/YYYY HH:mm")
+          ? dayjs(get(historyStatus, status)).format("DD/MM/YYYY HH:mm:ss")
           : "",
         status: status === currentStatus ? "finish" : "wait",
       };
