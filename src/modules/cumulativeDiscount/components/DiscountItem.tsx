@@ -366,6 +366,24 @@ export default function DiscountItem({
                                 {...restField}
                                 label={"Đến"}
                                 name={[name, "condition", "lte"]}
+                                rules={[
+                                  ({ getFieldValue }) => ({
+                                    validator(_, value) {
+                                      const gte = getFieldValue([
+                                        "cumulativeDiscount",
+                                        name,
+                                        "condition",
+                                        "gte",
+                                      ]);
+                                      if (value >= gte) {
+                                        return Promise.resolve();
+                                      }
+                                      return Promise.reject(
+                                        "Phải lớn hơn giá trị bắt đầu"
+                                      );
+                                    },
+                                  }),
+                                ]}
                                 
                               >
                                 {RenderLoading(
