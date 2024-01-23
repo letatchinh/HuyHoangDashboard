@@ -21,7 +21,7 @@
     "@types/react": "18.2.45",
     "@types/react-dom": "18.2.18",
     "@types/react-redux": "7.1.33",
-    "antd": "5.12.5",
+    "antd": "^5.13.1",
     "axios": "1.6.3",
     "browser-image-compression": "^2.0.2",
     "dayjs": "1.11.10",

@@ -4,6 +4,7 @@ import { InstanceModuleRedux } from "~/redux/instanceModuleRedux";
 import { initStateSlice } from "~/redux/models";
 import { createSlice } from "@reduxjs/toolkit";
 import { UserResponseOne } from "~/modules/user/user.modal";
+import { getPaging } from "~/utils/helpers";
 
 class EmployeeClassExtentd extends InstanceModuleRedux {
   clone;
@@ -14,6 +15,18 @@ class EmployeeClassExtentd extends InstanceModuleRedux {
       getListSuccess: (state: initStateSlice, { payload }: { payload?: any }) => {
         state.isLoading = false;
         state.list = get(payload, 'docs', []);
+        state.paging = getPaging(payload);
+      },
+      updateSuccess: (state: initStateSlice, { payload }: { payload?: any }) => {
+        state.isLoading = false;
+        state.updateSuccess = get(payload, 'data', {});
+        state.list = state?.list?.map((item: any) => {
+          if (item._id === payload?.data?._id) {
+            return payload?.data;
+          } else {
+            return item;
+          };
+        });
       },
     }
   }

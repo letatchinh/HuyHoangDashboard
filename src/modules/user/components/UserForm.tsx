@@ -1,5 +1,5 @@
 import { Button, Col, Form, Input, Row, Select, Skeleton } from "antd";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import UploadImage from "~/components/common/Upload/UploadImage";
 import AddressFormSection from "~/components/common/AddressFormSection";
 import { useCreateUser, useGetUser, useUpdateUser } from "../user.hook";
@@ -20,22 +20,28 @@ interface IProps {
   id?: string | null;
   handleCloseModal: () => void;
   updateUser?: any;
+  resetAction?: any;
 };
 
 export default function UserForm(props: IProps) {
   const [form] = Form.useForm();
-  const { id, handleCloseModal, updateUser: handleUpdate } = props;
-  const [imageUrl, setImageUrl] = useState<string>();
+  const { id, handleCloseModal, updateUser: handleUpdate, resetAction } = props;
+  const [imageUrl, setImageUrl] = useState<string>('');
   const [loadingValidateUsername, setLoadingValidateUsername] =
     useState<boolean>(false);
-    const [statusAccount, setStatusAccount] = useState('ACTIVE');
+  const [statusAccount, setStatusAccount] = useState('ACTIVE');
+  const [isLoadingAvatar, setIsLoading] = useState(false);
+  
   //address
   const [cityCode, setCityCode] = useState<string>('');
   const [districtCode, setDistrictCode] = useState<string>('');
   const [wardCode, setWardCode] = useState<string>('');
 
   //hook user
-  const [, handleCreate] = useCreateUser(handleCloseModal);
+  const [, handleCreate] = useCreateUser(() => {
+    handleCloseModal();
+    resetAction();
+  });
   const [user, isLoading] = useGetUser(id);
 
   //fetch user groups
@@ -45,7 +51,6 @@ export default function UserForm(props: IProps) {
     [branchId]
   );
   const [groups, isLoadingGroups] = useGetUserGroups(branchIdParam);
-
   useResetState(userSliceAction.resetAction);
 
   useEffect(() => {
@@ -61,12 +66,16 @@ export default function UserForm(props: IProps) {
       setDistrictCode(user?.address?.districtId);
       setWardCode(user?.address?.wardId);
     };
+    if (!id) {
+      form.setFieldsValue({ groups: [] });
+    };
   }, [id, user]);
   
   const onFinish = (values: any) => {
     const user = {
       ...values,
       avatar: imageUrl,
+      idNumber: values?.idNumber || '',
       branchId: values?.branchId || DEFAULT_BRANCH_ID
     };
     if (id) {
@@ -82,7 +91,7 @@ export default function UserForm(props: IProps) {
         });
       };
     } else {
-      handleCreate({...omit(user, ['userId'])});
+      handleCreate({...omit(user, ['userId','updateAccount'])});
     };
   };
 
@@ -103,6 +112,14 @@ export default function UserForm(props: IProps) {
       };
     };
   };
+
+  //Handle avatar
+  const handleChange = useCallback(
+    (imageUrl: string) => {
+        setImageUrl(imageUrl);
+    },
+    [setImageUrl]
+  );
 
   return (
     <div className="employee-form">
@@ -161,7 +178,10 @@ export default function UserForm(props: IProps) {
             </FormItem>
           </Col>
           <Col span={12} className="employee-form__upload-logo">
-            <UploadImage setImageUrl={setImageUrl} imageUrl={imageUrl} />
+            <UploadImage
+              imgUrl={imageUrl}
+              onChange={handleChange}
+            />
           </Col>
         </Row>
         <AddressFormSection
