@@ -16,6 +16,6 @@ const moduleExport = {
     hook : paymentVoucherHook,
     service : paymentVoucherService,
     model : paymentVoucherModels,
-    redux : {reducer,saga}
+    redux: { reducer, saga },
 };
 export default moduleExport;

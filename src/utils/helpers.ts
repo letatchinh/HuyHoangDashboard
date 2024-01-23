@@ -136,3 +136,5 @@ export const useExpandrowTableClick: () => UseExpandrowTableClick = () => {
   return { select, setSelect, onClick };
 };
 export const formatNumberThreeComma = (num: any) => num?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+
+export const  compactAddress = (address: any)=> compact([address?.street, address?.ward, address?.district, address?.city]).join(", ") 

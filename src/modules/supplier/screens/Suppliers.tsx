@@ -1,5 +1,5 @@
 import { DeleteOutlined, InfoCircleOutlined, InfoCircleTwoTone, PlusCircleOutlined, PlusCircleTwoTone } from "@ant-design/icons";
-import { Button, Col, Divider, Popconfirm, Row, Space, Switch, Typography } from "antd";
+import { Button, Col, Divider, Modal, Popconfirm, Row, Space, Switch, Typography } from "antd";
 import Search from "antd/es/input/Search";
 import { ColumnsType } from "antd/es/table/InternalTable";
 import { get } from "lodash";
@@ -25,6 +25,8 @@ import {
 } from "../supplier.hook";
 import { STATUS_SUPPLIER_TYPE } from "../supplier.modal";
 import ProductModule from '~/modules/product';
+import PaymentVoucherForm from "~/modules/paymentVoucher/components/PaymentVoucherForm";
+import { REF_COLLECTION, REF_COLLECTION_UPPER } from "~/constants/defaultValue";
 export default function Supplier(): React.JSX.Element {
   // Translate
   const { t }: any = useTranslate();
@@ -34,7 +36,8 @@ export default function Supplier(): React.JSX.Element {
   const [isOpenForm, setIsOpenForm]: any = useState(false);
   const [idSupplierCreateProduct, setIdSupplierCreateProduct]: any = useState();
   const [isOpenFormProduct, setIsOpenFormProduct]: any = useState(false);
-
+  const [open, setOpen] = useState(false);
+  const [supplierId, setSupplierId] = useState<string|null>('');
   // Control form
   const onOpenForm = useCallback((idSelect?: any) => {
     if (idSelect) {
@@ -58,10 +61,19 @@ export default function Supplier(): React.JSX.Element {
     setIdSupplierCreateProduct(null);
   }, []);
 
+  const onOpenPayment = (item: any) => {
+    console.log(item,'item')
+    setOpen(true);
+    setSupplierId(item?._id)
+  };
+  const onClosePayment = () => {
+    setOpen(false);
+    setSupplierId(null);
+  };
+
   // Hook
   const [query] = useSupplierQueryParams();
-  const [keyword, { setKeyword, onParamChange }] =
-    useUpdateSupplierParams(query);
+  const [keyword, { setKeyword, onParamChange }] = useUpdateSupplierParams(query);
   const [data, isLoading] = useGetSuppliers(query);
   const [isSubmitLoading, onDelete] = useDeleteSupplier();
   const [, onUpdate] = useUpdateSupplier(onCloseForm);
@@ -108,6 +120,17 @@ export default function Supplier(): React.JSX.Element {
         align: "center",
         render(value) {
           return 0
+        },
+      },
+      {
+        title: "Tạo phiếu",
+        dataIndex: "name",
+        key: "name",
+        align: "center",
+        render(value, rc) {
+         return ( <Space>
+            <Button type="primary" onClick={()=> onOpenPayment(rc)}>Phiếu chi</Button>
+          </Space>)
         },
       },
       {
@@ -239,6 +262,21 @@ export default function Supplier(): React.JSX.Element {
       >
         <ProductModule.page.form supplierId={idSupplierCreateProduct} onCancel={onCloseFormProduct}/>
       </ModalAnt>
+      <Modal
+        title='Phiếu chi'
+        open={open}
+        onCancel={() => setOpen(false)}
+        onOk={() => setOpen(false)}
+        width={1366}
+        footer={null}
+        destroyOnClose
+      >
+        <PaymentVoucherForm
+          onClose={() => onClosePayment()}
+          supplierId={supplierId}
+          refCollection = {REF_COLLECTION_UPPER.SUPPLIER}
+        />
+      </Modal>
     </div>
   );
 }

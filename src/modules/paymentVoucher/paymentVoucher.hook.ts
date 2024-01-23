@@ -3,15 +3,19 @@ import { get } from "lodash";
 import { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
-import { clearQuerySearch, getExistProp } from "~/utils/helpers";
+import { clearQuerySearch, compactAddress, getExistProp } from "~/utils/helpers";
+import { fromJSON } from "../vouchers/components/parser";
 import {
     getSelectors,
     useFailed, useFetchByParam,
     useQueryParams,
+    useResetState,
     useSubmit,
     useSuccess
 } from "~/utils/hook";
 import { paymentVoucherSliceAction } from "./redux/reducer";
+import { TYPE_VOUCHER } from "~/constants/defaultValue";
+import dayjs from "dayjs";
 const MODULE = "paymentVoucher";
 const MODULE_VI = "";
 
@@ -80,6 +84,19 @@ export const useUpdatePaymentVoucher = (callback?: any) => {
     loadingSelector: isSubmitLoadingSelector,
   });
 };
+export const useConfirmPaymentVoucher = (callback?: any) => {
+  useSuccess(
+    updateSuccessSelector,
+    `Cập nhật ${MODULE_VI} thành công`,
+    callback
+  );
+  useFailed(updateFailedSelector);
+
+  return useSubmit({
+    action: paymentVoucherSliceAction.confirmPaymentVoucherRequest,
+    loadingSelector: isSubmitLoadingSelector,
+  });
+};
 
 export const useDeletePaymentVoucher = (callback?: any) => {
   useSuccess(deleteSuccessSelector, `Xoá ${MODULE_VI} thành công`, callback);
@@ -93,18 +110,24 @@ export const useDeletePaymentVoucher = (callback?: any) => {
 
 export const usePaymentVoucherQueryParams = () => {
   const query = useQueryParams();
-  const limit = query.get("limit") || 10;
-  const page = query.get("page") || 1;
+  const typeVoucher = TYPE_VOUCHER.PC;
+  const [limit, setLimit] = useState(query.get("limit") || 10); 
+  const [page, setPage] = useState(query.get("page") || 1);
   const keyword = query.get("keyword");
   const createSuccess = useSelector(createSuccessSelector);
   const deleteSuccess = useSelector(deleteSuccessSelector);
+  const onTableChange = ({ current, pageSize }: any) => {
+    setLimit(pageSize);
+    setPage(current);
+  };
   return useMemo(() => {
     const queryParams = {
       page,
       limit,
       keyword,
+      typeVoucher,
     };
-    return [queryParams];
+    return [queryParams, onTableChange];
     //eslint-disable-next-line
   }, [page, limit, keyword, createSuccess, deleteSuccess]);
 };
@@ -140,4 +163,29 @@ export const useUpdatePaymentVoucherParams = (
   };
 
   return [keyword, { setKeyword, onParamChange }];
+};
+
+export const useResetAction = () => {
+  return useResetState(paymentVoucherSliceAction.resetAction);
+};
+
+export const useInitWhPaymentVoucher = (whPaymentVoucher: any) => {
+  return useMemo(() => {
+    if (!whPaymentVoucher) {
+      return {
+      };
+    };
+    const { accountingDetail, dateOfIssue,supplier, ...rest } = whPaymentVoucher;
+    const newValue = {
+      ...rest,
+      accountingDate: dayjs(accountingDetail?.accountingDate),
+      dateOfIssue: dayjs(dateOfIssue),
+      supplier: supplier?.name,
+      supplierAddress: compactAddress(supplier?.address),
+    };
+    const initValues = {
+      ...fromJSON(newValue),
+    };
+    return initValues;
+  }, [whPaymentVoucher]);
 };

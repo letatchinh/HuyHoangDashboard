@@ -1,7 +1,7 @@
 import moment from "moment";
 import { get } from "lodash";
 
-import { WH_RECEIPT_VOUCHER_CODE_PREFIX } from "~/constants/defaultValue";
+import { WH_VOUCHER_CODE_PREFIX } from "~/constants/defaultValue";
 
 /**
  * Convert an object received from API to the internal object that can work with Antd Form.
@@ -13,10 +13,10 @@ const fromJSON = (instance: any) => {
   return {
     ...instance,
     id: get(instance, "_id") || get(instance, "id"),
-    accountingDate: moment(get(instance, "accountingDate"), "YYYY-MM-DD"),
-    dateOfIssue: moment(get(instance, "dateOfIssue"), "YYYY-MM-DD"),
-    originalDocument: Number(get(instance, "originalDocument")),
-    issueNumber: get(instance, "issueNumber") || `${WH_RECEIPT_VOUCHER_CODE_PREFIX}${get(instance, "code")}`,
+    // accountingDate: moment(get(instance, "accountingDate"), "YYYY-MM-DD"),
+    // dateOfIssue: moment(get(instance, "dateOfIssue"), "YYYY-MM-DD"),
+    // originalDocument: Number(get(instance, "originalDocument")),
+    issueNumber: get(instance, "issueNumber") || `${WH_VOUCHER_CODE_PREFIX}${get(instance, "typeVoucher")}`,
   }
 }
 /**

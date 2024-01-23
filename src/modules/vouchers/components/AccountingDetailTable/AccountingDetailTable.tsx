@@ -7,6 +7,7 @@ import { ACCOUNTS, COMPONENT_MODES } from '~/constants/defaultValue';
 import { InfoCircleOutlined, MinusCircleOutlined, PlusCircleOutlined, PlusSquareOutlined } from '@ant-design/icons';
 import './index.scss'
 import { floorFormatter, formatNumberThreeComma } from '~/utils/helpers';
+import { EditableCell, EditableRow } from '~/components/common/EditableComponent';
 
 
 interface Props{
@@ -14,24 +15,29 @@ interface Props{
   mode?: string;
   whAppointment?: any;
   isShowSuggest?: boolean;
+  setAccountingDetails?: any
 }
 const AccountingDetails = forwardRef(({
   dataSource,
   mode,
   whAppointment,
   isShowSuggest,
-}: Props, ref) => {
-  const [clonedDataSource, setClonedDataSource] = useState<object[] | null>([]);
+  setAccountingDetails
+}: Props, ref: any) => {
+  const [clonedDataSource, setClonedDataSource] = useState<any[]>([]);
   const [count, setCount] = useState(0);
   useEffect(() => {
-    // if (Array.isArray(dataSource)) {
-    //   setClonedDataSource(dataSource?.map((item, index) => ({
-    //     ...item,
-    //     key: index,
-    //   })))
-    //   setCount(dataSource?.length);
-    // }
+    if (Array.isArray(dataSource)) {
+        setClonedDataSource(dataSource?.map((item, index) => ({
+          ...item,
+          key: index,
+        })))
+      setCount(dataSource?.length);
+    }
   }, [dataSource]);
+  useEffect(() => {
+    setAccountingDetails(clonedDataSource);
+  }, [clonedDataSource])
 
   const columns = [
     {
@@ -68,16 +74,17 @@ const AccountingDetails = forwardRef(({
     },
     {
       title: (
-        isShowSuggest ?
-          <Tooltip className='wh-payment-voucher__tooltip'
-            style={{ cursor: 'pointer' }}
-            title={`Số tiền phải trả cho khách hàng(nếu có) là: ${whAppointment?.length && formatNumberThreeComma(whAppointment[0]?.reduced?.prepay)}đ /buổi hẹn`}
-            trigger={'hover'}
-            placement="topLeft">
-            <span> Số tiền</span>
-            <InfoCircleOutlined style={{ marginLeft: 5 }} /> 
-        </Tooltip>
-          : 'Số tiền'
+        // isShowSuggest ?
+        //   <Tooltip className='wh-payment-voucher__tooltip'
+        //     style={{ cursor: 'pointer' }}
+        //     title={`Số tiền phải trả cho khách hàng(nếu có) là: ${whAppointment?.length && formatNumberThreeComma(whAppointment[0]?.reduced?.prepay)}đ /buổi hẹn`}
+        //     trigger={'hover'}
+        //     placement="topLeft">
+        //     <span> Số tiền</span>
+        //     <InfoCircleOutlined style={{ marginLeft: 5 }} />
+        // </Tooltip>
+        //   : 'Số tiền'
+        'Số tiền'
       ),
       align: 'right',
       width: 200,
@@ -101,10 +108,10 @@ const AccountingDetails = forwardRef(({
   ];
 
   const components = {
-    // body: {
-    //   row: EditableRow,
-    //   cell: EditableCell,
-    // },
+    body: {
+      row: EditableRow,
+      cell: EditableCell,
+    },
   };
 
   const tableProps = {
@@ -116,7 +123,7 @@ const AccountingDetails = forwardRef(({
     // columns: mode === COMPONENT_MODES.EDIT ?
     columns: true ?
       columns.filter((col: any) => !col.display || col.display !== "viewOnly")
-        .map((col) => {
+        .map((col: any) => {
           if (!col.editable) {
             return col;
           }
@@ -128,12 +135,12 @@ const AccountingDetails = forwardRef(({
               let triggerFetchingOptions = null;
               let availableTime = null;
 
-              if (col.options) {
+              if (col?.options) {
                 options = col.options;
               };
-              // if (col.computedOptions) {
-              //   options = get(record, col.computedOptions)
-              // };
+              if (col?.computedOptions) {
+                options = get(record, col?.computedOptions)
+              };
 
               return {
                 record,
@@ -166,43 +173,43 @@ const AccountingDetails = forwardRef(({
       creditAccount: null,
       amountOfMoney: 0,
     };
-    // setClonedDataSource([...clonedDataSource, newData]);
+    setClonedDataSource([...clonedDataSource, newData]);
     setCount(count + 1);
   }
 
   const handleDelete = (index: number) => {
-    // const newData = clonedDataSource.filter((item, idx) => idx !== index);
-    // setClonedDataSource(newData);
+    const newData = clonedDataSource.filter((item, idx) => idx !== index);
+    setClonedDataSource(newData);
   };
 
   const handleSave = (row: any, dataIndex: number) => {
-    // const newData = [...clonedDataSource];
-    // const index = newData.findIndex((item) => row.key === item.key);
-    // const item = newData[index];
+    const newData = [...clonedDataSource];
+    const index = newData.findIndex((item) => row.key === item.key);
+    const item = newData[index];
 
-    // const computedRow = {
-    //   ...row,
-    // }
-    // newData.splice(index, 1, { ...item, ...computedRow });
-    // setClonedDataSource(newData);
+    const computedRow = {
+      ...row,
+    }
+    newData.splice(index, 1, { ...item, ...computedRow });
+    setClonedDataSource(newData);
   };
 
   const renderSummary = (pageData: any) => {
-    // const totalAmountOfMoney = pageData.reduce((prev, curr) => {
-    //   return prev + Number(get(curr, "amountOfMoney"));
-    // }, 0);
+    const totalAmountOfMoney = pageData.reduce((prev: any, curr: any) => {
+      return prev + Number(get(curr, "amountOfMoney"));
+    }, 0);
 
-    // return (
-    //   <Table.Summary.Row>
-    //     <Table.Summary.Cell align="right" colSpan={mode === COMPONENT_MODES.EDIT ? 4 : 4}>
-    //       <h5>Tổng cộng</h5>
-    //       <h5>{floorFormatter(totalAmountOfMoney)}</h5>
-    //     </Table.Summary.Cell>
-    //   </Table.Summary.Row>
-    // )
+    return (
+      <Table.Summary.Row>
+        <Table.Summary.Cell index={0} align="right" colSpan={mode === COMPONENT_MODES.EDIT ? 4 : 4}>
+          <h5>Tổng cộng</h5>
+          <h5>{floorFormatter(totalAmountOfMoney)}</h5>
+        </Table.Summary.Cell>
+      </Table.Summary.Row>
+    )
   }
 
-  useImperativeHandle(ref, () => ({
+  useImperativeHandle(ref, ()=> ({
     getAccountingDetailsData() {
       return clonedDataSource;
     }
@@ -210,7 +217,6 @@ const AccountingDetails = forwardRef(({
 
   return (
     <Space direction='vertical'>
-
       <Button
         // disabled={form.getFi eldValue("services").length >= whServices.length}
         icon={<PlusCircleOutlined />}
@@ -219,12 +225,13 @@ const AccountingDetails = forwardRef(({
         Thêm dòng
       </Button>
       <Table
-        // {...tableProps}
-        // footer={null}
+        {...tableProps}
+        // footer={{}}
         pagination={false}
-        scroll={{ x: 1000}}
+        // scroll={{ x: 1000 }}
+        style={{width: '100%'}}
         size="small"
-        // summary={renderSummary}
+        summary={renderSummary}
       />
     </Space>
   )

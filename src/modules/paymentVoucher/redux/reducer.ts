@@ -11,6 +11,17 @@ class PaymentVoucherClassExtend extends InstanceModuleRedux {
     super('paymentVoucher');
     this.cloneReducer = {
       ...this.initReducer,
+      confirmPaymentVoucherRequest: (state: cloneInitState, { payload }: any) => {
+        state.isSubmitLoading = true;
+      },
+      confirmPaymentVoucherSuccess: (state: cloneInitState, { payload }: any) => {
+        state.isSubmitLoading = false;
+        state.updateSuccess = payload;
+      },
+      confirmPaymentVoucherFailed: (state: cloneInitState, { payload }: any) => {
+        state.isSubmitLoading = false;
+        state.updateFailed = payload;
+      },
       // Want Add more reducer Here...
     }
     this.cloneInitState = {

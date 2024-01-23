@@ -49,7 +49,74 @@ export const COMPONENT_MODES = {
   EDIT: 'EDIT',
   CREATE: 'CREATE'
 };
-export const WH_RECEIPT_VOUCHER_CODE_PREFIX = 'PT';
+
+export const REF_COLLECTION_UPPER : any= {
+  BILL: 'BILL',
+  BILLITEM: 'BILLITEM',
+  PHARMA_PROFILE: 'PHARMA_PROFILE',
+  SUPPLIER: 'SUPPLIER',
+};
+
+export const REF_COLLECTION : any= {
+  BILL: 'bill',
+  BILLITEM: 'billItem',
+  PHARMA_PROFILE: 'pharma_profile',
+  SUPPLIER: 'supplier',
+};
+
+export const TYPE_VOUCHER = {
+  PT: 'PT',
+  PC: 'PC',
+};
+
+export const WH_VOUCHER_STATUS = {
+  CREATED: 'CREATED',
+  CONFIRMED: 'CONFIRMED',
+  APPROVED: 'APPROVED',
+  REJECT: 'REJECT',
+  CUSTOMER_CANCEL: 'CUSTOMER_CANCEL',
+};
+export const STATUS_VOUCHERS_VI = {
+  CREATED: 'Mới',
+  CONFIRMED: 'Đã xác nhận',
+  APPROVED: 'Đã duyệt',
+  REJECT: 'Đã từ chối',
+  CUSTOMER_CANCEL: 'Đã chấm dứt',
+};
+export const LANGUAGE = {
+  VI: 'vi',
+  EN: 'en'
+};
+export const WH_VOUCHER_ACTION_NAME = {
+  [WH_VOUCHER_STATUS.CONFIRMED]: {
+    [LANGUAGE.VI]: 'Xác nhận'
+  },
+  [WH_VOUCHER_STATUS.APPROVED]: {
+    [LANGUAGE.VI]: 'Duyệt'
+  },
+  [WH_VOUCHER_STATUS.REJECT]: {
+    [LANGUAGE.VI]: 'Từ chối'
+  },
+  [WH_VOUCHER_STATUS.CREATED]: {
+    [LANGUAGE.VI]: 'Mới'
+  },
+  [WH_VOUCHER_STATUS.CUSTOMER_CANCEL]: {
+    [LANGUAGE.VI]: 'Đã chấm dứt'
+  },
+};
+
+export const MAP_STATUS_VOUCHERS_VI = {
+  [STATUS_VOUCHERS_VI.CREATED]: { name: 'Mới', color: 'geekblue',colorStyle : '#1d39c4' },
+  [STATUS_VOUCHERS_VI.CONFIRMED]: { name: 'Đã xác nhận', color: 'processing' ,colorStyle : '#1890ff'},
+  [STATUS_VOUCHERS_VI.APPROVED]: { name: 'Đã duyệt', color: 'success',colorStyle : '#52c41a' },
+  [STATUS_VOUCHERS_VI.REJECT]: { name: 'Đã từ chối', color: 'error',colorStyle : '#f5222d' },
+  [STATUS_VOUCHERS_VI.CUSTOMER_CANCEL]: { name: 'Đã chấm dứt', color: 'default',colorStyle : 'rgba(0, 0, 0, 0.85)' },
+};
+
+export const WH_VOUCHER_CODE_PREFIX = {
+  [TYPE_VOUCHER.PT]: 'PT',
+  [TYPE_VOUCHER.PC] : 'PC'
+};
 export const ACCOUNTS : any = {
   1111: 'Tiền Việt Nam ',
   1112: 'Ngoại tệ',

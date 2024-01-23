@@ -38,7 +38,7 @@ type propsType = {
   onClose?: any
 };
 
-export default function ReceiptVoucher(props: propsType): React.JSX.Element {
+export default function ReceiptVoucherForm(props: propsType): React.JSX.Element {
   const { id , onClose} = props;
   const isLoading = false;
   const [form] = Form.useForm();
@@ -144,7 +144,6 @@ export default function ReceiptVoucher(props: propsType): React.JSX.Element {
                   </Col>
                   <Col span={12}>
                     <FormItem
-                      // label={<>Tên khách hàng{` `}<code>customerName</code></>}
                       label={"Tên khách hàng"}
                       labelCol={{ lg: 8 }}
                       name="customerName"

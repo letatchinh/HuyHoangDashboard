@@ -12,6 +12,7 @@ import {
     useSuccess
 } from "~/utils/hook";
 import { receiptVoucherSliceAction } from "./redux/reducer";
+import { TYPE_VOUCHER } from "~/constants/defaultValue";
 const MODULE = "receiptVoucher";
 const MODULE_VI = "";
 
@@ -94,6 +95,7 @@ export const useDeleteReceiptVoucher = (callback?: any) => {
 export const useReceiptVoucherQueryParams = () => {
   const query = useQueryParams();
   const limit = query.get("limit") || 10;
+  const typeVoucher = TYPE_VOUCHER.PT;
   const page = query.get("page") || 1;
   const keyword = query.get("keyword");
   const createSuccess = useSelector(createSuccessSelector);
@@ -102,6 +104,7 @@ export const useReceiptVoucherQueryParams = () => {
     const queryParams = {
       page,
       limit,
+      typeVoucher,
       keyword,
     };
     return [queryParams];

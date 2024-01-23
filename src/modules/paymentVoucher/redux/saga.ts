@@ -9,7 +9,7 @@ function* getListPaymentVoucher({payload:query} : any) : any {
   } catch (error:any) {
     yield put(paymentVoucherSliceAction.getListFailed(error));
   }
-}
+};
 
 function* getByIdPaymentVoucher({payload:id} : any) : any {
   try {
@@ -18,7 +18,7 @@ function* getByIdPaymentVoucher({payload:id} : any) : any {
   } catch (error:any) {
     yield put(paymentVoucherSliceAction.getByIdFailed(error));
   }
-}
+};
 
 function* createPaymentVoucher({payload} : any) : any {
   try {
@@ -27,7 +27,7 @@ function* createPaymentVoucher({payload} : any) : any {
   } catch (error:any) {
     yield put(paymentVoucherSliceAction.createFailed(error));
   }
-}
+};
 
 function* updatePaymentVoucher({payload} : any) : any {
   try {
@@ -36,7 +36,16 @@ function* updatePaymentVoucher({payload} : any) : any {
   } catch (error:any) {
     yield put(paymentVoucherSliceAction.updateFailed(error));
   }
-}
+};
+function* confirmPaymentVoucher({payload} : any) : any {
+  try {
+    const data = yield call(api.confirm,payload);
+    yield put(paymentVoucherSliceAction.confirmPaymentVoucherSuccess(data));
+  } catch (error:any) {
+    yield put(paymentVoucherSliceAction.confirmPaymentVoucherFailed(error));
+  }
+};
+
 function* deletePaymentVoucher({payload : id} : any) : any {
   try {
     const data = yield call(api.delete,id);
@@ -44,7 +53,7 @@ function* deletePaymentVoucher({payload : id} : any) : any {
   } catch (error:any) {
     yield put(paymentVoucherSliceAction.deleteFailed(error));
   }
-}
+};
 
 
 export default function* paymentVoucherSaga() {
@@ -53,4 +62,5 @@ export default function* paymentVoucherSaga() {
   yield takeLatest(paymentVoucherSliceAction.createRequest, createPaymentVoucher);
   yield takeLatest(paymentVoucherSliceAction.updateRequest, updatePaymentVoucher);
   yield takeLatest(paymentVoucherSliceAction.deleteRequest, deletePaymentVoucher);
-}
+  yield takeLatest(paymentVoucherSliceAction.confirmPaymentVoucherRequest, confirmPaymentVoucher);
+};
