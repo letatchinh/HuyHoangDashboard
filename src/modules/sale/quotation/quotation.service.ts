@@ -1,5 +1,5 @@
-import { get, pick } from "lodash";
-import { quotation, FormFieldCreateBill, PayloadCreateBill } from "../bill/bill.modal";
+import { pick } from "lodash";
+import { FormFieldCreateBill, PayloadCreateBill, quotation } from "../bill/bill.modal";
 
 type paramsConvertDataQuotation = {
     data : FormFieldCreateBill,
@@ -7,7 +7,7 @@ type paramsConvertDataQuotation = {
     totalPriceAfterDiscount : number,
     _id? : string
 }
-export const convertDataQuotation = ({data,quotationItems,totalPriceAfterDiscount,_id}:paramsConvertDataQuotation) => {
+export const convertDataQuotation = ({data,quotationItems,totalPriceAfterDiscount,_id}:paramsConvertDataQuotation) : PayloadCreateBill => {
     const quotationItemsSubmit : Omit<quotation,'variant' | 'variants'>[] = quotationItems?.map((quotation : quotation) => ({
         ...pick(quotation,[
           'cumulativeDiscount',
@@ -22,17 +22,9 @@ export const convertDataQuotation = ({data,quotationItems,totalPriceAfterDiscoun
           'quantity',
         ]),
       }));
-      // FixME : Verify Component not Updated data
-      // verifyData(() => {
-      //   const submitData : PayloadCreateBill = {
-      //     ...values,
-      //     quotationItems : quotationItemsSubmit,
-      //     pair : 0,
-      //     totalPrice : totalPriceAfterDiscount
-      //   };
-    
-      //   console.log(submitData,'submitData');
-      // });
+      // Todo : Verify Data When Send to sever (Not implemented)
+
+      
       const submitData : PayloadCreateBill = {
           ...data,
           quotationItems : quotationItemsSubmit,

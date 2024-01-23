@@ -8,12 +8,13 @@ import DebounceSelect from "~/components/common/DebounceSelect";
 type propsType = {
   form? : any,
   onChange? : (p:any) => void,
+  allowClear? : boolean
 };
 type ItemSearch = {
   name: string;
   value: string;
 };
-export default function SelectPharmacy({form,onChange = () => {}}: propsType): React.JSX.Element {
+export default function SelectPharmacy({form,onChange = () => {},allowClear = true}: propsType): React.JSX.Element {
   const { onNotify } = useNotificationStore();
   const [loading,setLoading] = useState(false);
   const [initOption,setInitOption] = useState([]);
@@ -74,6 +75,7 @@ export default function SelectPharmacy({form,onChange = () => {}}: propsType): R
         fetchOptions={fetchOptions}
         style={{ width: "100%" }}
         initOptions={initOption}
+        allowClear={allowClear}
         {...onChange && {onChange : (value : any) => onChange(value)}}
 
       />

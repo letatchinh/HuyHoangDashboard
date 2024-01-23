@@ -38,6 +38,9 @@ const {
 const convertSuccessSelector = getSelector("convertSuccess");
 const convertFailedSelector = getSelector("convertFailed");
 
+const copySuccessSelector = getSelector("copySuccess");
+const copyFailedSelector = getSelector("copyFailed");
+
 export const useQuotationPaging = () => useSelector(pagingSelector);
 
 export const useGetQuotations = (param:any) => {
@@ -101,6 +104,20 @@ export const useConvertQuotation = (callbackSubmit?: any) => {
   });
 };
 
+export const useCopyQuotation = (callbackSubmit?: any) => {
+  useSuccess(
+    copySuccessSelector,
+    `Sao chép ${MODULE_VI} thành công`,
+  );
+  useFailed(copyFailedSelector);
+
+  return useSubmit({
+    action: quotationActions.copyRequest,
+    loadingSelector: isSubmitLoadingSelector,
+    // callbackSubmit,
+  });
+};
+
 export const useDeleteQuotation = (callback?: any) => {
   useSuccess(deleteSuccessSelector, `Xoá ${MODULE_VI} thành công`, callback);
   useFailed(deleteFailedSelector);
@@ -120,6 +137,7 @@ export const useQuotationQueryParams = (status? : string) => {
   const keyword = query.get("keyword");
   const pharmacyId = query.get("pharmacyId");
   const createSuccess = useSelector(createSuccessSelector);
+  const copySuccess = useSelector(copySuccessSelector);
   const deleteSuccess = useSelector(deleteSuccessSelector);
   return useMemo(() => {
     const queryParams = {
@@ -131,7 +149,7 @@ export const useQuotationQueryParams = (status? : string) => {
     };
     return [queryParams];
     //eslint-disable-next-line
-  }, [page, limit, keyword, createSuccess, deleteSuccess,status,pharmacyId]);
+  }, [page, limit, keyword, createSuccess, deleteSuccess,status,pharmacyId,copySuccess]);
 };
 
 export const useUpdateQuotationParams = (
