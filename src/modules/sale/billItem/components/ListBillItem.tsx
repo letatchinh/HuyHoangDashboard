@@ -91,7 +91,7 @@ export default function ListBillItem({statusBill}:propsType) : React.JSX.Element
                 // const {nextStatus,message} = getNextStatus({status,lotNumber,expirationDate});
                 return <div className="d-flex flex-column">
                     <Typography.Text>{get(record,'codeBySupplier')} - {get(product,'name','')}</Typography.Text>
-                    {CLONE_STATUS_BILLITEM_LEVEL[status] >= 4 && <FormLot isDisabledAll={isDisabledAll} id={_id} onChangeStatusBillItem={onChangeStatusBillItem} status={status} lotNumber={lotNumber} expirationDate={expirationDate}/>}
+                    {CLONE_STATUS_BILLITEM_LEVEL[status] >= 4 && status !== STATUS_BILL.CANCELLED && <FormLot isDisabledAll={isDisabledAll} id={_id} onChangeStatusBillItem={onChangeStatusBillItem} status={status} lotNumber={lotNumber} expirationDate={expirationDate}/>}
                 </div>
             },
         },
@@ -101,6 +101,8 @@ export default function ListBillItem({statusBill}:propsType) : React.JSX.Element
             key : 'status',
             align : 'center',
             render(status, record, index) {
+                console.log(status,'status');
+                
                 const {nextStatus,message} = getNextStatus({status,lotNumber:get(record,'lotNumber'),expirationDate:get(record,'expirationDate')});
                 return <div className='d-flex flex-column'>
                     <Status status={status} statusVi={CLONE_STATUS_BILLITEM_VI?.[status]}/>
@@ -166,7 +168,9 @@ export default function ListBillItem({statusBill}:propsType) : React.JSX.Element
         //     },
         // },
         
-    ]
+    ];
+    console.log(billItems,'billItems');
+    
     return (
         <TableAnt 
         bordered={true}

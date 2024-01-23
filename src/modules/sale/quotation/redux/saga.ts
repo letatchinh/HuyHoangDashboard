@@ -1,3 +1,4 @@
+import { get } from 'lodash';
 import { put, call, takeLatest } from 'redux-saga/effects';
 import api from '../quotation.api'; 
 import { quotationActions } from './reducer';
@@ -25,7 +26,10 @@ function* createQuotation({payload} : any) : any {
     const {callbackSubmit,...params} = payload
     const data = yield call(api.create,params);
     if(callbackSubmit){
-      callbackSubmit()
+      callbackSubmit({
+        type : 'createQuotation',
+        code : get(data,'code')
+      })
     }
     yield put(quotationActions.createSuccess(data));
   } catch (error:any) {
@@ -38,7 +42,10 @@ function* updateQuotation({payload} : any) : any {
     const {callbackSubmit,...params} = payload
     const data = yield call(api.update,params);
     if(callbackSubmit){
-      callbackSubmit()
+      callbackSubmit({
+        type : 'updateQuotation',
+        code : get(data,'code')
+      })
     }
     yield put(quotationActions.updateSuccess(data));
   } catch (error:any) {
@@ -51,7 +58,10 @@ function* convertQuotation({payload} : any) : any {
     const {callbackSubmit,...params} = payload
     const data = yield call(api.convert,params);
     if(callbackSubmit){
-      callbackSubmit()
+      callbackSubmit({
+        type : 'convertQuotation',
+        code : get(data,'code')
+      })
     }
     yield put(quotationActions.convertSuccess(data));
   } catch (error:any) {
