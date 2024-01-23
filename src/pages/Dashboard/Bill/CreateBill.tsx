@@ -163,6 +163,7 @@ const CreateBillPage = (): React.JSX.Element => {
         ) {
         initDatSource();
       } else {
+
         // Data source is Ready
         const dataReady: DataSourceType = JSON.parse(dataFromLocalStorage);
         
@@ -195,10 +196,17 @@ const CreateBillPage = (): React.JSX.Element => {
 
         });
         setTabs(newTabs);
+        let keyFirst ;
+        const keyPriorityStorage = localStorage.getItem(KEY_PRIORITY);
+        if(keyPriorityStorage){
+           keyFirst = JSON.parse(keyPriorityStorage);
 
-        const keyFirst = Object.keys(dataReady)[0];
+        }else{
+           keyFirst = Object.keys(dataReady)[0];
+        }
         const dataFirst = dataReady[keyFirst];
-        setDataSource(BillModule.service.onConvertInitQuantity(dataReady));
+        setDataSource(dataReady);
+        
         // Verify when Initialize DataSource
         BillModule.service.onVerifyData({
           bill: dataFirst,

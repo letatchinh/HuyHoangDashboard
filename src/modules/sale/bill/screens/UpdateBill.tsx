@@ -6,7 +6,7 @@ import {
   Col,
   Divider,
   Dropdown, Row,
-  Space, Typography
+  Space, Spin, Typography
 } from "antd";
 import TextArea from "antd/es/input/TextArea";
 import { MenuProps } from "antd/lib/index";
@@ -21,9 +21,9 @@ import { useUpdateBill } from "~/modules/sale/bill/bill.hook";
 import { PATH_APP } from "~/routes/allPath";
 import { concatAddress, formatter } from "~/utils/helpers";
 import { PayloadUpdateBill } from "../bill.modal";
-import ListBillItem from "../components/ListBillitem";
 import StepStatus from "../components/StepStatus";
-import { STATUS_BILL, STATUS_BILLITEM, STATUS_BILL_VI } from "../constants";
+import BillItemModule from '~/modules/sale/billItem';
+import { STATUS_BILL, STATUS_BILL_VI } from "../constants";
 import useUpdateBillStore from "../storeContext/UpdateBillContext";
 type propsType = {};
 const Layout = ({ label, children }: { label: any; children: any }) => (
@@ -41,7 +41,7 @@ const Layout = ({ label, children }: { label: any; children: any }) => (
 const CLONE_STATUS_BILL_VI: any = STATUS_BILL_VI;
 const CLONE_STATUS_BILL: any = STATUS_BILL;
 export default function UpdateBill(props: propsType): React.JSX.Element {
-  const { bill } = useUpdateBillStore();
+  const { bill,isLoading } = useUpdateBillStore();
   const {
     codeSequence,
     createdAt,
@@ -63,7 +63,8 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
   const onUpdateBill = () => {
     const payloadUpdate  : PayloadUpdateBill= {
       note,
-      status : CLONE_STATUS_BILL.CANCELLED
+      status : CLONE_STATUS_BILL.CANCELLED,
+      _id : get(bill,'_id')
     };
     updateBill(payloadUpdate);
   }
@@ -75,7 +76,7 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
         key: "1",
         label: <span onClick={onOpenCancel}>Huỷ đơn</span>,
         disabled: billItems?.some(
-          (item: any) => get(item, "status") !== STATUS_BILLITEM.ORDERING
+          (item: any) => get(item, "status") !== BillItemModule.constants.STATUS_BILLITEM.ORDERING
         ),
       },
     ],
@@ -84,6 +85,7 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
 
   return (
     <div className="bill-page-update">
+      {isLoading && <Spin fullscreen/>}
       <Link className="link_" to={PATH_APP.bill.root}>
         <LeftOutlined /> Đơn hàng
       </Link>
@@ -191,7 +193,7 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
       <div className="bill-page-update--infoBillItem">
         <WhiteBox>
           <h6>Thông tin sản phẩm</h6>
-          <ListBillItem />
+          <BillItemModule.components.ListBillItem statusBill={status}/>
         </WhiteBox>
       </div>
       <ModalAnt

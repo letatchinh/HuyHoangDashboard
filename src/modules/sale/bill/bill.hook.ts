@@ -39,6 +39,9 @@ const {
 const getListDebtSelector = getSelector('debt');
 const isGetDebtLoadingSelector = getSelector('isGetDebtLoading');
 const getDebtFailedSelector = getSelector('getDebtFailed');
+
+const updateBillItemFailedSelector = getSelector('updateBillItemFailed');
+const updateBillItemSuccessSelector = getSelector('updateBillItemSuccess');
 export const useBillPaging = () => useSelector(pagingSelector);
 
 export const useGetBills = (param: any) => {
@@ -50,13 +53,14 @@ export const useGetBills = (param: any) => {
     param,
   });
 };
-export const useGetBill = (id: any) => {
+export const useGetBill = (id: any,reFetch?:boolean) => {
   return useFetchByParam({
     action: billSliceAction.getByIdRequest,
     loadingSelector: getByIdLoadingSelector,
     dataSelector: getByIdSelector,
     failedSelector: getByIdFailedSelector,
     param: id,
+    reFetch,
   });
 };
 
@@ -95,6 +99,22 @@ export const useDeleteBill = (callback?: any) => {
   return useSubmit({
     action: billSliceAction.deleteRequest,
     loadingSelector: isSubmitLoadingSelector,
+  });
+};
+
+
+export const useUpdateBillItem = (callback?: any) => {
+  useSuccess(
+    updateBillItemSuccessSelector,
+    `Cập nhật Đơn hàng thành công`,
+    // callback
+  );
+  useFailed(updateBillItemFailedSelector);
+
+  return useSubmit({
+    action: billSliceAction.updateBillItemRequest,
+    loadingSelector: isSubmitLoadingSelector,
+    callbackSubmit : callback
   });
 };
 

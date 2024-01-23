@@ -10,6 +10,7 @@ import {
     getSelectors,
     useFailed, useFetchByParam,
     useQueryParams,
+    useResetState,
     useSubmit,
     useSuccess
 } from "~/utils/hook";
@@ -164,4 +165,8 @@ export const useUpdateQuotationParams = (
   };
 
   return [keyword, { setKeyword, onParamChange }];
+};
+
+export const useResetQuotation = () => {
+  return useResetState(quotationActions.reset);
 };

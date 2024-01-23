@@ -4,11 +4,15 @@ import { cumulativeDiscountType } from "~/modules/cumulativeDiscount/cumulativeD
 import { InstanceModuleRedux } from "~/redux/instanceModuleRedux";
 import { initStateSlice } from "~/redux/models";
 import { getDiscountAmount } from "../bill.service";
+import { STATUS_BILL } from "../constants";
 interface cloneInitState extends initStateSlice {
  // Add cloneInitState Type Here
  isGetDebtLoading? : boolean,
  getDebtFailed? : any,
  debt? : any,
+ updateBillItemFailed? : any,
+ updateBillItemSuccess? : any,
+
 }
 class BillClassExtend extends InstanceModuleRedux {
   cloneReducer;
@@ -48,6 +52,45 @@ class BillClassExtend extends InstanceModuleRedux {
         billItems
       }
     },
+    updateSuccess: (state:cloneInitState, { payload }:{payload:any}) => {
+      state.isSubmitLoading = false;
+      state.byId = {
+        ...state.byId,
+        status : STATUS_BILL.CANCELLED
+      };
+      // state.list = state.list?.map((item:any) => get(item,'_id') === get(payload,'_id') ? payload : item);
+      state.updateSuccess = payload;
+    },
+
+    // update billItem
+    updateBillItemRequest: (state:cloneInitState) => {
+      state.isSubmitLoading = true;
+      state.updateBillItemFailed = null;
+    },
+    updateBillItemSuccess: (state:cloneInitState, { payload }:{payload:any}) => {
+      state.isSubmitLoading = false;
+      const billItemId = Object.keys(payload)?.[0];
+      const payloadUpdate = get(payload,billItemId,{});
+      const billItems = get(state.byId,'billItems',[])?.map((billItem : any) => {
+        if(billItemId === get(billItem,'_id')){
+          return {
+            ...billItem,
+            ...payloadUpdate
+          }
+        }
+        return billItem;
+      
+      });
+      state.byId = {
+        ...state.byId,
+        billItems
+      }
+      state.updateBillItemSuccess = payload;
+    },
+    updateBillItemFailed: (state:cloneInitState, { payload }:{payload:any}) => {
+      state.isSubmitLoading = false;
+      state.updateBillItemFailed = payload;
+    },
     };
 
     this.cloneInitState = {
@@ -55,6 +98,8 @@ class BillClassExtend extends InstanceModuleRedux {
       isGetDebtLoading : false,
       getDebtFailed : null,
       debt : null,
+      updateBillItemFailed : null,
+      updateBillItemSuccess : null,
       // Want Add more State Here...
     }
   }

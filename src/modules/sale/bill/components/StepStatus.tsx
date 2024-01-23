@@ -15,11 +15,12 @@ export default function StepStatus({
   currentStatus,
   historyStatus,
 }: propsType): React.JSX.Element {
+  
   // const [current,setCurrent] = useState(1);
   const items: StepProps[] = useMemo(() => {
     const statusMap: StepProps[] = keys(statuses)?.map((status: any) => {
       return {
-        title: statusesVi[status],
+        title: get(statusesVi,status,''),
         description: get(historyStatus, status)
           ? dayjs(get(historyStatus, status)).format("DD/MM/YYYY HH:mm")
           : "",
@@ -27,7 +28,7 @@ export default function StepStatus({
       };
     });
     return statusMap;
-  }, [historyStatus]);
+  }, [historyStatus,currentStatus]);
   // useEffect(() => {
   //     const index = keys(statuses).findIndex((status) => status === currentStatus);
   //     setCurrent(index)
@@ -37,6 +38,8 @@ export default function StepStatus({
     theme={{
         components: {
             Steps: {
+              fontSize : 12,
+              lineHeight : 0.8
           },
         },
       }}

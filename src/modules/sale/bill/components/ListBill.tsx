@@ -106,10 +106,12 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
       <SearchAnt onParamChange={onParamChange} />
       </Space>
       <TableAnt
+      stickyTop
         columns={columns}
         dataSource={bills}
         loading={isLoading}
         pagination={pagingTable(paging, onParamChange)}
+        size='small'
       />
     </div>
   );

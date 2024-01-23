@@ -13,6 +13,7 @@ import { v4 } from "uuid";
 import { useGetDebtRule, useResetBillAction } from "../bill.hook";
 import { quotation, DebtType } from "../bill.modal";
 import { reducerDiscountQuotationItems } from "../bill.service";
+import QuotationModule from '~/modules/sale/quotation';
 const TYPE_DISCOUNT = {
   "DISCOUNT.CORE": "DISCOUNT.CORE",
   "DISCOUNT.SOFT": "DISCOUNT.SOFT",
@@ -100,7 +101,7 @@ export function CreateBillProvider({
   verifyData,
   onRemoveTab,
 }: CreateBillProviderProps): JSX.Element {
-  useResetBillAction();
+  QuotationModule.hook.useResetQuotation();
   const [quotationItems, setQuotationItems] = useState<DataItem[]>([]);
   const [form] = Form.useForm();
   const [debt,isLoadingDebt] = useGetDebtRule();
@@ -110,13 +111,16 @@ export function CreateBillProvider({
     const newData: DataItem[] = [...quotationItems];
     const index = newData.findIndex((item) => row.key === item.key);
     const item = newData[index];
-
     const computedRow = {
       ...row,
     };
-    console.log(computedRow,'computedRow');
+    const newItemData = { ...item,
+       ...computedRow ,
+       quantity : Number((get(row, "quantityActual", 1) * get(row, "variant.exchangeValue", 1)).toFixed(1)),
+      };
+
+    newData.splice(index, 1, newItemData);
     
-    newData.splice(index, 1, { ...item, ...computedRow });
     onChangeBill({
       quotationItems: newData,
     });
@@ -230,8 +234,8 @@ export function CreateBillProvider({
   useEffect(() => {
     const initDebt = debt?.find((debt : DebtType) => get(debt, "key") === "COD");
     form.setFieldsValue({
-      ...bill,
-      debtType : get(initDebt,'key')
+      debtType : get(initDebt,'key'),
+      pharmacyId : get(bill,'pharmacyId'),
     });
     if (get(bill, "quotationItems", [])?.length) {
       const newQuotationItems: any[] = reducerDiscountQuotationItems(get(bill, "quotationItems", []));

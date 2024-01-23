@@ -7,6 +7,6 @@ const apis = {
     create: (data?: any) => requester.post(`/api/v1/billQuotation-create`, data),
     update: (data?: any) => requester.put(`/api/v1/billQuotation-update/${get(data,'_id')}`, data),
     convert: (data?: any) => requester.post(`/api/v1/billQuotation-convert/${get(data,'_id')}`,data),
-    delete: (id?: any) => requester.delete(`/api/v1/billQuotation/${id}`),
+    delete: (id?: any) => requester.delete(`/api/v1/billQuotation-delete/${id}`),
 }
 export default apis;

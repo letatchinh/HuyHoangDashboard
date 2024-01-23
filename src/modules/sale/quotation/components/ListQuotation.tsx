@@ -8,7 +8,7 @@ import {
   useUpdateQuotationParams
 } from "../quotation.hook";
 
-import { Button, Popconfirm, Space, Typography } from "antd";
+import { Button, Popconfirm, Row, Space, Typography } from "antd";
 import { ColumnsType } from "antd/es/table/InternalTable";
 import dayjs from "dayjs";
 import { get } from "lodash";
@@ -21,6 +21,7 @@ import { PATH_APP } from "~/routes/allPath";
 import { pagingTable } from "~/utils/helpers";
 import SelectPharmacy from "../../bill/components/SelectPharmacy";
 import { STATUS_QUOTATION, STATUS_QUOTATION_VI } from "../constants";
+import { PlusCircleTwoTone } from "@ant-design/icons";
 type propsType = {
   status?: string;
 };
@@ -148,6 +149,7 @@ export default function ListQuotation({
           return (
             <Space direction="vertical">
               <Button
+                disabled={get(record,'status') !== STATUS_QUOTATION.NEW}
                 block
                 onClick={() => {
                   onConvertQuotation({
@@ -166,6 +168,7 @@ export default function ListQuotation({
               </Button>
               <Button
                 block
+                disabled={get(record,'status') !== STATUS_QUOTATION.NEW}
                 onClick={() => {
                   onUpdateQuotation({
                     quotationItems: get(record, "quotationItems", []),
@@ -186,7 +189,9 @@ export default function ListQuotation({
                 okText="Xoá"
                 cancelText="Huỷ"
               >
-                <Button block danger size="small">
+                <Button block danger size="small" 
+                // disabled={get(record,'status') !== STATUS_QUOTATION.NEW}
+                >
                   Xoá
                 </Button>
               </Popconfirm>
@@ -199,15 +204,20 @@ export default function ListQuotation({
   );
   return (
     <div className="quotation-page">
-      <Space align="center">
+      <Row align="middle" gutter={8}>
       <SelectPharmacy onChange={(value) => onParamChange({pharmacyId : value})}/>
       <SearchAnt onParamChange={onParamChange} />
-      </Space>
+      <Button style={{marginLeft : 'auto'}} onClick={() => window.open(PATH_APP.bill.create)} type="primary" icon={<PlusCircleTwoTone />}>
+        Tạo đơn hàng tạm
+      </Button>
+      </Row>
       <TableAnt
+      stickyTop
         columns={columns}
         dataSource={quotations}
-        // loading={isLoading}
+        loading={isLoading}
         pagination={pagingTable(paging, onParamChange)}
+        size='small'
       />
     </div>
   );

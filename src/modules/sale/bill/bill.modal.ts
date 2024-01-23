@@ -74,6 +74,7 @@ export type PayloadCreateBill = {
 export type PayloadUpdateBill = {
     note : string,
     status : "CANCELLED",
+    _id : string
 }
 
 export type ItemSearchProduct = {

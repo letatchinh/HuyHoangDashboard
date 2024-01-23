@@ -1,4 +1,4 @@
-import { pick } from "lodash";
+import { get, pick } from "lodash";
 import { quotation, FormFieldCreateBill, PayloadCreateBill } from "../bill/bill.modal";
 
 type paramsConvertDataQuotation = {
@@ -15,12 +15,12 @@ export const convertDataQuotation = ({data,quotationItems,totalPriceAfterDiscoun
           'variantId',
           'price',
           'totalPrice',
-          'quantity',
           'supplierId',
           'lotNumber',
           'expirationDate',
-          'codeBySupplier'
-        ])
+          'codeBySupplier',
+          'quantity',
+        ]),
       }));
       // FixME : Verify Component not Updated data
       // verifyData(() => {

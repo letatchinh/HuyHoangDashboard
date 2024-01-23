@@ -1,7 +1,7 @@
 import { put, call, takeLatest } from 'redux-saga/effects';
 import api from '../bill.api'; 
 import { billSliceAction } from './reducer';
-
+import BillItemModule from '~/modules/sale/billItem';
 function* getListBill({payload:query} : any) : any {
   try {
     const data = yield call(api.getAll,query);
@@ -31,11 +31,7 @@ function* getByIdBill({payload:id} : any) : any {
 
 function* createBill({payload} : any) : any {
   try {
-    const {callback,...params} = payload
-    const data = yield call(api.create,params);
-    if(callback){
-      callback()
-    }
+    const data = yield call(api.create,payload);
     yield put(billSliceAction.createSuccess(data));
   } catch (error:any) {
     yield put(billSliceAction.createFailed(error));
@@ -59,6 +55,18 @@ function* deleteBill({payload : id} : any) : any {
   }
 }
 
+function* updateBillItem({payload} : any) : any {
+  try {
+    const {callbackSubmit,...params} = payload;
+    const data = yield call(BillItemModule.api.update,params);
+    yield put(billSliceAction.updateBillItemSuccess(params));
+    if(callbackSubmit && typeof callbackSubmit === 'function'){
+      callbackSubmit();
+    }
+  } catch (error:any) {
+    yield put(billSliceAction.updateBillItemFailed(error));
+  }
+}
 
 export default function* billSaga() {
   yield takeLatest(billSliceAction.getListRequest, getListBill);
@@ -67,4 +75,5 @@ export default function* billSaga() {
   yield takeLatest(billSliceAction.createRequest, createBill);
   yield takeLatest(billSliceAction.updateRequest, updateBill);
   yield takeLatest(billSliceAction.deleteRequest, deleteBill);
+  yield takeLatest(billSliceAction.updateBillItemRequest, updateBillItem);
 }

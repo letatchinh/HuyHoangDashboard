@@ -94,14 +94,14 @@ export const onVerifyData = ({
             return {
               ...findInResponse,
               quantity: get(item, "quantity", 1),
-              // quantity: Number((get(item, "quantity", 1) / get(item, "exchangeValue", 1)).toFixed(1)),
+              // quantity: Number((get(item, "quantity", 1) / get(item, "variant.exchangeValue", 1)).toFixed(1)),
               // Inherit More here
             };
           } else {
             return null;
           }
         });
-
+        console.log(concatQuantity,'concatQuantity');
         let items: any = compact(concatQuantity)?.map((quotation: any) => {
           const dataSearch = selectProductSearch(quotation);
 
@@ -110,6 +110,7 @@ export const onVerifyData = ({
             key: v4(),
           };
         });
+        console.log(items,'items');
         const cumulativeDiscount = await getCumulativeDiscount({
           quotationItems: items,
           pharmacyId: get(bill, "pharmacyId"),
@@ -151,16 +152,17 @@ export const getDiscountAmount = (
 
   const discountAmount =
     valueType === TYPE_VALUE.PERCENT ? (value * price) / 100 : value;
-  return discountAmount;
+  return Math.floor(discountAmount);
 };
 
 export const reducerDiscountQuotationItems = (quotationItems: any[]) => {
   const newQuotationItems: any[] = quotationItems?.map((quotation: DataItem) => {
+    const quantityActual:number = Number((get(quotation, "quantity", 1) / get(quotation, "variant.exchangeValue", 1)).toFixed(1));
     const cumulativeDiscount = get(quotation, "cumulativeDiscount", [])?.map(
       (discount: any) => {
         const discountAmount = getDiscountAmount(
           discount,
-          get(quotation, "price", 1)
+          get(quotation, "variant.price", 1) * quantityActual
         );
         return {
           ...discount,
@@ -205,9 +207,9 @@ export const reducerDiscountQuotationItems = (quotationItems: any[]) => {
         sum + get(cur, "discountAmount", 0),
       0
     );
-
+  
     const totalPrice =
-      get(quotation, "price", 1) * get(quotation, "quantity", 1) - totalDiscount;
+      get(quotation, "variant.price", 1) * quantityActual - totalDiscount;
     return {
       ...quotation,
       cumulativeDiscount,
@@ -215,6 +217,9 @@ export const reducerDiscountQuotationItems = (quotationItems: any[]) => {
       totalPrice: totalPrice > 0 ? totalPrice : 0,
       totalDiscountDetailFromProduct,
       totalDiscountDetailFromSupplier,
+      exchangeValue : get(quotation,'variant.exchangeValue',1),
+      price : get(quotation,'variant.price',1),
+      quantityActual,
     };
   });
 
@@ -276,7 +281,8 @@ export const onConvertInitQuantity = (newDataSource : DataSourceType) => {
   forIn(newDataSource, (value, key : any) => {
     const quotationItems = get(value,'quotationItems',[])?.map((item:any) => ({
       ...item,
-      quantity : Number((get(value,'quantity',1) / get(value,'exchangeValue',1)).toFixed(1)),
+      // quantity : Number((get(value,'quantity',1) / get(value,'exchangeValue',1)).toFixed(1)),
+      quantity : get(value,'quantity',1),
     }))
     cloneNewDataSource[key] = {
       ...newDataSource[key],

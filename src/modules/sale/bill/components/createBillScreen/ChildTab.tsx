@@ -1,6 +1,6 @@
 import { Button, Col, Form, Row } from "antd";
 import { get, pick } from "lodash";
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import ModalAnt from "~/components/Antd/ModalAnt";
 import { quotation, FormFieldCreateBill, PayloadCreateBill } from "~/modules/sale/bill/bill.modal";
 import useNotificationStore from "~/store/NotificationContext";
@@ -14,19 +14,23 @@ type propsType = {};
 export default function ChildTab(props: propsType): React.JSX.Element {
  const {form,onValueChange,quotationItems,totalPriceAfterDiscount,verifyData,onRemoveTab,bill} = useCreateBillStore();
  const {onNotify} = useNotificationStore();
- const [isSubmitLoading,onCreateQuotation] = QuotationModule.hook.useCreateQuotation(() => onRemoveTab());
- const [,onUpdateQuotation] = QuotationModule.hook.useUpdateQuotation(() => onRemoveTab());
- const [,onConvertQuotation] = QuotationModule.hook.useConvertQuotation(() => onRemoveTab());
+ const [isSubmitLoading,onCreateQuotation] = QuotationModule.hook.useCreateQuotation(onRemoveTab);
+ const [,onUpdateQuotation] = QuotationModule.hook.useUpdateQuotation(onRemoveTab);
+ const [,onConvertQuotation] = QuotationModule.hook.useConvertQuotation(onRemoveTab);
  const [openDebt,setOpenDebt] = useState(false);
  const onOpenDebt = useCallback(() => setOpenDebt(true),[]);
  const onCloseDebt = useCallback(() => setOpenDebt(false),[]);
   const onFinish = (values: FormFieldCreateBill) => {
 try {
+  if(!quotationItems?.length){
+    return onNotify?.warning("Vui lòng chọn thuốc!")
+  }
   const submitData : PayloadCreateBill = QuotationModule.service.convertDataQuotation({
     quotationItems : quotationItems,
     data : values,
     totalPriceAfterDiscount,
-    _id : get(bill,'dataUpdateQuotation.id')
+    _id : get(bill,'dataUpdateQuotation.id'),
+    
   });
   console.log(submitData,'submitData')
     switch (get(bill,'typeTab')) {
@@ -62,7 +66,20 @@ try {
       default:
         break;
     }
-  },[bill])
+  },[bill]);
+  useEffect(() => {
+    const handleKeyPress = (event : any) => {
+      // Check if the pressed key is F1
+      if (event.key === 'F1') {
+        form.submit();
+      }
+    };
+    window.addEventListener('keydown', handleKeyPress);
+    // Clean up the event listener when the component unmounts
+    return () => {
+      window.removeEventListener('keydown', handleKeyPress);
+    };
+  }, []); 
   return (
     <Form
       className="form-create-bill"
@@ -93,6 +110,7 @@ try {
               <Col span={14}>
                 <Button
                   block
+                  disabled={!quotationItems?.length}
                   className="form-create-bill--payment__actions__btnPayment"
                   type="primary"
                   htmlType="submit"

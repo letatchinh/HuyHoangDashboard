@@ -15,11 +15,14 @@ type propsType = {};
 export default function ProductSelectedTable(
   props: propsType
 ): React.JSX.Element {
-  const { quotationItems, onSave,onRemove } = useCreateBillStore();
-  const onSelect = (value : string,options : any) => {
-    if(!options) return;
-    const {data} = options;
-    
+  const { quotationItems, onSave,onRemove } = useCreateBillStore();  
+  const onSelect = (newVariantId : string,data : any) => {
+    const variant = get(data,'variants',[])?.find((item : any) => get(item,'_id') === newVariantId);
+    onSave({
+      ...data,
+      variant,
+      variantId : newVariantId
+    }) 
   }
   const columns = [
     {
@@ -40,9 +43,15 @@ export default function ProductSelectedTable(
         }))
       return <div>
         <Typography.Text strong>{get(record,'codeBySupplier')} 
-        <Select options={optionsVariant}
-        onSelect={onSelect}
-        /></Typography.Text>
+         
+        {get(record,'variants',[])?.length > 1 ? <Select 
+        className="mx-1"
+        value={get(record, "variantId")}
+        options={optionsVariant}
+        onSelect={(value:any) => {
+          onSelect(value,record)
+        }} 
+        /> : <span className="mx-1">({get(record,'variant.unit.name')})</span>}</Typography.Text>
         <p className="m-0">{name}</p>
       </div>
       }
@@ -55,8 +64,8 @@ export default function ProductSelectedTable(
     },
     {
       title: "Số lượng",
-      dataIndex: "quantity",
-      key: "quantity",
+      dataIndex: "quantityActual",
+      key: "quantityActual",
       editable: true,
       component: "InputNumber",
       required: true,
