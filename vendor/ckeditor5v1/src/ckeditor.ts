@@ -48,7 +48,7 @@ import { GeneralHtmlSupport,FullPage } from '@ckeditor/ckeditor5-html-support';
 // You can read more about extending the build with additional plugins in the "Installing plugins" guide.
 // See https://ckeditor.com/docs/ckeditor5/latest/installation/plugins/installing-plugins.html for details.
 
-class Editor extends ClassicEditor {
+class Editorv2 extends ClassicEditor {
 	public static override builtinPlugins = [
 		Alignment,
 		AutoImage,
@@ -254,4 +254,4 @@ class Editor extends ClassicEditor {
 	};
 }
 
-export default Editor;
+export default Editorv2;

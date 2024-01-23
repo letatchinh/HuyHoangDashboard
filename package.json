@@ -27,7 +27,7 @@
     "antd": "^5.13.1",
     "axios": "1.6.3",
     "browser-image-compression": "^2.0.2",
-    "ckeditor5-custom-build": "file:vendor/ckeditor5v1",
+    "ckeditor5-custom-build": "file:vendor/ck5v2",
     "dayjs": "1.11.10",
     "i18next": "23.7.11",
     "lodash": "4.17.21",

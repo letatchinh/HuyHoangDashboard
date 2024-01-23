@@ -1,6 +1,6 @@
 import { Button, Row } from 'antd';
 import { useCallback, useEffect, useState } from 'react';
-// import Editors from '~/utils/Editors';
+import Editors from '~/utils/Editors';
 interface Props {
   dataTask?: any
   onCancel?: any
@@ -23,13 +23,13 @@ export default function EditerDetail({ dataTask, onCancel, handleFinshed }: Prop
     
     return (
         <div className='flex-column-center'>
-            {/* <Editors
+            <Editors
                 value={inputValue}
                 onChange={(e: any) => {
                     setInputValue(e)
                 }
                 }
-            /> */}
+            />
             <Row style={{marginLeft : 'auto'}}>
                 <Button onClick={handleOk} type='primary' style={{ width: 100 }}>Lưu</Button>
                 <Button onClick={handleCancel} style={{ width: 100 }}>Huỷ</Button>
