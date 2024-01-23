@@ -34,7 +34,23 @@ export const OptionStatus : OptionSelect[] = [
   }
 ];
 
-export const ACCOUNTS = {
+export const WH_PAYMENT_METHOD = {
+  COD: 'COD',
+  TRANSFER: 'TRANSFER'
+};
+
+export const WH_PAYMENT_METHOD_VI = {
+  COD: 'Tiền mặt',
+  TRANSFER: 'Chuyển khoản'
+};
+
+export const COMPONENT_MODES = {
+  VIEW: 'VIEW',
+  EDIT: 'EDIT',
+  CREATE: 'CREATE'
+};
+export const WH_RECEIPT_VOUCHER_CODE_PREFIX = 'PT';
+export const ACCOUNTS : any = {
   1111: 'Tiền Việt Nam ',
   1112: 'Ngoại tệ',
   1121: 'Tiền Việt Nam ',

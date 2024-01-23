@@ -1,4 +1,3 @@
-// Please UnComment To use
 
 import { get } from "lodash";
 import { useEffect, useMemo, useState } from "react";
@@ -12,8 +11,8 @@ import {
     useSubmit,
     useSuccess
 } from "~/utils/hook";
-import { vouchersSliceAction } from "./redux/reducer";
-const MODULE = "vouchers";
+import { receiptVoucherSliceAction } from "./redux/reducer";
+const MODULE = "receiptVoucher";
 const MODULE_VI = "";
 
 const {
@@ -33,20 +32,20 @@ const {
   pagingSelector,
 } = getSelectors(MODULE);
 
-export const useVouchersPaging = () => useSelector(pagingSelector);
+export const useReceiptVoucherPaging = () => useSelector(pagingSelector);
 
-export const useGetVoucherss = (param:any) => {
+export const useGetReceiptVouchers = (param:any) => {
   return useFetchByParam({
-    action: vouchersSliceAction.getListRequest,
+    action: receiptVoucherSliceAction.getListRequest,
     loadingSelector: loadingSelector,
     dataSelector: listSelector,
     failedSelector: getListFailedSelector,
     param
   });
 };
-export const useGetVouchers = (id: any) => {
+export const useGetReceiptVoucher = (id: any) => {
   return useFetchByParam({
-    action: vouchersSliceAction.getByIdRequest,
+    action: receiptVoucherSliceAction.getByIdRequest,
     loadingSelector: getByIdLoadingSelector,
     dataSelector: getByIdSelector,
     failedSelector: getByIdFailedSelector,
@@ -54,7 +53,7 @@ export const useGetVouchers = (id: any) => {
   });
 };
 
-export const useCreateVouchers = (callback?: any) => {
+export const useCreateReceiptVoucher = (callback?: any) => {
   useSuccess(
     createSuccessSelector,
     `Tạo mới ${MODULE_VI} thành công`,
@@ -63,12 +62,12 @@ export const useCreateVouchers = (callback?: any) => {
   useFailed(createFailedSelector);
 
   return useSubmit({
-    action: vouchersSliceAction.createRequest,
+    action: receiptVoucherSliceAction.createRequest,
     loadingSelector: isSubmitLoadingSelector,
   });
 };
 
-export const useUpdateVouchers = (callback?: any) => {
+export const useUpdateReceiptVoucher = (callback?: any) => {
   useSuccess(
     updateSuccessSelector,
     `Cập nhật ${MODULE_VI} thành công`,
@@ -77,22 +76,22 @@ export const useUpdateVouchers = (callback?: any) => {
   useFailed(updateFailedSelector);
 
   return useSubmit({
-    action: vouchersSliceAction.updateRequest,
+    action: receiptVoucherSliceAction.updateRequest,
     loadingSelector: isSubmitLoadingSelector,
   });
 };
 
-export const useDeleteVouchers = (callback?: any) => {
+export const useDeleteReceiptVoucher = (callback?: any) => {
   useSuccess(deleteSuccessSelector, `Xoá ${MODULE_VI} thành công`, callback);
   useFailed(deleteFailedSelector);
 
   return useSubmit({
-    action: vouchersSliceAction.deleteRequest,
+    action: receiptVoucherSliceAction.deleteRequest,
     loadingSelector: isSubmitLoadingSelector,
   });
 };
 
-export const useVouchersQueryParams = () => {
+export const useReceiptVoucherQueryParams = () => {
   const query = useQueryParams();
   const limit = query.get("limit") || 10;
   const page = query.get("page") || 1;
@@ -110,7 +109,7 @@ export const useVouchersQueryParams = () => {
   }, [page, limit, keyword, createSuccess, deleteSuccess]);
 };
 
-export const useUpdateVouchersParams = (
+export const useUpdateReceiptVoucherParams = (
   query: any,
   listOptionSearch?: any[]
 ) => {

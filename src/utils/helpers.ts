@@ -135,3 +135,4 @@ export const useExpandrowTableClick: () => UseExpandrowTableClick = () => {
 
   return { select, setSelect, onClick };
 };
+export const formatNumberThreeComma = (num: any) => num?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
