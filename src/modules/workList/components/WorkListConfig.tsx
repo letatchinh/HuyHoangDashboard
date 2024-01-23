@@ -131,7 +131,7 @@ const BoardConfig: FC<BoardConfigProps> = ({ name, id, dataBoardConfigItem }) =>
                           key={task._id}
                           task={task}
                         />
-                      </Suspense>
+                      </Suspense> 
                     </div>
                   )}
                 </Draggable>

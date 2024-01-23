@@ -7,6 +7,7 @@
     "npm": ">=7.0.0"
   },
   "dependencies": {
+    "@ckeditor/ckeditor5-react": "6.0.0",
     "@ant-design/icons": "5.2.6",
     "@fortawesome/fontawesome-svg-core": "^6.5.1",
     "@fortawesome/free-solid-svg-icons": "^6.5.1",
@@ -23,13 +24,13 @@
     "@types/react-mentions": "^4.1.13",
     "@types/react-redux": "7.1.33",
     "@vtaits/react-color-picker": "^0.1.3",
-    "antd": "5.12.5",
+    "antd": "^5.13.1",
     "axios": "1.6.3",
     "browser-image-compression": "^2.0.2",
+    "ckeditor5-custom-build": "file:vendor/ckeditor5v1",
     "dayjs": "1.11.10",
     "i18next": "23.7.11",
     "lodash": "4.17.21",
-    "moment": "2.30.1",
     "path": "^0.12.7",
     "react": "18.2.0",
     "react-beautiful-dnd": "^13.1.1",

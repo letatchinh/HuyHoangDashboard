@@ -112,7 +112,7 @@ const {
         param: query,
       })
   }
-  export const useGetBoardById = (id?: string) => {
+export const useGetBoardById = (id?: string) => {
     return useFetchByParam({
       action: workBoardActions.getByIdRequest,
       loadingSelector: getByIdLoadingSelector,

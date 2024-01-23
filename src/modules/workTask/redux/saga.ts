@@ -1,29 +1,42 @@
 import { DataType } from './../../workBoard/workBoard.modal';
-// import { TaskRelationOption } from "./../../../../.history/src/modules/workTask/components/RrelationTask_20240116151409";
 import { put, call, takeLatest, select } from "redux-saga/effects";
 import api from "../workTask.api";
 import { workTaskSliceAction } from "./reducer";
 import { get } from "lodash";
 import { Empty } from "antd";
 import { workListActions } from "~/modules/workList/redux/reducer";
-function* getListWorkTask({ payload: query }: any): any {
+import {TaskRelationOption} from '~/modules/workTask/components/RrelationTask';
+
+function* getAllTask({ payload: query } : any) : any {
   try {
     const data = yield call(api.getAll, query);
     yield put(workTaskSliceAction.getListSuccess(data));
-  } catch (error: any) {
+  } catch (error) {
     yield put(workTaskSliceAction.getListFailed(error));
   }
-}
+};
 
-function* getByIdWorkTask({ payload: id }: any): any {
+function* getTaskById({ payload }: any): any {
   try {
-    const data = yield call(api.getById, id);
-    yield put(workTaskSliceAction.getByIdSuccess(data));
+    const profile = yield select((state) => state.user.profile);
+      const response = yield call(api.getById, payload);
+      const managers = yield call(api.getAllManagersByIdBoard, get(response, 'boardId'));
+      // Check if User is a Super admin or manager assigned
+      if (!!get(profile, 'user.isSuperAdmin') || managers?.some((item: any) => get(item, '_id') === get(profile, '_id'))) {
+          yield put( workTaskSliceAction.getByIdSuccess({ ...response, progressListShow: get(response, 'progressList') }));
+      } else {
+          const progressListShow = get(response, 'progressList', [])?.map((item: any) => {
+            //if job not assign anyone then show everyone see task 
+            // if job has assign someone then show for user
+              let progressShow = get(item, 'progress', [])?.filter((progress: any) => get(progress, '[0].assign', '')?.includes(get(profile, '_id'))||get(progress, '[0].assign', '')==='');
+              return { ...item, progress: progressShow }
+          });
+          yield put(workTaskSliceAction.getByIdSuccess({ ...response, progressListShow }));
+      }
   } catch (error: any) {
-    yield put(workTaskSliceAction.getByIdFailed(error));
+      yield put(workTaskSliceAction.getByIdFailed(error));
   }
-}
-
+};
 function* createWorkTask({ payload }: any): any {
   try {
     const data = yield call(api.create,payload);
@@ -33,18 +46,8 @@ function* createWorkTask({ payload }: any): any {
   } catch (error:any) {
     yield put(workTaskSliceAction.createFailed(error));
   }
-}
+};
 
-// function* updateWorkTask({ payload }: any): any {
-//   try {
-//     const data = yield call(api.update, payload);
-//     const dataType:any = get(data.data, 'boardConfigId') 
-//     yield put(workListActions.addBoardConfigItemRequest(dataType))
-//     yield put(workTaskSliceAction.updateSuccess(data));
-//   } catch (error: any) {
-//     yield put(workTaskSliceAction.updateFailed(error));
-//   }
-// }
 function* deleteWorkTask({payload} : any) : any {
   try {
     const data = yield call(api.delete,payload.id);
@@ -135,8 +138,7 @@ function* updateProgressTask({ payload }: any): any {
           progressListShow,
         })
       );
-      // yield put({ type: Types.UPDATE_TASK_SUCCESS, payload: { ...response, progressListShow } });
-    }
+    };
   } catch (error: any) {
     yield put(workTaskSliceAction.updateProgressTaskFailed(error));
   }
@@ -156,17 +158,18 @@ function* copyTask({ payload }: any): any {
 function* searchTaskItemTask({ payload }: any): any {
   try {
     const data = yield call(api.searchTaskByBoardId, payload);
-    // let convertDatatoOption : any = data.map((task: any)=>({
-    //   value:task._id,
-    //   label:<TaskRelationOption task={task}/>
-    // }));
+    let convertDataOption : any = data.map((task: any)=>({
+      value: task._id,
+      // label: <TaskRelationOption task={task}/>
+    }));
 
-    // if (!data?.length) {
-    //   convertDatatoOption = [{
-    //     value: 'unkow',
-    //     label: <Empty style = {{width: 40}} />}]
-    // };
-    // payload.action(convertDatatoOption)
+    if (!data?.length) {
+      convertDataOption = [{
+        value: 'unkow',
+        // label: <Empty style = {{width: 40}} />
+      }]
+    }
+    payload.action(convertDataOption);
     yield put(workTaskSliceAction.searchTaskSuccess(data));
   } catch (error: any) {
     yield put(workTaskSliceAction.searchTaskFailed(error));
@@ -234,7 +237,7 @@ function* deleteCommentTask({payload}: any): any{
 function* updateCommentTask({payload}: any): any{
   try {
     const data = yield call(api.updateCommentById, payload);
-    // yield put(workTaskSliceAction.commen);
+    // yield put(workTaskSliceAction.commentUpdateSuccess(data));
   } catch (error: any) {
     console.log(error)
     // yield put({ type: Types.COMMENT_UPDATE_FAILED, payload: error.message });
@@ -244,8 +247,8 @@ function* updateCommentTask({payload}: any): any{
 
 export default function* workTaskSaga() {
   //Get
-  yield takeLatest(workTaskSliceAction.getListRequest, getListWorkTask);
-  yield takeLatest(workTaskSliceAction.getByIdRequest, getByIdWorkTask);
+  yield takeLatest(workTaskSliceAction.getListRequest, getAllTask);
+  yield takeLatest(workTaskSliceAction.getByIdRequest, getTaskById);
   yield takeLatest(
     workTaskSliceAction.getHistoryActivityTaskByIdRequest,
     getHistoryActivityTaskById
@@ -268,7 +271,7 @@ export default function* workTaskSaga() {
   //Update
   // yield takeLatest(workTaskSliceAction.updateRequest, updateTask);
   yield takeLatest(workTaskSliceAction.updateRequest, updateTask);
-  yield takeLatest(workTaskSliceAction.updateCommentRequest, updateCommentTask);
+  yield takeLatest(workTaskSliceAction.commentUpdateRequest, updateCommentTask);
   yield takeLatest(workTaskSliceAction.pushEmotionRequest, pushEmtionTask);
   yield takeLatest(
     workTaskSliceAction.updateProgressTaskRequest,

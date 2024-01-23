@@ -298,7 +298,7 @@ export const useListenComment= (taskId: any)=>{
         eventListener.close();
       }
     };
-  },[taskIdmemo,dispatch])
+  }, [taskIdmemo, dispatch])
   return [data]
 }
 
@@ -323,7 +323,7 @@ export const useDeleteComment = () => {
 export const useUpdateComment = () => {
   return useSubmit({
     loadingSelector: () => false,
-    action: workTaskSliceAction.updateCommentRequest,
+    action: workTaskSliceAction.commentUpdateRequest,
   })
 };
 export const useResetAction = () => {

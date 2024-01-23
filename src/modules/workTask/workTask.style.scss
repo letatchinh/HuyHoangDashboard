@@ -70,4 +70,65 @@
         };
     };
     };
+    .selectTask-custom {
+        .ant-select-selector {
+            background-color: var(--select-by-status-bg);
+            color: var(--select-by-status-color);
+        }
+    };
 };
+.previewDescription {
+    width: 100%;
+    min-height: 100px;
+    cursor: text !important;
+
+    &:hover {
+        // border-width: 1px;
+        // border-color: rgb(243, 243, 243);
+        // border-style: solid;
+    }
+};
+.menuAssign {
+    width: 350px;
+    background-color: white;
+    box-shadow: 0 2px 4px 2px rgba(15, 34, 58, 0.12);
+    padding: 20px;
+
+    &--listAssign {
+        max-height: 400px !important;
+        overflow-y: scroll;
+    }
+
+    &--overlayDisabled {
+        position: absolute;
+        inset: 0;
+        background: #005d9017 !important;
+        -webkit-backdrop-filter: blur(8px) !important;
+        backdrop-filter: blur(8px) !important;
+        padding: 10px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+};
+.task-detail-history {
+    .comment-context{
+        width: inherit;
+        display: flex;
+        align-items: flex-end;
+        margin-bottom: 12px;
+        position: -webkit-sticky;
+        position: sticky;
+        top:40px;
+        gap: 10px;
+        // bottom: 0;
+        z-index: 1000;
+        background-color: white;
+      }
+      .comment-body{
+        z-index: 1299;
+      };
+};
+.comment-item-line{
+    display: flex;
+}

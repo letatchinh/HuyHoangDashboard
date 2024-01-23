@@ -9,7 +9,6 @@ import {
 } from "../workTask.hook";
 import { get, head } from "lodash";
 import Text from "antd/lib/typography/Text";
-import moment from "moment";
 import { useGetBoardById } from "~/modules/workBoard/workBoard.hook";
 import { TaskItemProvider } from "~/store/TaskItemContext";
 import Description from "../components/Description";
@@ -21,6 +20,7 @@ import RelationTask from "../components/RrelationTask";
 import Assigner from "../components/Assigner";
 import TodoList from "../components/TodoList";
 import ComponentComment from "../components/ComponentComment";
+import dayjs from "dayjs";
 
 interface Props {
   idTask?: any;
@@ -97,18 +97,20 @@ export default function TaskItem({ idTask }: Props) {
   return (
     <TaskItemProvider dataTask={dataTask}>
       <WhiteBox>
-      <div className="work-task">
+      <div className="work-task page-wraper page-content page-task-detail">
         <div className="page-task-detail_container">
           <div className="task-detail-header">
             <Row align="middle" gutter={16} style={{ width: "100%" }}>
               <Col>
+                <Suspense fallback={<div>Mô tả...</div>}>
                 <SelectStatusTask
                   handleChange={handleChange}
                   value={selected}
                   defaultValue={selected}
                   initStatusValue={get(dataTask, "statusId", {})}
                   listStatus={boardById?.listStatusConfig}
-                />
+                    />
+                </Suspense>
               </Col>
               <Col>
                 <Text strong>#{get(dataTask, "code", "")} </Text>
@@ -137,7 +139,7 @@ export default function TaskItem({ idTask }: Props) {
               <span>
                 {" "}
                 Ngày tạo:{" "}
-                {moment(get(dataTask, "createdAt", "")).format("YYYY-MM-DD")}
+                {dayjs(get(dataTask, "createdAt", "")).format("YYYY-MM-DD")}
               </span>
             </Col>
           </Row>
@@ -151,12 +153,12 @@ export default function TaskItem({ idTask }: Props) {
                     className="task-detail-content__tabs"
                   >
                     <Tabs.TabPane tab={"Ghi chú công việc"} key="description">
-                      {/* <Suspense fallback={<div>Mô tả...</div>}> */}
+                      <Suspense fallback={<div>Mô tả...</div>}>
                       <Description
                         handleFinshed={handleFinshed}
                         dataTask={dataTask}
                       />
-                      {/* </Suspense> */}
+                      </Suspense>
                     </Tabs.TabPane>
                     <Tabs.TabPane
                       tab={
@@ -169,30 +171,28 @@ export default function TaskItem({ idTask }: Props) {
                       key="files"
                       style={{ height: "100%" }}
                     >
-                      {/* <Suspense fallback={<div>Tải File...</div>}> */}
+                      <Suspense fallback={<div>Tải File...</div>}>
                       <UploadfileTaskItem
                         dataTask={dataTask}
                         handleFinshed={handleFinshed}
                         fileList_={fileList_}
                         setFileList={setFileList}
                       />
-                      {/* </Suspense> */}
+                      </Suspense>
                     </Tabs.TabPane>
                     <Tabs.TabPane tab="Lịch sử chỉnh sửa" key={"activity"}>
-                      {/* <Suspense fallback={<div>Lịch sử...</div>}> */}
+                      <Suspense fallback={<div>Lịch sử...</div>}>
                       <ActivityTask />
-                      {/* </Suspense> */}
+                      </Suspense>
                     </Tabs.TabPane>
                     <Tabs.TabPane tab="Công việc liên quan" key={"relation"}>
-                      {/* <Suspense fallback={<div>Công việc liên quan...</div>}> */}
+                      <Suspense fallback={<div>Công việc liên quan...</div>}>
                       <RelationTask/>
-                    {/* </Suspense> */}
+                    </Suspense>
                     </Tabs.TabPane>
                   </Tabs>
-                  {/* <Suspense fallback={<div>Trảng thái...</div>}><Assigner dataTask={dataTask} /></Suspense>
-                  <Suspense fallback={<div>Trảng thái...</div>}><TodoList updateProgressTask={updateProgressTask} dataTask={dataTask} /></Suspense> */}
-                    <Assigner dataTask={dataTask} />
-                    <TodoList updateProgressTask={updateProgressTask} dataTask={dataTask} />
+                  <Suspense fallback={<div>Trạng thái...</div>}><Assigner dataTask={dataTask} /></Suspense>
+                  <Suspense fallback={<div>Trạng thái...</div>}><TodoList updateProgressTask={updateProgressTask} dataTask={dataTask} /></Suspense>
                 </div>
               </Col>
             </Row>
@@ -206,9 +206,9 @@ export default function TaskItem({ idTask }: Props) {
                 style={{ marginTop: 20, marginBottom: 20 }}
               >
                 <Tabs.TabPane tab="Nội dung trao đổi" key={"comment"}>
+                  <Suspense fallback={<div>Trao đổi...</div>}>
                     <ComponentComment/>
-                  {/* <Suspense fallback={<div>Trao đổi...</div>}>
-                    </Suspense> */}
+                    </Suspense>
                 </Tabs.TabPane>
               </Tabs>
             </Col>

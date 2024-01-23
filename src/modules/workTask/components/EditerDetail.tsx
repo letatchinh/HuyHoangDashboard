@@ -1,14 +1,13 @@
 import { Button, Row } from 'antd';
 import { useCallback, useEffect, useState } from 'react';
-// import Editor from '~/utils/editor';
-
+// import Editors from '~/utils/Editors';
 interface Props {
   dataTask?: any
   onCancel?: any
   handleFinshed?: any
 };
 
-export default function EditerDetail({ dataTask,onCancel,handleFinshed }: Props) {
+export default function EditerDetail({ dataTask, onCancel, handleFinshed }: Props) {
     const [inputValue, setInputValue] = useState('');
     const handleCancel = useCallback(() => {
         setInputValue(dataTask?.description || "");
@@ -24,7 +23,7 @@ export default function EditerDetail({ dataTask,onCancel,handleFinshed }: Props)
     
     return (
         <div className='flex-column-center'>
-            {/* <Editor
+            {/* <Editors
                 value={inputValue}
                 onChange={(e: any) => {
                     setInputValue(e)
