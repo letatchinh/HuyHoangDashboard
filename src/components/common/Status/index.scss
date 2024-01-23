@@ -23,7 +23,7 @@
         background-color: #1890ff;
         color: #fff;
       }
-    &.completed {
+    &.completed ,&.confirmed {
       background-color: #52c41a;
       color: #fff;
     }
@@ -39,7 +39,7 @@
     
     &.received {
       color: #ffffff;
-      background-color: #ff4500; /* Màu cam đậm */
+      background-color: #9c543a; /* Màu cam đậm */
     }
     
     &.processing {

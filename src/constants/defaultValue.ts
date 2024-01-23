@@ -1,5 +1,5 @@
-export const BASE_URL = process.env.REACT_APP_BASE_URL;
-// export const BASE_URL = "http://192.168.1.3:8555";
+export const BASE_URL = process.env.REACT_APP_BASE_URL ??"http://192.168.77.157:8555";
+// export const BASE_URL = "http://192.168.77.157:8555";
 export const DEFAULT_UPLOAD_ACTION = `${BASE_URL}/api/v1/file`;
 export const MAX_UPLOAD_FILE_SIZE_IN_MB = 2;
 

@@ -17,7 +17,8 @@ import medicineModule from '~/modules/medicine';
 import productModule from '~/modules/product';
 import workBoardModule from '~/modules/workBoard';
 import configDiscountModule from '~/modules/configDiscount';
-import billModule from '~/modules/bill';
+import billModule from '~/modules/sale/bill';
+import quotationModule from '~/modules/sale/quotation';
 export default function* rootSaga() {
   yield all([
     authModule.redux.saga(),
@@ -41,5 +42,6 @@ export default function* rootSaga() {
     pharmacyModule.redux.saga(),
     // Đơn hàng
     billModule.redux.saga(),
+    quotationModule.redux.saga(),
   ]);
 };

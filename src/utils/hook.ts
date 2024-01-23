@@ -77,6 +77,7 @@ interface UseFetchByParamProps extends UseFetchProps {
   param?: any;
   muteOnFailed?: boolean;
   actionUpdate?: any;
+  reFetch?: boolean;
 }
 
 export const useFetchByParam = (props: UseFetchByParamProps): [any, boolean, ActionUpdateFunction] => {
@@ -88,6 +89,7 @@ export const useFetchByParam = (props: UseFetchByParamProps): [any, boolean, Act
     param,
     muteOnFailed,
     actionUpdate,
+    reFetch,
   } = props;
 
   const dispatch = useDispatch();
@@ -96,7 +98,7 @@ export const useFetchByParam = (props: UseFetchByParamProps): [any, boolean, Act
 
   useEffect(() => {
     if (param) dispatch(action(param));
-  }, [dispatch, action, param]);
+  }, [dispatch, action, param,reFetch]);
 
   useFailed(failedSelector, undefined, undefined, muteOnFailed);
 
@@ -112,20 +114,20 @@ export const useFetchByParam = (props: UseFetchByParamProps): [any, boolean, Act
 interface UseSubmitProps {
     loadingSelector: (state: any) => boolean; // Adjust the state type based on your Redux store
     action: any // Adjust the values type based on your action requirements
-    callback? : (p?:any) => void // Callback After Submit
+    callbackSubmit? : (p?:any) => void // Callback After Submit
   }
 
-export const useSubmit = ({ loadingSelector, action ,callback}:UseSubmitProps) : [boolean,(v:any) => void] => {
+export const useSubmit = ({ loadingSelector, action ,callbackSubmit}:UseSubmitProps) : [boolean,(v:any) => void] => {
     const dispatch = useDispatch();
     const isLoading = useSelector(loadingSelector);
   
-    const handleSubmit = (values:any) => {
-      if(callback && typeof callback === 'function'){
-        dispatch(action({...values,callback}));
+    const handleSubmit = useCallback((values:any) => {
+      if(callbackSubmit && typeof callbackSubmit === 'function'){
+        dispatch(action({...values,callbackSubmit}));
       }else{
         dispatch(action(values));
       }
-    };
+    },[callbackSubmit,dispatch,action]);
   
     return [isLoading, handleSubmit];
   };

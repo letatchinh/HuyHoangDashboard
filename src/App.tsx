@@ -5,7 +5,7 @@ import { authRoutes, mainRoutes } from "./routes/allRoute";
 import ProtectRoute from "./routes/middleware/ProtectRoute";
 import AuthModule from "~/modules/auth";
 import { PATH_APP } from "./routes/allPath";
-import BillModule from "~/modules/bill";
+import BillModule from "~/modules/sale/bill";
 import CreateBillPage from "./pages/Dashboard/Bill/CreateBill";
 
 function App(): React.JSX.Element {

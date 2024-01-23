@@ -21,7 +21,8 @@ import rankingModule from '~/modules/ranking';
 import medicineModule from '~/modules/medicine';
 import productModule from '~/modules/product';
 import workBoardModule from '~/modules/workBoard';
-import billModule from '~/modules/bill';
+import billModule from '~/modules/sale/bill';
+import quotationModule from '~/modules/sale/quotation';
 const authPersistConfig = {
     key: 'auth',
     storage: localStorage,
@@ -55,6 +56,7 @@ const rootReducer = combineReducers({
     workBoard:workBoardModule.redux.reducer,
     configDiscount: configDiscount.redux.reducer,
     bill: billModule.redux.reducer,
+    quotation: quotationModule.redux.reducer,
 
 });
 export default rootReducer
