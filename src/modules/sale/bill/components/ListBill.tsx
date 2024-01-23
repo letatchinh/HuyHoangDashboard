@@ -7,17 +7,17 @@ import {
   useUpdateBillParams,
 } from "../bill.hook";
 
-import { Select, Space, Typography } from "antd";
+import { Space, Typography } from "antd";
 import { ColumnsType } from "antd/es/table/InternalTable";
 import dayjs from "dayjs";
 import { get } from "lodash";
 import { Link } from "react-router-dom";
 import SearchAnt from "~/components/Antd/SearchAnt";
 import Status from "~/components/common/Status/index";
+import SelectSupplier from "~/modules/supplier/components/SelectSupplier";
 import { PATH_APP } from "~/routes/allPath";
 import { formatter, pagingTable } from "~/utils/helpers";
 import { STATUS_BILL_VI } from "../constants";
-import SelectSupplier from "~/modules/supplier/components/SelectSupplier";
 type propsType = {
   status?: string;
 };
@@ -102,16 +102,19 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
   return (
     <div className="bill-page">
       <Space>
-        <SelectSupplier onChange={(value) => onParamChange({supplierIds : value})} mode='multiple'/>
-      <SearchAnt onParamChange={onParamChange} />
+        <SelectSupplier
+          onChange={(value) => onParamChange({ supplierIds: value })}
+          mode="multiple"
+        />
+        <SearchAnt onParamChange={onParamChange} />
       </Space>
       <TableAnt
-      stickyTop
+        stickyTop
         columns={columns}
         dataSource={bills}
         loading={isLoading}
         pagination={pagingTable(paging, onParamChange)}
-        size='small'
+        size="small"
       />
     </div>
   );

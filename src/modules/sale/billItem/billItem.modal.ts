@@ -9,3 +9,14 @@ export type UpdateBillItem = {
 export  type PayloadSubmitUpdateBillItem = {
     [billItemId: string]: Omit<UpdateBillItem,"id">
 }
+
+export type StatusBillItemType = {
+    ORDERING: string,
+    ORDERED: string,
+    RECEIVED: string,
+    PROCESSING: string,
+    PACKAGED: string,
+    SHIPPING: string,
+    COMPLETED: string,
+    CANCELLED: string,
+}

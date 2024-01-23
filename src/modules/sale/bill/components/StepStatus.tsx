@@ -1,9 +1,9 @@
-import { ConfigProvider, Steps } from "antd";
+import { ConfigProvider, Steps, StepsProps } from "antd";
 import { StepProps } from "antd/lib/index";
 import dayjs from "dayjs";
 import { get, keys } from "lodash";
 import React, { useEffect, useMemo, useState } from "react";
-type propsType = {
+interface propsType extends StepsProps {
   statuses: any;
   statusesVi: any;
   currentStatus?: string;
@@ -14,6 +14,7 @@ export default function StepStatus({
   statusesVi,
   currentStatus,
   historyStatus,
+  ...props
 }: propsType): React.JSX.Element {
   
   // const [current,setCurrent] = useState(1);
@@ -29,10 +30,6 @@ export default function StepStatus({
     });
     return statusMap;
   }, [historyStatus,currentStatus]);
-  // useEffect(() => {
-  //     const index = keys(statuses).findIndex((status) => status === currentStatus);
-  //     setCurrent(index)
-  // },[])
   return (
     <ConfigProvider 
     theme={{
@@ -48,8 +45,7 @@ export default function StepStatus({
       labelPlacement="vertical"
       items={items}
       className="step-custom"
-      //   status='finish'
-      //   current={current}
+      {...props}
       />
       </ConfigProvider>
   );

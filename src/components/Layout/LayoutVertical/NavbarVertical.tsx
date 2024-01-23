@@ -1,4 +1,4 @@
-import { Menu, MenuProps } from 'antd';
+import { ConfigProvider, Menu, MenuProps, Tooltip } from 'antd';
 import React, { useCallback, useMemo, useState , isValidElement} from 'react';
 import NavbarItems, { resource } from './resource';
 import { useGetPolicyCheckAllPage } from '~/modules/user/user.hook';
@@ -29,12 +29,14 @@ function getItem({ label, icon, children, path, key, permission }: ItemType): an
     children,
     permission,
     label: path ? (
-      <NavLink
+      <Tooltip placement='right' color={'blue'} title={label}>
+        <NavLink
         className={() => `layoutVertical--content__navbar__navLink`}
         to={path}
       >
         {label}
       </NavLink>
+      </Tooltip>
     ) : (
       label
     ),
@@ -90,14 +92,24 @@ const NavbarVertical: React.FC = () => {
     <div className='layoutVertical--content__navbar'>
       {/* <button onClick={toggleCollapsed}>asd</button> */}
       <div className='layoutVertical--content__navbar__wrapMenu'>
-    
+      <ConfigProvider theme={{
+        components : {
+          Menu : {
+            itemMarginInline : 0,
+            itemMarginBlock : 0,
+          }
+        }
+      }}>
       <Menu
+
       className='layoutVertical--content__navbar__wrapMenu__menu'
-        mode="inline"
-        inlineCollapsed={collapsed}
-        items={NewNavbarItems}
-        theme='dark'
-        />
+      mode="inline"
+      inlineCollapsed={collapsed}
+      items={NewNavbarItems}
+      theme='dark'
+
+      />
+      </ConfigProvider>
       </div>
     </div>
   );

@@ -7,10 +7,6 @@ import { typeCumulativeDiscount } from "../bill.modal";
 type propsType = {
   data: typeCumulativeDiscount[],
 };
- const TYPE_VALUE_VI = {
-  VALUE : "Đ",
-  PERCENT : "%",
-}
 const TYPE_DISCOUNT_VI = {
   "DISCOUNT.CORE" : "Chiết khấu cứng",
   "DISCOUNT.SOFT" : "Chiết khấu mềm",

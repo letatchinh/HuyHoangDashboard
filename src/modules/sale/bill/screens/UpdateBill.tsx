@@ -121,6 +121,7 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
           {/* step */}
           <Col lg={15} md={24} sm={24}>
             <StepStatus
+          
               statuses={
                 status !== STATUS_BILL.CANCELLED
                   ? omit(STATUS_BILL, ["CANCELLED"])

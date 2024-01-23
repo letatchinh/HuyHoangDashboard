@@ -178,17 +178,17 @@ export const resource: ItemType[] = [
     // Children
     children: [
       {
-        label: "Danh sách đơn hàng",
+        label: "Đơn hàng",
         path: PATH_APP.bill.root,
         key: PATH_APP.bill.root,
       },
       {
-        label: "Tạo đơn hàng",
+        label: "Tạo đơn hàng tạm",
         path: PATH_APP.bill.create,
         key: PATH_APP.bill.create,
       },
       {
-        label: "Danh sách đơn hàng tạm",
+        label: "Đơn hàng tạm",
         path: PATH_APP.quotation.root,
         key: PATH_APP.quotation.root,
       },
