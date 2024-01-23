@@ -155,11 +155,11 @@ const CreateBillPage = (): React.JSX.Element => {
     };
     setDataSource(newDataSource);
   };
-  const verifyData = (newActiveKey: string, callback?: () => void) => {
-    const billCurrent = dataSource[newActiveKey];
+  const verifyData = (targetKey: string, callback?: () => void) => {
+    const billCurrent = dataSource[targetKey];
     BillModule.service.onVerifyData({
       bill: billCurrent,
-      keyActive: newActiveKey,
+      keyActive: targetKey,
       onChangeBill,
       callback,
     });

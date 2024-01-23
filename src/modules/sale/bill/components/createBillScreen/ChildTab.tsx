@@ -37,7 +37,6 @@ try {
     _id : get(bill,'dataUpdateQuotation.id'),
     
   });
-  console.log(submitData,'submitData')
     switch (get(bill,'typeTab')) {
       case 'createQuotation':
         onCreateQuotation(submitData);
@@ -98,7 +97,7 @@ try {
         </Col>
         <Col span={8} className="form-create-bill--payment">
           <div>
-            <SelectPharmacy form={form}/>
+            <SelectPharmacy form={form} allowClear={false}/>
             <TotalBill />
           </div>
           <div className="form-create-bill--payment__actions">

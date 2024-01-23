@@ -6,6 +6,9 @@ export interface cloneInitState extends initStateSlice {
   // Add cloneInitState Type Here
   convertFailed?: any;
   convertSuccess?: any;
+
+  copyFailed?: any;
+  copySuccess?: any;
 }
 class QuotationClassExtend extends InstanceModuleRedux {
   cloneReducer;
@@ -30,12 +33,31 @@ class QuotationClassExtend extends InstanceModuleRedux {
         state.isSubmitLoading = false;
         state.convertFailed = payload;
       },
+
+      copyRequest: (state: cloneInitState) => {
+        state.isSubmitLoading = true;
+        state.copyFailed = null;
+      },
+      copySuccess: (
+        state: cloneInitState,
+        { payload }: { payload: any }
+      ) => {
+        state.isSubmitLoading = false;
+        state.copySuccess = payload;
+      },
+      copyFailed: (state: cloneInitState, { payload }: { payload: any }) => {
+        state.isSubmitLoading = false;
+        state.copyFailed = payload;
+      },
+
       reset: () => this.cloneInitState,
     };
     this.cloneInitState = {
       ...this.initialState,
       convertFailed: null,
       convertSuccess: null,
+      copyFailed: null,
+      copySuccess: null,
       // Want Add more State Here...
     };
   }

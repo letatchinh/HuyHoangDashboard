@@ -2,7 +2,7 @@ import { Form } from "antd";
 import { forIn, get } from "lodash";
 import {
   createContext,
-  ReactNode, useContext,
+  ReactNode, useCallback, useContext,
   useEffect,
   useMemo,
   useState
@@ -11,7 +11,7 @@ import { v4 } from "uuid";
 import QuotationModule from '~/modules/sale/quotation';
 import { useGetDebtRule } from "../bill.hook";
 import { DebtType, quotation } from "../bill.modal";
-import { reducerDiscountQuotationItems } from "../bill.service";
+import { onVerifyData, reducerDiscountQuotationItems } from "../bill.service";
 const TYPE_DISCOUNT = {
   "DISCOUNT.CORE": "DISCOUNT.CORE",
   "DISCOUNT.SOFT": "DISCOUNT.SOFT",
@@ -50,6 +50,7 @@ export type GlobalCreateBill = {
   debt : DebtType[];
   bill : any,
   onOpenModalResult : (data:any) => void
+  mutateReValidate : () => void
 };
 const CreateBill = createContext<GlobalCreateBill>({
   quotationItems: [],
@@ -69,6 +70,7 @@ const CreateBill = createContext<GlobalCreateBill>({
   debt : [],
   bill : null,
   onOpenModalResult: () => {},
+  mutateReValidate: () => {},
 });
 
 type CreateBillProviderProps = {
@@ -89,6 +91,7 @@ export function CreateBillProvider({
   onOpenModalResult,
 }: CreateBillProviderProps): JSX.Element {
   QuotationModule.hook.useResetQuotation();
+  const [countReValidate,setCountReValidate] = useState(1);
   const [quotationItems, setQuotationItems] = useState<DataItem[]>([]);
   const [form] = Form.useForm();
   const [debt,isLoadingDebt] = useGetDebtRule();
@@ -129,9 +132,18 @@ export function CreateBillProvider({
     });
   };
 
+  // Trigger ReValidation Bill Sample and discount
+  const mutateReValidate = useCallback(() => {
+    setCountReValidate(countReValidate+1);
+  },[countReValidate]);
+
+  useEffect(() => {
+    if(countReValidate > 1){
+      verifyData();
+    }
+  },[countReValidate]);
 
 
-  
   const onValueChange = (value: any, values: any) => {
     const key: any = Object.keys(value)[0];
     switch (key) {
@@ -139,6 +151,8 @@ export function CreateBillProvider({
         onChangeBill({
           pharmacyId: value[key],
         });
+        // Revalidate after change Pharmacy
+        mutateReValidate();
         break;
 
       default:
@@ -217,6 +231,7 @@ export function CreateBillProvider({
     [quotationItems]
   );
 
+
   // Initalize Data And Calculate Discount
   useEffect(() => {
     const initDebt = debt?.find((debt : DebtType) => get(debt, "key") === "COD");
@@ -229,6 +244,7 @@ export function CreateBillProvider({
       setQuotationItems(newQuotationItems);
     }
   }, [bill,debt,form,totalPrice]);
+
 
   return (
     <CreateBill.Provider
@@ -250,6 +266,7 @@ export function CreateBillProvider({
         onRemoveTab,
         bill,
         onOpenModalResult,
+        mutateReValidate,
       }}
     >
       {children}

@@ -1,6 +1,7 @@
 import React, { useMemo } from "react";
 import TableAnt from "~/components/Antd/TableAnt";
 import {
+  useCopyQuotation,
   useDeleteQuotation,
   useGetQuotations,
   useQuotationPaging,
@@ -30,11 +31,10 @@ export default function ListQuotation({
   status,
 }: propsType): React.JSX.Element {
   const [query] = useQuotationQueryParams(status);
-  console.log(query,'query');
-  
   const [keyword, { setKeyword, onParamChange }] =
     useUpdateQuotationParams(query);
   const [quotations, isLoading] = useGetQuotations(query);
+  const [isSubmitLoading, onCopyQuotation] = useCopyQuotation();
   const paging = useQuotationPaging();
   const [, onDelete] = useDeleteQuotation();
   const onUpdateQuotation = (data: Omit<ItemDataSource, "typeTab">) => {
@@ -185,7 +185,19 @@ export default function ListQuotation({
                 Cập nhật
               </Button>
               <Popconfirm
-                title="Bạn muốn xoá nhà cung cấp này?"
+                title="Bạn muốn sao chép đơn hàng tạm này?"
+                onConfirm={() => onCopyQuotation(_id)}
+                okText="Sao chép"
+                cancelText="Huỷ"
+              >
+                <Button block ghost type="primary" size="small" 
+                // disabled={get(record,'status') !== STATUS_QUOTATION.NEW}
+                >
+                  Sao chép
+                </Button>
+              </Popconfirm>
+              <Popconfirm
+                title="Bạn muốn xoá đơn hàng tạm này?"
                 onConfirm={() => onDelete(_id)}
                 okText="Xoá"
                 cancelText="Huỷ"

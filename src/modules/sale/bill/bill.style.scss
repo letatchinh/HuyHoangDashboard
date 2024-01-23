@@ -80,7 +80,11 @@
 
     }
     &--infoPharmacy{
+        height: 100%;
         margin-bottom: 10px;
+        & .whiteBox  {
+            height: inherit !important;;
+        }
         &__info{
             &__name {
                 font-weight: 600;
@@ -96,6 +100,13 @@
 
     &--infoBillItem{
         margin-top: 20px;
+    }
+
+    &--infoBillRight{
+        height: 100%;
+        & .whiteBox  {
+            height: inherit !important;;
+        }
     }
 }
 

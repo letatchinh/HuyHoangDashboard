@@ -52,7 +52,7 @@ export default function Manufacturer() {
     {
       title: 'Tên hãng sản xuất',
       dataIndex: 'name',
-      align: 'center',
+      align: 'left',
       key: 'name',
       render: (text: string) => <a>{text}</a>,
     },

@@ -171,6 +171,7 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
         </Col>
         {/* // InfoBill */}
         <Col lg={8} md={24} sm={24}>
+          <div className="bill-page-update--infoBillRight">
           <WhiteBox>
             <Space className="justify-content-between w-100">
               <h6>Thông tin đơn hàng</h6>
@@ -188,6 +189,7 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
               </Typography.Text>
             </Layout>
           </WhiteBox>
+          </div>
         </Col>
       </Row>
       <div className="bill-page-update--infoBillItem">
