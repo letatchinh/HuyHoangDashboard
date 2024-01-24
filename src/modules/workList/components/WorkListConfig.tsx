@@ -1,27 +1,24 @@
 import { DeleteFilled, PlusOutlined } from '@ant-design/icons';
-import { Button, Col, Input, Row, Space, Tooltip, Popconfirm, Dropdown, Menu } from 'antd';
-import { Suspense, useMemo, useState, FC, ChangeEvent } from 'react';
-import { Droppable, Draggable } from 'react-beautiful-dnd';
-// import { useFormTaskContext } from './WorkList';
-// import { WithOrPermission } from '../Common';
-// import POLICIES from '~/constants/policy';
-import { useNavigate } from 'react-router-dom';
-import { useFormTaskContext } from '../screens/WorkList';
+import { Button, Col, Dropdown, Input, Popconfirm, Row, Space, Tooltip } from 'antd';
+import { ChangeEvent, FC, Suspense, useMemo, useState } from 'react';
+import { Draggable, Droppable } from 'react-beautiful-dnd';
+import WithOrPermission from '~/components/common/WithOrPermission';
+import POLICIES from '~/modules/policy/policy.auth';
 import TaskForm from '~/modules/workTask/components/TaskForm';
 import TaskItem from '~/modules/workTask/components/TaskItem';
+import { useResetAction } from '~/modules/workTask/workTask.hook';
+import { useFormTaskContext } from '../screens/WorkList';
 import apis from '../workList.api';
-import POLICIES from '~/modules/policy/policy.auth';
-import WithOrPermission from '~/components/common/WithOrPermission';
 interface BoardConfigProps {
   name?: string;
   id?: string;
   dataBoardConfigItem?: any; // Change the type to your actual type
 }
 const BoardConfig: FC<BoardConfigProps> = ({ name, id, dataBoardConfigItem }) => {
+  useResetAction();
   const tasks = useMemo(() => dataBoardConfigItem, [dataBoardConfigItem]);
-  const { openForm, handleDeleteWork, handleButtonClick, sprintId } = useFormTaskContext();
+  const { openForm, handleDeleteWork} = useFormTaskContext();
   const [inputValue, setInputValue] = useState(name);
-  const navigate = useNavigate();
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const handleButtonClickOpen = () => {
     // Handle button click if needed

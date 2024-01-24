@@ -7,24 +7,14 @@ import { ResizableBox } from 'react-resizable';
 import Text from 'antd/lib/typography/Text';
 import { get } from 'lodash';
 import { useUpdatePositionBoardConfig,useCreateWorkList, useDeleteWorkList, useGetListBoardConfig, useListBoardConfigItem, useUpdatePosition, useWorkListQueryParams, useUpdateWorkList } from '../workList.hook';
-// import Menufilter from '../components/Menufilter';
 import { useGetWorkSprint } from '~/modules/workSprint/workSprint.hook';
 import MenuListBoard from '~/modules/workSprint/components/MenuListBoard';
 import BoardConfig from '../components/WorkListConfig';
 import { FormTaskContextProps } from '../workList.modal';
-import { useCreateTask, useDeleteTask, useUpdateTask } from '~/modules/workTask/workTask.hook';
+import { useCreateTask, useDeleteTask, useResetAction, useUpdateTask } from '~/modules/workTask/workTask.hook';
 import { useGetBoardById } from '~/modules/workBoard/workBoard.hook';
 import Menufilter from '../components/Menufilter';
-// import { useGetSprintInfo } from '~/hooks/workSprint';
-// import { useWorkListQueryParams } from '~/hooks/workList';
-// import { WithOrPermission } from '../Common';
-// import POLICIES from '~/constants/policy';
-// import BoardConfig from './BoardConfig';
-// import MenuListBoard from './WorkList/MenuListBoard';
-// import TaskForm from './TaskForm/TaskForm';
-// import TaskTabDetail from './TaskTabs/TaskTabDetail';
-// import MenuFilter from './MenuFilter';
-
+import TaskTabDetail from '~/modules/workTask/components/Task/TaskTabDetail';
 const FormTaskContext = createContext({});
 export const useFormTaskContext = () => useContext<FormTaskContextProps | any>(FormTaskContext);
 
@@ -68,7 +58,12 @@ const WorkList = () => {
   const showDrawer = (param?: any) => {
     setVisibleListBoard((val) => param ?? !val);
   };
-
+  const handleFinshed = useCallback((val: any, key: any,id?:any) => {
+    updateTask({
+      [key]: val,
+      id: id,
+    });
+  }, []);
   const openFormTask = (id: any, data: any) => {
     setPropsModal({ boardConfigId: id });
   };
@@ -148,7 +143,9 @@ const WorkList = () => {
           handleDeleteTask,
           setVisibleInfo,
           setIdVisibleInfo,
+          idVisibleInfo,
           setTaskData,
+          handleFinshed,
           taskData,
           dropdownVisible,
           setDropdownVisible,
@@ -230,7 +227,7 @@ const WorkList = () => {
             {visibleInfo && (
               <div className="view-port-info-body">
                 <Suspense fallback={<p>...loading</p>}>
-                  {/* <TaskTabDetail taskData={taskData} setVisibleInfo={setVisibleInfo} idTask={idVisibleInfo} /> */}
+                  <TaskTabDetail idTask={idVisibleInfo} />
                 </Suspense>
               </div>
             )}

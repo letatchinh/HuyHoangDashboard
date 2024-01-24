@@ -128,7 +128,15 @@ class Editor extends ClassicEditor {
 				'imageStyle:side',
 				'linkImage'
 			]
-		}
+		},
+		// table: {
+		// 	contentToolbar: [
+		// 		'tableColumn',
+		// 		'tableRow',
+		// 		'mergeTableCells'
+		// 	]
+		// },
+
 	};
 }
 

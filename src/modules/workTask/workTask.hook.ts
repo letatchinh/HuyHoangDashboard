@@ -329,3 +329,9 @@ export const useUpdateComment = () => {
 export const useResetAction = () => {
   return useResetState(workTaskSliceAction.resetAction);
 };
+export const useReset = () => {
+  return useSubmit({
+    loadingSelector: () => false,
+    action: workTaskSliceAction.resetAction
+  })
+}

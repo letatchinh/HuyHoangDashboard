@@ -12,7 +12,8 @@ interface StatusItem {
 };
 
 interface SelectStatusTaskProps {
-  handleChange: (value: string) => void;
+  handleChange?: (value: string) => void;
+  handleChangeStatus?: (value: string) => Promise<void>;
   defaultValue: string;
   value: string;
   listStatus: StatusItem[];
@@ -26,6 +27,7 @@ interface CSSProperties {
 
 function SelectStatusTask({
   handleChange,
+  handleChangeStatus,
   defaultValue,
   value,
   listStatus,
@@ -69,7 +71,7 @@ function SelectStatusTask({
         borderRadius: "9px",
       }}
       defaultValue={defaultValue}
-      onSelect={handleChange}
+      onSelect={handleChange||handleChangeStatus}
       placement={"bottomLeft"}
       value={value}
     >

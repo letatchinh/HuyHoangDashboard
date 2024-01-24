@@ -34,6 +34,7 @@ import { get } from "lodash";
 import Text from "antd/lib/typography/Text";
 import UploadFileProgress from "./UploadFileProgress";
 import SelectUsersAssign from "../SelectUserAssign";
+import { useResetAction } from "../../workTask.hook";
 
 interface Props {
   item?: any;
@@ -78,7 +79,7 @@ function TaskProgress({
   const [preview, setPreview] = useState<boolean>(false);
   const [current, setSrc] = useState<number | undefined>(0);
   const [visibilytiUpload, setVisibilityUpload] = useState(0);
-
+  useResetAction();
   useEffect(() => {
     setFileList(get(item[1], "fileList", []));
   }, [item]);

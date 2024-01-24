@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { get } from "lodash";
+import { get, omit } from "lodash";
 import { InstanceModuleRedux } from "~/redux/instanceModuleRedux";
 import { initStateSlice } from "~/redux/models";
 interface cloneInitState extends initStateSlice {
@@ -225,7 +225,11 @@ class WorkTaskClassExtend extends InstanceModuleRedux {
       },
       commentReset: (state: cloneInitState, { payload }: { payload?: any }) => {
         state.listComment = [];
-      }
+      },
+      resetAction: (state:cloneInitState) => ({
+        ...state,
+        ...omit(this.cloneInitState, ["list"]),
+      }),
 
       // Want Add more reducer Here...
     }

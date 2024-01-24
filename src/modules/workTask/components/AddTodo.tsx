@@ -1,4 +1,4 @@
-import { Button, Typography } from 'antd';
+import { Button } from 'antd';
 import TextArea from 'antd/lib/input/TextArea';
 import { get } from 'lodash';
 import { useCallback, useState } from 'react';
@@ -12,7 +12,6 @@ interface Props {
 
 export default function AddTodo({ dataTask,updateProgressTask,setActiveAddTodo }: Props) {
     const {assign : {canAssign}} = useTaskItemStore();
-
     const [text,setText] = useState('');
     const {progressList = []} = dataTask;
     const onAdd = useCallback(() => {
@@ -21,16 +20,14 @@ export default function AddTodo({ dataTask,updateProgressTask,setActiveAddTodo }
             progress: [],
             name: text || "(Công việc)"
         }
-        
         const submitData = [...progressList, newProgressList];
         updateProgressTask({
             id: get(dataTask, '_id'),
             progressList: submitData
         });
         setActiveAddTodo(false)
-        setText('');
-    }, [text]);
-    
+        setText('');     
+    }, [text]);  
     return (
         <div className='addTodo--container'>
             <h5>Thêm công việc</h5>

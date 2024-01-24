@@ -6,12 +6,14 @@ import { useFormTaskContext } from '~/modules/workList/screens/WorkList';
 import { getShortName } from '~/utils/helpers';
 import SelectStatusTask from '../components/SelectStatusTask';
 import apis from '../workTask.api';
+import { useReset, useResetAction } from '../workTask.hook';
 interface TaskProps {
   task: any; // Replace 'any' with the actual type of your 'task' object
   // idBoard: string; // Replace 'string' with the actual type of your 'idBoard' property
 }
 
 const TaskItem: React.FC<TaskProps> = ({ task }) => {
+
   const [style, setStyle] = useState<boolean>(false);
   const {
     handleDeleteTask,
@@ -22,16 +24,15 @@ const TaskItem: React.FC<TaskProps> = ({ task }) => {
     boardData: boardById,
   } = useFormTaskContext();
   const [selected, setSelected] = useState('Không xác định');
-
+  const [,reset] =useReset();
   const handleChange = async (value: string) => {
     setSelected(value);
     const res = await apis.update({ statusId: value, _id: task._id });
     setTaskData(res?.data);
   };
-
+  useResetAction();
   useEffect(() => {
     const statusItem = boardById?.listStatusConfig.find((item:any) => item._id === task?.statusId?._id);
-
     if (statusItem) {
       setSelected(statusItem._id);
     } else if (typeof task?.statusId === 'object') {
@@ -40,7 +41,6 @@ const TaskItem: React.FC<TaskProps> = ({ task }) => {
       setSelected('Không xác định');
     }
   }, [boardById?.listStatusConfig, task?.statusId]);
-
   return (
     <div
       className={'work-item ' + (style ? 'active' : '')}
@@ -57,7 +57,7 @@ const TaskItem: React.FC<TaskProps> = ({ task }) => {
       {/* {task.name} */}
       <Row  justify='center' style={{ alignItems: 'center', cursor: 'move' }} className='headerTask'>
         <Col flex={0} style={{ padding: '0 4px' }} >
-           <SelectStatusTask handleChange={handleChange} defaultValue={selected} value={selected} initStatusValue={get(task,'statusId',{})} listStatus={boardById?.listStatusConfig}/> 
+           <SelectStatusTask handleChangeStatus={handleChange} defaultValue={selected} value={selected} initStatusValue={get(task,'statusId',{})} listStatus={boardById?.listStatusConfig}/> 
         </Col>
         <Col flex={1}>
           <Tooltip title='Mở trang chi tiết' mouseEnterDelay={0.8}>
@@ -71,7 +71,9 @@ const TaskItem: React.FC<TaskProps> = ({ task }) => {
                 event.preventDefault();
                 setVisibleInfo(true);
                 setIdVisibleInfo(task._id);
-                setTaskData(task);
+                reset([]);
+                // setTaskData(task);
+                
               }} />
           </Tooltip>
             <span className='work-item-icon-action' style={{}}>

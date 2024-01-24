@@ -143,7 +143,7 @@
     overflow-y: auto !important;
 }
 .page-workflow {
-    height: 100vh;
+    height: calc(100vh - var(--flexBody)) !important;
     padding-bottom: 16px !important;
     display: flex;
     flex-direction: column;
@@ -183,7 +183,7 @@
             width: 100%;
             margin: 0;
             padding: 0;
-            height: calc(100% - var(--info-header) - 5px);
+            height: 100vh;
             background-color: white;
             & > .branch-detail.page-wraper.page-content {
                 margin: 0 !important;
@@ -257,6 +257,7 @@
                 margin: 0;
                 // @include maxLineText(3);
                 color: white;
+                text-decoration: none;
             }
             &:hover {
                 background-color: #124e7c;

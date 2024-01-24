@@ -23,6 +23,8 @@ import TaskProgress from "./Task/TaskProgress";
 import AddTodo from "./AddTodo";
 import useTaskItemStore from "~/store/TaskItemContext";
 import BaseBorderBox from "~/components/common/BaseBorderBox";
+import { useFormTaskContext } from "~/modules/workList/screens/WorkList";
+import { useReset, useResetAction } from "../workTask.hook";
 
 interface PropsFooter {
   onAddProcess?: any;
@@ -176,9 +178,10 @@ export default function TodoList({
   const [activeAddTodo, setActiveAddTodo] = useState(false);
   const {
     assign: { canAssign, users },
-  } = useTaskItemStore();
 
-  const onAddProcess = (progressListId: any, newProcessContent: any) => {
+  } = useTaskItemStore();
+  const [,reset] =useReset();
+  const onAddProcess = useCallback((progressListId: any, newProcessContent: any) => {
     const processUpdate = get(dataTask, "progressList", [])?.find(
       (item: any) => get(item, "_id") === progressListId
     );
@@ -205,7 +208,8 @@ export default function TodoList({
           : item
       ),
     });
-  };
+    reset([]);
+  },[]);
 
   const onCopyProcess = (progressListId: any) => {
     const processCopy = get(dataTask, "progressList", [])?.find(
@@ -223,6 +227,7 @@ export default function TodoList({
       id: get(dataTask, "_id"),
       progressList: processUpdateSubmit,
     });
+    reset([]);
   };
 
   const onRemoveProgressList = (progressListId: any) => {
@@ -232,9 +237,10 @@ export default function TodoList({
         (item: any) => get(item, "_id") !== progressListId
       ),
     });
+    reset([]);
   };
 
-  const onUpdateProgress = (progressListId: any, index: any, newData: any) => {
+  const onUpdateProgress = useCallback((progressListId: any, index: any, newData: any) => {
     // Find Progress List To Update
     const progressListUpdate = get(dataTask, "progressList", [])?.find(
       (item: any) => get(item, "_id") === progressListId
@@ -269,7 +275,10 @@ export default function TodoList({
       id: get(dataTask, "_id"),
       progressList: processListSubmit,
     });
-  };
+    reset([
+      
+    ]);
+  },[]);
 
   const onUpdateProgressList = (progressListId: any, newData: any) => {
     // Create SubmitListProgress
@@ -281,7 +290,9 @@ export default function TodoList({
       id: get(dataTask, "_id"),
       progressList: processListSubmit,
     });
+    reset([]);
   };
+  useResetAction();
   if (!get(dataTask, "progressListShow", [])) return null;
   return (
     <BaseBorderBox

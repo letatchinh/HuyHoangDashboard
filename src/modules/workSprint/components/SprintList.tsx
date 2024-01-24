@@ -49,7 +49,7 @@ const SprintList: React.FC = memo(() => {
   }
   return (
     <div style={{ width: 'auto', height: '100%' }}>
-      <Space align='center' style={{ position: 'sticky', top: 0, width: '100%', backgroundColor: 'white', zIndex: 2 }}>
+      <Space align='center' style={{ position: 'sticky', top: 0, width: '100%', zIndex: 2 }}>
         <Button
           htmlType='button'
           type='primary'

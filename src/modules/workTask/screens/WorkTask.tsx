@@ -1,50 +1,41 @@
 import { Badge, Col, Input, Row, Tabs } from "antd";
-import { Suspense, lazy, useCallback, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import {
-  useGetTaskById,
-  useResetComment,
-  useUpdateProgress,
-  useUpdateTask,
-} from "../workTask.hook";
-import { get, head } from "lodash";
 import Text from "antd/lib/typography/Text";
+import dayjs from "dayjs";
+import { get } from "lodash";
+import { Suspense, useCallback, useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import WhiteBox from "~/components/common/WhiteBox";
 import { useGetBoardById } from "~/modules/workBoard/workBoard.hook";
 import { TaskItemProvider } from "~/store/TaskItemContext";
-import Description from "../components/Description";
-import UploadfileTaskItem from "../components/Upload";
 import ActivityTask from "../components/ActivityTask";
-import SelectStatusTask from "../components/SelectStatusTask";
-import WhiteBox from "~/components/common/WhiteBox";
-import RelationTask from "../components/RrelationTask";
 import Assigner from "../components/Assigner";
-import TodoList from "../components/TodoList";
 import ComponentComment from "../components/ComponentComment";
-import dayjs from "dayjs";
+import Description from "../components/Description";
+import RelationTask from "../components/RrelationTask";
+import SelectStatusTask from "../components/SelectStatusTask";
+import TodoList from "../components/TodoList";
+import UploadfileTaskItem from "../components/Upload";
+import {
+  useGetTaskById,
+  useReset,
+  useResetAction,
+  useResetComment,
+  useUpdateProgress,
+  useUpdateTask
+} from "../workTask.hook";
+import { useFormTaskContext } from "~/modules/workList/screens/WorkList";
 
 interface Props {
   idTask?: any;
+  updateProgressTask?: any;
 };
-// const UploadfileTaskItem = lazy(() =>
-// import('../components/Upload/index.js').then((module: any) => ({
-//     default: module.UploadfileTaskItem,
-//   }))
-// );
-// const SelectStatusTask = lazy(()=>import('./common/SelectStatusTask.js'));
-// const RelationTask = lazy(()=>import('./Detail/RelationTask.js'));
-// const ActivityTask = lazy(()=>import('./Detail/ActivityTask.js'));
-// const TodoList= lazy(()=>import('./Detail/TodoList.js'));
-// const Assigner= lazy(()=>import('./Detail/Assigner.js'));
-// const Description = lazy(()=>import('./Detail/Description.js'));
-// const ComponentComment = lazy(() => import('./Detail/ComponentComment.js'));
-
-export default function TaskItem({ idTask }: Props) {
+export default function TaskItem({ idTask, }: Props) {
   const { taskId : id } = useParams();
   const [dataTask, isLoading] = useGetTaskById(idTask || id);
   const [isSubmit, updateTask] = useUpdateTask();
-  const [isLoadingProgress, updateProgressTask] = useUpdateProgress();
   const [boardById] = useGetBoardById(dataTask?.boardId);
   const [, handleResetComment] = useResetComment();
+  const [isLoadingProgress, updateProgressTask] = useUpdateProgress();
   const [inputValue, setInputValue] = useState(get(dataTask, "name", ""));
   const [fileList_, setFileList] = useState([]);
   const [selected, setSelected] = useState(get(dataTask?.statusId, "_id"));
@@ -89,7 +80,7 @@ export default function TaskItem({ idTask }: Props) {
       id: idTask || id,
     });
   }, []);
-
+  useResetAction();
   const handleChange = (value: any) => {
     setSelected(value);
     handleFinshed(value, "statusId");
@@ -192,7 +183,7 @@ export default function TaskItem({ idTask }: Props) {
                     </Tabs.TabPane>
                   </Tabs>
                   <Suspense fallback={<div>Trạng thái...</div>}><Assigner dataTask={dataTask} /></Suspense>
-                  <Suspense fallback={<div>Trạng thái...</div>}><TodoList updateProgressTask={updateProgressTask} dataTask={dataTask} /></Suspense>
+                  <Suspense fallback={<div>Trạng thái...</div>}><TodoList updateProgressTask={updateProgressTask}  dataTask={dataTask} /></Suspense>
                 </div>
               </Col>
             </Row>

@@ -1,6 +1,3 @@
-// import { useUpdatePosition } from './workList.hook';
-
-
 
 import { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
@@ -10,6 +7,7 @@ import {
     getSelectors,
     useFailed, useFetch, useFetchByParam,
     useQueryParams,
+    useResetState,
     useSubmit,
     useSuccess
 } from "~/utils/hook";
@@ -18,7 +16,7 @@ import { get } from "lodash";
 import { cloneInitState } from "./workList.modal";
 import { RootState } from "~/redux/store";
 const MODULE = "workList";
-const MODULE_VI = "";
+const MODULE_VI = "List công việc";
 const getSelector = (key: keyof cloneInitState) => (state: RootState) =>
   state[MODULE][key];
   const listWorkConfig = getSelector('listWorkConfig');
@@ -87,13 +85,6 @@ export const useCreateWorkList = (callback?: any) => {
 };
 export const useListBoardConfigItem = (query?:any) => {
   const data = useSelector(dataBoardConfig);
-  // const _clone = useMemo(()=>{
-  //   let clonedata = {};
-  //   for (const key in data) {
-  //     clonedata[key] = sortBy(data[key],[function(o){return o.ordinal}])
-  //   }
-  //   return clonedata
-  // },[data])
    return [data]
 };
 export const useUpdateWorkList = (callback?: any) => {
@@ -132,7 +123,11 @@ export const useUpdatePositionBoardConfig = (payload?: any) => {
     loadingSelector: isSubmitLoadingSelector,
     
   })
+};
+export const useResetAction = () => {
+  return useResetState(workListActions.resetAction);
 }
+
 export const useWorkListQueryParams = (sprintId?: any) => {
   const query = useQueryParams();
   const limit = query.get("limit") || 10;
