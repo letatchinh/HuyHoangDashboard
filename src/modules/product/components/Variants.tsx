@@ -1,5 +1,5 @@
 import { CloseSquareOutlined, PlusCircleOutlined } from "@ant-design/icons";
-import { Button, Col, Form, Modal, Popconfirm, Row, Select } from "antd";
+import { Button, Col, Form, Modal, notification, Popconfirm, Row, Select } from "antd";
 import { get } from "lodash";
 import React, { useCallback, useState } from "react";
 import InputNumberAnt from "~/components/Antd/InputNumberAnt";
@@ -8,13 +8,17 @@ import UnitModule from "~/modules/productUnit";
 import { useGetListProductUnitAll } from "~/modules/productUnit/productUnit.hook";
 import { filterSelectWithLabel } from "~/utils/helpers";
 import { TypePropVariants } from "../product.modal";
+import { validateChangeVariants } from "../product.service";
 export default function Variants({
   form,
   isLoading: loading,
+  onUndoForm,
 }: TypePropVariants): React.JSX.Element {
   const [reFetch, setReFetch] = useState(false);
   const [units, isLoading] = useGetListProductUnitAll(reFetch);
   const variants = Form.useWatch("variants", form);
+  const cumulativeDiscount = Form.useWatch("cumulativeDiscount", form);
+  
   const [open, setOpen] = useState(false);
   const onOpen = useCallback(() => setOpen(true), []);
   const onClose = useCallback(() => setOpen(false), []);
@@ -25,7 +29,6 @@ export default function Variants({
   const isUsed = (cur: string, unitId: String) =>
     unitId !== cur &&
     variants?.some((variant: any) => get(variant, "productUnit") === unitId);
-
   return (
     <>
       <Form.List name={"variants"}>
@@ -69,6 +72,7 @@ export default function Variants({
                               }))}
                             showSearch
                             filterOption={filterSelectWithLabel}
+                            onSelect={() => validateChangeVariants({cumulativeDiscount,variants : form.getFieldValue('variants'),form,onUndoForm})}
                           />
                         )}
                       </Form.Item>
@@ -105,7 +109,7 @@ export default function Variants({
                                     name,
                                     "price",
                                   ]);
-                                  if (value <= price) {
+                                  if (!value || value <= price) {
                                     return Promise.resolve();
                                   }
                                   return Promise.reject(
@@ -191,7 +195,7 @@ export default function Variants({
                                     name,
                                     "price",
                                   ]);
-                                  if (value <= price) {
+                                  if (!value || value <= price) {
                                     return Promise.resolve();
                                   }
                                   return Promise.reject(

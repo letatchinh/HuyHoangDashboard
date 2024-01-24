@@ -1,7 +1,7 @@
-import { GiftTwoTone } from "@ant-design/icons";
+import { GiftTwoTone, UndoOutlined } from "@ant-design/icons";
 import { Button, Col, Form, Input, Row, Select } from "antd";
-import { get, keys } from "lodash";
-import React, { useCallback, useEffect, useMemo } from "react";
+import { concat, debounce, get, keys } from "lodash";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import BaseBorderBox from "~/components/common/BaseBorderBox/index";
 import RenderLoading from "~/components/common/RenderLoading";
 import { 
@@ -40,11 +40,24 @@ export default function FormProduct({
   onCancel,
 }: TypePropsFormProduct): React.JSX.Element {
   const [form] = Form.useForm();
-
+  const [backupForm,setBackupForm] = useState<FieldTypeFormProduct[]>([]);
+  
   const [isSubmitLoading, onCreate] = useCreateProduct(onCancel);
   const [, onUpdate] = useUpdateProduct(onCancel);
   const [product, isLoading] = useGetProduct(id);
   useResetAction();
+  console.log(backupForm,'backupForm');
+  
+  const onUndoForm = useCallback(() => {
+    // Action Back One step to set Form And Remove last Recover
+    const preForm = backupForm[backupForm.length - (backupForm.length === 1 ? 1 : 2)];      
+    form.setFieldsValue(preForm);
+    const newRecoverForm = [...backupForm];
+    newRecoverForm.pop();
+    setBackupForm(newRecoverForm);
+  },[backupForm,form]);
+
+
   const onFinish = (values: FieldTypeFormProduct) => {
     const submitData = convertSubmitData({values,supplierId});
     if (id) {
@@ -75,11 +88,15 @@ export default function FormProduct({
     if (product && id) {
     const initProduct = convertInitProduct(product);
       form.setFieldsValue(initProduct);
+      setBackupForm(initProduct);
+    }else{
+      setBackupForm([form.getFieldsValue()])
     };
+    
   }, [product, id, form]);
 
-  const onValuesChange = (value: any, values: FieldTypeFormProduct) => {
-    const key = Object.keys(value)[0];
+  const onValuesChange = (valueChange: any, values: FieldTypeFormProduct) => {
+    const key: keyof FieldTypeFormProduct = Object.keys(valueChange)[0] as keyof FieldTypeFormProduct;
     switch (key) {
       case "cumulativeDiscount":
         const cumulativeDiscount = CumulativeDiscountModule.service.onDiscountChange(values[key])
@@ -87,10 +104,13 @@ export default function FormProduct({
           cumulativeDiscount,
         });
         break;
-
       default:
         break;
-    }
+    };
+    // Recover Form
+    const onSetRecoverForm = () => setBackupForm((pre:FieldTypeFormProduct[]) => [...pre,values]);
+    const debounceSetRecover = debounce(onSetRecoverForm,0);
+    debounceSetRecover();
   };
   return (
     <div>
@@ -102,6 +122,7 @@ export default function FormProduct({
         wrapperCol={{ span: 16 }}
         labelAlign="left"
         scrollToFirstError
+
         initialValues={{
           variants: [
             {
@@ -189,7 +210,7 @@ export default function FormProduct({
 
         <BaseBorderBox title={"Đơn vị"}>
           <Col style={{ paddingBottom: 10 }} span={24}>
-            <Variants form={form} isLoading={isLoading} />
+            <Variants form={form} isLoading={isLoading} onUndoForm={onUndoForm}/>
           </Col>
         </BaseBorderBox>
 
@@ -205,13 +226,19 @@ export default function FormProduct({
 
         <Row justify={"end"} gutter={16}>
           <Col>
-            <Button size="large" onClick={onCancel}>
+          {/* To preserve backup Keep one To undo to Init */}
+          <Button disabled={backupForm.length <= 1} onClick={onUndoForm}>
+            Hoàn tác
+          </Button>
+          </Col>
+          <Col>
+            <Button onClick={onCancel}>
               Huỷ
             </Button>
           </Col>
           <Col>
             <Button
-              size="large"
+             
               loading={isSubmitLoading}
               htmlType="submit"
               type="primary"

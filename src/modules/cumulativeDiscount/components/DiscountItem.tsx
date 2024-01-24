@@ -263,6 +263,7 @@ export default function DiscountItem({
                                 {RenderLoading(
                                   loading,
                                   <InputNumberAnt
+                                    min={0}
                                     max={
                                       form.getFieldValue([
                                         "cumulativeDiscount",
@@ -375,7 +376,7 @@ export default function DiscountItem({
                                         "condition",
                                         "gte",
                                       ]);
-                                      if (value >= gte) {
+                                      if (!value || value >= gte) {
                                         return Promise.resolve();
                                       }
                                       return Promise.reject(
