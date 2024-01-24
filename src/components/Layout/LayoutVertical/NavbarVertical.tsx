@@ -5,6 +5,7 @@ import { useGetPolicyCheckAllPage } from '~/modules/user/user.hook';
 import { useGetProfile, useProfile } from '~/modules/auth/auth.hook';
 import { isMatchPolicy, useUserPolicy } from '~/modules/policy/policy.hook';
 import { NavLink } from 'react-router-dom';
+import NavbarItem from './NavbarItem';
 
 
 /**
@@ -29,14 +30,7 @@ function getItem({ label, icon, children, path, key, permission }: ItemType): an
     children,
     permission,
     label: path ? (
-      <Tooltip placement='right' color={'blue'} title={label}>
-        <NavLink
-        className={() => `layoutVertical--content__navbar__navLink`}
-        to={path}
-      >
-        {label}
-      </NavLink>
-      </Tooltip>
+      <NavbarItem label={label} path={path}/>
     ) : (
       label
     ),
@@ -87,7 +81,8 @@ const NavbarVertical: React.FC = () => {
   } else {
     return getItem(first)
   };
-});
+  });
+  
   return (
     <div className='layoutVertical--content__navbar'>
       {/* <button onClick={toggleCollapsed}>asd</button> */}
