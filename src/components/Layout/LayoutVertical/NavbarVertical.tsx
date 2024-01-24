@@ -43,9 +43,9 @@ const NavbarVertical: React.FC = () => {
   };
   const profile = useGetProfile();
   const [, , policies] = useUserPolicy();
-  const [filteredResource,setFilteredResource]:any = useState([]);
+  // const [filteredResource,setFilteredResource]:any = useState([]);
 
-  useEffect(() => {
+  // useEffect(() => {
     const checkPermission = (permission: any) : boolean => {
       if (!permission || profile?.user?.isSuperAdmin ) return true;
       
@@ -67,13 +67,13 @@ const NavbarVertical: React.FC = () => {
         
       });
     };
-    if(policies && !!keys(policies).length){
-      const filteredResource = filterItems(resource);
-      setFilteredResource(filteredResource)
-    };
-  },[policies])
-  
-  const NewNavbarItems : any = filteredResource?.map((first : any) => {
+  //   if(policies && !!keys(policies).length){
+  //     const filteredResource = filterItems(resource);
+  //     setFilteredResource(filteredResource)
+  //   };
+  // },[policies])
+  const filteredResource = filterItems(resource);
+    const NewNavbarItems : any = filteredResource?.map((first : any) => {
   if (first.children?.length) {
     const newChildFirst = first.children.map((second : any) => {
       if (second.children?.length) {
