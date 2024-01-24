@@ -256,3 +256,17 @@ export const useAction = ({ action }:UseActionProps) : (v:any) => void => {
     const dataReturn = useMemo(() => data, [data])
     return [dataReturn, loading]
   };
+
+  export const useCheckIsEllipsisActive = (target:any) => {
+    const isEllipsisActive = useCallback((e:any) =>{
+      if(!e) return false;
+      const parentNode = e?.parentNode;
+      return (e?.offsetWidth > parentNode?.offsetWidth);
+  },[])
+    const [isEllipsis,setIsEllipsis] = useState(false);
+    useEffect(() => {
+        const is = isEllipsisActive(target?.current);
+        setIsEllipsis(is);
+    },[target]);
+    return isEllipsis
+  }

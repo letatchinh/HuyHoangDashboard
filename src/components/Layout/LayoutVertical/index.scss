@@ -48,6 +48,10 @@
       &__navLink {
         text-decoration: none;
       }
+      &__tooltip{
+        user-select: none;
+        z-index: 0;
+      }
     }
     &__mainContent {
       flex: 1;
