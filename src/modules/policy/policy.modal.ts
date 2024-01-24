@@ -10,7 +10,9 @@ export type ResourceType = {
   UNIT: string[],
   GROUP_PRODUCTGROUP: string[],
   GROUP_RANKING: string[],
-  MEDICINE: string[]
+  MEDICINE: string[],
+
+  GROUP_SUPPLIER: string[],
 };
 
 export type policyType = 'write' | 'read' | 'update' | 'delete' | 'download' | 'admin';
@@ -88,6 +90,25 @@ export type PoliciesType = {
   "DELETE_MEDICINE" |
   "DOWNLOAD_MEDICINE" |
   "ADMIN_MEDICINE" |
-  "MEDICINE"
+  "MEDICINE"|
+
+
+  //SUPPLIER
+  "READ_SUPPLIER" |
+  "WRITE_SUPPLIER" |
+  "UPDATE_SUPPLIER" |
+  "DELETE_SUPPLIER" |
+  "DOWNLOAD_SUPPLIER" |
+  "ADMIN_SUPPLIER" |
+  "SUPPLIER"|
+
+  //PRODUCT
+  "READ_PRODUCT" |
+  "WRITE_PRODUCT" |
+  "UPDATE_PRODUCT" |
+  "DELETE_PRODUCT" |
+  "DOWNLOAD_PRODUCT" |
+  "ADMIN_PRODUCT" |
+  "PRODUCT"
   ]: [string, policyType];
 };

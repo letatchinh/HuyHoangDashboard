@@ -14,6 +14,10 @@ const unit = 'unit';
 const productGroup='productGroup';
 const ranking = 'ranking';
 const medicine = 'medicine';
+// Nhà cung cấp
+const supplier = 'supplier';
+// Sản phẩm Nhà cung cấp
+const product = 'product';
 
 const RESOURCES = [
   branch,
@@ -29,7 +33,9 @@ const RESOURCES = [
   // productGroup
   productGroup,
   //
-  medicine
+  medicine,
+  supplier,
+  product,
 
 ];
 
@@ -92,6 +98,11 @@ const RESOURCE = (): ResourceType => {
     ranking
   ];
 
+  const GROUP_SUPPLIER: string[] = [
+    supplier,
+    product,
+  ];
+
   return {
     GROUP_USER,
     GROUP_EMPLOYEE,
@@ -102,6 +113,7 @@ const RESOURCE = (): ResourceType => {
     GROUP_PRODUCTGROUP,
     GROUP_RANKING,
     MEDICINE,
+    GROUP_SUPPLIER,
   };
 };
 

@@ -106,7 +106,7 @@ export const resource: ItemType[] = [
     icon: <ShopFilled />,
     path: PATH_APP.supplier.root,
     key: PATH_APP.supplier.root,
-    // permission :[POLICIES.READ_USER],
+    permission :[POLICIES.READ_SUPPLIER],
   },
 
       // Chi nhánh
