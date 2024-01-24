@@ -1,4 +1,4 @@
-import { ConfigProvider, Menu, MenuProps, Tooltip } from 'antd';
+import { ConfigProvider, Menu, MenuProps, Spin, Tooltip } from 'antd';
 import React, { useCallback, useMemo, useState , isValidElement, useEffect} from 'react';
 import NavbarItems, { resource } from './resource';
 import { useGetPolicyCheckAllPage } from '~/modules/user/user.hook';
@@ -42,10 +42,10 @@ const NavbarVertical: React.FC = () => {
     setCollapsed(!collapsed);
   };
   const profile = useGetProfile();
-  const [, , policies] = useUserPolicy();
-  // const [filteredResource,setFilteredResource]:any = useState([]);
+  const [isLoadingPolicy, , policies] = useUserPolicy();
+  const [filteredResource,setFilteredResource]:any = useState([]);
 
-  // useEffect(() => {
+  useEffect(() => {
     const checkPermission = (permission: any) : boolean => {
       if (!permission || profile?.user?.isSuperAdmin ) return true;
       
@@ -67,12 +67,12 @@ const NavbarVertical: React.FC = () => {
         
       });
     };
-  //   if(policies && !!keys(policies).length){
-  //     const filteredResource = filterItems(resource);
-  //     setFilteredResource(filteredResource)
-  //   };
-  // },[policies])
-  const filteredResource = filterItems(resource);
+    if(profile?.user?.isSuperAdmin || (policies && !!keys(policies).length)){
+      const filteredResource = filterItems(resource);
+      setFilteredResource(filteredResource)
+    };
+  },[policies]);
+  // const filteredResource = filterItems(resource);
     const NewNavbarItems : any = filteredResource?.map((first : any) => {
   if (first.children?.length) {
     const newChildFirst = first.children.map((second : any) => {
@@ -90,6 +90,7 @@ const NavbarVertical: React.FC = () => {
   
   return (
     <div className='layoutVertical--content__navbar'>
+      {isLoadingPolicy && <Spin fullscreen tip="Đang lấy dữ liệu phân quyền"/>}
       {/* <button onClick={toggleCollapsed}>asd</button> */}
       <div className='layoutVertical--content__navbar__wrapMenu'>
       <ConfigProvider theme={{

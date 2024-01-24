@@ -220,7 +220,7 @@ export const autoCreateUsername = async ({ fullName, callApi }: any) => {
  
 //POLICY
 
-export const useGetPolicyCheckAllPage = (param?: any) => {
+export const useGetPolicyCheckAllPage = (param?: any) : any => {
   return useFetch({
     action: userSliceAction.getPolicyRequest,
     loadingSelector: isGetPolicyLoadingSelector,
