@@ -202,7 +202,7 @@ export const useUserPolicy = () => {
       handleGetPolicy(DEFAULT_BRANCH_ID);
     }
     //eslint-disable-next-line
-  }, []);
+  }, [handleGetPolicy]);
 
   useFailed(getPolicyFailedSelector);
 
