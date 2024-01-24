@@ -18,6 +18,7 @@ const pharmaProfile = 'pharmaProfile';
 
 // Đơn hàng
 const bill = 'bill';
+const todoStatusConfig = 'todoStatusConfig';
 
 // Đơn hàng tạm
 const quotation = 'quotation';
@@ -54,6 +55,7 @@ const RESOURCES = [
   
   bill,
   quotation,
+  todoStatusConfig,
 ];
 
 //ACTIONS
@@ -128,6 +130,10 @@ const RESOURCE = (): ResourceType => {
     supplier,
     product,
   ];
+  
+  const GROUP_WORK_MANAGERMENT: string[] = [
+    todoStatusConfig,
+  ];
 
   return {
     GROUP_USER,
@@ -141,6 +147,7 @@ const RESOURCE = (): ResourceType => {
     PHARMA_PROFILE,
     GROUP_BILL,
     GROUP_SUPPLIER,
+    GROUP_WORK_MANAGERMENT,
   };
 };
 

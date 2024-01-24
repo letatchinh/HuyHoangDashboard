@@ -38,3 +38,12 @@ export interface PERMISSION {
     id:string;
     fullName: string;
 }
+
+export interface DataType {
+    _id: string;
+    name: string;
+    createBy: string;
+    createAt: Date;
+    status: string,
+    userCreate?:any,
+  }

@@ -27,6 +27,7 @@ export default function ProductConfig() {
   const [showForm, setShowForm] = useState(false);
   const [query] = useProductConfigQueryParams();
   const [id, setId] = useState(null);
+  const paging =useProductConfigPaging();
   const [form] = Form.useForm();
   const [search, setSearch] = useState(get(query, 'status') || '');
   const handleCloseForm = useCallback(() => {
@@ -34,7 +35,6 @@ export default function ProductConfig() {
     form.resetFields();
     setId(null);
   }, []);
-  const paging = useProductConfigPaging();
   const [, deleteProductConfig] = useDeleteProductConfig(handleCloseForm);
   const [isSubmitUpdateLoading, updateProductConfig] = useUpdateProductConfig(handleCloseForm);
   const [listProductConfig, isLoading] = useGetlistProductConfig(query);

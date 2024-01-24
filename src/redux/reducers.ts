@@ -23,6 +23,9 @@ import productModule from '~/modules/product';
 import workBoardModule from '~/modules/workBoard';
 import billModule from '~/modules/sale/bill';
 import quotationModule from '~/modules/sale/quotation';
+import workSprintModule from '~/modules/workSprint';
+import workListModule from '~/modules/workList';
+import workTaskModule from '~/modules/workTask';
 const authPersistConfig = {
     key: 'auth',
     storage: localStorage,
@@ -57,6 +60,9 @@ const rootReducer = combineReducers({
     configDiscount: configDiscount.redux.reducer,
     bill: billModule.redux.reducer,
     quotation: quotationModule.redux.reducer,
+    workSprint:workSprintModule.redux.reducer,
+    workList:workListModule.redux.reducer,
+    workTask:workTaskModule.redux.reducer
 
 });
 export default rootReducer

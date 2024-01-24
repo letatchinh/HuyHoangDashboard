@@ -1,7 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { get } from "lodash";
-import { InstanceModuleRedux } from "~/redux/instanceModuleRedux";
+// import { InstanceModuleRedux } from "~/redux/instanceModuleRedux";
 import { cloneInitState } from "../workBoard.modal";
+import { InstanceModuleRedux } from "~/modules/workSprint/workSprint.modal";
 class WorkBoardClassExtend extends InstanceModuleRedux {
   clone;
   cloneInitState:cloneInitState;
@@ -14,8 +15,9 @@ class WorkBoardClassExtend extends InstanceModuleRedux {
         state.getProductSupplierFailed = null;
       },
       getAllManagersSuccess: (state: any, { payload }: any) => {
+        console.log(payload,'manager');
         state.isLoadingGetAllManagers = false;
-        state.allManagers = get(payload, "docs", []);
+        state.allManagers = payload;
       },
       getAllManagersFailed: (state: any, { payload }: any) => {
         state.isLoadingGetAllManagers = false;
@@ -28,7 +30,7 @@ class WorkBoardClassExtend extends InstanceModuleRedux {
       },
       getAllEmployeeSuccess: (state: any, { payload }: any) => {
         state.isLoadingGetAllEmployee = false;
-        state.allEmployee = get(payload, "docs", []);
+        state.allEmployee = payload;
       },
       getAllEmployeeFailed: (state: any, { payload }: any) => {
         state.isLoadingGetAllEmployee = false;
@@ -40,7 +42,7 @@ class WorkBoardClassExtend extends InstanceModuleRedux {
       },
       getListBoardSuccess : (state: any, { payload }: any) => {
         state.isLoadingGetListBoard = false;
-        state.listBoard = get(payload, "docs", []);
+        state.listBoard = payload;
       },
       getListBoardFailed : (state: any, { payload }: any) => {
         state.isLoadingGetListBoard = false;
@@ -52,7 +54,7 @@ class WorkBoardClassExtend extends InstanceModuleRedux {
       },
       getListManagerByIdSuccess : (state: any, { payload }: any) => {
         state.isLoadingGetListManagerById = false;
-        state.listManagerById = get(payload, "docs", []);
+        state.listManagerById = payload;
       },
       getListManagerByIdFailed : (state: any, { payload }: any) => {
         state.isLoadingGetListManagerById = false;
@@ -64,7 +66,7 @@ class WorkBoardClassExtend extends InstanceModuleRedux {
       },
       getListEmployeeByIdSuccess : (state: any, { payload }: any) => {
         state.isLoadingGetListEmployeeById = false;
-        state.listEmployeeById = get(payload, "docs", []);
+        state.listEmployeeById = payload;
       },
       getListEmployeeByIdFailed : (state: any, { payload }: any) => {
         state.isLoadingGetListEmployeeById = false;

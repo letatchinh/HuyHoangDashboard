@@ -32,7 +32,7 @@ class SupplierClassExtend extends InstanceModuleRedux {
       isLoadingGetProductSupplier: false,
       getProductSupplierFailed: null,
       productSupplier: [],
-      pagingProductSupplier: null,
+      // pagingProductSupplier: null,
     };
   }
   createSlice() {

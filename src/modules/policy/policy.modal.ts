@@ -15,6 +15,7 @@ export type ResourceType = {
   GROUP_BILL: string[],
 
   GROUP_SUPPLIER: string[],
+  GROUP_WORK_MANAGERMENT: string[],
 };
 
 export type policyType = 'write' | 'read' | 'update' | 'delete' | 'download' | 'admin';
@@ -145,6 +146,14 @@ export type PoliciesType = {
   "DELETE_PRODUCT" |
   "DOWNLOAD_PRODUCT" |
   "ADMIN_PRODUCT" |
-  "PRODUCT"
+  "PRODUCT"|
+  
+  //WORK_MANAGEMENT
+  'READ_WORKMANAGEMENT' |
+  'WRITE_WORKMANAGEMENT' |
+  'UPDATE_WORKMANAGEMENT' |
+  'DELETE_WORKMANAGEMENT' |
+  'DOWNLOAD_WORKMANAGEMENT' |
+  'ADMIN_WORKMANAGEMENT' 
   ]: [string, policyType];
 };

@@ -5,6 +5,7 @@ import supplier from '../vi/supplier.json';
 import rankingManufacturer from '../vi/rankingManufacturer.json';
 import unit from '../vi/unit.json';
 import medicine from '../vi/medicine.json';
+import workBoard from '../vi/workBoard.json';
 const vi = {
     ...dashboard,
     ...supplier,
@@ -13,5 +14,6 @@ const vi = {
     ...rankingManufacturer,
     ...unit,
     ...medicine,
+    ...workBoard,
 }
 export default vi;
