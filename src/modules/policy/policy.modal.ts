@@ -10,7 +10,8 @@ export type ResourceType = {
   UNIT: string[],
   GROUP_PRODUCTGROUP: string[],
   GROUP_RANKING: string[],
-  MEDICINE: string[]
+  MEDICINE: string[],
+  GROUP_VOUCHER: string[],
 };
 
 export type policyType = 'write' | 'read' | 'update' | 'delete' | 'download' | 'admin';
@@ -88,6 +89,33 @@ export type PoliciesType = {
   "DELETE_MEDICINE" |
   "DOWNLOAD_MEDICINE" |
   "ADMIN_MEDICINE" |
-  "MEDICINE"
+  "MEDICINE" |
+  
+  //VOUCHER
+  "READ_VOUCHER" |
+  "WRITE_VOUCHER" |
+  "UPDATE_VOUCHER" |
+  "DELETE_VOUCHER" |
+  "DOWNLOAD_VOUCHER" |
+  "ADMIN_VOUCHER" |
+  "VOUCHER" |
+  
+  //STATUS_VOUCHER
+  "READ_STATUS_VOUCHER" |
+  "WRITE_STATUS_VOUCHER" |
+  "UPDATE_STATUS_VOUCHER" |
+  "DELETE_STATUS_VOUCHER" |
+  "DOWNLOAD_STATUS_VOUCHER" |
+  "ADMIN_STATUS_VOUCHER" |
+  "STATUS_VOUCHER" |
+
+  //HISTORY_VOUCHER
+  "READ_HISTORY_VOUCHER" |
+  "WRITE_HISTORY_VOUCHER" |
+  "UPDATE_HISTORY_VOUCHER" |
+  "DELETE_HISTORY_VOUCHER" |
+  "DOWNLOAD_HISTORY_VOUCHER" |
+  "ADMIN_HISTORY_VOUCHER" |
+  "HISTORY_VOUCHER"
   ]: [string, policyType];
 };

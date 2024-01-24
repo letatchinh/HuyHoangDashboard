@@ -114,12 +114,20 @@ export const useDeleteReceiptVoucher = (callback?: any) => {
 
 export const useReceiptVoucherQueryParams = () => {
   const query = useQueryParams();
-  const limit = query.get("limit") || 10;
   const typeVoucher = TYPE_VOUCHER.PT;
-  const page = query.get("page") || 1;
+  const [limit, setLimit] = useState(query.get("limit") || 10); 
+  const [page, setPage] = useState(query.get("page") || 1);
   const keyword = query.get("keyword");
+  const startDate = query.get('startDate') || dayjs().startOf('month').format("YYYY-MM-DDTHH:mm:ss");
+  const endDate = query.get('endDate') || dayjs().endOf('month').format("YYYY-MM-DDTHH:mm:ss");
   const createSuccess = useSelector(createSuccessSelector);
   const deleteSuccess = useSelector(deleteSuccessSelector);
+
+  const onTableChange : any = ({ current, pageSize }: any) => {
+    setLimit(pageSize);
+    setPage(current);
+  };
+
   return useMemo(() => {
     const queryParams = {
       page,
@@ -127,9 +135,9 @@ export const useReceiptVoucherQueryParams = () => {
       typeVoucher,
       keyword,
     };
-    return [queryParams];
+    return [queryParams,onTableChange];
     //eslint-disable-next-line
-  }, [page, limit, keyword, createSuccess, deleteSuccess]);
+  }, [page, limit, keyword, createSuccess, deleteSuccess,startDate, endDate]);
 };
 
 export const useUpdateReceiptVoucherParams = (
@@ -138,15 +146,16 @@ export const useUpdateReceiptVoucherParams = (
 ) => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
-  const [keyword, setKeyword] = useState(get(query, "keyword"));
-  useEffect(() => {
-    setKeyword(get(query, "keyword"));
-  }, [query]);
-  const onParamChange = (param: any) => {
+  const [keyword, setKeyword] = useState(query.keyword);
+  // useEffect(() => {
+  //   setKeyword(get(query, "keyword"));
+  // }, [query]);
+  
+  const onParamChange = (param?: any) => {
     // Clear Search Query when change Params
     clearQuerySearch(listOptionSearch, query, param);
 
-    if (!param.page) {
+    if (!param?.page) {
       query.page = 1;
     };
 

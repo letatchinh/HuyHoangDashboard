@@ -120,20 +120,25 @@ export const usePaymentVoucherQueryParams = () => {
   const keyword = query.get("keyword");
   const createSuccess = useSelector(createSuccessSelector);
   const deleteSuccess = useSelector(deleteSuccessSelector);
-  const onTableChange = ({ current, pageSize }: any) => {
+  const startDate = query.get('startDate') || dayjs().startOf('month').format("YYYY-MM-DDTHH:mm:ss");
+  const endDate = query.get('endDate') || dayjs().endOf('month').format("YYYY-MM-DDTHH:mm:ss");
+  const onTableChange : any = ({ current, pageSize }: any) => {
     setLimit(pageSize);
     setPage(current);
   };
+
   return useMemo(() => {
     const queryParams = {
       page,
       limit,
       keyword,
       typeVoucher,
+      startDate,
+      endDate,
     };
     return [queryParams, onTableChange];
     //eslint-disable-next-line
-  }, [page, limit, keyword, createSuccess, deleteSuccess]);
+  }, [page, limit, keyword, createSuccess, deleteSuccess, startDate, endDate]);
 };
 
 export const useUpdatePaymentVoucherParams = (

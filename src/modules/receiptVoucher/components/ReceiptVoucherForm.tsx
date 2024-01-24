@@ -40,6 +40,8 @@ import { Link } from "react-router-dom";
 import apiEmployee from "~/modules/employee/employee.api";
 import apiReceiptVoucher from "~/modules/receiptVoucher/receiptVoucher.api";
 import { useGetPharmacyId } from "~/modules/pharmacy/pharmacy.hook";
+import WithPermission from "~/components/common/WithPermission";
+import POLICIES from "~/modules/policy/policy.auth";
 
 const mainRowGutter = 24;
 const FormItem = Form.Item;
@@ -602,7 +604,7 @@ export default function ReceiptVoucherForm(props: propsType): React.JSX.Element 
               (!get(mergedInitWhPaymentVoucher, "status") ||
                 get(mergedInitWhPaymentVoucher, "status") ===
                   WH_VOUCHER_STATUS.CREATED) && (
-                // <WithPermission permission={POLICIES}>
+                <WithPermission permission={POLICIES.UPDATE_STATUS_VOUCHER}>
                 <Button
                   icon={<CheckOutlined/>}
                   loading={isSubmitLoading}
@@ -614,14 +616,14 @@ export default function ReceiptVoucherForm(props: propsType): React.JSX.Element 
                     ]
                   }
                 </Button>
-                // </WithPermission>
+                 </WithPermission>
               )}
 
             {id &&
               get(mergedInitWhPaymentVoucher, "status") ===
                 WH_VOUCHER_STATUS.CONFIRMED && (
                 <Space>
-                  {/* <WithPermission permission={POLICIES.UPDATE_WHUPDATERECEIPTANDPAYMENTVOUCHERSTATUS}> */}
+                  <WithPermission permission={POLICIES.UPDATE_STATUS_VOUCHER}>
                   <Button
                     icon={<CheckOutlined/>}
                     loading={isSubmitLoading}
@@ -635,8 +637,8 @@ export default function ReceiptVoucherForm(props: propsType): React.JSX.Element 
                       ]
                     }
                   </Button>
-                  {/* </WithPermission> */}
-                  {/* <WithPermission permission={POLICIES.UPDATE_WHUPDATERECEIPTANDPAYMENTVOUCHERSTATUS}> */}
+                  </WithPermission>
+                  <WithPermission permission={POLICIES.UPDATE_STATUS_VOUCHER}>
                   <Button
                     icon={<CheckOutlined />}
                     loading={isSubmitLoading}
@@ -650,7 +652,7 @@ export default function ReceiptVoucherForm(props: propsType): React.JSX.Element 
                       ]
                     }
                   </Button>
-                  {/* </WithPermission> */}
+                  </WithPermission>
                 </Space>
               )}
 

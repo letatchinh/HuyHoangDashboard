@@ -3,11 +3,13 @@ import dayjs from 'dayjs';
 import { get, toUpper } from 'lodash';
 import React, { useState } from 'react';
 import { MAP_STATUS_VOUCHERS_VI, REF_COLLECTION } from '~/constants/defaultValue';
-import { useGetPaymentVouchers, usePaymentVoucherQueryParams } from '~/modules/paymentVoucher/paymentVoucher.hook';
+import { useGetPaymentVouchers, usePaymentVoucherPaging, usePaymentVoucherQueryParams, useUpdatePaymentVoucherParams } from '~/modules/paymentVoucher/paymentVoucher.hook';
 import StatusTag from '../components/StatusTag';
 import PaymentVoucherForm from '~/modules/paymentVoucher/components/PaymentVoucherForm';
 type propsType = {
-
+  listOptionSearch?: any[];
+  keyword?: string;
+  searchBy?: string;
 };
 interface Column {
   title: string;
@@ -17,9 +19,16 @@ interface Column {
   align?: string;
 };
 
-export default function   PaymentVouchers(props: propsType): React.JSX.Element {
+export default function PaymentVouchers(props: propsType): React.JSX.Element {
+  const { listOptionSearch, keyword: keywordProps, searchBy } = props;
+  
+  //HOOK
   const [query, onTableChange] = usePaymentVoucherQueryParams();
+  const [keyword, {setKeyword, onParamChange}] = useUpdatePaymentVoucherParams(query, listOptionSearch)
   const [vouchers, isLoading] = useGetPaymentVouchers(query);
+  const paging = usePaymentVoucherPaging();
+
+  //STATE
   const [id, setId] = useState<string | null>();
   const [isOpenForm, setIsOpenForm] = useState(false);
   const [refCollection, setRefCollection] = useState<string | undefined>();
@@ -56,22 +65,11 @@ export default function   PaymentVouchers(props: propsType): React.JSX.Element {
       key: 'issueNumber',
       render: text => text || "-",
     },
-    // {
-    //   title: 'Mã đơn hàng',
-    //   key: 'billNumber',
-    //   align: 'center',
-    //   render: (text, record, index) => get(record, "whBill.billNumber") ? get(record, "whBill.billNumber") : '-',
-    // },
     {
       title: 'Nội dung',
       key: 'reason',
       dataIndex: 'reason',
     },
-    // {
-    //   title: 'ID dịch vụ',
-    //   dataIndex: 'whServiceId',
-    //   key: 'whServiceId',
-    // },
     {
       title: 'Số tiền',
       dataIndex: 'totalAmount',
@@ -103,6 +101,12 @@ export default function   PaymentVouchers(props: propsType): React.JSX.Element {
       <Table
         columns={columns as any}
         dataSource={vouchers}
+        loading={isLoading}
+        pagination={{
+          ...paging,
+          showTotal: (total)=> `Tổng cộng: ${total}`
+        }}
+        onChange={({current, pageSize}: any)=> onTableChange({current, pageSize})}
       />
       <Modal
         footer={null}

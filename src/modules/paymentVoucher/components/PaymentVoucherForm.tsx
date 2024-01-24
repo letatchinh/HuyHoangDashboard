@@ -54,11 +54,8 @@ import { get, omit, sumBy } from "lodash";
 import { CheckOutlined, CloseCircleOutlined, ExclamationCircleOutlined, EyeOutlined, SaveOutlined } from "@ant-design/icons";
 import WithPermission from "~/components/common/WithPermission";
 import POLICIES from "~/modules/policy/policy.auth";
-import { PATH_APP } from "~/routes/allPath";
 import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { paymentVoucherSliceAction } from "../redux/reducer";
-import { useResetState } from "~/utils/hook";
 // import myFile from '../../../assets/templates/PC_Template_V2.docs'
 const mainRowGutter = 24;
 const FormItem = Form.Item;
@@ -615,7 +612,7 @@ export default function PaymentVoucherForm(
               (!get(mergedInitWhPaymentVoucher, "status") ||
                 get(mergedInitWhPaymentVoucher, "status") ===
                   WH_VOUCHER_STATUS.CREATED) && (
-                // <WithPermission permission={POLICIES}>
+              <WithPermission permission={POLICIES.UPDATE_STATUS_VOUCHER}>
                 <Button
                   icon={<CheckOutlined />}
                   loading={isSubmitLoading}
@@ -627,14 +624,14 @@ export default function PaymentVoucherForm(
                     ]
                   }
                 </Button>
-                // </WithPermission>
+                </WithPermission>
               )}
 
             {id &&
               get(mergedInitWhPaymentVoucher, "status") ===
                 WH_VOUCHER_STATUS.CONFIRMED && (
                 <Space>
-                  {/* <WithPermission permission={POLICIES.UPDATE_WHUPDATERECEIPTANDPAYMENTVOUCHERSTATUS}> */}
+                  <WithPermission permission={POLICIES.UPDATE_STATUS_VOUCHER}>
                   <Button
                     icon={<CheckOutlined />}
                     loading={isSubmitLoading}
@@ -648,8 +645,8 @@ export default function PaymentVoucherForm(
                       ]
                     }
                   </Button>
-                  {/* </WithPermission> */}
-                  {/* <WithPermission permission={POLICIES.UPDATE_WHUPDATERECEIPTANDPAYMENTVOUCHERSTATUS}> */}
+                  </WithPermission>
+                  <WithPermission permission={POLICIES.UPDATE_STATUS_VOUCHER}>
                   <Button
                     icon={<CheckOutlined />}
                     loading={isSubmitLoading}
@@ -663,7 +660,7 @@ export default function PaymentVoucherForm(
                       ]
                     }
                   </Button>
-                  {/* </WithPermission> */}
+                  </WithPermission>
                 </Space>
               )}
 

@@ -1,4 +1,3 @@
-import PaymentVoucherScreen from "./screens/PaymentVoucher";
 import paymentVoucherApi from "./paymentVoucher.api";
 import * as paymentVoucherAuth from "./paymentVoucher.auth";
 import * as paymentVoucherHook from "./paymentVoucher.hook";
@@ -8,9 +7,6 @@ import reducer from "./redux/reducer";
 import saga from "./redux/saga";
 
 const moduleExport = {
-    page : {
-        index : PaymentVoucherScreen,
-    },
     api : paymentVoucherApi,
     auth : paymentVoucherAuth,
     hook : paymentVoucherHook,

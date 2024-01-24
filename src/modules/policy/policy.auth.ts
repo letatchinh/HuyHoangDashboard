@@ -14,6 +14,9 @@ const unit = 'unit';
 const productGroup='productGroup';
 const ranking = 'ranking';
 const medicine = 'medicine';
+const voucher = 'voucher';
+const statusVoucher = 'statusVoucher';
+const historyVoucher = 'historyVoucher';
 
 const RESOURCES = [
   branch,
@@ -29,7 +32,12 @@ const RESOURCES = [
   // productGroup
   productGroup,
   //
-  medicine
+  medicine,
+
+  //VOUCHER
+  voucher,
+  statusVoucher,
+  historyVoucher,
 
 ];
 
@@ -91,6 +99,11 @@ const RESOURCE = (): ResourceType => {
   const GROUP_RANKING : string[] = [
     ranking
   ];
+  const GROUP_VOUCHER: string[] = [
+    voucher,
+    statusVoucher,
+    historyVoucher
+  ]
 
   return {
     GROUP_USER,
@@ -102,6 +115,7 @@ const RESOURCE = (): ResourceType => {
     GROUP_PRODUCTGROUP,
     GROUP_RANKING,
     MEDICINE,
+    GROUP_VOUCHER
   };
 };
 

@@ -1,4 +1,3 @@
-import ReceiptVoucherScreen from "./screens/ReceiptVoucher";
 import receiptVoucherApi from "./receiptVoucher.api";
 import * as receiptVoucherAuth from "./receiptVoucher.auth";
 import * as receiptVoucherHook from "./receiptVoucher.hook";
@@ -8,9 +7,6 @@ import reducer from "./redux/reducer";
 import saga from "./redux/saga";
 
 const moduleExport = {
-    page : {
-        index : ReceiptVoucherScreen,
-    },
     api : receiptVoucherApi,
     auth : receiptVoucherAuth,
     hook : receiptVoucherHook,

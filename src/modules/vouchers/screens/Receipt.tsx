@@ -2,11 +2,13 @@ import { Button, Modal, Table } from 'antd';
 import dayjs from 'dayjs';
 import { get } from 'lodash';
 import React, { useState } from 'react';
-import { useGetReceiptVouchers, useReceiptVoucherQueryParams } from '~/modules/receiptVoucher/receiptVoucher.hook';
+import { useGetReceiptVouchers, useReceiptVoucherPaging, useReceiptVoucherQueryParams, useUpdateReceiptVoucherParams } from '~/modules/receiptVoucher/receiptVoucher.hook';
 import StatusTag from '../components/StatusTag';
 import ReceiptVoucherForm from '~/modules/receiptVoucher/components/ReceiptVoucherForm';
 type propsType = {
-
+  listOptionSearch?: any[];
+  keyword?: string;
+  searchBy?: string;
 };
 interface Column {
   title: string;
@@ -16,13 +18,21 @@ interface Column {
   align?: string;
 };
 export default function ReceiptVouchers(props: propsType): React.JSX.Element {
+  const { listOptionSearch, keyword: keywordProps, searchBy } = props;
+  
+  //HOOK
   const [query, onTableChange] = useReceiptVoucherQueryParams();
+  const [keyword, {setkeyword, onParamChange}] = useUpdateReceiptVoucherParams(query, listOptionSearch);
+  const paging = useReceiptVoucherPaging();
   const [vouchers, isLoading] = useGetReceiptVouchers(query);
+
+  //STATE
   const [id, setId] = useState<string | null>();
   const [isOpenForm, setIsOpenForm] = useState(false);
   const [refCollection, setRefCollection] = useState<string | undefined>();
   const [item, setItem] = useState<any>();
 
+// console.log(onParamChange)
   const onOpenForm = (id: string | null) => {
     setId(id);
     setIsOpenForm(true);
@@ -33,7 +43,7 @@ export default function ReceiptVouchers(props: propsType): React.JSX.Element {
   };
   const columns: Column[] = [
     {
-      title: 'Mã phiếu chi',
+      title: 'Mã phiếu thu',
       dataIndex: 'code',
       key: 'code',
       render: (text, record, index) => {
@@ -54,22 +64,11 @@ export default function ReceiptVouchers(props: propsType): React.JSX.Element {
       key: 'issueNumber',
       render: text => text || "-",
     },
-    // {
-    //   title: 'Mã đơn hàng',
-    //   key: 'billNumber',
-    //   align: 'center',
-    //   render: (text, record, index) => get(record, "whBill.billNumber") ? get(record, "whBill.billNumber") : '-',
-    // },
     {
       title: 'Nội dung',
       key: 'reason',
       dataIndex: 'reason',
     },
-    // {
-    //   title: 'ID dịch vụ',
-    //   dataIndex: 'whServiceId',
-    //   key: 'whServiceId',
-    // },
     {
       title: 'Số tiền',
       dataIndex: 'totalAmount',
@@ -99,7 +98,13 @@ export default function ReceiptVouchers(props: propsType): React.JSX.Element {
     <>
     <Table
       columns={columns as any}
-      dataSource={vouchers}
+        dataSource={vouchers}
+        loading={isLoading}
+        pagination={{
+          ...paging,
+          showTotal: (total)=> `Tổng cộng: ${total}`
+        }}
+        onChange={({current, pageSize}: any)=> onTableChange({current, pageSize})}
     />
     <Modal
       footer={null}
