@@ -160,6 +160,7 @@ export function CreateBillProvider({
     }
   };
 
+  const pair = Form.useWatch('pair',form) || 0;
   const totalPrice = useMemo(
     () =>
       quotationItems?.reduce(
@@ -174,8 +175,8 @@ export function CreateBillProvider({
       quotationItems?.reduce(
         (sum: number, cur: any) => sum + get(cur, "totalPrice"),
         0
-      ),
-    [quotationItems]
+      ) - pair,
+    [quotationItems,pair]
   );
   const totalDiscount = useMemo(
     () =>

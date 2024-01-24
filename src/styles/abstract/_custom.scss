@@ -31,9 +31,13 @@
     font-weight: 600;
 }
 
+.ant-form-item{
+    margin-bottom: 0!important;
+}
+
 .form-custom{
     & .ant-form-item {
-        margin-bottom: 2px !important;
+        // margin-bottom: 2px !important;
     }
 }
 .disabledLink {
@@ -42,3 +46,7 @@
     text-decoration: none;
     pointer-events: none;
   }
+
+.ant-divider{
+    margin: 12px 0 !important;
+}

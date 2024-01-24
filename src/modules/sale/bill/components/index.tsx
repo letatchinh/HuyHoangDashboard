@@ -1,9 +1,9 @@
 import SelectPharmacy from './SelectPharmacy';
-import ChildTab from './createBillScreen/ChildTab';
+import SaleScreen from './createBillScreen/SaleScreen';
 import ModalCreateQuotationSuccess from './ModalCreateQuotationSuccess';
 const components = {
     SelectPharmacy,
-    ChildTab,
+    SaleScreen,
     ModalCreateQuotationSuccess,
 }
 export default components

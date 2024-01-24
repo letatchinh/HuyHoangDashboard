@@ -79,6 +79,12 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
         },
       },
       {
+        title: "Lý do huỷ",
+        dataIndex: "cancelNote",
+        key: "cancelNote",
+        align: "center",
+      },
+      {
         title: "Khách đã trả",
         dataIndex: "pair",
         key: "pair",

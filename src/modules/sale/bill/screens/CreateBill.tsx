@@ -1,10 +1,10 @@
 import React from "react";
-import ChildTab from "../components/createBillScreen/ChildTab";
+import SaleScreen from "../components/createBillScreen/SaleScreen";
 
 type propsType = {};
 export default function CreateBill(props: propsType): React.JSX.Element {
 
   return (
-    <ChildTab />
+    <SaleScreen />
   );
 }

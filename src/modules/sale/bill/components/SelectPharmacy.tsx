@@ -1,10 +1,11 @@
-import { Form, Select } from "antd";
+import { Col, Flex, Form, Row, Select } from "antd";
 import { get } from "lodash";
 import React, { useEffect, useMemo, useState } from "react";
 import PharmacyModule from "~/modules/pharmacy";
 import useNotificationStore from "~/store/NotificationContext";
 import { FormFieldCreateBill } from "../bill.modal";
 import DebounceSelect from "~/components/common/DebounceSelect";
+import { UserAddOutlined, UserOutlined } from "@ant-design/icons";
 type propsType = {
   form? : any,
   onChange? : (p:any) => void,
@@ -58,8 +59,10 @@ export default function SelectPharmacy({form,onChange = () => {},allowClear = tr
 
   },[]);
   return (
-    <Form.Item<FormFieldCreateBill>
-      
+    <Row gutter={8}>
+      <UserOutlined />
+      <Col flex={1}>
+      <Form.Item<FormFieldCreateBill>
       name={"pharmacyId"}
       rules={[
         {
@@ -67,9 +70,11 @@ export default function SelectPharmacy({form,onChange = () => {},allowClear = tr
           message: "Vui lòng chọn nhà thuốc",
         },
       ]}
+      colon={false}
       style={{marginBottom: 'unset'}}
     >
       <DebounceSelect
+      size="large"
         loading={loading}
         placeholder="Chọn nhà thuốc"
         fetchOptions={fetchOptions}
@@ -80,5 +85,7 @@ export default function SelectPharmacy({form,onChange = () => {},allowClear = tr
 
       />
     </Form.Item>
+      </Col>
+    </Row>
   );
 }

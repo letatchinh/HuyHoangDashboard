@@ -147,7 +147,7 @@ export default function ListBillItem({
             />
             {nextStatus && (
              <WithPermission permission={PolicyModule.POLICIES.UPDATE_BILL}>
-                 <Flex align="center" justify={"center"}>
+                 <Flex gap={'small'} align="center" justify={"center"}>
                 <Popconfirm
                   title={
                     "Chuyển đổi sang trạng thái " +
@@ -186,7 +186,7 @@ export default function ListBillItem({
                       })
                     }
                   >
-                    <Button block danger>
+                    <Button type="primary" block danger>
                       Huỷ đơn
                     </Button>
                   </Popconfirm>
@@ -239,16 +239,6 @@ export default function ListBillItem({
         );
       },
     },
-    // {
-    //     title : "Thao tác",
-    //     dataIndex : '_id',
-    //     key : 'action',
-    //     align : 'center',
-    //     render(_id, record, index) {
-    //         // return <Button type='primary'>Cập nhật</Button>
-    //         return <EditTwoTone />
-    //     },
-    // },
   ];
   console.log(billItems, "billItems");
 
