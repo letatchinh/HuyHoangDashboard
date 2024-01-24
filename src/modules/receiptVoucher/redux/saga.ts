@@ -44,7 +44,16 @@ function* deleteReceiptVoucher({payload : id} : any) : any {
   } catch (error:any) {
     yield put(receiptVoucherSliceAction.deleteFailed(error));
   }
-}
+};
+
+function* confirmReceiptVoucher({payload} : any) : any {
+  try {
+    const data = yield call(api.confirm,payload);
+    yield put(receiptVoucherSliceAction.confirmReceiptVoucherSuccess(data));
+  } catch (error:any) {
+    yield put(receiptVoucherSliceAction.confirmReceiptVoucherFailed(error));
+  }
+};
 
 
 export default function* receiptVoucherSaga() {
@@ -53,4 +62,5 @@ export default function* receiptVoucherSaga() {
   yield takeLatest(receiptVoucherSliceAction.createRequest, createReceiptVoucher);
   yield takeLatest(receiptVoucherSliceAction.updateRequest, updateReceiptVoucher);
   yield takeLatest(receiptVoucherSliceAction.deleteRequest, deleteReceiptVoucher);
+  yield takeLatest(receiptVoucherSliceAction.confirmReceiptVoucherRequest, confirmReceiptVoucher);
 }

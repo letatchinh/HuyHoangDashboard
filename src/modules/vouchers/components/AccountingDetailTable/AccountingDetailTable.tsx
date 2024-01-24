@@ -14,7 +14,7 @@ interface Props{
   dataSource?: any;
   mode?: string;
   whAppointment?: any;
-  isShowSuggest?: boolean;
+  isShowSuggest?: number | null;
   setAccountingDetails?: any
 }
 const AccountingDetails = forwardRef(({
@@ -74,17 +74,16 @@ const AccountingDetails = forwardRef(({
     },
     {
       title: (
-        // isShowSuggest ?
-        //   <Tooltip className='wh-payment-voucher__tooltip'
-        //     style={{ cursor: 'pointer' }}
-        //     title={`Số tiền phải trả cho khách hàng(nếu có) là: ${whAppointment?.length && formatNumberThreeComma(whAppointment[0]?.reduced?.prepay)}đ /buổi hẹn`}
-        //     trigger={'hover'}
-        //     placement="topLeft">
-        //     <span> Số tiền</span>
-        //     <InfoCircleOutlined style={{ marginLeft: 5 }} />
-        // </Tooltip>
-        //   : 'Số tiền'
-        'Số tiền'
+        isShowSuggest ?
+          <Tooltip className='wh-payment-voucher__tooltip'
+            style={{ cursor: 'pointer' }}
+            title={`Số tiền công nợ là: ${formatNumberThreeComma(isShowSuggest)}đ`}
+            trigger={'hover'}
+            placement="topLeft">
+            <span> Số tiền</span>
+            <InfoCircleOutlined style={{ marginLeft: 5 }} />
+        </Tooltip>
+          : 'Số tiền'
       ),
       align: 'right',
       width: 200,

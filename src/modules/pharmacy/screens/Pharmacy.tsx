@@ -13,13 +13,14 @@ import Breadcrumb from "~/components/common/Breadcrumb";
 import WhiteBox from "~/components/common/WhiteBox";
 import TableAnt from "~/components/Antd/TableAnt";
 import { omit, get } from "lodash";
-import { STATUS, STATUS_NAMES } from "~/constants/defaultValue";
+import { REF_COLLECTION_UPPER, STATUS, STATUS_NAMES } from "~/constants/defaultValue";
 import moment from "moment";
 // import ColumnActions from "~/components/common/ColumnAction";
 import { useState } from "react";
 import {
   Button,
   Col,
+  Modal,
   Popconfirm,
   Radio,
   Row,
@@ -31,6 +32,7 @@ import Search from "antd/es/input/Search";
 import { PlusCircleOutlined } from "@ant-design/icons";
 import PharmacyForm from "./PharmacyForm";
 import { propsType } from "../pharmacy.modal";
+import ReceiptVoucherForm from "~/modules/receiptVoucher/components/ReceiptVoucherForm";
 
 const dataFake = [
   {
@@ -86,6 +88,9 @@ export default function Pharmacy() {
   const [isOpenForm, setIsOpenForm] = useState(false);
   const paging = usePharmacyPaging();
 
+  const [open, setOpen] = useState(false);
+  const [debt, setDebt] = useState<number | null>();
+
   const onOpenForm = (id?: any) => {
     if (id) {
       setPharmacyId(id);
@@ -96,6 +101,16 @@ export default function Pharmacy() {
   const onCloseForm = () => {
     setPharmacyId(null);
     setIsOpenForm(false);
+  };
+
+  const onOpenReceipt = (item: any) => {
+    setOpen(true);
+    setPharmacyId(item?._id)
+    setDebt(item?.resultDebt)
+  };
+  const onCloseReceipt = () => {
+    setOpen(false);
+    setPharmacyId(null);
   };
 
   const columns: ColumnsType = [
@@ -134,6 +149,17 @@ export default function Pharmacy() {
       render: (record) => {
         return moment(record).format("DD/MM/YYYY");
       },
+    },
+    {
+      title: "Tạo phiếu",
+      dataIndex: "createReceipt",
+      key: "createReceipt",
+      width: 120,
+      render(value, rc) {
+        return ( <Space>
+           <Button type="primary" onClick={()=> onOpenReceipt(rc)}>Phiếu thu</Button>
+         </Space>)
+       },
     },
     {
       title: "Trạng thái",
@@ -276,6 +302,27 @@ export default function Pharmacy() {
         id={pharmacyId}
         handleUpdate={updatePharmacy}
       />
+      <Modal>
+        <ReceiptVoucherForm
+        />
+      </Modal>
+      <Modal
+        title='Phiếu chi'
+        open={open}
+        onCancel={() => setOpen(false)}
+        onOk={() => setOpen(false)}
+        width={1366}
+        footer={null}
+        destroyOnClose
+      >
+        <ReceiptVoucherForm
+          onClose={() => onCloseReceipt()}
+          pharmacyId={pharmacyId}
+          refCollection={REF_COLLECTION_UPPER.PHARMA_PROFILE}
+          debt={debt}
+          from='Pharmacy'
+        />
+      </Modal>
     </div>
   );
 }

@@ -12,7 +12,7 @@ import Vnd from "~/components/common/Vnd/index";
 import WhiteBox from "~/components/common/WhiteBox";
 import useTranslate from "~/lib/translation";
 import { PATH_APP } from "~/routes/allPath";
-import { concatAddress } from "~/utils/helpers";
+import { concatAddress, formatNumberThreeComma } from "~/utils/helpers";
 import TabSupplier from "../components/TabSupplier";
 import { STATUS_SUPPLIER } from "../constants";
 import {
@@ -25,8 +25,8 @@ import {
 } from "../supplier.hook";
 import { STATUS_SUPPLIER_TYPE } from "../supplier.modal";
 import ProductModule from '~/modules/product';
-import PaymentVoucherForm from "~/modules/paymentVoucher/components/PaymentVoucherForm";
 import { REF_COLLECTION, REF_COLLECTION_UPPER } from "~/constants/defaultValue";
+import PaymentVoucherForm from "~/modules/paymentVoucher/components/PaymentVoucherForm";
 export default function Supplier(): React.JSX.Element {
   // Translate
   const { t }: any = useTranslate();
@@ -37,7 +37,9 @@ export default function Supplier(): React.JSX.Element {
   const [idSupplierCreateProduct, setIdSupplierCreateProduct]: any = useState();
   const [isOpenFormProduct, setIsOpenFormProduct]: any = useState(false);
   const [open, setOpen] = useState(false);
-  const [supplierId, setSupplierId] = useState<string|null>('');
+  const [supplierId, setSupplierId] = useState<string | null>('');
+  const [debt, setDebt] = useState<number | null>();
+  
   // Control form
   const onOpenForm = useCallback((idSelect?: any) => {
     if (idSelect) {
@@ -62,9 +64,9 @@ export default function Supplier(): React.JSX.Element {
   }, []);
 
   const onOpenPayment = (item: any) => {
-    console.log(item,'item')
     setOpen(true);
     setSupplierId(item?._id)
+    setDebt(item?.resultDebt)
   };
   const onClosePayment = () => {
     setOpen(false);
@@ -115,11 +117,11 @@ export default function Supplier(): React.JSX.Element {
       },
       {
         title: "Công nợ",
-        dataIndex: "name",
-        key: "name",
+        dataIndex: "resultDebt",
+        key: "resultDebt",
         align: "center",
         render(value) {
-          return 0
+          return formatNumberThreeComma(value);
         },
       },
       {
@@ -274,7 +276,8 @@ export default function Supplier(): React.JSX.Element {
         <PaymentVoucherForm
           onClose={() => onClosePayment()}
           supplierId={supplierId}
-          refCollection = {REF_COLLECTION_UPPER.SUPPLIER}
+          refCollection={REF_COLLECTION_UPPER.SUPPLIER}
+          debt={debt}
         />
       </Modal>
     </div>

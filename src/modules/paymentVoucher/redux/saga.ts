@@ -20,11 +20,12 @@ function* getByIdPaymentVoucher({payload:id} : any) : any {
   }
 };
 
-function* createPaymentVoucher({payload} : any) : any {
+function* createPaymentVoucher({ payload }: any): any {
   try {
-    const data = yield call(api.create,payload);
+    const data = yield call(api.create, payload);
     yield put(paymentVoucherSliceAction.createSuccess(data));
-  } catch (error:any) {
+  } catch (error: any) {
+    console.log(error)
     yield put(paymentVoucherSliceAction.createFailed(error));
   }
 };

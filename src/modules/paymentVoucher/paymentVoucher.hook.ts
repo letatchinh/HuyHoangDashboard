@@ -36,7 +36,11 @@ const {
   pagingSelector,
 } = getSelectors(MODULE);
 
+const getSelector = (key: string) => (state: any) => state.paymentVoucher[key];
+
 export const usePaymentVoucherPaging = () => useSelector(pagingSelector);
+const confirmPaymentSuccessSelector = getSelector('confirmSuccess');
+const confirmPaymentFailedSelector = getSelector('confirmFailed');
 
 export const useGetPaymentVouchers = (param:any) => {
   return useFetchByParam({
@@ -86,11 +90,11 @@ export const useUpdatePaymentVoucher = (callback?: any) => {
 };
 export const useConfirmPaymentVoucher = (callback?: any) => {
   useSuccess(
-    updateSuccessSelector,
-    `Cập nhật ${MODULE_VI} thành công`,
+    confirmPaymentSuccessSelector,
+    `Cập nhật ${MODULE_VI} thành công `,
     callback
   );
-  useFailed(updateFailedSelector);
+  useFailed(confirmPaymentFailedSelector);
 
   return useSubmit({
     action: paymentVoucherSliceAction.confirmPaymentVoucherRequest,

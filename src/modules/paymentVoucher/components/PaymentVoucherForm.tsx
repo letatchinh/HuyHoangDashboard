@@ -27,6 +27,7 @@ import {
   COMPONENT_MODES,
   LANGUAGE,
   REF_COLLECTION,
+  TYPE_VOUCHER,
   WH_PAYMENT_METHOD,
   WH_PAYMENT_METHOD_VI,
   WH_VOUCHER_ACTION_NAME,
@@ -37,6 +38,7 @@ import HistoryLogs from "../../vouchers/components/HistoryLog";
 import { toJSON } from "../../vouchers/components/parser";
 import "./form.scss";
 import apiEmployee from "~/modules/employee/employee.api";
+import apiPaymentVoucher from "~/modules/paymentVoucher/paymentVoucher.api";
 import { useGetSupplier } from "~/modules/supplier/supplier.hook";
 import { compactAddress } from "~/utils/helpers";
 import dayjs from "dayjs";
@@ -48,14 +50,16 @@ import {
   useResetAction,
   useUpdatePaymentVoucher,
 } from "../paymentVoucher.hook";
-import { get, omit } from "lodash";
-import { CheckOutlined, CloseCircleOutlined, EyeOutlined, SaveOutlined } from "@ant-design/icons";
+import { get, omit, sumBy } from "lodash";
+import { CheckOutlined, CloseCircleOutlined, ExclamationCircleOutlined, EyeOutlined, SaveOutlined } from "@ant-design/icons";
 import WithPermission from "~/components/common/WithPermission";
 import POLICIES from "~/modules/policy/policy.auth";
-import { head } from "axios";
 import { PATH_APP } from "~/routes/allPath";
 import { Link } from "react-router-dom";
-
+import { useDispatch } from "react-redux";
+import { paymentVoucherSliceAction } from "../redux/reducer";
+import { useResetState } from "~/utils/hook";
+// import myFile from '../../../assets/templates/PC_Template_V2.docs'
 const mainRowGutter = 24;
 const FormItem = Form.Item;
 const { TabPane } = Tabs;
@@ -68,28 +72,35 @@ type propsType = {
   onClose?: any;
   supplierId?: any;
   refCollection?: string;
+  onCancel?: any;
+  debt?: number | null;
 };
 
 export default function PaymentVoucherForm(
   props: propsType
 ): React.JSX.Element {
   useResetAction();
-  const { id, supplierId, onClose, refCollection } = props;
+  const dispatch = useDispatch();
+  const { id, supplierId, onClose, refCollection,onCancel, debt } = props;
   const [form] = Form.useForm();
   const ref = useRef();
-
+  const [isPrinting, setIsPrinting] = useState(false);
+  const [accountingDetails, setAccountingDetails] = useState([]);
+  const [url, setUrl] = useState<string>('');
+  const [isOpenViewer, setIsOpenViewer] = useState(false);
+  const [initEmployee, setInitEmployee] = useState<any[]>([]);
   //Hook
   const [isSubmitLoading, handleCreate] = useCreatePaymentVoucher(onClose);
-  const [, handleUpdate] = useUpdatePaymentVoucher();
-  const [, handleConfirm] = useConfirmPaymentVoucher();
+  const [, handleUpdate] = useUpdatePaymentVoucher(onClose);
+  const [, handleConfirm] = useConfirmPaymentVoucher(onClose);
   const [voucher, isLoading] = useGetPaymentVoucher(id);
   const initPaymentVoucher = useInitWhPaymentVoucher(voucher);
+  const [supplier] = useGetSupplier(supplierId);
   const [settingDocs, setSettingDocs] = useState({
     name: "CÔNG TY TNHH WORLDCARE MIỀN TRUNG",
     address: "559 Lê Văn Hiến, P. Khuê Mỹ, Q. Ngũ Hành Sơn, TP Đà Nẵng",
     isVisibleSettings: false,
   });
-
   const [dataAccounting, setDataAccounting] = useState([
     {
       content: `rút tiền từ ví , mã yêu cầu `,
@@ -99,11 +110,6 @@ export default function PaymentVoucherForm(
       amountOfMoney: 0,
     },
   ]);
-  const [accountingDetails, setAccountingDetails] = useState([]);
-  const [initEmployee, setInitEmployee] = useState([]);
-
-  //Hook
-  const [supplier] = useGetSupplier(supplierId);
 
   // use initWhPaymentVoucher to merge with other data that should be fetched from the API
   const mergedInitWhPaymentVoucher = useMemo(() => {
@@ -117,13 +123,12 @@ export default function PaymentVoucherForm(
     }
     return {
       ...initPaymentVoucher,
-      arrAppointmentCancel: [],
     };
   }, [id, initPaymentVoucher]);
 
   const fetchOptionEmployee = useCallback(
     async (keyword?: any) => {
-      const res = await apiEmployee.getAll({ keyword });
+      const res = await apiEmployee.getALLAuthenticated({ keyword });
       const mapRes = res?.docs?.map((item: any) => ({
         label: item?.fullName,
         value: item?._id,
@@ -133,6 +138,122 @@ export default function PaymentVoucherForm(
     },
     [id]
   );
+
+  const fetchIssueNumber = async () => {
+    const typeVoucher = TYPE_VOUCHER.PC;
+    const res = await apiPaymentVoucher.postIssueNumber({ typeVoucher });
+    form.setFieldsValue({
+      issueNumber: res?.result,
+    });
+  };
+
+  // const onPrint = async (viewOnly = false): Promise<void> => {
+  //   const downloadURL = (data: string, fileName: string): void => {
+  //     const a : any = document.createElement('a');
+  //     a.href = data;
+  //     a.download = fileName;
+  //     document.body.appendChild(a);
+  //     a.style = 'display: none';
+  //     a.click();
+  //     a.remove();
+  //   };
+
+  //   const saveDataToFile = (data: string, fileName: string, mimeType: string): void => {
+  //     const blob = new Blob([data], { type: mimeType });
+  //     const url = window.URL.createObjectURL(blob);
+  //     downloadURL(url, fileName);
+  //     setTimeout(() => {
+  //       window.URL.revokeObjectURL(url);
+  //     }, 1000);
+  //   };
+
+  //   const renderFile = async (data: string, fileName: string, mimeType: string): Promise<void> => {
+  //     const blob = new Blob([data], { type: mimeType });
+  //     const url = window.URL.createObjectURL(blob);
+
+  //     // const res = await api.whReceiptVoucher.upload(blob); // Replace with your actual API call
+  //     // const res = await api.whReceiptVoucher.upload(url);
+  //     // setUrl(get(res, "url"));
+  //     setUrl('https://calibre-ebook.com/downloads/demos/demo.docx');
+  //     setIsOpenViewer(true);
+  //   };
+
+  //   setIsPrinting(true);
+  //   const template = await fetch(myFile).then((res) => res.arrayBuffer());
+
+  //   try {
+  //     await form.validateFields();
+
+  //     const {
+  //       customerAddress,
+  //       customerName,
+  //       issueNumber,
+  //       originalDocument,
+  //       reason,
+  //       accountingDate,
+  //       employeeId,
+  //     }: any = form.getFieldsValue();
+
+  //     // const employee: any = await api.userEmployee.getById(employeeId);
+  //     // const totalAmountOfMoney = sumBy(dataSource, (item) => Number(get(item, 'amountOfMoney')));
+  //     // const totalAmountOfMoneyString = `${readNumber(totalAmountOfMoney)} ${
+  //     //   CURRENCY_STRING[CURRENCY.VND]
+  //     // }`;
+  //     // const debitAccounts = uniq(dataSource.map((item) => get(item, 'debitAccount'))).join(', ');
+  //     // const creditAccounts = uniq(dataSource.map((item) => get(item, 'creditAccount'))).join(', ');
+
+  //     // const accountingDateDD = get(initWhPaymentVoucher, 'dateApproved')
+  //     //   ? moment(get(initWhPaymentVoucher, 'dateApproved')).date()
+  //     //   : moment(get(initWhPaymentVoucher, 'createdAt')).date();
+  //     // const accountingDateMM = get(initWhPaymentVoucher, 'dateApproved')
+  //     //   ? moment(get(initWhPaymentVoucher, 'dateApproved')).month() + 1
+  //     //   : moment(get(initWhPaymentVoucher, 'createdAt')).month() + 1;
+  //     // const accountingDateYY = get(initWhPaymentVoucher, 'dateApproved')
+  //     //   ? moment(get(initWhPaymentVoucher, 'dateApproved')).year()
+  //     //   : moment(get(initWhPaymentVoucher, 'createdAt')).year();
+
+  //     // const report = await createReport({
+  //     //   template,
+  //     //   cmdDelimiter: ['{#', '#}'],
+  //     //   data: {
+  //     //     accountingDateDD,
+  //     //     accountingDateMM,
+  //     //     accountingDateYY,
+  //     //     creditAccounts,
+  //     //     customerAddress: get(customerAddress, 'street') || customerAddress,
+  //     //     customerName,
+  //     //     debitAccounts,
+  //     //     issueNumber,
+  //     //     originalDocument,
+  //     //     reason,
+  //     //     totalAmountOfMoney: floorFormatter(totalAmountOfMoney),
+  //     //     totalAmountOfMoneyString: capitalizeFirstLetter(totalAmountOfMoneyString),
+  //     //     EmployeeName: get(employee, 'data.fullName', ''),
+  //     //     nameCompany: get(settingDocs, 'name', ''),
+  //     //     addressCompany: get(settingDocs, 'address', ''),
+  //     //   },
+  //     // });
+
+  //     // if (viewOnly) {
+  //     //   renderFile(
+  //     //     report,
+  //     //     `${issueNumber}.docx`,
+  //     //     'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+  //     //   );
+  //     // } else {
+  //     //   saveDataToFile(
+  //     //     report,
+  //     //     `${issueNumber}.docx`,
+  //     //     'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+  //     //   );
+  //     // }
+  //   } catch (error) {
+  //     console.error(error);
+  //   } finally {
+  //     setIsPrinting(false);
+  //   }
+  // };
+
 
   useEffect(() => {
     if (!id) {
@@ -153,10 +274,16 @@ export default function PaymentVoucherForm(
   }, [supplier, supplierId, id, initPaymentVoucher]);
 
   useEffect(() => {
-    if (id) {
-      fetchOptionEmployee();
+    if (id && mergedInitWhPaymentVoucher ) {
+      const initEmployee = {
+        label: mergedInitWhPaymentVoucher?.employee?.fullName,
+        value: mergedInitWhPaymentVoucher?.employee?._id
+      };
+      setInitEmployee([initEmployee]);
+    } else {
+      fetchIssueNumber();
     }
-  }, [id]);
+  }, [id, mergedInitWhPaymentVoucher]);
   const onValuesChange = () => {
     console.log("first");
   };
@@ -171,10 +298,10 @@ export default function PaymentVoucherForm(
         dateOfIssue: dayjs(dateOfIssue).format("YYYY-MM-DD"),
         refCollection: refCollection ? REF_COLLECTION[refCollection] : null,
         accountingDetails: accountingDetails,
+        totalAmount:sumBy([...accountingDetails],(item) => get(item,'amountOfMoney',0))
       };
       if (id) {
-        console.log("update");
-        // handleUpdate({ ...whPaymentVoucher, id: head(id.split("&")) });
+        handleUpdate({ id: id, ...newValue });
       } else {
         handleCreate(newValue);
       }
@@ -189,55 +316,28 @@ export default function PaymentVoucherForm(
     // }else{ // CREATE
     //   if(!isHaveCreateVoucher) return toastr.error("Bạn không có quyền Tạo phiếu")
     // }
-    switch (status) {
-      case WH_VOUCHER_STATUS.CONFIRMED:
-        handleConfirm({ id: id,status : WH_VOUCHER_STATUS.CONFIRMED });
-        break;
-      case WH_VOUCHER_STATUS.APPROVED:
-        handleConfirm({ id:id,status : WH_VOUCHER_STATUS.APPROVED });
-        break;
-      case WH_VOUCHER_STATUS.REJECT:
-        handleConfirm({ id:id,status : WH_VOUCHER_STATUS.REJECT });
-        break;
-      default:
-        break;
-    }
-    // onCancel()
-    // else{
-    //   confirm({
-
-    //     title: `Bạn có muốn ${WH_VOUCHER_ACTION_NAME[status][LANGUAGE.VI]} phiếu này?`,
-    //     icon: <ExclamationCircleOutlined />,
-    //     content: '',
-    //     onOk() {
-    //       const fullValues = form.getFieldsValue(true);
-
-    //       const whPaymentVoucher = toJSON({
-    //         ...(whBill && { whBillId: get(whBill, '_id') }),
-    //         ...(whBillItem && { whBillItemId: get(whBillItem, '_id') }),
-    //         ...(whAppointment && { whAppointmentId: get(whAppointment, '_id') }),
-    //         ...fullValues,
-    //         accountingDetails: [...ref.current.getAccountingDetailsData()],
-    //         totalAmount:sumBy([...ref.current.getAccountingDetailsData()],(item) => get(item,'amountOfMoney',0))
-    //       });
-    //       switch (status) {
-    //         case WH_VOUCHER_STATUS.CONFIRMED:
-    //           handleConfirm({ id: head(id.split("&")),...whPaymentVoucher,status : null });
-    //           break;
-    //         case WH_VOUCHER_STATUS.APPROVED:
-    //           handleApprove({ id: head(id.split("&")),...whPaymentVoucher,status : null });
-    //           break;
-    //         case WH_VOUCHER_STATUS.REJECT:
-    //           handleReject({ id: head(id.split("&")),...whPaymentVoucher,status : null });
-    //           break;
-    //         default:
-    //           break;
-    //       }
-    //     },
-    //     onCancel() {
-    //     },
-    //   });
-    // }
+    confirm({
+      title: `Bạn có muốn ${WH_VOUCHER_ACTION_NAME[status][LANGUAGE.VI]} phiếu này?`,
+      icon: <ExclamationCircleOutlined />,
+      content: '',
+      onOk() {
+        const fullValues = form.getFieldsValue(true);
+        switch (status) {
+          case WH_VOUCHER_STATUS.CONFIRMED:
+            handleConfirm({ id: id, status: WH_VOUCHER_STATUS.CONFIRMED });
+            break;
+          case WH_VOUCHER_STATUS.APPROVED:
+            handleConfirm({ id: id, status: WH_VOUCHER_STATUS.APPROVED });
+            break;
+          case WH_VOUCHER_STATUS.REJECT:
+            handleConfirm({ id: id, status: WH_VOUCHER_STATUS.REJECT });
+            break;
+          default:
+            break;
+        }
+      },
+      onCancel() { },
+    });
   };
 
   const render = (component: any) =>
@@ -278,21 +378,7 @@ export default function PaymentVoucherForm(
                         },
                       ]}
                     >
-                      {render(
-                        // <DebounceSelect
-                        //   fetchOptions={async (keyword?: string) => {
-                        //     return [
-                        //       {
-                        //         label: "1111",
-                        //         value: "1111",
-                        //       },
-                        //     ];
-                        //   }}
-                        //   allowClear
-                        //   showSearch
-                        // />
-                        <Input disabled />
-                      )}
+                      {render(<Input disabled />)}
                     </FormItem>
                     <FormItem hidden name="provider"></FormItem>
                   </Col>
@@ -447,7 +533,7 @@ export default function PaymentVoucherForm(
                       //   }
                       // ]}
                     >
-                      {isLoading ? <Skeleton.Input active /> : <Input />}
+                      {isLoading ? <Skeleton.Input active /> : <Input  disabled/>}
                     </FormItem>
                     <FormItem
                       label="Phương thức thanh toán"
@@ -496,13 +582,13 @@ export default function PaymentVoucherForm(
                   mode={COMPONENT_MODES.EDIT}
                   dataSource={dataAccounting}
                   // whAppointment={whAppointment}
-                  isShowSuggest={!id}
+                  isShowSuggest={debt}
                   setAccountingDetails={setAccountingDetails}
                 />
               </Space>
             </TabPane>
           </Tabs>
-          <Collapse style={{ backgroundColor: "transparent" }} bordered={false}>
+          { id &&  <Collapse style={{ backgroundColor: "transparent" }} bordered={false}>
             <Collapse.Panel
               showArrow={false}
               style={{
@@ -516,37 +602,12 @@ export default function PaymentVoucherForm(
               key="1"
             >
               <HistoryLogs
-              // historyLogs={get(whPaymentVoucher, 'historyLogs', [])}
+              historyLogs={get(mergedInitWhPaymentVoucher, 'historyLogs', [])}
               />
             </Collapse.Panel>
-          </Collapse>
-
-          {/* <Row
-            gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}
-            justify="center"
-            align="middle"
-            wrap={false}
-            className="form-actions"
-          >
-            <Button
-              type="primary"
-              htmlType="submit"
-              loading={isLoading}
-              style={{ marginRight: "10px" }}
-            >
-              {id ? "Cập nhật" : "Tạo mới"}
-            </Button>
-            <Button
-              type="default"
-              onClick={() => {
-                onClose();
-              }}
-            >
-              Huỷ
-            </Button>
-          </Row> */}
+          </Collapse>}
           <Row className="staff-form__submit-box">
-            <Button icon={<SaveOutlined />} onClick={onFinish} type="primary">
+            <Button icon={<SaveOutlined />} type="primary" htmlType="submit">
               Lưu
             </Button>
 
@@ -620,9 +681,9 @@ export default function PaymentVoucherForm(
             {isSubmitLoading ? (
               <Button disabled>Đóng</Button>
             ) : (
-              // onCancel
-              //   ? <Button icon={<CloseCircleOutlined />} onClick={onCancel}>Đóng</Button>
-              //     :
+              onCancel
+                ? <Button icon={<CloseCircleOutlined />} onClick={onCancel}>Đóng</Button>
+                  :
                   (
                   <Link to={'/'}>
                     <Button icon={<CloseCircleOutlined />}>Đóng</Button>
@@ -630,13 +691,13 @@ export default function PaymentVoucherForm(
                 )
             )}
 
-            <Button
+            {/* <Button
               icon={<EyeOutlined />}
               // loading={isPrinting}
               // onClick={() => onPrint(true)}
             >
               Xem trước file
-            </Button>
+            </Button> */}
           </Row>
         </Form>
       </div>

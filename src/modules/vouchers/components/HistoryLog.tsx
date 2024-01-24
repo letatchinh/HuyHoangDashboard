@@ -15,7 +15,7 @@ export default function HistoryLogs({ historyLogs }: propsType) {
       <List
         header={<h2>Logs</h2>}
         bordered
-        dataSource={clone(historyLogs) || []}
+        dataSource={historyLogs}
         renderItem={(item: any) => (
           <List.Item>
             <Row
@@ -33,7 +33,7 @@ export default function HistoryLogs({ historyLogs }: propsType) {
                 </span>
               </Col>
               <Col>
-                <span>{item.username || item.userId}</span>
+                <span>{item.fullName}</span>
               </Col>
               <Col>
                 <span>{item.message}</span>

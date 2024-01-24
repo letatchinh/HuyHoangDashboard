@@ -3,16 +3,20 @@ import { get } from "lodash";
 import { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
-import { clearQuerySearch, getExistProp } from "~/utils/helpers";
+import { clearQuerySearch, compactAddress, getExistProp } from "~/utils/helpers";
 import {
     getSelectors,
     useFailed, useFetchByParam,
     useQueryParams,
+    useResetState,
     useSubmit,
     useSuccess
 } from "~/utils/hook";
 import { receiptVoucherSliceAction } from "./redux/reducer";
 import { TYPE_VOUCHER } from "~/constants/defaultValue";
+import dayjs from "dayjs";
+import { fromJSON } from "../vouchers/components/parser";
+
 const MODULE = "receiptVoucher";
 const MODULE_VI = "";
 
@@ -32,8 +36,10 @@ const {
   updateFailedSelector,
   pagingSelector,
 } = getSelectors(MODULE);
-
+const getSelector = (key: string) => (state: any) => state.receiptVoucher[key];
 export const useReceiptVoucherPaging = () => useSelector(pagingSelector);
+const confirmReceiptSuccessSelector = getSelector('confirmSuccess');
+const confirmReceiptFailedSelector = getSelector('confirmFailed');
 
 export const useGetReceiptVouchers = (param:any) => {
   return useFetchByParam({
@@ -78,6 +84,20 @@ export const useUpdateReceiptVoucher = (callback?: any) => {
 
   return useSubmit({
     action: receiptVoucherSliceAction.updateRequest,
+    loadingSelector: isSubmitLoadingSelector,
+  });
+};
+
+export const useConfirmReceiptVoucher = (callback?: any) => {
+  useSuccess(
+    confirmReceiptSuccessSelector,
+    `Cập nhật ${MODULE_VI} thành công `,
+    callback
+  );
+  useFailed(confirmReceiptFailedSelector);
+
+  return useSubmit({
+    action: receiptVoucherSliceAction.confirmReceiptVoucherRequest,
     loadingSelector: isSubmitLoadingSelector,
   });
 };
@@ -143,4 +163,30 @@ export const useUpdateReceiptVoucherParams = (
   };
 
   return [keyword, { setKeyword, onParamChange }];
+};
+
+
+export const useResetAction = () => {
+  return useResetState(receiptVoucherSliceAction.resetAction);
+};
+
+export const useInitWhReceiptVoucher = (whReceiptVoucher: any) => {
+  return useMemo(() => {
+    if (!whReceiptVoucher) {
+      return {
+      };
+    };
+    const { accountingDetail, dateOfIssue,supplier, ...rest } = whReceiptVoucher;
+    const newValue = {
+      ...rest,
+      accountingDate: dayjs(accountingDetail?.accountingDate),
+      dateOfIssue: dayjs(dateOfIssue),
+      supplier: supplier?.name,
+      supplierAddress: compactAddress(supplier?.address),
+    };
+    const initValues = {
+      ...fromJSON(newValue),
+    };
+    return initValues;
+  }, [whReceiptVoucher]);
 };

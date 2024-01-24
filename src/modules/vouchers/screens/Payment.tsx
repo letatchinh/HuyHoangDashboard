@@ -33,7 +33,6 @@ export default function   PaymentVouchers(props: propsType): React.JSX.Element {
     setId(null);
     setIsOpenForm(false);
   };
-  console.log(vouchers, 'vouchers')
   const columns: Column[] = [
     {
       title: 'Mã phiếu chi',
@@ -57,22 +56,22 @@ export default function   PaymentVouchers(props: propsType): React.JSX.Element {
       key: 'issueNumber',
       render: text => text || "-",
     },
-    {
-      title: 'Mã đơn hàng',
-      key: 'billNumber',
-      align: 'center',
-      render: (text, record, index) => get(record, "whBill.billNumber") ? get(record, "whBill.billNumber") : '-',
-    },
+    // {
+    //   title: 'Mã đơn hàng',
+    //   key: 'billNumber',
+    //   align: 'center',
+    //   render: (text, record, index) => get(record, "whBill.billNumber") ? get(record, "whBill.billNumber") : '-',
+    // },
     {
       title: 'Nội dung',
       key: 'reason',
       dataIndex: 'reason',
     },
-    {
-      title: 'ID dịch vụ',
-      dataIndex: 'whServiceId',
-      key: 'whServiceId',
-    },
+    // {
+    //   title: 'ID dịch vụ',
+    //   dataIndex: 'whServiceId',
+    //   key: 'whServiceId',
+    // },
     {
       title: 'Số tiền',
       dataIndex: 'totalAmount',
