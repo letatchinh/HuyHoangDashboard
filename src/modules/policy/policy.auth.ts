@@ -21,6 +21,10 @@ const bill = 'bill';
 
 // Đơn hàng tạm
 const quotation = 'quotation';
+// Nhà cung cấp
+const supplier = 'supplier';
+// Sản phẩm Nhà cung cấp
+const product = 'product';
 
 const RESOURCES = [
   //Setting
@@ -42,6 +46,8 @@ const RESOURCES = [
   productGroup,
   //
   medicine,
+  supplier,
+  product,
 
   // Pharmacy Profile
   pharmaProfile,
@@ -117,6 +123,12 @@ const RESOURCE = (): ResourceType => {
     quotation,
   ];
 
+  
+  const GROUP_SUPPLIER: string[] = [
+    supplier,
+    product,
+  ];
+
   return {
     GROUP_USER,
     GROUP_EMPLOYEE,
@@ -128,6 +140,7 @@ const RESOURCE = (): ResourceType => {
     MEDICINE,
     PHARMA_PROFILE,
     GROUP_BILL,
+    GROUP_SUPPLIER,
   };
 };
 

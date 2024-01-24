@@ -16,6 +16,8 @@ import { GiftTwoTone } from "@ant-design/icons";
 import { get } from "lodash";
 import { convertInitSupplier, convertSubmitData } from "../supplier.service";
 import CumulativeDiscountModule from '~/modules/cumulativeDiscount';
+import WithPermission from "~/components/common/WithPermission";
+import POLICIES from "~/modules/policy/policy.auth";
 
 const FormSupplier = ({
   id,
@@ -124,6 +126,7 @@ const FormSupplier = ({
           <CumulativeDiscountModule.components.DiscountList target={CumulativeDiscountModule.constants.TARGET.supplier} loading={isLoading} form={form} />
         </BaseBorderBox>
         <div className="btn-footer">
+          <WithPermission permission={id ? POLICIES.UPDATE_SUPPLIER : POLICIES.WRITE_SUPPLIER}>
           <Button
             loading={isSubmitLoading}
             block
@@ -132,6 +135,7 @@ const FormSupplier = ({
           >
             {id ? "Cập nhật" : "Tạo mới"}
           </Button>
+          </WithPermission>
           <Button onClick={onCancel} block danger>
             Huỷ
           </Button>
