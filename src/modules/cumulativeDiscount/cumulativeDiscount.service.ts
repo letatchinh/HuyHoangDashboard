@@ -56,7 +56,8 @@ const rootField = [
   "typeReward",
   "value",
   "valueType",
-  "status"
+  "status",
+  "_id"
 ]
 export const pickCore = (submitData: any) =>
   pick(submitData, rootField);
