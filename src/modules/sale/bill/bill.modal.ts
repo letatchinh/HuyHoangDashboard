@@ -63,6 +63,7 @@ export type quotation = {
 export type FormFieldCreateBill = {
     pharmacyId : string,
     debtType : string,
+    pair : number
 }
 export type PayloadCreateBill = {
     pharmacyId : string,
@@ -72,7 +73,7 @@ export type PayloadCreateBill = {
     _id? : any,
 }
 export type PayloadUpdateBill = {
-    note : string,
+    cancelNote : string,
     status : "CANCELLED",
     _id : string
 }

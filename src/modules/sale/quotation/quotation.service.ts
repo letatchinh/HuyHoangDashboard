@@ -28,7 +28,7 @@ export const convertDataQuotation = ({data,quotationItems,totalPriceAfterDiscoun
       const submitData : PayloadCreateBill = {
           ...data,
           quotationItems : quotationItemsSubmit,
-          pair : 0,
+          pair : data?.pair || 0,
           totalPrice : totalPriceAfterDiscount,
           ..._id && {_id}
         };
