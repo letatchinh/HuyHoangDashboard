@@ -46,7 +46,7 @@ interface NavBoardProps {}
         title={
           <p style={{ whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>
             {' '}
-            <Button type="dashed" href="/workBoard">
+            <Button type="dashed" href="/work-board">
               <ArrowLeftOutlined style={{ color: 'black', fontSize: 16 }} />
             </Button>{' '}
             Không gian làm việc{' '}
