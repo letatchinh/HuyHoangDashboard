@@ -8,7 +8,6 @@ const employee = 'employee';
 const user = 'user';
 const userGroup = 'userGroup';
 const pharmacy = 'pharmacy';
-const bill = 'bill';
 const manuFacturer = 'manufacturer';
 const unit = 'unit';
 const productGroup='productGroup';
@@ -16,6 +15,12 @@ const ranking = 'ranking';
 const medicine = 'medicine';
 const configDiscount = 'configDiscount';
 const pharmaProfile = 'pharmaProfile';
+
+// Đơn hàng
+const bill = 'bill';
+
+// Đơn hàng tạm
+const quotation = 'quotation';
 
 const RESOURCES = [
   //Setting
@@ -30,7 +35,6 @@ const RESOURCES = [
 
 
   // pharmacy,
-  // bill,
   manuFacturer,
   unit,
   ranking,
@@ -41,6 +45,9 @@ const RESOURCES = [
 
   // Pharmacy Profile
   pharmaProfile,
+  
+  bill,
+  quotation,
 ];
 
 //ACTIONS
@@ -82,9 +89,6 @@ const RESOURCE = (): ResourceType => {
     user,
     userGroup
   ];
-  const GROUP_WHBILL: string[] = [
-    bill
-  ];
   const GROUP_EMPLOYEE : string[] = [
     employee
   ];
@@ -107,11 +111,15 @@ const RESOURCE = (): ResourceType => {
   const PHARMA_PROFILE: string[] = [
     pharmaProfile
   ];
+  
+  const GROUP_BILL : string[] = [
+    bill,
+    quotation,
+  ];
 
   return {
     GROUP_USER,
     GROUP_EMPLOYEE,
-    GROUP_WHBILL,
     GROUP_WHSETTING,
     GROUP_MANUFACTURER,
     UNIT,
@@ -119,6 +127,7 @@ const RESOURCE = (): ResourceType => {
     GROUP_RANKING,
     MEDICINE,
     PHARMA_PROFILE,
+    GROUP_BILL,
   };
 };
 
@@ -128,9 +137,9 @@ const RESOURCE = (): ResourceType => {
  * @returns {Array} [POLICIES.action_resources]
  */
 export const GROUP_POLICY : any = (action: any): void => {
-  forIn(RESOURCE(), (value, key, object : any) => {
+  return forIn(RESOURCE(), (value, key, object : any) => {
     object[key] = [];
-    if (Array.isArray(value)) {
+    // if (Array.isArray(value)) {
       value.forEach((keyPermission: string | undefined) => {
         if (keyPermission) {
           object[key].push(
@@ -138,10 +147,9 @@ export const GROUP_POLICY : any = (action: any): void => {
           );
         }
       });
-    }
+    // }
   });
 };
-
 export const CORE_ACTION = {
   READ: 'READ',
   WRITE: 'WRITE',

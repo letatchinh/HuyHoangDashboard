@@ -14,10 +14,9 @@ import { MenuProps } from "antd";
 import React, { useCallback } from "react";
 import { NavLink } from "react-router-dom";
 import { PATH_APP } from "~/routes/allPath";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUsers, faUser } from "@fortawesome/free-solid-svg-icons";
-import POLICIES from "~/modules/policy/policy.auth";
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUsers, faUser } from '@fortawesome/free-solid-svg-icons';
+import POLICIES, { GROUP_POLICY } from "~/modules/policy/policy.auth";
 type MenuItem = Required<MenuProps>["items"][number];
 function getItem({
   label,
@@ -52,6 +51,7 @@ type ItemType = {
   key: string;
   permission?: any;
 };
+
 export const resource: ItemType[] = [
   {
     label: "WorldPharmaVN",
@@ -179,22 +179,25 @@ export const resource: ItemType[] = [
   {
     label: "Đơn hàng",
     key: "bill",
-    // Children
+    permission : [POLICIES.READ_BILL,POLICIES.WRITE_QUOTATION,POLICIES.READ_QUOTATION],
     children: [
       {
         label: "Đơn hàng",
         path: PATH_APP.bill.root,
         key: PATH_APP.bill.root,
+        permission:[POLICIES.READ_BILL],
       },
       {
         label: "Tạo đơn hàng tạm",
         path: PATH_APP.bill.create,
         key: PATH_APP.bill.create,
+        permission:[POLICIES.WRITE_QUOTATION],
       },
       {
         label: "Đơn hàng tạm",
         path: PATH_APP.quotation.root,
         key: PATH_APP.quotation.root,
+        permission:[POLICIES.READ_QUOTATION],
       },
     ],
     icon: <AppstoreFilled />,

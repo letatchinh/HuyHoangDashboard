@@ -1,11 +1,12 @@
 import { ConfigProvider, Menu, MenuProps, Tooltip } from 'antd';
-import React, { useCallback, useMemo, useState , isValidElement} from 'react';
+import React, { useCallback, useMemo, useState , isValidElement, useEffect} from 'react';
 import NavbarItems, { resource } from './resource';
 import { useGetPolicyCheckAllPage } from '~/modules/user/user.hook';
 import { useGetProfile, useProfile } from '~/modules/auth/auth.hook';
 import { isMatchPolicy, useUserPolicy } from '~/modules/policy/policy.hook';
 import { NavLink } from 'react-router-dom';
 import NavbarItem from './NavbarItem';
+import { keys } from 'lodash';
 
 
 /**
@@ -29,11 +30,8 @@ function getItem({ label, icon, children, path, key, permission }: ItemType): an
     icon,
     children,
     permission,
-    label: path ? (
-      <NavbarItem label={label} path={path}/>
-    ) : (
-      label
-    ),
+    label: <NavbarItem label={label} path={path}/>
+    
   } as MenuItem 
 };
 const NavbarVertical: React.FC = () => {
@@ -45,28 +43,35 @@ const NavbarVertical: React.FC = () => {
   };
   const profile = useGetProfile();
   const [, , policies] = useUserPolicy();
-  const checkPermission = useCallback((permission: any) => {
-    if (!permission || profile?.user?.isSuperAdmin ) return true;
-    
-    for (const permissionItem of permission) {
-        if (isMatchPolicy(policies, permissionItem)) {
-          return true;
-      };
-    };
-    return false
-  }, [policies, profile?.user?.isSuperAdmin]);
+  const [filteredResource,setFilteredResource]:any = useState([]);
 
-  const filterItems = (items: any) => {
-    return items.filter((item: any) => {
-      const hasPermission = !('permission' in item) || checkPermission(item?.permission) === true;
-  
-      if (item?.children && item?.children?.length > 0) {
-        item.children = filterItems(item.children);
+  useEffect(() => {
+    const checkPermission = (permission: any) : boolean => {
+      if (!permission || profile?.user?.isSuperAdmin ) return true;
+      
+      for (const permissionItem of permission) {
+          if (isMatchPolicy(policies, permissionItem)) {
+            return true;
+        };
       };
-      return hasPermission;
-    });
-  };
-  const filteredResource = filterItems(resource);
+      return false;
+  
+    }
+  
+    const filterItems = (items: ItemType[]) => {
+      return items.filter((item: ItemType) => {
+        if ( !!item?.children?.length) {
+          item.children = filterItems(item.children);
+        };
+        return checkPermission(item?.permission);
+        
+      });
+    };
+    if(policies && !!keys(policies).length){
+      const filteredResource = filterItems(resource);
+      setFilteredResource(filteredResource)
+    };
+  },[policies])
   
   const NewNavbarItems : any = filteredResource?.map((first : any) => {
   if (first.children?.length) {

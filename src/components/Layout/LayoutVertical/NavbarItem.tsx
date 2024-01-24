@@ -3,13 +3,13 @@ import React, { useEffect, useRef, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { useCheckIsEllipsisActive } from '~/utils/hook';
 type propsType = {
-    path : string,
+    path : string | undefined,
     label : string,
 }
-export default function NavbarItem({path,label}:propsType) : React.JSX.Element {
+export default function NavbarItem({path,label}:propsType) : any {
     const target = useRef(null);
     const isEllipsis = useCheckIsEllipsisActive(target)
-    return (
+    return path ? 
         <Tooltip placement='topLeft' overlayClassName='layoutVertical--content__navbar__tooltip' color={'blue'} title={isEllipsis && label}>
         <NavLink
         ref={target}
@@ -19,5 +19,6 @@ export default function NavbarItem({path,label}:propsType) : React.JSX.Element {
         {label}
       </NavLink>
       </Tooltip>
-    )
+      : label
+    
 }
