@@ -23,6 +23,8 @@ import { pagingTable } from "~/utils/helpers";
 import SelectPharmacy from "../../bill/components/SelectPharmacy";
 import { STATUS_QUOTATION, STATUS_QUOTATION_VI } from "../constants";
 import { PlusCircleTwoTone } from "@ant-design/icons";
+import WithPermission from "~/components/common/WithPermission";
+import policyModule from 'policy';
 type propsType = {
   status?: string;
 };
@@ -149,6 +151,7 @@ export default function ListQuotation({
         render(_id, record: any, index) {
           return (
             <Space direction="vertical">
+              <WithPermission permission={policyModule.POLICIES.WRITE_BILL}>
               <Button
                 disabled={get(record,'status') !== STATUS_QUOTATION.NEW}
                 block
@@ -167,6 +170,8 @@ export default function ListQuotation({
               >
                 Chuyển đổi
               </Button>
+              </WithPermission>
+              <WithPermission permission={policyModule.POLICIES.UPDATE_QUOTATION}>
               <Button
                 block
                 disabled={get(record,'status') !== STATUS_QUOTATION.NEW}
@@ -184,6 +189,8 @@ export default function ListQuotation({
               >
                 Cập nhật
               </Button>
+              </WithPermission>
+              <WithPermission permission={policyModule.POLICIES.WRITE_QUOTATION}>
               <Popconfirm
                 title="Bạn muốn sao chép đơn hàng tạm này?"
                 onConfirm={() => onCopyQuotation(_id)}
@@ -196,6 +203,8 @@ export default function ListQuotation({
                   Sao chép
                 </Button>
               </Popconfirm>
+              </WithPermission>
+              <WithPermission permission={policyModule.POLICIES.DELETE_QUOTATION}>
               <Popconfirm
                 title="Bạn muốn xoá đơn hàng tạm này?"
                 onConfirm={() => onDelete(_id)}
@@ -208,6 +217,8 @@ export default function ListQuotation({
                   Xoá
                 </Button>
               </Popconfirm>
+              </WithPermission>
+            
             </Space>
           );
         },
@@ -220,9 +231,11 @@ export default function ListQuotation({
       <Row align="middle" gutter={8}>
       <SelectPharmacy onChange={(value) => onParamChange({pharmacyId : value})}/>
       <SearchAnt value={keyword} onChange={(e) => setKeyword(e.target.value)} onParamChange={onParamChange} />
+      <WithPermission permission={policyModule.POLICIES.WRITE_QUOTATION}>
       <Button style={{marginLeft : 'auto'}} onClick={() => window.open(PATH_APP.bill.create)} type="primary" icon={<PlusCircleTwoTone />}>
         Tạo đơn hàng tạm
       </Button>
+      </WithPermission>
       </Row>
       <TableAnt
       stickyTop

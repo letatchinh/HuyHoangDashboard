@@ -4,13 +4,14 @@ export type TypeProps = {
 export type ResourceType = {
   GROUP_USER: string[],
   GROUP_EMPLOYEE: string[],
-  GROUP_WHBILL: string[],
   GROUP_WHSETTING:  string[]
   GROUP_MANUFACTURER: string[],
   UNIT: string[],
   GROUP_PRODUCTGROUP: string[],
   GROUP_RANKING: string[],
-  MEDICINE: string[]
+  MEDICINE: string[],
+  // Đơn hàng
+  GROUP_BILL: string[],
 };
 
 export type policyType = 'write' | 'read' | 'update' | 'delete' | 'download' | 'admin';
@@ -88,6 +89,24 @@ export type PoliciesType = {
   "DELETE_MEDICINE" |
   "DOWNLOAD_MEDICINE" |
   "ADMIN_MEDICINE" |
-  "MEDICINE"
+  "MEDICINE"|
+
+  //Đơn hàng
+  "READ_BILL" |
+  "WRITE_BILL" |
+  "UPDATE_BILL" |
+  "DELETE_BILL" |
+  "DOWNLOAD_BILL" |
+  "ADMIN_BILL" |
+  "BILL" |
+
+  //Đơn hàng tạm
+  "READ_QUOTATION" |
+  "WRITE_QUOTATION" |
+  "UPDATE_QUOTATION" |
+  "DELETE_QUOTATION" |
+  "DOWNLOAD_QUOTATION" |
+  "ADMIN_QUOTATION" |
+  "QUOTATION" 
   ]: [string, policyType];
 };

@@ -25,6 +25,7 @@ import StepStatus from "../components/StepStatus";
 import BillItemModule from '~/modules/sale/billItem';
 import { STATUS_BILL, STATUS_BILL_VI } from "../constants";
 import useUpdateBillStore from "../storeContext/UpdateBillContext";
+import PolicyModule from 'policy';
 type propsType = {};
 const Layout = ({ label, children }: { label: any; children: any }) => (
   <Row justify={"space-between"} align="middle">
@@ -53,6 +54,7 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
     totalPrice,
     createBy,
   } = bill || {};
+  const canUpdateBill = PolicyModule.hook.useMatchPolicy(PolicyModule.POLICIES.UPDATE_BILL);
   const [openCancel, setOpenCancel] = useState(false);
   const [note, setNote] = useState("");
   const onOpenCancel = useCallback(() => setOpenCancel(true), []);
@@ -76,12 +78,12 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
       key: "1",
       onClick : () => onOpenCancel(),
       label: <span >Huỷ đơn</span>,
-      disabled: billItems?.some(
+      disabled: !canUpdateBill || billItems?.some(
         (item: any) => get(item, "status") !== BillItemModule.constants.STATUS_BILLITEM.ORDERING
       ),
       
     },
-  ],[onOpenCancel,billItems])
+  ],[onOpenCancel,billItems,canUpdateBill])
 
   return (
     <div className="bill-page-update">

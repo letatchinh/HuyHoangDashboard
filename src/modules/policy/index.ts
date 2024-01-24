@@ -1,6 +1,6 @@
 import PolicyScreen from "./screens/Policy";
 import policyApi from "./policy.api";
-import * as policyAuth from "./policy.auth";
+import POLICIES, * as policyAuth from "./policy.auth";
 import * as policyHook from "./policy.hook";
 import * as policyService from "./policy.service";
 import * as policyModels from "./policy.modal";
@@ -16,6 +16,7 @@ const moduleExport = {
     hook : policyHook,
     service : policyService,
     model : policyModels,
-    redux : {reducer,saga}
+    redux : {reducer,saga},
+    POLICIES
 };
 export default moduleExport;

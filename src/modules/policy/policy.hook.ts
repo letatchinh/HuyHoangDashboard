@@ -159,6 +159,7 @@ export const useResources = () => {
 
 //POLICY
 export const isMatchPolicy = (policies: any, requiredPermission: any) => {
+  if(!policies || Object.keys(policies).length === 0) return false;
   return  Boolean(policies?.[requiredPermission?.[0]]?.includes(requiredPermission[1]))
 };
 

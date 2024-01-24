@@ -2,8 +2,11 @@ import { Button, DatePicker, Form, Input } from "antd";
 import dayjs from "dayjs";
 import { get } from "lodash";
 import React, { useEffect, useMemo } from "react";
+import { useMatchPolicy } from "~/modules/policy/policy.hook";
 import { StatusBillItemType, UpdateBillItem } from "../billItem.modal";
 import { STATUS_BILLITEM } from "../constants";
+import PolicyModule from '~/modules/policy';
+
 type propsType = {
   lotNumber: string;
   expirationDate: any;
@@ -25,7 +28,8 @@ export default function FormLot({
   isDisabledAll,
 }: propsType): React.JSX.Element {
   const [form] = Form.useForm();
-  const isView = useMemo(() => status !== STATUS_BILLITEM.PROCESSING, [status]);
+  const canUpdateBill = useMatchPolicy(PolicyModule.POLICIES.UPDATE_BILL);
+  const isView = useMemo(() => !canUpdateBill || status !== STATUS_BILLITEM.PROCESSING, [status]);
   const onFinish = (values: FieldType) => {
     const submitData: UpdateBillItem = {
       ...values,
