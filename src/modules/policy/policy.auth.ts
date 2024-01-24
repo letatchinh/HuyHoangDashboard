@@ -18,7 +18,7 @@ const medicine = 'medicine';
 const RESOURCES = [
   branch,
   // company,
-  // employee,
+  employee,
   user,
   userGroup,
   // pharmacy,

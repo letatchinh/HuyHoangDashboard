@@ -1,10 +1,12 @@
-import { Button, Col, Form, Input, Modal, Row, Select, Skeleton } from "antd";
-import React, { useEffect, useState } from "react";
+import { Button, Col, Form, Input, Modal, Popconfirm, Row, Select, Skeleton } from "antd";
+import React, { useCallback, useEffect, useState } from "react";
 import UploadImage from "~/components/common/Upload/UploadImage";
 import AddressFormSection from "~/components/common/AddressFormSection";
-import { useCreateEmployee, useGetEmployee, useUpdateEmployee } from "../employee.hook";
+import {useGetEmployee, useUpdateEmployee } from "../employee.hook";
 import { employeeSliceAction } from "../redux/reducer";
 import { useResetState } from "~/utils/hook";
+import WithOrPermission from "~/components/common/WithOrPermission";
+import POLICIES from "~/modules/policy/policy.auth";
 
 const { Option } = Select;
 
@@ -15,21 +17,24 @@ const verticalLayout = {
   wrapperCol: { span: 24 },
 };
 interface IProps {
-  id: string;
+  id?: string | null;
   handleCloseModal: () => void;
-}
+  handleUpdate?: any;
+  resetAction?: any;
+  handleCreate?: any;
+  isSubmitLoading?: boolean;
+};
 
 export default function EmployeeForm(props: IProps) {
   const [form] = Form.useForm();
-  const { id, handleCloseModal } = props;
+  const { id, handleCloseModal,  handleUpdate,handleCreate,isSubmitLoading} = props;
   const [imageUrl, setImageUrl] = useState<string>();
   useResetState(employeeSliceAction.resetAction);
   //address
   const [cityCode, setCityCode] = useState(null);
   const [districtCode, setDistrictCode] = useState(null);
   // hook
-  const [isUpdateLoading, handleUpdate] = useUpdateEmployee(handleCloseModal);
-  const [isCreateLoading, handleCreate] = useCreateEmployee(handleCloseModal);
+
   const [employee, isLoading] = useGetEmployee(id);
   
   useEffect(() => {
@@ -38,6 +43,16 @@ export default function EmployeeForm(props: IProps) {
       setDistrictCode(employee?.address?.districtId);
       form.setFieldsValue(employee);
       setImageUrl(employee?.avatar);
+    };
+    if (!id) {
+      form.setFieldsValue({
+        address: {
+          cityId: null,
+          districtId: null,
+          wardId: null
+        }
+      });
+      form.resetFields();
     };
   }, [id, employee]);
 
@@ -77,7 +92,14 @@ export default function EmployeeForm(props: IProps) {
       };
     };
   };
-  
+
+  //Handle avatar
+  const handleChange = useCallback(
+    (imageUrl: string) => {
+        setImageUrl(imageUrl);
+    },
+    [setImageUrl]
+  );
 
   return (
     <div className="employee-form">
@@ -133,10 +155,10 @@ export default function EmployeeForm(props: IProps) {
                 <Skeleton.Input active />
               ) : (
                 <Select>
-                  <Option value="male" key="male">
+                  <Option value="M" key="M">
                     Nam
                   </Option>
-                  <Option value="female" key="female">
+                  <Option value="F" key="F">
                     Nữ
                   </Option>
                 </Select>
@@ -144,7 +166,10 @@ export default function EmployeeForm(props: IProps) {
             </FormItem>
           </Col>
           <Col span={12} className="employee-form__upload-logo">
-            <UploadImage setImageUrl={setImageUrl} imageUrl={imageUrl} />
+          <UploadImage
+              imgUrl={imageUrl}
+              onChange={handleChange}
+            />
           </Col>
         </Row>
         <AddressFormSection
@@ -184,10 +209,15 @@ export default function EmployeeForm(props: IProps) {
         </Row>
         <Row gutter={10} align="middle" justify={"center"}>
           <Col span={2}>
-            <Button onClick={handleCloseModal}>Huỷ</Button>
+            <Button
+              onClick={handleCloseModal}
+            >Huỷ</Button>
           </Col>
           <Col span={4}>
-            <Button type="primary" htmlType="submit">
+            <Button
+              type="primary" htmlType="submit"
+              loading={isSubmitLoading}
+            >
               {id ? "Cập nhật" : "Tạo mới"}
             </Button>
           </Col>

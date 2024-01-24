@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Button, Checkbox, Form, Input, Modal, Row, Skeleton } from "antd";
 import { useParams } from "react-router-dom";
 import { useCreateUserGroup, useGetUserGroup, useUpdateUserGroup } from "../userGroup.hook";
@@ -14,36 +14,29 @@ type propsType = {
   id?: string;
   setReFetch?: any,
   reFetch?: any
+  isSubmitLoading?: boolean,
+  handleCreate?: any,
+  handleUpdateUser?: any
 };
 
 const FormItem = Form.Item;
 export default function UserGroupForm(props: propsType): React.JSX.Element {
-  const { isOpen, onClose, initGroup, id , setReFetch, reFetch} = props;
-  const dispatch = useDispatch();
-  const resetAction = () => {
-    return dispatch(userGroupSliceAction.resetAction());
-  };
+  const { isOpen, onClose, initGroup, id ,isSubmitLoading, handleCreate,handleUpdateUser} = props;
   const { groupId } = useParams();
   const [form] = Form.useForm();
   const [userGroup, isLoading] = useGetUserGroup(groupId);
-  const [isSubmitLoading, handleCreate] = useCreateUserGroup(onClose);
-  const [, handleUpdate] = useUpdateUserGroup(() => {
-    onClose();
-    resetAction();
-    setReFetch(!reFetch);
-  });
-
+  const [data, setData] = useState<any>();
   useEffect(() => {
     if (userGroup && id) {
       form.setFieldsValue(userGroup);
     } else {
       form.resetFields();
     };
-  }, [groupId,userGroup, form, id]);
+  }, [groupId, userGroup, form, id]);
 
   const onFinish = (values: any) => {
     if (id) {
-      handleUpdate({
+      handleUpdateUser({
         ...values,
         id: id,
         branchId: DEFAULT_BRANCH_ID,
@@ -56,22 +49,23 @@ export default function UserGroupForm(props: propsType): React.JSX.Element {
     }
   };
 
+
   return (
     <Form
         form={form}
         name="basic"
         labelCol={{ span: 8 }}
         wrapperCol={{ span: 16 }}
-        style={{ maxWidth: 600 }}
+        style={{ width: '95%' }}
         onFinish={onFinish}
         autoComplete="off"
         labelAlign="left"
         >
-        <Row
+        {/* <Row
           align="middle"
           justify="space-between"
           className="employee-group-form__logo-row"
-        >
+        > */}
           <FormItem
             label="Tên nhóm nhân viên"
             name="name"
@@ -89,7 +83,7 @@ export default function UserGroupForm(props: propsType): React.JSX.Element {
           >
             {isLoading ? <Skeleton.Input active /> : <Input />}
           </FormItem>
-        </Row>
+        {/* </Row> */}
 
         <Row className="employee-group-form__submit-box">
           {isSubmitLoading ? (
