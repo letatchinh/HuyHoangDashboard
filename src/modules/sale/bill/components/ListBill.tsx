@@ -52,7 +52,7 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
         align: "center",
         render(createdAt, record, index) {
           return (
-            <Typography.Text>
+            <Typography.Text strong>
               {dayjs(createdAt).format("DD/MM/YYYY HH:mm")}
             </Typography.Text>
           );
@@ -82,6 +82,12 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
         title: "Lý do huỷ",
         dataIndex: "cancelNote",
         key: "cancelNote",
+        align: "center",
+      },
+      {
+        title: "Ghi chú",
+        dataIndex: "note",
+        key: "note",
         align: "center",
       },
       {

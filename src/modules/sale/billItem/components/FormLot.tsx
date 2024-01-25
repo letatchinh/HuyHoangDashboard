@@ -36,6 +36,7 @@ export default function FormLot({
       expirationDate: dayjs(get(values, "expirationDate")).format("YYYY-MM-DD"),
       id,
     };
+    
     onChangeStatusBillItem(submitData);
   };
   useEffect(() => {

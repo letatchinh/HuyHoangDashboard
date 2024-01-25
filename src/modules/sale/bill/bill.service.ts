@@ -1,6 +1,6 @@
 import { compact, forIn, get, keys, unset } from "lodash";
 import { v4 ,validate} from "uuid";
-import { DataSourceType, ItemDataSource, keyValid, KEY_DATA_PHARMACY, KEY_PRIORITY } from "~/pages/Dashboard/Bill/CreateBill";
+import { DataSourceType, ItemDataSource, keyValidDataSource, KEY_DATA_PHARMACY, KEY_PRIORITY } from "~/pages/Dashboard/Bill/CreateBill";
 import { cumulativeDiscountType } from "../../cumulativeDiscount/cumulativeDiscount.modal";
 import apis from "./bill.api";
 import { quotation } from "./bill.modal";
@@ -238,10 +238,11 @@ export const validateDataStorageREINS = (dataFromLocalStorage : any) : boolean =
 
   // Validate the Key of item BillDatSource
   const toJson = JSON.parse(dataFromLocalStorage);
+  console.log(toJson,'toJson');
   const isInvalid = keys(toJson).some((key:string) => {
     if(validate(key)){
       const value = toJson[key];
-      return keys(value)?.some((keyItem:string) => !keyValid.includes(keyItem))
+      return keys(value)?.some((keyItem:string) => !keyValidDataSource.includes(keyItem))
     }else{
       return true;
     }

@@ -40,7 +40,11 @@ function* createBill({payload} : any) : any {
 
 function* updateBill({payload} : any) : any {
   try {
-    const data = yield call(api.update,payload);
+    const {callbackSubmit,...params} = payload;
+    const data = yield call(api.update,params);
+    if(callbackSubmit && typeof callbackSubmit === 'function'){
+      callbackSubmit();
+    }
     yield put(billSliceAction.updateSuccess(data));
   } catch (error:any) {
     yield put(billSliceAction.updateFailed(error));

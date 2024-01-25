@@ -5,35 +5,36 @@ import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { v4 } from "uuid";
 import { default as Bill, default as BillModule } from "~/modules/sale/bill";
-import { quotation } from "~/modules/sale/bill/bill.modal";
+import { FormFieldCreateBill, quotation } from "~/modules/sale/bill/bill.modal";
 import SelectProduct from "~/modules/sale/bill/components/SelectProduct";
 import logo from '~/assets/images/header/logo-white.svg';
 import ModalAnt from "~/components/Antd/ModalAnt";
 
 export const KEY_DATA_PHARMACY = "bill-pharmacy";
 export const KEY_PRIORITY = "key-priority"; // Tab Will Use this key and Remove then (If Have)
-type DataUpdateQuotationType = {
+interface DataUpdateQuotationType {
   id : string,
   code : string
 }
-export type ItemDataSource = {
+export interface ItemDataSource extends FormFieldCreateBill  {
   typeTab : "createQuotation" | "updateQuotation" | "convertQuotation",
-  quotationItems: quotation[];
-  pharmacyId: string | null;
-  dataUpdateQuotation? : DataUpdateQuotationType;
+  quotationItems: quotation[]; // BillItems
+  dataUpdateQuotation? : DataUpdateQuotationType; // Data When Handle With Exist Quotation
 };
-export const keyValid = ['typeTab','quotationItems','pharmacyId','dataUpdateQuotation'];
+export const keyValidDataSource = ['typeTab','quotationItems','pharmacyId','dataUpdateQuotation','pair','debtType'];
 
-export type DataSourceType = {
+export interface DataSourceType  {
   [key: string]: ItemDataSource;
 };
 const initData: ItemDataSource = {
   typeTab : "createQuotation",
   quotationItems: [],
   pharmacyId: null,
+  pair : 0,
+  debtType : null
 };
 
-export type DataResultType = {
+export interface DataResultType  {
   type : 'createQuotation' | 'convertQuotation' | 'updateQuotation',
   code : string
 }
@@ -79,6 +80,8 @@ const CreateBillPage = (): React.JSX.Element => {
         typeTab : "createQuotation",
         quotationItems: [],
         pharmacyId: null,
+        pair : 0,
+        debtType : null,
       },
     };
     setDataSource(newDataSource);
@@ -152,7 +155,7 @@ const CreateBillPage = (): React.JSX.Element => {
         ...dataReady[activeKey], // Inherited from Old Data
         ...newData, // Change New Data Source
       },
-    };
+    };    
     setDataSource(newDataSource);
   };
   const verifyData = (targetKey: string, callback?: () => void) => {

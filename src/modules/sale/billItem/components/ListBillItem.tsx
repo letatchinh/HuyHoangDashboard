@@ -2,7 +2,7 @@ import { ArrowUpOutlined, EditTwoTone } from "@ant-design/icons";
 import { Button, Flex, Popconfirm, Space, Tooltip, Typography } from "antd";
 import { ColumnsType } from "antd/es/table/InternalTable";
 import { forIn, get } from "lodash";
-import React, { useMemo } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import TableAnt from "~/components/Antd/TableAnt";
 import Status from "~/components/common/Status/index";
 import { formatter } from "~/utils/helpers";
@@ -20,6 +20,9 @@ import ExpandRowBillItem from "./ExpandRowBillItem";
 import { STATUS_BILL } from "../../bill/constants";
 import WithPermission from "~/components/common/WithPermission";
 import PolicyModule from '~/modules/policy';
+import ModalAnt from "~/components/Antd/ModalAnt";
+import TextArea from "antd/es/input/TextArea";
+import ToolTipBadge from "~/components/common/ToolTipBadge";
 type propsType = {
   statusBill: any;
 };
@@ -34,10 +37,45 @@ export default function ListBillItem({
     () => statusBill === STATUS_BILL.CANCELLED,
     [statusBill]
   );
+  const [itemActive,setItemActive] = useState<any>();
   const { bill, mutateBill } = useUpdateBillStore();
-  const [isSubmitLoading, updateBillItem] =
-    BillModule.hook.useUpdateBillItem(mutateBill);
+
   const { billItems } = bill || {};
+  const [billItemIdCancel,setBillItemIdCancel] = useState<any>();
+  const [openCancel, setOpenCancel] = useState(false);
+  const [note, setNote] = useState(""); // CancelNote BillItem
+  const onOpenCancel = useCallback((id:any) => {
+    if(id){
+      setBillItemIdCancel(id);
+    }
+    setOpenCancel(true)
+  }, []);
+  const onCloseCancel = useCallback(() => {
+    setOpenCancel(false);
+    setNote("");
+    setBillItemIdCancel(null);
+  }, []);
+  const [isSubmitLoading, updateBillItem] =
+  BillModule.hook.useUpdateBillItem(() => {
+    mutateBill();
+    onCloseCancel();
+  });
+  const onChangeStatusBillItem = useCallback((data: UpdateBillItem) => {
+    const { id, ...params } = data;
+    const payloadSubmit: PayloadSubmitUpdateBillItem = {
+      [id]: {
+        ...params,
+      },
+    };
+    updateBillItem(payloadSubmit);
+  },[updateBillItem])
+  const onCancelBillItem = useCallback(() => {
+    onChangeStatusBillItem({
+      id: billItemIdCancel,
+      status: STATUS_BILLITEM.CANCELLED,
+      note,
+    })
+  },[note,billItemIdCancel])
   const getNextStatus = ({
     status,
     expirationDate,
@@ -77,15 +115,7 @@ export default function ListBillItem({
     };
   };
 
-  const onChangeStatusBillItem = (data: UpdateBillItem) => {
-    const { id, ...params } = data;
-    const payloadSubmit: PayloadSubmitUpdateBillItem = {
-      [id]: {
-        ...params,
-      },
-    };
-    updateBillItem(payloadSubmit);
-  };
+
   const columns: ColumnsType = [
     {
       title: "Mã sản phẩm",
@@ -140,11 +170,13 @@ export default function ListBillItem({
           expirationDate: get(record, "expirationDate"),
         });
         return (
-          <div className="d-flex flex-column">
+          <div className="d-flex flex-column align-items-center">
+            <ToolTipBadge title={status === STATUS_BILL.CANCELLED && get(record,'note','')}>
             <Status
               status={status}
               statusVi={CLONE_STATUS_BILLITEM_VI?.[status]}
             />
+            </ToolTipBadge>
             {nextStatus && (
              <WithPermission permission={PolicyModule.POLICIES.UPDATE_BILL}>
                  <Flex gap={'small'} align="center" justify={"center"}>
@@ -168,6 +200,7 @@ export default function ListBillItem({
                       block
                       type="primary"
                       disabled={isDisabledAll || !!message}
+                      loading={isSubmitLoading}
                     >
                       {CLONE_STATUS_BILLITEM_VI[nextStatus]}
                     </Button>
@@ -175,21 +208,9 @@ export default function ListBillItem({
                 </Popconfirm>
                 {status === STATUS_BILLITEM.ORDERING && (
                   <WithPermission permission={PolicyModule.POLICIES.UPDATE_BILL}>
-                    <Popconfirm
-                    title={"Chuyển đổi sang trạng thái Huỷ"}
-                    okText="Ok"
-                    cancelText="Huỷ"
-                    onConfirm={() =>
-                      onChangeStatusBillItem({
-                        id: get(record, "_id", ""),
-                        status: STATUS_BILLITEM.CANCELLED,
-                      })
-                    }
-                  >
-                    <Button type="primary" block danger>
+                    <Button type="primary" block danger loading={isSubmitLoading} onClick={() => onOpenCancel(get(record, "_id", ""))}>
                       Huỷ đơn
                     </Button>
-                  </Popconfirm>
                   </WithPermission>
                 )}
               </Flex>
@@ -240,14 +261,19 @@ export default function ListBillItem({
       },
     },
   ];
-  console.log(billItems, "billItems");
 
   return (
+    <>
     <TableAnt
       bordered={true}
       dataSource={billItems}
       pagination={false}
       columns={columns}
+      rowKey={(rc) => rc?._id}
+      // onRow={(rc) => ({
+      //   onClick : () => setItemActive(itemActive?.includes(rc._id) ? null : rc._id),
+        
+      // })}
       size="small"
       expandable={{
         expandedRowRender: (record: any) => (
@@ -256,8 +282,29 @@ export default function ListBillItem({
             historyStatus={get(record, "historyStatus")}
           />
         ),
-        defaultExpandAllRows: true,
+        expandedRowKeys : [itemActive],
+      }}
+      onExpand={(expanded, record) => {
+        expanded ? setItemActive(record._id) : setItemActive(null);
       }}
     />
+    <ModalAnt
+        destroyOnClose
+        onCancel={onCloseCancel}
+        okText="Huỷ đơn"
+        okType="danger"
+        open={openCancel}
+        cancelButtonProps={{ style: { display: "none" } }}
+        onOk={onCancelBillItem}
+        confirmLoading={isSubmitLoading}
+        afterClose={onCloseCancel}
+      >
+        <h6 className="text-center">Xác nhận huỷ đơn</h6>
+        <TextArea
+          value={note}
+          onChange={(e) => setNote(e.target.value)}
+          placeholder="Vui lòng nhập lý do huỷ đơn!"
+        />
+      </ModalAnt></>
   );
 }
