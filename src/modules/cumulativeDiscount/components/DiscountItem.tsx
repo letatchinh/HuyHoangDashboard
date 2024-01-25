@@ -445,7 +445,7 @@ export default function DiscountItem({
                               </Tooltip>
                             </Col>
                           </Row>
-                          <Divider orientation="left"><h6> Thời gian áp dụng</h6></Divider>
+                          <Divider orientation="left"><h6> Thời gian tích luỹ</h6></Divider>
                           <Row
                             gutter={8}
                             align={"middle"}
@@ -519,7 +519,7 @@ export default function DiscountItem({
                               </Form.Item>
                             </Col>
                           </Row>
-                          <Divider orientation="left"><h6> Thời gian tích luỹ</h6></Divider>
+                          <Divider orientation="left"><h6> Thời gian áp dụng</h6></Divider>
                           <Row
                             gutter={8}
                             align={"middle"}
