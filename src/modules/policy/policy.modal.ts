@@ -15,6 +15,7 @@ export type ResourceType = {
   GROUP_BILL: string[],
 
   GROUP_SUPPLIER: string[],
+
   GROUP_WORK_MANAGERMENT: string[],
 };
 

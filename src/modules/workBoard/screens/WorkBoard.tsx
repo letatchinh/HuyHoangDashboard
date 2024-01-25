@@ -1,10 +1,7 @@
 
 import React, { Suspense, useState, lazy, useCallback } from 'react';
-import { Button, Col, Form, Modal, Row, Select, Space, Switch, Table } from 'antd';
+import { Button, Col, Form, Modal, Row, Select, Space, Switch, Table, message } from 'antd';
 import Search from 'antd/lib/input/Search';
-// import POLICY from '~/constants/policy';
-// import { useMatchOrPolicy } from '~/hooks';
-
 import Breadcrumb from '~/components/common/Breadcrumb';
 import { useDeleteWorkBoard, useGetlistWorkBoard, useUpdateWorkBoardParams, useWorkBoardPaging, useWorkBoardQueryParams } from '../workBoard.hook';
 import { useExpandrowTableClick } from '~/utils/helpers';
@@ -15,17 +12,14 @@ import moment from 'moment';
 import BoardForm from '../components/BoardForm';
 import BoardFormDetail from '../components/BoardFormDetail';
 import { SearchOutlined } from '@ant-design/icons';
-// const BoardForm = lazy(() => import('../components/BoardForm.tsx'));
-// const BoardForm = lazy(() =>
-//   import('../components/BoardForm.tsx')
-//     .then(({ BoardForm }) => ({ default: BoardForm })),
-// );
-// const BoardFormDetail = lazy(() => import('../components/BoardFormDetail.tsx'));
-
+import WithPermission from '~/components/common/WithPermission';
+import POLICIES from '~/modules/policy/policy.auth';
+import { useMatchOrPolicy } from '~/modules/policy/policy.hook';
 interface WorkFlowProps { }
 
 const WorkBoard: React.FC<WorkFlowProps> = () => {
-  //   const canUpdateAndDelete = useMatchOrPolicy([POLICY.UPDATE_TODOLIST, POLICY.DELETE_TODOLIST]);
+    const canUpdate = useMatchOrPolicy([POLICIES.UPDATE_WORKMANAGEMENT]);
+    const canDELETE = useMatchOrPolicy([POLICIES.DELETE_WORKMANAGEMENT]);
   const [form] = Form.useForm();
   const { select, setSelect, onClick } = useExpandrowTableClick();
   const [isOpenForm, setOpen] = useState(false);
@@ -111,8 +105,6 @@ const WorkBoard: React.FC<WorkFlowProps> = () => {
         </Space>
       ),
     },
-    // canUpdateAndDelete
-    //   ? 
     {
       title: 'Hành động',
       key: 'action',
@@ -120,16 +112,19 @@ const WorkBoard: React.FC<WorkFlowProps> = () => {
       width: '180px',
       render: (_, record) => (
         <Space size="small">
-          <Button type="primary" onClick={() => handleOpenUpdate(record?._id)}>
+          <Button type="primary" onClick={() => {
+            if(!canUpdate) return message.warning('Bạn không có quyền thay đổi')
+            handleOpenUpdate(record?._id)}}>
             Chinh sửa
           </Button>
-          <Button style={{ color: 'red' }} onClick={() => handleDelete(record._id)}>
+          <Button style={{ color: 'red' }} onClick={() =>{
+            if(!canDELETE) return message.warning('Bạn không có quyền xoá')
+            handleDelete(record._id)}}>
             Xóa
           </Button>
         </Space>
       ),
     }
-    // : null,
   ];
   const onSearch = (value: string) => {
     onParamChange({ ['keyword']: value });
@@ -154,9 +149,11 @@ const WorkBoard: React.FC<WorkFlowProps> = () => {
             />
           </Col>
           <Col>
-            <Button onClick={() => handleOpenFormCreate()} type="primary">
-              Thêm mới
-            </Button>
+            <WithPermission permission={POLICIES.WRITE_WORKMANAGEMENT}>
+              <Button onClick={() => handleOpenFormCreate()} type="primary">
+                Thêm mới
+              </Button>
+            </WithPermission>
           </Col>
         </Row>
         <Table

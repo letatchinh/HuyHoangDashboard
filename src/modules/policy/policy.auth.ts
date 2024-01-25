@@ -26,6 +26,7 @@ const quotation = 'quotation';
 const supplier = 'supplier';
 // Sản phẩm Nhà cung cấp
 const product = 'product';
+const todoList = 'todoList';
 
 const RESOURCES = [
   //Setting
@@ -56,6 +57,7 @@ const RESOURCES = [
   bill,
   quotation,
   todoStatusConfig,
+  todoList,
 ];
 
 //ACTIONS
@@ -133,6 +135,7 @@ const RESOURCE = (): ResourceType => {
   
   const GROUP_WORK_MANAGERMENT: string[] = [
     todoStatusConfig,
+    todoList
   ];
 
   return {
