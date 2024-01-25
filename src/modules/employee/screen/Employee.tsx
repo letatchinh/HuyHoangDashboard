@@ -96,7 +96,7 @@ export default function Employee() {
 
   const [, handleUpdate] = useUpdateEmployee(() => {
     handleCloseModal();
-    resetAction();
+    // resetAction();
   });
   const [, handleDelete] = useDeleteEmployee(resetAction);
   const [isSubmitLoading, handleCreate] = useCreateEmployee(() => {
@@ -179,8 +179,7 @@ export default function Employee() {
         width={1020}
         style={{ top: 50 }}
         afterClose={() => {
-          setIsOpenModal(false);
-          setId(null);
+          setIsOpenModal(false)
         }}
         destroyOnClose
       >
@@ -189,8 +188,8 @@ export default function Employee() {
           handleCloseModal={handleCloseModal}
           handleUpdate={handleUpdate}
           resetAction={resetAction}
-          handleCreate={handleCreate}
-          isSubmitLoading = {isSubmitLoading}
+          handleCreate = {handleCreate}
+          isSubmitLoading={isSubmitLoading}
         />
       </Modal>
     </div>

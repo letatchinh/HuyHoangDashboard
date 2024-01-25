@@ -51,6 +51,7 @@ export type initStateSlice<T=any> = {
     // Đơn hàng
     bill: "bill",
     quotation: "quotation",
+    botNotification: "botNotification",
     workSprint:'workSprint',
     workList:'workList',
     workTask:'workTask',

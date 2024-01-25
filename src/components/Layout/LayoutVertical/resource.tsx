@@ -9,7 +9,8 @@ import {
   TrophyOutlined,
   ApartmentOutlined,
   ShopFilled,
-  MoneyCollectOutlined
+  MoneyCollectOutlined,
+  BellFilled,
 } from "@ant-design/icons";
 import { MenuProps } from "antd";
 import React, { useCallback } from "react";
@@ -209,6 +210,13 @@ export const resource: ItemType[] = [
       },
     ],
     icon: <AppstoreFilled />,
+  },
+  {
+    label: "Thông báo tự động",
+    icon: <BellFilled />,
+    path: PATH_APP.botNotification.root,
+    key: PATH_APP.botNotification.root,
+    permission: [POLICIES.READ_NOTIFICATIONBOTMANAGER],
   },
        
  ];

@@ -228,6 +228,10 @@ export const ACCOUNTS : any = {
   911: 'Xác định kết quả kinh doanh '
 };
 export const MAX_LIMIT = 200;
+export const NEW_BILL_EMAIL = 'newBillEmail';
+export const STATUS_BILL_EMAIL = 'statusBillEmail';
+export const NEW_QUOTATION_EMAIL = 'newQuotationEmail';
+
 export type ValueStatusTask = {
     value?: string;
     bg?: string;
