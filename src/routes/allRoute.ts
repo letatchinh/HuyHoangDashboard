@@ -23,6 +23,7 @@ import WorkBoardPage from "~/pages/Dashboard/WorkBoard";
 import WorkSprintPage from "~/pages/Dashboard/WorkSprint";
 import WorkListPage from "~/pages/Dashboard/WorkList";
 import WorkTaskPage from "~/pages/Dashboard/WorkTask";
+import BotNotificationPage from "~/pages/Dashboard/BotNotification";
 export const mainRoutes :PathRouteProps[] = [
   { path: PATH_APP.main.root, Component: Homepage },
 
@@ -64,7 +65,7 @@ export const mainRoutes :PathRouteProps[] = [
   { path: PATH_APP.pharmacy.root, Component: Pharmacy },
 
   // Bot Notification
-  { path: PATH_APP.botNotification.root, Component: null },
+  { path: PATH_APP.botNotification.root, Component: BotNotificationPage },
  
   //Work Management
   { path: PATH_APP.todoList.workSprint, Component: WorkSprintPage },

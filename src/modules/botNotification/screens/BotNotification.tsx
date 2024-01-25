@@ -202,14 +202,14 @@ export default function BotNotification(props: propsType): React.JSX.Element {
     setSelected(value);
   };
   return (
-    <div className="page-wraper page-content">
-      <div className="container-fluid">
-        <Breadcrumb title="Quản lý thông báo tự động" />
+    <div className="page-wrapper page-content">
+      <Breadcrumb title="Quản lý thông báo tự động" />
+      <div className="container-fluid" style={{backgroundColor: '#FFFFFF', padding: '2%'}}>
         <Row justify="space-between">
           <Col>
-            <h1>Quản lý tài khoản Email nhận thông báo</h1>
+            <h5>Tài khoản Email nhận thông báo</h5>
           </Col>
-          <Col>
+          {/* <Col>
             <Select
               value={selected}
               style={{ width: 120 }}
@@ -217,7 +217,7 @@ export default function BotNotification(props: propsType): React.JSX.Element {
             >
               <Option value="emailOption">Email</Option>
             </Select>
-          </Col>
+          </Col> */}
         </Row>
 
         <Form
@@ -235,6 +235,7 @@ export default function BotNotification(props: propsType): React.JSX.Element {
             onClick={() => {
               form.submit();
             }}
+            style={{ backgroundColor: "#3481FF", color: "white", marginLeft: '30%' }}
           >
             {isUpdateLoading && <Spin size="large" />}Cập nhật
           </Button>

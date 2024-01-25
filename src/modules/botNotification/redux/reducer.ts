@@ -11,8 +11,11 @@ class BotNotificationClassExtend extends InstanceModuleRedux {
     super('botNotification');
     this.cloneReducer = {
       ...this.initReducer,
-      // Want Add more reducer Here...
-    }
+      getListSuccess: (state: initStateSlice, { payload }: any) => {
+        state.isLoading = false;
+        state.list = payload;
+      },
+    };
     this.cloneInitState = {
       ...this.initialState,
       // Want Add more State Here...
