@@ -27,7 +27,7 @@ type manufacturerType = {
     _id : string,
     name : string
 }
-export type variant = {
+export interface variant  {
     exchangeValue : number,
     price : number,
     productUnit : string,
@@ -35,7 +35,7 @@ export type variant = {
     variantIsDefault : boolean,
     _id : string,
 }
-export type typeCumulativeDiscount = {
+export interface typeCumulativeDiscount  {
     typeReward : string,
     value : string,
     name : string,
@@ -46,7 +46,7 @@ export type typeCumulativeDiscount = {
     session : string,
     code : string,
 }
-export type quotation = {
+export interface quotation  {
     cumulativeDiscount : typeCumulativeDiscount[],
     productId : string,
     variantId : string,
@@ -60,25 +60,24 @@ export type quotation = {
     expirationDate : string,
     codeBySupplier : string,
 }
-export type FormFieldCreateBill = {
-    pharmacyId : string,
-    debtType : string,
+export interface FormFieldCreateBill {
+    pharmacyId : string | null,
+    debtType : string | null,
     pair : number
 }
-export type PayloadCreateBill = {
-    pharmacyId : string,
+export interface PayloadCreateBill extends FormFieldCreateBill {
     quotationItems : Omit<quotation,'variant' | 'variants'>[],
     totalPrice : number,
-    pair : number,
     _id? : any,
 }
-export type PayloadUpdateBill = {
-    cancelNote : string,
-    status : "CANCELLED",
+export interface PayloadUpdateBill  {
+    cancelNote? : string,
+    note? : string,
+    status? : "CANCELLED",
     _id : string
 }
 
-export type ItemSearchProduct = {
+export interface ItemSearchProduct  {
     cumulativeDiscount : typeCumulativeDiscount[],
     medicalCode : string,
     name : string,
@@ -94,7 +93,7 @@ export type ItemSearchProduct = {
     manufacturer : manufacturerType
 }
 
-export type DebtType = {
+export interface DebtType  {
     alias : string,
     key : string,
     name : string,

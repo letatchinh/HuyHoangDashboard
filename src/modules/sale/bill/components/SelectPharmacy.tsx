@@ -6,16 +6,18 @@ import useNotificationStore from "~/store/NotificationContext";
 import { FormFieldCreateBill } from "../bill.modal";
 import DebounceSelect from "~/components/common/DebounceSelect";
 import { UserAddOutlined, UserOutlined } from "@ant-design/icons";
-type propsType = {
+import { SelectProps } from "antd/lib/index";
+interface propsType extends SelectProps {
   form? : any,
   onChange? : (p:any) => void,
-  allowClear? : boolean
+  allowClear? : boolean,
+  showIcon? : boolean,
 };
 type ItemSearch = {
   name: string;
   value: string;
 };
-export default function SelectPharmacy({form,onChange = () => {},allowClear = true}: propsType): React.JSX.Element {
+export default function SelectPharmacy({form,onChange = () => {},allowClear = true,showIcon=true,...props}: propsType): React.JSX.Element {
   const { onNotify } = useNotificationStore();
   const [loading,setLoading] = useState(false);
   const [initOption,setInitOption] = useState([]);
@@ -60,7 +62,7 @@ export default function SelectPharmacy({form,onChange = () => {},allowClear = tr
   },[]);
   return (
     <Row gutter={8}>
-      <UserOutlined />
+      {showIcon && <UserOutlined />}
       <Col flex={1}>
       <Form.Item<FormFieldCreateBill>
       name={"pharmacyId"}
@@ -74,7 +76,7 @@ export default function SelectPharmacy({form,onChange = () => {},allowClear = tr
       style={{marginBottom: 'unset'}}
     >
       <DebounceSelect
-      size="large"
+        size="large"
         loading={loading}
         placeholder="Chọn nhà thuốc"
         fetchOptions={fetchOptions}
@@ -82,7 +84,7 @@ export default function SelectPharmacy({form,onChange = () => {},allowClear = tr
         initOptions={initOption}
         allowClear={allowClear}
         {...onChange && {onChange : (value : any) => onChange(value)}}
-
+        {...props}
       />
     </Form.Item>
       </Col>

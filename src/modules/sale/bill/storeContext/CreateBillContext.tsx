@@ -9,6 +9,7 @@ import {
 } from "react";
 import { v4 } from "uuid";
 import QuotationModule from '~/modules/sale/quotation';
+import { DEFAULT_DEBT_TYPE } from "../../quotation/constants";
 import { useGetDebtRule } from "../bill.hook";
 import { DebtType, quotation } from "../bill.modal";
 import { onVerifyData, reducerDiscountQuotationItems } from "../bill.service";
@@ -235,17 +236,16 @@ export function CreateBillProvider({
 
   // Initalize Data And Calculate Discount
   useEffect(() => {
-    const initDebt = debt?.find((debt : DebtType) => get(debt, "key") === "COD");
+    const initDebt = debt?.find((debt : DebtType) => get(debt, "key") === DEFAULT_DEBT_TYPE);
     form.setFieldsValue({
-      debtType : get(initDebt,'key'),
+      debtType : form.getFieldValue('debtType') ?? get(initDebt,'key'),
       pharmacyId : get(bill,'pharmacyId'),
     });
-    if (get(bill, "quotationItems", [])?.length) {
+    if (get(bill, "pharmacyId")) {
       const newQuotationItems: any[] = reducerDiscountQuotationItems(get(bill, "quotationItems", []));
       setQuotationItems(newQuotationItems);
     }
   }, [bill,debt,form,totalPrice]);
-
 
   return (
     <CreateBill.Provider

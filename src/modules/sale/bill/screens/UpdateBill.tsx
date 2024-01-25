@@ -1,10 +1,11 @@
-import { DownOutlined, LeftOutlined } from "@ant-design/icons";
+import { DownOutlined, LeftOutlined, SendOutlined } from "@ant-design/icons";
 import {
   Avatar,
   Button,
   Col,
   Divider,
   Dropdown,
+  Form,
   Row,
   Space,
   Spin,
@@ -14,7 +15,7 @@ import TextArea from "antd/es/input/TextArea";
 import { MenuProps } from "antd/lib/index";
 import dayjs from "dayjs";
 import { get, omit } from "lodash";
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import ModalAnt from "~/components/Antd/ModalAnt";
 import Status from "~/components/common/Status/index";
@@ -31,6 +32,7 @@ import BillItemModule from "~/modules/sale/billItem";
 import { STATUS_BILL, STATUS_BILL_VI } from "../constants";
 import useUpdateBillStore from "../storeContext/UpdateBillContext";
 import PolicyModule from "policy";
+import { useChangeDocumentTitle } from "~/utils/hook";
 type propsType = {};
 const Layout = ({ label, children }: { label: any; children: any }) => (
   <Row justify={"space-between"} align="middle">
@@ -43,12 +45,15 @@ const Layout = ({ label, children }: { label: any; children: any }) => (
     </Col>
   </Row>
 );
-
+type FormFieldBillType = {
+  note : string,
+}
 const CLONE_STATUS_BILL_VI: any = STATUS_BILL_VI;
 const CLONE_STATUS_BILL: any = STATUS_BILL;
 export default function UpdateBill(props: propsType): React.JSX.Element {
+  const [form] = Form.useForm();
   useResetBillAction();
-  const { bill, isLoading } = useUpdateBillStore();
+  const { bill, isLoading,mutateBill } = useUpdateBillStore();
   const {
     codeSequence,
     createdAt,
@@ -58,6 +63,7 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
     pair,
     totalPrice,
     createBy,
+    note,
   } = bill || {};
   const canUpdateBill = PolicyModule.hook.useMatchPolicy(
     PolicyModule.POLICIES.UPDATE_BILL
@@ -69,8 +75,11 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
     setOpenCancel(false);
     setCancelNote("");
   }, []);
-  const [isSubmitLoading, updateBill] = useUpdateBill(onCloseCancel);
-  const onUpdateBill = () => {
+  const [isSubmitLoading, updateBill] = useUpdateBill(() => {
+    onCloseCancel();
+    mutateBill()
+  });
+  const onCancelBill = () => {
     const payloadUpdate: PayloadUpdateBill = {
       cancelNote,
       status: CLONE_STATUS_BILL.CANCELLED,
@@ -78,31 +87,31 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
     };
     updateBill(payloadUpdate);
   };
+  const onFinish = (values : FormFieldBillType) => {
+    const payloadUpdate: PayloadUpdateBill = {
+      ...values,
+      _id: get(bill, "_id"),
+    };
+    updateBill(payloadUpdate);
+  }
 
-  const items: MenuProps["items"] = useMemo(
-    () => [
-      {
-        key: "1",
-        onClick: () => onOpenCancel(),
-        label: <span>Huỷ đơn</span>,
-        disabled:
-          !canUpdateBill ||
-          billItems?.some(
-            (item: any) =>
-              get(item, "status") !==
-              BillItemModule.constants.STATUS_BILLITEM.ORDERING
-          ),
-      },
-    ],
-    [onOpenCancel, billItems, canUpdateBill]
-  );
-
+  // useChangeDocumentTitle(codeSequence ? "Đơn hàng - " + codeSequence : 'Loading...',{dependency : [codeSequence]})
+  useEffect(() => {
+    form.setFieldsValue({note})
+  },[note])
   return (
     <div className="bill-page-update">
+      <Form
+      form={form}
+      onFinish={onFinish}
+      >
+
+      
       {isLoading && <Spin fullscreen />}
       <Link className="link_" to={PATH_APP.bill.root}>
         <LeftOutlined /> Đơn hàng
       </Link>
+      
       <div className="bill-page-update--infoBill">
         <Row justify={"space-between"} align="middle" gutter={24}>
           <Col lg={9} md={24} sm={24}>
@@ -122,12 +131,13 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
                     danger
                     onClick={onOpenCancel}
                     disabled={
-                      !canUpdateBill ||
-                      billItems?.some(
+                      !canUpdateBill
+                      || billItems?.some(
                         (item: any) =>
                           get(item, "status") !==
                           BillItemModule.constants.STATUS_BILLITEM.ORDERING
                       )
+                      || status !== STATUS_BILL.NEW
                     }
                   >
                     Huỷ đơn
@@ -187,7 +197,7 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
             </WhiteBox>
           </div>
         </Col>
-        {/* // InfoBill */}
+        {/* Thông tin đơn hàng */}
         <Col lg={8} md={24} sm={24}>
           <div className="bill-page-update--infoBillRight">
             <WhiteBox>
@@ -209,10 +219,17 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
                   {formatter(totalPrice - pair)}
                 </Typography.Text>
               </Layout>
+              <Divider/> 
+              <Typography.Text strong>Ghi chú</Typography.Text>
+              <Form.Item<FormFieldBillType> name={'note'}>
+              <TextArea />
+              </Form.Item>
+              <Button style={{marginLeft : 'auto',display : 'block',marginTop : 5}} type="primary" onClick={() => form.submit()} icon={<SendOutlined />} size='small'/>
             </WhiteBox>
           </div>
         </Col>
       </Row>
+        </Form>
       <div className="bill-page-update--infoBillItem">
         <WhiteBox>
           <h6>Thông tin sản phẩm</h6>
@@ -226,7 +243,7 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
         okType="danger"
         open={openCancel}
         cancelButtonProps={{ style: { display: "none" } }}
-        onOk={onUpdateBill}
+        onOk={onCancelBill}
         confirmLoading={isSubmitLoading}
       >
         <h6 className="text-center">Xác nhận huỷ đơn</h6>
@@ -236,6 +253,7 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
           placeholder="Vui lòng nhập lý do huỷ đơn!"
         />
       </ModalAnt>
+    
     </div>
   );
 }

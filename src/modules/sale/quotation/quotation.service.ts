@@ -1,5 +1,6 @@
 import { pick } from "lodash";
 import { FormFieldCreateBill, PayloadCreateBill, quotation } from "../bill/bill.modal";
+import { DEFAULT_DEBT_TYPE } from "./constants";
 
 type paramsConvertDataQuotation = {
     data : FormFieldCreateBill,
@@ -24,11 +25,11 @@ export const convertDataQuotation = ({data,quotationItems,totalPriceAfterDiscoun
       }));
       // Todo : Verify Data When Send to sever (Not implemented)
 
-      
       const submitData : PayloadCreateBill = {
           ...data,
           quotationItems : quotationItemsSubmit,
           pair : data?.pair || 0,
+          debtType : data?.debtType || DEFAULT_DEBT_TYPE,
           totalPrice : totalPriceAfterDiscount,
           ..._id && {_id}
         };

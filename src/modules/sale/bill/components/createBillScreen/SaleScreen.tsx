@@ -11,6 +11,7 @@ import SelectDebt from "./SelectDebt";
 import TotalBill from "./TotalBill";
 import QuotationModule from '~/modules/sale/quotation';
 import { DataResultType } from "~/pages/Dashboard/Bill/CreateBill";
+import { useChangeDocumentTitle } from "~/utils/hook";
 type propsType = {};
 export default function SaleScreen(props: propsType): React.JSX.Element {
  const {form,onValueChange,quotationItems,totalPriceAfterDiscount,verifyData,onRemoveTab,bill,onOpenModalResult} = useCreateBillStore();
@@ -84,6 +85,8 @@ try {
       window.removeEventListener('keydown', handleKeyPress);
     };
   }, []); 
+
+  useChangeDocumentTitle("Tạo đơn hàng");
   return (
     <Form
       className="form-create-bill"
