@@ -3,7 +3,7 @@ stages:
   - build
 
 semantic_release:
-  image: node:14
+  image: node:16
   stage: release
   rules: 
     - if: $OPERATION != "build-release" && $CI_COMMIT_REF_NAME == "master"
