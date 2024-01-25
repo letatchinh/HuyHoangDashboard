@@ -36,24 +36,24 @@ export default function TotalBill(props: propsType): React.JSX.Element {
   } = useCreateBillStore();
   return (
     <Flex vertical gap={"small"}>
-      <Layout label={"Số lượng sản phẩm"}>{formatter(totalQuantity)}</Layout>
+      <Layout label={"Số lượng mặt hàng"}>{formatter(totalQuantity)}</Layout>
       <Layout label={"Tổng tiền"}>{formatter(totalPrice)}</Layout>
       {totalDiscountFromProduct?.["DISCOUNT.CORE"] ? (
-        <Layout label={"Tổng chiết khấu cứng từ sản phẩm"}>
+        <Layout label={"Tổng chiết khấu cứng từ mặt hàng"}>
           <Typography.Text type="warning">
             -{formatter(totalDiscountFromProduct?.["DISCOUNT.CORE"])}
           </Typography.Text>
         </Layout>
       ) : null}
       {totalDiscountFromProduct?.["DISCOUNT.SOFT"] ? (
-        <Layout label={"Tổng chiết khấu mềm từ sản phẩm"}>
+        <Layout label={"Tổng chiết khấu mềm từ mặt hàng"}>
           <Typography.Text type="warning">
             -{formatter(totalDiscountFromProduct?.["DISCOUNT.SOFT"])}
           </Typography.Text>
         </Layout>
       ) : null}
       {totalDiscountFromProduct?.["LK"] ? (
-        <Layout label={"Tổng chiết khấu luỹ kế từ sản phẩm"}>
+        <Layout label={"Tổng chiết khấu luỹ kế từ mặt hàng"}>
           <Typography.Text type="warning">
             -{formatter(totalDiscountFromProduct?.["LK"])}
           </Typography.Text>
@@ -80,12 +80,16 @@ export default function TotalBill(props: propsType): React.JSX.Element {
           </Typography.Text>
         </Layout>
       ) : null}
-      <Layout label={"Tổng chiết khấu"}>{formatter(totalDiscount)}</Layout>
-      <Layout label={"Khách trả trước"}>
+      <Layout label={"Tổng chiết khấu"}>
+      <Typography.Text type="warning" strong>
+        {formatter(totalDiscount)}
+      </Typography.Text>
+        </Layout>
+      {/* <Layout label={"Khách trả trước"}>
         <Form.Item<FormFieldCreateBill> name="pair">
           <InputNumberAnt addonAfter={'VNĐ'} style={{width : 200}} min={0} max={totalPriceAfterDiscount}/>
         </Form.Item>
-      </Layout>
+      </Layout> */}
       <div
         style={{
           width: "100%",

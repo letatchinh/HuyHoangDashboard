@@ -238,11 +238,15 @@ export const validateDataStorageREINS = (dataFromLocalStorage : any) : boolean =
 
   // Validate the Key of item BillDatSource
   const toJson = JSON.parse(dataFromLocalStorage);
-  console.log(toJson,'toJson');
   const isInvalid = keys(toJson).some((key:string) => {
     if(validate(key)){
       const value = toJson[key];
-      return keys(value)?.some((keyItem:string) => !keyValidDataSource.includes(keyItem))
+      // Check key important must be Have
+      const isValidKeyImportant = value.hasOwnProperty('typeTab'); 
+      if(!isValidKeyImportant) return true;
+
+      // Check key is must include keyValidDataSource
+      return keys(value)?.some((keyItem:string) => !keyValidDataSource.includes(keyItem)); 
     }else{
       return true;
     }

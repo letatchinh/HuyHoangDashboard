@@ -1,5 +1,5 @@
-import { GiftTwoTone, MinusCircleTwoTone, UpCircleTwoTone } from "@ant-design/icons";
-import { Select, Typography } from "antd";
+import { DeleteOutlined, GiftTwoTone, MinusCircleTwoTone, UpCircleTwoTone } from "@ant-design/icons";
+import { Badge, Select, Typography } from "antd";
 import { get } from "lodash";
 import React, { useMemo } from "react";
 import TableAnt from "~/components/Antd/TableAnt";
@@ -56,32 +56,46 @@ export default function ProductSelectedTable(
       </div>
       }
     },
-    {
-      title: "Chiết khấu",
-      dataIndex: "totalDiscount",
-      key: "totalDiscount",
-      render : (totalDiscount : number) => formatter(totalDiscount)
-    },
+    
     {
       title: "Số lượng",
       dataIndex: "quantityActual",
       key: "quantityActual",
       editable: true,
       component: "InputNumber",
+      align : 'center',
       required: true,
     },
     {
       title: "Giá bán",
       dataIndex: "price",
       key: "price",
+      align : 'center',
       render : (item : any,record : any) => {
         return formatter(item)
       }
     },
     {
+      title: "Tổng tiền",
+      dataIndex: "amountPrice",
+      key: "amountPrice",
+      align : 'center',
+      render : (item : any,record : any) => {
+        return formatter(Math.floor(get(record,'price',1) * get(record,'quantityActual',1)))
+      }
+    },
+    {
+      title: "Chiết khấu",
+      dataIndex: "totalDiscount",
+      key: "totalDiscount",
+      align : 'center',
+      render : (totalDiscount : number) => formatter(totalDiscount)
+    },
+    {
       title: "Thành tiền",
       dataIndex: "totalPrice",
       key: "totalPrice",
+      align : 'center',
       render : (item : any,record : any) => {
         return <Typography.Text strong>{formatter(item)}</Typography.Text>
       }
@@ -91,7 +105,7 @@ export default function ProductSelectedTable(
       dataIndex: "key",
       key: "action",
       render : (key : any,record : any) => {
-        return <MinusCircleTwoTone onClick={() => onRemove(key)}/>
+        return <DeleteOutlined style={{color : 'red'}} onClick={() => onRemove(key)}/>
       }
     },
   ];
@@ -136,7 +150,6 @@ export default function ProductSelectedTable(
     // use cloned data source so that it can be submitted when complete
     dataSource: quotationItems,
   };
-  console.log(quotationItems,'quotationItems');
   
   return (
     <TableAnt
@@ -156,7 +169,9 @@ export default function ProductSelectedTable(
           expanded ? (
             <UpCircleTwoTone onClick={(e: any) => onExpand(record, e)} />
           ) : (
-            <GiftTwoTone onClick={(e: any) => onExpand(record, e)} />
+            <Badge size="small" count={get(record, "cumulativeDiscount", []).length}>
+              <GiftTwoTone style={{fontSize : 24}} onClick={(e: any) => onExpand(record, e)} />
+            </Badge>
           ) : null,
       }}
     />
