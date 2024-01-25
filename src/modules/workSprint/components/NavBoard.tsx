@@ -76,8 +76,6 @@ interface NavBoardProps {}
         }}
       >
         <div>
-        <p>Some contents...</p>
-
         </div>
         <ResizableBox
           className={'react-resizable_custom active'}

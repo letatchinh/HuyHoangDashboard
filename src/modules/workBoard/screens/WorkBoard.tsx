@@ -129,6 +129,7 @@ const WorkBoard: React.FC<WorkFlowProps> = () => {
   const onSearch = (value: string) => {
     onParamChange({ ['keyword']: value });
   };
+  const pageSizeOptions = ['10', '20', '50', '100'];
   return (
     <div className="branch-detail page-wraper page-content page-workflow">
       {/* <TabBranch> */}
@@ -164,10 +165,11 @@ const WorkBoard: React.FC<WorkFlowProps> = () => {
             onClick: () => onClick(item),
           })}
           pagination={{
-            current: 1, // Assuming the current page is 1 by default
-            pageSize: 10, // Set your preferred page size
-            total: board.length, // Total number of items in your 'board' array
-            showSizeChanger: false, // Disable page size changer
+            ...paging,
+            pageSizeOptions: pageSizeOptions,
+            showSizeChanger: true, // Hiển thị dropdown chọn kích thước trang
+            defaultPageSize: 10, // Kích thước trang mặc định
+            showTotal: (total) => `Tổng cộng: ${total} `,
           }}
           expandable={{
             expandedRowKeys: select,
