@@ -1,4 +1,4 @@
-import { Button, Col, Form, Row } from "antd";
+import { Button, Col, Divider, Form, Row } from "antd";
 import { get, pick } from "lodash";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import ModalAnt from "~/components/Antd/ModalAnt";
@@ -11,8 +11,9 @@ import SelectDebt from "./SelectDebt";
 import TotalBill from "./TotalBill";
 import QuotationModule from '~/modules/sale/quotation';
 import { DataResultType } from "~/pages/Dashboard/Bill/CreateBill";
+import { useChangeDocumentTitle } from "~/utils/hook";
 type propsType = {};
-export default function ChildTab(props: propsType): React.JSX.Element {
+export default function SaleScreen(props: propsType): React.JSX.Element {
  const {form,onValueChange,quotationItems,totalPriceAfterDiscount,verifyData,onRemoveTab,bill,onOpenModalResult} = useCreateBillStore();
  const {onNotify} = useNotificationStore();
  const callBackAfterSuccess = (newData : DataResultType) => {
@@ -84,12 +85,17 @@ try {
       window.removeEventListener('keydown', handleKeyPress);
     };
   }, []); 
+
+  useChangeDocumentTitle("Tạo đơn hàng");
   return (
     <Form
       className="form-create-bill"
       form={form}
       onFinish={onFinish}
       onValuesChange={onValueChange}
+      initialValues={{
+        pair : 0
+      }}
     >
       <Row gutter={16}>
         <Col span={16}>
@@ -98,6 +104,7 @@ try {
         <Col span={8} className="form-create-bill--payment">
           <div>
             <SelectPharmacy form={form} allowClear={false}/>
+            <Divider/>
             <TotalBill />
           </div>
           <div className="form-create-bill--payment__actions">

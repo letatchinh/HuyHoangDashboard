@@ -278,3 +278,15 @@ export const useAction = ({ action }:UseActionProps) : (v:any) => void => {
     };
     return [state, setUniqueState];
   };
+  type OptionsChangeDocumentType = {
+    dependency : any[]
+  }
+  export const useChangeDocumentTitle = (title : string,options? :OptionsChangeDocumentType ) => {
+    const dependency = useMemo(() => options?.dependency ?? [],[options?.dependency])
+    useEffect(() => {
+      document.title = title ?? "WorldPharma";
+      return () => {
+        document.title = "WorldPharma";
+      }
+    },dependency)
+  }

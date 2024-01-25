@@ -19,6 +19,10 @@ import Pharmacy from "~/pages/Dashboard/Pharmacy";
 import Bill from "~/pages/Dashboard/Bill";
 import UpdateBill from "~/pages/Dashboard/Bill/UpdateBill";
 import Quotation from "~/pages/Dashboard/Quotation";
+import WorkBoardPage from "~/pages/Dashboard/WorkBoard";
+import WorkSprintPage from "~/pages/Dashboard/WorkSprint";
+import WorkListPage from "~/pages/Dashboard/WorkList";
+import WorkTaskPage from "~/pages/Dashboard/WorkTask";
 export const mainRoutes :PathRouteProps[] = [
   { path: PATH_APP.main.root, Component: Homepage },
 
@@ -47,6 +51,7 @@ export const mainRoutes :PathRouteProps[] = [
   { path: PATH_APP.todoList.statusConfig, Component: StatusConfig },
 
   // Employee
+  { path: PATH_APP.todoList.workBoard, Component: WorkBoardPage },
   { path: PATH_APP.employee.root, Component: EmployeePage },
 
   // User
@@ -61,6 +66,11 @@ export const mainRoutes :PathRouteProps[] = [
   // Bot Notification
   { path: PATH_APP.botNotification.root, Component: null },
  
+  //Work Management
+  { path: PATH_APP.todoList.workSprint, Component: WorkSprintPage },
+  { path: PATH_APP.todoList.workList, Component: WorkListPage },
+  { path: PATH_APP.todoList.workTask, Component: WorkTaskPage },
+
   { path: '/', Component: Homepage },
 ]
 

@@ -9,6 +9,7 @@ import {
 } from "react";
 import { v4 } from "uuid";
 import QuotationModule from '~/modules/sale/quotation';
+import { DEFAULT_DEBT_TYPE } from "../../quotation/constants";
 import { useGetDebtRule } from "../bill.hook";
 import { DebtType, quotation } from "../bill.modal";
 import { onVerifyData, reducerDiscountQuotationItems } from "../bill.service";
@@ -160,6 +161,7 @@ export function CreateBillProvider({
     }
   };
 
+  const pair = Form.useWatch('pair',form) || 0;
   const totalPrice = useMemo(
     () =>
       quotationItems?.reduce(
@@ -174,8 +176,8 @@ export function CreateBillProvider({
       quotationItems?.reduce(
         (sum: number, cur: any) => sum + get(cur, "totalPrice"),
         0
-      ),
-    [quotationItems]
+      ) - pair,
+    [quotationItems,pair]
   );
   const totalDiscount = useMemo(
     () =>
@@ -234,17 +236,16 @@ export function CreateBillProvider({
 
   // Initalize Data And Calculate Discount
   useEffect(() => {
-    const initDebt = debt?.find((debt : DebtType) => get(debt, "key") === "COD");
+    const initDebt = debt?.find((debt : DebtType) => get(debt, "key") === DEFAULT_DEBT_TYPE);
     form.setFieldsValue({
-      debtType : get(initDebt,'key'),
+      debtType : form.getFieldValue('debtType') ?? get(initDebt,'key'),
       pharmacyId : get(bill,'pharmacyId'),
     });
-    if (get(bill, "quotationItems", [])?.length) {
+    if (get(bill, "pharmacyId")) {
       const newQuotationItems: any[] = reducerDiscountQuotationItems(get(bill, "quotationItems", []));
       setQuotationItems(newQuotationItems);
     }
   }, [bill,debt,form,totalPrice]);
-
 
   return (
     <CreateBill.Provider

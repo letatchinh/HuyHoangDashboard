@@ -121,7 +121,10 @@
         }
     }
     & .ant-steps-item-content{
-        width: max-content!important;
+        // width: max-content!important;
+    }
+    & .ant-steps-item-description {
+        white-space: nowrap!important;
     }
 
     & .ant-steps-item-title{

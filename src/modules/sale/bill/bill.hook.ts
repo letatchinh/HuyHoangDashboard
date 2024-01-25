@@ -82,13 +82,13 @@ export const useUpdateBill = (callback?: any) => {
   useSuccess(
     updateSuccessSelector,
     `Cập nhật ${MODULE_VI} thành công`,
-    callback
   );
   useFailed(updateFailedSelector);
 
   return useSubmit({
     action: billSliceAction.updateRequest,
     loadingSelector: isSubmitLoadingSelector,
+    callbackSubmit : callback
   });
 };
 

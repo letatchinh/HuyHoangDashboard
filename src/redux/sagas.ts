@@ -20,6 +20,9 @@ import configDiscountModule from '~/modules/configDiscount';
 import billModule from '~/modules/sale/bill';
 import quotationModule from '~/modules/sale/quotation';
 import botNotification from '~/modules/botNotification';
+import workSprintModule from '~/modules/workSprint';
+import workListModule from '~/modules/workList';
+import workTaskModule from '~/modules/workTask';
 export default function* rootSaga() {
   yield all([
     authModule.redux.saga(),
@@ -45,5 +48,8 @@ export default function* rootSaga() {
     billModule.redux.saga(),
     quotationModule.redux.saga(),
     botNotification.redux.saga(),
+    workSprintModule.redux.saga(),
+    workListModule.redux.saga(),
+    workTaskModule.redux.saga(),
   ]);
 };

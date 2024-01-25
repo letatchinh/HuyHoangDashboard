@@ -25,7 +25,13 @@ import {
 } from "../supplier.hook";
 import { STATUS_SUPPLIER_TYPE } from "../supplier.modal";
 import ProductModule from '~/modules/product';
+import { useMatchPolicy } from "~/modules/policy/policy.hook";
+import POLICIES from "~/modules/policy/policy.auth";
+import WithPermission from "~/components/common/WithPermission";
+import PermissionBadge from "~/components/common/PermissionBadge";
 export default function Supplier(): React.JSX.Element {
+  const canUpdateSupplier = useMatchPolicy(POLICIES.UPDATE_SUPPLIER);
+  const canReadProduct = useMatchPolicy(POLICIES.READ_PRODUCT);
   // Translate
   const { t }: any = useTranslate();
 
@@ -91,8 +97,10 @@ export default function Supplier(): React.JSX.Element {
         dataIndex: "_id",
         key: "listProduct",
         align: "center",
-        render(_id) {
-          return <Link target={'_blank'} to={PATH_APP.product.root + "/" + _id}>Xem chi tiết sản phẩm</Link>
+        render(_id : any) {
+          return <PermissionBadge permissions={[POLICIES.READ_PRODUCT]} title="Bạn không có quyền xem sản phẩm">
+          <Link className={!canReadProduct ? "disabledLink" : ""} target={'_blank'} to={PATH_APP.product.root + "/" + _id}>Xem chi tiết sản phẩm</Link>
+          </PermissionBadge>
         },
       },
       {
@@ -117,7 +125,7 @@ export default function Supplier(): React.JSX.Element {
         align: "center",
         width: "10%",
         render(value,record) {
-          return <Switch value={value === STATUS_SUPPLIER.ACTIVE} onChange={() => onUpdateStatus(value === STATUS_SUPPLIER.ACTIVE ? STATUS_SUPPLIER.INACTIVE : STATUS_SUPPLIER.ACTIVE,get(record,'_id'))}/>;
+          return <Switch disabled={!canUpdateSupplier} value={value === STATUS_SUPPLIER.ACTIVE} onChange={() => onUpdateStatus(value === STATUS_SUPPLIER.ACTIVE ? STATUS_SUPPLIER.INACTIVE : STATUS_SUPPLIER.ACTIVE,get(record,'_id'))}/>;
         },
       },
       {
@@ -139,6 +147,7 @@ export default function Supplier(): React.JSX.Element {
         render(_id) {
           return (
             <Space direction="vertical">
+              <WithPermission permission={POLICIES.WRITE_PRODUCT}>
               <Button
                 block
                 icon={<PlusCircleTwoTone />}
@@ -148,6 +157,7 @@ export default function Supplier(): React.JSX.Element {
               >
                 Thêm sản phẩm
               </Button>
+              </WithPermission>
               <Button
                 block
                 icon={<InfoCircleOutlined />}
@@ -156,6 +166,7 @@ export default function Supplier(): React.JSX.Element {
               >
                 Xem chi tiết
               </Button>
+              <WithPermission permission={POLICIES.DELETE_SUPPLIER}>
               <Popconfirm
                 title="Bạn muốn xoá nhà cung cấp này?"
                 onConfirm={() => onDelete(_id)}
@@ -172,6 +183,7 @@ export default function Supplier(): React.JSX.Element {
                   Xoá
                 </Button>
               </Popconfirm>
+              </WithPermission>
             </Space>
           );
         },
@@ -192,6 +204,7 @@ export default function Supplier(): React.JSX.Element {
           />
         </Col>
         <Col>
+          <WithPermission permission={POLICIES.WRITE_SUPPLIER}>
           <Button
             onClick={() => onOpenForm()}
             icon={<PlusCircleOutlined />}
@@ -199,6 +212,7 @@ export default function Supplier(): React.JSX.Element {
           >
             Thêm nhà cung cấp
           </Button>
+          </WithPermission>
         </Col>
       </Row>
       <WhiteBox>

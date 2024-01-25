@@ -36,7 +36,8 @@ export default function StepStatus({
         components: {
             Steps: {
               fontSize : 12,
-              lineHeight : 0.8
+              lineHeight : 0.8,
+              
           },
         },
       }}

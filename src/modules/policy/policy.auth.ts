@@ -20,9 +20,15 @@ const notificationBotManager = 'notificationBotManager';
 
 // Đơn hàng
 const bill = 'bill';
+const todoStatusConfig = 'todoStatusConfig';
 
 // Đơn hàng tạm
 const quotation = 'quotation';
+// Nhà cung cấp
+const supplier = 'supplier';
+// Sản phẩm Nhà cung cấp
+const product = 'product';
+const todoList = 'todoList';
 
 const RESOURCES = [
   //Setting
@@ -44,6 +50,8 @@ const RESOURCES = [
   productGroup,
   //
   medicine,
+  supplier,
+  product,
 
   // Pharmacy Profile
   pharmaProfile,
@@ -52,6 +60,8 @@ const RESOURCES = [
   quotation,
   // Bot Notification
   notificationBotManager,
+  todoStatusConfig,
+  todoList,
 ];
 
 //ACTIONS
@@ -123,6 +133,16 @@ const RESOURCE = (): ResourceType => {
 
   const NOTIFICATION_BOT_MANAGER: string[] = [
     notificationBotManager
+  ]
+  
+  const GROUP_SUPPLIER: string[] = [
+    supplier,
+    product,
+  ];
+  
+  const GROUP_WORK_MANAGERMENT: string[] = [
+    todoStatusConfig,
+    todoList
   ];
 
   return {
@@ -137,6 +157,8 @@ const RESOURCE = (): ResourceType => {
     PHARMA_PROFILE,
     GROUP_BILL,
     NOTIFICATION_BOT_MANAGER,
+    GROUP_SUPPLIER,
+    GROUP_WORK_MANAGERMENT,
   };
 };
 

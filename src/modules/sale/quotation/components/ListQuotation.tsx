@@ -94,7 +94,7 @@ export default function ListQuotation({
         render(createdAt, record, index) {
           return (
             <div>
-              <Typography.Text>
+              <Typography.Text strong>
               {dayjs(createdAt).format("DD/MM/YYYY HH:mm")}
             </Typography.Text>
             <p>-</p>
@@ -110,7 +110,7 @@ export default function ListQuotation({
         align: "center",
         render(historyStatus, record, index) {
           return historyStatus?.[STATUS_QUOTATION.CONFIRMED] && <div>
-            <Typography.Text>
+            <Typography.Text strong>
               {dayjs(historyStatus?.[STATUS_QUOTATION.CONFIRMED]).format("DD/MM/YYYY HH:mm")}
             </Typography.Text>
             <p>-</p>
@@ -163,6 +163,8 @@ export default function ListQuotation({
                       id: _id,
                       code: get(record, "code"),
                     },
+                    pair : get(record,'pair',0),
+                    debtType : get(record, "debtType"),
                   });
                 }}
                 type="primary"
@@ -183,6 +185,8 @@ export default function ListQuotation({
                       id: _id,
                       code: get(record, "code"),
                     },
+                    pair : get(record,'pair',0),
+                    debtType : get(record, "debtType"),
                   });
                 }}
                 size="small"
@@ -196,6 +200,9 @@ export default function ListQuotation({
                 onConfirm={() => onCopyQuotation(_id)}
                 okText="Sao chép"
                 cancelText="Huỷ"
+                okButtonProps={{
+                  loading: isSubmitLoading,
+                }}
               >
                 <Button block ghost type="primary" size="small" 
                 // disabled={get(record,'status') !== STATUS_QUOTATION.NEW}
@@ -210,6 +217,9 @@ export default function ListQuotation({
                 onConfirm={() => onDelete(_id)}
                 okText="Xoá"
                 cancelText="Huỷ"
+                okButtonProps={{
+                  loading: isSubmitLoading,
+                }}
               >
                 <Button block danger size="small" 
                 // disabled={get(record,'status') !== STATUS_QUOTATION.NEW}
@@ -229,7 +239,7 @@ export default function ListQuotation({
   return (
     <div className="quotation-page">
       <Row align="middle" gutter={8}>
-      <SelectPharmacy onChange={(value) => onParamChange({pharmacyId : value})}/>
+      <SelectPharmacy showIcon={false} size={'middle'} onChange={(value) => onParamChange({pharmacyId : value})}/>
       <SearchAnt value={keyword} onChange={(e) => setKeyword(e.target.value)} onParamChange={onParamChange} />
       <WithPermission permission={policyModule.POLICIES.WRITE_QUOTATION}>
       <Button style={{marginLeft : 'auto'}} onClick={() => window.open(PATH_APP.bill.create)} type="primary" icon={<PlusCircleTwoTone />}>

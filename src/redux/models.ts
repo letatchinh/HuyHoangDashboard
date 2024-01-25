@@ -52,6 +52,9 @@ export type initStateSlice<T=any> = {
     bill: "bill",
     quotation: "quotation",
     botNotification: "botNotification",
+    workSprint:'workSprint',
+    workList:'workList',
+    workTask:'workTask'
     }as const
     
     
