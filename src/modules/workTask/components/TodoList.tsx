@@ -180,37 +180,23 @@ export default function TodoList({
     assign: { canAssign, users },
 
   } = useTaskItemStore();
-  const [,reset] =useReset();
-  const onAddProcess = useCallback((progressListId: any, newProcessContent: any) => {
-    const processUpdate = get(dataTask, "progressList", [])?.find(
-      (item: any) => get(item, "_id") === progressListId
-    );
-
+  const onAddProcess = (progressListId:any, newProcessContent:any) => {
+    const processUpdate = get(dataTask, 'progressList', [])?.find((item:any) => get(item, '_id') === progressListId);
     const newProgress = [
       {
         assign: "",
       },
       {
         check: false,
-        content: newProcessContent,
-      },
+        content: newProcessContent
+      }
     ];
-
-    const processUpdateSubmit = {
-      ...processUpdate,
-      progress: [...get(processUpdate, "progress", []), newProgress],
-    };
+    const processUpdateSubmit = { ...processUpdate, progress: [...get(processUpdate, 'progress', []), newProgress] };
     updateProgressTask({
-      id: get(dataTask, "_id"),
-      progressList: get(dataTask, "progressList", [])?.map((item: any) =>
-        get(item, "_id") === get(processUpdateSubmit, "_id")
-          ? processUpdateSubmit
-          : item
-      ),
+      id: get(dataTask, '_id'),
+      progressList: get(dataTask, 'progressList', [])?.map((item:any) => get(item, '_id') === get(processUpdateSubmit, '_id') ? processUpdateSubmit : item)
     });
-    reset([]);
-  },[]);
-
+  };
   const onCopyProcess = (progressListId: any) => {
     const processCopy = get(dataTask, "progressList", [])?.find(
       (item: any) => get(item, "_id") === progressListId
@@ -227,7 +213,6 @@ export default function TodoList({
       id: get(dataTask, "_id"),
       progressList: processUpdateSubmit,
     });
-    reset([]);
   };
 
   const onRemoveProgressList = (progressListId: any) => {
@@ -237,10 +222,9 @@ export default function TodoList({
         (item: any) => get(item, "_id") !== progressListId
       ),
     });
-    reset([]);
   };
 
-  const onUpdateProgress = useCallback((progressListId: any, index: any, newData: any) => {
+  const onUpdateProgress = (progressListId: any, index: any, newData: any) => {
     // Find Progress List To Update
     const progressListUpdate = get(dataTask, "progressList", [])?.find(
       (item: any) => get(item, "_id") === progressListId
@@ -275,10 +259,7 @@ export default function TodoList({
       id: get(dataTask, "_id"),
       progressList: processListSubmit,
     });
-    reset([
-      
-    ]);
-  },[]);
+  };
 
   const onUpdateProgressList = (progressListId: any, newData: any) => {
     // Create SubmitListProgress
@@ -290,7 +271,6 @@ export default function TodoList({
       id: get(dataTask, "_id"),
       progressList: processListSubmit,
     });
-    reset([]);
   };
   useResetAction();
   if (!get(dataTask, "progressListShow", [])) return null;
