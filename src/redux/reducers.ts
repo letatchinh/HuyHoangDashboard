@@ -23,6 +23,7 @@ import productModule from '~/modules/product';
 import workBoardModule from '~/modules/workBoard';
 import billModule from '~/modules/sale/bill';
 import quotationModule from '~/modules/sale/quotation';
+import botNotificationModule from '~/modules/botNotification';
 const authPersistConfig = {
     key: 'auth',
     storage: localStorage,
@@ -57,6 +58,7 @@ const rootReducer = combineReducers({
     configDiscount: configDiscount.redux.reducer,
     bill: billModule.redux.reducer,
     quotation: quotationModule.redux.reducer,
+    botNotification: botNotificationModule.redux.reducer,
 
 });
 export default rootReducer

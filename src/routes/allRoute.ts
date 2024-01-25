@@ -57,6 +57,9 @@ export const mainRoutes :PathRouteProps[] = [
 
   // Pharmacy
   { path: PATH_APP.pharmacy.root, Component: Pharmacy },
+
+  // Bot Notification
+  { path: PATH_APP.botNotification.root, Component: null },
  
   { path: '/', Component: Homepage },
 ]

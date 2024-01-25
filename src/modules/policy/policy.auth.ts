@@ -15,6 +15,8 @@ const ranking = 'ranking';
 const medicine = 'medicine';
 const configDiscount = 'configDiscount';
 const pharmaProfile = 'pharmaProfile';
+const notificationBotManager = 'notificationBotManager';
+
 
 // Đơn hàng
 const bill = 'bill';
@@ -48,6 +50,8 @@ const RESOURCES = [
   
   bill,
   quotation,
+  // Bot Notification
+  notificationBotManager,
 ];
 
 //ACTIONS
@@ -117,6 +121,10 @@ const RESOURCE = (): ResourceType => {
     quotation,
   ];
 
+  const NOTIFICATION_BOT_MANAGER: string[] = [
+    notificationBotManager
+  ];
+
   return {
     GROUP_USER,
     GROUP_EMPLOYEE,
@@ -128,6 +136,7 @@ const RESOURCE = (): ResourceType => {
     MEDICINE,
     PHARMA_PROFILE,
     GROUP_BILL,
+    NOTIFICATION_BOT_MANAGER,
   };
 };
 

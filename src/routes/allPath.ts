@@ -67,6 +67,10 @@ export const PATH_APP = {
       update: path(ROOTS.app, '/quotation/:id'),
       create: path(ROOTS.app, '/quotation/create'),
     },
-  
+    botNotification : {
+      root:  path(ROOTS.app, '/bot-notification'),
+      // update: path(ROOTS.app, '/bot-notification/:id'),
+      create: path(ROOTS.app, '/bot-notification/create'),
+    }
 
   };

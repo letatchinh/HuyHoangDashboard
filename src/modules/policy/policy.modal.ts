@@ -13,6 +13,7 @@ export type ResourceType = {
   PHARMA_PROFILE: string[],
   // Đơn hàng
   GROUP_BILL: string[],
+  NOTIFICATION_BOT_MANAGER: string[],
 };
 
 export type policyType = 'write' | 'read' | 'update' | 'delete' | 'download' | 'admin';
@@ -124,6 +125,15 @@ export type PoliciesType = {
   "DELETE_QUOTATION" |
   "DOWNLOAD_QUOTATION" |
   "ADMIN_QUOTATION" |
-  "QUOTATION" 
+  "QUOTATION" |
+
+  //NOTIFICATION BOT MANAGER
+  "READ_NOTIFICATIONBOTMANAGER" |
+  "WRITE_NOTIFICATIONBOTMANAGER" |
+  "UPDATE_NOTIFICATIONBOTMANAGER" |
+  "DELETE_NOTIFICATIONBOTMANAGER" |
+  "DOWNLOAD_NOTIFICATIONBOTMANAGER" |
+  "ADMIN_NOTIFICATIONBOTMANAGER" |
+  "NOTIFICATIONBOTMANAGER"
   ]: [string, policyType];
 };

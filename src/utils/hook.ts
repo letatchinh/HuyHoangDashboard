@@ -1,4 +1,4 @@
-import { get } from 'lodash';
+import { get, union } from 'lodash';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useLocation } from 'react-router-dom';
@@ -270,3 +270,11 @@ export const useAction = ({ action }:UseActionProps) : (v:any) => void => {
     },[target]);
     return isEllipsis
   }
+
+  export const useTags = (initialState = []) : any => {
+    const [state, setState] = useState(initialState);
+    const setUniqueState = (newState : any) => {
+      setState(union(newState));
+    };
+    return [state, setUniqueState];
+  };
