@@ -28,26 +28,20 @@ export const convertInitProduct = (product : any) => {
   };
 
 
-export const validateChangeVariants = ({cumulativeDiscount,variants,form,onUndoForm}:{cumulativeDiscount:any[],variants:any[],form:any,onUndoForm:() => void}) => {
+export const validateChangeVariants = ({cumulativeDiscount,variants,form,setDataNotificationUndo}:{cumulativeDiscount:any[],variants:any[],form:any,setDataNotificationUndo:(data? : any) => void}) => {
 
   // Filter Have unit and add productUnit to compare Diff cumulativeDiscount and variants
   const listHaveApplyUnit = cumulativeDiscount?.filter((item:any) => !!get(item,'applyUnit'))?.map((item:any) => ({...item,productUnit : get(item,'applyUnit')}));
 
   const differenceUnit = differenceBy(listHaveApplyUnit,variants,'productUnit');
   if(differenceUnit?.length){
-    notification.warning({
-      message : `Hệ thống thông báo`,
-      description : `Hệ thống gỡ chiết khấu \n ${compact(differenceUnit?.map((item:any) => get(item,'name')))?.join(',')} \n ra khỏi chiết khấu để vì đã sử dụng đơn vị này!`,
-      placement: 'bottomRight',
-      duration: 0, // Never Off
-      btn : <Button size="small" onClick={onUndoForm}>
-        Hoàn tác
-      </Button>
-    });
-
+    const description = `Hệ thống gỡ chiết khấu \n ${compact(differenceUnit?.map((item:any) => get(item,'name')))?.join(',')} \n ra khỏi chiết khấu để vì đã sử dụng đơn vị này!`;
     const listCumulativeRemain = differenceBy(listHaveApplyUnit,differenceUnit,'productUnit');
     form.setFieldsValue({cumulativeDiscount:listCumulativeRemain});
-
+    // setDataNotificationUndo({
+    //   open : true,
+    //   description
+    // })
   };
 
 }

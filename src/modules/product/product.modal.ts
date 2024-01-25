@@ -62,7 +62,7 @@ export type FieldTypeFormProduct = {
   export type TypePropVariants = {
     form : any,
     isLoading : boolean,
-    onUndoForm : () => void
+    setDataNotificationUndo : (data? : any) => void
   }
 
   export type TypePropsDiscountList = {

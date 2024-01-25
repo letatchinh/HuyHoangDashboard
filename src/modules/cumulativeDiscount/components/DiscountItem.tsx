@@ -411,6 +411,7 @@ export default function DiscountItem({
                                   {RenderLoading(
                                     loading,
                                     <Select
+                                    allowClear
                                     // Always Get Unit from Variants Selected and Validate them
                                       options={units?.filter((unit : any) => variants?.some((variant : any) => !!get(variant,'productUnit') && !!get(variant,'price') && !!get(variant,'exchangeValue') && (get(variant,'productUnit') === get(unit,'_id'))))?.map((item: any) => ({
                                         label: get(item, "name"),
