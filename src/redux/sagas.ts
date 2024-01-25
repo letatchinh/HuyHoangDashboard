@@ -9,6 +9,7 @@ import employeeModule from '~/modules/employee';
 import userModule from '~/modules/user';
 import userGroupModule from '~/modules/userGroup';
 import policyModule from '~/modules/policy';
+import vouchers from '~/modules/vouchers';
 import productGroupModule from '~/modules/productGroup';
 import manuFacturerModule from '~/modules/manufacturer';
 import productUnitModule from '~/modules/productUnit';
@@ -22,6 +23,8 @@ import quotationModule from '~/modules/sale/quotation';
 import workSprintModule from '~/modules/workSprint';
 import workListModule from '~/modules/workList';
 import workTaskModule from '~/modules/workTask';
+import paymentVoucher from '~/modules/paymentVoucher';
+import receiptVoucher from '~/modules/receiptVoucher';
 export default function* rootSaga() {
   yield all([
     authModule.redux.saga(),
@@ -34,6 +37,7 @@ export default function* rootSaga() {
     userModule.redux.saga(),
     userGroupModule.redux.saga(),
     policyModule.redux.saga(),
+    vouchers.redux.saga(),
     productGroupModule.redux.saga(),
     manuFacturerModule.redux.saga(),
     productUnitModule.redux.saga(),
@@ -49,5 +53,7 @@ export default function* rootSaga() {
     workSprintModule.redux.saga(),
     workListModule.redux.saga(),
     workTaskModule.redux.saga(),
+    paymentVoucher.redux.saga(),
+    receiptVoucher.redux.saga(),
   ]);
 };

@@ -53,7 +53,10 @@ export type initStateSlice<T=any> = {
     quotation: "quotation",
     workSprint:'workSprint',
     workList:'workList',
-    workTask:'workTask'
+    workTask:'workTask',
+    vouchers: "vouchers",
+    receiptVoucher: "receiptVoucher",
+    paymentVoucher: "paymentVoucher",
     }as const
     
     

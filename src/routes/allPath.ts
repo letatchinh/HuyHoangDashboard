@@ -70,6 +70,9 @@ export const PATH_APP = {
       update: path(ROOTS.app, '/quotation/:id'),
       create: path(ROOTS.app, '/quotation/create'),
     },
+    vouchers: {
+      root: path(ROOTS.app, '/vouchers'),
+    },
   
 
   };

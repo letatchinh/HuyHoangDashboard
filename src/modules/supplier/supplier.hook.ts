@@ -175,3 +175,23 @@ export const useGetProductSuppliers = (param: any) => {
 export const useResetAction = () => {
   return useResetState(supplierSliceAction.resetAction);
 };
+
+
+export const useDebtQueryParams = () => {
+  const query = useQueryParams();
+  const limit = query.get("limit") || 10;
+  const page = query.get("page") || 1;
+  const keyword = query.get("keyword");
+  return useMemo(() => {
+    const queryParams = {
+      page,
+      limit,
+      keyword,
+    };
+    return [queryParams];
+    //eslint-disable-next-line
+  }, [page,
+     limit,
+     keyword,
+    ]);
+};

@@ -15,6 +15,7 @@ import employeeModule from '~/modules/employee';
 import userModule from '~/modules/user';
 import userGroupModule from '~/modules/userGroup';
 import policy from '~/modules/policy';
+import vouchers from '~/modules/vouchers';
 import manufacturerModule from '~/modules/manufacturer';
 import productUnitModule from '~/modules/productUnit';
 import rankingModule from '~/modules/ranking';
@@ -26,6 +27,8 @@ import quotationModule from '~/modules/sale/quotation';
 import workSprintModule from '~/modules/workSprint';
 import workListModule from '~/modules/workList';
 import workTaskModule from '~/modules/workTask';
+import paymentVoucher from '~/modules/paymentVoucher';
+import receiptVoucher from '~/modules/receiptVoucher';
 const authPersistConfig = {
     key: 'auth',
     storage: localStorage,
@@ -50,6 +53,7 @@ const rootReducer = combineReducers({
     user: userModule.redux.reducer,
     userGroup: userGroupModule.redux.reducer,
     policy: policy.redux.reducer,
+    vouchers: vouchers.redux.reducer,
     productGroup:productGroupModule.redux.reducer,
     manufacturer:manufacturerModule.redux.reducer,
     productUnit:productUnitModule.redux.reducer,
@@ -62,7 +66,9 @@ const rootReducer = combineReducers({
     quotation: quotationModule.redux.reducer,
     workSprint:workSprintModule.redux.reducer,
     workList:workListModule.redux.reducer,
-    workTask:workTaskModule.redux.reducer
+    workTask:workTaskModule.redux.reducer,
+    paymentVoucher: paymentVoucher.redux.reducer,
+    receiptVoucher: receiptVoucher.redux.reducer,
 
 });
 export default rootReducer

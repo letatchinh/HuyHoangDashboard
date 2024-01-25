@@ -9,6 +9,7 @@ import {
   TrophyOutlined,
   ApartmentOutlined,
   ShopFilled,
+  MoneyCollectOutlined
 } from "@ant-design/icons";
 import { MenuProps } from "antd";
 import React, { useCallback } from "react";
@@ -172,6 +173,13 @@ export const resource: ItemType[] = [
     path: PATH_APP.pharmacy.root,
     key: PATH_APP.pharmacy.root,
     permission: [POLICIES.READ_PHARMAPROFILE],
+  },
+  
+  { label : "Phiếu",
+    icon: <MoneyCollectOutlined />,
+    path : PATH_APP.vouchers.root,
+    key: PATH_APP.vouchers.root,
+    permission :[POLICIES.READ_VOUCHER],
   },
 
       

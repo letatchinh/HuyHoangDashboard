@@ -27,6 +27,9 @@ const supplier = 'supplier';
 // Sản phẩm Nhà cung cấp
 const product = 'product';
 const todoList = 'todoList';
+const voucher = 'voucher';
+const statusVoucher = 'statusVoucher';
+const historyVoucher = 'historyVoucher';
 
 const RESOURCES = [
   //Setting
@@ -50,6 +53,11 @@ const RESOURCES = [
   medicine,
   supplier,
   product,
+
+  //VOUCHER
+  voucher,
+  statusVoucher,
+  historyVoucher,
 
   // Pharmacy Profile
   pharmaProfile,
@@ -117,6 +125,11 @@ const RESOURCE = (): ResourceType => {
   const GROUP_RANKING : string[] = [
     ranking
   ];
+  const GROUP_VOUCHER: string[] = [
+    voucher,
+    statusVoucher,
+    historyVoucher
+  ]
 
   const PHARMA_PROFILE: string[] = [
     pharmaProfile
@@ -151,6 +164,7 @@ const RESOURCE = (): ResourceType => {
     GROUP_BILL,
     GROUP_SUPPLIER,
     GROUP_WORK_MANAGERMENT,
+    GROUP_VOUCHER
   };
 };
 

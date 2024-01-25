@@ -1,5 +1,5 @@
 import { DeleteOutlined, InfoCircleOutlined, InfoCircleTwoTone, PlusCircleOutlined, PlusCircleTwoTone } from "@ant-design/icons";
-import { Button, Col, Divider, Popconfirm, Row, Space, Switch, Typography } from "antd";
+import { Button, Col, Divider, Modal, Popconfirm, Row, Space, Switch, Typography } from "antd";
 import Search from "antd/es/input/Search";
 import { ColumnsType } from "antd/es/table/InternalTable";
 import { get } from "lodash";
@@ -12,7 +12,7 @@ import Vnd from "~/components/common/Vnd/index";
 import WhiteBox from "~/components/common/WhiteBox";
 import useTranslate from "~/lib/translation";
 import { PATH_APP } from "~/routes/allPath";
-import { concatAddress } from "~/utils/helpers";
+import { concatAddress, formatNumberThreeComma } from "~/utils/helpers";
 import TabSupplier from "../components/TabSupplier";
 import { STATUS_SUPPLIER } from "../constants";
 import {
@@ -25,10 +25,13 @@ import {
 } from "../supplier.hook";
 import { STATUS_SUPPLIER_TYPE } from "../supplier.modal";
 import ProductModule from '~/modules/product';
-import { useMatchPolicy } from "~/modules/policy/policy.hook";
-import POLICIES from "~/modules/policy/policy.auth";
 import WithPermission from "~/components/common/WithPermission";
 import PermissionBadge from "~/components/common/PermissionBadge";
+import { REF_COLLECTION, REF_COLLECTION_UPPER } from "~/constants/defaultValue";
+import PaymentVoucherForm from "~/modules/paymentVoucher/components/PaymentVoucherForm";
+import { useMatchPolicy } from "~/modules/policy/policy.hook";
+import POLICIES from "~/modules/policy/policy.auth";
+import Description from "../components/Description";
 export default function Supplier(): React.JSX.Element {
   const canUpdateSupplier = useMatchPolicy(POLICIES.UPDATE_SUPPLIER);
   const canReadProduct = useMatchPolicy(POLICIES.READ_PRODUCT);
@@ -40,7 +43,11 @@ export default function Supplier(): React.JSX.Element {
   const [isOpenForm, setIsOpenForm]: any = useState(false);
   const [idSupplierCreateProduct, setIdSupplierCreateProduct]: any = useState();
   const [isOpenFormProduct, setIsOpenFormProduct]: any = useState(false);
-
+  const [open, setOpen] = useState(false);
+  const [supplierId, setSupplierId] = useState<string | null>('');
+  const [debt, setDebt] = useState<number | null>();
+  const [isOpenDesc, setIsOpenDesc] = useState<boolean>(false);
+  const canWriteVoucher = useMatchPolicy(POLICIES.WRITE_VOUCHER);
   // Control form
   const onOpenForm = useCallback((idSelect?: any) => {
     if (idSelect) {
@@ -64,10 +71,26 @@ export default function Supplier(): React.JSX.Element {
     setIdSupplierCreateProduct(null);
   }, []);
 
+  const onOpenPayment = (item: any) => {
+    setOpen(true);
+    setSupplierId(item?._id)
+    setDebt(item?.resultDebt)
+  };
+  const onClosePayment = () => {
+    setOpen(false);
+    setSupplierId(null);
+  };
+  const onOpenDesc = (item?: any) => {
+    setSupplierId(item?._id)
+    setIsOpenDesc(true);
+  };
+  const onCloseDesc = () => {
+    setIsOpenDesc(false);
+  };
+
   // Hook
   const [query] = useSupplierQueryParams();
-  const [keyword, { setKeyword, onParamChange }] =
-    useUpdateSupplierParams(query);
+  const [keyword, { setKeyword, onParamChange }] = useUpdateSupplierParams(query);
   const [data, isLoading] = useGetSuppliers(query);
   const [isSubmitLoading, onDelete] = useDeleteSupplier();
   const [, onUpdate] = useUpdateSupplier(onCloseForm);
@@ -80,12 +103,22 @@ export default function Supplier(): React.JSX.Element {
     })
   },[onUpdate])
   // Columns Table
-  const columns: ColumnsType = useMemo(
+  const columns: ColumnsType  = useMemo(
     () => [
       {
         title: "Mã nhà cung cấp",
         dataIndex: "code",
         key: "code",
+        render (value, rc) {
+          return (
+            <Button
+              type="link"
+              // onClick={() => onOpenDesc(rc)}
+            >
+            {value}
+            </Button>
+          )
+        }
       },
       {
         title: "Nhà cung cấp",
@@ -111,13 +144,26 @@ export default function Supplier(): React.JSX.Element {
       },
       {
         title: "Công nợ",
-        dataIndex: "name",
-        key: "name",
+        dataIndex: "resultDebt",
+        key: "resultDebt",
         align: "center",
         render(value) {
-          return 0
+          return formatNumberThreeComma(value);
         },
       },
+      {
+          title: "Tạo phiếu",
+          dataIndex: "name",
+          key: "name",
+          align: "center",
+          render(value: any, rc: any) {
+            return (
+              <Space>
+                <Button type="primary" onClick={() => onOpenPayment(rc)}>Phiếu chi</Button>
+              </Space>
+            );
+          },
+        },
       {
         title: "Trạng thái",
         dataIndex: "status",
@@ -253,6 +299,31 @@ export default function Supplier(): React.JSX.Element {
       >
         <ProductModule.page.form supplierId={idSupplierCreateProduct} onCancel={onCloseFormProduct}/>
       </ModalAnt>
+      <Modal
+        title='Phiếu chi'
+        open={open}
+        onCancel={() => setOpen(false)}
+        onOk={() => setOpen(false)}
+        width={1366}
+        footer={null}
+        destroyOnClose
+      >
+        <PaymentVoucherForm
+          onClose={() => onClosePayment()}
+          supplierId={supplierId}
+          refCollection={REF_COLLECTION_UPPER.SUPPLIER}
+          debt={debt}
+        />
+      </Modal>
+      <Modal
+        title='Chi tiết' 
+        open={isOpenDesc}
+        onCancel={onCloseDesc}
+        onOk={onCloseDesc}
+        footer={null}
+      >
+        <Description/>
+      </Modal>
     </div>
   );
 }

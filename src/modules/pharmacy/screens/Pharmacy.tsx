@@ -12,14 +12,15 @@ import {
 import Breadcrumb from "~/components/common/Breadcrumb";
 import WhiteBox from "~/components/common/WhiteBox";
 import TableAnt from "~/components/Antd/TableAnt";
-import { omit, get, head } from "lodash";
-import { STATUS, STATUS_NAMES } from "~/constants/defaultValue";
+import { omit, get } from "lodash";
+import { REF_COLLECTION_UPPER, STATUS, STATUS_NAMES } from "~/constants/defaultValue";
 import moment from "moment";
 // import ColumnActions from "~/components/common/ColumnAction";
 import { useCallback, useState } from "react";
 import {
   Button,
   Col,
+  Modal,
   Popconfirm,
   Radio,
   Row,
@@ -36,6 +37,24 @@ import WithPermission from "~/components/common/WithPermission";
 import POLICIES from "~/modules/policy/policy.auth";
 import { useMatchPolicy } from "~/modules/policy/policy.hook";
 import ModalAnt from "~/components/Antd/ModalAnt";
+import ReceiptVoucherForm from "~/modules/receiptVoucher/components/ReceiptVoucherForm";
+
+const ColumnActions = ({ _id, deletePharmacy, onOpenForm }: propsType) => {
+  return (
+    <div className="custom-table__actions">
+      <p onClick={() => onOpenForm && onOpenForm(_id)}>Sửa</p>
+      <p>|</p>
+      <Popconfirm
+        title={`Bạn muốn xoá nhà thuốc này?`}
+        onConfirm={() => deletePharmacy && deletePharmacy(_id)}
+        okText="Xoá"
+        cancelText="Huỷ"
+      >
+        <p>Xóa</p>
+      </Popconfirm>{" "}
+    </div>
+  );
+};
 
 export default function Pharmacy() {
   const { t }: any = useTranslate();
@@ -64,6 +83,18 @@ export default function Pharmacy() {
     },
     [setPharmacyId, setIsOpenForm]
   );
+  const [open, setOpen] = useState(false);
+  const [debt, setDebt] = useState<number | null>();
+  
+  const onOpenReceipt = (item: any) => {
+    setOpen(true);
+    setPharmacyId(item?._id)
+    setDebt(item?.resultDebt)
+  };
+  const onCloseReceipt = () => {
+    setOpen(false);
+    setPharmacyId(null);
+  };
 
   const columns: ColumnsType = [
     {
@@ -101,6 +132,17 @@ export default function Pharmacy() {
       render: (record) => {
         return moment(record).format("DD/MM/YYYY");
       },
+    },
+    {
+      title: "Tạo phiếu",
+      dataIndex: "createReceipt",
+      key: "createReceipt",
+      width: 120,
+      render(value, rc) {
+        return ( <Space>
+           <Button type="primary" onClick={()=> onOpenReceipt(rc)}>Phiếu thu</Button>
+         </Space>)
+       },
     },
     {
       title: "Trạng thái",
@@ -267,6 +309,23 @@ export default function Pharmacy() {
           handleUpdate={updatePharmacy}
         />
       </ModalAnt>
+      <Modal
+        title='Phiếu chi'
+        open={open}
+        onCancel={() => setOpen(false)}
+        onOk={() => setOpen(false)}
+        width={1366}
+        footer={null}
+        destroyOnClose
+      >
+        <ReceiptVoucherForm
+          onClose={() => onCloseReceipt()}
+          pharmacyId={pharmacyId}
+          refCollection={REF_COLLECTION_UPPER.PHARMA_PROFILE}
+          debt={debt}
+          from='Pharmacy'
+        />
+      </Modal>
     </div>
   );
 }
