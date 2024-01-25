@@ -134,7 +134,7 @@ try {
           </div>
         </Col>
       </Row>
-      <ModalAnt onCancel={onCloseDebt} open={openDebt}>
+      <ModalAnt onCancel={onCloseDebt} open={openDebt} footer={[<Button onClick={onCloseDebt}>Đóng</Button>]}>
         <SelectDebt />
       </ModalAnt>
     </Form>

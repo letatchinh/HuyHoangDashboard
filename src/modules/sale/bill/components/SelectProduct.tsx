@@ -52,7 +52,8 @@ export default function SelectProduct({dataCurrent,onChangeBill}:propsType) : Re
       }
       const debounceFetcher = debounce(fetchOptions, 300);
       const onSelect = async(data:any) => {
-          inputEl.current.blur();
+          try {
+            inputEl.current.blur();
           const quotation : any = selectProductSearch(data);
           const cumulativeDiscount = await getCumulativeDiscount({pharmacyId : get(dataCurrent,'pharmacyId'),quotationItems : [quotation]});
           const quotationWithCumulative = {
@@ -60,6 +61,9 @@ export default function SelectProduct({dataCurrent,onChangeBill}:propsType) : Re
             cumulativeDiscount : cumulativeDiscount?.[get(quotation,'productId')] ?? []
           }
           onAdd(quotationWithCumulative)
+          } catch (error : any) {
+            onNotify?.error(error?.response?.data?.message || "Có lỗi gì đó xảy ra");
+          }
       };
       useEffect(() => {
         debounceFetcher('')
