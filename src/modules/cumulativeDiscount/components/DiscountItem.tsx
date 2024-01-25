@@ -263,6 +263,7 @@ export default function DiscountItem({
                                 {RenderLoading(
                                   loading,
                                   <InputNumberAnt
+                                    min={0}
                                     max={
                                       form.getFieldValue([
                                         "cumulativeDiscount",
@@ -375,7 +376,7 @@ export default function DiscountItem({
                                         "condition",
                                         "gte",
                                       ]);
-                                      if (value >= gte) {
+                                      if (!value || value >= gte) {
                                         return Promise.resolve();
                                       }
                                       return Promise.reject(
@@ -410,6 +411,7 @@ export default function DiscountItem({
                                   {RenderLoading(
                                     loading,
                                     <Select
+                                    allowClear
                                     // Always Get Unit from Variants Selected and Validate them
                                       options={units?.filter((unit : any) => variants?.some((variant : any) => !!get(variant,'productUnit') && !!get(variant,'price') && !!get(variant,'exchangeValue') && (get(variant,'productUnit') === get(unit,'_id'))))?.map((item: any) => ({
                                         label: get(item, "name"),
