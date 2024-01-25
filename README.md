@@ -1,4 +1,4 @@
-# Create Module Command
+# Create Module Command 1
 
 ## `npm run createModule moduleName`
 Then Add reducer and saga to '~/redux/reducers' and ~/redux/sagas'
