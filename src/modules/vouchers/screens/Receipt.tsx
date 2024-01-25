@@ -1,7 +1,7 @@
 import { Button, Modal, Table } from 'antd';
 import dayjs from 'dayjs';
 import { get } from 'lodash';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useGetReceiptVouchers, useReceiptVoucherPaging, useReceiptVoucherQueryParams, useUpdateReceiptVoucherParams } from '~/modules/receiptVoucher/receiptVoucher.hook';
 import StatusTag from '../components/StatusTag';
 import ReceiptVoucherForm from '~/modules/receiptVoucher/components/ReceiptVoucherForm';
@@ -9,6 +9,7 @@ type propsType = {
   listOptionSearch?: any[];
   keyword?: string;
   searchBy?: string;
+  setQueryReceipt?: any
 };
 interface Column {
   title: string;
@@ -18,7 +19,7 @@ interface Column {
   align?: string;
 };
 export default function ReceiptVouchers(props: propsType): React.JSX.Element {
-  const { listOptionSearch, keyword: keywordProps, searchBy } = props;
+  const { listOptionSearch, keyword: keywordProps, searchBy,setQueryReceipt } = props;
   
   //HOOK
   const [query, onTableChange] = useReceiptVoucherQueryParams();
@@ -32,6 +33,10 @@ export default function ReceiptVouchers(props: propsType): React.JSX.Element {
   const [refCollection, setRefCollection] = useState<string | undefined>();
   const [item, setItem] = useState<any>();
 
+  useEffect(() => {
+    setQueryReceipt(query);
+  }, query);
+  
 // console.log(onParamChange)
   const onOpenForm = (id: string | null) => {
     setId(id);
@@ -41,11 +46,12 @@ export default function ReceiptVouchers(props: propsType): React.JSX.Element {
     setId(null);
     setIsOpenForm(false);
   };
+
   const columns: Column[] = [
     {
       title: 'Mã phiếu thu',
-      dataIndex: 'code',
-      key: 'code',
+      dataIndex: 'codeSequence',
+      key: 'codeSequence',
       render: (text, record, index) => {
         return (
           <Button type='link' onClick={() => {
@@ -75,6 +81,34 @@ export default function ReceiptVouchers(props: propsType): React.JSX.Element {
       key: 'totalAmount',
       render: (text, record, index) => text?.toLocaleString(),
     },
+    // {
+    //   title: 'Nhóm đối tượng',
+    //   dataIndex: 'typeObj',
+    //   key: 'typeObj',
+    //   render: (text: any, record: any, index) => {
+    //     if (record?.supplierReceive) {
+    //       return 'Nhà cung cấp'
+    //     };
+    //     if (record?.pharmacyReceive) {
+    //       return 'Nhà thuốc'
+    //     };
+    //     return '';
+    //   },
+    // },
+    {
+      title: 'Tên đơn vị',
+      dataIndex: 'nameObj',
+      key: 'nameObj',
+      render: (text, record, index) => {
+        if (record?.supplierReceive) {
+          return record?.supplier?.name
+        };
+        if (record?.pharmacyReceive) {
+          return record?.pharmaProfile?.name
+        };
+        return '';
+      },
+    },
     {
       title: 'Ngày tạo',
       dataIndex: 'createdAt',
@@ -100,6 +134,7 @@ export default function ReceiptVouchers(props: propsType): React.JSX.Element {
       columns={columns as any}
         dataSource={vouchers}
         loading={isLoading}
+        size='small'
         pagination={{
           ...paging,
           showTotal: (total)=> `Tổng cộng: ${total}`
@@ -108,7 +143,7 @@ export default function ReceiptVouchers(props: propsType): React.JSX.Element {
     />
     <Modal
       footer={null}
-      title={`Phiếu chi - ${item?.code}`}
+      title={`Phiếu thu - ${item?.code}`}
       open={isOpenForm}
       onCancel={onClose}
       width={1366}

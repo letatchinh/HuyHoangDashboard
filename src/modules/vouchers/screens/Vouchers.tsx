@@ -1,5 +1,5 @@
 import { Col, Modal, Row, Select, Table, Form, Tabs, DatePicker } from "antd";
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import Breadcrumb from "~/components/common/Breadcrumb";
 import SelectSearch from "~/components/common/SelectSearch/SelectSearch";
 import WhiteBox from "~/components/common/WhiteBox";
@@ -9,6 +9,8 @@ import { get, head, transform } from "lodash";
 import Search from "antd/es/input/Search";
 import { MAP_STATUS_VOUCHERS_VI } from "~/constants/defaultValue";
 import dayjs from "dayjs";
+import { useLocation, useNavigate } from "react-router-dom";
+import { convertQueryString } from "~/utils/helpers";
 type propsType = {};
 type optionsSearch = {
   value: string;
@@ -25,7 +27,7 @@ const optionsSearch: optionsSearch[] = [
   },
   {
     value: "reason",
-    label: "Lý do",
+    label: "Nội dung",
   },
   {
     value: "totalAmount",
@@ -42,6 +44,9 @@ const optionsSearch: optionsSearch[] = [
 ];
 
 export default function Vouchers(props: propsType): React.JSX.Element {
+  const navigate = useNavigate();
+  const { pathname, search } = useLocation();
+  console.log(search,'search')
   const [activeTab, setActiveTab] = useState("1");
   const [searchBy, setSearchBy] = useState(head(optionsSearch)?.value || "");
   const [keyword, setKeyword] = useState("");
@@ -54,7 +59,15 @@ export default function Vouchers(props: propsType): React.JSX.Element {
     }),
     []
   );
-  const [date, setDate] = useState(defaultDate);
+  const [date, setDate] = useState<any>(defaultDate);
+
+  useEffect(() => {
+    setKeyword('');
+  }, [searchBy]);
+
+  useEffect(() => {
+    onSearch();
+  }, [date]);
 
   const onSearch = () => {
     let query;
@@ -68,16 +81,73 @@ export default function Vouchers(props: propsType): React.JSX.Element {
       default:
         break;
     }
+    let searchParams = `?page=1&limit=${query?.limit || 10}`;
+    const assignSearchParams = (key: string, value?: string) => {
+      let newKeyword = value?.toString();
+      if (!['totalAmount']?.includes(key)) { // keyword not need clear space
+        const regex = /[0-9.]/g;
+        if (newKeyword && regex.test(newKeyword)) {
+          newKeyword = newKeyword?.replace(/[. ]/g, '');
+        };
+      };
+      searchParams += `&${key}=${newKeyword}`;
+    };
+    if (!date.startDate || date.startDate === 'Invalid date') {
+      assignSearchParams('startDate', date?.defaultDate?.startDate)
+    } else {
+      assignSearchParams('startDate', date?.startDate)
+      if (!date.endDate || date.endDate === 'Invalid date') {
+        assignSearchParams('endDate', defaultDate?.endDate)
+      } else {
+        assignSearchParams('endDate', date?.endDate)
+      }
+      if (keyword) {
+        assignSearchParams(searchBy, keyword);
+      } else {
+        searchParams = searchParams;
+      };
+    };
+      // Navigate
+      navigate(`${pathname}${searchParams}`);
   };
 
-  const onSearchByStatus = (value: string) => {
-    console.log(value)
+  const handleChangeStatus = (status: string) => {
+    setKeyword(status);
+    let query = {};
+
+    // Set query by tab
+    switch (activeTab) {
+      case '1':
+        query = queryReceipt;
+        break;
+      case '2':
+        query = queryPayment;
+        break;
+      default:
+        break;
+
+    };
+    let searchParams = convertQueryString(
+      {
+        ...query,
+        [searchBy]: status
+      }
+    );
+    navigate(`${pathname}${searchParams}`);
   };
 
   const onChangeSelect = (value: string) => {
     setSearchBy(value);
     setKeyword("");
+    navigate(`${pathname}`);
   };
+  
+  const onChangeTab = (value: string) => {
+    setActiveTab(value);
+    navigate(`${pathname}`);
+    setKeyword("");
+  };
+
   return (
     <>
       <WhiteBox>
@@ -116,12 +186,15 @@ export default function Vouchers(props: propsType): React.JSX.Element {
                         value={keyword}
                       />
                     ),
-                    value: (
+                    totalAmount: (
                       <Search
                         placeholder={`Tìm ${optionsSearch
                           ?.find((item: any) => item.value === searchBy)
                           ?.label?.toLowerCase()}`}
                         onSearch={onSearch}
+                        onChange={(e: any) => {
+                          setKeyword(e.target.value);
+                        }}
                         style={{
                           width: 300,
                         }}
@@ -135,6 +208,7 @@ export default function Vouchers(props: propsType): React.JSX.Element {
                         placeholder={`Tìm ${optionsSearch
                           ?.find((item: any) => item.value === searchBy)
                           ?.label?.toLowerCase()}`}
+                          onSearch={onSearch}
                         onChange={(e) => setKeyword(e.target.value)}
                         style={{
                           width: 300,
@@ -152,7 +226,7 @@ export default function Vouchers(props: propsType): React.JSX.Element {
                           width: 200,
                         }}
                         placeholder="Vui lòng chọn trạng thái"
-                        onChange={onSearchByStatus}
+                        onChange={handleChangeStatus}
                       >
                         {transform(
                           MAP_STATUS_VOUCHERS_VI,
@@ -192,7 +266,7 @@ export default function Vouchers(props: propsType): React.JSX.Element {
                     onChange={(e) =>
                       setDate({
                         ...date,
-                        startDate: dayjs(e).format("YYYY-MM-DD"),
+                        startDate: dayjs(e).format("YYYY-MM-DD HH:mm:ss"),
                       })
                     }
                   />
@@ -205,7 +279,7 @@ export default function Vouchers(props: propsType): React.JSX.Element {
                     onChange={(e) =>
                       setDate({
                         ...date,
-                        endDate: dayjs(e).format("YYYY-MM-DD"),
+                        endDate: dayjs(e).format("YYYY-MM-DDTHH:mm:ss"),
                       })
                     }
                   />
@@ -214,19 +288,21 @@ export default function Vouchers(props: propsType): React.JSX.Element {
             </Row>
           </Col>
         </Row>
-        <Tabs defaultActiveKey="1">
+        <Tabs defaultActiveKey="1" onChange={onChangeTab} destroyInactiveTabPane>
           <Tabs.TabPane tab="Phiếu thu" key="1">
             <ReceiptVouchers
               listOptionSearch={optionsSearch}
               keyword={keyword}
               searchBy={searchBy}
+              setQueryReceipt={setQueryReceipt}
             />
           </Tabs.TabPane>
           <Tabs.TabPane tab="Phiếu chi" key="2">
             <PaymentVouchers
                 listOptionSearch={optionsSearch}
                 keyword={keyword}
-                searchBy={searchBy}
+              searchBy={searchBy}
+              setQueryPayment={setQueryPayment}
             />
           </Tabs.TabPane>
         </Tabs>

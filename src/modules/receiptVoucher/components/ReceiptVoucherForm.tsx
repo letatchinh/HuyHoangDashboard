@@ -257,16 +257,14 @@ export default function ReceiptVoucherForm(props: propsType): React.JSX.Element 
       });
       setDataAccounting(initReceiptVoucher?.accountingDetails);
     }
-  }, [id, initReceiptVoucher]);
+  }, [id, initReceiptVoucher,pharmacy]);
   
   useEffect(() => {
     if (id && mergedInitWhPaymentVoucher ) {
-      console.log(mergedInitWhPaymentVoucher,'mergedInitWhPaymentVoucher')
       const initEmployee = {
         label: mergedInitWhPaymentVoucher?.employee?.fullName,
         value: mergedInitWhPaymentVoucher?.employee?._id
       };
-      console.log(initEmployee,'initEmployee')
       setInitEmployee([initEmployee]);
     } else {
       fetchIssueNumber();
@@ -577,6 +575,7 @@ export default function ReceiptVoucherForm(props: propsType): React.JSX.Element 
               </Space>
             </TabPane>
           </Tabs>
+          <WithPermission permission={POLICIES.READ_HISTORYVOUCHER}>
           { id &&  <Collapse style={{ backgroundColor: "transparent" }} bordered={false}>
             <Collapse.Panel
               showArrow={false}
@@ -595,16 +594,19 @@ export default function ReceiptVoucherForm(props: propsType): React.JSX.Element 
               />
             </Collapse.Panel>
           </Collapse>}
+          </WithPermission>
           <Row className="staff-form__submit-box">
+            <WithPermission permission={POLICIES.UPDATE_VOUCHER}>
             <Button icon={<SaveOutlined/>} type="primary" htmlType="submit">
               Lưu
             </Button>
+            </WithPermission>
 
             {id &&
               (!get(mergedInitWhPaymentVoucher, "status") ||
                 get(mergedInitWhPaymentVoucher, "status") ===
                   WH_VOUCHER_STATUS.CREATED) && (
-                <WithPermission permission={POLICIES.UPDATE_STATUS_VOUCHER}>
+                <WithPermission permission={POLICIES.UPDATE_STATUSVOUCHER}>
                 <Button
                   icon={<CheckOutlined/>}
                   loading={isSubmitLoading}
@@ -623,7 +625,7 @@ export default function ReceiptVoucherForm(props: propsType): React.JSX.Element 
               get(mergedInitWhPaymentVoucher, "status") ===
                 WH_VOUCHER_STATUS.CONFIRMED && (
                 <Space>
-                  <WithPermission permission={POLICIES.UPDATE_STATUS_VOUCHER}>
+                  <WithPermission permission={POLICIES.UPDATE_STATUSVOUCHER}>
                   <Button
                     icon={<CheckOutlined/>}
                     loading={isSubmitLoading}
@@ -638,7 +640,7 @@ export default function ReceiptVoucherForm(props: propsType): React.JSX.Element 
                     }
                   </Button>
                   </WithPermission>
-                  <WithPermission permission={POLICIES.UPDATE_STATUS_VOUCHER}>
+                  <WithPermission permission={POLICIES.UPDATE_STATUSVOUCHER}>
                   <Button
                     icon={<CheckOutlined />}
                     loading={isSubmitLoading}
@@ -674,7 +676,7 @@ export default function ReceiptVoucherForm(props: propsType): React.JSX.Element 
                 ? <Button icon={<CloseCircleOutlined/>} onClick={onClose}>Đóng</Button>
                   :
                   (
-                  <Link to={'/'}>
+                  <Link to={'/pharmacy'}>
                     <Button icon={<CloseCircleOutlined/>}>Đóng</Button>
                   </Link>
                 )

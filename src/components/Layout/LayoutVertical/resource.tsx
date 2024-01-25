@@ -164,11 +164,11 @@ export const resource: ItemType[] = [
         permission :[POLICIES.READ_USER, POLICIES.READ_USERGROUP],
       },
       {
-        label : "Sổ quỹ",
+        label : "Phiếu",
         icon: <MoneyCollectOutlined />,
         path : PATH_APP.vouchers.root,
         key: PATH_APP.vouchers.root,
-        // permission :[POLICIES.READ_USER, POLICIES.READ_USERGROUP],
+        permission :[POLICIES.READ_VOUCHER],
       },
 
         //Nhà thuốc

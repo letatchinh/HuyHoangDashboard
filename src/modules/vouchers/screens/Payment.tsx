@@ -1,7 +1,7 @@
 import { Button, Modal, Table } from 'antd';
 import dayjs from 'dayjs';
 import { get, toUpper } from 'lodash';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { MAP_STATUS_VOUCHERS_VI, REF_COLLECTION } from '~/constants/defaultValue';
 import { useGetPaymentVouchers, usePaymentVoucherPaging, usePaymentVoucherQueryParams, useUpdatePaymentVoucherParams } from '~/modules/paymentVoucher/paymentVoucher.hook';
 import StatusTag from '../components/StatusTag';
@@ -10,6 +10,7 @@ type propsType = {
   listOptionSearch?: any[];
   keyword?: string;
   searchBy?: string;
+  setQueryPayment?: any;
 };
 interface Column {
   title: string;
@@ -20,7 +21,7 @@ interface Column {
 };
 
 export default function PaymentVouchers(props: propsType): React.JSX.Element {
-  const { listOptionSearch, keyword: keywordProps, searchBy } = props;
+  const { listOptionSearch, keyword: keywordProps, searchBy ,setQueryPayment} = props;
   
   //HOOK
   const [query, onTableChange] = usePaymentVoucherQueryParams();
@@ -34,6 +35,10 @@ export default function PaymentVouchers(props: propsType): React.JSX.Element {
   const [refCollection, setRefCollection] = useState<string | undefined>();
   const [item, setItem] = useState<any>();
 
+  useEffect(() => {
+    setQueryPayment(query);
+  }, [query]);
+
   const onOpenForm = (id: string | null) => {
     setId(id);
     setIsOpenForm(true);
@@ -42,11 +47,13 @@ export default function PaymentVouchers(props: propsType): React.JSX.Element {
     setId(null);
     setIsOpenForm(false);
   };
+
+  
   const columns: Column[] = [
     {
       title: 'Mã phiếu chi',
-      dataIndex: 'code',
-      key: 'code',
+      dataIndex: 'codeSequence',
+      key: 'codeSequence',
       render: (text, record, index) => {
         return (
           <Button type='link' onClick={() => {
@@ -76,6 +83,34 @@ export default function PaymentVouchers(props: propsType): React.JSX.Element {
       key: 'totalAmount',
       render: (text, record, index) => text?.toLocaleString(),
     },
+    // {
+    //   title: 'Nhóm đối tượng',
+    //   dataIndex: 'typeObj',
+    //   key: 'typeObj',
+    //   render: (text: any, record: any, index) => {
+    //     if (record?.supplierReceive) {
+    //       return 'Nhà cung cấp'
+    //     };
+    //     if (record?.pharmacyReceive) {
+    //       return 'Nhà thuốc'
+    //     };
+    //     return '';
+    //   },
+    // },
+    {
+      title: 'Tên đơn vị',
+      dataIndex: 'nameObj',
+      key: 'nameObj',
+      render: (text, record, index) => {
+        if (record?.supplierReceive) {
+          return record?.supplier?.name
+        };
+        if (record?.pharmacyReceive) {
+          return record?.pharmaProfile?.name
+        };
+        return '';
+      },
+    },
     {
       title: 'Ngày tạo',
       dataIndex: 'createdAt',
@@ -102,6 +137,7 @@ export default function PaymentVouchers(props: propsType): React.JSX.Element {
         columns={columns as any}
         dataSource={vouchers}
         loading={isLoading}
+        size='small'
         pagination={{
           ...paging,
           showTotal: (total)=> `Tổng cộng: ${total}`

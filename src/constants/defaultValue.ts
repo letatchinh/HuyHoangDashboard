@@ -1,5 +1,5 @@
 // export const BASE_URL = process.env.REACT_APP_BASE_URL ;
-export const BASE_URL = 'http://192.168.1.18:7006';
+export const BASE_URL = 'http://192.168.77.129:7006';
 
 export const DEFAULT_UPLOAD_ACTION = `${BASE_URL}/api/v1/file`;
 export const MAX_UPLOAD_FILE_SIZE_IN_MB = 2;
@@ -107,11 +107,11 @@ export const WH_VOUCHER_ACTION_NAME = {
 };
 
 export const MAP_STATUS_VOUCHERS_VI = {
-  [STATUS_VOUCHERS_VI.CREATED]: { name: 'Mới', color: 'geekblue',colorStyle : '#1d39c4' },
-  [STATUS_VOUCHERS_VI.CONFIRMED]: { name: 'Đã xác nhận', color: 'processing' ,colorStyle : '#1890ff'},
-  [STATUS_VOUCHERS_VI.APPROVED]: { name: 'Đã duyệt', color: 'success',colorStyle : '#52c41a' },
-  [STATUS_VOUCHERS_VI.REJECT]: { name: 'Đã từ chối', color: 'error',colorStyle : '#f5222d' },
-  [STATUS_VOUCHERS_VI.CUSTOMER_CANCEL]: { name: 'Đã chấm dứt', color: 'default',colorStyle : 'rgba(0, 0, 0, 0.85)' },
+  [WH_VOUCHER_STATUS.CREATED]: { name: 'Mới', color: 'geekblue',colorStyle : '#1d39c4' },
+  [WH_VOUCHER_STATUS.CONFIRMED]: { name: 'Đã xác nhận', color: 'processing' ,colorStyle : '#1890ff'},
+  [WH_VOUCHER_STATUS.APPROVED]: { name: 'Đã duyệt', color: 'success',colorStyle : '#52c41a' },
+  [WH_VOUCHER_STATUS.REJECT]: { name: 'Đã từ chối', color: 'error',colorStyle : '#f5222d' },
+  [WH_VOUCHER_STATUS.CUSTOMER_CANCEL]: { name: 'Đã chấm dứt', color: 'default',colorStyle : 'rgba(0, 0, 0, 0.85)' },
 };
 
 export const WH_VOUCHER_CODE_PREFIX = {

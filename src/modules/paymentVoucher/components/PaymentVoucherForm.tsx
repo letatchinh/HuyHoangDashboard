@@ -69,7 +69,6 @@ type propsType = {
   onClose?: any;
   supplierId?: any;
   refCollection?: string;
-  onCancel?: any;
   debt?: number | null;
 };
 
@@ -78,7 +77,7 @@ export default function PaymentVoucherForm(
 ): React.JSX.Element {
   useResetAction();
   const dispatch = useDispatch();
-  const { id, supplierId, onClose, refCollection,onCancel, debt } = props;
+  const { id, supplierId, onClose, refCollection, debt } = props;
   const [form] = Form.useForm();
   const ref = useRef();
   const [isPrinting, setIsPrinting] = useState(false);
@@ -585,6 +584,7 @@ export default function PaymentVoucherForm(
               </Space>
             </TabPane>
           </Tabs>
+          <WithPermission permission={POLICIES.READ_HISTORYVOUCHER}>
           { id &&  <Collapse style={{ backgroundColor: "transparent" }} bordered={false}>
             <Collapse.Panel
               showArrow={false}
@@ -603,16 +603,19 @@ export default function PaymentVoucherForm(
               />
             </Collapse.Panel>
           </Collapse>}
+          </WithPermission>
           <Row className="staff-form__submit-box">
+          <WithPermission permission={POLICIES.UPDATE_VOUCHER}>
             <Button icon={<SaveOutlined />} type="primary" htmlType="submit">
               Lưu
-            </Button>
+              </Button>
+              </WithPermission>
 
             {id &&
               (!get(mergedInitWhPaymentVoucher, "status") ||
                 get(mergedInitWhPaymentVoucher, "status") ===
                   WH_VOUCHER_STATUS.CREATED) && (
-              <WithPermission permission={POLICIES.UPDATE_STATUS_VOUCHER}>
+              <WithPermission permission={POLICIES.UPDATE_STATUSVOUCHER}>
                 <Button
                   icon={<CheckOutlined />}
                   loading={isSubmitLoading}
@@ -631,7 +634,7 @@ export default function PaymentVoucherForm(
               get(mergedInitWhPaymentVoucher, "status") ===
                 WH_VOUCHER_STATUS.CONFIRMED && (
                 <Space>
-                  <WithPermission permission={POLICIES.UPDATE_STATUS_VOUCHER}>
+                  <WithPermission permission={POLICIES.UPDATE_STATUSVOUCHER}>
                   <Button
                     icon={<CheckOutlined />}
                     loading={isSubmitLoading}
@@ -646,7 +649,7 @@ export default function PaymentVoucherForm(
                     }
                   </Button>
                   </WithPermission>
-                  <WithPermission permission={POLICIES.UPDATE_STATUS_VOUCHER}>
+                  <WithPermission permission={POLICIES.UPDATE_STATUSVOUCHER}>
                   <Button
                     icon={<CheckOutlined />}
                     loading={isSubmitLoading}
@@ -678,11 +681,11 @@ export default function PaymentVoucherForm(
             {isSubmitLoading ? (
               <Button disabled>Đóng</Button>
             ) : (
-              onCancel
-                ? <Button icon={<CloseCircleOutlined />} onClick={onCancel}>Đóng</Button>
+              onClose
+                ? <Button icon={<CloseCircleOutlined />} onClick={onClose}>Đóng</Button>
                   :
                   (
-                  <Link to={'/'}>
+                  <Link to={'/supplier'}>
                     <Button icon={<CloseCircleOutlined />}>Đóng</Button>
                   </Link>
                 )

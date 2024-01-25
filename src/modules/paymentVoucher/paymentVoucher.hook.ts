@@ -118,6 +118,11 @@ export const usePaymentVoucherQueryParams = () => {
   const [limit, setLimit] = useState(query.get("limit") || 10); 
   const [page, setPage] = useState(query.get("page") || 1);
   const keyword = query.get("keyword");
+  const codeSequence = query.get("codeSequence");
+  const status = query.get("status");
+  const totalAmount = query.get("totalAmount");
+  const reason = query.get("reason");
+
   const createSuccess = useSelector(createSuccessSelector);
   const deleteSuccess = useSelector(deleteSuccessSelector);
   const startDate = query.get('startDate') || dayjs().startOf('month').format("YYYY-MM-DDTHH:mm:ss");
@@ -135,10 +140,17 @@ export const usePaymentVoucherQueryParams = () => {
       typeVoucher,
       startDate,
       endDate,
+      codeSequence,
+      status,
+      totalAmount,
+      reason,
     };
     return [queryParams, onTableChange];
     //eslint-disable-next-line
-  }, [page, limit, keyword, createSuccess, deleteSuccess, startDate, endDate]);
+  }, [page, limit, keyword, createSuccess, deleteSuccess, startDate, endDate, codeSequence,
+    status,
+    totalAmount,
+    reason,]);
 };
 
 export const useUpdatePaymentVoucherParams = (

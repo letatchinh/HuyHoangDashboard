@@ -27,6 +27,9 @@ import { STATUS_SUPPLIER_TYPE } from "../supplier.modal";
 import ProductModule from '~/modules/product';
 import { REF_COLLECTION, REF_COLLECTION_UPPER } from "~/constants/defaultValue";
 import PaymentVoucherForm from "~/modules/paymentVoucher/components/PaymentVoucherForm";
+import { useMatchPolicy } from "~/modules/policy/policy.hook";
+import POLICIES from "~/modules/policy/policy.auth";
+import Description from "../components/Description";
 export default function Supplier(): React.JSX.Element {
   // Translate
   const { t }: any = useTranslate();
@@ -39,7 +42,8 @@ export default function Supplier(): React.JSX.Element {
   const [open, setOpen] = useState(false);
   const [supplierId, setSupplierId] = useState<string | null>('');
   const [debt, setDebt] = useState<number | null>();
-  
+  const [isOpenDesc, setIsOpenDesc] = useState<boolean>(false);
+  const canWriteVoucher = useMatchPolicy(POLICIES.WRITE_VOUCHER);
   // Control form
   const onOpenForm = useCallback((idSelect?: any) => {
     if (idSelect) {
@@ -72,6 +76,13 @@ export default function Supplier(): React.JSX.Element {
     setOpen(false);
     setSupplierId(null);
   };
+  const onOpenDesc = (item?: any) => {
+    setSupplierId(item?._id)
+    setIsOpenDesc(true);
+  };
+  const onCloseDesc = () => {
+    setIsOpenDesc(false);
+  };
 
   // Hook
   const [query] = useSupplierQueryParams();
@@ -88,12 +99,22 @@ export default function Supplier(): React.JSX.Element {
     })
   },[onUpdate])
   // Columns Table
-  const columns: ColumnsType = useMemo(
+  const columns: ColumnsType  = useMemo(
     () => [
       {
         title: "Mã nhà cung cấp",
         dataIndex: "code",
         key: "code",
+        render (value, rc) {
+          return (
+            <Button
+              type="link"
+              // onClick={() => onOpenDesc(rc)}
+            >
+            {value}
+            </Button>
+          )
+        }
       },
       {
         title: "Nhà cung cấp",
@@ -125,16 +146,18 @@ export default function Supplier(): React.JSX.Element {
         },
       },
       {
-        title: "Tạo phiếu",
-        dataIndex: "name",
-        key: "name",
-        align: "center",
-        render(value, rc) {
-         return ( <Space>
-            <Button type="primary" onClick={()=> onOpenPayment(rc)}>Phiếu chi</Button>
-          </Space>)
+          title: "Tạo phiếu",
+          dataIndex: "name",
+          key: "name",
+          align: "center",
+          render(value: any, rc: any) {
+            return (
+              <Space>
+                <Button type="primary" onClick={() => onOpenPayment(rc)}>Phiếu chi</Button>
+              </Space>
+            );
+          },
         },
-      },
       {
         title: "Trạng thái",
         dataIndex: "status",
@@ -279,6 +302,15 @@ export default function Supplier(): React.JSX.Element {
           refCollection={REF_COLLECTION_UPPER.SUPPLIER}
           debt={debt}
         />
+      </Modal>
+      <Modal
+        title='Chi tiết' 
+        open={isOpenDesc}
+        onCancel={onCloseDesc}
+        onOk={onCloseDesc}
+        footer={null}
+      >
+        <Description/>
       </Modal>
     </div>
   );
