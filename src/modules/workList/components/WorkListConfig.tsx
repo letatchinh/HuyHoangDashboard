@@ -100,7 +100,7 @@ const BoardConfig: FC<BoardConfigProps> = ({ name, id, dataBoardConfigItem }) =>
           </Tooltip>
         </Space>
       </div>
-      <Droppable key={id} droppableId={id as string} type={'TASK'} typeItem='task'>
+      <Droppable key={id} droppableId={id as string} type={'TASK'}>
         {(provided: any) => (
           <div
             key={id}

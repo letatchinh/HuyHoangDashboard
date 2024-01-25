@@ -15,6 +15,8 @@ import { useCreateTask, useDeleteTask, useResetAction, useUpdateTask } from '~/m
 import { useGetBoardById } from '~/modules/workBoard/workBoard.hook';
 import Menufilter from '../components/Menufilter';
 import TaskTabDetail from '~/modules/workTask/components/Task/TaskTabDetail';
+import WithOrPermission from '~/components/common/WithOrPermission';
+import POLICIES from '~/modules/policy/policy.auth';
 const FormTaskContext = createContext({});
 export const useFormTaskContext = () => useContext<FormTaskContextProps | any>(FormTaskContext);
 
@@ -181,7 +183,7 @@ const WorkList = () => {
               <div className="work-list-body">
                 <DragDropContext onDragEnd={onDragEndv2}>
                   {boardConfigMemo?.map(({ name, _id }: any, index: number) => (
-                    <Droppable key={_id} droppableId={_id} type={'COLUMN'} typeItem='boardConfig'>
+                    <Droppable key={_id} droppableId={_id} type={'COLUMN'} >
                       {(provided: any) => (
                         <div
                           key={_id}
@@ -210,7 +212,7 @@ const WorkList = () => {
                       )}
                     </Droppable>
                   ))}
-                  {/* <WithOrPermission permission={[POLICIES.WRITE_TODOLIST, POLICIES.ADMIN_TODOLIST]}> */}
+                  <WithOrPermission permission={[POLICIES.WRITE_WORKMANAGEMENT, POLICIES.ADMIN_WORKMANAGEMENT]}>
                   <Button
                     // type="ghost"
                     htmlType="button"
@@ -218,7 +220,7 @@ const WorkList = () => {
                   >
                     + Thêm danh mục
                   </Button>
-                  {/* </WithOrPermission> */}
+                  </WithOrPermission>
                 </DragDropContext>
               </div>
             </div>

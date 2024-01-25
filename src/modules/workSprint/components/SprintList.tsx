@@ -8,6 +8,8 @@ import { useProfile } from '~/modules/auth/auth.hook';
 import { useCreateWorkSprint, useDeleteWorkSprint, useGetWorkSprints, useUpdateWorkSprint } from '../workSprint.hook';
 import SprintCard from './SprintCard';
 import { useSprintContext } from '../screens/WorkSprint';
+import WithOrPermission from '~/components/common/WithOrPermission';
+import POLICIES from '~/modules/policy/policy.auth';
 
 // const SprintCard = lazy(() => import('./SprintCard.jsx'));
 const layoutCol = { lg: { span: 6 }, xl: { span: 6 }, xxl: { span: 4 }, sm: { span: 12 }, md: { span: 8 }, style: { height: 'auto' } };
@@ -106,7 +108,7 @@ const SprintList: React.FC = memo(() => {
             </Col>
           );
         })}
-        {/* <WithOrPermission permission={[POLICIES.ADMIN_TODOLIST, POLICIES.WRITE_TODOLIST]}> */}
+        <WithOrPermission permission={[POLICIES.ADMIN_WORKMANAGEMENT, POLICIES.WRITE_WORKMANAGEMENT]}>
           <Col {...layoutCol} key={'create'}>
             <Button
               htmlType="button"
@@ -121,7 +123,7 @@ const SprintList: React.FC = memo(() => {
               <PlusOutlined></PlusOutlined> Thêm Danh mục{' '}
             </Button>
           </Col>
-        {/* </WithOrPermission> */}
+        </WithOrPermission>
       </Row>
     </div>
   );

@@ -10,6 +10,7 @@ const userGroup = 'userGroup';
 const pharmacy = 'pharmacy';
 const bill = 'bill';
 const todoStatusConfig = 'todoStatusConfig';
+const todoList = 'todoList';
 
 const RESOURCES = [
   branch,
@@ -20,6 +21,7 @@ const RESOURCES = [
   // pharmacy,
   bill,
   todoStatusConfig,
+  todoList,
 ];
 
 //ACTIONS
@@ -67,6 +69,7 @@ const RESOURCE = (): ResourceType => {
   ];
   const GROUP_WORK_MANAGERMENT: string[] = [
     todoStatusConfig,
+    todoList
   ];
 
   return {
