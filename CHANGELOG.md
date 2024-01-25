@@ -1,3 +1,10 @@
+# [1.2.0](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/compare/v1.1.0...v1.2.0) (2024-01-25)
+
+
+### Features
+
+* test new release ([fdf7af1](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/fdf7af1e777069b7a14bca5abe49a4543a48db61))
+
 # 1.0.0 (2024-01-25)
 
 
