@@ -3,10 +3,10 @@ stages:
   - build
 
 semantic_release:
-  image: node:16
+  image: node:20
   stage: release
-  only:
-    - master
+  rules: 
+    - if: $OPERATION != "build-release" && $CI_COMMIT_REF_NAME == "master"
   script:
     - npm i
     - npx semantic-release
@@ -22,14 +22,13 @@ build_staging:
     - if: $OPERATION == "deploy-staging"
   script:
     - ENCODED_REF=$(echo $CI_COMMIT_REF_NAME|sed -e 's/\//\_/g')
-    - echo $ENCODED_REF
     - docker login -u $CI_REGISTRY_USER -p $GL_CI_TOKEN $CI_REGISTRY
     - docker build -f distribution/Dockerfile -t $CI_REGISTRY/worldtech-ltd/worldpharma-dashboard:$ENCODED_REF .
     - docker push $CI_REGISTRY/worldtech-ltd/worldpharma-dashboard:$ENCODED_REF
     - 'curl --silent -X POST --header "Content-Type: application/json" --header "Accept: application/json" --header "authorization: ${SWARM_KEY}" "$SWARM_URL?tag=$ENCODED_REF"'
   after_script:
     # - apk add --update curl && rm -rf /var/cache/apk/*
-    - PR_URL="https://gitlab.com/api/v4/projects/25638297/merge_requests/${MR_ID}/notes"
+    - PR_URL="https://gitlab.com/api/v4/projects/53411993/merge_requests/${MR_ID}/notes"
     - |
       if [ "$CI_JOB_STATUS" == "success" ]; then
         curl --silent --location --request POST "${PR_URL}" --header "PRIVATE-TOKEN: ${GL_CI_TOKEN}" --header "Content-Type: application/json" --data-raw "{ \"body\": \"Build success.\" }"
@@ -37,4 +36,18 @@ build_staging:
         curl  --silent --location --request POST "${PR_URL}" --header "PRIVATE-TOKEN: ${GL_CI_TOKEN}" --header "Content-Type: application/json" --data-raw "{ \"body\": \"Build failed.\" }"
       fi
     
+build_release:
+  image: docker:20.10.16
+  stage: build
+  services:
+    - docker:20.10.16-dind
+  before_script:
+    - apk add --update curl && rm -rf /var/cache/apk/*
+  rules: 
+    - if: $OPERATION == "build-release"
+  script:
+    - docker login -u $CI_REGISTRY_USER -p $GL_CI_TOKEN $CI_REGISTRY
+    - docker build -f distribution/Dockerfile -t $CI_REGISTRY/worldtech-ltd/worldpharma-dashboard:$TAG .
+    - docker push $CI_REGISTRY/worldtech-ltd/worldpharma-dashboard:$TAG
+
 
