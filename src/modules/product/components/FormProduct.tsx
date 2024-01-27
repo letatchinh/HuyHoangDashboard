@@ -95,7 +95,7 @@ export default function FormProduct({
     if (product && id) {
     const initProduct = convertInitProduct(product);
       form.setFieldsValue(initProduct);
-      setBackupForm(initProduct);
+      setBackupForm([initProduct]);
     }else{
       setBackupForm([form.getFieldsValue()])
     };
