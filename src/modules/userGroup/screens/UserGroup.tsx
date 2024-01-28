@@ -18,11 +18,13 @@ import UserGroupForm from "../components/UserGroupForm";
 import { get } from "lodash";
 import {
   onSearchPermissions,
+  useCreateUserGroup,
   useDeleteUserGroup,
   useGetUserGroup,
   useGetUserGroups,
   useResetUserGroups,
   useResourceColumns,
+  useUpdateUserGroup,
 } from "../userGroup.hook";
 import {
   useResources,
@@ -34,6 +36,8 @@ import POLICIES from "~/modules/policy/policy.auth";
 import { useResetState } from "~/utils/hook";
 import { userGroupSliceAction } from "../redux/reducer";
 import WithOrPermission from "~/components/common/WithOrPermission";
+import { useGetProfile, useProfile } from "~/modules/auth/auth.hook";
+import { useDispatch } from "react-redux";
 
 const styleButton = {
   alignContent: "center",
@@ -76,35 +80,32 @@ const getNextPath = (url: string) => {
 
 const UserGroup = ({ currentTab }: UserGroupProps) => {
   useResetUserGroups();
+  const dispatch = useDispatch();
+  const resetAction = () => {
+    return dispatch(userGroupSliceAction.resetAction());
+  };
   const { branchId, groupId }: any = useParams();
   const navigate = useNavigate();
   const { pathname } = useLocation();
+  const [reFetch, setReFetch] = useState(false);
   const branchIdParam = useMemo(
     () => ({ branchId: branchId ? branchId : DEFAULT_BRANCH_ID }),
-    [branchId]
+    [branchId, reFetch]
   );
-  const [reFetch, setReFetch] = useState(false);
   const [groups, isLoading] = useGetUserGroups(branchIdParam);
   const param = useMemo(() => (groupId), [groupId, reFetch]);
   const [group, isLoadingGroup, updateGroup] = useGetUserGroup(param);
   const [, handleUpdate] = useUpdatePolicy();
   const [, deleteGroup] = useDeleteUserGroup();
-
+  const reFeatchGroup = () => {
+    return dispatch(userGroupSliceAction.getByIdRequest(param));
+  };
   //State
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [id, setId] = useState<any>(null);
   const [dataShow, setDataShow] = useState(null);
   const canUpdate = true;
   // Action
-
-  const [resources, isResourcesLoading] = useResources();
-
-  useEffect(() => {
-    if (!groupId && groups.length && currentTab === 'user/group') {
-      navigate(`${pathname}/${groups[0]._id}`);
-    };
-  }, [groups, pathname, groupId]);
-
   const onOpenForm = (id?: any) => {
     setId(id);
     setIsOpen(true);
@@ -114,6 +115,22 @@ const UserGroup = ({ currentTab }: UserGroupProps) => {
     setIsOpen(false);
     setId(null);
   };
+  const [, handleUpdateUser] = useUpdateUserGroup(() => {
+    onClose();
+    resetAction();
+  });
+  const [isSubmitLoading, handleCreate] = useCreateUserGroup(() => {
+    onClose();
+    resetAction();
+  });
+  const [resources, isResourcesLoading] = useResources();
+
+  useEffect(() => {
+    if (!groupId && groups.length && currentTab === 'user/group') {
+      navigate(`/user/group/${groups[0]._id}`);
+    };
+  }, [groups, pathname, groupId]);
+
   const onSelectGroup = ({ key }: any) => {
     const nextPath = `/user/group/${key}`;
     navigate(nextPath);
@@ -149,6 +166,7 @@ const UserGroup = ({ currentTab }: UserGroupProps) => {
     );
   };
   const columns = useResourceColumns(renderPermission);
+  
   return (
     <div className="employee-group">
       <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
@@ -182,7 +200,7 @@ const UserGroup = ({ currentTab }: UserGroupProps) => {
           <div className="employee-group__content">
             <div className="employee-group__header">
               <h5 className="employee-group__list-title ">Thiết lập quyền</h5>
-              <Flex
+            { !isLoading && <Flex
                 gap="small"
                 wrap="wrap"
                 style={{
@@ -226,7 +244,7 @@ const UserGroup = ({ currentTab }: UserGroupProps) => {
                   <PlusOutlined /> Tạo mới
                 </Button>
                 </WithOrPermission>
-              </Flex>
+              </Flex>}
             </div>
             <SelectSearch
               showSelect={false}
@@ -249,9 +267,20 @@ const UserGroup = ({ currentTab }: UserGroupProps) => {
             footer={[]}
             onCancel={onClose}
             className="form-modal__user-group"
+            afterClose={() => {
+              setReFetch(!reFetch);
+              reFeatchGroup();
+              }}
         // destroyOnClose
       >
-        <UserGroupForm isOpen={isOpen} onClose={onClose} id={id} setReFetch = {setReFetch} reFetch = {reFetch} />
+        <UserGroupForm
+          isOpen={isOpen} 
+          onClose={onClose} id={id} 
+          setReFetch={setReFetch} 
+          reFetch={reFetch}
+          handleCreate={handleCreate}
+          handleUpdateUser={handleUpdateUser}
+        />
         </Modal>
     </div>
   );
