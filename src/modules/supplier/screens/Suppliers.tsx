@@ -1,9 +1,10 @@
 import { DeleteOutlined, InfoCircleOutlined, InfoCircleTwoTone, PlusCircleOutlined, PlusCircleTwoTone } from "@ant-design/icons";
-import { Button, Col, Divider, Modal, Popconfirm, Row, Space, Switch, Typography } from "antd";
+import { Button, Col, Divider, Modal, Popconfirm, Row, Space, Switch, Typography} from "antd";
 import Search from "antd/es/input/Search";
 import { ColumnsType } from "antd/es/table/InternalTable";
+import { AlignType } from 'rc-table/lib/interface'
 import { get } from "lodash";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import ModalAnt from "~/components/Antd/ModalAnt";
 import TableAnt from "~/components/Antd/TableAnt";
@@ -43,6 +44,13 @@ export default function Supplier(): React.JSX.Element {
   const [supplierId, setSupplierId] = useState<string | null>('');
   const [debt, setDebt] = useState<number | null>();
   const [isOpenDesc, setIsOpenDesc] = useState<boolean>(false);
+  //Hook
+  const [query] = useSupplierQueryParams();
+  const [keyword, { setKeyword, onParamChange }] = useUpdateSupplierParams(query);
+  const [data, isLoading] = useGetSuppliers(query);
+  const [isSubmitLoading, onDelete] = useDeleteSupplier();
+  const paging = useSupplierPaging();
+
   const canWriteVoucher = useMatchPolicy(POLICIES.WRITE_VOUCHER);
   // Control form
   const onOpenForm = useCallback((idSelect?: any) => {
@@ -85,12 +93,8 @@ export default function Supplier(): React.JSX.Element {
   };
 
   // Hook
-  const [query] = useSupplierQueryParams();
-  const [keyword, { setKeyword, onParamChange }] = useUpdateSupplierParams(query);
-  const [data, isLoading] = useGetSuppliers(query);
-  const [isSubmitLoading, onDelete] = useDeleteSupplier();
+  
   const [, onUpdate] = useUpdateSupplier(onCloseForm);
-  const paging = useSupplierPaging();
 
   const onUpdateStatus = useCallback((status:keyof STATUS_SUPPLIER_TYPE,idUpdate:any) => {
     onUpdate({
@@ -145,19 +149,23 @@ export default function Supplier(): React.JSX.Element {
           return formatNumberThreeComma(value);
         },
       },
-      {
-          title: "Tạo phiếu",
-          dataIndex: "name",
-          key: "name",
-          align: "center",
-          render(value: any, rc: any) {
-            return (
-              <Space>
-                <Button type="primary" onClick={() => onOpenPayment(rc)}>Phiếu chi</Button>
-              </Space>
-            );
+      ...(
+        canWriteVoucher ? [
+          {
+            title: "Tạo phiếu",
+            dataIndex: "name",
+            key: "name",
+            align: "center" as AlignType,
+            render(value: any, rc: any) {
+              return (
+                <Space>
+                  <Button type="primary" onClick={() => onOpenPayment(rc)}>Phiếu chi</Button>
+                </Space>
+              );
+            },
           },
-        },
+        ]: []
+      ),
       {
         title: "Trạng thái",
         dataIndex: "status",
@@ -227,6 +235,12 @@ export default function Supplier(): React.JSX.Element {
     ],
     [isSubmitLoading, onDelete, onOpenForm, onUpdateStatus]
   );
+
+  // useEffect(() => {
+  //   // if (canWriteVoucher) {
+  //   // }
+  // }, [canWriteVoucher]);
+
   return (
     <div>
       <Breadcrumb title={t("list-supplier")} />

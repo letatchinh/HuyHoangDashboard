@@ -11,7 +11,6 @@ export default function ProductList(props: propsType): React.JSX.Element {
         dataIndex: "code",
         key: "code",
       },
-      
     ],
     []
   );

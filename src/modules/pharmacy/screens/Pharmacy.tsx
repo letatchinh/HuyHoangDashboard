@@ -33,6 +33,8 @@ import { PlusCircleOutlined } from "@ant-design/icons";
 import PharmacyForm from "./PharmacyForm";
 import { propsType } from "../pharmacy.modal";
 import ReceiptVoucherForm from "~/modules/receiptVoucher/components/ReceiptVoucherForm";
+import { useMatchPolicy } from "~/modules/policy/policy.hook";
+import POLICIES from "~/modules/policy/policy.auth";
 
 const dataFake = [
   {
@@ -87,6 +89,7 @@ export default function Pharmacy() {
   const [pharmacyId, setPharmacyId] = useState(null);
   const [isOpenForm, setIsOpenForm] = useState(false);
   const paging = usePharmacyPaging();
+  const canWriteVoucher = useMatchPolicy(POLICIES.WRITE_VOUCHER);
 
   const [open, setOpen] = useState(false);
   const [debt, setDebt] = useState<number | null>();
@@ -150,6 +153,21 @@ export default function Pharmacy() {
         return moment(record).format("DD/MM/YYYY");
       },
     },
+    ...(
+        canWriteVoucher ? [
+          {
+            title: "Tạo phiếu",
+            dataIndex: "createReceipt",
+            key: "createReceipt",
+            width: 120,
+            render(value: any, rc: any) {
+              return ( <Space>
+                 <Button type="primary" onClick={()=> onOpenReceipt(rc)}>Phiếu thu</Button>
+               </Space>)
+             },
+          },
+        ]: []
+    ),
     {
       title: "Tạo phiếu",
       dataIndex: "createReceipt",
@@ -161,6 +179,7 @@ export default function Pharmacy() {
          </Space>)
        },
     },
+    
     {
       title: "Trạng thái",
       key: "status",
