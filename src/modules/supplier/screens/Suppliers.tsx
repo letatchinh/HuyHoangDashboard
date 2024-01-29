@@ -28,7 +28,7 @@ import { STATUS_SUPPLIER_TYPE } from "../supplier.modal";
 import ProductModule from '~/modules/product';
 import { REF_COLLECTION, REF_COLLECTION_UPPER } from "~/constants/defaultValue";
 import PaymentVoucherForm from "~/modules/paymentVoucher/components/PaymentVoucherForm";
-import Description from "../components/Description";
+import Description from "../components/Debt";
 import { useMatchPolicy } from "~/modules/policy/policy.hook";
 import POLICIES from "~/modules/policy/policy.auth";
 import WithPermission from "~/components/common/WithPermission";
@@ -54,8 +54,9 @@ export default function Supplier(): React.JSX.Element {
   const [data, isLoading] = useGetSuppliers(query);
   const [isSubmitLoading, onDelete] = useDeleteSupplier();
   const paging = useSupplierPaging();
-
   const canWriteVoucher = useMatchPolicy(POLICIES.WRITE_VOUCHER);
+  const canReadDebt = useMatchPolicy(POLICIES.READ_DEBT);
+
   // Control form
   const onOpenForm = useCallback((idSelect?: any) => {
     if (idSelect) {
@@ -116,12 +117,13 @@ export default function Supplier(): React.JSX.Element {
         key: "code",
         render (value, rc) {
           return (
-            <Button
+            canReadDebt ?  <Button
               type="link"
               onClick={() => onOpenDesc(rc)}
             >
             {value}
             </Button>
+              : value
           )
         }
       },
