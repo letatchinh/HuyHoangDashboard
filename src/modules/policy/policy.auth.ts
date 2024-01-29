@@ -20,7 +20,6 @@ const notificationBotManager = 'notificationBotManager';
 
 // Đơn hàng
 const bill = 'bill';
-const todoStatusConfig = 'todoStatusConfig';
 
 // Đơn hàng tạm
 const quotation = 'quotation';
@@ -30,6 +29,7 @@ const debt = 'debt';
 
 // Sản phẩm Nhà cung cấp
 const product = 'product';
+const todoStatusConfig = 'todoConfigStatus';
 const todoList = 'todoList';
 const voucher = 'voucher';
 const statusVoucher = 'statusVoucher';
