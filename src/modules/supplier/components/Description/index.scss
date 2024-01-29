@@ -1,0 +1,21 @@
+.sumary-row{
+  &__left{
+    background-color: #fff7e6;
+    color: #fa8c16;
+    border: 1px solid #0d0c0b;
+    padding: 5px 10px;
+    margin-left: 10px;
+    text-align: center;
+    display: flex;
+    align-content: center;
+  };
+  &__right{
+    text-align: center;
+    display: flex;
+    background-color: #fff7e6;
+    color: #F45050;
+    border: 1px solid #ffd591 ;
+    padding: 5px 10px;
+    margin-left: 10px;
+  };
+};

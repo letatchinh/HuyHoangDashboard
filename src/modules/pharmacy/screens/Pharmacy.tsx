@@ -169,18 +169,6 @@ export default function Pharmacy() {
         ]: []
     ),
     {
-      title: "Tạo phiếu",
-      dataIndex: "createReceipt",
-      key: "createReceipt",
-      width: 120,
-      render(value, rc) {
-        return ( <Space>
-           <Button type="primary" onClick={()=> onOpenReceipt(rc)}>Phiếu thu</Button>
-         </Space>)
-       },
-    },
-    
-    {
       title: "Trạng thái",
       key: "status",
       dataIndex: "status",

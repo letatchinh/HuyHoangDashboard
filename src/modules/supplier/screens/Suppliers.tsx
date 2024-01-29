@@ -85,6 +85,7 @@ export default function Supplier(): React.JSX.Element {
     setSupplierId(null);
   };
   const onOpenDesc = (item?: any) => {
+    console.log(item,'item')
     setSupplierId(item?._id)
     setIsOpenDesc(true);
   };
@@ -113,7 +114,7 @@ export default function Supplier(): React.JSX.Element {
           return (
             <Button
               type="link"
-              // onClick={() => onOpenDesc(rc)}
+              onClick={() => onOpenDesc(rc)}
             >
             {value}
             </Button>
@@ -236,11 +237,6 @@ export default function Supplier(): React.JSX.Element {
     [isSubmitLoading, onDelete, onOpenForm, onUpdateStatus]
   );
 
-  // useEffect(() => {
-  //   // if (canWriteVoucher) {
-  //   // }
-  // }, [canWriteVoucher]);
-
   return (
     <div>
       <Breadcrumb title={t("list-supplier")} />
@@ -318,13 +314,14 @@ export default function Supplier(): React.JSX.Element {
         />
       </Modal>
       <Modal
-        title='Chi tiết' 
+        title='Chi tiết công nợ' 
+        width={1366}
         open={isOpenDesc}
         onCancel={onCloseDesc}
         onOk={onCloseDesc}
         footer={null}
       >
-        <Description/>
+        <Description supplierId={supplierId} />
       </Modal>
     </div>
   );
