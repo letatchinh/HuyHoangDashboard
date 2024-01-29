@@ -160,8 +160,11 @@ const RESOURCE = (): ResourceType => {
   ];
   
   const GROUP_WORK_MANAGERMENT: string[] = [
-    todoStatusConfig,
+   
     todoList
+  ];
+  const GROUP_TODOSTATUSCONFIG: string []=[
+     todoStatusConfig,
   ];
 
   return {
@@ -178,7 +181,8 @@ const RESOURCE = (): ResourceType => {
     NOTIFICATION_BOT_MANAGER,
     GROUP_SUPPLIER,
     GROUP_WORK_MANAGERMENT,
-    GROUP_VOUCHER
+    GROUP_VOUCHER,
+    GROUP_TODOSTATUSCONFIG,
   };
 };
 

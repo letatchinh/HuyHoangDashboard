@@ -7,6 +7,7 @@ import {
     getSelectors,
     useFailed, useFetchByParam,
     useQueryParams,
+    useResetState,
     useSubmit,
     useSuccess
 } from "~/utils/hook";
@@ -104,6 +105,9 @@ export const useGetListTaskBySprints = (query?:any) => {
     // actionUpdate:getListTaskBySprints,
     param: query
   })
+};
+export const useResetAction = () => {
+  return useResetState(workSprintActions.resetAction);
 };
 export const useWorkSprintQueryParams = () => {
   const query = useQueryParams();

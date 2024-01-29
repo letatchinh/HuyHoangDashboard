@@ -38,9 +38,6 @@ import POLICIES from "~/modules/policy/policy.auth";
 import { useMatchPolicy } from "~/modules/policy/policy.hook";
 import ModalAnt from "~/components/Antd/ModalAnt";
 import ReceiptVoucherForm from "~/modules/receiptVoucher/components/ReceiptVoucherForm";
-import { useMatchPolicy } from "~/modules/policy/policy.hook";
-import POLICIES from "~/modules/policy/policy.auth";
-
 const ColumnActions = ({ _id, deletePharmacy, onOpenForm }: propsType) => {
   return (
     <div className="custom-table__actions">

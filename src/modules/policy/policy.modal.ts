@@ -19,6 +19,7 @@ export type ResourceType = {
 
   GROUP_WORK_MANAGERMENT: string[],
   GROUP_VOUCHER: string[],
+  GROUP_TODOSTATUSCONFIG: string[],
 };
 
 export type policyType = 'write' | 'read' | 'update' | 'delete' | 'download' | 'admin';
@@ -201,8 +202,16 @@ export type PoliciesType = {
   "DELETE_DEBT" |
   "DOWNLOAD_DEBT" |
   "ADMIN_DEBT" |
-  "DEBT"
+  "DEBT"|
 
   
+  //GROUP_TODOSTATUSCONFIG
+  'READ_TODOSTATUSCONFIG'|
+  'WRITE_TODOSTATUSCONFIG' |
+  'UPDATE_TODOSTATUSCONFIG' |
+  'DELETE_TODOSTATUSCONFIG' |
+  'DOWNLOAD_TODOSTATUSCONFIG' |
+  'ADMIN_TODOSTATUSCONFIG' |
+  ''
   ]: [string, policyType];
 };
