@@ -27,7 +27,6 @@ export default function ListProduct({
   const [keyword, { setKeyword, onParamChange }] =
     useUpdateProductParams(query);
   const [data, isLoading] = useGetProducts(query);
-  console.log(data,'data');
   const onChangeVariantDefault = useChangeVariantDefault();
 
   const [isSubmitLoading, onDelete] = useDeleteProduct();

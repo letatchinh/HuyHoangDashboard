@@ -13,6 +13,10 @@ interface cloneInitState extends initStateSlice {
  updateBillItemFailed? : any,
  updateBillItemSuccess? : any,
 
+  listProductSuggest?:any,
+  isProductSuggestLoading?: boolean,
+  getProductSuggestFailed?: any,
+  pagingProductSuggest?:any ;
 }
 class BillClassExtend extends InstanceModuleRedux {
   cloneReducer;
@@ -51,6 +55,23 @@ class BillClassExtend extends InstanceModuleRedux {
         ...payload,
         billItems
       }
+      },
+    getListProductSuggestRequest: (state:cloneInitState) => {
+      state.isProductSuggestLoading = true;
+      },
+    getListProductSuggestSuccess: (state:cloneInitState, { payload }:{payload?:any}) => {
+      state.isProductSuggestLoading = false;
+      state.listProductSuggest = payload;
+      state.pagingProductSuggest = {
+        current : payload?.page,
+        pageSize : payload?.limit,
+        total: payload?.totalDocs,
+        ...omit(payload,'docs','page','limit','totalDocs')
+      }
+      },
+    getListProductSuggestFailed: (state:cloneInitState, { payload }:{payload:any}) => {
+      state.isProductSuggestLoading = false;
+      state.getProductSuggestFailed = payload;
     },
     updateSuccess: (state:cloneInitState, { payload }:{payload:any}) => {
       state.isSubmitLoading = false;
@@ -104,6 +125,10 @@ class BillClassExtend extends InstanceModuleRedux {
       debt : null,
       updateBillItemFailed : null,
       updateBillItemSuccess : null,
+      
+      listProductSuggest: [],
+      isProductSuggestLoading: false,
+      getProductSuggestFailed: null,
       // Want Add more State Here...
     }
   }

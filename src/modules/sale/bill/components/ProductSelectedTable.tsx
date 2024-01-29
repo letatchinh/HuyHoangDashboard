@@ -11,6 +11,7 @@ import { formatter } from "~/utils/helpers";
 import { quotation, variant } from "../bill.modal";
 import useCreateBillStore from "../storeContext/CreateBillContext";
 import ExpandRowDiscount from "./ExpandRowDiscount";
+import ProductListSuggest from "./productSuggest";
 type propsType = {};
 export default function ProductSelectedTable(
   props: propsType
@@ -152,6 +153,7 @@ export default function ProductSelectedTable(
   };
   
   return (
+    <>
     <TableAnt
       className="table-selected-product"
       {...tableProps}
@@ -175,5 +177,7 @@ export default function ProductSelectedTable(
           ) : null,
       }}
     />
+      <ProductListSuggest/>
+    </>
   );
 }

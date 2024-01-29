@@ -133,6 +133,20 @@
     }
 }
 
+.product-suggest{
+    position: fixed;
+    bottom: 10px;
+    background-color: rgb(253, 253, 253);
+    padding: 10px;
+    max-width: 100%;
+    width: 65.5%;
+    &__list{
+        // margin-bottom: 10px;
+    }
+    &__item{
+        cursor: pointer;
+    };
+};
 .table-searchProduct{
     & .ant-table-row{
         cursor: pointer;
