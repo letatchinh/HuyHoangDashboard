@@ -17,6 +17,12 @@ const medicine = 'medicine';
 const voucher = 'voucher';
 const statusVoucher = 'statusVoucher';
 const historyVoucher = 'historyVoucher';
+// Nhà cung cấp
+const supplier = 'supplier';
+const debt = 'debt';
+
+// Sản phẩm Nhà cung cấp
+const product = 'product';
 
 const RESOURCES = [
   branch,
@@ -38,6 +44,9 @@ const RESOURCES = [
   voucher,
   statusVoucher,
   historyVoucher,
+  supplier,
+  product,
+  debt,
 
 ];
 
@@ -105,6 +114,12 @@ const RESOURCE = (): ResourceType => {
     historyVoucher
   ]
 
+  const GROUP_SUPPLIER: string[] = [
+    supplier,
+    product,
+    debt,
+  ];
+
   return {
     GROUP_USER,
     GROUP_EMPLOYEE,
@@ -115,7 +130,8 @@ const RESOURCE = (): ResourceType => {
     GROUP_PRODUCTGROUP,
     GROUP_RANKING,
     MEDICINE,
-    GROUP_VOUCHER
+    GROUP_VOUCHER,
+    GROUP_SUPPLIER,
   };
 };
 
