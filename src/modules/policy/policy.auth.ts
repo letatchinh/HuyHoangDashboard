@@ -68,8 +68,11 @@ const RESOURCE = (): ResourceType => {
     employee
   ];
   const GROUP_WORK_MANAGERMENT: string[] = [
-    todoStatusConfig,
+   
     todoList
+  ];
+  const GROUP_TODOSTATUSCONFIG: string []=[
+     todoStatusConfig,
   ];
 
   return {
@@ -78,6 +81,7 @@ const RESOURCE = (): ResourceType => {
     GROUP_EMPLOYEE,
     GROUP_WHSETTING,
     GROUP_WORK_MANAGERMENT,
+    GROUP_TODOSTATUSCONFIG,
   };
 };
 

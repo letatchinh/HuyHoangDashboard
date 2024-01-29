@@ -9,6 +9,7 @@ import useTranslate from '~/lib/translation';
 import POLICIES from '~/modules/policy/policy.auth';
 import { useMatchPolicy } from '~/modules/policy/policy.hook';
 import { useCreateStatusConfig, useDeleteStatusConfig, useGetListStatusConfig, useResetAction, useStatusConfigQueryParams, useUpdateStatusConfig } from '../statusConfig.hook';
+import WithPermission from "~/components/common/WithPermission";
 const EditableContext = React.createContext<FormInstance<any> | null>(null);
 interface Item {
   key: string;
@@ -123,8 +124,8 @@ const StatusConfig: React.FC = () => {
   const [, updateStatusConfig] = useUpdateStatusConfig(useResetAction());
   const [query] = useStatusConfigQueryParams();
   const [listStatusConfig, isLoading] = useGetListStatusConfig(query);
-  const canDelelte = useMatchPolicy(POLICIES.DELETE_WORKMANAGEMENT);
-  const canUpdate = useMatchPolicy(POLICIES.UPDATE_WORKMANAGEMENT);
+  const canDelelte = useMatchPolicy(POLICIES.DELETE_TODOSTATUSCONFIG);
+  const canUpdate = useMatchPolicy(POLICIES.UPDATE_TODOSTATUSCONFIG);
   const [count, setCount] = useState(2);
   useResetAction()
   const handleDelete = (_id: keyof DataType) => {
@@ -308,9 +309,12 @@ const StatusConfig: React.FC = () => {
   return (
     <div>
       <Breadcrumb title={t('statusConfig')} />
-      <Button onClick={handleAdd} type="primary" style={{ marginBottom: 16 }}>
-        Thêm cấu hình trạng thái
-      </Button>
+      <WithPermission permission={POLICIES.WRITE_TODOSTATUSCONFIG}>
+        <Button onClick={handleAdd} type="primary" style={{ marginBottom: 16 }}>
+          Thêm cấu hình trạng thái
+        </Button>
+      </WithPermission>
+
       <Table
         components={components}
         rowClassName={() => 'editable-row'}

@@ -7,6 +7,7 @@ export type ResourceType = {
   GROUP_WHBILL: string[],
   GROUP_WHSETTING: string[]
   GROUP_WORK_MANAGERMENT: string[],
+  GROUP_TODOSTATUSCONFIG: string[],
 };
 
 export type policyType = 'write' | 'read' | 'update' | 'delete' | 'download' | 'admin';
@@ -52,6 +53,14 @@ export type PoliciesType = {
   'UPDATE_WORKMANAGEMENT' |
   'DELETE_WORKMANAGEMENT' |
   'DOWNLOAD_WORKMANAGEMENT' |
-  'ADMIN_WORKMANAGEMENT' 
+  'ADMIN_WORKMANAGEMENT' |
+  //GROUP_TODOSTATUSCONFIG
+  'READ_TODOSTATUSCONFIG'|
+  'WRITE_TODOSTATUSCONFIG' |
+  'UPDATE_TODOSTATUSCONFIG' |
+  'DELETE_TODOSTATUSCONFIG' |
+  'DOWNLOAD_TODOSTATUSCONFIG' |
+  'ADMIN_TODOSTATUSCONFIG' |
+  ''
   ]: [string, policyType];
 };
