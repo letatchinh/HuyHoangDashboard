@@ -7,7 +7,7 @@ interface cloneInitState extends initStateSlice {
   // Add cloneInitState Type Here
   confirmSuccess?: any,
   confirmFailed?: any
-}
+};
 class PaymentVoucherClassExtend extends InstanceModuleRedux {
   cloneReducer;
   cloneInitState : cloneInitState;

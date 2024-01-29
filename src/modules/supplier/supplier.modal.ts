@@ -32,7 +32,13 @@ export type addressType = {
     getProductSupplierFailed?: any;
     productSupplier?: T[];
     pagingProductSupplier?: any;
-  }
+
+    isLoadingGetVoucherSupplier?: boolean;
+    getVoucherSupplierFailed?: any;
+    voucherSupplier?: T[];
+    pagingVoucherSupplier?: any;
+    totalAmountBillItem?: number;
+};
 
   export type STATUS_SUPPLIER_TYPE =  {
     ACTIVE : "ACTIVE",

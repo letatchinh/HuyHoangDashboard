@@ -119,6 +119,30 @@ export const WH_VOUCHER_CODE_PREFIX = {
   [TYPE_VOUCHER.PT]: 'PT',
   [TYPE_VOUCHER.PC] : 'PC'
 };
+
+export const ORDER_STATUS: any  = {
+  ORDERING: 'ORDERING',
+  ORDERED: 'ORDERED',
+  RECEIVED: 'RECEIVED',
+  PROCESSING: 'PROCESSING',
+  CONFIRMED: 'CONFIRMED',
+  PACKAGED: 'PACKAGED',
+  SHIPPING: 'SHIPPING',
+  COMPLETED: 'COMPLETED',
+  CANCELLED: 'CANCELLED'
+};
+export const ORDER_STATUS_KEY_SEARCH_COLOR : any = {
+  [ORDER_STATUS.ORDERING]: { name: 'Đang đặt hàng', color: '#4CB9E7',colorStyle: '#4CB9E7' },
+  [ORDER_STATUS.ORDERED]: { name: 'Đã đặt hàng', color: '#eee952',colorStyle: '#eee952' },
+  [ORDER_STATUS.RECEIVED]: { name: 'Đã tiếp nhận', color: '#242ddf',colorStyle: '#242ddf' },
+  [ORDER_STATUS.PROCESSING]: { name: 'Đang xử lý', color: '#249451',colorStyle: '#249451' },
+  [ORDER_STATUS.CONFIRMED]: { name: 'Đã xác nhận', color: '#ce8217',colorStyle: '#ce8217' },
+  [ORDER_STATUS.PACKAGED]: { name: 'Đã đóng gói', color: '#e03bae',colorStyle: '#e03bae' },
+  [ORDER_STATUS.SHIPPING]: { name: 'Đang giao', color: '#e0a98c',colorStyle: '#e0a98c' },
+  [ORDER_STATUS.COMPLETED]: { name: 'Đã nhận', color: '#60d308',colorStyle: '#60d308' },
+  [ORDER_STATUS.CANCELLED]:{ name: 'Đã huỷ', color: '#f5222d',colorStyle: '#f5222d' },
+};
+
 export const ACCOUNTS : any = {
   1111: 'Tiền Việt Nam ',
   1112: 'Ngoại tệ',

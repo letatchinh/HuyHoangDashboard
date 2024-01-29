@@ -38,6 +38,8 @@ import POLICIES from "~/modules/policy/policy.auth";
 import { useMatchPolicy } from "~/modules/policy/policy.hook";
 import ModalAnt from "~/components/Antd/ModalAnt";
 import ReceiptVoucherForm from "~/modules/receiptVoucher/components/ReceiptVoucherForm";
+import { useMatchPolicy } from "~/modules/policy/policy.hook";
+import POLICIES from "~/modules/policy/policy.auth";
 
 const ColumnActions = ({ _id, deletePharmacy, onOpenForm }: propsType) => {
   return (
@@ -73,6 +75,7 @@ export default function Pharmacy() {
   const [pharmacyId, setPharmacyId] = useState(null);
   const [isOpenForm, setIsOpenForm] = useState(false);
   const paging = usePharmacyPaging();
+  const canWriteVoucher = useMatchPolicy(POLICIES.WRITE_VOUCHER);
 
   const onOpenForm = useCallback(
     (id?: any) => {
@@ -133,17 +136,21 @@ export default function Pharmacy() {
         return moment(record).format("DD/MM/YYYY");
       },
     },
-    {
-      title: "Tạo phiếu",
-      dataIndex: "createReceipt",
-      key: "createReceipt",
-      width: 120,
-      render(value, rc) {
-        return ( <Space>
-           <Button type="primary" onClick={()=> onOpenReceipt(rc)}>Phiếu thu</Button>
-         </Space>)
-       },
-    },
+    ...(
+        canWriteVoucher ? [
+          {
+            title: "Tạo phiếu",
+            dataIndex: "createReceipt",
+            key: "createReceipt",
+            width: 120,
+            render(value: any, rc: any) {
+              return ( <Space>
+                 <Button type="primary" onClick={()=> onOpenReceipt(rc)}>Phiếu thu</Button>
+               </Space>)
+             },
+          },
+        ]: []
+    ),
     {
       title: "Trạng thái",
       key: "status",

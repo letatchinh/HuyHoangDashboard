@@ -26,6 +26,8 @@ const todoStatusConfig = 'todoStatusConfig';
 const quotation = 'quotation';
 // Nhà cung cấp
 const supplier = 'supplier';
+const debt = 'debt';
+
 // Sản phẩm Nhà cung cấp
 const product = 'product';
 const todoList = 'todoList';
@@ -60,6 +62,9 @@ const RESOURCES = [
   voucher,
   statusVoucher,
   historyVoucher,
+  supplier,
+  product,
+  debt,
 
   // Pharmacy Profile
   pharmaProfile,
@@ -151,6 +156,7 @@ const RESOURCE = (): ResourceType => {
   const GROUP_SUPPLIER: string[] = [
     supplier,
     product,
+    debt,
   ];
   
   const GROUP_WORK_MANAGERMENT: string[] = [

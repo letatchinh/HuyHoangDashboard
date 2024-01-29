@@ -192,6 +192,17 @@ export type PoliciesType = {
   "DELETE_HISTORYVOUCHER" |
   "DOWNLOAD_HISTORYVOUCHER" |
   "ADMIN_HISTORYVOUCHER" |
-  "HISTORYVOUCHER"
+  "HISTORYVOUCHER" |
+  
+  //DEBT
+  "READ_DEBT" |
+  "WRITE_DEBT" |
+  "UPDATE_DEBT" |
+  "DELETE_DEBT" |
+  "DOWNLOAD_DEBT" |
+  "ADMIN_DEBT" |
+  "DEBT"
+
+  
   ]: [string, policyType];
 };
