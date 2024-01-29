@@ -9,7 +9,7 @@ const user = 'user';
 const userGroup = 'userGroup';
 const pharmacy = 'pharmacy';
 const bill = 'bill';
-const todoStatusConfig = 'todoStatusConfig';
+const todoStatusConfig = 'todoConfigStatus';
 const todoList = 'todoList';
 
 const RESOURCES = [
