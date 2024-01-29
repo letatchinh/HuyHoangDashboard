@@ -32,7 +32,7 @@ const BoardForm: React.FC<BoardFormProps> = ({ id, handleCloseForm }) => {
   const [isSubmit, updateBoard] = useUpdateWorkBoard(handleCloseForm);
   const [boardById, isLoading] = useGetBoardById(id);
   const [query] = useStatusConfigQueryParams();
-  const [listAllStatus] = useGetListStatusConfig(query);
+  const [listAllStatus,isLoadingStatus] = useGetListStatusConfig(query);
   const [listManagers, isLoadingManager] = useGetListManagers();
   const [listStaffs, isLoadingStaffs] = useGetListStaffs();
   const [listBoardGroup, isLoadingGetListBoard] = useGetListBoard()
@@ -60,7 +60,7 @@ const BoardForm: React.FC<BoardFormProps> = ({ id, handleCloseForm }) => {
         const { name, security, parentId, listStatusConfig } = boardById;
         const listStatusConfigId = listStatusConfig?.map((status: any) => status._id);
         const managerNames = listManagersByBoard?.map((manager: any) => manager._id);
-        const staffNames = listStaffsById?.map((staff: any) => staff._id);
+        const staffNames = listStaffsById?.map((staff: any) => staff._id); 
         form.setFieldsValue({
           name,
           security: security ?? 'private',
@@ -172,6 +172,7 @@ const BoardForm: React.FC<BoardFormProps> = ({ id, handleCloseForm }) => {
               style={{ width: '100%' }}
               placeholder="Vui lòng chọn trạng thái"
               allowClear
+              loading={isLoadingStatus}
               showSearch
               // autoComplete="off"
               filterOption={filterAcrossAccents}

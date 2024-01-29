@@ -5,7 +5,7 @@ import { get } from 'lodash';
 import { useGetListManagersByIdBoard } from '~/modules/workBoard/workBoard.hook';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useProfile } from '~/modules/auth/auth.hook';
-import { useCreateWorkSprint, useDeleteWorkSprint, useGetWorkSprints, useUpdateWorkSprint } from '../workSprint.hook';
+import { useCreateWorkSprint, useDeleteWorkSprint, useGetWorkSprints, useUpdateWorkSprint,useResetAction } from '../workSprint.hook';
 import SprintCard from './SprintCard';
 import { useSprintContext } from '../screens/WorkSprint';
 import WithOrPermission from '~/components/common/WithOrPermission';
@@ -30,7 +30,6 @@ const SprintList: React.FC = memo(() => {
     };
   }, [boardId]);
   const [sprintByBoardID,] = useGetWorkSprints(query);
-  
   const [dataSource, setDataSource] = useState(sprintByBoardID);
   const boardNow = useMemo(() => {
     const item = (board ?? []).find(({ _id }) => String(_id) === String(boardId))
@@ -44,8 +43,7 @@ const SprintList: React.FC = memo(() => {
   const [, handleUpdate] = useUpdateWorkSprint()
   const [, handleDelete] = useDeleteWorkSprint()
   const navigate = useNavigate()
-//   const history = useHistory();
-
+  useResetAction(); 
   const handleSelect = (value: string, option: React.ReactElement) => {
     navigate(value)
   }

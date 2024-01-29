@@ -126,7 +126,6 @@ const StatusConfig: React.FC = () => {
   const [listStatusConfig, isLoading] = useGetListStatusConfig(query);
   const canDelelte = useMatchPolicy(POLICIES.DELETE_TODOSTATUSCONFIG);
   const canUpdate = useMatchPolicy(POLICIES.UPDATE_TODOSTATUSCONFIG);
-  const [count, setCount] = useState(2);
   useResetAction()
   const handleDelete = (_id: keyof DataType) => {
     deleteStatusConfig(_id);
@@ -269,7 +268,9 @@ const StatusConfig: React.FC = () => {
       width: 80,
       render: (_, record) =>
         listStatusConfig?.length >= 1 ? (
-          <Button onClick={() => handleDelete(record._id)} type="dashed" style={{ color: 'red' }} size="small">Xoá</Button>
+          <Tooltip title={!canDelelte ? 'Bạn không được cấp quyền thực hiện thao tác này' : ''}>
+            <Button onClick={() => handleDelete(record._id)} disabled={!canDelelte} type="dashed" style={{ color: 'red' }} size="small">Xoá</Button>
+          </Tooltip>
         ) : null,
     },
   ];
@@ -308,7 +309,7 @@ const StatusConfig: React.FC = () => {
 
   return (
     <div>
-      <Breadcrumb title={t('statusConfig')} />
+      <Breadcrumb title={t('Cấu hình trạng thái')} />
       <WithPermission permission={POLICIES.WRITE_TODOSTATUSCONFIG}>
         <Button onClick={handleAdd} type="primary" style={{ marginBottom: 16 }}>
           Thêm cấu hình trạng thái
