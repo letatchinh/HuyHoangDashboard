@@ -28,6 +28,8 @@ import {
   TYPE_REWARD_VI,
   TYPE_VALUE,
 } from "../constants";
+import ApplyTimeSheet from "./ApplyTimeSheet";
+import CumulativeTimeSheet from "./CumulativeTimeSheet";
 import DiscountView from "./DiscountView";
 type propsType = {
   key: any;
@@ -198,12 +200,12 @@ export default function DiscountItem({
                     <Row>
                       <Col span={8}>
                       <Form.Item shouldUpdate noStyle>
-                      {() =>
+                      {/* {() =>
                         form.getFieldValue([
                           "cumulativeDiscount",
                           name,
                           "typeDiscount",
-                        ]) === TYPE_DISCOUNT.LK && (
+                        ]) === TYPE_DISCOUNT.LK && ( */}
                           <Form.Item
                             style={{ marginBottom: 0 }}
                             {...restField}
@@ -221,8 +223,8 @@ export default function DiscountItem({
                               />
                             )}
                           </Form.Item>
-                        )
-                      }
+                        {/* ) */}
+                      {/* } */}
                     </Form.Item>
                       </Col>
                     </Row>
@@ -446,160 +448,9 @@ export default function DiscountItem({
                             </Col>
                           </Row>
                           <Divider orientation="left"><h6> Thời gian tích luỹ</h6></Divider>
-                          <Row
-                            gutter={8}
-                            align={"middle"}
-                            justify="space-between"
-                          >
-                            <Col span={7}>
-                              <Form.Item
-                                style={{ marginBottom: 0 }}
-                                {...restField}
-                                label={"Từ ngày"}
-                                name={[name, "cumulativeTimeSheet", "gte"]}
-                                rules={[
-                                  {
-                                    required: true,
-                                    message: "Xin vui nhập!",
-                                  },
-                                ]}
-                              >
-                                {RenderLoading(
-                                  loading,
-                                  <DatePicker
-                                    format={"YYYY-MM-DD"}
-                                  />
-                                )}
-                              </Form.Item>
-                            </Col>
-                            <Col span={7}>
-                              <Form.Item shouldUpdate noStyle>
-                                {() => (
-                                  <Form.Item
-                                    style={{ marginBottom: 0 }}
-                                    {...restField}
-                                    label={"Đến ngày"}
-                                    name={[name, "cumulativeTimeSheet", "lte"]}
-                                    rules={[
-                                      {
-                                        required: true,
-                                        message: "Xin vui nhập!",
-                                      },
-                                    ]}
-                                  >
-                                    {RenderLoading(
-                                      loading,
-                                      <DatePicker
-                                        disabledDate={(current) =>
-                                          current <=
-                                          dayjs(
-                                            form.getFieldValue([
-                                              "cumulativeDiscount",
-                                              name,
-                                              "cumulativeTimeSheet",
-                                              "gte",
-                                            ])
-                                          )
-                                        }
-                                        format={"YYYY-MM-DD"}
-                                      />
-                                    )}
-                                  </Form.Item>
-                                )}
-                              </Form.Item>
-                            </Col>
-                            <Col span={10}>
-                              <Form.Item
-                                style={{ marginBottom: 0 }}
-                                {...restField}
-                                label={"Dùng lại"}
-                                name={[name, "cumulativeTimeSheet", "isRepeat"]}
-                              >
-                                {RenderLoading(loading, <Switch />)}
-                              </Form.Item>
-                            </Col>
-                          </Row>
+                          <CumulativeTimeSheet form={form} loading={loading} name={name} restField={restField}/>
                           <Divider orientation="left"><h6> Thời gian áp dụng</h6></Divider>
-                          <Row
-                            gutter={8}
-                            align={"middle"}
-                            justify="space-between"
-                          >
-                            <Col span={7}>
-                              <Form.Item
-                                style={{ marginBottom: 0 }}
-                                {...restField}
-                                label={"Từ ngày"}
-                                name={[name, "applyTimeSheet", "gte"]}
-                                rules={[
-                                  {
-                                    required: true,
-                                    message: "Xin vui nhập!",
-                                  },
-                                ]}
-                              >
-                                {RenderLoading(
-                                  loading,
-                                  <DatePicker
-                                    // disabledDate={(current) => {
-                                    //   // Can not select days before lte and today
-                                    //   return (
-                                    //     current &&
-                                    //     current < dayjs().endOf("day")
-                                    //   );
-                                    // }}
-                                    format={"YYYY-MM-DD"}
-                                  />
-                                )}
-                              </Form.Item>
-                            </Col>
-                            <Col span={7}>
-                              <Form.Item shouldUpdate noStyle>
-                                {() => (
-                                  <Form.Item
-                                    style={{ marginBottom: 0 }}
-                                    {...restField}
-                                    label={"Đến ngày"}
-                                    name={[name, "applyTimeSheet", "lte"]}
-                                    rules={[
-                                      {
-                                        required: true,
-                                        message: "Xin vui nhập!",
-                                      },
-                                    ]}
-                                  >
-                                    {RenderLoading(
-                                      loading,
-                                      <DatePicker
-                                        disabledDate={(current) =>
-                                          current <=
-                                          dayjs(
-                                            form.getFieldValue([
-                                              "cumulativeDiscount",
-                                              name,
-                                              "applyTimeSheet",
-                                              "gte",
-                                            ])
-                                          )
-                                        }
-                                        format={"YYYY-MM-DD"}
-                                      />
-                                    )}
-                                  </Form.Item>
-                                )}
-                              </Form.Item>
-                            </Col>
-                            <Col span={10}>
-                              <Form.Item
-                                style={{ marginBottom: 0 }}
-                                {...restField}
-                                label={"Dùng lại"}
-                                name={[name, "applyTimeSheet", "isRepeat"]}
-                              >
-                                {RenderLoading(loading, <Switch />)}
-                              </Form.Item>
-                            </Col>
-                          </Row>
+                          <ApplyTimeSheet form={form} name={name} loading={loading} restField={restField}/>
                         </BaseBorderBox>
                       )
                     }

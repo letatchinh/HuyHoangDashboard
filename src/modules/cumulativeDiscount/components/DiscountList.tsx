@@ -20,6 +20,12 @@ export default function DiscountList({
       valueType: TYPE_VALUE.VALUE,
       typeReward: TYPE_REWARD.VALUE,
       target,
+      cumulativeTimeSheet : {
+        typeRepeat : "nope"
+      },
+      applyTimeSheet : {
+        typeRepeat : "nope"
+      },
     }),
     [target]
   );

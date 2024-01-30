@@ -19,6 +19,7 @@ export const convertSubmitData = ({values,supplierId} :paramsConvert) => {
 
 
 export const convertInitProduct = (product : any) => {
+  
   // Convert CumulativeDiscount
   const cumulativeDiscount = CumulativeDiscountModule.service.convertInitDiscount(get(product,'cumulativeDiscount',[]));
   return {
