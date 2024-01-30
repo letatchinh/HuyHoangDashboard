@@ -33,7 +33,6 @@ const ProductUnitForm: React.FC<Props> = ({ id, callBack,updateProductUnit }) =>
     }
   }, [id,productUnitById,form]);
   const onFinish = useCallback((values: FieldType) => {
-    console.log('s');
      const data: FieldType = {
       ...values,
       };

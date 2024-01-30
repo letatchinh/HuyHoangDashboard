@@ -14,7 +14,6 @@ const StatusEditForm: React.FC<StatusEditFormProps> = ({ form, inputRef, save, f
     const [colorHex, setColorHex] = useState<Color | string>("#1677ff");
 
     const handleColorChange = (color: Color) => {
-      console.log(color.toHexString());
       setColorHex(color);
     };
   

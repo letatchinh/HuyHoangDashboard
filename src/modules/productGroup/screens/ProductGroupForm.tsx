@@ -18,10 +18,8 @@ const ProductConfigForm: React.FC<Props> = ({ id, callBack, updateProductConfig 
   const [, createProductConfig] = useCreateProductConfig(callBack);
   const [productConfigById, isLoading] = useGetlistProductConfigById(id);
   const [form] = Form.useForm();
-  console.log(id,'sjsjssj')
   useResetAction();
   useEffect(() => {
-    console.log(id,'skskssk')
     if(id){
       if(productConfigById){
         const { code, name, note }: FieldType = productConfigById;
