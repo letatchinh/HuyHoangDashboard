@@ -40,7 +40,8 @@ const ProductUnitForm: React.FC<Props> = ({ id, callBack,updateProductUnit }) =>
       if (id) {
         updateProductUnit({ ...data, id });
       }else {
-        createProductUnit({ ...data });     
+        createProductUnit({ ...data });
+        form.resetFields()     
       };
   },[updateProductUnit,createProductUnit,id])
 

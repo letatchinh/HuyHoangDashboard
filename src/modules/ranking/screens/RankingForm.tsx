@@ -37,7 +37,7 @@ const RankingForm: React.FC<Props> = ({ id, handleCloseForm }) => {
         updateRanking({ ...data, id });
       }else {
         createRanking({ ...data });
-
+        form.resetFields()
       };
   },[updateRanking,createRanking,id]);
   return (
