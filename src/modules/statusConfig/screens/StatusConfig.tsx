@@ -129,7 +129,6 @@ const StatusConfig: React.FC = () => {
   useResetAction()
   const handleDelete = (_id: keyof DataType) => {
     deleteStatusConfig(_id);
-    console.log(_id)
   };
   const defaultColumns: (ColumnTypes[number] & { editable?: boolean; dataIndex: string })[] = [
     {
