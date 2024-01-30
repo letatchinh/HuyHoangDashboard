@@ -7,7 +7,7 @@ import { v4 } from "uuid";
 import { default as Bill, default as BillModule } from "~/modules/sale/bill";
 import { FormFieldCreateBill, quotation } from "~/modules/sale/bill/bill.modal";
 import SelectProduct from "~/modules/sale/bill/components/SelectProduct";
-import logo from '~/assets/images/header/logo-white.svg';
+import logo from '~/assets/images/logo.png';
 import ModalAnt from "~/components/Antd/ModalAnt";
 
 export const KEY_DATA_PHARMACY = "bill-pharmacy";
