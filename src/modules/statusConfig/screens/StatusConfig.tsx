@@ -119,9 +119,9 @@ interface DataType {
 type ColumnTypes = Exclude<EditableTableProps['columns'], undefined>;
 const StatusConfig: React.FC = () => {
   const { t }: any = useTranslate();
-  const [, createStatusConfig] = useCreateStatusConfig(useResetAction());
-  const [, deleteStatusConfig] = useDeleteStatusConfig(useResetAction());
-  const [, updateStatusConfig] = useUpdateStatusConfig(useResetAction());
+  const [, createStatusConfig] = useCreateStatusConfig();
+  const [, deleteStatusConfig] = useDeleteStatusConfig();
+  const [, updateStatusConfig] = useUpdateStatusConfig();
   const [query] = useStatusConfigQueryParams();
   const [listStatusConfig, isLoading] = useGetListStatusConfig(query);
   const canDelelte = useMatchPolicy(POLICIES.DELETE_TODOSTATUSCONFIG);
@@ -161,7 +161,7 @@ const StatusConfig: React.FC = () => {
             showText
             value={record?.color}
             onChange={(color) => {
-              if (!canUpdate) return message.warning('Bạn không có quyền thay đổi');
+              if (canUpdate) return message.warning('Bạn không có quyền thay đổi');
               updateStatusConfig({ ["color"]: color.toHexString(), id: record._id });
             }}
           />
