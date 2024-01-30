@@ -1,6 +1,6 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom';
-import logo from '~/assets/images/header/logo-white.svg';
+import logo from '~/assets/images/logo.png';
 import NavbarVertical from './NavbarVertical';
 import ProfileMenu from './ProfileMenu';
 
