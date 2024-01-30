@@ -37,6 +37,7 @@ const ManufacturerForm: React.FC<Props> = ({ id, callBack, updateManufacturer })
       updateManufacturer({ ...data, id });
     } else {
       createManufacturer({ ...data });
+      form.resetFields()
     }
   };
   return (

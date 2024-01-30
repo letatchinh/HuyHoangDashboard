@@ -18,17 +18,20 @@ const ProductConfigForm: React.FC<Props> = ({ id, callBack, updateProductConfig 
   const [, createProductConfig] = useCreateProductConfig(callBack);
   const [productConfigById, isLoading] = useGetlistProductConfigById(id);
   const [form] = Form.useForm();
+  console.log(id,'sjsjssj')
   useResetAction();
   useEffect(() => {
-    if (id && productConfigById) {
-      const { code, name, note }: FieldType = productConfigById;
+    console.log(id,'skskssk')
+    if(id){
+      if(productConfigById){
+        const { code, name, note }: FieldType = productConfigById;
       form.setFieldsValue({
         code,
         name,
         note,
       })
+      }
     }
-    else form.resetFields();
   }, [id, productConfigById,form]);
   const onFinish = (values: FieldType) => {
     const data: FieldType = {
@@ -38,7 +41,7 @@ const ProductConfigForm: React.FC<Props> = ({ id, callBack, updateProductConfig 
       updateProductConfig({ ...data, id });
     } else {
       createProductConfig({ ...data });
-
+      form.resetFields()
     }
   };
   return (

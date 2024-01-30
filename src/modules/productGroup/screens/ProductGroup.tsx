@@ -56,9 +56,9 @@ export default function ProductConfig() {
       setId(id);
     }
   };
-  const handleOpenFormCreate = () => {
-    setShowForm(true);
+  const handleOpenFormCreate = () => { 
     setId(null);
+    setShowForm(true);
   };
   const handleDelete = (id: any) => {
     deleteProductConfig(id);
