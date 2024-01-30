@@ -21,6 +21,8 @@ interface UploadImageProps {
   disabled?: boolean;
   className?: string;
   isShowImg?: boolean
+  setIsLoading?: any;
+  isLoading?: boolean;
 };
 
 const DEFAULT_RESOURCE: string = 'pharma';
@@ -34,11 +36,12 @@ const UploadImage: React.FC<UploadImageProps> = ({
   children,
   disabled = false,
   className,
-  isShowImg = true
+  isShowImg = true,
+  setIsLoading,
+  isLoading
 }) => {
   const [isCompressing, setIsCompressing] = useState(false);
   const [compressPercent, setCompressPercent] = useState<number>(0);
-  const [isLoading, setIsLoading] = useState(false);
 
   const beforeUpload = async (file: File) => {
     const isImage: boolean = allowedImageExtensions.includes(file.type);
@@ -110,7 +113,6 @@ const UploadImage: React.FC<UploadImageProps> = ({
       </div>
     </div>
   );
-console.log(isShowImg,'isShowImg')
   return (
     <Upload
       name="file"

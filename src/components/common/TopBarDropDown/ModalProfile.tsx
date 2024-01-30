@@ -30,7 +30,7 @@ interface ModalProfileProps {
   const [form] = Form.useForm();
    const [profile, isLoading]: any = useGetProfileUser();
   const [logo, setLogo] = useState<string | undefined>();
-   const [isLoadingAvatar, setIsLoading] = useState(false);
+   const [isLoadingAvatar, setIsLoadingAvatar] = useState(false);
   const [statusAccount,setStatusAccount] = useState('INACTIVE');
   const id = useMemo(() => profile?.user?._id, [profile?.user?._id]);
 
@@ -116,14 +116,14 @@ interface ModalProfileProps {
     <div className='modal-profile'>
       <Row align='top' justify='center' wrap={false}>
         <Col sm={{ span: 24 }} md={{ span: 9 }} style={{ alignSelf: 'center', textAlign: 'center' }}>
-          <Avatar src={logo} shape='circle' style={{ objectFit: 'contain', fontSize: 80, textTransform: 'uppercase' }} size={280}>
-            {/* {getShortName(get(initUserEmployee, 'fullName', ''))} */}
+          <Avatar src={logo} shape='circle' style={{ objectFit: 'contain', fontSize: 80, textTransform: 'uppercase' }} size={280} alt='avatar'>
           </Avatar>
             <UploadImage
               className='upLoadAvatar'
               imgUrl={logo}
               onChange={handleChange}
               isShowImg={false}
+              setIsLoading={setIsLoadingAvatar}
             >
               {render(<Button loading={isLoadingAvatar} type='text' style={{ backgroundColor: '#c8c8c8', borderRadius: 10 }} icon={<UploadOutlined />}></Button>)}
             </UploadImage>
@@ -175,7 +175,7 @@ interface ModalProfileProps {
                 />)}
               </BaseBorderBox>
               <Space style={{ width: '100%', justifyContent: 'flex-end', marginTop: 14 }}>
-                <Button htmlType='submit' type='primary' loading={isLoadingSubmit}>
+                <Button htmlType='submit' type='primary' loading={isLoadingSubmit || isLoadingAvatar}>
                   Cập nhật
                 </Button>
               <Button htmlType='button' loading={isLoadingSubmit} onClick={onCloseForm}>Huỷ</Button>

@@ -38,6 +38,7 @@ export default function ProfileMenu(props: propsType): React.JSX.Element {
   
   const [isLoadingSubmit, handleUpdateProfile] = useUpdateProfile(() => {
     onClose();
+    dispatch(authActions.getProfileRequest());
   });
 
   const items: any[] = useMemo(() => [
@@ -63,7 +64,7 @@ export default function ProfileMenu(props: propsType): React.JSX.Element {
       trigger={["click"]}
     >
       <div className="profileBtn d-flex gap-1 align-items-center">
-        <Avatar style={{backgroundColor : '#fff'}} src={get(profile,'avatar')}></Avatar>
+        <Avatar style={{backgroundColor : '#fff'}} src={get(profile,'profile.avatar')}></Avatar>
         <Typography.Text>{get(profile,'profile.fullName','')}</Typography.Text>
         <CaretDownOutlined />
       </div>

@@ -42,7 +42,7 @@ class UserClassExtend extends InstanceModuleRedux {
         state.getPolicyFailed = payload
       },
 
-      getProfileRequest: (state: UserState, { payload }: any) => {
+      getProfileRequest: (state: UserState) => {
         state.profile = {};
         state.isGetProfileLoading = true;
       },
