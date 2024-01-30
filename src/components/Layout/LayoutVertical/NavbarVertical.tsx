@@ -90,7 +90,7 @@ const NavbarVertical: React.FC = () => {
   
   return (
     <div className='layoutVertical--content__navbar'>
-      {isLoadingPolicy && <Spin fullscreen tip="Đang lấy dữ liệu phân quyền"/>}
+      {isLoadingPolicy && <Spin className='layoutVertical--content__navbar__loading' tip="Đang lấy dữ liệu phân quyền"/>}
       {/* <button onClick={toggleCollapsed}>asd</button> */}
       <div className='layoutVertical--content__navbar__wrapMenu'>
       <ConfigProvider theme={{

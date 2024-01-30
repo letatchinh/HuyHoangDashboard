@@ -52,6 +52,15 @@
         user-select: none;
         z-index: 0;
       }
+      &__loading{
+        position: absolute;
+        inset: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: rgba(0, 0, 0, 0.45);
+        z-index: 999;
+      }
     }
     &__mainContent {
       flex: 1;
