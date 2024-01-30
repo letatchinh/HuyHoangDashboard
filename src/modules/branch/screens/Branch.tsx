@@ -5,7 +5,7 @@ import WhiteBox from "~/components/common/WhiteBox";
 import useTranslate from "~/lib/translation";
 import { concatAddress } from "~/utils/helpers";
 import {
-  useBranchPaging, useGetBranches
+  useBranchPaging, useBranchQueryParams, useGetBranches, useUpdateBranchParams
 } from "../branch.hook";
 import SelectSearch from "~/components/common/SelectSearch/SelectSearch";
 const columns : ColumnsType = [
@@ -14,6 +14,11 @@ const columns : ColumnsType = [
     dataIndex : "name",
     key : "name",
   },
+  // {
+  //   title : "Email",
+  //   dataIndex : "email",
+  //   key : "email",
+  // },
   {
     title : "Địa chỉ",
     dataIndex : "address",
@@ -25,9 +30,9 @@ const columns : ColumnsType = [
 ]
 export default function Branch() {
   const { t }: any = useTranslate();
-  // const [query] = useBranchQueryParams();
+  const [query] = useBranchQueryParams();
   // const [keyword, { setKeyword, onParamChange }] = useUpdateBranchParams(query);
-  const [data, isLoading] = useGetBranches();
+  const [data, isLoading] = useGetBranches(query);
   const paging = useBranchPaging();
   return (
     <div>
@@ -48,6 +53,7 @@ export default function Branch() {
             onChange(page, pageSize) {
               // onParamChange({ page, limit: pageSize });
             },
+            showTotal: (total) => `Tổng cộng: ${total}`,
           }}
         />
       </WhiteBox>

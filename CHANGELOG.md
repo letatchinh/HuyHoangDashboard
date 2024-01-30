@@ -1,3 +1,12 @@
+## [1.2.1](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/compare/v1.2.0...v1.2.1) (2024-01-29)
+
+
+### Bug Fixes
+
+* add show Version and envDev ([12fd8ba](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/12fd8bad857e8024dfff0fbb6d925559f562ad1d))
+* remove log ([7309be5](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/7309be54bd078bcd94289efde7cc04ea774f641e))
+* Replace Baseurl with Env , update node version to 20 ([5de1585](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/5de15858a4d4e4fd02fba6879f6461ca2ad4449f))
+
 # [1.2.0](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/compare/v1.1.0...v1.2.0) (2024-01-25)
 
 
