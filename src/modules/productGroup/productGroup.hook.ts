@@ -97,7 +97,6 @@ const {
       })
   }
   export const useGetlistProductConfigById = (id: string) => {
-    console.log(id)
     return useFetchByParam({
       action: productGroupSliceAction.getByIdRequest,
       loadingSelector: getByIdLoadingSelector,
