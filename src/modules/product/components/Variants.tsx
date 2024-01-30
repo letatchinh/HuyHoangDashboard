@@ -13,7 +13,7 @@ import { validateChangeVariants } from "../product.service";
 export default function Variants({
   form,
   isLoading: loading,
-  setDataNotificationUndo,
+  // setDataNotificationUndo,
 }: TypePropVariants): React.JSX.Element {
   const [reFetch, setReFetch] = useState(false);
   const [units, isLoading] = useGetListProductUnitAll(reFetch);

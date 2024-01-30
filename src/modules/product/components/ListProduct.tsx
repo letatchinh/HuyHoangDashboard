@@ -140,6 +140,8 @@ export default function ListProduct({
       dataIndex: "_id",
       key: "_id",
       align: "center",
+      fixed : 'right',
+      width : 200,
       render(_id, record, index) {
         return <ActionColumn 
         _id={_id}
@@ -166,6 +168,7 @@ export default function ListProduct({
           loading={isLoading}
           rowKey={(rc) => rc?._id}
           columns={columns}
+          scroll={{x : 1500}}
           size="small"
           pagination={{
             ...paging,

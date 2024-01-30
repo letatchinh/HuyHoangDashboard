@@ -45,10 +45,10 @@ export default function FormProduct({
   const [isSubmitLoading, onCreate] = useCreateProduct(onCancel);
   const [, onUpdate] = useUpdateProduct(onCancel);
   const [product, isLoading] = useGetProduct(id);
-  const [dataNotificationUndo,setDataNotificationUndo] = useState({
-    open : false,
-    description : null
-  })
+  // const [dataNotificationUndo,setDataNotificationUndo] = useState({
+  //   open : false,
+  //   description : null
+  // })
   useResetAction();
   
   const onUndoForm = (isLast = false) => {
@@ -67,6 +67,8 @@ export default function FormProduct({
 
   const onFinish = (values: FieldTypeFormProduct) => {
     const submitData = convertSubmitData({values,supplierId});
+    console.log(submitData,'submitData');
+    
     if (id) {
       onUpdate({ ...submitData, _id: id });
     } else {
@@ -235,7 +237,7 @@ export default function FormProduct({
 
         <BaseBorderBox title={"Đơn vị"}>
           <Col style={{ paddingBottom: 10 }} span={24}>
-            <Variants form={form} isLoading={isLoading} setDataNotificationUndo={setDataNotificationUndo}/>
+            <Variants form={form} isLoading={isLoading} />
           </Col>
         </BaseBorderBox>
 
