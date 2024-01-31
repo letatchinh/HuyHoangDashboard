@@ -39,7 +39,6 @@ export default function DiscountView({
   name,
   isSameTarget,
 }: propsType): React.JSX.Element {
-  console.log(data,'data');
   
   const conditionText = useMemo(() => {
     const applyVariantId = units?.find(
