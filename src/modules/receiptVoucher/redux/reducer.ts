@@ -20,10 +20,26 @@ class ReceiptVoucherClassExtend extends InstanceModuleRedux {
       confirmReceiptVoucherSuccess: (state: cloneInitState, { payload }: any) => {
         state.isSubmitLoading = false;
         state.confirmSuccess = payload;
+        state.list = state.list?.map((item: any) => {
+          if (item._id === payload?.data?._id) {
+            return { ...item, ...payload?.data };
+          }
+          return item
+        });
       },
       confirmReceiptVoucherFailed: (state: cloneInitState, { payload }: any) => {
         state.isSubmitLoading = false;
         state.confirmFailed = payload;
+      },
+
+      updateSuccess: (state: cloneInitState, { payload }: any) => {
+        state.isSubmitLoading = false;
+        state.list = state.list?.map((item: any) => {
+          if (item._id === payload?.data?._id) {
+            return {...item, ...payload?.data};
+          }
+          return item
+        });
       },
       resetAction: (state:cloneInitState) => ({
         ...state,
