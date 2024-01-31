@@ -77,6 +77,7 @@ export default function ProfileMenu(props: propsType): React.JSX.Element {
         footer={null}
         className="form-modal"
         destroyOnClose
+        zIndex={9999}
       >
         <ModalProfile handleUpdateProfile = {handleUpdateProfile} onCloseForm={() => setIsOpen(false)} isLoadingSubmit = {isLoadingSubmit} />
       </Modal>
