@@ -33,7 +33,7 @@ export default function Branch() {
   const [query] = useBranchQueryParams();
   // const [keyword, { setKeyword, onParamChange }] = useUpdateBranchParams(query);
   const [data, isLoading] = useGetBranches(query);
-  const paging = useBranchPaging();
+  const paging = useBranchPaging(); 
   return (
     <div>
       <Breadcrumb title={t("list-branch")} />
@@ -43,18 +43,19 @@ export default function Branch() {
         isShowButtonAdd
         />
         <TableAnt
-          dataSource={[]}
+          dataSource={data} 
           loading={isLoading}
           rowKey={rc => rc?._id}
           columns={columns}
           size='small'
-          pagination={{
-            ...paging,
-            onChange(page, pageSize) {
-              // onParamChange({ page, limit: pageSize });
-            },
-            showTotal: (total) => `Tổng cộng: ${total}`,
-          }}
+          // pagination={{
+          //   ...paging,
+          //   onChange(page, pageSize) {
+          //     // onParamChange({ page, limit: pageSize });
+          //   },
+          //   showTotal: (total) => `Tổng cộng: ${total}`,
+          // }}
+          pagination={false}
         />
       </WhiteBox>
     </div>
