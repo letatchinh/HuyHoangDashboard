@@ -92,6 +92,7 @@ export default function PaymentVoucherForm(
   const [voucher, isLoading] = useGetPaymentVoucher(id);
   const initPaymentVoucher = useInitWhPaymentVoucher(voucher);
   const [supplier] = useGetSupplier(supplierId);
+  const [issueNumber, setIssueNumber] = useState(null);
   const [settingDocs, setSettingDocs] = useState({
     name: "CÔNG TY TNHH WORLDCARE MIỀN TRUNG",
     address: "559 Lê Văn Hiến, P. Khuê Mỹ, Q. Ngũ Hành Sơn, TP Đà Nẵng",
@@ -138,9 +139,8 @@ export default function PaymentVoucherForm(
   const fetchIssueNumber = async () => {
     const typeVoucher = TYPE_VOUCHER.PC;
     const res = await apiPaymentVoucher.postIssueNumber({ typeVoucher });
-    form.setFieldsValue({
-      issueNumber: res?.result,
-    });
+    setIssueNumber(res?.result);
+    return res?.result;
   };
 
   // const onPrint = async (viewOnly = false): Promise<void> => {
@@ -253,7 +253,6 @@ export default function PaymentVoucherForm(
 
   useEffect(() => {
     if (!id) {
-      form.resetFields();
       if (supplier) {
         form.setFieldsValue({
           supplier: supplier?.name,
@@ -277,12 +276,19 @@ export default function PaymentVoucherForm(
       };
       setInitEmployee([initEmployee]);
     } else {
-      fetchIssueNumber();
-    }
+        fetchIssueNumber().then((issueNumber) => {
+        console.log(issueNumber,'issueNumber')
+        form.setFieldsValue({
+          issueNumber
+        });
+      });
+    };
   }, [id, mergedInitWhPaymentVoucher]);
+
   const onValuesChange = () => {
     console.log("first");
   };
+
   const onFinish = async (values: any) => {
     try {
       await form.validateFields();
@@ -307,11 +313,6 @@ export default function PaymentVoucherForm(
   };
 
   const onWhVoucherStatusChange = async (status: string) => {
-    // if(id){ // UPDATING
-    //   if(!isHaveUpdateVoucher) return toastr.error("Bạn không có quyền chỉnh sửa")
-    // }else{ // CREATE
-    //   if(!isHaveCreateVoucher) return toastr.error("Bạn không có quyền Tạo phiếu")
-    // }
     confirm({
       title: `Bạn có muốn ${WH_VOUCHER_ACTION_NAME[status][LANGUAGE.VI]} phiếu này?`,
       icon: <ExclamationCircleOutlined />,
