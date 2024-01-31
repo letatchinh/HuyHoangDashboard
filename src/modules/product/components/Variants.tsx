@@ -39,7 +39,7 @@ export default function Variants({
             <>
               {fields.map(({ key, name, fieldKey, ...restField }: any, index) =>
                 {
-                  const isVariantUsedInDiscount = cumulativeDiscount?.some((discount : cumulativeDiscountType) => get(discount,'applyUnit') === form.getFieldValue(['variants',name, "productUnit"]))
+                  const isVariantUsedInDiscount = cumulativeDiscount?.some((discount : cumulativeDiscountType) => get(discount,'applyVariantId') === form.getFieldValue(['variants',name, "productUnit"]))
                   return index === 0 ? (
                     <Row className="mb-2" gutter={8} key={key} align="middle">
                       <Col span={6}>

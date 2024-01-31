@@ -42,15 +42,15 @@ export default function DiscountView({
   console.log(data,'data');
   
   const conditionText = useMemo(() => {
-    const applyUnit = units?.find(
-      (unit: any) => get(unit, "_id") === get(data, "applyUnit")
+    const applyVariantId = units?.find(
+      (unit: any) => get(unit, "_id") === get(data, "applyVariantId")
     );
     let text = `Từ ${formatter(get(data, "condition.gte"))} ${
-      applyUnit ? get(applyUnit, "name", "") : "Đ"
+      applyVariantId ? get(applyVariantId, "name", "") : "Đ"
     } `;
     if (get(data, "condition.lte")) {
       text += `đến ${formatter(get(data, "condition.lte"))} ${
-        applyUnit ? get(applyUnit, "name", "") : "Đ"
+        applyVariantId ? get(applyVariantId, "name", "") : "Đ"
       }`;
     }
     return text;

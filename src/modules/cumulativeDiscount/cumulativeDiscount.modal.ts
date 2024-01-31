@@ -67,7 +67,7 @@ export type TypeRepeatType = "ranger" | "month" | "quarter" | "nope";
     valueType : string,
     typeReward : string,
     condition : conditionType | null,
-    applyUnit : string | null,
+    applyVariantId : string | null,
     applyTimeSheet : applyTimeSheetType | null,
     cumulativeTimeSheet : cumulativeTimeSheet | null,
     status:"ACTIVE" | "INACTIVE",

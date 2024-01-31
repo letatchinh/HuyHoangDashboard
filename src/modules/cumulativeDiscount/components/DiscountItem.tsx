@@ -355,7 +355,7 @@ export default function DiscountItem({
                                   {... !form.getFieldValue([
                                     "cumulativeDiscount",
                                     name,
-                                    "applyUnit",
+                                    "applyVariantId",
                                   ]) && {addonAfter : <div>VNĐ</div>}}
                                   />
                                 )}
@@ -395,7 +395,7 @@ export default function DiscountItem({
                                   {... !getFieldValue([
                                     "cumulativeDiscount",
                                     name,
-                                    "applyUnit",
+                                    "applyVariantId",
                                   ]) && {addonAfter : <div>VNĐ</div>}}
                                   />
                                 )}
@@ -408,7 +408,7 @@ export default function DiscountItem({
                                   style={{ marginBottom: 0 }}
                                   {...restField}
                                   label={"Đơn vị"}
-                                  name={[name, "applyUnit"]}
+                                  name={[name, "applyVariantId"]}
                                 >
                                   {RenderLoading(
                                     loading,
@@ -433,7 +433,7 @@ export default function DiscountItem({
                                 value={isSelectUnit}
                                 onChange={(checked) => {
                                   if(!checked){
-                                    const newCumulativeDiscount = cumulativeDiscount?.map((item:any,index:number) => index === name ? {...item,applyUnit : null}  : item);
+                                    const newCumulativeDiscount = cumulativeDiscount?.map((item:any,index:number) => index === name ? {...item,applyVariantId : null}  : item);
 
                                     form.setFieldsValue({
                                       cumulativeDiscount : newCumulativeDiscount
