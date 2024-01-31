@@ -6,6 +6,7 @@ import { CollapseProps } from "antd/lib";
 import useCreateBillStore from "../../storeContext/CreateBillContext";
 import { getCumulativeDiscount, selectProductSearch } from "../../bill.service";
 import { get } from "lodash";
+import useNotificationStore from "~/store/NotificationContext";
 
 const contentStyle: React.CSSProperties = {
   margin: 0,
@@ -30,9 +31,9 @@ const ProductListSuggest: React.FC = () => {
   );
   const [products, isLoading] = useGetProductListSuggest(query);
   const paging = useBillProductSuggestPaging();
-  console.log(paging,'paging')
   const inputEl : any = useRef(null);
-  const { quotationItems, onAdd , bill} = useCreateBillStore();
+  const { quotationItems, onAdd, bill } = useCreateBillStore();
+  const {onNotify} = useNotificationStore();
   const onSelect = async(data:any) => {
     // inputEl.current.blur();
     const billItem: any = selectProductSearch(data);
@@ -66,15 +67,27 @@ const ProductListSuggest: React.FC = () => {
           xxl: 3,
         }}
         dataSource={products?.docs || []}
-        renderItem={(item: any) => (
+          renderItem={(item: any) => {
+            const disabled = quotationItems?.find((billItem: any) => billItem?.productId === item?._id) ? true : false;
+          return (
           <List.Item
-            className="product-suggest__item"
-            onClick={() => onSelect(item)}
+            className={`product-suggest__item`}
+              onClick={() => {
+                if (disabled) {
+                  onNotify?.warning("Đã chọn sản phẩm này")
+                } else {
+                  onSelect(item);
+              }
+              }}
+              style={{
+                cursor: disabled ? 'not-allowed' : 'pointer',
+              }}
           >
-            <Card
+              <Card
               title={item?.productGroup?.name}
               headStyle={{
                 fontSize: 12,
+                opacity: disabled ? 0.5 : 1,
               }}
               onScroll={(e) => e.stopPropagation()}
               bodyStyle={{
@@ -84,6 +97,7 @@ const ProductListSuggest: React.FC = () => {
                 padding: 5, 
                 overflow: 'hidden',
                 fontSize: 12,
+                opacity: disabled ? 0.5 : 1,
               }}
             >
               <p>{`- ${item?.name}`}</p>
@@ -91,7 +105,7 @@ const ProductListSuggest: React.FC = () => {
               <p>{`Ncc: ${item?.manufacturer?.name}`}</p>
             </Card>
           </List.Item>
-        )}
+        )}}
         />
         <Row align={"middle"} justify={"center"}>
           <Button type="link" icon={<CaretLeftOutlined />} disabled={ !paging?.hasPrevPage } onClick={()=> onChangeData(false)}/>

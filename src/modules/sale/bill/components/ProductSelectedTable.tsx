@@ -16,7 +16,7 @@ type propsType = {};
 export default function ProductSelectedTable(
   props: propsType
 ): React.JSX.Element {
-  const { quotationItems, onSave,onRemove } = useCreateBillStore();  
+  const { quotationItems, onSave,onRemove,bill } = useCreateBillStore();  
   const onSelect = (newVariantId : string,data : any) => {
     const variant = get(data,'variants',[])?.find((item : any) => get(item,'_id') === newVariantId);
     onSave({
@@ -177,7 +177,7 @@ export default function ProductSelectedTable(
           ) : null,
       }}
     />
-      <ProductListSuggest/>
+    {bill?.pharmacyId &&  <ProductListSuggest/>}
     </>
   );
 }
