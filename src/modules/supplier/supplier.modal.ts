@@ -38,3 +38,10 @@ export type addressType = {
     ACTIVE : "ACTIVE",
     INACTIVE : "INACTIVE",
   }
+
+  export type SearchByType = "date" | "month" | "quarter" | "year"
+  export type FormFieldSearch = {
+    startDate?: any,
+    endDate?: any,
+    searchBy?: SearchByType,
+  }

@@ -260,7 +260,7 @@ export default function CumulativeTimeSheet({
                     <Form.Item
                       style={{ marginBottom: 0 }}
                       {...restField}
-                      label={"Chọn tháng lặp"}
+                      label={"Tháng tích luỹ"}
                       name={[name, "cumulativeTimeSheet", "repeat"]}
                       rules={[
                         {
