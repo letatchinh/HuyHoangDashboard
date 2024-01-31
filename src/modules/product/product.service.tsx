@@ -1,16 +1,17 @@
 import { Button, notification } from "antd";
 import { compact, differenceBy, get } from "lodash";
 import CumulativeDiscountModule from '~/modules/cumulativeDiscount';
-import { FieldTypeFormProduct } from "./product.modal";
+import { FieldTypeFormProduct, variantType } from "./product.modal";
 type paramsConvert = {
     values: FieldTypeFormProduct,
     supplierId : string | undefined
 };
 
 export const convertSubmitData = ({values,supplierId} :paramsConvert) => {
+  
       const submitData = {
         ...values,
-        cumulativeDiscount : CumulativeDiscountModule.service.convertSubmitDiscount(get(values,'cumulativeDiscount')),
+        cumulativeDiscount : CumulativeDiscountModule.service.convertSubmitDiscount(get(values,'cumulativeDiscount'),get(values,'variants',[])),
         supplierId,
       };
 
@@ -21,7 +22,8 @@ export const convertSubmitData = ({values,supplierId} :paramsConvert) => {
 export const convertInitProduct = (product : any) => {
   
   // Convert CumulativeDiscount
-  const cumulativeDiscount = CumulativeDiscountModule.service.convertInitDiscount(get(product,'cumulativeDiscount',[]));
+  const cumulativeDiscount = CumulativeDiscountModule.service.convertInitDiscount(get(product,'cumulativeDiscount',[]),get(product,'variants',[]));
+  
   return {
     ...product,
     cumulativeDiscount
@@ -45,4 +47,10 @@ export const validateChangeVariants = ({cumulativeDiscount,variants,form,setData
     // })
   };
 
+}
+
+export const getExchangeValue = (variantId : string | null,variants? : variantType[]) => {
+  
+  const variant = variants?.find((v:variantType) => get(v,'_id') === variantId);
+  return get(variant,'exchangeValue',0)
 }

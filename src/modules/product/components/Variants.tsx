@@ -19,7 +19,6 @@ export default function Variants({
   const [units, isLoading] = useGetListProductUnitAll(reFetch);
   const variants = Form.useWatch("variants", form);
   const cumulativeDiscount = Form.useWatch("cumulativeDiscount", form);
-  console.log(cumulativeDiscount,'cumulativeDiscount');
   
   const [open, setOpen] = useState(false);
   const onOpen = useCallback(() => setOpen(true), []);
@@ -39,7 +38,9 @@ export default function Variants({
             <>
               {fields.map(({ key, name, fieldKey, ...restField }: any, index) =>
                 {
-                  const isVariantUsedInDiscount = cumulativeDiscount?.some((discount : cumulativeDiscountType) => get(discount,'applyVariantId') === form.getFieldValue(['variants',name, "productUnit"]))
+                  
+                  const isVariantUsedInDiscount = !!get(variants,[name,'_id']) && cumulativeDiscount?.some((discount : cumulativeDiscountType) => (get(discount,'applyVariantId') === get(variants,[name,'_id'])));
+                  
                   return index === 0 ? (
                     <Row className="mb-2" gutter={8} key={key} align="middle">
                       <Col span={6}>

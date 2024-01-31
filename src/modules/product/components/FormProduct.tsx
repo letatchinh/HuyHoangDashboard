@@ -67,7 +67,6 @@ export default function FormProduct({
 
   const onFinish = (values: FieldTypeFormProduct) => {
     const submitData = convertSubmitData({values,supplierId});
-    console.log(submitData,'submitData');
     
     if (id) {
       onUpdate({ ...submitData, _id: id });
@@ -96,6 +95,7 @@ export default function FormProduct({
   useEffect(() => {
     if (product && id) {
     const initProduct = convertInitProduct(product);
+    
       form.setFieldsValue(initProduct);
       setBackupForm([initProduct]);
     }else{
