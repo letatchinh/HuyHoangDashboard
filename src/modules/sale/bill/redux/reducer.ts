@@ -3,7 +3,7 @@ import { get, omit } from "lodash";
 import { cumulativeDiscountType } from "~/modules/cumulativeDiscount/cumulativeDiscount.modal";
 import { InstanceModuleRedux } from "~/redux/instanceModuleRedux";
 import { initStateSlice } from "~/redux/models";
-import { getDiscountAmount } from "../bill.service";
+import { CalculateDiscountFactory } from "../bill.service";
 import { STATUS_BILL } from "../constants";
 interface cloneInitState extends initStateSlice {
  // Add cloneInitState Type Here
@@ -40,10 +40,14 @@ class BillClassExtend extends InstanceModuleRedux {
       state.getDebtFailed = payload;
     },
     getByIdSuccess: (state:cloneInitState, { payload }:{payload?:any}) => {
+      const CalculateDiscountMethod = new CalculateDiscountFactory();
       state.isGetByIdLoading = false;
       const billItems = get(payload,'billItems',[])?.map((billItem : any) => {
-        const price : number = get(billItem, 'variant.price',1) * get(billItem, 'quantity',1);
-        const totalDiscount : number = get(billItem,'cumulativeDiscount',[])?.reduce((sum:number,cur : cumulativeDiscountType) => sum + getDiscountAmount(cur,price),0);
+        const {variant} = billItem || {};
+        console.log(billItem,'billItem');
+        const quantity:number = Number((get(billItem, "quantity", 1) / get(billItem, "variant.exchangeValue", 1)).toFixed(1));
+        const price : number = get(billItem, 'variant.price',1);
+        const totalDiscount : number = get(billItem,'cumulativeDiscount',[])?.reduce((sum:number,cur : cumulativeDiscountType) => sum + CalculateDiscountMethod.getDiscountBase(cur,price,quantity,variant),0);
         const remainAmount = price - totalDiscount;
         return {
           ...billItem,

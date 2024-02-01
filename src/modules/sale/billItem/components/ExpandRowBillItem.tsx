@@ -1,7 +1,7 @@
 import { Divider, Statistic, Table, Typography } from 'antd';
 import { get, omit } from 'lodash';
 import React from 'react';
-import { TARGET_VI, TYPE_DISCOUNT_VI, TYPE_VALUE } from '~/modules/cumulativeDiscount/constants';
+import { TARGET_VI, TYPE_DISCOUNT_VI, TYPE_REWARD, TYPE_VALUE } from '~/modules/cumulativeDiscount/constants';
 import { formatter } from '~/utils/helpers';
 import StepStatus from '../../bill/components/StepStatus';
 import { STATUS_BILLITEM, STATUS_BILLITEM_VI } from '../constants';
@@ -74,8 +74,8 @@ export default function ExpandRowBillItem({historyStatus,status,cumulativeDiscou
                 dataIndex : 'discountAmount',
                 key : 'discountAmount',
                 align : 'center',
-                render (discountAmount) {
-                  return <Typography.Text strong>{formatter(discountAmount)}</Typography.Text>
+                render (discountAmount,rc) {
+                  return get(rc,'typeReward') === TYPE_REWARD.PRODUCT ? <Typography.Text strong>{formatter(get(rc,'itemReward.quantityClampReward',0))} {get(rc,'itemReward.name',0)}</Typography.Text>  : <Typography.Text strong>{formatter(discountAmount)}</Typography.Text>
                 }
               },
             ]}
