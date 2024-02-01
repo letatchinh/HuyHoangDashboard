@@ -99,6 +99,7 @@ export default function DiscountView({
       >
         <Radio.Group
           size="small"
+          disabled={!isSameTarget}
           options={[
             {
               label: STATUS_NAMES.ACTIVE,

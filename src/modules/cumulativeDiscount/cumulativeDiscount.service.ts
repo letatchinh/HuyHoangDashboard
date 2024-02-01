@@ -10,6 +10,7 @@ import {
 import ProductModule from "~/modules/product";
 import quarterOfYear from "dayjs/plugin/quarterOfYear";
 import { variantType } from "../product/product.modal";
+import { v4 } from "uuid";
 dayjs.extend(quarterOfYear);
 
 interface TempObject {
@@ -22,6 +23,19 @@ interface TempObject {
 }
 export class DiscountFactory {
   prefix: string = "@id@";
+  generatorSession() {
+    return "$" + v4().slice(0, 5);
+  }
+  generatorSessionIdNonRepeat(session: any, id: any) {
+    return `ANY_${session ? session : this.generatorSession()}_${
+      id ? id : this.prefix
+    }`;
+  }
+  getSession(session_id: string) {
+    const session = session_id?.indexOf("$");
+    if (session === -1) return null;
+    return session_id.slice(session, session + 6);
+  }
   #generatorRepeatItem({
     session,
     d_start,
@@ -79,13 +93,30 @@ export class DiscountFactory {
     });
     return repeatQuarter;
   }
-  handleConvertOutputCumulative(item: cumulativeDiscountType) {
-    const cumulativeTimeSheetItem = get(item, "cumulativeTimeSheet");
-    const gteRanger: any = get(cumulativeTimeSheetItem, "repeat.gteRanger");
-    const lteRanger: any = get(cumulativeTimeSheetItem, "repeat.lteRanger");
-    const typeRepeatSheet = get(cumulativeTimeSheetItem, "typeRepeat");
-    const valueRepeat: any = get(cumulativeTimeSheetItem, "repeat");
-    const id: any = get(item, "_id");
+  handleConvertOutputTimeSheetNonRepeat(timeSheet: any, session_id: any) {
+    const typeRepeat = get(timeSheet, "typeRepeat");
+    return {
+      nonRepeat: {
+        gte: dayjs(get(timeSheet, "nonRepeat.gte"))
+          .startOf("d")
+          .format("YYYY-MM-DD HH:mm:ss"),
+        lte: dayjs(get(timeSheet, "nonRepeat.lte"))
+          .endOf("d")
+          .format("YYYY-MM-DD HH:mm:ss"),
+        session_id,
+      },
+      typeRepeat,
+    };
+  }
+  handleConvertOutputTimeSheetStart(
+    timeSheetItem: cumulativeTimeSheet | null,
+    idDiscount: any
+  ) {
+    const gteRanger: any = get(timeSheetItem, "repeat.gteRanger");
+    const lteRanger: any = get(timeSheetItem, "repeat.lteRanger");
+    const typeRepeatSheet = get(timeSheetItem, "typeRepeat");
+    const valueRepeat: any = get(timeSheetItem, "repeat");
+    const id: any = idDiscount;
     let repeat: any = {};
     switch (typeRepeatSheet) {
       case "ranger":
@@ -261,17 +292,23 @@ export class DiscountFactory {
     }
     return repeat;
   }
-  handleConvertInputCumulative(cumulativeDiscount: cumulativeDiscountType[],variants?  : variantType[]) {
+  handleConvertInputCumulative(
+    cumulativeDiscount: cumulativeDiscountType[],
+    variants?: variantType[]
+  ) {
     const newCumulativeDiscount = cumulativeDiscount?.map(
       (value: cumulativeDiscountType) => {
         let newValue = { ...value };
-        const applyVariantId = get(newValue,'applyVariantId');
-        const exchangeValue = ProductModule.service.getExchangeValue(applyVariantId,variants);
+        const applyVariantId = get(newValue, "applyVariantId");
+        const exchangeValue = ProductModule.service.getExchangeValue(
+          applyVariantId,
+          variants
+        );
         const cumulativeTimeSheetItem = get(value, "cumulativeTimeSheet");
         const applyTimeSheetItem = get(value, "applyTimeSheet");
         const repeatCumulative = get(cumulativeTimeSheetItem, "repeat", {});
         const repeatApply = get(applyTimeSheetItem, "repeat", {});
-        const typeRepeat = get(cumulativeTimeSheetItem, "typeRepeat");
+        const typeRepeat = get(applyTimeSheetItem, "typeRepeat");
         const firstKeyCumulative = Object.keys(repeatCumulative || {})?.[0];
         const firstKeyApply = Object.keys(repeatApply || {})?.[0];
         const firstRepeatCumulative = repeatCumulative?.[firstKeyCumulative];
@@ -284,16 +321,26 @@ export class DiscountFactory {
                 nonRepeat: {
                   gte: dayjs(get(applyTimeSheetItem, "nonRepeat.gte")),
                   lte: dayjs(get(applyTimeSheetItem, "nonRepeat.lte")),
-                },
-              },
-              cumulativeTimeSheet: {
-                ...cumulativeTimeSheetItem,
-                nonRepeat: {
-                  gte: dayjs(get(cumulativeTimeSheetItem, "nonRepeat.gte")),
-                  lte: dayjs(get(cumulativeTimeSheetItem, "nonRepeat.lte")),
+                  session: this.getSession(
+                    get(applyTimeSheetItem, "nonRepeat.session_id", "")
+                  ),
                 },
               },
             });
+            if (cumulativeTimeSheetItem) {
+              Object.assign(newValue, {
+                cumulativeTimeSheet: {
+                  ...cumulativeTimeSheetItem,
+                  nonRepeat: {
+                    gte: dayjs(get(cumulativeTimeSheetItem, "nonRepeat.gte")),
+                    lte: dayjs(get(cumulativeTimeSheetItem, "nonRepeat.lte")),
+                    session: this.getSession(
+                      get(applyTimeSheetItem, "nonRepeat.session_id", "")
+                    ),
+                  },
+                },
+              });
+            }
 
             break;
           case "ranger":
@@ -319,7 +366,7 @@ export class DiscountFactory {
               // Out month
               gteRangerApply = get(firstRepeatApply, "[1].d_start");
               lteRangerApply = get(firstRepeatApply, "[0].d_end");
-            }
+            };
             Object.assign(newValue, {
               applyTimeSheet: {
                 ...applyTimeSheetItem,
@@ -328,36 +375,25 @@ export class DiscountFactory {
                   lteRanger: lteRangerApply,
                 },
               },
-              cumulativeTimeSheet: {
-                ...cumulativeTimeSheetItem,
-                repeat: {
-                  gteRanger: gteRangerCumulative,
-                  lteRanger: lteRangerCumulative,
-                },
-              },
             });
+            if (cumulativeTimeSheetItem) {
+              Object.assign(newValue, {
+                cumulativeTimeSheet: {
+                  ...cumulativeTimeSheetItem,
+                  repeat: {
+                    gteRanger: gteRangerCumulative,
+                    lteRanger: lteRangerCumulative,
+                  },
+                },
+              });
+            }
             break;
           case "month":
             let repeat: any = [];
             forIn(repeatCumulative, (value, key) => {
               repeat.push(+key);
             });
-            Object.assign(newValue,{applyTimeSheet: {
-              ...applyTimeSheetItem,
-              repeat: {
-                gteRanger: get(firstRepeatApply, "[0].d_start"),
-                lteRanger: get(firstRepeatApply, "[0].d_end"),
-              },
-            },
-            cumulativeTimeSheet: {
-              ...cumulativeTimeSheetItem,
-              repeat,
-            },});
-            break;
-          case "quarter":
-            let repeatQuarter: any[] = this.#quarterOfMonths(repeatCumulative);
-            Object.assign(newValue,{
-              ...newValue,
+            Object.assign(newValue, {
               applyTimeSheet: {
                 ...applyTimeSheetItem,
                 repeat: {
@@ -365,19 +401,49 @@ export class DiscountFactory {
                   lteRanger: get(firstRepeatApply, "[0].d_end"),
                 },
               },
-              cumulativeTimeSheet: {
-                ...cumulativeTimeSheetItem,
-                repeat: repeatQuarter,
+            });
+            if(cumulativeTimeSheetItem){
+              Object.assign(newValue, {
+                cumulativeTimeSheet: {
+                  ...cumulativeTimeSheetItem,
+                  repeat,
+                },
+              });
+            }
+            break;
+          case "quarter":
+            let repeatQuarter: any[] = this.#quarterOfMonths(repeatCumulative);
+            Object.assign(newValue, {
+              applyTimeSheet: {
+                ...applyTimeSheetItem,
+                repeat: {
+                  gteRanger: get(firstRepeatApply, "[0].d_start"),
+                  lteRanger: get(firstRepeatApply, "[0].d_end"),
+                },
               },
             });
+            if(cumulativeTimeSheetItem){
+              Object.assign(newValue, {
+                cumulativeTimeSheet: {
+                  ...cumulativeTimeSheetItem,
+                  repeat: repeatQuarter,
+                },
+              });
+            }
+          
             break;
           default:
             break;
         }
-
+        console.log(newValue,'newValue');
         return {
           ...newValue,
-          condition : applyVariantId ? this.handleConvertConditionInput(get(newValue,'condition'),exchangeValue) : get(newValue,'condition')
+          condition: applyVariantId
+            ? this.handleConvertConditionInput(
+                get(newValue, "condition"),
+                exchangeValue
+              )
+            : get(newValue, "condition"),
         };
       }
     );
@@ -509,6 +575,7 @@ const rootField = [
   "valueType",
   "status",
   "_id",
+  "timesReward",
 ];
 export const pickCore = (submitData: any) => pick(submitData, rootField);
 
@@ -520,17 +587,10 @@ export const pickLK = (submitData: any) =>
     "applyTimeSheet",
     "cumulativeTimeSheet",
     "applyVariantId",
+    "itemReward",
   ]);
-
-export const convertInitDiscount = (
-  cumulativeDiscount: cumulativeDiscountType[],
-  variants? : variantType[]
-) => {
-  const DiscountMethod = new DiscountFactory();
-  const newCumulativeDiscount =
-    DiscountMethod.handleConvertInputCumulative(cumulativeDiscount,variants);
-  return newCumulativeDiscount;
-};
+export const pickSoftCondition = (submitData: any) =>
+  pick(submitData, [...rootField, "condition", "applyTimeSheet", "itemReward"]);
 
 export const onDiscountChange = (
   newCumulativeDiscount: cumulativeDiscountType[]
@@ -559,6 +619,18 @@ export const onDiscountChange = (
   return cumulativeDiscount;
 };
 
+export const convertInitDiscount = (
+  cumulativeDiscount: cumulativeDiscountType[],
+  variants?: variantType[]
+) => {
+  const DiscountMethod = new DiscountFactory();
+  const newCumulativeDiscount = DiscountMethod.handleConvertInputCumulative(
+    cumulativeDiscount,
+    variants
+  );
+  return newCumulativeDiscount;
+};
+
 export const convertSubmitDiscount = (
   cumulativeDiscount: cumulativeDiscountType[],
   variants?: variantType[]
@@ -580,34 +652,31 @@ export const convertSubmitDiscount = (
           const applyTimeSheetItem = get(item, "applyTimeSheet");
           const cumulativeTimeSheetItem: any = get(item, "cumulativeTimeSheet");
           const typeRepeat = get(cumulativeTimeSheetItem, "typeRepeat", "nope");
+          const session_id = DiscountMethod.generatorSessionIdNonRepeat(
+            get(applyTimeSheetItem, "nonRepeat.session"),
+            _id
+          ); // Same ID with cumulativeTimeSheet
           if (typeRepeat === "nope") {
-            Object.assign(cumulativeTimeSheet, {
-              nonRepeat: {
-                gte: dayjs(get(cumulativeTimeSheetItem, "nonRepeat.gte"))
-                  .startOf("d")
-                  .format("YYYY-MM-DD HH:mm:ss"),
-                lte: dayjs(get(cumulativeTimeSheetItem, "nonRepeat.lte"))
-                  .endOf("d")
-                  .format("YYYY-MM-DD HH:mm:ss"),
-                session_id: "ANY_" + (_id ? _id : DiscountMethod.prefix),
-              },
-              typeRepeat,
-            });
-            Object.assign(applyTimeSheet, {
-              nonRepeat: {
-                gte: dayjs(get(applyTimeSheetItem, "nonRepeat.gte"))
-                  .startOf("d")
-                  .format("YYYY-MM-DD HH:mm:ss"),
-                lte: dayjs(get(applyTimeSheetItem, "nonRepeat.lte"))
-                  .endOf("d")
-                  .format("YYYY-MM-DD HH:mm:ss"),
-                session_id: "ANY_" + (_id ? _id : DiscountMethod.prefix),
-              },
-              typeRepeat,
-            });
+            Object.assign(
+              cumulativeTimeSheet,
+              DiscountMethod.handleConvertOutputTimeSheetNonRepeat(
+                cumulativeTimeSheetItem,
+                session_id
+              )
+            );
+            Object.assign(
+              applyTimeSheet,
+              DiscountMethod.handleConvertOutputTimeSheetNonRepeat(
+                applyTimeSheetItem,
+                session_id
+              )
+            );
           } else {
             const repeatCumulative =
-              DiscountMethod.handleConvertOutputCumulative(item);
+              DiscountMethod.handleConvertOutputTimeSheetStart(
+                get(item, "cumulativeTimeSheet"),
+                get(item, "_id", "")
+              );
             const repeatApply =
               DiscountMethod.handleConvertOutputApplyTimeSheet(
                 item,
@@ -635,6 +704,48 @@ export const convertSubmitDiscount = (
           return pickCore(item);
         case TYPE_DISCOUNT["DISCOUNT.SOFT"]:
           return pickSoft(item);
+        case TYPE_DISCOUNT["DISCOUNT.SOFT.CONDITION"]:
+          let applyTimeSheet_4: any = {};
+
+          const applyTimeSheetItem_4 = get(item, "applyTimeSheet");
+          const typeRepeat_4 = get(applyTimeSheetItem_4, "typeRepeat", "nope");
+          const session_id_4 = DiscountMethod.generatorSessionIdNonRepeat(
+            get(applyTimeSheetItem_4, "nonRepeat.session"),
+            _id
+          ); // Same ID with cumulativeTimeSheet
+          if (typeRepeat_4 === "nope") {
+            Object.assign(
+              applyTimeSheet_4,
+              DiscountMethod.handleConvertOutputTimeSheetNonRepeat(
+                applyTimeSheetItem_4,
+                session_id_4
+              )
+            );
+          } else {
+            const repeatApply =
+              DiscountMethod.handleConvertOutputTimeSheetStart(
+                applyTimeSheetItem_4,
+                _id
+              );
+            Object.assign(applyTimeSheet_4, {
+              repeat: repeatApply,
+              typeRepeat,
+            });
+          }
+          const newItem_4 = {
+            ...item,
+            applyTimeSheet: applyTimeSheet_4,
+            condition: applyVariantId
+              ? DiscountMethod.handleConvertConditionOutput(
+                  get(item, "condition"),
+                  exChangeValue
+                )
+              : get(item, "condition"),
+          };
+          return pickSoftCondition({
+            ...newItem_4,
+            cumulativeDiscount: null,
+          });
         default:
           return item;
       }

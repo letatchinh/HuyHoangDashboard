@@ -13,6 +13,7 @@ export default function DiscountList({
   loading,
   form,
   target,
+  supplierId
 }: TypePropsDiscountList): React.JSX.Element {
   const defaultValueDiscount = useMemo(
     () => ({
@@ -26,6 +27,7 @@ export default function DiscountList({
       applyTimeSheet : {
         typeRepeat : "nope"
       },
+      timesReward : 1,
     }),
     [target]
   );
@@ -48,6 +50,7 @@ export default function DiscountList({
               remove={remove}
               units={units}
               target={target}
+              supplierId={supplierId}
               />
             ))}
             <Button

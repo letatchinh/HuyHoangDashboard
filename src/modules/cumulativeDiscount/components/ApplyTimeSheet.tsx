@@ -1,8 +1,12 @@
-import { Col, DatePicker, Form, InputNumber, Row } from "antd";
+import { CheckCircleOutlined, CheckCircleTwoTone, SyncOutlined } from "@ant-design/icons";
+import { Button, Col, DatePicker, Form, InputNumber, Modal, Row, Tag } from "antd";
 import dayjs from "dayjs";
-import React, { useMemo } from "react";
+import { get } from "lodash";
+import React, { useMemo, useState } from "react";
 import RenderLoading from "~/components/common/RenderLoading";
+import { TYPE_DISCOUNT } from "../constants";
 import { TypeRepeatType } from "../cumulativeDiscount.modal";
+import { DiscountFactory } from "../cumulativeDiscount.service";
 type propsType = {
   form: any;
   name: number;
@@ -15,10 +19,14 @@ export default function ApplyTimeSheet({
   restField,
   loading,
 }: propsType): React.JSX.Element {
+  const [isReset,setIsReset] = useState(false);
   const typeRepeat: TypeRepeatType = Form.useWatch(
-    ["cumulativeDiscount", name, "cumulativeTimeSheet", "typeRepeat"],
+    ["cumulativeDiscount", name, "applyTimeSheet", "typeRepeat"],
     form
   );
+  const applyTimeSheet = form.getFieldValue(['cumulativeDiscount',name,'applyTimeSheet']);
+    
+  const cumulativeDiscount = Form.useWatch('cumulativeDiscount');
   const getField = (field: string | string[]) => {
     const path = ["cumulativeDiscount", name, "applyTimeSheet"];
     return form.getFieldValue(
@@ -31,6 +39,43 @@ export default function ApplyTimeSheet({
       Array.isArray(field) ? path.concat(field) : [...path, field]
     );
   };
+  const changeForm = (value:any) => {
+    
+    const newCumulativeDiscount = cumulativeDiscount?.map(
+      (item: any, index: number) =>
+        index === name
+          ? {
+              ...item,
+              ...value
+            }
+          : item
+    );
+
+    form.setFieldsValue({
+      cumulativeDiscount: newCumulativeDiscount,
+    });
+  };
+  const handleConfirmResetSession = () => {
+    Modal.confirm({
+      title: 'Xác nhận làm mới chương trình sẽ kết thúc chương trình cũ và bắt đầu 1 chương trình mới',
+      onOk:handleResetSession
+    })
+  }
+  const handleResetSession = () => {
+    const DiscountMethod = new DiscountFactory();
+    const newSession = DiscountMethod.generatorSession();
+    changeForm({
+      applyTimeSheet : {
+        ...applyTimeSheet,
+        nonRepeat : {
+          ...get(applyTimeSheet,'nonRepeat'),
+          session:newSession,
+        }
+      }
+    });
+    setIsReset(true);
+  };
+  
   return (
     <Row>
       <Form.Item name={[name, "applyTimeSheet", "typeRepeat"]} hidden />
@@ -56,7 +101,12 @@ export default function ApplyTimeSheet({
                       "nonRepeat",
                       "lte",
                     ]);
-                    if (value < gte) {
+                    const typeDiscount = getFieldValue([
+                      "cumulativeDiscount",
+                      name,
+                      "typeDiscount",
+                    ]);
+                    if (typeDiscount === TYPE_DISCOUNT.LK && value < gte) {
                       return Promise.reject(
                         "Phải bé hơn ngày tích luỹ kết thúc"
                       );
@@ -69,8 +119,14 @@ export default function ApplyTimeSheet({
               {RenderLoading(
                 loading,
                 <DatePicker
-                  disabledDate={(current) =>
-                    current < dayjs(getFieldCumulative(["nonRepeat", "lte"]))
+                  disabledDate={(current) => {
+                    const typeDiscount = form.getFieldValue([
+                      "cumulativeDiscount",
+                      name,
+                      "typeDiscount",
+                    ]);
+                    return typeDiscount === TYPE_DISCOUNT.LK && current < dayjs(getFieldCumulative(["nonRepeat", "lte"]))
+                  }
                   }
                   format={"YYYY-MM-DD"}
                 />
@@ -99,10 +155,9 @@ export default function ApplyTimeSheet({
                           "nonRepeat",
                           "gte",
                         ]);
+                        
                         if (value < gte) {
-                          return Promise.reject(
-                            "Phải bé hơn ngày bắt đầu"
-                          );
+                          return Promise.reject("Phải bé hơn ngày bắt đầu");
                         }
                         return Promise.resolve();
                       },
@@ -122,6 +177,28 @@ export default function ApplyTimeSheet({
               )}
             </Form.Item>
           </Col>
+          {typeRepeat === "nope" && get(applyTimeSheet,'nonRepeat.session') &&  (
+            <Col>
+              {isReset ? (
+                <Tag
+                  icon={<CheckCircleOutlined />}
+                  bordered={false}
+                  color="success"
+                >
+                  Đã làm mới
+                </Tag>
+              ) : (
+                <Button
+                  onClick={handleConfirmResetSession}
+                  type="primary"
+                  ghost
+                  icon={<SyncOutlined />}
+                >
+                  Làm mới chương trình
+                </Button>
+              )}
+            </Col>
+          )}
         </>
       )}
       {["ranger", "month", "quarter"].includes(typeRepeat) && (
@@ -168,7 +245,10 @@ export default function ApplyTimeSheet({
                           "repeat",
                           "gteRanger",
                         ]);
-                        if (['month','quarter'].includes(typeRepeat) && (value < gte)) {
+                        if (
+                          ["month", "quarter"].includes(typeRepeat) &&
+                          value < gte
+                        ) {
                           return Promise.reject(
                             "Phải lớn hơn giá trị ngày bắt đầu"
                           );

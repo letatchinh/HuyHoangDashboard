@@ -77,5 +77,6 @@ export type TypeRepeatType = "ranger" | "month" | "quarter" | "nope";
   export type TypePropsDiscountList = {
     loading? : any,
     form : any,
-    target : string
+    target : string,
+    supplierId? : string
   }

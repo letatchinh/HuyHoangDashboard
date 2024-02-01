@@ -1,18 +1,11 @@
 import {
-  Col,
-  ConfigProvider,
-  DatePicker,
+  Col, DatePicker,
   Form,
   InputNumber,
-  Row,
-  Segmented,
-  Select,
-  Space,
-  Switch,
-  Typography,
+  Row, Select
 } from "antd";
 import dayjs from "dayjs";
-import React, { useState } from "react";
+import React from "react";
 import RenderLoading from "~/components/common/RenderLoading";
 import { TypeRepeatType } from "../cumulativeDiscount.modal";
 type propsType = {
@@ -21,33 +14,13 @@ type propsType = {
   form: any;
   restField: any;
 };
-const options = [
-  {
-    label: "Không lặp lại",
-    value: "nope",
-  },
-  {
-    label: "Khoảng ngày lặp lại",
-    value: "ranger",
-  },
-  {
-    label: "Tháng",
-    value: "month",
-  },
-  {
-    label: "Quý",
-    value: "quarter",
-  },
-];
+
 export default function CumulativeTimeSheet({
   name,
   loading,
   form,
   restField,
 }: propsType): React.JSX.Element {
-  // const [valueTypeRepeat, setValueTypeRepeat] =
-  //   useState<TypeRepeatType>("nope");
-  const cumulativeDiscount = Form.useWatch("cumulativeDiscount", form);
   const typeRepeat: TypeRepeatType = Form.useWatch(
     ["cumulativeDiscount", name, "cumulativeTimeSheet", "typeRepeat"],
     form
@@ -61,67 +34,9 @@ export default function CumulativeTimeSheet({
     return form.getFieldValue(Array.isArray(field) ? path.concat(field) : [...path,field]);
   }
   
-  const onChangeType = (value: any) => {
-    // setValueTypeRepeat(value);
-    // Reset CumulativeTimeSheet And ApplyTimeSheet when change TypeRepeat
-    const newCumulativeDiscount = cumulativeDiscount?.map(
-      (item: any, index: number) =>
-        index === name
-          ? {
-              ...item,
-              cumulativeTimeSheet: {
-                ...item?.cumulativeTimeSheet,
-                repeat: null,
-                nonRepeat: null,
-                typeRepeat : value
-              },
-              applyTimeSheet: {
-                ...item?.applyTimeSheet,
-                repeat: null,
-                nonRepeat: null,
-                typeRepeat : value
-              },
-            }
-          : item
-    );
-            
-    form.setFieldsValue({
-      cumulativeDiscount: newCumulativeDiscount,
-    });
-  };
   return (
     <>
-      <Space className="mb-3">
-        <ConfigProvider
-          theme={{
-            components: {
-              Segmented: {
-                itemSelectedBg: "#3481FF",
-                itemSelectedColor: "white",
-              },
-            },
-          }}
-        >
-          <Form.Item
-            style={{ marginBottom: 0 }}
-            {...restField}
-            label={"Loại chương trình"}
-            name={[name, "cumulativeTimeSheet", "typeRepeat"]}
-            tooltip={<div>
-              <p>Không lặp lại: Chỉ xảy ra ở một khoảng thời gian cố định và không tái diễn</p>
-              <p>Khoảng ngày lặp lại: Xảy ra ở một khoảng ngày cốt định và được lặp lại hằng tháng</p>
-              <p>Tháng: Lặp theo mỗi tháng mỗi chu kì gồm đầu tháng đến cuối tháng</p>
-              <p>Quý: Lặp theo mỗi quý mỗi chu kì gồm đầu quý đến cuối quý</p>
-            </div>}
-          >
-            <Segmented
-              options={options}
-              // value={valueTypeRepeat}
-              onChange={onChangeType}
-            />
-          </Form.Item>
-        </ConfigProvider>
-      </Space>
+      
       <Row gutter={8} align={"middle"}>
         {
           {
