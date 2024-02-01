@@ -24,6 +24,7 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import InputNumberAnt from "~/components/Antd/InputNumberAnt";
 import BaseBorderBox from "~/components/common/BaseBorderBox/index";
 import RenderLoading from "~/components/common/RenderLoading";
+import { INFINITY } from "~/constants/defaultValue";
 import {
   TARGET,
   TYPE_DISCOUNT,
@@ -451,8 +452,14 @@ export default function DiscountItem({
                           label="Số lần nhận thưởng"
                           name={[name, "timesReward"]}
                           labelCol={{ span: 11 }}
-                        >
-                          <Segmented
+                          hidden
+                        />
+                          <Form.Item shouldUpdate noStyle>
+                            {() => <Segmented
+                            onChange={(value) => changeForm(name,{
+                              timesReward : value
+                            })}
+                            value={form.getFieldValue(['cumulativeDiscount',name, "timesReward"])}
                             options={[
                               {
                                 label: "Một lần",
@@ -460,11 +467,12 @@ export default function DiscountItem({
                               },
                               {
                                 label: "Nhiều lần",
-                                value: Infinity,
+                                value: INFINITY,
                               },
                             ]}
-                          />
-                        </Form.Item>
+                          />}
+                          </Form.Item>
+                        {/* </Form.Item> */}
                       </Col>
                     </Row>
                   </BaseBorderBox>

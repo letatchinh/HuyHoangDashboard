@@ -742,10 +742,7 @@ export const convertSubmitDiscount = (
                 )
               : get(item, "condition"),
           };
-          return pickSoftCondition({
-            ...newItem_4,
-            cumulativeDiscount: null,
-          });
+          return pickSoftCondition(newItem_4);
         default:
           return item;
       }
