@@ -6,6 +6,7 @@ import { useCreateManufacturer, useGetManufacturerById, useResetAction } from '.
 interface Props {
   id?: any
   callBack: () => void
+  setId?:any
   updateManufacturer: (data: any) => void,
 };
 interface FieldType {
@@ -15,7 +16,7 @@ interface FieldType {
   description: string
   isAction: String
 };
-const ManufacturerForm: React.FC<Props> = ({ id, callBack, updateManufacturer }) => {
+const ManufacturerForm: React.FC<Props> = ({ id,setId, callBack, updateManufacturer }) => {
   const [manufacturer, loading] = useGetManufacturerById(id);
   const [, createManufacturer] = useCreateManufacturer(callBack);
   const [form] = Form.useForm<FieldType>();
@@ -27,7 +28,7 @@ const ManufacturerForm: React.FC<Props> = ({ id, callBack, updateManufacturer })
         name,
         description,
       })
-    }else form.resetFields();
+    }else{ form.resetFields()};
   }, [id, manufacturer,form])
   const onFinish = (values: FieldType) => {
     const data: FieldType = {
@@ -35,6 +36,7 @@ const ManufacturerForm: React.FC<Props> = ({ id, callBack, updateManufacturer })
     };
     if (id) {
       updateManufacturer({ ...data, id });
+      setId(null)
     } else {
       createManufacturer({ ...data });
       form.resetFields()

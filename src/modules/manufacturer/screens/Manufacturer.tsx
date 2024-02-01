@@ -25,6 +25,7 @@ export default function Manufacturer() {
   const [id, setId] = useState(null);
   const handleCloseForm = useCallback(() => {
     setShowForm(false);
+    form.resetFields();
     setId(null);
   }, []);
   const [, deleteManufacturer] = useDeleteManufacturer();
@@ -190,7 +191,7 @@ export default function Manufacturer() {
           footer={null}
         // destroyOnClose
         >
-          <ManufacturerForm id={id} callBack={handleCloseForm} updateManufacturer={updateManufacturer} />
+          <ManufacturerForm id={id} setId={setId} callBack={handleCloseForm} updateManufacturer={updateManufacturer} />
         </ModalAnt>
       </div>
     </>
