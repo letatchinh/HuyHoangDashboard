@@ -4,3 +4,30 @@
 .fw-5 {
     font-weight: 500!important;
 }
+.ant-modal-confirm-paragraph{
+    width: 100%!important;
+    max-width: unset !important;
+}
+.btn-footer{
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    gap: 10px;
+    align-items: center;
+    & button {
+        width: 25%!important;
+    }
+}
+
+.ant-skeleton-element{
+    width: 100%!important;
+    & .ant-skeleton-input{
+        width: 100%!important;
+    }
+}
+.disabledLink {
+    color: currentColor;
+    opacity: 0.5;
+    text-decoration: none;
+    pointer-events: none;
+  }

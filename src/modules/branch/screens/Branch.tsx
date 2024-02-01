@@ -38,7 +38,7 @@ export default function Branch() {
         isShowButtonAdd
         />
         <TableAnt
-          dataSource={data}
+          dataSource={[]}
           loading={isLoading}
           rowKey={rc => rc?._id}
           columns={columns}
