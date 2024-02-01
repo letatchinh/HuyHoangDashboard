@@ -2,7 +2,7 @@ import { Col, Divider, Form, Radio, Row, Switch, Typography } from "antd";
 import dayjs from "dayjs";
 import { get } from "lodash";
 import React, { useMemo } from "react";
-import { STATUS, STATUS_NAMES } from "~/constants/defaultValue";
+import { INFINITY, STATUS, STATUS_NAMES } from "~/constants/defaultValue";
 import { formatter } from "~/utils/helpers";
 import {
   TYPE_DISCOUNT,
@@ -14,7 +14,7 @@ import {
 import { DiscountFactory } from "../cumulativeDiscount.service";
 type propsType = {
   data: any;
-  units: any;
+  variants: any;
   name: any;
   isSameTarget: boolean;
 };
@@ -35,37 +35,85 @@ const CLONE_TYPE_REWARD_VI: any = TYPE_REWARD_VI;
 const DiscountMethod = new DiscountFactory();
 export default function DiscountView({
   data,
-  units,
+  variants,
   name,
   isSameTarget,
 }: propsType): React.JSX.Element {
   
   const conditionText = useMemo(() => {
-    const applyVariantId = units?.find(
-      (unit: any) => get(unit, "_id") === get(data, "applyVariantId")
+    const applyVariantId = variants?.find(
+      (variant: any) => get(variant, "_id") === get(data, "applyVariantId")
     );
-    let text = `Từ ${formatter(get(data, "condition.gte"))} ${
-      applyVariantId ? get(applyVariantId, "name", "") : "Đ"
-    } `;
-    if (get(data, "condition.lte")) {
-      text += `đến ${formatter(get(data, "condition.lte"))} ${
-        applyVariantId ? get(applyVariantId, "name", "") : "Đ"
-      }`;
+    let text = '';
+    switch (get(data,'typeDiscount')) {
+      case TYPE_DISCOUNT["DISCOUNT.SOFT.CONDITION"]:
+        if (get(data, "condition.lte")) {
+           text = `Mỗi ${formatter(get(data, "condition.gte"))} ${
+            applyVariantId ? get(applyVariantId, "unit.name", "") : "Đ"
+          } `;
+    
+          text += `Tối đa ${formatter(get(data, "condition.lte"))} ${
+            applyVariantId ? get(applyVariantId, "unit.name", "") : "Đ"
+          }`;
+        }else{
+           text = `Mỗi ${formatter(get(data, "condition.gte"))} ${
+            applyVariantId ? get(applyVariantId, "unit.name", "") : "Đ"
+          } `;
+        }
+        break;
+      case TYPE_DISCOUNT.LK:
+        if (get(data, "condition.lte")) {
+           text = `Từ ${formatter(get(data, "condition.gte"))} ${
+            applyVariantId ? get(applyVariantId, "unit.name", "") : "Đ"
+          } `;
+    
+          text += `đến ${formatter(get(data, "condition.lte"))} ${
+            applyVariantId ? get(applyVariantId, "unit.name", "") : "Đ"
+          }`;
+        }else{
+           text = `Lớn hơn ${formatter(get(data, "condition.gte"))} ${
+            applyVariantId ? get(applyVariantId, "unit.name", "") : "Đ"
+          } `;
+        }
+        break;
+    
+      default:
+        break;
     }
+  
     return text;
-  }, [data, units]);
+  }, [data, variants]);
 
   const valueText = useMemo(() => {
     let text = "";
-    if (get(data, "typeReward") === TYPE_REWARD.VALUE) {
-      text =
+    switch (get(data, "typeReward")) {
+      case TYPE_REWARD.VALUE:
+        text =
         formatter(get(data, "value", "")) +
         CLONE_TYPE_VALUE_VI[get(data, "valueType")];
-    } else {
-      text = CLONE_TYPE_REWARD_VI[get(data, "typeReward")];
+        break;
+        case TYPE_REWARD.PRODUCT:
+          text = get(data, "itemReward.quantity") + " " + get(data, "itemReward.name");
+          break;
+        case TYPE_REWARD.BONUS:
+          text = CLONE_TYPE_REWARD_VI[get(data, "typeReward")];
+          break;
+      default:
+        break;
     }
     return text;
   }, [data]);
+  console.log(data,'data');
+  
+  const timesRewardText = useMemo(() => {
+    let text = "";
+    if(get(data,'timesReward') === INFINITY){
+      text += "Không giới hạn số lần/Đơn"
+    }else{
+      text += "Chỉ nhận tối đa "+get(data,'timesReward',1)+" lần/Đơn"
+    }
+    return text;
+  },[data])
 
   const ApplyTimeText = useMemo(() => {
     let text = DiscountMethod.handleConvertTextViewApplyTimeSheet(get(data,'applyTimeSheet'))
@@ -85,10 +133,11 @@ export default function DiscountView({
         value={CLONE_TYPE_DISCOUNT_VI[get(data, "typeDiscount", "")]}
       />
       <Layout label="Giá trị chiết khấu" value={valueText} />
-      {get(data, "typeDiscount") === TYPE_DISCOUNT.LK && (
+      <Layout label="Tần suất nhận" value={timesRewardText} />
+      {[TYPE_DISCOUNT.LK,TYPE_DISCOUNT['DISCOUNT.SOFT.CONDITION']].includes(get(data, "typeDiscount")) && (
         <>
           <Layout label="Điều kiện nhận" value={conditionText} />
-          <Layout label="Thời gian tích luỹ" value={CumulativeText} />
+          {get(data, "typeDiscount") === TYPE_DISCOUNT.LK && <Layout label="Thời gian tích luỹ" value={CumulativeText} />}
           <Layout label="Thời gian áp dụng" value={ApplyTimeText} />
         </>
       )}
