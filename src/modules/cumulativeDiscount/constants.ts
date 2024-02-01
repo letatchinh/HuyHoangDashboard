@@ -1,11 +1,13 @@
 export const TYPE_DISCOUNT = {
     'DISCOUNT.CORE': "DISCOUNT.CORE",
     'DISCOUNT.SOFT' : "DISCOUNT.SOFT",
+    'DISCOUNT.SOFT.CONDITION' : "DISCOUNT.SOFT.CONDITION",
     LK : "LK",
   }
   export const TYPE_DISCOUNT_VI = {
     'DISCOUNT.CORE' : "Chiết khấu cứng",
     'DISCOUNT.SOFT' : "Chiết khấu mềm",
+    'DISCOUNT.SOFT.CONDITION' : 'Chiết khấu mềm (có điều kiện)',
     LK : "Luỹ kế",
   }
   
