@@ -446,7 +446,7 @@ export default function DiscountItem({
                       }
                     </Form.Item>
 
-                    <Row>
+                    {typeDiscount !== TYPE_DISCOUNT.LK && <Row>
                       <Col>
                         <Form.Item
                           label="Số lần nhận thưởng"
@@ -488,7 +488,7 @@ export default function DiscountItem({
                           </Form.Item>
                         {/* </Form.Item> */}
                       </Col>
-                    </Row>
+                    </Row>}
                   </BaseBorderBox>
                 </Col>
                 {/* Điều kiện */}
