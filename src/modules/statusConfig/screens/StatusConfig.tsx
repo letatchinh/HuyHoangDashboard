@@ -1,15 +1,14 @@
 import { ExclamationCircleOutlined } from "@ant-design/icons";
 import type { InputRef } from 'antd';
 import { Button, Checkbox, ColorPicker, Form, Input, Table, Tag, Tooltip, message } from 'antd';
-import { Color } from 'antd/es/color-picker';
 import type { FormInstance } from 'antd/es/form';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import Breadcrumb from '~/components/common/Breadcrumb';
+import WithPermission from "~/components/common/WithPermission";
 import useTranslate from '~/lib/translation';
 import POLICIES from '~/modules/policy/policy.auth';
-import { useMatchOrPolicy, useMatchPolicy } from '~/modules/policy/policy.hook';
+import { useMatchPolicy } from '~/modules/policy/policy.hook';
 import { useCreateStatusConfig, useDeleteStatusConfig, useGetListStatusConfig, useResetAction, useStatusConfigQueryParams, useUpdateStatusConfig } from '../statusConfig.hook';
-import WithPermission from "~/components/common/WithPermission";
 const EditableContext = React.createContext<FormInstance<any> | null>(null);
 interface Item {
   key: string;
@@ -126,7 +125,6 @@ const StatusConfig: React.FC = () => {
   const [listStatusConfig, isLoading] = useGetListStatusConfig(query);
   const canDelelte = useMatchPolicy(POLICIES.DELETE_TODOSTATUSCONFIG);
   const canUpdate = useMatchPolicy(POLICIES.UPDATE_TODOSTATUSCONFIG);
-  console.log(canDelelte, canUpdate);
   useResetAction()
   const handleDelete = (_id: keyof DataType) => {
     deleteStatusConfig(_id);
