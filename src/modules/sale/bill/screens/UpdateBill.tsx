@@ -32,7 +32,8 @@ import BillItemModule from "~/modules/sale/billItem";
 import { STATUS_BILL, STATUS_BILL_VI } from "../constants";
 import useUpdateBillStore from "../storeContext/UpdateBillContext";
 import PolicyModule from "policy";
-import { useChangeDocumentTitle } from "~/utils/hook";
+import PharmacyModule from "~/modules/pharmacy";
+import { useChangeDocumentTitle, useFetchState } from "~/utils/hook";
 type propsType = {};
 const Layout = ({ label, children }: { label: any; children: any }) => (
   <Row justify={"space-between"} align="middle">
@@ -68,6 +69,10 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
   const canUpdateBill = PolicyModule.hook.useMatchPolicy(
     PolicyModule.POLICIES.UPDATE_BILL
   );
+  
+  // const queryGetDebtPharmacy = useMemo(() => ({pharmacyId : get(bill,'pharmacyId')}),[bill]);
+  // const [debt,isLoadingDebt] = useFetchState({api : PharmacyModule.api.getDebt,query : queryGetDebtPharmacy});
+  
   const [openCancel, setOpenCancel] = useState(false);
   const [cancelNote, setCancelNote] = useState("");
   const onOpenCancel = useCallback(() => setOpenCancel(true), []);
@@ -188,7 +193,7 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
                   </Space>
                 </Col>
                 <Col>
-                  <Typography.Text strong>Công nợ hiện tại : 0</Typography.Text>
+                  {/* <Typography.Text strong>Công nợ hiện tại : 0</Typography.Text> */}
                 </Col>
               </Row>
               <Divider />

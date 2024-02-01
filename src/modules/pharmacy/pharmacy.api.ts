@@ -8,5 +8,6 @@ const pharmacy = {
     create: (data?: any) => requester.post(`api/v1/pharma-profile`, data),
     update: (data?: any) => requester.put(`api/v1/pharma-profile/${get(data,'_id')}`, data),
     delete: (id?: any) => requester.delete(`api/v1/pharma-profile/${id}`),
+    getDebt:(query:{pharmacyId : string}) => requester.get(`api/v1/pharma-profile-debt`,query)
 }
 export default pharmacy;

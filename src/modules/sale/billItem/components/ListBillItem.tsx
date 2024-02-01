@@ -280,6 +280,7 @@ export default function ListBillItem({
           <ExpandRowBillItem
             status={get(record, "status")}
             historyStatus={get(record, "historyStatus")}
+            cumulativeDiscount={get(record,'cumulativeDiscount',[])}
           />
         ),
         expandedRowKeys : [itemActive],
