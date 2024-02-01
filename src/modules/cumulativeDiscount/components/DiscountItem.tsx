@@ -521,7 +521,8 @@ export default function DiscountItem({
                                 style={{ marginBottom: 0 }}
                                 {...restField}
                                 colon={false}
-                                label={"Từ"}
+                                {...typeDiscount === TYPE_DISCOUNT.LK && {label : 'Từ'}}
+                                {...typeDiscount === TYPE_DISCOUNT["DISCOUNT.SOFT.CONDITION"] && {label : 'Mỗi'}}
                                 name={[name, "condition", "gte"]}
                                 rules={[
                                   {
@@ -533,12 +534,12 @@ export default function DiscountItem({
                                 {RenderLoading(
                                   loading,
                                   <InputNumberAnt
-                                    min={1}
+                                    min={typeDiscount === TYPE_DISCOUNT.LK ? 0 : 1}
                                     {...(!form.getFieldValue([
                                       "cumulativeDiscount",
                                       name,
                                       "applyVariantId",
-                                    ]) && { addonAfter: <div>VNĐ</div> })}
+                                    ]) && { addonAfter: <div>VNĐ</div>,step : 1000,min : 1000 })}
                                   />
                                 )}
                               </Form.Item>
@@ -550,7 +551,8 @@ export default function DiscountItem({
                                     colon={false}
                                     style={{ marginBottom: 0 }}
                                     {...restField}
-                                    label={"Đến"}
+                                    {...typeDiscount === TYPE_DISCOUNT.LK && {label : 'Đến'}}
+                                    {...typeDiscount === TYPE_DISCOUNT["DISCOUNT.SOFT.CONDITION"] && {label : 'Tối đa'}}
                                     name={[name, "condition", "lte"]}
                                     rules={[
                                       ({ getFieldValue }) => ({
@@ -579,7 +581,7 @@ export default function DiscountItem({
                                           "cumulativeDiscount",
                                           name,
                                           "applyVariantId",
-                                        ]) && { addonAfter: <div>VNĐ</div> })}
+                                        ]) && { addonAfter: <div>VNĐ</div> , step : 1000})}
                                       />
                                     )}
                                   </Form.Item>

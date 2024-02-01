@@ -590,7 +590,7 @@ export const pickLK = (submitData: any) =>
     "itemReward",
   ]);
 export const pickSoftCondition = (submitData: any) =>
-  pick(submitData, [...rootField, "condition", "applyTimeSheet", "itemReward"]);
+  pick(submitData, [...rootField, "condition", "applyTimeSheet", "itemReward","applyVariantId"]);
 
 export const onDiscountChange = (
   newCumulativeDiscount: cumulativeDiscountType[]
