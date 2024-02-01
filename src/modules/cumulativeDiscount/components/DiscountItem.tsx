@@ -228,7 +228,7 @@ export default function DiscountItem({
       {!editing ? (
         <DiscountView
           data={form.getFieldValue(["cumulativeDiscount", name])}
-          units={units}
+          variants={variants}
           name={name}
           isSameTarget={isSameTarget}
         />
@@ -539,7 +539,7 @@ export default function DiscountItem({
                                       "cumulativeDiscount",
                                       name,
                                       "applyVariantId",
-                                    ]) && { addonAfter: <div>VNĐ</div>,step : 1000,min : 1000 })}
+                                    ]) && { addonAfter: <div>VNĐ</div>,step : 1000,min : 500 })}
                                   />
                                 )}
                               </Form.Item>
