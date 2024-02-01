@@ -340,3 +340,5 @@ export const TASK_ITEM_TYPE_REQUEST = {
   add: 'add',
   remove: 'remove',
 };
+
+export const INFINITY = 999999999999; // 12
