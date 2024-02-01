@@ -123,8 +123,8 @@ const StatusConfig: React.FC = () => {
   const [, updateStatusConfig] = useUpdateStatusConfig();
   const [query] = useStatusConfigQueryParams();
   const [listStatusConfig, isLoading] = useGetListStatusConfig(query);
-  const canDelelte = useMatchPolicy(POLICIES.DELETE_TODOSTATUSCONFIG);
-  const canUpdate = useMatchPolicy(POLICIES.UPDATE_TODOSTATUSCONFIG);
+  const canDelelte = useMatchPolicy(POLICIES.DELETE_TODOCONFIGSTATUS);
+  const canUpdate = useMatchPolicy(POLICIES.UPDATE_TODOCONFIGSTATUS);
   useResetAction()
   const handleDelete = (_id: keyof DataType) => {
     deleteStatusConfig(_id);
@@ -189,6 +189,7 @@ const StatusConfig: React.FC = () => {
       align: "center",
       render: (value, record) => (
         <Checkbox
+        disabled={!canUpdate}
           checked={value}
           onChange={(e) => {
             if (value) return;
@@ -209,12 +210,12 @@ const StatusConfig: React.FC = () => {
       align: "center",
       width: 80,
       render: (value, record) => {
-        const disable = Boolean(record.priority) && Boolean(record.isDefault)
+        const disable = Boolean(record.priority) && Boolean(record.isDefault);
         const title = disable ? 'Không thể thực hiện thao tác vì trạng thái hiện tại đang được ưu tiên' : '';
         return (
           <Tooltip title={title} >
             <Checkbox
-              disabled={disable}
+              disabled={!canUpdate || disable}
               checked={value}
               onChange={(e) => {
                 updateStatusConfig({
@@ -234,7 +235,7 @@ const StatusConfig: React.FC = () => {
       align: "center",
       width: 80,
       render: (value, record) => (
-        <Checkbox checked={value} onChange={(e) => {
+        <Checkbox disabled={!canUpdate} checked={value} onChange={(e) => {
           if (!canUpdate) return
           updateStatusConfig({ justAdmin: e.target.checked, id: record._id })
         }} />
@@ -255,20 +256,22 @@ const StatusConfig: React.FC = () => {
         </Tooltip>
       )
     },
-    // canDelete?
-    {
-      title: "Hành động",
-      dataIndex: "operation",
-      key: "operation",
-      align: "center",
-      width: 80,
-      render: (_, record) =>
-        listStatusConfig?.length >= 1 ? (
-          <Tooltip title={!canDelelte ? 'Bạn không được cấp quyền thực hiện thao tác này' : ''}>
-            <Button onClick={() => handleDelete(record._id)} disabled={!canDelelte} type="dashed" style={{ color: 'red' }} size="small">Xoá</Button>
-          </Tooltip>
-        ) : null,
-    },
+    ...( canDelelte ? [
+        {
+          title: "Hành động",
+          dataIndex: "operation",
+          key: "operation",
+          align: "center" as any,
+          width: 80,
+          render: (_: any , record : any) =>
+            listStatusConfig?.length >= 1 ? (
+              <Tooltip title={!canDelelte ? 'Bạn không được cấp quyền thực hiện thao tác này' : ''}>
+                <Button onClick={() => handleDelete(record._id)} disabled={!canDelelte} type="dashed" style={{ color: 'red' }} size="small">Xoá</Button>
+              </Tooltip>
+            ) : null,
+        },
+      ]: []
+    ),
   ];
 
   const handleAdd = () => {
@@ -302,11 +305,11 @@ const StatusConfig: React.FC = () => {
       }),
     };
   });
-
+console.log(POLICIES,'111')
   return (
     <div>
       <Breadcrumb title={t('Cấu hình trạng thái')} />
-      <WithPermission permission={POLICIES.WRITE_TODOSTATUSCONFIG}>
+      <WithPermission permission={POLICIES.WRITE_TODOCONFIGSTATUS}>
         <Button onClick={handleAdd} type="primary" style={{ marginBottom: 16 }}>
           Thêm cấu hình trạng thái
         </Button>

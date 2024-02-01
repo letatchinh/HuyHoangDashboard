@@ -118,40 +118,52 @@ export const resource: ItemType[] = [
   },
 
   // Chi nhánh
-  {
-    label: "Chi nhánh",
-    key: "branch",
-    permission: [POLICIES.READ_BRANCH],
-    children: [
+    {
+      label : "Chi nhánh",
+      key: "branch",
+      permission :[POLICIES.READ_BRANCH],
+      children : [
+        {
+          label : "Danh sách chi nhánh",
+          path : PATH_APP.branch.root,
+          key : PATH_APP.branch.root,
+        }
+      ],
+      icon :<AppstoreFilled />
+    },
+    {
+      label: "Quản lý công việc",
+      key: "todoList",
+      icon: <AppstoreFilled />,
+      permission :[POLICIES.READ_TODOLIST, POLICIES.READ_TODOCONFIGSTATUS],
+      children: [
+        {
+          label: "Quản lý công việc",
+          // key: "statusConfig",
+          icon: <ApartmentOutlined />,
+          path: PATH_APP.todoList.workBoard,
+          key: PATH_APP.todoList.workBoard,
+          // permission :[POLICIES.READ_TODOLIST],
+          
+        },
+        {
+          label: "Cấu hình trạng thái",
+          // key: "statusConfig",
+          icon: <AppstoreFilled />,
+          path: PATH_APP.todoList.statusConfig,
+          key: PATH_APP.todoList.statusConfig,
+          // permission :[POLICIES.READ_TODOCONFIGSTATUS],
+          
+        },
+      ],
+      
+    },
+      //Nhân viên
       {
         label: "Danh sách chi nhánh",
         path: PATH_APP.branch.root,
         key: PATH_APP.branch.root,
       },
-    ],
-    icon: <AppstoreFilled />,
-  },
-  {
-    label: "Quản lý công việc",
-    key: "todoList",
-    icon: <AppstoreFilled />,
-    children: [
-      {
-        label: "Quản lý công việc",
-        // key: "statusConfig",
-        icon: <ApartmentOutlined />,
-        path: PATH_APP.todoList.workBoard,
-        key: PATH_APP.todoList.workBoard,
-      },
-      {
-        label: "Cấu hình trạng thái",
-        // key: "statusConfig",
-        icon: <AppstoreFilled />,
-        path: PATH_APP.todoList.statusConfig,
-        key: PATH_APP.todoList.statusConfig,
-      },
-    ],
-  },
   //Nhân viên
   {
     label: "Nhân viên",

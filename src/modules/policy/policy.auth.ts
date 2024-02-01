@@ -29,7 +29,7 @@ const debt = 'debt';
 
 // Sản phẩm Nhà cung cấp
 const product = 'product';
-const todoStatusConfig = 'todoConfigStatus';
+const todoConfigStatus = 'todoConfigStatus';
 const todoList = 'todoList';
 const voucher = 'voucher';
 const statusVoucher = 'statusVoucher';
@@ -73,7 +73,7 @@ const RESOURCES = [
   quotation,
   // Bot Notification
   notificationBotManager,
-  todoStatusConfig,
+  todoConfigStatus,
   todoList,
 ];
 
@@ -160,13 +160,9 @@ const RESOURCE = (): ResourceType => {
   ];
   
   const GROUP_WORK_MANAGERMENT: string[] = [
-   
-    todoList
+    todoList,
+    todoConfigStatus,
   ];
-  const GROUP_TODOSTATUSCONFIG: string []=[
-     todoStatusConfig,
-  ];
-
   return {
     GROUP_USER,
     GROUP_EMPLOYEE,
@@ -182,7 +178,6 @@ const RESOURCE = (): ResourceType => {
     GROUP_SUPPLIER,
     GROUP_WORK_MANAGERMENT,
     GROUP_VOUCHER,
-    GROUP_TODOSTATUSCONFIG,
   };
 };
 

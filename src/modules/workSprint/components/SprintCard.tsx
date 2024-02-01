@@ -154,7 +154,7 @@ const Detail: React.FC<DetailProps> = ({
   const [focusName, setFocusName] = useState<boolean>(false);
   return (
     <div className="sprint-card-container detail" style={{ ...style }}>
-      <WithPermission permission={POLICIES.DELETE_WORKMANAGEMENT} >
+      <WithPermission permission={POLICIES.DELETE_TODOLIST} >
         <div className='sprint-card-close'>
           <CloseCircleFilled onClick={(e) => {
             e.preventDefault();
@@ -177,7 +177,7 @@ const Detail: React.FC<DetailProps> = ({
             >
               <Typography.Title accessKey='true' className='sprint-card-title_link'>{name_}</Typography.Title>
             </Tooltip>
-            {/* {userIsAdminforBoard && ( */}
+            {userIsAdminforBoard && (
               <FormOutlined
                 onClick={() => {
                   setVis(true);
@@ -186,7 +186,7 @@ const Detail: React.FC<DetailProps> = ({
                 color='blue'
                 className='sprint-card-title_editor'
               />
-            {/* )} */}
+            )}
           </>
         ) : (
           <Input

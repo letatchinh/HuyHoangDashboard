@@ -18,10 +18,10 @@ import { useMatchOrPolicy } from '~/modules/policy/policy.hook';
 interface WorkFlowProps { }
 
 const WorkBoard: React.FC<WorkFlowProps> = () => {
-  // const canCreate = useMatchOrPolicy([POLICIES.WRITE_WORKMANAGEMENT]);
-  const canUpdateAndDelete = useMatchOrPolicy([POLICIES.UPDATE_WORKMANAGEMENT, POLICIES.DELETE_WORKMANAGEMENT]);
-  const canUpdate = useMatchOrPolicy([POLICIES.UPDATE_WORKMANAGEMENT]);
-  const canDELETE = useMatchOrPolicy([POLICIES.DELETE_WORKMANAGEMENT]);
+  // const canCreate = useMatchOrPolicy([POLICIES.WRITE_TODOLIST]);
+  const canUpdateAndDelete = useMatchOrPolicy([POLICIES.UPDATE_TODOLIST, POLICIES.DELETE_TODOLIST]);
+  const canUpdate = useMatchOrPolicy([POLICIES.UPDATE_TODOLIST]);
+  const canDELETE = useMatchOrPolicy([POLICIES.DELETE_TODOLIST]);
   const [form] = Form.useForm();
   const { select, setSelect, onClick } = useExpandrowTableClick();
   const [isOpenForm, setOpen] = useState(false);
@@ -105,32 +105,35 @@ const WorkBoard: React.FC<WorkFlowProps> = () => {
         </Space>
       ),
     },
-    {
-      title: 'Hành động',
-      key: 'action',
-      align: 'center',
-      width: '180px',
-      render: (_, record) => (
-        <Space size="small">
-          <WithPermission permission={canUpdate}>
-            <Button type="primary" onClick={() => {
-              // if (!canUpdate) return message.warning('Bạn không có quyền thay đổi')
-              handleOpenUpdate(record?._id)
-            }}>
-              Chinh sửa
-            </Button>
-          </WithPermission>
-          <WithPermission permission={canDELETE}>
-            <Button style={{ color: 'red' }} onClick={() => {
-              // if (!canDELETE) return message.warning('Bạn không có quyền xoá')
-              handleDelete(record._id)
-            }}>
-              Xóa
-            </Button>
-          </WithPermission>
-        </Space>
-      ),
-    }
+    ...( canUpdateAndDelete ? [
+      {
+        title: 'Hành động',
+        key: 'action',
+        align: 'center' as any,
+        width: '180px',
+        render: (_:any, record:any) => (
+          <Space size="small">
+            <WithPermission permission={POLICIES.UPDATE_TODOLIST}>
+              <Button type="primary" onClick={() => {
+                // if (!canUpdate) return message.warning('Bạn không có quyền thay đổi')
+                handleOpenUpdate(record?._id)
+              }}>
+                Chinh sửa
+              </Button>
+            </WithPermission>
+            <WithPermission permission={POLICIES.DELETE_TODOLIST}>
+              <Button style={{ color: 'red' }} onClick={() => {
+                // if (!canDELETE) return message.warning('Bạn không có quyền xoá')
+                handleDelete(record._id)
+              }}>
+                Xóa
+              </Button>
+            </WithPermission>
+          </Space>
+        ),
+      }
+    ]: []
+  ),
   ];
   const onSearch = (value: string) => {
     onParamChange({ ['keyword']: value });
@@ -156,7 +159,7 @@ const WorkBoard: React.FC<WorkFlowProps> = () => {
             />
           </Col>
           <Col>
-            <WithPermission permission={POLICIES.WRITE_WORKMANAGEMENT}>
+            <WithPermission permission={POLICIES.WRITE_TODOLIST}>
               <Button onClick={() => handleOpenFormCreate()} type="primary">
                 Thêm mới
               </Button>
