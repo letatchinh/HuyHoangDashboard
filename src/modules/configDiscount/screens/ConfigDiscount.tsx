@@ -23,9 +23,7 @@ import {
 import { ConfigItem } from "../configDiscount.modal";
 import Breadcrumb from "~/components/common/Breadcrumb";
 import WhiteBox from "~/components/common/WhiteBox";
-import toastr from "toastr";
 import { useDispatch } from "react-redux";
-import { useResetState } from "~/utils/hook";
 import { configDiscountSliceAction } from "../redux/reducer";
 import POLICIES from "~/modules/policy/policy.auth";
 import { useMatchPolicy } from "~/modules/policy/policy.hook";
@@ -151,17 +149,17 @@ const ConfigDiscount: React.FC = () => {
     }
     if (active.id !== over?.id) {
       try {
-        updateConfig(dataSource);
+        let data;
         setDataSource((previous) => {
           const activeIndex = previous.findIndex(
             (i: any) => i.key === active.id
           );
           const overIndex = previous.findIndex((i: any) => i.key === over?.id);
-          return arrayMove(previous, activeIndex, overIndex);
+          return data = arrayMove(previous, activeIndex, overIndex);
         });
+        updateConfig({config:data});
       } catch (error: any) {
-        console.log(error);
-        // toastr.error(error.message || "Có lỗi xảy ra" );
+        onNotify?.error(error.message || "Có lỗi xảy ra" );
       }
     }
   };
