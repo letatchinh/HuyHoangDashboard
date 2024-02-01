@@ -143,7 +143,7 @@ export const resource: ItemType[] = [
           icon: <ApartmentOutlined />,
           path: PATH_APP.todoList.workBoard,
           key: PATH_APP.todoList.workBoard,
-          // permission :[POLICIES.READ_TODOLIST],
+          permission :[POLICIES.READ_TODOLIST],
           
         },
         {
@@ -152,7 +152,7 @@ export const resource: ItemType[] = [
           icon: <AppstoreFilled />,
           path: PATH_APP.todoList.statusConfig,
           key: PATH_APP.todoList.statusConfig,
-          // permission :[POLICIES.READ_TODOCONFIGSTATUS],
+          permission :[POLICIES.READ_TODOCONFIGSTATUS],
           
         },
       ],
