@@ -437,7 +437,7 @@ export default function DiscountItem({
                                     },
                                   ]}
                                 >
-                                  <InputNumberAnt />
+                                  <InputNumberAnt min={1}/>
                                 </Form.Item>
                               </Col>
                             </Row>
@@ -454,8 +454,20 @@ export default function DiscountItem({
                           labelCol={{ span: 11 }}
                           hidden
                         />
+                        <span>Số lần nhận thưởng:  </span>
                           <Form.Item shouldUpdate noStyle>
-                            {() => <Segmented
+                            {() => 
+                            <ConfigProvider
+                            theme={{
+                              components: {
+                                Segmented: {
+                                  itemSelectedBg: "#3481FF",
+                                  itemSelectedColor: "white",
+                                },
+                              },
+                            }}
+                          >
+                            <Segmented
                             onChange={(value) => changeForm(name,{
                               timesReward : value
                             })}
@@ -470,7 +482,9 @@ export default function DiscountItem({
                                 value: INFINITY,
                               },
                             ]}
-                          />}
+                          />
+                          </ConfigProvider>
+                            }
                           </Form.Item>
                         {/* </Form.Item> */}
                       </Col>
@@ -493,7 +507,9 @@ export default function DiscountItem({
                       ) && (
                         <BaseBorderBox title={"Điều kiện"}>
                           <Divider orientation="left">
-                            <h6>Giá trị tích luỹ</h6>
+                            {typeDiscount === TYPE_DISCOUNT.LK && <h6>Giá trị tích luỹ</h6>}
+                            {typeDiscount === TYPE_DISCOUNT['DISCOUNT.SOFT.CONDITION'] && <h6>Số lượng mua</h6>}
+                            
                           </Divider>
                           <Row
                             style={{ marginBottom: 5 }}
@@ -517,7 +533,7 @@ export default function DiscountItem({
                                 {RenderLoading(
                                   loading,
                                   <InputNumberAnt
-                                    min={0}
+                                    min={1}
                                     {...(!form.getFieldValue([
                                       "cumulativeDiscount",
                                       name,

@@ -601,7 +601,7 @@ export const onDiscountChange = (
       const condition = get(item, "condition");
       const typeReward = get(item, "typeReward");
       const value = get(item, "value");
-      if (typeDiscount === TYPE_DISCOUNT.LK) {
+      if ([TYPE_DISCOUNT.LK,TYPE_DISCOUNT['DISCOUNT.SOFT.CONDITION']].includes(typeDiscount)) {
         return {
           ...item,
           condition: { ...condition, isRanger: !!get(condition, "lte") },
@@ -610,7 +610,7 @@ export const onDiscountChange = (
       } else {
         return {
           ...item,
-          // typeReward: TYPE_REWARD.VALUE,
+          typeReward: TYPE_REWARD.VALUE,
         };
       }
     }

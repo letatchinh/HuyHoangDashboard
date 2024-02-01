@@ -1,7 +1,6 @@
 import { AutoComplete, Button, Empty, Form, Space } from "antd";
 import React, { useMemo, useRef, useState } from "react";
 import TableAnt from "~/components/Antd/TableAnt";
-import { useFetchState } from "~/utils/hook";
 import ProductModule from "~/modules/product";
 import useNotificationStore from "~/store/NotificationContext";
 import { debounce, get } from "lodash";
@@ -108,7 +107,9 @@ export default function ItemRewardName({
                         {variants?.map((item: any) => (
                           <Button
                           size="small"
-                            onClick={() =>
+                            onClick={(e) =>
+                            {
+                              e.preventDefault();
                               onSelect(
                                 `${get(record, "name", "")} - ${get(
                                   item,
@@ -116,6 +117,7 @@ export default function ItemRewardName({
                                   ""
                                 )}`
                               )
+                            }
                             }
                             type="primary"
                           >
@@ -127,6 +129,19 @@ export default function ItemRewardName({
                   },
                 },
               ]}
+              onRow={(data) => ({
+                onClick : () => {
+                  console.log(data,'data');
+                  const variant = ProductModule.service.getVariants(get(data,'selectVariant',''),get(data,'variants',[]))
+                  onSelect(
+                    `${get(data, "name", "")} - ${get(
+                      variant,
+                      "unit.name",
+                      ""
+                    )}`
+                  )
+                }
+              })}
             />
           );
         }}
