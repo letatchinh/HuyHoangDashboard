@@ -3,6 +3,7 @@ import { Col, Row, Tag, Typography } from "antd";
 import { get } from "lodash";
 import React from "react";
 import cumulativeDiscountModule from '~/modules/cumulativeDiscount';
+import { TYPE_REWARD } from "~/modules/cumulativeDiscount/constants";
 import { formatter } from "~/utils/helpers";
 import { typeCumulativeDiscount } from "../bill.modal";
 type propsType = {
@@ -33,8 +34,9 @@ export default function ExpandRowDiscount({
               {/* <Typography.Text strong>{formatter(get(item, 'value')) + " " +CLONE_TYPE_VALUE_VI[get(item,'valueType')]}</Typography.Text> */}
               </Col>
               <Col flex={1}>
-                
-                <Typography.Text strong type="warning">- {formatter(get(item, 'discountAmount'))} {get(item,'valueType') === TYPE_VALUE.PERCENT ? `(${get(item, 'value')}%)` : ""}</Typography.Text>
+                {[TYPE_REWARD.VALUE,TYPE_REWARD.BONUS].includes(get(item,'typeReward')) &&   <Typography.Text>- {formatter(get(item, 'discountAmount'))} {get(item,'valueType') === TYPE_VALUE.PERCENT ? `(${get(item, 'value')}%)` : ""}</Typography.Text>}
+                {[TYPE_REWARD.PRODUCT].includes(get(item,'typeReward')) &&   <Typography.Text >Tặng thêm: {formatter(get(item, 'itemReward.quantityClampReward'))} {get(item,'itemReward.name')}</Typography.Text>}
+              
               </Col>
             </Row>
           ))}

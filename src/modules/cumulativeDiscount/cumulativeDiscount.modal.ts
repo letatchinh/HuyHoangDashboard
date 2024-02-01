@@ -12,15 +12,19 @@ export type conditionType = {
     target : string,
     targetId : string,
     name : string,
-    typeDiscount : string,
+    typeDiscount : "LK" | "DISCOUNT.CORE" | "DISCOUNT.SOFT" | "DISCOUNT.SOFT.CONDITION",
     value : number,
     valueType : string,
-    typeReward : string,
+    typeReward : "VALUE" | "PRODUCT" | "BONUS",
     condition : conditionType | null,
-    applyUnit : string | null,
+    applyVariantId : string | null,
     applyTimeSheet : applyTimeSheetType | null
-    status:"ACTIVE" | "INACTIVE"
-  
+    status:"ACTIVE" | "INACTIVE",
+    timesReward : number,
+    itemReward? : {
+      name : string,
+      quantity : number,
+    }
   }
   export type TypePropsDiscountList = {
     loading? : any,

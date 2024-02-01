@@ -371,7 +371,7 @@ export default function DiscountItem({
                                   style={{ marginBottom: 0 }}
                                   {...restField}
                                   label={"Đơn vị"}
-                                  name={[name, "applyUnit"]}
+                                  name={[name, "applyVariantId"]}
                                 >
                                   {RenderLoading(
                                     loading,

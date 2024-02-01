@@ -8,18 +8,16 @@ type propsType = {
 }
 export default function SelectDebt(props:propsType) : React.JSX.Element {
     const {debt} = useCreateBillStore();
-
     const options = useMemo(() => debt?.map((d:DebtType) => ({
         label : get(d,'name'),
         value : get(d,'key'),
     })),[debt])
     return (
         <Form.Item<FormFieldCreateBill>
-        colon={false}
         name={"debtType"}
         label="Hình thức công nợ"
         >
-            <Select options={options} disabled/>
+            <Select options={options} variant='borderless' />
         </Form.Item>
     )
 }

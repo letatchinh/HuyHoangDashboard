@@ -1,5 +1,5 @@
-import { SearchOutlined, StopOutlined } from '@ant-design/icons';
-import { AutoComplete, Empty, Tag, Typography } from 'antd';
+import { GiftFilled, GiftTwoTone, SearchOutlined, StopOutlined } from '@ant-design/icons';
+import { AutoComplete, Badge, Empty, Tag, Typography } from 'antd';
 import { debounce, get } from 'lodash';
 import React, { useEffect, useRef, useState } from 'react';
 import { v4 } from 'uuid';
@@ -85,7 +85,7 @@ export default function SelectProduct({dataCurrent,onChangeBill}:propsType) : Re
               scroll={{ y: 450 }}
               className="table-searchProduct"
               rowClassName={(record) => {
-                const isDisabled = get(dataCurrent,'quotationItems',[])?.some((quotation : any) => get(quotation, "variantId") === get(record, "selectVariant"));
+                const isDisabled = get(dataCurrent,'quotationItems',[])?.some((quotation : any) => get(quotation, "productId") === get(record, "_id"));
                 return isDisabled ? "disabled-row" : ""}}
               size="small"
               loading={loading}
@@ -98,7 +98,7 @@ export default function SelectProduct({dataCurrent,onChangeBill}:propsType) : Re
                   dataIndex: 'name',
                   key: 'name',
                   render(name, record, index) {
-                    const isDisabled = get(dataCurrent,'quotationItems',[])?.some((quotation : any) => get(quotation, "variantId") === get(record, "selectVariant"));
+                    const isDisabled = get(dataCurrent,'quotationItems',[])?.some((quotation : any) => get(quotation, "productId") === get(record, "_id"));
                     return <span>
                       <Typography.Text strong>{get(record,'codeBySupplier','')}</Typography.Text>
                       <span> - {name}</span>
@@ -121,7 +121,12 @@ export default function SelectProduct({dataCurrent,onChangeBill}:propsType) : Re
                   key: 'variant',
                   align: 'center',
                   render(variant, record, index) {
-                    return <Typography.Text strong>{formatter(get(variant,'price',0))}</Typography.Text>
+                    return <Typography.Text strong>{formatter(get(variant,'price',0))} 
+                    &nbsp;
+                    {get(record,'cumulativeDiscount.length',0) ? <Badge size='small' count={get(record,'cumulativeDiscount.length',0)}>
+                      <GiftTwoTone />
+                      </Badge> : null}
+                      </Typography.Text>
                   },
                 },
               ]}

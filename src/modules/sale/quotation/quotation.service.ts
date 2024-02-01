@@ -24,7 +24,7 @@ export const convertDataQuotation = ({data,quotationItems,totalPriceAfterDiscoun
         ]),
       }));
       // Todo : Verify Data When Send to sever (Not implemented)
-
+      
       const submitData : PayloadCreateBill = {
           ...data,
           quotationItems : quotationItemsSubmit,
