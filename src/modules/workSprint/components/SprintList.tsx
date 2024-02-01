@@ -106,7 +106,7 @@ const SprintList: React.FC = memo(() => {
             </Col>
           );
         })}
-        <WithOrPermission permission={[POLICIES.ADMIN_WORKMANAGEMENT, POLICIES.WRITE_WORKMANAGEMENT]}>
+        <WithOrPermission permission={[POLICIES.ADMIN_TODOLIST, POLICIES.WRITE_TODOLIST]}>
           <Col {...layoutCol} key={'create'}>
             <Button
               htmlType="button"

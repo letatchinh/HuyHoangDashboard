@@ -9,7 +9,7 @@ const user = 'user';
 const userGroup = 'userGroup';
 const pharmacy = 'pharmacy';
 const bill = 'bill';
-const todoStatusConfig = 'todoConfigStatus';
+const todoConfigStatus = 'todoConfigStatus';
 const todoList = 'todoList';
 
 const RESOURCES = [
@@ -20,7 +20,7 @@ const RESOURCES = [
   userGroup,
   // pharmacy,
   bill,
-  todoStatusConfig,
+  todoConfigStatus,
   todoList,
 ];
 
@@ -68,20 +68,15 @@ const RESOURCE = (): ResourceType => {
     employee
   ];
   const GROUP_WORK_MANAGERMENT: string[] = [
-   
-    todoList
+    todoList,
+    todoConfigStatus,
   ];
-  const GROUP_TODOSTATUSCONFIG: string []=[
-     todoStatusConfig,
-  ];
-
   return {
     GROUP_USER,
     GROUP_WHBILL,
     GROUP_EMPLOYEE,
     GROUP_WHSETTING,
     GROUP_WORK_MANAGERMENT,
-    GROUP_TODOSTATUSCONFIG,
   };
 };
 

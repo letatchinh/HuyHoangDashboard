@@ -118,6 +118,7 @@ export const resource: ItemType[] = [
       label: "Quản lý công việc",
       key: "todoList",
       icon: <AppstoreFilled />,
+      permission :[POLICIES.READ_TODOLIST, POLICIES.READ_TODOCONFIGSTATUS],
       children: [
         {
           label: "Quản lý công việc",
@@ -125,6 +126,7 @@ export const resource: ItemType[] = [
           icon: <ApartmentOutlined />,
           path: PATH_APP.todoList.workBoard,
           key: PATH_APP.todoList.workBoard,
+          // permission :[POLICIES.READ_TODOLIST],
           
         },
         {
@@ -133,9 +135,11 @@ export const resource: ItemType[] = [
           icon: <AppstoreFilled />,
           path: PATH_APP.todoList.statusConfig,
           key: PATH_APP.todoList.statusConfig,
+          // permission :[POLICIES.READ_TODOCONFIGSTATUS],
           
         },
       ],
+      
     },
       //Nhân viên
       {
