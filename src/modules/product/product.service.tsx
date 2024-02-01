@@ -54,3 +54,9 @@ export const getExchangeValue = (variantId : string | null,variants? : variantTy
   const variant = variants?.find((v:variantType) => get(v,'_id') === variantId);
   return get(variant,'exchangeValue',0)
 }
+
+export const getVariants = (variantId : string | null,variants? : variantType[]) => {
+  
+  const variant = variants?.find((v:variantType) => get(v,'_id') === variantId);
+  return variant;
+}
