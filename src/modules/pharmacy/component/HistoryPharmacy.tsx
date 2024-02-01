@@ -35,7 +35,7 @@ import {
 } from "antd";
 import Search from "antd/es/input/Search";
 import { PlusCircleOutlined } from "@ant-design/icons";
-import PharmacyForm from "./PharmacyForm";
+// import PharmacyForm from "./PharmacyForm";
 import { propsType } from "../pharmacy.modal";
 import WithPermission from "~/components/common/WithPermission";
 import POLICIES from "~/modules/policy/policy.auth";
@@ -45,24 +45,12 @@ import ReceiptVoucherForm from "~/modules/receiptVoucher/components/ReceiptVouch
 import { Link } from "react-router-dom";
 import { PATH_APP } from "~/routes/allPath";
 
-const ColumnActions = ({ _id, deletePharmacy, onOpenForm }: propsType) => {
-  return (
-    <div className="custom-table__actions">
-      <p onClick={() => onOpenForm && onOpenForm(_id)}>Sửa</p>
-      <p>|</p>
-      <Popconfirm
-        title={`Bạn muốn xoá nhà thuốc này?`}
-        onConfirm={() => deletePharmacy && deletePharmacy(_id)}
-        okText="Xoá"
-        cancelText="Huỷ"
-      >
-        <p>Xóa</p>
-      </Popconfirm>{" "}
-    </div>
-  );
-};
+interface UserProps {
+  currentTab: string | undefined;
+}
 
-export default function Pharmacy() {
+
+export default function HistoryPharmacy() {
   const { t }: any = useTranslate();
   const [query] = usePharmacyQueryParams();
   const [keyword, { setKeyword, onParamChange }] =
@@ -105,7 +93,7 @@ export default function Pharmacy() {
   const columns: ColumnsType = useMemo(
     () => [
       {
-        title: "Mã nhà thuốc",
+        title: "Mã đơn hàng",
         // dataIndex: "code",
         key: "code",
         width: 120,
@@ -118,27 +106,6 @@ export default function Pharmacy() {
         },
       },
       {
-        title: "Tên nhà thuốc",
-        dataIndex: "name",
-        key: "name",
-        width: 180,
-      },
-      {
-        title: "Số điện thoại",
-        dataIndex: "phoneNumber",
-        key: "phoneNumber",
-        width: 120,
-      },
-      {
-        title: "Địa chỉ",
-        dataIndex: "address",
-        key: "address",
-        width: 300,
-        render(value, record, index) {
-          return concatAddress(value);
-        },
-      },
-      {
         title: "Ngày tạo",
         dataIndex: "createdAt",
         key: "createdAt",
@@ -148,7 +115,28 @@ export default function Pharmacy() {
         },
       },
       {
-        title: "Tạo phiếu",
+        title: "Giá trị đơn hàng",
+        dataIndex: "name",
+        key: "name",
+        width: 180,
+      },
+      {
+        title: "Phương thức thanh toán",
+        dataIndex: "phoneNumber",
+        key: "phoneNumber",
+        width: 120,
+      },
+      {
+        title: "Đã thanh toán",
+        dataIndex: "address",
+        key: "address",
+        width: 300,
+        render(value, record, index) {
+          return concatAddress(value);
+        },
+      },
+      {
+        title: "Nợ",
         dataIndex: "createReceipt",
         key: "createReceipt",
         width: 120,
@@ -316,19 +304,7 @@ export default function Pharmacy() {
           }}
         />
       </WhiteBox>
-      <ModalAnt
-        width={1100}
-        open={isOpenForm}
-        onCancel={onCloseForm}
-        footer={[]}
-        destroyOnClose
-      >
-        <PharmacyForm
-          onClose={onCloseForm}
-          id={pharmacyId}
-          handleUpdate={updatePharmacy}
-        />
-      </ModalAnt>
+      
       <Modal
         title="Phiếu chi"
         open={open}
