@@ -1,15 +1,14 @@
 import { ExclamationCircleOutlined } from "@ant-design/icons";
 import type { InputRef } from 'antd';
 import { Button, Checkbox, ColorPicker, Form, Input, Table, Tag, Tooltip, message } from 'antd';
-import { Color } from 'antd/es/color-picker';
 import type { FormInstance } from 'antd/es/form';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import Breadcrumb from '~/components/common/Breadcrumb';
+import WithPermission from "~/components/common/WithPermission";
 import useTranslate from '~/lib/translation';
 import POLICIES from '~/modules/policy/policy.auth';
 import { useMatchPolicy } from '~/modules/policy/policy.hook';
 import { useCreateStatusConfig, useDeleteStatusConfig, useGetListStatusConfig, useResetAction, useStatusConfigQueryParams, useUpdateStatusConfig } from '../statusConfig.hook';
-import WithPermission from "~/components/common/WithPermission";
 const EditableContext = React.createContext<FormInstance<any> | null>(null);
 interface Item {
   key: string;
@@ -144,23 +143,22 @@ const StatusConfig: React.FC = () => {
         </Tag>
       )
     },
-    {
+    {  
       title: 'Tên trạng thái',
       dataIndex: 'value',
       width: '30%',
-      editable: true,
+      editable: canUpdate,
     },
     {
       title: 'Màu chữ',
       dataIndex: 'color',
-      // editable: true,
       render: (_, record: any) => {
         return (
           <ColorPicker
             showText
             value={record?.color}
             onChange={(color) => {
-              if (canUpdate) return message.warning('Bạn không có quyền thay đổi');
+              if (!canUpdate) return message.error("Bạn không có quyền thay đổi")
               updateStatusConfig({ ["color"]: color.toHexString(), id: record._id });
             }}
           />
@@ -170,14 +168,13 @@ const StatusConfig: React.FC = () => {
     {
       title: 'Màu nền',
       dataIndex: 'backgroundColor',
-      // editable: true,
       render: (_, record: any) => {
         return (
           <ColorPicker
             showText
             value={record?.backgroundColor}
             onChange={(color) => {
-              if (!canUpdate) return message.warning('Bạn không có quyền thay đổi');
+              if (!canUpdate)  return message.error("Bạn không có quyền thay đổi")
               updateStatusConfig({ ["backgroundColor"]: color.toHexString(), id: record._id });
             }}
           />
