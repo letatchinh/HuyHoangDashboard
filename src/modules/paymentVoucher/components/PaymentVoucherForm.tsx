@@ -260,7 +260,7 @@ export default function PaymentVoucherForm(
     if (!id) {
       if (supplier) {
         form.setFieldsValue({
-          supplier: supplier?.name,
+          name: supplier?.name,
           supplierReceive: supplier?.name,
           provider: supplier?._id,
           code: supplier?.code,
@@ -294,7 +294,7 @@ export default function PaymentVoucherForm(
         (item: any) => item._id === DEFAULT_BRANCH_ID
       );
       const address = concatAddress(findBranchWorldHealth?.address);
-      form.setFieldsValue({supplierAddress: address});
+      form.setFieldsValue({address: address});
     };
   }, [branch]);
 
@@ -308,7 +308,7 @@ export default function PaymentVoucherForm(
       const fullValues = form.getFieldsValue(true);
       const { accountingDate, dateOfIssue } = fullValues;
       const newValue = {
-        ...omit(values, ["code", "supplierAddress", "supplier"]),
+        ...omit(values, ["code", "address", "name"]),
         accountingDate: dayjs(accountingDate).format("YYYY-MM-DD"),
         dateOfIssue: dayjs(dateOfIssue).format("YYYY-MM-DD"),
         refCollection: refCollection ? REF_COLLECTION[refCollection] : null,
@@ -396,7 +396,7 @@ export default function PaymentVoucherForm(
                     <FormItem
                       label={"Tên nhà cung cấp"}
                       labelCol={{ lg: 8 }}
-                      name="supplier"
+                      name="name"
                       // rules={[
                       //   {
                       //     required: true,
@@ -417,7 +417,7 @@ export default function PaymentVoucherForm(
                 </Row>
                 <Row gutter={36}>
                   <Col span={24}>
-                    <FormItem label="Địa chỉ" name={"supplierAddress"}>
+                    <FormItem label="Địa chỉ" name={"address"}>
                       {isLoading ? (
                         <Skeleton.Input active />
                       ) : (
