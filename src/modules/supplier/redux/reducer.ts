@@ -1,33 +1,50 @@
-import { get } from "lodash";
-import { PaginateResult } from "~/lib/@types";
-import { InstanceModuleRedux } from "~/redux/instanceModuleRedux";
-import { initStateSlice } from "~/redux/models";
 import { createSlice } from "@reduxjs/toolkit";
-import { UserResponseOne } from "~/modules/user/user.modal";
+import { get } from "lodash";
+import { InstanceModuleRedux } from "~/redux/instanceModuleRedux";
+import { getPaging } from "~/utils/helpers";
+import { cloneInitState } from "../supplier.modal";
 
-class SupplierClassExtentd extends InstanceModuleRedux {
+class SupplierClassExtend extends InstanceModuleRedux {
   clone;
+  cloneInitState: cloneInitState;
   constructor() {
-    super('supplier');
+    super("supplier");
     this.clone = {
       ...this.initReducer,
-      getListSuccess: (state: initStateSlice<UserResponseOne>, { payload }: { payload?: PaginateResult<UserResponseOne> }) => {
-        state.isLoading = false;
-        state.list = get(payload, 'docs', []);
+      // Add More Reducer
+      getProductSupplierRequest: (state: any) => {
+        state.isLoadingGetProductSupplier = true;
+        state.getProductSupplierFailed = null;
       },
-    }
+      getProductSupplierSuccess: (state: any, { payload }: any) => {
+        state.isLoadingGetProductSupplier = false;
+        state.productSupplier = get(payload, "docs", []);
+        state.pagingProductSupplier = getPaging(payload);
+      },
+      getProductSupplierFailed: (state: any, { payload }: any) => {
+        state.isLoadingGetProductSupplier = false;
+        state.getProductSupplierFailed = payload;
+      },
+    };
+    // Add More InitState
+    this.cloneInitState = {
+      ...this.initialState,
+      isLoadingGetProductSupplier: false,
+      getProductSupplierFailed: null,
+      productSupplier: [],
+      pagingProductSupplier: null,
+    };
   }
   createSlice() {
     return createSlice({
       name: this.module,
-      initialState: this.initialState,
-      reducers:  this.clone,
+      initialState: this.cloneInitState,
+      reducers: this.clone,
     });
   }
-  
 }
 
-const newSlice = new SupplierClassExtentd();
+const newSlice = new SupplierClassExtend();
 const data = newSlice.createSlice();
 
 

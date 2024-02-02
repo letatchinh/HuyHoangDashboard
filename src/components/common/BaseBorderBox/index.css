@@ -1,0 +1,27 @@
+.base-border-box {
+  border-radius: 6px;
+  margin-bottom: 5px;
+  margin-top: 5px;
+}
+.base-border-box__divider {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  align-items: unset !important;
+}
+.base-border-box__divider::before {
+  border-left: solid thin rgba(0, 0, 0, 0.06);
+}
+.base-border-box__divider::after {
+  border-right: solid thin rgba(0, 0, 0, 0.06);
+}
+.base-border-box__content {
+  border: solid thin rgba(0, 0, 0, 0.06);
+  border-top: none;
+  padding: 0 24px 0px 24px;
+}
+
+@media only screen and (max-width: 576px) {
+  .base-border-box__content {
+    padding: 5px;
+  }
+}/*# sourceMappingURL=index.css.map */
