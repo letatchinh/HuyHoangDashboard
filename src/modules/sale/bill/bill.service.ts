@@ -203,8 +203,8 @@ export class CalculateDiscountFactory {
           this.getDiscountAmount(discount, price) * (minReward || 1);
         break;
       case "LK":
-        // LK ONLY CLAMP ONE TIMES
-        totalDiscount = this.getDiscountAmount(discount, price);
+        // LK Not Calculate
+        totalDiscount = 0;
         break;
       case "DISCOUNT.SOFT.CONDITION":
         // Must Check Condition

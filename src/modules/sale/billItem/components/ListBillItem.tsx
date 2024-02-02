@@ -251,12 +251,12 @@ export default function ListBillItem({
     },
     {
       title: "Thành tiền",
-      dataIndex: "remainAmount",
-      key: "remainAmount",
+      dataIndex: "totalPrice",
+      key: "totalPrice",
       align: "center",
-      render(remainAmount, record, index) {
+      render(totalPrice, record, index) {
         return (
-          <Typography.Text strong>{formatter(remainAmount)}</Typography.Text>
+          <Typography.Text strong>{formatter(totalPrice)}</Typography.Text>
         );
       },
     },
