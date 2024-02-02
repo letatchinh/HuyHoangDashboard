@@ -196,6 +196,12 @@ export const resource: ItemType[] = [
         key: PATH_APP.quotation.root,
         permission:[POLICIES.READ_QUOTATION],
       },
+      {
+        label: "Luỹ kế mặt hàng",
+        path: PATH_APP.bill.lk,
+        key: PATH_APP.bill.lk,
+        permission:[POLICIES.READ_BILL],
+      },
     ],
     icon: <AppstoreFilled />,
   },

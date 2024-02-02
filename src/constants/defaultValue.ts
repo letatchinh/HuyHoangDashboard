@@ -35,3 +35,5 @@ export const OptionStatus : OptionSelect[] = [
 ];
 
 export const MAX_LIMIT = 200;
+
+export const INFINITY = 999999999999; // 12
