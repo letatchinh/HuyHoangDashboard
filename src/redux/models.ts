@@ -52,6 +52,9 @@ export type initStateSlice<T=any> = {
     bill: "bill",
     quotation: "quotation",
     lk: "lk",
+    vouchers: "vouchers",
+    receiptVoucher: "receiptVoucher",
+    paymentVoucher: "paymentVoucher",
     }as const
     
     

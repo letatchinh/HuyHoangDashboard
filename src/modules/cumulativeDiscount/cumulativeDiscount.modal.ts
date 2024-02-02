@@ -25,6 +25,8 @@ export type conditionType = {
       name : string,
       quantity : number,
     }
+    cumulativeTimeSheet : applyTimeSheetType | null,
+  
   }
   export type TypePropsDiscountList = {
     loading? : any,

@@ -1,4 +1,4 @@
-import LkScreen from "./screens/lk";
+import LkScreen from "./screens/Lk";
 import LkApi from "./lk.api";
 import * as LkAuth from "./lk.auth";
 import * as LkHook from "./lk.hook";

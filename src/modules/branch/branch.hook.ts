@@ -35,24 +35,16 @@ const {
 
 export const useBranchPaging = () => useSelector(pagingSelector);
 
-// export const useGetBranchs = (params: any) => {
-//   return useFetchByParam({
-//     action: branchSliceAction.getListRequest,
-//     loadingSelector: loadingSelector,
-//     dataSelector: listSelector,
-//     failedSelector: getListFailedSelector,
-//     param: params,
-//   });
-// };
-
-export const useGetBranches = () => {
-  return useFetch({
+export const useGetBranches = (params: any) => {
+  return useFetchByParam({
     action: branchSliceAction.getListRequest,
     loadingSelector: loadingSelector,
     dataSelector: listSelector,
     failedSelector: getListFailedSelector,
+    param: params,
   });
 };
+
 export const useGetBranch = (id: any) => {
   return useFetchByParam({
     action: branchSliceAction.getByIdRequest,

@@ -12,6 +12,9 @@ export type ResourceType = {
   MEDICINE: string[],
   // Đơn hàng
   GROUP_BILL: string[],
+  GROUP_VOUCHER: string[],
+
+  GROUP_SUPPLIER: string[],
 };
 
 export type policyType = 'write' | 'read' | 'update' | 'delete' | 'download' | 'admin';
@@ -107,6 +110,64 @@ export type PoliciesType = {
   "DELETE_QUOTATION" |
   "DOWNLOAD_QUOTATION" |
   "ADMIN_QUOTATION" |
-  "QUOTATION" 
+  "QUOTATION" |
+  "MEDICINE" |
+  
+  //VOUCHER
+  "READ_VOUCHER" |
+  "WRITE_VOUCHER" |
+  "UPDATE_VOUCHER" |
+  "DELETE_VOUCHER" |
+  "DOWNLOAD_VOUCHER" |
+  "ADMIN_VOUCHER" |
+  "VOUCHER" |
+  
+  //STATUS_VOUCHER
+  "READ_STATUSVOUCHER" |
+  "WRITE_STATUSVOUCHER" |
+  "UPDATE_STATUSVOUCHER" |
+  "DELETE_STATUSVOUCHER" |
+  "DOWNLOAD_STATUSVOUCHER" |
+  "ADMIN_STATUSVOUCHER" |
+  "STATUSVOUCHER" |
+
+  //HISTORY_VOUCHER
+  "READ_HISTORYVOUCHER" |
+  "WRITE_HISTORYVOUCHER" |
+  "UPDATE_HISTORYVOUCHER" |
+  "DELETE_HISTORYVOUCHER" |
+  "DOWNLOAD_HISTORYVOUCHER" |
+  "ADMIN_HISTORYVOUCHER" |
+  "HISTORYVOUCHER"|
+
+
+  //SUPPLIER
+  "READ_SUPPLIER" |
+  "WRITE_SUPPLIER" |
+  "UPDATE_SUPPLIER" |
+  "DELETE_SUPPLIER" |
+  "DOWNLOAD_SUPPLIER" |
+  "ADMIN_SUPPLIER" |
+  "SUPPLIER"|
+
+  //PRODUCT
+  "READ_PRODUCT" |
+  "WRITE_PRODUCT" |
+  "UPDATE_PRODUCT" |
+  "DELETE_PRODUCT" |
+  "DOWNLOAD_PRODUCT" |
+  "ADMIN_PRODUCT" |
+  "PRODUCT" |
+  
+  //DEBT
+  "READ_DEBT" |
+  "WRITE_DEBT" |
+  "UPDATE_DEBT" |
+  "DELETE_DEBT" |
+  "DOWNLOAD_DEBT" |
+  "ADMIN_DEBT" |
+  "DEBT"
+
+  
   ]: [string, policyType];
 };

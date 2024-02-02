@@ -16,6 +16,7 @@ import { clearQuerySearch, getExistProp } from "~/utils/helpers";
 import { useSelector } from "react-redux";
 const MODULE = "productUnit";
 const MODULE_VI = "Đơn vị tính";
+const getSelector = (key: string) => (state: any) => state[MODULE][key];
 const {
     loadingSelector,
     listSelector,
@@ -32,6 +33,9 @@ const {
     updateFailedSelector,
     pagingSelector,
   } = getSelectors(MODULE);
+  const isGetAllLoadingSelector = getSelector('isGetAllLoading');
+  const unitAllSelector = getSelector('unitAll');
+  const getUnitAllFailedSelector = getSelector('getUnitAllFailed');
 
   export const useProductUnitQueryParams = () => {
     const query = useQueryParams();
@@ -135,12 +139,12 @@ const {
     return useResetState(productUnitActions.resetAction);
   };
 
-  export const useGetListProductUnitNoParam = (reFetch? : boolean) => {
+  export const useGetListProductUnitAll = (reFetch? : boolean) => {
     return useFetch({
-      action: productUnitActions.getListRequest,
-      loadingSelector: loadingSelector,
-      dataSelector: listSelector,
-      failedSelector: getListFailedSelector,
+      action: productUnitActions.getUnitAllRequest,
+      loadingSelector: isGetAllLoadingSelector,
+      dataSelector: unitAllSelector,
+      failedSelector: getUnitAllFailedSelector,
       payload : reFetch
     })
 }

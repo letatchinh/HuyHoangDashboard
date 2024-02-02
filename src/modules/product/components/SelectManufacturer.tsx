@@ -5,7 +5,7 @@ import DebounceSelect from "~/components/common/DebounceSelect";
 import RenderLoading from "~/components/common/RenderLoading";
 import { MAX_LIMIT } from "~/constants/defaultValue";
 import ManufacturerModule from "~/modules/manufacturer";
-import { getActive } from "~/utils/helpers";
+import { filterSelectWithLabel, getActive } from "~/utils/helpers";
 import { useFetchState } from "~/utils/hook";
 
 type propsType = {
@@ -18,9 +18,10 @@ export default function SelectManufacturer({
   product,
 }: propsType): React.JSX.Element {
   const [open, setOpen] = useState(false);
+  const [reFetch,setReFetch] = useState(false);
   const onOpen = useCallback(() => setOpen(true), []);
   const onClose = useCallback(() => setOpen(false), []);
-  const [manufacturers,loading] = useFetchState({api : ManufacturerModule.api.getAllPublic,useDocs : false});
+  const [manufacturers,loading] = useFetchState({api : ManufacturerModule.api.getAllPublic,useDocs : false,reFetch});
   const options = useMemo(() => manufacturers?.map((item:any) => ({
     label : get(item,'name'),
     value : get(item,'_id'),
@@ -60,11 +61,20 @@ export default function SelectManufacturer({
       >
       {RenderLoading(
           isLoading,
+          // <DebounceSelect 
+          //   className="right--parent"
+          //   placeholder="Hãng sản xuất"
+          //   fetchOptions={fetchOptionsManufacturer}
+          //   style={{ width: "100%" }}
+          //   initOptions={initManufacturer}
+          // />
           <Select 
             className="right--parent"
-            placeholder="Hãng sản xuất"
+            placeholder="Nhóm thuốc"
             options={options}
             style={{ width: "100%" }}
+            showSearch
+            filterOption={filterSelectWithLabel}
           />
         )}
       </Form.Item>
@@ -73,7 +83,10 @@ export default function SelectManufacturer({
       </Button>
       <Modal destroyOnClose open={open} onCancel={onClose} footer={null}>
         <ManufacturerModule.page.form
-          callBack={onClose}
+          callBack={() => {
+            onClose();
+            setReFetch(!reFetch)
+          }}
           updateManufacturer={() => {}}
         />
       </Modal>

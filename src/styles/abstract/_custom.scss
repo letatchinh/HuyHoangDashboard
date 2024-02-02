@@ -44,3 +44,9 @@
 .ant-table-container th {
     font-weight: 500!important;
 }
+.disabledLink {
+    color: currentColor;
+    opacity: 0.5;
+    text-decoration: none;
+    pointer-events: none;
+  }
