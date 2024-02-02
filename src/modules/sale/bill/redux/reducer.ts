@@ -50,15 +50,18 @@ class BillClassExtend extends InstanceModuleRedux {
         const totalPrice : number = get(billItem, 'totalPrice',1);
         const totalAmount = Math.floor(Number(quantity * price));
         const totalDiscount : number = totalPrice - totalAmount;
+        
         return {
           ...billItem,
           totalAmount,
           totalDiscount,
         }
       });
+      const remainAmount = get(payload,'totalPrice',0) - get(payload,'totalReceiptVoucherCompleted',0);
       state.byId = {
         ...payload,
-        billItems
+        billItems,
+        remainAmount,
       }
       },
     getListProductSuggestRequest: (state:cloneInitState) => {

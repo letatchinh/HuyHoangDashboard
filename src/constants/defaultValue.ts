@@ -1,4 +1,4 @@
-export const BASE_URL = process.env.REACT_APP_BASE_URL ??"http://192.168.77.157:8555";
+export const BASE_URL = process.env.REACT_APP_BASE_URL ??"http://192.168.77.129:7007";
 // export const BASE_URL = "http://192.168.77.157:8555";
 export const DEFAULT_UPLOAD_ACTION = `${BASE_URL}/api/v1/file`;
 export const MAX_UPLOAD_FILE_SIZE_IN_MB = 2;
@@ -51,18 +51,24 @@ export const COMPONENT_MODES = {
 };
 
 export const REF_COLLECTION_UPPER : any= {
-  BILL: 'BILL',
-  BILLITEM: 'BILLITEM',
+  // BILL: 'BILL',
+  // BILLITEM: 'BILLITEM',
   PHARMA_PROFILE: 'PHARMA_PROFILE',
   SUPPLIER: 'SUPPLIER',
 };
 
 export const REF_COLLECTION : any= {
-  BILL: 'bill',
-  BILLITEM: 'billItem',
+  // BILL: 'bill',
+  // BILLITEM: 'billItem',
   PHARMA_PROFILE: 'pharma_profile',
   SUPPLIER: 'supplier',
 };
+
+export const TYPE_METHOD = {
+  LK : "LK",
+  BILL : "BILL",
+  BILLITEM : "BILLITEM",
+}
 
 export const TYPE_VOUCHER = {
   PT: 'PT',
