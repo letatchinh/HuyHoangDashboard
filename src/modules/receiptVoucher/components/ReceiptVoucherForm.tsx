@@ -20,6 +20,7 @@ import "./form.scss";
 import DebounceSelect from "~/components/common/DebounceSelect";
 import {
   COMPONENT_MODES,
+  DEFAULT_BRANCH_ID,
   LANGUAGE,
   REF_COLLECTION,
   TYPE_VOUCHER,
@@ -32,16 +33,18 @@ import HistoryLogs from "~/modules/vouchers/components/HistoryLog";
 import AccountingDetails from "~/modules/vouchers/components/AccountingDetailTable/AccountingDetailTable";
 import { useDispatch } from "react-redux";
 import { useConfirmReceiptVoucher, useCreateReceiptVoucher, useGetReceiptVoucher, useInitWhReceiptVoucher, useResetAction, useUpdateReceiptVoucher } from "../receiptVoucher.hook";
-import { compactAddress } from "~/utils/helpers";
+import { compactAddress, concatAddress } from "~/utils/helpers";
 import dayjs from "dayjs";
 import { omit, unset, get, sumBy } from "lodash";
 import { CheckOutlined, CloseCircleOutlined, ExclamationCircleOutlined, SaveOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import apiEmployee from "~/modules/employee/employee.api";
+import apiStaff from "~/modules/user/user.api";
 import apiReceiptVoucher from "~/modules/receiptVoucher/receiptVoucher.api";
 import { useGetPharmacyId } from "~/modules/pharmacy/pharmacy.hook";
 import WithPermission from "~/components/common/WithPermission";
 import POLICIES from "~/modules/policy/policy.auth";
+import { useGetBranch, useGetBranches } from "~/modules/branch/branch.hook";
 
 const mainRowGutter = 24;
 const FormItem = Form.Item;
@@ -77,7 +80,10 @@ export default function ReceiptVoucherForm(props: propsType): React.JSX.Element 
   const [voucher, isLoading] = useGetReceiptVoucher(id);
   const initReceiptVoucher = useInitWhReceiptVoucher(voucher);
   const memo = useMemo(() => pharmacyId, [pharmacyId]);
-  const [pharmacy] = useGetPharmacyId(memo);
+  const queryBranch = useMemo(() => ({page: 1, limit: 10}), []);
+  const [branch] = useGetBranches(queryBranch);
+  const [pharmacy] = useGetPharmacyId(memo); 
+
   const [settingDocs, setSettingDocs] = useState({
     name: "CÔNG TY TNHH WORLDCARE MIỀN TRUNG",
     address: "559 Lê Văn Hiến, P. Khuê Mỹ, Q. Ngũ Hành Sơn, TP Đà Nẵng",
@@ -110,7 +116,7 @@ export default function ReceiptVoucherForm(props: propsType): React.JSX.Element 
 
   const fetchOptionEmployee = useCallback(
     async (keyword?: any) => {
-      const res = await apiEmployee.getALLAuthenticated({ keyword });
+      const res = await apiStaff.getAllAuthorIsVoucher({ keyword });
       const mapRes = res?.docs?.map((item: any) => ({
         label: item?.fullName,
         value: item?._id,
@@ -239,14 +245,13 @@ export default function ReceiptVoucherForm(props: propsType): React.JSX.Element 
 
   useEffect(() => {
     if (!id) {
-      form.resetFields();
+      // form.resetFields();
       if (pharmacy) {
         form.setFieldsValue({
           pharmacy: pharmacy?.name,
           pharmacyReceive: pharmacy?.name,
           provider: pharmacy?._id,
           code: pharmacy?.code,
-          pharmacyAddress: compactAddress(pharmacy?.address),
         });
       }
     } else {
@@ -267,9 +272,20 @@ export default function ReceiptVoucherForm(props: propsType): React.JSX.Element 
       };
       setInitEmployee([initEmployee]);
     } else {
-      fetchIssueNumber();
+      fetchIssueNumber()
     }
-  }, [id,mergedInitWhPaymentVoucher]);
+  }, [id, mergedInitWhPaymentVoucher]);
+  
+  //Set address default from branch 99999
+  useEffect(() => {
+    if (branch) {
+      const findBranchWorldHealth = branch?.find(
+        (item: any) => item._id === DEFAULT_BRANCH_ID
+      );
+      const address = concatAddress(findBranchWorldHealth?.address);
+      form.setFieldsValue({pharmacyAddress: address});
+    };
+  }, [branch]);
   const onValuesChange = () => {
     console.log("first");
   };
