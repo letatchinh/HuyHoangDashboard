@@ -25,6 +25,7 @@ import BaseBorderBox from "~/components/common/BaseBorderBox";
 import DebounceSelect from "~/components/common/DebounceSelect";
 import {
   COMPONENT_MODES,
+  DEFAULT_BRANCH_ID,
   LANGUAGE,
   REF_COLLECTION,
   TYPE_VOUCHER,
@@ -38,9 +39,10 @@ import HistoryLogs from "../../vouchers/components/HistoryLog";
 import { toJSON } from "../../vouchers/components/parser";
 import "./form.scss";
 import apiEmployee from "~/modules/employee/employee.api";
+import apiStaff from "~/modules/user/user.api";
 import apiPaymentVoucher from "~/modules/paymentVoucher/paymentVoucher.api";
 import { useGetSupplier } from "~/modules/supplier/supplier.hook";
-import { compactAddress } from "~/utils/helpers";
+import { compactAddress, concatAddress } from "~/utils/helpers";
 import dayjs from "dayjs";
 import {
   useConfirmPaymentVoucher,
@@ -56,6 +58,7 @@ import WithPermission from "~/components/common/WithPermission";
 import POLICIES from "~/modules/policy/policy.auth";
 import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
+import { useGetBranches } from "~/modules/branch/branch.hook";
 // import myFile from '../../../assets/templates/PC_Template_V2.docs'
 const mainRowGutter = 24;
 const FormItem = Form.Item;
@@ -92,6 +95,8 @@ export default function PaymentVoucherForm(
   const [voucher, isLoading] = useGetPaymentVoucher(id);
   const initPaymentVoucher = useInitWhPaymentVoucher(voucher);
   const [supplier] = useGetSupplier(supplierId);
+  const queryBranch = useMemo(() => ({page: 1, limit: 10}), []);
+  const [branch] = useGetBranches(queryBranch);
   const [issueNumber, setIssueNumber] = useState(null);
   const [settingDocs, setSettingDocs] = useState({
     name: "CÔNG TY TNHH WORLDCARE MIỀN TRUNG",
@@ -125,7 +130,7 @@ export default function PaymentVoucherForm(
 
   const fetchOptionEmployee = useCallback(
     async (keyword?: any) => {
-      const res = await apiEmployee.getALLAuthenticated({ keyword });
+      const res = await apiStaff.getAllAuthorIsVoucher({ keyword });
       const mapRes = res?.docs?.map((item: any) => ({
         label: item?.fullName,
         value: item?._id,
@@ -259,7 +264,6 @@ export default function PaymentVoucherForm(
           supplierReceive: supplier?.name,
           provider: supplier?._id,
           code: supplier?.code,
-          supplierAddress: compactAddress(supplier?.address),
         });
       }
     } else {
@@ -277,13 +281,22 @@ export default function PaymentVoucherForm(
       setInitEmployee([initEmployee]);
     } else {
         fetchIssueNumber().then((issueNumber) => {
-        console.log(issueNumber,'issueNumber')
         form.setFieldsValue({
           issueNumber
         });
       });
     };
   }, [id, mergedInitWhPaymentVoucher]);
+
+  useEffect(() => {
+    if (branch) {
+      const findBranchWorldHealth = branch?.find(
+        (item: any) => item._id === DEFAULT_BRANCH_ID
+      );
+      const address = concatAddress(findBranchWorldHealth?.address);
+      form.setFieldsValue({supplierAddress: address});
+    };
+  }, [branch]);
 
   const onValuesChange = () => {
     console.log("first");
