@@ -14,10 +14,17 @@ type propsType = {
 //   "DISCOUNT.SOFT" : "Chiết khấu mềm",
 //   LK : "Luỹ kế",
 // }
-const {TYPE_VALUE_VI,TYPE_DISCOUNT_VI,TARGET_VI,TYPE_VALUE} = cumulativeDiscountModule.constants;
+const {TYPE_VALUE_VI,TYPE_DISCOUNT_VI,TARGET_VI,TYPE_VALUE,TYPE_DISCOUNT} = cumulativeDiscountModule.constants;
 const CLONE_TYPE_VALUE_VI : any = TYPE_VALUE_VI;
 const CLONE_TYPE_DISCOUNT_VI: any = TYPE_DISCOUNT_VI;
 const CLONE_TARGET_VI: any = TARGET_VI;
+const color = {
+  [TYPE_DISCOUNT["DISCOUNT.CORE"]] : 'success',
+  [TYPE_DISCOUNT["DISCOUNT.SOFT"]] : 'geekblue',
+  [TYPE_DISCOUNT["DISCOUNT.SOFT.CONDITION"]] : 'purple',
+  [TYPE_DISCOUNT.LK] : 'volcano',
+  '' : 'error'
+}
 export default function ExpandRowDiscount({
   data,
 }: propsType): React.JSX.Element {
@@ -28,7 +35,7 @@ export default function ExpandRowDiscount({
           {data?.map((item: typeCumulativeDiscount) => (
             <Row key={get(item, 'id')}>
               <Col span={12}>
-                <Typography.Text strong> <Tag color='success'>{CLONE_TYPE_DISCOUNT_VI[get(item,'typeDiscount','')]} - {CLONE_TARGET_VI?.[get(item,'target')]}</Tag> {get(item, 'name')}</Typography.Text>
+                <Typography.Text strong> <Tag color={color[get(item,'typeDiscount','')]}>{CLONE_TYPE_DISCOUNT_VI[get(item,'typeDiscount','')]} - {CLONE_TARGET_VI?.[get(item,'target')]}</Tag> {get(item, 'name')}</Typography.Text>
               </Col>
               <Col span={6}>
               {/* <Typography.Text strong>{formatter(get(item, 'value')) + " " +CLONE_TYPE_VALUE_VI[get(item,'valueType')]}</Typography.Text> */}

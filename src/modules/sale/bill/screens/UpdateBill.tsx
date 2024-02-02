@@ -65,6 +65,7 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
     totalPrice,
     createBy,
     note,
+    totalAmount,
   } = bill || {};
   const canUpdateBill = PolicyModule.hook.useMatchPolicy(
     PolicyModule.POLICIES.UPDATE_BILL
@@ -217,11 +218,11 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
               <Layout label={"Nhân viên tạo"}>
                 {get(createBy, "fullName", "")}
               </Layout>
-              <Layout label={"Tổng số tiền"}>{formatter(totalPrice + +(pair || 0))}</Layout>
-              <Layout label={"Đã trả"}>{formatter(pair)}</Layout>
+              <Layout label={"Tổng số tiền"}>{formatter(get(bill,'totalAmount',totalPrice + +(pair || 0)))}</Layout>
+              <Layout label={"Đã trả"}>-{formatter(pair)}</Layout>
               <Layout label={"Tổng số tiền còn lại"}>
                 <Typography.Text strong>
-                  {formatter(totalPrice - pair)}
+                  {formatter(totalPrice)}
                 </Typography.Text>
               </Layout>
               <Divider/> 
