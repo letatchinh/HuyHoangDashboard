@@ -248,7 +248,7 @@ export default function ReceiptVoucherForm(props: propsType): React.JSX.Element 
       // form.resetFields();
       if (pharmacy) {
         form.setFieldsValue({
-          pharmacy: pharmacy?.name,
+          name: pharmacy?.name,
           pharmacyReceive: pharmacy?.name,
           provider: pharmacy?._id,
           code: pharmacy?.code,
@@ -257,7 +257,7 @@ export default function ReceiptVoucherForm(props: propsType): React.JSX.Element 
     } else {
       form.setFieldsValue({
         ...initReceiptVoucher,
-        pharmacy: initReceiptVoucher?.pharmaProfile?.name,
+        name: initReceiptVoucher?.pharmaProfile?.name,
         pharmacyAddress: compactAddress(initReceiptVoucher?.pharmaProfile?.address),
       });
       setDataAccounting(initReceiptVoucher?.accountingDetails);
@@ -295,7 +295,7 @@ export default function ReceiptVoucherForm(props: propsType): React.JSX.Element 
       const fullValues = form.getFieldsValue(true);
       const { accountingDate, dateOfIssue } = fullValues;
       const newValue = {
-        ...omit(values, ["code", "pharmacyAddress", "pharmacy"]),
+        ...omit(values, ["code", "pharmacyAddress", "name"]),
         accountingDate: dayjs(accountingDate).format("YYYY-MM-DD"),
         dateOfIssue: dayjs(dateOfIssue).format("YYYY-MM-DD"),
         refCollection: refCollection ? REF_COLLECTION[refCollection] : null,
@@ -389,7 +389,7 @@ export default function ReceiptVoucherForm(props: propsType): React.JSX.Element 
                     <FormItem
                       label={`Tên ${from === 'Pharmacy' ? 'nhà thuốc' : ''}`}
                       labelCol={{ lg: 8 }}
-                      name="pharmacy"
+                      name="name"
                       rules={[
                         {
                           required: true,
