@@ -539,7 +539,7 @@ export default function DiscountItem({
                                       "cumulativeDiscount",
                                       name,
                                       "applyVariantId",
-                                    ]) && { addonAfter: <div>VNĐ</div>,step : 1000,min : 500 })}
+                                    ]) && { addonAfter: <div>VNĐ</div>,step : 1000 })}
                                   />
                                 )}
                               </Form.Item>
