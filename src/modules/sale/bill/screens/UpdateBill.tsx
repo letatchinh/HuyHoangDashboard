@@ -1,43 +1,38 @@
-import { DownOutlined, LeftOutlined, SendOutlined } from "@ant-design/icons";
+import { LeftOutlined, SendOutlined } from "@ant-design/icons";
 import {
   Avatar,
   Button,
   Col,
-  Divider,
-  Dropdown,
-  Form,
+  Divider, Form,
   Row,
   Space,
   Spin,
-  Typography,
+  Typography
 } from "antd";
 import TextArea from "antd/es/input/TextArea";
-import { MenuProps } from "antd/lib/index";
 import dayjs from "dayjs";
 import { get, omit } from "lodash";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import PolicyModule from "policy";
+import React, { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import ModalAnt from "~/components/Antd/ModalAnt";
 import Status from "~/components/common/Status/index";
 import WhiteBox from "~/components/common/WhiteBox";
 import {
   useResetBillAction,
-  useUpdateBill,
+  useUpdateBill
 } from "~/modules/sale/bill/bill.hook";
+import BillItemModule from "~/modules/sale/billItem";
 import { PATH_APP } from "~/routes/allPath";
 import { concatAddress, formatter } from "~/utils/helpers";
 import { PayloadUpdateBill } from "../bill.modal";
 import StepStatus from "../components/StepStatus";
-import BillItemModule from "~/modules/sale/billItem";
 import { STATUS_BILL, STATUS_BILL_VI } from "../constants";
 import useUpdateBillStore from "../storeContext/UpdateBillContext";
-import PolicyModule from "policy";
-import PharmacyModule from "~/modules/pharmacy";
-import { useChangeDocumentTitle, useFetchState } from "~/utils/hook";
 type propsType = {};
 const Layout = ({ label, children }: { label: any; children: any }) => (
   <Row justify={"space-between"} align="middle">
-    <Col span={10}>
+    <Col span={12}>
       <span>{label}: </span>
     </Col>
 
@@ -54,7 +49,7 @@ const CLONE_STATUS_BILL: any = STATUS_BILL;
 export default function UpdateBill(props: propsType): React.JSX.Element {
   const [form] = Form.useForm();
   useResetBillAction();
-  const { bill, isLoading,mutateBill } = useUpdateBillStore();
+  const { bill, isLoading,mutateBill,onOpenForm } = useUpdateBillStore();
   const {
     codeSequence,
     createdAt,
@@ -66,6 +61,9 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
     createBy,
     note,
     totalAmount,
+    totalReceiptVoucherCompleted,
+    totalReceiptAmount,
+    remainAmount,
   } = bill || {};
   const canUpdateBill = PolicyModule.hook.useMatchPolicy(
     PolicyModule.POLICIES.UPDATE_BILL
@@ -104,7 +102,7 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
   // useChangeDocumentTitle(codeSequence ? "Đơn hàng - " + codeSequence : 'Loading...',{dependency : [codeSequence]})
   useEffect(() => {
     form.setFieldsValue({note})
-  },[note])
+  },[note]);
   return (
     <div className="bill-page-update">
       <Form
@@ -195,6 +193,9 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
                 </Col>
                 <Col>
                   {/* <Typography.Text strong>Công nợ hiện tại : 0</Typography.Text> */}
+                  {status !== STATUS_BILL.CANCELLED && <Button disabled={remainAmount <= 0} type="primary" size="small" onClick={onOpenForm}>
+                    Tạo phiếu thu
+                  </Button>}
                 </Col>
               </Row>
               <Divider />
@@ -219,10 +220,12 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
                 {get(createBy, "fullName", "")}
               </Layout>
               <Layout label={"Tổng số tiền"}>{formatter(get(bill,'totalAmount',totalPrice + +(pair || 0)))}</Layout>
-              <Layout label={"Đã trả"}>-{formatter(pair)}</Layout>
+              <Layout label={"Đã trả trước"}>-{formatter(pair)}</Layout>
+              <Layout label={"Đã thanh toán"}>-{formatter(totalReceiptAmount)}</Layout>
+              <Layout label={"Đã thanh toán và xác nhận"}>-{formatter(totalReceiptVoucherCompleted)}</Layout>
               <Layout label={"Tổng số tiền còn lại"}>
                 <Typography.Text strong>
-                  {formatter(totalPrice)}
+                  {formatter(remainAmount)}
                 </Typography.Text>
               </Layout>
               <Divider/> 

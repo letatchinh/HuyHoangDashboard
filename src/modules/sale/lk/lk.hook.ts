@@ -92,11 +92,12 @@ export const useDeleteLk = (callback?: any) => {
   });
 };
 
-export const useLkQueryParams = () => {
+export const useLkQueryParams = (reFetch:boolean) => {
   const query = useQueryParams();
   const limit = query.get("limit") || 10;
   const page = query.get("page") || 1;
   const keyword = query.get("keyword");
+  const pharmacyId = query.get("pharmacyId");
   const createSuccess = useSelector(createSuccessSelector);
   const deleteSuccess = useSelector(deleteSuccessSelector);
   return useMemo(() => {
@@ -104,10 +105,11 @@ export const useLkQueryParams = () => {
       page,
       limit,
       keyword,
+      pharmacyId,
     };
     return [queryParams];
     //eslint-disable-next-line
-  }, [page, limit, keyword, createSuccess, deleteSuccess]);
+  }, [page, limit, keyword, createSuccess, deleteSuccess,pharmacyId,reFetch]);
 };
 
 export const useUpdateLkParams = (

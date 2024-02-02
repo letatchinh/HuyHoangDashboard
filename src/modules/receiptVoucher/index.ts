@@ -5,6 +5,7 @@ import * as receiptVoucherService from "./receiptVoucher.service";
 import * as receiptVoucherModels from "./receiptVoucher.modal";
 import reducer from "./redux/reducer";
 import saga from "./redux/saga";
+import components from "./components";
 
 const moduleExport = {
     api : receiptVoucherApi,
@@ -12,6 +13,7 @@ const moduleExport = {
     hook : receiptVoucherHook,
     service : receiptVoucherService,
     model : receiptVoucherModels,
-    redux : {reducer,saga}
+    redux : {reducer,saga},
+    components
 };
 export default moduleExport;
