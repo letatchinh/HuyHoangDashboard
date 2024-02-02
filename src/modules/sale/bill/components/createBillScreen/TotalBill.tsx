@@ -103,7 +103,16 @@ export default function TotalBill(props: propsType): React.JSX.Element {
         </Layout>
         <SelectDebt />
         {debtType === 'DEPOSIT' && <Layout label={"Khách trả trước"}>
-        <Form.Item<FormFieldCreateBill> name="pair" style={{margin : 0}}>
+        <Form.Item<FormFieldCreateBill> name="pair" style={{margin : 0}} rules={[
+          {
+            validator(_, value) {
+              if (value <= totalAmount) {
+                return Promise.resolve();
+              }
+              return Promise.reject(new Error('Số tiền không hợp lệ!'));
+            }
+          },
+        ]}>
           <InputNumberAnt addonAfter={'VNĐ'} style={{width : 200}} min={0} max={totalAmount}/>
         </Form.Item>
       </Layout>}
