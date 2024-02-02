@@ -1,5 +1,5 @@
 import { CheckCircleOutlined, CheckCircleTwoTone, SyncOutlined } from "@ant-design/icons";
-import { Button, Col, DatePicker, Form, InputNumber, Modal, Row, Tag } from "antd";
+import { Button, Col, DatePicker, Form, InputNumber, Modal, Row, Select, Tag } from "antd";
 import dayjs from "dayjs";
 import { get } from "lodash";
 import React, { useMemo, useState } from "react";
@@ -24,8 +24,12 @@ export default function ApplyTimeSheet({
     ["cumulativeDiscount", name, "applyTimeSheet", "typeRepeat"],
     form
   );
+  const typeDiscount = Form.useWatch(
+    ["cumulativeDiscount", name, "typeDiscount"],
+    form
+  );
   const applyTimeSheet = form.getFieldValue(['cumulativeDiscount',name,'applyTimeSheet']);
-    
+  
   const cumulativeDiscount = Form.useWatch('cumulativeDiscount');
   const getField = (field: string | string[]) => {
     const path = ["cumulativeDiscount", name, "applyTimeSheet"];
@@ -201,7 +205,7 @@ export default function ApplyTimeSheet({
           )}
         </>
       )}
-      {["ranger", "month", "quarter"].includes(typeRepeat) && (
+      {typeDiscount === TYPE_DISCOUNT.LK && ["ranger", "month", "quarter"].includes(typeRepeat) && (
         <>
           <Col span={7}>
             <Form.Item shouldUpdate noStyle>
@@ -265,6 +269,156 @@ export default function ApplyTimeSheet({
           </Col>
         </>
       )}
+      {typeDiscount === TYPE_DISCOUNT['DISCOUNT.SOFT.CONDITION'] && <>
+      {
+          {
+            nope: (
+              <>
+              </>
+            ),
+            ranger: (
+              <>
+          <Col span={7}>
+            <Form.Item shouldUpdate noStyle>
+              {() => (
+                <Form.Item
+                  style={{ marginBottom: 0 }}
+                  {...restField}
+                  label={"Từ ngày"}
+                  name={[name, "applyTimeSheet", "repeat", "gteRanger"]}
+                  rules={[
+                    {
+                      required: true,
+                      message: "Xin vui nhập!",
+                    },
+                  ]}
+                >
+                  {RenderLoading(loading, <InputNumber min={1} max={31} />)}
+                </Form.Item>
+              )}
+            </Form.Item>
+          </Col>
+          <Col span={7}>
+            <Form.Item shouldUpdate noStyle>
+              {() => (
+                <Form.Item
+                  style={{ marginBottom: 0 }}
+                  {...restField}
+                  label={"Đến ngày"}
+                  name={[name, "applyTimeSheet", "repeat", "lteRanger"]}
+                  rules={[
+                    {
+                      required: true,
+                      message: "Xin vui nhập!",
+                    },
+                    ({ getFieldValue }) => ({
+                      validator(_, value) {
+                        const gte = getFieldValue([
+                          "cumulativeDiscount",
+                          name,
+                          "applyTimeSheet",
+                          "repeat",
+                          "gteRanger",
+                        ]);
+                        if (
+                          ["month", "quarter"].includes(typeRepeat) &&
+                          value < gte
+                        ) {
+                          return Promise.reject(
+                            "Phải lớn hơn giá trị ngày bắt đầu"
+                          );
+                        }
+                        return Promise.resolve();
+                      },
+                    }),
+                  ]}
+                >
+                  {RenderLoading(loading, <InputNumber min={0} max={31} />)}
+                </Form.Item>
+              )}
+            </Form.Item>
+          </Col>
+        </>
+            ),
+            month: (
+              <Col span={7}>
+                <Form.Item shouldUpdate noStyle>
+                  {() => (
+                    <Form.Item
+                      style={{ marginBottom: 0 }}
+                      {...restField}
+                      label={"Tháng áp dụng"}
+                      name={[name, "applyTimeSheet", "repeat"]}
+                      rules={[
+                        {
+                          required: true,
+                          message: "Xin vui nhập!",
+                        },
+                      ]}
+                    >
+                      {RenderLoading(
+                        loading,
+                        <Select
+                          allowClear
+                          mode="multiple"
+                          options={[
+                            { label: "Tháng 1", value: 1 },
+                            { label: "Tháng 2", value: 2 },
+                            { label: "Tháng 3", value: 3 },
+                            { label: "Tháng 4", value: 4 },
+                            { label: "Tháng 5", value: 5 },
+                            { label: "Tháng 6", value: 6 },
+                            { label: "Tháng 7", value: 7 },
+                            { label: "Tháng 8", value: 8 },
+                            { label: "Tháng 9", value: 9 },
+                            { label: "Tháng 10", value: 10 },
+                            { label: "Tháng 11", value: 11 },
+                            { label: "Tháng 12", value: 12 },
+                          ]}
+                        />
+                      )}
+                    </Form.Item>
+                  )}
+                </Form.Item>
+              </Col>
+            ),
+            quarter: (
+              <Col span={7}>
+                <Form.Item shouldUpdate noStyle>
+                  {() => (
+                    <Form.Item
+                      style={{ marginBottom: 0 }}
+                      {...restField}
+                      label={"Quý áp dụng"}
+                      name={[name, "applyTimeSheet", "repeat"]}
+                      rules={[
+                        {
+                          required: true,
+                          message: "Xin vui nhập!",
+                        },
+                      ]}
+                    >
+                      {RenderLoading(
+                        loading,
+                        <Select
+                          allowClear
+                          mode="multiple"
+                          options={[
+                            { label: "Quý 1", value: 1 },
+                            { label: "Quý 2", value: 2 },
+                            { label: "Quý 3", value: 3 },
+                            { label: "Quý 4", value: 4 },
+                          ]}
+                        />
+                      )}
+                    </Form.Item>
+                  )}
+                </Form.Item>
+              </Col>
+            ),
+          }[typeRepeat]
+        }
+      </>}
     </Row>
   );
 }

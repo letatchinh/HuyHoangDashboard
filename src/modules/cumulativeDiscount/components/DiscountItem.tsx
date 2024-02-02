@@ -658,7 +658,7 @@ export default function DiscountItem({
                                 label={"Loại chương trình"}
                                 name={[
                                   name,
-                                  "cumulativeTimeSheet",
+                                  "applyTimeSheet",
                                   "typeRepeat",
                                 ]}
                                 tooltip={
