@@ -19,6 +19,7 @@ import workBoardModule from '~/modules/workBoard';
 import configDiscountModule from '~/modules/configDiscount';
 import billModule from '~/modules/sale/bill';
 import quotationModule from '~/modules/sale/quotation';
+import lkModule from '~/modules/sale/lk';
 export default function* rootSaga() {
   yield all([
     authModule.redux.saga(),
@@ -43,5 +44,6 @@ export default function* rootSaga() {
     // Đơn hàng
     billModule.redux.saga(),
     quotationModule.redux.saga(),
+    lkModule.redux.saga(),
   ]);
 };

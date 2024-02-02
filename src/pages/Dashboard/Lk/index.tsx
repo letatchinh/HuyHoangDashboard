@@ -1,5 +1,5 @@
 import React from 'react';
-import LkModule from '~/modules/sale/Lk';
+import LkModule from '~/modules/sale/lk/index';
 type propsType = {
 
 }

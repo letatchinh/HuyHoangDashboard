@@ -23,6 +23,7 @@ import workBoardModule from '~/modules/workBoard';
 import configDiscount from '~/modules/configDiscount';
 import billModule from '~/modules/sale/bill';
 import quotationModule from '~/modules/sale/quotation';
+import lkModule from '~/modules/sale/lk';
 const authPersistConfig = {
     key: 'auth',
     storage: localStorage,
@@ -57,6 +58,7 @@ const rootReducer = combineReducers({
     configDiscount: configDiscount.redux.reducer,
     bill: billModule.redux.reducer,
     quotation: quotationModule.redux.reducer,
+    lk: lkModule.redux.reducer,
 
 });
 export default rootReducer
