@@ -116,7 +116,7 @@ export default function DiscountView({
   },[data])
 
   const ApplyTimeText = useMemo(() => {
-    let text = DiscountMethod.handleConvertTextViewApplyTimeSheet(get(data,'applyTimeSheet'))
+    let text = DiscountMethod.handleConvertTextViewApplyTimeSheet(get(data,'applyTimeSheet'),get(data,'typeDiscount'))
     return text;
   }, [data]);
 

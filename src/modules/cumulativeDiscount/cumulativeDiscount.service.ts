@@ -304,6 +304,7 @@ export class DiscountFactory {
           applyVariantId,
           variants
         );
+        const typeDiscount = get(value, "typeDiscount");
         const cumulativeTimeSheetItem = get(value, "cumulativeTimeSheet");
         const applyTimeSheetItem = get(value, "applyTimeSheet");
         const repeatCumulative = get(cumulativeTimeSheetItem, "repeat", {});
@@ -366,7 +367,7 @@ export class DiscountFactory {
               // Out month
               gteRangerApply = get(firstRepeatApply, "[1].d_start");
               lteRangerApply = get(firstRepeatApply, "[0].d_end");
-            };
+            }
             Object.assign(newValue, {
               applyTimeSheet: {
                 ...applyTimeSheetItem,
@@ -393,16 +394,8 @@ export class DiscountFactory {
             forIn(repeatCumulative, (value, key) => {
               repeat.push(+key);
             });
-            Object.assign(newValue, {
-              applyTimeSheet: {
-                ...applyTimeSheetItem,
-                repeat: {
-                  gteRanger: get(firstRepeatApply, "[0].d_start"),
-                  lteRanger: get(firstRepeatApply, "[0].d_end"),
-                },
-              },
-            });
-            if(cumulativeTimeSheetItem){
+
+            if (cumulativeTimeSheetItem) {
               Object.assign(newValue, {
                 cumulativeTimeSheet: {
                   ...cumulativeTimeSheetItem,
@@ -410,19 +403,39 @@ export class DiscountFactory {
                 },
               });
             }
+            switch (typeDiscount) {
+              case TYPE_DISCOUNT.LK:
+                Object.assign(newValue, {
+                  applyTimeSheet: {
+                    ...applyTimeSheetItem,
+                    repeat: {
+                      gteRanger: get(firstRepeatApply, "[0].d_start"),
+                      lteRanger: get(firstRepeatApply, "[0].d_end"),
+                    },
+                  },
+                });
+                break;
+              case TYPE_DISCOUNT["DISCOUNT.SOFT.CONDITION"]:
+                let repeatApplyMonth: any = [];
+                forIn(repeatApply, (value, key) => {
+                  repeatApplyMonth.push(+key);
+                });
+                Object.assign(newValue, {
+                  applyTimeSheet: {
+                    ...applyTimeSheetItem,
+                    repeat: repeatApplyMonth,
+                  },
+                });
+                break;
+
+              default:
+                break;
+            }
+
             break;
           case "quarter":
             let repeatQuarter: any[] = this.#quarterOfMonths(repeatCumulative);
-            Object.assign(newValue, {
-              applyTimeSheet: {
-                ...applyTimeSheetItem,
-                repeat: {
-                  gteRanger: get(firstRepeatApply, "[0].d_start"),
-                  lteRanger: get(firstRepeatApply, "[0].d_end"),
-                },
-              },
-            });
-            if(cumulativeTimeSheetItem){
+            if (cumulativeTimeSheetItem) {
               Object.assign(newValue, {
                 cumulativeTimeSheet: {
                   ...cumulativeTimeSheetItem,
@@ -430,12 +443,35 @@ export class DiscountFactory {
                 },
               });
             }
-          
+            switch (typeDiscount) {
+              case TYPE_DISCOUNT.LK:
+                Object.assign(newValue, {
+                  applyTimeSheet: {
+                    ...applyTimeSheetItem,
+                    repeat: {
+                      gteRanger: get(firstRepeatApply, "[0].d_start"),
+                      lteRanger: get(firstRepeatApply, "[0].d_end"),
+                    },
+                  },
+                });
+                break;
+              case TYPE_DISCOUNT["DISCOUNT.SOFT.CONDITION"]:
+                let repeatApplyQuarter: any[] = this.#quarterOfMonths(repeatApply);
+                Object.assign(newValue, {
+                  applyTimeSheet: {
+                    ...applyTimeSheetItem,
+                    repeat: repeatApplyQuarter,
+                  },
+                });
+                break;
+
+              default:
+                break;
+            }
             break;
           default:
             break;
         }
-        console.log(newValue,'newValue');
         return {
           ...newValue,
           condition: applyVariantId
@@ -448,6 +484,9 @@ export class DiscountFactory {
       }
     );
     return newCumulativeDiscount;
+  }
+  zeroToEndMonth(m: number) {
+    return m === 0 ? "Cuối tháng" : m;
   }
   handleConvertTextViewCumulativeTimeSheet(cumulativeTimeSheetItem: any) {
     const typeRepeat = get(cumulativeTimeSheetItem, "typeRepeat");
@@ -468,9 +507,13 @@ export class DiscountFactory {
       case "ranger":
         if (gteRanger <= lteRanger) {
           // In Month
-          text = `Từ ngày ${gteRanger} đến ngày ${lteRanger} mỗi tháng`;
+          text = `Từ ngày ${gteRanger} đến ngày ${this.zeroToEndMonth(
+            lteRanger
+          )} mỗi tháng`;
         } else {
-          text = `Từ ngày ${gteRanger} đến ngày ${lteRanger} tháng sau`;
+          text = `Từ ngày ${gteRanger} đến ngày ${this.zeroToEndMonth(
+            lteRanger
+          )} tháng sau`;
         }
         break;
 
@@ -491,7 +534,7 @@ export class DiscountFactory {
     }
     return text;
   }
-  handleConvertTextViewApplyTimeSheet(applyTimeSheetItem: any) {
+  handleConvertTextViewApplyTimeSheet(applyTimeSheetItem: any,typeDiscount : string) {
     let text = "";
     const typeRepeat = get(applyTimeSheetItem, "typeRepeat");
 
@@ -510,17 +553,51 @@ export class DiscountFactory {
       case "ranger":
         if (gteRanger <= lteRanger) {
           // In Month
-          text = `Từ ngày ${gteRanger} đến ngày ${lteRanger} mỗi tháng`;
+          text = `Từ ngày ${gteRanger} đến ngày ${this.zeroToEndMonth(
+            lteRanger
+          )} mỗi tháng`;
         } else {
-          text = `Từ ngày ${gteRanger} đến ngày ${lteRanger} tháng sau`;
+          text = `Từ ngày ${gteRanger} đến ngày ${this.zeroToEndMonth(
+            lteRanger
+          )} tháng sau`;
         }
         break;
 
       case "month":
-        text = `Diễn ra vào ngày ${gteRanger} đến ngày ${lteRanger} sau khi kết thúc chu kỳ tích luỹ của mỗi tháng`;
+        switch (typeDiscount) {
+          case TYPE_DISCOUNT["DISCOUNT.SOFT.CONDITION"]:
+            text = `Diễn ra vào các tháng ${repeatCumulative?.join(
+              ", "
+            )}`;
+            break;
+          case TYPE_DISCOUNT.LK:
+            text = `Diễn ra vào ngày ${gteRanger} đến ngày ${this.zeroToEndMonth(
+              lteRanger
+            )} sau khi kết thúc chu kỳ tích luỹ của mỗi tháng`;
+            break;
+        
+          default:
+            break;
+        }
+      
         break;
       case "quarter":
-        text = `Diễn ra vào ngày ${gteRanger} đến ngày ${lteRanger} sau khi kết thúc chu kỳ tích luỹ của mỗi quý`;
+        switch (typeDiscount) {
+          case TYPE_DISCOUNT["DISCOUNT.SOFT.CONDITION"]:
+            text = `Diễn ra vào các quý ${repeatCumulative?.join(
+              ", "
+            )}`;
+            break;
+          case TYPE_DISCOUNT.LK:
+            text = `Diễn ra vào ngày ${gteRanger} đến ngày ${this.zeroToEndMonth(
+              lteRanger
+            )} sau khi kết thúc chu kỳ tích luỹ của mỗi quý`;
+            break;
+        
+          default:
+            break;
+        }
+      
         break;
 
       default:
@@ -590,7 +667,13 @@ export const pickLK = (submitData: any) =>
     "itemReward",
   ]);
 export const pickSoftCondition = (submitData: any) =>
-  pick(submitData, [...rootField, "condition", "applyTimeSheet", "itemReward","applyVariantId"]);
+  pick(submitData, [
+    ...rootField,
+    "condition",
+    "applyTimeSheet",
+    "itemReward",
+    "applyVariantId",
+  ]);
 
 export const onDiscountChange = (
   newCumulativeDiscount: cumulativeDiscountType[]
@@ -601,7 +684,11 @@ export const onDiscountChange = (
       const condition = get(item, "condition");
       const typeReward = get(item, "typeReward");
       const value = get(item, "value");
-      if ([TYPE_DISCOUNT.LK,TYPE_DISCOUNT['DISCOUNT.SOFT.CONDITION']].includes(typeDiscount)) {
+      if (
+        [TYPE_DISCOUNT.LK, TYPE_DISCOUNT["DISCOUNT.SOFT.CONDITION"]].includes(
+          typeDiscount
+        )
+      ) {
         return {
           ...item,
           condition: { ...condition, isRanger: !!get(condition, "lte") },
@@ -729,7 +816,7 @@ export const convertSubmitDiscount = (
               );
             Object.assign(applyTimeSheet_4, {
               repeat: repeatApply,
-              typeRepeat,
+              typeRepeat: typeRepeat_4,
             });
           }
           const newItem_4 = {
