@@ -41,7 +41,7 @@ export default function TotalBill(props: propsType): React.JSX.Element {
     totalDiscountFromProduct,
     totalDiscountFromSupplier,
     form,
-    totalPriceBillItem,
+    totalAmount,
   } = useCreateBillStore();
   const debtType = Form.useWatch('debtType',form);
   
@@ -98,13 +98,13 @@ export default function TotalBill(props: propsType): React.JSX.Element {
         </Layout>
       <Layout tooltip="Tổng tiền sau chiết khấu có lúc không bằng Tổng tiền - Tổng chiết khấu" label={"Tổng tiền sau chiết khấu"}>
       <Typography.Text type="warning" strong>
-        {formatter(totalPriceBillItem)}
+        {formatter(totalAmount)}
       </Typography.Text>
         </Layout>
         <SelectDebt />
         {debtType === 'DEPOSIT' && <Layout label={"Khách trả trước"}>
         <Form.Item<FormFieldCreateBill> name="pair" style={{margin : 0}}>
-          <InputNumberAnt addonAfter={'VNĐ'} style={{width : 200}} min={0} max={totalPriceBillItem}/>
+          <InputNumberAnt addonAfter={'VNĐ'} style={{width : 200}} min={0} max={totalAmount}/>
         </Form.Item>
       </Layout>}
       <div

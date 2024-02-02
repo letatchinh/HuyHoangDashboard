@@ -75,7 +75,9 @@ export default function ExpandRowBillItem({historyStatus,status,cumulativeDiscou
                 key : 'discountAmount',
                 align : 'center',
                 render (discountAmount,rc) {
-                  return get(rc,'typeReward') === TYPE_REWARD.PRODUCT ? <Typography.Text strong>{formatter(get(rc,'itemReward.quantityClampReward',0))} {get(rc,'itemReward.name',0)}</Typography.Text>  : <Typography.Text strong>{formatter(discountAmount)}</Typography.Text>
+                  console.log(rc,'rc');
+                  
+                  return get(rc,'typeReward') === TYPE_REWARD.PRODUCT ? <Typography.Text strong>{formatter(get(rc,'itemReward.quantityClampReward',0))} {get(rc,'itemReward.name','')}</Typography.Text>  : <Typography.Text strong>{formatter(discountAmount)}</Typography.Text>
                 }
               },
             ]}

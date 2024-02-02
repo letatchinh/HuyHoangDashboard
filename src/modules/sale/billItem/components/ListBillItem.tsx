@@ -250,7 +250,7 @@ export default function ListBillItem({
       },
     },
     {
-      title: "Số tiền còn lại",
+      title: "Thành tiền",
       dataIndex: "remainAmount",
       key: "remainAmount",
       align: "center",
