@@ -63,7 +63,6 @@ export default function HistoryPharmacy() {
   }, []);
 
   const [, updatePharmacy] = useUpdatePharmacy(onCloseForm);
-  const [isSubmitLoading, deletePharmacy] = useDeletePharmacy();
   const [pharmacyId, setPharmacyId] = useState(null);
   const [isOpenForm, setIsOpenForm] = useState(false);
   const paging = usePharmacyPaging();
@@ -136,70 +135,10 @@ export default function HistoryPharmacy() {
         },
       },
       {
-        title: "Nợ",
+        title: "Luỹ kế",
         dataIndex: "createReceipt",
         key: "createReceipt",
         width: 120,
-        render(value, rc) {
-          return (
-            <Space>
-              <Button type="primary" onClick={() => onOpenReceipt(rc)}>
-                Phiếu thu
-              </Button>
-            </Space>
-          );
-        },
-      },
-      {
-        title: "Trạng thái",
-        key: "status",
-        dataIndex: "status",
-        width: 100,
-        align: "center",
-        render: (status, record) => {
-          return (
-            <WithPermission permission={POLICIES.UPDATE_PHARMAPROFILE}>
-              <Switch
-                checked={status === "ACTIVE"}
-                onChange={(value) =>
-                  onChangeStatus(
-                    get(record, "_id"),
-                    value ? STATUS["ACTIVE"] : STATUS["INACTIVE"],
-                    isLoading,
-                    record
-                  )
-                }
-              />
-            </WithPermission>
-          );
-        },
-      },
-      {
-        title: "Thao tác",
-        dataIndex: "_id",
-        // key: "actions",
-        width: 150,
-        align: "center",
-        render: (record) => {
-          return (
-            <div className="custom-table__actions">
-              <WithPermission permission={POLICIES.UPDATE_PHARMAPROFILE}>
-                <p onClick={() => onOpenForm(record)}>Sửa</p>
-              </WithPermission>
-              <WithPermission permission={POLICIES.DELETE_PHARMAPROFILE}>
-                <p>|</p>
-                <Popconfirm
-                  title={`Bạn muốn xoá nhà thuốc này?`}
-                  onConfirm={() => deletePharmacy(record)}
-                  okText="Xoá"
-                  cancelText="Huỷ"
-                >
-                  <p>Xóa</p>
-                </Popconfirm>{" "}
-              </WithPermission>
-            </div>
-          );
-        },
       },
     ],
     []
@@ -247,46 +186,7 @@ export default function HistoryPharmacy() {
             value={keyword}
           />
         </Col>
-        <WithPermission permission={POLICIES.WRITE_PHARMAPROFILE}>
-          <Col>
-            <Button
-              icon={<PlusCircleOutlined />}
-              type="primary"
-              onClick={() => onOpenForm()}
-            >
-              Thêm mới
-            </Button>
-          </Col>
-        </WithPermission>
       </Row>
-      <WithPermission permission={POLICIES.UPDATE_PHARMAPROFILE}>
-        <Space style={{ marginBottom: 20 }}>
-          <Typography style={{ fontSize: 14, marginRight: 20 }}>
-            Phân loại trạng thái theo :
-          </Typography>
-          <Row gutter={14}>
-            <Radio.Group
-              onChange={onChange}
-              optionType="button"
-              buttonStyle="solid"
-              defaultValue={(() => {
-                switch (query?.status) {
-                  case "ACTIVE":
-                    return 2;
-                  case "INACTIVE":
-                    return 3;
-                  default:
-                    return 1;
-                }
-              })()}
-            >
-              <Radio.Button value={1}>Tất cả</Radio.Button>
-              <Radio.Button value={2}>{STATUS_NAMES["ACTIVE"]}</Radio.Button>
-              <Radio.Button value={3}>{STATUS_NAMES["INACTIVE"]}</Radio.Button>
-            </Radio.Group>
-          </Row>
-        </Space>
-      </WithPermission>
       <WhiteBox>
         <TableAnt
           dataSource={pharmacies}

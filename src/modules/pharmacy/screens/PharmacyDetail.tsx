@@ -2,12 +2,12 @@ import { Tabs } from "antd";
 // import TabPane from "antd/es/tabs/TabPane";
 import React, { useEffect, useState } from "react";
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
-import WhiteBox from "~/components/common/WhiteBox";
-import POLICIES from "~/modules/policy/policy.auth";
-import { useMatchPolicy } from "~/modules/policy/policy.hook";
+
 import HistoryPharmacy from "../component/HistoryPharmacy";
-import UserGroup from "~/modules/userGroup/screens/UserGroup";
 import DebtPharmacy from "../component/DebtPharmacy";
+import POLICIES from "../../policy/policy.auth";
+import { useMatchPolicy } from "~/modules/policy/policy.hook";
+import WhiteBox from "~/components/common/WhiteBox";
 
 const { TabPane } = Tabs;
 

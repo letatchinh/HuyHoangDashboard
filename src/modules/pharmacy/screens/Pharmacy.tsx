@@ -1,6 +1,6 @@
 import { ColumnsType } from "antd/es/table";
 import useTranslate from "~/lib/translation";
-import { concatAddress } from "~/utils/helpers";
+import { concatAddress, formatNumberThreeComma } from "~/utils/helpers";
 import {
   useDeletePharmacy,
   useGetPharmacies,
@@ -145,6 +145,15 @@ export default function Pharmacy() {
         width: 120,
         render: (record) => {
           return moment(record).format("DD/MM/YYYY");
+        },
+      },
+      {
+        title: "Công nợ",
+        dataIndex: "resultDebt",
+        key: "resultDebt",
+        width: 120,
+        render(value) {
+          return formatNumberThreeComma(value);
         },
       },
       {

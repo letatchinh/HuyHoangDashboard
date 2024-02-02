@@ -53,8 +53,7 @@ interface UserProps {
 export default function DebtPharmacy() {
   const { t }: any = useTranslate();
   const [query] = usePharmacyQueryParams();
-  const [keyword, { setKeyword, onParamChange }] =
-    useUpdatePharmacyParams(query);
+  const [keyword, { setKeyword, onParamChange }] = useUpdatePharmacyParams(query);
   const [pharmacies, isLoading] = useGetPharmacies(query);
 
   const onCloseForm = useCallback(() => {
