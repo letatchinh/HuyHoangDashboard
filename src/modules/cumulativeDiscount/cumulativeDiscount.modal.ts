@@ -64,7 +64,7 @@ export type TypeRepeatType = "ranger" | "month" | "quarter" | "nope";
     name : string,
     typeDiscount : "LK" | "DISCOUNT.CORE" | "DISCOUNT.SOFT" | "DISCOUNT.SOFT.CONDITION",
     value : number,
-    valueType : string,
+    valueType : "VALUE" | "PERCENT",
     typeReward : "VALUE" | "PRODUCT" | "BONUS",
     condition : conditionType | null,
     applyVariantId : string | null,

@@ -14,6 +14,7 @@ import { DataItem } from "./storeContext/CreateBillContext";
 import CumulativeDiscountModule from "~/modules/cumulativeDiscount";
 import { variantType } from "~/modules/product/product.modal";
 import { TYPE_REWARD } from "~/modules/cumulativeDiscount/constants";
+import { INFINITY } from "~/constants/defaultValue";
 const TYPE_DISCOUNT: any = CumulativeDiscountModule.constants.TYPE_DISCOUNT;
 const TARGET: any = CumulativeDiscountModule.constants.TARGET;
 export const selectProductSearch = (data: any) => {
@@ -194,11 +195,13 @@ export class CalculateDiscountFactory {
     const {
       typeDiscount,
       timesReward,
+      valueType
     } = discount;
     switch (typeDiscount) {
       case "DISCOUNT.CORE":
       case "DISCOUNT.SOFT":
-        const minReward: any = min([quantity, timesReward]);
+        // Percent Alway Get Many Times
+        const minReward: any = min([quantity, valueType === 'PERCENT'? INFINITY : timesReward]);
         totalDiscount =
           this.getDiscountAmount(discount, price) * (minReward || 1);
         break;

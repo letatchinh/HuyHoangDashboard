@@ -63,6 +63,7 @@ export const PATH_APP = {
       update: path(ROOTS.app, '/bill/:id'),
       create: path(ROOTS.app, '/bill/create'),
       quotation:  path(ROOTS.app, '/quotation'),
+      lk: path(ROOTS.app, '/lk'),
     },
 
     quotation : {
@@ -73,6 +74,7 @@ export const PATH_APP = {
     vouchers: {
       root: path(ROOTS.app, '/vouchers'),
     },
+
   
     botNotification : {
       root:  path(ROOTS.app, '/bot-notification'),

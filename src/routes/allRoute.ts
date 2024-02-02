@@ -25,6 +25,7 @@ import WorkSprintPage from "~/pages/Dashboard/WorkSprint";
 import WorkListPage from "~/pages/Dashboard/WorkList";
 import WorkTaskPage from "~/pages/Dashboard/WorkTask";
 import BotNotificationPage from "~/pages/Dashboard/BotNotification";
+import Lk from "~/pages/Dashboard/Lk";
 export const mainRoutes :PathRouteProps[] = [
   { path: PATH_APP.main.root, Component: Homepage },
 
@@ -48,6 +49,7 @@ export const mainRoutes :PathRouteProps[] = [
   { path: PATH_APP.bill.root, Component: Bill },
   { path: PATH_APP.bill.update, Component: UpdateBill },
   { path: PATH_APP.quotation.root, Component: Quotation },
+  { path: PATH_APP.bill.lk, Component: Lk },
 
   // TodoList
   { path: PATH_APP.todoList.statusConfig, Component: StatusConfig },
