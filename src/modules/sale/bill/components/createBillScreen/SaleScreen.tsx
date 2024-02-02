@@ -12,7 +12,7 @@ import SelectPharmacy from "../SelectPharmacy";
 import TotalBill from "./TotalBill";
 type propsType = {};
 export default function SaleScreen(props: propsType): React.JSX.Element {
- const {form,onValueChange,quotationItems,totalPriceAfterDiscount,verifyData,onRemoveTab,bill,onOpenModalResult} = useCreateBillStore();
+ const {form,onValueChange,quotationItems,totalPriceAfterDiscount,verifyData,onRemoveTab,bill,onOpenModalResult,totalAmount} = useCreateBillStore();
  const {onNotify} = useNotificationStore();
  const callBackAfterSuccess = (newData : DataResultType) => {
   onRemoveTab();
@@ -31,6 +31,7 @@ try {
     data : values,
     totalPriceAfterDiscount,
     _id : get(bill,'dataUpdateQuotation.id'),
+    totalAmount,
     
   });
     switch (get(bill,'typeTab')) {

@@ -43,7 +43,7 @@ export type GlobalCreateBill = {
   totalPrice: number;
   totalQuantity: number;
   totalPriceAfterDiscount: number;
-  totalPriceBillItem: number;
+  totalAmount: number;
   totalDiscount: number;
   totalDiscountFromProduct: DiscountDetail | null;
   totalDiscountFromSupplier: DiscountDetail | null;
@@ -64,7 +64,7 @@ const CreateBill = createContext<GlobalCreateBill>({
   totalPrice: 0,
   totalQuantity: 0,
   totalPriceAfterDiscount: 0,
-  totalPriceBillItem: 0,
+  totalAmount: 0,
   totalDiscount : 0,
   totalDiscountFromProduct : null,
   totalDiscountFromSupplier: null,
@@ -186,7 +186,7 @@ export function CreateBillProvider({
   );
 console.log(quotationItems,'quotationItems');
 
-  const totalPriceBillItem = useMemo(
+  const totalAmount = useMemo(
     () =>
       quotationItems?.reduce(
         (sum: number, cur: any) => sum + get(cur, "totalPrice"),
@@ -197,7 +197,7 @@ console.log(quotationItems,'quotationItems');
 
   const totalPriceAfterDiscount = useMemo(
     () =>
-    totalPriceBillItem - pair,
+    totalAmount - pair,
     [quotationItems,pair]
   );
   const totalDiscount = useMemo(
@@ -259,7 +259,7 @@ console.log(quotationItems,'quotationItems');
   useEffect(() => {
     const initDebt = debt?.find((debt : DebtType) => get(debt, "key") === DEFAULT_DEBT_TYPE);    
     form.setFieldsValue({
-      debtType : get(bill,'debtType') || form.getFieldValue('debtType') ||  get(initDebt,'key'),
+      debtType :  form.getFieldValue('debtType') || get(bill,'debtType') ||  get(initDebt,'key'),
       pharmacyId : get(bill,'pharmacyId'),
       pair : get(bill,'pair',0)
     });
@@ -290,7 +290,7 @@ console.log(quotationItems,'quotationItems');
         bill,
         onOpenModalResult,
         mutateReValidate,
-        totalPriceBillItem,
+        totalAmount,
       }}
     >
       {children}
