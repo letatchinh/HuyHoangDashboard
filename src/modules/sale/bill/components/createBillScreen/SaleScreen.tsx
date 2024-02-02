@@ -1,20 +1,18 @@
 import { Button, Col, Divider, Form, Row } from "antd";
-import { get, pick } from "lodash";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
-import ModalAnt from "~/components/Antd/ModalAnt";
-import { quotation, FormFieldCreateBill, PayloadCreateBill } from "~/modules/sale/bill/bill.modal";
+import { get } from "lodash";
+import React, { useEffect, useMemo } from "react";
+import { FormFieldCreateBill, PayloadCreateBill } from "~/modules/sale/bill/bill.modal";
+import QuotationModule from '~/modules/sale/quotation';
+import { DataResultType } from "~/pages/Dashboard/Bill/CreateBill";
 import useNotificationStore from "~/store/NotificationContext";
+import { useChangeDocumentTitle } from "~/utils/hook";
 import useCreateBillStore from "../../storeContext/CreateBillContext";
 import ProductSelectedTable from "../ProductSelectedTable";
 import SelectPharmacy from "../SelectPharmacy";
-import SelectDebt from "./SelectDebt";
 import TotalBill from "./TotalBill";
-import QuotationModule from '~/modules/sale/quotation';
-import { DataResultType } from "~/pages/Dashboard/Bill/CreateBill";
-import { useChangeDocumentTitle } from "~/utils/hook";
 type propsType = {};
 export default function SaleScreen(props: propsType): React.JSX.Element {
- const {form,onValueChange,quotationItems,totalPriceAfterDiscount,verifyData,onRemoveTab,bill,onOpenModalResult} = useCreateBillStore();
+ const {form,onValueChange,quotationItems,totalPriceAfterDiscount,verifyData,onRemoveTab,bill,onOpenModalResult,totalAmount} = useCreateBillStore();
  const {onNotify} = useNotificationStore();
  const callBackAfterSuccess = (newData : DataResultType) => {
   onRemoveTab();
@@ -23,19 +21,21 @@ export default function SaleScreen(props: propsType): React.JSX.Element {
  const [isSubmitLoading,onCreateQuotation] = QuotationModule.hook.useCreateQuotation(callBackAfterSuccess);
  const [,onUpdateQuotation] = QuotationModule.hook.useUpdateQuotation(callBackAfterSuccess);
  const [,onConvertQuotation] = QuotationModule.hook.useConvertQuotation(callBackAfterSuccess);
- const [openDebt,setOpenDebt] = useState(false);
- const onOpenDebt = useCallback(() => setOpenDebt(true),[]);
- const onCloseDebt = useCallback(() => setOpenDebt(false),[]);
   const onFinish = (values: FormFieldCreateBill) => {
 try {
   if(!quotationItems?.length){
     return onNotify?.warning("Vui lòng chọn thuốc!")
+  }
+  
+  if(totalPriceAfterDiscount < 0){
+    return onNotify?.warning("Số tiền không hợp lệ")
   }
   const submitData : PayloadCreateBill = QuotationModule.service.convertDataQuotation({
     quotationItems : quotationItems,
     data : values,
     totalPriceAfterDiscount,
     _id : get(bill,'dataUpdateQuotation.id'),
+    totalAmount,
     
   });
     switch (get(bill,'typeTab')) {
@@ -110,13 +110,13 @@ try {
           <div className="form-create-bill--payment__actions">
             <Row gutter={8} justify={"space-between"} align='middle' wrap={false}>
               <Col flex={1}>
-                <Button
+                {/* <Button
                 block
                   className="form-create-bill--payment__actions__btnDebt"
                   onClick={onOpenDebt}
                 >
                   Hình thức thanh toán
-                </Button>
+                </Button> */}
               </Col>
               <Col span={14}>
                 <Button
@@ -124,8 +124,8 @@ try {
                   disabled={!quotationItems?.length}
                   className="form-create-bill--payment__actions__btnPayment"
                   type="primary"
-                  htmlType="submit"
                   loading={isSubmitLoading}
+                  onClick={() => form.submit()}
                 >
                   {textSubmit}
                 </Button>
@@ -134,9 +134,6 @@ try {
           </div>
         </Col>
       </Row>
-      <ModalAnt onCancel={onCloseDebt} open={openDebt}>
-        <SelectDebt />
-      </ModalAnt>
     </Form>
   );
 }

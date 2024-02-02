@@ -1,7 +1,7 @@
-import { GiftTwoTone } from "@ant-design/icons";
-import { Button, Col, Form, Input, Row, Select } from "antd";
-import { get, keys } from "lodash";
-import React, { useCallback, useEffect, useMemo } from "react";
+import { GiftTwoTone, UndoOutlined } from "@ant-design/icons";
+import { Button, Col, Form, Input, notification, Row, Select } from "antd";
+import { compact, concat, debounce, get, keys } from "lodash";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import BaseBorderBox from "~/components/common/BaseBorderBox/index";
 import RenderLoading from "~/components/common/RenderLoading";
 import { 
@@ -40,13 +40,34 @@ export default function FormProduct({
   onCancel,
 }: TypePropsFormProduct): React.JSX.Element {
   const [form] = Form.useForm();
-
+  const [backupForm,setBackupForm] = useState<FieldTypeFormProduct[]>([]);
+  
   const [isSubmitLoading, onCreate] = useCreateProduct(onCancel);
   const [, onUpdate] = useUpdateProduct(onCancel);
   const [product, isLoading] = useGetProduct(id);
+  // const [dataNotificationUndo,setDataNotificationUndo] = useState({
+  //   open : false,
+  //   description : null
+  // })
   useResetAction();
+  
+  const onUndoForm = (isLast = false) => {
+    
+    // Action Back One step to set Form And Remove last Recover
+    const stepUndo = ((backupForm.length === 1) || isLast) ? 1 : 2;
+    
+    const preForm = backupForm[backupForm.length - stepUndo];
+    form.setFieldsValue(preForm);
+    const newRecoverForm = [...backupForm];
+    
+    newRecoverForm.pop();
+    setBackupForm(newRecoverForm);
+  }
+
+
   const onFinish = (values: FieldTypeFormProduct) => {
     const submitData = convertSubmitData({values,supplierId});
+    
     if (id) {
       onUpdate({ ...submitData, _id: id });
     } else {
@@ -74,12 +95,17 @@ export default function FormProduct({
   useEffect(() => {
     if (product && id) {
     const initProduct = convertInitProduct(product);
+    
       form.setFieldsValue(initProduct);
+      setBackupForm([initProduct]);
+    }else{
+      setBackupForm([form.getFieldsValue()])
     };
+    
   }, [product, id, form]);
 
-  const onValuesChange = (value: any, values: FieldTypeFormProduct) => {
-    const key = Object.keys(value)[0];
+  const onValuesChange = (valueChange: any, values: FieldTypeFormProduct) => {
+    const key: keyof FieldTypeFormProduct = Object.keys(valueChange)[0] as keyof FieldTypeFormProduct;
     switch (key) {
       case "cumulativeDiscount":
         const cumulativeDiscount = CumulativeDiscountModule.service.onDiscountChange(values[key])
@@ -87,11 +113,32 @@ export default function FormProduct({
           cumulativeDiscount,
         });
         break;
-
       default:
         break;
-    }
+    };
+    // Recover Form
+    const onSetRecoverForm = () => setBackupForm((pre:FieldTypeFormProduct[]) => [...pre,values]);
+    const debounceSetRecover = debounce(onSetRecoverForm,0);
+    debounceSetRecover();
   };
+
+  // useEffect(() => {
+  //   if(dataNotificationUndo.open && !!dataNotificationUndo.description){
+  //     notification.warning({
+  //       message : `Hệ thống thông báo`,
+  //       description : dataNotificationUndo.description,
+  //       duration: 0, // Never Off
+  //       btn : <Button size="small" onClick={() => onUndoForm(true)}>
+  //         Hoàn tác
+  //       </Button>
+  //     });
+  //     setDataNotificationUndo({
+  //       open : false,
+  //       description : null
+  //     })
+  //   }
+
+  // },[dataNotificationUndo]);
   return (
     <div>
       <h5>Tạo mới thuốc</h5>
@@ -102,6 +149,7 @@ export default function FormProduct({
         wrapperCol={{ span: 16 }}
         labelAlign="left"
         scrollToFirstError
+
         initialValues={{
           variants: [
             {
@@ -200,18 +248,24 @@ export default function FormProduct({
             </span>
           }
         >
-          <CumulativeDiscountModule.components.DiscountList target={CumulativeDiscountModule.constants.TARGET.product} loading={isLoading} form={form} />
+          <CumulativeDiscountModule.components.DiscountList supplierId={supplierId} target={CumulativeDiscountModule.constants.TARGET.product} loading={isLoading} form={form} />
         </BaseBorderBox>
 
         <Row justify={"end"} gutter={16}>
           <Col>
-            <Button size="large" onClick={onCancel}>
+          {/* To preserve backup Keep one To undo to Init */}
+          <Button disabled={backupForm.length <= 1} onClick={() => onUndoForm()}>
+            Hoàn tác
+          </Button>
+          </Col>
+          <Col>
+            <Button onClick={onCancel}>
               Huỷ
             </Button>
           </Col>
           <Col>
             <Button
-              size="large"
+             
               loading={isSubmitLoading}
               htmlType="submit"
               type="primary"
@@ -221,6 +275,7 @@ export default function FormProduct({
           </Col>
         </Row>
       </Form>
+      
     </div>
   );
 }

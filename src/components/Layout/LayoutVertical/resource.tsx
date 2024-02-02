@@ -71,30 +71,35 @@ export const resource: ItemType[] = [
             path: PATH_APP.worldPharma.productGroup,
             key: PATH_APP.worldPharma.productGroup,
             icon: <HddOutlined />,
+            permission :[POLICIES.READ_PRODUCTGROUP],
           },
           {
             label: "Danh sách hãng sản xuất",
             path: PATH_APP.worldPharma.manufacturer,
             key: PATH_APP.worldPharma.manufacturer,
             icon: <HomeOutlined />,
+            permission :[POLICIES.READ_MANUFACTURER],
           },
           {
             label: "Xếp hạng nhà cung cấp",
             path: PATH_APP.worldPharma.ranking,
             key: PATH_APP.worldPharma.ranking,
             icon: <TrophyOutlined />,
+            permission :[POLICIES.READ_RANKING],
           },
           {
             label: "Đơn vị tính",
             path: PATH_APP.worldPharma.unit,
             key: PATH_APP.worldPharma.unit,
             icon: <DollarOutlined />,
+            permission :[POLICIES.READ_UNIT],
           },
           {
             label: "Danh sách thuốc",
             path: PATH_APP.worldPharma.medicine,
             key: PATH_APP.worldPharma.medicine,
             icon: <DatabaseOutlined />,
+            permission :[POLICIES.READ_MEDICINE],
             // permission :[POLICIES.READ_USERGROUP],
           },
           {
@@ -118,40 +123,52 @@ export const resource: ItemType[] = [
   },
 
   // Chi nhánh
-  {
-    label: "Chi nhánh",
-    key: "branch",
-    permission: [POLICIES.READ_BRANCH],
-    children: [
+    {
+      label : "Chi nhánh",
+      key: "branch",
+      permission :[POLICIES.READ_BRANCH],
+      children : [
+        {
+          label : "Danh sách chi nhánh",
+          path : PATH_APP.branch.root,
+          key : PATH_APP.branch.root,
+        }
+      ],
+      icon :<AppstoreFilled />
+    },
+    {
+      label: "Quản lý công việc",
+      key: "todoList",
+      icon: <AppstoreFilled />,
+      permission :[POLICIES.READ_TODOLIST, POLICIES.READ_TODOCONFIGSTATUS],
+      children: [
+        {
+          label: "Quản lý công việc",
+          // key: "statusConfig",
+          icon: <ApartmentOutlined />,
+          path: PATH_APP.todoList.workBoard,
+          key: PATH_APP.todoList.workBoard,
+          permission :[POLICIES.READ_TODOLIST],
+          
+        },
+        {
+          label: "Cấu hình trạng thái",
+          // key: "statusConfig",
+          icon: <AppstoreFilled />,
+          path: PATH_APP.todoList.statusConfig,
+          key: PATH_APP.todoList.statusConfig,
+          permission :[POLICIES.READ_TODOCONFIGSTATUS],
+          
+        },
+      ],
+      
+    },
+      //Nhân viên
       {
         label: "Danh sách chi nhánh",
         path: PATH_APP.branch.root,
         key: PATH_APP.branch.root,
       },
-    ],
-    icon: <AppstoreFilled />,
-  },
-  {
-    label: "Quản lý công việc",
-    key: "todoList",
-    icon: <AppstoreFilled />,
-    children: [
-      {
-        label: "Quản lý công việc",
-        // key: "statusConfig",
-        icon: <ApartmentOutlined />,
-        path: PATH_APP.todoList.workBoard,
-        key: PATH_APP.todoList.workBoard,
-      },
-      {
-        label: "Cấu hình trạng thái",
-        // key: "statusConfig",
-        icon: <AppstoreFilled />,
-        path: PATH_APP.todoList.statusConfig,
-        key: PATH_APP.todoList.statusConfig,
-      },
-    ],
-  },
   //Nhân viên
   {
     label: "Nhân viên",
@@ -208,6 +225,12 @@ export const resource: ItemType[] = [
         key: PATH_APP.quotation.root,
         permission:[POLICIES.READ_QUOTATION],
       },
+      // {
+      //   label: "Luỹ kế mặt hàng",
+      //   path: PATH_APP.bill.lk,
+      //   key: PATH_APP.bill.lk,
+      //   permission:[POLICIES.READ_BILL],
+      // },
     ],
     icon: <AppstoreFilled />,
   },

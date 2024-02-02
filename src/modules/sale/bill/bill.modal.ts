@@ -68,6 +68,7 @@ export interface FormFieldCreateBill {
 export interface PayloadCreateBill extends FormFieldCreateBill {
     quotationItems : Omit<quotation,'variant' | 'variants'>[],
     totalPrice : number,
+    totalAmount : number,
     _id? : any,
 }
 export interface PayloadUpdateBill  {

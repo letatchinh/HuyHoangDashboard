@@ -129,13 +129,53 @@ class Editor extends ClassicEditor {
 				'linkImage'
 			]
 		},
-		// table: {
-		// 	contentToolbar: [
-		// 		'tableColumn',
-		// 		'tableRow',
-		// 		'mergeTableCells'
-		// 	]
-		// },
+		mediaEmbed:{
+			previewsInData:true,
+
+			toolbar:[
+				'mediaEmbed', // Nút chèn media embed
+				'alignLeft',
+				'alignRight',
+				'alignCenter',
+				'resizeImage:25',
+				'resizeImage:50',
+				'resizeImage:75',
+				'resizeImage:original',
+				'imageStyle:inline',
+			],
+		},
+		fontSize:{
+			options:[ 9, 11, 12, 14, 15, 16, 18, 19, 20, 22, 23, 24, 25, 27, 28, 29],
+			supportAllValues: true
+		},
+		table: {
+			contentToolbar: [
+				'tableColumn',
+				'tableRow',
+				'mergeTableCells'
+			]
+		},
+		balloonToolbar: {
+			items: ['bold', 'italic', 'undo', 'redo' ],
+			shouldNotGroupWhenFull: true
+		},
+		htmlSupport:{
+			allow:[
+				{
+					name: /.*/,
+					attributes: true,
+					classes: true,
+					styles: true
+				},
+				{
+					name: /^(div|section|article|style)$/,
+					styles:true,
+					attributes: true,
+                    classes: true,
+				},
+		
+			]
+		},
 
 	};
 }

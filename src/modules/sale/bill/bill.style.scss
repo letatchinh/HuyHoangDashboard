@@ -1,7 +1,8 @@
 .form-create-bill{
-    padding: 0px 10px;
+    padding: 0px 5px;
     height: 100%;
     & > div {
+        padding-top: 5px;
         height: 100%;
     }
     &--payment{
@@ -46,7 +47,7 @@
                         border: unset !important;
                     }
                     & .ant-tabs-tab-btn{
-                        font-weight: 600;
+                        font-weight: 500;
                     }
                 }
             }
@@ -132,6 +133,17 @@
     }
 }
 
+.product-suggest{
+    position: fixed;
+    bottom: 10px;
+    background-color: rgb(253, 253, 253);
+    padding: 10px;
+    max-width: 100%;
+    width: 65.5%;
+    &__list{
+        // margin-bottom: 10px;
+    };
+};
 .table-searchProduct{
     & .ant-table-row{
         cursor: pointer;

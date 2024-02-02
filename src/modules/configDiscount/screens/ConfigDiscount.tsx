@@ -1,4 +1,9 @@
-import { MenuOutlined } from "@ant-design/icons";
+import React, { useEffect, useMemo, useState } from "react";
+import {
+  ArrowDownOutlined,
+  ArrowUpOutlined,
+  MenuOutlined,
+} from "@ant-design/icons";
 import type { DragEndEvent } from "@dnd-kit/core";
 import { DndContext } from "@dnd-kit/core";
 import { restrictToVerticalAxis } from "@dnd-kit/modifiers";
@@ -9,13 +14,11 @@ import {
   verticalListSortingStrategy
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { Checkbox, Table } from "antd";
+import { Checkbox, message, Radio, Table } from "antd";
 import type { ColumnsType } from "antd/es/table";
-import React, { useEffect, useState } from "react";
 import Breadcrumb from "~/components/common/Breadcrumb";
 import WhiteBox from "~/components/common/WhiteBox";
 import { useDispatch } from "react-redux";
-import { useResetState } from "~/utils/hook";
 import { configDiscountSliceAction } from "../redux/reducer";
 import POLICIES from "~/modules/policy/policy.auth";
 import { useMatchPolicy } from "~/modules/policy/policy.hook";
@@ -24,6 +27,7 @@ import {
   useUpdateConfigDiscount
 } from "../configDiscount.hook";
 import { ConfigItem } from "../configDiscount.modal";
+import useNotificationStore from "~/store/NotificationContext";
 
 interface RowProps extends React.HTMLAttributes<HTMLTableRowElement> {
   "data-row-key": string;
@@ -87,51 +91,76 @@ const ConfigDiscount: React.FC = () => {
   const resetState = () => {
     return dispatch(configDiscountSliceAction.resetAction());
   };
-  const [dataSource, setDataSource] = useState([]);
+  const [dataSource, setDataSource] = useState<any[]>([]);
   const [data, isLoading] = useGetConfigDiscounts();
   const [, updateConfig] = useUpdateConfigDiscount(() => resetState());
   const canUpdate = useMatchPolicy(POLICIES.UPDATE_CONFIGDISCOUNT);
+  const { onNotify } = useNotificationStore();
+
   useEffect(() => {
     if (data?.length) {
       setDataSource(data);
-    }
+    };
   }, [data]);
+  
 
   const handleCheckbox = (e: any, item: any, index?: number) => {
     try {
       const cloneData = [...dataSource];
-      const newData : any  = cloneData?.map((i: any, indexx: number) => {
+      const newData: any = cloneData?.map((i: any, indexx: number) => {
         if (indexx === index) {
           return {
             ...i,
             status: e.target.checked,
           };
-        };
+        }
         return i;
       });
-      updateConfig(newData);
+      updateConfig({config: newData});
       setDataSource(newData);
     } catch (error) {
       console.log(error);
-    };
+    }
+  };
+
+  const handleSortType = ( index: number ,e: number) => {
+    try {
+      const newData = [...dataSource];
+      const newSortData = newData?.map((i: object, objIndex: number) => {
+        if (objIndex === index) {
+          return {
+            ...i,
+            sortType: e,
+          };
+        }
+        return i;
+      });
+      updateConfig({config: newSortData});
+      setDataSource([...newSortData]);
+    } catch (error) {
+      onNotify?.error("Có lỗi xảy ra");
+    }
   };
 
   const onDragEnd = ({ active, over }: DragEndEvent) => {
-    if (!canUpdate) { // check permission
+    if (!canUpdate) {
+      // check permission
       return;
-    };
+    }
     if (active.id !== over?.id) {
       try {
-        updateConfig(dataSource);
+        let data;
         setDataSource((previous) => {
-          const activeIndex = previous.findIndex((i: any) => i.key === active.id);
+          const activeIndex = previous.findIndex(
+            (i: any) => i.key === active.id
+          );
           const overIndex = previous.findIndex((i: any) => i.key === over?.id);
-          return arrayMove(previous, activeIndex, overIndex);
+          return data = arrayMove(previous, activeIndex, overIndex);
         });
+        updateConfig({config:data});
       } catch (error: any) {
-        console.log(error);
-        // toastr.error(error.message || "Có lỗi xảy ra" );
-      };
+        onNotify?.error(error.message || "Có lỗi xảy ra" );
+      }
     }
   };
   const columns: ColumnsType<ConfigItem> = [
@@ -148,7 +177,28 @@ const ConfigDiscount: React.FC = () => {
     {
       title: "Kiểu sắp xếp",
       dataIndex: "sortType",
-      render: (value) => (value === -1 ? "Giảm dần" : "Tăng dần"),
+      width: "20%",
+      // render: (value) => (value === -1 ? "Giảm dần" : "Tăng dần"),
+      render: (value,rc, index) => {
+        return (
+          <>
+            <span>
+              {value === -1 ? "Giảm dần" : "Tăng dần"}
+            </span> &nbsp;
+            {value === 1 ? (
+              <ArrowUpOutlined
+                style={{ cursor: "pointer" }}
+                onClick={() => handleSortType(index,-1)}
+              />
+            ) : (
+              <ArrowDownOutlined
+                style={{ cursor: "pointer" }}
+                onClick={() => handleSortType(index,1)}
+              />
+            )}
+          </>
+        );
+      },
     },
     {
       title: "Trạng thái",
@@ -156,10 +206,13 @@ const ConfigDiscount: React.FC = () => {
       align: "center",
       width: 100,
       render: (value, rc, index) => {
-        return <Checkbox
-          disabled={!canUpdate}
-          onChange={(e: any) => handleCheckbox(e, rc, index)} checked={value}
-        />
+        return (
+          <Checkbox
+            disabled={!canUpdate}
+            onChange={(e: any) => handleCheckbox(e, rc, index)}
+            checked={value}
+          />
+        );
       },
     },
   ];
@@ -196,62 +249,4 @@ const ConfigDiscount: React.FC = () => {
 
 export default ConfigDiscount;
 
-// import React, { useEffect, useState } from "react";
-// import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-// import Breadcrumb from "~/components/common/Breadcrumb";
-// import WhiteBox from "~/components/common/WhiteBox";
-// import { useGetConfigDiscounts, useUpdateConfigDiscount } from "../configDiscount.hook";
 
-// const ConfigDiscount: React.FC = () => {
-//   const [items, setItems] = useState([]);
-//   const [data, isLoading] = useGetConfigDiscounts();
-//   const [, updateConfig] = useUpdateConfigDiscount();
-//   useEffect(() => {
-//     if (data?.length) {
-//       setItems(data);
-//     };
-//   }, [data]);
-//   // Function to handle item reordering
-//   const onDragEnd = (result: any) => {
-//     if (!result.destination) {
-//       return;
-//     }
-//     const newItems = Array.from(items);
-//     const [movedItem] = newItems.splice(result.source.index, 1);
-//     newItems.splice(result.destination.index, 0, movedItem);
-//     updateConfig(newItems);
-//     setItems(newItems);
-//   };
-//   return (
-//     <div>
-//       <Breadcrumb title="Cấu hình giảm giá ưu tiên" linkTo="/config-discount" />
-//       <WhiteBox>
-//         <DragDropContext onDragEnd={onDragEnd}>
-//           <Droppable droppableId="droppable">
-//             {(provided) => (
-//               <ul {...provided.droppableProps} ref={provided.innerRef}>
-//                 {items?.map((item: any, index) => (
-//                   <Draggable key={item?.key} draggableId={item?.key} index={index}>
-//                     {(provided) => (
-//                       <div
-//                         className="config-discount__item"
-//                         {...provided.draggableProps}
-//                         {...provided.dragHandleProps}
-//                         ref={provided.innerRef}
-//                       >
-//                         {item?.name}
-//                       </div>
-//                     )}
-//                   </Draggable>
-//                 ))}
-//                 {provided.placeholder}
-//               </ul>
-//             )}
-//           </Droppable>
-//         </DragDropContext>
-//       </WhiteBox>
-//     </div>
-//   );
-// };
-
-// export default ConfigDiscount;

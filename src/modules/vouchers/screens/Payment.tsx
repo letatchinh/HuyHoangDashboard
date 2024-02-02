@@ -83,20 +83,6 @@ export default function PaymentVouchers(props: propsType): React.JSX.Element {
       key: 'totalAmount',
       render: (text, record, index) => text?.toLocaleString(),
     },
-    // {
-    //   title: 'Nhóm đối tượng',
-    //   dataIndex: 'typeObj',
-    //   key: 'typeObj',
-    //   render: (text: any, record: any, index) => {
-    //     if (record?.supplierReceive) {
-    //       return 'Nhà cung cấp'
-    //     };
-    //     if (record?.pharmacyReceive) {
-    //       return 'Nhà thuốc'
-    //     };
-    //     return '';
-    //   },
-    // },
     {
       title: 'Tên đơn vị',
       dataIndex: 'nameObj',

@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 // import { InstanceModuleRedux } from "~/redux/instanceModuleRedux";
 import { initStateSlice } from "~/redux/models";
 import { InstanceModuleRedux } from "../workSprint.modal";
+import {omit} from 'lodash';
 interface cloneInitState extends initStateSlice {
   loadingTaskBySprint?: any,
   listTaskBySprints?: any,
@@ -44,7 +45,11 @@ class WorkSprintClassExtend extends InstanceModuleRedux {
       getListTaskBySprintFailed: (state: any, { payload }: { payload: any }) => {
         state.loadingTaskBySprint = false;
         state.listTaskBySprints = [];
-      }
+      },
+      resetAction: (state:cloneInitState) => ({
+        ...state,
+        ...omit(this.cloneInitState, ["list"]),
+      }),
       // Want Add more reducer Here...
 
     }

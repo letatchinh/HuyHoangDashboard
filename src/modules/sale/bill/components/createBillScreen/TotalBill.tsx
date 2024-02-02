@@ -1,25 +1,32 @@
-import { Col, Divider, Flex, Form, Row, Typography } from "antd";
+import { InfoCircleFilled, QuestionCircleFilled } from "@ant-design/icons";
+import { Col, Divider, Flex, Form, Row, Tooltip, Typography } from "antd";
 import React from "react";
 import InputNumberAnt from "~/components/Antd/InputNumberAnt";
 import { formatter } from "~/utils/helpers";
 import { FormFieldCreateBill } from "../../bill.modal";
 import useCreateBillStore from "../../storeContext/CreateBillContext";
+import SelectDebt from "./SelectDebt";
 type propsType = {};
 const Layout = ({
   label,
   children,
   isLarge,
+  tooltip,
 }: {
   label: any;
   children: any;
   isLarge?: boolean;
+  tooltip?: string;
 }) => (
   <Row justify={"space-between"} align="middle">
     <Col>
       <Typography.Text
-        style={{ fontSize: isLarge ? 18 : 16, fontWeight: isLarge ? 600 : 400 }}
+        style={{ fontSize: isLarge ? 18 : 14, fontWeight: isLarge ? 600 : 400 }}
       >
-        {label}
+        {label} &nbsp;
+      {tooltip && <Tooltip title={tooltip}>
+          <InfoCircleFilled />
+        </Tooltip>}
       </Typography.Text>
     </Col>
     <Col>{children}</Col>
@@ -33,27 +40,31 @@ export default function TotalBill(props: propsType): React.JSX.Element {
     totalDiscount,
     totalDiscountFromProduct,
     totalDiscountFromSupplier,
+    form,
+    totalAmount,
   } = useCreateBillStore();
+  const debtType = Form.useWatch('debtType',form);
+  
   return (
     <Flex vertical gap={"small"}>
-      <Layout label={"Số lượng sản phẩm"}>{formatter(totalQuantity)}</Layout>
+      <Layout label={"Số lượng mặt hàng"}>{formatter(totalQuantity)}</Layout>
       <Layout label={"Tổng tiền"}>{formatter(totalPrice)}</Layout>
       {totalDiscountFromProduct?.["DISCOUNT.CORE"] ? (
-        <Layout label={"Tổng chiết khấu cứng từ sản phẩm"}>
+        <Layout label={"Tổng chiết khấu cứng từ mặt hàng"}>
           <Typography.Text type="warning">
             -{formatter(totalDiscountFromProduct?.["DISCOUNT.CORE"])}
           </Typography.Text>
         </Layout>
       ) : null}
       {totalDiscountFromProduct?.["DISCOUNT.SOFT"] ? (
-        <Layout label={"Tổng chiết khấu mềm từ sản phẩm"}>
+        <Layout label={"Tổng chiết khấu mềm từ mặt hàng"}>
           <Typography.Text type="warning">
             -{formatter(totalDiscountFromProduct?.["DISCOUNT.SOFT"])}
           </Typography.Text>
         </Layout>
       ) : null}
       {totalDiscountFromProduct?.["LK"] ? (
-        <Layout label={"Tổng chiết khấu luỹ kế từ sản phẩm"}>
+        <Layout label={"Tổng chiết khấu luỹ kế từ mặt hàng"}>
           <Typography.Text type="warning">
             -{formatter(totalDiscountFromProduct?.["LK"])}
           </Typography.Text>
@@ -80,12 +91,31 @@ export default function TotalBill(props: propsType): React.JSX.Element {
           </Typography.Text>
         </Layout>
       ) : null}
-      <Layout label={"Tổng chiết khấu"}>{formatter(totalDiscount)}</Layout>
-      <Layout label={"Khách trả trước"}>
-        <Form.Item<FormFieldCreateBill> name="pair">
-          <InputNumberAnt addonAfter={'VNĐ'} style={{width : 200}} min={0} max={totalPriceAfterDiscount}/>
+      <Layout label={"Tổng chiết khấu"}>
+      <Typography.Text type="warning" strong>
+        {formatter(totalDiscount)}
+      </Typography.Text>
+        </Layout>
+      <Layout tooltip="Tổng tiền sau chiết khấu có lúc không bằng Tổng tiền - Tổng chiết khấu" label={"Tổng tiền sau chiết khấu"}>
+      <Typography.Text type="warning" strong>
+        {formatter(totalAmount)}
+      </Typography.Text>
+        </Layout>
+        <SelectDebt />
+        {debtType === 'DEPOSIT' && <Layout label={"Khách trả trước"}>
+        <Form.Item<FormFieldCreateBill> name="pair" style={{margin : 0}} rules={[
+          {
+            validator(_, value) {
+              if (value <= totalAmount) {
+                return Promise.resolve();
+              }
+              return Promise.reject(new Error('Số tiền không hợp lệ!'));
+            }
+          },
+        ]}>
+          <InputNumberAnt addonAfter={'VNĐ'} style={{width : 200}} min={0} max={totalAmount}/>
         </Form.Item>
-      </Layout>
+      </Layout>}
       <div
         style={{
           width: "100%",

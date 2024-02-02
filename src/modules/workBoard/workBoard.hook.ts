@@ -111,7 +111,7 @@ const {
         failedSelector: getListFailedSelector,
         param: query,
       })
-  }
+  };
 export const useGetBoardById = (id?: string) => {
     return useFetchByParam({
       action: workBoardActions.getByIdRequest,
@@ -119,7 +119,7 @@ export const useGetBoardById = (id?: string) => {
       dataSelector: getByIdSelector,
       failedSelector: getByIdFailedSelector,
       param: id,
-    });
+    })
   };
   export const useGetListManagers = () => {
     return useFetch({

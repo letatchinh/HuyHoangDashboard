@@ -250,13 +250,13 @@ export default function ListBillItem({
       },
     },
     {
-      title: "Số tiền còn lại",
-      dataIndex: "remainAmount",
-      key: "remainAmount",
+      title: "Thành tiền",
+      dataIndex: "totalPrice",
+      key: "totalPrice",
       align: "center",
-      render(remainAmount, record, index) {
+      render(totalPrice, record, index) {
         return (
-          <Typography.Text strong>{formatter(remainAmount)}</Typography.Text>
+          <Typography.Text strong>{formatter(totalPrice)}</Typography.Text>
         );
       },
     },
@@ -280,6 +280,7 @@ export default function ListBillItem({
           <ExpandRowBillItem
             status={get(record, "status")}
             historyStatus={get(record, "historyStatus")}
+            cumulativeDiscount={get(record,'cumulativeDiscount',[])}
           />
         ),
         expandedRowKeys : [itemActive],

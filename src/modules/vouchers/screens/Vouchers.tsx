@@ -46,7 +46,6 @@ const optionsSearch: optionsSearch[] = [
 export default function Vouchers(props: propsType): React.JSX.Element {
   const navigate = useNavigate();
   const { pathname, search } = useLocation();
-  console.log(search,'search')
   const [activeTab, setActiveTab] = useState("1");
   const [searchBy, setSearchBy] = useState(head(optionsSearch)?.value || "");
   const [keyword, setKeyword] = useState("");

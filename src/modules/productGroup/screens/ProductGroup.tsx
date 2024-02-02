@@ -52,13 +52,11 @@ export default function ProductConfig() {
   }
   const handleOpenUpdate = (id: any) => {
     setShowForm(true);
-    if (id) {
       setId(id);
-    }
   };
-  const handleOpenFormCreate = () => {
-    setShowForm(true);
+  const handleOpenFormCreate = () => { 
     setId(null);
+    setShowForm(true);
   };
   const handleDelete = (id: any) => {
     deleteProductConfig(id);
@@ -66,6 +64,7 @@ export default function ProductConfig() {
   };
   const handleCloseForm1 = () => {
     setShowForm(false);
+    form.resetFields()
     setId(null);
   }
   const columns: ColumnsType<DataType> = [
@@ -211,12 +210,12 @@ export default function ProductConfig() {
       <ModalAnt
         open={showForm}
         title={id ? 'Cập nhật danh mục sản phẩm' : 'Tạo mới danh mục sản phẩm'}
-        onCancel={handleCloseForm}
+        onCancel={handleCloseForm1}
         footer={null}
         // destroyOnClose
         width={800}
       >
-        <ProductGroupForm id={id} callBack={handleCloseForm} updateProductConfig={updateProductConfig} />
+        <ProductGroupForm id={id} setId={setId} callBack={handleCloseForm} updateProductConfig={updateProductConfig} />
       </ModalAnt>
     </div>
   );

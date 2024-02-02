@@ -184,7 +184,7 @@ export default function ProductUnit(props: propsType): React.JSX.Element {
           // destroyOnClose
           width={800}
         >
-          <ProductUnitForm id={id} updateProductUnit={updateProductUnit} callBack={handleCloseForm} />
+          <ProductUnitForm id={id} setId={setId} updateProductUnit={updateProductUnit} callBack={handleCloseForm} />
         </ModalAnt>
       </div>
     </>

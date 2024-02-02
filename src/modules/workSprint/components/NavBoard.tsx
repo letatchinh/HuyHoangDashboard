@@ -24,7 +24,7 @@ interface NavBoardProps {}
         let temp:any = pick(value, ['_id', 'children', 'name']);
         temp.key = String(temp._id);
         temp.title = (
-          <Link to={`/work-board/sprint/${temp._id}`}>
+          <Link to={`/work-board/sprint/${temp._id}`} style={{textDecoration: 'none'}}>
             <p style={{ fontSize: 16, color: 'black', width: '100%', margin: 0, padding: '4px 0' }}>
               {temp.name}
             </p>

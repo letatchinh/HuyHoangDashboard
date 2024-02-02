@@ -1,10 +1,10 @@
 import { ExclamationCircleOutlined } from "@ant-design/icons";
 import type { InputRef } from 'antd';
 import { Button, Checkbox, ColorPicker, Form, Input, Table, Tag, Tooltip, message } from 'antd';
-import { Color } from 'antd/es/color-picker';
 import type { FormInstance } from 'antd/es/form';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import Breadcrumb from '~/components/common/Breadcrumb';
+import WithPermission from "~/components/common/WithPermission";
 import useTranslate from '~/lib/translation';
 import POLICIES from '~/modules/policy/policy.auth';
 import { useMatchPolicy } from '~/modules/policy/policy.hook';
@@ -118,18 +118,16 @@ interface DataType {
 type ColumnTypes = Exclude<EditableTableProps['columns'], undefined>;
 const StatusConfig: React.FC = () => {
   const { t }: any = useTranslate();
-  const [, createStatusConfig] = useCreateStatusConfig(useResetAction());
-  const [, deleteStatusConfig] = useDeleteStatusConfig(useResetAction());
-  const [, updateStatusConfig] = useUpdateStatusConfig(useResetAction());
+  const [, createStatusConfig] = useCreateStatusConfig();
+  const [, deleteStatusConfig] = useDeleteStatusConfig();
+  const [, updateStatusConfig] = useUpdateStatusConfig();
   const [query] = useStatusConfigQueryParams();
   const [listStatusConfig, isLoading] = useGetListStatusConfig(query);
-  const canDelelte = useMatchPolicy(POLICIES.DELETE_WORKMANAGEMENT);
-  const canUpdate = useMatchPolicy(POLICIES.UPDATE_WORKMANAGEMENT);
-  const [count, setCount] = useState(2);
+  const canDelelte = useMatchPolicy(POLICIES.DELETE_TODOCONFIGSTATUS);
+  const canUpdate = useMatchPolicy(POLICIES.UPDATE_TODOCONFIGSTATUS);
   useResetAction()
   const handleDelete = (_id: keyof DataType) => {
     deleteStatusConfig(_id);
-    console.log(_id)
   };
   const defaultColumns: (ColumnTypes[number] & { editable?: boolean; dataIndex: string })[] = [
     {
@@ -145,23 +143,22 @@ const StatusConfig: React.FC = () => {
         </Tag>
       )
     },
-    {
+    {  
       title: 'Tên trạng thái',
       dataIndex: 'value',
       width: '30%',
-      editable: true,
+      editable: canUpdate,
     },
     {
       title: 'Màu chữ',
       dataIndex: 'color',
-      // editable: true,
       render: (_, record: any) => {
         return (
           <ColorPicker
             showText
             value={record?.color}
             onChange={(color) => {
-              if (!canUpdate) return message.warning('Bạn không có quyền thay đổi');
+              if (!canUpdate) return message.error("Bạn không có quyền thay đổi")
               updateStatusConfig({ ["color"]: color.toHexString(), id: record._id });
             }}
           />
@@ -171,14 +168,13 @@ const StatusConfig: React.FC = () => {
     {
       title: 'Màu nền',
       dataIndex: 'backgroundColor',
-      // editable: true,
       render: (_, record: any) => {
         return (
           <ColorPicker
             showText
             value={record?.backgroundColor}
             onChange={(color) => {
-              if (!canUpdate) return message.warning('Bạn không có quyền thay đổi');
+              if (!canUpdate)  return message.error("Bạn không có quyền thay đổi")
               updateStatusConfig({ ["backgroundColor"]: color.toHexString(), id: record._id });
             }}
           />
@@ -193,6 +189,7 @@ const StatusConfig: React.FC = () => {
       align: "center",
       render: (value, record) => (
         <Checkbox
+        disabled={!canUpdate}
           checked={value}
           onChange={(e) => {
             if (value) return;
@@ -213,12 +210,12 @@ const StatusConfig: React.FC = () => {
       align: "center",
       width: 80,
       render: (value, record) => {
-        const disable = Boolean(record.priority) && Boolean(record.isDefault)
+        const disable = Boolean(record.priority) && Boolean(record.isDefault);
         const title = disable ? 'Không thể thực hiện thao tác vì trạng thái hiện tại đang được ưu tiên' : '';
         return (
           <Tooltip title={title} >
             <Checkbox
-              disabled={disable}
+              disabled={!canUpdate || disable}
               checked={value}
               onChange={(e) => {
                 updateStatusConfig({
@@ -238,7 +235,7 @@ const StatusConfig: React.FC = () => {
       align: "center",
       width: 80,
       render: (value, record) => (
-        <Checkbox checked={value} onChange={(e) => {
+        <Checkbox disabled={!canUpdate} checked={value} onChange={(e) => {
           if (!canUpdate) return
           updateStatusConfig({ justAdmin: e.target.checked, id: record._id })
         }} />
@@ -259,18 +256,22 @@ const StatusConfig: React.FC = () => {
         </Tooltip>
       )
     },
-    // canDelete?
-    {
-      title: "Hành động",
-      dataIndex: "operation",
-      key: "operation",
-      align: "center",
-      width: 80,
-      render: (_, record) =>
-        listStatusConfig?.length >= 1 ? (
-          <Button onClick={() => handleDelete(record._id)} type="dashed" style={{ color: 'red' }} size="small">Xoá</Button>
-        ) : null,
-    },
+    ...( canDelelte ? [
+        {
+          title: "Hành động",
+          dataIndex: "operation",
+          key: "operation",
+          align: "center" as any,
+          width: 80,
+          render: (_: any , record : any) =>
+            listStatusConfig?.length >= 1 ? (
+              <Tooltip title={!canDelelte ? 'Bạn không được cấp quyền thực hiện thao tác này' : ''}>
+                <Button onClick={() => handleDelete(record._id)} disabled={!canDelelte} type="dashed" style={{ color: 'red' }} size="small">Xoá</Button>
+              </Tooltip>
+            ) : null,
+        },
+      ]: []
+    ),
   ];
 
   const handleAdd = () => {
@@ -304,13 +305,16 @@ const StatusConfig: React.FC = () => {
       }),
     };
   });
-
+console.log(POLICIES,'111')
   return (
     <div>
-      <Breadcrumb title={t('statusConfig')} />
-      <Button onClick={handleAdd} type="primary" style={{ marginBottom: 16 }}>
-        Thêm cấu hình trạng thái
-      </Button>
+      <Breadcrumb title={t('Cấu hình trạng thái')} />
+      <WithPermission permission={POLICIES.WRITE_TODOCONFIGSTATUS}>
+        <Button onClick={handleAdd} type="primary" style={{ marginBottom: 16 }}>
+          Thêm cấu hình trạng thái
+        </Button>
+      </WithPermission>
+
       <Table
         components={components}
         rowClassName={() => 'editable-row'}

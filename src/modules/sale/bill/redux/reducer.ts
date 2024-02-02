@@ -1,9 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { get, omit } from "lodash";
-import { cumulativeDiscountType } from "~/modules/cumulativeDiscount/cumulativeDiscount.modal";
+// import { cumulativeDiscountType } from "~/modules/cumulativeDiscount/cumulativeDiscount.modal";
 import { InstanceModuleRedux } from "~/redux/instanceModuleRedux";
 import { initStateSlice } from "~/redux/models";
-import { getDiscountAmount } from "../bill.service";
+import { CalculateDiscountFactory } from "../bill.service";
 import { STATUS_BILL } from "../constants";
 interface cloneInitState extends initStateSlice {
  // Add cloneInitState Type Here
@@ -13,6 +13,10 @@ interface cloneInitState extends initStateSlice {
  updateBillItemFailed? : any,
  updateBillItemSuccess? : any,
 
+  listProductSuggest?:any,
+  isProductSuggestLoading?: boolean,
+  getProductSuggestFailed?: any,
+  pagingProductSuggest?:any ;
 }
 class BillClassExtend extends InstanceModuleRedux {
   cloneReducer;
@@ -36,21 +40,43 @@ class BillClassExtend extends InstanceModuleRedux {
       state.getDebtFailed = payload;
     },
     getByIdSuccess: (state:cloneInitState, { payload }:{payload?:any}) => {
+      // const CalculateDiscountMethod = new CalculateDiscountFactory();
       state.isGetByIdLoading = false;
       const billItems = get(payload,'billItems',[])?.map((billItem : any) => {
-        const price : number = get(billItem, 'variant.price',1) * get(billItem, 'quantity',1);
-        const totalDiscount : number = get(billItem,'cumulativeDiscount',[])?.reduce((sum:number,cur : cumulativeDiscountType) => sum + getDiscountAmount(cur,price),0);
-        const remainAmount = price - totalDiscount;
+        // const {variant} = billItem || {};
+        // console.log(billItem,'billItem');
+        const quantity:number = Number((get(billItem, "quantity", 1) / get(billItem, "variant.exchangeValue", 1)).toFixed(1));
+        const price : number = get(billItem, 'variant.price',1);
+        const totalPrice : number = get(billItem, 'totalPrice',1);
+        const totalAmount = Math.floor(Number(quantity * price));
+        const totalDiscount : number = totalPrice - totalAmount;
         return {
           ...billItem,
+          totalAmount,
           totalDiscount,
-          remainAmount : remainAmount > 0 ? remainAmount : 0
         }
       });
       state.byId = {
         ...payload,
         billItems
       }
+      },
+    getListProductSuggestRequest: (state:cloneInitState) => {
+      state.isProductSuggestLoading = true;
+      },
+    getListProductSuggestSuccess: (state:cloneInitState, { payload }:{payload?:any}) => {
+      state.isProductSuggestLoading = false;
+      state.listProductSuggest = payload;
+      state.pagingProductSuggest = {
+        current : payload?.page,
+        pageSize : payload?.limit,
+        total: payload?.totalDocs,
+        ...omit(payload,'docs','page','limit','totalDocs')
+      }
+      },
+    getListProductSuggestFailed: (state:cloneInitState, { payload }:{payload:any}) => {
+      state.isProductSuggestLoading = false;
+      state.getProductSuggestFailed = payload;
     },
     updateSuccess: (state:cloneInitState, { payload }:{payload:any}) => {
       state.isSubmitLoading = false;
@@ -104,6 +130,10 @@ class BillClassExtend extends InstanceModuleRedux {
       debt : null,
       updateBillItemFailed : null,
       updateBillItemSuccess : null,
+      
+      listProductSuggest: [],
+      isProductSuggestLoading: false,
+      getProductSuggestFailed: null,
       // Want Add more State Here...
     }
   }

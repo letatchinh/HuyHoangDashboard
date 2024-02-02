@@ -1,0 +1,270 @@
+import { CheckCircleOutlined, CheckCircleTwoTone, SyncOutlined } from "@ant-design/icons";
+import { Button, Col, DatePicker, Form, InputNumber, Modal, Row, Tag } from "antd";
+import dayjs from "dayjs";
+import { get } from "lodash";
+import React, { useMemo, useState } from "react";
+import RenderLoading from "~/components/common/RenderLoading";
+import { TYPE_DISCOUNT } from "../constants";
+import { TypeRepeatType } from "../cumulativeDiscount.modal";
+import { DiscountFactory } from "../cumulativeDiscount.service";
+type propsType = {
+  form: any;
+  name: number;
+  restField: any;
+  loading: boolean;
+};
+export default function ApplyTimeSheet({
+  form,
+  name,
+  restField,
+  loading,
+}: propsType): React.JSX.Element {
+  const [isReset,setIsReset] = useState(false);
+  const typeRepeat: TypeRepeatType = Form.useWatch(
+    ["cumulativeDiscount", name, "applyTimeSheet", "typeRepeat"],
+    form
+  );
+  const applyTimeSheet = form.getFieldValue(['cumulativeDiscount',name,'applyTimeSheet']);
+    
+  const cumulativeDiscount = Form.useWatch('cumulativeDiscount');
+  const getField = (field: string | string[]) => {
+    const path = ["cumulativeDiscount", name, "applyTimeSheet"];
+    return form.getFieldValue(
+      Array.isArray(field) ? path.concat(field) : [...path, field]
+    );
+  };
+  const getFieldCumulative = (field: string | string[]) => {
+    const path = ["cumulativeDiscount", name, "cumulativeTimeSheet"];
+    return form.getFieldValue(
+      Array.isArray(field) ? path.concat(field) : [...path, field]
+    );
+  };
+  const changeForm = (value:any) => {
+    
+    const newCumulativeDiscount = cumulativeDiscount?.map(
+      (item: any, index: number) =>
+        index === name
+          ? {
+              ...item,
+              ...value
+            }
+          : item
+    );
+
+    form.setFieldsValue({
+      cumulativeDiscount: newCumulativeDiscount,
+    });
+  };
+  const handleConfirmResetSession = () => {
+    Modal.confirm({
+      title: 'Xác nhận làm mới chương trình sẽ kết thúc chương trình cũ và bắt đầu 1 chương trình mới',
+      onOk:handleResetSession
+    })
+  }
+  const handleResetSession = () => {
+    const DiscountMethod = new DiscountFactory();
+    const newSession = DiscountMethod.generatorSession();
+    changeForm({
+      applyTimeSheet : {
+        ...applyTimeSheet,
+        nonRepeat : {
+          ...get(applyTimeSheet,'nonRepeat'),
+          session:newSession,
+        }
+      }
+    });
+    setIsReset(true);
+  };
+  
+  return (
+    <Row>
+      <Form.Item name={[name, "applyTimeSheet", "typeRepeat"]} hidden />
+      {typeRepeat === "nope" && (
+        <>
+          <Col span={7}>
+            <Form.Item
+              style={{ marginBottom: 0 }}
+              {...restField}
+              label={"Từ ngày"}
+              name={[name, "applyTimeSheet", "nonRepeat", "gte"]}
+              rules={[
+                {
+                  required: true,
+                  message: "Xin vui nhập!",
+                },
+                ({ getFieldValue }) => ({
+                  validator(_, value) {
+                    const gte = getFieldValue([
+                      "cumulativeDiscount",
+                      name,
+                      "cumulativeTimeSheet",
+                      "nonRepeat",
+                      "lte",
+                    ]);
+                    const typeDiscount = getFieldValue([
+                      "cumulativeDiscount",
+                      name,
+                      "typeDiscount",
+                    ]);
+                    if (typeDiscount === TYPE_DISCOUNT.LK && value < gte) {
+                      return Promise.reject(
+                        "Phải bé hơn ngày tích luỹ kết thúc"
+                      );
+                    }
+                    return Promise.resolve();
+                  },
+                }),
+              ]}
+            >
+              {RenderLoading(
+                loading,
+                <DatePicker
+                  disabledDate={(current) => {
+                    const typeDiscount = form.getFieldValue([
+                      "cumulativeDiscount",
+                      name,
+                      "typeDiscount",
+                    ]);
+                    return typeDiscount === TYPE_DISCOUNT.LK && current < dayjs(getFieldCumulative(["nonRepeat", "lte"]))
+                  }
+                  }
+                  format={"YYYY-MM-DD"}
+                />
+              )}
+            </Form.Item>
+          </Col>
+          <Col span={7}>
+            <Form.Item shouldUpdate noStyle>
+              {() => (
+                <Form.Item
+                  style={{ marginBottom: 0 }}
+                  {...restField}
+                  label={"Đến ngày"}
+                  name={[name, "applyTimeSheet", "nonRepeat", "lte"]}
+                  rules={[
+                    {
+                      required: true,
+                      message: "Xin vui nhập!",
+                    },
+                    ({ getFieldValue }) => ({
+                      validator(_, value) {
+                        const gte = getFieldValue([
+                          "cumulativeDiscount",
+                          name,
+                          "applyTimeSheet",
+                          "nonRepeat",
+                          "gte",
+                        ]);
+                        
+                        if (value < gte) {
+                          return Promise.reject("Phải bé hơn ngày bắt đầu");
+                        }
+                        return Promise.resolve();
+                      },
+                    }),
+                  ]}
+                >
+                  {RenderLoading(
+                    loading,
+                    <DatePicker
+                      disabledDate={(current) =>
+                        current <= dayjs(getField(["nonRepeat", "gte"]))
+                      }
+                      format={"YYYY-MM-DD"}
+                    />
+                  )}
+                </Form.Item>
+              )}
+            </Form.Item>
+          </Col>
+          {typeRepeat === "nope" && get(applyTimeSheet,'nonRepeat.session') &&  (
+            <Col>
+              {isReset ? (
+                <Tag
+                  icon={<CheckCircleOutlined />}
+                  bordered={false}
+                  color="success"
+                >
+                  Đã làm mới
+                </Tag>
+              ) : (
+                <Button
+                  onClick={handleConfirmResetSession}
+                  type="primary"
+                  ghost
+                  icon={<SyncOutlined />}
+                >
+                  Làm mới chương trình
+                </Button>
+              )}
+            </Col>
+          )}
+        </>
+      )}
+      {["ranger", "month", "quarter"].includes(typeRepeat) && (
+        <>
+          <Col span={7}>
+            <Form.Item shouldUpdate noStyle>
+              {() => (
+                <Form.Item
+                  style={{ marginBottom: 0 }}
+                  {...restField}
+                  label={"Từ ngày"}
+                  name={[name, "applyTimeSheet", "repeat", "gteRanger"]}
+                  rules={[
+                    {
+                      required: true,
+                      message: "Xin vui nhập!",
+                    },
+                  ]}
+                >
+                  {RenderLoading(loading, <InputNumber min={1} max={31} />)}
+                </Form.Item>
+              )}
+            </Form.Item>
+          </Col>
+          <Col span={7}>
+            <Form.Item shouldUpdate noStyle>
+              {() => (
+                <Form.Item
+                  style={{ marginBottom: 0 }}
+                  {...restField}
+                  label={"Đến ngày"}
+                  name={[name, "applyTimeSheet", "repeat", "lteRanger"]}
+                  rules={[
+                    {
+                      required: true,
+                      message: "Xin vui nhập!",
+                    },
+                    ({ getFieldValue }) => ({
+                      validator(_, value) {
+                        const gte = getFieldValue([
+                          "cumulativeDiscount",
+                          name,
+                          "applyTimeSheet",
+                          "repeat",
+                          "gteRanger",
+                        ]);
+                        if (
+                          ["month", "quarter"].includes(typeRepeat) &&
+                          value < gte
+                        ) {
+                          return Promise.reject(
+                            "Phải lớn hơn giá trị ngày bắt đầu"
+                          );
+                        }
+                        return Promise.resolve();
+                      },
+                    }),
+                  ]}
+                >
+                  {RenderLoading(loading, <InputNumber min={0} max={31} />)}
+                </Form.Item>
+              )}
+            </Form.Item>
+          </Col>
+        </>
+      )}
+    </Row>
+  );
+}

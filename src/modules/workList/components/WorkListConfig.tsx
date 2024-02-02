@@ -67,7 +67,7 @@ const BoardConfig: FC<BoardConfigProps> = ({ name, id, dataBoardConfigItem }) =>
                 onPressEnter={handleInputConfirm}
               />
             </Col>
-            <WithOrPermission permission={[POLICIES.ADMIN_WORKMANAGEMENT, POLICIES.WRITE_WORKMANAGEMENT]}>
+            <WithOrPermission permission={[POLICIES.ADMIN_TODOLIST, POLICIES.WRITE_TODOLIST]}>
               <Col style={{ width: 20 }} className="work-item-top_delete-button">
                 <Popconfirm
                   title="Bạn có chắc chắn muốn cột này ?"

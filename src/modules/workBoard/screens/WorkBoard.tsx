@@ -18,8 +18,10 @@ import { useMatchOrPolicy } from '~/modules/policy/policy.hook';
 interface WorkFlowProps { }
 
 const WorkBoard: React.FC<WorkFlowProps> = () => {
-    const canUpdate = useMatchOrPolicy([POLICIES.UPDATE_WORKMANAGEMENT]);
-    const canDELETE = useMatchOrPolicy([POLICIES.DELETE_WORKMANAGEMENT]);
+  // const canCreate = useMatchOrPolicy([POLICIES.WRITE_TODOLIST]);
+  const canUpdateAndDelete = useMatchOrPolicy([POLICIES.UPDATE_TODOLIST, POLICIES.DELETE_TODOLIST]);
+  const canUpdate = useMatchOrPolicy([POLICIES.UPDATE_TODOLIST]);
+  const canDELETE = useMatchOrPolicy([POLICIES.DELETE_TODOLIST]);
   const [form] = Form.useForm();
   const { select, setSelect, onClick } = useExpandrowTableClick();
   const [isOpenForm, setOpen] = useState(false);
@@ -62,20 +64,18 @@ const WorkBoard: React.FC<WorkFlowProps> = () => {
       dataIndex: 'name',
       align: 'center',
       key: 'name',
-      render: (value, record) => {
-        return (
-          <Button type="link" href={`/work-board/sprint/${record._id}`} >
-            {value}
-          </Button>
-        );
-      }
+      render: (value, record) => (
+        <Button type="link" href={`/work-board/sprint/${record._id}`}>
+          {value}
+        </Button>
+      ),
     },
     {
       title: 'Người tạo',
       dataIndex: 'createBy',
       align: 'center',
       key: 'createBy',
-      render: (_, record) => <a>{record?.userCreate?.fullName}</a>,
+      render: (_, record) => <p>{record?.userCreate?.fullName}</p>,
     },
     {
       title: 'Ngày tạo',
@@ -105,26 +105,35 @@ const WorkBoard: React.FC<WorkFlowProps> = () => {
         </Space>
       ),
     },
-    {
-      title: 'Hành động',
-      key: 'action',
-      align: 'center',
-      width: '180px',
-      render: (_, record) => (
-        <Space size="small">
-          <Button type="primary" onClick={() => {
-            if(!canUpdate) return message.warning('Bạn không có quyền thay đổi')
-            handleOpenUpdate(record?._id)}}>
-            Chinh sửa
-          </Button>
-          <Button style={{ color: 'red' }} onClick={() =>{
-            if(!canDELETE) return message.warning('Bạn không có quyền xoá')
-            handleDelete(record._id)}}>
-            Xóa
-          </Button>
-        </Space>
-      ),
-    }
+    ...( canUpdateAndDelete ? [
+      {
+        title: 'Hành động',
+        key: 'action',
+        align: 'center' as any,
+        width: '180px',
+        render: (_:any, record:any) => (
+          <Space size="small">
+            <WithPermission permission={POLICIES.UPDATE_TODOLIST}>
+              <Button type="primary" onClick={() => {
+                // if (!canUpdate) return message.warning('Bạn không có quyền thay đổi')
+                handleOpenUpdate(record?._id)
+              }}>
+                Chinh sửa
+              </Button>
+            </WithPermission>
+            <WithPermission permission={POLICIES.DELETE_TODOLIST}>
+              <Button style={{ color: 'red' }} onClick={() => {
+                // if (!canDELETE) return message.warning('Bạn không có quyền xoá')
+                handleDelete(record._id)
+              }}>
+                Xóa
+              </Button>
+            </WithPermission>
+          </Space>
+        ),
+      }
+    ]: []
+  ),
   ];
   const onSearch = (value: string) => {
     onParamChange({ ['keyword']: value });
@@ -134,7 +143,7 @@ const WorkBoard: React.FC<WorkFlowProps> = () => {
     <div className="branch-detail page-wraper page-content page-workflow">
       {/* <TabBranch> */}
       <div className="container-fluid">
-        <Breadcrumb title={t("workBoard")} />
+        <Breadcrumb title={t("Quản lý không gian làm việc")} />
         <Row justify="space-between">
           <Col span={8}>
             <Search
@@ -150,7 +159,7 @@ const WorkBoard: React.FC<WorkFlowProps> = () => {
             />
           </Col>
           <Col>
-            <WithPermission permission={POLICIES.WRITE_WORKMANAGEMENT}>
+            <WithPermission permission={POLICIES.WRITE_TODOLIST}>
               <Button onClick={() => handleOpenFormCreate()} type="primary">
                 Thêm mới
               </Button>
@@ -160,6 +169,7 @@ const WorkBoard: React.FC<WorkFlowProps> = () => {
         <Table
           rowKey={(rc) => rc._id}
           columns={columns}
+          loading={isLoadingList}
           dataSource={board}
           onRow={(item) => ({
             onClick: () => onClick(item),

@@ -32,9 +32,22 @@ export type addressType = {
     getProductSupplierFailed?: any;
     productSupplier?: T[];
     pagingProductSupplier?: any;
-  }
+
+    isLoadingGetVoucherSupplier?: boolean;
+    getVoucherSupplierFailed?: any;
+    voucherSupplier?: T[];
+    pagingVoucherSupplier?: any;
+    totalAmountBillItem?: number;
+};
 
   export type STATUS_SUPPLIER_TYPE =  {
     ACTIVE : "ACTIVE",
     INACTIVE : "INACTIVE",
+  }
+
+  export type SearchByType = "date" | "month" | "quarter" | "year"
+  export type FormFieldSearch = {
+    startDate?: any,
+    endDate?: any,
+    searchBy?: SearchByType,
   }

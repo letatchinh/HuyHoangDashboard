@@ -79,6 +79,7 @@ export default function Pharmacy() {
   const [pharmacyId, setPharmacyId] = useState(null);
   const [isOpenForm, setIsOpenForm] = useState(false);
   const paging = usePharmacyPaging();
+  const canWriteVoucher = useMatchPolicy(POLICIES.WRITE_VOUCHER);
 
   const onOpenForm = useCallback(
     (id?: any) => {
@@ -128,7 +129,22 @@ export default function Pharmacy() {
         dataIndex: "phoneNumber",
         key: "phoneNumber",
         width: 120,
-      },
+    },
+    ...(
+        canWriteVoucher ? [
+          {
+            title: "Tạo phiếu",
+            dataIndex: "createReceipt",
+            key: "createReceipt",
+            width: 120,
+            render(value: any, rc: any) {
+              return ( <Space>
+                 <Button type="primary" onClick={()=> onOpenReceipt(rc)}>Phiếu thu</Button>
+               </Space>)
+             },
+          },
+        ]: []
+    ),
       {
         title: "Địa chỉ",
         dataIndex: "address",
@@ -339,7 +355,7 @@ export default function Pharmacy() {
         />
       </ModalAnt>
       <Modal
-        title="Phiếu chi"
+        title='Phiếu thu'
         open={open}
         onCancel={() => setOpen(false)}
         onOk={() => setOpen(false)}

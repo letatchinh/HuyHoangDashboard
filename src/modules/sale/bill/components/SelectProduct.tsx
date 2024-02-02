@@ -1,7 +1,7 @@
-import { SearchOutlined, StopOutlined } from '@ant-design/icons';
-import { AutoComplete, Empty, Tag, Typography } from 'antd';
+import { GiftFilled, GiftTwoTone, SearchOutlined, StopOutlined } from '@ant-design/icons';
+import { AutoComplete, Badge, Empty, Tag, Typography } from 'antd';
 import { debounce, get } from 'lodash';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { v4 } from 'uuid';
 import TableAnt from '~/components/Antd/TableAnt';
 import ProductModule from '~/modules/product';
@@ -52,7 +52,8 @@ export default function SelectProduct({dataCurrent,onChangeBill}:propsType) : Re
       }
       const debounceFetcher = debounce(fetchOptions, 300);
       const onSelect = async(data:any) => {
-          inputEl.current.blur();
+          try {
+            inputEl.current.blur();
           const quotation : any = selectProductSearch(data);
           const cumulativeDiscount = await getCumulativeDiscount({pharmacyId : get(dataCurrent,'pharmacyId'),quotationItems : [quotation]});
           const quotationWithCumulative = {
@@ -60,10 +61,21 @@ export default function SelectProduct({dataCurrent,onChangeBill}:propsType) : Re
             cumulativeDiscount : cumulativeDiscount?.[get(quotation,'productId')] ?? []
           }
           onAdd(quotationWithCumulative)
+          } catch (error : any) {
+            onNotify?.error(error?.response?.data?.message || "Có lỗi gì đó xảy ra");
+          }
       };
       useEffect(() => {
         debounceFetcher('')
       },[]);
+      const mappingProductId : { [key: string]: boolean } = useMemo(() => {
+        let mapProductId : any = {};
+        get(dataCurrent,'quotationItems',[])?.forEach((item:any) => {
+          mapProductId[get(item,'productId')] = true;
+        });
+        return mapProductId;
+      },[dataCurrent]);
+      
     return (
         <AutoComplete
         allowClear
@@ -81,8 +93,9 @@ export default function SelectProduct({dataCurrent,onChangeBill}:propsType) : Re
               scroll={{ y: 450 }}
               className="table-searchProduct"
               rowClassName={(record) => {
-                const isDisabled = get(dataCurrent,'quotationItems',[])?.some((quotation : any) => get(quotation, "variantId") === get(record, "selectVariant"));
-                return isDisabled ? "disabled-row" : ""}}
+                const isDisabled = get(mappingProductId,get(record, "_id"))
+                return isDisabled ? "disabled-row" : ""
+              }}
               size="small"
               loading={loading}
               dataSource={dataSearch}
@@ -94,7 +107,7 @@ export default function SelectProduct({dataCurrent,onChangeBill}:propsType) : Re
                   dataIndex: 'name',
                   key: 'name',
                   render(name, record, index) {
-                    const isDisabled = get(dataCurrent,'quotationItems',[])?.some((quotation : any) => get(quotation, "variantId") === get(record, "selectVariant"));
+                    const isDisabled = get(mappingProductId,get(record, "_id"))
                     return <span>
                       <Typography.Text strong>{get(record,'codeBySupplier','')}</Typography.Text>
                       <span> - {name}</span>
@@ -117,7 +130,12 @@ export default function SelectProduct({dataCurrent,onChangeBill}:propsType) : Re
                   key: 'variant',
                   align: 'center',
                   render(variant, record, index) {
-                    return <Typography.Text strong>{formatter(get(variant,'price',0))}</Typography.Text>
+                    return <Typography.Text strong>{formatter(get(variant,'price',0))} 
+                    &nbsp;
+                    {get(record,'cumulativeDiscount.length',0) ? <Badge size='small' count={get(record,'cumulativeDiscount.length',0)}>
+                      <GiftTwoTone />
+                      </Badge> : null}
+                      </Typography.Text>
                   },
                 },
               ]}

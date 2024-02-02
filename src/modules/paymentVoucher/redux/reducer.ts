@@ -2,12 +2,11 @@ import { createSlice } from "@reduxjs/toolkit";
 import { InstanceModuleRedux } from "~/redux/instanceModuleRedux";
 import { initStateSlice } from "~/redux/models";
 import{omit} from 'lodash'
-
 interface cloneInitState extends initStateSlice {
   // Add cloneInitState Type Here
   confirmSuccess?: any,
   confirmFailed?: any
-}
+};
 class PaymentVoucherClassExtend extends InstanceModuleRedux {
   cloneReducer;
   cloneInitState : cloneInitState;
@@ -21,10 +20,26 @@ class PaymentVoucherClassExtend extends InstanceModuleRedux {
       confirmPaymentVoucherSuccess: (state: cloneInitState, { payload }: any) => {
         state.isSubmitLoading = false;
         state.confirmSuccess = payload;
+        state.list = state.list?.map((item: any) => {
+          if (item._id === payload?.data?._id) {
+            return { ...item, ...payload?.data };
+          }
+          return item
+        });
       },
       confirmPaymentVoucherFailed: (state: cloneInitState, { payload }: any) => {
         state.isSubmitLoading = false;
         state.confirmFailed = payload;
+      },
+      updateSuccess: (state: cloneInitState, { payload }: any) => {
+        state.isSubmitLoading = false;
+        state.confirmSuccess = payload;
+        state.list = state.list?.map((item: any) => {
+          if (item._id === payload?.data?._id) {
+            return { ...item, ...payload?.data };
+          }
+          return item
+        });
       },
       resetAction: (state:cloneInitState) => ({
         ...state,

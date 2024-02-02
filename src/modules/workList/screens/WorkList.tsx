@@ -212,7 +212,7 @@ const WorkList = () => {
                       )}
                     </Droppable>
                   ))}
-                  <WithOrPermission permission={[POLICIES.WRITE_WORKMANAGEMENT, POLICIES.ADMIN_WORKMANAGEMENT]}>
+                  <WithOrPermission permission={[POLICIES.WRITE_TODOLIST, POLICIES.ADMIN_TODOLIST]}>
                   <Button
                     // type="ghost"
                     htmlType="button"
