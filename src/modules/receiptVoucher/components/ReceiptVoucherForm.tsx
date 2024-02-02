@@ -612,11 +612,13 @@ export default function ReceiptVoucherForm(props: propsType): React.JSX.Element 
           </Collapse>}
           </WithPermission>
           <Row className="staff-form__submit-box">
-            <WithPermission permission={POLICIES.UPDATE_VOUCHER}>
+          {get(mergedInitWhPaymentVoucher, "status") !== WH_VOUCHER_STATUS.CONFIRMED
+              || get(mergedInitWhPaymentVoucher, "status") !== WH_VOUCHER_STATUS.REJECT
+              &&  <WithPermission permission={POLICIES.UPDATE_VOUCHER}>
             <Button icon={<SaveOutlined/>} type="primary" htmlType="submit">
               Lưu
             </Button>
-            </WithPermission>
+            </WithPermission>}
 
             {id &&
               (!get(mergedInitWhPaymentVoucher, "status") ||
