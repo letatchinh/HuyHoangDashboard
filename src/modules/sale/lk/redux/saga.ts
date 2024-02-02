@@ -47,7 +47,7 @@ function* deleteLk({payload : id} : any) : any {
 }
 
 
-export default function* LkSaga() {
+export default function* lkSaga() {
   yield takeLatest(lkActions.getListRequest, getListLk);
   yield takeLatest(lkActions.getByIdRequest, getByIdLk);
   yield takeLatest(lkActions.createRequest, createLk);
