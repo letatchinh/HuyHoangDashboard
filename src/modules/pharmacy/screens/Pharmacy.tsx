@@ -314,7 +314,7 @@ export default function Pharmacy() {
         />
       </Modal>
       <Modal
-        title='Phiếu chi'
+        title='Phiếu thu'
         open={open}
         onCancel={() => setOpen(false)}
         onOk={() => setOpen(false)}
