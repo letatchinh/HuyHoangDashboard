@@ -1,56 +1,56 @@
 import { put, call, takeLatest } from 'redux-saga/effects';
-import api from '../Lk.api'; 
-import { LkActions } from './reducer';
+import api from '../lk.api'; 
+import { lkActions } from './reducer';
 
 function* getListLk({payload:query} : any) : any {
   try {
     const data = yield call(api.getAll,query);
-    yield put(LkActions.getListSuccess(data));
+    yield put(lkActions.getListSuccess(data));
   } catch (error:any) {
-    yield put(LkActions.getListFailed(error));
+    yield put(lkActions.getListFailed(error));
   }
 }
 
 function* getByIdLk({payload:id} : any) : any {
   try {
     const data = yield call(api.getById,id);
-    yield put(LkActions.getByIdSuccess(data));
+    yield put(lkActions.getByIdSuccess(data));
   } catch (error:any) {
-    yield put(LkActions.getByIdFailed(error));
+    yield put(lkActions.getByIdFailed(error));
   }
 }
 
 function* createLk({payload} : any) : any {
   try {
     const data = yield call(api.create,payload);
-    yield put(LkActions.createSuccess(data));
+    yield put(lkActions.createSuccess(data));
   } catch (error:any) {
-    yield put(LkActions.createFailed(error));
+    yield put(lkActions.createFailed(error));
   }
 }
 
 function* updateLk({payload} : any) : any {
   try {
     const data = yield call(api.update,payload);
-    yield put(LkActions.updateSuccess(data));
+    yield put(lkActions.updateSuccess(data));
   } catch (error:any) {
-    yield put(LkActions.updateFailed(error));
+    yield put(lkActions.updateFailed(error));
   }
 }
 function* deleteLk({payload : id} : any) : any {
   try {
     const data = yield call(api.delete,id);
-    yield put(LkActions.deleteSuccess(data));
+    yield put(lkActions.deleteSuccess(data));
   } catch (error:any) {
-    yield put(LkActions.deleteFailed(error));
+    yield put(lkActions.deleteFailed(error));
   }
 }
 
 
 export default function* LkSaga() {
-  yield takeLatest(LkActions.getListRequest, getListLk);
-  yield takeLatest(LkActions.getByIdRequest, getByIdLk);
-  yield takeLatest(LkActions.createRequest, createLk);
-  yield takeLatest(LkActions.updateRequest, updateLk);
-  yield takeLatest(LkActions.deleteRequest, deleteLk);
+  yield takeLatest(lkActions.getListRequest, getListLk);
+  yield takeLatest(lkActions.getByIdRequest, getByIdLk);
+  yield takeLatest(lkActions.createRequest, createLk);
+  yield takeLatest(lkActions.updateRequest, updateLk);
+  yield takeLatest(lkActions.deleteRequest, deleteLk);
 }

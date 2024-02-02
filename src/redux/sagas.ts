@@ -26,6 +26,7 @@ import workListModule from '~/modules/workList';
 import workTaskModule from '~/modules/workTask';
 import paymentVoucher from '~/modules/paymentVoucher';
 import receiptVoucher from '~/modules/receiptVoucher';
+import lkModule from '~/modules/sale/lk';
 export default function* rootSaga() {
   yield all([
     authModule.redux.saga(),
@@ -57,5 +58,6 @@ export default function* rootSaga() {
     workTaskModule.redux.saga(),
     paymentVoucher.redux.saga(),
     receiptVoucher.redux.saga(),
+    lkModule.redux.saga(),
   ]);
 };

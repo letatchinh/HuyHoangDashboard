@@ -26,6 +26,10 @@ try {
   if(!quotationItems?.length){
     return onNotify?.warning("Vui lòng chọn thuốc!")
   }
+  
+  if(totalPriceAfterDiscount < 0){
+    return onNotify?.warning("Số tiền không hợp lệ")
+  }
   const submitData : PayloadCreateBill = QuotationModule.service.convertDataQuotation({
     quotationItems : quotationItems,
     data : values,

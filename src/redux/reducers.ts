@@ -30,6 +30,7 @@ import workListModule from '~/modules/workList';
 import workTaskModule from '~/modules/workTask';
 import paymentVoucher from '~/modules/paymentVoucher';
 import receiptVoucher from '~/modules/receiptVoucher';
+import lkModule from '~/modules/sale/lk';
 const authPersistConfig = {
     key: 'auth',
     storage: localStorage,
@@ -71,6 +72,7 @@ const rootReducer = combineReducers({
     workTask:workTaskModule.redux.reducer,
     paymentVoucher: paymentVoucher.redux.reducer,
     receiptVoucher: receiptVoucher.redux.reducer,
+    lk: lkModule.redux.reducer,
 
 });
 export default rootReducer

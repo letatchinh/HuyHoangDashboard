@@ -1,9 +1,9 @@
-import LkScreen from "./screens/Lk";
-import LkApi from "./Lk.api";
-import * as LkAuth from "./Lk.auth";
-import * as LkHook from "./Lk.hook";
-import * as LkService from "./Lk.service";
-import * as LkModels from "./Lk.modal";
+import LkScreen from "./screens/lk";
+import LkApi from "./lk.api";
+import * as LkAuth from "./lk.auth";
+import * as LkHook from "./lk.hook";
+import * as LkService from "./lk.service";
+import * as LkModels from "./lk.modal";
 import reducer from "./redux/reducer";
 import saga from "./redux/saga";
 

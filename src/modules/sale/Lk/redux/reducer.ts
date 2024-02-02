@@ -4,11 +4,11 @@ import { initStateSlice } from "~/redux/models";
 interface cloneInitState extends initStateSlice {
  // Add cloneInitState Type Here
 }
-class LkClassExtend extends InstanceModuleRedux {
+class lkClassExtend extends InstanceModuleRedux {
   cloneReducer;
   cloneInitState : cloneInitState;
   constructor() {
-    super('Lk');
+    super('lk');
     this.cloneReducer = {
       ...this.initReducer,
       // Want Add more reducer Here...
@@ -28,9 +28,9 @@ class LkClassExtend extends InstanceModuleRedux {
   
 }
 
-const newSlice = new LkClassExtend();
+const newSlice = new lkClassExtend();
 const data = newSlice.createSlice();
 
 
-export const LkActions = data.actions;
+export const lkActions = data.actions;
 export default data.reducer;
