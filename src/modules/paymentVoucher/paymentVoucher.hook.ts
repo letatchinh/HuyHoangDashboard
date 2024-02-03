@@ -201,8 +201,8 @@ export const useInitWhPaymentVoucher = (whPaymentVoucher: any) => {
       ...rest,
       accountingDate: dayjs(accountingDetail?.accountingDate),
       dateOfIssue: dayjs(dateOfIssue),
-      supplier: supplier?.name,
-      supplierAddress: compactAddress(supplier?.address),
+      name: supplier?.name,
+      address: compactAddress(supplier?.address),
     };
     const initValues = {
       ...fromJSON(newValue),

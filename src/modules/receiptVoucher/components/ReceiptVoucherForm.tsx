@@ -258,7 +258,6 @@ export default function ReceiptVoucherForm(props: propsType): React.JSX.Element 
       form.setFieldsValue({
         ...initReceiptVoucher,
         name: initReceiptVoucher?.pharmaProfile?.name,
-        pharmacyAddress: compactAddress(initReceiptVoucher?.pharmaProfile?.address),
       });
       setDataAccounting(initReceiptVoucher?.accountingDetails);
     }
@@ -283,7 +282,7 @@ export default function ReceiptVoucherForm(props: propsType): React.JSX.Element 
         (item: any) => item._id === DEFAULT_BRANCH_ID
       );
       const address = concatAddress(findBranchWorldHealth?.address);
-      form.setFieldsValue({pharmacyAddress: address});
+      form.setFieldsValue({address: address});
     };
   }, [branch]);
   const onValuesChange = () => {
@@ -295,7 +294,7 @@ export default function ReceiptVoucherForm(props: propsType): React.JSX.Element 
       const fullValues = form.getFieldsValue(true);
       const { accountingDate, dateOfIssue } = fullValues;
       const newValue = {
-        ...omit(values, ["code", "pharmacyAddress", "name"]),
+        ...omit(values, ["code", "address", "name"]),
         accountingDate: dayjs(accountingDate).format("YYYY-MM-DD"),
         dateOfIssue: dayjs(dateOfIssue).format("YYYY-MM-DD"),
         refCollection: refCollection ? REF_COLLECTION[refCollection] : null,
@@ -397,7 +396,7 @@ export default function ReceiptVoucherForm(props: propsType): React.JSX.Element 
                         },
                       ]}
                     >
-                      {isLoading ? <Skeleton.Input active /> : <Input />}
+                      {isLoading ? <Skeleton.Input active /> : <Input disabled/>}
                     </FormItem>
                   </Col>
                 </Row>
@@ -410,7 +409,7 @@ export default function ReceiptVoucherForm(props: propsType): React.JSX.Element 
                 </Row>
                 <Row gutter={36}>
                   <Col span={24}>
-                    <FormItem label="Địa chỉ" name={"pharmacyAddress"}>
+                    <FormItem label="Địa chỉ" name={"address"}>
                       {isLoading ? (
                         <Skeleton.Input active />
                       ) : (
@@ -612,7 +611,13 @@ export default function ReceiptVoucherForm(props: propsType): React.JSX.Element 
           </Collapse>}
           </WithPermission>
           <Row className="staff-form__submit-box">
-          { id && 
+            {!id ? 
+              <WithPermission permission={POLICIES.UPDATE_VOUCHER}>
+              <Button icon={<SaveOutlined/>} type="primary" htmlType="submit">
+                Lưu
+              </Button>
+              </WithPermission>
+              :
             (get(mergedInitWhPaymentVoucher, "status") !== WH_VOUCHER_STATUS.CONFIRMED
               || get(mergedInitWhPaymentVoucher, "status") !== WH_VOUCHER_STATUS.REJECT
             )

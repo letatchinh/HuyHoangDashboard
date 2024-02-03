@@ -19,7 +19,7 @@ class ReceiptVoucherClassExtend extends InstanceModuleRedux {
       },
       confirmReceiptVoucherSuccess: (state: cloneInitState, { payload }: any) => {
         state.isSubmitLoading = false;
-        state.confirmSuccess = payload;
+        state.confirmSuccess = payload?.data;
         state.list = state.list?.map((item: any) => {
           if (item._id === payload?.data?._id) {
             return { ...item, ...payload?.data };
@@ -40,6 +40,7 @@ class ReceiptVoucherClassExtend extends InstanceModuleRedux {
           }
           return item
         });
+        state.updateSuccess = payload?.data;
       },
       resetAction: (state:cloneInitState) => ({
         ...state,
