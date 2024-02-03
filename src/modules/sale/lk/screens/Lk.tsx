@@ -294,6 +294,14 @@ export default function Lk(props: propsType): React.JSX.Element {
       title: "Đã tích luỹ",
       dataIndex: "discount",
       key: "discount",
+      render(totalCumulative, record, index) {
+        return <span>{formatter(totalCumulative)}</span>;
+      },
+    },
+    {
+      title: "Thưởng",
+      dataIndex: "discount",
+      key: "discount",
       render(discount, record, index) {
         return <span>{formatter(get(discount,'actualClamp',0))}</span>;
       },
