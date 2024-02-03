@@ -255,10 +255,9 @@ export default function ReceiptVoucherForm(props: propsType): React.JSX.Element 
         });
       }
     } else {
-      form.setFieldsValue({
-        ...initReceiptVoucher,
-        name: initReceiptVoucher?.pharmaProfile?.name,
-      });
+      form.setFieldsValue(
+        omit(initReceiptVoucher, ['address']) //set address default is branch address
+      );
       setDataAccounting(initReceiptVoucher?.accountingDetails);
     }
   }, [id, initReceiptVoucher,pharmacy]);

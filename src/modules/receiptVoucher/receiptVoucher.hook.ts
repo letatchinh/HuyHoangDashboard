@@ -196,13 +196,13 @@ export const useInitWhReceiptVoucher = (whReceiptVoucher: any) => {
       return {
       };
     };
-    const { accountingDetail, dateOfIssue,supplier, ...rest } = whReceiptVoucher;
+    const { accountingDetail, dateOfIssue,pharmaProfile, ...rest } = whReceiptVoucher;
     const newValue = {
       ...rest,
       accountingDate: dayjs(accountingDetail?.accountingDate),
       dateOfIssue: dayjs(dateOfIssue),
-      supplier: supplier?.name,
-      supplierAddress: compactAddress(supplier?.address),
+      name: pharmaProfile?.name,
+      address: compactAddress(pharmaProfile?.address),
     };
     const initValues = {
       ...fromJSON(newValue),
