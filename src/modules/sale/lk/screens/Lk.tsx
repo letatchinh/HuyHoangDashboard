@@ -298,6 +298,14 @@ export default function Lk(props: propsType): React.JSX.Element {
       },
     },
     {
+      title: "Nhà cung cấp",
+      dataIndex: "supplier",
+      key: "supplier",
+      render(supplier, record, index) {
+        return <span>{get(supplier, "name","")}</span>;
+      },
+    },
+    {
       title: "Chương trình luỹ kế",
       dataIndex: "discount",
       key: "discount",
