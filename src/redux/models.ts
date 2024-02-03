@@ -48,6 +48,7 @@ export type initStateSlice<T=any> = {
     workBoard:'workBoard',
     configDiscount: 'configDiscount',
     pharmacy: "pharmacy",
+    productsAll: "productsAll",
     }as const
     
     

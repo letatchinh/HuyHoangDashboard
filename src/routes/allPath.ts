@@ -56,5 +56,9 @@ export const PATH_APP = {
       root: path(ROOTS.app, '/user/*'),
    
     },
+     productAll: {
+      root: path(ROOTS.app, '/products-list'),
+    },
+    
   
   };

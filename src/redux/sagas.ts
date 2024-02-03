@@ -17,6 +17,7 @@ import medicineModule from '~/modules/medicine';
 import productModule from '~/modules/product';
 import workBoardModule from '~/modules/workBoard';
 import configDiscountModule from '~/modules/configDiscount';
+import productsAllModule from '~/modules/productsAll';
 export default function* rootSaga() {
   yield all([
     authModule.redux.saga(),
@@ -38,5 +39,6 @@ export default function* rootSaga() {
     workBoardModule.redux.saga(),
     configDiscountModule.redux.saga(),
     pharmacyModule.redux.saga(),
+    productsAllModule.redux.saga(),
   ]);
 };
