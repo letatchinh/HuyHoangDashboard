@@ -292,10 +292,10 @@ export default function Lk(props: propsType): React.JSX.Element {
     },
     {
       title: "Đã tích luỹ",
-      dataIndex: "totalCumulative",
-      key: "totalCumulative",
-      render(totalCumulative, record, index) {
-        return <span>{formatter(totalCumulative)}</span>;
+      dataIndex: "discount",
+      key: "discount",
+      render(discount, record, index) {
+        return <span>{formatter(get(discount,'totalCumulative',get(record,'totalCumulative',0)))}</span>;
       },
     },
     {
