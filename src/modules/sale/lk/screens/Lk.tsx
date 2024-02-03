@@ -295,7 +295,7 @@ export default function Lk(props: propsType): React.JSX.Element {
       dataIndex: "discount",
       key: "discount",
       render(discount, record, index) {
-        return <span>{formatter(get(discount,'totalCumulative',get(record,'totalCumulative',0)))}</span>;
+        return <span>{formatter(get(discount,'actualClamp',0))}</span>;
       },
     },
     {
@@ -317,7 +317,7 @@ export default function Lk(props: propsType): React.JSX.Element {
           <Flex vertical>
             {bills?.map((item: any) => (
               <Typography.Text strong>
-                {get(item, "codeSequence")}
+                {get(item, "code")}
               </Typography.Text>
             ))}
           </Flex>
