@@ -265,11 +265,13 @@ export default function PaymentVoucherForm(
           provider: supplier?._id,
           code: supplier?.code,
         });
-      }
+        const address = concatAddress(supplier?.address);
+        form.setFieldsValue({address: address});
+      };
     } else {
       form.setFieldsValue(initPaymentVoucher);
       setDataAccounting(initPaymentVoucher?.accountingDetails);
-    }
+    };
   }, [supplier, supplierId, id, initPaymentVoucher]);
 
   useEffect(() => {
@@ -288,15 +290,15 @@ export default function PaymentVoucherForm(
     };
   }, [id, mergedInitWhPaymentVoucher]);
 
-  useEffect(() => {
-    if (branch) {
-      const findBranchWorldHealth = branch?.find(
-        (item: any) => item._id === DEFAULT_BRANCH_ID
-      );
-      const address = concatAddress(findBranchWorldHealth?.address);
-      form.setFieldsValue({address: address});
-    };
-  }, [branch]);
+  // useEffect(() => {
+  //   if (branch) {
+  //     const findBranchWorldHealth = branch?.find(
+  //       (item: any) => item._id === DEFAULT_BRANCH_ID
+  //     );
+  //     const address = concatAddress(findBranchWorldHealth?.address);
+  //     form.setFieldsValue({address: address});
+  //   };
+  // }, [branch]);
 
   const onValuesChange = () => {
     console.log("first");
@@ -352,7 +354,6 @@ export default function PaymentVoucherForm(
 
   const render = (component: any) =>
     isLoading ? <Skeleton.Input active /> : component;
-
   return (
     <div className="page-wraper">
       <div className="container-fluid">
@@ -404,7 +405,7 @@ export default function PaymentVoucherForm(
                       //   },
                       // ]}
                     >
-                      {isLoading ? <Skeleton.Input active /> : <Input />}
+                      {isLoading ? <Skeleton.Input active /> : <Input disabled/>}
                     </FormItem>
                   </Col>
                 </Row>
@@ -619,8 +620,15 @@ export default function PaymentVoucherForm(
           </Collapse>}
           </WithPermission>
           <Row className="staff-form__submit-box">
-            {get(mergedInitWhPaymentVoucher, "status") !== WH_VOUCHER_STATUS.CONFIRMED
+            {!id ? 
+               <WithPermission permission={POLICIES.UPDATE_VOUCHER}>
+               <Button icon={<SaveOutlined />} type="primary" htmlType="submit">
+                 Lưu
+                 </Button>
+              </WithPermission>
+              : (get(mergedInitWhPaymentVoucher, "status") !== WH_VOUCHER_STATUS.CONFIRMED
               || get(mergedInitWhPaymentVoucher, "status") !== WH_VOUCHER_STATUS.REJECT
+              )
               && <WithPermission permission={POLICIES.UPDATE_VOUCHER}>
             <Button icon={<SaveOutlined />} type="primary" htmlType="submit">
               Lưu
@@ -647,7 +655,7 @@ export default function PaymentVoucherForm(
               )}
 
             {id &&
-              get(mergedInitWhPaymentVoucher, "status") ===
+              get(mergedInitWhPaymentVoucher, "status") ==
                 WH_VOUCHER_STATUS.CONFIRMED && (
                 <Space>
                   <WithPermission permission={POLICIES.UPDATE_STATUSVOUCHER}>

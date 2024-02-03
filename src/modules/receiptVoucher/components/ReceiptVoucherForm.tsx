@@ -258,7 +258,6 @@ export default function ReceiptVoucherForm(props: propsType): React.JSX.Element 
       form.setFieldsValue({
         ...initReceiptVoucher,
         name: initReceiptVoucher?.pharmaProfile?.name,
-        address: compactAddress(initReceiptVoucher?.pharmaProfile?.address),
       });
       setDataAccounting(initReceiptVoucher?.accountingDetails);
     }
@@ -397,7 +396,7 @@ export default function ReceiptVoucherForm(props: propsType): React.JSX.Element 
                         },
                       ]}
                     >
-                      {isLoading ? <Skeleton.Input active /> : <Input />}
+                      {isLoading ? <Skeleton.Input active /> : <Input disabled/>}
                     </FormItem>
                   </Col>
                 </Row>
@@ -612,8 +611,16 @@ export default function ReceiptVoucherForm(props: propsType): React.JSX.Element 
           </Collapse>}
           </WithPermission>
           <Row className="staff-form__submit-box">
-          { (id && get(mergedInitWhPaymentVoucher, "status") !== WH_VOUCHER_STATUS.CONFIRMED
-              || get(mergedInitWhPaymentVoucher, "status") !== WH_VOUCHER_STATUS.REJECT)
+            {!id ? 
+              <WithPermission permission={POLICIES.UPDATE_VOUCHER}>
+              <Button icon={<SaveOutlined/>} type="primary" htmlType="submit">
+                Lưu
+              </Button>
+              </WithPermission>
+              :
+            (get(mergedInitWhPaymentVoucher, "status") !== WH_VOUCHER_STATUS.CONFIRMED
+              || get(mergedInitWhPaymentVoucher, "status") !== WH_VOUCHER_STATUS.REJECT
+            )
               &&  <WithPermission permission={POLICIES.UPDATE_VOUCHER}>
             <Button icon={<SaveOutlined/>} type="primary" htmlType="submit">
               Lưu

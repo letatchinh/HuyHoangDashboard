@@ -19,7 +19,7 @@ class PaymentVoucherClassExtend extends InstanceModuleRedux {
       },
       confirmPaymentVoucherSuccess: (state: cloneInitState, { payload }: any) => {
         state.isSubmitLoading = false;
-        state.confirmSuccess = payload;
+        state.confirmSuccess = payload?.data;
         state.list = state.list?.map((item: any) => {
           if (item._id === payload?.data?._id) {
             return { ...item, ...payload?.data };
@@ -33,13 +33,13 @@ class PaymentVoucherClassExtend extends InstanceModuleRedux {
       },
       updateSuccess: (state: cloneInitState, { payload }: any) => {
         state.isSubmitLoading = false;
-        state.confirmSuccess = payload;
         state.list = state.list?.map((item: any) => {
           if (item._id === payload?.data?._id) {
             return { ...item, ...payload?.data };
           }
           return item
         });
+        state.updateSuccess = payload?.data;
       },
       resetAction: (state:cloneInitState) => ({
         ...state,
