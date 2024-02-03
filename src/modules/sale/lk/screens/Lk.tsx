@@ -268,6 +268,21 @@ export default function Lk(props: propsType): React.JSX.Element {
   };
   const columns: ColumnsType = [
     {
+      title: "Mã thuốc",
+      dataIndex: "variants",
+      key: "variants",
+      render(variants, record, index) {
+        const variant = variants?.find((item : any) => get(item,'variantIsDefault'))
+        return (
+          <span>
+            <Typography.Text strong>
+              {get(variant, "variantCode", "")}
+            </Typography.Text>
+          </span>
+        );
+      },
+    },
+    {
       title: "Mặt hàng",
       dataIndex: "product",
       key: "product",
@@ -292,8 +307,8 @@ export default function Lk(props: propsType): React.JSX.Element {
     },
     {
       title: "Đã tích luỹ",
-      dataIndex: "discount",
-      key: "discount",
+      dataIndex: "totalCumulative",
+      key: "totalCumulative",
       render(totalCumulative, record, index) {
         return <span>{formatter(totalCumulative)}</span>;
       },
@@ -337,6 +352,7 @@ export default function Lk(props: propsType): React.JSX.Element {
       dataIndex: "_id",
       key: "action",
       align: "center",
+      fixed : 'right',
       render(_id, record: any, index) {
         const { actualClamp, pharmacy, session_id } = record;
         return (
@@ -381,6 +397,7 @@ export default function Lk(props: propsType): React.JSX.Element {
         columns={columns} 
         size="small" 
         pagination={pagingTable(paging,onParamChange)}
+        scroll={{x : 1500}}
         />
       </WhiteBox>
       <Modal
