@@ -84,6 +84,7 @@ const MenuFilter = () => {
             options={listOptionsSearch}
             onChange={(e) => {
               setSearchBy(e);
+              onParamChange({ [searchBy]: '' });
               setKeyword('');
             }}
             dropdownMatchSelectWidth={false}

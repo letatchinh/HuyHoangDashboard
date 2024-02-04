@@ -118,7 +118,7 @@ const WorkBoard: React.FC<WorkFlowProps> = () => {
                 // if (!canUpdate) return message.warning('Bạn không có quyền thay đổi')
                 handleOpenUpdate(record?._id)
               }}>
-                Chinh sửa
+                Chỉnh sửa
               </Button>
             </WithPermission>
             <WithPermission permission={POLICIES.DELETE_TODOLIST}>
@@ -196,7 +196,7 @@ const WorkBoard: React.FC<WorkFlowProps> = () => {
       </div>
       {/* </TabBranch> */}
       <Modal open={isOpenForm} footer={null} onCancel={() => setOpen(false)} width={700} destroyOnClose
-        title={id ? 'Chinh sửa không gian làm việc' : 'Thêm không gian làm việc'}
+        title={id ? 'Chỉnh sửa không gian làm việc' : 'Thêm không gian làm việc'}
       >
         <Suspense fallback={<div>...</div>}>
           <BoardForm id={id} handleCloseForm={handleCloseForm} />

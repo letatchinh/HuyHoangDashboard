@@ -170,15 +170,16 @@ const WorkList = () => {
         </Suspense>
         <hr />
         <div className="workflow" ref={workflowRef}>
-          <ResizableBox
-            className={`react-resizable_custom ${visibleInfo ? 'active' : ''}`}
-            resizeHandles={['e']}
-            minConstraints={[workflowRef?.current?.offsetWidth * 0.2 || window.innerWidth * 0.2, Infinity]}
-            maxConstraints={[workflowRef?.current?.offsetWidth * 0.7 || window.innerWidth * 0.7, Infinity]}
-            height={Infinity}
-            draggableOpts={{ grid: [8, 8] }}
-            width={lengthList}
-          >
+        <ResizableBox
+  className={`react-resizable_custom ${visibleInfo ? 'active' : ''}`}
+  resizeHandles={['e']}
+  minConstraints={[workflowRef?.current?.offsetWidth * 0.3 || window.innerWidth * 0.3, Infinity]}
+  maxConstraints={[workflowRef?.current?.offsetWidth * 0.7 || window.innerWidth * 0.7, Infinity]}
+  height={Infinity}
+  draggableOpts={{ grid: [8, 8] }}
+  width={lengthList}
+>
+
             <div className="work-list">
               <div className="work-list-body">
                 <DragDropContext onDragEnd={onDragEndv2}>
