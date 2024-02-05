@@ -1,8 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
 // import { InstanceModuleRedux } from "~/redux/instanceModuleRedux";
 import { initStateSlice } from "~/redux/models";
-import { InstanceModuleRedux } from "../workSprint.modal";
+// import { InstanceModuleRedux } from "../workSprint.modal";
 import {omit} from 'lodash';
+import { getPaging } from "~/utils/helpers";
+import { InstanceModuleRedux } from "~/redux/instanceModuleRedux";
 interface cloneInitState extends initStateSlice {
   loadingTaskBySprint?: any,
   listTaskBySprints?: any,
@@ -14,6 +16,11 @@ class WorkSprintClassExtend extends InstanceModuleRedux {
     super('workSprint');
     this.cloneReducer = {
       ...this.initReducer,
+      getListSuccess: (state:initStateSlice , { payload }: any) => {
+        state.isLoading = false;
+        state.list = payload;
+        state.paging = getPaging(payload);
+      },
       createSuccess: (state: any, { payload }: { payload: any }) => {
         state.isSubmitLoading = false;
         state.createSuccess = payload;
