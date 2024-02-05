@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { get, sortBy } from "lodash";
+import { get, sortBy,omit } from "lodash";
 import { InstanceModuleRedux } from "~/redux/instanceModuleRedux";
 import { cloneInitState } from "../workList.modal";
 class WorkListClassExtend extends InstanceModuleRedux {
@@ -30,13 +30,13 @@ class WorkListClassExtend extends InstanceModuleRedux {
         // }
         state.dataBoardConfig[payload.id] = []
       },
-      addBoardConfigItemSuccess: (state: any, { payload }: { payload?: any }) => {
+      addBoardConfigItemSuccess: (state: cloneInitState, { payload }: { payload?: any }) => {
         state.dataBoardConfig[payload?.id] = sortBy(payload.data, [function (o) { return o.ordinal }]);
       },
-      addBoardConfigItemFaled: (state: any, { payload }: { payload?: any }) => {
+      addBoardConfigItemFaled: (state: cloneInitState, { payload }: { payload?: any }) => {
         state.dataBoardConfig[payload.id] = []
       },
-      updateTaskInitSuccess: (state: any, { payload }: { payload?: any }) => {
+      updateTaskInitSuccess: (state: cloneInitState, { payload }: { payload?: any }) => {
         state.isSubmitLoading = false;
       const { idTask, dataTask, boardId } = payload;
       state.dataBoardConfig[boardId] = state.dataBoardConfig[boardId]?.map((item:any) => {
@@ -46,7 +46,7 @@ class WorkListClassExtend extends InstanceModuleRedux {
         return item;
       });
       },
-      updatePosition: (state: any, { payload }: { payload?: any }) => {
+      updatePosition: (state: cloneInitState, { payload }: { payload?: any }) => {
         var {
           colBefore,
           indexBefore,
@@ -74,7 +74,7 @@ class WorkListClassExtend extends InstanceModuleRedux {
   
         state.dataBoardConfig[colAfter].splice(indexAfter, 0, itemBeRemove);
       },
-      updatePositionBoardConfig: (state: any, { payload }: { payload?: any }) => {
+      updatePositionBoardConfig: (state: cloneInitState, { payload }: { payload?: any }) => {
         var {
           newData,
           destinationIndex,
@@ -82,7 +82,11 @@ class WorkListClassExtend extends InstanceModuleRedux {
         } = payload;
         if(destinationIndex === sourceIndex) return;
         state.listWorkConfig=newData
-      }
+      },
+      resetAction: (state:cloneInitState) => ({
+        ...state,
+        ...omit(this.cloneInitState, ["list"]),
+      }),
       // Want to add more reducers here...
     };
 

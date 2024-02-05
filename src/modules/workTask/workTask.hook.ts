@@ -157,13 +157,18 @@ export const useUpdateWorkTaskParams = (
 
 export const useUpdateTask = (callback?: any) => {
   useSuccess(updateSuccessSelector, 'Cập nhật công việc thành công', callback);
-  useFailed(updateFailedSelector, 'Cập nhật này việc thất baị');
+  useFailed(updateFailedSelector, 'Cập nhật công việc thất baị');
   return useSubmit({
     loadingSelector: isSubmitLoadingSelector,
     action: workTaskSliceAction.updateRequest,
   })
 };
-
+export const useUpdateTaskInit =()=>{
+  return useSubmit({
+    loadingSelector:isSubmitLoadingSelector,
+    action: workTaskSliceAction.updateRequest,
+  })
+}
 
 //historySpentTime 
 export const useGetHistoryActivityTaskById = (query: any) => {

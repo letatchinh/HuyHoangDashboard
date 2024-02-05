@@ -118,6 +118,7 @@ class WorkTaskClassExtend extends InstanceModuleRedux {
 
       //UPDATE
       updateSuccess: (state: cloneInitState, { payload }: { payload?: any }) => {
+        // console.log('1');
         state.isSubmitLoading = false;
         const data = payload;
         state.byId = {...data,progressListShow : calculateProgress(get(data,'progressListShow'))};
@@ -228,7 +229,7 @@ class WorkTaskClassExtend extends InstanceModuleRedux {
       },
       resetAction: (state:cloneInitState) => ({
         ...state,
-        ...omit(this.cloneInitState, ["list"]),
+        ...omit(this.cloneInitState, ["list","byId"]),
       }),
 
       // Want Add more reducer Here...

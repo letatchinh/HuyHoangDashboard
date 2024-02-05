@@ -38,10 +38,12 @@ export default function TaskTabDetail({ idTask, }: Props) {
     const handleInputConfirm = async (ev: any) => {
         if (!ev.target.value) {
             setInputValue(get(dataTask, "name", ""));
+            
         };
         if (ev.target.value === get(dataTask, "name", "")) {
-            return;
+            return ;
         };
+        return apis.update({ name: ev.target.value, _id: idTask });
     };
     useEffect(() => {
         return () => {

@@ -1,22 +1,22 @@
-import React, { createContext, useContext, useEffect, useMemo, useRef, useState, lazy, Suspense, useCallback } from 'react';
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-import { useParams } from 'react-router-dom';
-import { Button, Drawer, Form, Modal, Space, Spin } from 'antd';
 import { ArrowLeftOutlined, CloseOutlined } from '@ant-design/icons';
-import { ResizableBox } from 'react-resizable';
+import { Button, Drawer, Form, Space, Spin } from 'antd';
 import Text from 'antd/lib/typography/Text';
 import { get } from 'lodash';
-import { useUpdatePositionBoardConfig, useCreateWorkList, useDeleteWorkList, useGetListBoardConfig, useListBoardConfigItem, useUpdatePosition, useWorkListQueryParams, useUpdateWorkList } from '../workList.hook';
-import { useGetWorkSprint } from '~/modules/workSprint/workSprint.hook';
-import MenuListBoard from '~/modules/workSprint/components/MenuListBoard';
-import BoardConfig from '../components/WorkListConfig';
-import { FormTaskContextProps } from '../workList.modal';
-import { useCreateTask, useDeleteTask, useResetAction, useUpdateTask } from '~/modules/workTask/workTask.hook';
-import { useGetBoardById } from '~/modules/workBoard/workBoard.hook';
-import Menufilter from '../components/Menufilter';
-import TaskTabDetail from '~/modules/workTask/components/Task/TaskTabDetail';
+import { Suspense, createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
+import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
+import { ResizableBox } from 'react-resizable';
+import { useParams } from 'react-router-dom';
 import WithOrPermission from '~/components/common/WithOrPermission';
 import POLICIES from '~/modules/policy/policy.auth';
+import { useGetBoardById } from '~/modules/workBoard/workBoard.hook';
+import MenuListBoard from '~/modules/workSprint/components/MenuListBoard';
+import { useGetWorkSprint } from '~/modules/workSprint/workSprint.hook';
+import TaskTabDetail from '~/modules/workTask/components/Task/TaskTabDetail';
+import { useCreateTask, useDeleteTask, useUpdateTaskInit } from '~/modules/workTask/workTask.hook';
+import Menufilter from '../components/Menufilter';
+import BoardConfig from '../components/WorkListConfig';
+import { useCreateWorkList, useDeleteWorkList, useGetListBoardConfig, useListBoardConfigItem, useUpdatePosition, useUpdatePositionBoardConfig, useUpdateWorkList, useWorkListQueryParams } from '../workList.hook';
+import { FormTaskContextProps } from '../workList.modal';
 const FormTaskContext = createContext({});
 export const useFormTaskContext = () => useContext<FormTaskContextProps | any>(FormTaskContext);
 
@@ -47,7 +47,7 @@ const WorkList = () => {
   const [taskData, setTaskData] = useState('');
   const [visibleListBoard, setVisibleListBoard] = useState(false);
   const [idVisibleInfo, setIdVisibleInfo] = useState('');
-  const [, updateTask] = useUpdateTask();
+  const [, updateTask] = useUpdateTaskInit();
   const [, updatePosition] = useUpdatePosition();
   const [, handleCreateTask] = useCreateTask();
   const [, updatePositionBoardConfig] = useUpdatePositionBoardConfig();
@@ -60,12 +60,6 @@ const WorkList = () => {
   const showDrawer = (param?: any) => {
     setVisibleListBoard((val) => param ?? !val);
   };
-  const handleFinshed = useCallback((val: any, key: any, id?: any) => {
-    updateTask({
-      [key]: val,
-      id: id,
-    });
-  }, []);
   const openFormTask = (id: any, data: any) => {
     setPropsModal({ boardConfigId: id });
   };
@@ -150,7 +144,6 @@ const WorkList = () => {
           setIdVisibleInfo,
           idVisibleInfo,
           setTaskData,
-          handleFinshed,
           taskData,
           dropdownVisible,
           setDropdownVisible,
@@ -182,7 +175,6 @@ const WorkList = () => {
             draggableOpts={{ grid: [8, 8] }}
             width={lengthList}
           >
-
             <div className="work-list">
               <div className="work-list-body">
                 <DragDropContext onDragEnd={onDragEndv2}>

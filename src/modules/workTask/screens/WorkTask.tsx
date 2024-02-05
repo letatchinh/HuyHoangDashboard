@@ -22,12 +22,19 @@ import {
   useUpdateProgress,
   useUpdateTask
 } from "../workTask.hook";
+import { useDispatch } from "react-redux";
+import { workTaskSliceAction } from "../redux/reducer";
+import { useFormTaskContext } from "~/modules/workList/screens/WorkList";
 
 interface Props {
   idTask?: any;
   updateProgressTask?: any;
 };
 export default function TaskItem({ idTask, }: Props) {
+  const dispatch = useDispatch();
+  const handleReset = useCallback(() => {
+       dispatch(workTaskSliceAction.resetAction());
+   },[])
   const { taskId : id } = useParams();
   const [dataTask, isLoading] = useGetTaskById(idTask || id);
   const [isSubmit, updateTask] = useUpdateTask();
@@ -52,6 +59,7 @@ export default function TaskItem({ idTask, }: Props) {
     if (ev.target.value === get(dataTask, "name", "")) {
       return;
     };
+    updateTask({ name: ev.target.value ?? get(dataTask, 'name', ''), id: idTask || id });
   };
   useEffect(() => {
     return () => {
@@ -73,11 +81,12 @@ export default function TaskItem({ idTask, }: Props) {
     }
   }, [boardById?.listStatusConfig, dataTask?.statusId]);
   const handleFinshed = useCallback((val: any, key: any) => {
-    updateTask({
+    (updateTask)({
       [key]: val,
       id: idTask || id,
     });
-  }, []);
+  }, [updateTask, idTask, id]);
+  
   useResetAction();
   const handleChange = (value: any) => {
     setSelected(value);
