@@ -61,6 +61,13 @@ export const resource: ItemType[] = [
     icon: <AppstoreFilled />,
     children: [
       {
+        label: "Danh sách sản phẩm",
+        path: PATH_APP.productAll.root,
+        key: PATH_APP.productAll.root,
+        icon: <HddOutlined />,
+        permission :[POLICIES.READ_PRODUCT],
+      },
+      {
         label: "Cài đặt",
         key: "WorldPharmaVN-setting",
         icon: <AppstoreFilled />,

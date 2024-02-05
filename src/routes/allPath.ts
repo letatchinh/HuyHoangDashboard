@@ -47,9 +47,7 @@ export const PATH_APP = {
     employee: {
         root: path(ROOTS.app, '/employee'),
     },
-    user: {
-      root: path(ROOTS.app, '/user/*'),
-    },
+
   configDiscount: {
     root: path(ROOTS.app, '/config-discount'),
   },
@@ -57,7 +55,6 @@ export const PATH_APP = {
       root:  path(ROOTS.app, '/pharmacy'),
       detail: path(ROOTS.app, '/pharmacy/:id'),
     },
-
     bill : {
       root:  path(ROOTS.app, '/bill'),
       update: path(ROOTS.app, '/bill/:id'),
@@ -75,6 +72,14 @@ export const PATH_APP = {
       root: path(ROOTS.app, '/vouchers'),
     },
 
+     user: {
+      root: path(ROOTS.app, '/user/*'),
+   
+    },
+     productAll: {
+      root: path(ROOTS.app, '/products-list'),
+    },
+    
   
     botNotification : {
       root:  path(ROOTS.app, '/bot-notification'),

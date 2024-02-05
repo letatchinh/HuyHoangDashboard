@@ -26,6 +26,7 @@ import WorkListPage from "~/pages/Dashboard/WorkList";
 import WorkTaskPage from "~/pages/Dashboard/WorkTask";
 import BotNotificationPage from "~/pages/Dashboard/BotNotification";
 import Lk from "~/pages/Dashboard/Lk";
+import ProductsAll from "~/pages/Dashboard/ProductsAll";
 export const mainRoutes :PathRouteProps[] = [
   { path: PATH_APP.main.root, Component: Homepage },
 
@@ -75,6 +76,9 @@ export const mainRoutes :PathRouteProps[] = [
   { path: PATH_APP.todoList.workSprint, Component: WorkSprintPage },
   { path: PATH_APP.todoList.workList, Component: WorkListPage },
   { path: PATH_APP.todoList.workTask, Component: WorkTaskPage },
+
+  { path: PATH_APP.productAll.root, Component: ProductsAll },
+
 
   { path: '/', Component: Homepage },
 ]

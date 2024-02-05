@@ -47,7 +47,6 @@ const BoardForm: React.FC<BoardFormProps> = ({ id, handleCloseForm }) => {
     }
     return false;
   }, [listAllStatus]);
-
   useEffect(() => {
     if (!_id && initListStatusCreate) {
       form.setFieldsValue({ listStatus: initListStatusCreate });

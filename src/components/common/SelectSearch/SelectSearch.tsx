@@ -27,6 +27,8 @@ interface Props {
   mode?: "multiple" | "tags" | undefined;
   onChangeStatus?: any;
   valueStatus?: any;
+  style?: React.CSSProperties;
+  titleButtonAdd?: string;
 }
 
 const SelectSearch = ({
@@ -47,9 +49,11 @@ const SelectSearch = ({
   onChangeStatus,
   valueStatus,
   permissionKey,
+  style,
+  titleButtonAdd = "Thêm mới",
 }: Props) => {
   return (
-    <div className="select-search">
+    <div className="select-search" style={{...style}}>
       <div className="select-search__left">
         <Row gutter={5}>
           {showSelect && (
@@ -117,7 +121,7 @@ const SelectSearch = ({
                   onClick={handleOnClickButton}
                   icon={<PlusCircleOutlined />}
                 >
-                  Thêm mới
+                {titleButtonAdd}
                 </Button>
               </WithOrPermission>
             </Col>

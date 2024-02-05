@@ -43,19 +43,29 @@ const isLoadingGetVoucherSupplierSelector = getSelector("isLoadingGetVoucherSupp
 const pagingVoucherSupplierSelector = getSelector("pagingVoucherSupplier");
 
 const totalAmountBillItemSupplierSelector = getSelector("totalAmountBillItem");
+
+export const useTotalAmountBillItem = () => useSelector(totalAmountBillItemSupplierSelector);
+export const useSupplierPaging = () => useSelector(pagingSelector);
+export const useVoucherSupplierPaging = () =>
+  useSelector(pagingVoucherSupplierSelector);
+
 const productSupplierSelector = getSelector("productSupplier");
 const getProductSupplierFailedSelector = getSelector(
   "getProductSupplierFailed"
 );
 const isLoadingGetProductSupplierSelector = getSelector(
   "isLoadingGetProductSupplier"
-  );
-  const pagingProductSupplierSelector = getSelector("pagingProductSupplier");
-  
-export const useTotalAmountBillItem = () => useSelector(totalAmountBillItemSupplierSelector);
-export const useSupplierPaging = () => useSelector(pagingSelector);
-export const useVoucherSupplierPaging = () =>
-  useSelector(pagingVoucherSupplierSelector);
+);
+const pagingProductSupplierSelector = getSelector("pagingProductSupplier");
+
+const suppliersProductAuthorSelector = getSelector("suppliersProductAuthor");
+const getSuppliersProductAuthorFailedSelector = getSelector(
+  "getSuppliersProductAuthorFailed"
+);
+const isLoadingGetSuppliersProductAuthorSelector = getSelector(
+  "isLoadingGetSuppliersProductAuthor"
+);
+const pagingSuppliersProductAuthorSelector = getSelector("pagingSuppliersProductAuthor");
 
 export const useProductSupplierPaging = () =>
   useSelector(pagingProductSupplierSelector);
@@ -76,6 +86,16 @@ export const useGetSupplier = (id: any) => {
     dataSelector: getByIdSelector,
     failedSelector: getByIdFailedSelector,
     param: id,
+  });
+};
+
+export const useGetSuppliersProductAuthor = (param: any) => {
+  return useFetchByParam({
+    action: supplierSliceAction.getSuppliersProductAuthorRequest,
+    loadingSelector: isLoadingGetSuppliersProductAuthorSelector,
+    dataSelector: suppliersProductAuthorSelector,
+    failedSelector: getSuppliersProductAuthorFailedSelector,
+    param,
   });
 };
 
@@ -137,6 +157,32 @@ export const useSupplierQueryParams = () => {
      keyword,
      createSuccess,
      deleteSuccess,
+    ]);
+};
+
+export const useSuppliersProductAuthorQueryParams = (keyword?:string) => {
+  const query = useQueryParams();
+  const [limit, setLimit] = useState(get(query, "limit") || 10);
+  const [page, setPage] = useState(get(query, "page") || 1);
+  const isSupplierMaster = true;
+
+  // const onTableChange: any = ({ current, pageSize }: any) => {
+  //   setLimit(pageSize);
+  //   setPage(current);
+  // };
+
+  return useMemo(() => {
+    const queryParams = {
+      page,
+      limit,
+      keyword,
+      isSupplierMaster
+    };
+    return [queryParams];
+    //eslint-disable-next-line
+  }, [page,
+     limit,
+     keyword,
     ]);
 };
 

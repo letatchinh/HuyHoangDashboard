@@ -11,5 +11,6 @@ const apis = {
     getDebt: (query?: any) => requester.get(`/api/v1/supplier-profile-debt`, query),
     getVouchers: (query?: any) => requester.get(`/api/v1/supplier-voucher-debt`, query),
     getBills: (query?: {supplierId : string}) => requester.get(`/api/v1/supplier-bill`,query),
+    getAllAuthorProduct: (query?: any) => requester.get(`/api/v1/search-supplier-product`, query),
 }
 export default apis;

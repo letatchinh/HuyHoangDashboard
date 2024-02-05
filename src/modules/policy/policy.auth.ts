@@ -8,11 +8,6 @@ const employee = 'employee';
 const user = 'user';
 const userGroup = 'userGroup';
 const pharmacy = 'pharmacy';
-const manuFacturer = 'manufacturer';
-const unit = 'unit';
-const productGroup='productGroup';
-const ranking = 'ranking';
-const medicine = 'medicine';
 const configDiscount = 'configDiscount';
 const pharmaProfile = 'pharmaProfile';
 const notificationBotManager = 'notificationBotManager';
@@ -20,6 +15,11 @@ const notificationBotManager = 'notificationBotManager';
 
 // Đơn hàng
 const bill = 'bill';
+const manuFacturer = 'manufacturer';
+const unit = 'unit';
+const productGroup='productGroup';
+const ranking = 'ranking';
+const medicine = 'medicine';
 
 // Đơn hàng tạm
 const quotation = 'quotation';

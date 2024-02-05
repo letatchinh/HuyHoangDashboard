@@ -1,16 +1,17 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { get, omit } from "lodash";
+import { get } from "lodash";
 import { InstanceModuleRedux } from "~/redux/instanceModuleRedux";
 import { initStateSlice } from "~/redux/models";
 import { getPaging } from "~/utils/helpers";
 interface cloneInitState extends initStateSlice {
- // Add cloneInitState Type Here
+  // Add cloneInitState Type Here
+  supplierInfo?: any
 }
-class ProductClassExtend extends InstanceModuleRedux {
+class ProductsAllClassExtend extends InstanceModuleRedux {
   cloneReducer;
   cloneInitState : cloneInitState;
   constructor() {
-    super('product');
+    super('productsAll');
     this.cloneReducer = {
       ...this.initReducer,
       getListSuccess: (state:initStateSlice , { payload }: any) => {
@@ -34,14 +35,15 @@ class ProductClassExtend extends InstanceModuleRedux {
         });
         state.list = list;
       },
-      resetActionFullState: (state:any) => ({
-        ...state,
-        ...omit(this.cloneInitState, ["list"]),
-      }),
+      setSupplierInfo: (state: cloneInitState, { payload }: any) => {
+        console.log(payload,'payload')
+        state.supplierInfo = payload;
+      },
       // Want Add more reducer Here...
     }
     this.cloneInitState = {
       ...this.initialState,
+      supplierInfo: undefined,
       // Want Add more State Here...
     }
   }
@@ -55,9 +57,9 @@ class ProductClassExtend extends InstanceModuleRedux {
   
 }
 
-const newSlice = new ProductClassExtend();
+const newSlice = new ProductsAllClassExtend();
 const data = newSlice.createSlice();
 
 
-export const productActions = data.actions;
+export const productsAllSliceAction = data.actions;
 export default data.reducer;

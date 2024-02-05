@@ -249,4 +249,3 @@ const ConfigDiscount: React.FC = () => {
 
 export default ConfigDiscount;
 
-

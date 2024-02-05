@@ -145,9 +145,7 @@ export const useAction = ({ action }:UseActionProps) : (v:any) => void => {
   
     return handleAction;
   };
-  
-  
-  
+
   export const useQueryParams = () => {
     return new URLSearchParams(useLocation().search);
   };
