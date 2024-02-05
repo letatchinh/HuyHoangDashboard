@@ -19,8 +19,7 @@ const SprintList: React.FC = memo(() => {
   const { showDrawer, board } = useSprintContext();
   const [listManagersByBoard,] = useGetListManagersByIdBoard(boardId);
   const profile = useGetProfile();
-  console.log(profile, 'board');
-  const userIsAdminforBoard = useMemo(() => get(profile, 'isSuperAdmin', false) || listManagersByBoard?.some(({ _id }:any) => String(_id) === String(profile?._id)), [listManagersByBoard, profile]);
+  const userIsAdminforBoard = useMemo(() => get(profile?.user, 'isSuperAdmin', false) || listManagersByBoard?.some(({ _id }:any) => String(_id) === String(profile?._id)), [listManagersByBoard, profile]);
 
   const query = useMemo(() => {
     if (!boardId) {

@@ -19,6 +19,7 @@ export type ResourceType = {
 
   GROUP_WORK_MANAGERMENT: string[],
   GROUP_VOUCHER: string[],
+  GROUP_MEDICINE: string[],
 };
 
 export type policyType = 'write' | 'read' | 'update' | 'delete' | 'download' | 'admin';
@@ -219,6 +220,12 @@ export type PoliciesType = {
   'DELETE_TODOCONFIGSTATUS' |
   'DOWNLOAD_TODOCONFIGSTATUS' |
   'ADMIN_TODOCONFIGSTATUS' |
-  ''
+  ''|
+  'READ_MEDICINE'|
+  'WRITE_MEDICINE' |
+  'UPDATE_MEDICINE' |
+  'DELETE_MEDICINE' |
+  'DOWNLOAD_MEDICINE' |
+  'ADMIN_MEDICINE' 
   ]: [string, policyType];
 };

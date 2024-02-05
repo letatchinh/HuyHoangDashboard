@@ -100,7 +100,6 @@ export const resource: ItemType[] = [
             key: PATH_APP.worldPharma.medicine,
             icon: <DatabaseOutlined />,
             permission :[POLICIES.READ_MEDICINE],
-            // permission :[POLICIES.READ_USERGROUP],
           },
           {
             label: "Cấu hình giảm giá",

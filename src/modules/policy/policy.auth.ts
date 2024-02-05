@@ -34,7 +34,6 @@ const todoList = 'todoList';
 const voucher = 'voucher';
 const statusVoucher = 'statusVoucher';
 const historyVoucher = 'historyVoucher';
-
 const RESOURCES = [
   //Setting
   configDiscount,
@@ -75,6 +74,8 @@ const RESOURCES = [
   notificationBotManager,
   todoConfigStatus,
   todoList,
+
+  medicine,
 ];
 
 //ACTIONS
@@ -163,6 +164,11 @@ const RESOURCE = (): ResourceType => {
     todoList,
     todoConfigStatus,
   ];
+
+
+   const GROUP_MEDICINE: string[] = [
+    medicine
+  ]
   return {
     GROUP_USER,
     GROUP_EMPLOYEE,
@@ -178,6 +184,7 @@ const RESOURCE = (): ResourceType => {
     GROUP_SUPPLIER,
     GROUP_WORK_MANAGERMENT,
     GROUP_VOUCHER,
+    GROUP_MEDICINE,
   };
 };
 
