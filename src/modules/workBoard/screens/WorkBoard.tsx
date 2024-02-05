@@ -15,6 +15,7 @@ import { SearchOutlined } from '@ant-design/icons';
 import WithPermission from '~/components/common/WithPermission';
 import POLICIES from '~/modules/policy/policy.auth';
 import { useMatchOrPolicy } from '~/modules/policy/policy.hook';
+import { useNavigate } from 'react-router-dom';
 interface WorkFlowProps { }
 
 const WorkBoard: React.FC<WorkFlowProps> = () => {
@@ -58,6 +59,7 @@ const WorkBoard: React.FC<WorkFlowProps> = () => {
     setId(null);
     form.resetFields();
   }, []);
+  const navigate = useNavigate()
   const columns: ColumnsType<DataType> = [
     {
       title: 'Tên nhóm',
@@ -65,7 +67,7 @@ const WorkBoard: React.FC<WorkFlowProps> = () => {
       align: 'center',
       key: 'name',
       render: (value, record) => (
-        <Button type="link" href={`/work-board/sprint/${record._id}`}>
+        <Button type="link" onClick={() => navigate(`sprint/${record._id}`)} >
           {value}
         </Button>
       ),

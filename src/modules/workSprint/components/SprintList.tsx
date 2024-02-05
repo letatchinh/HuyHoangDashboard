@@ -4,7 +4,7 @@ import { DownOutlined, PlusOutlined } from '@ant-design/icons';
 import { get } from 'lodash';
 import { useGetListManagersByIdBoard } from '~/modules/workBoard/workBoard.hook';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useProfile } from '~/modules/auth/auth.hook';
+import { useGetProfile, useProfile } from '~/modules/auth/auth.hook';
 import { useCreateWorkSprint, useDeleteWorkSprint, useGetWorkSprints, useUpdateWorkSprint,useResetAction } from '../workSprint.hook';
 import SprintCard from './SprintCard';
 import { useSprintContext } from '../screens/WorkSprint';
@@ -18,7 +18,8 @@ const SprintList: React.FC = memo(() => {
   const { boardId } = useParams();
   const { showDrawer, board } = useSprintContext();
   const [listManagersByBoard,] = useGetListManagersByIdBoard(boardId);
-  const [profile] = useProfile();
+  const profile = useGetProfile();
+  console.log(profile, 'board');
   const userIsAdminforBoard = useMemo(() => get(profile, 'isSuperAdmin', false) || listManagersByBoard?.some(({ _id }:any) => String(_id) === String(profile?._id)), [listManagersByBoard, profile]);
 
   const query = useMemo(() => {
@@ -45,7 +46,7 @@ const SprintList: React.FC = memo(() => {
   const navigate = useNavigate()
   useResetAction(); 
   const handleSelect = (value: string, option: React.ReactElement) => {
-    navigate(value)
+    window.location.replace(value);
   }
   return (
     <div style={{ width: 'auto', height: '100%' }}>
