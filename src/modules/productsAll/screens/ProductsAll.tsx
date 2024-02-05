@@ -211,6 +211,7 @@ export default function ProductsAll(props: TypeProps): React.JSX.Element {
               showSizeChanger : true
             }}
             onChange={onTableChange}
+            loading={isLoading}
           />
         </WhiteBox>
         <Modal

@@ -35,6 +35,7 @@ const {
 const getSelector = (key: string) => (state: any) => state.productsAll[key];
 const getSelectorProduct = (key: any) => (state: any) => state.product[key];
 const createProductSuccessSelector = getSelectorProduct('createSuccess');
+const deleteProductSuccessSelector = getSelectorProduct('deleteSuccess');
 const getSupplierInfo = getSelector('supplierInfo');
 export const useSupplierInfoRedux = () => useSelector(getSupplierInfo);
 
@@ -104,7 +105,7 @@ export const useProductsAllQueryParams = () => {
   const isSupplierMaster = true;
   const keyword = query.get("keyword");
   const createSuccess = useSelector(createProductSuccessSelector);
-  // const deleteSuccess = useSelector(deleteSuccessSelector);
+  const deleteSuccess = useSelector(deleteProductSuccessSelector);
   
 
   const onTableChange: any = ({ current, pageSize }: any) => {
@@ -120,7 +121,7 @@ export const useProductsAllQueryParams = () => {
     };
     return [queryParams, onTableChange];
     //eslint-disable-next-line
-  }, [page, limit, keyword,createSuccess ]);
+  }, [page, limit, keyword,createSuccess, deleteSuccess ]);
 };
 
 export const useUpdateProductsAllParams = (
