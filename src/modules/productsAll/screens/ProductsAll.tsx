@@ -3,7 +3,6 @@ import { Col, Modal, Row, Select } from 'antd';
 import { ColumnsType } from "antd/es/table/InternalTable";
 import { Table } from 'antd/lib';
 import { get } from 'lodash';
-import ActionColumn from '~/components/common/ActionColumn';
 import WhiteBox from '~/components/common/WhiteBox';
 import { formatter } from '~/utils/helpers';
 import Breadcrumb from '~/components/common/Breadcrumb';
@@ -17,14 +16,19 @@ import FormListSupplier from '../components/FormListSupplier';
 import SelectSearch from '~/components/common/SelectSearch/SelectSearch';
 import { DataType, TypeProps } from '../productsAll.modal';
 import ShowStep from '../components/ShowStep';
+import ActionColumn from '../components/ActionColumns';
+import { useDeleteProduct } from '~/modules/product/product.hook';
 
 export default function ProductsAll(props: TypeProps): React.JSX.Element {
   const [query, onTableChange] = useProductsAllQueryParams();
   const [keyword, { setKeyword, onParamChange }] = useUpdateProductsAllParams(query);
   const [data, isLoading] = useGetProductsAll(query);
   const onChangeVariantDefault = useChangeVariantDefault();
+  const [, onDelete] = useDeleteProduct();
   const onSetSupplierInfo = useSetSupplierInfo();
   const canReadSupplier = useMatchPolicy(POLICIES.READ_PRODUCT);
+  const canUpdate = useMatchPolicy(POLICIES.UPDATE_PRODUCT);
+  const canDelete = useMatchPolicy(POLICIES.DELETE_PRODUCT);
   const paging = useProductsAllPaging();
   const [step, setStep] = useState(0);
 
@@ -164,20 +168,23 @@ export default function ProductsAll(props: TypeProps): React.JSX.Element {
             return get(value,'element')
           },
         },
+      ...( canDelete || canUpdate ? [
         {
           title: "Thao tác",
           dataIndex: "_id",
           key: "_id",
-          align: "center",
-          fixed: "right",
-          render(_id, record, index) {
+          align: "center" as any,
+          fixed: "right" as any,
+          render(_id : any, record: any, index: any) {
             return <ActionColumn
             _id={_id}
             onDetailClick={() => onOpenFormProduct(_id, get(record, "supplier._id", null))}
-            // onDelete={onDelete}
+            onDelete={onDelete}
             />
           },
         },
+        ]: []
+        ),
       ];
     return (
       <div>
@@ -188,7 +195,8 @@ export default function ProductsAll(props: TypeProps): React.JSX.Element {
           handleOnClickButton={onOpenModal}
           titleButtonAdd='Thêm mới sản phẩm'
           showSelect={false}
-          onSearch={(value: any)=>  onParamChange({keyword : value?.trim()})}
+          onSearch={(value: any) => onParamChange({ keyword: value?.trim() })}
+          permissionKey={[POLICIES.WRITE_PRODUCT]}
           />
         <WhiteBox>
           <TableAnt
