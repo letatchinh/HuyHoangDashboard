@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowLeftOutlined, CloseOutlined, DownOutlined } from '@ant-design/icons';
 import { Button, Drawer, Tree } from 'antd';
@@ -43,6 +43,11 @@ interface NavBoardProps {
     }
     return [];
   }, [board]);
+  const [width, setWidth] = useState(300); // Chiều rộng ban đầu của ResizableBox
+
+  const handleResize = (e:any, { size }:any) => {
+    setWidth(size.width); // Cập nhật chiều rộng khi thay đổi kích thước của ResizableBox
+  };
   return (
     <>
       <Drawer
@@ -55,11 +60,11 @@ interface NavBoardProps {
             Không gian làm việc{' '}
           </p>
         }
-        placement="right"
+        placement="left"
         mask={true}
         maskStyle={{ background: 'transparent', width: '100vw' }}
         drawerStyle={{ background: '#dbe7ed' }}
-        // width={'max-content'}
+        width={width}
         closable={false}
         maskClosable={true}
         // onClose={() => showDrawer(false)}
@@ -86,7 +91,8 @@ interface NavBoardProps {
           minConstraints={[280, Infinity]}
           maxConstraints={[400, Infinity]}
           height={Infinity}
-          width={350}
+          width={width}
+          onResize={handleResize}
         >
           <div className="nav-board">
             {!!convertBoard.length && (
