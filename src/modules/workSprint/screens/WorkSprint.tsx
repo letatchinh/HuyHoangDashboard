@@ -4,7 +4,7 @@ import { clone } from 'lodash';
 import NavBoard from '../components/NavBoard';
 import SprintList from '../components/SprintList';
 import { useGetlistWorkBoard } from '~/modules/workBoard/workBoard.hook';
-import { useGetWorkSprints } from '../workSprint.hook';
+import { useGetWorkSprints, useResetAction } from '../workSprint.hook';
 // import './workSprint.style.scss';
 const SprintPageProvider = createContext<{
   showDrawer?: (param?: boolean) => void;
@@ -43,12 +43,12 @@ const Sprint: React.FC = () => {
     visibleListBoard,
     board: board.reduce(showDeeply, []),
   }), [showDrawer, visibleListBoard, board]);
-
+  useResetAction();
   return (
     <div >
     <div className="sprint-page" style={{ height: '100vh', overflow: 'hidden' }}>
       <SprintPageProvider.Provider value={memoizedProps}>
-      <NavBoard />
+      <NavBoard board={board} isLoadingList={isLoadingList}/>
         <Suspense fallback={<div>...</div>}>
         </Suspense>
        <SwitchRouter path={pathname} />

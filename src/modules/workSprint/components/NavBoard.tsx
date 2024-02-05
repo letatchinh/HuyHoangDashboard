@@ -10,13 +10,16 @@ import { useGetlistWorkBoard } from '~/modules/workBoard/workBoard.hook';
 // import { useGetAllBoard } from '~/hooks';
 // import { useSprintContext } from './Sprint';
 
-interface NavBoardProps {}
+interface NavBoardProps {
+  board?: any[];
+  isLoadingList?: boolean;
+}
 
 
-  export default function NavBoard({}: NavBoardProps): React.JSX.Element {
-  const query = useMemo(() => ({ page: 1 }), []);
+  export default function NavBoard({board, isLoadingList}: NavBoardProps): React.JSX.Element {
+  // const query = useMemo(() => ({ page: 1 }), []);
   const { showDrawer, visibleListBoard } = useSprintContext();
-  const [board, isLoadingList] = useGetlistWorkBoard(query);
+  // const [board, isLoadingList] = useGetlistWorkBoard(query);
   // console.log("board");
   const convertBoard = useMemo(() => {
     if (board?.length) {

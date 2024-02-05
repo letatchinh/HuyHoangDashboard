@@ -6,7 +6,7 @@ import { ArrowLeftOutlined, CloseOutlined } from '@ant-design/icons';
 import { ResizableBox } from 'react-resizable';
 import Text from 'antd/lib/typography/Text';
 import { get } from 'lodash';
-import { useUpdatePositionBoardConfig,useCreateWorkList, useDeleteWorkList, useGetListBoardConfig, useListBoardConfigItem, useUpdatePosition, useWorkListQueryParams, useUpdateWorkList } from '../workList.hook';
+import { useUpdatePositionBoardConfig, useCreateWorkList, useDeleteWorkList, useGetListBoardConfig, useListBoardConfigItem, useUpdatePosition, useWorkListQueryParams, useUpdateWorkList } from '../workList.hook';
 import { useGetWorkSprint } from '~/modules/workSprint/workSprint.hook';
 import MenuListBoard from '~/modules/workSprint/components/MenuListBoard';
 import BoardConfig from '../components/WorkListConfig';
@@ -32,12 +32,12 @@ const WorkList = () => {
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const [form] = Form.useForm();
   const [boardConfig] = useGetListBoardConfig(query);
-  const boardConfigMemo = useMemo(() => (boardConfig ?? []).map(({ name, _id,ordinal }: any) => ({ name, _id,ordinal })), [boardConfig]);
+  const boardConfigMemo = useMemo(() => (boardConfig ?? []).map(({ name, _id, ordinal }: any) => ({ name, _id, ordinal })), [boardConfig]);
   const [data] = useListBoardConfigItem();
   const [propsModal, setPropsModal] = useState({});
   const [visibleInfo, setVisibleInfo] = useState(false);
   const [lengthList, setLength] = useState<number>(
-    workflowRef?.current?.offsetWidth ?? window.innerWidth
+    workflowRef?.current?.offsetWidth || window.innerWidth
   );
   // let data = boardConfigMemo;
   const handleButtonClick = useCallback(() => {
@@ -50,7 +50,7 @@ const WorkList = () => {
   const [, updateTask] = useUpdateTask();
   const [, updatePosition] = useUpdatePosition();
   const [, handleCreateTask] = useCreateTask();
-  const [,updatePositionBoardConfig] = useUpdatePositionBoardConfig();
+  const [, updatePositionBoardConfig] = useUpdatePositionBoardConfig();
   const [, handleDeleteTask] = useDeleteTask();
   const [, handleCreateWork] = useCreateWorkList();
   const [, handleDeleteWork] = useDeleteWorkList();
@@ -60,7 +60,7 @@ const WorkList = () => {
   const showDrawer = (param?: any) => {
     setVisibleListBoard((val) => param ?? !val);
   };
-  const handleFinshed = useCallback((val: any, key: any,id?:any) => {
+  const handleFinshed = useCallback((val: any, key: any, id?: any) => {
     updateTask({
       [key]: val,
       id: id,
@@ -73,23 +73,23 @@ const WorkList = () => {
     if (!visibleInfo) {
       setLength(workflowRef?.current?.offsetWidth ?? window.innerWidth);
     } else {
-      setLength(workflowRef?.current?.offsetWidth * 0.7);
+      setLength(workflowRef?.current?.offsetWidth * 0.6);
     }
   }, [visibleInfo]);
   const changePosition = (sourceIndex: any, destinationIndex: any) => {
     const newData: any = [...boardConfigMemo];
-  const sourceItem = newData?.[sourceIndex];
-  if ( sourceIndex !== destinationIndex) {
-    newData.splice(sourceIndex, 1);
-    newData.splice(destinationIndex, 0, sourceItem);
-    let valueIdxUp = get(newData[destinationIndex-1], 'ordinal', 0);
-    let valueIdxDown = get(newData[destinationIndex+1], 'ordinal', valueIdxUp + 5);
-    let newOrdinal = (valueIdxUp + valueIdxDown) / 2;
-    Object.assign(sourceItem ?? {}, { ordinal: newOrdinal });
-    updateBoardConfig({id:get(sourceItem,'_id',''),ordinal:newOrdinal});
-    updatePositionBoardConfig({ newData, destinationIndex, sourceIndex });
+    const sourceItem = newData?.[sourceIndex];
+    if (sourceIndex !== destinationIndex) {
+      newData.splice(sourceIndex, 1);
+      newData.splice(destinationIndex, 0, sourceItem);
+      let valueIdxUp = get(newData[destinationIndex - 1], 'ordinal', 0);
+      let valueIdxDown = get(newData[destinationIndex + 1], 'ordinal', valueIdxUp + 5);
+      let newOrdinal = (valueIdxUp + valueIdxDown) / 2;
+      Object.assign(sourceItem ?? {}, { ordinal: newOrdinal });
+      updateBoardConfig({ id: get(sourceItem, '_id', ''), ordinal: newOrdinal });
+      updatePositionBoardConfig({ newData, destinationIndex, sourceIndex });
+    };
   };
-};
   const onDragEndv2 = (result: any) => {
     const { source, destination, draggableId } = result;
     if (result.type === 'TASK') {
@@ -128,6 +128,9 @@ const WorkList = () => {
       changePosition(source?.index, destination?.index);
     }
   };
+  const minConstraintsWidth = (workflowRef?.current?.offsetWidth || window.innerWidth) * 0.35;
+  const maxConstraintsWidth = (workflowRef?.current?.offsetWidth || window.innerWidth) * 0.5;
+
   return (
     <div className="branch-detail page-wraper page-content page-workflow">
       <FormTaskContext.Provider
@@ -173,12 +176,13 @@ const WorkList = () => {
           <ResizableBox
             className={`react-resizable_custom ${visibleInfo ? 'active' : ''}`}
             resizeHandles={['e']}
-            minConstraints={[workflowRef?.current?.offsetWidth * 0.2 || window.innerWidth * 0.2, Infinity]}
-            maxConstraints={[workflowRef?.current?.offsetWidth * 0.7 || window.innerWidth * 0.7, Infinity]}
+            minConstraints={[minConstraintsWidth, Infinity]}
+            maxConstraints={[maxConstraintsWidth, Infinity]}
             height={Infinity}
             draggableOpts={{ grid: [8, 8] }}
             width={lengthList}
           >
+
             <div className="work-list">
               <div className="work-list-body">
                 <DragDropContext onDragEnd={onDragEndv2}>
@@ -187,8 +191,8 @@ const WorkList = () => {
                       {(provided: any) => (
                         <div
                           key={_id}
-                           {...provided.droppableProps}
-                          ref={provided.innerRef}                         
+                          {...provided.droppableProps}
+                          ref={provided.innerRef}
                         >
                           <Draggable key={_id} draggableId={_id} index={index} >
                             {(provided: any) => (
@@ -213,13 +217,13 @@ const WorkList = () => {
                     </Droppable>
                   ))}
                   <WithOrPermission permission={[POLICIES.WRITE_TODOLIST, POLICIES.ADMIN_TODOLIST]}>
-                  <Button
-                    // type="ghost"
-                    htmlType="button"
-                    onClick={() => handleCreateWork({ boardId: idBoard, sprintId, name: 'Default' })}
-                  >
-                    + Thêm danh mục
-                  </Button>
+                    <Button
+                      // type="ghost"
+                      htmlType="button"
+                      onClick={() => handleCreateWork({ boardId: idBoard, sprintId, name: 'Default' })}
+                    >
+                      + Thêm danh mục
+                    </Button>
                   </WithOrPermission>
                 </DragDropContext>
               </div>
@@ -264,7 +268,7 @@ const WorkList = () => {
           style={{
             position: 'absolute',
             boxShadow: '0px 3px 3px #333',
-            textDecoration:'none',
+            textDecoration: 'none',
           }}
         >
           <ResizableBox
