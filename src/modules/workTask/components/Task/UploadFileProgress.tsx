@@ -13,7 +13,7 @@ interface Props {
 const propsUpload = {
   name: 'file',
   multiple: true,
-  action: `${BASE_URL}/api/v1/file-more/todo`,
+  action: `${BASE_URL}/api/v1/file-more/pharma`,
   beforeUpload: (file: any) => {
     // console.log(file)
     // const maxSize = 5 * 1024 * 1024; // 5MB, ví dụ giới hạn kích thước là 2MB

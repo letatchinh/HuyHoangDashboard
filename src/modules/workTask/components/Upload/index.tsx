@@ -86,7 +86,7 @@ function UploadfileTaskItem({dataTask,handleFinshed,fileList_,setFileList}: Prop
           ))}
       </Image.PreviewGroup>
       <Upload.Dragger
-        action={`${BASE_URL}/api/v1/file-more/todo`}
+        action={`${BASE_URL}/api/v1/file-more/pharma`}
         onChange={onChange}
         fileList={tempFileList}
         beforeUpload={beforeUpload}
