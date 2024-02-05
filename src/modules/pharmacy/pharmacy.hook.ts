@@ -15,6 +15,11 @@ import { useEffect, useMemo, useState } from "react";
 import { get } from "lodash";
 import { clearQuerySearch, getExistProp } from "~/utils/helpers";
 import { STATUS } from "~/constants/defaultValue";
+import { cloneInitState } from "./pharmacy.modal";
+import { RootState } from "~/redux/store";
+
+const getSelector = (key: keyof cloneInitState) => (state: RootState) =>
+  state[MODULE][key];
 
 const MODULE = "pharmacy";
 const MODULE_VI = "nhà thuốc";
@@ -36,9 +41,25 @@ const {
   pagingSelector,
 } = getSelectors(MODULE);
 
+const pharmacyDebtSelector = getSelector("pharmacyDebt");
+const getPharmacyDebtFailedSelector = getSelector("getPharmacyDebtFailed");
+const isLoadingGetPharmacyDebtSelector = getSelector(
+  "isLoadingGetPharmacyDebt"
+);
+const pagingPharmacyDebtSelector = getSelector("pagingPharmacyDebt");
+
+const historyPharmacySelector = getSelector("historyPharmacy");
+const getHistoryPharmacyFailedSelector = getSelector("getHistoryPharmacyFailed");
+const isLoadingGetHistoryPharmacySelector = getSelector("isLoadingGetHistoryPharmacy");
+const pagingHistoryPharmacySelector = getSelector("pagingPharmacyDebt");
+
+export const useHistoryPharmacyPaging = () => useSelector(pagingHistoryPharmacySelector);
+
+export const useProductSupplierPaging = () => useSelector(pagingPharmacyDebtSelector);
+
 export const usePharmacyPaging = () => useSelector(pagingSelector);
 
-export const useGetPharmacies = (query? : any) => {
+export const useGetPharmacies = (query?: any) => {
   return useFetchByParam({
     action: pharmacySliceAction.getListRequest,
     loadingSelector: loadingSelector,
@@ -115,7 +136,15 @@ export const usePharmacyQueryParams = () => {
     };
     return [queryParams];
     //eslint-disable-next-line
-  }, [page, limit, keyword, status, createSuccess, updateSuccess, deleteSuccess]);
+  }, [
+    page,
+    limit,
+    keyword,
+    status,
+    createSuccess,
+    updateSuccess,
+    deleteSuccess,
+  ]);
 };
 
 export const useUpdatePharmacyParams = (
@@ -157,6 +186,67 @@ export const useInitPharmacy = (pharmacy: any, id: any) => {
       status: pharmacy.status === STATUS.ACTIVE ? true : false,
     };
   }, [pharmacy, id]);
+};
+
+export const usePharmacyDebtQuery = () => {
+  const [limit, setLimit] = useState<number | null | undefined>(10);
+  const [page, setPage] = useState<number | null | undefined>(1);
+  const [keyword, setKeyword] = useState("");
+  const onTableChange: any = ({ current, pageSize }: any) => {
+    setPage(current);
+    setLimit(pageSize);
+  };
+  return useMemo(() => {
+    const query = {
+      page,
+      limit,
+      keyword,
+    };
+    return [query, onTableChange];
+  }, [page, limit, keyword]);
+};
+
+export const useGetPharmacyDebt = (param: any) => {
+  return useFetchByParam({
+    action: pharmacySliceAction.getPharmacyDebtRequest,
+    loadingSelector: isLoadingGetPharmacyDebtSelector,
+    dataSelector: pharmacyDebtSelector,
+    failedSelector: getPharmacyDebtFailedSelector,
+    param,
+  });
+};
+
+export const useHistoryPharmacyQuery = (keyword?: any) => {
+  const [limit, setLimit] = useState(10);
+  const [page, setPage] = useState(1);
+  const onTableChange : any = ({ current, pageSize }: any) => {
+    setPage(current);
+    setLimit(pageSize);
+  };
+  return useMemo(() => {
+    const query = {
+      page,
+      limit,
+      keyword,
+    };
+    return [query,onTableChange];
+  }, [page,
+     limit,
+     keyword,
+    ]);
+};
+
+export const useGetHistoryPharmacy = (id: any) => {
+  console.log('====================================');
+  console.log(id, "IDDD");
+  console.log('====================================');
+  return useFetchByParam({
+    action: pharmacySliceAction.getHistoryPharmacyRequest,
+    loadingSelector: historyPharmacySelector,
+    dataSelector: isLoadingGetHistoryPharmacySelector,
+    failedSelector: getHistoryPharmacyFailedSelector,
+    param: id,
+  });
 };
 
 export const useResetPharmacyAction = () => {

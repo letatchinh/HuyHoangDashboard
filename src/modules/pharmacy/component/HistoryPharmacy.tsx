@@ -2,12 +2,10 @@ import { ColumnsType } from "antd/es/table";
 import useTranslate from "~/lib/translation";
 import { concatAddress } from "~/utils/helpers";
 import {
-  useDeletePharmacy,
-  useGetPharmacies,
-  usePharmacyPaging,
-  usePharmacyQueryParams,
+  useGetHistoryPharmacy,
+  useHistoryPharmacyPaging,
+  useHistoryPharmacyQuery,
   useUpdatePharmacy,
-  useUpdatePharmacyParams,
 } from "../pharmacy.hook";
 import Breadcrumb from "~/components/common/Breadcrumb";
 import WhiteBox from "~/components/common/WhiteBox";
@@ -49,57 +47,33 @@ interface UserProps {
   currentTab: string | undefined;
 }
 
-
-export default function HistoryPharmacy() {
+export default function HistoryPharmacy(props: propsType) {
   const { t }: any = useTranslate();
-  const [query] = usePharmacyQueryParams();
-  const [keyword, { setKeyword, onParamChange }] =
-    useUpdatePharmacyParams(query);
-  const [pharmacies, isLoading] = useGetPharmacies(query);
+  const { pharmacyId } = props;
+  const [keyword, setKeyword] = useState("");
+  const [value, setValue] = useState("");
+  const [query] = useHistoryPharmacyQuery();
+  const [history, isLoading] = useGetHistoryPharmacy(pharmacyId);
+  const [searchByStatus, setSearchByStatus] = useState<string[]>([]);
+  const paging = useHistoryPharmacyPaging();
+console.log(history, "AAAAAA");
 
-  const onCloseForm = useCallback(() => {
-    setPharmacyId(null);
-    setIsOpenForm(false);
-  }, []);
-
-  const [, updatePharmacy] = useUpdatePharmacy(onCloseForm);
-  const [pharmacyId, setPharmacyId] = useState(null);
   const [isOpenForm, setIsOpenForm] = useState(false);
-  const paging = usePharmacyPaging();
 
-  const onOpenForm = useCallback(
-    (id?: any) => {
-      if (id) {
-        setPharmacyId(id);
-      }
-      setIsOpenForm(true);
-    },
-    [setPharmacyId, setIsOpenForm]
-  );
   const [open, setOpen] = useState(false);
   const [debt, setDebt] = useState<number | null>();
-
-  const onOpenReceipt = (item: any) => {
-    setOpen(true);
-    setPharmacyId(item?._id);
-    setDebt(item?.resultDebt);
-  };
-  const onCloseReceipt = () => {
-    setOpen(false);
-    setPharmacyId(null);
-  };
 
   const columns: ColumnsType = useMemo(
     () => [
       {
         title: "Mã đơn hàng",
-        // dataIndex: "code",
-        key: "code",
+        dataIndex: "codeSequence",
+        key: "codeSequence",
         width: 120,
-        render(record) {
+        render(codeSequence) {
           return (
-            <Link className="link_" to={`/pharmacy/${record?._id}`} target={'_blank'}>
-              {record?.code}
+            <Link className="link_" to={`/bill?keyword=${codeSequence}`} target={'_blank'}>
+              {codeSequence}
             </Link>
           );
         },
@@ -113,69 +87,15 @@ export default function HistoryPharmacy() {
           return moment(record).format("DD/MM/YYYY");
         },
       },
-      {
-        title: "Giá trị đơn hàng",
-        dataIndex: "name",
-        key: "name",
-        width: 180,
-      },
-      {
-        title: "Phương thức thanh toán",
-        dataIndex: "phoneNumber",
-        key: "phoneNumber",
-        width: 120,
-      },
-      {
-        title: "Đã thanh toán",
-        dataIndex: "address",
-        key: "address",
-        width: 300,
-        render(value, record, index) {
-          return concatAddress(value);
-        },
-      },
-      {
-        title: "Luỹ kế",
-        dataIndex: "createReceipt",
-        key: "createReceipt",
-        width: 120,
-      },
+      
     ],
     []
   );
 
-  const onChangeStatus = (
-    _id: any,
-    status: any,
-    isSubmitLoading: any,
-    record: any
-  ) => {
-    updatePharmacy({
-      _id,
-      status,
-      isSubmitLoading,
-      ...omit(record, ["_id", "status"]),
-    });
-  };
-
-  const onChange = ({ target }: any) => {
-    switch (target.value) {
-      case 2:
-        onParamChange({ ...query, status: STATUS["ACTIVE"] });
-        break;
-      case 3:
-        onParamChange({ ...query, status: STATUS["INACTIVE"] });
-        break;
-      default:
-        onParamChange({ ...query, status: "" });
-        break;
-    }
-  };
-
   return (
     <div>
       <Breadcrumb title={t("list-pharmacies")} />
-      <Row className="mb-3" justify={"space-between"}>
+      {/* <Row className="mb-3" justify={"space-between"}>
         <Col span={8}>
           <Search
             enterButton="Tìm kiếm"
@@ -186,42 +106,24 @@ export default function HistoryPharmacy() {
             value={keyword}
           />
         </Col>
-      </Row>
+      </Row> */}
       <WhiteBox>
         <TableAnt
-          dataSource={pharmacies}
+          dataSource={history}
           loading={isLoading}
           rowKey={(rc) => rc?._id}
           columns={columns}
           size="small"
           pagination={{
             ...paging,
-            onChange(page, pageSize) {
-              onParamChange({ page, limit: pageSize });
-            },
+            // onChange(page, pageSize) {
+            //   onParamChange({ page, limit: pageSize });
+            // },
             showSizeChanger: true,
             showTotal: (total) => `Tổng cộng: ${total} `,
           }}
         />
       </WhiteBox>
-      
-      <Modal
-        title="Phiếu chi"
-        open={open}
-        onCancel={() => setOpen(false)}
-        onOk={() => setOpen(false)}
-        width={1366}
-        footer={null}
-        destroyOnClose
-      >
-        <ReceiptVoucherForm
-          onClose={() => onCloseReceipt()}
-          pharmacyId={pharmacyId}
-          refCollection={REF_COLLECTION_UPPER.PHARMA_PROFILE}
-          debt={debt}
-          from="Pharmacy"
-        />
-      </Modal>
     </div>
   );
 }

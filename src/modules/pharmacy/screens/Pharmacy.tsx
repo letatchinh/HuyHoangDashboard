@@ -112,7 +112,11 @@ export default function Pharmacy() {
         width: 120,
         render(record) {
           return (
-            <Link className="link_" to={`/pharmacy/${record?._id}`} target={'_blank'}>
+            <Link
+              className="link_"
+              to={`/pharmacy/${record?._id}`}
+              target={"_blank"}
+            >
               {record?.code}
             </Link>
           );
@@ -129,22 +133,8 @@ export default function Pharmacy() {
         dataIndex: "phoneNumber",
         key: "phoneNumber",
         width: 120,
-    },
-    ...(
-        canWriteVoucher ? [
-          {
-            title: "Tạo phiếu",
-            dataIndex: "createReceipt",
-            key: "createReceipt",
-            width: 120,
-            render(value: any, rc: any) {
-              return ( <Space>
-                 <Button type="primary" onClick={()=> onOpenReceipt(rc)}>Phiếu thu</Button>
-               </Space>)
-             },
-          },
-        ]: []
-    ),
+      },
+
       {
         title: "Địa chỉ",
         dataIndex: "address",
@@ -172,21 +162,25 @@ export default function Pharmacy() {
           return formatNumberThreeComma(value);
         },
       },
-      {
-        title: "Tạo phiếu",
-        dataIndex: "createReceipt",
-        key: "createReceipt",
-        width: 120,
-        render(value, rc) {
-          return (
-            <Space>
-              <Button type="primary" onClick={() => onOpenReceipt(rc)}>
-                Phiếu thu
-              </Button>
-            </Space>
-          );
-        },
-      },
+      ...(canWriteVoucher
+        ? [
+            {
+              title: "Tạo phiếu",
+              dataIndex: "createReceipt",
+              key: "createReceipt",
+              width: 120,
+              render(value: any, rc: any) {
+                return (
+                  <Space>
+                    <Button type="primary" onClick={() => onOpenReceipt(rc)}>
+                      Phiếu thu
+                    </Button>
+                  </Space>
+                );
+              },
+            },
+          ]
+        : []),
       {
         title: "Trạng thái",
         key: "status",
@@ -355,7 +349,7 @@ export default function Pharmacy() {
         />
       </ModalAnt>
       <Modal
-        title='Phiếu thu'
+        title="Phiếu thu"
         open={open}
         onCancel={() => setOpen(false)}
         onOk={() => setOpen(false)}

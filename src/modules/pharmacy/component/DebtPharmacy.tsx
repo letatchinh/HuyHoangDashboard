@@ -2,12 +2,9 @@ import { ColumnsType } from "antd/es/table";
 import useTranslate from "~/lib/translation";
 import { concatAddress } from "~/utils/helpers";
 import {
-  useDeletePharmacy,
-  useGetPharmacies,
+  useGetPharmacyDebt,
+  usePharmacyDebtQuery,
   usePharmacyPaging,
-  usePharmacyQueryParams,
-  useUpdatePharmacy,
-  useUpdatePharmacyParams,
 } from "../pharmacy.hook";
 import Breadcrumb from "~/components/common/Breadcrumb";
 import WhiteBox from "~/components/common/WhiteBox";
@@ -44,51 +41,47 @@ import ModalAnt from "~/components/Antd/ModalAnt";
 import ReceiptVoucherForm from "~/modules/receiptVoucher/components/ReceiptVoucherForm";
 import { Link } from "react-router-dom";
 import { PATH_APP } from "~/routes/allPath";
+import dayjs from "dayjs";
 
 interface UserProps {
   currentTab: string | undefined;
 }
+// type propsType = {
+//   pharmacyId: string | null
+// };
 
 
-export default function DebtPharmacy() {
+export default function DebtPharmacy(props: propsType) {
   const { t }: any = useTranslate();
-  const [query] = usePharmacyQueryParams();
-  const [keyword, { setKeyword, onParamChange }] = useUpdatePharmacyParams(query);
-  const [pharmacies, isLoading] = useGetPharmacies(query);
-
-  const onCloseForm = useCallback(() => {
-    setPharmacyId(null);
-    setIsOpenForm(false);
-  }, []);
-
-  const [, updatePharmacy] = useUpdatePharmacy(onCloseForm);
-  const [isSubmitLoading, deletePharmacy] = useDeletePharmacy();
-  const [pharmacyId, setPharmacyId] = useState(null);
-  const [isOpenForm, setIsOpenForm] = useState(false);
+  const { pharmacyId } = props;
+  const [keyword, setKeyword] = useState("");
+  const [value, setValue] = useState("");
+  const [query, onTableChange] = usePharmacyDebtQuery();
+  const [searchByStatus, setSearchByStatus] = useState<string[]>([]);
+  const defaultDate = useMemo(
+    () => ({
+      startDate: dayjs().startOf("month").format("YYYY-MM-DDTHH:mm:ss"),
+      endDate: dayjs().endOf("month").format("YYYY-MM-DDTHH:mm:ss"),
+    }),
+    []
+  );
+  const [date, setDate] = useState<any>(defaultDate);
+  const newQuery = useMemo(
+    () => ({
+      ...query,
+      pharmacyId: pharmacyId,
+      ...date,
+      status: searchByStatus?.toString(),
+    }),
+    [pharmacyId, query, date, searchByStatus]
+  );
+  const [data, isLoading] = useGetPharmacyDebt(query);
+  
   const paging = usePharmacyPaging();
 
-  const onOpenForm = useCallback(
-    (id?: any) => {
-      if (id) {
-        setPharmacyId(id);
-      }
-      setIsOpenForm(true);
-    },
-    [setPharmacyId, setIsOpenForm]
-  );
   const [open, setOpen] = useState(false);
   const [debt, setDebt] = useState<number | null>();
-
-  const onOpenReceipt = (item: any) => {
-    setOpen(true);
-    setPharmacyId(item?._id);
-    setDebt(item?.resultDebt);
-  };
-  const onCloseReceipt = () => {
-    setOpen(false);
-    setPharmacyId(null);
-  };
-
+  
   const columns: ColumnsType = useMemo(
     () => [
       {
@@ -141,39 +134,11 @@ export default function DebtPharmacy() {
     []
   );
 
-  const onChangeStatus = (
-    _id: any,
-    status: any,
-    isSubmitLoading: any,
-    record: any
-  ) => {
-    updatePharmacy({
-      _id,
-      status,
-      isSubmitLoading,
-      ...omit(record, ["_id", "status"]),
-    });
-  };
-
-  const onChange = ({ target }: any) => {
-    switch (target.value) {
-      case 2:
-        onParamChange({ ...query, status: STATUS["ACTIVE"] });
-        break;
-      case 3:
-        onParamChange({ ...query, status: STATUS["INACTIVE"] });
-        break;
-      default:
-        onParamChange({ ...query, status: "" });
-        break;
-    }
-  };
-
   return (
     <div>
-      <Breadcrumb title={t("list-pharmacies")} />
+      <Breadcrumb title={t("debt")} />
       <Row className="mb-3" justify={"space-between"}>
-        <Col span={8}>
+        {/* <Col span={8}>
           <Search
             enterButton="Tìm kiếm"
             placeholder="Nhập để tìm kiếm"
@@ -182,82 +147,25 @@ export default function DebtPharmacy() {
             onChange={(e) => setKeyword(e.target.value)}
             value={keyword}
           />
-        </Col>
-        <WithPermission permission={POLICIES.WRITE_PHARMAPROFILE}>
-          <Col>
-            <Button
-              icon={<PlusCircleOutlined />}
-              type="primary"
-              onClick={() => onOpenForm()}
-            >
-              Thêm mới
-            </Button>
-          </Col>
-        </WithPermission>
+        </Col> */}
       </Row>
-      <WithPermission permission={POLICIES.UPDATE_PHARMAPROFILE}>
-        <Space style={{ marginBottom: 20 }}>
-          <Typography style={{ fontSize: 14, marginRight: 20 }}>
-            Phân loại trạng thái theo :
-          </Typography>
-          <Row gutter={14}>
-            <Radio.Group
-              onChange={onChange}
-              optionType="button"
-              buttonStyle="solid"
-              defaultValue={(() => {
-                switch (query?.status) {
-                  case "ACTIVE":
-                    return 2;
-                  case "INACTIVE":
-                    return 3;
-                  default:
-                    return 1;
-                }
-              })()}
-            >
-              <Radio.Button value={1}>Tất cả</Radio.Button>
-              <Radio.Button value={2}>{STATUS_NAMES["ACTIVE"]}</Radio.Button>
-              <Radio.Button value={3}>{STATUS_NAMES["INACTIVE"]}</Radio.Button>
-            </Radio.Group>
-          </Row>
-        </Space>
-      </WithPermission>
-      <WhiteBox>
+
         <TableAnt
-          dataSource={pharmacies}
+          dataSource={data}
           loading={isLoading}
-          rowKey={(rc) => rc?._id}
+          // rowKey={(rc) => rc?._id}
           columns={columns}
           size="small"
+          onChange={onTableChange}
           pagination={{
             ...paging,
-            onChange(page, pageSize) {
-              onParamChange({ page, limit: pageSize });
-            },
+            // onChange(page, pageSize) {
+            //   onParamChange({ page, limit: pageSize });
+            // },
             showSizeChanger: true,
             showTotal: (total) => `Tổng cộng: ${total} `,
           }}
         />
-      </WhiteBox>
-      
-      <Modal
-        title="Phiếu chi"
-        open={open}
-        onCancel={() => setOpen(false)}
-        onOk={() => setOpen(false)}
-        width={1366}
-        footer={null}
-        destroyOnClose
-      >
-        <ReceiptVoucherForm
-          onClose={() => onCloseReceipt()}
-          pharmacyId={pharmacyId}
-          refCollection={REF_COLLECTION_UPPER.PHARMA_PROFILE}
-          debt={debt}
-          from="Pharmacy"
-        />
-      </Modal>
     </div>
   );
 }
