@@ -11,6 +11,16 @@ function* getListModuleExample({payload:query} : any) : any {
   }
 }
 
+function* getSuppliersProductAuthor({payload:query} : any) : any {
+  try {
+    const data = yield call(api.getAllAuthorProduct,query);
+    yield put(supplierSliceAction.getSuppliersProductAuthorSuccess(data));
+  } catch (error:any) {
+    yield put(supplierSliceAction.getSuppliersProductAuthorFailed(error));
+  }
+}
+
+
 function* getByIdModuleExample({payload:id} : any) : any {
   try {
     const data = yield call(api.getById,id);
@@ -53,4 +63,5 @@ export default function* supplierSaga() {
   yield takeLatest(supplierSliceAction.createRequest, createModuleExample);
   yield takeLatest(supplierSliceAction.updateRequest, updateModuleExample);
   yield takeLatest(supplierSliceAction.deleteRequest, deleteModuleExample);
+  yield takeLatest(supplierSliceAction.getSuppliersProductAuthorRequest, getSuppliersProductAuthor);
 }

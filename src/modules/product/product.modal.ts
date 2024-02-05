@@ -1,9 +1,10 @@
 import { cumulativeDiscountType } from "../cumulativeDiscount/cumulativeDiscount.modal"
 
 export type TypePropsFormProduct = {
-    supplierId?:string,
+    supplierId?:string ,
     id?:string,
-    onCancel : () => void
+  onCancel: () => void,
+  // setSupplierId?: (id: string | null) => void
 }
 export type TypePropsListProduct = {
     supplierId?:string,

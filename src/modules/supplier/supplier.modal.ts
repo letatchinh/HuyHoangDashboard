@@ -32,6 +32,10 @@ export type addressType = {
     getProductSupplierFailed?: any;
     productSupplier?: T[];
     pagingProductSupplier?: any;
+    isLoadingGetSuppliersProductAuthor?: boolean;
+    getSuppliersProductAuthorFailed?: any;
+    suppliersProductAuthor?: T[];
+    pagingSuppliersProductAuthor?: any;
   }
 
   export type STATUS_SUPPLIER_TYPE =  {

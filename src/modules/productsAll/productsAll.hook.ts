@@ -1,56 +1,61 @@
-// Please UnComment To use
 
 import { get } from "lodash";
-// import { useEffect, useMemo, useState } from "react";
-// import { useSelector } from "react-redux";
-// import { useLocation, useNavigate } from "react-router-dom";
-// import { clearQuerySearch, getExistProp } from "~/utils/helpers";
-// import {
-//     getSelectors,
-//     useFailed, useFetchByParam,
-//     useQueryParams,
-//     useSubmit,
-//     useSuccess
-// } from "~/utils/hook";
-// import { productsAllSliceAction } from "./redux/reducer";
-// const MODULE = "productsAll";
-// const MODULE_VI = "";
+import { useEffect, useMemo, useState } from "react";
+import { useSelector } from "react-redux";
+import { useLocation, useNavigate } from "react-router-dom";
+import { clearQuerySearch, getExistProp } from "~/utils/helpers";
+import {
+    getSelectors,
+    useAction,
+    useFailed, useFetchByParam,
+    useQueryParams,
+    useSubmit,
+    useSuccess
+} from "~/utils/hook";
+import { productsAllSliceAction } from "./redux/reducer";
+const MODULE = "productsAll";
+const MODULE_VI = "sản phẩm";
 
-// const {
-//   loadingSelector,
-//   listSelector,
-//   getListFailedSelector,
-//   getByIdLoadingSelector,
-//   getByIdSelector,
-//   getByIdFailedSelector,
-//   deleteSuccessSelector,
-//   deleteFailedSelector,
-//   isSubmitLoadingSelector,
-//   createSuccessSelector,
-//   createFailedSelector,
-//   updateSuccessSelector,
-//   updateFailedSelector,
-//   pagingSelector,
-// } = getSelectors(MODULE);
+const {
+  loadingSelector,
+  listSelector,
+  getListFailedSelector,
+  getByIdLoadingSelector,
+  getByIdSelector,
+  getByIdFailedSelector,
+  deleteSuccessSelector,
+  deleteFailedSelector,
+  isSubmitLoadingSelector,
+  createSuccessSelector,
+  createFailedSelector,
+  updateSuccessSelector,
+  updateFailedSelector,
+  pagingSelector,
+} = getSelectors(MODULE);
+const getSelector = (key: string) => (state: any) => state.productsAll[key];
+const getSelectorProduct = (key: any) => (state: any) => state.product[key];
+const createProductSuccessSelector = getSelectorProduct('createSuccess');
+const getSupplierInfo = getSelector('supplierInfo');
+export const useSupplierInfoRedux = () => useSelector(getSupplierInfo);
 
-// export const useProductsAllPaging = () => useSelector(pagingSelector);
+export const useProductsAllPaging = () => useSelector(pagingSelector);
 
-// export const useGetProductsAlls = (param:any) => {
-//   return useFetchByParam({
-//     action: productsAllSliceAction.getListRequest,
-//     loadingSelector: loadingSelector,
-//     dataSelector: listSelector,
-//     failedSelector: getListFailedSelector,
-//     param
-//   });
-// };
-// export const useGetProductsAll = (id: any) => {
+export const useGetProductsAll = (query: any) => {
+  return useFetchByParam({
+    action: productsAllSliceAction.getListRequest,
+    loadingSelector: loadingSelector,
+    dataSelector: listSelector,
+    failedSelector: getListFailedSelector,
+    param: query,
+  });
+};
+// export const useGetProductAllById = (query: any) => {
 //   return useFetchByParam({
 //     action: productsAllSliceAction.getByIdRequest,
 //     loadingSelector: getByIdLoadingSelector,
 //     dataSelector: getByIdSelector,
 //     failedSelector: getByIdFailedSelector,
-//     param: id,
+//     param: query,
 //   });
 // };
 
@@ -82,63 +87,82 @@ import { get } from "lodash";
 //   });
 // };
 
-// export const useDeleteProductsAll = (callback?: any) => {
-//   useSuccess(deleteSuccessSelector, `Xoá ${MODULE_VI} thành công`, callback);
-//   useFailed(deleteFailedSelector);
+export const useDeleteProductsAll = (callback?: any) => {
+  useSuccess(deleteSuccessSelector, `Xoá ${MODULE_VI} thành công`, callback);
+  useFailed(deleteFailedSelector);
 
-//   return useSubmit({
-//     action: productsAllSliceAction.deleteRequest,
-//     loadingSelector: isSubmitLoadingSelector,
-//   });
-// };
+  return useSubmit({
+    action: productsAllSliceAction.deleteRequest,
+    loadingSelector: isSubmitLoadingSelector,
+  });
+};
 
-// export const useProductsAllQueryParams = () => {
-//   const query = useQueryParams();
-//   const limit = query.get("limit") || 10;
-//   const page = query.get("page") || 1;
-//   const keyword = query.get("keyword");
-//   const createSuccess = useSelector(createSuccessSelector);
-//   const deleteSuccess = useSelector(deleteSuccessSelector);
-//   return useMemo(() => {
-//     const queryParams = {
-//       page,
-//       limit,
-//       keyword,
-//     };
-//     return [queryParams];
-//     //eslint-disable-next-line
-//   }, [page, limit, keyword, createSuccess, deleteSuccess]);
-// };
+export const useProductsAllQueryParams = () => {
+  const query = useQueryParams();
+  const [limit, setLimit] = useState(get(query, "limit") || 10);
+  const [page, setPage] = useState(get(query, "page") || 1);
+  const isSupplierMaster = true;
+  const keyword = query.get("keyword");
+  const createSuccess = useSelector(createProductSuccessSelector);
+  // const deleteSuccess = useSelector(deleteSuccessSelector);
+  
 
-// export const useUpdateProductsAllParams = (
-//   query: any,
-//   listOptionSearch?: any[]
-// ) => {
-//   const navigate = useNavigate();
-//   const { pathname } = useLocation();
-//   const [keyword, setKeyword] = useState(get(query, "keyword"));
-//   useEffect(() => {
-//     setKeyword(get(query, "keyword"));
-//   }, [query]);
-//   const onParamChange = (param: any) => {
-//     // Clear Search Query when change Params
-//     clearQuerySearch(listOptionSearch, query, param);
+  const onTableChange: any = ({ current, pageSize }: any) => {
+    setLimit(pageSize);
+    setPage(current);
+  };
+  return useMemo(() => {
+    const queryParams = {
+      page,
+      limit,
+      keyword,
+      isSupplierMaster
+    };
+    return [queryParams, onTableChange];
+    //eslint-disable-next-line
+  }, [page, limit, keyword,createSuccess ]);
+};
 
-//     if (!param.page) {
-//       query.page = 1;
-//     };
+export const useUpdateProductsAllParams = (
+  query: any,
+  listOptionSearch?: any[],
+) => {
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
+  const [keyword, setKeyword] = useState(get(query, "keyword"));
+  useEffect(() => {
+    setKeyword(get(query, "keyword"));
+  }, [query]);
+  const onParamChange = (param: any) => {
+    // Clear Search Query when change Params
+    clearQuerySearch(listOptionSearch, query, param);
 
-//     // Convert Query and Params to Search Url Param
-//     const searchString = new URLSearchParams(
-//       getExistProp({
-//         ...query,
-//         ...param,
-//       })
-//     ).toString();
+    if (!param.page) {
+      query.page = 1;
+    };
 
-//     // Navigate
-//     navigate(`${pathname}?${searchString}`);
-//   };
+    // Convert Query and Params to Search Url Param
+    const searchString = new URLSearchParams(
+      getExistProp({
+        ...query,
+        ...param,
+      })
+    ).toString();
 
-//   return [keyword, { setKeyword, onParamChange }];
-// };
+    // Navigate
+    navigate(`${pathname}?${searchString}`);
+  };
+
+  return [keyword, { setKeyword, onParamChange }];
+};
+
+export const useChangeVariantDefault = () => {
+  return useAction({
+    action: productsAllSliceAction.changeVariantDefault,
+  });
+};
+export const useSetSupplierInfo = () => {
+  return useAction({
+    action: productsAllSliceAction.setSupplierInfo,
+  });
+};

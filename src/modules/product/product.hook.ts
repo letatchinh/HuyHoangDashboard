@@ -168,3 +168,6 @@ export const useChangeVariantDefault = () => {
     action: productActions.changeVariantDefault,
   });
 };
+export const useResetActionProductFullState = () => {
+  return useResetState(productActions.resetActionFullState);
+};
