@@ -27,7 +27,6 @@ function RelationTask() {
     if(!!(timing)){
       clearTimeout(timing)
     }
-
    if(!!(value)){ 
     timing = setTimeout(()=>{
       handleSearchTask({ 
@@ -117,7 +116,7 @@ const TaskRelationItem = memo(({ task }: any) => {
     // history.push({
     //   pathname:"/work-task-item/"+task._id
     // })
-    navigate(`/work-task-item/${task._id}`)
+    navigate(`/work-task-item/${task?._id}`)
   }
   return (
     <div className="relation-task-item flex-fill">
@@ -179,8 +178,8 @@ interface TaskRelationOptionProps {
 }
 
 
-const TaskRelationOption: React.FC<TaskRelationOptionProps> = ({ task }) => {
-    const statusBackGround = get(task,'statusId.backgroundColor','gray') 
+export const TaskRelationOption: React.FC<TaskRelationOptionProps> = ({ task }) => {
+    const statusBackGround = get(task?.statusId,'backgroundColor','gray') 
   const statusValue = get(task,'statusId.value',  'Không xác định')
 
   return (
@@ -207,4 +206,4 @@ const TaskRelationOption: React.FC<TaskRelationOptionProps> = ({ task }) => {
   );
 };
 
-export {TaskRelationOption};
+

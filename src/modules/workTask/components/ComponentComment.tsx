@@ -151,7 +151,6 @@ function CommentItem({
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value.date, value.updateDateComment]);
-  console.log(active[value._id],'active[value._id]')
   return (
     <div
       key={value._id}
@@ -286,11 +285,11 @@ function CommentItem({
                 handleEmotion({
                   taskId: dataTask?._id,
                   commentId: value._id,
-                  user: { [profile?.user._id]: profile?.user?.fullName },
+                  user: { [profile?.profile?._id]: profile?.profile?.fullName },
                 });
               }}
             >
-              {value?.emotion?.[profile?.user?._id] ? (
+              {value?.emotion?.[profile?.profile?._id] ? (
                 <HeartFilled style={{ color: "red" }} />
               ) : (
                 <HeartOutlined />
