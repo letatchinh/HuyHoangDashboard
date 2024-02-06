@@ -34,6 +34,10 @@ export const TYPE_DISCOUNT = {
     product : "product",
     supplier : "supplier",
   }
+   export const TARGET_TYPE = {
+    pharmacy : "pharmacy",
+    supplier : "supplier",
+   }
 
   export const TARGET_VI = {
     product : "Mặt hàng",

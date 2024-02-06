@@ -83,5 +83,6 @@ export type TypeRepeatType = "ranger" | "month" | "quarter" | "nope";
     loading? : any,
     form : any,
     target : string,
+    targetType: string,
     supplierId? : string
   }
