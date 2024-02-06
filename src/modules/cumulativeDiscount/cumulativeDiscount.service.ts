@@ -650,6 +650,7 @@ const rootField = [
   "typeReward",
   "value",
   "valueType",
+  "targetType",
   "status",
   "_id",
   "timesReward",
