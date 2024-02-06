@@ -160,6 +160,7 @@ function* searchTaskItemTask({ payload }: any): any {
     const data = yield call(api.searchTaskByBoardId, payload);
     let convertDataOption : any = data.map((task: any)=>({
       value: task._id,
+      label: task?.name
       // label: <TaskRelationOption task={task}/>
     }));
 

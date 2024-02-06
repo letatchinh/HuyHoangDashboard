@@ -80,11 +80,13 @@ const WorkBoard: React.FC<WorkFlowProps> = () => {
       render: (_, record) => <p>{record?.userCreate?.fullName}</p>,
     },
     {
-      title: 'Ngày tạo',
-      dataIndex: 'createAt',
-      align: 'center',
-      key: 'createAt',
-      render: (item, record, index) => moment(item)?.format('YYYY-MM-DD HH:mm'),
+      title: "Ngày tạo",
+      dataIndex: "createdAt",
+      key: "createdAt",
+      width: 120,
+      render: (record) => {
+        return moment(record).format("DD/MM/YYYY");
+      },
     },
     {
       title: 'Xem chi tiết',
