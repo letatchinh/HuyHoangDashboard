@@ -1146,7 +1146,9 @@
     }
 }
 
-
+.ant-drawer .ant-drawer-content-wrapper{
+    transition: none !important;
+}
 @keyframes actionShow {
     0%{
         visibility: hidden;
