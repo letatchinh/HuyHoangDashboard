@@ -1,100 +1,97 @@
-import React, { useState } from 'react';
 import { Button, Dropdown, Menu, Space } from 'antd';
-import { ApiFilled, DownloadOutlined, DownOutlined, UserOutlined } from '@ant-design/icons';
 import { BASE_URL } from '~/constants/defaultValue';
-import { forIn } from 'lodash';
 import moment from 'moment';
 import axios from 'axios';
-// import './index.scss'
+import {omit} from 'lodash'
 import { SizeType } from 'antd/es/config-provider/SizeContext';
+import useNotificationStore from '~/store/NotificationContext';
 
 interface Props {
     size?: SizeType;
     stylesButton?: any;
     query?: any;
-    fileName?: string
+    fileName: string;
+    api: string
+    exportOption: string;
+    ids?: string[];
 };
 
-const ExportExcelButton = ({ size, stylesButton, query,fileName }: Props) => {
-  
-  const defaultStyles = {
-    position: 'absolute',
-    top: '200px',
-    right: "100px",
-    width: '150px',
-  } 
+const defaultStyles = {
+  position: 'absolute',
+  top: '200px',
+  right: "100px",
+  width: '150px',
+};
+export default function ExportExcelButton({ size, stylesButton, query, fileName, api, exportOption, ids }: Props) {
+  console.log(ids,'ids')
+  const {onNotify} = useNotificationStore();
   const handleOnClick = async (obj: any) => {
-    if (query || query?.fileName_ || query?.url || query?.exportOption) {
-        const { fileName_ } = query;
-    //   const query = {
-    //     exportOption: query?.keyExport
-    //   }
-      const { searchBy } = query
-      // let a = !searchBy ? `?exportByCase=${obj}&` : `&exportByCase=${obj}&`
-      let a =  `?` 
-      forIn({ ...query }, (value, key) => {
-        a = a + key + '=' + value 
-      })
+    if (query || api) {
+      const concatExportOption = {
+        ...query,
+        exportOption
+      };
+      const newQuery : any = Object.fromEntries(Object.entries(concatExportOption)?.filter(([_, v]) => v !== null && v !== undefined));
+      let a = `?`
       const dateNow = moment(Date.now()).format("DD-MM-YYYY HH:mm")
       const keyExportUrl = '/api/v1/export';
-      const linkUrl = keyExportUrl.concat(query.url)
-      // Handle value search when it exist
-    //   if (searchBy) {
-    //     let params = searchBy?.split('?');
-    //     let newSearch = `&${params.join('&')}`;
-    //     a = (a.concat(newSearch))
-    //     a = a.replace('?&', '&') || a.replace('&&', '&') 
-    //     };
-    //   if (a.includes('&&')) {
-    //     a = a.replace('&&', '&') 
-    //   }
-    //   if (a.includes('?&')) {
-    //     a = a.replace('?&', '&') 
-    //   }
-      switch (obj) { 
+      const linkUrl = keyExportUrl.concat(`/${api}`)
+      switch (obj) {
         case '1':
-        //   let setQuery = a.split("&")?.filter(string => !string?.includes("page=") && !string?.includes("limit="));
-        //   a = setQuery.join("&")
+          const newObj_1 : any = {
+            ...omit(newQuery, ['page', 'limit']),
+          };
+          let queryString_1 = Object.keys(newObj_1).map(key => `${encodeURIComponent(key)}=${encodeURIComponent(newObj_1[key])}`).join('&');
+          a = a.concat(queryString_1);
           break;
         case '2':
-        //   if (!query?.ids.length) {
-        //     toastr.error('Không tồn tại lựa chọn nào!')
-        //    a = ''
-        //   } else {
-        //     a = a.concat(`&ids=${query?.ids || ''}`)
-        //   }
+            if (!ids?.length) {
+              onNotify?.error('Không tồn tại lựa chọn nào!')
+              a = '?'
+            } else {
+              const newObj_2 : any = {
+                ...omit(newQuery, ['page', 'limit']),
+                ids,
+              };
+              let queryString_2 = Object.keys(newObj_2).map(key => `${encodeURIComponent(key)}=${encodeURIComponent(newObj_2[key])}`)?.join('&');
+              a = a.concat(queryString_2);
+          };
           break;
         case '3':
-        //   let newA = ''
-        //   const newKeyExport = a.split('&')[0].concat("Page&")
-        //   searchBy ?  newA = searchBy.replace('?', '') : ()=>{}
-        //   a = newKeyExport.concat(newA)
-        //   a = a.includes("&&") ? a.replace("&&", "&") : a 
+          const newExportOption = exportOption.concat('Page');
+          const newObj_3 = {
+            ...newQuery,
+            exportOption: newExportOption,
+          };
+          let queryString_3 = Object.keys(newObj_3).map(key => `${encodeURIComponent(key)}=${encodeURIComponent(newObj_3[key])}`).join('&');
+          a = a.concat(queryString_3);
           break;
         default:
           break;
-      }
+      };
       const temp = BASE_URL.concat(linkUrl, a);
-     a !== '' ?   axios.get(temp, {
-        method: 'GET',
-        responseType: 'blob',
-    }).then((response) => {
-        const url = window.URL.createObjectURL(new Blob([response.data]));
-        const link = document.createElement('a');
-        link.href = url;
-        link.setAttribute('target',"_blank");
-        link.setAttribute('download', `${fileName_}_${dateNow}.xlsx`);
-        document.body.appendChild(link);
-        link.click();
-    }) : ()=>{};
+      if (a !== '') {
+        console.log(a)
+        axios.get(temp, {
+          method: 'GET',
+          responseType: 'blob',
+        }).then((response) => {
+          const url = window.URL.createObjectURL(new Blob([response.data]));
+          const link = document.createElement('a');
+          link.href = url;
+          link.setAttribute('target', "_blank");
+          link.setAttribute('download', `${fileName}_${dateNow}.xlsx`);
+          document.body.appendChild(link);
+          link.click();
+        })
+      };
     } else {
       console.log('cannot export excel file')
     }
-  }
-  
+  };
   return (
     <Dropdown.Button
-      dropdownRender={ () => <MenuButton handle={handleOnClick} /> }
+      dropdownRender={ () => <MenuButton handle={handleOnClick} ids = {ids}/> }
       onClick = {()=>handleOnClick( "1" )}
       trigger={['hover']}
       style={{
@@ -105,19 +102,17 @@ const ExportExcelButton = ({ size, stylesButton, query,fileName }: Props) => {
     >
       Tải về
       </Dropdown.Button>
-      
   )
-    
 };
-export default ExportExcelButton;
+// export default ExportExcelButton;
 
 
-function MenuButton({ handle}: any) {
+function MenuButton({ handle, ids}: any) {
   return (
     <Menu>
-      <Menu.Item>
+      {ids && <Menu.Item>
         <Button className='button-export__children'  type='primary' size='small' onClick={()=>handle("2")} >Theo lựa chọn</Button>
-      </Menu.Item>
+      </Menu.Item>}
       <Menu.Item>
         <Button className='button-export__children' type='primary' size='small'  onClick={()=>handle( "3")}>Theo trang hiện tại</Button>
       </Menu.Item>

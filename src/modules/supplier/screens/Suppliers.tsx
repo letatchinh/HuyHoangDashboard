@@ -29,6 +29,7 @@ import { useMatchPolicy } from "~/modules/policy/policy.hook";
 import POLICIES from "~/modules/policy/policy.auth";
 import WithPermission from "~/components/common/WithPermission";
 import PermissionBadge from "~/components/common/PermissionBadge";
+import ExportExcelButton from "~/modules/export/component";
 export default function Supplier(): React.JSX.Element {
   const canUpdateSupplier = useMatchPolicy(POLICIES.UPDATE_SUPPLIER);
   const canReadProduct = useMatchPolicy(POLICIES.READ_PRODUCT);
@@ -214,6 +215,11 @@ export default function Supplier(): React.JSX.Element {
           </Button>
           </WithPermission>
         </Col>
+        {/* <Col>
+          <WithPermission permission={POLICIES.DOWNLOAD_SUPPLIER}>
+            <ExportExcelButton/>
+          </WithPermission>
+        </Col> */}
       </Row>
       <WhiteBox>
         <TableAnt
