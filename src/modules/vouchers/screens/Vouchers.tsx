@@ -262,7 +262,7 @@ export default function Vouchers(props: propsType): React.JSX.Element {
                       exportOption = 'voucher'
                       query={activeTab === '1' ? {...queryReceipt, typeVoucher: 'PT'} : {...queryPayment, typeVoucher: 'PC'}}
                       fileName={activeTab === '1' ? 'Phiếu thu' : 'Phiếu chi'}
-                      // ids={arrCheckBox}
+                      ids={arrCheckBoxRedux}
                     />
                 </WithPermission>
               </Col>

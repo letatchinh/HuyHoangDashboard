@@ -147,7 +147,7 @@ export const useUpdateVouchersParams = (
   return [keyword, { setKeyword, onParamChange }];
 };
 
-export const useSetArrCheckBoxRedux = (arr?: any) => {
-  const dispatch = useDispatch();
-  return dispatch(vouchersSliceAction.setArrCheckBox(arr));
-};
+// export const useSetArrCheckBoxRedux = (arr?: any) => {
+//   const dispatch = useDispatch();
+//   return dispatch(vouchersSliceAction.setArrCheckBox(arr));
+// };

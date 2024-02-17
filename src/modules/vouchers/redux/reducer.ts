@@ -12,7 +12,7 @@ class VouchersClassExtend extends InstanceModuleRedux {
     super('vouchers');
     this.cloneReducer = {
       ...this.initReducer,
-      setArrCheckBox : (state: cloneInitState, { payload }: any) => {
+      updateArrCheckBox: (state: cloneInitState, {payload}: any) => {
         state.arrCheckBox = payload;
       },
       // Want Add more reducer Here...

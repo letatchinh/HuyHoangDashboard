@@ -8,7 +8,6 @@ import StatusTag from '~/modules/vouchers/components/StatusTag';
 import { useMatchPolicy } from '~/modules/policy/policy.hook';
 import POLICIES from '~/modules/policy/policy.auth';
 import useCheckBoxExport from '~/modules/export/export.hook';
-import { useSetArrCheckBoxRedux } from '~/modules/vouchers/vouchers.hook';
 import { useDispatch } from 'react-redux';
 import { vouchersSliceAction } from '~/modules/vouchers/redux/reducer';
 type propsType = {
@@ -35,7 +34,6 @@ export default function ReceiptVouchers(props: propsType): React.JSX.Element {
   const [vouchers, isLoading] = useGetReceiptVouchers(query);
   const canDownload = useMatchPolicy(POLICIES.DOWNLOAD_UNIT);
   const [arrCheckBox, onChangeCheckBox] = useCheckBoxExport();
-  const setArrCheckBoxRedux = useSetArrCheckBoxRedux();
   const dispatch = useDispatch();
   //STATE
   const [id, setId] = useState<string | null>();
@@ -47,11 +45,11 @@ export default function ReceiptVouchers(props: propsType): React.JSX.Element {
     setQueryReceipt(query);
   }, [query]);
 
-  // useEffect(() => {
-  //   // dispatch(vouchersSliceAction.setArrCheckBox(arrCheckBox))
-  // }, [arrCheckBox]);
+  useEffect(() => {
+    const newArrCheckBox: any = arrCheckBox;
+    dispatch(vouchersSliceAction.updateArrCheckBox(newArrCheckBox))
+  }, [arrCheckBox]);
   
-// console.log(onParamChange)
   const onOpenForm = (id: string | null) => {
     setId(id);
     setIsOpenForm(true);

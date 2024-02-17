@@ -23,7 +23,6 @@ const defaultStyles = {
   width: '150px',
 };
 export default function ExportExcelButton({ size, stylesButton, query, fileName, api, exportOption, ids }: Props) {
-  console.log(ids,'ids')
   const {onNotify} = useNotificationStore();
   const handleOnClick = async (obj: any) => {
     if (query || api) {

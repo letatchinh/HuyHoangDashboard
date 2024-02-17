@@ -2,14 +2,14 @@ import { Button, Checkbox, Modal, Table } from 'antd';
 import dayjs from 'dayjs';
 import { get, toUpper } from 'lodash';
 import React, { useEffect, useState } from 'react';
-import { MAP_STATUS_VOUCHERS_VI, REF_COLLECTION } from '~/constants/defaultValue';
 import { useGetPaymentVouchers, usePaymentVoucherPaging, usePaymentVoucherQueryParams, useUpdatePaymentVoucherParams } from '~/modules/paymentVoucher/paymentVoucher.hook';
 import PaymentVoucherForm from '~/modules/paymentVoucher/components/PaymentVoucherForm';
 import StatusTag from '~/modules/vouchers/components/StatusTag';
 import { useMatchPolicy } from '~/modules/policy/policy.hook';
 import POLICIES from '~/modules/policy/policy.auth';
 import useCheckBoxExport from '~/modules/export/export.hook';
-import { useSetArrCheckBoxRedux } from '~/modules/vouchers/vouchers.hook';
+import { useDispatch } from 'react-redux';
+import { vouchersSliceAction } from '~/modules/vouchers/redux/reducer';
 type propsType = {
   listOptionSearch?: any[];
   keyword?: string;
@@ -35,6 +35,7 @@ export default function PaymentVouchers(props: propsType): React.JSX.Element {
   const paging = usePaymentVoucherPaging();
   const canDownload = useMatchPolicy(POLICIES.DOWNLOAD_UNIT);
   const [arrCheckBox, onChangeCheckBox] = useCheckBoxExport();
+  const dispatch = useDispatch();
 
   //STATE
   const [id, setId] = useState<string | null>();
@@ -46,9 +47,10 @@ export default function PaymentVouchers(props: propsType): React.JSX.Element {
     setQueryPayment(query);
   }, [query]);
 
-  // useEffect(() => {
-  //   useSetArrCheckBoxRedux(arrCheckBox);
-  // }, [arrCheckBox]);
+  useEffect(() => {
+    const newArrCheckBox: any = arrCheckBox;
+    dispatch(vouchersSliceAction.updateArrCheckBox(newArrCheckBox))
+  }, [arrCheckBox]);
 
   const onOpenForm = (id: string | null) => {
     setId(id);
