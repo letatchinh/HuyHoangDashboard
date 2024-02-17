@@ -1,5 +1,6 @@
 import { forIn, get, groupBy, keys,flattenDeep,compact,uniq } from "lodash";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import { STATUS } from "~/constants/defaultValue";
 
 import subvn from "~/core/subvn";
@@ -134,4 +135,15 @@ export const useExpandrowTableClick: () => UseExpandrowTableClick = () => {
   };
 
   return { select, setSelect, onClick };
+};
+export const formatNumberThreeComma = (num: any) => num?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+
+export const compactAddress = (address: any) => compact([address?.street, address?.ward, address?.district, address?.city]).join(", ") 
+
+export const convertQueryString = (queryString: any) => {
+  const queryJson = Object.entries(getExistProp(queryString));
+  const stringQuery = queryJson.reduce((total, cur: any, i) => (
+    total.concat((i === 0 ? cur[0] ? '?' : '' : '&'), cur[0], '=', encodeURIComponent(cur[1]))
+  ), '');
+  return stringQuery;
 };

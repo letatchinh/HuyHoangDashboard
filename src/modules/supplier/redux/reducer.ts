@@ -15,15 +15,31 @@ class SupplierClassExtend extends InstanceModuleRedux {
       getProductSupplierRequest: (state: any) => {
         state.isLoadingGetProductSupplier = true;
         state.getProductSupplierFailed = null;
+        state.totalAmountBillItem = 0;
       },
       getProductSupplierSuccess: (state: any, { payload }: any) => {
         state.isLoadingGetProductSupplier = false;
         state.productSupplier = get(payload, "docs", []);
         state.pagingProductSupplier = getPaging(payload);
+        state.totalAmountBillItem = get(payload, "totalAmountBillItem", 0);
       },
       getProductSupplierFailed: (state: any, { payload }: any) => {
         state.isLoadingGetProductSupplier = false;
         state.getProductSupplierFailed = payload;
+        state.totalAmountBillItem = 0;
+      },
+      getVoucherSupplierRequest: (state: any) => {
+        state.isLoadingGetVoucherSupplier = true;
+        state.getVoucherSupplierFailed = null;
+      },
+      getVoucherSupplierSuccess: (state: any, { payload }: any) => {
+        state.isLoadingGetVoucherSupplier = false;
+        state.voucherSupplier = get(payload, "docs", []);
+        state.pagingVoucherSupplier = getPaging(payload);
+      },
+      getVoucherSupplierFailed: (state: any, { payload }: any) => {
+        state.isLoadingGetVoucherSupplier = false;
+        state.getVoucherSupplierFailed = payload;
       },
     };
     // Add More InitState

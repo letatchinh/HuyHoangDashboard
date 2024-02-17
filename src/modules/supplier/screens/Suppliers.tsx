@@ -1,9 +1,10 @@
 import { DeleteOutlined, InfoCircleOutlined, InfoCircleTwoTone, PlusCircleOutlined, PlusCircleTwoTone } from "@ant-design/icons";
-import { Button, Col, Divider, Popconfirm, Row, Space, Switch, Typography } from "antd";
+import { Button, Col, Divider, Modal, Popconfirm, Row, Space, Switch, Typography} from "antd";
 import Search from "antd/es/input/Search";
 import { ColumnsType } from "antd/es/table/InternalTable";
+import { AlignType } from 'rc-table/lib/interface'
 import { get } from "lodash";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import ModalAnt from "~/components/Antd/ModalAnt";
 import TableAnt from "~/components/Antd/TableAnt";
@@ -12,7 +13,7 @@ import Vnd from "~/components/common/Vnd/index";
 import WhiteBox from "~/components/common/WhiteBox";
 import useTranslate from "~/lib/translation";
 import { PATH_APP } from "~/routes/allPath";
-import { concatAddress } from "~/utils/helpers";
+import { concatAddress, formatNumberThreeComma } from "~/utils/helpers";
 import TabSupplier from "../components/TabSupplier";
 import { STATUS_SUPPLIER } from "../constants";
 import {
@@ -25,6 +26,9 @@ import {
 } from "../supplier.hook";
 import { STATUS_SUPPLIER_TYPE } from "../supplier.modal";
 import ProductModule from '~/modules/product';
+import { REF_COLLECTION, REF_COLLECTION_UPPER } from "~/constants/defaultValue";
+import PaymentVoucherForm from "~/modules/paymentVoucher/components/PaymentVoucherForm";
+import Description from "../components/Debt";
 import { useMatchPolicy } from "~/modules/policy/policy.hook";
 import POLICIES from "~/modules/policy/policy.auth";
 import WithPermission from "~/components/common/WithPermission";
@@ -41,6 +45,18 @@ export default function Supplier(): React.JSX.Element {
   const [isOpenForm, setIsOpenForm]: any = useState(false);
   const [idSupplierCreateProduct, setIdSupplierCreateProduct]: any = useState();
   const [isOpenFormProduct, setIsOpenFormProduct]: any = useState(false);
+  const [open, setOpen] = useState(false);
+  const [supplierId, setSupplierId] = useState<string | null>('');
+  const [debt, setDebt] = useState<number | null>();
+  const [isOpenDesc, setIsOpenDesc] = useState<boolean>(false);
+  //Hook
+  const [query] = useSupplierQueryParams();
+  const [keyword, { setKeyword, onParamChange }] = useUpdateSupplierParams(query);
+  const [data, isLoading] = useGetSuppliers(query);
+  const [isSubmitLoading, onDelete] = useDeleteSupplier();
+  const paging = useSupplierPaging();
+  const canWriteVoucher = useMatchPolicy(POLICIES.WRITE_VOUCHER);
+  const canReadDebt = useMatchPolicy(POLICIES.READ_DEBT);
 
   // Control form
   const onOpenForm = useCallback((idSelect?: any) => {
@@ -65,14 +81,27 @@ export default function Supplier(): React.JSX.Element {
     setIdSupplierCreateProduct(null);
   }, []);
 
+  const onOpenPayment = (item: any) => {
+    setOpen(true);
+    setSupplierId(item?._id)
+    setDebt(item?.resultDebt)
+  };
+  const onClosePayment = () => {
+    setOpen(false);
+    setSupplierId(null);
+  };
+  const onOpenDesc = (item?: any) => {
+    console.log(item,'item')
+    setSupplierId(item?._id)
+    setIsOpenDesc(true);
+  };
+  const onCloseDesc = () => {
+    setIsOpenDesc(false);
+  };
+
   // Hook
-  const [query] = useSupplierQueryParams();
-  const [keyword, { setKeyword, onParamChange }] =
-    useUpdateSupplierParams(query);
-  const [data, isLoading] = useGetSuppliers(query);
-  const [isSubmitLoading, onDelete] = useDeleteSupplier();
+  
   const [, onUpdate] = useUpdateSupplier(onCloseForm);
-  const paging = useSupplierPaging();
 
   const onUpdateStatus = useCallback((status:keyof STATUS_SUPPLIER_TYPE,idUpdate:any) => {
     onUpdate({
@@ -81,12 +110,23 @@ export default function Supplier(): React.JSX.Element {
     })
   },[onUpdate])
   // Columns Table
-  const columns: ColumnsType = useMemo(
+  const columns: ColumnsType  = useMemo(
     () => [
       {
         title: "Mã nhà cung cấp",
         dataIndex: "code",
         key: "code",
+        render (value, rc) {
+          return (
+            canReadDebt ?  <Button
+              type="link"
+              onClick={() => onOpenDesc(rc)}
+            >
+            {value}
+            </Button>
+              : value
+          )
+        }
       },
       {
         title: "Nhà cung cấp",
@@ -112,13 +152,30 @@ export default function Supplier(): React.JSX.Element {
       },
       {
         title: "Công nợ",
-        dataIndex: "name",
-        key: "name",
+        dataIndex: "resultDebt",
+        key: "resultDebt",
         align: "center",
         render(value) {
-          return 0
+          return formatNumberThreeComma(value);
         },
       },
+      ...(
+        canWriteVoucher ? [
+          {
+            title: "Tạo phiếu",
+            dataIndex: "name",
+            key: "name",
+            align: "center" as AlignType,
+            render(value: any, rc: any) {
+              return (
+                <Space>
+                  <Button type="primary" onClick={() => onOpenPayment(rc)}>Phiếu chi</Button>
+                </Space>
+              );
+            },
+          },
+        ]: []
+      ),
       {
         title: "Trạng thái",
         dataIndex: "status",
@@ -192,6 +249,7 @@ export default function Supplier(): React.JSX.Element {
     ],
     [isSubmitLoading, onDelete, onOpenForm, onUpdateStatus]
   );
+
   return (
     <div>
       <Breadcrumb title={t("list-supplier")} />
@@ -259,6 +317,32 @@ export default function Supplier(): React.JSX.Element {
       >
         <ProductModule.page.form supplierId={idSupplierCreateProduct} onCancel={onCloseFormProduct}/>
       </ModalAnt>
+      <Modal
+        title='Phiếu chi'
+        open={open}
+        onCancel={() => setOpen(false)}
+        onOk={() => setOpen(false)}
+        width={1366}
+        footer={null}
+        destroyOnClose
+      >
+        <PaymentVoucherForm
+          onClose={() => onClosePayment()}
+          supplierId={supplierId}
+          refCollection={REF_COLLECTION_UPPER.SUPPLIER}
+          debt={debt}
+        />
+      </Modal>
+      <Modal
+        title='Chi tiết công nợ' 
+        width={1366}
+        open={isOpenDesc}
+        onCancel={onCloseDesc}
+        onOk={onCloseDesc}
+        footer={null}
+      >
+        <Description supplierId={supplierId} />
+      </Modal>
     </div>
   );
 }

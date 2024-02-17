@@ -14,8 +14,13 @@ const unit = 'unit';
 const productGroup='productGroup';
 const ranking = 'ranking';
 const medicine = 'medicine';
+const voucher = 'voucher';
+const statusVoucher = 'statusVoucher';
+const historyVoucher = 'historyVoucher';
 // Nhà cung cấp
 const supplier = 'supplier';
+const debt = 'debt';
+
 // Sản phẩm Nhà cung cấp
 const product = 'product';
 
@@ -34,8 +39,14 @@ const RESOURCES = [
   productGroup,
   //
   medicine,
+
+  //VOUCHER
+  voucher,
+  statusVoucher,
+  historyVoucher,
   supplier,
   product,
+  debt,
 
 ];
 
@@ -97,10 +108,16 @@ const RESOURCE = (): ResourceType => {
   const GROUP_RANKING : string[] = [
     ranking
   ];
+  const GROUP_VOUCHER: string[] = [
+    voucher,
+    statusVoucher,
+    historyVoucher
+  ]
 
   const GROUP_SUPPLIER: string[] = [
     supplier,
     product,
+    debt,
   ];
 
   return {
@@ -113,6 +130,7 @@ const RESOURCE = (): ResourceType => {
     GROUP_PRODUCTGROUP,
     GROUP_RANKING,
     MEDICINE,
+    GROUP_VOUCHER,
     GROUP_SUPPLIER,
   };
 };
