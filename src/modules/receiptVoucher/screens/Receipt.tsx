@@ -1,16 +1,15 @@
 import { Button, Modal, Table } from 'antd';
 import dayjs from 'dayjs';
-import { get, toUpper } from 'lodash';
+import { get } from 'lodash';
 import React, { useEffect, useState } from 'react';
-import { MAP_STATUS_VOUCHERS_VI, REF_COLLECTION } from '~/constants/defaultValue';
-import { useGetPaymentVouchers, usePaymentVoucherPaging, usePaymentVoucherQueryParams, useUpdatePaymentVoucherParams } from '~/modules/paymentVoucher/paymentVoucher.hook';
-import StatusTag from '../components/StatusTag';
-import PaymentVoucherForm from '~/modules/paymentVoucher/components/PaymentVoucherForm';
+import { useGetReceiptVouchers, useReceiptVoucherPaging, useReceiptVoucherQueryParams, useUpdateReceiptVoucherParams } from '~/modules/receiptVoucher/receiptVoucher.hook';
+import ReceiptVoucherForm from '~/modules/receiptVoucher/components/ReceiptVoucherForm';
+import StatusTag from '~/modules/vouchers/components/StatusTag';
 type propsType = {
   listOptionSearch?: any[];
   keyword?: string;
   searchBy?: string;
-  setQueryPayment?: any;
+  setQueryReceipt?: any
 };
 interface Column {
   title: string;
@@ -19,15 +18,14 @@ interface Column {
   render?: (text: any, record: any, index: number) => React.ReactNode;
   align?: string;
 };
-
-export default function PaymentVouchers(props: propsType): React.JSX.Element {
-  const { listOptionSearch, keyword: keywordProps, searchBy ,setQueryPayment} = props;
+export default function ReceiptVouchers(props: propsType): React.JSX.Element {
+  const { listOptionSearch, keyword: keywordProps, searchBy,setQueryReceipt } = props;
   
   //HOOK
-  const [query, onTableChange] = usePaymentVoucherQueryParams();
-  const [keyword, {setKeyword, onParamChange}] = useUpdatePaymentVoucherParams(query, listOptionSearch)
-  const [vouchers, isLoading] = useGetPaymentVouchers(query);
-  const paging = usePaymentVoucherPaging();
+  const [query, onTableChange] = useReceiptVoucherQueryParams();
+  const [keyword, {setkeyword, onParamChange}] = useUpdateReceiptVoucherParams(query, listOptionSearch);
+  const paging = useReceiptVoucherPaging();
+  const [vouchers, isLoading] = useGetReceiptVouchers(query);
 
   //STATE
   const [id, setId] = useState<string | null>();
@@ -36,9 +34,10 @@ export default function PaymentVouchers(props: propsType): React.JSX.Element {
   const [item, setItem] = useState<any>();
 
   useEffect(() => {
-    setQueryPayment(query);
-  }, [query]);
-
+    setQueryReceipt(query);
+  }, query);
+  
+// console.log(onParamChange)
   const onOpenForm = (id: string | null) => {
     setId(id);
     setIsOpenForm(true);
@@ -48,10 +47,9 @@ export default function PaymentVouchers(props: propsType): React.JSX.Element {
     setIsOpenForm(false);
   };
 
-  
   const columns: Column[] = [
     {
-      title: 'Mã phiếu chi',
+      title: 'Mã phiếu thu',
       dataIndex: 'codeSequence',
       key: 'codeSequence',
       render: (text, record, index) => {
@@ -83,6 +81,20 @@ export default function PaymentVouchers(props: propsType): React.JSX.Element {
       key: 'totalAmount',
       render: (text, record, index) => text?.toLocaleString(),
     },
+    // {
+    //   title: 'Nhóm đối tượng',
+    //   dataIndex: 'typeObj',
+    //   key: 'typeObj',
+    //   render: (text: any, record: any, index) => {
+    //     if (record?.supplierReceive) {
+    //       return 'Nhà cung cấp'
+    //     };
+    //     if (record?.pharmacyReceive) {
+    //       return 'Nhà thuốc'
+    //     };
+    //     return '';
+    //   },
+    // },
     {
       title: 'Tên đơn vị',
       dataIndex: 'nameObj',
@@ -116,11 +128,10 @@ export default function PaymentVouchers(props: propsType): React.JSX.Element {
       render: (text, record, index) => <StatusTag status={text}/>
     },
   ];
-  
   return (
     <>
-      <Table
-        columns={columns as any}
+    <Table
+      columns={columns as any}
         dataSource={vouchers}
         loading={isLoading}
         size='small'
@@ -129,21 +140,21 @@ export default function PaymentVouchers(props: propsType): React.JSX.Element {
           showTotal: (total)=> `Tổng cộng: ${total}`
         }}
         onChange={({current, pageSize}: any)=> onTableChange({current, pageSize})}
+    />
+    <Modal
+      footer={null}
+      title={`Phiếu thu - ${item?.code}`}
+      open={isOpenForm}
+      onCancel={onClose}
+      width={1366}
+      destroyOnClose
+    >
+      <ReceiptVoucherForm
+        id={id}
+        onClose={onClose}
+        refCollection = {refCollection}
       />
-      <Modal
-        footer={null}
-        title={`Phiếu chi - ${item?.code}`}
-        open={isOpenForm}
-        onCancel={onClose}
-        width={1366}
-        destroyOnClose
-      >
-        <PaymentVoucherForm
-          id={id}
-          onClose={onClose}
-          refCollection = {refCollection}
-        />
-      </Modal>
-    </>
+    </Modal>
+  </>
   )
 }
