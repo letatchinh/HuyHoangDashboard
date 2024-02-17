@@ -14,6 +14,7 @@ import { useDeleteProductUnit, useGetlistProductUnit, useProductUnitPaging,useUp
 import ProductUnitForm from './ProductUnitForm';
 import { useMatchPolicy } from '~/modules/policy/policy.hook';
 import ExportExcelButton from '~/modules/export/component';
+import useCheckboxExport from '~/modules/export/export.hook';
 type propsType = {
 
 }
@@ -34,19 +35,8 @@ export default function ProductUnit(props: propsType): React.JSX.Element {
   const [,updateProductUnit] = useUpdateProductUnit(handleCloseForm);
   const [form] = Form.useForm();
   const canUpdate = useMatchPolicy(POLICIES.UPDATE_UNIT);
-  const [arrCheckBox, setArrCheckBox] = useState <any[]>([])
   const canDownload = useMatchPolicy(POLICIES.DOWNLOAD_UNIT);
-  const onChangeCheckBox = (e: boolean, id: string) => {
-    console.log(id)
-    if (e) {
-      setArrCheckBox([...arrCheckBox, id])
-    } else {
-      // const getIndex = arrCheckBox.findIndex((itemId, index) => itemId === id)
-      // const newArr = arrCheckBox?.splice(getIndex, 1)
-      const newArr = arrCheckBox?.filter((itemId, index) => itemId !== id);
-      setArrCheckBox(newArr)
-    };
-  };
+  const [arrCheckBox, onChangeCheckBox] = useCheckboxExport();
   interface DataType {
     _id: string;
     name: string;
@@ -123,7 +113,7 @@ export default function ProductUnit(props: propsType): React.JSX.Element {
             const id = record._id;
             return (
               <Checkbox
-                checked= {arrCheckBox.includes(id)}
+                checked= {arrCheckBox?.includes(id)}
                 onChange={(e)=>onChangeCheckBox(e.target.checked, id)}
           />)}
         },

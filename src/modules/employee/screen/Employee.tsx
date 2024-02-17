@@ -25,6 +25,7 @@ import { useDispatch } from "react-redux";
 import { employeeSliceAction } from "../redux/reducer";
 import WithPermission from "~/components/common/WithPermission";
 import ExportExcelButton from "~/modules/export/component";
+import useCheckBoxExport from "~/modules/export/export.hook";
 interface ColumnActionProps {
   _id: string;
   deleteEmpolyee?: any;
@@ -85,18 +86,9 @@ export default function Employee() {
   const isCanDelete = useMatchPolicy(POLICIES.DELETE_EMPLOYEE);
   const isCanUpdate = useMatchPolicy(POLICIES.UPDATE_EMPLOYEE);
   const shouldShowDevider = useMemo(() => isCanDelete && isCanUpdate, [isCanDelete, isCanUpdate]);
-  const [arrCheckBox, setArrCheckBox] = useState <any[]>([])
   const canDownload = useMatchPolicy(POLICIES.DOWNLOAD_UNIT);
-  const onChangeCheckBox = (e: boolean, id: string) => {
-    if (e) {
-      setArrCheckBox([...arrCheckBox, id])
-    } else {
-      // const getIndex = arrCheckBox.findIndex((itemId, index) => itemId === id)
-      // const newArr = arrCheckBox?.splice(getIndex, 1)
-      const newArr = arrCheckBox?.filter((itemId, index) => itemId !== id);
-      setArrCheckBox(newArr)
-    };
-  };
+  const [arrCheckBox, onChangeCheckBox] = useCheckBoxExport();
+
   //Handle
   const handleOpenModal = (id?: any) => {
     setIsOpenModal(true);

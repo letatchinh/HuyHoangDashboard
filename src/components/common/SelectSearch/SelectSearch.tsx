@@ -102,7 +102,7 @@ const SelectSearch = ({
       </div>
       <div className="select-search__right">
         <Row justify="end">
-          {addComponent}
+          {addComponent && addComponent}
           {isShowButtonAdd && (
             <Col className="select-search__button">
               <WithOrPermission permission={permissionKey}>

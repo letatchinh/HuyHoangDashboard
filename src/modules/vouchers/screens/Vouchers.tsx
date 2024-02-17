@@ -11,6 +11,11 @@ import { MAP_STATUS_VOUCHERS_VI } from "~/constants/defaultValue";
 import dayjs from "dayjs";
 import { useLocation, useNavigate } from "react-router-dom";
 import { convertQueryString } from "~/utils/helpers";
+import WithPermission from "~/components/common/WithPermission";
+import POLICIES from "~/modules/policy/policy.auth";
+import ExportExcelButton from "~/modules/export/component";
+import useCheckBoxExport from "~/modules/export/export.hook";
+import { useArrCheckBoxRedux } from "../vouchers.hook";
 type propsType = {};
 type optionsSearch = {
   value: string;
@@ -59,7 +64,8 @@ export default function Vouchers(props: propsType): React.JSX.Element {
     []
   );
   const [date, setDate] = useState<any>(defaultDate);
-
+  const arrCheckBoxRedux = useArrCheckBoxRedux();
+  console.log(arrCheckBoxRedux,'arrCheckBoxRedux')
   useEffect(() => {
     setKeyword('');
   }, [searchBy]);
@@ -248,6 +254,17 @@ export default function Vouchers(props: propsType): React.JSX.Element {
                     ),
                   }[searchBy]
                 }
+              </Col>
+              <Col>
+                <WithPermission permission={POLICIES.DOWNLOAD_SUPPLIER}>
+                    <ExportExcelButton
+                      api= {'voucher'}
+                      exportOption = 'voucher'
+                      query={activeTab === '1' ? {...queryReceipt, typeVoucher: 'PT'} : {...queryPayment, typeVoucher: 'PC'}}
+                      fileName={activeTab === '1' ? 'Phiếu thu' : 'Phiếu chi'}
+                      // ids={arrCheckBox}
+                    />
+                </WithPermission>
               </Col>
             </Row>
           </div>

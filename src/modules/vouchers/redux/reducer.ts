@@ -2,8 +2,9 @@ import { createSlice } from "@reduxjs/toolkit";
 import { InstanceModuleRedux } from "~/redux/instanceModuleRedux";
 import { initStateSlice } from "~/redux/models";
 interface cloneInitState extends initStateSlice {
+  arrCheckBox?: string[];
  // Add cloneInitState Type Here
-}
+};
 class VouchersClassExtend extends InstanceModuleRedux {
   cloneReducer;
   cloneInitState : cloneInitState;
@@ -11,10 +12,14 @@ class VouchersClassExtend extends InstanceModuleRedux {
     super('vouchers');
     this.cloneReducer = {
       ...this.initReducer,
+      setArrCheckBox : (state: cloneInitState, { payload }: any) => {
+        state.arrCheckBox = payload;
+      },
       // Want Add more reducer Here...
     }
     this.cloneInitState = {
       ...this.initialState,
+      arrCheckBox: [],
       // Want Add more State Here...
     }
   }

@@ -1,4 +1,4 @@
-import { Button, Modal, Table } from 'antd';
+import { Button, Checkbox, Modal, Table } from 'antd';
 import dayjs from 'dayjs';
 import { get, toUpper } from 'lodash';
 import React, { useEffect, useState } from 'react';
@@ -6,6 +6,10 @@ import { MAP_STATUS_VOUCHERS_VI, REF_COLLECTION } from '~/constants/defaultValue
 import { useGetPaymentVouchers, usePaymentVoucherPaging, usePaymentVoucherQueryParams, useUpdatePaymentVoucherParams } from '~/modules/paymentVoucher/paymentVoucher.hook';
 import PaymentVoucherForm from '~/modules/paymentVoucher/components/PaymentVoucherForm';
 import StatusTag from '~/modules/vouchers/components/StatusTag';
+import { useMatchPolicy } from '~/modules/policy/policy.hook';
+import POLICIES from '~/modules/policy/policy.auth';
+import useCheckBoxExport from '~/modules/export/export.hook';
+import { useSetArrCheckBoxRedux } from '~/modules/vouchers/vouchers.hook';
 type propsType = {
   listOptionSearch?: any[];
   keyword?: string;
@@ -18,6 +22,7 @@ interface Column {
   key: string;
   render?: (text: any, record: any, index: number) => React.ReactNode;
   align?: string;
+  width?: number;
 };
 
 export default function PaymentVouchers(props: propsType): React.JSX.Element {
@@ -28,6 +33,8 @@ export default function PaymentVouchers(props: propsType): React.JSX.Element {
   const [keyword, {setKeyword, onParamChange}] = useUpdatePaymentVoucherParams(query, listOptionSearch)
   const [vouchers, isLoading] = useGetPaymentVouchers(query);
   const paging = usePaymentVoucherPaging();
+  const canDownload = useMatchPolicy(POLICIES.DOWNLOAD_UNIT);
+  const [arrCheckBox, onChangeCheckBox] = useCheckBoxExport();
 
   //STATE
   const [id, setId] = useState<string | null>();
@@ -38,6 +45,10 @@ export default function PaymentVouchers(props: propsType): React.JSX.Element {
   useEffect(() => {
     setQueryPayment(query);
   }, [query]);
+
+  // useEffect(() => {
+  //   useSetArrCheckBoxRedux(arrCheckBox);
+  // }, [arrCheckBox]);
 
   const onOpenForm = (id: string | null) => {
     setId(id);
@@ -115,6 +126,24 @@ export default function PaymentVouchers(props: propsType): React.JSX.Element {
       key: 'status',
       render: (text, record, index) => <StatusTag status={text}/>
     },
+    ...(
+      canDownload ? [
+        {
+          title: 'Lựa chọn',
+          key: '_id',
+          width: 80,
+          align: 'center' as any,
+          render: (item: any, record: any) =>
+          {
+            const id = record._id;
+            return (
+              <Checkbox
+                checked= {arrCheckBox?.includes(id)}
+                onChange={(e)=>onChangeCheckBox(e.target.checked, id)}
+          />)}
+        },
+      ]: []
+    ) 
   ];
   
   return (
@@ -126,9 +155,9 @@ export default function PaymentVouchers(props: propsType): React.JSX.Element {
         size='small'
         pagination={{
           ...paging,
-          showTotal: (total)=> `Tổng cộng: ${total}`
+          showTotal: (total) => `Tổng cộng: ${total}`
         }}
-        onChange={({current, pageSize}: any)=> onTableChange({current, pageSize})}
+        onChange={({ current, pageSize }: any) => onTableChange({ current, pageSize })}
       />
       <Modal
         footer={null}
@@ -141,9 +170,9 @@ export default function PaymentVouchers(props: propsType): React.JSX.Element {
         <PaymentVoucherForm
           id={id}
           onClose={onClose}
-          refCollection = {refCollection}
+          refCollection={refCollection}
         />
       </Modal>
     </>
-  )
-}
+  );
+};
