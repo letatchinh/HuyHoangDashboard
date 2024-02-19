@@ -65,7 +65,7 @@ export default function Vouchers(props: propsType): React.JSX.Element {
   );
   const [date, setDate] = useState<any>(defaultDate);
   const arrCheckBoxRedux = useArrCheckBoxRedux();
-  console.log(arrCheckBoxRedux,'arrCheckBoxRedux')
+  
   useEffect(() => {
     setKeyword('');
   }, [searchBy]);
