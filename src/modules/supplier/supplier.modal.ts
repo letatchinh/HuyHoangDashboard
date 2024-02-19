@@ -38,7 +38,6 @@ export type addressType = {
     voucherSupplier?: T[];
     pagingVoucherSupplier?: any;
     totalAmountBillItem?: number;
-    
     isLoadingGetSuppliersProductAuthor?: boolean;
     getSuppliersProductAuthorFailed?: any;
     suppliersProductAuthor?: T[];

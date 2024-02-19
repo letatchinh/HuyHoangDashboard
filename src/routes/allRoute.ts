@@ -71,6 +71,9 @@ export const mainRoutes :PathRouteProps[] = [
 
   // Bot Notification
   { path: PATH_APP.botNotification.root, Component: BotNotificationPage },
+
+  // Products All
+  { path: PATH_APP.productAll.root, Component: ProductsAll },
  
   //Work Management
   { path: PATH_APP.todoList.workSprint, Component: WorkSprintPage },

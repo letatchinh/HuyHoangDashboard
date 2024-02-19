@@ -59,11 +59,12 @@ const isLoadingGetProductSupplierSelector = getSelector(
 const pagingProductSupplierSelector = getSelector("pagingProductSupplier");
 
 const suppliersProductAuthorSelector = getSelector("suppliersProductAuthor");
-const getSuppliersProductAuthorFailedSelector = getSelector(
-  "getSuppliersProductAuthorFailed"
-);
 const isLoadingGetSuppliersProductAuthorSelector = getSelector(
   "isLoadingGetSuppliersProductAuthor"
+);
+
+const getSuppliersProductAuthorFailedSelector = getSelector(
+  "getSuppliersProductAuthorFailed"
 );
 const pagingSuppliersProductAuthorSelector = getSelector("pagingSuppliersProductAuthor");
 

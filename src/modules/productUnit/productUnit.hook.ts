@@ -39,8 +39,8 @@ const {
 
   export const useProductUnitQueryParams = () => {
     const query = useQueryParams();
-    const limit = query.get("limit") || null;
-    const page = query.get("page") || null;
+    const limit = query.get("limit") || 10;
+    const page = query.get("page") || 1;
     const keyword = query.get("keyword");
     const status = query.get("status");
     const createSuccess = useSelector(createSuccessSelector);

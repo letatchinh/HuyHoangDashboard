@@ -1,5 +1,5 @@
 import { DeleteOutlined, InfoCircleTwoTone, PlusCircleOutlined, SearchOutlined } from '@ant-design/icons';
-import { Button, Col, Form, Row, Select, Space, Switch, message } from 'antd';
+import { Button, Checkbox,Select, Col, Form, Row, Space, Switch, message } from 'antd';
 import Search from 'antd/es/input/Search';
 import { ColumnsType } from 'antd/es/table';
 import React, { useCallback, useState } from 'react';
@@ -14,6 +14,8 @@ import { useDeleteProductUnit, useGetlistProductUnit, useProductUnitPaging, useU
 import ProductUnitForm from './ProductUnitForm';
 import { useMatchPolicy } from '~/modules/policy/policy.hook';
 import { SelectProps } from 'antd/lib';
+import ExportExcelButton from '~/modules/export/component';
+import useCheckboxExport from '~/modules/export/export.hook';
 type propsType = {
 
 }
@@ -35,6 +37,8 @@ export default function ProductUnit(props: propsType): React.JSX.Element {
   const [form] = Form.useForm();
   const canUpdate = useMatchPolicy(POLICIES.UPDATE_UNIT);
   const [search, setSearch] = useState(null);
+  const canDownload = useMatchPolicy(POLICIES.DOWNLOAD_UNIT);
+  const [arrCheckBox, onChangeCheckBox] = useCheckboxExport();
   interface DataType {
     _id: string;
     name: string;
@@ -99,6 +103,24 @@ export default function ProductUnit(props: propsType): React.JSX.Element {
         </Space>
       ),
     },
+    ...(
+      canDownload ? [
+        {
+          title: 'Lựa chọn',
+          key: '_id',
+          width: 80,
+          align: 'center' as any,
+          render: (item: any, record: any) =>
+          {
+            const id = record._id;
+            return (
+              <Checkbox
+                checked= {arrCheckBox?.includes(id)}
+                onChange={(e)=>onChangeCheckBox(e.target.checked, id)}
+          />)}
+        },
+      ]: []
+    ) 
   ];
   const onSearch = (value: string) => {
     onParamChange({ ['keyword']: value });
@@ -148,11 +170,26 @@ export default function ProductUnit(props: propsType): React.JSX.Element {
                 />
               </Col>
               <Col>
-                <WithPermission permission={POLICIES.WRITE_UNIT}>
-                  <Button icon={<PlusCircleOutlined />} onClick={() => handleOpenForm()} type="primary">
-                    Thêm mới
-                  </Button>
-                </WithPermission>
+                <Row>
+                  <Col>
+                    <WithPermission permission={POLICIES.WRITE_UNIT}>
+                      <Button icon={<PlusCircleOutlined />} onClick={() => handleOpenForm()} type="primary">
+                        Thêm mới
+                      </Button>
+                    </WithPermission>
+                  </Col>
+                  <Col>
+                    <WithPermission permission={POLICIES.DOWNLOAD_SUPPLIER}>
+                        <ExportExcelButton
+                          api='unit'
+                          exportOption = 'unit'
+                          query={query}
+                          fileName='Quản lý đơn vị tính'
+                          ids={arrCheckBox}
+                        />
+                    </WithPermission>
+                  </Col>
+                </Row>
               </Col>
             </Row>
           </div>

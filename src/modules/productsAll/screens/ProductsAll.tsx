@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Col, Modal, Row, Select } from 'antd';
+import { Checkbox, Col, Modal, Row, Select } from 'antd';
 import { ColumnsType } from "antd/es/table/InternalTable";
 import { Table } from 'antd/lib';
 import { get } from 'lodash';
@@ -18,6 +18,8 @@ import { DataType, TypeProps } from '../productsAll.modal';
 import ShowStep from '../components/ShowStep';
 import ActionColumn from '../components/ActionColumns';
 import { useDeleteProduct } from '~/modules/product/product.hook';
+import useCheckBoxExport from '~/modules/export/export.hook';
+import ExportExcelButton from '~/modules/export/component';
 
 export default function ProductsAll(props: TypeProps): React.JSX.Element {
   const [query, onTableChange] = useProductsAllQueryParams();
@@ -35,7 +37,11 @@ export default function ProductsAll(props: TypeProps): React.JSX.Element {
   const [isOpen, setIsOpen] = useState(false);
   const [isOpenFormProduct, setIsOpenFormProduct] = useState(false);
   const [supplierId, setSupplierId] = useState <string | null>(null);
-  const [id, setId] = useState <string | null>(null);
+  const [id, setId] = useState<string | null>(null);
+  
+  //Download
+  const canDownload = useMatchPolicy(POLICIES.DOWNLOAD_PRODUCT);
+  const [arrCheckBox, onChangeCheckBox] = useCheckBoxExport();
 
   const onOpenModal = (id: string | null) => {
     setIsOpen(true);
@@ -184,7 +190,25 @@ export default function ProductsAll(props: TypeProps): React.JSX.Element {
           },
         },
         ]: []
-        ),
+      ),
+      ...(
+        canDownload ? [
+          {
+            title: 'Lựa chọn',
+            key: '_id',
+            width: 80,
+            align: 'center' as any,
+            render: (item: any, record: any) =>
+            {
+              const id = record._id;
+              return (
+                <Checkbox
+                  checked= {arrCheckBox?.includes(id)}
+                  onChange={(e)=>onChangeCheckBox(e.target.checked, id)}
+            />)}
+          },
+        ]: []
+      ) 
       ];
     return (
       <div>
@@ -197,6 +221,17 @@ export default function ProductsAll(props: TypeProps): React.JSX.Element {
           showSelect={false}
           onSearch={(value: any) => onParamChange({ keyword: value?.trim() })}
           permissionKey={[POLICIES.WRITE_PRODUCT]}
+          addComponent={
+            canDownload ?  <Col>
+                <ExportExcelButton
+                  api='product'
+                  exportOption = 'product'
+                  query={query}
+                  fileName='Danh sách sản phẩm'
+                  ids={arrCheckBox}
+                />
+          </Col> : null
+          }
           />
         <WhiteBox>
           <TableAnt
