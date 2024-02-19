@@ -137,18 +137,22 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
       ),
     ], [arrCheckBox]
   );
+  console.log(query?.supplierIds,'query?.supplierIds');
+  
   return (
     <div className="bill-page">
       {/* <Space> */}
         <Row justify={"space-between"}>
           <Col span={12}>
-            <Space>
-              <SelectSupplier
-                onChange={(value) => onParamChange({ supplierIds: value })}
-                mode="multiple"
-                />
-              <SearchAnt onParamChange={onParamChange} />
-            </Space>
+          <Space>
+        <SelectSupplier
+          value={query?.supplierIds ? query?.supplierIds?.split(',') : []}
+          onChange={(value) => onParamChange({ supplierIds: value?.length ? value : null })}
+          mode="multiple"
+          style={{width : 200}}
+        />
+        <SearchAnt value={keyword} onChange={(e) => setKeyword(e.target.value)} onParamChange={onParamChange} />
+      </Space>
           </Col>
             <WithPermission permission={POLICIES.DOWNLOAD_BILL}>
               <Col>
