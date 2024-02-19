@@ -95,6 +95,21 @@ export const resource: ItemType[] = [
         key: PATH_APP.user.root,
         permission :[POLICIES.READ_USER, POLICIES.READ_USERGROUP],
       },
+
+        // Báo cáo
+    {
+      label : "Báo cáo",
+      key: "report",
+      children : [
+        {
+          label : "Thống kê bán hàng của nhà cung cấp",
+          path : PATH_APP.report.supplier,
+          key : PATH_APP.report.supplier,
+        }
+      ],
+      icon :<AppstoreFilled />,
+    },
+
  ];
 
 //Required permission is string[][]; 

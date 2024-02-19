@@ -34,5 +34,9 @@ export const PATH_APP = {
     user: {
       root: path(ROOTS.app, '/user/*'),
     },
+
+    report: {
+      supplier: path(ROOTS.app, '/report/supplier'),
+    },
   
   };
