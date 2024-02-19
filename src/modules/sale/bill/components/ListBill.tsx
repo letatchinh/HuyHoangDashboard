@@ -111,14 +111,18 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
     ],
     []
   );
+  console.log(query?.supplierIds,'query?.supplierIds');
+  
   return (
     <div className="bill-page">
       <Space>
         <SelectSupplier
-          onChange={(value) => onParamChange({ supplierIds: value })}
+          value={query?.supplierIds ? query?.supplierIds?.split(',') : []}
+          onChange={(value) => onParamChange({ supplierIds: value?.length ? value : null })}
           mode="multiple"
+          style={{width : 200}}
         />
-        <SearchAnt onParamChange={onParamChange} />
+        <SearchAnt value={keyword} onChange={(e) => setKeyword(e.target.value)} onParamChange={onParamChange} />
       </Space>
       <TableAnt
         stickyTop
