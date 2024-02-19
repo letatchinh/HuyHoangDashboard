@@ -217,7 +217,7 @@ export default function ProductConfig() {
                           api='product-group'
                           exportOption = 'productGroup'
                           query={query}
-                          fileName='Danh sách nhóm sản phẩm'
+                          fileName='Danh mục nhóm sản phẩm'
                           ids={arrCheckBox}
                         />
                       </Col>
