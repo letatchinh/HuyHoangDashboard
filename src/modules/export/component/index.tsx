@@ -25,68 +25,72 @@ const defaultStyles = {
 export default function ExportExcelButton({ size, stylesButton, query, fileName, api, exportOption, ids }: Props) {
   const {onNotify} = useNotificationStore();
   const handleOnClick = async (obj: any) => {
-    if (query || api) {
-      const concatExportOption = {
-        ...query,
-        exportOption
-      };
-      const newQuery : any = Object.fromEntries(Object.entries(concatExportOption)?.filter(([_, v]) => v !== null && v !== undefined));
-      let a = `?`
-      const dateNow = moment(Date.now()).format("DD-MM-YYYY HH:mm")
-      const keyExportUrl = '/api/v1/export';
-      const linkUrl = keyExportUrl.concat(`/${api}`)
-      switch (obj) {
-        case '1':
-          const newObj_1 : any = {
-            ...omit(newQuery, ['page', 'limit']),
-          };
-          let queryString_1 = Object.keys(newObj_1).map(key => `${encodeURIComponent(key)}=${encodeURIComponent(newObj_1[key])}`).join('&');
-          a = a.concat(queryString_1);
-          break;
-        case '2':
-            if (!ids?.length) {
-              onNotify?.error('Không tồn tại lựa chọn nào!')
-              a = '';
-            } else {
-              const newObj_2 : any = {
-                ...omit(newQuery, ['page', 'limit']),
-                ids,
-              };
-              let queryString_2 = Object.keys(newObj_2).map(key => `${encodeURIComponent(key)}=${encodeURIComponent(newObj_2[key])}`)?.join('&');
-              a = a.concat(queryString_2);
-          };
-          break;
-        case '3':
-          const newExportOption = exportOption.concat('Page');
-          const newObj_3 = {
-            ...newQuery,
-            exportOption: newExportOption,
-          };
-          let queryString_3 = Object.keys(newObj_3).map(key => `${encodeURIComponent(key)}=${encodeURIComponent(newObj_3[key])}`).join('&');
-          a = a.concat(queryString_3);
-          break;
-        default:
-          break;
-      };
-      const temp = BASE_URL.concat(linkUrl, a);
-      try {
-        if (a !== '') {
-          axios.get(temp, {
-            method: 'GET',
-            responseType: 'blob',
-          }).then((response) => {
-            const url = window.URL.createObjectURL(new Blob([response.data]));
-            const link = document.createElement('a');
-            link.href = url;
-            link.setAttribute('target', "_blank");
-            link.setAttribute('download', `${fileName}_${dateNow}.xlsx`);
-            document.body.appendChild(link);
-            link.click();
-          })
+    try {
+      if (query || api) {
+        const concatExportOption = {
+          ...query,
+          exportOption
         };
-      } catch (error: any) {
-        onNotify?.error(error || 'Có lỗi xảy ra!')
+        const newQuery : any = Object.fromEntries(Object.entries(concatExportOption)?.filter(([_, v]) => v !== null && v !== undefined));
+        let a = `?`
+        const dateNow = moment(Date.now()).format("DD-MM-YYYY HH:mm")
+        const keyExportUrl = '/api/v1/export';
+        const linkUrl = keyExportUrl.concat(`/${api}`)
+        switch (obj) {
+          case '1':
+            const newObj_1 : any = {
+              ...omit(newQuery, ['page', 'limit']),
+            };
+            let queryString_1 = Object.keys(newObj_1).map(key => `${encodeURIComponent(key)}=${encodeURIComponent(newObj_1[key])}`).join('&');
+            a = a.concat(queryString_1);
+            break;
+          case '2':
+              if (!ids?.length) {
+                onNotify?.error('Không tồn tại lựa chọn nào!')
+                a = '';
+              } else {
+                const newObj_2 : any = {
+                  ...omit(newQuery, ['page', 'limit']),
+                  ids,
+                };
+                let queryString_2 = Object.keys(newObj_2).map(key => `${encodeURIComponent(key)}=${encodeURIComponent(newObj_2[key])}`)?.join('&');
+                a = a.concat(queryString_2);
+            };
+            break;
+          case '3':
+            const newExportOption = exportOption.concat('Page');
+            const newObj_3 = {
+              ...newQuery,
+              exportOption: newExportOption,
+            };
+            let queryString_3 = Object.keys(newObj_3).map(key => `${encodeURIComponent(key)}=${encodeURIComponent(newObj_3[key])}`).join('&');
+            a = a.concat(queryString_3);
+            break;
+          default:
+            break;
+        };
+        const temp = BASE_URL.concat(linkUrl, a);
+        try {
+          if (a !== '') {
+            axios.get(temp, {
+              method: 'GET',
+              responseType: 'blob',
+            }).then((response) => {
+              const url = window.URL.createObjectURL(new Blob([response.data]));
+              const link = document.createElement('a');
+              link.href = url;
+              link.setAttribute('target', "_blank");
+              link.setAttribute('download', `${fileName}_${dateNow}.xlsx`);
+              document.body.appendChild(link);
+              link.click();
+            })
+          };
+        } catch (error: any) {
+          onNotify?.error(error || 'Có lỗi xảy ra!')
+        };
       };
+    } catch (error: any) {
+      onNotify?.error(error || 'Có lỗi xảy ra!')
     };
   };
   return (

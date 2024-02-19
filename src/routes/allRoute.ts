@@ -17,6 +17,7 @@ import MedicinePage from "~/pages/Dashboard/Medicine";
 import ProductPage from "~/pages/Dashboard/Product";
 import ConfigDiscountPage from "~/pages/Dashboard/ConfigDiscount";
 import Pharmacy from "~/pages/Dashboard/Pharmacy";
+import ProductsAll from "~/pages/Dashboard/ProductsAll";
 import Bill from "~/pages/Dashboard/Bill";
 import UpdateBill from "~/pages/Dashboard/Bill/UpdateBill";
 import Quotation from "~/pages/Dashboard/Quotation";
@@ -26,7 +27,6 @@ import WorkListPage from "~/pages/Dashboard/WorkList";
 import WorkTaskPage from "~/pages/Dashboard/WorkTask";
 import BotNotificationPage from "~/pages/Dashboard/BotNotification";
 import Lk from "~/pages/Dashboard/Lk";
-import ProductsAll from "~/pages/Dashboard/ProductsAll";
 export const mainRoutes :PathRouteProps[] = [
   { path: PATH_APP.main.root, Component: Homepage },
 
