@@ -5,11 +5,8 @@ import { useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import { clearQuerySearch, getExistProp } from "~/utils/helpers";
 import {
-    getSelectors,
-    useFailed, useFetchByParam,
-    useQueryParams,
-    useSubmit,
-    useSuccess
+  getSelectors, useFetchByParam,
+  useQueryParams
 } from "~/utils/hook";
 import { reportSupplierSliceAction } from "./redux/reducer";
 const MODULE = "reportSupplier";
@@ -23,12 +20,7 @@ const {
   getByIdSelector,
   getByIdFailedSelector,
   deleteSuccessSelector,
-  deleteFailedSelector,
-  isSubmitLoadingSelector,
   createSuccessSelector,
-  createFailedSelector,
-  updateSuccessSelector,
-  updateFailedSelector,
   pagingSelector,
 } = getSelectors(MODULE);
 
@@ -53,49 +45,14 @@ export const useGetReportSupplier = (id: any) => {
   });
 };
 
-export const useCreateReportSupplier = (callback?: any) => {
-  useSuccess(
-    createSuccessSelector,
-    `Tạo mới ${MODULE_VI} thành công`,
-    callback
-  );
-  useFailed(createFailedSelector);
-
-  return useSubmit({
-    action: reportSupplierSliceAction.createRequest,
-    loadingSelector: isSubmitLoadingSelector,
-  });
-};
-
-export const useUpdateReportSupplier = (callback?: any) => {
-  useSuccess(
-    updateSuccessSelector,
-    `Cập nhật ${MODULE_VI} thành công`,
-    callback
-  );
-  useFailed(updateFailedSelector);
-
-  return useSubmit({
-    action: reportSupplierSliceAction.updateRequest,
-    loadingSelector: isSubmitLoadingSelector,
-  });
-};
-
-export const useDeleteReportSupplier = (callback?: any) => {
-  useSuccess(deleteSuccessSelector, `Xoá ${MODULE_VI} thành công`, callback);
-  useFailed(deleteFailedSelector);
-
-  return useSubmit({
-    action: reportSupplierSliceAction.deleteRequest,
-    loadingSelector: isSubmitLoadingSelector,
-  });
-};
 
 export const useReportSupplierQueryParams = () => {
   const query = useQueryParams();
   const limit = query.get("limit") || 10;
   const page = query.get("page") || 1;
   const keyword = query.get("keyword");
+  const startDate = query.get("startDate");
+  const endDate = query.get("endDate");
   const createSuccess = useSelector(createSuccessSelector);
   const deleteSuccess = useSelector(deleteSuccessSelector);
   return useMemo(() => {
@@ -103,10 +60,12 @@ export const useReportSupplierQueryParams = () => {
       page,
       limit,
       keyword,
+      startDate,
+      endDate,
     };
     return [queryParams];
     //eslint-disable-next-line
-  }, [page, limit, keyword, createSuccess, deleteSuccess]);
+  }, [page, limit, keyword, createSuccess, deleteSuccess, startDate, endDate]);
 };
 
 export const useUpdateReportSupplierParams = (
