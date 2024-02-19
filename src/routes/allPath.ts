@@ -52,10 +52,25 @@ export const PATH_APP = {
       root:  path(ROOTS.app, '/pharmacy'),
       detail: path(ROOTS.app, '/pharmacy/:id'),
     },
+
+    bill : {
+      root:  path(ROOTS.app, '/bill'),
+      update: path(ROOTS.app, '/bill/:id'),
+      create: path(ROOTS.app, '/bill/create'),
+      quotation:  path(ROOTS.app, '/quotation'),
+      lk: path(ROOTS.app, '/lk'),
+    },
+
+    quotation : {
+      root:  path(ROOTS.app, '/quotation'),
+      update: path(ROOTS.app, '/quotation/:id'),
+      create: path(ROOTS.app, '/quotation/create'),
+    },
      user: {
       root: path(ROOTS.app, '/user/*'),
    
     },
+
     vouchers: {
       root: path(ROOTS.app, '/vouchers'),
     },

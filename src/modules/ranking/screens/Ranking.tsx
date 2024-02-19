@@ -35,7 +35,7 @@ export default function Ranking(props: propsType): React.JSX.Element {
     {
       title: 'Tên ',
       dataIndex: 'name',
-      align: 'center',
+      align: 'left',
       key: 'name',
       render: (text: string) => <a>{text}</a>,
     },

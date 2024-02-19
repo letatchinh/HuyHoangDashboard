@@ -19,7 +19,7 @@ function DebounceSelect<
   } = any
 >({
   fetchOptions,
-  debounceTimeout = 500,
+  debounceTimeout = 300,
   initOptions,
   value,
   ...props
@@ -36,7 +36,7 @@ function DebounceSelect<
   
   const debounceFetcher = useMemo(() => {
     setFetching(true);
-    const loadOptions = (value: string) => {
+    const loadOptions = (value: any) => {
     
       fetchRef.current += 1;
       const fetchId = fetchRef.current;

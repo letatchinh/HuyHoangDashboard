@@ -38,7 +38,7 @@ const {
 
 export const usePharmacyPaging = () => useSelector(pagingSelector);
 
-export const useGetPharmacies = (query : any) => {
+export const useGetPharmacies = (query? : any) => {
   return useFetchByParam({
     action: pharmacySliceAction.getListRequest,
     loadingSelector: loadingSelector,

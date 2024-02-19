@@ -8,7 +8,6 @@ const employee = 'employee';
 const user = 'user';
 const userGroup = 'userGroup';
 const pharmacy = 'pharmacy';
-const bill = 'bill';
 const manuFacturer = 'manufacturer';
 const unit = 'unit';
 const productGroup='productGroup';
@@ -24,6 +23,12 @@ const debt = 'debt';
 // Sản phẩm Nhà cung cấp
 const product = 'product';
 
+// Đơn hàng
+const bill = 'bill';
+
+// Đơn hàng tạm
+const quotation = 'quotation';
+
 const RESOURCES = [
   branch,
   // company,
@@ -31,7 +36,6 @@ const RESOURCES = [
   user,
   userGroup,
   // pharmacy,
-  // bill,
   manuFacturer,
   unit,
   ranking,
@@ -39,6 +43,9 @@ const RESOURCES = [
   productGroup,
   //
   medicine,
+  
+  bill,
+  quotation,
 
   //VOUCHER
   voucher,
@@ -87,9 +94,6 @@ const RESOURCE = (): ResourceType => {
     user,
     userGroup
   ];
-  const GROUP_WHBILL: string[] = [
-    bill
-  ];
   const GROUP_EMPLOYEE : string[] = [
     employee
   ];
@@ -120,16 +124,21 @@ const RESOURCE = (): ResourceType => {
     debt,
   ];
 
+  const GROUP_BILL : string[] = [
+    bill,
+    quotation,
+  ];
+
   return {
     GROUP_USER,
     GROUP_EMPLOYEE,
-    GROUP_WHBILL,
     GROUP_WHSETTING,
     GROUP_MANUFACTURER,
     UNIT,
     GROUP_PRODUCTGROUP,
     GROUP_RANKING,
     MEDICINE,
+    GROUP_BILL,
     GROUP_VOUCHER,
     GROUP_SUPPLIER,
   };
@@ -141,9 +150,9 @@ const RESOURCE = (): ResourceType => {
  * @returns {Array} [POLICIES.action_resources]
  */
 export const GROUP_POLICY : any = (action: any): void => {
-  forIn(RESOURCE(), (value, key, object : any) => {
+  return forIn(RESOURCE(), (value, key, object : any) => {
     object[key] = [];
-    if (Array.isArray(value)) {
+    // if (Array.isArray(value)) {
       value.forEach((keyPermission: string | undefined) => {
         if (keyPermission) {
           object[key].push(
@@ -151,10 +160,9 @@ export const GROUP_POLICY : any = (action: any): void => {
           );
         }
       });
-    }
+    // }
   });
 };
-
 export const CORE_ACTION = {
   READ: 'READ',
   WRITE: 'WRITE',

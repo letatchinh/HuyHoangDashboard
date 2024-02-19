@@ -17,8 +17,7 @@ import { NavLink } from "react-router-dom";
 import { PATH_APP } from "~/routes/allPath";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUsers, faUser } from '@fortawesome/free-solid-svg-icons';
-import POLICIES from "~/modules/policy/policy.auth";
-
+import POLICIES, { GROUP_POLICY } from "~/modules/policy/policy.auth";
 type MenuItem = Required<MenuProps>["items"][number];
 function getItem({ label, icon, children, path, key, permission }: ItemType): any {
   
@@ -47,6 +46,7 @@ type ItemType = {
   key: string;
   permission?: any; 
 };
+
 export const resource: ItemType[] = [
   {
     label: "WorldPharmaVN",
@@ -121,12 +121,13 @@ export const resource: ItemType[] = [
     {
       label : "Chi nhánh",
       key: "branch",
-      permission :[POLICIES.READ_BRANCH],
+      
       children : [
         {
           label : "Danh sách chi nhánh",
           path : PATH_APP.branch.root,
           key : PATH_APP.branch.root,
+          permission :[POLICIES.READ_BRANCH],
         }
       ],
       icon :<AppstoreFilled />
@@ -186,6 +187,39 @@ export const resource: ItemType[] = [
       key: PATH_APP.pharmacy.root,
     },
       
+    // Đơn hàng
+  {
+    label: "Đơn hàng",
+    key: "bill",
+    permission : [POLICIES.READ_BILL,POLICIES.WRITE_QUOTATION,POLICIES.READ_QUOTATION],
+    children: [
+      {
+        label: "Đơn hàng",
+        path: PATH_APP.bill.root,
+        key: PATH_APP.bill.root,
+        permission:[POLICIES.READ_BILL],
+      },
+      {
+        label: "Tạo đơn hàng tạm",
+        path: PATH_APP.bill.create,
+        key: PATH_APP.bill.create,
+        permission:[POLICIES.WRITE_QUOTATION],
+      },
+      {
+        label: "Đơn hàng tạm",
+        path: PATH_APP.quotation.root,
+        key: PATH_APP.quotation.root,
+        permission:[POLICIES.READ_QUOTATION],
+      },
+      {
+        label: "Luỹ kế mặt hàng",
+        path: PATH_APP.bill.lk,
+        key: PATH_APP.bill.lk,
+        permission:[POLICIES.READ_BILL],
+      },
+    ],
+    icon: <AppstoreFilled />,
+  },
        
  ];
 

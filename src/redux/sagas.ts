@@ -18,6 +18,9 @@ import medicineModule from '~/modules/medicine';
 import productModule from '~/modules/product';
 import workBoardModule from '~/modules/workBoard';
 import configDiscountModule from '~/modules/configDiscount';
+import billModule from '~/modules/sale/bill';
+import quotationModule from '~/modules/sale/quotation';
+import lkModule from '~/modules/sale/lk/index';
 import paymentVoucher from '~/modules/paymentVoucher';
 import receiptVoucher from '~/modules/receiptVoucher';
 import productsAllModule from '~/modules/productsAll';
@@ -43,6 +46,10 @@ export default function* rootSaga() {
     workBoardModule.redux.saga(),
     configDiscountModule.redux.saga(),
     pharmacyModule.redux.saga(),
+    // Đơn hàng
+    billModule.redux.saga(),
+    quotationModule.redux.saga(),
+    lkModule.redux.saga(),
     paymentVoucher.redux.saga(),
     receiptVoucher.redux.saga(),
     productsAllModule.redux.saga(),

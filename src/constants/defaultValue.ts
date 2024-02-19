@@ -54,18 +54,24 @@ export const COMPONENT_MODES = {
 };
 
 export const REF_COLLECTION_UPPER : any= {
-  BILL: 'BILL',
-  BILLITEM: 'BILLITEM',
+  // BILL: 'BILL',
+  // BILLITEM: 'BILLITEM',
   PHARMA_PROFILE: 'PHARMA_PROFILE',
   SUPPLIER: 'SUPPLIER',
 };
 
 export const REF_COLLECTION : any= {
-  BILL: 'bill',
-  BILLITEM: 'billItem',
+  // BILL: 'bill',
+  // BILLITEM: 'billItem',
   PHARMA_PROFILE: 'pharma_profile',
   SUPPLIER: 'supplier',
 };
+
+export const TYPE_METHOD = {
+  LK : "LK",
+  BILL : "BILL",
+  BILLITEM : "BILLITEM",
+}
 
 export const TYPE_VOUCHER = {
   PT: 'PT',
@@ -255,3 +261,5 @@ export const ACCOUNTS : any = {
   911: 'Xác định kết quả kinh doanh '
 };
 export const MAX_LIMIT = 200;
+
+export const INFINITY = 999999999999; // 12

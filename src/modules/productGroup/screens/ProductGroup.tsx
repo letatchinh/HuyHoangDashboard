@@ -246,9 +246,9 @@ export default function ProductConfig() {
               // showSizeChanger={true}
 
               />
-              <Table
+              {/* <Table
 
-              ></Table>
+              ></Table> */}
             </WhiteBox>
           </div>
         </div>

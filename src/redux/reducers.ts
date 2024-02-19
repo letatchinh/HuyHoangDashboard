@@ -22,6 +22,9 @@ import medicineModule from '~/modules/medicine';
 import productModule from '~/modules/product';
 import workBoardModule from '~/modules/workBoard';
 import configDiscount from '~/modules/configDiscount';
+import billModule from '~/modules/sale/bill';
+import quotationModule from '~/modules/sale/quotation';
+import lkModule from '~/modules/sale/lk';
 import paymentVoucher from '~/modules/paymentVoucher';
 import receiptVoucher from '~/modules/receiptVoucher';
 import productsAll from '~/modules/productsAll';
@@ -58,6 +61,9 @@ const rootReducer = combineReducers({
     product:productModule.redux.reducer,
     workBoard:workBoardModule.redux.reducer,
     configDiscount: configDiscount.redux.reducer,
+    bill: billModule.redux.reducer,
+    quotation: quotationModule.redux.reducer,
+    lk: lkModule.redux.reducer,
     paymentVoucher: paymentVoucher.redux.reducer,
     receiptVoucher: receiptVoucher.redux.reducer,
     productsAll: productsAll.redux.reducer,

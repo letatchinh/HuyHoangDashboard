@@ -12,15 +12,20 @@ export type conditionType = {
     target : string,
     targetId : string,
     name : string,
-    typeDiscount : string,
+    typeDiscount : "LK" | "DISCOUNT.CORE" | "DISCOUNT.SOFT" | "DISCOUNT.SOFT.CONDITION",
     value : number,
-    valueType : string,
-    typeReward : string,
+    valueType : "VALUE" | "PERCENT",
+    typeReward : "VALUE" | "PRODUCT" | "BONUS",
     condition : conditionType | null,
-    applyUnit : string | null,
-    applyTimeSheet : applyTimeSheetType | null,
+    applyVariantId : string | null,
+    applyTimeSheet : applyTimeSheetType | null
+    status:"ACTIVE" | "INACTIVE",
+    timesReward : number,
+    itemReward? : {
+      name : string,
+      quantity : number,
+    }
     cumulativeTimeSheet : applyTimeSheetType | null,
-    status:"ACTIVE" | "INACTIVE"
   
   }
   export type TypePropsDiscountList = {

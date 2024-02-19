@@ -48,6 +48,10 @@ export type initStateSlice<T=any> = {
     workBoard:'workBoard',
     configDiscount: 'configDiscount',
     pharmacy: "pharmacy",
+    // Đơn hàng
+    bill: "bill",
+    quotation: "quotation",
+    lk: "lk",
     vouchers: "vouchers",
     receiptVoucher: "receiptVoucher",
     paymentVoucher: "paymentVoucher",

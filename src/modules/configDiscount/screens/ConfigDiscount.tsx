@@ -6,19 +6,19 @@ import {
   arrayMove,
   SortableContext,
   useSortable,
-  verticalListSortingStrategy,
+  verticalListSortingStrategy
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import React, { useEffect, useState } from "react";
-import { Checkbox, Radio, Table } from "antd";
+import { Checkbox, Table } from "antd";
 import type { ColumnsType } from "antd/es/table";
-import {
-  useGetConfigDiscounts,
-  useUpdateConfigDiscount,
-} from "../configDiscount.hook";
-import { ConfigItem } from "../configDiscount.modal";
+import React, { useEffect, useState } from "react";
 import Breadcrumb from "~/components/common/Breadcrumb";
 import WhiteBox from "~/components/common/WhiteBox";
+import {
+  useGetConfigDiscounts,
+  useUpdateConfigDiscount
+} from "../configDiscount.hook";
+import { ConfigItem } from "../configDiscount.modal";
 
 interface RowProps extends React.HTMLAttributes<HTMLTableRowElement> {
   "data-row-key": string;

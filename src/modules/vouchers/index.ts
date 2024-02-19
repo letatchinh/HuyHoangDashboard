@@ -1,5 +1,6 @@
 import VouchersScreen from "./screens/Vouchers";
 import vouchersApi from "./vouchers.api";
+import components from "./components";
 import * as vouchersAuth from "./vouchers.auth";
 import * as vouchersHook from "./vouchers.hook";
 import * as vouchersService from "./vouchers.service";
@@ -16,6 +17,7 @@ const moduleExport = {
     hook : vouchersHook,
     service : vouchersService,
     model : vouchersModels,
-    redux : {reducer,saga}
+    redux : {reducer,saga},
+    components,
 };
 export default moduleExport;

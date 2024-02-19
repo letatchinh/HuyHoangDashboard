@@ -5,6 +5,9 @@ import { authRoutes, mainRoutes } from "./routes/allRoute";
 import ProtectRoute from "./routes/middleware/ProtectRoute";
 import AuthModule from "~/modules/auth";
 import packageJson from "../package.json";
+import { PATH_APP } from "./routes/allPath";
+import BillModule from "~/modules/sale/bill";
+import CreateBillPage from "./pages/Dashboard/Bill/CreateBill";
 
 function App(): React.JSX.Element {
   setupAxios();
@@ -23,6 +26,11 @@ function App(): React.JSX.Element {
             <Route key={route.path} {...route} />
           ))}
         </Route>
+        <Route
+          key={PATH_APP.bill.create}
+          path={PATH_APP.bill.create}
+          Component={() => <CreateBillPage />}
+        />
       </Routes>
       <div
         style={{
@@ -43,6 +51,9 @@ function App(): React.JSX.Element {
         </p>
       </div>
     </>
+      
+      
+    </Routes>
   );
 }
 

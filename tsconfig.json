@@ -19,6 +19,7 @@
       "~/*": ["src/*"],
       "~/m/*": ["src/modules/*"],
       "~/lib/*": ["src/lib/*"],
+      "policy": ["src/modules/policy"],
     },
     "typeRoots": ["./node_modules/@types", "./src/typings"],
   },
