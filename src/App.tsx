@@ -51,9 +51,6 @@ function App(): React.JSX.Element {
         </p>
       </div>
     </>
-      
-      
-    </Routes>
   );
 }
 
