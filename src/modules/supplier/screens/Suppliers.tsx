@@ -289,8 +289,8 @@ export default function Supplier(): React.JSX.Element {
             <WithPermission permission={POLICIES.DOWNLOAD_BILL}>
                 <Col>
                   <ExportExcelButton
-                    api='suppiler'
-                    exportOption = 'suppiler'
+                    api='supplier'
+                    exportOption = 'supplier'
                     query={query}
                     fileName='Danh sách nhà cung cấp'
                     ids={arrCheckBox}
