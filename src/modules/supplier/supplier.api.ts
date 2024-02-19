@@ -9,5 +9,6 @@ const apis = {
     delete: (id?: any) => requester.delete(`/api/v1/supplier/${id}`),
     getDebt: (query?: any) => requester.get(`/api/v1/supplier-profile-debt`, query),
     getVouchers: (query?: any) => requester.get(`/api/v1/supplier-voucher-debt`, query),
+    getAllAuthorProduct: (query?: any) => requester.get(`/api/v1/search-supplier-product`, query),
 }
 export default apis;

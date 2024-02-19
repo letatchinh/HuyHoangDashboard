@@ -24,6 +24,7 @@ import workBoardModule from '~/modules/workBoard';
 import configDiscount from '~/modules/configDiscount';
 import paymentVoucher from '~/modules/paymentVoucher';
 import receiptVoucher from '~/modules/receiptVoucher';
+import productsAll from '~/modules/productsAll';
 const authPersistConfig = {
     key: 'auth',
     storage: localStorage,
@@ -59,6 +60,7 @@ const rootReducer = combineReducers({
     configDiscount: configDiscount.redux.reducer,
     paymentVoucher: paymentVoucher.redux.reducer,
     receiptVoucher: receiptVoucher.redux.reducer,
+    productsAll: productsAll.redux.reducer,
 
 });
 export default rootReducer

@@ -17,6 +17,7 @@ import MedicinePage from "~/pages/Dashboard/Medicine";
 import ProductPage from "~/pages/Dashboard/Product";
 import ConfigDiscountPage from "~/pages/Dashboard/ConfigDiscount";
 import Pharmacy from "~/pages/Dashboard/Pharmacy";
+import ProductsAll from "~/pages/Dashboard/ProductsAll";
 export const mainRoutes :PathRouteProps[] = [
   { path: PATH_APP.main.root, Component: Homepage },
   { path: PATH_APP.supplier.root, Component: Supplier },
@@ -34,6 +35,8 @@ export const mainRoutes :PathRouteProps[] = [
   { path: PATH_APP.vouchers.root, Component: VouchersPage },
   { path: PATH_APP.configDiscount.root, Component: ConfigDiscountPage },
   { path: PATH_APP.pharmacy.root, Component: Pharmacy },
+  { path: PATH_APP.configDiscount.root, Component: ConfigDiscountPage },
+  { path: PATH_APP.productAll.root, Component: ProductsAll },
  
   { path: '/', Component: Homepage },
 ]

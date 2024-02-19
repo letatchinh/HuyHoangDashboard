@@ -27,6 +27,7 @@ import SelectManufacturer from "./SelectManufacturer";
 import SelectProductGroup from "./SelectProductGroup";
 import Variants from "./Variants";
 import CumulativeDiscountModule from '~/modules/cumulativeDiscount';
+import { useSupplierInfoRedux } from "~/modules/productsAll/productsAll.hook";
 
 
 const CLONE_PRODUCT_TYPE_VI: any = PRODUCT_TYPE_VI;
@@ -39,6 +40,7 @@ export default function FormProduct({
   id,
   onCancel,
 }: TypePropsFormProduct): React.JSX.Element {
+  const supplierInfo = useSupplierInfoRedux();
   const [form] = Form.useForm();
   const [backupForm,setBackupForm] = useState<FieldTypeFormProduct[]>([]);
   

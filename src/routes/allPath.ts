@@ -59,5 +59,9 @@ export const PATH_APP = {
     vouchers: {
       root: path(ROOTS.app, '/vouchers'),
     },
+     productAll: {
+      root: path(ROOTS.app, '/products-list'),
+    },
+    
   
   };

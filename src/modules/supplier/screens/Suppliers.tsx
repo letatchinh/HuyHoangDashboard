@@ -249,7 +249,6 @@ export default function Supplier(): React.JSX.Element {
     ],
     [isSubmitLoading, onDelete, onOpenForm, onUpdateStatus]
   );
-
   return (
     <div>
       <Breadcrumb title={t("list-supplier")} />
