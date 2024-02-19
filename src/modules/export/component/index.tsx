@@ -46,7 +46,7 @@ export default function ExportExcelButton({ size, stylesButton, query, fileName,
         case '2':
             if (!ids?.length) {
               onNotify?.error('Không tồn tại lựa chọn nào!')
-              a = '?'
+              a = '';
             } else {
               const newObj_2 : any = {
                 ...omit(newQuery, ['page', 'limit']),
@@ -69,24 +69,25 @@ export default function ExportExcelButton({ size, stylesButton, query, fileName,
           break;
       };
       const temp = BASE_URL.concat(linkUrl, a);
-      if (a !== '') {
-        console.log(a)
-        axios.get(temp, {
-          method: 'GET',
-          responseType: 'blob',
-        }).then((response) => {
-          const url = window.URL.createObjectURL(new Blob([response.data]));
-          const link = document.createElement('a');
-          link.href = url;
-          link.setAttribute('target', "_blank");
-          link.setAttribute('download', `${fileName}_${dateNow}.xlsx`);
-          document.body.appendChild(link);
-          link.click();
-        })
+      try {
+        if (a !== '') {
+          axios.get(temp, {
+            method: 'GET',
+            responseType: 'blob',
+          }).then((response) => {
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('target', "_blank");
+            link.setAttribute('download', `${fileName}_${dateNow}.xlsx`);
+            document.body.appendChild(link);
+            link.click();
+          })
+        };
+      } catch (error: any) {
+        onNotify?.error(error || 'Có lỗi xảy ra!')
       };
-    } else {
-      console.log('cannot export excel file')
-    }
+    };
   };
   return (
     <Dropdown.Button
