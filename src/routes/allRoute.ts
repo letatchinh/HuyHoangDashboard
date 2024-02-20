@@ -80,6 +80,7 @@ export const mainRoutes :PathRouteProps[] = [
 
   { path: PATH_APP.productAll.root, Component: ProductsAll },
 
+  // Order Supplier
   { path: PATH_APP.orderSupplier.root, Component: OrderSupplier},
 
 

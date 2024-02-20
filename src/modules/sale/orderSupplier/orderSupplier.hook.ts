@@ -6,6 +6,7 @@ import {
     getSelectors,
     useFailed, useFetchByParam,
     useQueryParams,
+    useResetState,
     useSubmit,
     useSuccess
 } from "~/utils/hook";
@@ -55,14 +56,13 @@ export const useGetOrderSupplier = (id: any) => {
 export const useCreateOrderSupplier = (callback?: any) => {
   useSuccess(
     createSuccessSelector,
-    `Tạo mới ${MODULE_VI} thành công`,
-    callback
   );
   useFailed(createFailedSelector);
 
   return useSubmit({
     action: orderSupplierActions.createRequest,
     loadingSelector: isSubmitLoadingSelector,
+    callbackSubmit:callback
   });
 };
 
@@ -141,4 +141,8 @@ export const useUpdateOrderSupplierParams = (
   };
 
   return [keyword, { setKeyword, onParamChange }];
+};
+
+export const useResetOrderSupplier = () => {
+  return useResetState(orderSupplierActions.reset);
 };

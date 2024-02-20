@@ -1,4 +1,4 @@
-import OrderSupplierModule from '~/modules/orderSupplier'
+import OrderSupplierModule from '~/modules/sale/orderSupplier/index'
 
 const OrderSupplier = () => {
   return (

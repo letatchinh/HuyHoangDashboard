@@ -6,16 +6,24 @@ import * as orderSupplierService from "./orderSupplier.service";
 import * as orderSupplierModels from "./orderSupplier.modal";
 import reducer from "./redux/reducer";
 import saga from "./redux/saga";
+import SaleScreen from "./components/createOrderSupplierScreen/SaleScreen";
+import { CreateOrderSupplierProvider } from "./storeContext/CreateOrderSupplierContext";
+import components from "./components";
 
 const moduleExport = {
     page : {
         index : OrderSupplierScreen,
+        create : SaleScreen
     },
     api : orderSupplierApi,
     auth : orderSupplierAuth,
     hook : orderSupplierHook,
     service : orderSupplierService,
     model : orderSupplierModels,
-    redux : {reducer,saga}
+    redux : {reducer,saga},
+    storeProvider : {
+        CreateOrderSupplier : CreateOrderSupplierProvider
+    },
+    components
 };
 export default moduleExport;

@@ -1,3 +1,4 @@
+import { get } from 'lodash';
 import { put, call, takeLatest } from 'redux-saga/effects';
 import api from '../orderSupplier.api'; 
 import { orderSupplierActions } from './reducer';
@@ -22,7 +23,14 @@ function* getByIdOrderSupplier({payload:id} : any) : any {
 
 function* createOrderSupplier({payload} : any) : any {
   try {
-    const data = yield call(api.create,payload);
+    const {callbackSubmit,...params} = payload
+    const data = yield call(api.create,params);
+    if(callbackSubmit){
+      callbackSubmit({
+        type : 'createOrderSupplier',
+        code : get(data,'code')
+      })
+    }
     yield put(orderSupplierActions.createSuccess(data));
   } catch (error:any) {
     yield put(orderSupplierActions.createFailed(error));

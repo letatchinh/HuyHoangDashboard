@@ -32,7 +32,7 @@ import paymentVoucher from '~/modules/paymentVoucher';
 import receiptVoucher from '~/modules/receiptVoucher';
 import lkModule from '~/modules/sale/lk';
 import productsAll from '~/modules/productsAll';
-import orderSupplier from '~/modules/orderSupplier';
+import orderSupplier from '~/modules/sale/orderSupplier/index';
 const authPersistConfig = {
     key: 'auth',
     storage: localStorage,
