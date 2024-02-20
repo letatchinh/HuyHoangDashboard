@@ -78,7 +78,7 @@ try {
     };
   }, []); 
 
-  useChangeDocumentTitle("Tạo đơn hàng");
+  useChangeDocumentTitle("Tạo đơn mua hàng");
 
   const supplierId = Form.useWatch('supplierId',form);
   return (
