@@ -215,6 +215,9 @@ export default function ReportSupplier(props: propsType): React.JSX.Element {
           ...paging,
           showTotal: (total) => `Tổng cộng ${total}`,
           showSizeChanger: true,
+          onChange(page, pageSize) {
+            onParamChange({ page, limit: pageSize });
+          },
         }}
         size="small"
       />
