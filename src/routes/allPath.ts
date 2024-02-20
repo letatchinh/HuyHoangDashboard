@@ -80,6 +80,10 @@ export const PATH_APP = {
       root: path(ROOTS.app, '/products-list'),
     },
     
+
+    report: {
+      supplier: path(ROOTS.app, '/report/supplier'),
+    },
   
     botNotification : {
       root:  path(ROOTS.app, '/bot-notification'),

@@ -206,6 +206,20 @@ export const resource: ItemType[] = [
     permission :[POLICIES.READ_VOUCHER],
   },
 
+        // Báo cáo
+    {
+      label : "Báo cáo",
+      key: "report",
+      children : [
+        {
+          label : "Thống kê bán hàng của nhà cung cấp",
+          path : PATH_APP.report.supplier,
+          key : PATH_APP.report.supplier,
+        }
+      ],
+      icon :<AppstoreFilled />,
+    },
+
       
     // Đơn hàng
   {

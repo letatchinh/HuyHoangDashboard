@@ -10,6 +10,7 @@ import Branch from "~/pages/Dashboard/Branch";
 import StatusConfig from "~/pages/Dashboard/StatusConfig";
 import EmployeePage from "~/pages/Dashboard/Employee";
 import UserPage from "~/pages/Dashboard/User";
+import ReportSupplierPage from "~/pages/Dashboard/ReportSupplier";
 import UserGroupPage from "~/pages/Dashboard/UserGroup";
 import VouchersPage from "~/pages/Dashboard/Vouchers";
 import Unit from "~/pages/Dashboard/Unit";
@@ -64,6 +65,7 @@ export const mainRoutes :PathRouteProps[] = [
 
   //ConfigDiscount
   { path: PATH_APP.vouchers.root, Component: VouchersPage },
+  { path: PATH_APP.report.supplier, Component: ReportSupplierPage },
   { path: PATH_APP.configDiscount.root, Component: ConfigDiscountPage },
 
   // Pharmacy
