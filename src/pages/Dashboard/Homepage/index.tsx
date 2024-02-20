@@ -1,6 +1,7 @@
 
+import HomepageModule from '~/modules/homepage';
 export default function Homepage() : any {
   return (
-    <div className="login">index</div>
+    <HomepageModule.page.index />
   )
 }
