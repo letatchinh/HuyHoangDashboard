@@ -6,7 +6,7 @@ import {
   useGetQuotations,
   useQuotationPaging,
   useQuotationQueryParams,
-  useUpdateQuotationParams
+  useUpdateQuotationParams,
 } from "../quotation.hook";
 
 import { Button, Popconfirm, Row, Space, Typography } from "antd";
@@ -24,7 +24,7 @@ import SelectPharmacy from "../../bill/components/SelectPharmacy";
 import { STATUS_QUOTATION, STATUS_QUOTATION_VI } from "../constants";
 import { PlusCircleTwoTone } from "@ant-design/icons";
 import WithPermission from "~/components/common/WithPermission";
-import policyModule from 'policy';
+import policyModule from "policy";
 type propsType = {
   status?: string;
 };
@@ -44,14 +44,14 @@ export default function ListQuotation({
       typeTab: "updateQuotation",
       ...data,
     });
-    window.open(PATH_APP.bill.create)
+    window.open(PATH_APP.bill.create);
   };
   const onConvertQuotation = (data: Omit<ItemDataSource, "typeTab">) => {
     BillModule.service.addDataToSaleScreen({
       typeTab: "convertQuotation",
       ...data,
     });
-    window.open(PATH_APP.bill.create)
+    window.open(PATH_APP.bill.create);
   };
   const columns: ColumnsType = useMemo(
     () => [
@@ -77,13 +77,15 @@ export default function ListQuotation({
         key: "bill",
         align: "center",
         render(bill, record, index) {
-        return  <Link
+          return (
+            <Link
               className="link_"
               to={PATH_APP.bill.root + "/" + get(record, "bill._id")}
               target="_blank"
             >
-              {get(record,'bill.codeSequence')}
+              {get(record, "bill.codeSequence")}
             </Link>
+          );
         },
       },
       {
@@ -95,10 +97,13 @@ export default function ListQuotation({
           return (
             <div>
               <Typography.Text strong>
-              {dayjs(createdAt).format("DD/MM/YYYY HH:mm")}
-            </Typography.Text>
-            <p>-</p>
-            Bởi: <Typography.Text strong>{get(record,'createBy.fullName')}</Typography.Text>
+                {dayjs(createdAt).format("DD/MM/YYYY HH:mm")}
+              </Typography.Text>
+              <p>-</p>
+              Bởi:{" "}
+              <Typography.Text strong>
+                {get(record, "createBy.fullName")}
+              </Typography.Text>
             </div>
           );
         },
@@ -109,14 +114,22 @@ export default function ListQuotation({
         key: "historyStatus",
         align: "center",
         render(historyStatus, record, index) {
-          return historyStatus?.[STATUS_QUOTATION.CONFIRMED] && <div>
-            <Typography.Text strong>
-              {dayjs(historyStatus?.[STATUS_QUOTATION.CONFIRMED]).format("DD/MM/YYYY HH:mm")}
-            </Typography.Text>
-            <p>-</p>
-            Bởi: <Typography.Text strong>{get(record,'confirmBy.fullName')}</Typography.Text>
-          </div>
-        ;
+          return (
+            historyStatus?.[STATUS_QUOTATION.CONFIRMED] && (
+              <div>
+                <Typography.Text strong>
+                  {dayjs(historyStatus?.[STATUS_QUOTATION.CONFIRMED]).format(
+                    "DD/MM/YYYY HH:mm"
+                  )}
+                </Typography.Text>
+                <p>-</p>
+                Bởi:{" "}
+                <Typography.Text strong>
+                  {get(record, "confirmBy.fullName")}
+                </Typography.Text>
+              </div>
+            )
+          );
         },
       },
       {
@@ -124,7 +137,7 @@ export default function ListQuotation({
         dataIndex: "pharmacy",
         key: "pharmacy",
         align: "center",
-        width : '30%',
+        width: "30%",
         render(pharmacy, record, index) {
           return <Typography.Text>{get(pharmacy, "name", "")}</Typography.Text>;
         },
@@ -152,83 +165,95 @@ export default function ListQuotation({
           return (
             <Space direction="vertical">
               <WithPermission permission={policyModule.POLICIES.WRITE_BILL}>
-              <Button
-                disabled={get(record,'status') !== STATUS_QUOTATION.NEW}
-                block
-                onClick={() => {
-                  onConvertQuotation({
-                    quotationItems: get(record, "quotationItems", []),
-                    pharmacyId: get(record, "pharmacyId"),
-                    dataUpdateQuotation: {
-                      id: _id,
-                      code: get(record, "code"),
-                    },
-                    pair : get(record,'pair',0),
-                    debtType : get(record, "debtType"),
-                  });
-                }}
-                type="primary"
-                size="small"
-              >
-                Chuyển đổi
-              </Button>
-              </WithPermission>
-              <WithPermission permission={policyModule.POLICIES.UPDATE_QUOTATION}>
-              <Button
-                block
-                disabled={get(record,'status') !== STATUS_QUOTATION.NEW}
-                onClick={() => {
-                  onUpdateQuotation({
-                    quotationItems: get(record, "quotationItems", []),
-                    pharmacyId: get(record, "pharmacyId"),
-                    dataUpdateQuotation: {
-                      id: _id,
-                      code: get(record, "code"),
-                    },
-                    pair : get(record,'pair',0),
-                    debtType : get(record, "debtType"),
-                  });
-                }}
-                size="small"
-              >
-                Cập nhật
-              </Button>
-              </WithPermission>
-              <WithPermission permission={policyModule.POLICIES.WRITE_QUOTATION}>
-              <Popconfirm
-                title="Bạn muốn sao chép đơn hàng tạm này?"
-                onConfirm={() => onCopyQuotation(_id)}
-                okText="Sao chép"
-                cancelText="Huỷ"
-                okButtonProps={{
-                  loading: isSubmitLoading,
-                }}
-              >
-                <Button block ghost type="primary" size="small" 
-                // disabled={get(record,'status') !== STATUS_QUOTATION.NEW}
+                <Button
+                  disabled={get(record, "status") !== STATUS_QUOTATION.NEW}
+                  block
+                  onClick={() => {
+                    onConvertQuotation({
+                      quotationItems: get(record, "quotationItems", []),
+                      pharmacyId: get(record, "pharmacyId"),
+                      dataUpdateQuotation: {
+                        id: _id,
+                        code: get(record, "code"),
+                      },
+                      pair: get(record, "pair", 0),
+                      debtType: get(record, "debtType"),
+                    });
+                  }}
+                  type="primary"
+                  size="small"
                 >
-                  Sao chép
+                  Chuyển đổi
                 </Button>
-              </Popconfirm>
               </WithPermission>
-              <WithPermission permission={policyModule.POLICIES.DELETE_QUOTATION}>
-              <Popconfirm
-                title="Bạn muốn xoá đơn hàng tạm này?"
-                onConfirm={() => onDelete(_id)}
-                okText="Xoá"
-                cancelText="Huỷ"
-                okButtonProps={{
-                  loading: isSubmitLoading,
-                }}
+              <WithPermission
+                permission={policyModule.POLICIES.UPDATE_QUOTATION}
               >
-                <Button block danger size="small" 
-                // disabled={get(record,'status') !== STATUS_QUOTATION.NEW}
+                <Button
+                  block
+                  disabled={get(record, "status") !== STATUS_QUOTATION.NEW}
+                  onClick={() => {
+                    onUpdateQuotation({
+                      quotationItems: get(record, "quotationItems", []),
+                      pharmacyId: get(record, "pharmacyId"),
+                      dataUpdateQuotation: {
+                        id: _id,
+                        code: get(record, "code"),
+                      },
+                      pair: get(record, "pair", 0),
+                      debtType: get(record, "debtType"),
+                    });
+                  }}
+                  size="small"
                 >
-                  Xoá
+                  Cập nhật
                 </Button>
-              </Popconfirm>
               </WithPermission>
-            
+              <WithPermission
+                permission={policyModule.POLICIES.WRITE_QUOTATION}
+              >
+                <Popconfirm
+                  title="Bạn muốn sao chép đơn hàng tạm này?"
+                  onConfirm={() => onCopyQuotation(_id)}
+                  okText="Sao chép"
+                  cancelText="Huỷ"
+                  okButtonProps={{
+                    loading: isSubmitLoading,
+                  }}
+                >
+                  <Button
+                    block
+                    ghost
+                    type="primary"
+                    size="small"
+                    // disabled={get(record,'status') !== STATUS_QUOTATION.NEW}
+                  >
+                    Sao chép
+                  </Button>
+                </Popconfirm>
+              </WithPermission>
+              <WithPermission
+                permission={policyModule.POLICIES.DELETE_QUOTATION}
+              >
+                <Popconfirm
+                  title="Bạn muốn xoá đơn hàng tạm này?"
+                  onConfirm={() => onDelete(_id)}
+                  okText="Xoá"
+                  cancelText="Huỷ"
+                  okButtonProps={{
+                    loading: isSubmitLoading,
+                  }}
+                >
+                  <Button
+                    block
+                    danger
+                    size="small"
+                    // disabled={get(record,'status') !== STATUS_QUOTATION.NEW}
+                  >
+                    Xoá
+                  </Button>
+                </Popconfirm>
+              </WithPermission>
             </Space>
           );
         },
@@ -239,21 +264,34 @@ export default function ListQuotation({
   return (
     <div className="quotation-page">
       <Row align="middle" gutter={8}>
-      <SelectPharmacy showIcon={false} size={'middle'} onChange={(value) => onParamChange({pharmacyId : value})}/>
-      <SearchAnt value={keyword} onChange={(e) => setKeyword(e.target.value)} onParamChange={onParamChange} />
-      <WithPermission permission={policyModule.POLICIES.WRITE_QUOTATION}>
-      <Button style={{marginLeft : 'auto'}} onClick={() => window.open(PATH_APP.bill.create)} type="primary" icon={<PlusCircleTwoTone />}>
-        Tạo đơn hàng tạm
-      </Button>
-      </WithPermission>
+        <SelectPharmacy
+          showIcon={false}
+          size={"middle"}
+          onChange={(value) => onParamChange({ pharmacyId: value })}
+        />
+        <SearchAnt
+          value={keyword}
+          onChange={(e) => setKeyword(e.target.value)}
+          onParamChange={onParamChange}
+        />
+        <WithPermission permission={policyModule.POLICIES.WRITE_QUOTATION}>
+          <Button
+            style={{ marginLeft: "auto" }}
+            onClick={() => window.open(PATH_APP.bill.create)}
+            type="primary"
+            icon={<PlusCircleTwoTone />}
+          >
+            Tạo đơn hàng tạm
+          </Button>
+        </WithPermission>
       </Row>
       <TableAnt
-      stickyTop
+        stickyTop
         columns={columns}
         dataSource={quotations}
         loading={isLoading}
         pagination={pagingTable(paging, onParamChange)}
-        size='small'
+        size="small"
       />
     </div>
   );

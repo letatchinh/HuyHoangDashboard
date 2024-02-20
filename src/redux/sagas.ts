@@ -28,6 +28,7 @@ import paymentVoucher from '~/modules/paymentVoucher';
 import receiptVoucher from '~/modules/receiptVoucher';
 import lkModule from '~/modules/sale/lk';
 import productsAllModule from '~/modules/productsAll';
+import orderSupplier from '~/modules/orderSupplier';
 export default function* rootSaga() {
   yield all([
     authModule.redux.saga(),
@@ -61,5 +62,6 @@ export default function* rootSaga() {
     receiptVoucher.redux.saga(),
     lkModule.redux.saga(),
     productsAllModule.redux.saga(),
+    orderSupplier.redux.saga(),
   ]);
 };

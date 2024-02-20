@@ -27,6 +27,7 @@ import WorkTaskPage from "~/pages/Dashboard/WorkTask";
 import BotNotificationPage from "~/pages/Dashboard/BotNotification";
 import Lk from "~/pages/Dashboard/Lk";
 import ProductsAll from "~/pages/Dashboard/ProductsAll";
+import OrderSupplier from "~/pages/Dashboard/OrderSupplier";
 export const mainRoutes :PathRouteProps[] = [
   { path: PATH_APP.main.root, Component: Homepage },
 
@@ -78,6 +79,8 @@ export const mainRoutes :PathRouteProps[] = [
   { path: PATH_APP.todoList.workTask, Component: WorkTaskPage },
 
   { path: PATH_APP.productAll.root, Component: ProductsAll },
+
+  { path: PATH_APP.orderSupplier.root, Component: OrderSupplier},
 
 
   { path: '/', Component: Homepage },
