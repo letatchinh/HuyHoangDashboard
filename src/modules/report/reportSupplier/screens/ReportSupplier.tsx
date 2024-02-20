@@ -18,16 +18,6 @@ const defaultDate = {
   endDate: dayjs().endOf("month"),
 };
 type propsType = {};
-const data = [
-  {
-    name: "Long châu",
-    totalAmount: 100000,
-  },
-  {
-    name: "UPharmacy",
-    totalAmount: 200000,
-  },
-];
 const columns: ColumnsType = [
   {
     title: "Nhà cung cấp",
@@ -211,6 +201,7 @@ export default function ReportSupplier(props: propsType): React.JSX.Element {
       <TableAnt
         dataSource={data}
         columns={columns}
+        loading={isLoading}
         pagination={{
           ...paging,
           showTotal: (total) => `Tổng cộng ${total}`,
