@@ -28,6 +28,7 @@ import BotNotificationPage from "~/pages/Dashboard/BotNotification";
 import Lk from "~/pages/Dashboard/Lk";
 import ProductsAll from "~/pages/Dashboard/ProductsAll";
 import OrderSupplier from "~/pages/Dashboard/OrderSupplier";
+import UpdateOrderSupplier from "~/pages/Dashboard/OrderSupplier/UpdateOrderSupplier";
 export const mainRoutes :PathRouteProps[] = [
   { path: PATH_APP.main.root, Component: Homepage },
 
@@ -82,6 +83,7 @@ export const mainRoutes :PathRouteProps[] = [
 
   // Order Supplier
   { path: PATH_APP.orderSupplier.root, Component: OrderSupplier},
+  { path: PATH_APP.orderSupplier.update, Component: UpdateOrderSupplier},
 
 
   { path: '/', Component: Homepage },

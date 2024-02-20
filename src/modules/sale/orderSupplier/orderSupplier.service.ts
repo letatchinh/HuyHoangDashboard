@@ -11,7 +11,7 @@ export const reducerDiscountOrderSupplierItems = (orderSupplierItems: any[]) => 
     const newOrderSupplierItems: any[] = orderSupplierItems?.map(
       (orderSupplier: any) => {
         const { variant } = orderSupplier || {};
-        console.log(orderSupplier, "orderSupplier");
+  
         const quantityActual: number = Number(
           (
             get(orderSupplier, "quantity", 1) /

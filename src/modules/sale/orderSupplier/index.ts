@@ -4,16 +4,20 @@ import * as orderSupplierAuth from "./orderSupplier.auth";
 import * as orderSupplierHook from "./orderSupplier.hook";
 import * as orderSupplierService from "./orderSupplier.service";
 import * as orderSupplierModels from "./orderSupplier.modal";
+import * as constants from "./constants"
 import reducer from "./redux/reducer";
 import saga from "./redux/saga";
 import SaleScreen from "./components/createOrderSupplierScreen/SaleScreen";
 import { CreateOrderSupplierProvider } from "./storeContext/CreateOrderSupplierContext";
 import components from "./components";
+import { UpdateOrderSupplierProvider } from "./storeContext/UpdateOrderSupplierContext";
+import UpdateOrderSupplier from "./screens/UpdateOrderSupplier"
 
 const moduleExport = {
     page : {
         index : OrderSupplierScreen,
-        create : SaleScreen
+        create : SaleScreen,
+        update : UpdateOrderSupplier,
     },
     api : orderSupplierApi,
     auth : orderSupplierAuth,
@@ -22,8 +26,10 @@ const moduleExport = {
     model : orderSupplierModels,
     redux : {reducer,saga},
     storeProvider : {
-        CreateOrderSupplier : CreateOrderSupplierProvider
+        CreateOrderSupplier : CreateOrderSupplierProvider,
+        UpdateOrderSupplier : UpdateOrderSupplierProvider
     },
-    components
+    components,
+    constants,
 };
 export default moduleExport;

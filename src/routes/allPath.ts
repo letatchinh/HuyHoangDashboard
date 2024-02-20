@@ -87,6 +87,7 @@ export const PATH_APP = {
   orderSupplier: {
     root: path(ROOTS.app, "/order-supplier"),
     create: path(ROOTS.app, "/order-supplier/create"),
+    update: path(ROOTS.app, "/order-supplier/:id"),
   },
 
 };

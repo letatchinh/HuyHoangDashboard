@@ -1,36 +1,84 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { get } from "lodash";
 import { InstanceModuleRedux } from "~/redux/instanceModuleRedux";
 import { initStateSlice } from "~/redux/models";
 interface cloneInitState extends initStateSlice {
- // Add cloneInitState Type Here
+  // Add cloneInitState Type Here
+  updateOrderItemFailed?: any;
+  updateOrderItemSuccess?: any;
 }
 class OrderSupplierClassExtend extends InstanceModuleRedux {
   cloneReducer;
-  cloneInitState : cloneInitState;
+  cloneInitState: cloneInitState;
   constructor() {
-    super('orderSupplier');
+    super("orderSupplier");
     this.cloneReducer = {
       ...this.initReducer,
       // Want Add more reducer Here...
-    }
+      getByIdSuccess: (
+        state: initStateSlice,
+        { payload }: { payload?: any }
+      ) => {
+        state.isGetByIdLoading = false;
+        state.byId = get(payload, "[0]");
+      },
+      // update billItem
+      updateOrderItemRequest: (state: cloneInitState) => {
+        state.isSubmitLoading = true;
+        state.updateOrderItemFailed = null;
+      },
+      updateOrderItemSuccess: (
+        state: cloneInitState,
+        { payload }: { payload: any }
+      ) => {
+        state.isSubmitLoading = false;
+        const orderSupplierId = Object.keys(payload)?.[0];
+        const payloadUpdate = get(payload, orderSupplierId, {});
+        const orderItems = get(state.byId, "orderItems", [])?.map(
+          (billItem: any) => {
+            if (orderSupplierId === get(billItem, "_id")) {
+              return {
+                ...billItem,
+                ...payloadUpdate,
+              };
+            }
+            return billItem;
+          }
+        );
+        state.byId = {
+          ...state.byId,
+          orderItems,
+        };
+        state.updateOrderItemSuccess = payload;
+      },
+      updateOrderItemFailed: (
+        state: cloneInitState,
+        { payload }: { payload: any }
+      ) => {
+        state.isSubmitLoading = false;
+        state.updateOrderItemFailed = payload;
+      },
+    };
+
     this.cloneInitState = {
       ...this.initialState,
       // Want Add more State Here...
-    }
+      updateOrderItemFailed: null,
+      updateOrderItemSuccess: null,
+    };
   }
+
   createSlice() {
     return createSlice({
       name: this.module,
       initialState: this.cloneInitState,
-      reducers:  this.cloneReducer,
+      reducers: this.cloneReducer,
     });
   }
-  
 }
 
 const newSlice = new OrderSupplierClassExtend();
 const data = newSlice.createSlice();
-
 
 export const orderSupplierActions = data.actions;
 export default data.reducer;

@@ -55,7 +55,7 @@ import {
   const DEFAULT_ACCOUNT = 1111;
   type methodType = {
     data : any,
-    type : "BILL" | "LK" | "BILLITEM"
+    type : "BILL" | "LK" | "BILLITEM" | "ORDER" | "ORDERITEM"
   }
   type propsType = {
     id?: any;
