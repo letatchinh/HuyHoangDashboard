@@ -246,6 +246,12 @@ export const resource: ItemType[] = [
         permission:[POLICIES.READ_QUOTATION],
       },
       {
+        label: "Đơn hàng nhà cung cấp",
+        path: PATH_APP.orderSupplier.root,
+        key: PATH_APP.orderSupplier.root,
+        // permission:[POLICIES.READ_BILL],
+      },
+      {
         label: "Luỹ kế mặt hàng",
         path: PATH_APP.bill.lk,
         key: PATH_APP.bill.lk,

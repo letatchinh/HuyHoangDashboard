@@ -8,6 +8,7 @@ import { PATH_APP } from "./routes/allPath";
 import BillModule from "~/modules/sale/bill";
 import CreateBillPage from "./pages/Dashboard/Bill/CreateBill";
 import packageJson from "../package.json";
+import CreateOrderSupplier from "./pages/Dashboard/OrderSupplier/CreateOrderSupplier";
 
 function App(): React.JSX.Element {
   setupAxios();
@@ -31,6 +32,11 @@ function App(): React.JSX.Element {
           key={PATH_APP.bill.create}
           path={PATH_APP.bill.create}
           Component={() => <CreateBillPage />}
+        />
+        <Route
+          key={PATH_APP.orderSupplier.create}
+          path={PATH_APP.orderSupplier.create}
+          Component={() => <CreateOrderSupplier />}
         />
       </Routes>
       <div
