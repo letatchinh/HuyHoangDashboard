@@ -1,20 +1,24 @@
-import { get, groupBy } from "lodash";
+import { get } from "lodash";
 import { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
+import { RootState } from "~/redux/store";
 import { clearQuerySearch, getExistProp } from "~/utils/helpers";
 import {
   getSelectors,
   useFailed,
-  useFetch,
   useFetchByParam,
   useQueryParams,
+  useResetState,
   useSubmit,
   useSuccess,
 } from "~/utils/hook";
 import { supplierSliceAction } from "./redux/reducer";
+import { cloneInitState } from "./supplier.modal";
 const MODULE = "supplier";
-const MODULE_VI = "Chi nhánh";
+const MODULE_VI = "Nhà cung cấp";
+const getSelector = (key: keyof cloneInitState) => (state: RootState) =>
+  state[MODULE][key];
 
 const {
   loadingSelector,
@@ -33,15 +37,35 @@ const {
   pagingSelector,
 } = getSelectors(MODULE);
 
-export const useSupplierPaging = () => useSelector(pagingSelector);
+const productSupplierSelector = getSelector("productSupplier");
+const getProductSupplierFailedSelector = getSelector(
+  "getProductSupplierFailed"
+);
+const isLoadingGetProductSupplierSelector = getSelector(
+  "isLoadingGetProductSupplier"
+);
+const pagingProductSupplierSelector = getSelector("pagingProductSupplier");
 
-export const useGetSuppliers = (param:any) => {
+const suppliersProductAuthorSelector = getSelector("suppliersProductAuthor");
+const getSuppliersProductAuthorFailedSelector = getSelector(
+  "getSuppliersProductAuthorFailed"
+);
+const isLoadingGetSuppliersProductAuthorSelector = getSelector(
+  "isLoadingGetSuppliersProductAuthor"
+);
+const pagingSuppliersProductAuthorSelector = getSelector("pagingSuppliersProductAuthor");
+
+export const useSupplierPaging = () => useSelector(pagingSelector);
+export const useProductSupplierPaging = () =>
+  useSelector(pagingProductSupplierSelector);
+
+export const useGetSuppliers = (param: any) => {
   return useFetchByParam({
     action: supplierSliceAction.getListRequest,
     loadingSelector: loadingSelector,
     dataSelector: listSelector,
     failedSelector: getListFailedSelector,
-    param
+    param,
   });
 };
 export const useGetSupplier = (id: any) => {
@@ -51,6 +75,16 @@ export const useGetSupplier = (id: any) => {
     dataSelector: getByIdSelector,
     failedSelector: getByIdFailedSelector,
     param: id,
+  });
+};
+
+export const useGetSuppliersProductAuthor = (param: any) => {
+  return useFetchByParam({
+    action: supplierSliceAction.getSuppliersProductAuthorRequest,
+    loadingSelector: isLoadingGetSuppliersProductAuthorSelector,
+    dataSelector: suppliersProductAuthorSelector,
+    failedSelector: getSuppliersProductAuthorFailedSelector,
+    param,
   });
 };
 
@@ -97,7 +131,8 @@ export const useSupplierQueryParams = () => {
   const limit = query.get("limit") || 10;
   const page = query.get("page") || 1;
   const keyword = query.get("keyword");
-
+  const createSuccess = useSelector(createSuccessSelector);
+  const deleteSuccess = useSelector(deleteSuccessSelector);
   return useMemo(() => {
     const queryParams = {
       page,
@@ -106,7 +141,38 @@ export const useSupplierQueryParams = () => {
     };
     return [queryParams];
     //eslint-disable-next-line
-  }, [page, limit, keyword]);
+  }, [page,
+     limit,
+     keyword,
+     createSuccess,
+     deleteSuccess,
+    ]);
+};
+
+export const useSuppliersProductAuthorQueryParams = (keyword?:string) => {
+  const query = useQueryParams();
+  const [limit, setLimit] = useState(get(query, "limit") || 10);
+  const [page, setPage] = useState(get(query, "page") || 1);
+  const isSupplierMaster = true;
+
+  // const onTableChange: any = ({ current, pageSize }: any) => {
+  //   setLimit(pageSize);
+  //   setPage(current);
+  // };
+
+  return useMemo(() => {
+    const queryParams = {
+      page,
+      limit,
+      keyword,
+      isSupplierMaster
+    };
+    return [queryParams];
+    //eslint-disable-next-line
+  }, [page,
+     limit,
+     keyword,
+    ]);
 };
 
 export const useUpdateSupplierParams = (
@@ -125,7 +191,7 @@ export const useUpdateSupplierParams = (
 
     if (!param.page) {
       query.page = 1;
-    };
+    }
 
     // Convert Query and Params to Search Url Param
     const searchString = new URLSearchParams(
@@ -140,4 +206,18 @@ export const useUpdateSupplierParams = (
   };
 
   return [keyword, { setKeyword, onParamChange }];
+};
+
+export const useGetProductSuppliers = (param: any) => {
+  return useFetchByParam({
+    action: supplierSliceAction.getProductSupplierRequest,
+    loadingSelector: isLoadingGetProductSupplierSelector,
+    dataSelector: productSupplierSelector,
+    failedSelector: getProductSupplierFailedSelector,
+    param,
+  });
+};
+
+export const useResetAction = () => {
+  return useResetState(supplierSliceAction.resetAction);
 };

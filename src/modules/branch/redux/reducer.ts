@@ -29,8 +29,8 @@ class BranchClassExtentd extends InstanceModuleRedux {
   
 }
 
-const newSlice = new BranchClassExtentd();
-const data = newSlice.createSlice();
+const branchSlice = new BranchClassExtentd();
+const data = branchSlice.createSlice();
 
 
 export const branchSliceAction   = data.actions;

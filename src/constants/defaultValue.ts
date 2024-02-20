@@ -5,7 +5,17 @@ export const BASE_URL = get(devConfig,'baseUrl');
 export const DEFAULT_UPLOAD_ACTION = `${BASE_URL}/api/v1/file`;
 export const MAX_UPLOAD_FILE_SIZE_IN_MB = 2;
 
+
 export const DEFAULT_BRANCH_ID = 99999;
+export const STATUS = {
+  ACTIVE: "ACTIVE",
+  INACTIVE: "INACTIVE",
+};
+
+export const STATUS_NAMES = {
+  ACTIVE: "Hoạt động",
+  INACTIVE: "Ngưng hoạt động",
+};
 export const ACTIONS_REDUX = ['read', 'write', 'update', 'delete', 'admin', 'download'];
 export interface OptionSelect {
   value: string | null;
@@ -25,3 +35,5 @@ export const OptionStatus : OptionSelect[] = [
     label: 'Không hoạt động',
   }
 ];
+
+export const MAX_LIMIT = 200;
