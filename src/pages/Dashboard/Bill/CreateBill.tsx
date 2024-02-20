@@ -120,6 +120,7 @@ const CreateBillPage = (): React.JSX.Element => {
     const newTab = concat(tabs, newTabs);
     setTabs(newTab);
     onAddDataSource(key);
+    setActiveKey(key)
   };
 
   const onRemoveTab = (targetKey: any) => {
