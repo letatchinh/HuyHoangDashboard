@@ -67,12 +67,18 @@ const { confirm } = Modal;
 const { Option } = Select;
 const DEFAULT_ACCOUNT = 1111;
 
+type methodType = {
+  data : any,
+  type : "BILL" | "LK" | "BILLITEM" | "ORDER" | "ORDERITEM"
+}
+
 type propsType = {
   id?: any;
   onClose?: any;
   supplierId?: any;
   refCollection?: string;
   debt?: number | null;
+  method?: methodType;
 };
 
 export default function PaymentVoucherForm(
@@ -80,7 +86,7 @@ export default function PaymentVoucherForm(
 ): React.JSX.Element {
   useResetAction();
   const dispatch = useDispatch();
-  const { id, supplierId, onClose, refCollection, debt } = props;
+  const { id, supplierId, onClose, refCollection, debt, method } = props;
   const [form] = Form.useForm();
   const ref = useRef();
   const [isPrinting, setIsPrinting] = useState(false);
@@ -148,114 +154,6 @@ export default function PaymentVoucherForm(
     return res?.result;
   };
 
-  // const onPrint = async (viewOnly = false): Promise<void> => {
-  //   const downloadURL = (data: string, fileName: string): void => {
-  //     const a : any = document.createElement('a');
-  //     a.href = data;
-  //     a.download = fileName;
-  //     document.body.appendChild(a);
-  //     a.style = 'display: none';
-  //     a.click();
-  //     a.remove();
-  //   };
-
-  //   const saveDataToFile = (data: string, fileName: string, mimeType: string): void => {
-  //     const blob = new Blob([data], { type: mimeType });
-  //     const url = window.URL.createObjectURL(blob);
-  //     downloadURL(url, fileName);
-  //     setTimeout(() => {
-  //       window.URL.revokeObjectURL(url);
-  //     }, 1000);
-  //   };
-
-  //   const renderFile = async (data: string, fileName: string, mimeType: string): Promise<void> => {
-  //     const blob = new Blob([data], { type: mimeType });
-  //     const url = window.URL.createObjectURL(blob);
-
-  //     // const res = await api.whReceiptVoucher.upload(blob); // Replace with your actual API call
-  //     // const res = await api.whReceiptVoucher.upload(url);
-  //     // setUrl(get(res, "url"));
-  //     setUrl('https://calibre-ebook.com/downloads/demos/demo.docx');
-  //     setIsOpenViewer(true);
-  //   };
-
-  //   setIsPrinting(true);
-  //   const template = await fetch(myFile).then((res) => res.arrayBuffer());
-
-  //   try {
-  //     await form.validateFields();
-
-  //     const {
-  //       customerAddress,
-  //       customerName,
-  //       issueNumber,
-  //       originalDocument,
-  //       reason,
-  //       accountingDate,
-  //       employeeId,
-  //     }: any = form.getFieldsValue();
-
-  //     // const employee: any = await api.userEmployee.getById(employeeId);
-  //     // const totalAmountOfMoney = sumBy(dataSource, (item) => Number(get(item, 'amountOfMoney')));
-  //     // const totalAmountOfMoneyString = `${readNumber(totalAmountOfMoney)} ${
-  //     //   CURRENCY_STRING[CURRENCY.VND]
-  //     // }`;
-  //     // const debitAccounts = uniq(dataSource.map((item) => get(item, 'debitAccount'))).join(', ');
-  //     // const creditAccounts = uniq(dataSource.map((item) => get(item, 'creditAccount'))).join(', ');
-
-  //     // const accountingDateDD = get(initWhPaymentVoucher, 'dateApproved')
-  //     //   ? moment(get(initWhPaymentVoucher, 'dateApproved')).date()
-  //     //   : moment(get(initWhPaymentVoucher, 'createdAt')).date();
-  //     // const accountingDateMM = get(initWhPaymentVoucher, 'dateApproved')
-  //     //   ? moment(get(initWhPaymentVoucher, 'dateApproved')).month() + 1
-  //     //   : moment(get(initWhPaymentVoucher, 'createdAt')).month() + 1;
-  //     // const accountingDateYY = get(initWhPaymentVoucher, 'dateApproved')
-  //     //   ? moment(get(initWhPaymentVoucher, 'dateApproved')).year()
-  //     //   : moment(get(initWhPaymentVoucher, 'createdAt')).year();
-
-  //     // const report = await createReport({
-  //     //   template,
-  //     //   cmdDelimiter: ['{#', '#}'],
-  //     //   data: {
-  //     //     accountingDateDD,
-  //     //     accountingDateMM,
-  //     //     accountingDateYY,
-  //     //     creditAccounts,
-  //     //     customerAddress: get(customerAddress, 'street') || customerAddress,
-  //     //     customerName,
-  //     //     debitAccounts,
-  //     //     issueNumber,
-  //     //     originalDocument,
-  //     //     reason,
-  //     //     totalAmountOfMoney: floorFormatter(totalAmountOfMoney),
-  //     //     totalAmountOfMoneyString: capitalizeFirstLetter(totalAmountOfMoneyString),
-  //     //     EmployeeName: get(employee, 'data.fullName', ''),
-  //     //     nameCompany: get(settingDocs, 'name', ''),
-  //     //     addressCompany: get(settingDocs, 'address', ''),
-  //     //   },
-  //     // });
-
-  //     // if (viewOnly) {
-  //     //   renderFile(
-  //     //     report,
-  //     //     `${issueNumber}.docx`,
-  //     //     'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
-  //     //   );
-  //     // } else {
-  //     //   saveDataToFile(
-  //     //     report,
-  //     //     `${issueNumber}.docx`,
-  //     //     'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
-  //     //   );
-  //     // }
-  //   } catch (error) {
-  //     console.error(error);
-  //   } finally {
-  //     setIsPrinting(false);
-  //   }
-  // };
-
-
   useEffect(() => {
     if (!id) {
       if (supplier) {
@@ -315,7 +213,9 @@ export default function PaymentVoucherForm(
         dateOfIssue: dayjs(dateOfIssue).format("YYYY-MM-DD"),
         refCollection: refCollection ? REF_COLLECTION[refCollection] : null,
         accountingDetails: accountingDetails,
-        totalAmount:sumBy([...accountingDetails],(item) => get(item,'amountOfMoney',0))
+        totalAmount:sumBy([...accountingDetails],(item) => get(item,'amountOfMoney',0)),
+        method,
+
       };
       if (id) {
         handleUpdate({ id: id, ...newValue });

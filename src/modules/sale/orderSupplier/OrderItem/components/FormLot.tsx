@@ -28,8 +28,8 @@ export default function FormLot({
   isDisabledAll,
 }: propsType): React.JSX.Element {
   const [form] = Form.useForm();
-  const canUpdateBill = useMatchPolicy(PolicyModule.POLICIES.UPDATE_BILL);
-  const isView = useMemo(() => !canUpdateBill || status !== STATUS_ORDER_ITEM.ORDERING, [status]);
+  // const canUpdateBill = useMatchPolicy(PolicyModule.POLICIES.UPDATE_BILL);
+  const isView = useMemo(() =>  status !== STATUS_ORDER_ITEM.RECEIVED, [status]);
   const onFinish = (values: FieldType) => {
     const submitData: UpdateOrderItem = {
       ...values,
@@ -85,7 +85,7 @@ export default function FormLot({
       </Form.Item>
       <Button
         size="small"
-        disabled={isDisabledAll || status !== STATUS_ORDER_ITEM.ORDERING}
+        disabled={isDisabledAll || status !== STATUS_ORDER_ITEM.RECEIVED}
         htmlType="submit"
         type="primary"
       >

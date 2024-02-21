@@ -47,11 +47,15 @@ function* updateOrderSupplier({payload} : any) : any {
   }
 }
 
-function* updateOrderItem({payload} : any) : any {
+function* updateOrderItem({ payload }: any): any {
   try {
-    const data = yield call(OrderItemModule.api.update,payload);
+    const { callbackSubmit, ...query } = payload;
+    const data = yield call(OrderItemModule.api.update, query);
     yield put(orderSupplierActions.updateOrderItemSuccess(data));
-  } catch (error:any) {
+    if (callbackSubmit && typeof callbackSubmit === "function") {
+      callbackSubmit();
+    }
+  } catch (error: any) {
     yield put(orderSupplierActions.updateOrderItemFailed(error));
   }
 }

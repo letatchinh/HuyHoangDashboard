@@ -292,12 +292,15 @@ export default function ListOrderItem({
     },
     {
       title: "Thao tác",
-      dataIndex: "_id",
       key: "_id",
       render(record) {
         return (
           <Space>
-            <Button type="primary" disabled={!STATUS_ORDER_ITEM.NEW} onClick={() => onOpenForm(record)}>
+            <Button
+              type="primary"
+              disabled={record.status !== STATUS_ORDER_ITEM.NEW}
+              onClick={() => onOpenForm(record)}
+            >
               Cập nhật
             </Button>
           </Space>
@@ -326,6 +329,8 @@ export default function ListOrderItem({
               historyStatus={get(record, "historyStatus")}
               cumulativeDiscount={get(record, "cumulativeDiscount", [])}
               orderRef={get(record, "orderRef")}
+              unitPrice={get(record, "unitPrice")}
+              quantity={get(record, "quantity")}
             />
           ),
           expandedRowKeys: [itemActive],

@@ -5,6 +5,7 @@ import {
   Col,
   Divider,
   Form,
+  Modal,
   Row,
   Space,
   Spin,
@@ -27,6 +28,7 @@ import StepStatus from "../components/StepStatus";
 import { PayloadUpdateOrderSupplier } from "../orderSupplier.modal";
 import useUpdateOrderSupplierStore from "../storeContext/UpdateOrderSupplierContext";
 import { useResetOrderSupplier, useUpdateOrderSupplier } from "../orderSupplier.hook";
+import PaymentVoucherForm from "~/modules/paymentVoucher/components/PaymentVoucherForm";
 
 type propsType = {};
 const Layout = ({ label, children }: { label: any; children: any }) => (
@@ -72,6 +74,10 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
   const [openCancel, setOpenCancel] = useState(false);
   const [cancelNote, setCancelNote] = useState("");
   const onOpenCancel = useCallback(() => setOpenCancel(true), []);
+  const [open, setOpen] = useState(false);
+  const [orderSelect, setOrderSelect] = useState<any>();
+  const [supplierId, setSupplierId] = useState<string | null>("");
+  const [debt, setDebt] = useState<number | null>();
   const onCloseCancel = useCallback(() => {
     setOpenCancel(false);
     setCancelNote("");
@@ -80,6 +86,14 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
     onCloseCancel();
     mutateOrderSupplier();
   });
+
+  const onOpenPayment = (item: any) => {
+    setOpen(true);
+    setSupplierId(item?.supplierId);
+    setDebt(item?.paymentAmount);
+    setOrderSelect(item);
+  };
+
   const onCancelBill = () => {
     const payloadUpdate: PayloadUpdateOrderSupplier = {
       cancelNote,
@@ -190,7 +204,7 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
                         disabled={totalAmount <= 0}
                         type="primary"
                         size="small"
-                        onClick={onOpenForm}
+                        onClick={()=>{onOpenPayment(orderSupplier)}}
                       >
                         Tạo phiếu chi
                       </Button>
@@ -265,6 +279,26 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
           placeholder="Vui lòng nhập lý do huỷ đơn!"
         />
       </ModalAnt>
+      <Modal
+        title="Phiếu chi"
+        open={open}
+        onCancel={() => setOpen(false)}
+        onOk={() => setOpen(false)}
+        width={1366}
+        footer={null}
+        destroyOnClose
+      >
+        {/* <PaymentVoucherForm
+          onClose={() => onClosePayment()}
+          supplierId={supplierId}
+          refCollection={REF_COLLECTION_UPPER.SUPPLIER}
+          debt={debt}
+          method={{
+            data: orderSelect,
+            type: "ORDER",
+          }}
+        /> */}
+      </Modal>
     </div>
   );
 }

@@ -15,6 +15,8 @@ type propsType = {
   status: any;
   cumulativeDiscount: any;
   orderRef: any;
+  unitPrice: number;
+  quantity:number
 };
 const CLONE_TARGET_VI: any = TARGET_VI;
 const CLONE_TYPE_DISCOUNT_VI: any = TYPE_DISCOUNT_VI;
@@ -23,6 +25,8 @@ export default function ExpandRowOrderItem({
   status,
   cumulativeDiscount,
   orderRef,
+  unitPrice,
+  quantity
 }: propsType): React.JSX.Element {
   return (
     <div>
@@ -112,16 +116,26 @@ export default function ExpandRowOrderItem({
             key: "discountAmount",
             align: "center",
             render(discountAmount, rc) {
-              return get(rc, "typeReward") === TYPE_REWARD.PRODUCT ? (
-                <Typography.Text strong>
-                  {formatter(get(rc, "itemReward.quantityClampReward", 0))}{" "}
-                  {get(rc, "itemReward.name", "")}
-                </Typography.Text>
-              ) : (
-                <Typography.Text strong>
-                  {formatter(discountAmount)}
-                </Typography.Text>
-              );
+              const value :any = {
+                get VALUE (){
+                  return get(rc, "value")
+                },
+                get PERCENT (){
+                  return (get(rc, "value")*unitPrice)/100
+                },
+              }
+              let minStep = Math.min(...[quantity, get(rc, "timesReward")])
+              return <Typography.Text strong>
+                    {formatter(value[get(rc, "valueType")] * minStep)}
+                  </Typography.Text>
+              // return get(rc, "typeReward") === TYPE_REWARD.PRODUCT ? (
+              //   <Typography.Text strong>
+              //     {formatter(get(rc, "itemReward.quantityClampReward", 0))}{" "}
+              //     {get(rc, "itemReward.name", "")}
+              //   </Typography.Text>
+              // ) : (
+                
+              // );
             },
           },
         ]}

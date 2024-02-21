@@ -1,11 +1,11 @@
-import React, { useMemo, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import TableAnt from "~/components/Antd/TableAnt";
 
 import { Button, Modal, Row, Space, Typography } from "antd";
 import { ColumnsType } from "antd/es/table/InternalTable";
 import dayjs from "dayjs";
 import { get } from "lodash";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import SearchAnt from "~/components/Antd/SearchAnt";
 import Status from "~/components/common/Status/index";
 import SelectSupplier from "~/modules/supplier/components/SelectSupplier";
@@ -13,6 +13,7 @@ import { PATH_APP } from "~/routes/allPath";
 import { formatter, pagingTable } from "~/utils/helpers";
 import { STATUS_ORDER_SUPPLIER_VI } from "../constants";
 import {
+  useGetOrderSupplier,
   useGetOrderSuppliers,
   useOrderSupplierPaging,
   useOrderSupplierQueryParams,
@@ -26,6 +27,7 @@ import { useMatchPolicy } from "~/modules/policy/policy.hook";
 import { AlignType } from "rc-table/lib/interface";
 import PaymentVoucherForm from "~/modules/paymentVoucher/components/PaymentVoucherForm";
 import { REF_COLLECTION_UPPER } from "~/constants/defaultValue";
+import PaymentModule from "~/modules/paymentVoucher";
 
 type propsType = {
   status?: string;
@@ -37,8 +39,10 @@ export default function ListOrder({ status }: propsType): React.JSX.Element {
   const [keyword, { setKeyword, onParamChange }] =
     useUpdateOrderSupplierParams(query);
   const [orderSuppliers, isLoading] = useGetOrderSuppliers(query);
+
   const paging = useOrderSupplierPaging();
   const [open, setOpen] = useState(false);
+  const [orderSelect, setOrderSelect] = useState<any>();
   const [supplierId, setSupplierId] = useState<string | null>("");
   const [debt, setDebt] = useState<number | null>();
   // const canWriteVoucher = useMatchPolicy(POLICIES.WRITE_VOUCHER);
@@ -47,11 +51,13 @@ export default function ListOrder({ status }: propsType): React.JSX.Element {
     setOpen(true);
     setSupplierId(item?.supplierId);
     setDebt(item?.paymentAmount);
+    setOrderSelect(item);
   };
 
   const onClosePayment = () => {
     setOpen(false);
     setSupplierId(null);
+    setOrderSelect(null);
   };
 
   const columns: ColumnsType = useMemo(
@@ -101,7 +107,10 @@ export default function ListOrder({ status }: propsType): React.JSX.Element {
         align: "center",
         render(status, record, index) {
           return (
-            <Status status={status} statusVi={CLONE_STATUS_ORDER_SUPPLIER_VI[status]} />
+            <Status
+              status={status}
+              statusVi={CLONE_STATUS_ORDER_SUPPLIER_VI[status]}
+            />
           );
         },
       },
@@ -153,7 +162,9 @@ export default function ListOrder({ status }: propsType): React.JSX.Element {
         render(value: any, rc: any) {
           return (
             <Space>
-              <Button type="primary" onClick={() => onOpenPayment(rc)}>Phiếu chi</Button>
+              <Button type="primary" onClick={() => onOpenPayment(rc)}>
+                Phiếu chi
+              </Button>
             </Space>
           );
         },
@@ -194,7 +205,7 @@ export default function ListOrder({ status }: propsType): React.JSX.Element {
         size="small"
       />
       <Modal
-        title='Phiếu chi'
+        title="Phiếu chi"
         open={open}
         onCancel={() => setOpen(false)}
         onOk={() => setOpen(false)}
@@ -207,6 +218,10 @@ export default function ListOrder({ status }: propsType): React.JSX.Element {
           supplierId={supplierId}
           refCollection={REF_COLLECTION_UPPER.SUPPLIER}
           debt={debt}
+          method={{
+            data: orderSelect,
+            type: "ORDER",
+          }}
         />
       </Modal>
     </div>
