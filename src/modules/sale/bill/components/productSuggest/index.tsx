@@ -1,4 +1,4 @@
-import React, { CSSProperties, useMemo, useRef, useState } from "react";
+import React, { CSSProperties, useEffect, useMemo, useRef, useState } from "react";
 import { useBillProductSuggestPaging, useGetProductListSuggest } from "../../bill.hook";
 import { Button, Card, Carousel, Collapse, List, Row } from "antd";
 import { CaretLeftOutlined, CaretRightOutlined } from "@ant-design/icons";
@@ -21,7 +21,7 @@ const ProductListSuggest: React.FC = () => {
   const [page, setPage] = useState(1)
   const [limit, setLimit] = useState(10)
   const [keyword, setKeyword] = useState("");
-  const productSuggest : any = document.querySelector('.product-suggest');
+  const productSuggest: any = document.querySelector('.product-suggest');
   const tableSelectedProductContent : any = document.querySelector('.table-selected-product .ant-table-content');
   const query = useMemo(
     () => ({
@@ -61,14 +61,17 @@ const ProductListSuggest: React.FC = () => {
   };
 
   function updateMaxHeight() {
-    const productSuggestHeight = productSuggest.offsetHeight;
+    const productSuggestHeight = productSuggest?.offsetHeight;
     const newMaxHeight = `calc(100vh - ${productSuggestHeight}vh)`;
-    if (!collapseActive) {
-        tableSelectedProductContent.style.maxHeight = newMaxHeight;
-    } else {
-        tableSelectedProductContent.style.maxHeight = 'calc(100vh - 50px - 80px)';
+    if (tableSelectedProductContent) {
+      if (collapseActive) {
+            tableSelectedProductContent.style.maxHeight = newMaxHeight;
+      } else {
+            tableSelectedProductContent.style.maxHeight = 'calc(100vh - 50px - 80px)';
+        };
     };
   };
+
   const ListItem = () => {
     return (
       <>
@@ -106,11 +109,13 @@ const ProductListSuggest: React.FC = () => {
                 fontSize: 12,
                 opacity: disabled ? 0.5 : 1,
               }}
+              className="product-suggest__card"
               onScroll={(e) => e.stopPropagation()}
               bodyStyle={{
                 width: '100%',
-                minWidth: '100px',
+                minWidth: '150px',
                 minHeight: '100px',
+                maxHeight: '100px',
                 padding: 5, 
                 overflow: 'hidden',
                 fontSize: 12,
@@ -137,7 +142,6 @@ const ProductListSuggest: React.FC = () => {
       label: 'Danh sách thuốc gợi ý',
       children: <ListItem />,
       onClick: () => {
-        console.log(1)
         updateMaxHeight();
         window.addEventListener('resize', updateMaxHeight);
       },
@@ -152,6 +156,8 @@ const ProductListSuggest: React.FC = () => {
         expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}
           items={getItems()}
           onChange={handleCollapseChange}
+          accordion
+          defaultActiveKey={["1"]}
       />
       </div>
     </div>
