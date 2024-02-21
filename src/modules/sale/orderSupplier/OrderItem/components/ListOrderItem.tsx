@@ -135,6 +135,12 @@ export default function ListOrderItem({
     },
     [setOrderItemId, setIsOpenForm]
   );
+
+  const onCloseForm = useCallback(() => {
+    setOrderItemId(null);
+    setIsOpenForm(false);
+  }, []);
+
   const columns: ColumnsType = [
     {
       title: "Mã sản phẩm",
@@ -356,6 +362,18 @@ export default function ListOrderItem({
           onChange={(e) => setNote(e.target.value)}
           placeholder="Vui lòng nhập lý do huỷ đơn!"
         />
+      </ModalAnt>
+      <ModalAnt
+        width={1100}
+        open={isOpenForm}
+        onCancel={onCloseForm}
+        footer={[]}
+        destroyOnClose
+      >
+        {/* <UpdateQuantity 
+         quantity={}
+        id={}
+        /> */}
       </ModalAnt>
     </>
   );

@@ -100,6 +100,7 @@ export const useOrderSupplierQueryParams = (status? : string) => {
   const limit = query.get("limit") || 10;
   const page = query.get("page") || 1;
   const keyword = query.get("keyword");
+  const supplierIds = query.get("supplierIds");
   const createSuccess = useSelector(createSuccessSelector);
   const updateSuccess = useSelector(updateSuccessSelector);
 //   const deleteSuccess = useSelector(deleteSuccessSelector);
@@ -108,11 +109,12 @@ export const useOrderSupplierQueryParams = (status? : string) => {
       page,
       limit,
       keyword,
-      status
+      status,
+      supplierIds,
     };
     return [queryParams];
     //eslint-disable-next-line
-  }, [page, limit, keyword, status, createSuccess, updateSuccess]);
+  }, [page, limit, keyword, status, supplierIds, createSuccess, updateSuccess]);
 };
 
 export const useUpdateOrderItem = (callback?: any) => {
