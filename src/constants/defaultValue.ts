@@ -70,6 +70,8 @@ export const TYPE_METHOD = {
   LK : "LK",
   BILL : "BILL",
   BILLITEM : "BILLITEM",
+  ORDER: 'ORDER',
+  ORDERITEM: 'ORDERITEM'
 }
 
 export const TYPE_VOUCHER = {

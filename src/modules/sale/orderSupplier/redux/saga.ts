@@ -2,6 +2,7 @@ import { get } from 'lodash';
 import { put, call, takeLatest } from 'redux-saga/effects';
 import api from '../orderSupplier.api'; 
 import { orderSupplierActions } from './reducer';
+import OrderItemModule from "~/modules/sale/orderSupplier/OrderItem"
 
 function* getListOrderSupplier({payload:query} : any) : any {
   try {
@@ -45,6 +46,19 @@ function* updateOrderSupplier({payload} : any) : any {
     yield put(orderSupplierActions.updateFailed(error));
   }
 }
+
+function* updateOrderItem({ payload }: any): any {
+  try {
+    const { callbackSubmit, ...query } = payload;
+    const data = yield call(OrderItemModule.api.update, query);
+    yield put(orderSupplierActions.updateOrderItemSuccess(data));
+    if (callbackSubmit && typeof callbackSubmit === "function") {
+      callbackSubmit();
+    }
+  } catch (error: any) {
+    yield put(orderSupplierActions.updateOrderItemFailed(error));
+  }
+}
 // function* deleteOrderSupplier({payload : id} : any) : any {
 //   try {
 //     const data = yield call(api.delete,id);
@@ -60,5 +74,6 @@ export default function* orderSupplierSaga() {
   yield takeLatest(orderSupplierActions.getByIdRequest, getByIdOrderSupplier);
   yield takeLatest(orderSupplierActions.createRequest, createOrderSupplier);
   yield takeLatest(orderSupplierActions.updateRequest, updateOrderSupplier);
+  yield takeLatest(orderSupplierActions.updateOrderItemRequest, updateOrderItem);
   // yield takeLatest(orderSupplierActions.deleteRequest, deleteOrderSupplier);
 }

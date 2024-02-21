@@ -14,6 +14,7 @@ import { get } from "lodash";
 import { orderSupplierActions } from "./redux/reducer";
 const MODULE = "orderSupplier";
 const MODULE_VI = "đơn mua";
+const getSelector = (key : string) => (state:any) => state[MODULE][key];
 
 const {
   loadingSelector,
@@ -34,6 +35,9 @@ const {
 
 export const useOrderSupplierPaging = () => useSelector(pagingSelector);
 
+const updateOrderItemFailedSelector = getSelector('updateOrderItemFailed');
+const updateOrderItemSuccessSelector = getSelector('updateOrderItemSuccess');
+
 export const useGetOrderSuppliers = (param:any) => {
   return useFetchByParam({
     action: orderSupplierActions.getListRequest,
@@ -43,13 +47,14 @@ export const useGetOrderSuppliers = (param:any) => {
     param
   });
 };
-export const useGetOrderSupplier = (id: any) => {
+export const useGetOrderSupplier = (id: any, reFetch?: boolean) => {
   return useFetchByParam({
     action: orderSupplierActions.getByIdRequest,
     loadingSelector: getByIdLoadingSelector,
     dataSelector: getByIdSelector,
     failedSelector: getByIdFailedSelector,
     param: id,
+    reFetch,
   });
 };
 
@@ -108,6 +113,21 @@ export const useOrderSupplierQueryParams = (status? : string) => {
     return [queryParams];
     //eslint-disable-next-line
   }, [page, limit, keyword, status, createSuccess, updateSuccess]);
+};
+
+export const useUpdateOrderItem = (callback?: any) => {
+  useSuccess(
+    updateOrderItemSuccessSelector,
+    `Cập nhật ${MODULE_VI} thành công`,
+    // callback
+  );
+  useFailed(updateOrderItemFailedSelector);
+
+  return useSubmit({
+    action: orderSupplierActions.updateOrderItemRequest,
+    loadingSelector: isSubmitLoadingSelector,
+    callbackSubmit : callback
+  });
 };
 
 export const useUpdateOrderSupplierParams = (
