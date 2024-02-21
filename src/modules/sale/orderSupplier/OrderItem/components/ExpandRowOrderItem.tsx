@@ -10,6 +10,8 @@ import {
   TYPE_REWARD,
   TYPE_VALUE,
 } from "~/modules/cumulativeDiscount/constants";
+import { Link } from "react-router-dom";
+import { PATH_APP } from "~/routes/allPath";
 type propsType = {
   historyStatus: any;
   status: any;
@@ -57,6 +59,17 @@ export default function ExpandRowOrderItem({
             title: "Mã đơn bán",
             dataIndex: "code",
             key: "code",
+            render(record, index) {
+              return (
+                <Link
+                  className="link_"
+                  to={PATH_APP.bill.root + "?page=1&limit=10&keyword=" + record}
+                  target="_blank"
+                >
+                  {record}
+                </Link>
+              );
+            },
           },
           {
             title: "Tên nhà thuốc",

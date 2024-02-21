@@ -29,6 +29,7 @@ import { PayloadUpdateOrderSupplier } from "../orderSupplier.modal";
 import useUpdateOrderSupplierStore from "../storeContext/UpdateOrderSupplierContext";
 import { useResetOrderSupplier, useUpdateOrderSupplier } from "../orderSupplier.hook";
 import PaymentVoucherForm from "~/modules/paymentVoucher/components/PaymentVoucherForm";
+import { REF_COLLECTION_UPPER } from "~/constants/defaultValue";
 
 type propsType = {};
 const Layout = ({ label, children }: { label: any; children: any }) => (
@@ -82,16 +83,22 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
     setOpenCancel(false);
     setCancelNote("");
   }, []);
-  const [isSubmitLoading, updateBill] = useUpdateOrderSupplier(() => {
+  const fucc = useCallback(()=>{
     onCloseCancel();
     mutateOrderSupplier();
-  });
+  },[])
+  const [isSubmitLoading, updateBill] = useUpdateOrderSupplier(fucc);
 
   const onOpenPayment = (item: any) => {
     setOpen(true);
     setSupplierId(item?.supplierId);
     setDebt(item?.paymentAmount);
     setOrderSelect(item);
+  };
+  const onClosePayment = () => {
+    setOpen(false);
+    setSupplierId(null);
+    setOrderSelect(null);
   };
 
   const onCancelBill = () => {
@@ -103,6 +110,7 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
     updateBill(payloadUpdate);
   };
   const onFinish = (values: FormFieldBillType) => {
+    console.log(values)
     const payloadUpdate: PayloadUpdateOrderSupplier = {
       ...values,
       _id: get(orderSupplier, "_id"),
@@ -246,7 +254,8 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
                 <Button
                   style={{ marginLeft: "auto", display: "block", marginTop: 5 }}
                   type="primary"
-                  onClick={() => form.submit()}
+                  // onClick={() => form.submit()}
+                  htmlType="submit"
                   icon={<SendOutlined />}
                   size="small"
                 />
@@ -287,16 +296,16 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
         footer={null}
         destroyOnClose
       >
-        {/* <PaymentVoucherForm
+        <PaymentVoucherForm
           onClose={() => onClosePayment()}
           supplierId={supplierId}
           refCollection={REF_COLLECTION_UPPER.SUPPLIER}
           debt={debt}
           method={{
-            data: orderSelect,
+            data: orderSupplier,
             type: "ORDER",
           }}
-        /> */}
+        />
       </Modal>
     </div>
   );
