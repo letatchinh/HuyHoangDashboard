@@ -15,18 +15,18 @@ class SupplierClassExtend extends InstanceModuleRedux {
       getProductSupplierRequest: (state: any) => {
         state.isLoadingGetProductSupplier = true;
         state.getProductSupplierFailed = null;
-        state.totalAmountBillItem = 0;
+        state.totalAmountOrder = 0;
       },
       getProductSupplierSuccess: (state: any, { payload }: any) => {
         state.isLoadingGetProductSupplier = false;
         state.productSupplier = get(payload, "docs", []);
         state.pagingProductSupplier = getPaging(payload);
-        state.totalAmountBillItem = get(payload, "totalAmountBillItem", 0);
+        state.totalAmountOrder = get(payload, "totalAmountOrder", 0);
       },
       getProductSupplierFailed: (state: any, { payload }: any) => {
         state.isLoadingGetProductSupplier = false;
         state.getProductSupplierFailed = payload;
-        state.totalAmountBillItem = 0;
+        state.totalAmountOrder = 0;
       },
       getVoucherSupplierRequest: (state: any) => {
         state.isLoadingGetVoucherSupplier = true;
