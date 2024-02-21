@@ -66,7 +66,7 @@
 .table-selected-product{
     & .ant-table-content{
         overflow-y: scroll;
-        max-height: calc(100vh - 50px); // max height 100vh - Height Tab Header
+        max-height: calc(100vh - 50px - 80px); // max height 100vh - Height Tab Header - Height Collapse in Footer
     }
 }
 
@@ -138,11 +138,19 @@
     bottom: 10px;
     background-color: rgb(253, 253, 253);
     padding: 10px;
+    max-height: 60vh;
     max-width: 100%;
     width: 65.5%;
-    &__list{
+    overflow-y: auto;
+    &__content{
         // margin-bottom: 10px;
     };
+    &__btn--icon{
+        font-size: 24px  !important
+    };
+    &__card{
+        overflow: hidden;
+    }
 };
 .table-searchProduct{
     & .ant-table-row{
