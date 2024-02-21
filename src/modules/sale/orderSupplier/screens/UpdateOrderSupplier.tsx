@@ -60,13 +60,13 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
     pair,
     totalPrice,
     totalPair,
-    totalAmount,
+    paymentAmount,
     // createBy,
     note,
   } = orderSupplier || {};
-  const canUpdateOrderSupplier = PolicyModule.hook.useMatchPolicy(
-    PolicyModule.POLICIES.UPDATE_BILL
-  );
+  // const canUpdateOrderSupplier = PolicyModule.hook.useMatchPolicy(
+  //   PolicyModule.POLICIES.UPDATE_BILL
+  // );
 
   // const queryGetDebtPharmacy = useMemo(() => ({pharmacyId : get(orderSupplier,'pharmacyId')}),[orderSupplier]);
   // const [debt,isLoadingDebt] = useFetchState({api : PharmacyModule.api.getDebt,query : queryGetDebtPharmacy});
@@ -141,7 +141,6 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
                       danger
                       onClick={onOpenCancel}
                       disabled={
-                        !canUpdateOrderSupplier ||
                         orderSupplierItems?.some(
                           (item: any) =>
                             get(item, "status") !==
@@ -201,7 +200,7 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
                     {/* <Typography.Text strong>Công nợ hiện tại : 0</Typography.Text> */}
                     {status !== STATUS_ORDER_SUPPLIER.CANCELLED && (
                       <Button
-                        disabled={totalAmount <= 0}
+                        disabled={paymentAmount <= 0}
                         type="primary"
                         size="small"
                         onClick={()=>{onOpenPayment(orderSupplier)}}
@@ -236,7 +235,7 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
                 <Layout label={"Đã trả trước"}>-{formatter(totalPair)}</Layout>
                 <Layout label={"Tổng số tiền còn lại"}>
                   <Typography.Text strong>
-                    {formatter(totalAmount)}
+                    {formatter(paymentAmount)}
                   </Typography.Text>
                 </Layout>
                 <Divider />

@@ -175,16 +175,13 @@ export default function ListOrder({ status }: propsType): React.JSX.Element {
   return (
     <div className="bill-page">
       <Row align="middle" gutter={8}>
-        {/* <SelectPharmacy
-          showIcon={false}
-          size={"middle"}
-          onChange={(value) => onParamChange({ pharmacyId: value })}
-        />
-        <SearchAnt
-          value={keyword}
-          onChange={(e) => setKeyword(e.target.value)}
-          onParamChange={onParamChange}
-        /> */}
+        <Space>
+          <SelectSupplier
+            onChange={(value) => onParamChange({ supplierIds: value })}
+            mode="multiple"
+          />
+          <SearchAnt onParamChange={onParamChange} />
+        </Space>
         <WithPermission permission={policyModule.POLICIES.WRITE_QUOTATION}>
           <Button
             style={{ marginLeft: "auto" }}
