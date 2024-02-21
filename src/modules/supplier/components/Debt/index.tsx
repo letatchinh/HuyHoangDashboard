@@ -14,7 +14,7 @@ export default function Description(props: propsType): React.JSX.Element {
   };
   return (
     <Tabs onChange={(e)=> onChangeTab(e)} destroyInactiveTabPane activeKey={activeTab} defaultActiveKey='1'>
-      <TabPane key={'1'} tab = 'Danh sách sản phẩm' >
+      <TabPane key={'1'} tab = 'Danh sách đơn hàng' >
         <ProductList supplierId = {supplierId}/>
       </TabPane>
       <TabPane key={'2'} tab = 'Danh sách phiếu chi' >

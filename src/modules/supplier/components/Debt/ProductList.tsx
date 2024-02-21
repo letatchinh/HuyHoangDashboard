@@ -11,7 +11,6 @@ import {
 import Search from "antd/es/input/Search";
 import dayjs from "dayjs";
 import { formatNumberThreeComma } from "~/utils/helpers";
-import StatusTag from "./StatusTag";
 import {
   ORDER_STATUS_KEY_SEARCH_COLOR,
   OptionStatus,
@@ -19,6 +18,9 @@ import {
 import { get, sum, transform } from "lodash";
 import "./index.scss";
 import RenderLoading from "~/components/common/RenderLoading";
+import StatusTag from "./StatusTag";
+import { STATUS_BILL_VI } from "../../constants";
+import { STATUS_BILL_TYPE } from "../../supplier.modal";
 type propsType = {
   supplierId: string | null;
 };
@@ -49,45 +51,21 @@ export default function ProductList(props: propsType): React.JSX.Element {
   const totalAmount = useTotalAmountBillItem();
   const paging = useProductSupplierPaging();
   const totalPage = useMemo(() => {
-    return sum(data?.map((e: any) => get(e, "price", 0)));
+    return sum(data?.map((e: any) => get(e, "totalPrice", 0)));
   }, [data]);
 
   const columns: ColumnsType = useMemo(
     () => [
       {
-        title: "Mã sản phẩm",
-        dataIndex: "product",
-        key: "medicalCode",
+        title: "Mã đơn hàng",
+        // dataIndex: "codeSequence",
+        key: "codeSequence",
         render(value) {
-          return value?.medicalCode;
+          return value?.codeSequence;
         },
       },
       {
-        title: "Tên sản phẩm",
-        dataIndex: "product",
-        key: "name",
-        render(value) {
-          return value?.name;
-        },
-      },
-      {
-        title: "Giá",
-        dataIndex: "price",
-        key: "price",
-        render(value) {
-          return formatNumberThreeComma(value);
-        },
-      },
-      {
-        title: "Trạng thái sản phẩm",
-        dataIndex: "status",
-        key: "status",
-        render(text) {
-          return <StatusTag status={text} />;
-        },
-      },
-      {
-        title: "Ngày tạo",
+        title: "Ngày tạo đơn",
         dataIndex: "createdAt",
         key: "createdAt",
         render(value) {
@@ -95,15 +73,34 @@ export default function ProductList(props: propsType): React.JSX.Element {
         },
       },
       {
-        title: "Mã đơn hàng",
-        dataIndex: "bill",
-        key: "codeSequence",
-        render(value) {
-          return value?.codeSequence;
+        title: "Trạng thái",
+        dataIndex: "status",
+        key: "status",
+        render(value:  keyof STATUS_BILL_TYPE) {
+          return (
+            <StatusTag
+              status={value}
+              statusVi= {STATUS_BILL_VI[value] }
+          />);
         },
       },
-    ],
-    []
+      {
+        title: "Ghi chú",
+        dataIndex: "note",
+        key: "note",
+        render(value) {
+          return value;
+        },
+      },
+      {
+        title: "Tổng số tiền",
+        dataIndex: "totalPrice",
+        key: "totalPrice",
+        render(value) {
+          return `${formatNumberThreeComma(value)}đ`;
+        },
+      },
+    ],[]
   );
   const renderLoading = (component: any) => {
     return isLoading ? <Spin /> : component;

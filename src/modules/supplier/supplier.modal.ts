@@ -37,10 +37,22 @@ export type addressType = {
     getVoucherSupplierFailed?: any;
     voucherSupplier?: T[];
     pagingVoucherSupplier?: any;
-    totalAmountBillItem?: number;
+    totalAmountOrder?: number;
 };
 
-  export type STATUS_SUPPLIER_TYPE =  {
-    ACTIVE : "ACTIVE",
-    INACTIVE : "INACTIVE",
-  }
+export type STATUS_SUPPLIER_TYPE = {
+  ACTIVE: "ACTIVE",
+  INACTIVE: "INACTIVE",
+};
+export type STATUS_BILL_TYPE = {
+  NEW: "NEW",
+  PROCESSING: "PROCESSING",
+  COMPLETED: "COMPLETED",
+  CANCELLED: "CANCELLED",
+};
+export type STATUS_BILL_VI_TYPE = {
+  NEW: "Đã tiếp nhận",
+  PROCESSING: "Đang xử lý",
+  COMPLETED: "Đã hoàn thành",
+  CANCELLED: "Đã huỷ",
+};

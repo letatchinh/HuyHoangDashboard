@@ -19,3 +19,64 @@
     margin-left: 10px;
   };
 };
+
+.status {
+  height: 22px;
+  min-width: 22px;
+  line-height: 0;
+  border-radius: 8px;
+  cursor: default;
+  align-items: center;
+  white-space: nowrap;
+  display: inline-flex;
+  justify-content: center;
+  padding: 0px 8px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  // Bill
+  &.new ,&.ordering{
+    background-color: #f0f0f0;
+    color: darken($color: #f0f0f0, $amount: 50%);
+  }
+  
+  &.processing {
+      background-color: #1890ff;
+      color: #fff;
+    }
+  &.completed ,&.confirmed {
+    background-color: #52c41a;
+    color: #fff;
+  }
+  &.cancelled {
+    background-color: #f5222d;
+    color: #fff;
+  }
+
+  &.ordered {
+    color: #ffffff;
+    background-color: #008000; 
+  }
+  
+  &.received {
+    color: #ffffff;
+    background-color: #9c543a; 
+  }
+  
+  &.processing {
+    color: #ffffff;
+    background-color: #ffa500; 
+  }
+  
+  &.packaged {
+    color: #ffffff;
+    background-color: #4caf50; 
+  }
+  
+  &.shipping {
+    color: #ffffff;
+    background-color: #007bff; 
+  };
+
+};
