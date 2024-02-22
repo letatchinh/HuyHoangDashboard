@@ -1,6 +1,6 @@
 import { ColumnsType } from "antd/es/table";
 import useTranslate from "~/lib/translation";
-import { concatAddress } from "~/utils/helpers";
+import { concatAddress, formatNumberThreeComma } from "~/utils/helpers";
 import {
   useDeletePharmacy,
   useGetPharmacies,
@@ -13,10 +13,14 @@ import Breadcrumb from "~/components/common/Breadcrumb";
 import WhiteBox from "~/components/common/WhiteBox";
 import TableAnt from "~/components/Antd/TableAnt";
 import { omit, get } from "lodash";
-import { REF_COLLECTION_UPPER, STATUS, STATUS_NAMES } from "~/constants/defaultValue";
+import {
+  REF_COLLECTION_UPPER,
+  STATUS,
+  STATUS_NAMES,
+} from "~/constants/defaultValue";
 import moment from "moment";
 // import ColumnActions from "~/components/common/ColumnAction";
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import {
   Button,
   Col,
@@ -38,6 +42,9 @@ import POLICIES from "~/modules/policy/policy.auth";
 import { useMatchPolicy } from "~/modules/policy/policy.hook";
 import ModalAnt from "~/components/Antd/ModalAnt";
 import ReceiptVoucherForm from "~/modules/receiptVoucher/components/ReceiptVoucherForm";
+import { Link } from "react-router-dom";
+import { PATH_APP } from "~/routes/allPath";
+
 const ColumnActions = ({ _id, deletePharmacy, onOpenForm }: propsType) => {
   return (
     <div className="custom-table__actions">
@@ -85,121 +92,149 @@ export default function Pharmacy() {
   );
   const [open, setOpen] = useState(false);
   const [debt, setDebt] = useState<number | null>();
-  
+
   const onOpenReceipt = (item: any) => {
     setOpen(true);
-    setPharmacyId(item?._id)
-    setDebt(item?.resultDebt)
+    setPharmacyId(item?._id);
+    setDebt(item?.resultDebt);
   };
   const onCloseReceipt = () => {
     setOpen(false);
     setPharmacyId(null);
   };
 
-  const columns: ColumnsType = [
-    {
-      title: "Mã nhà thuốc",
-      dataIndex: "code",
-      key: "code",
-      width: 120,
-    },
-    {
-      title: "Tên nhà thuốc",
-      dataIndex: "name",
-      key: "name",
-      width: 180,
-    },
-    {
-      title: "Số điện thoại",
-      dataIndex: "phoneNumber",
-      key: "phoneNumber",
-      width: 120,
-    },
-    {
-      title: "Địa chỉ",
-      dataIndex: "address",
-      key: "address",
-      width: 300,
-      render(value, record, index) {
-        return concatAddress(value);
+  const columns: ColumnsType = useMemo(
+    () => [
+      {
+        title: "Mã nhà thuốc",
+        // dataIndex: "code",
+        key: "code",
+        width: 120,
+        render(record) {
+          return (
+            <Link
+              className="link_"
+              to={`/pharmacy/${record?._id}`}
+              target={"_blank"}
+            >
+              {record?.code}
+            </Link>
+          );
+        },
       },
-    },
-    {
-      title: "Ngày tạo",
-      dataIndex: "createdAt",
-      key: "createdAt",
-      width: 120,
-      render: (record) => {
-        return moment(record).format("DD/MM/YYYY");
+      {
+        title: "Tên nhà thuốc",
+        dataIndex: "name",
+        key: "name",
+        width: 180,
       },
-    },
-    ...(
-        canWriteVoucher ? [
-          {
-            title: "Tạo phiếu",
-            dataIndex: "createReceipt",
-            key: "createReceipt",
-            width: 120,
-            render(value: any, rc: any) {
-              return ( <Space>
-                 <Button type="primary" onClick={()=> onOpenReceipt(rc)}>Phiếu thu</Button>
-               </Space>)
-             },
-          },
-        ]: []
-    ),
-    {
-      title: "Trạng thái",
-      key: "status",
-      dataIndex: "status",
-      width: 100,
-      align: "center",
-      render: (status, record) => {
-        return (
-          <WithPermission permission={POLICIES.UPDATE_PHARMAPROFILE}>
-            <Switch
-              checked={status === "ACTIVE"}
-              onChange={(value) =>
-                onChangeStatus(
-                  get(record, "_id"),
-                  value ? STATUS["ACTIVE"] : STATUS["INACTIVE"],
-                  isLoading,
-                  record
-                )
-              }
-            />
-          </WithPermission>
-        );
+      {
+        title: "Số điện thoại",
+        dataIndex: "phoneNumber",
+        key: "phoneNumber",
+        width: 120,
       },
-    },
-    {
-      title: "Thao tác",
-      dataIndex: "_id",
-      // key: "actions",
-      width: 150,
-      align: "center",
-      render: (record) => {
-        return (
-          <div className="custom-table__actions">
+
+      {
+        title: "Địa chỉ",
+        dataIndex: "address",
+        key: "address",
+        width: 300,
+        render(value, record, index) {
+          return concatAddress(value);
+        },
+      },
+      {
+        title: "Ngày tạo",
+        dataIndex: "createdAt",
+        key: "createdAt",
+        width: 120,
+        render: (record) => {
+          return moment(record).format("DD/MM/YYYY");
+        },
+      },
+      {
+        title: "Công nợ",
+        dataIndex: "resultDebt",
+        key: "resultDebt",
+        width: 120,
+        render(value) {
+          return formatNumberThreeComma(value);
+        },
+      },
+      ...(canWriteVoucher
+        ? [
+            {
+              title: "Tạo phiếu",
+              dataIndex: "createReceipt",
+              key: "createReceipt",
+              width: 120,
+              render(value: any, rc: any) {
+                return (
+                  <Space>
+                    <Button type="primary" onClick={() => onOpenReceipt(rc)}>
+                      Phiếu thu
+                    </Button>
+                  </Space>
+                );
+              },
+            },
+          ]
+        : []),
+      {
+        title: "Trạng thái",
+        key: "status",
+        dataIndex: "status",
+        width: 100,
+        align: "center",
+        render: (status, record) => {
+          return (
             <WithPermission permission={POLICIES.UPDATE_PHARMAPROFILE}>
-              <p onClick={() => onOpenForm(record)}>Sửa</p>
+              <Switch
+                checked={status === "ACTIVE"}
+                onChange={(value) =>
+                  onChangeStatus(
+                    get(record, "_id"),
+                    value ? STATUS["ACTIVE"] : STATUS["INACTIVE"],
+                    isLoading,
+                    record
+                  )
+                }
+              />
             </WithPermission>
-            <WithPermission permission={POLICIES.DELETE_PHARMAPROFILE}>
-              <p>|</p>
-              <Popconfirm
-                title={`Bạn muốn xoá nhà thuốc này?`}
-                onConfirm={() => deletePharmacy(record)}
-                okText="Xoá"
-                cancelText="Huỷ"
-              >
-                <p>Xóa</p>
-              </Popconfirm>{" "}
-            </WithPermission>
-          </div>
-        );
+          );
+        },
       },
-    },
-  ];
+      {
+        title: "Thao tác",
+        dataIndex: "_id",
+        // key: "actions",
+        width: 150,
+        align: "center",
+        render: (record) => {
+          return (
+            <div className="custom-table__actions">
+              <WithPermission permission={POLICIES.UPDATE_PHARMAPROFILE}>
+                <p onClick={() => onOpenForm(record)}>Sửa</p>
+              </WithPermission>
+              <WithPermission permission={POLICIES.DELETE_PHARMAPROFILE}>
+                <p>|</p>
+                <Popconfirm
+                  title={`Bạn muốn xoá nhà thuốc này?`}
+                  onConfirm={() => deletePharmacy(record)}
+                  okText="Xoá"
+                  cancelText="Huỷ"
+                >
+                  <p>Xóa</p>
+                </Popconfirm>{" "}
+              </WithPermission>
+            </div>
+          );
+        },
+      },
+    ],
+    []
+  );
 
   const onChangeStatus = (
     _id: any,
@@ -314,7 +349,7 @@ export default function Pharmacy() {
         />
       </ModalAnt>
       <Modal
-        title='Phiếu thu'
+        title="Phiếu thu"
         open={open}
         onCancel={() => setOpen(false)}
         onOk={() => setOpen(false)}
@@ -327,7 +362,7 @@ export default function Pharmacy() {
           pharmacyId={pharmacyId}
           refCollection={REF_COLLECTION_UPPER.PHARMA_PROFILE}
           debt={debt}
-          from='Pharmacy'
+          from="Pharmacy"
         />
       </Modal>
     </div>

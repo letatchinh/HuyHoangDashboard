@@ -47,10 +47,30 @@ function* deletePharmacy({ payload: id }: any): any {
   }
 }
 
+function* getPharmacyDebt({ payload: query }: any): any {
+  try {
+    const data = yield call(api.getDebt, query);
+    yield put(pharmacySliceAction.getPharmacyDebtSuccess(data));
+  } catch (error: any) {
+    yield put(pharmacySliceAction.getPharmacyDebtFailed(error));
+  }
+}
+
+function* getHistoryPharmacy({ payload: id }: any): any {
+  try {
+    const data = yield call(api.getHistoryById, id);
+    yield put(pharmacySliceAction.getHistoryPharmacySuccess(data));
+  } catch (error: any) {
+    yield put(pharmacySliceAction.getHistoryPharmacyFailed(error));
+  }
+}
+
 export default function* pharmacySaga(): any {
   yield takeLatest(pharmacySliceAction.getListRequest, getListPharmacy);
   yield takeLatest(pharmacySliceAction.getByIdRequest, getByIdPharmacy);
   yield takeLatest(pharmacySliceAction.createRequest, createPharmacy);
   yield takeLatest(pharmacySliceAction.updateRequest, updatePharmacy);
   yield takeLatest(pharmacySliceAction.deleteRequest, deletePharmacy);
+  yield takeLatest(pharmacySliceAction.getPharmacyDebtRequest, getPharmacyDebt);
+  yield takeLatest(pharmacySliceAction.getHistoryPharmacyRequest, getHistoryPharmacy);
 }

@@ -6,11 +6,13 @@ import * as pharmacyHook from "./pharmacy.hook";
 import * as pharmacyService from "./pharmacy.service";
 import * as pharmacyModals from "./pharmacy.modal";
 import pharmacyAuth from "./pharmacy.auth";
+import PharmacyDetailScreen from "./screens/PharmacyDetail";
 
 const moduleExport = {
   api: pharmacyApi,
   page: {
     index: PharmacyScreen,
+    pharmacyDetail: PharmacyDetailScreen,
   },
   redux: {
     reducer,
