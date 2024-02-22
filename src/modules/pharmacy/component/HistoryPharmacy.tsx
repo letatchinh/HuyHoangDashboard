@@ -56,7 +56,6 @@ export default function HistoryPharmacy(props: propsType) {
   const [history, isLoading] = useGetHistoryPharmacy(pharmacyId);
   const [searchByStatus, setSearchByStatus] = useState<string[]>([]);
   const paging = useHistoryPharmacyPaging();
-console.log(history, "AAAAAA");
 
   const [isOpenForm, setIsOpenForm] = useState(false);
 
@@ -94,7 +93,6 @@ console.log(history, "AAAAAA");
 
   return (
     <div>
-      <Breadcrumb title={t("list-pharmacies")} />
       {/* <Row className="mb-3" justify={"space-between"}>
         <Col span={8}>
           <Search

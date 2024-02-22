@@ -136,7 +136,6 @@ export default function DebtPharmacy(props: propsType) {
 
   return (
     <div>
-      <Breadcrumb title={t("debt")} />
       <Row className="mb-3" justify={"space-between"}>
         {/* <Col span={8}>
           <Search

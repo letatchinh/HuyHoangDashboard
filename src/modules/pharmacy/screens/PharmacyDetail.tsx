@@ -8,10 +8,15 @@ import DebtPharmacy from "../component/DebtPharmacy";
 import POLICIES from "../../policy/policy.auth";
 import { useMatchPolicy } from "~/modules/policy/policy.hook";
 import WhiteBox from "~/components/common/WhiteBox";
+import Breadcrumb from "~/components/common/Breadcrumb";
+import useTranslate from "~/lib/translation";
+import BackBtn from "~/components/common/BackBtn";
+import { PATH_APP } from "~/routes/allPath";
 
 const { TabPane } = Tabs;
 
 export default function PharmacyDetail() {
+  const { t }: any = useTranslate();
   const [pharmacyId, setPharmacyId] = useState<string | null>("");
   const [activeTab, setActiveTab] = useState("1");
   const onChangeTab = (key: string) => {
@@ -22,6 +27,8 @@ export default function PharmacyDetail() {
 
   return (
     <div>
+       <BackBtn label={"Nhà thuốc"} path={PATH_APP.pharmacy.root}/>
+      <h3>Chi tiết nhà thuốc</h3>
       <WhiteBox>
         <Tabs
           defaultActiveKey="1"
