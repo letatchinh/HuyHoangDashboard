@@ -225,7 +225,7 @@ import "./form.scss";
                   </Row>
                   <Row gutter={36}>
                     <Col span={24}>
-                      <FormItem label="Người nhận" name="pharmacyReceive">
+                      <FormItem label="Người nhận" name="receiver">
                         {isLoading ? <Skeleton.Input active /> : <Input />}
                       </FormItem>
                     </Col>
