@@ -102,7 +102,6 @@ import "./form.scss";
       },
       []
     );
-  
     const fetchIssueNumber = async () => {
       const typeVoucher = TYPE_VOUCHER.PT;
       const res = await apiPaymentVoucher.postIssueNumber({ typeVoucher });
@@ -120,9 +119,12 @@ import "./form.scss";
             pharmacyReceive: pharmacy?.name,
             provider: pharmacy?._id,
             code: pharmacy?.code,
-            paymentMethod : "COD"
+            paymentMethod : "COD",
+            accountingDate : dayjs(),
+            dateOfIssue : dayjs(),
+            reason: "Chi cho nhà thuốc đạt luỹ kế",
           });
-        }
+        };
     }, [pharmacy]);
     useEffect(() => {
         fetchIssueNumber();
@@ -155,9 +157,8 @@ import "./form.scss";
           totalAmount:sumBy([...accountingDetails],(item) => get(item,'amountOfMoney',0)),
           method,
         };
-        console.log(newValue,'newValue');
         
-        //   handleCreate(newValue);
+          handleCreate(newValue);
       } catch (error) {
         console.error(error);
       }
