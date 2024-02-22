@@ -19,7 +19,7 @@ const contentStyle: React.CSSProperties = {
 
 const ProductListSuggest: React.FC = () => {
   const [page, setPage] = useState(1)
-  const [limit, setLimit] = useState(10)
+  const [limit, setLimit] = useState(4)
   const [keyword, setKeyword] = useState("");
   const productSuggest: any = document.querySelector('.product-suggest');
   const tableSelectedProductContent : any = document.querySelector('.table-selected-product .ant-table-content');
@@ -59,13 +59,12 @@ const ProductListSuggest: React.FC = () => {
       setPage(paging?.current - 1)
     }
   };
-
   function updateMaxHeight() {
     const productSuggestHeight = productSuggest?.offsetHeight;
-    const newMaxHeight = `calc(100vh - ${productSuggestHeight}vh)`;
+    const newMaxHeight = 100 - productSuggestHeight;
     if (tableSelectedProductContent) {
       if (collapseActive) {
-            tableSelectedProductContent.style.maxHeight = newMaxHeight;
+            tableSelectedProductContent.style.maxHeight = `${newMaxHeight + 10}vh`;
       } else {
             tableSelectedProductContent.style.maxHeight = 'calc(100vh - 50px - 80px)';
         };
@@ -83,7 +82,7 @@ const ProductListSuggest: React.FC = () => {
           sm: 2,
           md: 4,
           lg: 4,
-          xl: 6,
+          xl: 4,
           xxl: 3,
         }}
         dataSource={products?.docs || []}
@@ -114,8 +113,8 @@ const ProductListSuggest: React.FC = () => {
               bodyStyle={{
                 width: '100%',
                 minWidth: '150px',
-                minHeight: '100px',
-                maxHeight: '100px',
+                minHeight: '80px',
+                maxHeight: '80px',
                 padding: 5, 
                 overflow: 'hidden',
                 fontSize: 12,
@@ -141,10 +140,10 @@ const ProductListSuggest: React.FC = () => {
       key: '1',
       label: 'Danh sách thuốc gợi ý',
       children: <ListItem />,
-      onClick: () => {
-        updateMaxHeight();
-        window.addEventListener('resize', updateMaxHeight);
-      },
+      // onClick: () => {
+      //   updateMaxHeight();
+      //   window.addEventListener('resize', updateMaxHeight);
+      // },
       // style: panelStyle,
     },
   ];
