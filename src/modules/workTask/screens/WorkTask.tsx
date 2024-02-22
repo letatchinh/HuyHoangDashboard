@@ -111,7 +111,7 @@ export default function TaskItem({ idTask, }: Props) {
                 </Suspense>
               </Col>
               <Col>
-                <Text strong>#{get(dataTask, "code", "")} </Text>
+                <Text style={{marginTop:4}} strong>#{get(dataTask, "code", "")} </Text>
               </Col>
               <Col sm={{ flex: 1 }} md={{ span: 9 }}>
                 <Input

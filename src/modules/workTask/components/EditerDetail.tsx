@@ -31,8 +31,8 @@ export default function EditerDetail({ dataTask, onCancel, handleFinshed }: Prop
                 }
             />
             <Row style={{marginLeft : 'auto'}}>
-                <Button onClick={handleOk} type='primary' style={{ width: 100 }}>Lưu</Button>
-                <Button onClick={handleCancel} style={{ width: 100 }}>Huỷ</Button>
+                <Button onClick={handleOk} type='primary' style={{ width: 100,margin: '18px 10px' }}>Lưu</Button>
+                <Button onClick={handleCancel} style={{  width: 100,margin: '18px 10px' }}>Huỷ</Button>
             </Row>
         </div>
     )

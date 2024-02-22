@@ -10,7 +10,7 @@ import WithOrPermission from '~/components/common/WithOrPermission';
 import POLICIES from '~/modules/policy/policy.auth';
 import { useGetBoardById } from '~/modules/workBoard/workBoard.hook';
 import MenuListBoard from '~/modules/workSprint/components/MenuListBoard';
-import { useGetWorkSprint } from '~/modules/workSprint/workSprint.hook';
+import { useGetListTaskBySprints, useGetWorkSprint } from '~/modules/workSprint/workSprint.hook';
 import TaskTabDetail from '~/modules/workTask/components/Task/TaskTabDetail';
 import { useCreateTask, useDeleteTask, useUpdateTaskInit } from '~/modules/workTask/workTask.hook';
 import Menufilter from '../components/Menufilter';
@@ -55,6 +55,10 @@ const WorkList = () => {
   const [, handleCreateWork] = useCreateWorkList();
   const [, handleDeleteWork] = useDeleteWorkList();
   const [, updateBoardConfig] = useUpdateWorkList()
+  // const [dataTask,isLoadingTask] = useGetListTaskBySprints(nQuery);
+
+ 
+
   const [boardData] = useGetBoardById(idBoard);
   const [data1, setData1] = useState<any>(data);
   const showDrawer = (param?: any) => {
@@ -67,7 +71,7 @@ const WorkList = () => {
     if (!visibleInfo) {
       setLength(workflowRef?.current?.offsetWidth ?? window.innerWidth);
     } else {
-      setLength(workflowRef?.current?.offsetWidth * 0.6);
+      setLength(workflowRef?.current?.offsetWidth * 0.5);
     }
   }, [visibleInfo]);
   const changePosition = (sourceIndex: any, destinationIndex: any) => {
@@ -122,8 +126,8 @@ const WorkList = () => {
       changePosition(source?.index, destination?.index);
     }
   };
-  const minConstraintsWidth = (workflowRef?.current?.offsetWidth || window.innerWidth) * 0.35;
-  const maxConstraintsWidth = (workflowRef?.current?.offsetWidth || window.innerWidth) * 0.5;
+  const minConstraintsWidth = (workflowRef?.current?.offsetWidth || window.innerWidth) * 0.5;
+  const maxConstraintsWidth = (workflowRef?.current?.offsetWidth || window.innerWidth) * 0.7;
 
   return (
     <div className="branch-detail page-wraper page-content page-workflow">
@@ -144,6 +148,7 @@ const WorkList = () => {
           setIdVisibleInfo,
           idVisibleInfo,
           setTaskData,
+          // dataTask,
           taskData,
           dropdownVisible,
           setDropdownVisible,

@@ -154,7 +154,7 @@ function CommentItem({
   return (
     <div
       key={value._id}
-            style={{
+      style={{
         width: 'inherit',
         display: 'flex',
         // flexDirection:
@@ -176,22 +176,22 @@ function CommentItem({
           size={38}
           src={
             includes(value.createdBy.avatar, 'http://') ||
-            includes(value.createdBy.avatar, 'https://')
+              includes(value.createdBy.avatar, 'https://')
               ? value.createdBy.avatar
               : ''
           }
-          style={{ backgroundColor: '#fcc499' }}
+          style={{ backgroundColor: '#ffffff' }}
         >
           {getShortName(get(value, 'createdBy.fullName', ''))}
         </Avatar>
-            </div>
+      </div>
       <div style={{ width: 'auto', marginBottom: 28 }}>
         <CommentTask
           readOnly
           active={Boolean(active?.[value._id])}
           isEdit={true}
           action={(item: any) => {
-            if(!(item).trim()){
+            if (!(item).trim()) {
               return
             }
             _update(item);
@@ -205,13 +205,13 @@ function CommentItem({
             {dayjs(getDate).diff(dayjs(timeValue), "d") <= 1
               ? dayjs(timeValue).fromNow()
               : dayjs(timeValue).format("DD/MM/YYYY HH:mm A")}
-            &nbsp;{!!get(value, "updateDateComment", false) && `(đã sửa)`}
+            &nbsp;{!!get(value, "updateDateComment", false) && `(đã chỉnh sửa)`}
           </Text>
           {!!!active[value._id] ? (
             <>
               <CanShow
                 rule={[
-                  ...managers.map(({ _id }: any) => _id),
+                  ...managers?.map(({ _id }: any) => _id),
                   get(value, "createdById", get(value, "createBy._id", false)),
                 ]}
                 permission={profile?.user?._id}
