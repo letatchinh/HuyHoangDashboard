@@ -110,19 +110,19 @@ export default function DebtPharmacy(props: propsType) {
         title: "Giá trị đơn hàng",
         dataIndex: "totalPrice",
         key: "totalPrice",
-        width: 180,
+        width: 200,
       },
       {
         title: "Phương thức thanh toán",
         dataIndex: "paymentMethod",
         key: "paymentMethod",
-        width: 120,
+        width: 250,
       },
       {
         title: "Đã thanh toán",
         dataIndex: "totalAmount",
         key: "totalAmount",
-        width: 300,
+        width: 120,
       },
       {
         title: "Nợ",

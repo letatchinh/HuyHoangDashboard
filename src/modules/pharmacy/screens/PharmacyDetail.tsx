@@ -1,8 +1,7 @@
 import { Tabs } from "antd";
 // import TabPane from "antd/es/tabs/TabPane";
 import React, { useEffect, useState } from "react";
-import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
-
+import { useParams } from "react-router-dom";
 import HistoryPharmacy from "../component/HistoryPharmacy";
 import DebtPharmacy from "../component/DebtPharmacy";
 import POLICIES from "../../policy/policy.auth";
@@ -17,7 +16,8 @@ const { TabPane } = Tabs;
 
 export default function PharmacyDetail() {
   const { t }: any = useTranslate();
-  const [pharmacyId, setPharmacyId] = useState<string | null>("");
+  const { id: pharmacyId }: any = useParams();
+
   const [activeTab, setActiveTab] = useState("1");
   const onChangeTab = (key: string) => {
     setActiveTab(key);
@@ -27,7 +27,7 @@ export default function PharmacyDetail() {
 
   return (
     <div>
-       <BackBtn label={"Nhà thuốc"} path={PATH_APP.pharmacy.root}/>
+      <BackBtn label={"Nhà thuốc"} path={PATH_APP.pharmacy.root} />
       <h3>Chi tiết nhà thuốc</h3>
       <WhiteBox>
         <Tabs

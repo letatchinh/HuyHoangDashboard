@@ -216,9 +216,10 @@ export const useGetPharmacyDebt = (param: any) => {
   });
 };
 
-export const useHistoryPharmacyQuery = (keyword?: any) => {
+export const useHistoryPharmacyQuery = () => {
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(1);
+  const [keyword, setKeyword] = useState("");
   const onTableChange : any = ({ current, pageSize }: any) => {
     setPage(current);
     setLimit(pageSize);
@@ -237,13 +238,11 @@ export const useHistoryPharmacyQuery = (keyword?: any) => {
 };
 
 export const useGetHistoryPharmacy = (id: any) => {
-  console.log('====================================');
-  console.log(id, "IDDD");
-  console.log('====================================');
+  
   return useFetchByParam({
     action: pharmacySliceAction.getHistoryPharmacyRequest,
-    loadingSelector: historyPharmacySelector,
-    dataSelector: isLoadingGetHistoryPharmacySelector,
+    loadingSelector: isLoadingGetHistoryPharmacySelector,
+    dataSelector: historyPharmacySelector,
     failedSelector: getHistoryPharmacyFailedSelector,
     param: id,
   });

@@ -57,8 +57,6 @@ function* getPharmacyDebt({ payload: query }: any): any {
 }
 
 function* getHistoryPharmacy({ payload: id }: any): any {
-  console.log(id, "id  saga");
-  
   try {
     const data = yield call(api.getHistoryById, id);
     yield put(pharmacySliceAction.getHistoryPharmacySuccess(data));

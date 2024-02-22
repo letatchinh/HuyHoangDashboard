@@ -1,6 +1,6 @@
 import { ColumnsType } from "antd/es/table";
 import useTranslate from "~/lib/translation";
-import { concatAddress } from "~/utils/helpers";
+import { formatter } from "~/utils/helpers";
 import {
   useGetHistoryPharmacy,
   useHistoryPharmacyPaging,
@@ -42,10 +42,15 @@ import ModalAnt from "~/components/Antd/ModalAnt";
 import ReceiptVoucherForm from "~/modules/receiptVoucher/components/ReceiptVoucherForm";
 import { Link } from "react-router-dom";
 import { PATH_APP } from "~/routes/allPath";
+import Status from "~/components/common/Status";
+import { STATUS_BILL_VI } from "~/modules/sale/bill/constants";
+import ExpandHistoryPharmacy from "./ExpandHistoryPharmacy";
 
 interface UserProps {
   currentTab: string | undefined;
 }
+
+const CLONE_STATUS_BILL_VI: any = STATUS_BILL_VI;
 
 export default function HistoryPharmacy(props: propsType) {
   const { t }: any = useTranslate();
@@ -54,6 +59,7 @@ export default function HistoryPharmacy(props: propsType) {
   const [value, setValue] = useState("");
   const [query] = useHistoryPharmacyQuery();
   const [history, isLoading] = useGetHistoryPharmacy(pharmacyId);
+
   const [searchByStatus, setSearchByStatus] = useState<string[]>([]);
   const paging = useHistoryPharmacyPaging();
 
@@ -61,6 +67,7 @@ export default function HistoryPharmacy(props: propsType) {
 
   const [open, setOpen] = useState(false);
   const [debt, setDebt] = useState<number | null>();
+  const [itemActive, setItemActive] = useState<any>();
 
   const columns: ColumnsType = useMemo(
     () => [
@@ -86,25 +93,32 @@ export default function HistoryPharmacy(props: propsType) {
           return moment(record).format("DD/MM/YYYY");
         },
       },
-      
+      {
+        title: "Thành tiền",
+        dataIndex: "totalPrice",
+        key: "totalPrice",
+        width: 120,
+        render(value) {
+          return formatter(value);
+        },
+      },
+      {
+        title: "Trạng thái",
+        dataIndex: "status",
+        key: "status",
+        width: 120,
+        render(status, record, index) {
+          return (
+            <Status status={status} statusVi={CLONE_STATUS_BILL_VI[status]} />
+          );
+        },
+      },
     ],
     []
   );
 
   return (
     <div>
-      {/* <Row className="mb-3" justify={"space-between"}>
-        <Col span={8}>
-          <Search
-            enterButton="Tìm kiếm"
-            placeholder="Nhập để tìm kiếm"
-            allowClear
-            onSearch={() => onParamChange({ keyword })}
-            onChange={(e) => setKeyword(e.target.value)}
-            value={keyword}
-          />
-        </Col>
-      </Row> */}
       <WhiteBox>
         <TableAnt
           dataSource={history}
@@ -112,6 +126,17 @@ export default function HistoryPharmacy(props: propsType) {
           rowKey={(rc) => rc?._id}
           columns={columns}
           size="small"
+          expandable={{
+            expandedRowRender: (record: any) => (
+              <ExpandHistoryPharmacy
+                historyStatus={get(record, "historyStatus")}
+              />
+            ),
+            expandedRowKeys: [itemActive],
+          }}
+          onExpand={(expanded, record) => {
+            expanded ? setItemActive(record._id) : setItemActive(null);
+          }}
           pagination={{
             ...paging,
             // onChange(page, pageSize) {
