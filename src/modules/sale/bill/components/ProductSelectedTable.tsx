@@ -158,7 +158,7 @@ export default function ProductSelectedTable(
       className="table-selected-product"
       {...tableProps}
       size="small"
-      pagination={false}
+        pagination={false}
       expandable={{
         expandedRowRender: (record: quotation) => (
           <ExpandRowDiscount data={get(record, "cumulativeDiscount")} />
