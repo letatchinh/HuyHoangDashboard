@@ -16,6 +16,8 @@ import {
 import { paymentVoucherSliceAction } from "./redux/reducer";
 import { TYPE_VOUCHER } from "~/constants/defaultValue";
 import dayjs from "dayjs";
+import PharmacyModule from '~/modules/pharmacy';
+import SupplierModule from '~/modules/supplier';
 const MODULE = "paymentVoucher";
 const MODULE_VI = "";
 
@@ -210,3 +212,22 @@ export const useInitWhPaymentVoucher = (whPaymentVoucher: any) => {
     return initValues;
   }, [whPaymentVoucher]);
 };
+
+export const GetProvider = async(payload : {refCollection : 'supplier' | 'pharma_profile',providerId:string}) => {
+  try {
+    const {providerId,refCollection} = payload;
+  let handle;
+  switch (refCollection) {
+    case 'pharma_profile':
+      handle = PharmacyModule.api.getById
+      break;
+    case 'supplier':
+      handle = SupplierModule.api.getById
+      break;
+  }
+  const provider = await handle(providerId);
+  return provider;
+  } catch (error) {
+    console.log(error);
+  }
+}

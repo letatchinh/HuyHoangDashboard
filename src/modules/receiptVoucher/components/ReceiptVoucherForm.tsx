@@ -45,6 +45,7 @@ import { useGetPharmacyId } from "~/modules/pharmacy/pharmacy.hook";
 import WithPermission from "~/components/common/WithPermission";
 import POLICIES from "~/modules/policy/policy.auth";
 import { useGetBranch, useGetBranches } from "~/modules/branch/branch.hook";
+import { useGetSupplier } from "~/modules/supplier/supplier.hook";
 
 const mainRowGutter = 24;
 const FormItem = Form.Item;
@@ -60,18 +61,16 @@ type propsType = {
   refCollection?: any;
   debt?: any;
   from?: string;
+  supplierId?:any,
+  dataAccountingDefault?:any[]
 };
 
-export default function ReceiptVoucherForm(props: propsType): React.JSX.Element {
-  const { id , onClose, pharmacyId,refCollection, debt, from} = props;
+export default function ReceiptVoucher(props: propsType): React.JSX.Element {
+  const { id , onClose, pharmacyId,supplierId,refCollection, debt, from,dataAccountingDefault} = props;
   useResetAction();
-  const dispatch = useDispatch();
   const [form] = Form.useForm();
   const ref = useRef();
-  const [isPrinting, setIsPrinting] = useState(false);
   const [accountingDetails, setAccountingDetails] = useState([]);
-  const [url, setUrl] = useState<string>('');
-  const [isOpenViewer, setIsOpenViewer] = useState(false);
   const [initEmployee, setInitEmployee] = useState<any[]>([]);
   //Hook
   const [isSubmitLoading, handleCreate] = useCreateReceiptVoucher(onClose);
@@ -83,21 +82,10 @@ export default function ReceiptVoucherForm(props: propsType): React.JSX.Element 
   const queryBranch = useMemo(() => ({page: 1, limit: 10}), []);
   const [branch] = useGetBranches(queryBranch);
   const [pharmacy] = useGetPharmacyId(memo); 
+  const [supplier] = useGetSupplier(supplierId);
+  const provider = useMemo(() => pharmacy ?? supplier,[pharmacy,supplier]);
 
-  const [settingDocs, setSettingDocs] = useState({
-    name: "CÔNG TY TNHH WORLDCARE MIỀN TRUNG",
-    address: "559 Lê Văn Hiến, P. Khuê Mỹ, Q. Ngũ Hành Sơn, TP Đà Nẵng",
-    isVisibleSettings: false,
-  });
-  const [dataAccounting, setDataAccounting] = useState([
-    {
-      content: `rút tiền từ ví , mã yêu cầu `,
-      // content: `rút tiền từ ví , mã yêu cầu ${get(requestVoucher,'requestNumber','')}`,
-      debitAccount: 635,
-      creditAccount: DEFAULT_ACCOUNT,
-      amountOfMoney: 0,
-    },
-  ]);
+  const [dataAccounting, setDataAccounting] = useState(dataAccountingDefault ?? []);
 
   // use initWhPaymentVoucher to merge with other data that should be fetched from the API
   const mergedInitWhPaymentVoucher = useMemo(() => {
@@ -135,123 +123,17 @@ export default function ReceiptVoucherForm(props: propsType): React.JSX.Element 
     });
   };
 
-  // const onPrint = async (viewOnly = false): Promise<void> => {
-  //   const downloadURL = (data: string, fileName: string): void => {
-  //     const a : any = document.createElement('a');
-  //     a.href = data;
-  //     a.download = fileName;
-  //     document.body.appendChild(a);
-  //     a.style = 'display: none';
-  //     a.click();
-  //     a.remove();
-  //   };
-
-  //   const saveDataToFile = (data: string, fileName: string, mimeType: string): void => {
-  //     const blob = new Blob([data], { type: mimeType });
-  //     const url = window.URL.createObjectURL(blob);
-  //     downloadURL(url, fileName);
-  //     setTimeout(() => {
-  //       window.URL.revokeObjectURL(url);
-  //     }, 1000);
-  //   };
-
-  //   const renderFile = async (data: string, fileName: string, mimeType: string): Promise<void> => {
-  //     const blob = new Blob([data], { type: mimeType });
-  //     const url = window.URL.createObjectURL(blob);
-
-  //     // const res = await api.whReceiptVoucher.upload(blob); // Replace with your actual API call
-  //     // const res = await api.whReceiptVoucher.upload(url);
-  //     // setUrl(get(res, "url"));
-  //     setUrl('https://calibre-ebook.com/downloads/demos/demo.docx');
-  //     setIsOpenViewer(true);
-  //   };
-
-  //   setIsPrinting(true);
-  //   const template = await fetch(myFile).then((res) => res.arrayBuffer());
-
-  //   try {
-  //     await form.validateFields();
-
-  //     const {
-  //       customerAddress,
-  //       customerName,
-  //       issueNumber,
-  //       originalDocument,
-  //       reason,
-  //       accountingDate,
-  //       employeeId,
-  //     }: any = form.getFieldsValue();
-
-  //     // const employee: any = await api.userEmployee.getById(employeeId);
-  //     // const totalAmountOfMoney = sumBy(dataSource, (item) => Number(get(item, 'amountOfMoney')));
-  //     // const totalAmountOfMoneyString = `${readNumber(totalAmountOfMoney)} ${
-  //     //   CURRENCY_STRING[CURRENCY.VND]
-  //     // }`;
-  //     // const debitAccounts = uniq(dataSource.map((item) => get(item, 'debitAccount'))).join(', ');
-  //     // const creditAccounts = uniq(dataSource.map((item) => get(item, 'creditAccount'))).join(', ');
-
-  //     // const accountingDateDD = get(initWhPaymentVoucher, 'dateApproved')
-  //     //   ? moment(get(initWhPaymentVoucher, 'dateApproved')).date()
-  //     //   : moment(get(initWhPaymentVoucher, 'createdAt')).date();
-  //     // const accountingDateMM = get(initWhPaymentVoucher, 'dateApproved')
-  //     //   ? moment(get(initWhPaymentVoucher, 'dateApproved')).month() + 1
-  //     //   : moment(get(initWhPaymentVoucher, 'createdAt')).month() + 1;
-  //     // const accountingDateYY = get(initWhPaymentVoucher, 'dateApproved')
-  //     //   ? moment(get(initWhPaymentVoucher, 'dateApproved')).year()
-  //     //   : moment(get(initWhPaymentVoucher, 'createdAt')).year();
-
-  //     // const report = await createReport({
-  //     //   template,
-  //     //   cmdDelimiter: ['{#', '#}'],
-  //     //   data: {
-  //     //     accountingDateDD,
-  //     //     accountingDateMM,
-  //     //     accountingDateYY,
-  //     //     creditAccounts,
-  //     //     customerAddress: get(customerAddress, 'street') || customerAddress,
-  //     //     customerName,
-  //     //     debitAccounts,
-  //     //     issueNumber,
-  //     //     originalDocument,
-  //     //     reason,
-  //     //     totalAmountOfMoney: floorFormatter(totalAmountOfMoney),
-  //     //     totalAmountOfMoneyString: capitalizeFirstLetter(totalAmountOfMoneyString),
-  //     //     EmployeeName: get(employee, 'data.fullName', ''),
-  //     //     nameCompany: get(settingDocs, 'name', ''),
-  //     //     addressCompany: get(settingDocs, 'address', ''),
-  //     //   },
-  //     // });
-
-  //     // if (viewOnly) {
-  //     //   renderFile(
-  //     //     report,
-  //     //     `${issueNumber}.docx`,
-  //     //     'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
-  //     //   );
-  //     // } else {
-  //     //   saveDataToFile(
-  //     //     report,
-  //     //     `${issueNumber}.docx`,
-  //     //     'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
-  //     //   );
-  //     // }
-  //   } catch (error) {
-  //     console.error(error);
-  //   } finally {
-  //     setIsPrinting(false);
-  //   }
-  // };
 
 
   useEffect(() => {
     if (!id) {
       // form.resetFields();
-      if (pharmacy) {
+      if (provider) {
         form.setFieldsValue({
-          name: pharmacy?.name,
-          pharmacyReceive: pharmacy?.name,
-          provider: pharmacy?._id,
-          code: pharmacy?.code,
+          name: provider?.name,
+          receiver: provider?.name,
+          provider: provider?._id,
+          code: provider?.code,
         });
       }
     } else {
@@ -260,7 +142,7 @@ export default function ReceiptVoucherForm(props: propsType): React.JSX.Element 
       );
       setDataAccounting(initReceiptVoucher?.accountingDetails);
     }
-  }, [id, initReceiptVoucher,pharmacy]);
+  }, [id, initReceiptVoucher,provider]);
   
   useEffect(() => {
     if (id && mergedInitWhPaymentVoucher ) {
@@ -312,11 +194,6 @@ export default function ReceiptVoucherForm(props: propsType): React.JSX.Element 
   };
 
   const onWhVoucherStatusChange = async (status: string) => {
-    // if(id){ // UPDATING
-    //   if(!isHaveUpdateVoucher) return toastr.error("Bạn không có quyền chỉnh sửa")
-    // }else{ // CREATE
-    //   if(!isHaveCreateVoucher) return toastr.error("Bạn không có quyền Tạo phiếu")
-    // }
     confirm({
       title: `Bạn có muốn ${WH_VOUCHER_ACTION_NAME[status][LANGUAGE.VI]} phiếu này?`,
       icon: <ExclamationCircleOutlined/>,
@@ -401,7 +278,7 @@ export default function ReceiptVoucherForm(props: propsType): React.JSX.Element 
                 </Row>
                 <Row gutter={36}>
                   <Col span={24}>
-                    <FormItem label="Người nhận" name="pharmacyReceive">
+                    <FormItem label="Người nhận" name="receiver">
                       {isLoading ? <Skeleton.Input active /> : <Input />}
                     </FormItem>
                   </Col>
@@ -681,18 +558,6 @@ export default function ReceiptVoucherForm(props: propsType): React.JSX.Element 
                   </WithPermission>
                 </Space>
               )}
-
-            {/* <div className='buttonSaveFile'>
-              <Button
-                icon={<FileWordOutlined />}
-                loading={isPrinting}
-                onClick={() => onPrint()}
-              >
-                Tải về file Docx
-              </Button>
-              <Button onClick={onOpenSettingDocs} className='buttonSaveFile--addAfter'><SettingOutlined /></Button>
-              </div> */}
-
             {isSubmitLoading ? (
               <Button disabled>Đóng</Button>
             ) : (
@@ -705,14 +570,6 @@ export default function ReceiptVoucherForm(props: propsType): React.JSX.Element 
                   </Link>
                 )
             )}
-
-            {/* <Button
-              icon={<EyeOutlined />}
-              // loading={isPrinting}
-              // onClick={() => onPrint(true)}
-            >
-              Xem trước file
-            </Button> */}
           </Row>
         </Form>
       </div>
