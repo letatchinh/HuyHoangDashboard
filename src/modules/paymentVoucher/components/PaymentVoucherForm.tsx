@@ -68,14 +68,15 @@ import "./form.scss";
     pharmacyId?: any;
     refCollection?: string;
     debt?: number | null;
-    dataAccountingDefault? : any[]
+    dataAccountingDefault? : any[],
+    method?:any
   };
   
   export default function PaymentVoucherForm(
     props: propsType
   ): React.JSX.Element {
     useResetAction();
-    const { id, supplierId, onClose, refCollection, debt,pharmacyId,dataAccountingDefault } = props;
+    const { id, supplierId, onClose, refCollection, debt,pharmacyId,dataAccountingDefault,method } = props;
     const [form] = Form.useForm();
     const ref = useRef();
     const [accountingDetails, setAccountingDetails] = useState([]);
@@ -188,7 +189,8 @@ import "./form.scss";
           dateOfIssue: dayjs(dateOfIssue).format("YYYY-MM-DD"),
           refCollection: refCollection ? REF_COLLECTION[refCollection] : null,
           accountingDetails: accountingDetails,
-          totalAmount:sumBy([...accountingDetails],(item) => get(item,'amountOfMoney',0))
+          totalAmount:sumBy([...accountingDetails],(item) => get(item,'amountOfMoney',0)),
+          method
         };
         if (id) {
           handleUpdate({ id: id, ...newValue });
