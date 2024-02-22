@@ -1,8 +1,8 @@
 import { Button, Col, Form, Input, Radio, Row, Select, Skeleton } from 'antd';
-import { debounce, get } from 'lodash';
-import React, { useMemo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { debounce, differenceBy, get } from 'lodash';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useFormTaskContext } from '~/modules/workList/screens/WorkList';
+import apisSprint from '~/modules/workSprint/workSprint.api';
 import { useGetListTaskBySprints, useGetWorkSprints } from '~/modules/workSprint/workSprint.hook';
 import { useCopyTask, useResetAction } from '../workTask.hook';
 interface TaskFormProps {
@@ -15,7 +15,10 @@ const TaskForm: React.FC<TaskFormProps> = ({setDropdownVisible, dropdownVisible}
   const [form] = Form.useForm();
   const [keyword, setKeyword] = useState<string | null>(null);
   const [idSprint, setIdSprint] = useState<string>('');
+  const [taskData, setTaskData] = useState<any>([]);
+  const [dataTask,setDataTask] = useState([]);
     const [, copyTask] = useCopyTask();
+    const nQuery = useMemo(() => ({  id: sprintId }), [sprintId,copyTask]);
   const query = useMemo(() => {
     if (boardId) {
       return {
@@ -26,6 +29,14 @@ const TaskForm: React.FC<TaskFormProps> = ({setDropdownVisible, dropdownVisible}
     }
     return null;
   }, [boardId]);
+  const getData = useCallback(async () => {
+    const a = await apisSprint.getTaskInSprints(nQuery)
+    console.log(a,'asdasd')
+    setDataTask(a)
+   }, [nQuery]);
+   useEffect(() => {
+     getData();
+   }, [sprintId]);
   const [sprints] = useGetWorkSprints(query);
   const querySearch = useMemo(() => ({
     id: idSprint ? idSprint : sprintId,
@@ -33,7 +44,12 @@ const TaskForm: React.FC<TaskFormProps> = ({setDropdownVisible, dropdownVisible}
   }), [idSprint, keyword]);
   useResetAction();
     const [sprint, isLoadingSprint] = useGetListTaskBySprints(querySearch);
-  const navigate = useNavigate();
+    useEffect(() => {
+      if (sprint) {
+        const arr: any = differenceBy(sprint, dataTask, '_id','taskExited');
+            setTaskData(arr);
+      };
+    }, [sprint, dataTask,idSprint]);
   const [value, setValue] = useState<string>('new');
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValue(e.target.value);
@@ -133,8 +149,8 @@ const TaskForm: React.FC<TaskFormProps> = ({setDropdownVisible, dropdownVisible}
                       handleChangeTask(value);
                     }}
                   >
-                    {Array.isArray(sprint) &&
-                      sprint?.map((task) => (
+                    {Array.isArray(taskData) &&
+                      taskData?.map((task) => (
                         <Option key={task?._id} value={task._id}>
                           <div className="task-option-label-item" style={{ width: '120%', borderBottom: '1px solid #f0f0f0', marginBottom: 10 }}>
                             <Row  justify='center' style={{ alignItems: 'center', cursor: 'move' }} className='headerTask'>
