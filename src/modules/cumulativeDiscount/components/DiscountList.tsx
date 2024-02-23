@@ -5,7 +5,7 @@ import {
 import React, { useMemo } from "react";
 import UnitModule from '~/modules/productUnit';
 import {
-  TYPE_DISCOUNT, TYPE_REWARD, TYPE_VALUE
+  TYPE_DISCOUNT, TYPE_REPEAT, TYPE_REWARD, TYPE_VALUE
 } from "../constants";
 import { TypePropsDiscountList } from "../cumulativeDiscount.modal";
 import DiscountItem from "./DiscountItem";
@@ -21,13 +21,8 @@ export default function DiscountList({
       valueType: TYPE_VALUE.VALUE,
       typeReward: TYPE_REWARD.VALUE,
       target,
-      cumulativeTimeSheet : {
-        typeRepeat : "nope"
-      },
-      applyTimeSheet : {
-        typeRepeat : "nope"
-      },
       timesReward : 1,
+      typeRepeat : TYPE_REPEAT.noTime
     }),
     [target]
   );

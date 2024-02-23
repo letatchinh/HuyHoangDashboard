@@ -7,7 +7,7 @@ export const TYPE_DISCOUNT = {
   export const TYPE_DISCOUNT_VI = {
     'DISCOUNT.CORE' : "Chiết khấu cứng",
     'DISCOUNT.SOFT' : "Chiết khấu mềm",
-    'DISCOUNT.SOFT.CONDITION' : 'Chiết khấu mềm (có điều kiện)',
+    'DISCOUNT.SOFT.CONDITION' : 'Chiết khấu điều kiện',
     LK : "Luỹ kế",
   }
   
@@ -34,4 +34,12 @@ export const TYPE_DISCOUNT = {
     product : "product",
     supplier : "supplier",
     pharma_profile : "pharma_profile",
+  }
+
+  export const TYPE_REPEAT = {
+    noTime : 'noTime',
+    nope : 'nope',
+    month : 'month',
+    quarter : 'quarter',
+    year : 'year',
   }

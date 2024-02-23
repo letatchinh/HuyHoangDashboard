@@ -5,6 +5,7 @@ import {
   Row, Select
 } from "antd";
 import dayjs from "dayjs";
+import { range } from "lodash";
 import React from "react";
 import RenderLoading from "~/components/common/RenderLoading";
 import { TypeRepeatType } from "../cumulativeDiscount.modal";
@@ -22,7 +23,7 @@ export default function CumulativeTimeSheet({
   restField,
 }: propsType): React.JSX.Element {
   const typeRepeat: TypeRepeatType = Form.useWatch(
-    ["cumulativeDiscount", name, "cumulativeTimeSheet", "typeRepeat"],
+    ["cumulativeDiscount", name, "typeRepeat"],
     form
   );
   const getField = (field: string | string[]) => {
@@ -40,6 +41,41 @@ export default function CumulativeTimeSheet({
       <Row gutter={8} align={"middle"}>
         {
           {
+            noTime: (
+              <>
+              </>
+            ),
+            year: (
+              <Col span={7}>
+              <Form.Item shouldUpdate noStyle>
+                {() => (
+                  <Form.Item
+                    style={{ marginBottom: 0 }}
+                    {...restField}
+                    label={"Năm áp dụng"}
+                    name={[name, "cumulativeTimeSheet", "nonRepeat"]}
+                    rules={[
+                      {
+                        required: true,
+                        message: "Xin vui nhập!",
+                      },
+                    ]}
+                  >
+                    {RenderLoading(
+                      loading,
+                      <Select
+                        allowClear
+                        options={range(dayjs().year(),dayjs().year()+12).map((year => ({
+                          label : "Năm " + year,
+                          value : year,
+                        })))}
+                      />
+                    )}
+                  </Form.Item>
+                )}
+              </Form.Item>
+            </Col>
+            ),
             nope: (
               <>
                 <Col span={7}>
