@@ -305,6 +305,10 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
             data: orderSupplier,
             type: "ORDER",
           }}
+          dataAccountingDefault={[{
+            creditAccount: 1111,
+            amountOfMoney: debt || 0
+          }]}
         />
       </Modal>
     </div>

@@ -219,6 +219,10 @@ export default function ListOrder({ status }: propsType): React.JSX.Element {
             data: orderSelect,
             type: "ORDER",
           }}
+          dataAccountingDefault={[{
+            creditAccount: 1111,
+            amountOfMoney: debt || 0
+          }]}
         />
       </Modal>
     </div>
