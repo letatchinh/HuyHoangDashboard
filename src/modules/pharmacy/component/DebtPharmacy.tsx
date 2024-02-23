@@ -1,6 +1,6 @@
 import { ColumnsType } from "antd/es/table";
 import useTranslate from "~/lib/translation";
-import { concatAddress } from "~/utils/helpers";
+import { concatAddress, formatter } from "~/utils/helpers";
 import {
   useGetPharmacyDebt,
   usePharmacyDebtQuery,
@@ -69,13 +69,13 @@ export default function DebtPharmacy(props: propsType) {
   const newQuery = useMemo(
     () => ({
       ...query,
-      pharmacyId: pharmacyId,
+      pharmaId: pharmacyId,
       ...date,
       status: searchByStatus?.toString(),
     }),
     [pharmacyId, query, date, searchByStatus]
   );
-  const [data, isLoading] = useGetPharmacyDebt(query);
+  const [data, isLoading] = useGetPharmacyDebt(newQuery);
   
   const paging = usePharmacyPaging();
 
@@ -111,24 +111,34 @@ export default function DebtPharmacy(props: propsType) {
         dataIndex: "totalPrice",
         key: "totalPrice",
         width: 200,
+        render(value) {
+          return formatter(value);
+        },
       },
       {
         title: "Phương thức thanh toán",
-        dataIndex: "paymentMethod",
-        key: "paymentMethod",
+        dataIndex: "debtType",
+        key: "debtType",
         width: 250,
+        
       },
       {
         title: "Đã thanh toán",
-        dataIndex: "totalAmount",
-        key: "totalAmount",
+        dataIndex: "pair",
+        key: "pair",
         width: 120,
+        render(value) {
+          return formatter(value);
+        },
       },
       {
         title: "Nợ",
-        dataIndex: "totalDebt",
-        key: "totalDebt",
+        dataIndex: "resultDebt",
+        key: "resultDebt",
         width: 120,
+        render(value) {
+          return formatter(value);
+        },
       },
     ],
     []
