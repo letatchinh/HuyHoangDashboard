@@ -325,6 +325,10 @@ export default function Supplier(): React.JSX.Element {
           supplierId={supplierId}
           refCollection={REF_COLLECTION_UPPER.SUPPLIER}
           debt={debt}
+          dataAccountingDefault={[{
+            creditAccount: 1111,
+            amountOfMoney: debt || 0
+          }]}
         />
       </Modal>
       <Modal

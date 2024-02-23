@@ -60,7 +60,12 @@ import "./form.scss";
   const { confirm } = Modal;
   const { Option } = Select;
   const DEFAULT_ACCOUNT = 1111;
-  
+  type DataAccounting = {
+    content? : string,
+    debitAccount?:number,
+    creditAccount?:number,
+    amountOfMoney?:number,
+  }
   type propsType = {
     id?: any;
     onClose?: any;
@@ -68,7 +73,7 @@ import "./form.scss";
     pharmacyId?: any;
     refCollection?: string;
     debt?: number | null;
-    dataAccountingDefault? : any[],
+    dataAccountingDefault? : DataAccounting[],
     method?:any
   };
   
