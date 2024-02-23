@@ -42,13 +42,12 @@ const getVoucherSupplierFailedSelector = getSelector("getVoucherSupplierFailed")
 const isLoadingGetVoucherSupplierSelector = getSelector("isLoadingGetVoucherSupplier");
 const pagingVoucherSupplierSelector = getSelector("pagingVoucherSupplier");
 
-const totalAmountBillItemSupplierSelector = getSelector("totalAmountBillItem");
-
 export const useTotalAmountBillItem = () => useSelector(totalAmountBillItemSupplierSelector);
 export const useSupplierPaging = () => useSelector(pagingSelector);
 export const useVoucherSupplierPaging = () =>
   useSelector(pagingVoucherSupplierSelector);
 
+const totalAmountBillItemSupplierSelector = getSelector("totalAmountOrder");
 const productSupplierSelector = getSelector("productSupplier");
 const getProductSupplierFailedSelector = getSelector(
   "getProductSupplierFailed"

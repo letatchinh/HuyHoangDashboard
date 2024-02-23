@@ -1,16 +1,15 @@
-import React from 'react';
+import "./index.scss";
 
-import { Tag } from 'antd';
-import { get } from 'lodash';
+import React from "react";
+type propsType = {
+    status : string,
+    statusVi : string,
 
-import { ORDER_STATUS, ORDER_STATUS_KEY_SEARCH_COLOR} from '~/constants/defaultValue';
-
-const StatusTag = ({ status}: any) => {
-  return (
-    <Tag color={get(ORDER_STATUS_KEY_SEARCH_COLOR[status], "color")}>
-      {get(ORDER_STATUS_KEY_SEARCH_COLOR[status], "name")}
-    </Tag>
-  )
 };
-
-export default StatusTag;
+export default function StatusTag({status,statusVi}: propsType): React.JSX.Element {
+  return (
+    <span className={`status ${status?.toLowerCase()}`}>
+      {statusVi}
+    </span>
+  );
+};

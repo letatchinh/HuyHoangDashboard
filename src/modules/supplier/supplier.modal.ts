@@ -37,7 +37,7 @@ export type addressType = {
     getVoucherSupplierFailed?: any;
     voucherSupplier?: T[];
     pagingVoucherSupplier?: any;
-    totalAmountBillItem?: number;
+    totalAmountOrder?: number;
     
     isLoadingGetSuppliersProductAuthor?: boolean;
     getSuppliersProductAuthorFailed?: any;
@@ -56,3 +56,15 @@ export type addressType = {
     endDate?: any,
     searchBy?: SearchByType,
   }
+  export type STATUS_BILL_TYPE = {
+    NEW: "NEW",
+    PROCESSING: "PROCESSING",
+    COMPLETED: "COMPLETED",
+    CANCELLED: "CANCELLED",
+  };
+  export type STATUS_BILL_VI_TYPE = {
+    NEW: "Đã tiếp nhận",
+    PROCESSING: "Đang xử lý",
+    COMPLETED: "Đã hoàn thành",
+    CANCELLED: "Đã huỷ",
+  };

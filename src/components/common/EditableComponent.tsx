@@ -144,7 +144,6 @@ const EditableCell = ({
   };
 
   let childNode = children;
-  
   if (editable) {
     childNode = editing ? (
       <Form.Item
@@ -155,7 +154,7 @@ const EditableCell = ({
         rules={[
           {
             required: required === false ? false : true,
-            message: `Vui lòng nhập ${title}.`,
+            message: `Vui lòng nhập ${typeof title === "string" ? title : ""}.`,
           },
         ]}
       >
