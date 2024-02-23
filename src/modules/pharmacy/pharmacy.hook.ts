@@ -191,7 +191,7 @@ export const useInitPharmacy = (pharmacy: any, id: any) => {
 export const usePharmacyDebtQuery = () => {
   const [limit, setLimit] = useState<number | null | undefined>(10);
   const [page, setPage] = useState<number | null | undefined>(1);
-  const [keyword, setKeyword] = useState("");
+  // const [keyword, setKeyword] = useState("");
   const onTableChange: any = ({ current, pageSize }: any) => {
     setPage(current);
     setLimit(pageSize);
@@ -200,10 +200,10 @@ export const usePharmacyDebtQuery = () => {
     const query = {
       page,
       limit,
-      keyword,
+      // keyword,
     };
     return [query, onTableChange];
-  }, [page, limit, keyword]);
+  }, [page, limit]);
 };
 
 export const useGetPharmacyDebt = (param: any) => {
