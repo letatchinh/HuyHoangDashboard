@@ -78,7 +78,7 @@ const CommentTask = ({readOnly,value,action,active,autoFocus,isEdit,onChange}: P
           }
           setHtmlContent('')
           }} style={{borderRadius:6}} type='primary'>
-          <SendOutlined />
+          <SendOutlined  style={{display:'flex',alignItems:'center',justifyContent:'center'}}/>
         </Button>
       </div>
       }

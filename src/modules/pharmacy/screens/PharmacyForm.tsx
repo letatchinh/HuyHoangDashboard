@@ -97,9 +97,6 @@ export default function PharmacyForm({ onClose, id, handleUpdate }: Props) {
             name={["infoPolicy", "fullName"]}
             labelCol={{ sm: 24, md: 24, lg: 3 }}
             wrapperCol={{ sm: 24, md: 24, lg: 21 }}
-            rules={[
-              { required: true, message: "Xin vui lòng nhập tên nhà thuốc" },
-            ]}
           >
             <Input />
           </FormItem>

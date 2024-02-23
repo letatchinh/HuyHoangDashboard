@@ -265,7 +265,6 @@ export const useListenComment= (taskId: any)=>{
 
       eventListener.onmessage = function(event: any){
         const parsedData = JSON.parse(event.data);
-
         switch (parsedData?.case) {
           case TASK_ITEM_API['FETCH']:{
               if(isArray(get(parsedData?.data,'comment',parsedData?.data))){

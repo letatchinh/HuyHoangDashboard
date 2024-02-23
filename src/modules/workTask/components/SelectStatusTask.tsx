@@ -65,7 +65,7 @@ function SelectStatusTask({
     <Select
       className="selectTask-custom"
       style={{
-        width: "150px",
+        width: "155px",
         textAlign: "center",
         ...customStyles,
         borderRadius: "9px",

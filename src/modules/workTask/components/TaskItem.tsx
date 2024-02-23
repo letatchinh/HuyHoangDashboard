@@ -61,7 +61,7 @@ const TaskItem: React.FC<TaskProps> = ({ task }) => {
         </Col>
         <Col flex={1}>
           <Tooltip title='Mở trang chi tiết' mouseEnterDelay={0.8}>
-            <Button type='link' target='_blank' href={`/work-task-item/${task._id}`} style={{ color: 'rgb(77 114 145)', float: 'left', marginLeft: 10 }}>#{task.code}</Button>
+            <Button type='link' target='_blank' href={`/work-task-item/${task._id}`} style={{ color: 'rgb(77 114 145)', float: 'left', marginLeft: 10,marginTop: 4 }}>#{task.code}</Button>
           </Tooltip>
         </Col>
         <Col className='work-item-icon-action-info' style={{ display: 'flex', justifyContent: 'space-around', width: '50px', alignItems: 'center', fontSize: 'large' }} >
@@ -78,7 +78,7 @@ const TaskItem: React.FC<TaskProps> = ({ task }) => {
           </Tooltip>
             <span className='work-item-icon-action' style={{}}>
               <Popconfirm
-                title="Bạn có chắc chắn muốn xóa task này ?"
+                title="Bạn có chắc chắn muốn xóa công việc này ?"
                 onConfirm={() => { handleDeleteTask({ id: task._id, boardConfigId: task.boardConfigId }) }}
                 okText="Xác nhận"
                 cancelText="Huỷ"
@@ -86,7 +86,6 @@ const TaskItem: React.FC<TaskProps> = ({ task }) => {
                 <CloseOutlined className='button-remove-task' style={{ color: '#DC3535' }} />
               </Popconfirm>
             </span>
-
         </Col>
       </Row>
       <Row
@@ -110,11 +109,10 @@ const TaskItem: React.FC<TaskProps> = ({ task }) => {
           >
             {task.assignUser && task.assignUser.map((item:any) => (
               <Tooltip title={get(item?.user||item?.User || item?.userId, 'fullName')} mouseEnterDelay={0.8}>
-
                 <Avatar
                   size={24}
                   src={get(item?.user||item?.User || item?.userId, 'avatar') ?? ''}
-                  style={{ marginRight: '2px', backgroundColor: '#f56a00', }}
+                  style={{ marginRight: '2px', backgroundColor: '#ffffff',color: 'rgb(82 146 234 / 88%)', border: '1px solid rgb(82 146 234 / 88%)',textAlign: 'center' }}
                 >
                   {!get(item?.user||item?.User || item?.userId, 'avatar') &&
                     getShortName(get(item?.user||item?.User || item?.userId, 'fullName', ''))

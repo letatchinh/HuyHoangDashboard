@@ -12,9 +12,10 @@ import apis from '../workList.api';
 interface BoardConfigProps {
   name?: string;
   id?: string;
-  dataBoardConfigItem?: any; // Change the type to your actual type
+  dataBoardConfigItem?: any;
+  dataTask?: any // Change the type to your actual type
 }
-const BoardConfig: FC<BoardConfigProps> = ({ name, id, dataBoardConfigItem }) => {
+const BoardConfig: FC<BoardConfigProps> = ({ name, id,dataTask, dataBoardConfigItem }) => {
   useResetAction();
   const tasks = useMemo(() => dataBoardConfigItem, [dataBoardConfigItem]);
   const { openForm, handleDeleteWork} = useFormTaskContext();
@@ -109,7 +110,7 @@ const BoardConfig: FC<BoardConfigProps> = ({ name, id, dataBoardConfigItem }) =>
             className="work-list-column work-list-column_body"
             style={{
               height: '100%',
-              background: 'rgb(82 146 234 / 88%)',
+              background: '#ffffff',
             }}
           >
             <div className="task-list">

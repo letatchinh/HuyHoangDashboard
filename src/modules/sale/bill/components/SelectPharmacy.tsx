@@ -1,12 +1,12 @@
-import { Col, Flex, Form, Row, Select } from "antd";
+import { UserOutlined } from "@ant-design/icons";
+import { Col, Form, Row } from "antd";
+import { SelectProps } from "antd/lib/index";
 import { get } from "lodash";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
+import DebounceSelect from "~/components/common/DebounceSelect";
 import PharmacyModule from "~/modules/pharmacy";
 import useNotificationStore from "~/store/NotificationContext";
 import { FormFieldCreateBill } from "../bill.modal";
-import DebounceSelect from "~/components/common/DebounceSelect";
-import { UserAddOutlined, UserOutlined } from "@ant-design/icons";
-import { SelectProps } from "antd/lib/index";
 interface propsType extends SelectProps {
   form? : any,
   onChange? : (p:any) => void,
@@ -24,7 +24,7 @@ export default function SelectPharmacy({form,onChange = () => {},allowClear = tr
   const fetchOptions : any = async (keyword : string) => {
     try {
       const pharmacies = await PharmacyModule.api.search({
-        keyword,
+        keyword : keyword || "",
       });
       const newOptions = get(pharmacies,'docs',[])?.map((item: ItemSearch) => ({
         label: get(item, "name"),
@@ -36,7 +36,7 @@ export default function SelectPharmacy({form,onChange = () => {},allowClear = tr
       onNotify?.error(error?.response?.data?.message || "Có lỗi gì đó xảy ra");
     }
   };
-
+  
   useEffect(() => {
     const fetchInit = async() => {
     try {
@@ -45,10 +45,12 @@ export default function SelectPharmacy({form,onChange = () => {},allowClear = tr
         id : form.getFieldValue("pharmacyId"),
         keyword : ''
       });
+      
       const newOptions = get(pharmacies,'docs',[])?.map((item: ItemSearch) => ({
         label: get(item, "name"),
         value: get(item, "_id"),
       }));
+      
       setInitOption(newOptions);
       setLoading(false);
       await form.validateFields(['pharmacyId']);
@@ -57,9 +59,10 @@ export default function SelectPharmacy({form,onChange = () => {},allowClear = tr
       setLoading(false);
     }
     };
-    fetchInit();
+      fetchInit();
 
   },[]);
+  
   return (
     <Row gutter={8}>
       {showIcon && <UserOutlined />}

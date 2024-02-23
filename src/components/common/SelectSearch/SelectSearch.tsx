@@ -27,6 +27,7 @@ interface Props {
   mode?: "multiple" | "tags" | undefined;
   onChangeStatus?: any;
   valueStatus?: any;
+  addComponent?: React.ReactNode;
   style?: React.CSSProperties;
   titleButtonAdd?: string;
 }
@@ -49,6 +50,7 @@ const SelectSearch = ({
   onChangeStatus,
   valueStatus,
   permissionKey,
+  addComponent,
   style,
   titleButtonAdd = "Thêm mới",
 }: Props) => {
@@ -99,20 +101,12 @@ const SelectSearch = ({
                 // defaultValue={OptionStatus[0]}
               />
             </Col>
-            // <Col className="select-search__status">
-            //   <Radio.Group
-            //     options={OptionStatus as any}
-            //     onChange={onChangeStatus}
-            //     value={valueStatus}
-            //     optionType="button"
-            //     buttonStyle="solid"
-            //   />
-            // </Col>
           )}
         </Row>
       </div>
       <div className="select-search__right">
         <Row justify="end">
+          {addComponent && addComponent}
           {isShowButtonAdd && (
             <Col className="select-search__button">
               <WithOrPermission permission={permissionKey}>

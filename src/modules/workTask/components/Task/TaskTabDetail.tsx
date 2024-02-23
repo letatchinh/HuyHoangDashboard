@@ -83,7 +83,7 @@ export default function TaskTabDetail({ idTask, }: Props) {
                         <SelectStatusTask handleChangeStatus={handleChange} value={selected} defaultValue={selected} initStatusValue={get(dataTask, 'statusId', {})} listStatus={boardById?.listStatusConfig} />
                     </Suspense>
                 </Col>
-                <Col style={{ marginRight: 8 }}>
+                <Col style={{ marginRight: 8,marginTop:5 }}>
                     <Text strong>#{get(dataTask, 'code', '')} </Text>
                 </Col>
                 <Col flex={1} style={{ marginRight: 8 }}>

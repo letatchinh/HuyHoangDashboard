@@ -16,6 +16,7 @@ import userModule from '~/modules/user';
 import userGroupModule from '~/modules/userGroup';
 import policy from '~/modules/policy';
 import vouchers from '~/modules/vouchers';
+import reportSupplier from '~/modules/report/reportSupplier';
 import manufacturerModule from '~/modules/manufacturer';
 import productUnitModule from '~/modules/productUnit';
 import rankingModule from '~/modules/ranking';
@@ -58,6 +59,7 @@ const rootReducer = combineReducers({
     userGroup: userGroupModule.redux.reducer,
     policy: policy.redux.reducer,
     vouchers: vouchers.redux.reducer,
+    reportSupplier: reportSupplier.redux.reducer,
     productGroup:productGroupModule.redux.reducer,
     manufacturer:manufacturerModule.redux.reducer,
     productUnit:productUnitModule.redux.reducer,

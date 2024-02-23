@@ -21,7 +21,6 @@ function* getListProductSupplier({payload:query} : any) : any {
 };
 
 function* getListVoucherSupplier({ payload: query }: any): any {
-  console.log(query,'query')
   try {
     const data = yield call(api.getVouchers,query);
     yield put(supplierSliceAction.getVoucherSupplierSuccess(data));
@@ -55,7 +54,7 @@ function* createModuleExample({payload} : any) : any {
   } catch (error:any) {
     yield put(supplierSliceAction.createFailed(error));
   }
-}
+};
 
 function* updateModuleExample({payload} : any) : any {
   try {
@@ -64,7 +63,8 @@ function* updateModuleExample({payload} : any) : any {
   } catch (error:any) {
     yield put(supplierSliceAction.updateFailed(error));
   }
-}
+};
+
 function* deleteModuleExample({payload : id} : any) : any {
   try {
     const data = yield call(api.delete,id);
@@ -72,7 +72,7 @@ function* deleteModuleExample({payload : id} : any) : any {
   } catch (error:any) {
     yield put(supplierSliceAction.deleteFailed(error));
   }
-}
+};
 
 export default function* supplierSaga() {
   yield takeLatest(supplierSliceAction.getListRequest, getListModuleExample);

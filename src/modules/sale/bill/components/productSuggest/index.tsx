@@ -1,4 +1,4 @@
-import React, { CSSProperties, useMemo, useRef, useState } from "react";
+import React, { CSSProperties, useEffect, useMemo, useRef, useState } from "react";
 import { useBillProductSuggestPaging, useGetProductListSuggest } from "../../bill.hook";
 import { Button, Card, Carousel, Collapse, List, Row } from "antd";
 import { CaretLeftOutlined, CaretRightOutlined } from "@ant-design/icons";
@@ -19,8 +19,10 @@ const contentStyle: React.CSSProperties = {
 
 const ProductListSuggest: React.FC = () => {
   const [page, setPage] = useState(1)
-  const [limit, setLimit] = useState(10)
+  const [limit, setLimit] = useState(4)
   const [keyword, setKeyword] = useState("");
+  const productSuggest: any = document.querySelector('.product-suggest');
+  const tableSelectedProductContent : any = document.querySelector('.table-selected-product .ant-table-content');
   const query = useMemo(
     () => ({
       keyword,
@@ -33,7 +35,12 @@ const ProductListSuggest: React.FC = () => {
   const paging = useBillProductSuggestPaging();
   const inputEl : any = useRef(null);
   const { quotationItems, onAdd, bill } = useCreateBillStore();
-  const {onNotify} = useNotificationStore();
+  const { onNotify } = useNotificationStore();
+  const [collapseActive, setCollapseActive] = useState(false);
+
+  const handleCollapseChange = () => {
+    setCollapseActive(!collapseActive);
+  };
   const onSelect = async(data:any) => {
     // inputEl.current.blur();
     const billItem: any = selectProductSearch(data);
@@ -52,6 +59,18 @@ const ProductListSuggest: React.FC = () => {
       setPage(paging?.current - 1)
     }
   };
+  function updateMaxHeight() {
+    const productSuggestHeight = productSuggest?.offsetHeight;
+    const newMaxHeight = 100 - productSuggestHeight;
+    if (tableSelectedProductContent) {
+      if (collapseActive) {
+            tableSelectedProductContent.style.maxHeight = `${newMaxHeight + 10}vh`;
+      } else {
+            tableSelectedProductContent.style.maxHeight = 'calc(100vh - 50px - 80px)';
+        };
+    };
+  };
+
   const ListItem = () => {
     return (
       <>
@@ -63,7 +82,7 @@ const ProductListSuggest: React.FC = () => {
           sm: 2,
           md: 4,
           lg: 4,
-          xl: 6,
+          xl: 4,
           xxl: 3,
         }}
         dataSource={products?.docs || []}
@@ -89,11 +108,13 @@ const ProductListSuggest: React.FC = () => {
                 fontSize: 12,
                 opacity: disabled ? 0.5 : 1,
               }}
+              className="product-suggest__card"
               onScroll={(e) => e.stopPropagation()}
               bodyStyle={{
                 width: '100%',
-                minWidth: '100px',
-                minHeight: '100px',
+                minWidth: '150px',
+                minHeight: '80px',
+                maxHeight: '80px',
                 padding: 5, 
                 overflow: 'hidden',
                 fontSize: 12,
@@ -108,8 +129,8 @@ const ProductListSuggest: React.FC = () => {
         )}}
         />
         <Row align={"middle"} justify={"center"}>
-          <Button type="link" icon={<CaretLeftOutlined />} disabled={ !paging?.hasPrevPage } onClick={()=> onChangeData(false)}/>
-          <Button type="link" icon={<CaretRightOutlined />} disabled={ !paging?.hasNextPage} onClick={()=> onChangeData(true)} />
+          <Button type="link" icon={<CaretLeftOutlined className="product-suggest__btn--icon" />} disabled={ !paging?.hasPrevPage } onClick={()=> onChangeData(false)}/>
+          <Button type="link" icon={<CaretRightOutlined className="product-suggest__btn--icon"  />} disabled={ !paging?.hasNextPage} onClick={()=> onChangeData(true)} />
       </Row>
       </>
     )
@@ -118,18 +139,26 @@ const ProductListSuggest: React.FC = () => {
     {
       key: '1',
       label: 'Danh sách thuốc gợi ý',
-      children: <ListItem/>,
+      children: <ListItem />,
+      // onClick: () => {
+      //   updateMaxHeight();
+      //   window.addEventListener('resize', updateMaxHeight);
+      // },
       // style: panelStyle,
     },
   ];
   return (
     <div className="product-suggest">
-      <Collapse
+      <div className="product-suggest__content">
+        <Collapse
         bordered={false}
-        // defaultActiveKey={['1']}
         expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}
-        items={getItems()}
+          items={getItems()}
+          onChange={handleCollapseChange}
+          accordion
+          defaultActiveKey={["1"]}
       />
+      </div>
     </div>
   );
 };

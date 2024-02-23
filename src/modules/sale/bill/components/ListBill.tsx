@@ -7,10 +7,10 @@ import {
   useUpdateBillParams,
 } from "../bill.hook";
 
-import { Space, Typography } from "antd";
+import { Checkbox, Col, Row, Space, Typography } from "antd";
 import { ColumnsType } from "antd/es/table/InternalTable";
 import dayjs from "dayjs";
-import { get } from "lodash";
+import { get, includes } from "lodash";
 import { Link } from "react-router-dom";
 import SearchAnt from "~/components/Antd/SearchAnt";
 import Status from "~/components/common/Status/index";
@@ -18,6 +18,11 @@ import SelectSupplier from "~/modules/supplier/components/SelectSupplier";
 import { PATH_APP } from "~/routes/allPath";
 import { formatter, pagingTable } from "~/utils/helpers";
 import { STATUS_BILL_VI } from "../constants";
+import { useMatchPolicy } from "~/modules/policy/policy.hook";
+import POLICIES from "~/modules/policy/policy.auth";
+import useCheckBoxExport from "~/modules/export/export.hook";
+import WithPermission from "~/components/common/WithPermission";
+import ExportExcelButton from "~/modules/export/component";
 type propsType = {
   status?: string;
 };
@@ -27,6 +32,10 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
   const [keyword, { setKeyword, onParamChange }] = useUpdateBillParams(query);
   const [bills, isLoading] = useGetBills(query);
   const paging = useBillPaging();
+
+  //Download
+  const canDownload = useMatchPolicy(POLICIES.DOWNLOAD_PRODUCT);
+  const [arrCheckBox, onChangeCheckBox] = useCheckBoxExport();
   const columns: ColumnsType = useMemo(
     () => [
       {
@@ -108,18 +117,56 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
           return <Typography.Text>{formatter(totalPrice)}</Typography.Text>;
         },
       },
-    ],
-    []
+      ...(
+        canDownload ? [
+          {
+            title: 'Lựa chọn',
+            key: '_id',
+            width: 80,
+            align: 'center' as any,
+            render: (item: any, record: any) => {
+              const id = record?._id;
+              return (
+                <Checkbox
+                  checked={arrCheckBox?.includes(id)}
+                  onChange={(e) => onChangeCheckBox(e.target.checked, id)}
+                />)
+            }
+          },
+        ] : []
+      ),
+    ], [arrCheckBox]
   );
+  console.log(query?.supplierIds,'query?.supplierIds');
+  
   return (
     <div className="bill-page">
-      <Space>
+      {/* <Space> */}
+        <Row justify={"space-between"}>
+          <Col span={12}>
+          <Space>
         <SelectSupplier
-          onChange={(value) => onParamChange({ supplierIds: value })}
+          value={query?.supplierIds ? query?.supplierIds?.split(',') : []}
+          onChange={(value) => onParamChange({ supplierIds: value?.length ? value : null })}
           mode="multiple"
+          style={{width : 200}}
         />
-        <SearchAnt onParamChange={onParamChange} />
+        <SearchAnt value={keyword} onChange={(e) => setKeyword(e.target.value)} onParamChange={onParamChange} />
       </Space>
+          </Col>
+            <WithPermission permission={POLICIES.DOWNLOAD_BILL}>
+              <Col>
+                <ExportExcelButton
+                  api='bill'
+                  exportOption = 'bill'
+                  query={query}
+                  fileName='Danh sách đơn hàng'
+                  ids={arrCheckBox}
+                />
+              </Col>
+          </WithPermission>
+        </Row>
+      {/* </Space> */}
       <TableAnt
         stickyTop
         columns={columns}

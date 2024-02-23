@@ -65,9 +65,11 @@
     &__mainContent {
       flex: 1;
       padding: 10px;
+      height: calc(100vh - #{$height-header});
       min-height: calc(100vh - #{$height-header});
       max-height: calc(100vh - #{$height-header});
       overflow-y: auto;
+      position: relative;
     }
   }
 }

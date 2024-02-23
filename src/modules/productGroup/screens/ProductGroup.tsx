@@ -1,5 +1,5 @@
 import { DeleteOutlined, InfoCircleTwoTone, PlusCircleOutlined, SearchOutlined } from '@ant-design/icons';
-import { Button, Col, Form, Input, Row, Select, SelectProps, Space, Switch, Table, message } from 'antd';
+import { Button, Checkbox, Col, Form, Input, Row, Select, SelectProps, Space, Switch, Table, message } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { get } from 'lodash';
 import { useCallback, useState } from 'react';
@@ -20,6 +20,8 @@ import {
   useUpdateProductConfigParams
 } from '../productGroup.hook';
 import ProductGroupForm from './ProductGroupForm';
+import useCheckBoxExport from '~/modules/export/export.hook';
+import ExportExcelButton from '~/modules/export/component';
 
 const { Search } = Input;
 
@@ -41,6 +43,10 @@ export default function ProductConfig() {
   const [keyword, { setKeyword, onParamChange }] = useUpdateProductConfigParams(query);
   const { t }: any = useTranslate();
   const canUpdate = useMatchPolicy(POLICIES.UPDATE_PRODUCTGROUP);
+
+  //Download
+  const canDownload = useMatchPolicy(POLICIES.DOWNLOAD_UNIT);
+  const [arrCheckBox, onChangeCheckBox] = useCheckBoxExport();
 
   interface DataType {
     code: string;
@@ -125,6 +131,24 @@ export default function ProductConfig() {
         </Space>
       ),
     },
+    ...(
+      canDownload ? [
+        {
+          title: 'Lựa chọn',
+          key: '_id',
+          width: 80,
+          align: 'center' as any,
+          render: (item: any, record: any) =>
+          {
+            const id = record._id;
+            return (
+              <Checkbox
+                checked= {arrCheckBox?.includes(id)}
+                onChange={(e)=>onChangeCheckBox(e.target.checked, id)}
+          />)}
+        },
+      ]: []
+    ) 
   ];
   const onSearch = (value: string) => {
     onParamChange({ ['keyword']: value });
@@ -178,11 +202,27 @@ export default function ProductConfig() {
                   />
                 </Col>
                 <Col>
-                  <WithPermission permission={POLICIES.WRITE_PRODUCTGROUP}>
-                    <Button icon={<PlusCircleOutlined />} onClick={handleOpenFormCreate} type="primary">
-                      Thêm mới
-                    </Button>
-                  </WithPermission>
+                  <Row>
+                    <Col>
+                    <WithPermission permission={POLICIES.WRITE_PRODUCTGROUP}>
+                      <Button icon={<PlusCircleOutlined />} onClick={handleOpenFormCreate} type="primary">
+                        Thêm mới
+                      </Button>
+                    </WithPermission>
+                    </Col>
+                    <WithPermission permission={POLICIES.DOWNLOAD_PRODUCTGROUP}>
+                      <Col>
+                        <ExportExcelButton
+                          api='product-group'
+                          exportOption = 'productGroup'
+                          query={query}
+                          fileName='Danh mục nhóm sản phẩm'
+                          ids={arrCheckBox}
+                        />
+                      </Col>
+                   </WithPermission>
+                  </Row>
+                  
                 </Col>
               </Row>
             </div>

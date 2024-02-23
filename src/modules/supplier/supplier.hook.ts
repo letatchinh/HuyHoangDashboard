@@ -42,12 +42,13 @@ const getVoucherSupplierFailedSelector = getSelector("getVoucherSupplierFailed")
 const isLoadingGetVoucherSupplierSelector = getSelector("isLoadingGetVoucherSupplier");
 const pagingVoucherSupplierSelector = getSelector("pagingVoucherSupplier");
 
+const totalAmountBillItemSupplierSelector = getSelector("totalAmountOrder");
+
 export const useTotalAmountBillItem = () => useSelector(totalAmountBillItemSupplierSelector);
 export const useSupplierPaging = () => useSelector(pagingSelector);
 export const useVoucherSupplierPaging = () =>
   useSelector(pagingVoucherSupplierSelector);
 
-const totalAmountBillItemSupplierSelector = getSelector("totalAmountOrder");
 const productSupplierSelector = getSelector("productSupplier");
 const getProductSupplierFailedSelector = getSelector(
   "getProductSupplierFailed"
@@ -58,11 +59,12 @@ const isLoadingGetProductSupplierSelector = getSelector(
 const pagingProductSupplierSelector = getSelector("pagingProductSupplier");
 
 const suppliersProductAuthorSelector = getSelector("suppliersProductAuthor");
-const getSuppliersProductAuthorFailedSelector = getSelector(
-  "getSuppliersProductAuthorFailed"
-);
 const isLoadingGetSuppliersProductAuthorSelector = getSelector(
   "isLoadingGetSuppliersProductAuthor"
+);
+
+const getSuppliersProductAuthorFailedSelector = getSelector(
+  "getSuppliersProductAuthorFailed"
 );
 const pagingSuppliersProductAuthorSelector = getSelector("pagingSuppliersProductAuthor");
 

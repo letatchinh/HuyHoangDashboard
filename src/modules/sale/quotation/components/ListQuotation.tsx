@@ -9,7 +9,7 @@ import {
   useUpdateQuotationParams,
 } from "../quotation.hook";
 
-import { Button, Popconfirm, Row, Space, Typography } from "antd";
+import { Button, Checkbox, Col, Popconfirm, Row, Space, Typography,Form } from "antd";
 import { ColumnsType } from "antd/es/table/InternalTable";
 import dayjs from "dayjs";
 import { get } from "lodash";
@@ -24,7 +24,11 @@ import SelectPharmacy from "../../bill/components/SelectPharmacy";
 import { STATUS_QUOTATION, STATUS_QUOTATION_VI } from "../constants";
 import { PlusCircleTwoTone } from "@ant-design/icons";
 import WithPermission from "~/components/common/WithPermission";
-import policyModule from "policy";
+import policyModule from 'policy';
+import { useMatchPolicy } from "~/modules/policy/policy.hook";
+import POLICIES from "~/modules/policy/policy.auth";
+import useCheckBoxExport from "~/modules/export/export.hook";
+import ExportExcelButton from "~/modules/export/component";
 type propsType = {
   status?: string;
 };
@@ -32,6 +36,7 @@ const CLONE_STATUS_QUOTATION_VI: any = STATUS_QUOTATION_VI;
 export default function ListQuotation({
   status,
 }: propsType): React.JSX.Element {
+  const [form] = Form.useForm();
   const [query] = useQuotationQueryParams(status);
   const [keyword, { setKeyword, onParamChange }] =
     useUpdateQuotationParams(query);
@@ -53,6 +58,11 @@ export default function ListQuotation({
     });
     window.open(PATH_APP.bill.create);
   };
+  //Download
+  const canDownload = useMatchPolicy(POLICIES.DOWNLOAD_PRODUCT);
+  const [arrCheckBox, onChangeCheckBox] = useCheckBoxExport();
+
+
   const columns: ColumnsType = useMemo(
     () => [
       {
@@ -156,6 +166,24 @@ export default function ListQuotation({
           );
         },
       },
+      ...(
+        canDownload ? [
+          {
+            title: 'Lựa chọn',
+            key: '_id',
+            width: 80,
+            align: 'center' as any,
+            render: (item: any, record: any) => {
+              const id = record?._id;
+              return (
+                <Checkbox
+                  checked={arrCheckBox?.includes(id)}
+                  onChange={(e) => onChangeCheckBox(e.target.checked, id)}
+                />)
+            }
+          },
+        ] : []
+      ),
       {
         title: "Thao tác",
         dataIndex: "_id",
@@ -259,31 +287,51 @@ export default function ListQuotation({
         },
       },
     ],
-    []
+    [arrCheckBox]
   );
   return (
     <div className="quotation-page">
-      <Row align="middle" gutter={8}>
+      <Row align="middle" gutter={8} justify={"space-between"}>
+        <Col>
+          <Space>
+          <Form form={form} initialValues={{pharmacyId : query?.pharmacyId}}> 
         <SelectPharmacy
+          form={form}
+          style={{ width: 200 }}
           showIcon={false}
           size={"middle"}
-          onChange={(value) => onParamChange({ pharmacyId: value })}
-        />
+          onChange={(value) =>
+            onParamChange({ pharmacyId: value })
+          }
+          />
+          </Form>
         <SearchAnt
           value={keyword}
           onChange={(e) => setKeyword(e.target.value)}
           onParamChange={onParamChange}
         />
-        <WithPermission permission={policyModule.POLICIES.WRITE_QUOTATION}>
-          <Button
-            style={{ marginLeft: "auto" }}
-            onClick={() => window.open(PATH_APP.bill.create)}
-            type="primary"
-            icon={<PlusCircleTwoTone />}
-          >
-            Tạo đơn hàng tạm
-          </Button>
-        </WithPermission>
+          </Space>
+        </Col>
+        <Col>
+          <Space>
+            <WithPermission permission={POLICIES.DOWNLOAD_QUOTATION}>
+                <Col>
+                  <ExportExcelButton
+                    api='billQuotation'
+                    exportOption = 'billQuotation'
+                    query={query}
+                    fileName='Danh sách đơn hàng tạm'
+                    ids={arrCheckBox}
+                  />
+                </Col>
+            </WithPermission>
+            <WithPermission permission={policyModule.POLICIES.WRITE_QUOTATION}>
+            <Button style={{marginLeft : 'auto'}} onClick={() => window.open(PATH_APP.bill.create)} type="primary" icon={<PlusCircleTwoTone />}>
+              Tạo đơn hàng tạm
+            </Button>
+            </WithPermission>
+          </Space>
+        </Col>
       </Row>
       <TableAnt
         stickyTop

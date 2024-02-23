@@ -10,6 +10,7 @@ import Branch from "~/pages/Dashboard/Branch";
 import StatusConfig from "~/pages/Dashboard/StatusConfig";
 import EmployeePage from "~/pages/Dashboard/Employee";
 import UserPage from "~/pages/Dashboard/User";
+import ReportSupplierPage from "~/pages/Dashboard/ReportSupplier";
 import UserGroupPage from "~/pages/Dashboard/UserGroup";
 import VouchersPage from "~/pages/Dashboard/Vouchers";
 import Unit from "~/pages/Dashboard/Unit";
@@ -17,6 +18,7 @@ import MedicinePage from "~/pages/Dashboard/Medicine";
 import ProductPage from "~/pages/Dashboard/Product";
 import ConfigDiscountPage from "~/pages/Dashboard/ConfigDiscount";
 import Pharmacy from "~/pages/Dashboard/Pharmacy";
+import ProductsAll from "~/pages/Dashboard/ProductsAll";
 import Bill from "~/pages/Dashboard/Bill";
 import UpdateBill from "~/pages/Dashboard/Bill/UpdateBill";
 import Quotation from "~/pages/Dashboard/Quotation";
@@ -25,8 +27,8 @@ import WorkSprintPage from "~/pages/Dashboard/WorkSprint";
 import WorkListPage from "~/pages/Dashboard/WorkList";
 import WorkTaskPage from "~/pages/Dashboard/WorkTask";
 import BotNotificationPage from "~/pages/Dashboard/BotNotification";
+import PharmacyDetail from "~/modules/pharmacy/screens/PharmacyDetail";
 import Lk from "~/pages/Dashboard/Lk";
-import ProductsAll from "~/pages/Dashboard/ProductsAll";
 import OrderSupplier from "~/pages/Dashboard/OrderSupplier";
 import UpdateOrderSupplier from "~/pages/Dashboard/OrderSupplier/UpdateOrderSupplier";
 export const mainRoutes :PathRouteProps[] = [
@@ -66,13 +68,18 @@ export const mainRoutes :PathRouteProps[] = [
 
   //ConfigDiscount
   { path: PATH_APP.vouchers.root, Component: VouchersPage },
+  { path: PATH_APP.report.supplier, Component: ReportSupplierPage },
   { path: PATH_APP.configDiscount.root, Component: ConfigDiscountPage },
 
   // Pharmacy
   { path: PATH_APP.pharmacy.root, Component: Pharmacy },
+  { path: PATH_APP.pharmacy.detail, Component: PharmacyDetail },
 
   // Bot Notification
   { path: PATH_APP.botNotification.root, Component: BotNotificationPage },
+
+  // Products All
+  { path: PATH_APP.productAll.root, Component: ProductsAll },
  
   //Work Management
   { path: PATH_APP.todoList.workSprint, Component: WorkSprintPage },

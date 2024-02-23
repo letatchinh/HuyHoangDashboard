@@ -71,18 +71,25 @@ export const PATH_APP = {
     root: path(ROOTS.app, "/vouchers"),
   },
 
-  user: {
-    root: path(ROOTS.app, "/user/*"),
-  },
-  productAll: {
-    root: path(ROOTS.app, "/products-list"),
-  },
+     user: {
+      root: path(ROOTS.app, '/user/*'),
+   
+    },
+     productAll: {
+      root: path(ROOTS.app, '/products-list'),
+    },
+    
 
-  botNotification: {
-    root: path(ROOTS.app, "/bot-notification"),
-    // update: path(ROOTS.app, '/bot-notification/:id'),
-    create: path(ROOTS.app, "/bot-notification/create"),
-  },
+    report: {
+      supplier: path(ROOTS.app, '/report/supplier'),
+    },
+  
+    botNotification : {
+      root:  path(ROOTS.app, '/bot-notification'),
+      // update: path(ROOTS.app, '/bot-notification/:id'),
+      create: path(ROOTS.app, '/bot-notification/create'),
+    },
+
 
   orderSupplier: {
     root: path(ROOTS.app, "/order-supplier"),

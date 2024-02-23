@@ -12,6 +12,7 @@ import {
   Select,
   Space,
   Statistic,
+  Tabs,
 } from "antd";
 import { formatter } from "~/utils/helpers";
 import apis from "../supplier.api";
@@ -21,6 +22,9 @@ import { FormFieldSearch, SearchByType } from "../supplier.modal";
 import TableAnt from "~/components/Antd/TableAnt";
 import { ColumnsType } from "antd/es/table/InternalTable";
 import ChartBill from "./ChartBill";
+import { TabsProps } from "antd/lib/index";
+import SaleReport from "./SaleReport";
+import HistoryReport from "./HistoryReport";
 type propsType = {
   id: string | null;
 };
@@ -59,11 +63,7 @@ export default function Report({ id }: propsType): React.JSX.Element {
     query: queryGetProduct,
     useDocs: false,
   });
-  const [bills, loadingBills] = useFetchState({
-    api: apis.getBills,
-    query: queryGetBills,
-    useDocs: false,
-  });
+
   
   const [debt, loadingDebt] = useFetchState({
     api: apis.getDebt,
@@ -104,29 +104,18 @@ export default function Report({ id }: propsType): React.JSX.Element {
     }
   }
 
-  const columns : ColumnsType = [
+  const Items : TabsProps['items'] = [
     {
-        title : "Mã đơn hàng",
-        dataIndex : 'codeSequence',
-        key : 'codeSequence',
+        label : "Thông kê doanh thu",
+        key : '0',
+        children : <SaleReport query={queryGetBills} searchBy={searchBy} searchByVi={searchByVi} />,
     },
     {
-        title : "Tổng giá trị",
-        dataIndex : 'totalPrice',
-        key : 'totalPrice',
-        render(totalPrice, record, index) {
-            return formatter(totalPrice);
-        },
+        label : "Lịch sử bán hàng",
+        key : '1',
+        children : <HistoryReport />,
     },
-    {
-        title : "Ngày tạo",
-        dataIndex : 'createdAt',
-        key : 'createdAt',
-        render(createdAt, record, index) {
-            return dayjs(createdAt).format("DD-MM-YYYY HH:mm:ss");
-        },
-    },
-  ]
+]
   return (
     <div className="report-supplier">
       <h5 className="mb-3">Tổng quan</h5>
@@ -155,7 +144,7 @@ export default function Report({ id }: propsType): React.JSX.Element {
           </Card>
         </Col>
       </Row>
-      <h5 className="my-3">Lịch sử bán hàng</h5>
+      <h5 className="my-3">Thống kê doanh thu</h5>
       <Form
         form={form}
         onFinish={onFinish}
@@ -214,20 +203,8 @@ export default function Report({ id }: propsType): React.JSX.Element {
             </Button>
           </Col>
         </Row>
-        <Space>
-            <Button onClick={() => setTypeShow('chart')} type={typeShow === 'chart' ? 'primary' : 'default'} icon={<BarChartOutlined />}></Button>
-            <Button onClick={() => setTypeShow('table')} type={typeShow === 'table' ? 'primary' : 'default'} icon={<TableOutlined />}></Button>
-        </Space>
       </Form>
-      {typeShow === 'table' &&<TableAnt 
-      dataSource={get(bills,'bills',[])}
-      columns={columns}
-      loading={loadingBills}
-      pagination={false}
-      size='small'
-      scroll={{y : 500}}
-      />}
-      {typeShow === 'chart' && <ChartBill loadingBills={loadingBills} data={bills} searchBy={searchBy} searchByVi={searchByVi}/>}
+      <Tabs defaultActiveKey="0" items={Items}/>
     </div>
   );
 }
