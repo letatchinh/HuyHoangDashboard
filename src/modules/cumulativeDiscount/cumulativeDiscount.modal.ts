@@ -10,7 +10,7 @@ export type conditionType = {
     session_id : string
 }
 
-export type TypeRepeatType = "ranger" | "month" | "quarter" | "nope";
+export type TypeRepeatType = "ranger" | "month" | "quarter" | "nope" | "year" | "noTime";
 
   export type applyTimeSheetType = {
   //   repeat:{
@@ -33,7 +33,6 @@ export type TypeRepeatType = "ranger" | "month" | "quarter" | "nope";
       lte:Date,
       session_id : string,
   },
-  typeRepeat : TypeRepeatType
   }
   export type cumulativeTimeSheet = {
   //   repeat:{
@@ -56,7 +55,6 @@ export type TypeRepeatType = "ranger" | "month" | "quarter" | "nope";
       lte:Date,
       session_id : string,
   },
-  typeRepeat : TypeRepeatType
   }
   export type cumulativeDiscountType = {
     target : string,
@@ -71,7 +69,8 @@ export type TypeRepeatType = "ranger" | "month" | "quarter" | "nope";
     applyTimeSheet : applyTimeSheetType | null,
     cumulativeTimeSheet : cumulativeTimeSheet | null,
     status:"ACTIVE" | "INACTIVE",
-    _id : string | null
+    _id : string | null,
+    typeRepeat : TypeRepeatType
   
     timesReward : number,
     itemReward? : {
