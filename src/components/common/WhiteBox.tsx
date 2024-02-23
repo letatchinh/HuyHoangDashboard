@@ -2,11 +2,12 @@ import React from 'react';
 type propsType = {
     children : React.ReactNode,
     className? : string,
-    noPadding?: boolean,
+    style? :  React.CSSProperties,
+    noPadding? : boolean
 }
-export default function WhiteBox({children,className,noPadding}:propsType) : React.JSX.Element {
+export default function WhiteBox({children,className,noPadding,style = {}}:propsType) : React.JSX.Element {
     return (
-        <div className={`whiteBox ${className ?? ""} ${noPadding ? 'p-0' : ''}`}>
+        <div style={style} className={`whiteBox ${className ?? ""} ${noPadding ? 'p-0' : ''}`}>
             {children}
         </div>
     )

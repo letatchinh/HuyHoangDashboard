@@ -1,11 +1,13 @@
 import auth from "~/modules/auth";
 import branch from "~/modules/branch";
 import geo from "~/modules/geo";
+import country from "./country";
 
-const apis = {
+const api = {
     auth : auth.api,
     branch : branch.api,
     geo : geo.api,
+    country
 }
-export default apis;
+export default api;
 

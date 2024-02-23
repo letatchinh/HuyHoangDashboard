@@ -1,0 +1,82 @@
+.sumary-row{
+  &__left{
+    background-color: #fff7e6;
+    color: #fa8c16;
+    border: 1px solid #0d0c0b;
+    padding: 5px 10px;
+    margin-left: 10px;
+    text-align: center;
+    display: flex;
+    align-content: center;
+  };
+  &__right{
+    text-align: center;
+    display: flex;
+    background-color: #fff7e6;
+    color: #F45050;
+    border: 1px solid #ffd591 ;
+    padding: 5px 10px;
+    margin-left: 10px;
+  };
+};
+
+.status {
+  height: 22px;
+  min-width: 22px;
+  line-height: 0;
+  border-radius: 8px;
+  cursor: default;
+  align-items: center;
+  white-space: nowrap;
+  display: inline-flex;
+  justify-content: center;
+  padding: 0px 8px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  // Bill
+  &.new ,&.ordering{
+    background-color: #f0f0f0;
+    color: darken($color: #f0f0f0, $amount: 50%);
+  }
+  
+  &.processing {
+      background-color: #1890ff;
+      color: #fff;
+    }
+  &.completed ,&.confirmed {
+    background-color: #52c41a;
+    color: #fff;
+  }
+  &.cancelled {
+    background-color: #f5222d;
+    color: #fff;
+  }
+
+  &.ordered {
+    color: #ffffff;
+    background-color: #008000; 
+  }
+  
+  &.received {
+    color: #ffffff;
+    background-color: #9c543a; 
+  }
+  
+  &.processing {
+    color: #ffffff;
+    background-color: #ffa500; 
+  }
+  
+  &.packaged {
+    color: #ffffff;
+    background-color: #4caf50; 
+  }
+  
+  &.shipping {
+    color: #ffffff;
+    background-color: #007bff; 
+  };
+
+};

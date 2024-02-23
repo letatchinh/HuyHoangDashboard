@@ -27,7 +27,7 @@ export default function Branch() {
   const { t }: any = useTranslate();
   // const [query] = useBranchQueryParams();
   // const [keyword, { setKeyword, onParamChange }] = useUpdateBranchParams(query);
-  const [data, isLoading] = useGetBranches();
+  // const [data, isLoading] = useGetBranches();
   const paging = useBranchPaging();
   return (
     <div>
@@ -38,8 +38,8 @@ export default function Branch() {
         isShowButtonAdd
         />
         <TableAnt
-          dataSource={data}
-          loading={isLoading}
+          dataSource={[]}
+          // loading={isLoading}
           rowKey={rc => rc?._id}
           columns={columns}
           size='small'

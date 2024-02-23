@@ -9,6 +9,20 @@ const user = 'user';
 const userGroup = 'userGroup';
 const pharmacy = 'pharmacy';
 const bill = 'bill';
+const manuFacturer = 'manufacturer';
+const unit = 'unit';
+const productGroup='productGroup';
+const ranking = 'ranking';
+const medicine = 'medicine';
+const voucher = 'voucher';
+const statusVoucher = 'statusVoucher';
+const historyVoucher = 'historyVoucher';
+// Nhà cung cấp
+const supplier = 'supplier';
+const debt = 'debt';
+
+// Sản phẩm Nhà cung cấp
+const product = 'product';
 
 const RESOURCES = [
   branch,
@@ -18,6 +32,22 @@ const RESOURCES = [
   userGroup,
   // pharmacy,
   // bill,
+  manuFacturer,
+  unit,
+  ranking,
+  // productGroup
+  productGroup,
+  //
+  medicine,
+
+  //VOUCHER
+  voucher,
+  statusVoucher,
+  historyVoucher,
+  supplier,
+  product,
+  debt,
+
 ];
 
 //ACTIONS
@@ -63,12 +93,45 @@ const RESOURCE = (): ResourceType => {
   const GROUP_EMPLOYEE : string[] = [
     employee
   ];
+  const GROUP_MANUFACTURER : string[] = [
+    manuFacturer
+  ];
+  const UNIT : string[] = [
+    unit
+  ];
+  const MEDICINE : string[] = [
+    medicine
+  ];
+  const GROUP_PRODUCTGROUP : string[] = [
+    productGroup
+  ];
+  const GROUP_RANKING : string[] = [
+    ranking
+  ];
+  const GROUP_VOUCHER: string[] = [
+    voucher,
+    statusVoucher,
+    historyVoucher
+  ]
+
+  const GROUP_SUPPLIER: string[] = [
+    supplier,
+    product,
+    debt,
+  ];
 
   return {
     GROUP_USER,
     GROUP_EMPLOYEE,
     GROUP_WHBILL,
     GROUP_WHSETTING,
+    GROUP_MANUFACTURER,
+    UNIT,
+    GROUP_PRODUCTGROUP,
+    GROUP_RANKING,
+    MEDICINE,
+    GROUP_VOUCHER,
+    GROUP_SUPPLIER,
   };
 };
 

@@ -32,5 +32,5 @@ const newSlice = new ModuleExampleClassExtend();
 const data = newSlice.createSlice();
 
 
-export const moduleExampleSliceAction = data.actions;
+export const moduleExampleActions = data.actions;
 export default data.reducer;
