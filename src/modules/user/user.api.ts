@@ -10,5 +10,7 @@ const apis = {
     delete: (id?: any) => requester.delete(`/api/v1/staff/${id}`),
     validateUsername: (query: any) => requester.post(`/api/v1/user/validate-user`, query),
     getPolicy: (query: any) => requester.get(`/api/v1/user-policy`),
+    getProfile: () => requester.get(`/api/v1/staff-profile-detail`),
+    updateProfile: (data?: any) => requester.put(`/api/v1/staff-update-detail`, data),
 }
 export default apis;

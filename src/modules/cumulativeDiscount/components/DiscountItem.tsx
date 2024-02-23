@@ -1,7 +1,9 @@
 import { CloseSquareTwoTone, EditTwoTone, EyeTwoTone } from "@ant-design/icons";
 import {
+  AutoComplete,
   Button,
   Col,
+  ConfigProvider,
   DatePicker,
   Divider,
   Form,
@@ -9,7 +11,9 @@ import {
   Popconfirm,
   Radio,
   Row,
+  Segmented,
   Select,
+  Space,
   Switch,
   Tooltip,
 } from "antd";
@@ -20,6 +24,7 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import InputNumberAnt from "~/components/Antd/InputNumberAnt";
 import BaseBorderBox from "~/components/common/BaseBorderBox/index";
 import RenderLoading from "~/components/common/RenderLoading";
+import { INFINITY } from "~/constants/defaultValue";
 import {
   TARGET,
   TYPE_DISCOUNT,
@@ -28,7 +33,10 @@ import {
   TYPE_REWARD_VI,
   TYPE_VALUE,
 } from "../constants";
+import ApplyTimeSheet from "./ApplyTimeSheet";
+import CumulativeTimeSheet from "./CumulativeTimeSheet";
 import DiscountView from "./DiscountView";
+import ItemRewardName from "./ItemRewardName";
 type propsType = {
   key: any;
   name: number;
@@ -39,7 +47,27 @@ type propsType = {
   units: any;
   remove: (v: any) => void;
   target: string;
+  targetType: string;
+  supplierId?: string;
 };
+const options = [
+  {
+    label: "Không lặp lại",
+    value: "nope",
+  },
+  {
+    label: "Khoảng ngày lặp lại",
+    value: "ranger",
+  },
+  {
+    label: "Tháng",
+    value: "month",
+  },
+  {
+    label: "Quý",
+    value: "quarter",
+  },
+];
 const CLONE_TYPE_DISCOUNT_VI: any = TYPE_DISCOUNT_VI;
 const CLONE_TYPE_REWARD_VI: any = TYPE_REWARD_VI;
 
@@ -53,6 +81,8 @@ export default function DiscountItem({
   units,
   remove,
   target,
+  targetType,
+  supplierId,
 }: propsType): React.JSX.Element {
   const [isSelectUnit, setIsSelectUnit] = useState(false);
   const [editing, setEditing] = useState(true);
@@ -100,9 +130,65 @@ export default function DiscountItem({
       setEditing(false);
     }
   }, [form, name]);
-  const variants = Form.useWatch('variants',form);
-  const cumulativeDiscount = Form.useWatch('cumulativeDiscount',form);
-  
+  const variants = Form.useWatch("variants", form);
+  const applyVariantId = get(Form.useWatch(`cumulativeDiscount`, form), [
+    name,
+    "applyVariantId",
+  ]);
+  const cumulativeDiscount = Form.useWatch("cumulativeDiscount", form);
+
+  const typeDiscount = Form.useWatch(
+    ["cumulativeDiscount", name, "typeDiscount"],
+    form
+  );
+
+  useEffect(() => {
+    setIsSelectUnit(!!applyVariantId);
+  }, [applyVariantId]);
+
+  const changeForm = (name: number, value: any) => {
+    const newCumulativeDiscount = cumulativeDiscount?.map(
+      (item: any, index: number) =>
+        index === name
+          ? {
+              ...item,
+              ...value,
+            }
+          : item
+    );
+
+    form.setFieldsValue({
+      cumulativeDiscount: newCumulativeDiscount,
+    });
+  };
+  const onChangeType = (value: any) => {
+    // setValueTypeRepeat(value);
+    // Reset CumulativeTimeSheet And ApplyTimeSheet when change TypeRepeat
+    const newCumulativeDiscount = cumulativeDiscount?.map(
+      (item: any, index: number) =>
+        index === name
+          ? {
+              ...item,
+              cumulativeTimeSheet: {
+                ...item?.cumulativeTimeSheet,
+                repeat: null,
+                nonRepeat: null,
+                typeRepeat: value,
+              },
+              applyTimeSheet: {
+                ...item?.applyTimeSheet,
+                repeat: null,
+                nonRepeat: null,
+                typeRepeat: value,
+              },
+            }
+          : item
+    );
+
+    form.setFieldsValue({
+      cumulativeDiscount: newCumulativeDiscount,
+    });
+  };
   return (
     <>
       <Divider orientation="left">
@@ -121,19 +207,19 @@ export default function DiscountItem({
                 }
               />
               <Popconfirm
-              title="Xác nhận xoá"
-              okText="Xoá"
-              cancelText="Huỷ"
-              onConfirm={() => remove(name)}
+                title="Xác nhận xoá"
+                okText="Xoá"
+                cancelText="Huỷ"
+                onConfirm={() => remove(name)}
               >
-              <Button
-                icon={
-                  <CloseSquareTwoTone
-                    twoToneColor={"red"}
-                    style={{ fontSize: 18 }}
-                  />
-                }
-              />
+                <Button
+                  icon={
+                    <CloseSquareTwoTone
+                      twoToneColor={"red"}
+                      style={{ fontSize: 18 }}
+                    />
+                  }
+                />
               </Popconfirm>
             </ButtonGroup>
           ) : (
@@ -144,13 +230,14 @@ export default function DiscountItem({
       {!editing ? (
         <DiscountView
           data={form.getFieldValue(["cumulativeDiscount", name])}
-          units={units}
+          variants={variants}
           name={name}
           isSameTarget={isSameTarget}
         />
       ) : (
         <React.Fragment key={key}>
           <Form.Item hidden name={[name, "target"]} />
+          <Form.Item hidden name={[name, "targetType"]} initialValue={targetType} />
           <Form.Item hidden name={[name, "targetId"]} />
 
           <Row wrap={false} justify={"space-between"}>
@@ -197,33 +284,44 @@ export default function DiscountItem({
                   <BaseBorderBox title={"Giá trị chiết khấu"}>
                     <Row>
                       <Col span={8}>
-                      <Form.Item shouldUpdate noStyle>
-                      {() =>
-                        form.getFieldValue([
-                          "cumulativeDiscount",
-                          name,
-                          "typeDiscount",
-                        ]) === TYPE_DISCOUNT.LK && (
-                          <Form.Item
-                            style={{ marginBottom: 0 }}
-                            {...restField}
-                            label={"Loại thưởng"}
-                            name={[name, "typeReward"]}
-                            labelCol={{span : 6}}
-                          >
-                            {RenderLoading(
-                              loading,
-                              <Radio.Group
-                                size="small"
-                                options={optionsTypeReward}
-                                optionType="button"
-                                buttonStyle="solid"
-                              />
-                            )}
-                          </Form.Item>
-                        )
-                      }
-                    </Form.Item>
+                        <Form.Item shouldUpdate noStyle>
+                          {() =>
+                            [
+                              TYPE_DISCOUNT.LK,
+                              TYPE_DISCOUNT["DISCOUNT.SOFT.CONDITION"],
+                            ].includes(
+                              form.getFieldValue([
+                                "cumulativeDiscount",
+                                name,
+                                "typeDiscount",
+                              ])
+                            ) && (
+                              <Form.Item
+                                {...restField}
+                                label={"Loại thưởng"}
+                                name={[name, "typeReward"]}
+                                labelCol={{ span: 8 }}
+                              >
+                                {RenderLoading(
+                                  loading,
+                                  <Radio.Group
+                                    size="small"
+                                    options={optionsTypeReward}
+                                    optionType="button"
+                                    buttonStyle="solid"
+                                    onChange={(e) =>
+                                      changeForm(name, {
+                                        value: null,
+                                        itemReward: null,
+                                        typeReward: e.target.value,
+                                      })
+                                    }
+                                  />
+                                )}
+                              </Form.Item>
+                            )
+                          }
+                        </Form.Item>
                       </Col>
                     </Row>
                     <Row>
@@ -257,8 +355,8 @@ export default function DiscountItem({
                                     message: "Vui lòng nhập bé hơn 100%",
                                   },
                                 ]}
-                                labelCol={{span : 6}}
-                                wrapperCol={{span : 20}}
+                                labelCol={{ span: 6 }}
+                                wrapperCol={{ span: 20 }}
                               >
                                 {RenderLoading(
                                   loading,
@@ -314,20 +412,108 @@ export default function DiscountItem({
                         </Form.Item>
                       </Col>
                     </Row>
+                    <Form.Item shouldUpdate noStyle>
+                      {({ getFieldValue }) =>
+                        getFieldValue([
+                          "cumulativeDiscount",
+                          name,
+                          "typeReward",
+                        ]) === TYPE_REWARD.PRODUCT && (
+                          <>
+                            <Row gutter={16}>
+                              <Col span={8}>
+                                <ItemRewardName
+                                  supplierId={supplierId}
+                                  form={form}
+                                  cumulativeDiscount={cumulativeDiscount}
+                                  name={name}
+                                />
+                              </Col>
+                              <Col span={6}>
+                                <Form.Item
+                                  label="Số lượng"
+                                  name={[name, "itemReward", "quantity"]}
+                                  rules={[
+                                    {
+                                      required: true,
+                                      message: "Vui lòng nhập",
+                                    },
+                                  ]}
+                                >
+                                  <InputNumberAnt min={1}/>
+                                </Form.Item>
+                              </Col>
+                            </Row>
+                          </>
+                        )
+                      }
+                    </Form.Item>
+
+                    {typeDiscount !== TYPE_DISCOUNT.LK && <Row>
+                      <Col>
+                        <Form.Item
+                          label="Số lần nhận thưởng"
+                          name={[name, "timesReward"]}
+                          labelCol={{ span: 11 }}
+                          hidden
+                        />
+                        <span>Số lần nhận thưởng:  </span>
+                          <Form.Item shouldUpdate noStyle>
+                            {() => 
+                            <ConfigProvider
+                            theme={{
+                              components: {
+                                Segmented: {
+                                  itemSelectedBg: "#3481FF",
+                                  itemSelectedColor: "white",
+                                },
+                              },
+                            }}
+                          >
+                            <Segmented
+                            onChange={(value) => changeForm(name,{
+                              timesReward : value
+                            })}
+                            value={form.getFieldValue(['cumulativeDiscount',name, "timesReward"])}
+                            options={[
+                              {
+                                label: "Một lần",
+                                value: 1,
+                              },
+                              {
+                                label: "Nhiều lần",
+                                value: INFINITY,
+                              },
+                            ]}
+                          />
+                          </ConfigProvider>
+                            }
+                          </Form.Item>
+                        {/* </Form.Item> */}
+                      </Col>
+                    </Row>}
                   </BaseBorderBox>
                 </Col>
                 {/* Điều kiện */}
                 <Col flex={1}>
-                
                   <Form.Item shouldUpdate noStyle>
                     {() =>
-                      form.getFieldValue([
-                        "cumulativeDiscount",
-                        name,
-                        "typeDiscount",
-                      ]) === TYPE_DISCOUNT.LK && (
+                      [
+                        TYPE_DISCOUNT.LK,
+                        TYPE_DISCOUNT["DISCOUNT.SOFT.CONDITION"],
+                      ].includes(
+                        form.getFieldValue([
+                          "cumulativeDiscount",
+                          name,
+                          "typeDiscount",
+                        ])
+                      ) && (
                         <BaseBorderBox title={"Điều kiện"}>
-                            <Divider orientation="left"><h6>Giá trị tích luỹ</h6></Divider>
+                          <Divider orientation="left">
+                            {typeDiscount === TYPE_DISCOUNT.LK && <h6>Giá trị tích luỹ</h6>}
+                            {typeDiscount === TYPE_DISCOUNT['DISCOUNT.SOFT.CONDITION'] && <h6>Số lượng mua</h6>}
+                            
+                          </Divider>
                           <Row
                             style={{ marginBottom: 5 }}
                             gutter={8}
@@ -338,7 +524,8 @@ export default function DiscountItem({
                                 style={{ marginBottom: 0 }}
                                 {...restField}
                                 colon={false}
-                                label={"Từ"}
+                                {...typeDiscount === TYPE_DISCOUNT.LK && {label : 'Từ'}}
+                                {...typeDiscount === TYPE_DISCOUNT["DISCOUNT.SOFT.CONDITION"] && {label : 'Mỗi'}}
                                 name={[name, "condition", "gte"]}
                                 rules={[
                                   {
@@ -349,55 +536,59 @@ export default function DiscountItem({
                               >
                                 {RenderLoading(
                                   loading,
-                                  <InputNumberAnt min={0} 
-                                  {... !form.getFieldValue([
-                                    "cumulativeDiscount",
-                                    name,
-                                    "applyUnit",
-                                  ]) && {addonAfter : <div>VNĐ</div>}}
+                                  <InputNumberAnt
+                                    min={typeDiscount === TYPE_DISCOUNT.LK ? 0 : 1}
+                                    {...(!form.getFieldValue([
+                                      "cumulativeDiscount",
+                                      name,
+                                      "applyVariantId",
+                                    ]) && { addonAfter: <div>VNĐ</div>,step : 1000 })}
                                   />
                                 )}
                               </Form.Item>
                             </Col>
                             <Col span={7}>
                               <Form.Item shouldUpdate noStyle>
-                                {({getFieldValue}) => <Form.Item
-                                colon={false}
-                                style={{ marginBottom: 0 }}
-                                {...restField}
-                                label={"Đến"}
-                                name={[name, "condition", "lte"]}
-                                rules={[
-                                  ({ getFieldValue }) => ({
-                                    validator(_, value) {
-                                      const gte = getFieldValue([
-                                        "cumulativeDiscount",
-                                        name,
-                                        "condition",
-                                        "gte",
-                                      ]);
-                                      if (!value || value >= gte) {
-                                        return Promise.resolve();
-                                      }
-                                      return Promise.reject(
-                                        "Phải lớn hơn giá trị bắt đầu"
-                                      );
-                                    },
-                                  }),
-                                ]}
-                                
-                              >
-                                {RenderLoading(
-                                  loading,
-                                  <InputNumberAnt min={0} 
-                                  {... !getFieldValue([
-                                    "cumulativeDiscount",
-                                    name,
-                                    "applyUnit",
-                                  ]) && {addonAfter : <div>VNĐ</div>}}
-                                  />
+                                {({ getFieldValue }) => (
+                                  <Form.Item
+                                    colon={false}
+                                    style={{ marginBottom: 0 }}
+                                    {...restField}
+                                    {...typeDiscount === TYPE_DISCOUNT.LK && {label : 'Đến'}}
+                                    {...typeDiscount === TYPE_DISCOUNT["DISCOUNT.SOFT.CONDITION"] && {label : 'Tối đa'}}
+                                    name={[name, "condition", "lte"]}
+                                    rules={[
+                                      ({ getFieldValue }) => ({
+                                        validator(_, value) {
+                                          const gte = getFieldValue([
+                                            "cumulativeDiscount",
+                                            name,
+                                            "condition",
+                                            "gte",
+                                          ]);
+                                          if (!value || value >= gte) {
+                                            return Promise.resolve();
+                                          }
+                                          return Promise.reject(
+                                            "Phải lớn hơn giá trị bắt đầu"
+                                          );
+                                        },
+                                      }),
+                                    ]}
+                                  >
+                                    {RenderLoading(
+                                      loading,
+                                      <InputNumberAnt
+                                        min={0}
+                                        {...(!getFieldValue([
+                                          "cumulativeDiscount",
+                                          name,
+                                          "applyVariantId",
+                                        ]) && { addonAfter: <div>VNĐ</div> , step : 1000})}
+                                      />
+                                    )}
+                                  </Form.Item>
                                 )}
-                              </Form.Item>}
                               </Form.Item>
                             </Col>
                             <Col span={7}>
@@ -406,17 +597,22 @@ export default function DiscountItem({
                                   style={{ marginBottom: 0 }}
                                   {...restField}
                                   label={"Đơn vị"}
-                                  name={[name, "applyUnit"]}
+                                  name={[name, "applyVariantId"]}
                                 >
                                   {RenderLoading(
                                     loading,
                                     <Select
-                                    allowClear
-                                    // Always Get Unit from Variants Selected and Validate them
-                                      options={units?.filter((unit : any) => variants?.some((variant : any) => !!get(variant,'productUnit') && !!get(variant,'price') && !!get(variant,'exchangeValue') && (get(variant,'productUnit') === get(unit,'_id'))))?.map((item: any) => ({
-                                        label: get(item, "name"),
-                                        value: get(item, "_id"),
-                                      }))}
+                                      allowClear
+                                      // Always Get Unit from Variants Selected and Validate them
+                                      options={variants
+                                        ?.filter(
+                                          (variant: any) =>
+                                            !!get(variant, "_id")
+                                        )
+                                        ?.map((item: any) => ({
+                                          label: get(item, "unit.name"),
+                                          value: get(item, "_id"),
+                                        }))}
                                     />
                                   )}
                                 </Form.Item>
@@ -425,181 +621,98 @@ export default function DiscountItem({
                               )}
                             </Col>
                             <Col>
-                              <Tooltip title={target === TARGET.supplier && "Nhà cung cấp chỉ được phép chọn VNĐ"}>
-                              <Switch
-                                disabled={target === TARGET.supplier}
-                                value={isSelectUnit}
-                                onChange={(checked) => {
-                                  if(!checked){
-                                    const newCumulativeDiscount = cumulativeDiscount?.map((item:any,index:number) => index === name ? {...item,applyUnit : null}  : item);
-
-                                    form.setFieldsValue({
-                                      cumulativeDiscount : newCumulativeDiscount
-                                    })
-                                  }
-                                  setIsSelectUnit(checked);
-                                }}
-                                unCheckedChildren="VND"
-                                checkedChildren="Đơn vị"
-                              />
+                              <Tooltip
+                                title={
+                                  target === TARGET.supplier &&
+                                  "Nhà cung cấp chỉ được phép chọn VNĐ"
+                                }
+                              >
+                                <Switch
+                                  disabled={target === TARGET.supplier}
+                                  value={isSelectUnit}
+                                  onChange={(checked) => {
+                                    if (!checked) {
+                                      changeForm(name, {
+                                        applyVariantId: null,
+                                      });
+                                    }
+                                    setIsSelectUnit(checked);
+                                  }}
+                                  unCheckedChildren="VND"
+                                  checkedChildren="Đơn vị"
+                                />
                               </Tooltip>
                             </Col>
                           </Row>
-                          <Divider orientation="left"><h6> Thời gian tích luỹ</h6></Divider>
-                          <Row
-                            gutter={8}
-                            align={"middle"}
-                            justify="space-between"
-                          >
-                            <Col span={7}>
-                              <Form.Item
-                                style={{ marginBottom: 0 }}
-                                {...restField}
-                                label={"Từ ngày"}
-                                name={[name, "cumulativeTimeSheet", "gte"]}
-                                rules={[
-                                  {
-                                    required: true,
-                                    message: "Xin vui nhập!",
+                          <Space className="mb-3">
+                            <ConfigProvider
+                              theme={{
+                                components: {
+                                  Segmented: {
+                                    itemSelectedBg: "#3481FF",
+                                    itemSelectedColor: "white",
                                   },
+                                },
+                              }}
+                            >
+                              <Form.Item
+                                style={{ marginBottom: 0, marginTop: 20 }}
+                                {...restField}
+                                label={"Loại chương trình"}
+                                name={[
+                                  name,
+                                  "applyTimeSheet",
+                                  "typeRepeat",
                                 ]}
+                                tooltip={
+                                  <div>
+                                    <p>
+                                      Không lặp lại: Chỉ xảy ra ở một khoảng
+                                      thời gian cố định và không tái diễn
+                                    </p>
+                                    <p>
+                                      Khoảng ngày lặp lại: Xảy ra ở một khoảng
+                                      ngày cốt định và được lặp lại hằng tháng
+                                    </p>
+                                    <p>
+                                      Tháng: Lặp theo mỗi tháng mỗi chu kì gồm
+                                      đầu tháng đến cuối tháng
+                                    </p>
+                                    <p>
+                                      Quý: Lặp theo mỗi quý mỗi chu kì gồm đầu
+                                      quý đến cuối quý
+                                    </p>
+                                  </div>
+                                }
                               >
-                                {RenderLoading(
-                                  loading,
-                                  <DatePicker
-                                    format={"YYYY-MM-DD"}
-                                  />
-                                )}
+                                <Segmented
+                                  options={options}
+                                  onChange={onChangeType}
+                                />
                               </Form.Item>
-                            </Col>
-                            <Col span={7}>
-                              <Form.Item shouldUpdate noStyle>
-                                {() => (
-                                  <Form.Item
-                                    style={{ marginBottom: 0 }}
-                                    {...restField}
-                                    label={"Đến ngày"}
-                                    name={[name, "cumulativeTimeSheet", "lte"]}
-                                    rules={[
-                                      {
-                                        required: true,
-                                        message: "Xin vui nhập!",
-                                      },
-                                    ]}
-                                  >
-                                    {RenderLoading(
-                                      loading,
-                                      <DatePicker
-                                        disabledDate={(current) =>
-                                          current <=
-                                          dayjs(
-                                            form.getFieldValue([
-                                              "cumulativeDiscount",
-                                              name,
-                                              "cumulativeTimeSheet",
-                                              "gte",
-                                            ])
-                                          )
-                                        }
-                                        format={"YYYY-MM-DD"}
-                                      />
-                                    )}
-                                  </Form.Item>
-                                )}
-                              </Form.Item>
-                            </Col>
-                            <Col span={10}>
-                              <Form.Item
-                                style={{ marginBottom: 0 }}
-                                {...restField}
-                                label={"Dùng lại"}
-                                name={[name, "cumulativeTimeSheet", "isRepeat"]}
-                              >
-                                {RenderLoading(loading, <Switch />)}
-                              </Form.Item>
-                            </Col>
-                          </Row>
-                          <Divider orientation="left"><h6> Thời gian áp dụng</h6></Divider>
-                          <Row
-                            gutter={8}
-                            align={"middle"}
-                            justify="space-between"
-                          >
-                            <Col span={7}>
-                              <Form.Item
-                                style={{ marginBottom: 0 }}
-                                {...restField}
-                                label={"Từ ngày"}
-                                name={[name, "applyTimeSheet", "gte"]}
-                                rules={[
-                                  {
-                                    required: true,
-                                    message: "Xin vui nhập!",
-                                  },
-                                ]}
-                              >
-                                {RenderLoading(
-                                  loading,
-                                  <DatePicker
-                                    // disabledDate={(current) => {
-                                    //   // Can not select days before lte and today
-                                    //   return (
-                                    //     current &&
-                                    //     current < dayjs().endOf("day")
-                                    //   );
-                                    // }}
-                                    format={"YYYY-MM-DD"}
-                                  />
-                                )}
-                              </Form.Item>
-                            </Col>
-                            <Col span={7}>
-                              <Form.Item shouldUpdate noStyle>
-                                {() => (
-                                  <Form.Item
-                                    style={{ marginBottom: 0 }}
-                                    {...restField}
-                                    label={"Đến ngày"}
-                                    name={[name, "applyTimeSheet", "lte"]}
-                                    rules={[
-                                      {
-                                        required: true,
-                                        message: "Xin vui nhập!",
-                                      },
-                                    ]}
-                                  >
-                                    {RenderLoading(
-                                      loading,
-                                      <DatePicker
-                                        disabledDate={(current) =>
-                                          current <=
-                                          dayjs(
-                                            form.getFieldValue([
-                                              "cumulativeDiscount",
-                                              name,
-                                              "applyTimeSheet",
-                                              "gte",
-                                            ])
-                                          )
-                                        }
-                                        format={"YYYY-MM-DD"}
-                                      />
-                                    )}
-                                  </Form.Item>
-                                )}
-                              </Form.Item>
-                            </Col>
-                            <Col span={10}>
-                              <Form.Item
-                                style={{ marginBottom: 0 }}
-                                {...restField}
-                                label={"Dùng lại"}
-                                name={[name, "applyTimeSheet", "isRepeat"]}
-                              >
-                                {RenderLoading(loading, <Switch />)}
-                              </Form.Item>
-                            </Col>
-                          </Row>
+                            </ConfigProvider>
+                          </Space>
+                        {typeDiscount === TYPE_DISCOUNT.LK &&  
+                        <>
+                        <Divider orientation="left">
+                            <h6> Thời gian tích luỹ</h6>
+                          </Divider>
+                          <CumulativeTimeSheet
+                            form={form}
+                            loading={loading}
+                            name={name}
+                            restField={restField}
+                          />
+                        </>}
+                          <Divider orientation="left">
+                            <h6> Thời gian áp dụng</h6>
+                          </Divider>
+                          <ApplyTimeSheet
+                            form={form}
+                            name={name}
+                            loading={loading}
+                            restField={restField}
+                          />
                         </BaseBorderBox>
                       )
                     }

@@ -1,5 +1,5 @@
 import { GiftTwoTone, UndoOutlined } from "@ant-design/icons";
-import { Button, Col, Form, Input, notification, Row, Select } from "antd";
+import { Button, Col, Form, Input, notification, Row, Select, Tabs } from "antd";
 import { compact, concat, debounce, get, keys } from "lodash";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import BaseBorderBox from "~/components/common/BaseBorderBox/index";
@@ -27,7 +27,9 @@ import SelectManufacturer from "./SelectManufacturer";
 import SelectProductGroup from "./SelectProductGroup";
 import Variants from "./Variants";
 import CumulativeDiscountModule from '~/modules/cumulativeDiscount';
+import { useSupplierInfoRedux } from "~/modules/productsAll/productsAll.hook";
 
+import TabPane from "antd/es/tabs/TabPane";
 
 const CLONE_PRODUCT_TYPE_VI: any = PRODUCT_TYPE_VI;
 const CLONE_SALE_LEVEL_VI: any = SALE_LEVEL_VI;
@@ -39,16 +41,17 @@ export default function FormProduct({
   id,
   onCancel,
 }: TypePropsFormProduct): React.JSX.Element {
+  const supplierInfo = useSupplierInfoRedux();
   const [form] = Form.useForm();
   const [backupForm,setBackupForm] = useState<FieldTypeFormProduct[]>([]);
   
   const [isSubmitLoading, onCreate] = useCreateProduct(onCancel);
   const [, onUpdate] = useUpdateProduct(onCancel);
   const [product, isLoading] = useGetProduct(id);
-  const [dataNotificationUndo,setDataNotificationUndo] = useState({
-    open : false,
-    description : null
-  })
+  // const [dataNotificationUndo,setDataNotificationUndo] = useState({
+  //   open : false,
+  //   description : null
+  // })
   useResetAction();
   
   const onUndoForm = (isLast = false) => {
@@ -67,6 +70,7 @@ export default function FormProduct({
 
   const onFinish = (values: FieldTypeFormProduct) => {
     const submitData = convertSubmitData({values,supplierId});
+    
     if (id) {
       onUpdate({ ...submitData, _id: id });
     } else {
@@ -94,6 +98,7 @@ export default function FormProduct({
   useEffect(() => {
     if (product && id) {
     const initProduct = convertInitProduct(product);
+    
       form.setFieldsValue(initProduct);
       setBackupForm([initProduct]);
     }else{
@@ -137,6 +142,10 @@ export default function FormProduct({
   //   }
 
   // },[dataNotificationUndo]);
+  const [activeTab, setActiveTab] = useState("1");
+  const onChangeTab = (key: string) => {
+    setActiveTab(key);
+  };
   return (
     <div>
       <h5>Tạo mới thuốc</h5>
@@ -235,7 +244,7 @@ export default function FormProduct({
 
         <BaseBorderBox title={"Đơn vị"}>
           <Col style={{ paddingBottom: 10 }} span={24}>
-            <Variants form={form} isLoading={isLoading} setDataNotificationUndo={setDataNotificationUndo}/>
+            <Variants form={form} isLoading={isLoading} />
           </Col>
         </BaseBorderBox>
 
@@ -246,7 +255,32 @@ export default function FormProduct({
             </span>
           }
         >
-          <CumulativeDiscountModule.components.DiscountList target={CumulativeDiscountModule.constants.TARGET.product} loading={isLoading} form={form} />
+          <Tabs
+            onChange={(e) => onChangeTab(e)}
+            destroyInactiveTabPane
+            activeKey={activeTab}
+            defaultActiveKey="1"
+          >
+            <TabPane key={"1"} tab="Chiết khấu bán hàng" >
+              <CumulativeDiscountModule.components.DiscountList
+                supplierId={supplierId}
+                target={CumulativeDiscountModule.constants.TARGET.product}
+                targetType={CumulativeDiscountModule.constants.TARGET_TYPE.pharmacy}
+                loading={isLoading}
+                form={form}
+              />
+            </TabPane>
+            <TabPane key={"2"} tab="Chiết khấu mua hàng">
+              <CumulativeDiscountModule.components.DiscountList
+                supplierId={supplierId}
+                target={CumulativeDiscountModule.constants.TARGET.product}
+                targetType={CumulativeDiscountModule.constants.TARGET_TYPE.supplier}
+                loading={isLoading}
+                form={form}
+              />
+
+            </TabPane>
+          </Tabs>
         </BaseBorderBox>
 
         <Row justify={"end"} gutter={16}>

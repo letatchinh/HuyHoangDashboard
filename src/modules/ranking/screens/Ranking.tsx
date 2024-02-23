@@ -1,17 +1,17 @@
-import { Button, Col, Form, Row, Space, Switch } from 'antd';
+import { DeleteOutlined, InfoCircleTwoTone, PlusCircleOutlined, SearchOutlined } from '@ant-design/icons';
+import { Button, Col, Form, Row, Space } from 'antd';
 import Search from 'antd/es/input/Search';
+import { ColumnsType } from 'antd/es/table';
 import React, { useCallback, useState } from 'react';
+import ModalAnt from '~/components/Antd/ModalAnt';
 import TableAnt from '~/components/Antd/TableAnt';
 import Breadcrumb from '~/components/common/Breadcrumb';
 import WhiteBox from '~/components/common/WhiteBox';
-import useTranslate from '~/lib/translation';
-import { useGetlistRanking, useGetlistRankingById, useCreateRanking, useRankingQueryParams, useUpdateRankingParams, useDeleteRanking, useRankingPaging } from '../ranking.hook';
-import { ColumnsType } from 'antd/es/table';
-import { SearchOutlined, DeleteOutlined, EditOutlined, InfoCircleTwoTone, PlusCircleOutlined } from '@ant-design/icons';
-import ModalAnt from '~/components/Antd/ModalAnt';
-import RankingForm from './RankingForm';
 import WithPermission from '~/components/common/WithPermission';
+import useTranslate from '~/lib/translation';
 import POLICIES from '~/modules/policy/policy.auth';
+import { useDeleteRanking, useGetlistRanking, useRankingPaging, useRankingQueryParams, useUpdateRankingParams } from '../ranking.hook';
+import RankingForm from './RankingForm';
 type propsType = {
 
 }
@@ -35,7 +35,7 @@ export default function Ranking(props: propsType): React.JSX.Element {
     {
       title: 'Tên ',
       dataIndex: 'name',
-      align: 'center',
+      align: 'left',
       key: 'name',
       render: (text: string) => <a>{text}</a>,
     },
@@ -85,7 +85,7 @@ export default function Ranking(props: propsType): React.JSX.Element {
   const pageSizeOptions = ['10', '20', '50', '100'];
   return (
     <div className='product-config'>
-      <Breadcrumb title={t('Quản lý xếp hạng nhà sản xuất')} />
+      <Breadcrumb title={t('Xếp hạng nhà cung cấp')} />
 
       <div className="product-config-action" >
         <Row justify="space-between">
@@ -132,14 +132,14 @@ export default function Ranking(props: propsType): React.JSX.Element {
       </WhiteBox>
       <ModalAnt
         open={showForm}
-        title={id ? 'Cập nhật hãng sản xuất' : 'Tạo mới hãng sản xuất'}
+        title={id ? 'Cập nhật xếp hạng nhà cung cấp' : 'Tạo mới xếp hạng nhà cung cấp'}
         onCancel={handleCloseForm}
         footer={null}
         // destroyOnClose
         width={800}
 
       >
-        <RankingForm id={id} handleCloseForm={handleCloseForm} />
+        <RankingForm id={id} setId={setId} handleCloseForm={handleCloseForm} />
       </ModalAnt>
     </div>
   )

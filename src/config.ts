@@ -1,6 +1,6 @@
 import { get } from "lodash";
 
-const devConfigJson = '{ "REACT_APP_BASE_URL": "https://pharma-dashboard.congtyso.com/api" }';
+const devConfigJson = '{ "REACT_APP_BASE_URL": "https://pharma-dashboard.congtyso.com" }';
 
 let config = {};
 try {

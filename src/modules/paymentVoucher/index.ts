@@ -5,6 +5,7 @@ import * as paymentVoucherService from "./paymentVoucher.service";
 import * as paymentVoucherModels from "./paymentVoucher.modal";
 import reducer from "./redux/reducer";
 import saga from "./redux/saga";
+import components from "./components";
 
 const moduleExport = {
     api : paymentVoucherApi,
@@ -13,5 +14,6 @@ const moduleExport = {
     service : paymentVoucherService,
     model : paymentVoucherModels,
     redux: { reducer, saga },
+    components : components
 };
 export default moduleExport;

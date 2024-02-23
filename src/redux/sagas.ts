@@ -18,8 +18,18 @@ import medicineModule from '~/modules/medicine';
 import productModule from '~/modules/product';
 import workBoardModule from '~/modules/workBoard';
 import configDiscountModule from '~/modules/configDiscount';
+import billModule from '~/modules/sale/bill';
+import quotationModule from '~/modules/sale/quotation';
+import botNotification from '~/modules/botNotification';
+import workSprintModule from '~/modules/workSprint';
+import workListModule from '~/modules/workList';
+import workTaskModule from '~/modules/workTask';
 import paymentVoucher from '~/modules/paymentVoucher';
 import receiptVoucher from '~/modules/receiptVoucher';
+import lkModule from '~/modules/sale/lk';
+import productsAllModule from '~/modules/productsAll';
+import reportSupplierModule from '~/modules/report/reportSupplier';
+import orderSupplier from '~/modules/sale/orderSupplier/index';
 export default function* rootSaga() {
   yield all([
     authModule.redux.saga(),
@@ -27,6 +37,7 @@ export default function* rootSaga() {
     branchModule.redux.saga(),
     geoModule.redux.saga(),
     statusModule.redux.saga(),
+    configDiscountModule.redux.saga(),
     employeeModule.redux.saga(),
     userModule.redux.saga(),
     userGroupModule.redux.saga(),
@@ -40,9 +51,20 @@ export default function* rootSaga() {
     productModule.redux.saga(),
 
     workBoardModule.redux.saga(),
-    configDiscountModule.redux.saga(),
     pharmacyModule.redux.saga(),
+    // Đơn hàng
+    billModule.redux.saga(),
+    quotationModule.redux.saga(),
+    botNotification.redux.saga(),
+    workSprintModule.redux.saga(),
+    workListModule.redux.saga(),
+    workTaskModule.redux.saga(),
     paymentVoucher.redux.saga(),
     receiptVoucher.redux.saga(),
+    lkModule.redux.saga(),
+    productsAllModule.redux.saga(),
+
+    reportSupplierModule.redux.saga(),
+    orderSupplier.redux.saga(),
   ]);
 };

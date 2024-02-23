@@ -13,6 +13,7 @@ import {
     useSuccess
 } from "~/utils/hook";
 import { vouchersSliceAction } from "./redux/reducer";
+import { useDispatch } from "react-redux";
 const MODULE = "vouchers";
 const MODULE_VI = "";
 
@@ -33,6 +34,9 @@ const {
   pagingSelector,
 } = getSelectors(MODULE);
 
+const getSelector = (key: string) => (state: any) => state.vouchers[key];
+const getArrCheckBox = getSelector('arrCheckBox');
+export const useArrCheckBoxRedux = () => useSelector(getArrCheckBox);
 export const useVouchersPaging = () => useSelector(pagingSelector);
 
 export const useGetVoucherss = (param:any) => {
@@ -142,3 +146,8 @@ export const useUpdateVouchersParams = (
 
   return [keyword, { setKeyword, onParamChange }];
 };
+
+// export const useSetArrCheckBoxRedux = (arr?: any) => {
+//   const dispatch = useDispatch();
+//   return dispatch(vouchersSliceAction.setArrCheckBox(arr));
+// };

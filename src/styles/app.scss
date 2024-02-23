@@ -4,14 +4,21 @@
 
 // Module
 @import "~/modules/auth/auth.style.scss";
+@import "~/modules/homepage/homepage.style.scss";
 @import "~/modules/product/product.style.scss";
 @import "~/components/Layout/LayoutVertical/index.scss";
+@import "~/modules/configDiscount/configDiscount.style.scss";
+@import "~/modules/sale/bill/bill.style.scss";
 @import "../modules//employee/employee.style.scss";
 @import "../modules/user/user.style.scss";
 @import "../modules/userGroup/userGroup.style.scss";
-@import "../modules/configDiscount/configDiscount.style.scss";
+@import "../modules/workList/workList.style.scss";
+@import "../modules/workSprint/workSprint.style.scss";
+@import "../modules/workTask/workTask.style.scss";
+@import "~/modules/supplier/supplier.style.scss";
 
 // Component
+@import "~/components/Layout/LayoutVertical/index.scss";
 @import "component/whiteBox";
 @import "component/columnAction";
 @import "component/page";

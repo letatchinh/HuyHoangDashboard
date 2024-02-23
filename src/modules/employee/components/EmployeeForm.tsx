@@ -27,7 +27,7 @@ interface IProps {
 
 export default function EmployeeForm(props: IProps) {
   const [form] = Form.useForm();
-  const { id, handleCloseModal,  handleUpdate,handleCreate,isSubmitLoading} = props;
+  const { id, handleCloseModal,  handleUpdate,handleCreate, isSubmitLoading} = props;
   const [imageUrl, setImageUrl] = useState<string>();
   useResetState(employeeSliceAction.resetAction);
   //address

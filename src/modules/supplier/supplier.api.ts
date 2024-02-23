@@ -7,7 +7,10 @@ const apis = {
     create: (data?: any) => requester.post(`/api/v1/supplier`, data),
     update: (data?: any) => requester.put(`/api/v1/supplier/${get(data,'_id')}`, data),
     delete: (id?: any) => requester.delete(`/api/v1/supplier/${id}`),
+    getAllPublic: () => requester.get(`/api/v1/supplier-search`),
     getDebt: (query?: any) => requester.get(`/api/v1/supplier-profile-debt`, query),
     getVouchers: (query?: any) => requester.get(`/api/v1/supplier-voucher-debt`, query),
+    getBills: (query?: {supplierId : string}) => requester.get(`/api/v1/supplier-bill`,query),
+    getAllAuthorProduct: (query?: any) => requester.get(`/api/v1/search-supplier-product`, query),
 }
 export default apis;

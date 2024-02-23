@@ -4,6 +4,7 @@ import { useGetlistProductUnitById,useCreateProductUnit, useResetAction } from '
 interface Props {
   id?: any;
   callBack?: () => void;
+  setId?:any
   updateProductUnit: (data: any) => void;
 };
 interface FieldType {
@@ -14,7 +15,7 @@ interface FieldType {
   isAction:String
 };
 const { TextArea } = Input;
-const ProductUnitForm: React.FC<Props> = ({ id, callBack,updateProductUnit }) => {
+const ProductUnitForm: React.FC<Props> = ({ id,setId, callBack,updateProductUnit }) => {
   // const [, updateProductUnit] = useUpdateProductUnit(callBack);
   const [, createProductUnit] = useCreateProductUnit(callBack);
   const [productUnitById, isLoading] = useGetlistProductUnitById(id);
@@ -33,14 +34,15 @@ const ProductUnitForm: React.FC<Props> = ({ id, callBack,updateProductUnit }) =>
     }
   }, [id,productUnitById,form]);
   const onFinish = useCallback((values: FieldType) => {
-    console.log('s');
      const data: FieldType = {
       ...values,
       };
       if (id) {
         updateProductUnit({ ...data, id });
+        setId(null)
       }else {
-        createProductUnit({ ...data });     
+        createProductUnit({ ...data });
+        form.resetFields()     
       };
   },[updateProductUnit,createProductUnit,id])
 

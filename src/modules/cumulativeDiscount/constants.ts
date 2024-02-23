@@ -1,11 +1,13 @@
 export const TYPE_DISCOUNT = {
     'DISCOUNT.CORE': "DISCOUNT.CORE",
     'DISCOUNT.SOFT' : "DISCOUNT.SOFT",
+    'DISCOUNT.SOFT.CONDITION' : "DISCOUNT.SOFT.CONDITION",
     LK : "LK",
   }
   export const TYPE_DISCOUNT_VI = {
     'DISCOUNT.CORE' : "Chiết khấu cứng",
     'DISCOUNT.SOFT' : "Chiết khấu mềm",
+    'DISCOUNT.SOFT.CONDITION' : 'Chiết khấu mềm (có điều kiện)',
     LK : "Luỹ kế",
   }
   
@@ -31,5 +33,13 @@ export const TYPE_DISCOUNT = {
   export const TARGET = {
     product : "product",
     supplier : "supplier",
-    pharma_profile : "pharma_profile",
+  }
+   export const TARGET_TYPE = {
+    pharmacy : "pharmacy",
+    supplier : "supplier",
+   }
+
+  export const TARGET_VI = {
+    product : "Mặt hàng",
+    supplier : "Nhà cung cấp",
   }

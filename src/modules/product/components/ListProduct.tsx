@@ -1,4 +1,4 @@
-import { Col, Modal, Row, Select } from "antd";
+import { Col, Modal, Row, Select, Typography } from "antd";
 import { ColumnsType } from "antd/es/table/InternalTable";
 import { get } from "lodash";
 import React, { useCallback, useState } from "react";
@@ -27,7 +27,6 @@ export default function ListProduct({
   const [keyword, { setKeyword, onParamChange }] =
     useUpdateProductParams(query);
   const [data, isLoading] = useGetProducts(query);
-  console.log(data,'data');
   const onChangeVariantDefault = useChangeVariantDefault();
 
   const [isSubmitLoading, onDelete] = useDeleteProduct();
@@ -59,6 +58,7 @@ export default function ListProduct({
       key: "name",
       width : 300,
       render(name, record) {
+        const codeBySupplier = get(record,'codeBySupplier','');
         if (get(record, "variants", [])?.length > 1) {
           const options = get(record, "variants", [])?.map((item) => ({
             label: get(item, "unit.name"),
@@ -66,6 +66,9 @@ export default function ListProduct({
           }));
           return (
             <Row align={"middle"} gutter={4} wrap={false}>
+              <Col>
+              <Typography.Text strong>{codeBySupplier} - </Typography.Text>
+              </Col>
               <Col>{name}</Col>
               <Col>
                 <Select
@@ -83,7 +86,10 @@ export default function ListProduct({
             </Row>
           );
         } else {
-          return name + " " + `(${get(record, "variant.unit.name")})`;
+          return <span>
+              <Typography.Text strong>{codeBySupplier} - </Typography.Text>
+            {name + " " + `(${get(record, "variant.unit.name")})`}
+          </span>;
         }
       },
     },
@@ -131,6 +137,7 @@ export default function ListProduct({
       title: "Thành phần",
       dataIndex: "productDetail",
       key: "productDetail.element",
+      width : 300,
       render(value, record, index) {
         return get(value,'element')
       },
@@ -140,6 +147,8 @@ export default function ListProduct({
       dataIndex: "_id",
       key: "_id",
       align: "center",
+      fixed : 'right',
+      width : 200,
       render(_id, record, index) {
         return <ActionColumn 
         _id={_id}
@@ -166,12 +175,17 @@ export default function ListProduct({
           loading={isLoading}
           rowKey={(rc) => rc?._id}
           columns={columns}
+          scroll={{x : 2000}}
+          stickyTop
           size="small"
           pagination={{
             ...paging,
             onChange(page, pageSize) {
               onParamChange({ page, limit: pageSize });
             },
+            showSizeChanger : true,
+            showTotal: (total) => `Tổng cộng: ${total} `,
+            size:"small"
           }}
         />
 

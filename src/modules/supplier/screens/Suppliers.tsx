@@ -1,5 +1,5 @@
 import { DeleteOutlined, InfoCircleOutlined, InfoCircleTwoTone, PlusCircleOutlined, PlusCircleTwoTone } from "@ant-design/icons";
-import { Button, Col, Divider, Modal, Popconfirm, Row, Space, Switch, Typography} from "antd";
+import { Button, Checkbox, Col, Divider, Modal, Popconfirm, Row, Space, Switch, Typography} from "antd";
 import Search from "antd/es/input/Search";
 import { ColumnsType } from "antd/es/table/InternalTable";
 import { AlignType } from 'rc-table/lib/interface'
@@ -33,6 +33,8 @@ import { useMatchPolicy } from "~/modules/policy/policy.hook";
 import POLICIES from "~/modules/policy/policy.auth";
 import WithPermission from "~/components/common/WithPermission";
 import PermissionBadge from "~/components/common/PermissionBadge";
+import ExportExcelButton from "~/modules/export/component";
+import useCheckBoxExport from "~/modules/export/export.hook";
 export default function Supplier(): React.JSX.Element {
   const canUpdateSupplier = useMatchPolicy(POLICIES.UPDATE_SUPPLIER);
   const canReadProduct = useMatchPolicy(POLICIES.READ_PRODUCT);
@@ -56,6 +58,10 @@ export default function Supplier(): React.JSX.Element {
   const paging = useSupplierPaging();
   const canWriteVoucher = useMatchPolicy(POLICIES.WRITE_VOUCHER);
   const canReadDebt = useMatchPolicy(POLICIES.READ_DEBT);
+
+  //Download
+  const canDownload = useMatchPolicy(POLICIES.DOWNLOAD_PRODUCT);
+  const [arrCheckBox, onChangeCheckBox] = useCheckBoxExport();
 
   // Control form
   const onOpenForm = useCallback((idSelect?: any) => {
@@ -194,6 +200,24 @@ export default function Supplier(): React.JSX.Element {
           return concatAddress(address);
         },
       },
+      ...(
+        canDownload ? [
+          {
+            title: 'Lựa chọn',
+            key: '_id',
+            width: 80,
+            align: 'center' as any,
+            render: (item: any, record: any) => {
+              const id = record?._id;
+              return (
+                <Checkbox
+                  checked={arrCheckBox?.includes(id)}
+                  onChange={(e) => onChangeCheckBox(e.target.checked, id)}
+                />)
+            }
+          },
+        ] : []
+      ),
       
       {
         title: "Thao tác",
@@ -248,7 +272,6 @@ export default function Supplier(): React.JSX.Element {
     ],
     [isSubmitLoading, onDelete, onOpenForm, onUpdateStatus]
   );
-
   return (
     <div>
       <Breadcrumb title={t("list-supplier")} />
@@ -262,16 +285,34 @@ export default function Supplier(): React.JSX.Element {
           />
         </Col>
         <Col>
-          <WithPermission permission={POLICIES.WRITE_SUPPLIER}>
-          <Button
-            onClick={() => onOpenForm()}
-            icon={<PlusCircleOutlined />}
-            type="primary"
-          >
-            Thêm nhà cung cấp
-          </Button>
-          </WithPermission>
+          <Space>
+            <WithPermission permission={POLICIES.DOWNLOAD_BILL}>
+                <Col>
+                  <ExportExcelButton
+                    api='supplier'
+                    exportOption = 'supplier'
+                    query={query}
+                    fileName='Danh sách nhà cung cấp'
+                    ids={arrCheckBox}
+                  />
+                </Col>
+            </WithPermission>
+            <WithPermission permission={POLICIES.WRITE_SUPPLIER}>
+            <Button
+              onClick={() => onOpenForm()}
+              icon={<PlusCircleOutlined />}
+              type="primary"
+            >
+              Thêm nhà cung cấp
+            </Button>
+            </WithPermission>
+          </Space>
         </Col>
+        {/* <Col>
+          <WithPermission permission={POLICIES.DOWNLOAD_SUPPLIER}>
+            <ExportExcelButton/>
+          </WithPermission>
+        </Col> */}
       </Row>
       <WhiteBox>
         <TableAnt

@@ -1,16 +1,17 @@
 import { Button, notification } from "antd";
 import { compact, differenceBy, get } from "lodash";
 import CumulativeDiscountModule from '~/modules/cumulativeDiscount';
-import { FieldTypeFormProduct } from "./product.modal";
+import { FieldTypeFormProduct, variantType } from "./product.modal";
 type paramsConvert = {
     values: FieldTypeFormProduct,
     supplierId : string | undefined
 };
 
 export const convertSubmitData = ({values,supplierId} :paramsConvert) => {
+  
       const submitData = {
         ...values,
-        cumulativeDiscount : CumulativeDiscountModule.service.convertSubmitDiscount(get(values,'cumulativeDiscount')),
+        cumulativeDiscount : CumulativeDiscountModule.service.convertSubmitDiscount(get(values,'cumulativeDiscount'),get(values,'variants',[])),
         supplierId,
       };
 
@@ -19,8 +20,10 @@ export const convertSubmitData = ({values,supplierId} :paramsConvert) => {
 
 
 export const convertInitProduct = (product : any) => {
+  
   // Convert CumulativeDiscount
-  const cumulativeDiscount = CumulativeDiscountModule.service.convertInitDiscount(get(product,'cumulativeDiscount',[]));
+  const cumulativeDiscount = CumulativeDiscountModule.service.convertInitDiscount(get(product,'cumulativeDiscount',[]),get(product,'variants',[]));
+  
   return {
     ...product,
     cumulativeDiscount
@@ -31,12 +34,12 @@ export const convertInitProduct = (product : any) => {
 export const validateChangeVariants = ({cumulativeDiscount,variants,form,setDataNotificationUndo}:{cumulativeDiscount:any[],variants:any[],form:any,setDataNotificationUndo:(data? : any) => void}) => {
 
   // Filter Have unit and add productUnit to compare Diff cumulativeDiscount and variants
-  const listHaveApplyUnit = cumulativeDiscount?.filter((item:any) => !!get(item,'applyUnit'))?.map((item:any) => ({...item,productUnit : get(item,'applyUnit')}));
+  const listHaveApplyVariantId = cumulativeDiscount?.filter((item:any) => !!get(item,'applyVariantId'))?.map((item:any) => ({...item,productUnit : get(item,'applyVariantId')}));
 
-  const differenceUnit = differenceBy(listHaveApplyUnit,variants,'productUnit');
+  const differenceUnit = differenceBy(listHaveApplyVariantId,variants,'productUnit');
   if(differenceUnit?.length){
     const description = `Hệ thống gỡ chiết khấu \n ${compact(differenceUnit?.map((item:any) => get(item,'name')))?.join(',')} \n ra khỏi chiết khấu để vì đã sử dụng đơn vị này!`;
-    const listCumulativeRemain = differenceBy(listHaveApplyUnit,differenceUnit,'productUnit');
+    const listCumulativeRemain = differenceBy(listHaveApplyVariantId,differenceUnit,'productUnit');
     form.setFieldsValue({cumulativeDiscount:listCumulativeRemain});
     // setDataNotificationUndo({
     //   open : true,
@@ -44,4 +47,16 @@ export const validateChangeVariants = ({cumulativeDiscount,variants,form,setData
     // })
   };
 
+}
+
+export const getExchangeValue = (variantId : string | null,variants? : variantType[]) => {
+  
+  const variant = variants?.find((v:variantType) => get(v,'_id') === variantId);
+  return get(variant,'exchangeValue',0)
+}
+
+export const getVariants = (variantId : string | null,variants? : variantType[]) => {
+  
+  const variant = variants?.find((v:variantType) => get(v,'_id') === variantId);
+  return variant;
 }

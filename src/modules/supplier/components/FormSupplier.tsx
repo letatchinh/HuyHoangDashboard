@@ -116,7 +116,7 @@ const FormSupplier = ({
             allowEmail={false}
           />
         </BaseBorderBox>
-        <BaseBorderBox
+        {/* <BaseBorderBox
           title={
             <span>
               Chiết khấu <GiftTwoTone />
@@ -124,7 +124,7 @@ const FormSupplier = ({
           }
         >
           <CumulativeDiscountModule.components.DiscountList target={CumulativeDiscountModule.constants.TARGET.supplier} loading={isLoading} form={form} />
-        </BaseBorderBox>
+        </BaseBorderBox> */}
         <div className="btn-footer">
           <WithPermission permission={id ? POLICIES.UPDATE_SUPPLIER : POLICIES.WRITE_SUPPLIER}>
           <Button
