@@ -54,6 +54,13 @@ const { confirm } = Modal;
 const { Option } = Select;
 const DEFAULT_ACCOUNT = 1111;
 
+type DataAccounting = {
+  content? : string,
+  debitAccount?:number,
+  creditAccount?:number,
+  amountOfMoney?:number,
+}
+
 type propsType = {
   id?: any;
   onClose?: any;
@@ -62,7 +69,7 @@ type propsType = {
   debt?: any;
   from?: string;
   supplierId?:any,
-  dataAccountingDefault?:any[]
+  dataAccountingDefault?: DataAccounting[]
 };
 
 export default function ReceiptVoucher(props: propsType): React.JSX.Element {

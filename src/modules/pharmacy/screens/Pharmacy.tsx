@@ -363,6 +363,10 @@ export default function Pharmacy() {
           refCollection={REF_COLLECTION_UPPER.PHARMA_PROFILE}
           debt={debt}
           from="Pharmacy"
+          dataAccountingDefault={[{
+            debitAccount: 1111,
+            amountOfMoney: debt || 0
+          }]}
         />
       </Modal>
     </div>

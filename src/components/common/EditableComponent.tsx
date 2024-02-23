@@ -144,7 +144,6 @@ const EditableCell = ({
   };
 
   let childNode = children;
-  
   if (editable) {
     childNode = editing ? (
       <Form.Item
