@@ -23,12 +23,13 @@ export default function DiscountList({
   const defaultValueDiscount = useMemo(
     () => ({
       typeDiscount: TYPE_DISCOUNT["DISCOUNT.CORE"],
-      valueType: TYPE_VALUE.VALUE,
+      valueType: TYPE_VALUE.PERCENT,
       typeReward: TYPE_REWARD.VALUE,
       target,
       targetType,
       timesReward : 1,
-      typeRepeat : TYPE_REPEAT.noTime
+      typeRepeat : TYPE_REPEAT.noTime,
+      editing : true
     }),
     [target, targetType]
   );

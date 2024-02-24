@@ -30,6 +30,7 @@ import CumulativeDiscountModule from '~/modules/cumulativeDiscount';
 import { useSupplierInfoRedux } from "~/modules/productsAll/productsAll.hook";
 
 import TabPane from "antd/es/tabs/TabPane";
+import useNotificationStore from "~/store/NotificationContext";
 
 const CLONE_PRODUCT_TYPE_VI: any = PRODUCT_TYPE_VI;
 const CLONE_SALE_LEVEL_VI: any = SALE_LEVEL_VI;
@@ -42,7 +43,8 @@ export default function FormProduct({
   id,
   onCancel,
 }: TypePropsFormProduct): React.JSX.Element {
-  const supplierInfo = useSupplierInfoRedux();
+  // const supplierInfo = useSupplierInfoRedux();
+  const {onNotify} = useNotificationStore();
   const [form] = Form.useForm();
   const [backupForm,setBackupForm] = useState<FieldTypeFormProduct[]>([]);
   
@@ -144,8 +146,23 @@ export default function FormProduct({
 
   // },[dataNotificationUndo]);
   const [activeTab, setActiveTab] = useState("1");
-  const onChangeTab = (key: string) => {
+  const onChangeTab = async(key: string) => {
+  try {
+    await form.validateFields();
     setActiveTab(key);
+    form.setFieldsValue({
+      cumulativeDiscount : form.getFieldValue('cumulativeDiscount')?.map((discount:any) => ({
+        ...discount,
+        editing : false
+      }))
+    })
+  } catch (error : any) {
+    const {errorFields} = error;
+    const isCumulativeError = errorFields?.some(((e:any) => get(e,'name.[0]') === "cumulativeDiscount"));
+    if(isCumulativeError){
+      onNotify?.error("Vui lòng kéo xuống kiểm tra lại chiết khấu")
+    }
+  }
   };
   return (
     <div>
@@ -156,8 +173,8 @@ export default function FormProduct({
         labelCol={{ span: 8 }}
         wrapperCol={{ span: 16 }}
         labelAlign="left"
-        scrollToFirstError
-
+        scrollToFirstError={true}
+        
         initialValues={{
           variants: [
             {

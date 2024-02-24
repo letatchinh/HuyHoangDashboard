@@ -95,8 +95,10 @@ export default function DiscountItem({
   supplierId,
   editingDefault = true
 }: propsType): React.JSX.Element {
+  console.log(name,'name');
+  
   const [isSelectUnit, setIsSelectUnit] = useState(false);
-  const [editing, setEditing] = useState(editingDefault);
+  // const [editing, setEditing] = useState(editingDefault);
   
   const optionsTypeReward = useMemo(
     () =>
@@ -107,44 +109,30 @@ export default function DiscountItem({
     []
   );
 
-  const toggleEdit = useCallback(async () => {
-    try {
-      await form.validateFields();
-      setEditing(!editing);
-    } catch (error: any) {
-      const { errorFields } = error;
-      const isErrorDiscount = errorFields?.some(
-        (item: any) =>
-          get(item, ["name", 0]) === "cumulativeDiscount" &&
-          get(item, ["name", 1]) === name
-      );
-      if (!isErrorDiscount) {
-        setEditing(!editing);
-      }
-    }
-  }, [editing, form, name]);
+
   const isSameTarget = useMemo(
     () =>
       get(form.getFieldValue(["cumulativeDiscount", name]), "target") ===
       target,
     [form, name, target]
   );
-  useEffect(() => {
-    if (get(form.getFieldValue(["cumulativeDiscount", name]), "_id")) {
-      setEditing(false);
-    }
-  }, [form, name]);
+
   const variants = Form.useWatch("variants", form);
   const applyVariantId = get(Form.useWatch(`cumulativeDiscount`, form), [
     name,
     "applyVariantId",
   ]);
   const cumulativeDiscount = Form.useWatch("cumulativeDiscount", form);
-
+  
   const typeDiscount = Form.useWatch(
     ["cumulativeDiscount", name, "typeDiscount"],
     form
   );
+  const editing = Form.useWatch(
+    ["cumulativeDiscount", name, "editing"],
+    form
+  ) || false;
+  console.log(editing,'editing')
   const typeRepeat = Form.useWatch(
     ["cumulativeDiscount", name, "typeRepeat"],
     form
@@ -167,7 +155,8 @@ export default function DiscountItem({
     setIsSelectUnit(!!applyVariantId);
   }, [applyVariantId]);
 
-  const changeForm = (name: number, value: any) => {
+  const changeForm = (value: any) => {
+      
     const newCumulativeDiscount = cumulativeDiscount?.map(
       (item: any, index: number) =>
         index === name
@@ -176,8 +165,9 @@ export default function DiscountItem({
               ...value,
             }
           : item
-    );
-
+      );
+            console.log(cumulativeDiscount,'cumulativeDiscount');
+            
     form.setFieldsValue({
       cumulativeDiscount: newCumulativeDiscount,
     });
@@ -211,6 +201,29 @@ export default function DiscountItem({
       cumulativeDiscount: newCumulativeDiscount,
     });
   };
+
+  const toggleEdit = async () => {
+    try {
+      await form.validateFields();
+      changeForm({editing : !editing});
+    } catch (error: any) {
+      const { errorFields } = error;
+      const isErrorDiscount = errorFields?.some(
+        (item: any) =>
+          get(item, ["name", 0]) === "cumulativeDiscount" &&
+          get(item, ["name", 1]) === name
+      );
+      if (!isErrorDiscount) {
+        changeForm({editing : !editing});
+      }
+    }
+  }
+
+  // useEffect(() => {
+  //   if (get(form.getFieldValue(["cumulativeDiscount", name]), "_id")) {
+  //     changeForm({editing : false});
+  //   }
+  // }, [form, name,]);
   return (
     <>
       <Divider orientation="left">
@@ -286,7 +299,7 @@ export default function DiscountItem({
                                   optionType="button"
                                   buttonStyle="solid"
                                   onChange={(e) =>
-                                    changeForm(name, {
+                                    changeForm({
                                       value: null,
                                       itemReward: null,
                                       typeReward: e.target.value,
@@ -374,7 +387,7 @@ export default function DiscountItem({
                           rules={[
                             {
                               required: true,
-                              message: "Xin vui nhập!",
+                              message: "Xin vui lòng nhập tên chiết khấu!",
                             },
                           ]}
                         >
@@ -591,7 +604,7 @@ export default function DiscountItem({
                               >
                                 <Segmented
                                   onChange={(value) =>
-                                    changeForm(name, {
+                                    changeForm({
                                       timesReward: value,
                                     })
                                   }
@@ -780,7 +793,7 @@ export default function DiscountItem({
                                   value={isSelectUnit}
                                   onChange={(checked) => {
                                     if (!checked) {
-                                      changeForm(name, {
+                                      changeForm({
                                         applyVariantId: null,
                                       });
                                     }
