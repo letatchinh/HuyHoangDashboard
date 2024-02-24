@@ -82,6 +82,6 @@ export type TypeRepeatType = "ranger" | "month" | "quarter" | "nope" | "year" | 
     loading? : any,
     form : any,
     target : string,
-    targetType: string,
+    targetType: 'pharmacy' | 'supplier',
     supplierId? : string
   }

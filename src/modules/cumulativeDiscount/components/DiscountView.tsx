@@ -103,7 +103,6 @@ export default function DiscountView({
     }
     return text;
   }, [data]);
-  console.log(data,'data');
   
   const timesRewardText = useMemo(() => {
     let text = "";
