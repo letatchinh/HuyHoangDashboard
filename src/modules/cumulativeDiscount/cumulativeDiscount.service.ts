@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import { forIn, get, min, pick } from "lodash";
+import { forIn, get, min, omit, pick } from "lodash";
 import { TYPE_DISCOUNT, TYPE_REPEAT, TYPE_REWARD } from "./constants";
 import {
   applyTimeSheetType,
@@ -695,6 +695,21 @@ export class DiscountFactory {
     } else {
       return null;
     }
+  }
+  handleCopyDiscountList({discountList,targetTypeCopy,targetTypePaste } : {discountList : cumulativeDiscountType[],targetTypeCopy : 'pharmacy' | 'supplier',targetTypePaste : 'pharmacy' | 'supplier'}) : cumulativeDiscountType[]{
+    const resultCopy : any[] = discountList?.filter((discount : cumulativeDiscountType) => get(discount,'targetType') === targetTypeCopy)?.map((discount:cumulativeDiscountType) => {
+      const discountRemoveField = omit(discount,[
+        '_id',
+        'code',
+        'updatedAt',
+        'createdAt',
+      ])
+      return ({
+        ...discountRemoveField,
+        targetType  : targetTypePaste 
+    })
+    });
+    return resultCopy
   }
 }
 

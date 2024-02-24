@@ -50,6 +50,7 @@ type propsType = {
   target: string;
   targetType: string;
   supplierId?: string;
+  editingDefault?:boolean
 };
 const options = [
   {
@@ -92,10 +93,11 @@ export default function DiscountItem({
   target,
   targetType,
   supplierId,
+  editingDefault = true
 }: propsType): React.JSX.Element {
   const [isSelectUnit, setIsSelectUnit] = useState(false);
-  const [editing, setEditing] = useState(true);
-
+  const [editing, setEditing] = useState(editingDefault);
+  
   const optionsTypeReward = useMemo(
     () =>
       keys(TYPE_REWARD).map((key) => ({

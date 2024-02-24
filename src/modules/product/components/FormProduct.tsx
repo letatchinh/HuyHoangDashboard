@@ -33,6 +33,7 @@ import TabPane from "antd/es/tabs/TabPane";
 
 const CLONE_PRODUCT_TYPE_VI: any = PRODUCT_TYPE_VI;
 const CLONE_SALE_LEVEL_VI: any = SALE_LEVEL_VI;
+const CLONE_TARGET_TYPE: any = CumulativeDiscountModule.constants.TARGET_TYPE;
 const layoutRow = {
   gutter: 16,
 };
@@ -70,7 +71,6 @@ export default function FormProduct({
 
   const onFinish = (values: FieldTypeFormProduct) => {
     const submitData = convertSubmitData({values,supplierId});
-    console.log(submitData,'submitData');
     
     if (id) {
       onUpdate({ ...submitData, _id: id });
@@ -258,7 +258,7 @@ export default function FormProduct({
         >
           <Tabs
             onChange={(e) => onChangeTab(e)}
-            destroyInactiveTabPane
+            // destroyInactiveTabPane
             activeKey={activeTab}
             defaultActiveKey="1"
           >
@@ -266,7 +266,7 @@ export default function FormProduct({
               <CumulativeDiscountModule.components.DiscountList
                 supplierId={supplierId}
                 target={CumulativeDiscountModule.constants.TARGET.product}
-                targetType={CumulativeDiscountModule.constants.TARGET_TYPE.pharmacy}
+                targetType={CLONE_TARGET_TYPE.pharmacy}
                 loading={isLoading}
                 form={form}
               />
@@ -275,7 +275,7 @@ export default function FormProduct({
               <CumulativeDiscountModule.components.DiscountList
                 supplierId={supplierId}
                 target={CumulativeDiscountModule.constants.TARGET.product}
-                targetType={CumulativeDiscountModule.constants.TARGET_TYPE.supplier}
+                targetType={CLONE_TARGET_TYPE.supplier}
                 loading={isLoading}
                 form={form}
               />

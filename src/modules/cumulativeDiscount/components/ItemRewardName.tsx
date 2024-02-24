@@ -131,7 +131,6 @@ export default function ItemRewardName({
               ]}
               onRow={(data) => ({
                 onClick : () => {
-                  console.log(data,'data');
                   const variant = ProductModule.service.getVariants(get(data,'selectVariant',''),get(data,'variants',[]))
                   onSelect(
                     `${get(data, "name", "")} - ${get(
