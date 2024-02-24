@@ -48,6 +48,7 @@ type propsType = {
   units: any;
   remove: (v: any) => void;
   target: string;
+  targetType: string;
   supplierId?: string;
 };
 const options = [
@@ -89,6 +90,7 @@ export default function DiscountItem({
   units,
   remove,
   target,
+  targetType,
   supplierId,
 }: propsType): React.JSX.Element {
   const [isSelectUnit, setIsSelectUnit] = useState(false);
@@ -255,6 +257,7 @@ export default function DiscountItem({
       ) : (
         <React.Fragment key={key}>
           <Form.Item hidden name={[name, "target"]} />
+          <Form.Item hidden name={[name, "targetType"]} initialValue={targetType} />
           <Form.Item hidden name={[name, "targetId"]} />
 
           <Row wrap={false} justify={"space-between"}>

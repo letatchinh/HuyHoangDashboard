@@ -16,6 +16,6 @@ const supplierModule = {
     hook : supplierHook,
     service : supplierService,
     model : supplierModels,
-    redux : {reducer,saga}
+    redux : {reducer,saga},
 }
 export default supplierModule;

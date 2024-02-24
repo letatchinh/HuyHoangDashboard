@@ -4,6 +4,7 @@ module.exports = {
     alias: {
       '~': path.resolve(__dirname, 'src'),
       '~/m': path.resolve(__dirname, 'src/modules'),
+      'policy': path.resolve(__dirname, 'src/modules/policy'),
     },
   },
 };

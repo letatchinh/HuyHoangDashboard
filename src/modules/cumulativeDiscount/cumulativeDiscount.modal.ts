@@ -60,10 +60,10 @@ export type TypeRepeatType = "ranger" | "month" | "quarter" | "nope" | "year" | 
     target : string,
     targetId : string,
     name : string,
-    typeDiscount : string,
+    typeDiscount : "LK" | "DISCOUNT.CORE" | "DISCOUNT.SOFT" | "DISCOUNT.SOFT.CONDITION",
     value : number,
-    valueType : string,
-    typeReward : string,
+    valueType : "VALUE" | "PERCENT",
+    typeReward : "VALUE" | "PRODUCT" | "BONUS",
     condition : conditionType | null,
     applyVariantId : string | null,
     applyTimeSheet : applyTimeSheetType | null,
@@ -72,10 +72,16 @@ export type TypeRepeatType = "ranger" | "month" | "quarter" | "nope" | "year" | 
     _id : string | null,
     typeRepeat : TypeRepeatType
   
+    timesReward : number,
+    itemReward? : {
+      name : string,
+      quantity : number,
+    }
   }
   export type TypePropsDiscountList = {
     loading? : any,
     form : any,
     target : string,
+    targetType: string,
     supplierId? : string
   }

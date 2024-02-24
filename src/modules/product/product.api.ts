@@ -7,7 +7,6 @@ const apis = {
     create: (data?: any) => requester.post(`/api/v1/product`, data),
     update: (data?: any) => requester.put(`/api/v1/product/${get(data,'_id')}`, data),
     delete: (id?: any) => requester.delete(`/api/v1/product/${id}`),
-    search : (query?: any) => requester.post(`/api/v1/product-search`, query),
-
+    search : ({optionWith = 'pharmacy',...query}) => requester.post(`/api/v1/product-search`, {...query,optionWith}),
 }
 export default apis;

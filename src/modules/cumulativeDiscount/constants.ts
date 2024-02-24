@@ -43,3 +43,12 @@ export const TYPE_DISCOUNT = {
     quarter : 'quarter',
     year : 'year',
   }
+   export const TARGET_TYPE = {
+    pharmacy : "pharmacy",
+    supplier : "supplier",
+   }
+
+  export const TARGET_VI = {
+    product : "Mặt hàng",
+    supplier : "Nhà cung cấp",
+  }

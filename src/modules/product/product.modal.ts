@@ -13,7 +13,6 @@ export type variantType = {
     productId : string,
     exchangeValue : number,
     price : number,
-    cost : number,
     variantIsDefault : boolean,
 }
 export type conditionType = {

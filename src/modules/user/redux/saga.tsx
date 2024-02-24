@@ -56,8 +56,25 @@ function* getPolicy({ payload: branchId}: any): any {
     // setAxiosCompanyId(null);
     yield put(userSliceAction.getPolicyFailed(error));
   }
-}
+};
 
+function* getProfile() : any {
+  try {
+    const data = yield call(api.getProfile);
+    yield put(userSliceAction.getProfileSuccess(data));
+  } catch (error:any) {
+    yield put(userSliceAction.getProfileFailed(error));
+  }
+};
+
+function* updateProfile({payload} : any) : any {
+  try {
+    const data = yield call(api.updateProfile,payload);
+    yield put(userSliceAction.updateProfileSuccess(data));
+  } catch (error:any) {
+    yield put(userSliceAction.updateProfileFailed(error));
+  }
+};
 
 export default function* userSaga() {
   yield takeLatest(userSliceAction.getListRequest, getListUser);
@@ -66,4 +83,6 @@ export default function* userSaga() {
   yield takeLatest(userSliceAction.updateRequest, updateUser);
   yield takeLatest(userSliceAction.deleteRequest, deleteUser);
   yield takeLatest(userSliceAction.getPolicyRequest,getPolicy );
+  yield takeLatest(userSliceAction.getProfileRequest,getProfile );
+  yield takeLatest(userSliceAction.updateProfileRequest,updateProfile );
 }

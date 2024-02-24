@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { get } from "lodash";
+import { get, omit } from "lodash";
 import { InstanceModuleRedux } from "~/redux/instanceModuleRedux";
 import { initStateSlice } from "~/redux/models";
 import { getPaging } from "~/utils/helpers";
@@ -34,6 +34,10 @@ class ProductClassExtend extends InstanceModuleRedux {
         });
         state.list = list;
       },
+      resetActionFullState: (state:any) => ({
+        ...state,
+        ...omit(this.cloneInitState, ["list"]),
+      }),
       // Want Add more reducer Here...
     }
     this.cloneInitState = {
