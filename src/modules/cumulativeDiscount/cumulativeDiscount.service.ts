@@ -726,6 +726,7 @@ const rootField = [
   "_id",
   "timesReward",
   "typeRepeat",
+  "itemReward",
 ];
 export const pickCore = (submitData: any) => pick(submitData, rootField);
 
@@ -876,6 +877,7 @@ export const convertSubmitDiscount = (
           };
           return pickLK(newItem);
         case TYPE_DISCOUNT["DISCOUNT.CORE"]:
+          console.log(item,'item');
           return pickCore(item);
         case TYPE_DISCOUNT["DISCOUNT.SOFT"]:
           return pickSoft(item);
@@ -925,3 +927,26 @@ export const convertSubmitDiscount = (
   );
   return newCumulativeDiscount;
 };
+type ParamsValidateDiscount = {
+  form : any,
+  onFailed:() => void,
+  onSuccess:() => void,
+}
+export const validateDiscount = async({form,onFailed,onSuccess} : ParamsValidateDiscount) => {
+  try {
+    await form.validateFields();
+    form.setFieldsValue({
+      cumulativeDiscount : form.getFieldValue('cumulativeDiscount')?.map((discount:any) => ({
+        ...discount,
+        editing : false
+      }))
+    })
+    onSuccess();
+  } catch (error : any) {
+    const {errorFields} = error;
+    const isCumulativeError = errorFields?.some(((e:any) => get(e,'name.[0]') === "cumulativeDiscount"));
+    if(isCumulativeError){
+      onFailed()
+    }
+  }
+}

@@ -10,7 +10,7 @@ import {
   TYPE_DISCOUNT, TYPE_REPEAT, TYPE_REWARD, TYPE_VALUE
 } from "../constants";
 import { TypePropsDiscountList } from "../cumulativeDiscount.modal";
-import { DiscountFactory } from "../cumulativeDiscount.service";
+import { DiscountFactory, validateDiscount } from "../cumulativeDiscount.service";
 import DiscountItem from "./DiscountItem";
 export default function DiscountList({
   loading,
@@ -23,12 +23,13 @@ export default function DiscountList({
   const defaultValueDiscount = useMemo(
     () => ({
       typeDiscount: TYPE_DISCOUNT["DISCOUNT.CORE"],
-      valueType: TYPE_VALUE.VALUE,
+      valueType: TYPE_VALUE.PERCENT,
       typeReward: TYPE_REWARD.VALUE,
       target,
       targetType,
       timesReward : 1,
-      typeRepeat : TYPE_REPEAT.noTime
+      typeRepeat : TYPE_REPEAT.noTime,
+      editing : true
     }),
     [target, targetType]
   );
@@ -51,17 +52,17 @@ export default function DiscountList({
   return (
     <Form.List name={"cumulativeDiscount"}>
       {(fields, { add, remove }) => {
-
+        const list = fields
+        .filter(
+          ({ name }) =>
+            form.getFieldValue("cumulativeDiscount")[name].targetType ===
+              targetType ||
+            !form.getFieldValue("cumulativeDiscount")[name].targetType
+        )
         return (
           <>
-            {fields
-              .filter(
-                ({ name }) =>
-                  form.getFieldValue("cumulativeDiscount")[name].targetType ===
-                    targetType ||
-                  !form.getFieldValue("cumulativeDiscount")[name].targetType
-              )
-              .map(({ key, name, fieldKey, ...restField }: any, index) => (
+            {
+              list.map(({ key, name, fieldKey, ...restField }: any, index) => (
                 <DiscountItem
                   form={form}
                   index={index}
@@ -79,7 +80,17 @@ export default function DiscountList({
             <Flex gap={10}>
             <Button
               type="primary"
-              onClick={() => add(defaultValueDiscount)}
+              onClick={() => {
+                if(list?.length){
+                  validateDiscount({
+                    form,
+                    onFailed : () => onNotify?.error("Vui lòng điền đủ thông tin vào chiết khấu trước khi thêm"),
+                    onSuccess : () => add(defaultValueDiscount)
+                  })
+                }else{
+                  add(defaultValueDiscount)
+                }
+              }}
               icon={<PlusCircleOutlined />}
             >
               Thêm chiết khấu
