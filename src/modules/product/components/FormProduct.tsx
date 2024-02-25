@@ -73,7 +73,7 @@ export default function FormProduct({
 
   const onFinish = (values: FieldTypeFormProduct) => {
     const submitData = convertSubmitData({values,supplierId});
-    
+      
     if (id) {
       onUpdate({ ...submitData, _id: id });
     } else {
@@ -147,22 +147,11 @@ export default function FormProduct({
   // },[dataNotificationUndo]);
   const [activeTab, setActiveTab] = useState("1");
   const onChangeTab = async(key: string) => {
-  try {
-    await form.validateFields();
-    setActiveTab(key);
-    form.setFieldsValue({
-      cumulativeDiscount : form.getFieldValue('cumulativeDiscount')?.map((discount:any) => ({
-        ...discount,
-        editing : false
-      }))
+    CumulativeDiscountModule.service.validateDiscount({
+      form,
+      onSuccess : () => setActiveTab(key),
+      onFailed : () => onNotify?.error("Vui lòng kéo xuống kiểm tra lại chiết khấu")
     })
-  } catch (error : any) {
-    const {errorFields} = error;
-    const isCumulativeError = errorFields?.some(((e:any) => get(e,'name.[0]') === "cumulativeDiscount"));
-    if(isCumulativeError){
-      onNotify?.error("Vui lòng kéo xuống kiểm tra lại chiết khấu")
-    }
-  }
   };
   return (
     <div>

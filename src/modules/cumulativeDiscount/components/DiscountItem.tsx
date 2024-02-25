@@ -15,6 +15,7 @@ import {
   Select,
   Space,
   Switch,
+  Tag,
   Tooltip,
 } from "antd";
 import ButtonGroup from "antd/es/button/button-group";
@@ -95,7 +96,6 @@ export default function DiscountItem({
   supplierId,
   editingDefault = true
 }: propsType): React.JSX.Element {
-  console.log(name,'name');
   
   const [isSelectUnit, setIsSelectUnit] = useState(false);
   // const [editing, setEditing] = useState(editingDefault);
@@ -132,7 +132,12 @@ export default function DiscountItem({
     ["cumulativeDiscount", name, "editing"],
     form
   ) || false;
-  console.log(editing,'editing')
+
+  const _id = Form.useWatch(
+    ["cumulativeDiscount", name, "_id"],
+    form
+  ) || false;
+
   const typeRepeat = Form.useWatch(
     ["cumulativeDiscount", name, "typeRepeat"],
     form
@@ -228,19 +233,22 @@ export default function DiscountItem({
     <>
       <Divider orientation="left">
         <span>
-          Chiết khấu {index + 1} &nbsp;
+          <Tag color={_id ? 'blue' : 'success'}>{_id ? "Cập nhật" : "Mới"}</Tag>Chiết khấu {index + 1} &nbsp;
           {isSameTarget ? (
             <ButtonGroup>
               <Button
+                type="primary"
                 onClick={toggleEdit}
-                icon={
-                  editing ? (
-                    <EyeTwoTone style={{ fontSize: 18 }} />
-                  ) : (
-                    <EditTwoTone style={{ fontSize: 18 }} />
-                  )
-                }
-              />
+                // icon={
+                //   editing ? (
+                //     <EyeTwoTone style={{ fontSize: 18 }} />
+                //   ) : (
+                //     <EditTwoTone style={{ fontSize: 18 }} />
+                //   )
+                // }
+              >
+                {editing ? "Xem trước" : "Chỉnh sửa"}
+              </Button>
               <Popconfirm
                 title="Xác nhận xoá"
                 okText="Xoá"
@@ -248,13 +256,17 @@ export default function DiscountItem({
                 onConfirm={() => remove(name)}
               >
                 <Button
-                  icon={
-                    <CloseSquareTwoTone
-                      twoToneColor={"red"}
-                      style={{ fontSize: 18 }}
-                    />
-                  }
-                />
+                danger
+                type="primary"
+                  // icon={
+                  //   <CloseSquareTwoTone
+                  //     twoToneColor={"red"}
+                  //     style={{ fontSize: 18 }}
+                  //   />
+                  // }
+                >
+                  Xoá
+                </Button>
               </Popconfirm>
             </ButtonGroup>
           ) : (
@@ -512,7 +524,7 @@ export default function DiscountItem({
                       </Col>
                       <Col span={8}>
                         <Form.Item shouldUpdate noStyle>
-                          {({ getFieldValue }) =>
+                          {({ getFieldValue,setFieldValue }) =>
                             getFieldValue([
                               "cumulativeDiscount",
                               name,
@@ -528,6 +540,19 @@ export default function DiscountItem({
                                     size="small"
                                     optionType="button"
                                     buttonStyle="solid"
+                                    onChange={(e) => {
+                                      // TODO: valueType = PERCENT WILL set timesReward INFINITE
+                                      if(e.target.value === 'PERCENT'){
+                                        setFieldValue(
+                                          [
+                                            "cumulativeDiscount",
+                                            name,
+                                            "timesReward",
+                                          ],
+                                          INFINITY
+                                        )
+                                      }
+                                    }}
                                   >
                                     <Radio.Button value="VALUE">
                                       Giá trị
