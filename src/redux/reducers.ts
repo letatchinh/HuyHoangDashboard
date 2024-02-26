@@ -34,6 +34,7 @@ import receiptVoucher from '~/modules/receiptVoucher';
 import lkModule from '~/modules/sale/lk';
 import productsAll from '~/modules/productsAll';
 import orderSupplier from '~/modules/sale/orderSupplier/index';
+import costManagement from '~/modules/costManagement';
 const authPersistConfig = {
     key: 'auth',
     storage: localStorage,
@@ -79,6 +80,7 @@ const rootReducer = combineReducers({
     lk: lkModule.redux.reducer,
     productsAll: productsAll.redux.reducer,
     orderSupplier: orderSupplier.redux.reducer,
+    costManagement: costManagement.redux.reducer,
 
 });
 export default rootReducer

@@ -31,6 +31,7 @@ import PharmacyDetail from "~/modules/pharmacy/screens/PharmacyDetail";
 import Lk from "~/pages/Dashboard/Lk";
 import OrderSupplier from "~/pages/Dashboard/OrderSupplier";
 import UpdateOrderSupplier from "~/pages/Dashboard/OrderSupplier/UpdateOrderSupplier";
+import CostManagement from "~/pages/Dashboard/CostManagement";
 export const mainRoutes :PathRouteProps[] = [
   { path: PATH_APP.main.root, Component: Homepage },
 
@@ -91,7 +92,7 @@ export const mainRoutes :PathRouteProps[] = [
   // Order Supplier
   { path: PATH_APP.orderSupplier.root, Component: OrderSupplier},
   { path: PATH_APP.orderSupplier.update, Component: UpdateOrderSupplier},
-
+  {path: PATH_APP.costManagement.root, Component: CostManagement},
 
   { path: '/', Component: Homepage },
 ]
