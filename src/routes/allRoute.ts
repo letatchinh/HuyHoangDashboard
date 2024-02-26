@@ -68,6 +68,8 @@ export const mainRoutes :PathRouteProps[] = [
 
   //ConfigDiscount
   { path: PATH_APP.vouchers.root, Component: VouchersPage },
+  { path: PATH_APP.vouchers.pharmacy, Component: VouchersPage },
+  { path: PATH_APP.vouchers.supplier, Component: VouchersPage },
   { path: PATH_APP.report.supplier, Component: ReportSupplierPage },
   { path: PATH_APP.configDiscount.root, Component: ConfigDiscountPage },
 
