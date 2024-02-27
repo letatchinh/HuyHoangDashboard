@@ -30,9 +30,11 @@ import CumulativeDiscountModule from '~/modules/cumulativeDiscount';
 import { useSupplierInfoRedux } from "~/modules/productsAll/productsAll.hook";
 
 import TabPane from "antd/es/tabs/TabPane";
+import useNotificationStore from "~/store/NotificationContext";
 
 const CLONE_PRODUCT_TYPE_VI: any = PRODUCT_TYPE_VI;
 const CLONE_SALE_LEVEL_VI: any = SALE_LEVEL_VI;
+const CLONE_TARGET_TYPE: any = CumulativeDiscountModule.constants.TARGET_TYPE;
 const layoutRow = {
   gutter: 16,
 };
@@ -41,7 +43,8 @@ export default function FormProduct({
   id,
   onCancel,
 }: TypePropsFormProduct): React.JSX.Element {
-  const supplierInfo = useSupplierInfoRedux();
+  // const supplierInfo = useSupplierInfoRedux();
+  const {onNotify} = useNotificationStore();
   const [form] = Form.useForm();
   const [backupForm,setBackupForm] = useState<FieldTypeFormProduct[]>([]);
   
@@ -70,7 +73,7 @@ export default function FormProduct({
 
   const onFinish = (values: FieldTypeFormProduct) => {
     const submitData = convertSubmitData({values,supplierId});
-    
+      
     if (id) {
       onUpdate({ ...submitData, _id: id });
     } else {
@@ -143,8 +146,12 @@ export default function FormProduct({
 
   // },[dataNotificationUndo]);
   const [activeTab, setActiveTab] = useState("1");
-  const onChangeTab = (key: string) => {
-    setActiveTab(key);
+  const onChangeTab = async(key: string) => {
+    CumulativeDiscountModule.service.validateDiscount({
+      form,
+      onSuccess : () => setActiveTab(key),
+      onFailed : () => onNotify?.error("Vui lòng kéo xuống kiểm tra lại chiết khấu")
+    })
   };
   return (
     <div>
@@ -155,8 +162,8 @@ export default function FormProduct({
         labelCol={{ span: 8 }}
         wrapperCol={{ span: 16 }}
         labelAlign="left"
-        scrollToFirstError
-
+        scrollToFirstError={true}
+        
         initialValues={{
           variants: [
             {
@@ -257,7 +264,7 @@ export default function FormProduct({
         >
           <Tabs
             onChange={(e) => onChangeTab(e)}
-            destroyInactiveTabPane
+            // destroyInactiveTabPane
             activeKey={activeTab}
             defaultActiveKey="1"
           >
@@ -265,7 +272,7 @@ export default function FormProduct({
               <CumulativeDiscountModule.components.DiscountList
                 supplierId={supplierId}
                 target={CumulativeDiscountModule.constants.TARGET.product}
-                targetType={CumulativeDiscountModule.constants.TARGET_TYPE.pharmacy}
+                targetType={CLONE_TARGET_TYPE.pharmacy}
                 loading={isLoading}
                 form={form}
               />
@@ -274,7 +281,7 @@ export default function FormProduct({
               <CumulativeDiscountModule.components.DiscountList
                 supplierId={supplierId}
                 target={CumulativeDiscountModule.constants.TARGET.product}
-                targetType={CumulativeDiscountModule.constants.TARGET_TYPE.supplier}
+                targetType={CLONE_TARGET_TYPE.supplier}
                 loading={isLoading}
                 form={form}
               />

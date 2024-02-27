@@ -1,13 +1,16 @@
-import { PlusCircleOutlined } from "@ant-design/icons";
+import { CopyOutlined, CopyrightCircleOutlined, PlusCircleOutlined } from "@ant-design/icons";
 import {
-  Button, Form
+  Button, Flex, Form, Row
 } from "antd";
+import { concat } from "lodash";
 import React, { useMemo } from "react";
 import UnitModule from '~/modules/productUnit';
+import useNotificationStore from "~/store/NotificationContext";
 import {
-  TYPE_DISCOUNT, TYPE_REWARD, TYPE_VALUE
+  TYPE_DISCOUNT, TYPE_REPEAT, TYPE_REWARD, TYPE_VALUE
 } from "../constants";
 import { TypePropsDiscountList } from "../cumulativeDiscount.modal";
+import { DiscountFactory, validateDiscount } from "../cumulativeDiscount.service";
 import DiscountItem from "./DiscountItem";
 export default function DiscountList({
   loading,
@@ -16,41 +19,50 @@ export default function DiscountList({
   targetType,
   supplierId,
 }: TypePropsDiscountList): React.JSX.Element {
+  const {onNotify} = useNotificationStore();
   const defaultValueDiscount = useMemo(
     () => ({
       typeDiscount: TYPE_DISCOUNT["DISCOUNT.CORE"],
-      valueType: TYPE_VALUE.VALUE,
+      valueType: TYPE_VALUE.PERCENT,
       typeReward: TYPE_REWARD.VALUE,
       target,
       targetType,
-      cumulativeTimeSheet : {
-        typeRepeat : "nope"
-      },
-      applyTimeSheet : {
-        typeRepeat : "nope"
-      },
       timesReward : 1,
+      typeRepeat : TYPE_REPEAT.noTime,
+      editing : true
     }),
     [target, targetType]
   );
 
   const [units,isLoading] = UnitModule.hook.useGetListProductUnitAll();
-
+  const onCopy = () => {
+    const discountList = form.getFieldValue("cumulativeDiscount");
+    const discountMethod = new DiscountFactory();
+    const discountCopy = discountMethod.handleCopyDiscountList({
+      discountList,
+      targetTypeCopy: targetType,
+      targetTypePaste: targetType === "pharmacy" ? "supplier" : "pharmacy",
+    });
+    form.setFieldsValue({
+      cumulativeDiscount: concat(discountList, discountCopy),
+    });
+    onNotify?.success("Copy thành công");
+    
+  }
   return (
     <Form.List name={"cumulativeDiscount"}>
       {(fields, { add, remove }) => {
-        console.log(fields, "fields");
-
+        const list = fields
+        .filter(
+          ({ name }) =>
+            form.getFieldValue("cumulativeDiscount")[name].targetType ===
+              targetType ||
+            !form.getFieldValue("cumulativeDiscount")[name].targetType
+        )
         return (
           <>
-            {fields
-              .filter(
-                ({ name }) =>
-                  form.getFieldValue("cumulativeDiscount")[name].targetType ===
-                    targetType ||
-                  !form.getFieldValue("cumulativeDiscount")[name].targetType
-              )
-              .map(({ key, name, fieldKey, ...restField }: any, index) => (
+            {
+              list.map(({ key, name, fieldKey, ...restField }: any, index) => (
                 <DiscountItem
                   form={form}
                   index={index}
@@ -65,12 +77,32 @@ export default function DiscountList({
                   supplierId={supplierId}
                 />
               ))}
+            <Flex gap={10}>
             <Button
-              onClick={() => add(defaultValueDiscount)}
+              type="primary"
+              onClick={() => {
+                if(list?.length){
+                  validateDiscount({
+                    form,
+                    onFailed : () => onNotify?.error("Vui lòng điền đủ thông tin vào chiết khấu trước khi thêm"),
+                    onSuccess : () => add(defaultValueDiscount)
+                  })
+                }else{
+                  add(defaultValueDiscount)
+                }
+              }}
               icon={<PlusCircleOutlined />}
             >
               Thêm chiết khấu
             </Button>
+            <Button
+            onClick={onCopy}
+            icon={<CopyOutlined />}
+            >
+              Sao chép toàn bộ chiết khấu sang chiết khấu {targetType === 'supplier' ? 'bán' : 'mua'} hàng
+            </Button>
+            </Flex>
+            
           </>
         );
       }}

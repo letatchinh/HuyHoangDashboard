@@ -16,6 +16,7 @@ import POLICIES from "~/modules/policy/policy.auth";
 import ExportExcelButton from "~/modules/export/component";
 import useCheckBoxExport from "~/modules/export/export.hook";
 import { useArrCheckBoxRedux } from "../vouchers.hook";
+import { PATH_APP } from "~/routes/allPath";
 type propsType = {};
 type optionsSearch = {
   value: string;
@@ -156,7 +157,7 @@ export default function Vouchers(props: propsType): React.JSX.Element {
   return (
     <>
       <WhiteBox>
-        <Breadcrumb title="Sổ quỹ" />
+        <Breadcrumb title={`Sổ quỹ của ${pathname === PATH_APP.vouchers.pharmacy ? 'Nhà thuốc' : 'Nhà cung cấp'}`} />
         <div className="select-search">
           <div className="select-search__left">
             <Row gutter={5}>
@@ -167,7 +168,7 @@ export default function Vouchers(props: propsType): React.JSX.Element {
                   }}
                   options={optionsSearch}
                   showSearch
-                  placeholder={"Tiếm theo..."}
+                  placeholder={"Tìm kiếm theo..."}
                   value={searchBy}
                   onChange={onChangeSelect}
                   // onSelect={onSelect}

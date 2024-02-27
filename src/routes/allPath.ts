@@ -69,6 +69,8 @@ export const PATH_APP = {
   },
   vouchers: {
     root: path(ROOTS.app, "/vouchers"),
+    supplier: path(ROOTS.app, "/vouchers-supplier"),
+    pharmacy: path(ROOTS.app, "/vouchers-pharmacy"),
   },
 
      user: {

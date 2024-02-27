@@ -103,7 +103,6 @@ export default function DiscountView({
     }
     return text;
   }, [data]);
-  console.log(data,'data');
   
   const timesRewardText = useMemo(() => {
     let text = "";
@@ -116,12 +115,12 @@ export default function DiscountView({
   },[data])
 
   const ApplyTimeText = useMemo(() => {
-    let text = DiscountMethod.handleConvertTextViewApplyTimeSheet(get(data,'applyTimeSheet'),get(data,'typeDiscount'))
+    let text = DiscountMethod.handleConvertTextViewApplyTimeSheet(get(data,'applyTimeSheet'),get(data,'typeDiscount'),get(data,'typeRepeat'))
     return text;
   }, [data]);
 
   const CumulativeText = useMemo(() => {
-    const text = DiscountMethod.handleConvertTextViewCumulativeTimeSheet(get(data,'cumulativeTimeSheet'));
+    const text = DiscountMethod.handleConvertTextViewCumulativeTimeSheet(get(data,'cumulativeTimeSheet'),get(data,'typeRepeat'));
     return text;
   }, [data]);
 
@@ -133,7 +132,7 @@ export default function DiscountView({
         value={CLONE_TYPE_DISCOUNT_VI[get(data, "typeDiscount", "")]}
       />
       <Layout label="Giá trị chiết khấu" value={valueText} />
-      <Layout label="Tần suất nhận" value={timesRewardText} />
+      {get(data, "typeDiscount") !== 'LK' && <Layout label="Tần suất nhận" value={timesRewardText} />}
       {[TYPE_DISCOUNT.LK,TYPE_DISCOUNT['DISCOUNT.SOFT.CONDITION']].includes(get(data, "typeDiscount")) && (
         <>
           <Layout label="Điều kiện nhận" value={conditionText} />

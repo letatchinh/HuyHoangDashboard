@@ -83,11 +83,11 @@ export default function Variants({
                           )}
                         </Form.Item>
                       </Col>
-                      <Col span={4}>
+                      <Col span={6}>
                         <Form.Item
                           style={{ marginBottom: 0 }}
                           {...restField}
-                          label={"Giá bán"}
+                          label={"Giá niêm yết"}
                           name={[name, "price"]}
                           rules={[
                             {
@@ -99,13 +99,13 @@ export default function Variants({
                           {RenderLoading(loading, <InputNumberAnt min={0} />)}
                         </Form.Item>
                       </Col>
-                      <Col span={4}>
+                      <Col span={5}>
                         <Form.Item shouldUpdate noStyle>
                           {() => (
                             <Form.Item
                               style={{ marginBottom: 0 }}
                               {...restField}
-                              label={"Giá nhập"}
+                              label={"Giá thu về"}
                               name={[name, "cost"]}
                               rules={[
                                 ({ getFieldValue }) => ({
@@ -170,11 +170,11 @@ export default function Variants({
                           )}
                         </Form.Item>
                       </Col>
-                      <Col span={4}>
+                      <Col span={6}>
                         <Form.Item
                           style={{ marginBottom: 0 }}
                           {...restField}
-                          label={"Giá bán"}
+                          label={"Giá niêm yết"}
                           name={[name, "price"]}
                           rules={[
                             {
@@ -186,13 +186,13 @@ export default function Variants({
                           {RenderLoading(loading, <InputNumberAnt min={0} />)}
                         </Form.Item>
                       </Col>
-                      <Col span={4}>
+                      <Col span={5}>
                         <Form.Item shouldUpdate noStyle>
                           {({ getFieldValue }) => (
                             <Form.Item
                               style={{ marginBottom: 0 }}
                               {...restField}
-                              label={"Giá nhập"}
+                              label={"Giá thu về"}
                               name={[name, "cost"]}
                               rules={[
                                 ({ getFieldValue }) => ({
