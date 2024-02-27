@@ -1,0 +1,139 @@
+import { Button, Col, DatePicker, Form, Modal, Popconfirm, Row, Space } from "antd";
+import dayjs from "dayjs";
+import { useEffect, useMemo, useState } from "react";
+import { useParams } from "react-router-dom";
+import { useCreateTotalRevenue, useGetTotalRevenueSupplierById, useResetActionInRevenue, useRevenueSupplierQueryParams, useUpdateTotalRevenueSupplier } from "../../supplier.hook";
+import TotalRevenueForm from "./TotalRevenueForm";
+import { formatNumberThreeComma } from "~/utils/helpers";
+import { useDispatch } from "react-redux";
+import { supplierSliceAction } from "../../redux/reducer";
+interface propsType {
+  setTotalRevenueId: any;
+  totalRevenueId: any
+};
+
+function RenderTotalRevenue({ setTotalRevenueId, totalRevenueId }: propsType) {
+  const [query] = useRevenueSupplierQueryParams();
+  const [data, isLoading] = useGetTotalRevenueSupplierById(query);
+  const [totalRevenue, setTotalRevenue] = useState(0);
+  const [totalSalesAchieved, setTotalSalesAchieved] = useState(0);
+  const [isOpen, setIsOpen] = useState(false);
+  const [isSubmitLoading, resetRevenue] = useCreateTotalRevenue();
+  const dispatch = useDispatch();
+  const resetAction = () => {
+    return dispatch(supplierSliceAction.resetActionInTotalRevenue());
+  };
+
+  const [form] = Form.useForm();
+  const [date, setDate] = useState<any>();
+
+  const onOpen = () => {
+    setIsOpen(true);
+  };
+
+  const onClose = () => {
+    setIsOpen(false);
+  };
+  const [loading, updateTotalRevenue] = useUpdateTotalRevenueSupplier(() => {
+    onClose();
+    resetAction();
+  });
+
+  // useEffect(() => {
+  //   form.setFieldsValue({
+  //     startDate: dayjs(date?.startDate),
+  //     endDate: dayjs(date?.endDate),
+  //   });
+  // }, [date]);
+
+  useEffect(() => {
+    if (data) {
+      setTotalRevenue(data?.mineralOfSupplier?.totalRevenue);
+      setTotalSalesAchieved(data?.totalSalesAchieved);
+      setDate({
+        startDate: dayjs(data?.mineralOfSupplier?.startDate).format("DD-MM-YYYY"),
+        endDate: dayjs(data?.mineralOfSupplier?.endDate).format("DD-MM-YYYY"),
+      })
+      setTotalRevenueId(data?.mineralOfSupplier?._id)
+    };
+  }, [data]);
+  console.log(date)
+
+  return (
+    <div style={{ backgroundColor: "#fff", padding: 10, marginBottom: 10 }}>
+      <Row gutter={36} align="middle" justify="space-between">
+        <Col span={8}>
+          <h5>Tổng doanh số khoán: {formatNumberThreeComma(totalRevenue)}đ</h5>
+        </Col>
+        <Col flex={8}>
+          <h5>Tổng doanh số đã đạt: {formatNumberThreeComma(totalSalesAchieved)}đ</h5>
+        </Col>
+        <Col flex={1}>
+          <Space>
+            {
+              !!data?.mineralOfSupplier?.isUpdate && (
+                <Popconfirm
+                  title="Bạn có chắc chắn muốn tạo lại doanh thu khoán cho nhà cung cấp này?"
+                  onConfirm={() => {
+                    resetRevenue({
+                      supplierId: query?.id
+                    })
+                  }}
+                  onCancel={() => {
+                    console.log("cancel");
+                  }}
+                >
+                  <Button loading={isSubmitLoading} type="primary">Tạo mới</Button>
+                </Popconfirm>
+              )
+            }
+            <Button loading={isSubmitLoading} type="primary" onClick={onOpen}>Cập nhật</Button>
+          </Space>
+        </Col>
+      </Row>
+      <Form
+        form={form}
+        style={{
+          display: "flex",
+          // justifyContent: "space-between",
+          alignItems: "center",
+          gap: 10,
+        }}
+      >
+        <Form.Item label="Ngày bắt đầu" name="startDate">
+          <DatePicker
+            disabled
+            format="DD-MM-YYYY"
+            value={dayjs(date?.startDate)}
+            defaultValue={(date?.startDate)}
+           />
+        </Form.Item>
+        <Form.Item label="Ngày kết thúc" name="endDate">
+          <DatePicker
+            disabled
+            format="DD-MM-YYYY"
+            value={dayjs(date?.endDate)}
+            defaultValue={(date?.startDate)}
+          />
+        </Form.Item>
+      </Form>
+      <Modal
+        title="Cập nhật doanh số khoán cho nhà cung cấp"
+        open={isOpen}
+        footer={null}
+        onCancel={onClose}
+        width={600}
+        destroyOnClose
+      >
+        <TotalRevenueForm
+          totalRevenue={totalRevenue}
+          updateTotalRevenue={updateTotalRevenue}
+          totalRevenueId={totalRevenueId}
+          date={date}
+          onClose = {onClose}
+        />
+      </Modal>
+    </div>
+  );
+};
+export default RenderTotalRevenue;

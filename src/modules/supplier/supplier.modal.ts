@@ -42,6 +42,26 @@ export type addressType = {
     getSuppliersProductAuthorFailed?: any;
     suppliersProductAuthor?: T[];
     pagingSuppliersProductAuthor?: any;
+
+    isLoadingGetRevenueSupplier?: boolean;
+    getRevenueSupplierFailed?: any;
+    revenueSupplier?: T[];
+    pagingRevenueSupplier?: any;
+
+    isLoadingGetTotalRevenue?: boolean;
+    totalRevenue?: any;
+    getTotalRevenueFailed?: any;
+
+    updateRevenueSuccess?: any;
+    updateRevenueFailed?: any;
+
+    createTotalRevenueSuccess?: any;
+    createTotalRevenueFailed?: any;
+
+    updateTotalRevenueSuccess?: any;
+    updateTotalRevenueFailed?: any;
+
+    isLoadingSubmitRevenue?: boolean;
 };
 
 

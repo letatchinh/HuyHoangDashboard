@@ -31,11 +31,15 @@ import PharmacyDetail from "~/modules/pharmacy/screens/PharmacyDetail";
 import Lk from "~/pages/Dashboard/Lk";
 import OrderSupplier from "~/pages/Dashboard/OrderSupplier";
 import UpdateOrderSupplier from "~/pages/Dashboard/OrderSupplier/UpdateOrderSupplier";
+import RevenueSupplier from "~/modules/supplier/components/Revenue";
 export const mainRoutes :PathRouteProps[] = [
   { path: PATH_APP.main.root, Component: Homepage },
 
   // Supplier
   { path: PATH_APP.supplier.root, Component: Supplier },
+
+  //Revenue Supplier
+  { path: PATH_APP.revenueSupplier.revenue, Component: RevenueSupplier },
 
   // worldPharma
   { path: PATH_APP.worldPharma.productGroup, Component: ProductGroupPage },

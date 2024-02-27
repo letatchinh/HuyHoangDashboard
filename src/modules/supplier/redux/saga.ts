@@ -74,6 +74,53 @@ function* deleteModuleExample({payload : id} : any) : any {
   }
 };
 
+// Revenue Supplier
+
+function* getRevenueSupplierById({payload:query} : any) : any {
+  try {
+    const data = yield call(api.getAllRevenueByIdSupplier,query);
+    yield put(supplierSliceAction.getRevenueSupplierSuccess(data));
+  } catch (error:any) {
+    yield put(supplierSliceAction.getRevenueSupplierFailed(error));
+  }
+};
+
+function* getTotalRevenueSupplierById({payload:query} : any) : any {
+  try {
+    const data = yield call(api.getTotalRevenue, query);
+    yield put(supplierSliceAction.getTotalRevenueSuccess(data));
+  } catch (error:any) {
+    yield put(supplierSliceAction.getTotalRevenueFailed(error));
+  }
+};
+
+function* updateRevenueSupplier({payload} : any) : any {
+  try {
+    const data = yield call(api.updateRevenue,payload);
+    yield put(supplierSliceAction.updateRevenueSupplierSuccess(data));
+  } catch (error:any) {
+    yield put(supplierSliceAction.updateRevenueSupplierFailed(error));
+  }
+};
+
+function* updateTotalRevenueSupplier({payload} : any) : any {
+  try {
+    const data = yield call(api.updateTotalRevenue,payload);
+    yield put(supplierSliceAction.updateTotalRevenueSupplierSuccess(data));
+  } catch (error:any) {
+    yield put(supplierSliceAction.updateTotalRevenueSupplierFailed(error));
+  }
+};
+
+function* createTotalRevenue({payload} : any) : any {
+  try {
+    const data = yield call(api.createTotalRevenue,payload);
+    yield put(supplierSliceAction.createTotalRevenueSuccess(data));
+  } catch (error:any) {
+    yield put(supplierSliceAction.createTotalRevenueFailed(error));
+  }
+};
+
 export default function* supplierSaga() {
   yield takeLatest(supplierSliceAction.getListRequest, getListModuleExample);
   yield takeLatest(supplierSliceAction.getProductSupplierRequest, getListProductSupplier);
@@ -84,4 +131,9 @@ export default function* supplierSaga() {
   yield takeLatest(supplierSliceAction.updateRequest, updateModuleExample);
   yield takeLatest(supplierSliceAction.deleteRequest, deleteModuleExample);
   yield takeLatest(supplierSliceAction.getSuppliersProductAuthorRequest, getSuppliersProductAuthor);
+  yield takeLatest(supplierSliceAction.getRevenueSupplierRequest, getRevenueSupplierById);
+  yield takeLatest(supplierSliceAction.updateRevenueSupplierRequest, updateRevenueSupplier);
+  yield takeLatest(supplierSliceAction.updateTotalRevenueSupplierRequest, updateTotalRevenueSupplier);
+  yield takeLatest(supplierSliceAction.createTotalRevenueRequest, createTotalRevenue);
+  yield takeLatest(supplierSliceAction.getTotalRevenueRequest, getTotalRevenueSupplierById);
 }

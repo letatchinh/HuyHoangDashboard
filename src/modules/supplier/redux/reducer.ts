@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { get } from "lodash";
+import { get ,omit} from "lodash";
 import { InstanceModuleRedux } from "~/redux/instanceModuleRedux";
 import { getPaging } from "~/utils/helpers";
 import { cloneInitState } from "../supplier.modal";
@@ -54,6 +54,84 @@ class SupplierClassExtend extends InstanceModuleRedux {
         state.isLoadingGetSuppliersProductAuthor = false;
         state.getSuppliersProductAuthorFailed = payload;
       },
+
+      //Revenue Supplier
+      getRevenueSupplierRequest: (state: any) => {
+        state.isLoadingGetRevenueSupplier = true;
+        state.getRevenueSupplierFailed = null;
+      },
+      getRevenueSupplierSuccess: (state: any, { payload }: any) => {
+        state.isLoadingGetRevenueSupplier = false;
+        state.revenueSupplier = get(payload, "docs", []);
+        state.pagingRevenueSupplier = getPaging(payload);
+      },
+      getRevenueSupplierFailed: (state: any, { payload }: any) => {
+        state.isLoadingGetRevenueSupplier = false;
+        state.getRevenueSupplierFailed = payload;
+      },
+
+      getTotalRevenueRequest: (state: any) => {
+        state.isLoadingGetTotalRevenue = true;
+        state.getTotalRevenueFailed = null;
+      },
+      getTotalRevenueSuccess: (state: any, { payload }: any) => {
+        state.isLoadingGetTotalRevenue = false;
+        state.totalRevenue = payload;
+      },
+      getTotalRevenueFailed: (state: any, { payload }: any) => {
+        state.isLoadingGetTotalRevenue = false;
+        state.getTotalRevenueFailed = payload;
+      },
+
+      updateRevenueSupplierRequest: (state: any) => {
+        state.isLoadingSubmitRevenue = false;
+      },
+      updateRevenueSupplierSuccess: (state: any, { payload }: any) => {
+        state.updateRevenueSuccess = payload;
+        state.revenueSupplier = state.revenueSupplier.map((item: any) => {
+          if (item._id === payload._id) {
+            return payload;
+          }
+          return item;
+        });
+      },
+      updateRevenueSupplierFailed: (state: any, { payload }: any) => {
+        state.updateRevenueFailed = payload;
+      },
+      //
+      updateTotalRevenueSupplierRequest: (state: any) => {
+        state.isLoadingSubmitRevenue = false;
+      },
+      updateTotalRevenueSupplierSuccess: (state: any, { payload }: any) => {
+        state.updateTotalRevenueSuccess = payload;
+        state.totalRevenue = payload;
+      },
+      updateTotalRevenueSupplierFailed: (state: any, { payload }: any) => {
+        state.updateTotalRevenueFailed = payload;
+      },
+
+      //
+      createTotalRevenueRequest: (state: any) => {
+        state.isLoadingSubmitRevenue = false;
+      },
+      createTotalRevenueSuccess: (state: any, { payload }: any) => {
+        state.createTotalRevenueSuccess = payload;
+        state.totalRevenue = payload;
+      },
+      createTotalRevenueFailed: (state: any, { payload }: any) => {
+        state.createTotalRevenueFailed = payload;
+      },
+      
+      resetActionInRevenue: (state:any) => ({
+        ...state,
+        ...omit(this.cloneInitState, ["revenueSupplier"]),  
+      }),
+
+      resetActionInTotalRevenue: (state:any) => ({
+        ...state,
+        ...omit(this.cloneInitState, ["revenueSupplier", "totalRevenue"]),  
+      }),
+
     };
     // Add More InitState
     this.cloneInitState = {
@@ -67,6 +145,26 @@ class SupplierClassExtend extends InstanceModuleRedux {
       suppliersProductAuthor: [],
       pagingSuppliersProductAuthor: null, 
       getSuppliersProductAuthorFailed: null, 
+      
+      isLoadingGetRevenueSupplier: false,
+      revenueSupplier: [],
+      getRevenueSupplierFailed: null,
+      pagingRevenueSupplier: null,
+
+      isLoadingGetTotalRevenue: false,
+      totalRevenue: null,
+      getTotalRevenueFailed: null,
+
+      updateRevenueSuccess: null,
+      updateRevenueFailed: null,
+
+      updateTotalRevenueSuccess: null,
+      updateTotalRevenueFailed: null,
+
+      createTotalRevenueSuccess: null,
+      createTotalRevenueFailed: null,
+
+      isLoadingSubmitRevenue: false,
     };
   }
   createSlice() {

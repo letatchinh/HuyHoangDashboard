@@ -34,6 +34,9 @@ const todoList = 'todoList';
 const voucher = 'voucher';
 const statusVoucher = 'statusVoucher';
 const historyVoucher = 'historyVoucher';
+
+const revenueSupplier = 'revenueSupplier';
+
 const RESOURCES = [
   //Setting
   configDiscount,
@@ -76,6 +79,7 @@ const RESOURCES = [
   todoList,
 
   medicine,
+  revenueSupplier,
 ];
 
 //ACTIONS
@@ -158,6 +162,7 @@ const RESOURCE = (): ResourceType => {
     supplier,
     product,
     debt,
+    revenueSupplier,
   ];
   
   const GROUP_WORK_MANAGERMENT: string[] = [

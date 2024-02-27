@@ -164,6 +164,25 @@ export default function Supplier(): React.JSX.Element {
           return formatNumberThreeComma(value);
         },
       },
+      {
+        title: "Doanh số tích luỹ",
+        dataIndex: "revenueCamulative",
+        key: "revenueCamulative",
+        align: "center",
+        width: 150,
+        render(value) {
+          return formatNumberThreeComma(value ?? 0);
+        },
+      },
+      {
+        title: "Doanh số khoán",
+        dataIndex: "_id",
+        key: "salasContract",
+        align: "center",
+        render(_id) {
+          return <Link  target={'_blank'} to={PATH_APP.revenueSupplier.root + "/" + _id}>Xem chi tiết</Link>
+        },
+      },
       ...(
         canWriteVoucher ? [
           {
