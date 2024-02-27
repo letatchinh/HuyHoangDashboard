@@ -18,20 +18,29 @@ export default function ProcessCumulative({
   const cumulative = useMemo(() => get(discount, "applyVariantId")
   ? get(record, "cumulativeQuantity", 1)
   : get(record, "cumulativeAmount", 1),[discount]);
-  const isDone = useMemo(() => cumulative >= get(discount, "condition.gte"),[discount,cumulative]);
+  const isDone = useMemo(() => get(discount, "condition.isRanger") ? cumulative >= get(discount, "condition.gte") && cumulative < get(discount, "condition.lte") : cumulative >= get(discount, "condition.gte") ,[discount,cumulative]);
+  const isOver = useMemo(() => get(discount, "condition.isRanger") ? cumulative > get(discount, "condition.lte") : false ,[discount,cumulative]);
+  
   return (
     <Flex align={'center'}>
     <span style={{flex : 1}}>
       <Popover trigger={'click'} content={<ProcessBillItem bills={bills} cumulativeAmount={cumulativeAmount} cumulativeQuantity={cumulativeQuantity} discount={discount}/>}>
-      <a>{formatter(cumulative)}</a>
-      </Popover> /{" "}
-      <Typography.Text strong>
+      <Typography.Text strong>Đã tích luỹ: <a>{formatter(cumulative)}</a></Typography.Text>
+      {" "}
+      {isDone ? <Tag icon={<CheckCircleOutlined />} color={'#389F0C'}>{"Đã đạt"}</Tag> : null}
+      {isOver ? <Tag  color={'#f50'}>{"Đã vượt mức"}</Tag> : null}
+      </Popover>
+      <Typography.Text type="secondary">
+        <br/>
+        Mốc: {get(discount, "condition.isRanger") ? "Từ " : "Lớn hơn "}
         {formatter(get(discount, "condition.gte"))}
-      </Typography.Text>{" "}
+        {get(discount, "condition.isRanger") && `-${formatter(get(discount, "condition.lte"))}`}
+        {" "}
         {unit ? get(unit,'name','') : "VNĐ"}
+      </Typography.Text>
       {" "}
     </span>
-    {isDone ? <Tag icon={<CheckCircleOutlined />} color={isDone ? '#4AAC4E' : 'processing'}>{isDone ? "Đã đạt" : "Chưa đạt"}</Tag> : null}
+  
     </Flex>
   );
 }

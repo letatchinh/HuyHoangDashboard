@@ -7,7 +7,7 @@ export const getValueOfLk = (record: any) => {
   const applyVariantId = get(record, "discount.applyVariantId");
   if (isValue) {
     value = get(record, "discount.value");
-  } else {
+  } else { // Percent
     // TODO: IF have applyVariantId will get Price of variant * gte to get TotalPrice
     if (!applyVariantId) {
       value = (get(record, "discount.value", 1) * gte) / 100;
