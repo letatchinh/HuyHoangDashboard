@@ -1,3 +1,4 @@
+
 // Please UnComment To use
 
 import { get } from "lodash";
@@ -9,10 +10,11 @@ import {
     getSelectors,
     useFailed, useFetchByParam,
     useQueryParams,
+    useResetState,
     useSubmit,
     useSuccess
 } from "~/utils/hook";
-import { costManagementSliceAction } from "./redux/reducer";
+import { costManagementActions } from "./redux/reducer";
 const MODULE = "costManagement";
 const MODULE_VI = "";
 
@@ -37,7 +39,7 @@ export const useCostManagementPaging = () => useSelector(pagingSelector);
 
 export const useGetCostManagements = (param:any) => {
   return useFetchByParam({
-    action: costManagementSliceAction.getListRequest,
+    action: costManagementActions.getListRequest,
     loadingSelector: loadingSelector,
     dataSelector: listSelector,
     failedSelector: getListFailedSelector,
@@ -46,7 +48,7 @@ export const useGetCostManagements = (param:any) => {
 };
 export const useGetCostManagement = (id: any) => {
   return useFetchByParam({
-    action: costManagementSliceAction.getByIdRequest,
+    action: costManagementActions.getByIdRequest,
     loadingSelector: getByIdLoadingSelector,
     dataSelector: getByIdSelector,
     failedSelector: getByIdFailedSelector,
@@ -63,7 +65,7 @@ export const useCreateCostManagement = (callback?: any) => {
   useFailed(createFailedSelector);
 
   return useSubmit({
-    action: costManagementSliceAction.createRequest,
+    action: costManagementActions.createRequest,
     loadingSelector: isSubmitLoadingSelector,
   });
 };
@@ -77,7 +79,7 @@ export const useUpdateCostManagement = (callback?: any) => {
   useFailed(updateFailedSelector);
 
   return useSubmit({
-    action: costManagementSliceAction.updateRequest,
+    action: costManagementActions.updateRequest,
     loadingSelector: isSubmitLoadingSelector,
   });
 };
@@ -87,16 +89,22 @@ export const useDeleteCostManagement = (callback?: any) => {
   useFailed(deleteFailedSelector);
 
   return useSubmit({
-    action: costManagementSliceAction.deleteRequest,
+    action: costManagementActions.deleteRequest,
     loadingSelector: isSubmitLoadingSelector,
   });
 };
-
+export const useProductConfigPaging = () => useSelector(pagingSelector);
+export const useResetAction = () => {
+  return useResetState(costManagementActions.resetAction);
+}
 export const useCostManagementQueryParams = () => {
   const query = useQueryParams();
   const limit = query.get("limit") || 10;
   const page = query.get("page") || 1;
   const keyword = query.get("keyword");
+  const startDate = query.get("startDate");
+  const endDate = query.get("endDate");
+  const branchId = query.get("branchId");
   const createSuccess = useSelector(createSuccessSelector);
   const deleteSuccess = useSelector(deleteSuccessSelector);
   return useMemo(() => {
@@ -104,10 +112,12 @@ export const useCostManagementQueryParams = () => {
       page,
       limit,
       keyword,
+      startDate,
+      endDate,
     };
     return [queryParams];
     //eslint-disable-next-line
-  }, [page, limit, keyword, createSuccess, deleteSuccess]);
+  }, [page, limit, keyword,startDate,endDate,branchId, createSuccess, deleteSuccess]);
 };
 
 export const useUpdateCostManagementParams = (

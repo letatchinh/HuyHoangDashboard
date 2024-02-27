@@ -2,10 +2,10 @@ import { get } from "lodash";
 import requester from "~/api/requester";
 
 const apis = {
-    getAll: (query?: any) => requester.get(`/api/v1/costManagement`, query),
-    getById: (id?: any) => requester.get(`/api/v1/costManagement/${id}`),
-    create: (data?: any) => requester.post(`/api/v1/costManagement`, data),
-    update: (data?: any) => requester.put(`/api/v1/costManagement/${get(data,'_id')}`, data),
-    delete: (id?: any) => requester.delete(`/api/v1/costManagement/${id}`),
+    getAll: (query?: any) => requester.get(`/api/v1/shipping-cost`, query),
+    getById: (id?: any) => requester.get(`/api/v1/shipping-cost/${id}`),
+    create: (data?: any) => requester.post(`/api/v1/shipping-cost`, data),
+    update: (data?: any) => requester.put(`/api/v1/shipping-cost}`, data),
+    delete: (id?: any) => requester.delete(`/api/v1/shipping-cost/${id}`),
 }
 export default apis;

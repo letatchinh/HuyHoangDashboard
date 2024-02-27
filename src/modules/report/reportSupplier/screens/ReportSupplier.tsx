@@ -62,7 +62,6 @@ export default function ReportSupplier(props: propsType): React.JSX.Element {
 
   const onFinish = (values: FormFieldSearch) => {
     const { searchBy, startDate, endDate } = values;
-    console.log(values,'values');
     if(startDate){
         switch (searchBy) {
             case "date":

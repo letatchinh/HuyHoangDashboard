@@ -32,5 +32,5 @@ const newSlice = new CostManagementClassExtend();
 const data = newSlice.createSlice();
 
 
-export const costManagementSliceAction = data.actions;
+export const costManagementActions = data.actions;
 export default data.reducer;

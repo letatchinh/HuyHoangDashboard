@@ -5,6 +5,7 @@ import {
     DatabaseOutlined,
     DollarOutlined,
     HddOutlined,
+    StockOutlined,
     HomeOutlined,
     TrophyOutlined,
     ApartmentOutlined,
@@ -264,6 +265,13 @@ import {
       key: PATH_APP.user.root,
       permission: [POLICIES.READ_USER, POLICIES.READ_USERGROUP],
     },
+    {
+      label: "Quản lý chi phí",
+      icon: <StockOutlined />,
+      path: PATH_APP.costManagement.root,
+      key: PATH_APP.costManagement.root,
+      // permission: [POLICIES.READ_LEDGER],
+    }
   
   ];
   
