@@ -86,7 +86,7 @@ export default function ConfigurationCronTime(
   const layout = {
     labelCol: {
       xs: { span: 48 },
-      sm: { span: 8 },
+      sm: { span: 12 },
     },
     wrapperCol: {
       xs: { span: 44, offset: 0 },
@@ -131,7 +131,7 @@ export default function ConfigurationCronTime(
                   <Col span={10}>
                     <Row style={{ width: "100%" }}>
                       <Form.Item
-                        label={"Nhập giờ"}
+                        label={`Nhập giờ lần ` + (index + 1)}
                         name={[index, "h"]}
                         rules={[
                           {
@@ -152,7 +152,7 @@ export default function ConfigurationCronTime(
                     </Row>
                     <Row style={{ width: "100%" }}>
                       <Form.Item
-                        label={"Nhập phút"}
+                        label={`Nhập phút lần ` + (index + 1)}
                         name={[index, "m"]}
                         rules={[
                           {

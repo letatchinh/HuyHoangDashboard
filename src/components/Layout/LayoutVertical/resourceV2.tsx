@@ -11,6 +11,7 @@ import {
     ShopFilled,
     MoneyCollectOutlined,
     BellFilled,
+    FieldTimeOutlined,
   } from "@ant-design/icons";
   import { MenuProps } from "antd";
   import React, { useCallback } from "react";
@@ -121,6 +122,13 @@ import {
               path: PATH_APP.botNotification.root,
               key: PATH_APP.botNotification.root,
               permission: [POLICIES.READ_NOTIFICATIONBOTMANAGER],
+            },
+            {
+              label: "Cấu hình thời gian tự động",
+              path: PATH_APP.configurationCronTime.root,
+              key: PATH_APP.configurationCronTime.root,
+              icon: <FieldTimeOutlined />,
+              // permission: [POLICIES.READ_CONFIGDISCOUNT],
             },
           ],
         },
