@@ -97,4 +97,8 @@ export const PATH_APP = {
     update: path(ROOTS.app, "/order-supplier/:id"),
   },
 
+  configurationCronTime: {
+    root: path(ROOTS.app, "/configuration-cronTime"),
+  },
+
 };

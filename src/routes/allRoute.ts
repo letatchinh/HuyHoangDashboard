@@ -31,6 +31,7 @@ import PharmacyDetail from "~/modules/pharmacy/screens/PharmacyDetail";
 import Lk from "~/pages/Dashboard/Lk";
 import OrderSupplier from "~/pages/Dashboard/OrderSupplier";
 import UpdateOrderSupplier from "~/pages/Dashboard/OrderSupplier/UpdateOrderSupplier";
+import ConfigurationCronTime from "~/pages/Dashboard/ConfigurationCronTime";
 export const mainRoutes :PathRouteProps[] = [
   { path: PATH_APP.main.root, Component: Homepage },
 
@@ -92,6 +93,8 @@ export const mainRoutes :PathRouteProps[] = [
   { path: PATH_APP.orderSupplier.root, Component: OrderSupplier},
   { path: PATH_APP.orderSupplier.update, Component: UpdateOrderSupplier},
 
+  // Configuration Cron Time
+  { path: PATH_APP.configurationCronTime.root, Component: ConfigurationCronTime},
 
   { path: '/', Component: Homepage },
 ]
