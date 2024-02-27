@@ -1,4 +1,13 @@
-import { Button, Col, Form, Modal, Popover, Row, Typography } from "antd";
+import {
+  Button,
+  Checkbox,
+  Col,
+  Form,
+  Modal,
+  Popover,
+  Row,
+  Typography,
+} from "antd";
 import { ColumnsType } from "antd/es/table/InternalTable";
 import { get } from "lodash";
 import React, { useCallback, useState } from "react";
@@ -10,7 +19,7 @@ import { useIsSuperAdmin } from "~/modules/auth/auth.hook";
 import { DiscountFactory } from "~/modules/cumulativeDiscount/cumulativeDiscount.service";
 import PaymentModule from "~/modules/paymentVoucher";
 import PaymentVoucherForm from "~/modules/paymentVoucher/components/PaymentVoucherForm";
-import billModule from '~/modules/sale/bill';
+import billModule from "~/modules/sale/bill";
 import { pagingTable } from "~/utils/helpers";
 import ProcessCumulative from "../components/ProcessCumulative";
 import Programme from "../components/Programme";
@@ -19,35 +28,40 @@ import {
   useGetLks,
   useLkPaging,
   useLkQueryParams,
-  useUpdateLkParams
+  useUpdateLkParams,
 } from "../lk.hook";
 import { getValueOfLk } from "../lk.service";
 import POLICIES from "~/modules/policy/policy.auth";
-
+import ExportExcelButton from "~/modules/export/component/index";
+import useCheckBoxExport from "~/modules/export/export.hook";
 
 type propsType = {
-    cumulativeSession : 'IN' | 'OUT',
-    options? : {
-        action? : boolean,
-        showVoucher? : boolean,
-        showSession? : boolean
-    }
+  cumulativeSession: "IN" | "OUT";
+  options?: {
+    action?: boolean;
+    showVoucher?: boolean;
+    showSession?: boolean;
+  };
 };
-export default function LkTabItem({cumulativeSession,options}: propsType): React.JSX.Element {
+export default function LkTabItem({
+  cumulativeSession,
+  options,
+}: propsType): React.JSX.Element {
   // Hook
-    const isSuperAdmin = useIsSuperAdmin();
-    const [form] = Form.useForm();
-    const [reFetch,setReFetch] = useState(false);
-    const mutate = useCallback(() => setReFetch(!reFetch),[reFetch]);
-    const [query] = useLkQueryParams(reFetch,cumulativeSession);
-    const [keyword, { setKeyword, onParamChange }] =
-      useUpdateLkParams(query);
-    const [data, isLoading] = useGetLks(query);
-    const paging = useLkPaging();
+  const isSuperAdmin = useIsSuperAdmin();
+  const [form] = Form.useForm();
+  const [reFetch, setReFetch] = useState(false);
+  const mutate = useCallback(() => setReFetch(!reFetch), [reFetch]);
+  const [query] = useLkQueryParams(reFetch, cumulativeSession);
+  const [keyword, { setKeyword, onParamChange }] = useUpdateLkParams(query);
+  const [data, isLoading] = useGetLks(query);
+  const paging = useLkPaging();
   const [dataInitForm, setData] = useState<any>();
   const [open, setOpen] = useState(false);
-  const [openVoucher,setOpenVoucher] = useState(false);
-  const [idVoucher,setIdVoucher] = useState<string | null>(null);
+  const [openVoucher, setOpenVoucher] = useState(false);
+  const [idVoucher, setIdVoucher] = useState<string | null>(null);
+  const [arrCheckBox, onChangeCheckBox] = useCheckBoxExport();
+
   const onOpenPayment = (newData: any) => {
     setOpen(true);
     setData(newData);
@@ -70,86 +84,130 @@ export default function LkTabItem({cumulativeSession,options}: propsType): React
       key: "product",
       render(product, record, index) {
         return (
-          <Popover title="Thông tin thêm" content={<span>Nhà cung cấp: <Typography.Text strong>{get(record, "supplier.code","")}</Typography.Text> - {get(record, "supplier.name","")}</span>}>
-          <span>
-            <Typography.Text strong>
-              {get(product, "codeBySupplier", "")} -{" "}
-            </Typography.Text>
-            {get(product, "name")}
-          </span>
+          <Popover
+            title="Thông tin thêm"
+            content={
+              <span>
+                Nhà cung cấp:{" "}
+                <Typography.Text strong>
+                  {get(record, "supplier.code", "")}
+                </Typography.Text>{" "}
+                - {get(record, "supplier.name", "")}
+              </span>
+            }
+          >
+            <span>
+              <Typography.Text strong>
+                {get(product, "codeBySupplier", "")} -{" "}
+              </Typography.Text>
+              {get(product, "name")}
+            </span>
           </Popover>
         );
       },
     },
     {
-        title: "Nhà thuốc",
-        dataIndex: "pharmacy",
-        key: "pharmacy",
-        align: "center",
-        render(pharmacy, record, index) {
-          return <span>{get(pharmacy, "name")}</span>;
-        },
+      title: "Nhà thuốc",
+      dataIndex: "pharmacy",
+      key: "pharmacy",
+      align: "center",
+      render(pharmacy, record, index) {
+        return <span>{get(pharmacy, "name")}</span>;
       },
-    
+    },
+
     {
       title: "Chương trình luỹ kế",
       dataIndex: "discount",
       key: "discount",
       render(discount, record, index) {
-        return <Popover content={options?.showSession ? <Programme discount={discount} sequence={get(record,'sequence','')}/> : null}>
-          <a>{get(discount, "name",'')}</a>
-        </Popover>;
+        return (
+          <Popover
+            content={
+              options?.showSession ? (
+                <Programme
+                  discount={discount}
+                  sequence={get(record, "sequence", "")}
+                />
+              ) : null
+            }
+          >
+            <a>{get(discount, "name", "")}</a>
+          </Popover>
+        );
       },
     },
     {
       title: "Đã tích luỹ",
       key: "cumulative",
-    //   align : "center",
-      width : 250,
+      //   align : "center",
+      width: 300,
       render(item, record, index) {
-        return <ProcessCumulative record={record}/>
+        return <ProcessCumulative record={record} />;
       },
     },
     {
       title: "Thưởng",
       dataIndex: "discount",
       key: "discount",
-    //   align : "center",
+      //   align : "center",
       render(discount, record, index) {
-        return <RewardCumulative record={record}/>;
+        return <RewardCumulative record={record} />;
       },
     },
   ];
-  if(options?.showVoucher){
+  if (options?.showVoucher) {
     columns.push({
-        title: "Phiếu chi",
-        dataIndex: "voucher",
-        key: "voucher",
-        align: "center",
-        render(voucher, record: any, index) {
-          return (
-            voucher ? <Typography.Link onClick={() => onOpenVoucher(get(voucher,'_id'))}>{get(voucher,'codeSequence','')}</Typography.Link> : null
-          );
-        },
-      },)
+      title: "Phiếu chi",
+      dataIndex: "voucher",
+      key: "voucher",
+      align: "center",
+      render(voucher, record: any, index) {
+        return voucher ? (
+          <Typography.Link onClick={() => onOpenVoucher(get(voucher, "_id"))}>
+            {get(voucher, "codeSequence", "")}
+          </Typography.Link>
+        ) : null;
+      },
+    });
   }
-  if(options?.action){
+  columns.push({
+    title: "Lựa chọn",
+    key: "_id",
+    width: 80,
+    align: "center",
+    render: (item: any, record: any) => {
+      const id = record._id;
+      return (
+        <Checkbox
+          checked={arrCheckBox.includes(id)}
+          onChange={(e) => onChangeCheckBox(e.target.checked, id)}
+        />
+      );
+    },
+  });
+  if (options?.action) {
     columns.push({
-        title: "Thao tác",
-        dataIndex: "_id",
-        key: "action",
-        align: "center",
-        fixed : 'right',
-        render(_id, record: any, index) {
-          const { pharmacy,voucher } = record;
-          const applyTimeSheet = get(record,'discount.applyTimeSheet');
-          const typeRepeat = get(record,'discount.typeRepeat');
-          const DiscountMethod = new DiscountFactory();
-          const isInApplyTime = isSuperAdmin ?? DiscountMethod.handleCheckIsInTimeApplyTimeSheet(applyTimeSheet,typeRepeat); // Super Admin Can create All Day
-          
-          return (
-            <WithPermission permission={POLICIES.WRITE_VOUCHER}>
-              <Button
+      title: "Thao tác",
+      dataIndex: "_id",
+      key: "action",
+      align: "center",
+      fixed: "right",
+      render(_id, record: any, index) {
+        const { pharmacy, voucher } = record;
+        const applyTimeSheet = get(record, "discount.applyTimeSheet");
+        const typeRepeat = get(record, "discount.typeRepeat");
+        const DiscountMethod = new DiscountFactory();
+        const isInApplyTime =
+          isSuperAdmin ??
+          DiscountMethod.handleCheckIsInTimeApplyTimeSheet(
+            applyTimeSheet,
+            typeRepeat
+          ); // Super Admin Can create All Day
+
+        return (
+          <WithPermission permission={POLICIES.WRITE_VOUCHER}>
+            <Button
               disabled={!!voucher ?? !isInApplyTime}
               onClick={() => {
                 onOpenPayment({
@@ -167,40 +225,60 @@ export default function LkTabItem({cumulativeSession,options}: propsType): React
             >
               Tạo Phiếu chi
             </Button>
-            </WithPermission>
-          );
-        },
-      },)
+          </WithPermission>
+        );
+      },
+    });
   }
 
   return (
     <div>
-        <Form form={form} initialValues={query}> 
-      <Row>
-        <Col span={6}>
-        <billModule.components.SelectPharmacy validateFirst={false} form={form} allowClear showIcon={false} size={'middle'} onChange={(value) => onParamChange({pharmacyId : value})}/>
-        </Col>
-        <Col span={6}>
-        <Form.Item name={'product'}>
-        <SearchAnt  onParamChange={onParamChange} keyPath='product' placeholder="Tìm mặt hàng..."/>
-        </Form.Item>
-        </Col>
-      </Row>
-        </Form>
-        <TableAnt 
+      <Form form={form} initialValues={query}>
+        <Row>
+          <Col span={6}>
+            <billModule.components.SelectPharmacy
+              validateFirst={false}
+              form={form}
+              allowClear
+              showIcon={false}
+              size={"middle"}
+              onChange={(value) => onParamChange({ pharmacyId: value })}
+            />
+          </Col>
+          <Col span={6}>
+            <Form.Item name={"product"}>
+              <SearchAnt
+                onParamChange={onParamChange}
+                keyPath="product"
+                placeholder="Tìm mặt hàng..."
+              />
+            </Form.Item>
+          </Col>
+          <Col style={{marginLeft : 'auto'}}>
+            <ExportExcelButton
+              api="cumulative_event"
+              exportOption="cumulative_event"
+              query={query}
+              fileName="Danh sách các mặt hàng luỹ kế"
+              ids={arrCheckBox}
+            />
+          </Col>
+        </Row>
+      </Form>
+      <TableAnt
         loading={isLoading}
-        dataSource={data} 
-        columns={columns} 
-        size="small" 
-        pagination={pagingTable(paging,onParamChange)}
+        dataSource={data}
+        columns={columns}
+        size="small"
+        pagination={pagingTable(paging, onParamChange)}
         // scroll={{x : 1700}}
-        />
+      />
       <Modal
         title="Phiếu chi"
         open={open}
         onCancel={() => setOpen(false)}
         onOk={() => setOpen(false)}
-        width={'auto'}
+        width={"auto"}
         footer={null}
         destroyOnClose
       >

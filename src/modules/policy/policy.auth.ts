@@ -34,6 +34,10 @@ const todoList = 'todoList';
 const voucher = 'voucher';
 const statusVoucher = 'statusVoucher';
 const historyVoucher = 'historyVoucher';
+
+// Quản lý luỹ kế
+const cumulativeEvent = 'cumulativeEvent';
+
 const RESOURCES = [
   //Setting
   configDiscount,
