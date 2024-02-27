@@ -10,9 +10,11 @@ import {
 } from "./cumulativeDiscount.modal";
 import ProductModule from "~/modules/product";
 import quarterOfYear from "dayjs/plugin/quarterOfYear";
+import isBetween from "dayjs/plugin/isBetween";
 import { variantType } from "../product/product.modal";
 import { v4 } from "uuid";
 dayjs.extend(quarterOfYear);
+dayjs.extend(isBetween);
 
 interface TempObject {
   session?: number | string;
@@ -537,6 +539,53 @@ export class DiscountFactory {
       }
     );
     return newCumulativeDiscount;
+  }
+  handleCheckIsInTimeApplyTimeSheet(applyTimeSheet: any,typeRepeat: TypeRepeatType) : boolean{
+    const Now = dayjs();
+    const monthNow = Now.month() + 1; // Month is (0-indexed)
+    const dateNow = Now.date();
+    const nonRepeat = get(applyTimeSheet,'nonRepeat');
+    if(nonRepeat){
+      const gte = get(nonRepeat,'gte');
+      const lte = get(nonRepeat,'lte');
+      return Now.isBetween(gte,lte,'date','[]')
+    };
+    const repeat = get(applyTimeSheet,'repeat');
+    if(repeat){
+      switch (typeRepeat) {
+        case 'month':
+        case 'quarter':
+          const timeApply = get(repeat,monthNow); 
+          if(!timeApply) return false;
+          return dateNow >= get(timeApply,'[0].d_start') && dateNow <= get(timeApply,'[0].d_end')
+      }
+    }
+    return false;
+  }
+  handleGetTimeApplyTimeSheet(applyTimeSheet: any,typeRepeat: TypeRepeatType) : {gte:string,lte:string} | null{
+    const Now = dayjs();
+    const monthNow = Now.month() + 1; // Month is (0-indexed)
+    const nonRepeat = get(applyTimeSheet,'nonRepeat');
+    if(nonRepeat){
+      const gte = dayjs(get(nonRepeat,'gte')).format("YYYY-MM-DD");
+      const lte = dayjs(get(nonRepeat,'lte')).format("YYYY-MM-DD");
+      return {gte,lte}
+    };
+    const repeat = get(applyTimeSheet,'repeat');
+    if(repeat){
+      switch (typeRepeat) {
+        case 'month':
+        case 'quarter':
+          const timeApply = get(repeat,monthNow); 
+          if(!timeApply) return null;
+          const lastDateOfMonth = +dayjs().endOf('month').format("DD");
+          return {
+            gte : get(timeApply,'[0].d_start') > lastDateOfMonth ? Now.startOf('month').format("YYYY-MM-DD") : Now.set('date',get(timeApply,'[0].d_start')).format('YYYY-MM-DD'),
+            lte : get(timeApply,'[0].d_end') > lastDateOfMonth ? Now.endOf('month').format("YYYY-MM-DD") :  Now.set('date',get(timeApply,'[0].d_end')).format('YYYY-MM-DD'),
+          }
+      }
+    }
+    return null;
   }
   zeroToEndMonth(m: number) {
     return m === 0 ? "Cuối tháng" : m;
