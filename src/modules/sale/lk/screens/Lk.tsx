@@ -29,6 +29,7 @@ export default function Lk(props: propsType): React.JSX.Element {
               options={{
                 action: true,
                 showVoucher: true,
+                showSession : true,
               }}
             />
           </TabPane>
