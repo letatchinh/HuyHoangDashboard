@@ -80,6 +80,7 @@ const RESOURCES = [
   todoList,
 
   medicine,
+  cumulativeEvent,
 ];
 
 //ACTIONS

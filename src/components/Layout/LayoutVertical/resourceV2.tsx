@@ -132,7 +132,7 @@ import {
       label: "Nhà cung cấp",
       icon: <i className="fa-solid fa-cubes"></i>,
       key: "supplier",
-      permission: [],
+      permission: [POLICIES.READ_SUPPLIER,POLICIES.READ_VOUCHER],
       children: [
         {
           label: "Danh sách nhà cung cấp",
@@ -168,6 +168,7 @@ import {
       label: "Nhà thuốc",
       icon: <i className="fa-solid fa-house-chimney-medical"></i>,
       key: "pharmacy",
+      permission: [POLICIES.READ_PHARMAPROFILE, POLICIES.READ_BILL,POLICIES.READ_QUOTATION,POLICIES.WRITE_QUOTATION,POLICIES.READ_CUMULATIVEEVENT,POLICIES.READ_VOUCHER],
       children: [
         {
           label: "Danh sách nhà thuốc",
@@ -197,7 +198,7 @@ import {
           label: "Luỹ kế mặt hàng",
           path: PATH_APP.bill.lk,
           key: PATH_APP.bill.lk,
-          permission: [POLICIES.READ_BILL],
+          permission: [POLICIES.READ_CUMULATIVEEVENT],
         },
         {
           label: "Phiếu",

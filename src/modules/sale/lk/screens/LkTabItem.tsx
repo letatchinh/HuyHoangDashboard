@@ -34,6 +34,7 @@ import { getValueOfLk } from "../lk.service";
 import POLICIES from "~/modules/policy/policy.auth";
 import ExportExcelButton from "~/modules/export/component/index";
 import useCheckBoxExport from "~/modules/export/export.hook";
+import { useMatchPolicy } from "~/modules/policy/policy.hook";
 
 type propsType = {
   cumulativeSession: "IN" | "OUT";
@@ -49,6 +50,8 @@ export default function LkTabItem({
 }: propsType): React.JSX.Element {
   // Hook
   const isSuperAdmin = useIsSuperAdmin();
+  const canDownload = useMatchPolicy(POLICIES.DOWNLOAD_CUMULATIVEEVENT);
+
   const [form] = Form.useForm();
   const [reFetch, setReFetch] = useState(false);
   const mutate = useCallback(() => setReFetch(!reFetch), [reFetch]);
@@ -170,22 +173,25 @@ export default function LkTabItem({
         ) : null;
       },
     });
+  };
+  if(canDownload){
+    columns.push({
+      title: "Lựa chọn",
+      key: "_id",
+      width: 80,
+      align: "center",
+      render: (item: any, record: any) => {
+        const id = record._id;
+        return (
+          <Checkbox
+            checked={arrCheckBox.includes(id)}
+            onChange={(e) => onChangeCheckBox(e.target.checked, id)}
+          />
+        );
+      },
+    });
   }
-  columns.push({
-    title: "Lựa chọn",
-    key: "_id",
-    width: 80,
-    align: "center",
-    render: (item: any, record: any) => {
-      const id = record._id;
-      return (
-        <Checkbox
-          checked={arrCheckBox.includes(id)}
-          onChange={(e) => onChangeCheckBox(e.target.checked, id)}
-        />
-      );
-    },
-  });
+
   if (options?.action) {
     columns.push({
       title: "Thao tác",
@@ -254,6 +260,7 @@ export default function LkTabItem({
               />
             </Form.Item>
           </Col>
+          <WithPermission permission={POLICIES.DOWNLOAD_CUMULATIVEEVENT}>
           <Col style={{marginLeft : 'auto'}}>
             <ExportExcelButton
               api="cumulative_event"
@@ -263,6 +270,7 @@ export default function LkTabItem({
               ids={arrCheckBox}
             />
           </Col>
+          </WithPermission>
         </Row>
       </Form>
       <TableAnt
