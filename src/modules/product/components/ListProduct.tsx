@@ -13,10 +13,12 @@ import {
   useGetProducts,
   useProductPaging,
   useProductQueryParams,
+  useUpdateProduct,
   useUpdateProductParams
 } from "../product.hook";
 import { TypePropsListProduct } from "../product.modal";
 import FormProduct from "./FormProduct";
+import StockProduct from "./StockProduct";
 export default function ListProduct({
   supplierId,
 }: TypePropsListProduct): React.JSX.Element {
@@ -27,6 +29,7 @@ export default function ListProduct({
   const [keyword, { setKeyword, onParamChange }] =
     useUpdateProductParams(query);
   const [data, isLoading] = useGetProducts(query);
+  const [, onUpdateProduct] = useUpdateProduct();
   const onChangeVariantDefault = useChangeVariantDefault();
 
   const [isSubmitLoading, onDelete] = useDeleteProduct();
@@ -73,6 +76,9 @@ export default function ListProduct({
               <Col>
                 <Select
                   style={{minWidth : 50}}
+                  dropdownStyle={{
+                    width : 'max-content'
+                  }}
                   value={get(record,'variant._id')}
                   options={options}
                   onChange={(value) =>
@@ -107,6 +113,17 @@ export default function ListProduct({
       key: "variant",
       render(variant, record, index) {
         return formatter(get(variant,'cost',0))
+      },
+    },
+    {
+      title: "Tồn kho",
+      dataIndex: "stock",
+      key: "stock",
+      render(stock, record) {
+        return <StockProduct stock={stock ?? 0} handleUpdate={(newStock:number) => onUpdateProduct({
+          _id : get(record,'_id'),
+          stock : newStock
+        })}/>
       },
     },
     {
