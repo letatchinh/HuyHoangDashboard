@@ -132,7 +132,7 @@ import {
       label: "Nhà cung cấp",
       icon: <i className="fa-solid fa-cubes"></i>,
       key: "supplier",
-      permission: [],
+      // permission: [],
       children: [
         {
           label: "Danh sách nhà cung cấp",
@@ -144,7 +144,7 @@ import {
           label: "Đơn hàng",
           path: PATH_APP.orderSupplier.root,
           key: PATH_APP.orderSupplier.root,
-          // permission:[POLICIES.READ_BILL],
+          permission:[POLICIES.READ_ORDERSUPPLIER],
         },
         {
           label: "Doanh số tích luỹ",

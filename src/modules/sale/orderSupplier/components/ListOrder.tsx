@@ -45,7 +45,7 @@ export default function ListOrder({ status }: propsType): React.JSX.Element {
   const [orderSelect, setOrderSelect] = useState<any>();
   const [supplierId, setSupplierId] = useState<string | null>("");
   const [debt, setDebt] = useState<number | null>();
-  // const canWriteVoucher = useMatchPolicy(POLICIES.WRITE_VOUCHER);
+  const canWriteVoucher = useMatchPolicy(policyModule.POLICIES.WRITE_VOUCHER);
 
   const onOpenPayment = (item: any) => {
     setOpen(true);
@@ -60,8 +60,7 @@ export default function ListOrder({ status }: propsType): React.JSX.Element {
     setOrderSelect(null);
   };
 
-  const columns: ColumnsType = useMemo(
-    () => [
+  const columns: ColumnsType = [
       {
         title: "Mã đơn hàng",
         dataIndex: "codeSequence",
@@ -154,24 +153,26 @@ export default function ListOrder({ status }: propsType): React.JSX.Element {
         },
       },
 
-      {
-        title: "Tạo phiếu",
-        dataIndex: "_id",
-        key: "_id",
-        align: "center" as AlignType,
-        render(value: any, rc: any) {
-          return (
-            <Space>
-              <Button type="primary" onClick={() => onOpenPayment(rc)}>
-                Phiếu chi
-              </Button>
-            </Space>
-          );
-        },
+      
+    ];
+
+  if(canWriteVoucher){
+    columns.push({
+      title: "Tạo phiếu",
+      dataIndex: "_id",
+      key: "_id",
+      align: "center" as AlignType,
+      render(value: any, rc: any) {
+        return (
+          <Space>
+            <Button type="primary" onClick={() => onOpenPayment(rc)}>
+              Phiếu chi
+            </Button>
+          </Space>
+        );
       },
-    ],
-    []
-  );
+    },)
+  }
   return (
     <div className="bill-page">
       <Row align="middle" gutter={8}>
@@ -182,7 +183,7 @@ export default function ListOrder({ status }: propsType): React.JSX.Element {
           />
           <SearchAnt onParamChange={onParamChange} />
         </Space>
-        <WithPermission permission={policyModule.POLICIES.WRITE_QUOTATION}>
+        <WithPermission permission={policyModule.POLICIES.WRITE_ORDERSUPPLIER}>
           <Button
             style={{ marginLeft: "auto" }}
             onClick={() => window.open(PATH_APP.orderSupplier.create)}
