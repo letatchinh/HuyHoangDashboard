@@ -42,6 +42,8 @@ class BillClassExtend extends InstanceModuleRedux {
     getByIdSuccess: (state:cloneInitState, { payload }:{payload?:any}) => {
       // const CalculateDiscountMethod = new CalculateDiscountFactory();
       state.isGetByIdLoading = false;
+      let totalDiscountBill = 0;
+      let totalAmountBill = 0;
       const billItems = get(payload,'billItems',[])?.map((billItem : any) => {
         // const {variant} = billItem || {};
         // console.log(billItem,'billItem');
@@ -49,8 +51,9 @@ class BillClassExtend extends InstanceModuleRedux {
         const price : number = get(billItem, 'variant.price',1);
         const totalPrice : number = get(billItem, 'totalPrice',1);
         const totalAmount = Math.floor(Number(quantity * price));
-        const totalDiscount : number = totalPrice - totalAmount;
-        
+        const totalDiscount : number = totalAmount - totalPrice;
+        totalDiscountBill += totalDiscount;
+        totalAmountBill += totalAmount;
         return {
           ...billItem,
           totalAmount,
@@ -62,6 +65,9 @@ class BillClassExtend extends InstanceModuleRedux {
         ...payload,
         billItems,
         remainAmount,
+        totalDiscountBill,
+        totalAmountBill,
+        totalAfterDiscountBill : totalAmountBill - totalDiscountBill
       }
       },
     getListProductSuggestRequest: (state:cloneInitState) => {
