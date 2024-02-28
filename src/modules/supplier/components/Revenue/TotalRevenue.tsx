@@ -13,13 +13,14 @@ import POLICIES from "~/modules/policy/policy.auth";
 interface propsType {
   setTotalRevenueId: any;
   totalRevenueId: any
+  setHistoryLogs: any
 };
 
 const { RangePicker } = DatePicker;
 const dateFormat = 'DD-MM-YYYY';
 
-function RenderTotalRevenue({ setTotalRevenueId, totalRevenueId }: propsType) {
-  const revenueId = useGetRevenueId();
+function RenderTotalRevenue({ setTotalRevenueId, totalRevenueId, setHistoryLogs }: propsType) {
+  const { revenueId } = useParams();
   const [query] = useRevenueSupplierQueryParams(revenueId);
   const [data, isLoading] = useGetTotalRevenueSupplierById(query);
   const [totalRevenue, setTotalRevenue] = useState(0);
@@ -53,8 +54,9 @@ function RenderTotalRevenue({ setTotalRevenueId, totalRevenueId }: propsType) {
       setDate({
         startDate: dayjs(data?.mineralOfSupplier?.startDate).format("DD-MM-YYYY"),
         endDate: dayjs(data?.mineralOfSupplier?.endDate).format("DD-MM-YYYY"),
-      })
-      setTotalRevenueId(data?.mineralOfSupplier?._id)
+      });
+      setTotalRevenueId(data?.mineralOfSupplier?._id);
+      setHistoryLogs(data?.mineralOfSupplier?.historyLogs);
     };
   }, [data]);
   

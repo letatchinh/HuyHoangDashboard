@@ -25,7 +25,7 @@ export default function TotalRevenueList(props: propsType): React.JSX.Element {
 
   const handleDescription = async (value: any) => {
     await dispatch(supplierSliceAction.setRevenueIdAction(value?._id));
-    return navigator(`${PATH_APP.revenueSupplier.root}/${supplierId}`);
+    return navigator(`${PATH_APP.revenueSupplier.root}/${supplierId}/detail/${value?._id}`);
   };
   const columns: ColumnsType  = useMemo(
     () => [

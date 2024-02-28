@@ -41,6 +41,7 @@ export const mainRoutes :PathRouteProps[] = [
 
   //Revenue Supplier
   { path: PATH_APP.revenueSupplier.revenue, Component: RevenueSupplier },
+  { path: PATH_APP.revenueSupplier.revenueDetail, Component: RevenueSupplier },
   { path: PATH_APP.revenueSupplier.revenueAll, Component: TotalRevenueList },
 
   // worldPharma

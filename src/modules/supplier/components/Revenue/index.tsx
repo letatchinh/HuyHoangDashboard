@@ -15,6 +15,8 @@ import UpdateRevenueForm from './UpdateRevenueForm';
 import { useDispatch } from 'react-redux';
 import { supplierSliceAction } from '../../redux/reducer';
 import RenderTotalRevenue from './TotalRevenue';
+import HistoryLogs from './HistoryLogs';
+import WithPermission from '~/components/common/WithPermission';
 type propsType = {
 
 };
@@ -34,6 +36,7 @@ export default function RevenueSupplier(props: propsType): React.JSX.Element {
   const [productId, setProductId] = useState<any>(null);
   const [productName, setProductName] = useState<any>(null);
   const [isOpen, setIsOpen] = useState(false);
+  const [historyLogs, setHistoryLogs] = useState<any[]>([]);
 
   const dispatch = useDispatch();
   const resetAction = () => {
@@ -119,6 +122,7 @@ export default function RevenueSupplier(props: propsType): React.JSX.Element {
       <RenderTotalRevenue
         setTotalRevenueId = {setTotalRevenueId}
         totalRevenueId = {totalRevenueId}
+        setHistoryLogs = {setHistoryLogs}
       />
       <TableAnt
         loading={isLoading || isSubmitLoading}
@@ -132,6 +136,11 @@ export default function RevenueSupplier(props: propsType): React.JSX.Element {
           showSizeChanger : true
         }}
       />
+      {
+        <WithPermission permission={POLICIES.READ_HISTORYSUPPLIERMINERRAL}>
+          <HistoryLogs historyLogs={historyLogs} />
+        </WithPermission>
+      }
       <Modal
         title= {`Cập nhật doanh số khoán cho sản phẩm ${productName}`}
         open={isOpen}

@@ -36,6 +36,7 @@ const statusVoucher = 'statusVoucher';
 const historyVoucher = 'historyVoucher';
 
 const revenueSupplier = 'revenueSupplier';
+const historySupplierMineral = 'historySupplierMineral';
 
 const RESOURCES = [
   //Setting
@@ -79,7 +80,10 @@ const RESOURCES = [
   todoList,
 
   medicine,
+
   revenueSupplier,
+  historySupplierMineral
+  
 ];
 
 //ACTIONS
@@ -163,6 +167,7 @@ const RESOURCE = (): ResourceType => {
     product,
     debt,
     revenueSupplier,
+    historySupplierMineral 
   ];
   
   const GROUP_WORK_MANAGERMENT: string[] = [
