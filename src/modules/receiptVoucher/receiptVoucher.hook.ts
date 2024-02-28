@@ -13,9 +13,10 @@ import {
     useSuccess
 } from "~/utils/hook";
 import { receiptVoucherSliceAction } from "./redux/reducer";
-import { TYPE_VOUCHER } from "~/constants/defaultValue";
+import { REF_COLLECTION, TYPE_VOUCHER } from "~/constants/defaultValue";
 import dayjs from "dayjs";
 import { fromJSON } from "../vouchers/components/parser";
+import { PATH_APP } from "~/routes/allPath";
 
 const MODULE = "receiptVoucher";
 const MODULE_VI = "";
@@ -114,6 +115,7 @@ export const useDeleteReceiptVoucher = (callback?: any) => {
 
 export const useReceiptVoucherQueryParams = () => {
   const query = useQueryParams();
+  const {pathname} = useLocation() 
   const typeVoucher = TYPE_VOUCHER.PT;
   const [limit, setLimit] = useState(query.get("limit") || 10); 
   const [page, setPage] = useState(query.get("page") || 1);
@@ -133,6 +135,15 @@ export const useReceiptVoucherQueryParams = () => {
     setPage(current);
   };
 
+  // TODO: Default RefCollection By PathName
+  let refCollection : 'pharma_profile' | 'supplier' | null = null;
+  if(pathname === PATH_APP.vouchers.pharmacy ){
+    refCollection = REF_COLLECTION.PHARMA_PROFILE
+  }
+  if(pathname === PATH_APP.vouchers.supplier ){
+    refCollection = REF_COLLECTION.SUPPLIER
+  }
+  
   return useMemo(() => {
     const queryParams = {
       page,
@@ -145,10 +156,11 @@ export const useReceiptVoucherQueryParams = () => {
       status,
       totalAmount,
       reason,
+      ...refCollection && {refCollection}
     };
     return [queryParams,onTableChange];
     //eslint-disable-next-line
-  }, [page, limit, keyword, createSuccess, deleteSuccess,startDate, endDate,codeSequence, status, totalAmount, reason]);
+  }, [page, limit, keyword, createSuccess, deleteSuccess,startDate, endDate,codeSequence, status, totalAmount, reason,pathname]);
 };
 
 export const useUpdateReceiptVoucherParams = (

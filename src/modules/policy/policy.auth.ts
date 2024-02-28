@@ -37,6 +37,8 @@ const historyVoucher = 'historyVoucher';
 
 const revenueSupplier = 'revenueSupplier';
 const historySupplierMineral = 'historySupplierMineral';
+// Quản lý luỹ kế
+const cumulativeEvent = 'cumulativeEvent';
 
 const RESOURCES = [
   //Setting
@@ -82,8 +84,9 @@ const RESOURCES = [
   medicine,
 
   revenueSupplier,
-  historySupplierMineral
+  historySupplierMineral,
   
+  cumulativeEvent,
 ];
 
 //ACTIONS
