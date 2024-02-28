@@ -38,6 +38,13 @@ class ProductClassExtend extends InstanceModuleRedux {
         ...state,
         ...omit(this.cloneInitState, ["list"]),
       }),
+
+      updateSuccess: (state:initStateSlice, { payload }:{payload:any}) => {
+        state.isSubmitLoading = false;
+        state.byId = payload;
+        state.list = state.list?.map((item:any) => get(item,'_id') === get(payload,'data._id') ? {...item,...get(payload,'data')} : item);
+        state.updateSuccess = payload;
+      },
       // Want Add more reducer Here...
     }
     this.cloneInitState = {

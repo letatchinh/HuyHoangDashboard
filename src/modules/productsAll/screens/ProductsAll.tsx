@@ -107,6 +107,9 @@ export default function ProductsAll(props: TypeProps): React.JSX.Element {
                   <Col>
                     <Select
                       style={{minWidth : 50}}
+                      dropdownStyle={{
+                        width : 'max-content'
+                      }}
                       value={get(record,'variant._id')}
                       options={options}
                       onChange={(value) =>
