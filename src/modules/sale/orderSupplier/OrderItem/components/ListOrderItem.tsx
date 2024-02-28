@@ -6,7 +6,7 @@ import React, { useCallback, useMemo, useState } from "react";
 import TableAnt from "~/components/Antd/TableAnt";
 import Status from "~/components/common/Status/index";
 import { formatter } from "~/utils/helpers";
-import UpdateQuantity from "./UpdateQuantity";
+// import UpdateQuantity from "./UpdateQuantity";
 // import BillModule from "~/modules/sale/bill";
 import OrderSupplierModule from "~/modules/sale/orderSupplier";
 import {
@@ -208,7 +208,7 @@ export default function ListOrderItem({
               />
             </ToolTipBadge>
             {nextStatus && (
-              <WithPermission permission={PolicyModule.POLICIES.UPDATE_BILL}>
+              <WithPermission permission={PolicyModule.POLICIES.UPDATE_ORDERSUPPLIER}>
                 <Flex gap={"small"} align="center" justify={"center"}>
                   <Popconfirm
                     title={
@@ -238,7 +238,7 @@ export default function ListOrderItem({
                   </Popconfirm>
                   {status === STATUS_ORDER_ITEM.NEW && (
                     <WithPermission
-                      permission={PolicyModule.POLICIES.UPDATE_BILL}
+                      permission={PolicyModule.POLICIES.UPDATE_ORDERSUPPLIER}
                     >
                       <Button
                         type="primary"
@@ -299,16 +299,19 @@ export default function ListOrderItem({
     {
       title: "Thao tác",
       key: "_id",
-      render(record) {
+      dataIndex : '_id',
+      render(_id,record:any) {
         return (
           <Space>
+            <WithPermission permission={PolicyModule.POLICIES.UPDATE_ORDERSUPPLIER}>
             <Button
               type="primary"
               disabled={record.status !== STATUS_ORDER_ITEM.NEW}
-              onClick={() => onOpenForm(record)}
+              onClick={() => onOpenForm(_id)}
             >
               Cập nhật
             </Button>
+            </WithPermission>
           </Space>
         );
       },
