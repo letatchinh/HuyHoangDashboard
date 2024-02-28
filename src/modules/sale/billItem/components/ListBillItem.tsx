@@ -1,5 +1,5 @@
 import { ArrowUpOutlined, EditTwoTone } from "@ant-design/icons";
-import { Button, Flex, Popconfirm, Space, Tooltip, Typography } from "antd";
+import { Button, Checkbox, Flex, Popconfirm, Space, Tooltip, Typography } from "antd";
 import { ColumnsType } from "antd/es/table/InternalTable";
 import { forIn, get } from "lodash";
 import React, { useCallback, useMemo, useState } from "react";
@@ -23,6 +23,7 @@ import PolicyModule from '~/modules/policy';
 import ModalAnt from "~/components/Antd/ModalAnt";
 import TextArea from "antd/es/input/TextArea";
 import ToolTipBadge from "~/components/common/ToolTipBadge";
+import ConfirmStatusBillItem from "./ConfirmStatusBillItem";
 type propsType = {
   statusBill: any;
 };
@@ -38,6 +39,7 @@ export default function ListBillItem({
     [statusBill]
   );
   const [itemActive,setItemActive] = useState<any>();
+  const [askAgain,setAskAgain] = useState(true);
   const { bill, mutateBill } = useUpdateBillStore();
 
   const { billItems } = bill || {};
@@ -76,46 +78,9 @@ export default function ListBillItem({
       note,
     })
   },[note,billItemIdCancel])
-  const getNextStatus = ({
-    status,
-    expirationDate,
-    lotNumber,
-  }: {
-    status: string;
-    lotNumber?: any;
-    expirationDate: any;
-  }) => {
-    let nextStatus: any = null;
-    let message;
-    let isSame = false;
-    forIn(STATUS_BILLITEM, (value, key) => {
-      if (value === STATUS_BILLITEM.CANCELLED) return;
-      if (isDisabledAll) {
-        return;
-      }
-      if (nextStatus) return;
-      if (isSame) {
-        nextStatus = value;
-        if (
-          value === STATUS_BILLITEM.PACKAGED &&
-          !expirationDate &&
-          !lotNumber
-        ) {
-          message = "Chưa nhập lô và hạn sử dụng";
-        }
-        return;
-      }
-      if (status === key) {
-        isSame = true;
-      }
-    });
-    return {
-      nextStatus,
-      message,
-    };
-  };
 
 
+  
   const columns: ColumnsType = [
     {
       title: "Mã sản phẩm",
@@ -164,11 +129,6 @@ export default function ListBillItem({
       key: "status",
       align: "center",
       render(status, record, index) {
-        const { nextStatus, message } = getNextStatus({
-          status,
-          lotNumber: get(record, "lotNumber"),
-          expirationDate: get(record, "expirationDate"),
-        });
         return (
           <div className="d-flex flex-column align-items-center">
             <ToolTipBadge title={status === STATUS_BILL.CANCELLED && get(record,'note','')}>
@@ -177,45 +137,7 @@ export default function ListBillItem({
               statusVi={CLONE_STATUS_BILLITEM_VI?.[status]}
             />
             </ToolTipBadge>
-            {nextStatus && (
-             <WithPermission permission={PolicyModule.POLICIES.UPDATE_BILL}>
-                 <Flex gap={'small'} align="center" justify={"center"}>
-                <Popconfirm
-                  title={
-                    "Chuyển đổi sang trạng thái " +
-                    CLONE_STATUS_BILLITEM_VI[nextStatus]
-                  }
-                  okText="Ok"
-                  cancelText="Huỷ"
-                  onConfirm={() =>
-                    onChangeStatusBillItem({
-                      id: get(record, "_id", ""),
-                      status: nextStatus,
-                    })
-                  }
-                >
-                  <Tooltip title={message}>
-                    <Button
-                      icon={<ArrowUpOutlined />}
-                      block
-                      type="primary"
-                      disabled={isDisabledAll || !!message}
-                      loading={isSubmitLoading}
-                    >
-                      {CLONE_STATUS_BILLITEM_VI[nextStatus]}
-                    </Button>
-                  </Tooltip>
-                </Popconfirm>
-                {status === STATUS_BILLITEM.ORDERING && (
-                  <WithPermission permission={PolicyModule.POLICIES.UPDATE_BILL}>
-                    <Button type="primary" block danger loading={isSubmitLoading} onClick={() => onOpenCancel(get(record, "_id", ""))}>
-                      Huỷ đơn
-                    </Button>
-                  </WithPermission>
-                )}
-              </Flex>
-             </WithPermission>
-            )}
+            <ConfirmStatusBillItem askAgain={askAgain} setAskAgain={setAskAgain} billItem={record} onChangeStatusBillItem={onChangeStatusBillItem} onOpenCancel={onOpenCancel} isDisabledAll={isDisabledAll} isSubmitLoading={isSubmitLoading} key={get(record,'_id')}/>
           </div>
         );
       },
@@ -261,7 +183,6 @@ export default function ListBillItem({
       },
     },
   ];
-
   return (
     <>
     <TableAnt
