@@ -167,3 +167,27 @@
         pointer-events: none;
     }
 }
+.hover-dot-between{
+    position: relative;
+    &::after , &::before{
+        content: '';
+        border-radius: 50%;
+        width: 5px;
+        height: 5px;
+        background-color: gray;
+        position: absolute;
+        top: 40%;
+        bottom: 0;
+        opacity: 0;
+        transition: 0.2s;
+    }
+    &::after{
+        right: -6px;
+    }
+    &::before{
+        left: -6px;
+    }
+    &:hover::after , &:hover::before{
+        opacity: 1!important;
+    }
+};
