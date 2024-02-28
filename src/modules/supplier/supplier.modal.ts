@@ -45,7 +45,7 @@ export type addressType = {
 
     isLoadingGetRevenueSupplier?: boolean;
     getRevenueSupplierFailed?: any;
-    revenueSupplier?: T[];
+    revenueSupplier?: any;
     pagingRevenueSupplier?: any;
 
     isLoadingGetTotalRevenue?: boolean;

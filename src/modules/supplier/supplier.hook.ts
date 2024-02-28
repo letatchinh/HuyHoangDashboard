@@ -16,6 +16,7 @@ import {
 import { supplierSliceAction } from "./redux/reducer";
 import { cloneInitState } from "./supplier.modal";
 import { useDispatch } from "react-redux";
+import dayjs from "dayjs";
 const MODULE = "supplier";
 const MODULE_VI = "Nhà cung cấp";
 const getSelector = (key: keyof cloneInitState) => (state: RootState) =>
@@ -81,8 +82,8 @@ const totalRevenueSelector = getSelector("totalRevenue");
 const getTotalRevenueFailedSelector = getSelector("getTotalRevenueFailed");
 const isLoadingTotalRevenueSelector = getSelector("isLoadingGetTotalRevenue");
 
-const updateRevenueSuccessSelector = getSelector("updateRevenueSuccess");
-const updateRevenueFailedSelector = getSelector("updateRevenueFailed");
+const updateRevenueProductSuccessSelector = getSelector("updateRevenueSuccess");
+const updateRevenueProductFailedSelector = getSelector("updateRevenueFailed");
 
 const updateTotalRevenueSuccessSelector = getSelector("updateTotalRevenueSuccess");
 const updateTotalRevenueFailedSelector = getSelector("updateTotalRevenueFailed");
@@ -353,13 +354,22 @@ export const useDebtQueryParams = () => {
 
 //Revenue Supplier
 
-export const useRevenueSupplierQueryParams = (idRevenue?: any) => {
+export const useRevenueProductQueryParams = (idRevenue?: any) => {
   const query = useQueryParams();
   const { id } = useParams();
-  const limit = query.get("limit") || 10;
-  const page = query.get("page") || 1;
+  const [page, setPage] = useState<any>(query.get("page") || 1);
+  const [limit, setLimit] = useState<any>(query.get("limit") || 10);
   const keyword = query.get("keyword");
   const revenueId = idRevenue ? idRevenue : null;
+
+  const onTableChange: any = ({ current, pageSize }: any) => {
+    setPage(current);
+    setLimit(pageSize);
+  };
+
+  const updateSuccess = useSelector(updateTotalRevenueSuccessSelector);
+  const updateRevenueProductSuccess = useSelector(updateRevenueProductSuccessSelector);
+
   return useMemo(() => {
     const queryParams = {
       page,
@@ -368,13 +378,15 @@ export const useRevenueSupplierQueryParams = (idRevenue?: any) => {
       id,
       revenueId,
     };
-    return [queryParams];
+    return [queryParams, onTableChange];
     //eslint-disable-next-line
   }, [page,
      limit,
       keyword,
       id,
-      revenueId
+      revenueId,
+      updateSuccess,
+      updateRevenueProductSuccess 
     ]);
 };
 
@@ -383,6 +395,8 @@ export const useListTotalRevenueQueryParams = () => {
   const { id } = useParams();
   const [page, setPage] = useState<any>(query.get("page") || 1);
   const [limit, setLimit] = useState<any>(query.get("limit") || 10);
+  const startDate = query.get('startDate') || dayjs().startOf('month').format("YYYY-MM-DDTHH:mm:ss");
+  const endDate = query.get('endDate') || dayjs().endOf('month').format("YYYY-MM-DDTHH:mm:ss");
 
   const onTableChange: any = ({ current, pageSize }: any) => {
     setPage(current);
@@ -395,13 +409,17 @@ export const useListTotalRevenueQueryParams = () => {
       limit,
       keyword,
       id,
+      startDate,
+      endDate
     };
     return [queryParams, onTableChange];
     //eslint-disable-next-line
   }, [page,
      limit,
       keyword,
-     id,
+      id,
+      startDate,
+      endDate
     ]);
 };
 
@@ -430,7 +448,6 @@ export const useUpdateListTotalRevenueParams = (
         ...param,
       })
     ).toString();
-
     // Navigate
     navigate(`${pathname}?${searchString}`);
   };
@@ -460,11 +477,11 @@ export const useGetTotalRevenueSupplierById = (param: any) => {
 
 export const useUpdateRevenueSupplier = (callback?: any) => {
   useSuccess(
-    updateRevenueSuccessSelector,
+    updateRevenueProductSuccessSelector,
     `Cập nhật doanh thu khoán theo sản phẩm thành công`,
     callback
   );
-  useFailed(updateRevenueFailedSelector);
+  useFailed(updateRevenueProductFailedSelector);
 
   return useSubmit({
     action: supplierSliceAction.updateRevenueSupplierRequest,

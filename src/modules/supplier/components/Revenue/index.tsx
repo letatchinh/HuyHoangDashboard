@@ -5,7 +5,7 @@ import { useParams } from 'react-router-dom';
 import TableAnt from '~/components/Antd/TableAnt';
 import Breadcrumb from '~/components/common/Breadcrumb';
 import { formatNumberThreeComma } from '~/utils/helpers';
-import { useGetRevenueSupplierById, useGetSupplier, useResetAction, useResetActionInRevenue, useRevenueSupplierPaging, useRevenueSupplierQueryParams, useUpdateRevenueSupplier } from '../../supplier.hook';
+import { useGetRevenueSupplierById, useGetSupplier, useResetAction, useResetActionInRevenue, useRevenueSupplierPaging, useRevenueProductQueryParams, useUpdateRevenueSupplier } from '../../supplier.hook';
 import { get } from 'lodash';
 import { useMatchPolicy } from '~/modules/policy/policy.hook';
 import POLICIES from '~/modules/policy/policy.auth';
@@ -17,6 +17,7 @@ import { supplierSliceAction } from '../../redux/reducer';
 import RenderTotalRevenue from './TotalRevenue';
 import HistoryLogs from './HistoryLogs';
 import WithPermission from '~/components/common/WithPermission';
+import { useSelector } from 'react-redux';
 type propsType = {
 
 };
@@ -25,13 +26,13 @@ export default function RevenueSupplier(props: propsType): React.JSX.Element {
   const { id } = useParams();
   const [totalRevenueId, setTotalRevenueId] = useState<any>(null);
   const [supplier, loading] = useGetSupplier(id);
-  const [query] = useRevenueSupplierQueryParams();
+  const [query,onTableChange] = useRevenueProductQueryParams();
   const newQuery = useMemo(() => ({
     ...query,
     supplierMineralId: totalRevenueId,
   }), [totalRevenueId, query]);
   const [revenues, isLoading] = useGetRevenueSupplierById(totalRevenueId && newQuery);
-  const [data, setData] = useState<any[]>([]);
+  const [data, setData] = useState<any>([]);
   const [revenue, setRevenue] = useState(null);
   const [productId, setProductId] = useState<any>(null);
   const [productName, setProductName] = useState<any>(null);
@@ -42,6 +43,7 @@ export default function RevenueSupplier(props: propsType): React.JSX.Element {
   const resetAction = () => {
     return dispatch(supplierSliceAction.resetActionInTotalRevenue());
   };
+
   const [isSubmitLoading, updateRevenue] = useUpdateRevenueSupplier(() => {
     closeFormUpdateRevenue();
     resetAction();
@@ -66,8 +68,8 @@ export default function RevenueSupplier(props: propsType): React.JSX.Element {
   useResetActionInRevenue();
 
   useEffect(() => {
-    if(revenues?.length) {
-      setData(revenues);
+    if(revenues) {
+      setData(revenues?.docs);
     };
   }, [revenues]);
 
@@ -115,7 +117,7 @@ export default function RevenueSupplier(props: propsType): React.JSX.Element {
     ],
     [data]
   );
-
+console.log(data,'data')
   return (
     <div>
       <h4>{loading ? "Đang tải..." :  `Doanh số khoán của nhà cung cấp ${get(supplier,'name','')}`}</h4>
@@ -125,10 +127,11 @@ export default function RevenueSupplier(props: propsType): React.JSX.Element {
         setHistoryLogs = {setHistoryLogs}
       />
       <TableAnt
+        title={() => <h6>{`Tổng doanh số khoán theo sản phẩm: ${formatNumberThreeComma(revenues?.totalRevenueAllProduct)}đ`}</h6>}
         loading={isLoading || isSubmitLoading}
         dataSource={data ?? []}
         columns={columns}
-        // onChange={onTableChange}
+        onChange={onTableChange}
         size='small'
         pagination={{
           ...paging,

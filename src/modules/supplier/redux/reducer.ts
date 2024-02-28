@@ -62,7 +62,7 @@ class SupplierClassExtend extends InstanceModuleRedux {
       },
       getRevenueSupplierSuccess: (state: cloneInitState, { payload }: any) => {
         state.isLoadingGetRevenueSupplier = false;
-        state.revenueSupplier = get(payload, "docs", []);
+        state.revenueSupplier = payload;
         state.pagingRevenueSupplier = getPaging(payload);
       },
       getRevenueSupplierFailed: (state: cloneInitState, { payload }: any) => {
@@ -88,7 +88,7 @@ class SupplierClassExtend extends InstanceModuleRedux {
       },
       updateRevenueSupplierSuccess: (state: cloneInitState, { payload }: any) => {
         state.updateRevenueSuccess = payload;
-        state.revenueSupplier = state.revenueSupplier?.map((item: any) => {
+        state.revenueSupplier = state.revenueSupplier?.docs?.map((item: any) => {
           if (item._id === payload._id) {
             return payload;
           }

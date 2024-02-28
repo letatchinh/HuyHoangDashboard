@@ -2,7 +2,7 @@ import { Button, Col, DatePicker, Form, Modal, Popconfirm, Row, Space } from "an
 import dayjs from "dayjs";
 import { useEffect, useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { useCreateTotalRevenue, useGetRevenueId, useGetTotalRevenueSupplierById, useResetActionInRevenue, useRevenueSupplierQueryParams, useUpdateTotalRevenueSupplier } from "../../supplier.hook";
+import { useCreateTotalRevenue, useGetRevenueId, useGetTotalRevenueSupplierById, useResetActionInRevenue, useRevenueProductQueryParams, useUpdateTotalRevenueSupplier } from "../../supplier.hook";
 import TotalRevenueForm from "./TotalRevenueForm";
 import { formatNumberThreeComma } from "~/utils/helpers";
 import { useDispatch } from "react-redux";
@@ -21,7 +21,7 @@ const dateFormat = 'DD-MM-YYYY';
 
 function RenderTotalRevenue({ setTotalRevenueId, totalRevenueId, setHistoryLogs }: propsType) {
   const { revenueId } = useParams();
-  const [query] = useRevenueSupplierQueryParams(revenueId);
+  const [query] = useRevenueProductQueryParams(revenueId);
   const [data, isLoading] = useGetTotalRevenueSupplierById(query);
   const [totalRevenue, setTotalRevenue] = useState(0);
   const [totalSalesAchieved, setTotalSalesAchieved] = useState(0);
