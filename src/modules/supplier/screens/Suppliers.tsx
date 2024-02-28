@@ -63,6 +63,9 @@ export default function Supplier(): React.JSX.Element {
   const canDownload = useMatchPolicy(POLICIES.DOWNLOAD_PRODUCT);
   const [arrCheckBox, onChangeCheckBox] = useCheckBoxExport();
 
+  //Revenue
+  const canReadRevenue = useMatchPolicy(POLICIES.READ_REVENUESUPPLIER);
+
   // Control form
   const onOpenForm = useCallback((idSelect?: any) => {
     if (idSelect) {
@@ -164,6 +167,25 @@ export default function Supplier(): React.JSX.Element {
           return formatNumberThreeComma(value);
         },
       },
+      {
+        title: "Doanh số tích luỹ",
+        dataIndex: "revenueCamulative",
+        key: "revenueCamulative",
+        align: "center",
+        width: 150,
+        render(value) {
+          return formatNumberThreeComma(value ?? 0);
+        },
+      },
+      ...(canReadRevenue ? [{
+        title: "Doanh số khoán",
+        dataIndex: "_id",
+        key: "salasContract",
+        align: "center" as AlignType,
+        render(_id: any) {
+          return <Link  target={'_blank'} to={PATH_APP.revenueSupplier.root + "/" + _id}>Xem chi tiết</Link>
+        },
+      }]: []),
       ...(
         canWriteVoucher ? [
           {

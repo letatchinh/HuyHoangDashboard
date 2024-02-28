@@ -35,6 +35,8 @@ const voucher = 'voucher';
 const statusVoucher = 'statusVoucher';
 const historyVoucher = 'historyVoucher';
 
+const revenueSupplier = 'revenueSupplier';
+const historySupplierMineral = 'historySupplierMineral';
 // Quản lý luỹ kế
 const cumulativeEvent = 'cumulativeEvent';
 
@@ -80,6 +82,10 @@ const RESOURCES = [
   todoList,
 
   medicine,
+
+  revenueSupplier,
+  historySupplierMineral,
+  
   cumulativeEvent,
 ];
 
@@ -163,6 +169,8 @@ const RESOURCE = (): ResourceType => {
     supplier,
     product,
     debt,
+    revenueSupplier,
+    historySupplierMineral 
   ];
   
   const GROUP_WORK_MANAGERMENT: string[] = [

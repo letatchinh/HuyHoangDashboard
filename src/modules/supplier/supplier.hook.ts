@@ -1,7 +1,7 @@
 import { get } from "lodash";
 import { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { RootState } from "~/redux/store";
 import { clearQuerySearch, getExistProp } from "~/utils/helpers";
 import {
@@ -15,6 +15,8 @@ import {
 } from "~/utils/hook";
 import { supplierSliceAction } from "./redux/reducer";
 import { cloneInitState } from "./supplier.modal";
+import { useDispatch } from "react-redux";
+import dayjs from "dayjs";
 const MODULE = "supplier";
 const MODULE_VI = "Nhà cung cấp";
 const getSelector = (key: keyof cloneInitState) => (state: RootState) =>
@@ -67,6 +69,40 @@ const getSuppliersProductAuthorFailedSelector = getSelector(
   "getSuppliersProductAuthorFailed"
 );
 const pagingSuppliersProductAuthorSelector = getSelector("pagingSuppliersProductAuthor");
+
+
+//Revenue Supplier
+
+const revenueSupplierSelector = getSelector("revenueSupplier");
+const getRevenueSupplierFailedSelector = getSelector("getRevenueSupplierFailed");
+const isLoadingGetRevenueSupplierSelector = getSelector("isLoadingGetRevenueSupplier");
+const pagingRevenueSupplierSelector = getSelector("pagingRevenueSupplier");
+
+const totalRevenueSelector = getSelector("totalRevenue");
+const getTotalRevenueFailedSelector = getSelector("getTotalRevenueFailed");
+const isLoadingTotalRevenueSelector = getSelector("isLoadingGetTotalRevenue");
+
+const updateRevenueProductSuccessSelector = getSelector("updateRevenueSuccess");
+const updateRevenueProductFailedSelector = getSelector("updateRevenueFailed");
+
+const updateTotalRevenueSuccessSelector = getSelector("updateTotalRevenueSuccess");
+const updateTotalRevenueFailedSelector = getSelector("updateTotalRevenueFailed");
+
+const createTotalRevenueSuccessSelector = getSelector("createTotalRevenueSuccess");
+const createTotalRevenueFailedSelector = getSelector("createTotalRevenueFailed");
+
+const isLoadingRevenue = getSelector("isLoadingSubmitRevenue");
+
+const revenueListTotalSelector = getSelector("revenueListTotal");
+const getListTotalRevenueFailedSelector = getSelector("getListTotalRevenueFailed");
+const isLoadingGetListTotalRevenueSelector = getSelector("isLoadingGetListTotalRevenue");
+const pagingListTotalRevenueSelector = getSelector("pagingListTotalRevenue");
+
+const getRevenueId = getSelector("revenueId");
+export const useGetRevenueId = () => useSelector(getRevenueId);
+
+export const useListTotalRevenuePaging = () => useSelector(pagingListTotalRevenueSelector);
+export const useRevenueSupplierPaging = () => useSelector(pagingRevenueSupplierSelector);
 
 export const useProductSupplierPaging = () =>
   useSelector(pagingProductSupplierSelector);
@@ -287,6 +323,14 @@ export const useResetAction = () => {
   return useResetState(supplierSliceAction.resetAction);
 };
 
+export const useResetActionInRevenue = () => {
+  return useResetState(supplierSliceAction.resetActionInRevenue);
+};
+
+export const useResetActionInTotalRevenue = () => {
+  return useResetState(supplierSliceAction.resetActionInTotalRevenue);
+};
+
 
 export const useDebtQueryParams = () => {
   const query = useQueryParams();
@@ -305,4 +349,180 @@ export const useDebtQueryParams = () => {
      limit,
      keyword,
     ]);
+};
+
+
+//Revenue Supplier
+
+export const useRevenueProductQueryParams = (idRevenue?: any) => {
+  const query = useQueryParams();
+  const { id } = useParams();
+  const [page, setPage] = useState<any>(query.get("page") || 1);
+  const [limit, setLimit] = useState<any>(query.get("limit") || 10);
+  const keyword = query.get("keyword");
+  const revenueId = idRevenue ? idRevenue : null;
+
+  const onTableChange: any = ({ current, pageSize }: any) => {
+    setPage(current);
+    setLimit(pageSize);
+  };
+
+  const updateSuccess = useSelector(updateTotalRevenueSuccessSelector);
+  const updateRevenueProductSuccess = useSelector(updateRevenueProductSuccessSelector);
+
+  return useMemo(() => {
+    const queryParams = {
+      page,
+      limit,
+      keyword,
+      id,
+      revenueId,
+    };
+    return [queryParams, onTableChange];
+    //eslint-disable-next-line
+  }, [page,
+     limit,
+      keyword,
+      id,
+      revenueId,
+      updateSuccess,
+      updateRevenueProductSuccess 
+    ]);
+};
+
+export const useListTotalRevenueQueryParams = () => {
+  const query = useQueryParams();
+  const { id } = useParams();
+  const [page, setPage] = useState<any>(query.get("page") || 1);
+  const [limit, setLimit] = useState<any>(query.get("limit") || 10);
+  const startDate = query.get('startDate') || dayjs().startOf('month').format("YYYY-MM-DDTHH:mm:ss");
+  const endDate = query.get('endDate') || dayjs().endOf('month').format("YYYY-MM-DDTHH:mm:ss");
+
+  const onTableChange: any = ({ current, pageSize }: any) => {
+    setPage(current);
+    setLimit(pageSize);
+  };
+  const keyword = query.get("keyword");
+  return useMemo(() => {
+    const queryParams = {
+      page,
+      limit,
+      keyword,
+      id,
+      startDate,
+      endDate
+    };
+    return [queryParams, onTableChange];
+    //eslint-disable-next-line
+  }, [page,
+     limit,
+      keyword,
+      id,
+      startDate,
+      endDate
+    ]);
+};
+
+export const useUpdateListTotalRevenueParams = (
+  query: any,
+  listOptionSearch?: any[]
+) => {
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
+  const [keyword, setKeyword] = useState(get(query, "keyword"));
+  useEffect(() => {
+    setKeyword(get(query, "keyword"));
+  }, [query]);
+  const onParamChange = (param: any) => {
+    // Clear Search Query when change Params
+    clearQuerySearch(listOptionSearch, query, param);
+
+    if (!param.page) {
+      query.page = 1;
+    }
+
+    // Convert Query and Params to Search Url Param
+    const searchString = new URLSearchParams(
+      getExistProp({
+        ...query,
+        ...param,
+      })
+    ).toString();
+    // Navigate
+    navigate(`${pathname}?${searchString}`);
+  };
+
+  return [keyword, { setKeyword, onParamChange }];
+};
+
+export const useGetRevenueSupplierById = (param: any) => {
+  return useFetchByParam({
+    action: supplierSliceAction.getRevenueSupplierRequest,
+    loadingSelector: isLoadingGetRevenueSupplierSelector,
+    dataSelector: revenueSupplierSelector,
+    failedSelector: getRevenueSupplierFailedSelector,
+    param
+  });
+};
+
+export const useGetTotalRevenueSupplierById = (param: any) => {
+  return useFetchByParam({
+    action: supplierSliceAction.getTotalRevenueRequest,
+    loadingSelector: isLoadingTotalRevenueSelector,
+    dataSelector: totalRevenueSelector,
+    failedSelector: getTotalRevenueFailedSelector,
+    param
+  });
+};
+
+export const useUpdateRevenueSupplier = (callback?: any) => {
+  useSuccess(
+    updateRevenueProductSuccessSelector,
+    `Cập nhật doanh thu khoán theo sản phẩm thành công`,
+    callback
+  );
+  useFailed(updateRevenueProductFailedSelector);
+
+  return useSubmit({
+    action: supplierSliceAction.updateRevenueSupplierRequest,
+    loadingSelector: isLoadingRevenue,
+  });
+};
+
+export const useUpdateTotalRevenueSupplier = (callback?: any) => {
+  useSuccess(
+    updateTotalRevenueSuccessSelector,
+    `Cập nhật doanh thu khoán cho nhà cung cấp thành công`,
+    callback
+  );
+  useFailed(updateTotalRevenueFailedSelector);
+
+  return useSubmit({
+    action: supplierSliceAction.updateTotalRevenueSupplierRequest,
+    loadingSelector: isLoadingRevenue,
+  });
+};
+
+export const useCreateTotalRevenue = (callback?: any) => {
+  useSuccess(
+    createTotalRevenueSuccessSelector,
+    `Tạo mới doanh thu khoán thành công`,
+    callback
+  );
+  useFailed(createTotalRevenueFailedSelector);
+
+  return useSubmit({
+    action: supplierSliceAction.createTotalRevenueRequest,
+    loadingSelector: isLoadingRevenue,
+  });
+};
+
+export const useGetListTotalRevenue = (param: any) => {
+  return useFetchByParam({
+    action: supplierSliceAction.getListTotalRevenueRequest,
+    loadingSelector: isLoadingGetListTotalRevenueSelector,
+    dataSelector: revenueListTotalSelector,
+    failedSelector: getListTotalRevenueFailedSelector,
+    param
+  });
 };
