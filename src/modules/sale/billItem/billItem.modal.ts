@@ -20,3 +20,8 @@ export type StatusBillItemType = {
     COMPLETED: string,
     CANCELLED: string,
 }
+export type ParamGetNextStatus = {
+    status: string;
+    lotNumber?: any;
+    expirationDate: any;
+  }
