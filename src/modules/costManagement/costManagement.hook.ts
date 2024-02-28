@@ -112,6 +112,7 @@ export const useCostManagementQueryParams = () => {
       page,
       limit,
       keyword,
+      branchId,
       startDate,
       endDate,
     };

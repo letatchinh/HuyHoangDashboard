@@ -1,18 +1,25 @@
 
-import { Button, Col, DatePicker, Form, Modal, Row, Select } from 'antd';
+import { Button, Checkbox, Col, DatePicker, Form, Modal, Row, Select, Space, Typography } from 'antd';
 import Search from 'antd/es/input/Search';
-import React, { useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import Breadcrumb from '~/components/common/Breadcrumb';
 import WhiteBox from '~/components/common/WhiteBox';
 import useTranslate from '~/lib/translation';
-import { useCostManagementQueryParams, useGetCostManagements, useUpdateCostManagementParams } from '../costManagement.hook';
+import { useCostManagementPaging, useCostManagementQueryParams, useDeleteCostManagement, useGetCostManagements, useUpdateCostManagementParams } from '../costManagement.hook';
 import dayjs from 'dayjs';
-import { ApartmentOutlined, BehanceSquareOutlined, FilterOutlined, CloudServerOutlined, DollarOutlined, MediumOutlined, ShoppingOutlined, PlusOutlined } from '@ant-design/icons';
+import { ApartmentOutlined, BehanceSquareOutlined, FilterOutlined, CloudServerOutlined, DollarOutlined, MediumOutlined, ShoppingOutlined, PlusOutlined, InfoCircleTwoTone, DeleteOutlined } from '@ant-design/icons';
 import { FormFieldSearch, SearchByType } from '~/modules/supplier/supplier.modal';
 import CostManagementForm from '../components/CostManagementForm';
 import CostManagementCard from '../components/CostManegementCard';
 import { useGetBranches } from '~/modules/branch/branch.hook';
+import CostManagementTable from '../components/CostManagementTable';
 import { get, transform } from 'lodash';
+import TableAnt from '~/components/Antd/TableAnt';
+import ActionColumn from '~/components/common/ActionColumn';
+import { ColumnsType } from 'antd/es/table';
+import { formatter } from '~/utils/helpers';
+import useCheckBoxExport from '~/modules/export/export.hook';
+import ExportExcelButton from '~/modules/export/component';
 type propsType = {
 
 }
@@ -29,7 +36,17 @@ export default function CostManagement(props: propsType): React.JSX.Element {
   const [isOpenForm, setOpenForm] = useState(false);
   const [query] = useCostManagementQueryParams();
   const [costManagement, isLoading] = useGetCostManagements(query);
-  console.log(costManagement[0]?.cost, 'costManagement');
+  const [id,setId] = useState(null)
+  // console.log(costManagement[0]?.cost, 'costManagement');
+  const [isSubmitLoading, onDelete] = useDeleteCostManagement();
+  const paging = useCostManagementPaging();
+
+  const onOpenForm = useCallback((id?: any) => {
+    if (id) {
+      setId(id);
+    }
+    setOpenForm(true);
+  }, []);
   const [keyword, { setKeyword, onParamChange }] = useUpdateCostManagementParams(query);
   const [value1, setValue1] = useState('');
   const optionsSearchBy = [
@@ -54,15 +71,14 @@ export default function CostManagement(props: propsType): React.JSX.Element {
 
   const onFinish = (values: FormFieldSearch) => {
     const { searchBy, startDate, endDate } = values;
-    console.log(values, 'values');
     if (startDate) {
       switch (searchBy) {
         case "date":
           onParamChange({
-            startDate: dayjs(startDate)
+            startDate:startDate? dayjs(startDate)
               .startOf(searchBy)
-              .format("YYYY-MM-DD"),
-            endDate: dayjs(endDate).endOf(searchBy).format("YYYY-MM-DD"),
+              .format("YYYY-MM-DD"):null,
+            endDate:endDate ? dayjs(endDate).endOf(searchBy).format("YYYY-MM-DD"):null,
           });
           break;
         case "month":
@@ -91,11 +107,106 @@ export default function CostManagement(props: propsType): React.JSX.Element {
   };
   const onCancel = () => {
     setOpenForm(false);
-  }
+  };
+  const onCloseForm = useCallback(() => {
+    setId(null);
+    setOpenForm(false);
+  }, []);
   const options = useMemo(() => dataBranch?.map((item: any) => ({
     label: get(item, 'name'),
     value: get(item, '_id')
   })), [dataBranch]);
+  const handleOpenUpdate = (id: any) => {
+    setOpenForm(true);
+      setId(id);
+  };
+  const handleOpenFormCreate = () => { 
+    setId(null);
+    setOpenForm(true);
+  };
+  const handleDelete = (id: any) => {
+    onDelete(id);
+
+  };
+  const columns: ColumnsType = [
+    {
+      title: "Mã sản phẩm",
+      dataIndex: "variant",
+      key: "variant",
+      render : (variant) => {
+        return get(variant,'variantCode','')
+      }
+    },
+    {
+      title: "Tên sản phẩm",
+      dataIndex: "name",
+      key: "name",
+      width : 300,
+      render(name, record) {
+        const codeBySupplier = get(record,'codeBySupplier','');
+        if (get(record, "variants", [])?.length > 1) {
+          const options = get(record, "variants", [])?.map((item) => ({
+            label: get(item, "unit.name"),
+            value: get(item, "_id"),
+          }));
+          return (
+            <Row align={"middle"} gutter={4} wrap={false}>
+              <Col>
+              <Typography.Text strong>{codeBySupplier} - </Typography.Text>
+              </Col>
+              <Col>{name}</Col>
+              <Col>
+                <Select
+                  style={{minWidth : 50}}
+                  value={get(record,'variant._id')}
+                  options={options}
+                  onChange={(value) =>{}
+                    // onChangeVariantDefault({
+                    //   productId: get(record, "_id"),
+                    //   variantId: value,
+                    // })
+                  }
+                />
+              </Col>
+            </Row>
+          );
+        } else {
+          return <span>
+              <Typography.Text strong>{codeBySupplier} - </Typography.Text>
+            {name + " " + `(${get(record, "variant.unit.name")})`}
+          </span>;
+        }
+      },
+    },
+    {
+      title: "Doanh thu",
+      dataIndex: "totalAmount",
+      key: "totalAmount",
+      render(totalAmount, record, index) {
+        return formatter(get(record,'totalAmount',0))
+      },
+    },
+    {
+      title: 'Hành động',
+      key: 'action',
+      align: 'center',
+      width: '180px',
+      render: (_, record: any) => (
+        <Space size="middle">
+          {/* <WithPermission permission={POLICIES.UPDATE_PRODUCTGROUP}> */}
+            <Button icon={<InfoCircleTwoTone />} type="primary" onClick={() => handleOpenUpdate(record?._id)}>
+              Cập nhật chi phí
+            </Button>
+          {/* </WithPermission>
+          <WithPermission permission={POLICIES.DELETE_PRODUCTGROUP}> */}
+            <Button icon={<DeleteOutlined />} style={{ color: 'red' }} onClick={() => handleDelete(record._id)}>
+              Xóa
+            </Button>
+          {/* </WithPermission> */}
+        </Space>
+      ),
+    },
+  ];
   return (
     <div className="page-wrapper page-costManagement">
       <Breadcrumb title={t('Quản lý danh sách chi phí sản phẩm')} />
@@ -219,48 +330,24 @@ export default function CostManagement(props: propsType): React.JSX.Element {
         </Col>
       </Row>
       <WhiteBox>
-        <Row gutter={16}>
-          <Col span={4}>
-            <CostManagementCard
-              onClick={() => { }}
-              title="Chi phí vận chuyển"
-              value={costManagement[0]?.cost?.logistic || 0}
-              icon={<ShoppingOutlined className="homepage--btnAction__icon" />}
-            />
-          </Col>
-          <Col span={4}>
-            <CostManagementCard
-              onClick={() => { }}
-              title="Chi phí vận hành"
-              value={costManagement[0]?.cost?.operations || 0}
-              icon={<DollarOutlined className="homepage--btnAction__icon" />}
-            />
-          </Col>
-          <Col span={4}>
-            <CostManagementCard
-              onClick={() => { }}
-              title="Chi phí kênh phân phối"
-              value={costManagement[0]?.cost?.distributionChannel || 0}
-              icon={<ApartmentOutlined className="homepage--btnAction__icon" />}
-            />
-          </Col>
-          <Col span={4}>
-            <CostManagementCard
-              onClick={() => { }}
-              title="Chi phí maketing"
-              value={costManagement[0]?.cost?.marketing || 0}
-              icon={<MediumOutlined className="homepage--btnAction__icon" />}
-            />
-          </Col>
-          <Col span={4}>
-            <CostManagementCard
-              onClick={() => { }}
-              title="Chi phí quản lý"
-              value={costManagement[0]?.cost?.management || 0}
-              icon={<CloudServerOutlined className="homepage--btnAction__icon" />}
-            />
-          </Col>
-        </Row>
+      <TableAnt
+          dataSource={costManagement}
+          loading={isLoading}
+          rowKey={(rc) => rc?._id}
+          columns={columns}
+          // scroll={{x : 2000}}
+          stickyTop
+          size="small"
+          pagination={{
+            ...paging,
+            onChange(page, pageSize) {
+              onParamChange({ page, limit: pageSize });
+            },
+            showSizeChanger : true,
+            showTotal: (total) => `Tổng cộng: ${total} `,
+            size:"small"
+          }}
+        />
       </WhiteBox>
 
       <Modal
@@ -270,7 +357,7 @@ export default function CostManagement(props: propsType): React.JSX.Element {
         onCancel={onCancel}
         width={1050}
       >
-        <CostManagementForm onCancel={onCancel} />
+        <CostManagementForm id={id} onCancel={onCancel} />
       </Modal>
     </div>
   )

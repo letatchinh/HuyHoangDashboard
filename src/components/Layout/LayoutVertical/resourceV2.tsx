@@ -12,6 +12,7 @@ import {
     ShopFilled,
     MoneyCollectOutlined,
     BellFilled,
+    FundProjectionScreenOutlined,
   } from "@ant-design/icons";
   import { MenuProps } from "antd";
   import React, { useCallback } from "react";
@@ -267,7 +268,7 @@ import {
     },
     {
       label: "Quản lý chi phí",
-      icon: <StockOutlined />,
+      icon: <FundProjectionScreenOutlined />,
       path: PATH_APP.costManagement.root,
       key: PATH_APP.costManagement.root,
       // permission: [POLICIES.READ_LEDGER],
