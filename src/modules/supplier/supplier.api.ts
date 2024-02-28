@@ -4,6 +4,7 @@ import requester from "~/api/requester";
 const apis = {
     getAll: (query?: any) => requester.get(`/api/v1/supplier`, query),
     getTotalRevenue: (query?: any) => requester.get(`/api/v1/supplier-mineral-revenue/${query?.id}`, omit(query,['id'])),
+    getListTotalRevenue: (query?: any) => requester.get(`/api/v1/supplier-mineral-revenue/all/${query?.id}`, omit(query,['id'])),
     getById: (id?: any) => requester.get(`/api/v1/supplier/${id}`),
     create: (data?: any) => requester.post(`/api/v1/supplier`, data),
     update: (data?: any) => requester.put(`/api/v1/supplier/${get(data,'_id')}`, data),

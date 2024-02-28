@@ -1,7 +1,7 @@
 import { Button, Col, DatePicker, Form, InputNumber, Row, Space } from "antd";
 import React, { useEffect, useState } from "react";
 import { formatNumberThreeComma } from "~/utils/helpers";
-import { useResetActionInRevenue } from "../../supplier.hook";
+import { useResetActionInRevenue, useResetActionInTotalRevenue } from "../../supplier.hook";
 type propsType = {
   revenue?: number | null;
   id: any;
@@ -17,7 +17,7 @@ export default function UpdateRevenueForm({
   productName,
 }: propsType): React.JSX.Element {
   const [revenueValue, setRevenueValue] = useState<number | null | undefined>(0);
-  useResetActionInRevenue();
+  useResetActionInTotalRevenue();
 
   useEffect(() => {
     setRevenueValue(revenue);

@@ -1,52 +1,63 @@
-import { Button, Col, DatePicker, Form, InputNumber, Row } from 'antd';
+import { Button, Col, DatePicker, Form, InputNumber, Row, Space } from 'antd';
 import dayjs from 'dayjs';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import useNotificationStore from '~/store/NotificationContext';
 import { formatNumberThreeComma } from '~/utils/helpers';
 type propsType = {
   totalRevenue: any,
   updateTotalRevenue: any,
-  totalRevenueId: any,
-  date: any,
-  onClose: any
+  onClose: any,
+  data: any
 };
-export default function TotalRevenueForm({ totalRevenue, updateTotalRevenue, totalRevenueId,date: dateDefault, onClose}: propsType): React.JSX.Element {
+
+const { RangePicker } = DatePicker;
+const dateFormat = 'DD-MM-YYYY';
+
+export default function TotalRevenueForm({ totalRevenue, updateTotalRevenue, onClose, data}: propsType): React.JSX.Element {
   const [revenueValue, setRevenueValue] = useState<number | null | undefined>(0);
   const { id } = useParams();
-  // const defaultDate = useMemo(
-  //   () => ({
-  //     startDate: dayjs().startOf("month").format("YYYY-MM-DD"),
-  //     endDate: dayjs().endOf("month").format("YYYY-MM-DD"),
-  //   }),
-  //   []
-  // );
+  const [form] = Form.useForm();
   const [date, setDate] = useState<any>();
-
+  const {onNotify} = useNotificationStore();
   useEffect(() => {
     setRevenueValue(totalRevenue ?? 0);
   }, [totalRevenue]);
 
   useEffect(() => {
-    setDate(dateDefault);
-  }, [dateDefault]);
-
-  const onFinish = (values: any) => {
-    updateTotalRevenue({
-      startDate: dayjs(date?.startDate).format("YYYY-MM-DD"),
-      endDate: dayjs(date?.endDate).format("YYYY-MM-DD"),
-      totalRevenue: revenueValue,
-      supplierId: id,
-      supplierMineralId: totalRevenueId
+    setDate({
+      startDate: data?.startDate,
+      endDate: data?.endDate,
     });
+  }, [data]);
+  const onFinish = () => {
+    try {
+      if (date?.startDate && date?.endDate) {
+        updateTotalRevenue({
+          startDate: date?.startDate,
+          endDate: date?.endDate,
+          totalRevenue: revenueValue,
+          supplierId: id,
+          supplierMineralId: data?._id
+        });
+      } else {
+        onNotify?.error("Vui lòng chọn thời gian");
+      };
+    } catch (error) {
+      console.log(error);
+    }
   };
-  console.log(dayjs(date?.startDate),'dayjs(date?.startDate)')
+
   return (
     <div>
       <Form
         onFinish={onFinish}
+        form={form}
       >
         <Row gutter={12} style = {{marginBottom: 20}}>
-        <Col span={12}>Doanh số khoán :</Col>
+          <Col span={12}>
+            <h6>Doanh số khoán :</h6>
+        </Col>
         <Col flex={1}>
           <InputNumber
             style={{
@@ -59,29 +70,26 @@ export default function TotalRevenueForm({ totalRevenue, updateTotalRevenue, tot
           />
         </Col>
       </Row>
-      <Row gutter={12}>
-        <Col span={12}>
-          <Form.Item label="Ngày bắt đầu" name="startDate" rules={[{ required: true, message: 'Vui lòng nhập ngày bắt đầu' }]}>
-            <DatePicker
-                format="DD-MM-YYYY"
-                value={date?.startDate ? dayjs(date?.startDate) : null}
-                onChange={(date, dateString) => setDate((e: any) => ({
-                  ...e,
-                  startDate: dayjs(date).format("YYYY-MM-DD")
-                }))}
-            />
-          </Form.Item>
-        </Col>
-        <Col span={12}>
-          <Form.Item label="Ngày kết thúc" name="endDate" rules={[{ required: true, message: 'Vui lòng nhập ngày kết thúc' }]}>
-            <DatePicker
-                format="DD-MM-YYYY"
-                onChange={(date, dateString) => setDate((e: any) => ({
-                  ...e,
-                  endDate: dayjs(date).format("YYYY-MM-DD")
-                }))}
-            />
-          </Form.Item>
+        <Row gutter={12} style = {{marginBottom: 20}}>
+          <Col span={12}>
+            <h6>Thời gian:</h6>
+          </Col>
+          <Col flex={1}>
+            <Form.Item
+              rules={[{ required: true, message: 'Vui lòng chọn thời gian' }]}
+            >
+              <RangePicker
+                format={dateFormat}
+                allowEmpty={[false, false]}
+                value={[(date?.startDate ? dayjs(date?.startDate) : null), date?.endDate ? dayjs(date?.endDate) : null]}
+                onChange={(value) => {
+                  setDate({
+                    startDate: dayjs(value?.[0]).format("YYYY-MM-DD"),
+                    endDate: dayjs(value?.[1]).format("YYYY-MM-DD"),
+                  });
+                }}
+              />
+            </Form.Item>
         </Col>
       </Row>
       <Row justify={"end"} style={{marginTop: 30}}>

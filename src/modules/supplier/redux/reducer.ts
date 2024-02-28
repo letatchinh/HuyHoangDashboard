@@ -56,72 +56,90 @@ class SupplierClassExtend extends InstanceModuleRedux {
       },
 
       //Revenue Supplier
-      getRevenueSupplierRequest: (state: any) => {
+      getRevenueSupplierRequest: (state: cloneInitState) => {
         state.isLoadingGetRevenueSupplier = true;
         state.getRevenueSupplierFailed = null;
       },
-      getRevenueSupplierSuccess: (state: any, { payload }: any) => {
+      getRevenueSupplierSuccess: (state: cloneInitState, { payload }: any) => {
         state.isLoadingGetRevenueSupplier = false;
         state.revenueSupplier = get(payload, "docs", []);
         state.pagingRevenueSupplier = getPaging(payload);
       },
-      getRevenueSupplierFailed: (state: any, { payload }: any) => {
+      getRevenueSupplierFailed: (state: cloneInitState, { payload }: any) => {
         state.isLoadingGetRevenueSupplier = false;
         state.getRevenueSupplierFailed = payload;
       },
 
-      getTotalRevenueRequest: (state: any) => {
+      getTotalRevenueRequest: (state: cloneInitState) => {
         state.isLoadingGetTotalRevenue = true;
         state.getTotalRevenueFailed = null;
       },
-      getTotalRevenueSuccess: (state: any, { payload }: any) => {
+      getTotalRevenueSuccess: (state: cloneInitState, { payload }: any) => {
         state.isLoadingGetTotalRevenue = false;
         state.totalRevenue = payload;
       },
-      getTotalRevenueFailed: (state: any, { payload }: any) => {
+      getTotalRevenueFailed: (state: cloneInitState, { payload }: any) => {
         state.isLoadingGetTotalRevenue = false;
         state.getTotalRevenueFailed = payload;
       },
 
-      updateRevenueSupplierRequest: (state: any) => {
+      updateRevenueSupplierRequest: (state: cloneInitState) => {
         state.isLoadingSubmitRevenue = false;
       },
-      updateRevenueSupplierSuccess: (state: any, { payload }: any) => {
+      updateRevenueSupplierSuccess: (state: cloneInitState, { payload }: any) => {
         state.updateRevenueSuccess = payload;
-        state.revenueSupplier = state.revenueSupplier.map((item: any) => {
+        state.revenueSupplier = state.revenueSupplier?.map((item: any) => {
           if (item._id === payload._id) {
             return payload;
           }
           return item;
         });
       },
-      updateRevenueSupplierFailed: (state: any, { payload }: any) => {
+      updateRevenueSupplierFailed: (state: cloneInitState, { payload }: any) => {
         state.updateRevenueFailed = payload;
       },
       //
-      updateTotalRevenueSupplierRequest: (state: any) => {
+      updateTotalRevenueSupplierRequest: (state: cloneInitState) => {
         state.isLoadingSubmitRevenue = false;
       },
-      updateTotalRevenueSupplierSuccess: (state: any, { payload }: any) => {
+      updateTotalRevenueSupplierSuccess: (state: cloneInitState, { payload }: any) => {
         state.updateTotalRevenueSuccess = payload;
         state.totalRevenue = payload;
       },
-      updateTotalRevenueSupplierFailed: (state: any, { payload }: any) => {
+      updateTotalRevenueSupplierFailed: (state: cloneInitState, { payload }: any) => {
         state.updateTotalRevenueFailed = payload;
       },
 
       //
-      createTotalRevenueRequest: (state: any) => {
+      createTotalRevenueRequest: (state: cloneInitState) => {
         state.isLoadingSubmitRevenue = false;
       },
-      createTotalRevenueSuccess: (state: any, { payload }: any) => {
+      createTotalRevenueSuccess: (state: cloneInitState, { payload }: any) => {
         state.createTotalRevenueSuccess = payload;
         state.totalRevenue = payload;
       },
-      createTotalRevenueFailed: (state: any, { payload }: any) => {
+      createTotalRevenueFailed: (state: cloneInitState, { payload }: any) => {
         state.createTotalRevenueFailed = payload;
       },
       
+      getListTotalRevenueRequest: (state: cloneInitState) => {
+        state.isLoadingGetListTotalRevenue = true;
+        state.getListTotalRevenueFailed = null;
+      },
+      getListTotalRevenueSuccess: (state: cloneInitState, { payload }: any) => {
+        state.isLoadingGetListTotalRevenue = false;
+        state.revenueListTotal = get(payload, "docs", []);
+        state.pagingListTotalRevenue = getPaging(payload);
+      },
+      getListTotalRevenueFailed: (state: cloneInitState, { payload }: any) => {
+        state.isLoadingGetListTotalRevenue = false;
+        state.getListTotalRevenueFailed = payload;
+      },
+
+      setRevenueIdAction: (state: cloneInitState, { payload }: any) => {
+        state.revenueId = payload;
+      },
+
       resetActionInRevenue: (state:any) => ({
         ...state,
         ...omit(this.cloneInitState, ["revenueSupplier"]),  
@@ -129,7 +147,7 @@ class SupplierClassExtend extends InstanceModuleRedux {
 
       resetActionInTotalRevenue: (state:any) => ({
         ...state,
-        ...omit(this.cloneInitState, ["revenueSupplier", "totalRevenue"]),  
+        ...omit(this.cloneInitState, ["revenueSupplier", "totalRevenue", 'revenueId']),  
       }),
 
     };
@@ -164,7 +182,14 @@ class SupplierClassExtend extends InstanceModuleRedux {
       createTotalRevenueSuccess: null,
       createTotalRevenueFailed: null,
 
+      isLoadingGetListTotalRevenue: false,
+      getListTotalRevenueFailed: null,
+      revenueListTotal: [],
+      pagingListTotalRevenue: null,
+
       isLoadingSubmitRevenue: false,
+
+      revenueId: null,
     };
   }
   createSlice() {

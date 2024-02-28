@@ -32,6 +32,7 @@ import Lk from "~/pages/Dashboard/Lk";
 import OrderSupplier from "~/pages/Dashboard/OrderSupplier";
 import UpdateOrderSupplier from "~/pages/Dashboard/OrderSupplier/UpdateOrderSupplier";
 import RevenueSupplier from "~/modules/supplier/components/Revenue";
+import TotalRevenueList from "~/modules/supplier/components/Revenue/TotalRevenueList";
 export const mainRoutes :PathRouteProps[] = [
   { path: PATH_APP.main.root, Component: Homepage },
 
@@ -40,6 +41,7 @@ export const mainRoutes :PathRouteProps[] = [
 
   //Revenue Supplier
   { path: PATH_APP.revenueSupplier.revenue, Component: RevenueSupplier },
+  { path: PATH_APP.revenueSupplier.revenueAll, Component: TotalRevenueList },
 
   // worldPharma
   { path: PATH_APP.worldPharma.productGroup, Component: ProductGroupPage },

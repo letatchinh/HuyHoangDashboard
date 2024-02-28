@@ -61,6 +61,13 @@ export type addressType = {
     updateTotalRevenueSuccess?: any;
     updateTotalRevenueFailed?: any;
 
+    isLoadingGetListTotalRevenue?: boolean;
+    getListTotalRevenueFailed?: any;
+    revenueListTotal?: T[];
+    pagingListTotalRevenue?: any;
+
+    revenueId?: any;
+
     isLoadingSubmitRevenue?: boolean;
 };
 

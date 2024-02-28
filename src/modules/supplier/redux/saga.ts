@@ -121,6 +121,15 @@ function* createTotalRevenue({payload} : any) : any {
   }
 };
 
+function* getListTotalRevenue({payload:query} : any) : any {
+  try {
+    const data = yield call(api.getListTotalRevenue,query);
+    yield put(supplierSliceAction.getListTotalRevenueSuccess(data));
+  } catch (error:any) {
+    yield put(supplierSliceAction.getListTotalRevenueFailed(error));
+  }
+};
+
 export default function* supplierSaga() {
   yield takeLatest(supplierSliceAction.getListRequest, getListModuleExample);
   yield takeLatest(supplierSliceAction.getProductSupplierRequest, getListProductSupplier);
@@ -131,9 +140,14 @@ export default function* supplierSaga() {
   yield takeLatest(supplierSliceAction.updateRequest, updateModuleExample);
   yield takeLatest(supplierSliceAction.deleteRequest, deleteModuleExample);
   yield takeLatest(supplierSliceAction.getSuppliersProductAuthorRequest, getSuppliersProductAuthor);
+
+  //Revenue 
+
   yield takeLatest(supplierSliceAction.getRevenueSupplierRequest, getRevenueSupplierById);
   yield takeLatest(supplierSliceAction.updateRevenueSupplierRequest, updateRevenueSupplier);
   yield takeLatest(supplierSliceAction.updateTotalRevenueSupplierRequest, updateTotalRevenueSupplier);
   yield takeLatest(supplierSliceAction.createTotalRevenueRequest, createTotalRevenue);
   yield takeLatest(supplierSliceAction.getTotalRevenueRequest, getTotalRevenueSupplierById);
+  yield takeLatest(supplierSliceAction.getListTotalRevenueRequest, getListTotalRevenue);
+
 }

@@ -1,32 +1,39 @@
 import { Button, Col, DatePicker, Form, Modal, Popconfirm, Row, Space } from "antd";
 import dayjs from "dayjs";
 import { useEffect, useMemo, useState } from "react";
-import { useParams } from "react-router-dom";
-import { useCreateTotalRevenue, useGetTotalRevenueSupplierById, useResetActionInRevenue, useRevenueSupplierQueryParams, useUpdateTotalRevenueSupplier } from "../../supplier.hook";
+import { Link, useParams } from "react-router-dom";
+import { useCreateTotalRevenue, useGetRevenueId, useGetTotalRevenueSupplierById, useResetActionInRevenue, useRevenueSupplierQueryParams, useUpdateTotalRevenueSupplier } from "../../supplier.hook";
 import TotalRevenueForm from "./TotalRevenueForm";
 import { formatNumberThreeComma } from "~/utils/helpers";
 import { useDispatch } from "react-redux";
 import { supplierSliceAction } from "../../redux/reducer";
+import { PATH_APP } from "~/routes/allPath";
+import { useMatchPolicy } from "~/modules/policy/policy.hook";
+import POLICIES from "~/modules/policy/policy.auth";
 interface propsType {
   setTotalRevenueId: any;
   totalRevenueId: any
 };
 
+const { RangePicker } = DatePicker;
+const dateFormat = 'DD-MM-YYYY';
+
 function RenderTotalRevenue({ setTotalRevenueId, totalRevenueId }: propsType) {
-  const [query] = useRevenueSupplierQueryParams();
+  const revenueId = useGetRevenueId();
+  const [query] = useRevenueSupplierQueryParams(revenueId);
   const [data, isLoading] = useGetTotalRevenueSupplierById(query);
   const [totalRevenue, setTotalRevenue] = useState(0);
   const [totalSalesAchieved, setTotalSalesAchieved] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
   const [isSubmitLoading, resetRevenue] = useCreateTotalRevenue();
+  const canUpdate = useMatchPolicy(POLICIES.UPDATE_REVENUESUPPLIER);
+  const canWrite = useMatchPolicy(POLICIES.WRITE_REVENUESUPPLIER);
+
   const dispatch = useDispatch();
   const resetAction = () => {
     return dispatch(supplierSliceAction.resetActionInTotalRevenue());
   };
-
-  const [form] = Form.useForm();
   const [date, setDate] = useState<any>();
-
   const onOpen = () => {
     setIsOpen(true);
   };
@@ -39,13 +46,6 @@ function RenderTotalRevenue({ setTotalRevenueId, totalRevenueId }: propsType) {
     resetAction();
   });
 
-  // useEffect(() => {
-  //   form.setFieldsValue({
-  //     startDate: dayjs(date?.startDate),
-  //     endDate: dayjs(date?.endDate),
-  //   });
-  // }, [date]);
-
   useEffect(() => {
     if (data) {
       setTotalRevenue(data?.mineralOfSupplier?.totalRevenue);
@@ -57,21 +57,20 @@ function RenderTotalRevenue({ setTotalRevenueId, totalRevenueId }: propsType) {
       setTotalRevenueId(data?.mineralOfSupplier?._id)
     };
   }, [data]);
-  console.log(date)
-
+  
   return (
     <div style={{ backgroundColor: "#fff", padding: 10, marginBottom: 10 }}>
-      <Row gutter={36} align="middle" justify="space-between">
-        <Col span={8}>
+      <Row gutter={36} align="middle" justify="space-between" style={{ marginTop: 10 }}>
+        <Col span={10}>
           <h5>Tổng doanh số khoán: {formatNumberThreeComma(totalRevenue)}đ</h5>
         </Col>
         <Col flex={8}>
           <h5>Tổng doanh số đã đạt: {formatNumberThreeComma(totalSalesAchieved)}đ</h5>
         </Col>
         <Col flex={1}>
-          <Space>
+           { (canUpdate || canWrite) && <Space>
             {
-              !!data?.mineralOfSupplier?.isUpdate && (
+            (canWrite && !!data?.mineralOfSupplier?.isUpdate && (
                 <Popconfirm
                   title="Bạn có chắc chắn muốn tạo lại doanh thu khoán cho nhà cung cấp này?"
                   onConfirm={() => {
@@ -83,40 +82,28 @@ function RenderTotalRevenue({ setTotalRevenueId, totalRevenueId }: propsType) {
                     console.log("cancel");
                   }}
                 >
-                  <Button loading={isSubmitLoading} type="primary">Tạo mới</Button>
-                </Popconfirm>
+                  <Button loading={isSubmitLoading || loading} type="primary">Tạo mới</Button>
+                </Popconfirm>)
               )
             }
-            <Button loading={isSubmitLoading} type="primary" onClick={onOpen}>Cập nhật</Button>
-          </Space>
+            {canUpdate && <Button loading={isSubmitLoading || loading} type="primary" onClick={onOpen}>Cập nhật</Button>}
+          </Space>}
         </Col>
       </Row>
-      <Form
-        form={form}
-        style={{
-          display: "flex",
-          // justifyContent: "space-between",
-          alignItems: "center",
-          gap: 10,
-        }}
-      >
-        <Form.Item label="Ngày bắt đầu" name="startDate">
-          <DatePicker
-            disabled
-            format="DD-MM-YYYY"
-            value={dayjs(date?.startDate)}
-            defaultValue={(date?.startDate)}
-           />
-        </Form.Item>
-        <Form.Item label="Ngày kết thúc" name="endDate">
-          <DatePicker
-            disabled
-            format="DD-MM-YYYY"
-            value={dayjs(date?.endDate)}
-            defaultValue={(date?.startDate)}
-          />
-        </Form.Item>
-      </Form>
+      <Row style={{ margin: 10}}>
+        <h6
+          style={{ marginTop: 10, marginRight: 10, marginBottom: 10}}
+        >Thời gian:</h6>
+        <RangePicker
+          format={dateFormat}
+          disabled
+          allowEmpty={[true, true]}
+          value={[dayjs(date?.startDate,'DD-MM-YYYY'), dayjs(date?.endDate, 'DD-MM-YYYY')]}
+        />
+      </Row>
+      <Space>
+        <Link target={'_blank'} to={PATH_APP.revenueSupplier.root + "-all/" + query?.id}>Xem thêm các doanh số khoán khác theo thời gian</Link>
+      </Space>
       <Modal
         title="Cập nhật doanh số khoán cho nhà cung cấp"
         open={isOpen}
@@ -128,8 +115,7 @@ function RenderTotalRevenue({ setTotalRevenueId, totalRevenueId }: propsType) {
         <TotalRevenueForm
           totalRevenue={totalRevenue}
           updateTotalRevenue={updateTotalRevenue}
-          totalRevenueId={totalRevenueId}
-          date={date}
+          data = {data?.mineralOfSupplier}
           onClose = {onClose}
         />
       </Modal>

@@ -31,6 +31,7 @@ export const PATH_APP = {
   revenueSupplier: {
     root: path(ROOTS.app, "/supplier-revenue"),
     revenue: path(ROOTS.app, "/supplier-revenue/:id"),
+    revenueAll: path(ROOTS.app, "/supplier-revenue-all/:id"),
   },
 
   branch: {

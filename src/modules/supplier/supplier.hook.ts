@@ -15,6 +15,7 @@ import {
 } from "~/utils/hook";
 import { supplierSliceAction } from "./redux/reducer";
 import { cloneInitState } from "./supplier.modal";
+import { useDispatch } from "react-redux";
 const MODULE = "supplier";
 const MODULE_VI = "Nhà cung cấp";
 const getSelector = (key: keyof cloneInitState) => (state: RootState) =>
@@ -91,6 +92,15 @@ const createTotalRevenueFailedSelector = getSelector("createTotalRevenueFailed")
 
 const isLoadingRevenue = getSelector("isLoadingSubmitRevenue");
 
+const revenueListTotalSelector = getSelector("revenueListTotal");
+const getListTotalRevenueFailedSelector = getSelector("getListTotalRevenueFailed");
+const isLoadingGetListTotalRevenueSelector = getSelector("isLoadingGetListTotalRevenue");
+const pagingListTotalRevenueSelector = getSelector("pagingListTotalRevenue");
+
+const getRevenueId = getSelector("revenueId");
+export const useGetRevenueId = () => useSelector(getRevenueId);
+
+export const useListTotalRevenuePaging = () => useSelector(pagingListTotalRevenueSelector);
 export const useRevenueSupplierPaging = () => useSelector(pagingRevenueSupplierSelector);
 
 export const useProductSupplierPaging = () =>
@@ -316,6 +326,10 @@ export const useResetActionInRevenue = () => {
   return useResetState(supplierSliceAction.resetActionInRevenue);
 };
 
+export const useResetActionInTotalRevenue = () => {
+  return useResetState(supplierSliceAction.resetActionInTotalRevenue);
+};
+
 
 export const useDebtQueryParams = () => {
   const query = useQueryParams();
@@ -339,11 +353,41 @@ export const useDebtQueryParams = () => {
 
 //Revenue Supplier
 
-export const useRevenueSupplierQueryParams = () => {
+export const useRevenueSupplierQueryParams = (idRevenue?: any) => {
   const query = useQueryParams();
   const { id } = useParams();
   const limit = query.get("limit") || 10;
   const page = query.get("page") || 1;
+  const keyword = query.get("keyword");
+  const revenueId = idRevenue ? idRevenue : null;
+  return useMemo(() => {
+    const queryParams = {
+      page,
+      limit,
+      keyword,
+      id,
+      revenueId,
+    };
+    return [queryParams];
+    //eslint-disable-next-line
+  }, [page,
+     limit,
+      keyword,
+      id,
+      revenueId
+    ]);
+};
+
+export const useListTotalRevenueQueryParams = () => {
+  const query = useQueryParams();
+  const { id } = useParams();
+  const [page, setPage] = useState<any>(query.get("page") || 1);
+  const [limit, setLimit] = useState<any>(query.get("limit") || 10);
+
+  const onTableChange: any = ({ current, pageSize }: any) => {
+    setPage(current);
+    setLimit(pageSize);
+  };
   const keyword = query.get("keyword");
   return useMemo(() => {
     const queryParams = {
@@ -352,13 +396,46 @@ export const useRevenueSupplierQueryParams = () => {
       keyword,
       id,
     };
-    return [queryParams];
+    return [queryParams, onTableChange];
     //eslint-disable-next-line
   }, [page,
      limit,
       keyword,
      id,
     ]);
+};
+
+export const useUpdateListTotalRevenueParams = (
+  query: any,
+  listOptionSearch?: any[]
+) => {
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
+  const [keyword, setKeyword] = useState(get(query, "keyword"));
+  useEffect(() => {
+    setKeyword(get(query, "keyword"));
+  }, [query]);
+  const onParamChange = (param: any) => {
+    // Clear Search Query when change Params
+    clearQuerySearch(listOptionSearch, query, param);
+
+    if (!param.page) {
+      query.page = 1;
+    }
+
+    // Convert Query and Params to Search Url Param
+    const searchString = new URLSearchParams(
+      getExistProp({
+        ...query,
+        ...param,
+      })
+    ).toString();
+
+    // Navigate
+    navigate(`${pathname}?${searchString}`);
+  };
+
+  return [keyword, { setKeyword, onParamChange }];
 };
 
 export const useGetRevenueSupplierById = (param: any) => {
@@ -420,5 +497,15 @@ export const useCreateTotalRevenue = (callback?: any) => {
   return useSubmit({
     action: supplierSliceAction.createTotalRevenueRequest,
     loadingSelector: isLoadingRevenue,
+  });
+};
+
+export const useGetListTotalRevenue = (param: any) => {
+  return useFetchByParam({
+    action: supplierSliceAction.getListTotalRevenueRequest,
+    loadingSelector: isLoadingGetListTotalRevenueSelector,
+    dataSelector: revenueListTotalSelector,
+    failedSelector: getListTotalRevenueFailedSelector,
+    param
   });
 };

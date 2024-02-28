@@ -37,7 +37,7 @@ export default function RevenueSupplier(props: propsType): React.JSX.Element {
 
   const dispatch = useDispatch();
   const resetAction = () => {
-    return dispatch(supplierSliceAction.resetActionInRevenue());
+    return dispatch(supplierSliceAction.resetActionInTotalRevenue());
   };
   const [isSubmitLoading, updateRevenue] = useUpdateRevenueSupplier(() => {
     closeFormUpdateRevenue();
@@ -68,19 +68,6 @@ export default function RevenueSupplier(props: propsType): React.JSX.Element {
     };
   }, [revenues]);
 
-  const handleChangeRevenue = (value: any, id: any) => {
-    const newData = data?.map((item: any) => {
-      if(item._id === id) {
-        return {
-          ...item,
-          revenue: value
-        };
-      };
-      return item;
-    });
-    setData(newData);
-  };
-
   const onUpdateRevenue = (value: any, productId: any) => {
     const data = {
       revenue: Number(value),
@@ -109,10 +96,10 @@ export default function RevenueSupplier(props: propsType): React.JSX.Element {
           return formatNumberThreeComma(value);
         }
       },
-      {
+    ...(canUpdate ? [ {
         title: "Cập nhật doanh số khoán",
         key: "updateRevenue",
-        align: "center",
+        align: "center" as any,
         render(value: any, rc: any) {
           return (<Button
            type='primary'
@@ -121,7 +108,7 @@ export default function RevenueSupplier(props: propsType): React.JSX.Element {
             }}
           >Cập nhật</Button>)
         }
-      },
+      }] : []),
     ],
     [data]
   );
