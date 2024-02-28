@@ -5,7 +5,7 @@ import React, { useCallback, useMemo, useState } from 'react';
 import Breadcrumb from '~/components/common/Breadcrumb';
 import WhiteBox from '~/components/common/WhiteBox';
 import useTranslate from '~/lib/translation';
-import { useCostManagementPaging, useCostManagementQueryParams, useDeleteCostManagement, useGetCostManagements, useUpdateCostManagementParams } from '../costManagement.hook';
+import { useCostManagementPaging,useChangeVariantDefault, useCostManagementQueryParams, useDeleteCostManagement, useGetCostManagements, useUpdateCostManagementParams } from '../costManagement.hook';
 import dayjs from 'dayjs';
 import { ApartmentOutlined, BehanceSquareOutlined, FilterOutlined, CloudServerOutlined, DollarOutlined, MediumOutlined, ShoppingOutlined, PlusOutlined, InfoCircleTwoTone, DeleteOutlined } from '@ant-design/icons';
 import { FormFieldSearch, SearchByType } from '~/modules/supplier/supplier.modal';
@@ -20,6 +20,8 @@ import { ColumnsType } from 'antd/es/table';
 import { formatter } from '~/utils/helpers';
 import useCheckBoxExport from '~/modules/export/export.hook';
 import ExportExcelButton from '~/modules/export/component';
+import { Table } from 'antd/lib';
+// import { useChangeVariantDefault } from '~/modules/product/product.hook';
 type propsType = {
 
 }
@@ -40,7 +42,7 @@ export default function CostManagement(props: propsType): React.JSX.Element {
   // console.log(costManagement[0]?.cost, 'costManagement');
   const [isSubmitLoading, onDelete] = useDeleteCostManagement();
   const paging = useCostManagementPaging();
-
+  const [priceByProduct, setPriceByProduct] = useState<any>(0);
   const onOpenForm = useCallback((id?: any) => {
     if (id) {
       setId(id);
@@ -68,7 +70,13 @@ export default function CostManagement(props: propsType): React.JSX.Element {
     },
   ];
   const searchBy: SearchByType = Form.useWatch("searchBy", form);
-
+  interface DataType {
+    code: string;
+    _id: string;
+    name: string;
+    variants: any,
+    totalAmount: number,
+  }
   const onFinish = (values: FormFieldSearch) => {
     const { searchBy, startDate, endDate } = values;
     if (startDate) {
@@ -105,9 +113,9 @@ export default function CostManagement(props: propsType): React.JSX.Element {
     }
 
   };
-  const onCancel = () => {
+  const onCancel = useCallback(() => {
     setOpenForm(false);
-  };
+  },[]);
   const onCloseForm = useCallback(() => {
     setId(null);
     setOpenForm(false);
@@ -116,8 +124,9 @@ export default function CostManagement(props: propsType): React.JSX.Element {
     label: get(item, 'name'),
     value: get(item, '_id')
   })), [dataBranch]);
-  const handleOpenUpdate = (id: any) => {
+  const handleOpenUpdate = (id: any,price:any) => {
     setOpenForm(true);
+    setPriceByProduct(price);
       setId(id);
   };
   const handleOpenFormCreate = () => { 
@@ -128,11 +137,12 @@ export default function CostManagement(props: propsType): React.JSX.Element {
     onDelete(id);
 
   };
-  const columns: ColumnsType = [
+  const onChangeVariantDefault = useChangeVariantDefault();
+  const columns: ColumnsType<DataType> = [
     {
       title: "Mã sản phẩm",
-      dataIndex: "variant",
-      key: "variant",
+      dataIndex: "variants",
+      key: "variants",
       render : (variant) => {
         return get(variant,'variantCode','')
       }
@@ -141,11 +151,11 @@ export default function CostManagement(props: propsType): React.JSX.Element {
       title: "Tên sản phẩm",
       dataIndex: "name",
       key: "name",
-      width : 300,
+      // width : 300,
       render(name, record) {
         const codeBySupplier = get(record,'codeBySupplier','');
         if (get(record, "variants", [])?.length > 1) {
-          const options = get(record, "variants", [])?.map((item) => ({
+          const options = get(record, "variants", [])?.map((item:any) => ({
             label: get(item, "unit.name"),
             value: get(item, "_id"),
           }));
@@ -158,13 +168,13 @@ export default function CostManagement(props: propsType): React.JSX.Element {
               <Col>
                 <Select
                   style={{minWidth : 50}}
-                  value={get(record,'variant._id')}
+                  value={get(record,'variants._id')}
                   options={options}
-                  onChange={(value) =>{}
-                    // onChangeVariantDefault({
-                    //   productId: get(record, "_id"),
-                    //   variantId: value,
-                    // })
+                  onChange={(value) =>
+                    onChangeVariantDefault({
+                      productId: get(record, "_id"),
+                      variantId: value,
+                    })
                   }
                 />
               </Col>
@@ -173,7 +183,7 @@ export default function CostManagement(props: propsType): React.JSX.Element {
         } else {
           return <span>
               <Typography.Text strong>{codeBySupplier} - </Typography.Text>
-            {name + " " + `(${get(record, "variant.unit.name")})`}
+            {name + " " + `(${get(record, "variants.unit.name")})`}
           </span>;
         }
       },
@@ -187,24 +197,76 @@ export default function CostManagement(props: propsType): React.JSX.Element {
       },
     },
     {
-      title: 'Hành động',
-      key: 'action',
-      align: 'center',
-      width: '180px',
-      render: (_, record: any) => (
-        <Space size="middle">
-          {/* <WithPermission permission={POLICIES.UPDATE_PRODUCTGROUP}> */}
-            <Button icon={<InfoCircleTwoTone />} type="primary" onClick={() => handleOpenUpdate(record?._id)}>
-              Cập nhật chi phí
-            </Button>
-          {/* </WithPermission>
-          <WithPermission permission={POLICIES.DELETE_PRODUCTGROUP}> */}
-            <Button icon={<DeleteOutlined />} style={{ color: 'red' }} onClick={() => handleDelete(record._id)}>
-              Xóa
-            </Button>
-          {/* </WithPermission> */}
-        </Space>
-      ),
+      title: "Giá bán",
+      dataIndex: "variants",
+      key: "variants",
+      render(variants, record, index) {
+        return formatter(get(variants,'price'))
+      },
+    },
+    {
+      title: "Lợi nhuận",
+      dataIndex: "variants",
+      key: "variants",
+      render(variants, record, index) {
+        return formatter(get(variants,'cost',0))
+      },
+    },
+    {
+      title: "Chi phí vận chuyển",
+      dataIndex: "variants",
+      key: "variants",
+      render(value, record, index) {
+        return get(value,'logistic')
+      },
+    },
+    {
+      title: "Chi phí kênh phân phối",
+      dataIndex: "variants",
+      key: "variants",
+      render(value, record, index) {
+        return get(value,'cost.distributionChannel')
+      },
+    },
+    {
+      title: "Chi phí vận hành",
+      dataIndex: "variants",
+      key: "variants",
+      render(value, record, index) {
+        return get(value,'cost.operations')
+      },
+    },
+    {
+      title: "Chi phí quản lý",
+      dataIndex: "variants",
+      key: "variants",
+      render(value, record, index) {
+        return get(value,'cost.management')
+      },
+    },
+    {
+      title: "Chi phí maketing",
+      dataIndex: "variants",
+      key: "variants",
+      render(value, record, index) {
+        return get(value,'cost.maketing')
+      },
+    },
+   
+    {
+      title: "Thao tác",
+      dataIndex: "_id",
+      key: "_id",
+      align: "center",
+      fixed : 'right',
+      width : 200,
+      render(_id, record, index) {
+        return <ActionColumn 
+        _id={_id}
+        onDetailClick={onOpenForm}
+        onDelete={onDelete}
+        />
+      },
     },
   ];
   return (
@@ -335,7 +397,7 @@ export default function CostManagement(props: propsType): React.JSX.Element {
           loading={isLoading}
           rowKey={(rc) => rc?._id}
           columns={columns}
-          // scroll={{x : 2000}}
+          scroll={{x : 2000}}
           stickyTop
           size="small"
           pagination={{
@@ -357,7 +419,7 @@ export default function CostManagement(props: propsType): React.JSX.Element {
         onCancel={onCancel}
         width={1050}
       >
-        <CostManagementForm id={id} onCancel={onCancel} />
+        <CostManagementForm id={id} onCancel={onCancel} priceByProduct={priceByProduct}/>
       </Modal>
     </div>
   )

@@ -8,6 +8,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { clearQuerySearch, getExistProp } from "~/utils/helpers";
 import {
     getSelectors,
+    useAction,
     useFailed, useFetchByParam,
     useQueryParams,
     useResetState,
@@ -37,7 +38,7 @@ const {
 
 export const useCostManagementPaging = () => useSelector(pagingSelector);
 
-export const useGetCostManagements = (param:any) => {
+export const useGetCostManagements = (param?:any) => {
   return useFetchByParam({
     action: costManagementActions.getListRequest,
     loadingSelector: loadingSelector,
@@ -95,8 +96,13 @@ export const useDeleteCostManagement = (callback?: any) => {
 };
 export const useProductConfigPaging = () => useSelector(pagingSelector);
 export const useResetAction = () => {
-  return useResetState(costManagementActions.resetAction);
-}
+  return useResetState(costManagementActions.resetActionFullState);
+};
+export const useChangeVariantDefault = () => {
+  return useAction({
+    action: costManagementActions.changeVariantDefault,
+  });
+};
 export const useCostManagementQueryParams = () => {
   const query = useQueryParams();
   const limit = query.get("limit") || 10;

@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { get,omit } from "lodash";
 import { InstanceModuleRedux } from "~/redux/instanceModuleRedux";
 import { initStateSlice } from "~/redux/models";
 interface cloneInitState extends initStateSlice {
@@ -11,6 +12,21 @@ class CostManagementClassExtend extends InstanceModuleRedux {
     super('costManagement');
     this.cloneReducer = {
       ...this.initReducer,
+      changeVariantDefault: (state:initStateSlice , { payload }: any) => {
+        const {productId, variantId} = payload;
+        const list = state.list?.map((item:any) => {
+          if(get(item,'_id') === productId){
+            const variant = get(item,'variants',[])?.find((v: any) => get(v,'_id') === variantId);
+            return {...item, variant};
+          }
+          return item;
+        });
+        state.list = list;
+      },
+      resetActionFullState: (state:any) => ({
+        ...state,
+        ...omit(this.cloneInitState, ["list"]),
+      }),
       // Want Add more reducer Here...
     }
     this.cloneInitState = {
