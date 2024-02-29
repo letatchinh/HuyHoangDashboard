@@ -13,6 +13,7 @@ import useNotificationStore from "~/store/NotificationContext";
 import { useCreateCostManagement, useGetCostManagement, useResetAction, useUpdateCostManagement } from "../costManagement.hook";
 import { DatePickerProps } from "antd/lib";
 import dayjs from "dayjs";
+import { formToJSON } from "axios";
 // type DataType = "new" | "evaluating" | "ongoing" | "finished" | "archived";
 
 // interface PieChartData {
@@ -66,6 +67,8 @@ export default function CostManagementForm({
   id,
   onCancel,
   priceByProduct,
+  startDate,
+  endDate,
 }: any): React.JSX.Element {
   // const supplierInfo = useSupplierInfoRedux();
   const { onNotify } = useNotificationStore();
@@ -74,8 +77,12 @@ export default function CostManagementForm({
 
   const [isSubmitLoading, onCreate] = useCreateCostManagement(onCancel);
   const [, onUpdate] = useUpdateCostManagement(onCancel);
+  const queryGet = useMemo(() => ({ id:id,
+  startDate:dayjs(startDate).format("YYYY-MM-DD"),
+  endDate:dayjs(endDate).format("YYYY-MM-DD")
+  }), [id,startDate,endDate]);
   const [costManagementById, isLoading] = useGetCostManagement(id);
-  const [toTalPrice, setToTalPrice] = useState(50000); //giá bán
+  const [toTalPrice, setToTalPrice] = useState(0); //giá bán
   const [toTalDiscount, setToTalDiscount] = useState(0); // tổng tiền chiết khấu
   const [totalAmount, setTotalAmount] = useState(0); // tổng lợi nhuận
   const [totalRelated, setTotalRelated] = useState<number>(0); //tổng chi phí liên quan
@@ -85,22 +92,23 @@ export default function CostManagementForm({
   //   description : null
   // })
   useResetAction();
- 
-  const handleChangeKeyword = useCallback((value: any) => {
-    setKeyword(value);
+  const [keyword, setKeyword] = useState<any>("VND");
+  const handleChangeKeyword = useCallback((value?: any) => {
+    if(value) {
+    setKeyword(value);}
     const price1 = form.getFieldValue("exchangeValue");
     if(price1){
       const a = toTalPrice-price1
       setPriceMemo(a);
-      form.resetFields(["cost","logistic"]);
-    }
-    form.resetFields(["cost","logistic"]);
+      form.resetFields(["cost"]);
+    };
   },[form]);
-   useEffect(() => {
-
-
-    setPriceMemo(50000);
-  }, []);
+  //  useEffect(() => {
+  //   if(costManagementById){
+  //   const { shippingCost,variants,medicalCode,name } = costManagementById;
+  //   setPriceMemo( variants?.price);
+  //   setToTalPrice(variants?.price);}
+  // }, [costManagementById]);
   const onUndoForm = (isLast = false) => {
 
     // Action Back One step to set Form And Remove last Recover
@@ -125,7 +133,6 @@ export default function CostManagementForm({
     },
 
   ];
-  const [keyword, setKeyword] = useState<any>("VND");
   const onFinish = (values: any) => {
     const formattedValues: any = {
         ...values,
@@ -140,26 +147,41 @@ export default function CostManagementForm({
         });
     }
     console.log(formattedValues);
-    // onCreate({ ...formattedValues, productId: id });
-    // form.resetFields();
-    // onCancel();
+    onUpdate({ ...formattedValues, _id: id });
+    form.resetFields();
+    onCancel();
 };
   useEffect(() => {
-
+   
     if (costManagementById && id) {
-      const { shippingCost } = costManagementById;
+      console.log("id", costManagementById);
+      const { shippingCost,variants,medicalCode,name } = costManagementById;
+      const costShipping ={
+        distributionChannel: shippingCost?.cost?.distributionChannel??0,
+        pharmaceutical: shippingCost?.cost?.pharmaceutical??0,
+        operations: shippingCost?.cost?.operations??0,
+        maketing: shippingCost?.cost?.maketing??0,
+        management: shippingCost?.cost?.management??0,
+        logistic: shippingCost?.cost?.logistic??0,
+
+
+        get count(){
+          return this.distributionChannel - this.pharmaceutical - this.operations - this.maketing - this.management - this.logistic
+        }
+      }
+      console.log(variants?.price)
+      setPriceMemo( variants?.price-costShipping.count);
+      // setPriceMemo( variants?.price-shippingCost?.cost?.distributionChannel-shippingCost?.cost?.pharmaceutical-shippingCost?.cost?.operations-shippingCost?.cost?.maketing-shippingCost?.cost?.management-shippingCost?.cost?.logistic); 
+      setToTalPrice(variants?.price);
       form.setFieldsValue({
-        priceProduct: 50000,
-        cost: [
+        priceProduct: variants?.price,
+        code:variants?.variantCode,
+        name,
+        cost: 
           {
-            distributionChannel: shippingCost?.cost?.distributionChannel,
-            pharmaceutical: shippingCost?.cost?.pharmaceutical,
-            operations: shippingCost?.cost?.operations,
-            maketing: shippingCost?.cost?.maketing,
-            management: shippingCost?.cost?.management,
-            logistic: shippingCost?.cost?.logistic,
-          }
-        ]
+            ...costShipping
+           }
+        
       });
 
       setBackupForm([costManagementById]);
@@ -167,7 +189,7 @@ export default function CostManagementForm({
       setBackupForm([form.getFieldsValue()])
     };
 
-  }, [costManagementById, id, form]);
+  }, [costManagementById, id,form]);
   const onChange: DatePickerProps['onChange'] = (date, dateString) => {
     console.log(date, dateString);
   };
@@ -183,10 +205,10 @@ export default function CostManagementForm({
     console.log(value)
     // setTotalAmount(value);
   }
-  const handLeBlur = (value: any) => {
-    const values = totalRelated + parseFloat(value);
-    setTotalRelated(values);
-  }
+  // const handLeBlur = (value: any) => {
+  //   const values = totalRelated + parseFloat(value);
+  //   setTotalRelated(values);
+  // }
   return (
     <div>
       <h5>Tạo mới chi phí</h5>
@@ -290,7 +312,7 @@ export default function CostManagementForm({
                 label="Mã sản phẩm"
                 name={'code'}
               >
-                {RenderLoading(isLoading, <Input disabled />)}
+                {RenderLoading(isLoading, <Input readOnly />) }
               </Form.Item>
             </Col>
             <Col span={12}>
@@ -298,7 +320,7 @@ export default function CostManagementForm({
                 label="Tên sản phẩm"
                 name={'name'}
               >
-                {RenderLoading(isLoading, <Input disabled />)}
+                {RenderLoading(isLoading, <Input readOnly />)}
               </Form.Item>
             </Col>
           </Row>
@@ -308,17 +330,15 @@ export default function CostManagementForm({
               label="Giá bán"
               name={'priceProduct'}
             >
-              {RenderLoading(isLoading, <InputNumber disabled style={{ width: '100%' }} />)}
+              {RenderLoading(isLoading, <InputNumber readOnly style={{ width: '100%' }} />)}
             </Form.Item>
             </Col>
             <Col span={12}>
             <Form.Item<any>
               label="Lợi nhuận mong đợi"
-              name={'exchangeValue'}
+              name={'profitValue'}
             >
-              {RenderLoading(isLoading, <InputNumber onChange={(e: any) => {
-                onChange1(e);
-              }}
+              {RenderLoading(isLoading, <InputNumber
                 onBlur={(e: any) => {
                   const a = priceMemo - e.target.value
                   setPriceMemo(a);
@@ -329,7 +349,7 @@ export default function CostManagementForm({
             </Col>
           </Row>
         </BaseBorderBox>
-        <Select
+       <span>Chọn đơn vị quy chiếu: </span> <Select
           style={{ width: 120 }}
           value={keyword}
           options={options}
@@ -347,12 +367,12 @@ export default function CostManagementForm({
                 {keyword === 'VND' ? RenderLoading(isLoading, <InputNumber onBlur={(e: any) => {
                   const a = priceMemo - e.target.value
                   setPriceMemo(a);
-                  handLeBlur(e.target.value)
+                  // handLeBlur(e.target.value)
                     ;
                 }} style={{ width: '100%' }} />) : RenderLoading(isLoading, <InputNumber max={100} onBlur={(e: any) => {
                   const a = priceMemo - (toTalPrice * e.target.value) / 100
                   setPriceMemo(a);
-                  handLeBlur(e.target.value)
+                  // handLeBlur(e.target.value)
                     ;
                 }} style={{ width: '100%' }} />)}
               </Form.Item>
@@ -365,12 +385,12 @@ export default function CostManagementForm({
                 {keyword === 'VND' ? RenderLoading(isLoading, <InputNumber onBlur={(e: any) => {
                   const a = priceMemo - e.target.value
                   setPriceMemo(a);
-                  handLeBlur(e.target.value)
+                  // handLeBlur(e.target.value)
                     ;
                 }} style={{ width: '100%' }} />) : RenderLoading(isLoading, <InputNumber max={100} onBlur={(e: any) => {
                   const a = priceMemo - (toTalPrice * e.target.value) / 100
                   setPriceMemo(a);
-                  handLeBlur(e.target.value)
+                  // handLeBlur(e.target.value)
                     ;
                 }} style={{ width: '100%' }} />)}
               </Form.Item>
@@ -385,12 +405,12 @@ export default function CostManagementForm({
                 {keyword === 'VND' ? RenderLoading(isLoading, <InputNumber onBlur={(e: any) => {
                   const a = priceMemo - e.target.value
                   setPriceMemo(a);
-                  handLeBlur(e.target.value)
+                  // handLeBlur(e.target.value)
                     ;
                 }} style={{ width: '100%' }} />) : RenderLoading(isLoading, <InputNumber max={100} onBlur={(e: any) => {
                   const a = priceMemo - (toTalPrice * e.target.value) / 100
                   setPriceMemo(a);
-                  handLeBlur(e.target.value)
+                  // handLeBlur(e.target.value)
                     ;
                 }} style={{ width: '100%' }} />)}
               </Form.Item>
@@ -403,16 +423,17 @@ export default function CostManagementForm({
                 {keyword === 'VND' ? RenderLoading(isLoading, <InputNumber onBlur={(e: any) => {
                   const a = priceMemo - e.target.value
                   setPriceMemo(a);
-                  handLeBlur(e.target.value)
+                  // handLeBlur(e.target.value)
                     ;
                 }} style={{ width: '100%' }} />) : RenderLoading(isLoading, <InputNumber max={100} onBlur={(e: any) => {
                   const a = priceMemo - (toTalPrice * e.target.value) / 100
                   setPriceMemo(a);
-                  handLeBlur(e.target.value)
+                  // handLeBlur(e.target.value)
                     ;
                 }} style={{ width: '100%' }} />)}
               </Form.Item>
             </Col>
+            {/* <Button onClick={() => form.resetFields(["cost"])}>Đặt lại</Button> */}
           </Row>
 
           <Row {...layoutRow}>
@@ -424,12 +445,12 @@ export default function CostManagementForm({
                 {keyword === 'VND' ? RenderLoading(isLoading, <InputNumber onBlur={(e: any) => {
                   const a = priceMemo - e.target.value
                   setPriceMemo(a);
-                  handLeBlur(e.target.value)
+                  // handLeBlur(e.target.value)
                     ;
                 }} style={{ width: '100%' }} />) : RenderLoading(isLoading, <InputNumber max={100} onBlur={(e: any) => {
                   const a = priceMemo - (toTalPrice * e.target.value) / 100
                   setPriceMemo(a);
-                  handLeBlur(e.target.value)
+                  // handLeBlur(e.target.value)
                     ;
                 }} style={{ width: '100%' }} />)}
               </Form.Item>
@@ -442,12 +463,12 @@ export default function CostManagementForm({
                 {keyword === 'VND' ? RenderLoading(isLoading, <InputNumber onBlur={(e: any) => {
                   const a = priceMemo - e.target.value
                   setPriceMemo(a);
-                  handLeBlur(e.target.value)
+                  // handLeBlur(e.target.value)
                     ;
                 }} style={{ width: '100%' }} />) : RenderLoading(isLoading, <InputNumber max={100} onBlur={(e: any) => {
                   const a = priceMemo - (toTalPrice * e.target.value) / 100
                   setPriceMemo(a);
-                  handLeBlur(e.target.value)
+                  // handLeBlur(e.target.value)
                     ;
                 }} style={{ width: '100%' }} />)}
               </Form.Item>

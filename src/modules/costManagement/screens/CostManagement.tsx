@@ -7,7 +7,7 @@ import WhiteBox from '~/components/common/WhiteBox';
 import useTranslate from '~/lib/translation';
 import { useCostManagementPaging,useChangeVariantDefault, useCostManagementQueryParams, useDeleteCostManagement, useGetCostManagements, useUpdateCostManagementParams } from '../costManagement.hook';
 import dayjs from 'dayjs';
-import { ApartmentOutlined, BehanceSquareOutlined, FilterOutlined, CloudServerOutlined, DollarOutlined, MediumOutlined, ShoppingOutlined, PlusOutlined, InfoCircleTwoTone, DeleteOutlined } from '@ant-design/icons';
+import { ApartmentOutlined, BehanceSquareOutlined, FilterOutlined, CloudServerOutlined, DollarOutlined, MediumOutlined, ShoppingOutlined, PlusOutlined, InfoCircleTwoTone, DeleteOutlined, SearchOutlined } from '@ant-design/icons';
 import { FormFieldSearch, SearchByType } from '~/modules/supplier/supplier.modal';
 import CostManagementForm from '../components/CostManagementForm';
 import CostManagementCard from '../components/CostManegementCard';
@@ -115,6 +115,7 @@ export default function CostManagement(props: propsType): React.JSX.Element {
   };
   const onCancel = useCallback(() => {
     setOpenForm(false);
+    setId(null);
   },[]);
   const onCloseForm = useCallback(() => {
     setId(null);
@@ -132,10 +133,6 @@ export default function CostManagement(props: propsType): React.JSX.Element {
   const handleOpenFormCreate = () => { 
     setId(null);
     setOpenForm(true);
-  };
-  const handleDelete = (id: any) => {
-    onDelete(id);
-
   };
   const onChangeVariantDefault = useChangeVariantDefault();
   const columns: ColumnsType<DataType> = [
@@ -209,7 +206,7 @@ export default function CostManagement(props: propsType): React.JSX.Element {
       dataIndex: "variants",
       key: "variants",
       render(variants, record, index) {
-        return formatter(get(variants,'cost',0))
+        return formatter(get(variants,'profitValue',0))
       },
     },
     {
@@ -269,11 +266,27 @@ export default function CostManagement(props: propsType): React.JSX.Element {
       },
     },
   ];
+  const onSearch = (value: string) => {
+    onParamChange({ ['keyword']: value });
+  };
   return (
     <div className="page-wrapper page-costManagement">
       <Breadcrumb title={t('Quản lý danh sách chi phí sản phẩm')} />
       {/* <Text>Tổng doanh thu theo chi nhánh {costManagement.financialCost}</Text> */}
       <Row style={{ marginBottom: 10 }} gutter={8}>
+      <Col span={4}>
+            <Search
+              style={{ height: '50px' }}
+              placeholder="Nhập bất kì để tìm..."
+              value={keyword}
+              onChange={(e) => (setKeyword(e.target.value))
+
+              }
+              allowClear
+              onSearch={onSearch}
+              enterButton={<SearchOutlined />}
+            />
+          </Col>
         <Col span={6}>
           <Select
             options={options}
@@ -376,7 +389,7 @@ export default function CostManagement(props: propsType): React.JSX.Element {
                   Áp dụng bộ lọc
                 </Button>
               </Col>
-              <Col>
+              {/* <Col>
                 <Button
                   onClick={() => {
                     setOpenForm(true);
@@ -386,7 +399,7 @@ export default function CostManagement(props: propsType): React.JSX.Element {
                 >
                   Thêm chi phí
                 </Button>
-              </Col>
+              </Col> */}
             </Row>
           </Form>
         </Col>
@@ -419,7 +432,8 @@ export default function CostManagement(props: propsType): React.JSX.Element {
         onCancel={onCancel}
         width={1050}
       >
-        <CostManagementForm id={id} onCancel={onCancel} priceByProduct={priceByProduct}/>
+        <CostManagementForm   startDate= {defaultDate.startDate}
+              endDate={defaultDate.endDate} id={id} onCancel={onCancel} priceByProduct={priceByProduct}/>
       </Modal>
     </div>
   )

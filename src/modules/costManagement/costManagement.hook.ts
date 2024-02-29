@@ -56,6 +56,15 @@ export const useGetCostManagement = (id: any) => {
     param: id,
   });
 };
+// export const useGetCostManagement = (param?: any) => {
+//   return useFetchByParam({
+//     action: costManagementActions.getByIdRequest,
+//     loadingSelector: getByIdLoadingSelector,
+//     dataSelector: getByIdSelector,
+//     failedSelector: getByIdFailedSelector,
+//     param,
+//   });
+// };
 
 export const useCreateCostManagement = (callback?: any) => {
   useSuccess(
