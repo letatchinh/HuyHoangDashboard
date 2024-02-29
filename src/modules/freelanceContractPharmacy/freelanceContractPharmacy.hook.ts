@@ -99,6 +99,7 @@ export const useFreelanceContractPharmacyQueryParams = () => {
   const page = query.get("page") || 1;
   const keyword = query.get("keyword");
   const createSuccess = useSelector(createSuccessSelector);
+  const updateSuccess = useSelector(updateSuccessSelector);
   const deleteSuccess = useSelector(deleteSuccessSelector);
   return useMemo(() => {
     const queryParams = {
@@ -108,7 +109,7 @@ export const useFreelanceContractPharmacyQueryParams = () => {
     };
     return [queryParams];
     //eslint-disable-next-line
-  }, [page, limit, keyword, createSuccess, deleteSuccess]);
+  }, [page, limit, keyword, createSuccess, updateSuccess, deleteSuccess]);
 };
 
 export const useUpdateFreelanceContractPharmacyParams = (

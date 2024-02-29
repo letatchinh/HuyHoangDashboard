@@ -90,6 +90,7 @@ export default function SelectPharmacy({
           ]}
           colon={false}
           style={{ marginBottom: "unset" }}
+          wrapperCol={{ sm: 24 }}
         >
           <DebounceSelect
             size="large"
