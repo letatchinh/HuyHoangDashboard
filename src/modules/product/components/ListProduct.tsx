@@ -29,7 +29,6 @@ export default function ListProduct({
   const [keyword, { setKeyword, onParamChange }] =
     useUpdateProductParams(query);
   const [data, isLoading] = useGetProducts(query);
-  const [, onUpdateProduct] = useUpdateProduct();
   const onChangeVariantDefault = useChangeVariantDefault();
 
   const [isSubmitLoading, onDelete] = useDeleteProduct();
@@ -46,6 +45,7 @@ export default function ListProduct({
     setId(null);
     setOpenForm(false);
   }, []);
+  const [, onUpdateProduct] = useUpdateProduct(onCloseForm);
   const columns: ColumnsType = [
     {
       title: "Mã thuốc",
@@ -120,7 +120,7 @@ export default function ListProduct({
       dataIndex: "stock",
       key: "stock",
       render(stock, record) {
-        return <StockProduct stock={stock ?? 0} handleUpdate={(newStock:number) => onUpdateProduct({
+        return <StockProduct variantDefault={get(record,'variantDefault')} stock={stock ?? 0} handleUpdate={(newStock:number) => onUpdateProduct({
           _id : get(record,'_id'),
           stock : newStock
         })}/>
@@ -213,7 +213,7 @@ export default function ListProduct({
           footer={null}
           onCancel={onCloseForm}
         >
-          <FormProduct id={id} supplierId={supplierId} onCancel={onCloseForm} />
+          <FormProduct onUpdate={onUpdateProduct} id={id} supplierId={supplierId} onCancel={onCloseForm} />
         </Modal>
       </WhiteBox>
     </div>

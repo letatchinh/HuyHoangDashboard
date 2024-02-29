@@ -18,7 +18,7 @@ class ProductClassExtend extends InstanceModuleRedux {
         // Find Variant Default
         const list = get(payload, "docs", [])?.map((item:any) => {
           const variant = get(item,'variants',[])?.find((v: any) => get(v,'variantIsDefault'));
-          return {...item, variant};
+          return {...item, variant,variantDefault : variant};
         });
         state.list = list;
         state.paging = getPaging(payload);
@@ -26,7 +26,7 @@ class ProductClassExtend extends InstanceModuleRedux {
       changeVariantDefault: (state:initStateSlice , { payload }: any) => {
         const {productId, variantId} = payload;
         const list = state.list?.map((item:any) => {
-          if(get(item,'_id') === productId){
+          if(get(item,'_id') === productId){ // Find Item
             const variant = get(item,'variants',[])?.find((v: any) => get(v,'_id') === variantId);
             return {...item, variant};
           }
