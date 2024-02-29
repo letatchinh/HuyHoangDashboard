@@ -3,7 +3,8 @@ import { cumulativeDiscountType } from "../cumulativeDiscount/cumulativeDiscount
 export type TypePropsFormProduct = {
     supplierId?:string,
     id?:string,
-    onCancel : () => void
+    onCancel : () => void,
+    onUpdate? : (p:any) => void
 }
 export type TypePropsListProduct = {
     supplierId?:string,

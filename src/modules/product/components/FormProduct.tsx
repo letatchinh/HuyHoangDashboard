@@ -42,6 +42,7 @@ export default function FormProduct({
   supplierId,
   id,
   onCancel,
+  onUpdate,
 }: TypePropsFormProduct): React.JSX.Element {
   // const supplierInfo = useSupplierInfoRedux();
   const {onNotify} = useNotificationStore();
@@ -49,7 +50,7 @@ export default function FormProduct({
   const [backupForm,setBackupForm] = useState<FieldTypeFormProduct[]>([]);
   
   const [isSubmitLoading, onCreate] = useCreateProduct(onCancel);
-  const [, onUpdate] = useUpdateProduct(onCancel);
+  // const [, onUpdate] = useUpdateProduct(onCancel);
   const [product, isLoading] = useGetProduct(id);
   // const [dataNotificationUndo,setDataNotificationUndo] = useState({
   //   open : false,
@@ -75,7 +76,9 @@ export default function FormProduct({
     const submitData = convertSubmitData({values,supplierId});
       
     if (id) {
-      onUpdate({ ...submitData, _id: id });
+      if(onUpdate){
+        onUpdate({ ...submitData, _id: id });
+      }
     } else {
       onCreate(submitData);
     }

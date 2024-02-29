@@ -6,7 +6,7 @@ import { get } from 'lodash';
 import WhiteBox from '~/components/common/WhiteBox';
 import { formatter } from '~/utils/helpers';
 import Breadcrumb from '~/components/common/Breadcrumb';
-import { useChangeVariantDefault, useGetProductsAll, useProductsAllPaging, useProductsAllQueryParams, useSetSupplierInfo, useUpdateProductsAllParams } from '../productsAll.hook';
+import {  useGetProductsAll, useProductsAllPaging, useProductsAllQueryParams, useSetSupplierInfo, useUpdateProductsAllParams } from '../productsAll.hook';
 import TableAnt from '~/components/Antd/TableAnt';
 import { Link } from 'react-router-dom';
 import { useMatchPolicy } from '~/modules/policy/policy.hook';
@@ -17,17 +17,19 @@ import SelectSearch from '~/components/common/SelectSearch/SelectSearch';
 import { DataType, TypeProps } from '../productsAll.modal';
 import ShowStep from '../components/ShowStep';
 import ActionColumn from '../components/ActionColumns';
-import { useDeleteProduct } from '~/modules/product/product.hook';
+import { useChangeVariantDefault, useDeleteProduct, useGetProducts, useUpdateProduct } from '~/modules/product/product.hook';
 import useCheckBoxExport from '~/modules/export/export.hook';
 import ExportExcelButton from '~/modules/export/component';
+import StockProduct from '~/modules/product/components/StockProduct';
 
 export default function ProductsAll(props: TypeProps): React.JSX.Element {
   const [query, onTableChange] = useProductsAllQueryParams();
   const [keyword, { setKeyword, onParamChange }] = useUpdateProductsAllParams(query);
-  const [data, isLoading] = useGetProductsAll(query);
+  const [data, isLoading] = useGetProducts(query);
   const onChangeVariantDefault = useChangeVariantDefault();
   const [, onDelete] = useDeleteProduct();
-  const onSetSupplierInfo = useSetSupplierInfo();
+
+  // const onSetSupplierInfo = useSetSupplierInfo();
   const canReadSupplier = useMatchPolicy(POLICIES.READ_PRODUCT);
   const canUpdate = useMatchPolicy(POLICIES.UPDATE_PRODUCT);
   const canDelete = useMatchPolicy(POLICIES.DELETE_PRODUCT);
@@ -64,6 +66,7 @@ export default function ProductsAll(props: TypeProps): React.JSX.Element {
     setSupplierId(null);
     setId(null);
   };
+  const [, onUpdateProduct] = useUpdateProduct(onCloseFormProduct);
 
   const onChangeStep = (step: number) => {
     setStep(step);
@@ -141,6 +144,17 @@ export default function ProductsAll(props: TypeProps): React.JSX.Element {
           key: "variant",
           render(variant, record, index) {
             return formatter(get(variant,'cost',0))
+          },
+        },
+        {
+          title: "Tồn kho",
+          dataIndex: "stock",
+          key: "stock",
+          render(stock, record) {
+            return <StockProduct variantDefault={get(record,'variantDefault')} stock={stock ?? 0} handleUpdate={(newStock:number) => onUpdateProduct({
+              _id : get(record,'_id'),
+              stock : newStock
+            })}/>
           },
         },
         {
@@ -270,6 +284,7 @@ export default function ProductsAll(props: TypeProps): React.JSX.Element {
           destroyOnClose
         >
           <FormProduct
+            onUpdate={onUpdateProduct}
             onCancel={onCloseFormProduct}
             supplierId={supplierId as any}
             id= {id as any}
