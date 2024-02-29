@@ -105,5 +105,7 @@ export const PATH_APP = {
     create: path(ROOTS.app, "/order-supplier/create"),
     update: path(ROOTS.app, "/order-supplier/:id"),
   },
-
+  freelanceContractPharmacy: {
+    root: path(ROOTS.app, "/freelance-contract-pharmacy"),
+  },
 };

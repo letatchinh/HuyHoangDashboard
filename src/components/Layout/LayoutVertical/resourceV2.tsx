@@ -207,6 +207,12 @@ import {
           key: PATH_APP.vouchers.pharmacy,
           permission: [POLICIES.READ_VOUCHER],
         },
+        {
+          label: "Hợp đồng khoán",
+          path: PATH_APP.freelanceContractPharmacy.root,
+          key: PATH_APP.freelanceContractPharmacy.root,
+          // permission: [POLICIES.READ_VOUCHER],
+        },
       ],
     },
   
