@@ -185,14 +185,14 @@ export default function CostManagement(props: propsType): React.JSX.Element {
         }
       },
     },
-    {
-      title: "Doanh thu",
-      dataIndex: "totalAmount",
-      key: "totalAmount",
-      render(totalAmount, record, index) {
-        return formatter(get(record,'totalAmount',0))
-      },
-    },
+    // {
+    //   title: "Doanh thu",
+    //   dataIndex: "totalAmount",
+    //   key: "totalAmount",
+    //   render(totalAmount, record, index) {
+    //     return formatter(get(record,'totalAmount',0))
+    //   },
+    // },
     {
       title: "Giá bán",
       dataIndex: "variants",
@@ -202,53 +202,64 @@ export default function CostManagement(props: propsType): React.JSX.Element {
       },
     },
     {
-      title: "Lợi nhuận",
+      title: "Giá đầu vào",
       dataIndex: "variants",
       key: "variants",
       render(variants, record, index) {
-        return formatter(get(variants,'profitValue',0))
+        return formatter(get(variants,'cost'))
       },
     },
+    // {
+    //   title: "Lợi nhuận",
+    //   dataIndex: "variants",
+    //   key: "variants",
+    //   render(variants, record, index) {
+    //     return formatter(get(variants,'profitValue',0))
+    //   },
+    // },
     {
       title: "Chi phí vận chuyển",
-      dataIndex: "variants",
-      key: "variants",
+      dataIndex: "shippingCost",
+      align: 'center',
+      key: "shippingCost",
       render(value, record, index) {
-        return get(value,'logistic')
+        return get(value,'cost.logistic')
       },
     },
     {
       title: "Chi phí kênh phân phối",
-      dataIndex: "variants",
-      key: "variants",
+      dataIndex: "shippingCost",
+      align: 'center',
+      key: "shippingCost",
       render(value, record, index) {
         return get(value,'cost.distributionChannel')
       },
     },
     {
-      title: "Chi phí vận hành",
-      dataIndex: "variants",
-      key: "variants",
+      title: "Chi phí tài chính",
+      dataIndex: "shippingCost",
+      align: 'center',
+      key: "shippingCost",
       render(value, record, index) {
-        return get(value,'cost.operations')
+        return get(value,'financialCost')
       },
     },
-    {
-      title: "Chi phí quản lý",
-      dataIndex: "variants",
-      key: "variants",
-      render(value, record, index) {
-        return get(value,'cost.management')
-      },
-    },
-    {
-      title: "Chi phí maketing",
-      dataIndex: "variants",
-      key: "variants",
-      render(value, record, index) {
-        return get(value,'cost.maketing')
-      },
-    },
+    // {
+    //   title: "Chi phí quản lý",
+    //   dataIndex: "shippingCost",
+    //   key: "shippingCost",
+    //   render(value, record, index) {
+    //     return get(value,'cost.management')
+    //   },
+    // },
+    // {
+    //   title: "Chi phí maketing",
+    //   dataIndex: "shippingCost",
+    //   key: "shippingCost",
+    //   render(value, record, index) {
+    //     return get(value,'cost.maketing')
+    //   },
+    // },
    
     {
       title: "Thao tác",
@@ -261,7 +272,7 @@ export default function CostManagement(props: propsType): React.JSX.Element {
         return <ActionColumn 
         _id={_id}
         onDetailClick={onOpenForm}
-        onDelete={onDelete}
+        // onDelete={onDelete}
         />
       },
     },
@@ -389,17 +400,17 @@ export default function CostManagement(props: propsType): React.JSX.Element {
                   Áp dụng bộ lọc
                 </Button>
               </Col>
-              {/* <Col>
+              <Col>
                 <Button
                   onClick={() => {
-                    setOpenForm(true);
+                    onOpenForm();
                   }}
                   icon={<PlusOutlined />}
                   type="primary"
                 >
                   Thêm chi phí
                 </Button>
-              </Col> */}
+              </Col>
             </Row>
           </Form>
         </Col>

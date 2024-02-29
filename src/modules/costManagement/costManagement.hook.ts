@@ -121,6 +121,7 @@ export const useCostManagementQueryParams = () => {
   const endDate = query.get("endDate");
   const branchId = query.get("branchId");
   const createSuccess = useSelector(createSuccessSelector);
+  const updateSuccess = useSelector(updateSuccessSelector);
   const deleteSuccess = useSelector(deleteSuccessSelector);
   return useMemo(() => {
     const queryParams = {
@@ -133,7 +134,7 @@ export const useCostManagementQueryParams = () => {
     };
     return [queryParams];
     //eslint-disable-next-line
-  }, [page, limit, keyword,startDate,endDate,branchId, createSuccess, deleteSuccess]);
+  }, [page, limit, keyword,startDate,endDate,branchId, createSuccess,updateSuccess, deleteSuccess]);
 };
 
 export const useUpdateCostManagementParams = (

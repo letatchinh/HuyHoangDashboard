@@ -30,14 +30,14 @@ export default function ActionColumn({
         okText="Xoá"
         cancelText="Huỷ"
       >
-        <Button
+       {onDelete ?<Button
           loading={isSubmitLoading}
           danger
           size="small"
           icon={<DeleteOutlined />}
         >
           Xoá
-        </Button>
+        </Button>:null}
       </Popconfirm>
     </Row>
   );
