@@ -145,6 +145,7 @@ export default function Supplier(): React.JSX.Element {
         dataIndex: "_id",
         key: "listProduct",
         align: "center",
+        width : 180,
         render(_id : any) {
           return <PermissionBadge permissions={[POLICIES.READ_PRODUCT]} title="Bạn không có quyền xem sản phẩm">
           <Button type="primary" ghost  shape='round' disabled={!canReadProduct} onClick={() => navigate(PATH_APP.product.root + "/" + _id)} icon={<i className="fa-solid fa-cube"></i>}>
