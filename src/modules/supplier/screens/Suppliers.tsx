@@ -182,6 +182,7 @@ export default function Supplier(): React.JSX.Element {
         dataIndex: "_id",
         key: "salasContract",
         align: "center" as AlignType,
+        width: 150,
         render(_id: any) {
           return <Link  target={'_blank'} to={PATH_APP.revenueSupplier.root + "/" + _id}>Xem chi tiết</Link>
         },
@@ -193,6 +194,7 @@ export default function Supplier(): React.JSX.Element {
             dataIndex: "name",
             key: "name",
             align: "center" as AlignType,
+            width: 150,
             render(value: any, rc: any) {
               return (
                 <Space>
