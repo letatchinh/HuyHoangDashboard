@@ -123,6 +123,7 @@ export default function LkTabItem({
       title: "Chương trình luỹ kế",
       dataIndex: "discount",
       key: "discount",
+      width : 200,
       render(discount, record, index) {
         return (
           <Popover
