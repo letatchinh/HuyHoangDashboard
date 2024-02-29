@@ -16,6 +16,7 @@ import SelectPharmacy from "~/modules/sale/bill/components/SelectPharmacy";
 import dayjs from "dayjs";
 import InputNumberAnt from "~/components/Antd/InputNumberAnt";
 import moment from "moment";
+import { get } from "lodash";
 
 const { RangePicker } = DatePicker;
 const FormItem = Form.Item;
@@ -48,6 +49,7 @@ const FreelanceContractPharmacyForm = ({
       const initContract = convertInitContract(initFreelanceContractPharmacy);
       form.setFieldsValue(initContract);
       form.setFieldsValue({
+        pharmacyId: get(contract, "pharmacyId._id", contract?.pharmacyId),
         date: moment(form.getFieldValue(["date"])),
         startDate: moment(form.getFieldValue(["startDate"])),
         endDate: moment(form.getFieldValue(["endDate"])),
@@ -79,7 +81,7 @@ const FreelanceContractPharmacyForm = ({
           onFinish={onFinish}
           scrollToFirstError
           requiredMark={false}
-          labelCol={{ sm: 24, md: 24, lg: 6 }}
+          labelCol={{ sm: 24, md: 24, lg: 4 }}
           wrapperCol={{ sm: 24, md: 24, lg: 18 }}
           labelAlign="left"
         >
@@ -87,24 +89,25 @@ const FreelanceContractPharmacyForm = ({
             form={form}
             allowClear={false}
             showIcon={false}
+            validateFirst={false}
             label="Nhà thuốc:"
           />
           <FormItem
             label="Mã hợp đồng"
             name="contractCode"
-            labelCol={{ sm: 24, md: 24, lg: 3 }}
+            // labelCol={{ sm: 24, md: 24, lg: 3 }}
             wrapperCol={{ sm: 24, md: 24, lg: 21 }}
             rules={[
               { required: true, message: "Xin vui lòng nhập mã hợp dồng" },
             ]}
-            style={{marginTop: "25px"}}
+            style={{ marginTop: "25px" }}
           >
             <Input />
           </FormItem>
           <FormItem
             label="Ngày tạo"
             name="date"
-            labelCol={{ sm: 24, md: 24, lg: 3 }}
+            // labelCol={{ sm: 24, md: 24, lg: 3 }}
             rules={[
               {
                 required: true,
@@ -128,57 +131,48 @@ const FreelanceContractPharmacyForm = ({
           <FormItem
             label="Số tiền khoán"
             name={"amount"}
-            labelCol={{ sm: 24, md: 24, lg: 3 }}
+            // labelCol={{ sm: 24, md: 24, lg: 3 }}
             wrapperCol={{ sm: 24, md: 24, lg: 21 }}
           >
-            <InputNumberAnt min={0}  style={{ width: '100%' }}/>
+            <InputNumberAnt min={0} style={{ width: "100%" }} />
           </FormItem>
-          <Row gutter={48} align="middle" justify="space-between">
-            <Col span={12}>
-              <FormItem
-                label="Ngày bắt đầu"
-                name="startDate"
-                wrapperCol={{ sm: 24, md: 24, lg: 21 }}
-                rules={[
-                  {
-                    required: true,
-                    message: "Vui lòng chọn ngày bắt đầu hợp đồng!",
-                  },
-                ]}
-              >
-                {isLoading ? (
-                  <Skeleton.Input active />
-                ) : (
-                  <DatePicker
-                    format={"DD/MM/YYYY"}
-                    placeholder="Ngày bắt đầu"
-                  />
-                )}
-              </FormItem>
-            </Col>
-            <Col span={12}>
-              <FormItem
-                label="Ngày kết thúc"
-                name="endDate"
-                wrapperCol={{ sm: 24, md: 24, lg: 21 }}
-                rules={[
-                  {
-                    required: true,
-                    message: "Vui lòng chọn ngày kết thúc hợp đồng!",
-                  },
-                ]}
-              >
-                {isLoading ? (
-                  <Skeleton.Input active />
-                ) : (
-                  <DatePicker
-                    format={"DD/MM/YYYY"}
-                    placeholder="Ngày kết thúc"
-                  />
-                )}
-              </FormItem>
-            </Col>
-          </Row>
+
+          <FormItem
+            label="Ngày bắt đầu"
+            name="startDate"
+            wrapperCol={{ sm: 24, md: 24, lg: 21 }}
+            rules={[
+              {
+                required: true,
+                message: "Vui lòng chọn ngày bắt đầu hợp đồng!",
+              },
+            ]}
+          >
+            {isLoading ? (
+              <Skeleton.Input active />
+            ) : (
+              <DatePicker format={"DD/MM/YYYY"} placeholder="Ngày bắt đầu" />
+            )}
+          </FormItem>
+
+          <FormItem
+            label="Ngày kết thúc"
+            name="endDate"
+            wrapperCol={{ sm: 24, md: 24, lg: 21 }}
+            rules={[
+              {
+                required: true,
+                message: "Vui lòng chọn ngày kết thúc hợp đồng!",
+              },
+            ]}
+          >
+            {isLoading ? (
+              <Skeleton.Input active />
+            ) : (
+              <DatePicker format={"DD/MM/YYYY"} placeholder="Ngày kết thúc" />
+            )}
+          </FormItem>
+
           <Row className="form__submit-box" justify={"center"} gutter={16}>
             <Col>
               {isSubmitLoading ? (
