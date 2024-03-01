@@ -298,7 +298,7 @@ export default function CostManagement(props: propsType): React.JSX.Element {
               enterButton={<SearchOutlined />}
             />
           </Col>
-        <Col span={6}>
+        <Col span={8}>
           <Select
             options={options}
             loading={isLoadingBranch}
