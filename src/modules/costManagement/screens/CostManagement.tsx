@@ -429,6 +429,9 @@ export default function CostManagement(props: propsType): React.JSX.Element {
             onChange(page, pageSize) {
               onParamChange({ page, limit: pageSize });
             },
+            // onChange={({ current }) {
+            //   onParamChange({ page: current });
+            // }}
             showSizeChanger : true,
             showTotal: (total) => `Tổng cộng: ${total} `,
             size:"small"
@@ -437,10 +440,10 @@ export default function CostManagement(props: propsType): React.JSX.Element {
       </WhiteBox>
 
       <Modal
-        destroyOnClose
+        // destroyOnClose
         open={isOpenForm}
         footer={null}
-        onCancel={onCancel}
+        onCancel={()=>setOpenForm(false)}
         width={1050}
       >
         <CostManagementForm   startDate= {defaultDate.startDate}
