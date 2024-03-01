@@ -1,6 +1,6 @@
 import React from "react";
 import { Col, List, Row, Typography } from "antd";
-import { clone } from "lodash";
+import { clone, get } from "lodash";
 import dayjs from "dayjs";
 interface propsType {
   historyLogs: any;
@@ -32,10 +32,10 @@ export default function HistoryLogs({ historyLogs }: propsType) {
                 </span>
               </Col>
               <Col>
-                <span>{item.username || item.userId}</span>
+                <span>{get(item, 'fullName', '')}</span>
               </Col>
               <Col>
-                <span>{item.message}</span>
+                <span>{item?.message}</span>
               </Col>
             </Row>
           </List.Item>
