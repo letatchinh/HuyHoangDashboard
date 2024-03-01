@@ -1,7 +1,8 @@
 import { get } from "lodash";
 import { devConfig } from "~/config";
 
-export const BASE_URL = get(devConfig,'baseUrl');
+export const BASE_URL = get(devConfig,'baseUrl'); 
+// export const BASE_URL = 'http://192.168.77.139:7000';
 export const DEFAULT_UPLOAD_ACTION = `${BASE_URL}/api/v1/file`;
 export const MAX_UPLOAD_FILE_SIZE_IN_MB = 2;
 

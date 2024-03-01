@@ -34,6 +34,7 @@ import UpdateOrderSupplier from "~/pages/Dashboard/OrderSupplier/UpdateOrderSupp
 import { FreelanceContractPharmacyPage } from "~/pages/Dashboard/FreelanceContractPharmacy";
 import RevenueSupplier from "~/modules/supplier/components/Revenue";
 import TotalRevenueList from "~/modules/supplier/components/Revenue/TotalRevenueList";
+import CostManagement from "~/pages/Dashboard/CostManagement";
 export const mainRoutes :PathRouteProps[] = [
   { path: PATH_APP.main.root, Component: Homepage },
 
@@ -104,6 +105,8 @@ export const mainRoutes :PathRouteProps[] = [
 
   // Freelance Contract Pharmacy
   { path: PATH_APP.freelanceContractPharmacy.root, Component: FreelanceContractPharmacyPage},
+  {path: PATH_APP.costManagement.root, Component: CostManagement},
+
   { path: '/', Component: Homepage },
 ]
 

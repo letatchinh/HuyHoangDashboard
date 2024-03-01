@@ -35,6 +35,7 @@ import lkModule from '~/modules/sale/lk';
 import productsAll from '~/modules/productsAll';
 import orderSupplier from '~/modules/sale/orderSupplier/index';
 import freelanceContractPharmacy from '~/modules/freelanceContractPharmacy';
+import costManagement from '~/modules/costManagement';
 const authPersistConfig = {
     key: 'auth',
     storage: localStorage,
@@ -81,6 +82,7 @@ const rootReducer = combineReducers({
     productsAll: productsAll.redux.reducer,
     orderSupplier: orderSupplier.redux.reducer,
     freelanceContractPharmacy: freelanceContractPharmacy.redux.reducer,
+    costManagement: costManagement.redux.reducer,
 
 });
 export default rootReducer

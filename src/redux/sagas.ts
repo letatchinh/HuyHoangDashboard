@@ -31,6 +31,7 @@ import productsAllModule from '~/modules/productsAll';
 import reportSupplierModule from '~/modules/report/reportSupplier';
 import orderSupplier from '~/modules/sale/orderSupplier/index';
 import freelanceContractPharmacy from '~/modules/freelanceContractPharmacy';
+import costManagement from '~/modules/costManagement';
 export default function* rootSaga() {
   yield all([
     authModule.redux.saga(),
@@ -64,9 +65,9 @@ export default function* rootSaga() {
     receiptVoucher.redux.saga(),
     lkModule.redux.saga(),
     productsAllModule.redux.saga(),
-
     reportSupplierModule.redux.saga(),
     orderSupplier.redux.saga(),
     freelanceContractPharmacy.redux.saga(),
+    costManagement.redux.saga(),
   ]);
 };
