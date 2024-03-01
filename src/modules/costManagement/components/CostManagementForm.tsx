@@ -84,8 +84,8 @@ export default function CostManagementForm({
     endDate: dayjs(endDate).format("YYYY-MM-DD")
   }), [id, startDate, endDate]);
   const [costManagementById, isLoading] = useGetCostManagement(id);
-  const query = useMemo(() => ({ page: 1, limit: 10, keyword: 'isSupplierMaster' }), []);
-  const [data, isLoadingPro] = useGetProducts(query);
+  // const query = useMemo(() => ({ page: 1, limit: 10, keyword: 'isSupplierMaster' }), []);
+  // const [data, isLoadingPro] = useGetProducts(query);
   const [toTalPrice, setToTalPrice] = useState(0); //giá bán
   const [toTalDiscount, setToTalDiscount] = useState(0); // tổng tiền chiết khấu
   const [totalAmount, setTotalAmount] = useState(0); // tổng lợi nhuận
@@ -139,10 +139,10 @@ export default function CostManagementForm({
     },
 
   ];
-  const optionData = get(data, "variants", [])?.map((item: any) => ({
-    label: get(item, "variantCode"),
-    value: get(item, "_id"),
-  }));
+  // const optionData = get(data, "variants", [])?.map((item: any) => ({
+  //   label: get(item, "variantCode"),
+  //   value: get(item, "_id"),
+  // }));
   const onFinish = (values: any) => {
     const formattedValues: any = {
       ...values,
@@ -329,7 +329,7 @@ export default function CostManagementForm({
                 {id ? RenderLoading(isLoading, <Input readOnly />) : <Select
                   style={{ width: 312 }}
                   value={keyword}
-                  options={optionData}
+                  // options={optionData}
                   onChange={(value) => handleChangeKeyword(value)
                   }
                 />}
@@ -516,11 +516,11 @@ export default function CostManagementForm({
 
         {/* <Pie {...config} /> */}
         <Row justify={"end"} gutter={16}>
-          {/* <Col>
+          <Col>
             <Button disabled={backupForm.length <= 1} onClick={() => onUndoForm()}>
               Hoàn tác
             </Button>
-          </Col> */}
+          </Col>
           <Col>
             <Button onClick={onCancel}>
               Huỷ

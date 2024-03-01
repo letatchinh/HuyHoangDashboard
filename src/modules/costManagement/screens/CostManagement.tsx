@@ -400,7 +400,7 @@ export default function CostManagement(props: propsType): React.JSX.Element {
                   Áp dụng bộ lọc
                 </Button>
               </Col>
-              <Col>
+              {/* <Col>
                 <Button
                   onClick={() => {
                     onOpenForm();
@@ -410,7 +410,7 @@ export default function CostManagement(props: propsType): React.JSX.Element {
                 >
                   Thêm chi phí
                 </Button>
-              </Col>
+              </Col> */}
             </Row>
           </Form>
         </Col>
