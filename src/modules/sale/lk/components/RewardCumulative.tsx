@@ -1,14 +1,13 @@
 import { Typography } from 'antd';
 import { get } from 'lodash';
 import React, { useMemo } from 'react';
-import Vnd from '~/components/common/Vnd/index';
 import { formatter } from '~/utils/helpers';
 import { getValueOfLk } from '../lk.service';
 type propsType = {
     record:any,
 }
-export default function RewardCumulative({record}:propsType) : React.JSX.Element {
-    const itemReward = useMemo(() => get(record,'itemReward'),[record]);
+export default function RewardCumulative({record}:propsType) : React.JSX.Element {    
+    const itemReward = useMemo(() => get(record,'discount.itemReward'),[record]);
     const value = useMemo(() => {
         return getValueOfLk(record);
     },[record]);
