@@ -17,7 +17,7 @@ import SelectSearch from '~/components/common/SelectSearch/SelectSearch';
 import { DataType, TypeProps } from '../productsAll.modal';
 import ShowStep from '../components/ShowStep';
 import ActionColumn from '../components/ActionColumns';
-import { useChangeVariantDefault, useDeleteProduct, useGetProducts, useUpdateProduct } from '~/modules/product/product.hook';
+import { useChangeVariantDefault, useDeleteProduct, useGetProducts, useProductPaging, useUpdateProduct } from '~/modules/product/product.hook';
 import useCheckBoxExport from '~/modules/export/export.hook';
 import ExportExcelButton from '~/modules/export/component';
 import StockProduct from '~/modules/product/components/StockProduct';
@@ -34,7 +34,7 @@ export default function ProductsAll(props: TypeProps): React.JSX.Element {
   const canReadSupplier = useMatchPolicy(POLICIES.READ_PRODUCT);
   const canUpdate = useMatchPolicy(POLICIES.UPDATE_PRODUCT);
   const canDelete = useMatchPolicy(POLICIES.DELETE_PRODUCT);
-  const paging = useProductsAllPaging();
+  const paging = useProductPaging();
   const [step, setStep] = useState(0);
 
   const [isOpen, setIsOpen] = useState(false);
