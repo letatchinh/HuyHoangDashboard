@@ -3,6 +3,7 @@ import TabPane from "antd/es/tabs/TabPane";
 import React, { useCallback, useEffect, useState } from "react";
 import WhiteBox from "~/components/common/WhiteBox";
 import { getValueQuery } from "~/utils/helpers";
+import { useChangeDocumentTitle } from "~/utils/hook";
 import LkTabItem from "./LkTabItem";
 
 type propsType = {};
@@ -16,6 +17,8 @@ export default function Lk(props: propsType): React.JSX.Element {
     const defaultCumulativeSession : "IN" | "OUT" = getValueQuery('cumulativeSession');
     setActiveTab(defaultCumulativeSession ?? "IN");
   },[]);
+
+  useChangeDocumentTitle("Luỹ kế mặt hàng")
   return (
     <div>
       <h5>Các mặt hàng luỹ kế đã tích luỹ</h5>
