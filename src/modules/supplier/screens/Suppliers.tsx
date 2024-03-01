@@ -35,6 +35,7 @@ import WithPermission from "~/components/common/WithPermission";
 import PermissionBadge from "~/components/common/PermissionBadge";
 import ExportExcelButton from "~/modules/export/component";
 import useCheckBoxExport from "~/modules/export/export.hook";
+import { useChangeDocumentTitle } from "~/utils/hook";
 export default function Supplier(): React.JSX.Element {
   const canUpdateSupplier = useMatchPolicy(POLICIES.UPDATE_SUPPLIER);
   const canReadProduct = useMatchPolicy(POLICIES.READ_PRODUCT);
@@ -302,6 +303,8 @@ export default function Supplier(): React.JSX.Element {
     ],
     [isSubmitLoading, onDelete, onOpenForm, onUpdateStatus]
   );
+  useChangeDocumentTitle("Danh sách nhà cung cấp");
+
   return (
     <div>
       <Breadcrumb title={t("list-supplier")} />

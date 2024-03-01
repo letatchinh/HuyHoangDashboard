@@ -21,6 +21,7 @@ import { useChangeVariantDefault, useDeleteProduct, useGetProducts, useUpdatePro
 import useCheckBoxExport from '~/modules/export/export.hook';
 import ExportExcelButton from '~/modules/export/component';
 import StockProduct from '~/modules/product/components/StockProduct';
+import { useChangeDocumentTitle } from '~/utils/hook';
 
 export default function ProductsAll(props: TypeProps): React.JSX.Element {
   const [query, onTableChange] = useProductsAllQueryParams();
@@ -227,6 +228,8 @@ export default function ProductsAll(props: TypeProps): React.JSX.Element {
         ]: []
       ),
       ];
+
+      useChangeDocumentTitle("Danh sách sản phẩm")
     return (
       <div>
       <Breadcrumb title={isLoading ? "Đang tải..." : <p>Danh sách sản phẩm</p>} />

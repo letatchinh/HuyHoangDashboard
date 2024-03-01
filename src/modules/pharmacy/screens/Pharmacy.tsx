@@ -44,6 +44,7 @@ import ModalAnt from "~/components/Antd/ModalAnt";
 import ReceiptVoucherForm from "~/modules/receiptVoucher/components/ReceiptVoucherForm";
 import { Link } from "react-router-dom";
 import { PATH_APP } from "~/routes/allPath";
+import { useChangeDocumentTitle } from "~/utils/hook";
 
 const ColumnActions = ({ _id, deletePharmacy, onOpenForm }: propsType) => {
   return (
@@ -263,7 +264,7 @@ export default function Pharmacy() {
         break;
     }
   };
-
+  useChangeDocumentTitle("Danh sách nhà thuốc")
   return (
     <div>
       <Breadcrumb title={t("list-pharmacies")} />
