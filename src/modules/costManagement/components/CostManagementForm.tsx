@@ -354,20 +354,6 @@ export default function CostManagementForm({
 
               </Form.Item>
             </Col>
-            {/* <Col span={12}>
-            <Form.Item<any>
-              label="Lợi nhuận mong đợi"
-              name={'profitValue'}
-            >
-              {RenderLoading(isLoading, <InputNumber
-                onBlur={(e: any) => {
-                  const a = priceMemo - e.target.value
-                  setPriceMemo(a);
-                  //  handLeBlur(e.target.value)
-                  ;
-                }} style={{ width: '100%' }} />)}
-            </Form.Item>
-            </Col> */}
           </Row>
         </BaseBorderBox>
         <span>Chọn đơn vị quy chiếu: </span> <Select
@@ -377,7 +363,7 @@ export default function CostManagementForm({
           onChange={(value) => handleChangeKeyword(value)
           }
         />
-        <BaseBorderBox title={"Thông tin chi phí liên quan"}>
+        <BaseBorderBox title={"Thông tin chi phí vận chuyển"}>
 
           <Row {...layoutRow}>
             <Col span={12}>
@@ -398,6 +384,12 @@ export default function CostManagementForm({
                 }} style={{ width: '100%' }} />)}
               </Form.Item>
             </Col>
+           
+          </Row>
+        </BaseBorderBox>
+        <BaseBorderBox title={"Thông tin chi phí kênh phân phối"}>
+
+          <Row {...layoutRow}>
             <Col span={12}>
               <Form.Item<any>
                 label="Chi phí trình dược viên"
@@ -416,24 +408,6 @@ export default function CostManagementForm({
                 }} style={{ width: '100%' }} />)}
               </Form.Item>
             </Col>
-            {/* <Col span={12}>
-              <Form.Item<any>
-                label="Chi phí kênh phân phối"
-                name={["cost", "distributionChannel"]}
-              >
-                {keyword === 'VND' ? RenderLoading(isLoading, <InputNumber onBlur={(e: any) => {
-                  const a = priceMemo - e.target.value
-                  setPriceMemo(a);
-                  ;
-                }} style={{ width: '100%' }} />) : RenderLoading(isLoading, <InputNumber max={100} onBlur={(e: any) => {
-                  const a = priceMemo - (toTalPrice * e.target.value) / 100
-                  setPriceMemo(a);
-                  ;
-                }} style={{ width: '100%' }} />)}
-              </Form.Item>
-            </Col> */}
-          </Row>
-          <Row {...layoutRow}>
             <Col span={12}>
               <Form.Item<any>
                 label="Chi phí vận hành"
@@ -452,7 +426,9 @@ export default function CostManagementForm({
                 }} style={{ width: '100%' }} />)}
               </Form.Item>
             </Col>
-            {/* <Button onClick={() => form.resetFields(["cost"])}>Đặt lại</Button> */}
+          </Row>
+          <Row {...layoutRow}>
+            
             <Col span={12}>
               <Form.Item<any>
                 label="Chi phí marketing"
@@ -471,8 +447,6 @@ export default function CostManagementForm({
                 }} style={{ width: '100%' }} />)}
               </Form.Item>
             </Col>
-          </Row>
-            <Row {...layoutRow}>
             <Col span={12}>
               <Form.Item<any>
                 label="Chi phí quản lý"
@@ -491,6 +465,11 @@ export default function CostManagementForm({
                 }} style={{ width: '100%' }} />)}
               </Form.Item>
             </Col>
+          </Row>
+          </BaseBorderBox>
+          
+        <BaseBorderBox title={"Tổng tin chi phí tài chính"}> 
+        <Row {...layoutRow}>
             <Col span={12}>
               <Form.Item<any>
                 label="Chi phí tài chính"
