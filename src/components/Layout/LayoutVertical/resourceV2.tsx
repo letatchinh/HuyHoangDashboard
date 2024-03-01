@@ -271,7 +271,7 @@ import {
       icon: <FundProjectionScreenOutlined />,
       path: PATH_APP.costManagement.root,
       key: PATH_APP.costManagement.root,
-      // permission: [POLICIES.READ_LEDGER],
+      permission: [POLICIES.READ_SHIPPINGCOST],
     }
   
   ];
