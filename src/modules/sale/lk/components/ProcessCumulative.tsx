@@ -4,11 +4,16 @@ import { get } from "lodash";
 import React, { useMemo } from "react";
 import { formatter } from "~/utils/helpers";
 import ProcessBillItem from "./ProcessBillItem";
+type OptionsType = {
+  showIsDone?: boolean
+}
 type propsType = {
   record: any;
+  options : OptionsType
 };
 export default function ProcessCumulative({
   record,
+  options
 }: propsType): React.JSX.Element {
   const discount = useMemo(() => get(record, "discount"),[record]);
   const bills = useMemo(() => get(record, "bills"),[record]);
@@ -27,7 +32,7 @@ export default function ProcessCumulative({
       <Popover trigger={'click'} content={<ProcessBillItem bills={bills} cumulativeAmount={cumulativeAmount} cumulativeQuantity={cumulativeQuantity} discount={discount}/>}>
       <Typography.Text strong>Đã tích luỹ: <a>{formatter(cumulative)}</a></Typography.Text>
       {" "}
-      {isDone ? <Tag icon={<CheckCircleOutlined />} color={'#389F0C'}>{"Đã đạt"}</Tag> : null}
+      {(options?.showIsDone && isDone) ? <Tag icon={<CheckCircleOutlined />} color={'#389F0C'}>{"Đã đạt"}</Tag> : null}
       {isOver ? <Tag  color={'#f50'}>{"Đã vượt mức"}</Tag> : null}
       </Popover>
       <Typography.Text type="secondary">

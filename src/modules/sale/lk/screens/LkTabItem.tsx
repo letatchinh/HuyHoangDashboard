@@ -2,10 +2,12 @@ import {
   Button,
   Checkbox,
   Col,
+  Flex,
   Form,
   Modal,
   Popover,
   Row,
+  Tag,
   Typography,
 } from "antd";
 import { ColumnsType } from "antd/es/table/InternalTable";
@@ -35,13 +37,14 @@ import POLICIES from "~/modules/policy/policy.auth";
 import ExportExcelButton from "~/modules/export/component/index";
 import useCheckBoxExport from "~/modules/export/export.hook";
 import { useMatchPolicy } from "~/modules/policy/policy.hook";
+import { CheckCircleOutlined, CheckCircleTwoTone, SearchOutlined } from "@ant-design/icons";
 
 type propsType = {
   cumulativeSession: "IN" | "OUT";
   options?: {
     action?: boolean;
-    showVoucher?: boolean;
     showSession?: boolean;
+    showIsDone?: boolean;
   };
 };
 export default function LkTabItem({
@@ -51,7 +54,7 @@ export default function LkTabItem({
   // Hook
   const isSuperAdmin = useIsSuperAdmin();
   const canDownload = useMatchPolicy(POLICIES.DOWNLOAD_CUMULATIVEEVENT);
-
+  const canReadVoucher = useMatchPolicy(POLICIES.READ_VOUCHER)
   const [form] = Form.useForm();
   const [reFetch, setReFetch] = useState(false);
   const mutate = useCallback(() => setReFetch(!reFetch), [reFetch]);
@@ -123,7 +126,7 @@ export default function LkTabItem({
       title: "Chương trình luỹ kế",
       dataIndex: "discount",
       key: "discount",
-      width : 200,
+      width : 180,
       render(discount, record, index) {
         return (
           <Popover
@@ -147,7 +150,7 @@ export default function LkTabItem({
       //   align : "center",
       width: 300,
       render(item, record, index) {
-        return <ProcessCumulative record={record} />;
+        return <ProcessCumulative record={record} options={{showIsDone : options?.showIsDone}}/>;
       },
     },
     {
@@ -160,38 +163,7 @@ export default function LkTabItem({
       },
     },
   ];
-  if (options?.showVoucher) {
-    columns.push({
-      title: "Phiếu chi",
-      dataIndex: "voucher",
-      key: "voucher",
-      align: "center",
-      render(voucher, record: any, index) {
-        return voucher ? (
-          <Typography.Link onClick={() => onOpenVoucher(get(voucher, "_id"))}>
-            {get(voucher, "codeSequence", "")}
-          </Typography.Link>
-        ) : null;
-      },
-    });
-  };
-  if(canDownload){
-    columns.push({
-      title: "Lựa chọn",
-      key: "_id",
-      width: 80,
-      align: "center",
-      render: (item: any, record: any) => {
-        const id = record._id;
-        return (
-          <Checkbox
-            checked={arrCheckBox.includes(id)}
-            onChange={(e) => onChangeCheckBox(e.target.checked, id)}
-          />
-        );
-      },
-    });
-  }
+
 
   if (options?.action) {
     columns.push({
@@ -213,6 +185,12 @@ export default function LkTabItem({
           ); // Super Admin Can create All Day
 
         return (
+          !!voucher ? <Flex vertical>
+            <Tag icon={<CheckCircleOutlined twoToneColor={'#389F0C'}/>} bordered={false} color={'#389F0C'}>Đã phát thưởng</Tag>
+            <Typography.Link disabled={!canReadVoucher} onClick={() => onOpenVoucher(get(voucher, "_id"))}>
+            <SearchOutlined /> {get(voucher, "codeSequence", "")}
+          </Typography.Link>
+          </Flex> :
           <WithPermission permission={POLICIES.WRITE_VOUCHER}>
             <Button
               disabled={!!voucher ?? !isInApplyTime}
@@ -237,7 +215,23 @@ export default function LkTabItem({
       },
     });
   }
-
+  if(canDownload){
+    columns.push({
+      title: "Lựa chọn",
+      key: "_id",
+      width: 80,
+      align: "center",
+      render: (item: any, record: any) => {
+        const id = record._id;
+        return (
+          <Checkbox
+            checked={arrCheckBox.includes(id)}
+            onChange={(e) => onChangeCheckBox(e.target.checked, id)}
+          />
+        );
+      },
+    });
+  }
   return (
     <div>
       <Form form={form} initialValues={query}>

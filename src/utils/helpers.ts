@@ -233,3 +233,10 @@ export function getRandomColor() {
   }
   return color;
 }
+
+export const getValueQuery = (key : string) : any => {
+  let search = window.location.search;
+  let params = new URLSearchParams(search);
+  let foo = params.get(key);
+  return foo;
+}
