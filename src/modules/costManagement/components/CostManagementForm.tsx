@@ -1,5 +1,5 @@
 import { GiftTwoTone, UndoOutlined } from "@ant-design/icons";
-import { Button, Col, DatePicker, Form, Input, InputNumber, notification, Row, Select, Tabs } from "antd";
+import { Button, Col, DatePicker, Form, Input, InputNumber, notification, Row, Select, Tabs, Typography } from "antd";
 import { compact, concat, debounce, get, head, keys } from "lodash";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import BaseBorderBox from "~/components/common/BaseBorderBox/index";
@@ -15,6 +15,8 @@ import { DatePickerProps } from "antd/lib";
 import dayjs from "dayjs";
 import { formToJSON } from "axios";
 import { useGetProducts } from "~/modules/product/product.hook";
+import { formatter } from "~/utils/helpers";
+import { Layout } from "~/modules/sale/bill/components/createBillScreen/TotalBill";
 // type DataType = "new" | "evaluating" | "ongoing" | "finished" | "archived";
 
 // interface PieChartData {
@@ -354,6 +356,14 @@ export default function CostManagementForm({
 
               </Form.Item>
             </Col>
+            <Col style={{ paddingBottom: 10 }} span={12}>
+            <Form.Item<any>
+              label="Doanh thu"
+              name={'profitValue'}
+            >
+              {RenderLoading(isLoading, <InputNumber readOnly style={{ width: '100%' }} />)}
+            </Form.Item>
+          </Col> 
           </Row>
         </BaseBorderBox>
         <span>Chọn đơn vị quy chiếu: </span> <Select
@@ -363,7 +373,7 @@ export default function CostManagementForm({
           onChange={(value) => handleChangeKeyword(value)
           }
         />
-        <BaseBorderBox title={"Thông tin chi phí vận chuyển"}>
+        <BaseBorderBox title={"Thông tin chi phí vận chuyển (1)"}>
 
           <Row {...layoutRow}>
             <Col span={12}>
@@ -387,7 +397,7 @@ export default function CostManagementForm({
            
           </Row>
         </BaseBorderBox>
-        <BaseBorderBox title={"Thông tin chi phí kênh phân phối"}>
+        <BaseBorderBox title={"Thông tin chi phí kênh phân phối (2)"}>
 
           <Row {...layoutRow}>
             <Col span={12}>
@@ -468,7 +478,7 @@ export default function CostManagementForm({
           </Row>
           </BaseBorderBox>
           
-        <BaseBorderBox title={"Tổng tin chi phí tài chính"}> 
+        <BaseBorderBox title={"Tổng tin chi phí tài chính (3)"}> 
         <Row {...layoutRow}>
             <Col span={12}>
               <Form.Item<any>
@@ -491,7 +501,20 @@ export default function CostManagementForm({
             {/* <strong style={{ color: "red", float: 'right' }}>{`Tổng số tiền chi phí liên quan: ${totalRelated}`}</strong> */}
           </Row>
         </BaseBorderBox>
-        {/* <h5 style={{ color: "red" }}>Số tiền còn lại: {priceMemo}</h5> */}
+        <BaseBorderBox> 
+        <Row {...layoutRow}>
+            <Col span={4}>
+              <Layout  tooltip="Lợi nhuận bằng doanh thu - (1) - (2) - (3)" label={"Lợi nhuận:"}>
+      <Typography.Text type="danger" strong>
+      {formatter(priceMemo)}đ
+      </Typography.Text>
+        </Layout>
+            </Col>
+            {/* <strong style={{ color: "red", float: 'right' }}>{`Tổng số tiền chi phí liên quan: ${totalRelated}`}</strong> */}
+          </Row>
+        </BaseBorderBox>
+        {/* <h5 style={{ color: "red" }}>Lợi nhuận dự kiến: {formatter(priceMemo)}</h5> */}
+       
 
         {/* <Pie {...config} /> */}
         <Row justify={"end"} gutter={16}>
