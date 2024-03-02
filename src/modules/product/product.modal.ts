@@ -1,3 +1,4 @@
+import { UploadFile } from "antd"
 import { cumulativeDiscountType } from "../cumulativeDiscount/cumulativeDiscount.modal"
 
 export type TypePropsFormProduct = {
@@ -56,7 +57,8 @@ export type FieldTypeFormProduct = {
     medicalCode : string,
     variants : variantType[],
     cumulativeDiscount : cumulativeDiscountType[]
-    codeBySupplier : string
+    codeBySupplier : string,
+    images ? : UploadFile[]
   };
 
   export type TypePropVariants = {
