@@ -1,7 +1,10 @@
-import React, { useState, useCallback } from 'react';
-import { Progress, Upload, message } from 'antd';
-import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
+import { LoadingOutlined, PlusOutlined, UploadOutlined } from '@ant-design/icons';
+import { message, Modal, Progress, Upload, UploadProps } from 'antd';
+import { UploadChangeParam } from 'antd/es/upload/interface';
+import { UploadFile } from 'antd/lib/index';
 import imageCompression from 'browser-image-compression';
+import { get } from 'lodash';
+import React, { useCallback, useState } from 'react';
 import {
   DEFAULT_UPLOAD_ACTION,
   MAX_UPLOAD_FILE_SIZE_IN_MB
@@ -14,7 +17,7 @@ const allowedImageExtensions: string[] = ['image/jpeg', 'image/png'];
 interface UploadImageProps {
   index?: number;
   onChange?: any;
-  imgUrl: string | undefined;
+  imgUrl: any;
   title?: string;
   action?: string;
   children?: React.ReactNode;
@@ -23,25 +26,30 @@ interface UploadImageProps {
   isShowImg?: boolean
   setIsLoading?: any;
   isLoading?: boolean;
+  resource?: 'pharma';
+  allowList?:boolean;
 };
 
 const DEFAULT_RESOURCE: string = 'pharma';
-
+const MAX_IMAGES = 6;
 const UploadImage: React.FC<UploadImageProps> = ({
   index,
   onChange,
   imgUrl,
   title,
-  action = `${DEFAULT_UPLOAD_ACTION}/${DEFAULT_RESOURCE}`,
-  children,
+  resource,
+  action = `${DEFAULT_UPLOAD_ACTION}/${resource ?? DEFAULT_RESOURCE}`,
+  // children,
   disabled = false,
   className,
   isShowImg = true,
   setIsLoading,
-  isLoading
+  isLoading,
+  allowList = false
 }) => {
   const [isCompressing, setIsCompressing] = useState(false);
   const [compressPercent, setCompressPercent] = useState<number>(0);
+  const [previewImage, setPreviewImage] = useState('');
 
   const beforeUpload = async (file: File) => {
     const isImage: boolean = allowedImageExtensions.includes(file.type);
@@ -79,26 +87,46 @@ const UploadImage: React.FC<UploadImageProps> = ({
     return isImage && isLtMaxFileSize;
   };
 
-  const handleChange = useCallback(
-    (info: any) => {
-      if (info?.file?.status === 'uploading') {
-        setIsLoading(true);
-        return;
+  const handleChange : UploadProps['onChange'] = useCallback(
+    ({file,fileList} : UploadChangeParam) => {
+      if(file?.status === 'error'){
+         message.error('Lỗi khi tải ảnh lên, Vui lòng gửi ảnh dung lượng nhỏ hơn 1 MB hoặc thử lại!');
       }
-      if (info?.file?.status === 'done') {
-        const imageUrl: string | undefined = info.file?.response?.url;
-        setIsLoading(false);
-        if (imageUrl) {
-          onChange(imageUrl);
-        };
+      if(allowList){// Mode List
+        const newFileList = fileList?.map((value : UploadFile) => ({
+          ...value,
+          url : get(value,'response.url',''),
+        }))
+        onChange(newFileList);
+        
+      }else{// Mode Single
+        if (file?.status === 'uploading') {
+          setIsLoading(true);
+          return;
+        }
+        if (file?.status === 'done') {
+          const imageUrl: string | undefined = file?.response?.url;
+          setIsLoading(false);
+          if (imageUrl) {
+            onChange(imageUrl);
+          };
+        }
       }
+
     },
     [onChange]
   );
 
+  const handlePreview = async (file: UploadFile) => {
+    setPreviewImage(file.url || (file.preview as string));
+
+  }
+  const handleCancel = () => setPreviewImage('');
+
+
   const uploadButton = (
     <div>
-      {isCompressing || isLoading ? <LoadingOutlined /> : <PlusOutlined />}
+      {isCompressing || isLoading ? <LoadingOutlined /> : <i style={{fontSize : 18}} className="fa-solid fa-arrow-up-from-bracket"></i>}
       <div style={{ marginTop: 8 }}>
         {isCompressing ? (
           <>
@@ -113,28 +141,40 @@ const UploadImage: React.FC<UploadImageProps> = ({
       </div>
     </div>
   );
+  
   return (
+<>
     <Upload
       name="file"
       listType="picture-card"
       className= { className ?? "avatar-uploader"}
-      showUploadList={false}
       action={action}
       beforeUpload={beforeUpload}
       onChange={handleChange}
       disabled={disabled}
+      multiple={allowList}
+      {...allowList && {fileList : imgUrl}}
+      maxCount={MAX_IMAGES}
+      onPreview={handlePreview}
+      showUploadList={allowList}
+      
     >
-      { isShowImg &&(imgUrl && !isCompressing && !isLoading ? (
+      {allowList ? 
+      (imgUrl?.length >= MAX_IMAGES ? null : uploadButton) :  
+      (isShowImg &&(imgUrl && !isCompressing && !isLoading) ? (
         <img
           src={imgUrl}
           alt="avatar"
-          style={{ maxWidth: '100%', maxHeight: '100%' }}
+          style={{ maxWidth: '100%', maxHeight: '100%',objectFit : 'contain' }}
         />
       ) : (
         uploadButton
         ))}
-      {children}
     </Upload>
+    <Modal closable={false} open={!!previewImage} footer={null} onCancel={handleCancel}>
+    <img alt="Ảnh xem trước" style={{ width: '100%' }} loading="lazy" src={previewImage} />
+  </Modal>
+</>
   );
 };
 
