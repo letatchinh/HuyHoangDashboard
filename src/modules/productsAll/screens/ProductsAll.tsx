@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Checkbox, Col, Modal, Row, Select } from 'antd';
+import { Checkbox, Col, Modal, Row, Select, Typography } from 'antd';
 import { ColumnsType } from "antd/es/table/InternalTable";
 import { Table } from 'antd/lib';
 import { get } from 'lodash';
@@ -100,6 +100,8 @@ export default function ProductsAll(props: TypeProps): React.JSX.Element {
           key: "name",
           width : 300,
           render(name, record) {
+            const codeBySupplier = get(record,'codeBySupplier','');
+
             if (get(record, "variants", [])?.length > 1) {
               const options = get(record, "variants", [])?.map((item) => ({
                 label: get(item, "unit.name"),
@@ -107,6 +109,9 @@ export default function ProductsAll(props: TypeProps): React.JSX.Element {
               }));
               return (
                 <Row align={"middle"} gutter={4} wrap={false}>
+                  <Col>
+                  <Typography.Text strong>{codeBySupplier}</Typography.Text>
+                  </Col>
                   <Col>{name}</Col>
                   <Col>
                     <Select
@@ -127,7 +132,10 @@ export default function ProductsAll(props: TypeProps): React.JSX.Element {
                 </Row>
               );
             } else {
-              return name + " " + `(${get(record, "variant.unit.name")})`;
+              return <span>
+              <Typography.Text strong>{codeBySupplier} - </Typography.Text>
+            {name + " " + `(${get(record, "variant.unit.name")})`}
+          </span>;
             }
           },
         },
