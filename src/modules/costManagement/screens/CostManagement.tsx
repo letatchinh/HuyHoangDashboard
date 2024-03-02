@@ -206,7 +206,7 @@ export default function CostManagement(props: propsType): React.JSX.Element {
       dataIndex: "variants",
       key: "variants",
       render(variants, record, index) {
-        return formatter(get(variants,'cost'))
+        return formatter(get(variants,'cost',0))
       },
     },
     // {
