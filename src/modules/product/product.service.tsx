@@ -1,5 +1,7 @@
 import { Button, notification } from "antd";
+import { UploadFile } from "antd/lib/index";
 import { compact, differenceBy, get } from "lodash";
+import { v4 } from "uuid";
 import CumulativeDiscountModule from '~/modules/cumulativeDiscount';
 import { FieldTypeFormProduct, variantType } from "./product.modal";
 type paramsConvert = {
@@ -7,12 +9,30 @@ type paramsConvert = {
     supplierId : string | undefined
 };
 
+type InitImages = {
+  uid : string,
+  url : string
+}
+export class AdapterUploadImagesAnt {
+  convertSubmit(images : UploadFile[]) : string[]{
+    return compact(images?.map((image : UploadFile) => get(image,'url','')));
+  }
+  convertInit(images: string[]) : InitImages[]{
+    return images?.map((image:string) => ({
+      uid : v4(),
+      url : image
+    }))
+  }
+}
 export const convertSubmitData = ({values,supplierId} :paramsConvert) => {
-  
+  const ImagesUploadMethod = new AdapterUploadImagesAnt();
+      // Convert Submit Images
+      const images = ImagesUploadMethod.convertSubmit(get(values,'images',[]))
       const submitData = {
         ...values,
         cumulativeDiscount : CumulativeDiscountModule.service.convertSubmitDiscount(get(values,'cumulativeDiscount'),get(values,'variants',[])),
         supplierId,
+        images,
       };
 
       return submitData;
@@ -20,13 +40,16 @@ export const convertSubmitData = ({values,supplierId} :paramsConvert) => {
 
 
 export const convertInitProduct = (product : any) => {
-  
+  const ImagesUploadMethod = new AdapterUploadImagesAnt();
   // Convert CumulativeDiscount
   const cumulativeDiscount = CumulativeDiscountModule.service.convertInitDiscount(get(product,'cumulativeDiscount',[]),get(product,'variants',[]));
   
+  // Convert Images
+  const images = ImagesUploadMethod.convertInit(get(product,'images',[]))
   return {
     ...product,
-    cumulativeDiscount
+    cumulativeDiscount,
+    images,
   }
   };
 
@@ -60,3 +83,4 @@ export const getVariants = (variantId : string | null,variants? : variantType[])
   const variant = variants?.find((v:variantType) => get(v,'_id') === variantId);
   return variant;
 }
+

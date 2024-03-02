@@ -31,6 +31,8 @@ import { useSupplierInfoRedux } from "~/modules/productsAll/productsAll.hook";
 
 import TabPane from "antd/es/tabs/TabPane";
 import useNotificationStore from "~/store/NotificationContext";
+import UploadImage from "~/components/common/Upload/UploadImage";
+import ImagesProduct from "./ImagesProduct";
 
 const CLONE_PRODUCT_TYPE_VI: any = PRODUCT_TYPE_VI;
 const CLONE_SALE_LEVEL_VI: any = SALE_LEVEL_VI;
@@ -42,6 +44,7 @@ export default function FormProduct({
   supplierId,
   id,
   onCancel,
+  onUpdate,
 }: TypePropsFormProduct): React.JSX.Element {
   // const supplierInfo = useSupplierInfoRedux();
   const {onNotify} = useNotificationStore();
@@ -49,7 +52,7 @@ export default function FormProduct({
   const [backupForm,setBackupForm] = useState<FieldTypeFormProduct[]>([]);
   
   const [isSubmitLoading, onCreate] = useCreateProduct(onCancel);
-  const [, onUpdate] = useUpdateProduct(onCancel);
+  // const [, onUpdate] = useUpdateProduct(onCancel);
   const [product, isLoading] = useGetProduct(id);
   // const [dataNotificationUndo,setDataNotificationUndo] = useState({
   //   open : false,
@@ -73,9 +76,12 @@ export default function FormProduct({
 
   const onFinish = (values: FieldTypeFormProduct) => {
     const submitData = convertSubmitData({values,supplierId});
+      console.log(submitData,'submitData');
       
     if (id) {
-      onUpdate({ ...submitData, _id: id });
+      if(onUpdate){
+        onUpdate({ ...submitData, _id: id });
+      }
     } else {
       onCreate(submitData);
     }
@@ -180,14 +186,39 @@ export default function FormProduct({
           <Row {...layoutRow}>
             <Col span={12}>
               {RenderLoading(isLoading, <MedicineName form={form} />)}
-            </Col>
-            <Col span={12}>
               <Form.Item<FieldTypeFormProduct> label="Hình thức" name="type">
                 {RenderLoading(isLoading, <Select options={optionsType} />)}
               </Form.Item>
+              <Form.Item<FieldTypeFormProduct>
+                label="Mức độ đẩy hàng"
+                name="saleLevel"
+              >
+                {RenderLoading(
+                  isLoading,
+                  <Select options={optionsSaleLevel} />
+                )}
+                </Form.Item>
+                <Form.Item<FieldTypeFormProduct>
+                label="Mã sản phẩm"
+                name="codeBySupplier"
+                tooltip="Mã dành cho nhà cung cấp"
+                rules={[
+                  { required: true, message: "Vui lòng nhập mã sản phẩm" },
+                ]}
+              >
+                {RenderLoading(isLoading, <Input />)}
+              </Form.Item>
             </Col>
+            <Col span={12}>
+            <ImagesProduct form={form} isLoading={isLoading}/>
+            </Col>
+            {/* <Col span={12}>
+              <Form.Item<FieldTypeFormProduct> label="Hình thức" name="type">
+                {RenderLoading(isLoading, <Select options={optionsType} />)}
+              </Form.Item>
+            </Col> */}
           </Row>
-          <Row {...layoutRow}>
+          {/* <Row {...layoutRow}>
             <Col span={12}>
               <Form.Item<FieldTypeFormProduct>
                 label="Mức độ đẩy hàng"
@@ -211,7 +242,7 @@ export default function FormProduct({
                 {RenderLoading(isLoading, <Input />)}
               </Form.Item>
             </Col>
-          </Row>
+          </Row> */}
         </BaseBorderBox>
 
         <BaseBorderBox title={"Thông tin chung"}>

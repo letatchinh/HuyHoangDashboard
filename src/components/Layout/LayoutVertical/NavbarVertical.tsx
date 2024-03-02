@@ -1,6 +1,6 @@
 import { ConfigProvider, Menu, MenuProps, Spin, Tooltip } from 'antd';
 import React, { useCallback, useMemo, useState , isValidElement, useEffect} from 'react';
-import NavbarItems, { resource } from './resource';
+import NavbarItems, { resource } from './resourceV2';
 import { useGetPolicyCheckAllPage } from '~/modules/user/user.hook';
 import { useGetProfile, useProfile } from '~/modules/auth/auth.hook';
 import { isMatchPolicy, useUserPolicy } from '~/modules/policy/policy.hook';
