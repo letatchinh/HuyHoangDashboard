@@ -33,9 +33,10 @@ import paymentVoucher from '~/modules/paymentVoucher';
 import receiptVoucher from '~/modules/receiptVoucher';
 import lkModule from '~/modules/sale/lk';
 import productsAll from '~/modules/productsAll';
-import orderSupplier from '~/modules/sale/orderSupplier/index';
 import freelanceContractPharmacy from '~/modules/freelanceContractPharmacy';
 import costManagement from '~/modules/costManagement';
+import orderSupplier from '~/modules/sale/orderSupplier';
+import areaConfiguration from '~/modules/areaConfiguration';
 const authPersistConfig = {
     key: 'auth',
     storage: localStorage,
@@ -83,6 +84,7 @@ const rootReducer = combineReducers({
     orderSupplier: orderSupplier.redux.reducer,
     freelanceContractPharmacy: freelanceContractPharmacy.redux.reducer,
     costManagement: costManagement.redux.reducer,
+    areaConfiguration: areaConfiguration.redux.reducer,
 
 });
 export default rootReducer
