@@ -6,12 +6,14 @@ type propsType = {
   onDelete?: (_id: string) => void;
   _id: string;
   isSubmitLoading?: boolean;
+  title?:string
 };
 export default function ActionColumn({
   onDetailClick,
   onDelete,
   _id,
   isSubmitLoading,
+  title,
 }: propsType): React.JSX.Element {
   return (
     <Row justify={"center"} align={"middle"} wrap={false}>
@@ -21,7 +23,7 @@ export default function ActionColumn({
         type="primary"
         size="small"
       >
-        Xem chi tiết
+        {title ? title :'Xem chi tiết'}
       </Button>
       <Divider type="vertical" />
       <Popconfirm

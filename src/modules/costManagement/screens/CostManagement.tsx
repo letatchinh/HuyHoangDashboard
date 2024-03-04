@@ -5,7 +5,7 @@ import React, { useCallback, useMemo, useState } from 'react';
 import Breadcrumb from '~/components/common/Breadcrumb';
 import WhiteBox from '~/components/common/WhiteBox';
 import useTranslate from '~/lib/translation';
-import { useCostManagementPaging,useChangeVariantDefault, useCostManagementQueryParams, useDeleteCostManagement, useGetCostManagements, useUpdateCostManagementParams } from '../costManagement.hook';
+import { useCostManagementPaging,useChangeVariantDefault, useCostManagementQueryParams, useDeleteCostManagement, useGetCostManagements, useUpdateCostManagementParams, useUpdateCostManagement } from '../costManagement.hook';
 import dayjs from 'dayjs';
 import { ApartmentOutlined, BehanceSquareOutlined, FilterOutlined, CloudServerOutlined, DollarOutlined, MediumOutlined, ShoppingOutlined, PlusOutlined, InfoCircleTwoTone, DeleteOutlined, SearchOutlined } from '@ant-design/icons';
 import { FormFieldSearch, SearchByType } from '~/modules/supplier/supplier.modal';
@@ -42,6 +42,7 @@ export default function CostManagement(props: propsType): React.JSX.Element {
   // console.log(costManagement[0]?.cost, 'costManagement');
   const [isSubmitLoading, onDelete] = useDeleteCostManagement();
   const paging = useCostManagementPaging();
+  // const [, onUpdate] = useUpdateCostManagement();
   const [priceByProduct, setPriceByProduct] = useState<any>(0);
   const onOpenForm = useCallback((id?: any) => {
     if (id) {
@@ -269,11 +270,18 @@ export default function CostManagement(props: propsType): React.JSX.Element {
       fixed : 'right',
       width : 200,
       render(_id, record, index) {
-        return <ActionColumn 
-        _id={_id}
-        onDetailClick={onOpenForm}
-        // onDelete={onDelete}
-        />
+        return <Row justify={"center"} align={"middle"} wrap={false}>
+        <Button
+          icon={<InfoCircleTwoTone />}
+          onClick={() => handleOpenUpdate(_id,get(record,'variants.price'))}
+          type="primary"
+          size="small"
+        >
+          {'Cập nhật'}
+        </Button>
+
+        
+      </Row>
       },
     },
   ];
@@ -443,10 +451,10 @@ export default function CostManagement(props: propsType): React.JSX.Element {
         // destroyOnClose
         open={isOpenForm}
         footer={null}
-        onCancel={()=>setOpenForm(false)}
+        onCancel={onCancel}
         width={1050}
       >
-        <CostManagementForm   startDate= {defaultDate.startDate}
+        <CostManagementForm setId={setId}  startDate= {defaultDate.startDate}
               endDate={defaultDate.endDate} id={id} onCancel={onCancel} priceByProduct={priceByProduct}/>
       </Modal>
     </div>
