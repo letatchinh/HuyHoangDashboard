@@ -7,7 +7,7 @@ import { FormFieldCreateBill } from "../../bill.modal";
 import useCreateBillStore from "../../storeContext/CreateBillContext";
 import SelectDebt from "./SelectDebt";
 type propsType = {};
-const Layout = ({
+export const Layout = ({
   label,
   children,
   isLarge,
