@@ -122,6 +122,13 @@ import {
               key: PATH_APP.botNotification.root,
               permission: [POLICIES.READ_NOTIFICATIONBOTMANAGER],
             },
+            {
+              label: "Cấu hình vùng",
+              icon: <i className="fa-solid fa-chart-area"></i>,
+              path: PATH_APP.areaConfiguration.root,
+              key: PATH_APP.areaConfiguration.root,
+              permission: [POLICIES.READ_AREACONFIGURATION],
+            },
           ],
         },
       ],

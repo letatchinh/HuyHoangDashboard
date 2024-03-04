@@ -34,6 +34,7 @@ const todoList = 'todoList';
 const voucher = 'voucher';
 const statusVoucher = 'statusVoucher';
 const historyVoucher = 'historyVoucher';
+const areaConfiguration = 'areaConfiguration';
 const RESOURCES = [
   //Setting
   configDiscount,
@@ -76,6 +77,8 @@ const RESOURCES = [
   todoList,
 
   medicine,
+  
+  areaConfiguration,
 ];
 
 //ACTIONS

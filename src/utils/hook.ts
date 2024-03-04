@@ -78,6 +78,7 @@ interface UseFetchByParamProps extends UseFetchProps {
   muteOnFailed?: boolean;
   actionUpdate?: any;
   reFetch?: boolean;
+  listSearchSelector?:any
 }
 
 export const useFetchByParam = (props: UseFetchByParamProps): [any, boolean, ActionUpdateFunction] => {
@@ -165,6 +166,7 @@ export const useAction = ({ action }:UseActionProps) : (v:any) => void => {
     return {
       loadingSelector: getSelector('isLoading'),
       listSelector: getSelector('list'),
+      listSearchSelector: getSelector('listSearch'),
       getListFailedSelector: getSelector('getListFailed'),
   
       getByIdLoadingSelector: getSelector('isGetByIdLoading'),
@@ -180,7 +182,7 @@ export const useAction = ({ action }:UseActionProps) : (v:any) => void => {
   
       updateSuccessSelector: getSelector('updateSuccess'),
       updateFailedSelector: getSelector('updateFailed'),
-      pagingSelector: getSelector('paging')
+      pagingSelector: getSelector('paging'),
     };
   };
   

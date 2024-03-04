@@ -31,6 +31,7 @@ import PharmacyDetail from "~/modules/pharmacy/screens/PharmacyDetail";
 import Lk from "~/pages/Dashboard/Lk";
 import OrderSupplier from "~/pages/Dashboard/OrderSupplier";
 import UpdateOrderSupplier from "~/pages/Dashboard/OrderSupplier/UpdateOrderSupplier";
+import AreaConfigurationPage from "~/pages/Dashboard/AreaConfiguration";
 export const mainRoutes :PathRouteProps[] = [
   { path: PATH_APP.main.root, Component: Homepage },
 
@@ -82,18 +83,19 @@ export const mainRoutes :PathRouteProps[] = [
 
   // Products All
   { path: PATH_APP.productAll.root, Component: ProductsAll },
- 
+  
   //Work Management
   { path: PATH_APP.todoList.workSprint, Component: WorkSprintPage },
   { path: PATH_APP.todoList.workList, Component: WorkListPage },
   { path: PATH_APP.todoList.workTask, Component: WorkTaskPage },
-
-  { path: PATH_APP.productAll.root, Component: ProductsAll },
-
+  
+  
   // Order Supplier
   { path: PATH_APP.orderSupplier.root, Component: OrderSupplier},
   { path: PATH_APP.orderSupplier.update, Component: UpdateOrderSupplier},
-
+  
+  // Cấu hình vùng
+  { path: PATH_APP.areaConfiguration.root, Component: AreaConfigurationPage },
 
   { path: '/', Component: Homepage },
 ]
