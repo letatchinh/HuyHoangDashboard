@@ -37,18 +37,18 @@ export default function CostManagementForm({
   const [toTalPrice, setToTalPrice] = useState(0); //giá bán
   const [priceMemo, setPriceMemo] = useState(0);
   const [shippngId, setShippingId] = useState(null);
+  const [profitVal, setProfitVal] = useState(0);
   useResetAction();
   const [keyword, setKeyword] = useState<any>("VND");
   const handleChangeKeyword = useCallback((value?: any) => {
     if (value) {
       setKeyword(value);
     }
-    const price1 = form.getFieldValue("exchangeValue");
-    if (price1) {
-      const a = toTalPrice - price1
-      setPriceMemo(a);
-      form.resetFields(["cost"]);
-    };
+    const price1 = form.getFieldValue("totalPrices").replace(/,/g, '');
+    // if (price1) {
+      setPriceMemo(price1);
+      form.resetFields(["cost","financialCost"]);
+    // };
   }, [form]);
   // const onUndoForm = (isLast = false) => {
 
@@ -80,25 +80,29 @@ export default function CostManagementForm({
       startDate: dayjs(values.startDate).format('YYYY-MM-DD'),
       endDate: dayjs(values.endDate).format('YYYY-MM-DD'),
     };
-    const { cost } = values;
-    const distributionChannel = cost.management + cost?.pharmaceutical + cost?.operations + cost?.marketing + cost?.operations;
+    const { cost,financialCost } = values;
+    const distributionChannel = cost.management + cost?.pharmaceutical + cost?.operations + cost?.marketing;
     if (keyword === 'percent') {
-      const percentKeys = ['distributionChannel', 'marketing', 'management', 'pharmaceutical', 'logistic', 'operations'];
+
+      const percentKeys = [ 'marketing', 'management', 'pharmaceutical', 'logistic', 'operations'];
       percentKeys.forEach(key => {
         formattedValues.cost[key] = (toTalPrice * values.cost[key]) / 100;
       });
-    }
-    console.log(formattedValues);
-    onUpdate({ ...formattedValues, cost: { ...cost, distributionChannel }, _id: shippngId });
+    onUpdate({ ...formattedValues,financialCost: (toTalPrice * financialCost) / 100, cost: { ...cost, distributionChannel: (toTalPrice * distributionChannel / 100) }, _id: shippngId });
     form.resetFields();setId(null);
-    // onCancel();
-    
+    } else{
+      onUpdate({ ...formattedValues, cost: { ...cost, distributionChannel: distributionChannel }, _id: shippngId });
+    form.resetFields();setId(null);
+    };
   };
   useEffect(() => {
 
     if (costManagementById && id) {
-      const { shippingCost, variants, medicalCode, name } = costManagementById;
+      const { shippingCost, variants, medicalCode, name,totalPrices,profitValue } = costManagementById;
       setShippingId(get(shippingCost, '_id', null))
+      setToTalPrice(totalPrices);
+      setProfitVal(profitValue);
+      setKeyword('VND')
       const costShipping = {
         distributionChannel: shippingCost?.cost?.distributionChannel ?? 0,
         pharmaceutical: shippingCost?.cost?.pharmaceutical ?? 0,
@@ -110,20 +114,26 @@ export default function CostManagementForm({
 
 
         get count() {
-          return this.distributionChannel - this.pharmaceutical - this.operations - this.marketing - this.management - this.logistic - this.financialCost
+          return this.distributionChannel  + this.logistic + this.financialCost
         }
       }
-      setPriceMemo(variants?.price - costShipping.count);
+      setPriceMemo(profitValue?profitValue:(totalPrices - costShipping.count));
       // setPriceMemo( variants?.price-shippingCost?.cost?.distributionChannel-shippingCost?.cost?.pharmaceutical-shippingCost?.cost?.operations-shippingCost?.cost?.marketing-shippingCost?.cost?.management-shippingCost?.cost?.logistic); 
-      setToTalPrice(variants?.price);
       form.setFieldsValue({
         priceProduct: variants?.price,
         code: variants?.variantCode,
         name,
-        financialCost: shippingCost?.financialCost,
+        financialCost: formatter(shippingCost?.financialCost),
+        totalPrices: formatter(totalPrices),
         cost:
         {
-          ...costShipping
+          distributionChannel: formatter(shippingCost?.cost?.distributionChannel ?? 0),
+        pharmaceutical: formatter(shippingCost?.cost?.pharmaceutical ?? 0),
+        operations: formatter(shippingCost?.cost?.operations ?? 0),
+        marketing:formatter( shippingCost?.cost?.marketing ?? 0),
+        management: formatter(shippingCost?.cost?.management ?? 0),
+        logistic: formatter(shippingCost?.cost?.logistic ?? 0),
+        financialCost: formatter(shippingCost?.financialCost ?? 0),
         }
 
       });
@@ -147,6 +157,9 @@ export default function CostManagementForm({
   const handleReset = () => {
     form.resetFields(["cost", 'financialCost']);
     setPriceMemo(priceByProduct);
+  };
+  const handleBlur = (value:any) => {
+    
   }
   return (
     <div>
@@ -227,7 +240,7 @@ export default function CostManagementForm({
             <Col style={{ paddingBottom: 10 }} span={12}>
               <Form.Item<any>
                 label="Doanh thu"
-                name={'profitValue'}
+                name={'totalPrices'}
               >
                 {RenderLoading(isLoading, <InputNumber readOnly style={{ width: '100%' }} />)}
               </Form.Item>
@@ -241,7 +254,7 @@ export default function CostManagementForm({
           onChange={(value) => handleChangeKeyword(value)
           }
         />
-        <span><Button onClick={() => handleReset()}>Đặt lại</Button></span>
+        {/* <span><Button onClick={() => handleReset()}>Đặt lại</Button></span> */}
         <BaseBorderBox title={"Thông tin chi phí vận chuyển (1)"}>
 
           <Row {...layoutRow}>
@@ -256,6 +269,7 @@ export default function CostManagementForm({
                   ;
                 }} style={{ width: '100%' }} />) : RenderLoading(isLoading, <InputNumber max={100} onBlur={(e: any) => {
                   const a = priceMemo - (toTalPrice * e.target.value) / 100
+                  console.log(e.target.value,priceMemo,toTalPrice,'asdsd')
                   setPriceMemo(a);
                   ;
                 }} style={{ width: '100%' }} />)}
@@ -360,10 +374,10 @@ export default function CostManagementForm({
         </BaseBorderBox>
         <BaseBorderBox>
           <Row {...layoutRow}>
-            <Col span={4}>
+            <Col span={6}>
               <Layout tooltip="Lợi nhuận bằng doanh thu - (1) - (2) - (3)" label={"Lợi nhuận:"}>
                 <Typography.Text type="danger" strong>
-                  {formatter(priceMemo)}đ
+                  {formatter(profitVal)}đ
                 </Typography.Text>
               </Layout>
             </Col>
@@ -371,7 +385,7 @@ export default function CostManagementForm({
         </BaseBorderBox>
         <Row justify={"end"} gutter={16}>
           <Col>
-            <Button disabled={backupForm.length <= 1} onClick={() => handleReset()}>
+            <Button onClick={() => handleReset()}>
               Đặt lại
             </Button>
           </Col>

@@ -1,5 +1,5 @@
 
-import { Button, Checkbox, Col, DatePicker, Form, Modal, Row, Select, Space, Typography } from 'antd';
+import { Button, Checkbox, Col, DatePicker, Form, Modal, Row, Select, Space, Typography, message } from 'antd';
 import Search from 'antd/es/input/Search';
 import React, { useCallback, useMemo, useState } from 'react';
 import Breadcrumb from '~/components/common/Breadcrumb';
@@ -186,20 +186,30 @@ export default function CostManagement(props: propsType): React.JSX.Element {
         }
       },
     },
-    // {
-    //   title: "Doanh thu",
-    //   dataIndex: "totalAmount",
-    //   key: "totalAmount",
-    //   render(totalAmount, record, index) {
-    //     return formatter(get(record,'totalAmount',0))
-    //   },
-    // },
+    {
+      title: "Doanh thu",
+      dataIndex: "totalAmount",
+      align: 'center',
+      key: "totalAmount",
+      render(totalAmount, record, index) {
+        return formatter(get(record,'totalPrices',0))
+      },
+    },
+    {
+      title: "Lợi nhuận",
+      dataIndex: "profitValue",
+      align: 'center',
+      key: "profitValue",
+      render(totalAmount, record, index) {
+        return formatter(get(record,'profitValue',0))
+      },
+    },
     {
       title: "Giá bán",
       dataIndex: "variants",
       key: "variants",
       render(variants, record, index) {
-        return formatter(get(variants,'price'))
+        return formatter(get(variants,'price',0))
       },
     },
     {
@@ -224,7 +234,7 @@ export default function CostManagement(props: propsType): React.JSX.Element {
       align: 'center',
       key: "shippingCost",
       render(value, record, index) {
-        return get(value,'cost.logistic')
+        return formatter(get(value,'cost.logistic',0))
       },
     },
     {
@@ -233,7 +243,7 @@ export default function CostManagement(props: propsType): React.JSX.Element {
       align: 'center',
       key: "shippingCost",
       render(value, record, index) {
-        return get(value,'cost.distributionChannel')
+        return formatter(get(value,'cost.distributionChannel',0))
       },
     },
     {
@@ -242,7 +252,7 @@ export default function CostManagement(props: propsType): React.JSX.Element {
       align: 'center',
       key: "shippingCost",
       render(value, record, index) {
-        return get(value,'financialCost')
+        return formatter(get(value,'financialCost',0))
       },
     },
     // {
@@ -273,7 +283,11 @@ export default function CostManagement(props: propsType): React.JSX.Element {
         return <Row justify={"center"} align={"middle"} wrap={false}>
         <Button
           icon={<InfoCircleTwoTone />}
-          onClick={() => handleOpenUpdate(_id,get(record,'variants.price'))}
+          onClick={() =>{ 
+            if(get(record,'totalPrices',0) === 0)
+            return message.warning('Sản phẩm chưa có doanh thu')
+           else return handleOpenUpdate(_id,get(record,'totalPrices',0))}
+          }
           type="primary"
           size="small"
         >
@@ -424,6 +438,7 @@ export default function CostManagement(props: propsType): React.JSX.Element {
         </Col>
       </Row>
       <WhiteBox>
+        <h5>Đơn vị: VND</h5>
       <TableAnt
           dataSource={costManagement}
           loading={isLoading}
