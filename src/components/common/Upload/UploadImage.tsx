@@ -94,8 +94,8 @@ const UploadImage: React.FC<UploadImageProps> = ({
       }
       if(allowList){// Mode List
         const newFileList = fileList?.map((value : UploadFile) => ({
-          ...value,
           url : get(value,'response.url',''),
+          ...value,
         }))
         onChange(newFileList);
         
