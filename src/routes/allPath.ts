@@ -113,5 +113,9 @@ export const PATH_APP = {
     root: path(ROOTS.app, "/cost-management"),
     create: path(ROOTS.app, "/cost-management/create"),
     update: path(ROOTS.app, "/cost-management/:id"),
-  }
+  },
+
+  areaConfiguration : {
+    root:  path(ROOTS.app, '/area-configuration'),
+  },
 };

@@ -41,6 +41,7 @@ const historySupplierMineral = 'historySupplierMineral';
 // Quản lý luỹ kế
 const cumulativeEvent = 'cumulativeEvent';
 
+const areaConfiguration = 'areaConfiguration';
 const RESOURCES = [
   //Setting
   configDiscount,
@@ -89,6 +90,8 @@ const RESOURCES = [
   
   cumulativeEvent,
   shippingCost,
+  
+  areaConfiguration,
 ];
 
 //ACTIONS

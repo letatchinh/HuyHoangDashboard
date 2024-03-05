@@ -1,66 +1,16 @@
-import { GiftTwoTone, UndoOutlined } from "@ant-design/icons";
-import { Button, Col, DatePicker, Form, Input, InputNumber, notification, Row, Select, Tabs } from "antd";
-import { compact, concat, debounce, get, head, keys } from "lodash";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { Button, Col, DatePicker, Form, Input, InputNumber, Row, Select, Typography } from "antd";
+import { debounce, get } from "lodash";
+import React, { useCallback, useEffect, useState } from "react";
 import BaseBorderBox from "~/components/common/BaseBorderBox/index";
 import RenderLoading from "~/components/common/RenderLoading";
 // import { Pie } from "@ant-design/charts";
-import CumulativeDiscountModule from '~/modules/cumulativeDiscount';
-import { useSupplierInfoRedux } from "~/modules/productsAll/productsAll.hook";
 
-import TabPane from "antd/es/tabs/TabPane";
-import useNotificationStore from "~/store/NotificationContext";
-import { useCreateCostManagement, useGetCostManagement, useResetAction, useUpdateCostManagement } from "../costManagement.hook";
 import { DatePickerProps } from "antd/lib";
 import dayjs from "dayjs";
-import { formToJSON } from "axios";
-import { useGetProducts } from "~/modules/product/product.hook";
-// type DataType = "new" | "evaluating" | "ongoing" | "finished" | "archived";
-
-// interface PieChartData {
-//   type: DataType;
-//   value: number;
-// }
-// const pieChartData: PieChartData[] = [
-//   {
-//     type: "new",
-//     value: 40,
-//   },
-//   {
-//     type: "evaluating",
-//     value: 25,
-//   },
-//   {
-//     type: "ongoing",
-//     value: 22,
-//   },
-//   {
-//     type: "finished",
-//     value: 22,
-//   },
-//   {
-//     type: "archived",
-//     value: 10,
-//   },
-// ];
-
-// const config = {
-//   appendPadding: 10,
-//   data: pieChartData,
-//   angleField: "value",
-//   colorField: "type",
-//   radius: 0.8,
-//   label: {
-//     type: "outer",
-//     content: "{value}",
-//   },
-//   interactions: [
-//     {
-//       type: "element-active",
-//     },
-//   ],
-// };
-
+import { Layout } from "~/modules/sale/bill/components/createBillScreen/TotalBill";
+import useNotificationStore from "~/store/NotificationContext";
+import { formatter } from "~/utils/helpers";
+import { useCreateCostManagement, useGetCostManagement, useResetAction, useUpdateCostManagement } from "../costManagement.hook";
 const layoutRow = {
   gutter: 16,
 };
@@ -70,63 +20,48 @@ export default function CostManagementForm({
   priceByProduct,
   startDate,
   endDate,
+  setId
 }: any): React.JSX.Element {
-  // const supplierInfo = useSupplierInfoRedux();
   const { onNotify } = useNotificationStore();
   const [form] = Form.useForm();
   const [backupForm, setBackupForm] = useState<any[]>([]);
 
-  const [isSubmitLoading, onCreate] = useCreateCostManagement(onCancel);
-  const [, onUpdate] = useUpdateCostManagement(onCancel);
-  const queryGet = useMemo(() => ({
-    id: id,
-    startDate: dayjs(startDate).format("YYYY-MM-DD"),
-    endDate: dayjs(endDate).format("YYYY-MM-DD")
-  }), [id, startDate, endDate]);
+  // const [isSubmitLoading, onCreate] = useCreateCostManagement();
+  const [isSubmitLoading, onUpdate] = useUpdateCostManagement(onCancel);
+  // const queryGet = useMemo(() => ({
+  //   id: id,
+  //   startDate: dayjs(startDate).format("YYYY-MM-DD"),
+  //   endDate: dayjs(endDate).format("YYYY-MM-DD")
+  // }), [id, startDate, endDate]);
   const [costManagementById, isLoading] = useGetCostManagement(id);
-  // const query = useMemo(() => ({ page: 1, limit: 10, keyword: 'isSupplierMaster' }), []);
-  // const [data, isLoadingPro] = useGetProducts(query);
   const [toTalPrice, setToTalPrice] = useState(0); //giá bán
-  const [toTalDiscount, setToTalDiscount] = useState(0); // tổng tiền chiết khấu
-  const [totalAmount, setTotalAmount] = useState(0); // tổng lợi nhuận
-  const [totalRelated, setTotalRelated] = useState<number>(0); //tổng chi phí liên quan
   const [priceMemo, setPriceMemo] = useState(0);
   const [shippngId, setShippingId] = useState(null);
-  // const [dataNotificationUndo,setDataNotificationUndo] = useState({
-  //   open : false,
-  //   description : null
-  // })
+  const [profitVal, setProfitVal] = useState(0);
   useResetAction();
   const [keyword, setKeyword] = useState<any>("VND");
   const handleChangeKeyword = useCallback((value?: any) => {
     if (value) {
       setKeyword(value);
     }
-    const price1 = form.getFieldValue("exchangeValue");
-    if (price1) {
-      const a = toTalPrice - price1
-      setPriceMemo(a);
-      form.resetFields(["cost"]);
-    };
+    const price1 = form.getFieldValue("totalPrices").replace(/,/g, '');
+    // if (price1) {
+      setPriceMemo(price1);
+      form.resetFields(["cost","financialCost"]);
+    // };
   }, [form]);
-  //  useEffect(() => {
-  //   if(costManagementById){
-  //   const { shippingCost,variants,medicalCode,name } = costManagementById;
-  //   setPriceMemo( variants?.price);
-  //   setToTalPrice(variants?.price);}
-  // }, [costManagementById]);
-  const onUndoForm = (isLast = false) => {
+  // const onUndoForm = (isLast = false) => {
 
-    // Action Back One step to set Form And Remove last Recover
-    const stepUndo = ((backupForm.length === 1) || isLast) ? 1 : 2;
+  //   // Action Back One step to set Form And Remove last Recover
+  //   const stepUndo = ((backupForm.length === 1) || isLast) ? 1 : 2;
 
-    const preForm = backupForm[backupForm.length - stepUndo];
-    form.setFieldsValue(preForm);
-    const newRecoverForm = [...backupForm];
+  //   const preForm = backupForm[backupForm.length - stepUndo];
+  //   form.setFieldsValue(preForm);
+  //   const newRecoverForm = [...backupForm];
 
-    newRecoverForm.pop();
-    setBackupForm(newRecoverForm);
-  }
+  //   newRecoverForm.pop();
+  //   setBackupForm(newRecoverForm);
+  // }
 
   const options = [
     {
@@ -139,34 +74,35 @@ export default function CostManagementForm({
     },
 
   ];
-  // const optionData = get(data, "variants", [])?.map((item: any) => ({
-  //   label: get(item, "variantCode"),
-  //   value: get(item, "_id"),
-  // }));
   const onFinish = (values: any) => {
     const formattedValues: any = {
       ...values,
       startDate: dayjs(values.startDate).format('YYYY-MM-DD'),
       endDate: dayjs(values.endDate).format('YYYY-MM-DD'),
     };
-    const {cost} = values;
-    const distributionChannel = cost.management + cost?.pharmaceutical + cost?.operations + cost?.marketing +cost?.operations;
+    const { cost,financialCost } = values;
+    const distributionChannel = cost.management + cost?.pharmaceutical + cost?.operations + cost?.marketing;
     if (keyword === 'percent') {
-      const percentKeys = ['distributionChannel', 'marketing', 'management', 'pharmaceutical', 'logistic', 'operations'];
+
+      const percentKeys = [ 'marketing', 'management', 'pharmaceutical', 'logistic', 'operations'];
       percentKeys.forEach(key => {
         formattedValues.cost[key] = (toTalPrice * values.cost[key]) / 100;
       });
-    }
-    console.log(formattedValues);
-    onUpdate({ ...formattedValues,cost:{...cost,distributionChannel},_id: shippngId });
-    form.resetFields();
-    onCancel();
+    onUpdate({ ...formattedValues,financialCost: (toTalPrice * financialCost) / 100, cost: { ...cost, distributionChannel: (toTalPrice * distributionChannel / 100) }, _id: shippngId });
+    form.resetFields();setId(null);
+    } else{
+      onUpdate({ ...formattedValues, cost: { ...cost, distributionChannel: distributionChannel }, _id: shippngId });
+    form.resetFields();setId(null);
+    };
   };
   useEffect(() => {
 
     if (costManagementById && id) {
-      const { shippingCost, variants, medicalCode, name } = costManagementById;
-      setShippingId(get(shippingCost,'_id',null))
+      const { shippingCost, variants, medicalCode, name,totalPrices,profitValue } = costManagementById;
+      setShippingId(get(shippingCost, '_id', null))
+      setToTalPrice(totalPrices);
+      setProfitVal(profitValue);
+      setKeyword('VND')
       const costShipping = {
         distributionChannel: shippingCost?.cost?.distributionChannel ?? 0,
         pharmaceutical: shippingCost?.cost?.pharmaceutical ?? 0,
@@ -178,20 +114,26 @@ export default function CostManagementForm({
 
 
         get count() {
-          return this.distributionChannel - this.pharmaceutical - this.operations - this.marketing - this.management - this.logistic - this.financialCost
+          return this.distributionChannel  + this.logistic + this.financialCost
         }
       }
-      setPriceMemo(variants?.price - costShipping.count);
+      setPriceMemo(profitValue?profitValue:(totalPrices - costShipping.count));
       // setPriceMemo( variants?.price-shippingCost?.cost?.distributionChannel-shippingCost?.cost?.pharmaceutical-shippingCost?.cost?.operations-shippingCost?.cost?.marketing-shippingCost?.cost?.management-shippingCost?.cost?.logistic); 
-      setToTalPrice(variants?.price);
       form.setFieldsValue({
         priceProduct: variants?.price,
         code: variants?.variantCode,
         name,
-        financialCost: shippingCost?.financialCost,
+        financialCost: formatter(shippingCost?.financialCost),
+        totalPrices: formatter(totalPrices),
         cost:
         {
-          ...costShipping
+          distributionChannel: formatter(shippingCost?.cost?.distributionChannel ?? 0),
+        pharmaceutical: formatter(shippingCost?.cost?.pharmaceutical ?? 0),
+        operations: formatter(shippingCost?.cost?.operations ?? 0),
+        marketing:formatter( shippingCost?.cost?.marketing ?? 0),
+        management: formatter(shippingCost?.cost?.management ?? 0),
+        logistic: formatter(shippingCost?.cost?.logistic ?? 0),
+        financialCost: formatter(shippingCost?.financialCost ?? 0),
         }
 
       });
@@ -212,15 +154,13 @@ export default function CostManagementForm({
     const debounceSetRecover = debounce(onSetRecoverForm, 0);
     debounceSetRecover();
   };
-
-  const onChange1 = (value: any) => {
-    console.log(value)
-    // setTotalAmount(value);
+  const handleReset = () => {
+    form.resetFields(["cost", 'financialCost']);
+    setPriceMemo(priceByProduct);
+  };
+  const handleBlur = (value:any) => {
+    
   }
-  // const handLeBlur = (value: any) => {
-  //   const values = totalRelated + parseFloat(value);
-  //   setTotalRelated(values);
-  // }
   return (
     <div>
       <h5>Tạo mới chi phí</h5>
@@ -242,84 +182,27 @@ export default function CostManagementForm({
         }}
         onValuesChange={onValuesChange}
       >
-        {/* <Form.Item<any> name="medicalCode" hidden /> */}
-        {/* <BaseBorderBox title={"Thông tin sản phẩm"}>
-          <Row {...layoutRow}>
-            <Col span={12}>
-            <Form.Item<any>
-                label="Mã sản phẩm"
-                name={'code'}
-              >
-                {RenderLoading(isLoading, <Input readOnly />)}
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-            <Form.Item<any>
-                label="Tên sản phẩm"
-                name={'name'}
-              >
-                {RenderLoading(isLoading, <Input readOnly />)}
-              </Form.Item>
-            </Col>
-          </Row>
-
-          <Row {...layoutRow}>
-            <Col span={12}>
-            <Form.Item<any>
-                label="Chi nhánh"
-                name={'branch'}
-              >
-                {RenderLoading(isLoading, <Input readOnly />)}
-              </Form.Item>
-            </Col>
-          </Row>
-        </BaseBorderBox> */}
         <BaseBorderBox title={"Khoảng ngày"}>
-        <Row {...layoutRow}>
-          <Col style={{ paddingBottom: 10 }} span={12}>
-            <Form.Item<any>
-              label="Ngày bắt đầu"
-              name={'startDate'}
-            >
-              <DatePicker onChange={onChange} />
-            </Form.Item>
-          </Col>
-          <Col style={{ paddingBottom: 10 }} span={12}>
-            <Form.Item<any>
-              label="Ngày kết thúc"
-              name={'endDate'}
-            >
-              <DatePicker onChange={onChange} />
-            </Form.Item>
-          </Col>
-        </Row>
+          <Row {...layoutRow}>
+            <Col style={{ paddingBottom: 10 }} span={12}>
+              <Form.Item<any>
+                label="Ngày bắt đầu"
+                name={'startDate'}
+              >
+                <DatePicker onChange={onChange} />
+              </Form.Item>
+            </Col>
+            <Col style={{ paddingBottom: 10 }} span={12}>
+              <Form.Item<any>
+                label="Ngày kết thúc"
+                name={'endDate'}
+              >
+                <DatePicker onChange={onChange} />
+              </Form.Item>
+            </Col>
+          </Row>
         </BaseBorderBox>
-
         <BaseBorderBox title={"Thông tin sản phẩm"}>
-          {/* <Col style={{ paddingBottom: 10 }} span={12}>
-            <Form.Item<any>
-              label="Giá bán"
-              name={'priceProduct'}
-            >
-              {RenderLoading(isLoading, <InputNumber style={{ width: '100%' }} />)}
-            </Form.Item>
-          </Col>
-          <Col style={{ paddingBottom: 10 }} span={12}>
-            <Form.Item<any>
-              label="Lợi nhuận mong đợi"
-              name={'exchangeValue'}
-            >
-              {RenderLoading(isLoading, <InputNumber onChange={(e: any) => {
-                onChange1(e);
-              }}
-                onBlur={(e: any) => {
-                  const a = priceMemo - e.target.value
-                  setPriceMemo(a);
-                  //  handLeBlur(e.target.value)
-                  ;
-                }} style={{ width: '100%' }} />)}
-            </Form.Item>
-          </Col> */}
           <Row {...layoutRow}>
             <Col span={12}>
               <Form.Item<any>
@@ -354,6 +237,14 @@ export default function CostManagementForm({
 
               </Form.Item>
             </Col>
+            <Col style={{ paddingBottom: 10 }} span={12}>
+              <Form.Item<any>
+                label="Doanh thu"
+                name={'totalPrices'}
+              >
+                {RenderLoading(isLoading, <InputNumber readOnly style={{ width: '100%' }} />)}
+              </Form.Item>
+            </Col>
           </Row>
         </BaseBorderBox>
         <span>Chọn đơn vị quy chiếu: </span> <Select
@@ -363,7 +254,8 @@ export default function CostManagementForm({
           onChange={(value) => handleChangeKeyword(value)
           }
         />
-        <BaseBorderBox title={"Thông tin chi phí vận chuyển"}>
+        {/* <span><Button onClick={() => handleReset()}>Đặt lại</Button></span> */}
+        <BaseBorderBox title={"Thông tin chi phí vận chuyển (1)"}>
 
           <Row {...layoutRow}>
             <Col span={12}>
@@ -374,20 +266,19 @@ export default function CostManagementForm({
                 {keyword === 'VND' ? RenderLoading(isLoading, <InputNumber onBlur={(e: any) => {
                   const a = priceMemo - e.target.value
                   setPriceMemo(a);
-                  // handLeBlur(e.target.value)
                   ;
                 }} style={{ width: '100%' }} />) : RenderLoading(isLoading, <InputNumber max={100} onBlur={(e: any) => {
                   const a = priceMemo - (toTalPrice * e.target.value) / 100
+                  console.log(e.target.value,priceMemo,toTalPrice,'asdsd')
                   setPriceMemo(a);
-                  // handLeBlur(e.target.value)
                   ;
                 }} style={{ width: '100%' }} />)}
               </Form.Item>
             </Col>
-           
+
           </Row>
         </BaseBorderBox>
-        <BaseBorderBox title={"Thông tin chi phí kênh phân phối"}>
+        <BaseBorderBox title={"Thông tin chi phí kênh phân phối (2)"}>
 
           <Row {...layoutRow}>
             <Col span={12}>
@@ -398,12 +289,10 @@ export default function CostManagementForm({
                 {keyword === 'VND' ? RenderLoading(isLoading, <InputNumber onBlur={(e: any) => {
                   const a = priceMemo - e.target.value
                   setPriceMemo(a);
-                  // handLeBlur(e.target.value)
                   ;
                 }} style={{ width: '100%' }} />) : RenderLoading(isLoading, <InputNumber max={100} onBlur={(e: any) => {
                   const a = priceMemo - (toTalPrice * e.target.value) / 100
                   setPriceMemo(a);
-                  // handLeBlur(e.target.value)
                   ;
                 }} style={{ width: '100%' }} />)}
               </Form.Item>
@@ -416,19 +305,17 @@ export default function CostManagementForm({
                 {keyword === 'VND' ? RenderLoading(isLoading, <InputNumber onBlur={(e: any) => {
                   const a = priceMemo - e.target.value
                   setPriceMemo(a);
-                  // handLeBlur(e.target.value)
                   ;
                 }} style={{ width: '100%' }} />) : RenderLoading(isLoading, <InputNumber max={100} onBlur={(e: any) => {
                   const a = priceMemo - (toTalPrice * e.target.value) / 100
                   setPriceMemo(a);
-                  // handLeBlur(e.target.value)
                   ;
                 }} style={{ width: '100%' }} />)}
               </Form.Item>
             </Col>
           </Row>
           <Row {...layoutRow}>
-            
+
             <Col span={12}>
               <Form.Item<any>
                 label="Chi phí marketing"
@@ -437,12 +324,10 @@ export default function CostManagementForm({
                 {keyword === 'VND' ? RenderLoading(isLoading, <InputNumber onBlur={(e: any) => {
                   const a = priceMemo - e.target.value
                   setPriceMemo(a);
-                  // handLeBlur(e.target.value)
                   ;
                 }} style={{ width: '100%' }} />) : RenderLoading(isLoading, <InputNumber max={100} onBlur={(e: any) => {
                   const a = priceMemo - (toTalPrice * e.target.value) / 100
                   setPriceMemo(a);
-                  // handLeBlur(e.target.value)
                   ;
                 }} style={{ width: '100%' }} />)}
               </Form.Item>
@@ -455,21 +340,19 @@ export default function CostManagementForm({
                 {keyword === 'VND' ? RenderLoading(isLoading, <InputNumber onBlur={(e: any) => {
                   const a = priceMemo - e.target.value
                   setPriceMemo(a);
-                  // handLeBlur(e.target.value)
                   ;
                 }} style={{ width: '100%' }} />) : RenderLoading(isLoading, <InputNumber max={100} onBlur={(e: any) => {
                   const a = priceMemo - (toTalPrice * e.target.value) / 100
                   setPriceMemo(a);
-                  // handLeBlur(e.target.value)
                   ;
                 }} style={{ width: '100%' }} />)}
               </Form.Item>
             </Col>
           </Row>
-          </BaseBorderBox>
-          
-        <BaseBorderBox title={"Tổng tin chi phí tài chính"}> 
-        <Row {...layoutRow}>
+        </BaseBorderBox>
+
+        <BaseBorderBox title={"Tổng tin chi phí tài chính (3)"}>
+          <Row {...layoutRow}>
             <Col span={12}>
               <Form.Item<any>
                 label="Chi phí tài chính"
@@ -478,12 +361,10 @@ export default function CostManagementForm({
                 {keyword === 'VND' ? RenderLoading(isLoading, <InputNumber onBlur={(e: any) => {
                   const a = priceMemo - e.target.value
                   setPriceMemo(a);
-                  // handLeBlur(e.target.value)
                   ;
                 }} style={{ width: '100%' }} />) : RenderLoading(isLoading, <InputNumber max={100} onBlur={(e: any) => {
                   const a = priceMemo - (toTalPrice * e.target.value) / 100
                   setPriceMemo(a);
-                  // handLeBlur(e.target.value)
                   ;
                 }} style={{ width: '100%' }} />)}
               </Form.Item>
@@ -491,13 +372,21 @@ export default function CostManagementForm({
             {/* <strong style={{ color: "red", float: 'right' }}>{`Tổng số tiền chi phí liên quan: ${totalRelated}`}</strong> */}
           </Row>
         </BaseBorderBox>
-        {/* <h5 style={{ color: "red" }}>Số tiền còn lại: {priceMemo}</h5> */}
-
-        {/* <Pie {...config} /> */}
+        <BaseBorderBox>
+          <Row {...layoutRow}>
+            <Col span={6}>
+              <Layout tooltip="Lợi nhuận bằng doanh thu - (1) - (2) - (3)" label={"Lợi nhuận:"}>
+                <Typography.Text type="danger" strong>
+                  {formatter(profitVal)}đ
+                </Typography.Text>
+              </Layout>
+            </Col>
+          </Row>
+        </BaseBorderBox>
         <Row justify={"end"} gutter={16}>
           <Col>
-            <Button disabled={backupForm.length <= 1} onClick={() => onUndoForm()}>
-              Hoàn tác
+            <Button onClick={() => handleReset()}>
+              Đặt lại
             </Button>
           </Col>
           <Col>

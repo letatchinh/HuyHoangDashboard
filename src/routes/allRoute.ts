@@ -35,6 +35,7 @@ import { FreelanceContractPharmacyPage } from "~/pages/Dashboard/FreelanceContra
 import RevenueSupplier from "~/modules/supplier/components/Revenue";
 import TotalRevenueList from "~/modules/supplier/components/Revenue/TotalRevenueList";
 import CostManagement from "~/pages/Dashboard/CostManagement";
+import AreaConfigurationPage from "~/pages/Dashboard/AreaConfiguration";
 export const mainRoutes :PathRouteProps[] = [
   { path: PATH_APP.main.root, Component: Homepage },
 
@@ -91,14 +92,13 @@ export const mainRoutes :PathRouteProps[] = [
 
   // Products All
   { path: PATH_APP.productAll.root, Component: ProductsAll },
- 
+  
   //Work Management
   { path: PATH_APP.todoList.workSprint, Component: WorkSprintPage },
   { path: PATH_APP.todoList.workList, Component: WorkListPage },
   { path: PATH_APP.todoList.workTask, Component: WorkTaskPage },
-
-  { path: PATH_APP.productAll.root, Component: ProductsAll },
-
+  
+  
   // Order Supplier
   { path: PATH_APP.orderSupplier.root, Component: OrderSupplier},
   { path: PATH_APP.orderSupplier.update, Component: UpdateOrderSupplier},
@@ -106,6 +106,9 @@ export const mainRoutes :PathRouteProps[] = [
   // Freelance Contract Pharmacy
   { path: PATH_APP.freelanceContractPharmacy.root, Component: FreelanceContractPharmacyPage},
   {path: PATH_APP.costManagement.root, Component: CostManagement},
+  
+  // Cấu hình vùng
+  { path: PATH_APP.areaConfiguration.root, Component: AreaConfigurationPage },
 
   { path: '/', Component: Homepage },
 ]

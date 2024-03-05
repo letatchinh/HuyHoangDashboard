@@ -1,11 +1,11 @@
 
-import { Button, Checkbox, Col, DatePicker, Form, Modal, Row, Select, Space, Typography } from 'antd';
+import { Button, Checkbox, Col, DatePicker, Form, Modal, Row, Select, Space, Typography, message } from 'antd';
 import Search from 'antd/es/input/Search';
 import React, { useCallback, useMemo, useState } from 'react';
 import Breadcrumb from '~/components/common/Breadcrumb';
 import WhiteBox from '~/components/common/WhiteBox';
 import useTranslate from '~/lib/translation';
-import { useCostManagementPaging,useChangeVariantDefault, useCostManagementQueryParams, useDeleteCostManagement, useGetCostManagements, useUpdateCostManagementParams } from '../costManagement.hook';
+import { useCostManagementPaging,useChangeVariantDefault, useCostManagementQueryParams, useDeleteCostManagement, useGetCostManagements, useUpdateCostManagementParams, useUpdateCostManagement } from '../costManagement.hook';
 import dayjs from 'dayjs';
 import { ApartmentOutlined, BehanceSquareOutlined, FilterOutlined, CloudServerOutlined, DollarOutlined, MediumOutlined, ShoppingOutlined, PlusOutlined, InfoCircleTwoTone, DeleteOutlined, SearchOutlined } from '@ant-design/icons';
 import { FormFieldSearch, SearchByType } from '~/modules/supplier/supplier.modal';
@@ -18,6 +18,7 @@ import TableAnt from '~/components/Antd/TableAnt';
 import ActionColumn from '~/components/common/ActionColumn';
 import { ColumnsType } from 'antd/es/table';
 import { formatter } from '~/utils/helpers';
+import toastr from "toastr";
 import useCheckBoxExport from '~/modules/export/export.hook';
 import ExportExcelButton from '~/modules/export/component';
 import { Table } from 'antd/lib';
@@ -42,6 +43,7 @@ export default function CostManagement(props: propsType): React.JSX.Element {
   // console.log(costManagement[0]?.cost, 'costManagement');
   const [isSubmitLoading, onDelete] = useDeleteCostManagement();
   const paging = useCostManagementPaging();
+  // const [, onUpdate] = useUpdateCostManagement();
   const [priceByProduct, setPriceByProduct] = useState<any>(0);
   const onOpenForm = useCallback((id?: any) => {
     if (id) {
@@ -135,6 +137,7 @@ export default function CostManagement(props: propsType): React.JSX.Element {
     setOpenForm(true);
   };
   const onChangeVariantDefault = useChangeVariantDefault();
+  const [messageApi, contextHolder] = message.useMessage();
   const columns: ColumnsType<DataType> = [
     {
       title: "Mã sản phẩm",
@@ -185,20 +188,30 @@ export default function CostManagement(props: propsType): React.JSX.Element {
         }
       },
     },
-    // {
-    //   title: "Doanh thu",
-    //   dataIndex: "totalAmount",
-    //   key: "totalAmount",
-    //   render(totalAmount, record, index) {
-    //     return formatter(get(record,'totalAmount',0))
-    //   },
-    // },
+    {
+      title: "Doanh thu",
+      dataIndex: "totalAmount",
+      align: 'center',
+      key: "totalAmount",
+      render(totalAmount, record, index) {
+        return formatter(get(record,'totalPrices',0))
+      },
+    },
+    {
+      title: "Lợi nhuận",
+      dataIndex: "profitValue",
+      align: 'center',
+      key: "profitValue",
+      render(totalAmount, record, index) {
+        return formatter(get(record,'profitValue',0))
+      },
+    },
     {
       title: "Giá bán",
       dataIndex: "variants",
       key: "variants",
       render(variants, record, index) {
-        return formatter(get(variants,'price'))
+        return formatter(get(variants,'price',0))
       },
     },
     {
@@ -223,7 +236,7 @@ export default function CostManagement(props: propsType): React.JSX.Element {
       align: 'center',
       key: "shippingCost",
       render(value, record, index) {
-        return get(value,'cost.logistic')
+        return formatter(get(value,'cost.logistic',0))
       },
     },
     {
@@ -232,7 +245,7 @@ export default function CostManagement(props: propsType): React.JSX.Element {
       align: 'center',
       key: "shippingCost",
       render(value, record, index) {
-        return get(value,'cost.distributionChannel')
+        return formatter(get(value,'cost.distributionChannel',0))
       },
     },
     {
@@ -241,7 +254,7 @@ export default function CostManagement(props: propsType): React.JSX.Element {
       align: 'center',
       key: "shippingCost",
       render(value, record, index) {
-        return get(value,'financialCost')
+        return formatter(get(value,'financialCost',0))
       },
     },
     // {
@@ -269,14 +282,42 @@ export default function CostManagement(props: propsType): React.JSX.Element {
       fixed : 'right',
       width : 200,
       render(_id, record, index) {
-        return <ActionColumn 
-        _id={_id}
-        onDetailClick={onOpenForm}
-        // onDelete={onDelete}
-        />
+        return <Row justify={"center"} align={"middle"} wrap={false}>
+          {contextHolder}
+        <Button
+          icon={<InfoCircleTwoTone />}
+          onClick={() =>{ 
+            if(get(record,'totalPrices',0) === 0){
+              console.log("first")
+            return messageApi.open({
+              type: "error",
+              content: "Sản phẩm chưa có doanh thu",
+              className: "custom-class",
+              style: {
+                // marginTop: "20vh",
+                // float: "bottom",
+                bottom: "20px", /* Điều chỉnh khoảng cách từ bottom tùy ý */
+                right: "20px",
+                top: "90vh",
+                height: "150px",
+
+                position: "absolute",
+              },
+            });}
+           else return handleOpenUpdate(_id,get(record,'totalPrices',0))}
+          }
+          type="primary"
+          size="small"
+        >
+          {'Cập nhật'}
+        </Button>
+
+        
+      </Row>
       },
     },
   ];
+
   const onSearch = (value: string) => {
     onParamChange({ ['keyword']: value });
   };
@@ -416,6 +457,7 @@ export default function CostManagement(props: propsType): React.JSX.Element {
         </Col>
       </Row>
       <WhiteBox>
+        <h5>Đơn vị: VND</h5>
       <TableAnt
           dataSource={costManagement}
           loading={isLoading}
@@ -443,10 +485,10 @@ export default function CostManagement(props: propsType): React.JSX.Element {
         // destroyOnClose
         open={isOpenForm}
         footer={null}
-        onCancel={()=>setOpenForm(false)}
+        onCancel={onCancel}
         width={1050}
       >
-        <CostManagementForm   startDate= {defaultDate.startDate}
+        <CostManagementForm setId={setId}  startDate= {defaultDate.startDate}
               endDate={defaultDate.endDate} id={id} onCancel={onCancel} priceByProduct={priceByProduct}/>
       </Modal>
     </div>
