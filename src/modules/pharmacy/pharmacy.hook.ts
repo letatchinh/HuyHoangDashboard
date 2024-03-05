@@ -51,13 +51,27 @@ const pagingPharmacyDebtSelector = getSelector("pagingPharmacyDebt");
 const historyPharmacySelector = getSelector("historyPharmacy");
 const getHistoryPharmacyFailedSelector = getSelector("getHistoryPharmacyFailed");
 const isLoadingGetHistoryPharmacySelector = getSelector("isLoadingGetHistoryPharmacy");
-const pagingHistoryPharmacySelector = getSelector("pagingPharmacyDebt");
+const pagingHistoryPharmacySelector = getSelector("pagingHistoryPharmacy");
+
+const accumulationSelector = getSelector("accumulation");
+const getAccumulationFailedSelector = getSelector("getAccumulationFailed");
+const isLoadingGetAccumulationSelector = getSelector("isLoadingGetAccumulation");
+const pagingAccumulationSelector = getSelector("pagingAccumulation");
+
+const accumulationDetailSelector = getSelector("accumulationDetail");
+const getAccumulationDetailFailedSelector = getSelector("getAccumulationDetailFailed");
+const isLoadingGetAccumulationDetailSelector = getSelector("isLoadingGetAccumulationDetail");
+const pagingAccumulationDetailSelector = getSelector("pagingAccumulationDetail");
 
 export const useHistoryPharmacyPaging = () => useSelector(pagingHistoryPharmacySelector);
 
 export const useProductSupplierPaging = () => useSelector(pagingPharmacyDebtSelector);
 
 export const usePharmacyPaging = () => useSelector(pagingSelector);
+
+export const useAccumulationPaging = () => useSelector(pagingAccumulationSelector);
+
+export const useAccumulationDetailPaging = () => useSelector(pagingAccumulationDetailSelector);
 
 export const useGetPharmacies = (query?: any) => {
   return useFetchByParam({
@@ -245,6 +259,65 @@ export const useGetHistoryPharmacy = (id: any) => {
     dataSelector: historyPharmacySelector,
     failedSelector: getHistoryPharmacyFailedSelector,
     param: id,
+  });
+};
+
+export const useAccumulationQuery = () => {
+  const [limit, setLimit] = useState<number | null | undefined>(10);
+  const [page, setPage] = useState<number | null | undefined>(1);
+  // const [keyword, setKeyword] = useState("");
+  const onTableChange: any = ({ current, pageSize }: any) => {
+    setPage(current);
+    setLimit(pageSize);
+  };
+  return useMemo(() => {
+    const query = {
+      page,
+      limit,
+      // keyword,
+    };
+    return [query, onTableChange];
+  }, [page, limit]);
+};
+
+export const useGetAccumulation = (param: any) => {
+  return useFetchByParam({
+    action: pharmacySliceAction.getAccumulationRequest,
+    loadingSelector: isLoadingGetAccumulationSelector,
+    dataSelector: accumulationSelector,
+    failedSelector: getAccumulationFailedSelector,
+    param,
+  });
+};
+
+export const useAccumulationDetailQuery = () => {
+  const [limit, setLimit] = useState(10);
+  const [page, setPage] = useState(1);
+  const [keyword, setKeyword] = useState("");
+  const onTableChange : any = ({ current, pageSize }: any) => {
+    setPage(current);
+    setLimit(pageSize);
+  };
+  return useMemo(() => {
+    const query = {
+      page,
+      limit,
+      keyword,
+    };
+    return [query,onTableChange];
+  }, [page,
+     limit,
+     keyword,
+    ]);
+};
+
+export const useGetAccumulationDetail = (id: any) => {
+  return useFetchByParam({
+    action: pharmacySliceAction.getAccumulationDetailRequest,
+    loadingSelector: isLoadingGetAccumulationDetailSelector,
+    dataSelector: accumulationDetailSelector,
+    failedSelector: getAccumulationDetailFailedSelector,
+    param : id,
   });
 };
 

@@ -11,6 +11,8 @@ import Breadcrumb from "~/components/common/Breadcrumb";
 import useTranslate from "~/lib/translation";
 import BackBtn from "~/components/common/BackBtn";
 import { PATH_APP } from "~/routes/allPath";
+import AccumulationDetailPharmacy from "../component/AccumulationDetailPharmacy";
+import AccumulationPharmacy from "../component/AccumulationPharmacy";
 
 const { TabPane } = Tabs;
 
@@ -41,6 +43,12 @@ export default function PharmacyDetail() {
           </TabPane>
           <TabPane tab="Công nợ" key="2">
             <DebtPharmacy pharmacyId={pharmacyId} />
+          </TabPane>
+          <TabPane tab="Tích luỹ sản phẩm" key="3">
+            <AccumulationPharmacy pharmacyId={pharmacyId} targetType="PRODUCT"/>
+          </TabPane>
+          <TabPane tab="Tích luỹ danh mục" key="4">
+          <AccumulationPharmacy pharmacyId={pharmacyId} targetType="GROUP"/>
           </TabPane>
         </Tabs>
       </WhiteBox>

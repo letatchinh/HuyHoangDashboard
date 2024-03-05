@@ -65,6 +65,24 @@ function* getHistoryPharmacy({ payload: id }: any): any {
   }
 }
 
+function* getAccumulation({ payload : query }: any): any {
+  try {
+    const data = yield call(api.getAccumulation, query);
+    yield put(pharmacySliceAction.getAccumulationSuccess(data));
+  } catch (error: any) {
+    yield put(pharmacySliceAction.getAccumulationFailed(error));
+  }
+}
+
+function* getAccumulationDetail({ payload : id }: any): any {
+  try {
+    const data = yield call(api.getAccumulationDetail, id);
+    yield put(pharmacySliceAction.getAccumulationDetailSuccess(data));
+  } catch (error: any) {
+    yield put(pharmacySliceAction.getAccumulationDetailFailed(error));
+  }
+}
+
 export default function* pharmacySaga(): any {
   yield takeLatest(pharmacySliceAction.getListRequest, getListPharmacy);
   yield takeLatest(pharmacySliceAction.getByIdRequest, getByIdPharmacy);
@@ -73,4 +91,6 @@ export default function* pharmacySaga(): any {
   yield takeLatest(pharmacySliceAction.deleteRequest, deletePharmacy);
   yield takeLatest(pharmacySliceAction.getPharmacyDebtRequest, getPharmacyDebt);
   yield takeLatest(pharmacySliceAction.getHistoryPharmacyRequest, getHistoryPharmacy);
+  yield takeLatest(pharmacySliceAction.getAccumulationRequest, getAccumulation);
+  yield takeLatest(pharmacySliceAction.getAccumulationDetailRequest, getAccumulationDetail);
 }
