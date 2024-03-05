@@ -14,7 +14,7 @@ import {
   useSuccess,
 } from "~/utils/hook";
 import { supplierSliceAction } from "./redux/reducer";
-import { cloneInitState } from "./supplier.modal";
+import { PROVIDER_COLLECTION_CONTRACT_MINERAL, cloneInitState } from "./supplier.modal";
 import { useDispatch } from "react-redux";
 import dayjs from "dayjs";
 const MODULE = "supplier";
@@ -361,6 +361,7 @@ export const useRevenueProductQueryParams = (idRevenue?: any) => {
   const [limit, setLimit] = useState<any>(query.get("limit") || 10);
   const keyword = query.get("keyword");
   const revenueId = idRevenue ? idRevenue : null;
+  const providerCollection =  PROVIDER_COLLECTION_CONTRACT_MINERAL.supplier;
 
   const onTableChange: any = ({ current, pageSize }: any) => {
     setPage(current);
@@ -377,6 +378,7 @@ export const useRevenueProductQueryParams = (idRevenue?: any) => {
       keyword,
       id,
       revenueId,
+      providerCollection,
     };
     return [queryParams, onTableChange];
     //eslint-disable-next-line
@@ -386,7 +388,7 @@ export const useRevenueProductQueryParams = (idRevenue?: any) => {
       id,
       revenueId,
       updateSuccess,
-      updateRevenueProductSuccess 
+      updateRevenueProductSuccess,
     ]);
 };
 
@@ -397,6 +399,7 @@ export const useListTotalRevenueQueryParams = () => {
   const [limit, setLimit] = useState<any>(query.get("limit") || 10);
   const startDate = query.get('startDate') || dayjs().startOf('month').format("YYYY-MM-DDTHH:mm:ss");
   const endDate = query.get('endDate') || dayjs().endOf('month').format("YYYY-MM-DDTHH:mm:ss");
+  const providerCollection =  PROVIDER_COLLECTION_CONTRACT_MINERAL.supplier;
 
   const onTableChange: any = ({ current, pageSize }: any) => {
     setPage(current);
@@ -410,7 +413,8 @@ export const useListTotalRevenueQueryParams = () => {
       keyword,
       id,
       startDate,
-      endDate
+      endDate,
+      providerCollection
     };
     return [queryParams, onTableChange];
     //eslint-disable-next-line

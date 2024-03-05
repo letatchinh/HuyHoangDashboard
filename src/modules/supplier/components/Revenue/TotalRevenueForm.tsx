@@ -4,6 +4,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import useNotificationStore from '~/store/NotificationContext';
 import { formatNumberThreeComma } from '~/utils/helpers';
+import { PROVIDER_COLLECTION_CONTRACT_MINERAL } from '../../supplier.modal';
 type propsType = {
   totalRevenue: any,
   updateTotalRevenue: any,
@@ -38,7 +39,8 @@ export default function TotalRevenueForm({ totalRevenue, updateTotalRevenue, onC
           endDate: date?.endDate,
           totalRevenue: revenueValue,
           supplierId: id,
-          supplierMineralId: data?._id
+          supplierMineralId: data?._id,
+          providerCollection: PROVIDER_COLLECTION_CONTRACT_MINERAL.supplier  //is default data table
         });
       } else {
         onNotify?.error("Vui lòng chọn thời gian");

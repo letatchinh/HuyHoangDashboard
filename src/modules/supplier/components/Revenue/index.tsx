@@ -18,6 +18,7 @@ import RenderTotalRevenue from './TotalRevenue';
 import HistoryLogs from './HistoryLogs';
 import WithPermission from '~/components/common/WithPermission';
 import { useSelector } from 'react-redux';
+import { PROVIDER_COLLECTION_CONTRACT_MINERAL } from '../../supplier.modal';
 type propsType = {
 
 };
@@ -78,7 +79,8 @@ export default function RevenueSupplier(props: propsType): React.JSX.Element {
       revenue: Number(value),
       supplierId: id,
       productId: productId,
-      supplierMineralId : totalRevenueId
+      supplierMineralId: totalRevenueId,
+      providerCollection:  PROVIDER_COLLECTION_CONTRACT_MINERAL.supplier //is default data table
     };
     updateRevenue(data)
   };

@@ -94,3 +94,9 @@ export type STATUS_BILL_VI_TYPE = {
   COMPLETED: "Đã hoàn thành",
   CANCELLED: "Đã huỷ",
 };
+
+export const PROVIDER_COLLECTION_CONTRACT_MINERAL = {
+  pharma_profile: 'pharma_profile',
+  supplier: 'supplier',
+  TDV: 'TDV',
+};

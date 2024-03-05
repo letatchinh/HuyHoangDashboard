@@ -9,11 +9,12 @@ export default function HistoryLogs({ historyLogs }: propsType) {
   return (
     <div
       className="history-logs-wrap"
-      style={{ marginTop: "1rem",marginBottom: "1rem", overflow: "scroll", maxHeight: "500px" , backgroundColor: "#fff", padding: 10 }}
+      style={{ marginTop: "1rem",marginBottom: "1rem", overflow: "scroll", maxHeight: "500px" , backgroundColor: "#fff", padding: 10,}}
     >
       <List
         header={<h2>Logs</h2>}
         bordered
+        style={{zIndex: 1}}
         dataSource={clone(historyLogs) || []}
         renderItem={(item: any) => (
           <List.Item>
