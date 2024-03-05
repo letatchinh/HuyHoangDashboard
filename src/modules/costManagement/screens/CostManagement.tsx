@@ -18,6 +18,7 @@ import TableAnt from '~/components/Antd/TableAnt';
 import ActionColumn from '~/components/common/ActionColumn';
 import { ColumnsType } from 'antd/es/table';
 import { formatter } from '~/utils/helpers';
+import toastr from "toastr";
 import useCheckBoxExport from '~/modules/export/export.hook';
 import ExportExcelButton from '~/modules/export/component';
 import { Table } from 'antd/lib';
@@ -136,6 +137,7 @@ export default function CostManagement(props: propsType): React.JSX.Element {
     setOpenForm(true);
   };
   const onChangeVariantDefault = useChangeVariantDefault();
+  const [messageApi, contextHolder] = message.useMessage();
   const columns: ColumnsType<DataType> = [
     {
       title: "Mã sản phẩm",
@@ -281,11 +283,27 @@ export default function CostManagement(props: propsType): React.JSX.Element {
       width : 200,
       render(_id, record, index) {
         return <Row justify={"center"} align={"middle"} wrap={false}>
+          {contextHolder}
         <Button
           icon={<InfoCircleTwoTone />}
           onClick={() =>{ 
-            if(get(record,'totalPrices',0) === 0)
-            return message.warning('Sản phẩm chưa có doanh thu')
+            if(get(record,'totalPrices',0) === 0){
+              console.log("first")
+            return messageApi.open({
+              type: "error",
+              content: "Sản phẩm chưa có doanh thu",
+              className: "custom-class",
+              style: {
+                // marginTop: "20vh",
+                // float: "bottom",
+                bottom: "20px", /* Điều chỉnh khoảng cách từ bottom tùy ý */
+                right: "20px",
+                top: "90vh",
+                height: "150px",
+
+                position: "absolute",
+              },
+            });}
            else return handleOpenUpdate(_id,get(record,'totalPrices',0))}
           }
           type="primary"
@@ -299,6 +317,7 @@ export default function CostManagement(props: propsType): React.JSX.Element {
       },
     },
   ];
+
   const onSearch = (value: string) => {
     onParamChange({ ['keyword']: value });
   };
