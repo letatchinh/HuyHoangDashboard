@@ -1,4 +1,4 @@
-import { get } from "lodash";
+import { get, omit } from "lodash";
 import requester from "~/api/requester";
 
 const pharmacy = {
@@ -11,6 +11,6 @@ const pharmacy = {
     delete: (id?: any) => requester.delete(`api/v1/pharma-profile/${id}`),
     getDebt:(query?: any) => requester.get(`api/v1/pharma-profile-debt`, query),
     getAccumulation: (query?: any) => requester.get(`/api/v1/accumulate-pharma-profile`, query),
-    getAccumulationDetail: (id?: any) => requester.get(`/api/v1/accumulate-pharma-profile-detail/${id}`)
+    getAccumulationDetail: (query?: any) => requester.get(`/api/v1/accumulate-pharma-profile-detail/${query?.id}`,(omit(query,['id'])))
 }
 export default pharmacy;

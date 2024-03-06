@@ -11,7 +11,6 @@ import Breadcrumb from "~/components/common/Breadcrumb";
 import useTranslate from "~/lib/translation";
 import BackBtn from "~/components/common/BackBtn";
 import { PATH_APP } from "~/routes/allPath";
-import AccumulationDetailPharmacy from "../component/AccumulationDetailPharmacy";
 import AccumulationPharmacy from "../component/AccumulationPharmacy";
 
 const { TabPane } = Tabs;

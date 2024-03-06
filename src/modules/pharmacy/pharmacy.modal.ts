@@ -34,3 +34,9 @@ export interface cloneInitState<T = any> extends initStateSlice {
   pagingAccumulationDetail?: any;
 
 };
+export type SearchByType = "date" | "month" | "quarter" | "year"
+export type FormFieldSearch = {
+  startDate?: any,
+  endDate?: any,
+  searchBy?: SearchByType,
+};
