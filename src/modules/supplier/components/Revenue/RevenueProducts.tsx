@@ -1,0 +1,145 @@
+import React, { useEffect, useMemo, useState } from 'react';
+import TableAnt from '~/components/Antd/TableAnt';
+import { formatNumberThreeComma } from '~/utils/helpers';
+import { useGetRevenueSupplierById, useResetAction, useResetActionInRevenue, useRevenueProductQueryParams, useRevenueSupplierPaging, useUpdateRevenueSupplier } from '../../supplier.hook';
+import { useMatchPolicy } from '~/modules/policy/policy.hook';
+import POLICIES from '~/modules/policy/policy.auth';
+import { ColumnsType } from 'antd/es/table';
+import { Button, Modal } from 'antd';
+import UpdateRevenueForm from './UpdateRevenueForm';
+import { PROVIDER_COLLECTION_CONTRACT_MINERAL } from '../../supplier.modal';
+import { useParams } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { supplierSliceAction } from '../../redux/reducer';
+import { get } from 'lodash';
+type propsType = {
+  totalRevenueId: any;
+}
+export default function RevenueProducts({ totalRevenueId }: propsType): React.JSX.Element {
+  const { id } = useParams();
+  
+  const [data, setData] = useState<any>([]);
+  const [productId, setProductId] = useState<any>(null);
+  const [productName, setProductName] = useState<any>(null);
+  const [isOpen, setIsOpen] = useState(false);
+  const [revenue, setRevenue] = useState(null);
+
+  const [query,onTableChange] = useRevenueProductQueryParams();
+  const canUpdate = useMatchPolicy(POLICIES.UPDATE_REVENUESUPPLIER);
+
+  const newQuery = useMemo(() => ({
+    ...query,
+    supplierMineralId: totalRevenueId,
+  }), [totalRevenueId, query]);
+
+  const [revenues, isLoading] = useGetRevenueSupplierById(totalRevenueId && newQuery);
+  const paging = useRevenueSupplierPaging();
+
+  const dispatch = useDispatch();
+  const resetAction = () => {
+    return dispatch(supplierSliceAction.resetActionInTotalRevenue());
+  };
+
+  const [isSubmitLoading, updateRevenue] = useUpdateRevenueSupplier(() => {
+    closeFormUpdateRevenue();
+    resetAction();
+  });
+
+  const openFormUpdateRevenue = (item: any) => {
+    setIsOpen(true);
+    setRevenue((item?.revenue) ?? 0);
+    setProductId(item?._id);
+    setProductName(item?.name);
+  };
+
+  const closeFormUpdateRevenue = () => {
+    setIsOpen(false);
+    setRevenue(null);
+    setProductId(null);
+    setProductName(null);
+  };
+
+  const onUpdateRevenue = (value: any, productId: any) => {
+    const data = {
+      revenue: Number(value),
+      supplierId: id,
+      productId: productId,
+      supplierMineralId: totalRevenueId,
+      providerCollection:  PROVIDER_COLLECTION_CONTRACT_MINERAL.supplier //is default data table
+    };
+    updateRevenue(data)
+  };
+
+  useEffect(() => {
+    if(revenues) {
+      setData(revenues?.docs);
+    };
+  }, [revenues]);
+
+  const columns: ColumnsType  = useMemo(
+    () => [
+      {
+        title: "Tên sản phẩm",
+        dataIndex: "name",
+        key: "name",
+        render(value: any) {
+          return value;
+        }
+      },
+      {
+        title: "Doanh số khoán",
+        dataIndex: "revenue",
+        key: "revenue",
+        render(value, rc: any) {
+          return formatNumberThreeComma(value);
+        }
+      },
+    ...(canUpdate ? [ {
+        title: "Cập nhật doanh số khoán",
+        key: "updateRevenue",
+        align: "center" as any,
+        render(value: any, rc: any) {
+          return (<Button
+           type='primary'
+            onClick={() => {
+              openFormUpdateRevenue(rc);
+            }}
+          >Cập nhật</Button>)
+        }
+      }] : []),
+    ],
+    [data]
+  );
+  return (
+    <>
+    <TableAnt
+        title={() => <h6>{`Tổng doanh số khoán theo sản phẩm: ${formatNumberThreeComma(get(revenues, 'totalRevenueAllProduct',0))}đ`}</h6>}
+        loading={isLoading || isSubmitLoading}
+        dataSource={data ?? []}
+        columns={columns}
+        onChange={onTableChange}
+        size='small'
+        pagination={{
+          ...paging,
+          showTotal: (total) => `Tổng cộng: ${total} `,
+          showSizeChanger : true
+        }}
+      />
+      <Modal
+        title= {`Cập nhật doanh số khoán cho sản phẩm ${productName}`}
+        open={isOpen}
+        onCancel={closeFormUpdateRevenue}
+        footer={null}
+        // destroyOnClose
+      >
+        <UpdateRevenueForm
+          revenue={revenue}
+          id={productId}
+          closeFormUpdateRevenue={closeFormUpdateRevenue}
+          onUpdateRevenue={onUpdateRevenue}
+          productName={productName}
+        />
+      </Modal>
+    </>
+)
+};

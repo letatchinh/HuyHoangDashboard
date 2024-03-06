@@ -84,9 +84,10 @@ class SupplierClassExtend extends InstanceModuleRedux {
       },
 
       updateRevenueSupplierRequest: (state: cloneInitState) => {
-        state.isLoadingSubmitRevenue = false;
+        state.isSubmitLoading = false;
       },
       updateRevenueSupplierSuccess: (state: cloneInitState, { payload }: any) => {
+        state.isSubmitLoading = true;
         state.updateRevenueSuccess = payload;
         state.revenueSupplier = state.revenueSupplier?.docs?.map((item: any) => {
           if (item._id === payload._id) {
@@ -96,6 +97,7 @@ class SupplierClassExtend extends InstanceModuleRedux {
         });
       },
       updateRevenueSupplierFailed: (state: cloneInitState, { payload }: any) => {
+        state.isSubmitLoading = false;
         state.updateRevenueFailed = payload;
       },
       //
@@ -139,6 +141,35 @@ class SupplierClassExtend extends InstanceModuleRedux {
       setRevenueIdAction: (state: cloneInitState, { payload }: any) => {
         state.revenueId = payload;
       },
+
+      getProductGroupsRevenueRequest: (state: cloneInitState) => {
+        state.isLoadingGetListProductGroupRevenue = true;
+      },
+      getProductGroupsRevenueSuccess: (state: cloneInitState, { payload }: any) => {
+        state.isLoadingGetListProductGroupRevenue = false;
+        state.productGroupRevenue = payload;
+      },
+      getProductGroupsRevenueFailed: (state: cloneInitState, { payload }: any) => {
+        state.isLoadingGetListProductGroupRevenue = false;
+        state.getProductGroupsRevenueFailed = payload;
+      },
+
+      updateRevenueProductGroupsRequest: (state: cloneInitState) => {
+        state.isLoadingSubmitRevenue = false;
+      },
+      updateRevenueProductGroupsSuccess: (state: cloneInitState, { payload }: any) => {
+        state.updateRevenueProductGroupsSuccess = payload;
+        state.productGroupRevenue = state.productGroupRevenue?.docs?.map((item: any) => {
+          if (item._id === payload._id) {
+            return payload;
+          };
+          return item;
+        });
+      },
+      updateRevenueProductGroupsFailed: (state: cloneInitState, { payload }: any) => {
+        state.updateRevenueProductGroupsFailed = payload;
+      },
+      //
 
       resetActionInRevenue: (state:any) => ({
         ...state,
@@ -188,6 +219,11 @@ class SupplierClassExtend extends InstanceModuleRedux {
       pagingListTotalRevenue: null,
 
       isLoadingSubmitRevenue: false,
+      
+      productGroupRevenue: [],
+      isLoadingGetListProductGroupRevenue: false,
+      getProductGroupsRevenueFailed: null,
+      pagingListProductGroupRevenue: null,
 
       revenueId: null,
     };

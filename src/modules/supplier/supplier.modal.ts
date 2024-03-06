@@ -66,8 +66,15 @@ export type addressType = {
     revenueListTotal?: T[];
     pagingListTotalRevenue?: any;
 
-    revenueId?: any;
+    isLoadingGetListProductGroupRevenue ?: boolean;
+    productGroupRevenue?: any;
+    getProductGroupsRevenueFailed?: any;
 
+    updateRevenueProductGroupsSuccess?: any;
+    updateRevenueProductGroupsFailed?: any;
+    
+    pagingListProductGroupRevenue ?: any;
+    revenueId?: any;
     isLoadingSubmitRevenue?: boolean;
 };
 

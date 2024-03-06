@@ -98,11 +98,20 @@ const getListTotalRevenueFailedSelector = getSelector("getListTotalRevenueFailed
 const isLoadingGetListTotalRevenueSelector = getSelector("isLoadingGetListTotalRevenue");
 const pagingListTotalRevenueSelector = getSelector("pagingListTotalRevenue");
 
+const productGroupsRevenueSelector = getSelector("productGroupRevenue");
+const getProductGroupsRevenueFailedSelector = getSelector("getProductGroupsRevenueFailed");
+const isLoadingGetProductGroupsRevenueSelector = getSelector("isLoadingGetListProductGroupRevenue");
+const pagingProductGroupsRevenueSelector = getSelector("pagingListProductGroupRevenue");
+
+const updateRevenueProductGroupsSuccessSelector = getSelector("updateRevenueProductGroupsSuccess");
+const updateRevenueProductGroupsFailedSelector = getSelector("updateRevenueProductGroupsFailed");
+
 const getRevenueId = getSelector("revenueId");
 export const useGetRevenueId = () => useSelector(getRevenueId);
 
 export const useListTotalRevenuePaging = () => useSelector(pagingListTotalRevenueSelector);
 export const useRevenueSupplierPaging = () => useSelector(pagingRevenueSupplierSelector);
+export const useProductsGroupRevenuePaging = () => useSelector(pagingProductGroupsRevenueSelector);
 
 export const useProductSupplierPaging = () =>
   useSelector(pagingProductSupplierSelector);
@@ -427,6 +436,44 @@ export const useListTotalRevenueQueryParams = () => {
     ]);
 };
 
+export const useProductGroupsRevenueQueryParams = (idRevenue?: any) => {
+  const query = useQueryParams();
+  const { id } = useParams();
+  const [page, setPage] = useState<any>(query.get("page") || 1);
+  const [limit, setLimit] = useState<any>(query.get("limit") || 10);
+  const keyword = query.get("keyword");
+  const revenueId = idRevenue ? idRevenue : null;
+  const providerCollection =  PROVIDER_COLLECTION_CONTRACT_MINERAL.supplier;
+
+  const onTableChange: any = ({ current, pageSize }: any) => {
+    setPage(current);
+    setLimit(pageSize);
+  };
+
+  // const updateSuccess = useSelector(updateTotalRevenueSuccessSelector);
+  // const updateRevenueProductSuccess = useSelector(updateRevenueProductSuccessSelector);
+
+  return useMemo(() => {
+    const queryParams = {
+      page,
+      limit,
+      keyword,
+      id,
+      revenueId,
+      providerCollection,
+    };
+    return [queryParams, onTableChange];
+    //eslint-disable-next-line
+  }, [page,
+     limit,
+      keyword,
+      id,
+      revenueId,
+      // updateSuccess,
+      // updateRevenueProductSuccess,
+    ]);
+};
+
 export const useUpdateListTotalRevenueParams = (
   query: any,
   listOptionSearch?: any[]
@@ -482,7 +529,7 @@ export const useGetTotalRevenueSupplierById = (param: any) => {
 export const useUpdateRevenueSupplier = (callback?: any) => {
   useSuccess(
     updateRevenueProductSuccessSelector,
-    `Cập nhật doanh thu khoán theo sản phẩm thành công`,
+    `Cập nhật doanh số khoán theo sản phẩm thành công`,
     callback
   );
   useFailed(updateRevenueProductFailedSelector);
@@ -496,7 +543,7 @@ export const useUpdateRevenueSupplier = (callback?: any) => {
 export const useUpdateTotalRevenueSupplier = (callback?: any) => {
   useSuccess(
     updateTotalRevenueSuccessSelector,
-    `Cập nhật doanh thu khoán cho nhà cung cấp thành công`,
+    `Cập nhật doanh số khoán cho nhà cung cấp thành công`,
     callback
   );
   useFailed(updateTotalRevenueFailedSelector);
@@ -510,7 +557,7 @@ export const useUpdateTotalRevenueSupplier = (callback?: any) => {
 export const useCreateTotalRevenue = (callback?: any) => {
   useSuccess(
     createTotalRevenueSuccessSelector,
-    `Tạo mới doanh thu khoán thành công`,
+    `Tạo mới doanh số khoán thành công`,
     callback
   );
   useFailed(createTotalRevenueFailedSelector);
@@ -521,12 +568,35 @@ export const useCreateTotalRevenue = (callback?: any) => {
   });
 };
 
+export const useUpdateRevenueProductGroups = (callback?: any) => {
+  useSuccess(
+    updateRevenueProductGroupsSuccessSelector,
+    `Cập nhật doanh số khoán theo nhóm sản phẩm thành công`,
+    callback
+  );
+  useFailed(updateRevenueProductGroupsFailedSelector);
+
+  return useSubmit({
+    action: supplierSliceAction.updateRevenueProductGroupsRequest,
+    loadingSelector: isSubmitLoadingSelector,
+  });
+};
+
 export const useGetListTotalRevenue = (param: any) => {
   return useFetchByParam({
     action: supplierSliceAction.getListTotalRevenueRequest,
     loadingSelector: isLoadingGetListTotalRevenueSelector,
     dataSelector: revenueListTotalSelector,
     failedSelector: getListTotalRevenueFailedSelector,
+    param
+  });
+};
+export const useGetProductsGroupRevenue = (param: any) => {
+  return useFetchByParam({
+    action: supplierSliceAction.getProductGroupsRevenueRequest,
+    loadingSelector: isLoadingGetProductGroupsRevenueSelector,
+    dataSelector: productGroupsRevenueSelector,
+    failedSelector: getProductGroupsRevenueFailedSelector,
     param
   });
 };
