@@ -263,21 +263,52 @@ export const useGetHistoryPharmacy = (id: any) => {
 };
 
 export const useAccumulationQuery = () => {
+  const query = useQueryParams();
   const [limit, setLimit] = useState<number | null | undefined>(10);
   const [page, setPage] = useState<number | null | undefined>(1);
+  const keyword = query.get("keyword");
   // const [keyword, setKeyword] = useState("");
   const onTableChange: any = ({ current, pageSize }: any) => {
     setPage(current);
     setLimit(pageSize);
+
   };
   return useMemo(() => {
     const query = {
       page,
       limit,
-      // keyword,
+      keyword,
     };
     return [query, onTableChange];
-  }, [page, limit]);
+  }, [page, limit, keyword]);
+};
+
+export const useUpdateAccumulationParams = (
+  query: any,
+  listOptionSearch?: any[]
+) => {
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
+  const [keyword, setKeyword] = useState(get(query, "keyword"));
+  useEffect(() => {
+    setKeyword(get(query, "keyword"));
+  }, [query]);
+  const onParamChange = (param: any) => {
+    clearQuerySearch(listOptionSearch, query, param);
+    if (!param.page) {
+      query.page = 1;
+    }
+    const searchString = new URLSearchParams(
+      getExistProp({
+        ...query,
+        ...param,
+      })
+    ).toString();
+
+    navigate(`${pathname}?${searchString}`);
+  };
+
+  return [keyword, { setKeyword, onParamChange }];
 };
 
 export const useGetAccumulation = (param: any) => {
@@ -311,13 +342,16 @@ export const useAccumulationDetailQuery = () => {
     ]);
 };
 
-export const useGetAccumulationDetail = (id: any) => {
+export const useGetAccumulationDetail = (id: any, params: any) => {
+  const memoParams = useMemo(() => ({ id, ...params }),[id, params]);
+  console.log(memoParams,'memoParams');
+  
   return useFetchByParam({
     action: pharmacySliceAction.getAccumulationDetailRequest,
     loadingSelector: isLoadingGetAccumulationDetailSelector,
     dataSelector: accumulationDetailSelector,
     failedSelector: getAccumulationDetailFailedSelector,
-    param : id,
+    param: memoParams,
   });
 };
 
