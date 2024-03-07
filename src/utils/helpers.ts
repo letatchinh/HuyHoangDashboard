@@ -239,4 +239,15 @@ export const getValueQuery = (key : string) : any => {
   let params = new URLSearchParams(search);
   let foo = params.get(key);
   return foo;
+};
+
+export const getOptions = (constantVi : any) => {
+  let options : any[] = [];
+  forIn(constantVi,(value,key) => {
+    options.push({
+      label : value,
+      value : key
+    })
+  });
+  return options;
 }

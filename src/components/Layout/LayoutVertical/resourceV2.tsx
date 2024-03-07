@@ -131,6 +131,13 @@ import {
               key: PATH_APP.areaConfiguration.root,
               permission: [POLICIES.READ_AREACONFIGURATION],
             },
+            {
+              label: "Cấu hình lương vùng",
+              icon: <i className="fa-solid fa-money-bill-trend-up"></i>,
+              path: PATH_APP.baseSalary.root,
+              key: PATH_APP.baseSalary.root,
+              // permission: [POLICIES.READ_AREACONFIGURATION],
+            },
           ],
         },
       ],

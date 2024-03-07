@@ -37,6 +37,7 @@ import freelanceContractPharmacy from '~/modules/freelanceContractPharmacy';
 import costManagement from '~/modules/costManagement';
 import orderSupplier from '~/modules/sale/orderSupplier';
 import areaConfiguration from '~/modules/areaConfiguration';
+import baseSalary from '~/modules/baseSalary';
 const authPersistConfig = {
     key: 'auth',
     storage: localStorage,
@@ -85,6 +86,7 @@ const rootReducer = combineReducers({
     freelanceContractPharmacy: freelanceContractPharmacy.redux.reducer,
     costManagement: costManagement.redux.reducer,
     areaConfiguration: areaConfiguration.redux.reducer,
+    baseSalary: baseSalary.redux.reducer,
 
 });
 export default rootReducer

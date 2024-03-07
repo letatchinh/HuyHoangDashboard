@@ -36,6 +36,7 @@ import RevenueSupplier from "~/modules/supplier/components/Revenue";
 import TotalRevenueList from "~/modules/supplier/components/Revenue/TotalRevenueList";
 import CostManagement from "~/pages/Dashboard/CostManagement";
 import AreaConfigurationPage from "~/pages/Dashboard/AreaConfiguration";
+import BaseSalaryPage from "~/pages/Dashboard/BaseSalary";
 export const mainRoutes :PathRouteProps[] = [
   { path: PATH_APP.main.root, Component: Homepage },
 
@@ -109,6 +110,8 @@ export const mainRoutes :PathRouteProps[] = [
   
   // Cấu hình vùng
   { path: PATH_APP.areaConfiguration.root, Component: AreaConfigurationPage },
+  // Cấu hình vùng
+  { path: PATH_APP.baseSalary.root, Component: BaseSalaryPage },
 
   { path: '/', Component: Homepage },
 ]

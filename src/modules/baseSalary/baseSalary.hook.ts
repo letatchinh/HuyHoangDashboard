@@ -6,15 +6,13 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { clearQuerySearch, getExistProp } from "~/utils/helpers";
 import {
     getSelectors,
-    useFailed, useFetch, useFetchByParam,
+    useFailed, useFetchByParam,
     useQueryParams,
-    useResetState,
     useSubmit,
     useSuccess
 } from "~/utils/hook";
-import { AreaConfigurationType } from "./areaConfiguration.modal";
-import { areaConfigurationActions } from "./redux/reducer";
-const MODULE = "areaConfiguration";
+import { baseSalaryActions } from "./redux/reducer";
+const MODULE = "baseSalary";
 const MODULE_VI = "";
 
 const {
@@ -32,34 +30,22 @@ const {
   updateSuccessSelector,
   updateFailedSelector,
   pagingSelector,
-  listSearchSelector,
 } = getSelectors(MODULE);
 
-export const useAreaConfigurationPaging = () => useSelector(pagingSelector);
+export const useBaseSalaryPaging = () => useSelector(pagingSelector);
 
-export const useGetAreaConfigurations = (param:any) => {
+export const useGetBaseSalarys = (param:any) => {
   return useFetchByParam({
-    action: areaConfigurationActions.getListRequest,
+    action: baseSalaryActions.getListRequest,
     loadingSelector: loadingSelector,
     dataSelector: listSelector,
     failedSelector: getListFailedSelector,
-    actionUpdate : areaConfigurationActions.onSearch,
     param
   });
 };
-
-export const useFetchAreaConfigurations = () => {
-  return useFetch({
-    action: areaConfigurationActions.getListRequest,
-    loadingSelector: loadingSelector,
-    dataSelector: listSelector,
-    failedSelector: getListFailedSelector,
-  });
-};
-export const useGetAreaConfigurationsSearch  = (): AreaConfigurationType[] => useSelector(listSearchSelector);
-export const useGetAreaConfiguration = (id: any) => {
+export const useGetBaseSalary = (id: any) => {
   return useFetchByParam({
-    action: areaConfigurationActions.getByIdRequest,
+    action: baseSalaryActions.getByIdRequest,
     loadingSelector: getByIdLoadingSelector,
     dataSelector: getByIdSelector,
     failedSelector: getByIdFailedSelector,
@@ -67,7 +53,7 @@ export const useGetAreaConfiguration = (id: any) => {
   });
 };
 
-export const useCreateAreaConfiguration = (callback?: any) => {
+export const useCreateBaseSalary = (callback?: any) => {
   useSuccess(
     createSuccessSelector,
     `Tạo mới ${MODULE_VI} thành công`,
@@ -76,12 +62,12 @@ export const useCreateAreaConfiguration = (callback?: any) => {
   useFailed(createFailedSelector);
 
   return useSubmit({
-    action: areaConfigurationActions.createRequest,
+    action: baseSalaryActions.createRequest,
     loadingSelector: isSubmitLoadingSelector,
   });
 };
 
-export const useUpdateAreaConfiguration = (callback?: any) => {
+export const useUpdateBaseSalary = (callback?: any) => {
   useSuccess(
     updateSuccessSelector,
     `Cập nhật ${MODULE_VI} thành công`,
@@ -90,28 +76,27 @@ export const useUpdateAreaConfiguration = (callback?: any) => {
   useFailed(updateFailedSelector);
 
   return useSubmit({
-    action: areaConfigurationActions.updateRequest,
+    action: baseSalaryActions.updateRequest,
     loadingSelector: isSubmitLoadingSelector,
   });
 };
 
-export const useDeleteAreaConfiguration = (callback?: any) => {
+export const useDeleteBaseSalary = (callback?: any) => {
   useSuccess(deleteSuccessSelector, `Xoá ${MODULE_VI} thành công`, callback);
   useFailed(deleteFailedSelector);
 
   return useSubmit({
-    action: areaConfigurationActions.deleteRequest,
+    action: baseSalaryActions.deleteRequest,
     loadingSelector: isSubmitLoadingSelector,
   });
 };
 
-export const useAreaConfigurationQueryParams = () => {
+export const useBaseSalaryQueryParams = () => {
   const query = useQueryParams();
   const limit = query.get("limit") || 10;
   const page = query.get("page") || 1;
   const keyword = query.get("keyword");
-  const createSuccess = useSelector(createSuccessSelector);
-  const deleteSuccess = useSelector(deleteSuccessSelector);
+  const updateSuccess = useSelector(updateSuccessSelector);
   return useMemo(() => {
     const queryParams = {
       page,
@@ -120,10 +105,10 @@ export const useAreaConfigurationQueryParams = () => {
     };
     return [queryParams];
     //eslint-disable-next-line
-  }, [page, limit, keyword, createSuccess, deleteSuccess]);
+  }, [page, limit, keyword, updateSuccess]);
 };
 
-export const useUpdateAreaConfigurationParams = (
+export const useUpdateBaseSalaryParams = (
   query: any,
   listOptionSearch?: any[]
 ) => {
@@ -155,8 +140,3 @@ export const useUpdateAreaConfigurationParams = (
 
   return [keyword, { setKeyword, onParamChange }];
 };
-
-
-export const useResetAction = () => {
-    return useResetState(areaConfigurationActions.resetAction);
-  };

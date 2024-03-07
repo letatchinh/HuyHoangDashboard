@@ -118,4 +118,7 @@ export const PATH_APP = {
   areaConfiguration : {
     root:  path(ROOTS.app, '/area-configuration'),
   },
+  baseSalary : {
+    root:  path(ROOTS.app, '/base-salary'),
+  },
 };
