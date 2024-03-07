@@ -9,8 +9,8 @@ import WithOrPermission from "~/components/common/WithOrPermission";
 import POLICIES from "~/modules/policy/policy.auth";
 import BaseBorderBox from "~/components/common/BaseBorderBox/index";
 import { STAFF_LEVEL_OPTIONS } from "../constants";
-import AreaConfigurationSelect from "~/modules/areaConfiguration/components/AreaConfigurationSelect";
 import AreaSelect from "~/components/common/AreaSelect/index";
+import { OPTION_AREA } from "~/constants/defaultValue";
 
 const { Option } = Select;
 
@@ -122,15 +122,15 @@ export default function EmployeeForm(props: IProps) {
         wrapperCol={{ sm: 24, md: 24, lg: 16, xl: 16 }}
       >
         <BaseBorderBox title={"Thông tin chung"}>
-        <Row
-          gutter={48}
-          align="middle"
-          justify="space-between"
-          className="employee-form__logo-row"
-        >
-          <Col span={12}>
-            <Row gutter={36}>
-              {/* <Col span={24}>
+          <Row
+            gutter={48}
+            align="middle"
+            justify="space-between"
+            className="employee-form__logo-row"
+          >
+            <Col span={12}>
+              <Row gutter={36}>
+                {/* <Col span={24}>
                   <FormItem
                     label="Tên nhân viên"
                     name="firstName"
@@ -142,113 +142,102 @@ export default function EmployeeForm(props: IProps) {
                   </FormItem>
                 </Col> */}
 
-              <Col span={24}>
-                <FormItem
-                  label="Họ và tên nhân viên"
-                  name="fullName"
-                  rules={[
-                    { required: true, message: "Xin mời nhập tên nhân viên!" },
-                  ]}
-                >
-                  {isLoading ? <Skeleton.Input active /> : <Input />}
-                </FormItem>
-              </Col>
-            </Row>
+                <Col span={24}>
+                  <FormItem
+                    label="Họ và tên nhân viên"
+                    name="fullName"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Xin mời nhập tên nhân viên!",
+                      },
+                    ]}
+                  >
+                    {isLoading ? <Skeleton.Input active /> : <Input />}
+                  </FormItem>
+                </Col>
+              </Row>
 
-            <FormItem label="Giới tính" name="gender">
-              {isLoading ? (
-                <Skeleton.Input active />
-              ) : (
-                <Select>
-                  <Option value="M" key="M">
-                    Nam
-                  </Option>
-                  <Option value="F" key="F">
-                    Nữ
-                  </Option>
-                </Select>
-              )}
-            </FormItem>
-          </Col>
-          <Col span={12} className="employee-form__upload-logo">
-          <UploadImage
-              imgUrl={imageUrl}
-              onChange={handleChange}
-            />
-          </Col>
-        </Row>
-        <AddressFormSection
-          isLoading={isLoading}
-          form={form}
-          setCityCode={setCityCode}
-          setDistrictCode={setDistrictCode}
-          cityCode={cityCode}
-          districtCode={districtCode}
-        />
-        <Row
-          gutter={48}
-          align="middle"
-          justify="space-between"
-          className="employee-form__logo-row"
-        >
-          <Col span={12}>
-            <Row gutter={36}>
-              <Col span={24}>
-                <FormItem
-                  label="CMND/CCCD"
-                  name="idNumber"
-                  rules={[
-                    {
-                      required: false,
-                      pattern: new RegExp(/^[0-9]{9,12}$/),
-                      message: "Xin vui lòng nhập đúng số CMND/CCCD!",
-                    },
-                  ]}
-                >
-                  {isLoading ? <Skeleton.Input active /> : <Input />}
-                </FormItem>
-              </Col>
-            </Row>
-          </Col>
-          {/* <Col></Col> */}
-        </Row>
+              <FormItem label="Giới tính" name="gender">
+                {isLoading ? (
+                  <Skeleton.Input active />
+                ) : (
+                  <Select>
+                    <Option value="M" key="M">
+                      Nam
+                    </Option>
+                    <Option value="F" key="F">
+                      Nữ
+                    </Option>
+                  </Select>
+                )}
+              </FormItem>
+            </Col>
+            <Col span={12} className="employee-form__upload-logo">
+              <UploadImage imgUrl={imageUrl} onChange={handleChange} />
+            </Col>
+          </Row>
+          <AddressFormSection
+            isLoading={isLoading}
+            form={form}
+            setCityCode={setCityCode}
+            setDistrictCode={setDistrictCode}
+            cityCode={cityCode}
+            districtCode={districtCode}
+          />
+          <Row
+            gutter={48}
+            align="middle"
+            justify="space-between"
+            className="employee-form__logo-row"
+          >
+            <Col span={12}>
+              <Row gutter={36}>
+                <Col span={24}>
+                  <FormItem
+                    label="CMND/CCCD"
+                    name="idNumber"
+                    rules={[
+                      {
+                        required: false,
+                        pattern: new RegExp(/^[0-9]{9,12}$/),
+                        message: "Xin vui lòng nhập đúng số CMND/CCCD!",
+                      },
+                    ]}
+                  >
+                    {isLoading ? <Skeleton.Input active /> : <Input />}
+                  </FormItem>
+                </Col>
+              </Row>
+            </Col>
+            {/* <Col></Col> */}
+          </Row>
         </BaseBorderBox>
         <BaseBorderBox title={"Thông tin chức vụ"}>
-            <Row
-          gutter={48}
-          align="middle"
-          justify="space-between"
-          className="employee-form__logo-row"
-        >
-          <Col span={12}>
-                <FormItem
-                  label="Chức vụ"
-                  name="staffLevel"
-                >
-                  <Select options={STAFF_LEVEL_OPTIONS} />
-                </FormItem>
-          </Col>
-          <Col span={12}>
-          <FormItem
-              label="Vùng nhận lương"
-              name="baseSalary"
+          <Row
+            gutter={48}
+            align="middle"
+            justify="space-between"
+            className="employee-form__logo-row"
           >
-            <AreaSelect />
-          </FormItem>
-          </Col>
-        </Row>
+            <Col span={12}>
+              <FormItem label="Chức vụ" name="staffLevel">
+                <Select options={STAFF_LEVEL_OPTIONS} />
+              </FormItem>
+            </Col>
+            <Col span={12}>
+              <FormItem label="Vùng nhận lương" name="baseSalary">
+              <Select options={OPTION_AREA}/>
+              </FormItem>
+            </Col>
+          </Row>
         </BaseBorderBox>
         <Row gutter={10} align="middle" justify={"center"}>
           <Col span={2}>
-            <Button
-              onClick={handleCloseModal}
-            >Huỷ</Button>
+            <Button onClick={handleCloseModal}>Huỷ</Button>
           </Col>
           <Col span={4}>
-            <Button
-              type="primary" htmlType="submit"
-              loading={isSubmitLoading}
-            >
+            <Button type="primary" htmlType="submit" loading={isSubmitLoading}>
               {id ? "Cập nhật" : "Tạo mới"}
             </Button>
           </Col>

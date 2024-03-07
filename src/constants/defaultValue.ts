@@ -366,3 +366,10 @@ export const AREA_VI= {
 }
 
 export const OPTION_AREA = getOptions(AREA_VI);
+
+export const requireRules = [
+  {
+      required : true,
+      message : "Vui lòng nhập!"
+  }
+];
