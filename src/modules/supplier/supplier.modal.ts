@@ -85,10 +85,17 @@ export type FormFieldSearch = {
   endDate?: any,
   searchBy?: SearchByType,
 };
+
 export type STATUS_SUPPLIER_TYPE = {
   ACTIVE: "ACTIVE",
   INACTIVE: "INACTIVE",
 };
+
+export const STATUS_SUPPLIER_TYPE_VI : any= {
+  ACTIVE: "Hoạt động",
+  INACTIVE: "Ngưng hoạt động",
+};
+
 export type STATUS_BILL_TYPE = {
   NEW: "NEW",
   PROCESSING: "PROCESSING",

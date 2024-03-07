@@ -1,5 +1,6 @@
+import { resetAction } from './../../../.history/src/modules/supplier/supplier.hook_20240307094358';
 import { get } from "lodash";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { RootState } from "~/redux/store";
@@ -442,7 +443,6 @@ export const useProductGroupsRevenueQueryParams = (idRevenue?: any) => {
   const [page, setPage] = useState<any>(query.get("page") || 1);
   const [limit, setLimit] = useState<any>(query.get("limit") || 10);
   const keyword = query.get("keyword");
-  const revenueId = idRevenue ? idRevenue : null;
   const providerCollection =  PROVIDER_COLLECTION_CONTRACT_MINERAL.supplier;
 
   const onTableChange: any = ({ current, pageSize }: any) => {
@@ -450,8 +450,8 @@ export const useProductGroupsRevenueQueryParams = (idRevenue?: any) => {
     setLimit(pageSize);
   };
 
-  // const updateSuccess = useSelector(updateTotalRevenueSuccessSelector);
-  // const updateRevenueProductSuccess = useSelector(updateRevenueProductSuccessSelector);
+  const updateSuccess = useSelector(updateTotalRevenueSuccessSelector);
+  const updateRevenueProductGroupsSuccess = useSelector(updateRevenueProductGroupsSuccessSelector);
 
   return useMemo(() => {
     const queryParams = {
@@ -459,7 +459,6 @@ export const useProductGroupsRevenueQueryParams = (idRevenue?: any) => {
       limit,
       keyword,
       id,
-      revenueId,
       providerCollection,
     };
     return [queryParams, onTableChange];
@@ -468,9 +467,8 @@ export const useProductGroupsRevenueQueryParams = (idRevenue?: any) => {
      limit,
       keyword,
       id,
-      revenueId,
-      // updateSuccess,
-      // updateRevenueProductSuccess,
+      updateSuccess,
+      updateRevenueProductGroupsSuccess,
     ]);
 };
 
@@ -599,4 +597,13 @@ export const useGetProductsGroupRevenue = (param: any) => {
     failedSelector: getProductGroupsRevenueFailedSelector,
     param
   });
+};
+
+export const useResetInRevenueActionUpdate = () => {
+  const dispatch = useDispatch();
+  const resetAction = useCallback(() => {
+    return dispatch(supplierSliceAction.resetActionInTotalRevenue());
+  }, [dispatch]);
+
+  return resetAction;
 };

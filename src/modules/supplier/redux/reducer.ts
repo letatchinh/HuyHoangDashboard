@@ -89,12 +89,13 @@ class SupplierClassExtend extends InstanceModuleRedux {
       updateRevenueSupplierSuccess: (state: cloneInitState, { payload }: any) => {
         state.isSubmitLoading = true;
         state.updateRevenueSuccess = payload;
-        state.revenueSupplier = state.revenueSupplier?.docs?.map((item: any) => {
+        const newRevenueSupplier = state.revenueSupplier?.docs?.map((item: any) => {
           if (item._id === payload._id) {
             return payload;
           }
           return item;
         });
+        state.revenueSupplier = { ...state.revenueSupplier, docs: newRevenueSupplier };
       },
       updateRevenueSupplierFailed: (state: cloneInitState, { payload }: any) => {
         state.isSubmitLoading = false;
@@ -155,30 +156,34 @@ class SupplierClassExtend extends InstanceModuleRedux {
       },
 
       updateRevenueProductGroupsRequest: (state: cloneInitState) => {
-        state.isLoadingSubmitRevenue = false;
+        state.isSubmitLoading = false;
       },
       updateRevenueProductGroupsSuccess: (state: cloneInitState, { payload }: any) => {
         state.updateRevenueProductGroupsSuccess = payload;
-        state.productGroupRevenue = state.productGroupRevenue?.docs?.map((item: any) => {
+        state.isSubmitLoading = true;
+
+        const newProductGroupRevenue = state.productGroupRevenue?.docs?.map((item: any) => {
           if (item._id === payload._id) {
             return payload;
           };
           return item;
         });
+        state.productGroupRevenue = { ...state.productGroupRevenue, docs: newProductGroupRevenue };
       },
       updateRevenueProductGroupsFailed: (state: cloneInitState, { payload }: any) => {
         state.updateRevenueProductGroupsFailed = payload;
+        state.isSubmitLoading = false;
       },
       //
 
-      resetActionInRevenue: (state:any) => ({
+      resetActionInRevenue: (state:cloneInitState) => ({
         ...state,
         ...omit(this.cloneInitState, ["revenueSupplier"]),  
       }),
 
-      resetActionInTotalRevenue: (state:any) => ({
+      resetActionInTotalRevenue: (state:cloneInitState) => ({
         ...state,
-        ...omit(this.cloneInitState, ["revenueSupplier", "totalRevenue", 'revenueId']),  
+        ...omit(this.cloneInitState, ["revenueSupplier", "totalRevenue", 'revenueId', 'productGroupRevenue']),  
       }),
 
     };
@@ -224,6 +229,9 @@ class SupplierClassExtend extends InstanceModuleRedux {
       isLoadingGetListProductGroupRevenue: false,
       getProductGroupsRevenueFailed: null,
       pagingListProductGroupRevenue: null,
+
+      updateRevenueProductGroupsSuccess: null,
+      updateRevenueProductGroupsFailed: null,
 
       revenueId: null,
     };

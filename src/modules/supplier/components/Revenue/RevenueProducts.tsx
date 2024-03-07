@@ -1,17 +1,17 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import TableAnt from '~/components/Antd/TableAnt';
 import { formatNumberThreeComma } from '~/utils/helpers';
-import { useGetRevenueSupplierById, useResetAction, useResetActionInRevenue, useRevenueProductQueryParams, useRevenueSupplierPaging, useUpdateRevenueSupplier } from '../../supplier.hook';
+import { useGetRevenueSupplierById, useResetAction, useResetActionInRevenue, useResetInRevenueActionUpdate, useRevenueProductQueryParams, useRevenueSupplierPaging, useUpdateRevenueSupplier } from '../../supplier.hook';
 import { useMatchPolicy } from '~/modules/policy/policy.hook';
 import POLICIES from '~/modules/policy/policy.auth';
 import { ColumnsType } from 'antd/es/table';
 import { Button, Modal } from 'antd';
-import UpdateRevenueForm from './UpdateRevenueForm';
-import { PROVIDER_COLLECTION_CONTRACT_MINERAL } from '../../supplier.modal';
+import { PROVIDER_COLLECTION_CONTRACT_MINERAL, STATUS_SUPPLIER_TYPE_VI } from '../../supplier.modal';
 import { useParams } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { supplierSliceAction } from '../../redux/reducer';
 import { get } from 'lodash';
+import RevenueProductForm from './RevenueProductForm';
 type propsType = {
   totalRevenueId: any;
 }
@@ -26,6 +26,7 @@ export default function RevenueProducts({ totalRevenueId }: propsType): React.JS
 
   const [query,onTableChange] = useRevenueProductQueryParams();
   const canUpdate = useMatchPolicy(POLICIES.UPDATE_REVENUESUPPLIER);
+  const resetAction = useResetInRevenueActionUpdate();
 
   const newQuery = useMemo(() => ({
     ...query,
@@ -34,11 +35,6 @@ export default function RevenueProducts({ totalRevenueId }: propsType): React.JS
 
   const [revenues, isLoading] = useGetRevenueSupplierById(totalRevenueId && newQuery);
   const paging = useRevenueSupplierPaging();
-
-  const dispatch = useDispatch();
-  const resetAction = () => {
-    return dispatch(supplierSliceAction.resetActionInTotalRevenue());
-  };
 
   const [isSubmitLoading, updateRevenue] = useUpdateRevenueSupplier(() => {
     closeFormUpdateRevenue();
@@ -94,6 +90,14 @@ export default function RevenueProducts({ totalRevenueId }: propsType): React.JS
           return formatNumberThreeComma(value);
         }
       },
+      {
+        title: "Trạng thái sản phẩm",
+        dataIndex: "productGroup",
+        key: "status",
+        render(value, rc: any) {
+          return (STATUS_SUPPLIER_TYPE_VI[value?.status]);
+        }
+      },
     ...(canUpdate ? [ {
         title: "Cập nhật doanh số khoán",
         key: "updateRevenue",
@@ -132,7 +136,7 @@ export default function RevenueProducts({ totalRevenueId }: propsType): React.JS
         footer={null}
         // destroyOnClose
       >
-        <UpdateRevenueForm
+        <RevenueProductForm
           revenue={revenue}
           id={productId}
           closeFormUpdateRevenue={closeFormUpdateRevenue}
