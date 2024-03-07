@@ -7,6 +7,10 @@ import { employeeSliceAction } from "../redux/reducer";
 import { useResetState } from "~/utils/hook";
 import WithOrPermission from "~/components/common/WithOrPermission";
 import POLICIES from "~/modules/policy/policy.auth";
+import BaseBorderBox from "~/components/common/BaseBorderBox/index";
+import { STAFF_LEVEL_OPTIONS } from "../constants";
+import AreaConfigurationSelect from "~/modules/areaConfiguration/components/AreaConfigurationSelect";
+import AreaSelect from "~/components/common/AreaSelect/index";
 
 const { Option } = Select;
 
@@ -117,6 +121,7 @@ export default function EmployeeForm(props: IProps) {
         labelCol={{ sm: 24, md: 24, lg: 8, xl: 8 }}
         wrapperCol={{ sm: 24, md: 24, lg: 16, xl: 16 }}
       >
+        <BaseBorderBox title={"Thông tin chung"}>
         <Row
           gutter={48}
           align="middle"
@@ -207,6 +212,32 @@ export default function EmployeeForm(props: IProps) {
           </Col>
           {/* <Col></Col> */}
         </Row>
+        </BaseBorderBox>
+        <BaseBorderBox title={"Thông tin chức vụ"}>
+            <Row
+          gutter={48}
+          align="middle"
+          justify="space-between"
+          className="employee-form__logo-row"
+        >
+          <Col span={12}>
+                <FormItem
+                  label="Chức vụ"
+                  name="staffLevel"
+                >
+                  <Select options={STAFF_LEVEL_OPTIONS} />
+                </FormItem>
+          </Col>
+          <Col span={12}>
+          <FormItem
+              label="Vùng nhận lương"
+              name="baseSalary"
+          >
+            <AreaSelect />
+          </FormItem>
+          </Col>
+        </Row>
+        </BaseBorderBox>
         <Row gutter={10} align="middle" justify={"center"}>
           <Col span={2}>
             <Button

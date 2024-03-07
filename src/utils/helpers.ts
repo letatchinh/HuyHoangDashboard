@@ -224,3 +224,14 @@ export const convertQueryString = (queryString: any) => {
   ), '');
   return stringQuery;
 };
+
+export const getOptions = (constantVi : any) => {
+  let options : any[] = [];
+  forIn(constantVi,(value,key) => {
+    options.push({
+      label : value,
+      value : key
+    })
+  });
+  return options;
+}

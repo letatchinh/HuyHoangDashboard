@@ -6,7 +6,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { clearQuerySearch, getExistProp } from "~/utils/helpers";
 import {
     getSelectors,
-    useFailed, useFetchByParam,
+    useFailed, useFetch, useFetchByParam,
     useQueryParams,
     useResetState,
     useSubmit,
@@ -45,6 +45,15 @@ export const useGetAreaConfigurations = (param:any) => {
     failedSelector: getListFailedSelector,
     actionUpdate : areaConfigurationActions.onSearch,
     param
+  });
+};
+
+export const useFetchAreaConfigurations = () => {
+  return useFetch({
+    action: areaConfigurationActions.getListRequest,
+    loadingSelector: loadingSelector,
+    dataSelector: listSelector,
+    failedSelector: getListFailedSelector,
   });
 };
 export const useGetAreaConfigurationsSearch  = (): AreaConfigurationType[] => useSelector(listSearchSelector);

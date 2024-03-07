@@ -10,6 +10,7 @@ function* login({ payload: user }: any){
     };
     yield put(authActions.loginSuccess({token,branchId}));
   } catch (error: any) {
+    console.log(error,'error');
     yield put(authActions.loginFailed(error));
   }
 }
