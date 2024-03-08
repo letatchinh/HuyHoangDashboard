@@ -5,7 +5,7 @@ import { useParams } from 'react-router-dom';
 import useNotificationStore from '~/store/NotificationContext';
 import { formatNumberThreeComma } from '~/utils/helpers';
 import { PROVIDER_COLLECTION_CONTRACT_MINERAL } from '../../supplier.modal';
-import ListMineralByMonth from './ListMineralByMonth';
+import ListMineralByMonth, { newListMineralByMonth } from './ListMineralByMonth';
 import { useRevenueContext } from '.';
 type propsType = {
   totalRevenue: any,
@@ -18,7 +18,7 @@ const { RangePicker } = DatePicker;
 const dateFormat = 'DD-MM-YYYY';
 
 export default function TotalRevenueForm({ totalRevenue, updateTotalRevenue, onClose, data }: propsType): React.JSX.Element {
-  const { setTotalRevenue, listMineralByMonth } = useRevenueContext();
+  const { setTotalRevenue, listMineralByMonth, dateTime, setDateTime, setListMineralByMonth } = useRevenueContext();
   const [revenueValue, setRevenueValue] = useState<number | null | undefined>(0);
   const { id } = useParams();
   const [form] = Form.useForm();
@@ -33,6 +33,10 @@ export default function TotalRevenueForm({ totalRevenue, updateTotalRevenue, onC
       startDate: data?.startDate,
       endDate: data?.endDate,
     });
+    setDateTime({
+      startDate: data?.startDate,
+      endDate: data?.endDate,
+    })
   }, [data]);
   const onFinish = () => {
     try {
@@ -89,10 +93,13 @@ export default function TotalRevenueForm({ totalRevenue, updateTotalRevenue, onC
                 allowEmpty={[false, false]}
                 value={[(date?.startDate ? dayjs(date?.startDate) : null), date?.endDate ? dayjs(date?.endDate) : null]}
                 onChange={(value) => {
-                  setDate({
+                  const data = {
                     startDate: dayjs(value?.[0]).format("YYYY-MM-DD"),
                     endDate: dayjs(value?.[1]).format("YYYY-MM-DD"),
-                  });
+                  };
+                  setDate({...data});
+                  setDateTime({ ...data });
+                  setListMineralByMonth(newListMineralByMonth(data));
                 }}
               />
             </Form.Item>

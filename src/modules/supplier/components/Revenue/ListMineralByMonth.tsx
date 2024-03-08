@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useRevenueContext } from '.';
 import dayjs from 'dayjs';
 import TableAnt from '~/components/Antd/TableAnt';
@@ -9,30 +9,62 @@ type propsType = {
 export default function ListMineralByMonth({}: propsType): React.JSX.Element {
   const { dateTime, totalRevenue ,setListMineralByMonth, listMineralByMonth} = useRevenueContext();
   const [data, setData] = useState<any>([]);
-  console.log(listMineralByMonth,'listMineralByMonth')
   const [count, setCount] = useState<number>();
-  let monthsArray = getMonthsBetweenDates(dateTime);
+  let monthsArray = useMemo(() => {
+    return getMonthsBetweenDates(dateTime)
+  }, [dateTime]);
+
   useEffect(() => {
-    if (!listMineralByMonth.length) {
-      const newData = monthsArray?.map((item: any) => ({
-        ...item,
+    if (!listMineralByMonth?.length) {
+      const newData = monthsArray?.map((item: any, index: any) => ({
+        startDate: item?.startDate,
+        endDate: index === monthsArray?.length - 1 ? dayjs(dateTime?.endDate).format('DD-MM-YYYY') : item?.endDate,
         revenue: 0
       }));
       setData([...newData]);
-      const newList = data?.map((item: any) => {
-        return {
-          ...item,
-          revenue: Number(item?.revenue)
-        }});
-      setListMineralByMonth(newList);
+      setListMineralByMonth(newData);
     } else {
       setData(listMineralByMonth);
     };
-  }, [dateTime]);
+  }, [dateTime, monthsArray]);
+
+  useEffect(() => {
+    if (!(dayjs(dateTime.startDate).isSame(dayjs(listMineralByMonth[0]?.startDate)))) {
+      const newList = listMineralByMonth.map((item: any, index: any) => {
+        if (index === 0) {
+          return {
+            ...item,
+            startDate: dayjs(dateTime.startDate).format('DD-MM-YYYY'),
+          };
+        };
+        return item;
+      });
+      setListMineralByMonth(newList);
+    };
+    if (!(dayjs(dateTime.endDate).isSame(dayjs(listMineralByMonth[(listMineralByMonth?.length - 1)]?.endDate)))) {
+      const newList = listMineralByMonth.map((item: any, index: any) => {
+        if (index === (listMineralByMonth?.length - 1)) {
+          console.log(1)
+          return {
+            ...item,
+            endDate: dayjs(dateTime.endDate).format('DD-MM-YYYY'),
+          };
+        };
+        return item;
+      });
+      setListMineralByMonth(newList);
+    };
+  },[dateTime])
 
   useEffect(() => {
     setCount(totalRevenue);
   }, [totalRevenue]);
+
+  useEffect(() => {
+    if (data?.length) {
+      setListMineralByMonth(data);
+    };
+  }, [data]);
 
   const columns = [
     {
@@ -52,24 +84,25 @@ export default function ListMineralByMonth({}: propsType): React.JSX.Element {
       render(value: any, rc: any, index: any) {
         return (
           <InputNumber
-            value={value}
-            style={{ width: "100%" }}
-            formatter={value => formatNumberThreeComma(value)}
-            min={0}
-            onBlur={(e) => {
-              const revenue = e.target.value;
-              const newData = data?.map((item: any, index_: any) => {
-                if (index_  === index) {
-                  return {
-                    ...item,
-                    revenue: revenue
-                  }
-                }
-                return item;
-              });
-              setData([...newData]);
-            }}
-          />
+          value={value}
+          style={{ width: "100%" }}
+          formatter={value => formatNumberThreeComma(value)}
+          parser={value => value?.replace(/\$\s?|(,*)/g, '')}
+          min={0}
+          onBlur={(e) => {
+            const revenue = parseFloat(e.target.value.replace(/\$\s?|(,*)/g, '')) || 0; 
+            const newData = data?.map((item: any, index_: any) => {
+              if (index_ === index) {
+                return {
+                  ...item,
+                  revenue: revenue
+                };
+              }
+              return item;
+            });
+            setData([...newData]);
+          }}
+        />
         )
       }
     },
@@ -78,6 +111,7 @@ export default function ListMineralByMonth({}: propsType): React.JSX.Element {
   return (
     <>
     <h6>Doanh số khoán chi tiết theo tháng:</h6>
+    <span style={{opacity: 0.5}}>Lưu ý: Nếu bạn thay đổi giá trị thời gian thì doanh số khoán theo tháng sẽ bị cài đặt lại</span>
     <TableAnt
       columns={columns}
       dataSource={data}
@@ -90,14 +124,15 @@ export default function ListMineralByMonth({}: propsType): React.JSX.Element {
   )
 };
 
-function getMonthsBetweenDates(dateTime: any) {
+export function getMonthsBetweenDates(dateTime: any) {
   let months = [];
   let currentDate : any = new Date(dateTime?.startDate);
   while (currentDate <= dayjs(dateTime.endDate)) {
     let date = currentDate.getDate();
     let month = currentDate.getMonth() + 1; // Tháng bắt đầu từ 0 nên cần cộng thêm 1
     let year = currentDate.getFullYear();
-    let lastDayOfMonth = new Date(year, month + 1, 0).getDate();
+    // let lastDayOfMonth = new Date(year, month + 1, 0).getDate();
+    let lastDayOfMonth = dayjs(currentDate).endOf('month').date()
     let newEndDateOfMonth = `${lastDayOfMonth}-${month}-${year}`;
     months.push({
       startDate: `${date}-${month}-${year}`,
@@ -107,4 +142,14 @@ function getMonthsBetweenDates(dateTime: any) {
       currentDate.setDate(1); // Đặt ngày thành ngày đầu tiên của tháng
   };
   return months;
+};
+
+export function newListMineralByMonth(dateTime: any) {
+  let monthsArray = getMonthsBetweenDates(dateTime);
+  const newData = monthsArray?.map((item: any, index: any) => ({
+    startDate: item?.startDate,
+    endDate: index === monthsArray?.length - 1 ? dayjs(dateTime?.endDate).format('DD-MM-YYYY') : item?.endDate,
+    revenue: 0
+  }));
+  return newData;
 };
