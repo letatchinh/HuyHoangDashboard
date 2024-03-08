@@ -165,7 +165,7 @@ const Detail: React.FC<DetailProps> = ({
       </WithPermission>
       <div
         className='sprint-card-title'
-        onDoubleClick={() => navigate(`/work-board/detail/${id}`)}
+        onClick={() => navigate(`/work-board/detail/${id}`)}
         style={{ cursor: 'pointer' }}
       >
         {!focusName ? (

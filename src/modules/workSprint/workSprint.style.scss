@@ -143,12 +143,12 @@
     overflow-y: auto !important;
 }
 .page-workflow {
-    height: calc(100vh - var(--flexBody)) !important;
+    height: calc(100vh - 100px) !important;
     padding-bottom: 16px !important;
     display: flex;
     flex-direction: column;
     .container-fluid{
-        overflow-y: auto;
+        overflow-y: hiden;
         position: relative;
         .ant-table-thead{
             position: -webkit-sticky;
@@ -183,7 +183,7 @@
             width: 100%;
             margin: 0;
             padding: 0;
-            height: 100vh;
+            height: calc(100vh - 300px) !important;
             background-color: white;
             & > .branch-detail.page-wraper.page-content {
                 margin: 0 !important;
@@ -343,10 +343,11 @@
 .workflow {
     width: 100%;
     flex-grow: 1;
+    height:calc(100vh - 50px) !important;
     display: flex;
     padding-top: 5px;
     box-shadow: 2px 3px 4px #616161;
-    // overflow-y: auto;
+    // overflow-x: auto;
     // .react-resizable_custom{
     //     display: flex;
     //     height: 100%;
@@ -382,12 +383,10 @@
         .work-list-body {
             display: flex;
             justify-content: start;
-            width: 105%;
+            width: 100%;
             margin: auto;
             height: 100%;
-            // overflow-x: auto;
         }
-
         .work-list-column {
             padding: 0 8px;
             margin: 0 8px;
@@ -395,7 +394,7 @@
             // max-height: 550px;
             border-radius: 5px;
             width: 345px;
-            padding-bottom: 5px;
+            // padding-bottom: 5px;
 
             .work-item-title {
                 .ant-tag {
@@ -696,7 +695,7 @@
         --task-detail-header: #{$task-detail-header}px;
         width: 100%;
         position: relative;
-        padding-top: calc(var(--flexBody) + #{$task-detail-header}px) !important;
+        padding-top: calc(130px + #{$task-detail-header}px) !important;
         padding-bottom: 0 !important;
         margin-top: 0 !important;
         height: 100vh;
@@ -707,7 +706,7 @@
             overflow-y: auto;
             .task-detail-header {
                 position: fixed;
-                top: var(--flexBody);
+                top: 130px;
                 width: 100%;
                 height: $task-detail-header + px;
                 display: flex;
