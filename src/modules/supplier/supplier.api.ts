@@ -22,5 +22,8 @@ const apis = {
     // This is api for Product groups
     getProductGroupsRevenue: (query?: any) => requester.get(`/api/v1/supplier-revenue-product-group/${query?.id}`, omit(query,['id'])),
     updateProductGroupsRevenue: (query?: any) => requester.put(`/api/v1/supplier-revenue-product-group/${query?.supplierId}`, omit(query,['id'])),
+
+    //This is api for report
+    getReport: (query?: any) => requester.get(`/api/v1/supplier-revenue-time/${query?.id}`, omit(query,['id'])),
 }
 export default apis;

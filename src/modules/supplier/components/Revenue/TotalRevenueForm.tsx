@@ -5,6 +5,8 @@ import { useParams } from 'react-router-dom';
 import useNotificationStore from '~/store/NotificationContext';
 import { formatNumberThreeComma } from '~/utils/helpers';
 import { PROVIDER_COLLECTION_CONTRACT_MINERAL } from '../../supplier.modal';
+import ListMineralByMonth from './ListMineralByMonth';
+import { useRevenueContext } from '.';
 type propsType = {
   totalRevenue: any,
   updateTotalRevenue: any,
@@ -15,7 +17,8 @@ type propsType = {
 const { RangePicker } = DatePicker;
 const dateFormat = 'DD-MM-YYYY';
 
-export default function TotalRevenueForm({ totalRevenue, updateTotalRevenue, onClose, data}: propsType): React.JSX.Element {
+export default function TotalRevenueForm({ totalRevenue, updateTotalRevenue, onClose, data }: propsType): React.JSX.Element {
+  const { setTotalRevenue, listMineralByMonth } = useRevenueContext();
   const [revenueValue, setRevenueValue] = useState<number | null | undefined>(0);
   const { id } = useParams();
   const [form] = Form.useForm();
@@ -40,7 +43,8 @@ export default function TotalRevenueForm({ totalRevenue, updateTotalRevenue, onC
           totalRevenue: revenueValue,
           supplierId: id,
           supplierMineralId: data?._id,
-          providerCollection: PROVIDER_COLLECTION_CONTRACT_MINERAL.supplier  //is default data table
+          providerCollection: PROVIDER_COLLECTION_CONTRACT_MINERAL.supplier,  //is default data table
+          listMineralByMonth,
         });
       } else {
         onNotify?.error("Vui lòng chọn thời gian");
@@ -93,7 +97,8 @@ export default function TotalRevenueForm({ totalRevenue, updateTotalRevenue, onC
               />
             </Form.Item>
         </Col>
-      </Row>
+        </Row>
+        <ListMineralByMonth/>
       <Row justify={"end"} style={{marginTop: 30}}>
         <Col span={4}>
           <Button

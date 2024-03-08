@@ -10,6 +10,7 @@ import { supplierSliceAction } from "../../redux/reducer";
 import { PATH_APP } from "~/routes/allPath";
 import { useMatchPolicy } from "~/modules/policy/policy.hook";
 import POLICIES from "~/modules/policy/policy.auth";
+import { useRevenueContext } from ".";
 interface propsType {
   setTotalRevenueId: any;
   totalRevenueId: any
@@ -20,6 +21,7 @@ const { RangePicker } = DatePicker;
 const dateFormat = 'DD-MM-YYYY';
 
 function RenderTotalRevenue({ setTotalRevenueId, totalRevenueId, setHistoryLogs }: propsType) {
+  const { setDateTime, setTotalRevenue: setTotal,setListMineralByMonth} = useRevenueContext();
   const { revenueId } = useParams();
   const [query] = useRevenueProductQueryParams(revenueId);
   const [data, isLoading] = useGetTotalRevenueSupplierById(query);
@@ -50,13 +52,19 @@ function RenderTotalRevenue({ setTotalRevenueId, totalRevenueId, setHistoryLogs 
   useEffect(() => {
     if (data) {
       setTotalRevenue(data?.mineralOfSupplier?.totalRevenue);
+      setTotal(data?.mineralOfSupplier?.totalRevenue);
       setTotalSalesAchieved(data?.totalSalesAchieved);
       setDate({
         startDate: dayjs(data?.mineralOfSupplier?.startDate).format("DD-MM-YYYY"),
         endDate: dayjs(data?.mineralOfSupplier?.endDate).format("DD-MM-YYYY"),
       });
+      setDateTime({
+        startDate: data?.mineralOfSupplier?.startDate,
+        endDate: data?.mineralOfSupplier?.endDate
+      });
       setTotalRevenueId(data?.mineralOfSupplier?._id);
       setHistoryLogs(data?.mineralOfSupplier?.historyLogs);
+      data?.listMineralByMonth && setListMineralByMonth([...data?.listMineralByMonth]);
     };
   }, [data]);
   
