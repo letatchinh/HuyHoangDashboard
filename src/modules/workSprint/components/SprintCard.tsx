@@ -157,7 +157,7 @@ const Detail: React.FC<DetailProps> = ({
       <WithPermission permission={POLICIES.DELETE_TODOLIST} >
         <div className='sprint-card-close'>
           <CloseCircleFilled onClick={(e) => {
-            e.preventDefault();
+            // e.preventDefault();
             e.stopPropagation();
             onDelete({id});
           }}/>
@@ -165,7 +165,11 @@ const Detail: React.FC<DetailProps> = ({
       </WithPermission>
       <div
         className='sprint-card-title'
-        onClick={() => navigate(`/work-board/detail/${id}`)}
+        onClick={(e) => {
+        
+          navigate(`/work-board/detail/${id}`)}
+         
+        }
         style={{ cursor: 'pointer' }}
       >
         {!focusName ? (
@@ -179,7 +183,9 @@ const Detail: React.FC<DetailProps> = ({
             </Tooltip>
             {userIsAdminforBoard && (
               <FormOutlined
-                onClick={() => {
+                onClick={(e) => {
+                  e.stopPropagation();
+                  e.preventDefault();
                   setVis(true);
                   setFocusName(true);
                 }}
