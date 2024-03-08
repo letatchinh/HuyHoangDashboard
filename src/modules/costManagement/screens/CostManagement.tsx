@@ -257,23 +257,6 @@ export default function CostManagement(props: propsType): React.JSX.Element {
         return formatter(get(value,'financialCost',0))
       },
     },
-    // {
-    //   title: "Chi phí quản lý",
-    //   dataIndex: "shippingCost",
-    //   key: "shippingCost",
-    //   render(value, record, index) {
-    //     return get(value,'cost.management')
-    //   },
-    // },
-    // {
-    //   title: "Chi phí maketing",
-    //   dataIndex: "shippingCost",
-    //   key: "shippingCost",
-    //   render(value, record, index) {
-    //     return get(value,'cost.maketing')
-    //   },
-    // },
-   
     {
       title: "Thao tác",
       dataIndex: "_id",
@@ -288,14 +271,11 @@ export default function CostManagement(props: propsType): React.JSX.Element {
           icon={<InfoCircleTwoTone />}
           onClick={() =>{ 
             if(get(record,'totalPrices',0) === 0){
-              console.log("first")
             return messageApi.open({
               type: "error",
               content: "Sản phẩm chưa có doanh thu",
               className: "custom-class",
               style: {
-                // marginTop: "20vh",
-                // float: "bottom",
                 bottom: "20px", /* Điều chỉnh khoảng cách từ bottom tùy ý */
                 right: "20px",
                 top: "90vh",
@@ -441,17 +421,6 @@ export default function CostManagement(props: propsType): React.JSX.Element {
                   Áp dụng bộ lọc
                 </Button>
               </Col>
-              {/* <Col>
-                <Button
-                  onClick={() => {
-                    onOpenForm();
-                  }}
-                  icon={<PlusOutlined />}
-                  type="primary"
-                >
-                  Thêm chi phí
-                </Button>
-              </Col> */}
             </Row>
           </Form>
         </Col>
