@@ -64,12 +64,15 @@ const WorkBoard: React.FC<WorkFlowProps> = () => {
     {
       title: 'Tên nhóm',
       dataIndex: 'name',
-      align: 'center',
+      align: 'left',
       key: 'name',
+      className: 'name-column',
       render: (value, record) => (
+       <span style={{ cursor: 'pointer' }}>
         <Button type="link" onClick={() => navigate(`sprint/${record._id}`)} >
           {value}
         </Button>
+       </span> 
       ),
     },
     {
@@ -96,7 +99,7 @@ const WorkBoard: React.FC<WorkFlowProps> = () => {
       render: (_, record) => (
         <Space size="small">
           <Button
-            size="middle"
+            size="small"
             type="link"
             style={{ background: '#1890ff', borderRadius: '10px', color: 'white' }}
             onClick={(e) => {
@@ -118,7 +121,7 @@ const WorkBoard: React.FC<WorkFlowProps> = () => {
         render: (_:any, record:any) => (
           <Space size="small">
             <WithPermission permission={POLICIES.UPDATE_TODOLIST}>
-              <Button type="primary" onClick={() => {
+              <Button type="primary" size='small' onClick={() => {
                 // if (!canUpdate) return message.warning('Bạn không có quyền thay đổi')
                 handleOpenUpdate(record?._id)
               }}>
@@ -126,7 +129,7 @@ const WorkBoard: React.FC<WorkFlowProps> = () => {
               </Button>
             </WithPermission>
             <WithPermission permission={POLICIES.DELETE_TODOLIST}>
-              <Button style={{ color: 'red' }} onClick={() => {
+              <Button size='small' style={{ color: 'red' }} onClick={() => {
                 // if (!canDELETE) return message.warning('Bạn không có quyền xoá')
                 handleDelete(record._id)
               }}>
@@ -176,8 +179,14 @@ const WorkBoard: React.FC<WorkFlowProps> = () => {
           loading={isLoadingList}
           dataSource={board}
           onRow={(item) => ({
-            onClick: () => onClick(item),
+            onClick: onClick(item),
+            // onMouseEnter:(evt:any)=>{
+            //   if(evt?.target?.cellIndex===0){
+
+            //     }
+            // }
           })}
+          bordered
           pagination={{
             ...paging,
             pageSizeOptions: pageSizeOptions,
