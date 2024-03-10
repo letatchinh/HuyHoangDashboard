@@ -4,6 +4,9 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import useNotificationStore from '~/store/NotificationContext';
 import { formatNumberThreeComma } from '~/utils/helpers';
+import { PROVIDER_COLLECTION_CONTRACT_MINERAL } from '../../supplier.modal';
+import ListMineralByMonth, { newListMineralByMonth } from './ListMineralByMonth';
+import { useRevenueContext } from '.';
 type propsType = {
   totalRevenue: any,
   updateTotalRevenue: any,
@@ -14,7 +17,8 @@ type propsType = {
 const { RangePicker } = DatePicker;
 const dateFormat = 'DD-MM-YYYY';
 
-export default function TotalRevenueForm({ totalRevenue, updateTotalRevenue, onClose, data}: propsType): React.JSX.Element {
+export default function TotalRevenueForm({ totalRevenue, updateTotalRevenue, onClose, data }: propsType): React.JSX.Element {
+  const { setTotalRevenue, listMineralByMonth, dateTime, setDateTime, setListMineralByMonth } = useRevenueContext();
   const [revenueValue, setRevenueValue] = useState<number | null | undefined>(0);
   const { id } = useParams();
   const [form] = Form.useForm();
@@ -29,6 +33,10 @@ export default function TotalRevenueForm({ totalRevenue, updateTotalRevenue, onC
       startDate: data?.startDate,
       endDate: data?.endDate,
     });
+    setDateTime({
+      startDate: data?.startDate,
+      endDate: data?.endDate,
+    })
   }, [data]);
   const onFinish = () => {
     try {
@@ -38,7 +46,9 @@ export default function TotalRevenueForm({ totalRevenue, updateTotalRevenue, onC
           endDate: date?.endDate,
           totalRevenue: revenueValue,
           supplierId: id,
-          supplierMineralId: data?._id
+          supplierMineralId: data?._id,
+          providerCollection: PROVIDER_COLLECTION_CONTRACT_MINERAL.supplier,  //is default data table
+          listMineralByMonth,
         });
       } else {
         onNotify?.error("Vui lòng chọn thời gian");
@@ -83,15 +93,19 @@ export default function TotalRevenueForm({ totalRevenue, updateTotalRevenue, onC
                 allowEmpty={[false, false]}
                 value={[(date?.startDate ? dayjs(date?.startDate) : null), date?.endDate ? dayjs(date?.endDate) : null]}
                 onChange={(value) => {
-                  setDate({
+                  const data = {
                     startDate: dayjs(value?.[0]).format("YYYY-MM-DD"),
                     endDate: dayjs(value?.[1]).format("YYYY-MM-DD"),
-                  });
+                  };
+                  setDate({...data});
+                  setDateTime({ ...data });
+                  setListMineralByMonth(newListMineralByMonth(data));
                 }}
               />
             </Form.Item>
         </Col>
-      </Row>
+        </Row>
+        <ListMineralByMonth/>
       <Row justify={"end"} style={{marginTop: 30}}>
         <Col span={4}>
           <Button

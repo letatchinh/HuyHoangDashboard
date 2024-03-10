@@ -1,5 +1,6 @@
+import { resetAction } from './../../../.history/src/modules/supplier/supplier.hook_20240307094358';
 import { get } from "lodash";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { RootState } from "~/redux/store";
@@ -14,7 +15,7 @@ import {
   useSuccess,
 } from "~/utils/hook";
 import { supplierSliceAction } from "./redux/reducer";
-import { cloneInitState } from "./supplier.modal";
+import { PROVIDER_COLLECTION_CONTRACT_MINERAL, cloneInitState } from "./supplier.modal";
 import { useDispatch } from "react-redux";
 import dayjs from "dayjs";
 const MODULE = "supplier";
@@ -98,11 +99,20 @@ const getListTotalRevenueFailedSelector = getSelector("getListTotalRevenueFailed
 const isLoadingGetListTotalRevenueSelector = getSelector("isLoadingGetListTotalRevenue");
 const pagingListTotalRevenueSelector = getSelector("pagingListTotalRevenue");
 
+const productGroupsRevenueSelector = getSelector("productGroupRevenue");
+const getProductGroupsRevenueFailedSelector = getSelector("getProductGroupsRevenueFailed");
+const isLoadingGetProductGroupsRevenueSelector = getSelector("isLoadingGetListProductGroupRevenue");
+const pagingProductGroupsRevenueSelector = getSelector("pagingListProductGroupRevenue");
+
+const updateRevenueProductGroupsSuccessSelector = getSelector("updateRevenueProductGroupsSuccess");
+const updateRevenueProductGroupsFailedSelector = getSelector("updateRevenueProductGroupsFailed");
+
 const getRevenueId = getSelector("revenueId");
 export const useGetRevenueId = () => useSelector(getRevenueId);
 
 export const useListTotalRevenuePaging = () => useSelector(pagingListTotalRevenueSelector);
 export const useRevenueSupplierPaging = () => useSelector(pagingRevenueSupplierSelector);
+export const useProductsGroupRevenuePaging = () => useSelector(pagingProductGroupsRevenueSelector);
 
 export const useProductSupplierPaging = () =>
   useSelector(pagingProductSupplierSelector);
@@ -361,6 +371,7 @@ export const useRevenueProductQueryParams = (idRevenue?: any) => {
   const [limit, setLimit] = useState<any>(query.get("limit") || 10);
   const keyword = query.get("keyword");
   const revenueId = idRevenue ? idRevenue : null;
+  const providerCollection =  PROVIDER_COLLECTION_CONTRACT_MINERAL.supplier;
 
   const onTableChange: any = ({ current, pageSize }: any) => {
     setPage(current);
@@ -377,6 +388,7 @@ export const useRevenueProductQueryParams = (idRevenue?: any) => {
       keyword,
       id,
       revenueId,
+      providerCollection,
     };
     return [queryParams, onTableChange];
     //eslint-disable-next-line
@@ -386,7 +398,7 @@ export const useRevenueProductQueryParams = (idRevenue?: any) => {
       id,
       revenueId,
       updateSuccess,
-      updateRevenueProductSuccess 
+      updateRevenueProductSuccess,
     ]);
 };
 
@@ -397,6 +409,7 @@ export const useListTotalRevenueQueryParams = () => {
   const [limit, setLimit] = useState<any>(query.get("limit") || 10);
   const startDate = query.get('startDate') || dayjs().startOf('month').format("YYYY-MM-DDTHH:mm:ss");
   const endDate = query.get('endDate') || dayjs().endOf('month').format("YYYY-MM-DDTHH:mm:ss");
+  const providerCollection =  PROVIDER_COLLECTION_CONTRACT_MINERAL.supplier;
 
   const onTableChange: any = ({ current, pageSize }: any) => {
     setPage(current);
@@ -410,7 +423,8 @@ export const useListTotalRevenueQueryParams = () => {
       keyword,
       id,
       startDate,
-      endDate
+      endDate,
+      providerCollection
     };
     return [queryParams, onTableChange];
     //eslint-disable-next-line
@@ -420,6 +434,41 @@ export const useListTotalRevenueQueryParams = () => {
       id,
       startDate,
       endDate
+    ]);
+};
+
+export const useProductGroupsRevenueQueryParams = (idRevenue?: any) => {
+  const query = useQueryParams();
+  const { id } = useParams();
+  const [page, setPage] = useState<any>(query.get("page") || 1);
+  const [limit, setLimit] = useState<any>(query.get("limit") || 10);
+  const keyword = query.get("keyword");
+  const providerCollection =  PROVIDER_COLLECTION_CONTRACT_MINERAL.supplier;
+
+  const onTableChange: any = ({ current, pageSize }: any) => {
+    setPage(current);
+    setLimit(pageSize);
+  };
+
+  const updateSuccess = useSelector(updateTotalRevenueSuccessSelector);
+  const updateRevenueProductGroupsSuccess = useSelector(updateRevenueProductGroupsSuccessSelector);
+
+  return useMemo(() => {
+    const queryParams = {
+      page,
+      limit,
+      keyword,
+      id,
+      providerCollection,
+    };
+    return [queryParams, onTableChange];
+    //eslint-disable-next-line
+  }, [page,
+     limit,
+      keyword,
+      id,
+      updateSuccess,
+      updateRevenueProductGroupsSuccess,
     ]);
 };
 
@@ -478,7 +527,7 @@ export const useGetTotalRevenueSupplierById = (param: any) => {
 export const useUpdateRevenueSupplier = (callback?: any) => {
   useSuccess(
     updateRevenueProductSuccessSelector,
-    `Cập nhật doanh thu khoán theo sản phẩm thành công`,
+    `Cập nhật doanh số khoán theo sản phẩm thành công`,
     callback
   );
   useFailed(updateRevenueProductFailedSelector);
@@ -492,7 +541,7 @@ export const useUpdateRevenueSupplier = (callback?: any) => {
 export const useUpdateTotalRevenueSupplier = (callback?: any) => {
   useSuccess(
     updateTotalRevenueSuccessSelector,
-    `Cập nhật doanh thu khoán cho nhà cung cấp thành công`,
+    `Cập nhật doanh số khoán cho nhà cung cấp thành công`,
     callback
   );
   useFailed(updateTotalRevenueFailedSelector);
@@ -506,7 +555,7 @@ export const useUpdateTotalRevenueSupplier = (callback?: any) => {
 export const useCreateTotalRevenue = (callback?: any) => {
   useSuccess(
     createTotalRevenueSuccessSelector,
-    `Tạo mới doanh thu khoán thành công`,
+    `Tạo mới doanh số khoán thành công`,
     callback
   );
   useFailed(createTotalRevenueFailedSelector);
@@ -514,6 +563,20 @@ export const useCreateTotalRevenue = (callback?: any) => {
   return useSubmit({
     action: supplierSliceAction.createTotalRevenueRequest,
     loadingSelector: isLoadingRevenue,
+  });
+};
+
+export const useUpdateRevenueProductGroups = (callback?: any) => {
+  useSuccess(
+    updateRevenueProductGroupsSuccessSelector,
+    `Cập nhật doanh số khoán theo nhóm sản phẩm thành công`,
+    callback
+  );
+  useFailed(updateRevenueProductGroupsFailedSelector);
+
+  return useSubmit({
+    action: supplierSliceAction.updateRevenueProductGroupsRequest,
+    loadingSelector: isSubmitLoadingSelector,
   });
 };
 
@@ -525,4 +588,22 @@ export const useGetListTotalRevenue = (param: any) => {
     failedSelector: getListTotalRevenueFailedSelector,
     param
   });
+};
+export const useGetProductsGroupRevenue = (param: any) => {
+  return useFetchByParam({
+    action: supplierSliceAction.getProductGroupsRevenueRequest,
+    loadingSelector: isLoadingGetProductGroupsRevenueSelector,
+    dataSelector: productGroupsRevenueSelector,
+    failedSelector: getProductGroupsRevenueFailedSelector,
+    param
+  });
+};
+
+export const useResetInRevenueActionUpdate = () => {
+  const dispatch = useDispatch();
+  const resetAction = useCallback(() => {
+    return dispatch(supplierSliceAction.resetActionInTotalRevenue());
+  }, [dispatch]);
+
+  return resetAction;
 };

@@ -84,18 +84,21 @@ class SupplierClassExtend extends InstanceModuleRedux {
       },
 
       updateRevenueSupplierRequest: (state: cloneInitState) => {
-        state.isLoadingSubmitRevenue = false;
+        state.isSubmitLoading = false;
       },
       updateRevenueSupplierSuccess: (state: cloneInitState, { payload }: any) => {
+        state.isSubmitLoading = true;
         state.updateRevenueSuccess = payload;
-        state.revenueSupplier = state.revenueSupplier?.docs?.map((item: any) => {
+        const newRevenueSupplier = state.revenueSupplier?.docs?.map((item: any) => {
           if (item._id === payload._id) {
             return payload;
           }
           return item;
         });
+        state.revenueSupplier = { ...state.revenueSupplier, docs: newRevenueSupplier };
       },
       updateRevenueSupplierFailed: (state: cloneInitState, { payload }: any) => {
+        state.isSubmitLoading = false;
         state.updateRevenueFailed = payload;
       },
       //
@@ -140,14 +143,47 @@ class SupplierClassExtend extends InstanceModuleRedux {
         state.revenueId = payload;
       },
 
-      resetActionInRevenue: (state:any) => ({
+      getProductGroupsRevenueRequest: (state: cloneInitState) => {
+        state.isLoadingGetListProductGroupRevenue = true;
+      },
+      getProductGroupsRevenueSuccess: (state: cloneInitState, { payload }: any) => {
+        state.isLoadingGetListProductGroupRevenue = false;
+        state.productGroupRevenue = payload;
+      },
+      getProductGroupsRevenueFailed: (state: cloneInitState, { payload }: any) => {
+        state.isLoadingGetListProductGroupRevenue = false;
+        state.getProductGroupsRevenueFailed = payload;
+      },
+
+      updateRevenueProductGroupsRequest: (state: cloneInitState) => {
+        state.isSubmitLoading = false;
+      },
+      updateRevenueProductGroupsSuccess: (state: cloneInitState, { payload }: any) => {
+        state.updateRevenueProductGroupsSuccess = payload;
+        state.isSubmitLoading = true;
+
+        const newProductGroupRevenue = state.productGroupRevenue?.docs?.map((item: any) => {
+          if (item._id === payload._id) {
+            return payload;
+          };
+          return item;
+        });
+        state.productGroupRevenue = { ...state.productGroupRevenue, docs: newProductGroupRevenue };
+      },
+      updateRevenueProductGroupsFailed: (state: cloneInitState, { payload }: any) => {
+        state.updateRevenueProductGroupsFailed = payload;
+        state.isSubmitLoading = false;
+      },
+      //
+
+      resetActionInRevenue: (state:cloneInitState) => ({
         ...state,
         ...omit(this.cloneInitState, ["revenueSupplier"]),  
       }),
 
-      resetActionInTotalRevenue: (state:any) => ({
+      resetActionInTotalRevenue: (state:cloneInitState) => ({
         ...state,
-        ...omit(this.cloneInitState, ["revenueSupplier", "totalRevenue", 'revenueId']),  
+        ...omit(this.cloneInitState, ["revenueSupplier", "totalRevenue", 'revenueId', 'productGroupRevenue']),  
       }),
 
     };
@@ -188,6 +224,14 @@ class SupplierClassExtend extends InstanceModuleRedux {
       pagingListTotalRevenue: null,
 
       isLoadingSubmitRevenue: false,
+      
+      productGroupRevenue: [],
+      isLoadingGetListProductGroupRevenue: false,
+      getProductGroupsRevenueFailed: null,
+      pagingListProductGroupRevenue: null,
+
+      updateRevenueProductGroupsSuccess: null,
+      updateRevenueProductGroupsFailed: null,
 
       revenueId: null,
     };

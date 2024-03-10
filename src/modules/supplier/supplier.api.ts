@@ -17,6 +17,13 @@ const apis = {
     getAllRevenueByIdSupplier: (query?: any) => requester.get(`/api/v1/supplier-revenue/${get(query,'id')}`, omit(query,['id'])),
     updateRevenue: (data?: any) => requester.put(`/api/v1/supplier-revenue-product/${get(data,'supplierId')}`, omit(data,['supplierId'])),
     updateTotalRevenue: (data?: any) => requester.put(`/api/v1/supplier-mineral-revenue/${data?.supplierId} `,  omit(data,['supplierId'])),
-    createTotalRevenue: (data?: any) => requester.post(`/api/v1/supplier-mineral-revenue/reset/${data?.supplierId} `,  omit(data,['supplierId'])),
+    createTotalRevenue: (data?: any) => requester.post(`/api/v1/supplier-mineral-revenue/reset/${data?.supplierId} `, omit(data, ['supplierId'])),
+
+    // This is api for Product groups
+    getProductGroupsRevenue: (query?: any) => requester.get(`/api/v1/supplier-revenue-product-group/${query?.id}`, omit(query,['id'])),
+    updateProductGroupsRevenue: (query?: any) => requester.put(`/api/v1/supplier-revenue-product-group/${query?.supplierId}`, omit(query,['id'])),
+
+    //This is api for report
+    getReport: (query?: any) => requester.get(`/api/v1/supplier-revenue-time/${query?.id}`, omit(query,['id'])),
 }
 export default apis;

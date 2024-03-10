@@ -129,6 +129,24 @@ function* getListTotalRevenue({payload:query} : any) : any {
     yield put(supplierSliceAction.getListTotalRevenueFailed(error));
   }
 };
+function* getProductGroupsRevenue({payload:query} : any) : any {
+  try {
+    const data = yield call(api.getProductGroupsRevenue,query);
+    yield put(supplierSliceAction.getProductGroupsRevenueSuccess(data));
+  } catch (error:any) {
+    yield put(supplierSliceAction.getProductGroupsRevenueFailed(error));
+  }
+};
+
+function* updateRevenueProductGroups({payload} : any) : any {
+  try {
+    const data = yield call(api.updateProductGroupsRevenue,payload);
+    yield put(supplierSliceAction.updateRevenueProductGroupsSuccess(data));
+  } catch (error:any) {
+    yield put(supplierSliceAction.updateRevenueProductGroupsFailed(error));
+  }
+};
+
 
 export default function* supplierSaga() {
   yield takeLatest(supplierSliceAction.getListRequest, getListModuleExample);
@@ -144,10 +162,14 @@ export default function* supplierSaga() {
   //Revenue 
 
   yield takeLatest(supplierSliceAction.getRevenueSupplierRequest, getRevenueSupplierById);
-  yield takeLatest(supplierSliceAction.updateRevenueSupplierRequest, updateRevenueSupplier);
-  yield takeLatest(supplierSliceAction.updateTotalRevenueSupplierRequest, updateTotalRevenueSupplier);
-  yield takeLatest(supplierSliceAction.createTotalRevenueRequest, createTotalRevenue);
   yield takeLatest(supplierSliceAction.getTotalRevenueRequest, getTotalRevenueSupplierById);
   yield takeLatest(supplierSliceAction.getListTotalRevenueRequest, getListTotalRevenue);
+  yield takeLatest(supplierSliceAction.getProductGroupsRevenueRequest, getProductGroupsRevenue);
+
+  yield takeLatest(supplierSliceAction.updateRevenueSupplierRequest, updateRevenueSupplier);
+  yield takeLatest(supplierSliceAction.updateTotalRevenueSupplierRequest, updateTotalRevenueSupplier);
+  yield takeLatest(supplierSliceAction.updateRevenueProductGroupsRequest, updateRevenueProductGroups);
+
+  yield takeLatest(supplierSliceAction.createTotalRevenueRequest, createTotalRevenue);
 
 }

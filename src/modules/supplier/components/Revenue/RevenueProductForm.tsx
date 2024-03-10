@@ -9,7 +9,7 @@ type propsType = {
   onUpdateRevenue: (value: any, id: any) => void;
   productName: string,
 };
-export default function UpdateRevenueForm({
+export default function RevenueProductForm({
   revenue,
   id,
   closeFormUpdateRevenue,
