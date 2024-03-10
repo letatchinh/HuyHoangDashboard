@@ -15,6 +15,7 @@ export default function ListMineralByMonth({}: propsType): React.JSX.Element {
   }, [dateTime]);
 
   useEffect(() => {
+    console.log(listMineralByMonth?.length,'listMineralByMonth?.length')
     if (!listMineralByMonth?.length) {
       const newData = monthsArray?.map((item: any, index: any) => ({
         startDate: item?.startDate,
@@ -29,34 +30,6 @@ export default function ListMineralByMonth({}: propsType): React.JSX.Element {
   }, [dateTime, monthsArray]);
 
   useEffect(() => {
-    if (!(dayjs(dateTime.startDate).isSame(dayjs(listMineralByMonth[0]?.startDate)))) {
-      const newList = listMineralByMonth.map((item: any, index: any) => {
-        if (index === 0) {
-          return {
-            ...item,
-            startDate: dayjs(dateTime.startDate).format('DD-MM-YYYY'),
-          };
-        };
-        return item;
-      });
-      setListMineralByMonth(newList);
-    };
-    if (!(dayjs(dateTime.endDate).isSame(dayjs(listMineralByMonth[(listMineralByMonth?.length - 1)]?.endDate)))) {
-      const newList = listMineralByMonth.map((item: any, index: any) => {
-        if (index === (listMineralByMonth?.length - 1)) {
-          console.log(1)
-          return {
-            ...item,
-            endDate: dayjs(dateTime.endDate).format('DD-MM-YYYY'),
-          };
-        };
-        return item;
-      });
-      setListMineralByMonth(newList);
-    };
-  },[dateTime])
-
-  useEffect(() => {
     setCount(totalRevenue);
   }, [totalRevenue]);
 
@@ -65,6 +38,25 @@ export default function ListMineralByMonth({}: propsType): React.JSX.Element {
       setListMineralByMonth(data);
     };
   }, [data]);
+
+  useEffect(() => {
+    const newData = listMineralByMonth?.map((item: any, index: any) => {
+      if (index === 0) {
+        return {
+          ...item,
+          startDate: dayjs(dateTime?.startDate).format('DD-MM-YYYY'),
+        }
+      };
+      if(index === data?.length - 1) {
+        return {
+          ...item,
+          endDate: dayjs(dateTime?.endDate).format('DD-MM-YYYY'),
+        }
+      };
+      return item;
+    });
+    setListMineralByMonth(newData);
+  },[dateTime])
 
   const columns = [
     {

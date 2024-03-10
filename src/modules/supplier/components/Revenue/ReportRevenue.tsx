@@ -23,42 +23,94 @@ interface ColumnChartProps {
 const ColumnChart: React.FC<ColumnChartProps> = ({ data }) => {
   const series = [
     {
-      name: 'Doanh số khoán', data: data?.map(month => (month.DSK)) },
-    { name: 'Doanh thu', data: data?.map(month => (month.DT)) }
+      name: 'Doanh số khoán', data: data?.map(month => (month.DSK)), color: '#387ADF' },
+    { name: 'Doanh thu', data: data?.map(month => (month.DT)) , color: '#27e26c' },
   ];
 
+  // const options = {
+  //   chart: {
+  //     type: 'bar',
+  //     toolbar: {
+  //       show: false // Ẩn thanh công cụ
+  //     },
+  //   },
+  //   xaxis: {
+  //     categories: data?.map(month => month?.duration),
+  //   },
+  //   yaxis: {
+  //     labels: {
+  //       minWidth: 40, // Đặt minWidth cho các nhãn trục y
+  //       maxWidth: 50,
+  //       formatter: (val: any) => {
+  //         return String(val).replace(/(.)(?=(\d{3})+$)/g, '$1.');
+  //       },
+  //     },
+  //   },
+  //   plotOptions: {
+  //     bar: {
+  //       horizontal: false,
+  //       columnWidth: '40px', // Đặt chiều rộng cột là 20px
+  //       padding: '10px',
+  //       dataLabels: {
+  //         position: 'top', // Đặt vị trí nhãn dữ liệu
+  //         style: {
+  //           color: ['#ff0000'] // Thay đổi màu chữ ở đây
+  //         },
+  //         formatter: (val: any) => {
+  //           return String(val).replace(/(.)(?=(\d{3})+$)/g, '$1.');
+  //         },
+  //       },
+  //       barWidth: '90%',
+  //     },
+  //   },
+  //   stroke: {
+  //     width: [0, 4],
+  //     colors: ['#27e26c']
+  //   },
+  // };
   const options = {
+    fill: {
+      colors: ['blue']
+    },
     chart: {
-      type: 'bar',
-      toolbar: {
-        show: false // Ẩn thanh công cụ
-      }
-    },
-    xaxis: {
-      categories: data?.map(month => month?.duration),
-    //   labels: {
-    //   show: false // Ẩn nhãn trục x
-    // }
-    },
-    yaxis: {
-      labels: {
-        minWidth: 40, // Đặt minWidth cho các nhãn trục y
-        maxWidth: 50
-      }
+      type: 'column',
+      height: 350
     },
     plotOptions: {
       bar: {
         horizontal: false,
-        columnWidth: '40px', // Đặt chiều rộng cột là 20px
+        columnWidth: '40px',
         padding: '10px',
-        dataLabels: {
-          position: 'top' // Đặt vị trí nhãn dữ liệu
-        },
-        barWidth: '90%',
       }
     },
+    stroke: {
+      width: [0, 4],
+      colors: ['#27e26c']
+    },
+    dataLabels: {
+      enabled: false
+    },
+    xaxis: {
+      categories: data?.map(month => month?.duration),
+      labels: {
+        trim: true,
+        rotateAlways: true,
+        rotate: -45
+      }
+    },
+    yaxis: [
+      {
+        title: {
+          // text: ''
+        },
+        labels: {
+          formatter: (val: any) => {
+            return String(val).replace(/(.)(?=(\d{3})+$)/g, '$1.');
+          }
+        }
+      }
+    ]
   };
-
   return (
     <div style={{ overflowX: 'auto' }}>
     <ReactApexChart
@@ -78,7 +130,7 @@ interface propsType {
 };
 
 export default function RevenueChart(props: any) {
-  const { dateTime: dateTimeContext } = useRevenueContext();
+  const { dateTime: dateTimeContext} = useRevenueContext();
   const { onNotify} = useNotificationStore();
   const { totalRevenueId } = props;
   const { id } = useParams();
@@ -166,7 +218,7 @@ export default function RevenueChart(props: any) {
   return (
     <div>
       <h3>Báo cáo doanh số khoán và doanh thu theo tháng</h3>
-      <Row>
+      {/* <Row>
         <Col flex={1}>
           <RangePicker 
             style={{ width: '400px', maxWidth: '500px' }} picker="month"
@@ -175,7 +227,7 @@ export default function RevenueChart(props: any) {
             defaultValue={dateTime ? [dayjs(dateTime.startDate, monthFormat), dayjs(dateTime.endDate, monthFormat)] : undefined}
           />
         </Col>
-      </Row>
+      </Row> */}
       <ColumnChart data={data} />
     </div>
   );
