@@ -33,7 +33,8 @@ import freelanceContractPharmacy from '~/modules/freelanceContractPharmacy';
 import costManagement from '~/modules/costManagement';
 import orderSupplier from '~/modules/sale/orderSupplier';
 import areaConfiguration from '~/modules/areaConfiguration';
-import baseSalary from '~/modules/baseSalary';
+import baseSalary from '~/modules/reportSalary/baseSalary/index';
+import benefitConfiguration from '~/modules/reportSalary/benefitConfiguration/index';
 export default function* rootSaga() {
   yield all([
     authModule.redux.saga(),
@@ -73,5 +74,6 @@ export default function* rootSaga() {
     costManagement.redux.saga(),
     areaConfiguration.redux.saga(),
     baseSalary.redux.saga(),
+    benefitConfiguration.redux.saga(),
   ]);
 };

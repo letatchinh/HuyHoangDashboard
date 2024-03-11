@@ -253,3 +253,5 @@ export const getOptions = (constantVi : any) => {
   });
   return options;
 }
+
+export const filterOptionSlug = (input:any,option:any) => StringToSlug(get(option,'label','')?.toLowerCase())?.includes(StringToSlug(input?.trim()?.toLowerCase()));

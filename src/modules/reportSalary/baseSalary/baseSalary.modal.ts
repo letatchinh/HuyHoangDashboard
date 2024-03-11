@@ -8,5 +8,6 @@ export type typeFormField = {
         V_III : number,
         V_IV : number,
     },
-    baseSalaryASM : number
+    baseSalaryASM : number,
+    baseConditionSalaryASM : number,
 }
