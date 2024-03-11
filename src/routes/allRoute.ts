@@ -33,6 +33,7 @@ import OrderSupplier from "~/pages/Dashboard/OrderSupplier";
 import UpdateOrderSupplier from "~/pages/Dashboard/OrderSupplier/UpdateOrderSupplier";
 import AreaConfigurationPage from "~/pages/Dashboard/AreaConfiguration";
 import BaseSalaryPage from "~/pages/Dashboard/BaseSalary";
+import BenefitConfigurationPage from "~/pages/Dashboard/BenefitConfiguration";
 export const mainRoutes :PathRouteProps[] = [
   { path: PATH_APP.main.root, Component: Homepage },
 
@@ -97,8 +98,10 @@ export const mainRoutes :PathRouteProps[] = [
   
   // Cấu hình vùng
   { path: PATH_APP.areaConfiguration.root, Component: AreaConfigurationPage },
-  // Cấu hình vùng
+  // Cấu hình Lương cơ bản vùng
   { path: PATH_APP.baseSalary.root, Component: BaseSalaryPage },
+  // Cấu hình Hoa hồng
+  { path: PATH_APP.benefitConfiguration.root, Component: BenefitConfigurationPage },
 
   { path: '/', Component: Homepage },
 ]

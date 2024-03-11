@@ -31,7 +31,8 @@ import productsAllModule from '~/modules/productsAll';
 import reportSupplierModule from '~/modules/report/reportSupplier';
 import orderSupplier from '~/modules/sale/orderSupplier';
 import areaConfiguration from '~/modules/areaConfiguration';
-import baseSalary from '~/modules/baseSalary';
+import baseSalary from '~/modules/reportSalary/baseSalary/index';
+import benefitConfiguration from '~/modules/reportSalary/benefitConfiguration/index';
 export default function* rootSaga() {
   yield all([
     authModule.redux.saga(),
@@ -70,5 +71,6 @@ export default function* rootSaga() {
     orderSupplier.redux.saga(),
     areaConfiguration.redux.saga(),
     baseSalary.redux.saga(),
+    benefitConfiguration.redux.saga(),
   ]);
 };

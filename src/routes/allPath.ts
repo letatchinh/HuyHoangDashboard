@@ -105,4 +105,7 @@ export const PATH_APP = {
   baseSalary : {
     root:  path(ROOTS.app, '/base-salary'),
   },
+  benefitConfiguration : {
+    root:  path(ROOTS.app, '/benefit-configuration'),
+  },
 };

@@ -136,6 +136,13 @@ import {
               key: PATH_APP.baseSalary.root,
               // permission: [POLICIES.READ_AREACONFIGURATION],
             },
+            {
+              label: "Cấu hình hoa hồng",
+              icon: <i className="fa-brands fa-pagelines"></i>,
+              path: PATH_APP.benefitConfiguration.root,
+              key: PATH_APP.benefitConfiguration.root,
+              // permission: [POLICIES.READ_AREACONFIGURATION],
+            },
           ],
         },
       ],

@@ -1,4 +1,4 @@
-import BaseSalary from "~/modules/baseSalary";
+import BaseSalary from "~/modules/reportSalary/baseSalary/index";
 
 const BaseSalaryPage = () =>  {
   return (
