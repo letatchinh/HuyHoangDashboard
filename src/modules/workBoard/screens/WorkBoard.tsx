@@ -187,23 +187,7 @@ const WorkBoard: React.FC<WorkFlowProps> = () => {
             // }
           })}
           bordered
-          pagination={{
-            ...paging,
-            pageSizeOptions: pageSizeOptions,
-            showSizeChanger: true, // Hiển thị dropdown chọn kích thước trang
-            defaultPageSize: 10, // Kích thước trang mặc định
-            showTotal: (total) => `Tổng cộng: ${total} `,
-          }}
-          expandable={{
-            expandedRowKeys: select,
-            onExpandedRowsChange: (e: any) => {
-              onParamChange({ page: 1 }); // Reset to the first page when expanding rows
-              setSelect(e);
-            },
-          }}
-          onChange={({ current }) => {
-            onParamChange({ page: current });
-          }}
+          pagination={false}
         />
         {/* )} */}
       </div>

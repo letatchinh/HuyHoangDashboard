@@ -147,7 +147,7 @@
     overflow-y: auto !important;
 }
 .page-workflow {
-    height: calc(100vh - 100px) !important;
+    // height: calc(100vh - 10px) !important;
     padding-bottom: 16px !important;
     display: flex;
     flex-direction: column;
@@ -187,7 +187,7 @@
             width: 100%;
             margin: 0;
             padding: 0;
-            height: calc(100vh - 300px) !important;
+            height: calc(100vh - 265px) !important;
             background-color: white;
             & > .branch-detail.page-wraper.page-content {
                 margin: 0 !important;
@@ -347,7 +347,7 @@
 .workflow {
     width: 100%;
     flex-grow: 1;
-    height:calc(100vh - 50px) !important;
+    height: calc(100vh - 215px) !important;
     display: flex;
     padding-top: 5px;
     box-shadow: 2px 3px 4px #616161;
