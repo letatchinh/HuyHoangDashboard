@@ -17,7 +17,7 @@ type propsType = {
 };
 const CLONE_TYPE_BENEFIT_VI : any = TYPE_BENEFIT_VI;
 export default function TableConfig({typeBenefit}:propsType) : React.JSX.Element {
-  const {isLoading,mutate} = useBenefitConfigStore();
+  const {isLoading,mutate,WIDTH_ITEM} = useBenefitConfigStore();
   const ref : any = useRef();
     // Condition
     const [openCondition,setOpenCondition] = useState(false);
@@ -87,7 +87,7 @@ export default function TableConfig({typeBenefit}:propsType) : React.JSX.Element
           size="small"
           pagination={false}
           bordered={true}
-          // scroll={{ x: WIDTH_ITEM * (columns?.length + 1) }}
+          scroll={{ x: WIDTH_ITEM * (columns?.length + 1) }}
           columns={columns}
           dataSource={dataSource}
         />
