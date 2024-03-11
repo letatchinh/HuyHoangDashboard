@@ -8,7 +8,7 @@ import { useResetState } from "~/utils/hook";
 import WithOrPermission from "~/components/common/WithOrPermission";
 import POLICIES from "~/modules/policy/policy.auth";
 import BaseBorderBox from "~/components/common/BaseBorderBox/index";
-import { STAFF_LEVEL_OPTIONS } from "../constants";
+import { EMPLOYEE_LEVEL_OPTIONS } from "../constants";
 import AreaSelect from "~/components/common/AreaSelect/index";
 import { OPTION_AREA } from "~/constants/defaultValue";
 
@@ -221,8 +221,8 @@ export default function EmployeeForm(props: IProps) {
             className="employee-form__logo-row"
           >
             <Col span={12}>
-              <FormItem label="Chức vụ" name="staffLevel">
-                <Select options={STAFF_LEVEL_OPTIONS} />
+              <FormItem label="Chức vụ" name="employeeLevel">
+                <Select options={EMPLOYEE_LEVEL_OPTIONS} />
               </FormItem>
             </Col>
             <Col span={12}>
