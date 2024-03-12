@@ -63,6 +63,7 @@
     "web-vitals": "2.1.4"
   },
   "scripts": {
+    "s": "npm use 20 && npm start",
     "start": "craco start",
     "build": "craco build",
     "test": "craco test",

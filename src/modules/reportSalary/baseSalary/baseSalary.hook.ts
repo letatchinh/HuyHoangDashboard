@@ -6,17 +6,14 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { clearQuerySearch, getExistProp } from "~/utils/helpers";
 import {
     getSelectors,
-    useFailed, useFetch, useFetchByParam,
+    useFailed, useFetchByParam,
     useQueryParams,
-    useResetState,
     useSubmit,
     useSuccess
 } from "~/utils/hook";
-import { SalesGroupType } from "./salesGroup.modal";
-import { salesGroupActions } from "./redux/reducer";
-const MODULE = "salesGroup";
+import { baseSalaryActions } from "./redux/reducer";
+const MODULE = "baseSalary";
 const MODULE_VI = "";
-const getSelector = (key : any) => (state : any) => state[MODULE][key];
 
 const {
   loadingSelector,
@@ -33,28 +30,22 @@ const {
   updateSuccessSelector,
   updateFailedSelector,
   pagingSelector,
-  listSearchSelector,
 } = getSelectors(MODULE);
-const listTeamLeadSelector = getSelector('listTeamLead');
-const isLoadingGetListTeamLeadSelector = getSelector('isLoadingGetListTeamLead');
-const getListTeamLeadFailedSelector = getSelector('getListTeamLeadFailed');
 
-export const useSalesGroupPaging = () => useSelector(pagingSelector);
+export const useBaseSalaryPaging = () => useSelector(pagingSelector);
 
-export const useGetSalesGroups = (param:any) => {
+export const useGetBaseSalarys = (param:any) => {
   return useFetchByParam({
-    action: salesGroupActions.getListRequest,
+    action: baseSalaryActions.getListRequest,
     loadingSelector: loadingSelector,
     dataSelector: listSelector,
     failedSelector: getListFailedSelector,
-    actionUpdate : salesGroupActions.onSearch,
     param
   });
 };
-export const useGetSalesGroupsSearch  = (): SalesGroupType[] => useSelector(listSearchSelector);
-export const useGetSalesGroup = (id: any) => {
+export const useGetBaseSalary = (id: any) => {
   return useFetchByParam({
-    action: salesGroupActions.getByIdRequest,
+    action: baseSalaryActions.getByIdRequest,
     loadingSelector: getByIdLoadingSelector,
     dataSelector: getByIdSelector,
     failedSelector: getByIdFailedSelector,
@@ -62,7 +53,7 @@ export const useGetSalesGroup = (id: any) => {
   });
 };
 
-export const useCreateSalesGroup = (callback?: any) => {
+export const useCreateBaseSalary = (callback?: any) => {
   useSuccess(
     createSuccessSelector,
     `Tạo mới ${MODULE_VI} thành công`,
@@ -71,12 +62,12 @@ export const useCreateSalesGroup = (callback?: any) => {
   useFailed(createFailedSelector);
 
   return useSubmit({
-    action: salesGroupActions.createRequest,
+    action: baseSalaryActions.createRequest,
     loadingSelector: isSubmitLoadingSelector,
   });
 };
 
-export const useUpdateSalesGroup = (callback?: any) => {
+export const useUpdateBaseSalary = (callback?: any) => {
   useSuccess(
     updateSuccessSelector,
     `Cập nhật ${MODULE_VI} thành công`,
@@ -85,28 +76,27 @@ export const useUpdateSalesGroup = (callback?: any) => {
   useFailed(updateFailedSelector);
 
   return useSubmit({
-    action: salesGroupActions.updateRequest,
+    action: baseSalaryActions.updateRequest,
     loadingSelector: isSubmitLoadingSelector,
   });
 };
 
-export const useDeleteSalesGroup = (callback?: any) => {
+export const useDeleteBaseSalary = (callback?: any) => {
   useSuccess(deleteSuccessSelector, `Xoá ${MODULE_VI} thành công`, callback);
   useFailed(deleteFailedSelector);
 
   return useSubmit({
-    action: salesGroupActions.deleteRequest,
+    action: baseSalaryActions.deleteRequest,
     loadingSelector: isSubmitLoadingSelector,
   });
 };
 
-export const useSalesGroupQueryParams = () => {
+export const useBaseSalaryQueryParams = () => {
   const query = useQueryParams();
   const limit = query.get("limit") || 10;
   const page = query.get("page") || 1;
   const keyword = query.get("keyword");
-  const createSuccess = useSelector(createSuccessSelector);
-  const deleteSuccess = useSelector(deleteSuccessSelector);
+  const updateSuccess = useSelector(updateSuccessSelector);
   return useMemo(() => {
     const queryParams = {
       page,
@@ -115,10 +105,10 @@ export const useSalesGroupQueryParams = () => {
     };
     return [queryParams];
     //eslint-disable-next-line
-  }, [page, limit, keyword, createSuccess, deleteSuccess]);
+  }, [page, limit, keyword, updateSuccess]);
 };
 
-export const useUpdateSalesGroupParams = (
+export const useUpdateBaseSalaryParams = (
   query: any,
   listOptionSearch?: any[]
 ) => {
@@ -150,18 +140,3 @@ export const useUpdateSalesGroupParams = (
 
   return [keyword, { setKeyword, onParamChange }];
 };
-
-
-export const useResetAction = () => {
-    return useResetState(salesGroupActions.resetAction);
-  };
-
-  export const useGetListTeamLeadSalesGroups = (param?:any) => {
-    return useFetchByParam({
-      action: salesGroupActions.getListTeamLeadRequest,
-      loadingSelector: isLoadingGetListTeamLeadSelector,
-      dataSelector: listTeamLeadSelector,
-      failedSelector: getListTeamLeadFailedSelector,
-      param
-    });
-  };

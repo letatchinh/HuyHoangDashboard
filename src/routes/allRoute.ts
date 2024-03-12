@@ -32,6 +32,8 @@ import Lk from "~/pages/Dashboard/Lk";
 import OrderSupplier from "~/pages/Dashboard/OrderSupplier";
 import UpdateOrderSupplier from "~/pages/Dashboard/OrderSupplier/UpdateOrderSupplier";
 import SalesGroupPage from "~/pages/Dashboard/SalesGroup";
+import BaseSalaryPage from "~/pages/Dashboard/BaseSalary";
+import BenefitConfigurationPage from "~/pages/Dashboard/BenefitConfiguration";
 export const mainRoutes :PathRouteProps[] = [
   { path: PATH_APP.main.root, Component: Homepage },
 
@@ -96,6 +98,10 @@ export const mainRoutes :PathRouteProps[] = [
   
   // Cấu hình vùng
   { path: PATH_APP.salesGroup.root, Component: SalesGroupPage },
+  // Cấu hình Lương cơ bản vùng
+  { path: PATH_APP.baseSalary.root, Component: BaseSalaryPage },
+  // Cấu hình Hoa hồng
+  { path: PATH_APP.benefitConfiguration.root, Component: BenefitConfigurationPage },
 
   { path: '/', Component: Homepage },
 ]

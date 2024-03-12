@@ -102,4 +102,10 @@ export const PATH_APP = {
   salesGroup : {
     root:  path(ROOTS.app, '/area-configuration'),
   },
+  baseSalary : {
+    root:  path(ROOTS.app, '/base-salary'),
+  },
+  benefitConfiguration : {
+    root:  path(ROOTS.app, '/benefit-configuration'),
+  },
 };

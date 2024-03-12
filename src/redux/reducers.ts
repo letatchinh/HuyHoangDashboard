@@ -35,6 +35,8 @@ import lkModule from '~/modules/sale/lk';
 import productsAll from '~/modules/productsAll';
 import orderSupplier from '~/modules/sale/orderSupplier';
 import salesGroup from '~/modules/salesGroup';
+import baseSalary from '~/modules/reportSalary/baseSalary/index';
+import benefitConfiguration from '~/modules/reportSalary/benefitConfiguration/index';
 const authPersistConfig = {
     key: 'auth',
     storage: localStorage,
@@ -81,6 +83,8 @@ const rootReducer = combineReducers({
     productsAll: productsAll.redux.reducer,
     orderSupplier: orderSupplier.redux.reducer,
     salesGroup: salesGroup.redux.reducer,
+    baseSalary: baseSalary.redux.reducer,
+    benefitConfiguration: benefitConfiguration.redux.reducer,
 
 });
 export default rootReducer
