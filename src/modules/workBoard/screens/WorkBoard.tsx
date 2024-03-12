@@ -186,6 +186,13 @@ const WorkBoard: React.FC<WorkFlowProps> = () => {
             //     }
             // }
           })}
+          expandable={{
+            expandedRowKeys: select,
+            onExpandedRowsChange: (e: any) => {
+              onParamChange({ page: 1 }); // Reset to the first page when expanding rows
+              setSelect(e);
+            },
+          }}
           bordered
           pagination={false}
         />
