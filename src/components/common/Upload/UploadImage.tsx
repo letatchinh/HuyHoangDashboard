@@ -101,12 +101,12 @@ const UploadImage: React.FC<UploadImageProps> = ({
         
       }else{// Mode Single
         if (file?.status === 'uploading') {
-          setIsLoading(true);
+          setIsLoading && setIsLoading(true);
           return;
         }
         if (file?.status === 'done') {
           const imageUrl: string | undefined = file?.response?.url;
-          setIsLoading(false);
+          setIsLoading && setIsLoading(false);
           if (imageUrl) {
             onChange(imageUrl);
           };
