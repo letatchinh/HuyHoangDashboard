@@ -12,10 +12,11 @@ import {
     useSubmit,
     useSuccess
 } from "~/utils/hook";
-import { AreaConfigurationType } from "./areaConfiguration.modal";
-import { areaConfigurationActions } from "./redux/reducer";
-const MODULE = "areaConfiguration";
+import { SalesGroupType } from "./salesGroup.modal";
+import { salesGroupActions } from "./redux/reducer";
+const MODULE = "salesGroup";
 const MODULE_VI = "";
+const getSelector = (key : any) => (state : any) => state[MODULE][key];
 
 const {
   loadingSelector,
@@ -34,32 +35,30 @@ const {
   pagingSelector,
   listSearchSelector,
 } = getSelectors(MODULE);
+const listTeamLeadSelector = getSelector('listTeamLead');
+const isLoadingGetListTeamLeadSelector = getSelector('isLoadingGetListTeamLead');
+const getListTeamLeadFailedSelector = getSelector('getListTeamLeadFailed');
 
-export const useAreaConfigurationPaging = () => useSelector(pagingSelector);
+const listMemberSelector = getSelector('listMember');
+const isLoadingGetListMemberSelector = getSelector('isLoadingGetListMember');
+const getListMemberFailedSelector = getSelector('getListMemberFailed');
 
-export const useGetAreaConfigurations = (param:any) => {
+export const useSalesGroupPaging = () => useSelector(pagingSelector);
+
+export const useGetSalesGroups = (param:any) => {
   return useFetchByParam({
-    action: areaConfigurationActions.getListRequest,
+    action: salesGroupActions.getListRequest,
     loadingSelector: loadingSelector,
     dataSelector: listSelector,
     failedSelector: getListFailedSelector,
-    actionUpdate : areaConfigurationActions.onSearch,
+    actionUpdate : salesGroupActions.onSearch,
     param
   });
 };
-
-export const useFetchAreaConfigurations = () => {
-  return useFetch({
-    action: areaConfigurationActions.getListRequest,
-    loadingSelector: loadingSelector,
-    dataSelector: listSelector,
-    failedSelector: getListFailedSelector,
-  });
-};
-export const useGetAreaConfigurationsSearch  = (): AreaConfigurationType[] => useSelector(listSearchSelector);
-export const useGetAreaConfiguration = (id: any) => {
+export const useGetSalesGroupsSearch  = (): SalesGroupType[] => useSelector(listSearchSelector);
+export const useGetSalesGroup = (id: any) => {
   return useFetchByParam({
-    action: areaConfigurationActions.getByIdRequest,
+    action: salesGroupActions.getByIdRequest,
     loadingSelector: getByIdLoadingSelector,
     dataSelector: getByIdSelector,
     failedSelector: getByIdFailedSelector,
@@ -67,7 +66,7 @@ export const useGetAreaConfiguration = (id: any) => {
   });
 };
 
-export const useCreateAreaConfiguration = (callback?: any) => {
+export const useCreateSalesGroup = (callback?: any) => {
   useSuccess(
     createSuccessSelector,
     `Tạo mới ${MODULE_VI} thành công`,
@@ -76,12 +75,12 @@ export const useCreateAreaConfiguration = (callback?: any) => {
   useFailed(createFailedSelector);
 
   return useSubmit({
-    action: areaConfigurationActions.createRequest,
+    action: salesGroupActions.createRequest,
     loadingSelector: isSubmitLoadingSelector,
   });
 };
 
-export const useUpdateAreaConfiguration = (callback?: any) => {
+export const useUpdateSalesGroup = (callback?: any) => {
   useSuccess(
     updateSuccessSelector,
     `Cập nhật ${MODULE_VI} thành công`,
@@ -90,27 +89,28 @@ export const useUpdateAreaConfiguration = (callback?: any) => {
   useFailed(updateFailedSelector);
 
   return useSubmit({
-    action: areaConfigurationActions.updateRequest,
+    action: salesGroupActions.updateRequest,
     loadingSelector: isSubmitLoadingSelector,
   });
 };
 
-export const useDeleteAreaConfiguration = (callback?: any) => {
+export const useDeleteSalesGroup = (callback?: any) => {
   useSuccess(deleteSuccessSelector, `Xoá ${MODULE_VI} thành công`, callback);
   useFailed(deleteFailedSelector);
 
   return useSubmit({
-    action: areaConfigurationActions.deleteRequest,
+    action: salesGroupActions.deleteRequest,
     loadingSelector: isSubmitLoadingSelector,
   });
 };
 
-export const useAreaConfigurationQueryParams = () => {
+export const useSalesGroupQueryParams = () => {
   const query = useQueryParams();
   const limit = query.get("limit") || 10;
   const page = query.get("page") || 1;
   const keyword = query.get("keyword");
-  const createSuccess = useSelector(createSuccessSelector);
+  const createSuccess : any = useSelector(createSuccessSelector);
+  const updateSuccess = useSelector(updateSuccessSelector);
   const deleteSuccess = useSelector(deleteSuccessSelector);
   return useMemo(() => {
     const queryParams = {
@@ -120,10 +120,10 @@ export const useAreaConfigurationQueryParams = () => {
     };
     return [queryParams];
     //eslint-disable-next-line
-  }, [page, limit, keyword, createSuccess, deleteSuccess]);
+  }, [page, limit, keyword, createSuccess, deleteSuccess,updateSuccess]);
 };
 
-export const useUpdateAreaConfigurationParams = (
+export const useUpdateSalesGroupParams = (
   query: any,
   listOptionSearch?: any[]
 ) => {
@@ -158,5 +158,25 @@ export const useUpdateAreaConfigurationParams = (
 
 
 export const useResetAction = () => {
-    return useResetState(areaConfigurationActions.resetAction);
+    return useResetState(salesGroupActions.resetAction);
+  };
+
+  export const useGetListTeamLeadSalesGroups = (param?:any) => {
+    return useFetchByParam({
+      action: salesGroupActions.getListTeamLeadRequest,
+      loadingSelector: isLoadingGetListTeamLeadSelector,
+      dataSelector: listTeamLeadSelector,
+      failedSelector: getListTeamLeadFailedSelector,
+      param
+    });
+  };
+
+  export const useGetListMemberSalesGroups = (param?:any) : any => {
+    return useFetchByParam({
+      action: salesGroupActions.getListMemberRequest,
+      loadingSelector: isLoadingGetListMemberSelector,
+      dataSelector: listMemberSelector,
+      failedSelector: getListMemberFailedSelector,
+      param
+    });
   };

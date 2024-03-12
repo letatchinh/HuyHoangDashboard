@@ -35,7 +35,7 @@ import { FreelanceContractPharmacyPage } from "~/pages/Dashboard/FreelanceContra
 import RevenueSupplier from "~/modules/supplier/components/Revenue";
 import TotalRevenueList from "~/modules/supplier/components/Revenue/TotalRevenueList";
 import CostManagement from "~/pages/Dashboard/CostManagement";
-import AreaConfigurationPage from "~/pages/Dashboard/AreaConfiguration";
+import SalesGroupPage from "~/pages/Dashboard/SalesGroup";
 import BaseSalaryPage from "~/pages/Dashboard/BaseSalary";
 import BenefitConfigurationPage from "~/pages/Dashboard/BenefitConfiguration";
 export const mainRoutes :PathRouteProps[] = [
@@ -109,8 +109,8 @@ export const mainRoutes :PathRouteProps[] = [
   { path: PATH_APP.freelanceContractPharmacy.root, Component: FreelanceContractPharmacyPage},
   {path: PATH_APP.costManagement.root, Component: CostManagement},
   
-  // Cấu hình vùng
-  { path: PATH_APP.areaConfiguration.root, Component: AreaConfigurationPage },
+  // Nhóm bán hàng
+  { path: PATH_APP.salesGroup.root, Component: SalesGroupPage },
   // Cấu hình Lương cơ bản vùng
   { path: PATH_APP.baseSalary.root, Component: BaseSalaryPage },
   // Cấu hình Hoa hồng

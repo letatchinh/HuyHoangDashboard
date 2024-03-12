@@ -32,7 +32,7 @@ import reportSupplierModule from '~/modules/report/reportSupplier';
 import freelanceContractPharmacy from '~/modules/freelanceContractPharmacy';
 import costManagement from '~/modules/costManagement';
 import orderSupplier from '~/modules/sale/orderSupplier';
-import areaConfiguration from '~/modules/areaConfiguration';
+import salesGroup from '~/modules/salesGroup';
 import baseSalary from '~/modules/reportSalary/baseSalary/index';
 import benefitConfiguration from '~/modules/reportSalary/benefitConfiguration/index';
 export default function* rootSaga() {
@@ -72,7 +72,7 @@ export default function* rootSaga() {
     orderSupplier.redux.saga(),
     freelanceContractPharmacy.redux.saga(),
     costManagement.redux.saga(),
-    areaConfiguration.redux.saga(),
+    salesGroup.redux.saga(),
     baseSalary.redux.saga(),
     benefitConfiguration.redux.saga(),
   ]);

@@ -1,4 +1,10 @@
+interface AreaType {
+  code : "string",
+  name : "string",
+  unit : "string",
+}
 declare module 'sub-vn' {
+  export function getAreas(): AreaType[];
   export function getWardsByDistrictCode(code: string): any;
   export function getProvinces(): [any];
   export function getDistricts(): [any];

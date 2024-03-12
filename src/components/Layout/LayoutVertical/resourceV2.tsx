@@ -125,10 +125,10 @@ import {
               permission: [POLICIES.READ_NOTIFICATIONBOTMANAGER],
             },
             {
-              label: "Cấu hình vùng",
+              label: "Nhóm bán hàng",
               icon: <i className="fa-solid fa-chart-area"></i>,
-              path: PATH_APP.areaConfiguration.root,
-              key: PATH_APP.areaConfiguration.root,
+              path: PATH_APP.salesGroup.root,
+              key: PATH_APP.salesGroup.root,
               permission: [POLICIES.READ_AREACONFIGURATION],
             },
             {

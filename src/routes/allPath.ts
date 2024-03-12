@@ -115,7 +115,7 @@ export const PATH_APP = {
     update: path(ROOTS.app, "/cost-management/:id"),
   },
 
-  areaConfiguration : {
+  salesGroup : {
     root:  path(ROOTS.app, '/area-configuration'),
   },
   baseSalary : {
