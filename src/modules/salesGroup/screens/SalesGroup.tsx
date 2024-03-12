@@ -1,4 +1,4 @@
-import { DeleteOutlined, InfoCircleOutlined } from "@ant-design/icons";
+import { DeleteOutlined, InfoCircleOutlined, SisternodeOutlined } from "@ant-design/icons";
 import { Button, Popconfirm, Space } from "antd";
 import { ColumnsType } from "antd/es/table/InternalTable";
 import { get } from "lodash";
@@ -21,15 +21,19 @@ import {
 import { SalesGroupType } from "../salesGroup.modal";
 import SalesGroupForm from "../components/SalesGroupForm";
 import AssignTeamLead from "../components/AssignTeamLead";
-import { SalesGroupProvider } from "../salesGroupContext";
+import useSalesGroupStore, { SalesGroupProvider } from "../salesGroupContext";
+import Member from "../components/Member";
+import TargetSalesGroup from "../components/TargetSalesGroup";
 export default function SalesGroup() {
+  const {isSubmitLoading,updateSalesGroup} = useSalesGroupStore();
   const [query] = useSalesGroupQueryParams();
   const [data, isLoading,actionUpdate] = useGetSalesGroups(query);
+    console.log(data,'data');
+    
   const dataSearch = useGetSalesGroupsSearch()
   const [id, setId]: any = useState();
+  const [parentNear, setParentNear]: any = useState();
   const [isOpenForm, setIsOpenForm]: any = useState(false);
-  const [isSubmitLoading, updateSalesGroup]: any =
-    useUpdateSalesGroup();
   const [, deleteSalesGroup]: any =
     useDeleteSalesGroup();
 
@@ -40,20 +44,27 @@ export default function SalesGroup() {
     }
     setIsOpenForm(true);
   }, []);
+  const onOpenFormCreateGroupFromExistGroup = useCallback((data: any) => {
+    setParentNear(data);
+    setIsOpenForm(true);
+  }, []);
   const onCloseForm = useCallback(() => {
     setIsOpenForm(false);
     setId(null);
+    setParentNear(null)
   }, []);
 
   const onSearch = (keyword:any) => {
     // Get Data Filter From Redux
     const resultSearch = data?.filter((item:SalesGroupType) => {
-        const name = get(item,'name','');
-        const alias = get(item,'alias','');
+        
+        const name = get(item,'nameChild','');
+        const member = get(item,'memberChild','');
         const keywordSlug = StringToSlug(keyword?.trim()?.toLowerCase());
         const nameSlug = StringToSlug(name?.trim()?.toLowerCase());
-        const aliasSlug = StringToSlug(alias?.trim()?.toLowerCase());
-        return  nameSlug?.includes(keywordSlug) || aliasSlug?.includes(keywordSlug);
+        const memberSlug = StringToSlug(member?.trim()?.toLowerCase());
+        
+        return  nameSlug?.includes(keywordSlug) || memberSlug?.includes(keywordSlug) 
         });
         
         actionUpdate(resultSearch);
@@ -63,27 +74,53 @@ export default function SalesGroup() {
       title: "Tên",
       dataIndex: "name",
       key: "name",
-      render : (name,rc) => `${name} ${get(rc,'alias') ? `(${get(rc,'alias')})` : ''}` 
+      render: (name, rc) =>
+        `${name} ${get(rc, "alias") ? `(${get(rc, "alias")})` : ""}`,
     },
     {
       title: "Chỉ tiêu",
       key: "targets",
-      render : (name,rc) => 'chi tieu'
+      dataIndex: "_id",
+      width : '20%',
+      render: (_id, rc) => (
+        <TargetSalesGroup
+          _id={_id}
+          targetLead={get(rc, "targetLead",0)}
+          targetMember={get(rc, "targetMember",0)}
+        />
+      ),
     },
     {
       title: "Thành viên",
-      key: "member",
-      render : (name,rc) => <AssignTeamLead />
+      key: "salesGroupPermission",
+      dataIndex: "_id",
+      width : '30%',
+      render: (_id, rc) => (
+        <Member _id={_id} data={get(rc, "salesGroupPermission", [])} />
+      ),
     },
     {
       title: "Thao tác",
       dataIndex: "_id",
       key: "_id",
       align: "center",
-      fixed: 'right',
-      render(_id) {
+      fixed: "right",
+      width : '10%',
+      render(_id,rc) {
         return (
           <Space direction="horizontal">
+            <Button
+              block
+              icon={<SisternodeOutlined />}
+              onClick={() => onOpenFormCreateGroupFromExistGroup({
+                parentNear : _id,
+                parentNearName : get(rc,'name','')
+              })}
+              size="small"
+              type="dashed"
+            >
+              Tạo nhóm
+            </Button>
             <Button
               block
               icon={<InfoCircleOutlined />}
@@ -94,22 +131,22 @@ export default function SalesGroup() {
               Xem chi tiết
             </Button>
             <WithPermission permission={POLICIES.DELETE_AREACONFIGURATION}>
-            <Popconfirm
-              title="Bạn muốn xoá địa chỉ này?"
-              onConfirm={() => deleteSalesGroup(_id)}
-              okText="Xoá"
-              cancelText="Huỷ"
-            >
-              <Button
-                block
-                loading={isSubmitLoading}
-                danger
-                size="small"
-                icon={<DeleteOutlined />}
+              <Popconfirm
+                title="Bạn muốn xoá địa chỉ này?"
+                onConfirm={() => deleteSalesGroup(_id)}
+                okText="Xoá"
+                cancelText="Huỷ"
               >
-                Xoá
-              </Button>
-            </Popconfirm>
+                <Button
+                  block
+                  loading={isSubmitLoading}
+                  danger
+                  size="small"
+                  icon={<DeleteOutlined />}
+                >
+                  Xoá
+                </Button>
+              </Popconfirm>
             </WithPermission>
           </Space>
         );
@@ -117,7 +154,6 @@ export default function SalesGroup() {
     },
   ];
   return (
-    <SalesGroupProvider>
 
     <div>
       <Breadcrumb title={"Cấu hình vùng"} />
@@ -137,10 +173,11 @@ export default function SalesGroup() {
           onCancel={onCloseForm}
           onUpdate={updateSalesGroup}
           id={id}
+          parentNear={get(parentNear,'parentNear')}
+          parentNearName={get(parentNear,'parentNearName')}
         />
       </ModalAnt>
     </div>
-    </SalesGroupProvider>
 
   );
 }

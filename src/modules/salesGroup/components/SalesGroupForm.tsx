@@ -17,6 +17,8 @@ const SalesGroupForm = ({
   id,
   onCancel,
   onUpdate,
+  parentNear,
+  parentNearName,
 }: propsTypeSalesGroupForm): React.JSX.Element => {
   const [salesGroup, isLoading] = useGetSalesGroup(id);
 
@@ -28,12 +30,13 @@ const SalesGroupForm = ({
   const onFinish = useCallback(
     (values: FieldTypeForm) => {
       const submitData = convertSubmitData(values);
+      console.log(submitData,'submitData');
+      
       if (!id) {
         onCreate(submitData);
       } else {
         onUpdate({ ...submitData, _id: id });
       }
-      console.log(submitData,'submitData');
       
     },
     [id, onCreate, onUpdate]
@@ -43,6 +46,8 @@ const SalesGroupForm = ({
     if (id && salesGroup) {
       const initSalesGroup = convertInitData(salesGroup);
       form.setFieldsValue(initSalesGroup);
+    }else{
+      form.setFieldsValue({parentNear});
     }
   }, [form, id, salesGroup]);
 
@@ -61,6 +66,7 @@ const SalesGroupForm = ({
         onFinish={onFinish}
         onValuesChange={onValuesChange}
       >
+          <Form.Item<FieldTypeForm> hidden name={'parentNear'}/>
          <Row justify={"space-between"} align="middle" gutter={48}>
             <Col span={24}>
               <Form.Item<FieldTypeForm>
@@ -94,6 +100,9 @@ const SalesGroupForm = ({
               <Form.Item
                 label="Khu vực"
                 name={['managementArea']}
+                rules={[
+                  { required: true, message: "Vui lòng chọn" },
+                ]}
               >
                 <GeoTreeSelect
                   autoClearSearchValue
@@ -140,6 +149,7 @@ const SalesGroupForm = ({
             Huỷ
           </Button>
         </div>
+        {parentNear ? <i>*Nhóm cha: {parentNearName}</i> : ""}
       </Form>
     </div>
   );

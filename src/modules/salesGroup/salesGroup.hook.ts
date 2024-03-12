@@ -39,6 +39,10 @@ const listTeamLeadSelector = getSelector('listTeamLead');
 const isLoadingGetListTeamLeadSelector = getSelector('isLoadingGetListTeamLead');
 const getListTeamLeadFailedSelector = getSelector('getListTeamLeadFailed');
 
+const listMemberSelector = getSelector('listMember');
+const isLoadingGetListMemberSelector = getSelector('isLoadingGetListMember');
+const getListMemberFailedSelector = getSelector('getListMemberFailed');
+
 export const useSalesGroupPaging = () => useSelector(pagingSelector);
 
 export const useGetSalesGroups = (param:any) => {
@@ -105,7 +109,8 @@ export const useSalesGroupQueryParams = () => {
   const limit = query.get("limit") || 10;
   const page = query.get("page") || 1;
   const keyword = query.get("keyword");
-  const createSuccess = useSelector(createSuccessSelector);
+  const createSuccess : any = useSelector(createSuccessSelector);
+  const updateSuccess = useSelector(updateSuccessSelector);
   const deleteSuccess = useSelector(deleteSuccessSelector);
   return useMemo(() => {
     const queryParams = {
@@ -115,7 +120,7 @@ export const useSalesGroupQueryParams = () => {
     };
     return [queryParams];
     //eslint-disable-next-line
-  }, [page, limit, keyword, createSuccess, deleteSuccess]);
+  }, [page, limit, keyword, createSuccess, deleteSuccess,updateSuccess]);
 };
 
 export const useUpdateSalesGroupParams = (
@@ -162,6 +167,16 @@ export const useResetAction = () => {
       loadingSelector: isLoadingGetListTeamLeadSelector,
       dataSelector: listTeamLeadSelector,
       failedSelector: getListTeamLeadFailedSelector,
+      param
+    });
+  };
+
+  export const useGetListMemberSalesGroups = (param?:any) : any => {
+    return useFetchByParam({
+      action: salesGroupActions.getListMemberRequest,
+      loadingSelector: isLoadingGetListMemberSelector,
+      dataSelector: listMemberSelector,
+      failedSelector: getListMemberFailedSelector,
       param
     });
   };

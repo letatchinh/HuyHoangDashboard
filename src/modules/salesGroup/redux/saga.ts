@@ -19,6 +19,14 @@ function* getListTeamLeadSalesGroup({payload:query} : any) : any {
     yield put(salesGroupActions.getListTeamLeadFailed(error));
   }
 }
+function* getListMemberSalesGroup({payload:query} : any) : any {
+  try {
+    const data = yield call(api.getListMember,query);
+    yield put(salesGroupActions.getListMemberSuccess(data));
+  } catch (error:any) {
+    yield put(salesGroupActions.getListMemberFailed(error));
+  }
+}
 
 function* getByIdSalesGroup({payload:id} : any) : any {
   try {
@@ -59,6 +67,7 @@ function* deleteSalesGroup({payload : id} : any) : any {
 export default function* salesGroupSaga() {
   yield takeLatest(salesGroupActions.getListRequest, getListSalesGroup);
   yield takeLatest(salesGroupActions.getListTeamLeadRequest, getListTeamLeadSalesGroup);
+  yield takeLatest(salesGroupActions.getListMemberRequest, getListMemberSalesGroup);
   yield takeLatest(salesGroupActions.getByIdRequest, getByIdSalesGroup);
   yield takeLatest(salesGroupActions.createRequest, createSalesGroup);
   yield takeLatest(salesGroupActions.updateRequest, updateSalesGroup);

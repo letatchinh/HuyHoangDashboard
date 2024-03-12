@@ -1,10 +1,12 @@
 import SalesGroup from "~/modules/salesGroup";
-
+import { SalesGroupProvider } from "~/modules/salesGroup/salesGroupContext";
 
 const SalesGroupPage = () => {
   return (
-    <SalesGroup.page.index />
-  )
+    <SalesGroupProvider>
+      <SalesGroup.page.index />
+    </SalesGroupProvider>
+  );
 };
 
-export default SalesGroupPage
+export default SalesGroupPage;
