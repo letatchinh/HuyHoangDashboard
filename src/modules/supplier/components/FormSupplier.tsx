@@ -18,6 +18,7 @@ import { convertInitSupplier, convertSubmitData } from "../supplier.service";
 import CumulativeDiscountModule from '~/modules/cumulativeDiscount';
 import WithPermission from "~/components/common/WithPermission";
 import POLICIES from "~/modules/policy/policy.auth";
+import InputNumberAnt from "~/components/Antd/InputNumberAnt";
 
 const FormSupplier = ({
   id,
@@ -115,6 +116,21 @@ const FormSupplier = ({
             allowPhoneNumber={false}
             allowEmail={false}
           />
+        </BaseBorderBox>
+        <BaseBorderBox title={"Kinh doanh"}>
+          <Row justify={"space-between"} align="middle" gutter={48}>
+            <Col span={12}>
+              <Form.Item<FieldType>
+                label="Doanh thu tối thiểu"
+                name="minSale"
+                rules={[
+                  { required: true, message: "Vui lòng nhập Doanh thu tối thiểu" },
+                ]}
+              >
+                {RenderLoading(isLoading,<InputNumberAnt min={0} style={{width : '100%'}} addonAfter={<div>VNĐ</div>}/>)}
+              </Form.Item>
+            </Col>
+          </Row>
         </BaseBorderBox>
         {/* <BaseBorderBox
           title={
