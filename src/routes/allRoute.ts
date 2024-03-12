@@ -96,7 +96,7 @@ export const mainRoutes :PathRouteProps[] = [
   { path: PATH_APP.orderSupplier.root, Component: OrderSupplier},
   { path: PATH_APP.orderSupplier.update, Component: UpdateOrderSupplier},
   
-  // Cấu hình vùng
+  // Nhóm bán hàng
   { path: PATH_APP.salesGroup.root, Component: SalesGroupPage },
   // Cấu hình Lương cơ bản vùng
   { path: PATH_APP.baseSalary.root, Component: BaseSalaryPage },

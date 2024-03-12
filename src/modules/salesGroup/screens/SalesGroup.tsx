@@ -156,7 +156,7 @@ export default function SalesGroup() {
   return (
 
     <div>
-      <Breadcrumb title={"Cấu hình vùng"} />
+      <Breadcrumb title={"Nhóm bán hàng"} />
       <WhiteBox>
         <SelectSearch onChange={(e:any) => onSearch(e.target.value)} handleOnClickButton={() => onOpenForm()} showSelect={false} isShowButtonAdd />
         <TableAnt

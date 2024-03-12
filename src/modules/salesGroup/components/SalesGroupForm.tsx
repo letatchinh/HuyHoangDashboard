@@ -56,7 +56,7 @@ const SalesGroupForm = ({
   return (
     <div className="flex-column-center">
       <Divider>
-        <h5 className="text-center">{id ? "Cập nhật" : "Tạo mới"} cấu hình vùng</h5>
+        <h5 className="text-center">{id ? "Cập nhật" : "Tạo mới"} nhóm bán hàng</h5>
       </Divider>
       <Form
         form={form}
@@ -70,10 +70,10 @@ const SalesGroupForm = ({
          <Row justify={"space-between"} align="middle" gutter={48}>
             <Col span={24}>
               <Form.Item<FieldTypeForm>
-                label="Tên cấu hình vùng"
+                label="Tên nhóm bán hàng"
                 name="name"
                 rules={[
-                  { required: true, message: "Vui lòng nhập tên cấu hình vùng" },
+                  { required: true, message: "Vui lòng nhập tên nhóm bán hàng" },
                 ]}
               >
                 {RenderLoading(isLoading,<Input />)}

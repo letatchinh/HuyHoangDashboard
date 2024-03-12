@@ -123,7 +123,7 @@ import {
               permission: [POLICIES.READ_NOTIFICATIONBOTMANAGER],
             },
             {
-              label: "Cấu hình vùng",
+              label: "Nhóm bán hàng",
               icon: <i className="fa-solid fa-chart-area"></i>,
               path: PATH_APP.salesGroup.root,
               key: PATH_APP.salesGroup.root,
