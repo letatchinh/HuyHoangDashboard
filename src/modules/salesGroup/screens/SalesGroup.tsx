@@ -12,25 +12,26 @@ import WithPermission from "~/components/common/WithPermission";
 import POLICIES from "~/modules/policy/policy.auth";
 import { StringToSlug } from "~/utils/helpers";
 import {
-    useAreaConfigurationQueryParams,
-    useDeleteAreaConfiguration,
-    useGetAreaConfigurations,
-    useGetAreaConfigurationsSearch,
-    useUpdateAreaConfiguration
-} from "../areaConfiguration.hook";
-import { AreaConfigurationType } from "../areaConfiguration.modal";
-import AreaConfigurationForm from "../components/AreaConfigurationForm";
-
-export default function AreaConfiguration() {
-  const [query] = useAreaConfigurationQueryParams();
-  const [data, isLoading,actionUpdate] = useGetAreaConfigurations(query);
-  const dataSearch = useGetAreaConfigurationsSearch()
+    useSalesGroupQueryParams,
+    useDeleteSalesGroup,
+    useGetSalesGroups,
+    useGetSalesGroupsSearch,
+    useUpdateSalesGroup
+} from "../salesGroup.hook";
+import { SalesGroupType } from "../salesGroup.modal";
+import SalesGroupForm from "../components/SalesGroupForm";
+import AssignTeamLead from "../components/AssignTeamLead";
+import { SalesGroupProvider } from "../salesGroupContext";
+export default function SalesGroup() {
+  const [query] = useSalesGroupQueryParams();
+  const [data, isLoading,actionUpdate] = useGetSalesGroups(query);
+  const dataSearch = useGetSalesGroupsSearch()
   const [id, setId]: any = useState();
   const [isOpenForm, setIsOpenForm]: any = useState(false);
-  const [isSubmitLoading, updateAreaConfiguration]: any =
-    useUpdateAreaConfiguration();
-  const [, deleteAreaConfiguration]: any =
-    useDeleteAreaConfiguration();
+  const [isSubmitLoading, updateSalesGroup]: any =
+    useUpdateSalesGroup();
+  const [, deleteSalesGroup]: any =
+    useDeleteSalesGroup();
 
   // Control form
   const onOpenForm = useCallback((idSelect?: any) => {
@@ -46,7 +47,7 @@ export default function AreaConfiguration() {
 
   const onSearch = (keyword:any) => {
     // Get Data Filter From Redux
-    const resultSearch = data?.filter((item:AreaConfigurationType) => {
+    const resultSearch = data?.filter((item:SalesGroupType) => {
         const name = get(item,'name','');
         const alias = get(item,'alias','');
         const keywordSlug = StringToSlug(keyword?.trim()?.toLowerCase());
@@ -62,11 +63,17 @@ export default function AreaConfiguration() {
       title: "Tên",
       dataIndex: "name",
       key: "name",
+      render : (name,rc) => `${name} ${get(rc,'alias') ? `(${get(rc,'alias')})` : ''}` 
     },
     {
-      title: "Tên mô tả",
-      dataIndex: "alias",
-      key: "alias",
+      title: "Chỉ tiêu",
+      key: "targets",
+      render : (name,rc) => 'chi tieu'
+    },
+    {
+      title: "Thành viên",
+      key: "member",
+      render : (name,rc) => <AssignTeamLead />
     },
     {
       title: "Thao tác",
@@ -89,7 +96,7 @@ export default function AreaConfiguration() {
             <WithPermission permission={POLICIES.DELETE_AREACONFIGURATION}>
             <Popconfirm
               title="Bạn muốn xoá địa chỉ này?"
-              onConfirm={() => deleteAreaConfiguration(_id)}
+              onConfirm={() => deleteSalesGroup(_id)}
               okText="Xoá"
               cancelText="Huỷ"
             >
@@ -110,6 +117,8 @@ export default function AreaConfiguration() {
     },
   ];
   return (
+    <SalesGroupProvider>
+
     <div>
       <Breadcrumb title={"Cấu hình vùng"} />
       <WhiteBox>
@@ -124,12 +133,14 @@ export default function AreaConfiguration() {
         />
       </WhiteBox>
       <ModalAnt onCancel={onCloseForm} open={isOpenForm} footer={null} destroyOnClose>
-        <AreaConfigurationForm
+        <SalesGroupForm
           onCancel={onCloseForm}
-          onUpdate={updateAreaConfiguration}
+          onUpdate={updateSalesGroup}
           id={id}
         />
       </ModalAnt>
     </div>
+    </SalesGroupProvider>
+
   );
 }

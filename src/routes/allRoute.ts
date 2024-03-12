@@ -31,7 +31,7 @@ import PharmacyDetail from "~/modules/pharmacy/screens/PharmacyDetail";
 import Lk from "~/pages/Dashboard/Lk";
 import OrderSupplier from "~/pages/Dashboard/OrderSupplier";
 import UpdateOrderSupplier from "~/pages/Dashboard/OrderSupplier/UpdateOrderSupplier";
-import AreaConfigurationPage from "~/pages/Dashboard/AreaConfiguration";
+import SalesGroupPage from "~/pages/Dashboard/SalesGroup";
 export const mainRoutes :PathRouteProps[] = [
   { path: PATH_APP.main.root, Component: Homepage },
 
@@ -95,7 +95,7 @@ export const mainRoutes :PathRouteProps[] = [
   { path: PATH_APP.orderSupplier.update, Component: UpdateOrderSupplier},
   
   // Cấu hình vùng
-  { path: PATH_APP.areaConfiguration.root, Component: AreaConfigurationPage },
+  { path: PATH_APP.salesGroup.root, Component: SalesGroupPage },
 
   { path: '/', Component: Homepage },
 ]

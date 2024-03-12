@@ -1,6 +1,6 @@
 import { BaseData } from "~/utils/Modal"
 
-export type propsTypeAreaConfigurationForm = {
+export type propsTypeSalesGroupForm = {
     id? : string,
     onCancel : () => void,
     onUpdate : (p:any) => void,
@@ -8,10 +8,11 @@ export type propsTypeAreaConfigurationForm = {
 export type FieldTypeForm = {
     name : string,
     alias : string,
-    
+    managementArea : string[]
+    typeArea : "REGION" | "GROUP",
+
 }
-export interface AreaConfigurationType extends BaseData {
+export interface SalesGroupType extends BaseData {
     alias : string,
     name : string,
-    areaManages : any[]
 }

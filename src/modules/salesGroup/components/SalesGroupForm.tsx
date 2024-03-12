@@ -1,42 +1,50 @@
-import { Button, Col, Divider, Form, Input, Row } from "antd";
+import { Button, Col, Divider, Form, Input, Row, Select, TreeSelect } from "antd";
+import { get } from "lodash";
 import React, { useCallback, useEffect } from "react";
 import RenderLoading from "~/components/common/RenderLoading";
 import WithPermission from "~/components/common/WithPermission";
+import GeoTreeSelect from "~/modules/geo/components/GeoTreeSelect";
+import { RELATIVE_POSITION } from "~/modules/geo/constants";
 import POLICIES from "~/modules/policy/policy.auth";
+import { OPTIONS_SALES_GROUP_GEOGRAPHY } from "../constants";
 import {
-    useCreateAreaConfiguration, useGetAreaConfiguration, useResetAction
-} from "../areaConfiguration.hook";
-import { FieldTypeForm, propsTypeAreaConfigurationForm } from "../areaConfiguration.modal";
+    useCreateSalesGroup, useGetSalesGroup, useResetAction
+} from "../salesGroup.hook";
+import { FieldTypeForm, propsTypeSalesGroupForm } from "../salesGroup.modal";
+import { convertInitData, convertSubmitData } from "../salesGroup.service";
 
-const AreaConfigurationForm = ({
+const SalesGroupForm = ({
   id,
   onCancel,
   onUpdate,
-}: propsTypeAreaConfigurationForm): React.JSX.Element => {
-  const [areaConfiguration, isLoading] = useGetAreaConfiguration(id);
-  
+}: propsTypeSalesGroupForm): React.JSX.Element => {
+  const [salesGroup, isLoading] = useGetSalesGroup(id);
+
   const [form] = Form.useForm();
-  const [isSubmitLoading, onCreate] = useCreateAreaConfiguration(onCancel);
+  const [isSubmitLoading, onCreate] = useCreateSalesGroup(onCancel);
 
   useResetAction();
 
   const onFinish = useCallback(
     (values: FieldTypeForm) => {
-      const submitData = values;
+      const submitData = convertSubmitData(values);
       if (!id) {
         onCreate(submitData);
       } else {
         onUpdate({ ...submitData, _id: id });
       }
+      console.log(submitData,'submitData');
+      
     },
     [id, onCreate, onUpdate]
   );
 
   useEffect(() => {
-    if (id && areaConfiguration) {
-      form.setFieldsValue(areaConfiguration);
+    if (id && salesGroup) {
+      const initSalesGroup = convertInitData(salesGroup);
+      form.setFieldsValue(initSalesGroup);
     }
-  }, [form, id, areaConfiguration]);
+  }, [form, id, salesGroup]);
 
   const onValuesChange = (value: any, values: any) => {
   }
@@ -80,6 +88,43 @@ const AreaConfigurationForm = ({
               </Form.Item>
             </Col>
             </Row>
+
+         <Row justify={"space-between"} align="middle" gutter={48}>
+            <Col span={24}>
+              <Form.Item
+                label="Khu vực"
+                name={['managementArea']}
+              >
+                <GeoTreeSelect
+                  autoClearSearchValue
+                  labelInValue={true}
+                  listItemHeight={200}
+                  multiple={true}
+                  showCheckedStrategy={TreeSelect.SHOW_ALL}
+                  showEnabledValuesOnly={true}
+                  showSearch={true}
+                  size="large"
+                  treeCheckStrictly={true}
+                  treeCheckable={true}
+                  treeDefaultExpandedKeys={['1', '2', '3']}
+                  checkablePositions={[RELATIVE_POSITION.IS_CHILD, RELATIVE_POSITION.IS_EQUAL]}
+                />
+              </Form.Item>
+            </Col>
+            </Row>
+            <Row justify={"space-between"} align="middle" gutter={48}>
+            <Col span={24}>
+              <Form.Item<FieldTypeForm>
+                label="Loại nhóm"
+                name="typeArea"
+                rules={[
+                  { required: true, message: "Vui lòng nhập!" },
+                ]}
+              >
+                {RenderLoading(isLoading,<Select options={OPTIONS_SALES_GROUP_GEOGRAPHY}/>)}
+              </Form.Item>
+            </Col>
+            </Row>
         <div className="btn-footer">
           <WithPermission permission={id ? POLICIES.UPDATE_AREACONFIGURATION : POLICIES.UPDATE_AREACONFIGURATION}>
           <Button
@@ -100,4 +145,4 @@ const AreaConfigurationForm = ({
   );
 };
 
-export default AreaConfigurationForm;
+export default SalesGroupForm;

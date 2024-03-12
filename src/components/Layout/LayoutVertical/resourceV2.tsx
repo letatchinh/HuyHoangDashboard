@@ -125,8 +125,8 @@ import {
             {
               label: "Cấu hình vùng",
               icon: <i className="fa-solid fa-chart-area"></i>,
-              path: PATH_APP.areaConfiguration.root,
-              key: PATH_APP.areaConfiguration.root,
+              path: PATH_APP.salesGroup.root,
+              key: PATH_APP.salesGroup.root,
               permission: [POLICIES.READ_AREACONFIGURATION],
             },
           ],

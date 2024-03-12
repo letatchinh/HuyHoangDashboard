@@ -3,18 +3,36 @@ import { InstanceModuleRedux } from "~/redux/instanceModuleRedux";
 import { initStateSlice } from "~/redux/models";
 interface cloneInitState extends initStateSlice {
  // Add cloneInitState Type Here
+ listTeamLead? : any,
+ isLoadingGetListTeamLead? : boolean,
+ getListTeamLeadFailed? : any
 }
-class AreaConfigurationClassExtend extends InstanceModuleRedux {
+class SalesGroupClassExtend extends InstanceModuleRedux {
   cloneReducer;
   cloneInitState : cloneInitState;
   constructor() {
-    super('areaConfiguration');
+    super('salesGroup');
     this.cloneReducer = {
       ...this.initReducer,
       getListSuccess: (state:initStateSlice , { payload }: any) => {
         state.isLoading = false;
         state.list = payload;
       },
+          // Get List TeadLead
+    getListTeamLeadRequest: (state:cloneInitState) => {
+      state.isLoading = true;
+      state.getListTeamLeadFailed = null;
+    },
+    getListTeamLeadSuccess: (state:cloneInitState , { payload }: any) => {
+      state.isLoading = false;
+      state.list = payload;
+    },
+    getListTeamLeadFailed: (state:cloneInitState, { payload }:{payload:any}) => {
+      state.isLoading = false;
+      state.getListTeamLeadFailed = payload;
+      
+    },
+
       // Want Add more reducer Here...
     }
     this.cloneInitState = {
@@ -32,9 +50,9 @@ class AreaConfigurationClassExtend extends InstanceModuleRedux {
   
 }
 
-const newSlice = new AreaConfigurationClassExtend();
+const newSlice = new SalesGroupClassExtend();
 const data = newSlice.createSlice();
 
 
-export const areaConfigurationActions = data.actions;
+export const salesGroupActions = data.actions;
 export default data.reducer;
