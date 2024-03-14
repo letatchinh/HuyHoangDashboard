@@ -90,20 +90,20 @@ export default function CostManagementForm({
     };
     const { cost, financialCost } = values;
     const costShipping = {
-
-      pharmaceutical: cost?.pharmaceutical ?? 0,
-      operations: cost?.operations ?? 0,
-      marketing: cost?.marketing ?? 0,
-      management: cost?.management ?? 0,
-      logistic: cost?.logistic ?? 0,
-      financialCost: financialCost ?? 0,
-
-
+      pharmaceutical: parseFloat(cost?.pharmaceutical) ?? 0,
+      operations: parseFloat(cost?.operations) ?? 0,
+      marketing: parseFloat(cost?.marketing) ?? 0,
+      management: parseFloat(cost?.management) ?? 0,
+      logistic: parseFloat(cost?.logistic) ?? 0,
+      financialCost: parseFloat(financialCost) ?? 0,
+    
       get count() {
-        return this.pharmaceutical + this.operations + this.marketing + this.management
+        return this.pharmaceutical + this.operations + this.marketing + this.management;
       }
-    }
+    };
+    
     const distributionChannel = costShipping.count;
+    
     if (keyword === 'percent') {
 
       const percentKeys = ['marketing', 'management', 'pharmaceutical', 'logistic', 'operations'];
@@ -124,42 +124,22 @@ export default function CostManagementForm({
       setShippingId(get(shippingCost, '_id', null))
       setToTalPrice(totalPrices);
       setProfitVal(profitValue);
-      setKeyword('VND')
-      // const costShipping = {
-      //   distributionChannel: shippingCost?.cost?.distributionChannel ?? 0,
-      //   pharmaceutical: shippingCost?.cost?.pharmaceutical ?? 0,
-      //   operations: shippingCost?.cost?.operations ?? 0,
-      //   marketing: shippingCost?.cost?.marketing ?? 0,
-      //   management: shippingCost?.cost?.management ?? 0,
-      //   logistic: shippingCost?.cost?.logistic ?? 0,
-      //   financialCost: shippingCost?.financialCost ?? 0,
-
-
-      //   get count() {
-      //     return this.distributionChannel  + this.logistic + this.financialCost
-      //   }
-      // }
-      // setPriceMemo(profitValue?profitValue:(totalPrices - costShipping.count));
-      // setPriceMemo( variants?.price-shippingCost?.cost?.distributionChannel-shippingCost?.cost?.pharmaceutical-shippingCost?.cost?.operations-shippingCost?.cost?.marketing-shippingCost?.cost?.management-shippingCost?.cost?.logistic); 
+      setKeyword('VND');
       form.setFieldsValue({
-        priceProduct: variants?.price,
-        code: variants?.variantCode,
-        name,
-        financialCost: shippingCost?.financialCost ? formatter(shippingCost?.financialCost) : 0,
+        priceProduct: variants?.price ?? 0,
+        code: variants?.variantCode ?? '',
+        name: name ?? '',
+        financialCost: shippingCost?.financialCost?? 0,
         totalPrices: formatter(totalPrices),
-        cost:
-        {
-          distributionChannel: formatter(shippingCost?.cost?.distributionChannel ?? 0),
-          pharmaceutical: shippingCost?.pharmaceutical ? formatter(shippingCost?.cost?.pharmaceutical) : 0,
-          operations: shippingCost?.operations ? formatter(shippingCost?.cost?.operations) : 0,
-          marketing: shippingCost?.marketing ? formatter(shippingCost?.cost?.marketing) : 0,
-          management: shippingCost?.management ? formatter(shippingCost?.cost?.management) : 0,
-          logistic: shippingCost?.logistic ? formatter(shippingCost?.cost?.logistic) : 0,
-          // financialCost: formatter(shippingCost?.financialCost ?? 0),
+        cost: {
+          distributionChannel: shippingCost?.cost?.distributionChannel ?? 0,
+          pharmaceutical:  shippingCost?.cost?.pharmaceutical??0,
+          operations:  shippingCost?.cost?.operations??0,
+          marketing:  shippingCost?.cost?.marketing ??0,
+          management:  shippingCost?.cost?.management ??0,
+          logistic:  shippingCost?.cost?.logistic ??0,
         }
-
       });
-
       setBackupForm([costManagementById]);
     } else {
       setBackupForm([form.getFieldsValue()])
