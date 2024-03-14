@@ -10,7 +10,7 @@ import WhiteBox from "~/components/common/WhiteBox";
 import TableAnt from "~/components/Antd/TableAnt";
 import moment from "moment";
 import { useCallback, useMemo, useState } from "react";
-import { propsAccumulation, propsType } from "../pharmacy.modal";
+import { propsAccumulation, propsAccumulationDetail, propsType } from "../pharmacy.modal";
 import WithPermission from "~/components/common/WithPermission";
 import POLICIES from "~/modules/policy/policy.auth";
 import { useMatchPolicy } from "~/modules/policy/policy.hook";
@@ -22,26 +22,27 @@ interface UserProps {
   currentTab: string | undefined;
 }
 
-export default function AccumulationDetailPharmacy(props: propsAccumulation) {
+export default function AccumulationDetailPharmacy(props: propsAccumulationDetail) {
   const { t }: any = useTranslate();
-  const { _id, pharmacyId, targetType } = props;
+  const { _id, pharmacyId, targetType, date } = props;
 
   const defaultDate = useMemo(
     () => ({
-      startDate: dayjs().startOf("month").format("YYYY-MM-DDTHH:mm:ss"),
-      endDate: dayjs().endOf("month").format("YYYY-MM-DDTHH:mm:ss"),
+      startDate: dayjs().startOf("month").format("YYYY-MM-DD"),
+      endDate: dayjs().endOf("month").format("YYYY-MM-DD"),
     }),
     []
   );
-  const [date, setDate] = useState<any>(defaultDate);
+  // const [date, setDate] = useState<any>(defaultDate);
   const [query] = useAccumulationDetailQuery();
   const newQuery = useMemo(
     () => ({
       ...query,
       pharmacyId: pharmacyId,
       targetType: targetType,
+      ...date,
     }),
-    [pharmacyId, targetType, query]
+    [pharmacyId, targetType, date, query]
   );
   const memoId = useMemo(() => _id, [_id]);
   const [data, isLoading] = useGetAccumulationDetail(memoId, newQuery);

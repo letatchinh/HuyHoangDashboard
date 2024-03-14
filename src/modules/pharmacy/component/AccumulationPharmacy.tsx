@@ -166,44 +166,34 @@ export default function AccumulationPharmacy(props: propsAccumulation) {
             value={keyword}
           />
         </Col>
-        {targetType == "PRODUCT" ? (
-          <Row gutter={16}>
-            <Col>
-              <Form.Item<FormFieldSearch>
-                name={"startDate"}
-                label="Ngày bắt đầu"
-              >
-                <DatePicker
-                  defaultValue={dayjs(date.startDate)}
-                  onChange={(e) =>
-                    setDate({
-                      ...date,
-                      startDate: dayjs(e).format("YYYY-MM-DD"),
-                    })
-                  }
-                />
-              </Form.Item>
-            </Col>
-            <Col>
-              <Form.Item<FormFieldSearch>
-                name={"endDate"}
-                label="Ngày kết thúc"
-              >
-                <DatePicker
-                  defaultValue={dayjs(date.endDate)}
-                  onChange={(e) =>
-                    setDate({
-                      ...date,
-                      endDate: dayjs(e).format("YYYY-MM-DD"),
-                    })
-                  }
-                />
-              </Form.Item>
-            </Col>
-          </Row>
-        ) : (
-          ""
-        )}
+        <Row gutter={16}>
+          <Col>
+            <Form.Item<FormFieldSearch> name={"startDate"} label="Ngày bắt đầu">
+              <DatePicker
+                defaultValue={dayjs(date.startDate)}
+                onChange={(e) =>
+                  setDate({
+                    ...date,
+                    startDate: dayjs(e).format("YYYY-MM-DD"),
+                  })
+                }
+              />
+            </Form.Item>
+          </Col>
+          <Col>
+            <Form.Item<FormFieldSearch> name={"endDate"} label="Ngày kết thúc">
+              <DatePicker
+                defaultValue={dayjs(date.endDate)}
+                onChange={(e) =>
+                  setDate({
+                    ...date,
+                    endDate: dayjs(e).format("YYYY-MM-DD"),
+                  })
+                }
+              />
+            </Form.Item>
+          </Col>
+        </Row>
       </Row>
 
       <WhiteBox>
@@ -221,6 +211,7 @@ export default function AccumulationPharmacy(props: propsAccumulation) {
                 _id={record._id}
                 pharmacyId={pharmacyId}
                 targetType={targetType}
+                date={date}
               />
             ),
             expandedRowKeys: [itemActive],
