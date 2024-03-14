@@ -46,8 +46,16 @@ export default function CostManagementForm({
     }
     const price1 = form.getFieldValue("totalPrices").replace(/,/g, '');
     // if (price1) {
-      setPriceMemo(price1);
-      form.resetFields(["cost","financialCost"]);
+    setPriceMemo(price1);
+    form.setFieldsValue({
+      cost: {
+        pharmaceutical: 0,
+        operations: 0,
+        marketing: 0,
+        management: 0,
+      },
+      financialCost: 0,
+    });
     // };
   }, [form]);
   // const onUndoForm = (isLast = false) => {
@@ -80,9 +88,9 @@ export default function CostManagementForm({
       startDate: dayjs(values.startDate).format('YYYY-MM-DD'),
       endDate: dayjs(values.endDate).format('YYYY-MM-DD'),
     };
-    const { cost,financialCost } = values;
+    const { cost, financialCost } = values;
     const costShipping = {
-   
+
       pharmaceutical: cost?.pharmaceutical ?? 0,
       operations: cost?.operations ?? 0,
       marketing: cost?.marketing ?? 0,
@@ -92,28 +100,27 @@ export default function CostManagementForm({
 
 
       get count() {
-        return  this.pharmaceutical + this.operations + this.marketing + this.management
+        return this.pharmaceutical + this.operations + this.marketing + this.management
       }
     }
-    const distributionChannel =costShipping.count;
-    console.log(distributionChannel, 'distributionChannel');
+    const distributionChannel = costShipping.count;
     if (keyword === 'percent') {
 
-      const percentKeys = [ 'marketing', 'management', 'pharmaceutical', 'logistic', 'operations'];
+      const percentKeys = ['marketing', 'management', 'pharmaceutical', 'logistic', 'operations'];
       percentKeys.forEach(key => {
         formattedValues.cost[key] = (toTalPrice * values.cost[key]) / 100;
       });
-    onUpdate({ ...formattedValues,financialCost: (toTalPrice * financialCost) / 100, cost: { ...cost, distributionChannel: (toTalPrice * distributionChannel / 100) }, _id: shippngId });
-    form.resetFields();setId(null);
-    } else{
+      onUpdate({ ...formattedValues, financialCost: (toTalPrice * financialCost) / 100, cost: { ...cost, distributionChannel: (toTalPrice * distributionChannel / 100) }, _id: shippngId });
+      form.resetFields(); setId(null);
+    } else {
       onUpdate({ ...formattedValues, cost: { ...cost, distributionChannel: distributionChannel }, _id: shippngId });
-    form.resetFields();setId(null);
+      form.resetFields(); setId(null);
     };
   };
   useEffect(() => {
 
     if (costManagementById && id) {
-      const { shippingCost, variants, medicalCode, name,totalPrices,profitValue } = costManagementById;
+      const { shippingCost, variants, medicalCode, name, totalPrices, profitValue } = costManagementById;
       setShippingId(get(shippingCost, '_id', null))
       setToTalPrice(totalPrices);
       setProfitVal(profitValue);
@@ -138,17 +145,17 @@ export default function CostManagementForm({
         priceProduct: variants?.price,
         code: variants?.variantCode,
         name,
-        financialCost: formatter(shippingCost?.financialCost),
+        financialCost: shippingCost?.financialCost ? formatter(shippingCost?.financialCost) : 0,
         totalPrices: formatter(totalPrices),
         cost:
         {
           distributionChannel: formatter(shippingCost?.cost?.distributionChannel ?? 0),
-        pharmaceutical: formatter(shippingCost?.cost?.pharmaceutical ?? 0),
-        operations: formatter(shippingCost?.cost?.operations ?? 0),
-        marketing:formatter( shippingCost?.cost?.marketing ?? 0),
-        management: formatter(shippingCost?.cost?.management ?? 0),
-        logistic: formatter(shippingCost?.cost?.logistic ?? 0),
-        financialCost: formatter(shippingCost?.financialCost ?? 0),
+          pharmaceutical: shippingCost?.pharmaceutical ? formatter(shippingCost?.cost?.pharmaceutical) : 0,
+          operations: shippingCost?.operations ? formatter(shippingCost?.cost?.operations) : 0,
+          marketing: shippingCost?.marketing ? formatter(shippingCost?.cost?.marketing) : 0,
+          management: shippingCost?.management ? formatter(shippingCost?.cost?.management) : 0,
+          logistic: shippingCost?.logistic ? formatter(shippingCost?.cost?.logistic) : 0,
+          // financialCost: formatter(shippingCost?.financialCost ?? 0),
         }
 
       });
@@ -180,8 +187,8 @@ export default function CostManagementForm({
     form.resetFields(["cost", 'financialCost']);
     setPriceMemo(priceByProduct);
   };
-  const handleBlur = (value:any) => {
-    
+  const handleBlur = (value: any) => {
+
   }
   return (
     <div>
@@ -284,7 +291,7 @@ export default function CostManagementForm({
               <Form.Item<any>
                 label="Chi phí vận chuyển"
                 name={["cost", "logistic"]}
-                
+
               >
                 {keyword === 'VND' ? RenderLoading(isLoading, <InputNumber onBlur={(e: any) => {
                   const a = priceMemo - e.target.value
@@ -292,7 +299,7 @@ export default function CostManagementForm({
                   ;
                 }} style={{ width: '100%' }} />) : RenderLoading(isLoading, <InputNumber max={100} onBlur={(e: any) => {
                   const a = priceMemo - (toTalPrice * e.target.value) / 100
-                  console.log(e.target.value,priceMemo,toTalPrice,'asdsd')
+                  console.log(e.target.value, priceMemo, toTalPrice, 'asdsd')
                   setPriceMemo(a);
                   ;
                 }} style={{ width: '100%' }} />)}
@@ -407,11 +414,11 @@ export default function CostManagementForm({
           </Row>
         </BaseBorderBox>
         <Row justify={"end"} gutter={16}>
-          <Col>
+          {/* <Col>
             <Button onClick={() => handleReset()}>
               Đặt lại
             </Button>
-          </Col>
+          </Col> */}
           <Col>
             <Button onClick={onCancel}>
               Huỷ
