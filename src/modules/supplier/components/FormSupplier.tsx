@@ -123,11 +123,25 @@ const FormSupplier = ({
               <Form.Item<FieldType>
                 label="Doanh thu tối thiểu"
                 name="minSale"
+                tooltip="Doanh thu tối thiểu của mỗi Trình dược viên"
                 rules={[
                   { required: true, message: "Vui lòng nhập Doanh thu tối thiểu" },
                 ]}
               >
-                {RenderLoading(isLoading,<InputNumberAnt min={0} style={{width : '100%'}} addonAfter={<div>VNĐ</div>}/>)}
+                {RenderLoading(isLoading,<InputNumberAnt min={0} style={{width : '100%'}} addonAfter={<div>VNĐ /1TDV</div>}/>)}
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item<FieldType>
+                label="Doanh số khoán"
+                name="targetsTDV"
+                tooltip="Doanh số khoán của mỗi Trình dược viên"
+
+                rules={[
+                  { required: true, message: "Vui lòng nhập Doanh thu số khoán" },
+                ]}
+              >
+                {RenderLoading(isLoading,<InputNumberAnt min={0} style={{width : '100%'}} addonAfter={<div>VNĐ /1 TDV</div>}/>)}
               </Form.Item>
             </Col>
           </Row>
