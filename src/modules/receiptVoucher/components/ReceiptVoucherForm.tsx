@@ -141,6 +141,8 @@ export default function ReceiptVoucher(props: propsType): React.JSX.Element {
           receiver: provider?.name,
           provider: provider?._id,
           code: provider?.code,
+          accountingDate : dayjs(),
+          dateOfIssue : dayjs(),
         });
       }
     } else {
@@ -375,12 +377,12 @@ export default function ReceiptVoucher(props: propsType): React.JSX.Element {
                         <Skeleton.Input active />
                       ) : (
                         <DatePicker
-                          format={"DD/MM/YYYY"}
-                          placeholder="Ngày hạch toán"
-                          disabledDate={(current) => {
-                            return current > dayjs().endOf("day");
-                          }}
-                        />
+                        format={"DD/MM/YYYY"}
+                        placeholder="Ngày hạch toán"
+                        disabledDate={(current) => {
+                          return current > dayjs().endOf("day");
+                        }}
+                      />
                       )}
                     </FormItem>
                     <FormItem
