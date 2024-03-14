@@ -143,6 +143,8 @@ import "./form.scss";
             receiver: provider?.name,
             provider: provider?._id,
             code: provider?.code,
+            accountingDate : dayjs(),
+            dateOfIssue : dayjs(),
           });
           const address = concatAddress(provider?.address);
           form.setFieldsValue({address: address});
