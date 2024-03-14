@@ -34,7 +34,7 @@ export default function ExportExcelButton({ size, stylesButton, query, fileName,
         const newQuery : any = Object.fromEntries(Object.entries(concatExportOption)?.filter(([_, v]) => v !== null && v !== undefined));
         let a = `?`
         const dateNow = moment(Date.now()).format("DD-MM-YYYY HH:mm")
-        const keyExportUrl = '/api/v1/export';
+        const keyExportUrl = 'api/v1/export';
         const linkUrl = keyExportUrl.concat(`/${api}`)
         switch (obj) {
           case '1':
