@@ -102,7 +102,7 @@ export default function ListProduct({
       },
     },
     {
-      title: "Giá Vốn",
+      title: "Giá thu về",
       dataIndex: "variant",
       key: "variant",
       render(variant, record, index) {
