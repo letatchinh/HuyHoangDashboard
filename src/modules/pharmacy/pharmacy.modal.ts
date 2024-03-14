@@ -12,6 +12,12 @@ export type propsAccumulation = {
   pharmacyId: string | null;
   targetType: 'GROUP' | 'PRODUCT',
 }
+export type propsAccumulationDetail = {
+  _id?: string;
+  pharmacyId: string | null;
+  targetType: 'GROUP' | 'PRODUCT',
+  date?: any,
+}
 export interface cloneInitState<T = any> extends initStateSlice {
   isLoadingGetPharmacyDebt?: boolean;
   getPharmacyDebtFailed?: any;

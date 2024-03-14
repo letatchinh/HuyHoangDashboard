@@ -267,6 +267,7 @@ export const useAccumulationQuery = () => {
   const [limit, setLimit] = useState<number | null | undefined>(10);
   const [page, setPage] = useState<number | null | undefined>(1);
   const keyword = query.get("keyword");
+  const productGroupId= query.get("productGroupId")
   // const [keyword, setKeyword] = useState("");
   const onTableChange: any = ({ current, pageSize }: any) => {
     setPage(current);
@@ -278,9 +279,10 @@ export const useAccumulationQuery = () => {
       page,
       limit,
       keyword,
+      productGroupId,
     };
     return [query, onTableChange];
-  }, [page, limit, keyword]);
+  }, [page, limit, keyword, productGroupId]);
 };
 
 export const useUpdateAccumulationParams = (
@@ -290,6 +292,7 @@ export const useUpdateAccumulationParams = (
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const [keyword, setKeyword] = useState(get(query, "keyword"));
+  
   useEffect(() => {
     setKeyword(get(query, "keyword"));
   }, [query]);
