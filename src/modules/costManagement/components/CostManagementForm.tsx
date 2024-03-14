@@ -53,6 +53,7 @@ export default function CostManagementForm({
         operations: 0,
         marketing: 0,
         management: 0,
+        logistic: 0,
       },
       financialCost: 0,
     });
@@ -90,7 +91,7 @@ export default function CostManagementForm({
     };
     const { cost, financialCost } = values;
     const costShipping = {
-      pharmaceutical: parseFloat(cost?.pharmaceutical) ?? 0,
+      pharmaceutical: cost?.pharmaceutical ? parseFloat(cost?.pharmaceutical) : 0,
       operations: parseFloat(cost?.operations) ?? 0,
       marketing: parseFloat(cost?.marketing) ?? 0,
       management: parseFloat(cost?.management) ?? 0,
