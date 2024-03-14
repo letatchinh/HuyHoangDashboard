@@ -81,7 +81,22 @@ export default function CostManagementForm({
       endDate: dayjs(values.endDate).format('YYYY-MM-DD'),
     };
     const { cost,financialCost } = values;
-    const distributionChannel = cost.management + cost?.pharmaceutical + cost?.operations + cost?.marketing;
+    const costShipping = {
+   
+      pharmaceutical: cost?.pharmaceutical ?? 0,
+      operations: cost?.operations ?? 0,
+      marketing: cost?.marketing ?? 0,
+      management: cost?.management ?? 0,
+      logistic: cost?.logistic ?? 0,
+      financialCost: financialCost ?? 0,
+
+
+      get count() {
+        return  this.pharmaceutical + this.operations + this.marketing + this.management
+      }
+    }
+    const distributionChannel =costShipping.count;
+    console.log(distributionChannel, 'distributionChannel');
     if (keyword === 'percent') {
 
       const percentKeys = [ 'marketing', 'management', 'pharmaceutical', 'logistic', 'operations'];
@@ -103,21 +118,21 @@ export default function CostManagementForm({
       setToTalPrice(totalPrices);
       setProfitVal(profitValue);
       setKeyword('VND')
-      const costShipping = {
-        distributionChannel: shippingCost?.cost?.distributionChannel ?? 0,
-        pharmaceutical: shippingCost?.cost?.pharmaceutical ?? 0,
-        operations: shippingCost?.cost?.operations ?? 0,
-        marketing: shippingCost?.cost?.marketing ?? 0,
-        management: shippingCost?.cost?.management ?? 0,
-        logistic: shippingCost?.cost?.logistic ?? 0,
-        financialCost: shippingCost?.financialCost ?? 0,
+      // const costShipping = {
+      //   distributionChannel: shippingCost?.cost?.distributionChannel ?? 0,
+      //   pharmaceutical: shippingCost?.cost?.pharmaceutical ?? 0,
+      //   operations: shippingCost?.cost?.operations ?? 0,
+      //   marketing: shippingCost?.cost?.marketing ?? 0,
+      //   management: shippingCost?.cost?.management ?? 0,
+      //   logistic: shippingCost?.cost?.logistic ?? 0,
+      //   financialCost: shippingCost?.financialCost ?? 0,
 
 
-        get count() {
-          return this.distributionChannel  + this.logistic + this.financialCost
-        }
-      }
-      setPriceMemo(profitValue?profitValue:(totalPrices - costShipping.count));
+      //   get count() {
+      //     return this.distributionChannel  + this.logistic + this.financialCost
+      //   }
+      // }
+      // setPriceMemo(profitValue?profitValue:(totalPrices - costShipping.count));
       // setPriceMemo( variants?.price-shippingCost?.cost?.distributionChannel-shippingCost?.cost?.pharmaceutical-shippingCost?.cost?.operations-shippingCost?.cost?.marketing-shippingCost?.cost?.management-shippingCost?.cost?.logistic); 
       form.setFieldsValue({
         priceProduct: variants?.price,
@@ -147,6 +162,13 @@ export default function CostManagementForm({
   const onChange: DatePickerProps['onChange'] = (date, dateString) => {
     console.log(date, dateString);
   };
+  // const validateNumber = (rule: any, value: any, callback: any) => {
+  //   if (isNaN(value)) {
+  //     callback('Vui lòng nhập một số!');
+  //   } else {
+  //     callback();
+  //   }
+  // };
   const onValuesChange = (valueChange: any, values: any) => {
 
     // Recover Form
@@ -262,6 +284,7 @@ export default function CostManagementForm({
               <Form.Item<any>
                 label="Chi phí vận chuyển"
                 name={["cost", "logistic"]}
+                
               >
                 {keyword === 'VND' ? RenderLoading(isLoading, <InputNumber onBlur={(e: any) => {
                   const a = priceMemo - e.target.value

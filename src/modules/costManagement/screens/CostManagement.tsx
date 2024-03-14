@@ -203,7 +203,7 @@ export default function CostManagement(props: propsType): React.JSX.Element {
       align: 'center',
       key: "profitValue",
       render(totalAmount, record, index) {
-        return formatter(get(record,'profitValue',0))
+        return formatter(get(record,'profitValue') ?get(record,'profitValue',0):0)
       },
     },
     {
@@ -236,7 +236,7 @@ export default function CostManagement(props: propsType): React.JSX.Element {
       align: 'center',
       key: "shippingCost",
       render(value, record, index) {
-        return formatter(get(value,'cost.logistic',0))
+        return formatter(get(value,'cost.logistic')?get(value,'cost.logistic',0):0)
       },
     },
     {
@@ -245,7 +245,7 @@ export default function CostManagement(props: propsType): React.JSX.Element {
       align: 'center',
       key: "shippingCost",
       render(value, record, index) {
-        return formatter(get(value,'cost.distributionChannel',0))
+        return formatter(get(value,'cost.distributionChannel')?get(value,'cost.distributionChannel',0):0)
       },
     },
     {
@@ -254,7 +254,7 @@ export default function CostManagement(props: propsType): React.JSX.Element {
       align: 'center',
       key: "shippingCost",
       render(value, record, index) {
-        return formatter(get(value,'financialCost',0))
+        return formatter(get(value,'financialCost')?get(value,'financialCost',0):0)
       },
     },
     {
