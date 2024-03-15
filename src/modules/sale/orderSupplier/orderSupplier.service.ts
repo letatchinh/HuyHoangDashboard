@@ -11,6 +11,7 @@ export const reducerDiscountOrderSupplierItems = (orderSupplierItems: any[]) => 
     const CalculateDiscountMethod = new BillModule.service.CalculateDiscountFactory();
     const newOrderSupplierItems: any[] = orderSupplierItems?.map(
       (orderSupplier: any) => {
+        const price = get(orderSupplier,'variant.cost',1);
         const { variant } = orderSupplier || {};
   
         const quantityActual: number = Number(
@@ -23,7 +24,7 @@ export const reducerDiscountOrderSupplierItems = (orderSupplierItems: any[]) => 
           (discount: any) => {
             const discountAmount = CalculateDiscountMethod.getDiscountBase(
               discount,
-              get(orderSupplier, "variant.price", 1),
+              price,
               quantityActual,
               variant
             );
@@ -32,7 +33,7 @@ export const reducerDiscountOrderSupplierItems = (orderSupplierItems: any[]) => 
               const quantityClampReward =
                 CalculateDiscountMethod.getProductReward(
                   discount,
-                  get(orderSupplier, "variant.price", 1),
+                  price,
                   quantityActual,
                   variant
                 );
@@ -88,7 +89,7 @@ export const reducerDiscountOrderSupplierItems = (orderSupplierItems: any[]) => 
         );
   
         const totalPrice =
-          get(orderSupplier, "variant.price", 1) * quantityActual - totalDiscount;
+          price * quantityActual - totalDiscount;
         return {
           ...orderSupplier,
           cumulativeDiscount,
@@ -97,7 +98,7 @@ export const reducerDiscountOrderSupplierItems = (orderSupplierItems: any[]) => 
           totalDiscountDetailFromProduct,
           totalDiscountDetailFromSupplier,
           exchangeValue: get(orderSupplier, "variant.exchangeValue", 1),
-          price: get(orderSupplier, "variant.price", 1),
+          price: price,
           quantityActual,
         };
       }

@@ -134,7 +134,7 @@ export default function SelectProduct({dataCurrent,onChangeBill}:propsType) : Re
                   key: 'variant',
                   align: 'center',
                   render(variant, record, index) {
-                    return <Typography.Text strong>{formatter(get(variant,'price',0))} 
+                    return <Typography.Text strong>{formatter(get(variant,'cost',0))} 
                     &nbsp;
                     {get(record,'cumulativeDiscount.length',0) ? <Badge size='small' count={get(record,'cumulativeDiscount.length',0)}>
                       <GiftTwoTone />
