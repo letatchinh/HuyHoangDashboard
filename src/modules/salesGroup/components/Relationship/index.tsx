@@ -1,36 +1,31 @@
 import { get } from 'lodash';
 import React, { useMemo } from 'react';
-import { Tree, TreeNode } from 'react-organizational-chart';
+import { Tree } from 'react-organizational-chart';
 import { useGetSalesGroup } from '../../salesGroup.hook';
-import CardLead from './CardLead';
-const StyledNode = ({children} : any) => children
+import { getDeepChild, RulesLeader, RulesMember } from '../../salesGroup.service';
+import CardRelation from './CardRelation';
+const RulesLeaderMethod = new RulesLeader();
+const RulesMemberMethod = new RulesMember();
 
 type propsType = {
     id? : string
 }
 export default function Relationship({id}:propsType) : React.JSX.Element {
     const [salesGroup, isLoading] = useGetSalesGroup(id);
-    const child = useMemo(() => get(salesGroup,'children',[]),[salesGroup])
+    const child = useMemo(() => get(salesGroup,'children',[]),[salesGroup]);
+    const leader = useMemo(() => RulesLeaderMethod.FindOne(get(salesGroup,'salesGroupPermission',[])),[salesGroup]);
+    const member = useMemo(() => RulesMemberMethod.FindOne(get(salesGroup,'salesGroupPermission',[])),[salesGroup]);
+    if(isLoading){
+        return <div>Loading...</div>
+    }
     return (
         <Tree
         lineWidth={'2px'}
         lineColor={'green'}
         lineBorderRadius={'10px'}
-        label={<CardLead />}
+        label={<CardRelation member={member} leader={leader} managementArea={get(salesGroup,'managementArea',[])}/>}
       >
-        <TreeNode label={<StyledNode>Child 1</StyledNode>}>
-          <TreeNode label={<StyledNode>Grand Child</StyledNode>} />
-        </TreeNode>
-        <TreeNode label={<StyledNode>Child 2</StyledNode>}>
-          <TreeNode label={<StyledNode>Grand Child</StyledNode>}>
-            <TreeNode label={<StyledNode>Great Grand Child 1</StyledNode>} />
-            <TreeNode label={<StyledNode>Great Grand Child 2</StyledNode>} />
-          </TreeNode>
-        </TreeNode>
-        <TreeNode label={<StyledNode>Child 3</StyledNode>}>
-          <TreeNode label={<StyledNode>Grand Child 1</StyledNode>} />
-          <TreeNode label={<StyledNode>Grand Child 2</StyledNode>} />
-        </TreeNode>
+        {getDeepChild(child)}
       </Tree>
     )
 }

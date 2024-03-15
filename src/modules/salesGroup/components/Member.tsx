@@ -11,8 +11,9 @@ type propsType = {
   _id?: string;
   typeArea?: any;
   data: MemberRulesInGroupType[];
+  child ? : any[]
 };
-export default function Member({ _id, data,typeArea }: propsType): React.JSX.Element {
+export default function Member({ _id, data,typeArea,child }: propsType): React.JSX.Element {
   const teamLead = useMemo(
     () =>
       data?.find((member) => get(member, "rule") === RULE_SALES_GROUP.LEADER),
@@ -35,7 +36,7 @@ export default function Member({ _id, data,typeArea }: propsType): React.JSX.Ele
         )}{" "}
         <AssignTeamLead teamLead={teamLead} _id={_id} />
       </Flex> : <></>}
-      <Flex align={"center"} gap={10}>
+      {!child?.length ? <Flex align={"center"} gap={10}>
         Trình dược viên:{" "}
         {member ? (
           <Tooltip title={get(member, "employee.fullName", "")} placement="top">
@@ -48,7 +49,7 @@ export default function Member({ _id, data,typeArea }: propsType): React.JSX.Ele
           "(Chưa có)"
         )}
         <AssignMember member={member} _id={_id} />
-      </Flex>
+      </Flex> : <></>}
     </Flex>
   );
 }

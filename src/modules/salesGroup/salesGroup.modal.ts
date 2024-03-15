@@ -5,6 +5,7 @@ export type propsTypeSalesGroupForm = {
     id? : string,
     parentNear? : string,
     parentNearName? : string,
+    parentNearPath? : string[],
     onCancel : () => void,
     onUpdate : (p:any) => void,
 }

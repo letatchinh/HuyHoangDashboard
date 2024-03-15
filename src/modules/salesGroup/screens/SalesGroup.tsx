@@ -116,7 +116,7 @@ export default function SalesGroup() {
       dataIndex: "_id",
       width: "30%",
       render: (_id, rc) => (
-        <Member _id={_id} data={get(rc, "salesGroupPermission", [])} typeArea={get(rc,'typeArea','')}/>
+        <Member _id={_id} data={get(rc, "salesGroupPermission", [])} typeArea={get(rc,'typeArea','')} child={get(rc,'children',[])}/>
       ),
     },
     {
@@ -151,6 +151,7 @@ export default function SalesGroup() {
                   onOpenFormCreateGroupFromExistGroup({
                     parentNear: _id,
                     parentNearName: get(rc, "name", ""),
+                    parentNearPath : get(rc,'managementArea',[])?.map((area:any) => get(area,'path'))
                   })
                 }
                 size="small"
@@ -204,6 +205,8 @@ export default function SalesGroup() {
       },
     },
   ];
+  console.log(parentNear,'parentNear');
+  
   return (
     <div>
       <Breadcrumb title={"Nhóm bán hàng"} />
@@ -235,6 +238,7 @@ export default function SalesGroup() {
           id={id}
           parentNear={get(parentNear, "parentNear")}
           parentNearName={get(parentNear, "parentNearName")}
+          parentNearPath={get(parentNear, "parentNearPath")}
         />
       </ModalAnt>
       <ModalAnt
@@ -242,6 +246,7 @@ export default function SalesGroup() {
         open={isOpenFormRelation}
         footer={null}
         destroyOnClose
+        width={'max-content'}
       >
         <Relationship id={id}/>
       </ModalAnt>
