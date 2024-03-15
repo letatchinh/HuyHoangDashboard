@@ -26,48 +26,6 @@ const ColumnChart: React.FC<ColumnChartProps> = ({ data }) => {
       name: 'Doanh số khoán', data: data?.map(month => (month.DSK)), color: '#387ADF' },
     { name: 'Doanh thu', data: data?.map(month => (month.DT)) , color: '#27e26c' },
   ];
-
-  // const options = {
-  //   chart: {
-  //     type: 'bar',
-  //     toolbar: {
-  //       show: false // Ẩn thanh công cụ
-  //     },
-  //   },
-  //   xaxis: {
-  //     categories: data?.map(month => month?.duration),
-  //   },
-  //   yaxis: {
-  //     labels: {
-  //       minWidth: 40, // Đặt minWidth cho các nhãn trục y
-  //       maxWidth: 50,
-  //       formatter: (val: any) => {
-  //         return String(val).replace(/(.)(?=(\d{3})+$)/g, '$1.');
-  //       },
-  //     },
-  //   },
-  //   plotOptions: {
-  //     bar: {
-  //       horizontal: false,
-  //       columnWidth: '40px', // Đặt chiều rộng cột là 20px
-  //       padding: '10px',
-  //       dataLabels: {
-  //         position: 'top', // Đặt vị trí nhãn dữ liệu
-  //         style: {
-  //           color: ['#ff0000'] // Thay đổi màu chữ ở đây
-  //         },
-  //         formatter: (val: any) => {
-  //           return String(val).replace(/(.)(?=(\d{3})+$)/g, '$1.');
-  //         },
-  //       },
-  //       barWidth: '90%',
-  //     },
-  //   },
-  //   stroke: {
-  //     width: [0, 4],
-  //     colors: ['#27e26c']
-  //   },
-  // };
   const options = {
     fill: {
       colors: ['blue']

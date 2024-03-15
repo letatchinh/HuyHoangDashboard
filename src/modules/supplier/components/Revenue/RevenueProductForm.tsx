@@ -1,4 +1,4 @@
-import { Button, Col, DatePicker, Form, InputNumber, Row, Space } from "antd";
+import { Button, Col, DatePicker, Form, InputNumber, Row, Space, Spin } from "antd";
 import React, { useEffect, useState } from "react";
 import { formatNumberThreeComma } from "~/utils/helpers";
 import { useResetActionInRevenue, useResetActionInTotalRevenue } from "../../supplier.hook";
@@ -11,6 +11,7 @@ type propsType = {
   productName: string,
   totalRevenueId: any,
   productGroupId: any,
+  refetch: boolean,
 };
 export default function RevenueProductForm({
   revenue,
@@ -20,23 +21,27 @@ export default function RevenueProductForm({
   productName,
   totalRevenueId,
   productGroupId,
+  refetch,
 }: propsType): React.JSX.Element {
   const [revenueValue, setRevenueValue] = useState<number | null | undefined>(0);
   const [totalRevenueInfo, setTotalRevenueInfo] = useState<any>({});
+  const [loading, setLoading] = useState<boolean>(false);
   
   useResetActionInTotalRevenue();
 
   const getTotalRevenue = async () => {
+    setLoading(true);
     const res = await apis.getTotalProductGroupsAndListProductRevenue({
       supplierMineral: totalRevenueId,
       productGroupId: productGroupId
     });
     setTotalRevenueInfo(res);
+    setLoading(false);
   };
 
   useEffect(() => {
     getTotalRevenue();
-  }, [totalRevenueId, productGroupId,id]);
+  }, [totalRevenueId, productGroupId,id,refetch]);
 
   useEffect(() => {
     setRevenueValue(revenue);
@@ -48,8 +53,8 @@ export default function RevenueProductForm({
         padding: 10,
       }}
     >
-      <h6>Tổng số doanh số khoán cho nhóm: {formatNumberThreeComma(totalRevenueInfo?.totalProductGroup) || 0}đ</h6>
-      <h6>Tổng đã khoán cho cho các sản phẩm trong nhóm: {formatNumberThreeComma(totalRevenueInfo?.totalProduct) || 0}đ</h6>
+      <h6>Tổng số doanh số khoán cho nhóm: {loading ?<Spin/>: formatNumberThreeComma(totalRevenueInfo?.totalProductGroup) || 0}đ</h6>
+      <h6>Tổng đã khoán cho cho các sản phẩm trong nhóm: {loading ?<Spin/>: formatNumberThreeComma(totalRevenueInfo?.totalProduct) || 0}đ</h6>
       <Row  style={{marginTop: 30}}>
         <Col span={12}>Doanh số khoán cho sản phẩm:</Col>
         <Col flex={1}>

@@ -29,6 +29,7 @@ export default function RevenueProducts({ totalRevenueId }: propsType): React.JS
   const canUpdate = useMatchPolicy(POLICIES.UPDATE_REVENUESUPPLIER);
   const resetAction = useResetInRevenueActionUpdate();
   const [productGroupId, setProductGroupId] = useState(null);
+  const [refetch, setReFetch] = useState(false);
 
   const newQuery = useMemo(() => ({
     ...query,
@@ -41,6 +42,7 @@ export default function RevenueProducts({ totalRevenueId }: propsType): React.JS
   const [isSubmitLoading, updateRevenue] = useUpdateRevenueSupplier(() => {
     closeFormUpdateRevenue();
     resetAction();
+    setReFetch(!refetch);
   });
 
   const openFormUpdateRevenue = (item: any) => {
@@ -145,6 +147,7 @@ export default function RevenueProducts({ totalRevenueId }: propsType): React.JS
         open={isOpen}
         onCancel={closeFormUpdateRevenue}
         footer={null}
+        width={600}
         // destroyOnClose
       >
         <RevenueProductForm
@@ -155,6 +158,7 @@ export default function RevenueProducts({ totalRevenueId }: propsType): React.JS
           productName={productName}
           totalRevenueId = {totalRevenueId}
           productGroupId = {productGroupId}
+          refetch = {refetch}
         />
       </Modal>
     </>
