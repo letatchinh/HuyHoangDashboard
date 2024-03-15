@@ -21,7 +21,7 @@ export default function Relationship({id}:propsType) : React.JSX.Element {
     return (
         <Tree
         lineWidth={'2px'}
-        lineColor={'green'}
+        lineColor={'#3481ff'}
         lineBorderRadius={'10px'}
         label={<CardRelation member={member} leader={leader} managementArea={get(salesGroup,'managementArea',[])}/>}
       >

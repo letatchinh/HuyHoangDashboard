@@ -1,10 +1,14 @@
 import {
   ApartmentOutlined,
   DeleteOutlined,
+  DownCircleOutlined,
+  DownOutlined,
   InfoCircleOutlined,
+  MenuOutlined,
+  MoreOutlined,
   SisternodeOutlined,
 } from "@ant-design/icons";
-import { Button, Popconfirm, Space, Tooltip, Typography } from "antd";
+import { Button, Dropdown, Flex, Popconfirm, Space, Tooltip, Typography } from "antd";
 import { ColumnsType } from "antd/es/table/InternalTable";
 import { get } from "lodash";
 import { useCallback, useState } from "react";
@@ -32,9 +36,12 @@ import TargetSalesGroup from "../components/TargetSalesGroup";
 import { RulesLeader, RulesMember } from "../salesGroup.service";
 import { SALES_GROUP_GEOGRAPHY, SALES_GROUP_GEOGRAPHY_VI } from "../constants";
 import Relationship from "../components/Relationship";
+import { MenuProps } from "antd/lib";
+import Address from "../components/Address";
+import Action from "../components/Action";
 const RulesMemberMethod = new RulesMember();
 const RulesLeaderMethod = new RulesLeader();
-const CLONE_SALES_GROUP_GEOGRAPHY_VI : any = SALES_GROUP_GEOGRAPHY_VI;
+const CLONE_SALES_GROUP_GEOGRAPHY_VI: any = SALES_GROUP_GEOGRAPHY_VI;
 export default function SalesGroup() {
   const {
     isSubmitLoading,
@@ -54,7 +61,6 @@ export default function SalesGroup() {
 
   const dataSearch = useGetSalesGroupsSearch();
   const [, deleteSalesGroup]: any = useDeleteSalesGroup();
-
 
   const onSearch = (keyword: any) => {
     // Get Data Filter From Redux
@@ -78,19 +84,16 @@ export default function SalesGroup() {
       dataIndex: "name",
       key: "name",
       render: (name, rc) => {
-        const addressCode = {
-          wardId : get(rc,'managementArea.[0].wardCode'),
-          districtId : get(rc,'managementArea.[0].districtCode'),
-          cityId : get(rc,'managementArea.[0].cityCode'),
-          areaId : get(rc,'managementArea.[0].areaCode'),
-        };
-        const address = concatAddress(addressCode);
-        return <div>
-          <p>{`${name} ${get(rc, "alias") ? `(${get(rc, "alias")})` : ""}`}</p>
-          <div  style={{marginLeft : 25}}>
-          <Typography.Text type="secondary">Địa chỉ: {address}</Typography.Text>
+        return (
+          <div>
+            <p>{`${name} ${
+              get(rc, "alias") ? `(${get(rc, "alias")})` : ""
+            }`}</p>
+            <div style={{ marginLeft: 25 }}>
+            <Address managementArea={get(rc,'managementArea',[])}/>
+            </div>
           </div>
-        </div>;
+        );
       },
     },
     {
@@ -98,14 +101,15 @@ export default function SalesGroup() {
       key: "typeArea",
       dataIndex: "typeArea",
       width: 100,
-      align : 'center',
-      render: (typeArea, rc) => CLONE_SALES_GROUP_GEOGRAPHY_VI?.[typeArea]
+      align: "center",
+      render: (typeArea, rc) => CLONE_SALES_GROUP_GEOGRAPHY_VI?.[typeArea],
     },
     {
       title: "Chỉ tiêu",
       key: "targets",
       dataIndex: "_id",
       width: "20%",
+      align: "center",
       render: (_id, rc) => (
         <TargetSalesGroup _id={_id} targetLead={get(rc, "targetLead", 0)} />
       ),
@@ -116,7 +120,12 @@ export default function SalesGroup() {
       dataIndex: "_id",
       width: "30%",
       render: (_id, rc) => (
-        <Member _id={_id} data={get(rc, "salesGroupPermission", [])} typeArea={get(rc,'typeArea','')} child={get(rc,'children',[])}/>
+        <Member
+          _id={_id}
+          data={get(rc, "salesGroupPermission", [])}
+          typeArea={get(rc, "typeArea", "")}
+          child={get(rc, "children", [])}
+        />
       ),
     },
     {
@@ -127,86 +136,11 @@ export default function SalesGroup() {
       fixed: "right",
       width: "15%",
       render(_id, rc) {
-        const existMember = RulesMemberMethod.isExist(
-          get(rc, "salesGroupPermission", [])
-        );
-        const notExistLeader = !RulesLeaderMethod.isExist(
-          get(rc, "salesGroupPermission", [])
-        );
-        const isZone = get(rc, "typeArea") === SALES_GROUP_GEOGRAPHY.ZONE;
-        return (
-          <Space direction="vertical">
-            <Tooltip
-              title={
-                isZone || existMember || notExistLeader
-                  ? "Đã có TDV hoặc đã là nhóm nhỏ hoặc không có quản lý"
-                  : ""
-              }
-            >
-              <Button
-                disabled={existMember || isZone || notExistLeader}
-                block
-                icon={<SisternodeOutlined />}
-                onClick={() =>
-                  onOpenFormCreateGroupFromExistGroup({
-                    parentNear: _id,
-                    parentNearName: get(rc, "name", ""),
-                    parentNearPath : get(rc,'managementArea',[])?.map((area:any) => get(area,'path'))
-                  })
-                }
-                size="small"
-                type="dashed"
-              >
-                Tạo nhóm
-              </Button>
-            
-            </Tooltip>
-            <Button
-                block
-                icon={<ApartmentOutlined />}
-                onClick={() =>
-                  onOpenFormRelation(_id)
-                }
-                size="small"
-                type="primary"
-                ghost
-              >
-                Xem tổng thể
-              </Button>
-            <Button
-              block
-              icon={<InfoCircleOutlined />}
-              onClick={() => onOpenForm(_id)}
-              size="small"
-              type="primary"
-            >
-              Xem chi tiết
-            </Button>
-            <WithPermission permission={POLICIES.DELETE_AREACONFIGURATION}>
-              <Popconfirm
-                title="Bạn muốn xoá địa chỉ này?"
-                onConfirm={() => deleteSalesGroup(_id)}
-                okText="Xoá"
-                cancelText="Huỷ"
-              >
-                <Button
-                  block
-                  loading={isSubmitLoading}
-                  danger
-                  size="small"
-                  icon={<DeleteOutlined />}
-                >
-                  Xoá
-                </Button>
-              </Popconfirm>
-            </WithPermission>
-          </Space>
-        );
-      },
+        return <Action _id={_id} rc={rc}/>
+      } 
     },
   ];
-  console.log(parentNear,'parentNear');
-  
+
   return (
     <div>
       <Breadcrumb title={"Nhóm bán hàng"} />
@@ -224,6 +158,7 @@ export default function SalesGroup() {
           columns={columns}
           size="small"
           pagination={false}
+          bordered
         />
       </WhiteBox>
       <ModalAnt
@@ -246,9 +181,9 @@ export default function SalesGroup() {
         open={isOpenFormRelation}
         footer={null}
         destroyOnClose
-        width={'max-content'}
+        width={"max-content"}
       >
-        <Relationship id={id}/>
+        <Relationship id={id} />
       </ModalAnt>
     </div>
   );
