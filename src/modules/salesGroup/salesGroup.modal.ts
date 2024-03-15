@@ -12,7 +12,7 @@ export type FieldTypeForm = {
     name : string,
     alias : string,
     managementArea : string[]
-    typeArea : "REGION" | "GROUP",
+    typeArea : "REGION" | "GROUP" | "ZONE",
     parentNear ? : string,
 
 }

@@ -1,4 +1,5 @@
 import { Button, Flex, Popover, Table } from "antd";
+import { TableRowSelection } from "antd/es/table/interface";
 import { get } from "lodash";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { EMPLOYEE_LEVEL_VI } from "~/modules/employee/constants";
@@ -7,13 +8,12 @@ import { EmployeeType, MemberRulesInGroupType } from "../salesGroup.modal";
 import useSalesGroupStore from "../salesGroupContext";
 type propsType = {
     _id? : string,
-    members? : MemberRulesInGroupType[],
+    member? : MemberRulesInGroupType,
 };
 const CLONE_EMPLOYEE_LEVEL_VI : any = EMPLOYEE_LEVEL_VI;
-export default function AssignMember({_id,members}: propsType): React.JSX.Element {
+export default function AssignMember({_id,member}: propsType): React.JSX.Element {
   const [open, setOpen] = useState(false);
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
-    console.log(selectedRowKeys,'selectedRowKeys');
     
   const {isSubmitLoading,updateSalesGroup} = useSalesGroupStore();
   const query = useMemo(() => open ? ({salesGroupId : _id}) : null,[open,_id]);
@@ -32,20 +32,23 @@ export default function AssignMember({_id,members}: propsType): React.JSX.Elemen
     });
     hide();
   },[_id,selectedRowKeys]);
-  const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
-    setSelectedRowKeys(newSelectedRowKeys);
-  };
 
-  const rowSelection = {
+  const rowSelection : TableRowSelection<any> = {
     selectedRowKeys,
-    onChange: onSelectChange,
+    onSelect : (record, selected) => {
+      if(selected){
+        setSelectedRowKeys([get(record,'_id')]);
+      }else{
+        setSelectedRowKeys([])
+      }
+    },
+    hideSelectAll : true,
   };
 
   useEffect(() => {
     // Init Selected Row key By Member in data
-    const initSelected : any = members?.map((member : any) => get(member,'employeeId'));
-    setSelectedRowKeys(initSelected)
-  },[members]);
+    setSelectedRowKeys([get(member,'employeeId','')])
+  },[member]);
 
   const columns : any = [
     {
