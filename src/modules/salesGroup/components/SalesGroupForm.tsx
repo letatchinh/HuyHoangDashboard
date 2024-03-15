@@ -19,8 +19,10 @@ const SalesGroupForm = ({
   onUpdate,
   parentNear,
   parentNearName,
+  parentNearPath
 }: propsTypeSalesGroupForm): React.JSX.Element => {
   const [salesGroup, isLoading] = useGetSalesGroup(id);
+console.log(parentNearPath,'parentNearPath');
 
   const [form] = Form.useForm();
   const [isSubmitLoading, onCreate] = useCreateSalesGroup(onCancel);
@@ -30,7 +32,6 @@ const SalesGroupForm = ({
   const onFinish = useCallback(
     (values: FieldTypeForm) => {
       const submitData = convertSubmitData(values);
-      console.log(submitData,'submitData');
       
       if (!id) {
         onCreate(submitData);
@@ -86,9 +87,6 @@ const SalesGroupForm = ({
               <Form.Item<FieldTypeForm>
                 label="Tên mô tả"
                 name="alias"
-                rules={[
-                  { required: true, message: "Vui lòng nhập tên mô tả" },
-                ]}
               >
                 {RenderLoading(isLoading,<Input />)}
               </Form.Item>
@@ -116,7 +114,8 @@ const SalesGroupForm = ({
                   treeCheckStrictly={true}
                   treeCheckable={true}
                   treeDefaultExpandedKeys={['1', '2', '3']}
-                  checkablePositions={[RELATIVE_POSITION.IS_CHILD, RELATIVE_POSITION.IS_EQUAL]}
+                  checkablePositions={!parentNearPath ? [RELATIVE_POSITION.IS_CHILD, RELATIVE_POSITION.IS_EQUAL] : [RELATIVE_POSITION.IS_CHILD]}
+                  enabledValues={parentNearPath}
                 />
               </Form.Item>
             </Col>

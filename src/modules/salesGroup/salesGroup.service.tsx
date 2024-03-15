@@ -1,4 +1,7 @@
 import { get } from "lodash";
+import { TreeNode } from "react-organizational-chart";
+import { concatAddress } from "~/utils/helpers";
+import CardRelation from "./components/Relationship/CardRelation";
 import { RULE_SALES_GROUP } from "./constants";
 import { FieldTypeForm, MemberRulesInGroupType } from "./salesGroup.modal";
 
@@ -27,6 +30,33 @@ export const convertInitData = (salesGroupInit: any) => {
   };
 };
 
+export const convertAddress = (managementArea?:any,onlyShowLastPath?:boolean) => {
+    return managementArea?.map((area:any) => {
+      const addressCode = {
+        wardId : get(area,'wardCode'),
+        districtId : get(area,'districtCode'),
+        cityId : get(area,'cityCode'),
+        areaId : get(area,'areaCode'),
+      };
+      if(onlyShowLastPath){
+        const {cityId,districtId,wardId} = addressCode;
+        if(wardId){
+          return concatAddress({wardId});
+        }
+        if(districtId){
+          return concatAddress({districtId});
+        }
+        if(cityId){
+          return concatAddress({cityId});
+        }
+      }else{
+        const address = concatAddress(addressCode);
+        return address;
+      }
+  
+    })
+    
+}
 export class RulesMember {
   isExist(salesGroupPermission: MemberRulesInGroupType[]) {
     return salesGroupPermission?.some(
@@ -50,4 +80,15 @@ export class RulesLeader {
       (m) => get(m, "rule") === RULE_SALES_GROUP.LEADER
     );
   }
+}
+// Loop Deep Child
+export function getDeepChild (child : any[]){
+  return child?.map((c : any) => {
+    const leader = new RulesLeader().FindOne(get(c,'salesGroupPermission',[]));
+    const member = new RulesMember().FindOne(get(c,'salesGroupPermission',[]));
+    
+    return <TreeNode label={<CardRelation parentNear={get(c,'parentNear')} member={member} leader={leader} managementArea={get(c,'managementArea',[])}/>}>
+    {get(c,'children',[])?.length ? getDeepChild(get(c,'children',[])) : null} 
+</TreeNode>
+  })
 }
