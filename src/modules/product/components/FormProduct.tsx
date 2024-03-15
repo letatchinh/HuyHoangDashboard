@@ -14,7 +14,6 @@ import {
   useCreateProduct,
   useGetProduct,
   useResetAction,
-  useUpdateProduct
 } from "../product.hook";
 import {
   FieldTypeFormProduct,
@@ -52,7 +51,6 @@ export default function FormProduct({
   const [backupForm,setBackupForm] = useState<FieldTypeFormProduct[]>([]);
   
   const [isSubmitLoading, onCreate] = useCreateProduct(onCancel);
-  // const [, onUpdate] = useUpdateProduct(onCancel);
   const [product, isLoading] = useGetProduct(id);
   // const [dataNotificationUndo,setDataNotificationUndo] = useState({
   //   open : false,
@@ -161,7 +159,7 @@ export default function FormProduct({
   };
   return (
     <div>
-      <h5>Tạo mới thuốc</h5>
+      <h5>{id ? "Cập nhật thuốc" : "Tạo mới thuốc"}</h5>
       <Form
         form={form}
         onFinish={onFinish}

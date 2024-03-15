@@ -1,27 +1,25 @@
-import React, { useState } from 'react';
 import { Checkbox, Col, Modal, Row, Select, Typography } from 'antd';
 import { ColumnsType } from "antd/es/table/InternalTable";
-import { Table } from 'antd/lib';
 import { get } from 'lodash';
-import WhiteBox from '~/components/common/WhiteBox';
-import { formatter } from '~/utils/helpers';
-import Breadcrumb from '~/components/common/Breadcrumb';
-import {  useGetProductsAll, useProductsAllPaging, useProductsAllQueryParams, useSetSupplierInfo, useUpdateProductsAllParams } from '../productsAll.hook';
-import TableAnt from '~/components/Antd/TableAnt';
+import React, { useCallback, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useMatchPolicy } from '~/modules/policy/policy.hook';
-import POLICIES from '~/modules/policy/policy.auth';
-import FormProduct from '~/modules/product/components/FormProduct';
-import FormListSupplier from '../components/FormListSupplier';
+import TableAnt from '~/components/Antd/TableAnt';
+import Breadcrumb from '~/components/common/Breadcrumb';
 import SelectSearch from '~/components/common/SelectSearch/SelectSearch';
-import { DataType, TypeProps } from '../productsAll.modal';
-import ShowStep from '../components/ShowStep';
-import ActionColumn from '../components/ActionColumns';
-import { useChangeVariantDefault, useDeleteProduct, useGetProducts, useProductPaging, useUpdateProduct } from '~/modules/product/product.hook';
-import useCheckBoxExport from '~/modules/export/export.hook';
+import WhiteBox from '~/components/common/WhiteBox';
 import ExportExcelButton from '~/modules/export/component';
+import useCheckBoxExport from '~/modules/export/export.hook';
+import POLICIES from '~/modules/policy/policy.auth';
+import { useMatchPolicy } from '~/modules/policy/policy.hook';
+import FormProduct from '~/modules/product/components/FormProduct';
 import StockProduct from '~/modules/product/components/StockProduct';
+import { useChangeVariantDefault, useDeleteProduct, useGetProducts, useProductPaging, useUpdateProduct } from '~/modules/product/product.hook';
+import { formatter } from '~/utils/helpers';
 import { useChangeDocumentTitle } from '~/utils/hook';
+import ActionColumn from '../components/ActionColumns';
+import ShowStep from '../components/ShowStep';
+import { useProductsAllQueryParams, useUpdateProductsAllParams } from '../productsAll.hook';
+import { DataType, TypeProps } from '../productsAll.modal';
 
 export default function ProductsAll(props: TypeProps): React.JSX.Element {
   const [query, onTableChange] = useProductsAllQueryParams();
@@ -62,11 +60,11 @@ export default function ProductsAll(props: TypeProps): React.JSX.Element {
     setId(id);
   };
   
-  const onCloseFormProduct = () => {
+  const onCloseFormProduct = useCallback(() => {
     setIsOpenFormProduct(false);
     setSupplierId(null);
     setId(null);
-  };
+  },[])
   const [, onUpdateProduct] = useUpdateProduct(onCloseFormProduct);
 
   const onChangeStep = (step: number) => {
