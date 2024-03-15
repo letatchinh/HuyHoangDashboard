@@ -28,7 +28,7 @@ export default function RevenueProductForm({
 
   const getTotalRevenue = async () => {
     const res = await apis.getTotalProductGroupsAndListProductRevenue({
-      supplierMineralId: totalRevenueId,
+      supplierMineral: totalRevenueId,
       productGroupId: productGroupId
     });
     setTotalRevenueInfo(res);
