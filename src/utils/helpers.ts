@@ -58,14 +58,19 @@ export const getExistProp = (data: any) => {
 
   return result;
 };
-
+export const getAreaByCode = (areaCode? : string) => {
+  if(!areaCode) {return null};
+  const areas = subvn.getAreas();
+  return areas?.find((area) => areaCode === area?.code);
+}
 export const concatAddress = (address: any): string => {
   if (!address) return "";
-  const { street, ward, district, districtId, city, cityId, wardId } = address;
+  const { street, ward, district, districtId, city, cityId, wardId,area, areaId} = address;
   let ward_ = ward ?? get(subvn.getWardsByCode(wardId), "name");
   let district_ = district ?? get(subvn.getDistrictByCode(districtId), "name");
   let city_ = city ?? get(subvn.getCityByCode(cityId), "name");
-  return [street, ward_, district_, city_].filter(Boolean).join(", ");
+  let area_ = area ?? get(getAreaByCode(areaId), "name");
+  return [street, ward_, district_, city_,area_].filter(Boolean).join(", ");
 };
 
 export function removeAccents(str: any) {

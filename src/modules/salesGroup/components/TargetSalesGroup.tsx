@@ -5,17 +5,15 @@ import useSalesGroupStore from "../salesGroupContext";
 type propsType = {
   _id: string;
   targetLead: number;
-  targetMember: number;
 };
 type FormFieldType = {
   targetLead: number;
-  targetMember: number;
   _id: string;
 };
 export default function TargetSalesGroup({
   _id,
   targetLead,
-  targetMember,
+  // targetMember,
 }: propsType): React.JSX.Element {
   const [form] = Form.useForm();
   const { isSubmitLoading, updateSalesGroup } = useSalesGroupStore();
@@ -27,9 +25,8 @@ export default function TargetSalesGroup({
     form.setFieldsValue({
       _id,
       targetLead,
-      targetMember,
     });
-  }, [_id, targetLead, targetMember]);
+  }, [_id, targetLead]);
   return (
     <div>
       <Form
@@ -42,12 +39,6 @@ export default function TargetSalesGroup({
       >
         <Form.Item<FormFieldType> hidden name={"_id"} />
         <Form.Item<FormFieldType> name={"targetLead"} label="Nhóm">
-          <InputNumberAnt min={0} style={{width : '100%'}}/>
-        </Form.Item>
-        <Form.Item<FormFieldType>
-          name={"targetMember"}
-          label="Thành viên"
-        >
           <InputNumberAnt min={0} style={{width : '100%'}}/>
         </Form.Item>
         <Button loading={isSubmitLoading} block size="small" type="primary" htmlType="submit">
