@@ -48,8 +48,8 @@ export default function RevenueProductForm({
         padding: 10,
       }}
     >
-      <h6>Tổng số doanh số khoán cho nhóm: {totalRevenueInfo?.totalProductGroup || 0}đ</h6>
-      <h6>Tổng đã khoán cho nhóm: {totalRevenueInfo?.totalProduct || 0}đ</h6>
+      <h6>Tổng số doanh số khoán cho nhóm: {formatNumberThreeComma(totalRevenueInfo?.totalProductGroup) || 0}đ</h6>
+      <h6>Tổng đã khoán cho cho các sản phẩm trong nhóm: {formatNumberThreeComma(totalRevenueInfo?.totalProduct) || 0}đ</h6>
       <Row  style={{marginTop: 30}}>
         <Col span={12}>Doanh số khoán cho sản phẩm:</Col>
         <Col flex={1}>
