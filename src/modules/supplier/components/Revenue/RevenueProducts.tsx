@@ -12,6 +12,7 @@ import { useDispatch } from 'react-redux';
 import { supplierSliceAction } from '../../redux/reducer';
 import { get } from 'lodash';
 import RevenueProductForm from './RevenueProductForm';
+import apis from '../../supplier.api';
 type propsType = {
   totalRevenueId: any;
 }
@@ -27,6 +28,7 @@ export default function RevenueProducts({ totalRevenueId }: propsType): React.JS
   const [query,onTableChange] = useRevenueProductQueryParams();
   const canUpdate = useMatchPolicy(POLICIES.UPDATE_REVENUESUPPLIER);
   const resetAction = useResetInRevenueActionUpdate();
+  const [productGroupId, setProductGroupId] = useState(null);
 
   const newQuery = useMemo(() => ({
     ...query,
@@ -91,6 +93,14 @@ export default function RevenueProducts({ totalRevenueId }: propsType): React.JS
         }
       },
       {
+        title: "Nhóm sản phẩm",
+        dataIndex: "productGroup",
+        key: "name",
+        render(value, rc: any) {
+          return value?.name;
+        }
+      },
+      {
         title: "Trạng thái sản phẩm",
         dataIndex: "productGroup",
         key: "status",
@@ -107,6 +117,7 @@ export default function RevenueProducts({ totalRevenueId }: propsType): React.JS
            type='primary'
             onClick={() => {
               openFormUpdateRevenue(rc);
+              setProductGroupId(rc?.productGroup?._id);
             }}
           >Cập nhật</Button>)
         }
@@ -142,6 +153,8 @@ export default function RevenueProducts({ totalRevenueId }: propsType): React.JS
           closeFormUpdateRevenue={closeFormUpdateRevenue}
           onUpdateRevenue={onUpdateRevenue}
           productName={productName}
+          totalRevenueId = {totalRevenueId}
+          productGroupId = {productGroupId}
         />
       </Modal>
     </>

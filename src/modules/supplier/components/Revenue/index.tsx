@@ -80,7 +80,7 @@ export default function RevenueSupplier(props: propsType): React.JSX.Element {
         </TabPane>
         <TabPane key={'2'} tab='Sản phẩm' >
           <RevenueProducts
-          totalRevenueId = {totalRevenueId}
+              totalRevenueId={totalRevenueId}
         />
         </TabPane>
         <TabPane key={'3'} tab='Báo cáo' >

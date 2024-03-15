@@ -22,6 +22,7 @@ const apis = {
     // This is api for Product groups
     getProductGroupsRevenue: (query?: any) => requester.get(`/api/v1/supplier-revenue-product-group/${query?.id}`, omit(query,['id'])),
     updateProductGroupsRevenue: (query?: any) => requester.put(`/api/v1/supplier-revenue-product-group/${query?.supplierId}`, omit(query,['id'])),
+    getTotalProductGroupsAndListProductRevenue: (query?: any) => requester.get(`/api/v1/supplier-revenue-total-product-group`, query),
 
     //This is api for report
     getReport: (query?: any) => requester.get(`/api/v1/supplier-revenue-time/${query?.id}`, omit(query,['id'])),
