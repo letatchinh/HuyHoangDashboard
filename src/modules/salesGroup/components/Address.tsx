@@ -9,7 +9,7 @@ export default function Address({managementArea,onlyShowLastPath}:propsType) : R
     const addressString = useMemo(() => convertAddress(managementArea,onlyShowLastPath),[managementArea,onlyShowLastPath])
     return (
         <div>
-            {addressString?.map((item : any) => <Typography.Text strong>
+            {addressString?.map((item : any) => <Typography.Text style={{display : 'block'}} strong>
                 {item}
             </Typography.Text>)}
         </div>

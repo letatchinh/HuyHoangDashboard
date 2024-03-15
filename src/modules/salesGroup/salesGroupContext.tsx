@@ -5,10 +5,11 @@ import {
   useContext,
   useState,
 } from "react";
-import { useUpdateSalesGroup } from "./salesGroup.hook";
+import { useDeleteSalesGroup, useUpdateSalesGroup } from "./salesGroup.hook";
 export type GlobalSalesGroup = {
   isSubmitLoading: boolean;
   updateSalesGroup: (p: any) => void;
+  deleteSalesGroup: (p: any) => void;
   onOpenFormCreateGroupFromExistGroup: (p:any) => void;
   onOpenForm: (p?:any) => void;
   onCloseForm: () => void;
@@ -22,6 +23,7 @@ export type GlobalSalesGroup = {
 const SalesGroup = createContext<GlobalSalesGroup>({
   isSubmitLoading: false,
   updateSalesGroup: () => {},
+  deleteSalesGroup: () => {},
   onOpenFormCreateGroupFromExistGroup: () => {},
   onOpenForm: () => {},
   onCloseForm: () => {},
@@ -73,6 +75,8 @@ export function SalesGroupProvider({
     setId(null);
   }, []);
   const [isSubmitLoading, updateSalesGroup] = useUpdateSalesGroup(onCloseForm);
+  const [, deleteSalesGroup]: any = useDeleteSalesGroup();
+
   return (
     <SalesGroup.Provider
       value={{
@@ -87,6 +91,7 @@ export function SalesGroupProvider({
         isOpenFormRelation,
         onOpenFormRelation,
         onCloseFormRelation,
+        deleteSalesGroup,
       }}
     >
       {children}
