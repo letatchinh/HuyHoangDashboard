@@ -30,7 +30,8 @@ export default function AssignTeamLead({_id,teamLead}: propsType): React.JSX.Ele
         manager : get(item,'_id')
     });
     hide();
-  },[_id])
+  },[_id]);
+  
   return (
     <div>
       <Popover
@@ -41,7 +42,7 @@ export default function AssignTeamLead({_id,teamLead}: propsType): React.JSX.Ele
               <List.Item key={get(item,'_id')}>
                 <List.Item.Meta
                 style={{alignItems : 'center'}}
-                  avatar={<AvatarShortOrName avatar={get(item,'avatar')} name={get(item,'fullName')}/>}
+                  avatar={<AvatarShortOrName src={get(item,'avatar')} name={get(item,'fullName')}/>}
                   title={<span>{get(item,'fullName','')}</span>}
                   description={get(EMPLOYEE_LEVEL_VI,get(item,'employeeLevel',''),'')}
                 />

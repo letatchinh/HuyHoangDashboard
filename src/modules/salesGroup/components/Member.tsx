@@ -1,5 +1,5 @@
 import { AntDesignOutlined, UserOutlined } from "@ant-design/icons";
-import { Avatar, Flex, Tooltip, Typography } from "antd";
+import { Avatar, Button, Flex, Tooltip, Typography } from "antd";
 import { get } from "lodash";
 import React, { useMemo } from "react";
 import AvatarShortOrName from "~/components/common/AvatarShortOrName";
@@ -7,6 +7,7 @@ import { RULE_SALES_GROUP, SALES_GROUP_GEOGRAPHY } from "../constants";
 import { MemberRulesInGroupType } from "../salesGroup.modal";
 import AssignMember from "./AssignMember";
 import AssignTeamLead from "./AssignTeamLead";
+import PopoverCardEmployee from "./PopoverCardEmployee";
 type propsType = {
   _id?: string;
   typeArea?: any;
@@ -28,9 +29,13 @@ export default function Member({ _id, data,typeArea,child }: propsType): React.J
       {typeArea !== SALES_GROUP_GEOGRAPHY.ZONE  ? <Flex align={"center"} gap={10}>
         Trưởng nhóm:{" "}
         {teamLead ? (
-          <Typography.Text strong>
+          <PopoverCardEmployee employee={get(teamLead, "employee", "")}>
+        <Button type="text">
+        <Typography.Text strong>
             {get(teamLead, "employee.fullName", "")}
           </Typography.Text>
+        </Button>
+          </PopoverCardEmployee>
         ) : (
           "(Chưa có)"
         )}{" "}
@@ -41,7 +46,7 @@ export default function Member({ _id, data,typeArea,child }: propsType): React.J
         {member ? (
           <Tooltip title={get(member, "employee.fullName", "")} placement="top">
             <AvatarShortOrName
-              avatar={get(member, "employee.avatar")}
+              src={get(member, "employee.avatar")}
               name={get(member, "employee.fullName")}
             />
           </Tooltip>

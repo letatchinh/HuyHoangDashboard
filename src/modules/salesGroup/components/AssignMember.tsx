@@ -1,3 +1,4 @@
+import { PlusCircleOutlined } from "@ant-design/icons";
 import { Button, Flex, Popover, Table } from "antd";
 import { TableRowSelection } from "antd/es/table/interface";
 import { get } from "lodash";
@@ -75,7 +76,7 @@ export default function AssignMember({_id,member}: propsType): React.JSX.Element
         open={open}
         onOpenChange={handleOpenChange}
       >
-        <Button>+</Button>
+        <Button icon={member ? <i className="fa-solid fa-repeat"></i> : <PlusCircleOutlined />}/>
       </Popover>
     </div>
   );

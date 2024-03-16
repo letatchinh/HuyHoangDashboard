@@ -1,8 +1,9 @@
-import { Flex } from "antd";
+import { Badge, Flex, Tag } from "antd";
 import { get } from "lodash";
 import React from "react";
 import WhiteBox from "~/components/common/WhiteBox";
 import Address from "../Address";
+import PopoverCardEmployee from "../PopoverCardEmployee";
 type propsType = {
   managementArea?: any[];
   leader?: any;
@@ -15,12 +16,31 @@ export default function CardRelation({
   member,
   parentNear,
 }: propsType): React.JSX.Element {
-  return <Flex className="cardRelation" align={"center"} vertical>
-  <WhiteBox>
-  <Address onlyShowLastPath={!!parentNear} managementArea={managementArea}/> 
-    {leader && <div>Quản lý: {get(leader,'employee.fullName','')}</div>}
-    {member && <div>TDV: {get(member,'employee.fullName','')}</div>}
-    {!leader && !member ? "(Trống)" : null}
-  </WhiteBox>
-  </Flex>;
+  return (
+    <Flex align={"center"} vertical>
+      <WhiteBox>
+        <Address
+          onlyShowLastPath={!!parentNear}
+          managementArea={managementArea}
+        />
+        {leader && (
+          <div>
+            Quản lý:{" "}
+            <PopoverCardEmployee employee={get(leader, "employee", "")}>
+              {get(leader, "employee.fullName", "")}
+            </PopoverCardEmployee>
+          </div>
+        )}
+        {member && (
+          <div>
+            TDV:
+            <PopoverCardEmployee employee={get(member, "employee", "")}>
+              {get(member, "employee.fullName", "")}
+            </PopoverCardEmployee>
+          </div>
+        )}
+        {!leader && !member ? <Tag bordered={false} color={'error'}>Trống</Tag> : null}
+      </WhiteBox>
+    </Flex>
+  );
 }
