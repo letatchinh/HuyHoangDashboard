@@ -7,10 +7,9 @@ import TableAnt from '~/components/Antd/TableAnt';
 import ProductModule from '~/modules/product';
 import useNotificationStore from '~/store/NotificationContext';
 import { formatter } from '~/utils/helpers';
-import { selectProductSearch } from '../../bill/bill.service';
 import ImageProduct from '../../bill/components/ImageProduct';
 import { ItemSearchProduct } from '../orderSupplier.modal';
-import { getCumulativeDiscount } from '../orderSupplier.service';
+import { getCumulativeDiscount, selectProductSearch } from '../orderSupplier.service';
 type propsType = {
   dataCurrent : any,
   onChangeBill : (newData:any) => void,
