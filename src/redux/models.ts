@@ -40,7 +40,6 @@ export type initStateSlice<T=any> = {
     user: 'user',
     userGroup: 'userGroup',
     policy: 'policy',
-    reportSupplier: 'reportSupplier',
     productGroup:'productGroup',
     manufacturer:'manufacturer',
     productUnit:'productUnit',
@@ -65,6 +64,7 @@ export type initStateSlice<T=any> = {
     salesGroup: "salesGroup",
     baseSalary: "baseSalary",
     benefitConfiguration: "benefitConfiguration",
+    reportEmployee: "reportEmployee",
     }as const
     
     

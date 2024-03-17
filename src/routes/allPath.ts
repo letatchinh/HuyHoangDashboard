@@ -84,6 +84,7 @@ export const PATH_APP = {
 
     report: {
       supplier: path(ROOTS.app, '/report/supplier'),
+      employee: path(ROOTS.app, '/report/employee'),
     },
   
     botNotification : {
@@ -108,4 +109,5 @@ export const PATH_APP = {
   benefitConfiguration : {
     root:  path(ROOTS.app, '/benefit-configuration'),
   },
+
 };

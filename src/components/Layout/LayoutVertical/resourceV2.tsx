@@ -244,6 +244,22 @@ import {
       ],
       icon: <i className="fa-solid fa-code-branch"></i>,
     },
+
+    // Báo cáo
+    {
+      label: "Báo cáo",
+      key: "report",
+      // permission: [POLICIES.READ_BRANCH],
+      children: [
+        {
+          label: "Báo cáo nhân viên",
+          path: PATH_APP.report.employee,
+          key: PATH_APP.report.employee,
+        },
+      ],
+      icon: <i className="fa-solid fa-code-branch"></i>,
+    },
+
     {
       label: "Quản lý công việc",
       key: "todoList",

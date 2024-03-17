@@ -1,60 +1,36 @@
-import {
-  ApartmentOutlined,
-  DeleteOutlined,
-  DownCircleOutlined,
-  DownOutlined,
-  InfoCircleOutlined,
-  MenuOutlined,
-  MoreOutlined,
-  SisternodeOutlined,
-} from "@ant-design/icons";
-import { Button, Dropdown, Flex, Popconfirm, Space, Tooltip, Typography } from "antd";
 import { ColumnsType } from "antd/es/table/InternalTable";
 import { get } from "lodash";
-import { useCallback, useState } from "react";
 import ModalAnt from "~/components/Antd/ModalAnt";
 import TableAnt from "~/components/Antd/TableAnt";
 import Breadcrumb from "~/components/common/Breadcrumb";
 import SelectSearch from "~/components/common/SelectSearch/SelectSearch";
 import WhiteBox from "~/components/common/WhiteBox";
-import WithPermission from "~/components/common/WithPermission";
-import POLICIES from "~/modules/policy/policy.auth";
-import { concatAddress, StringToSlug } from "~/utils/helpers";
+import { StringToSlug } from "~/utils/helpers";
+import Action from "../components/Action";
+import Address from "../components/Address";
+import Member from "../components/Member";
+import Relationship from "../components/Relationship";
+import SalesGroupForm from "../components/SalesGroupForm";
+import TargetSalesGroup from "../components/TargetSalesGroup";
+import { SALES_GROUP_GEOGRAPHY_VI } from "../constants";
 import {
-  useSalesGroupQueryParams,
   useDeleteSalesGroup,
   useGetSalesGroups,
-  useGetSalesGroupsSearch,
-  useUpdateSalesGroup,
+  useGetSalesGroupsSearch, useSalesGroupQueryParams
 } from "../salesGroup.hook";
 import { SalesGroupType } from "../salesGroup.modal";
-import SalesGroupForm from "../components/SalesGroupForm";
-import AssignTeamLead from "../components/AssignTeamLead";
-import useSalesGroupStore, { SalesGroupProvider } from "../salesGroupContext";
-import Member from "../components/Member";
-import TargetSalesGroup from "../components/TargetSalesGroup";
-import { RulesLeader, RulesMember } from "../salesGroup.service";
-import { SALES_GROUP_GEOGRAPHY, SALES_GROUP_GEOGRAPHY_VI } from "../constants";
-import Relationship from "../components/Relationship";
-import { MenuProps } from "antd/lib";
-import Address from "../components/Address";
-import Action from "../components/Action";
-const RulesMemberMethod = new RulesMember();
-const RulesLeaderMethod = new RulesLeader();
+import useSalesGroupStore from "../salesGroupContext";
 const CLONE_SALES_GROUP_GEOGRAPHY_VI: any = SALES_GROUP_GEOGRAPHY_VI;
 export default function SalesGroup() {
   const {
-    isSubmitLoading,
     updateSalesGroup,
     isOpenForm,
     onCloseForm,
     onOpenForm,
-    onOpenFormCreateGroupFromExistGroup,
     id,
     parentNear,
     isOpenFormRelation,
     onCloseFormRelation,
-    onOpenFormRelation,
   } = useSalesGroupStore();
   const [query] = useSalesGroupQueryParams();
   const [data, isLoading, actionUpdate] = useGetSalesGroups(query);
