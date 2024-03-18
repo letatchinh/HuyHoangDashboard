@@ -19,6 +19,9 @@ export type GlobalSalesGroup = {
   parentNear?: any;
   isOpenForm: boolean;
   isOpenFormRelation: boolean;
+  isOpenFormExchangeRate: boolean;
+  onCloseFormExchangeRate: () => void;
+  onOpenFormExchangeRate: () => void;
 };
 const SalesGroup = createContext<GlobalSalesGroup>({
   isSubmitLoading: false,
@@ -33,6 +36,9 @@ const SalesGroup = createContext<GlobalSalesGroup>({
   parentNear: null,
   isOpenForm: false,
   isOpenFormRelation: false,
+  isOpenFormExchangeRate: false,
+  onCloseFormExchangeRate: () => { },
+  onOpenFormExchangeRate: () => { },
 });
 
 type SalesGroupProviderProps = {
@@ -46,6 +52,7 @@ export function SalesGroupProvider({
   const [id, setId]: any = useState();
   const [parentNear, setParentNear]: any = useState();
   const [isOpenForm, setIsOpenForm]: any = useState(false);
+  const [isOpenFormExchangeRate, setIsOpenFormExchangeRate]: any = useState(false);
 
   // Control form
   const onOpenForm = useCallback((idSelect?: any) => {
@@ -54,6 +61,7 @@ export function SalesGroupProvider({
     }
     setIsOpenForm(true);
   }, []);
+
   const onOpenFormCreateGroupFromExistGroup = useCallback((data?: any) => {
     setParentNear(data);
     setIsOpenForm(true);
@@ -74,6 +82,20 @@ export function SalesGroupProvider({
     setIsOpenFormRelation(false);
     setId(null);
   }, []);
+
+  const onOpenFormExchangeRate = useCallback((idSelect?: any) => {
+    if (idSelect) {
+      setId(idSelect);
+    }
+    setIsOpenFormExchangeRate(true);
+  }, []);
+
+  const onCloseFormExchangeRate = useCallback(() => {
+    setIsOpenFormExchangeRate(false);
+    setId(null);
+    setParentNear(null);
+  }, []);
+
   const [isSubmitLoading, updateSalesGroup] = useUpdateSalesGroup(onCloseForm);
   const [, deleteSalesGroup]: any = useDeleteSalesGroup();
 
@@ -92,6 +114,9 @@ export function SalesGroupProvider({
         onOpenFormRelation,
         onCloseFormRelation,
         deleteSalesGroup,
+        isOpenFormExchangeRate,
+        onOpenFormExchangeRate,
+        onCloseFormExchangeRate,
       }}
     >
       {children}

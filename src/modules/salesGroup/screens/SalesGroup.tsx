@@ -20,6 +20,9 @@ import {
 } from "../salesGroup.hook";
 import { SalesGroupType } from "../salesGroup.modal";
 import useSalesGroupStore from "../salesGroupContext";
+import { Button } from "antd";
+import ExchangeRate from "../components/ExchangeRate";
+import TableSelect from "../components/ExchangeRate/TableSelect";
 const CLONE_SALES_GROUP_GEOGRAPHY_VI: any = SALES_GROUP_GEOGRAPHY_VI;
 export default function SalesGroup() {
   const {
@@ -31,6 +34,9 @@ export default function SalesGroup() {
     parentNear,
     isOpenFormRelation,
     onCloseFormRelation,
+    isOpenFormExchangeRate,
+    onOpenFormExchangeRate,
+    onCloseFormExchangeRate
   } = useSalesGroupStore();
   const [query] = useSalesGroupQueryParams();
   const [data, isLoading, actionUpdate] = useGetSalesGroups(query);
@@ -105,6 +111,16 @@ export default function SalesGroup() {
       ),
     },
     {
+      title: "Quy đổi",
+      key: "exchangeRate",
+      dataIndex: "exchangeRate",
+      width: "10%",
+      align: "center",
+      render: (_id, rc) => (
+        <Button type="link" onClick={() => onOpenFormExchangeRate()}>Nhập quy đổi</Button>
+      ),
+    },
+    {
       title: "Thao tác",
       dataIndex: "_id",
       key: "_id",
@@ -135,6 +151,7 @@ export default function SalesGroup() {
           size="small"
           pagination={false}
           bordered
+          scroll={{ x: 1500 }}
         />
       </WhiteBox>
       <ModalAnt
@@ -160,6 +177,16 @@ export default function SalesGroup() {
         width={"max-content"}
       >
         <Relationship id={id} />
+      </ModalAnt>
+      <ModalAnt
+        title="Nhập quy đổi cho từng nhóm nhà cung cấp"
+        onCancel={onCloseFormExchangeRate}
+        open={isOpenFormExchangeRate}
+        footer={null}
+        destroyOnClose
+        width={1200}
+      >
+        <ExchangeRate id={id} />
       </ModalAnt>
     </div>
   );

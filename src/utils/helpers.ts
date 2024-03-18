@@ -242,3 +242,9 @@ export const getOptions = (constantVi : any) => {
 }
 
 export const filterOptionSlug = (input:any,option:any) => StringToSlug(get(option,'label','')?.toLowerCase())?.includes(StringToSlug(input?.trim()?.toLowerCase()));
+
+export const filterAcrossAccentsByLabel = (input: any, option: any) => {
+  return (
+    removeAccents(option?.label?.toLowerCase()).indexOf(removeAccents(input.toLowerCase())) >= 0
+  );
+};
