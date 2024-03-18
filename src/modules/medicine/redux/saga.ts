@@ -10,6 +10,14 @@ function* getListMedicine({payload:query} : any) : any {
     yield put(medicineSliceAction.getListFailed(error));
   }
 }
+function* getListMedicineSearch({payload:query} : any) : any {
+  try {
+    const data = yield call(api.search,query);
+    yield put(medicineSliceAction.getListSearchSuccess(data));
+  } catch (error:any) {
+    yield put(medicineSliceAction.getListSearchFailed(error));
+  }
+}
 
 function* getByIdMedicine({payload:id} : any) : any {
   try {
@@ -49,6 +57,7 @@ function* deleteMedicine({payload : id} : any) : any {
 
 export default function* medicineSaga() {
   yield takeLatest(medicineSliceAction.getListRequest, getListMedicine);
+  yield takeLatest(medicineSliceAction.getListSearchRequest, getListMedicineSearch);
   yield takeLatest(medicineSliceAction.getByIdRequest, getByIdMedicine);
   yield takeLatest(medicineSliceAction.createRequest, createMedicine);
   yield takeLatest(medicineSliceAction.updateRequest, updateMedicine);
