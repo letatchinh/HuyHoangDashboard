@@ -35,32 +35,11 @@ import { propsType } from "../pharmacy.modal";
 import ReceiptVoucherForm from "~/modules/receiptVoucher/components/ReceiptVoucherForm";
 import { useMatchPolicy } from "~/modules/policy/policy.hook";
 import POLICIES from "~/modules/policy/policy.auth";
-
-const dataFake = [
-  {
-    id: 1,
-    code: "P01",
-    fullName: "Pharmacy 01",
-    phoneNumber: "0123456789",
-    createdAt: "2022-07-29T14:18:34.552Z",
-    address: "HCM",
-  },
-  {
-    id: 2,
-    code: "P02",
-    fullName: "Pharmacy 02",
-    phoneNumber: "0123456789",
-    createdAt: "2023-07-11T03:30:01.624Z",
-    address: "HCM",
-  },
-  {
-    id: 3,
-    code: "P03",
-    fullName: "Pharmacy 03",
-    phoneNumber: "0123456789",
-    address: "HCM",
-  },
-];
+import { Link } from "react-router-dom";
+import { PATH_APP } from "~/routes/allPath";
+import { useChangeDocumentTitle } from "~/utils/hook";
+import ExportExcelButton from "~/modules/export/component";
+import WithPermission from "~/components/common/WithPermission";
 
 const ColumnActions = ({ _id, deletePharmacy, onOpenForm }: propsType) => {
   return (
@@ -249,15 +228,29 @@ export default function Pharmacy() {
             value={keyword}
           />
         </Col>
-        <Col>
-          <Button
-            icon={<PlusCircleOutlined />}
-            type="primary"
-            onClick={() => onOpenForm()}
-          >
-            Thêm mới
-          </Button>
-        </Col>
+        <Row>
+        {/* <WithPermission permission={POLICIES.WRITE_PHARMAPROFILE}> */}
+          <Col>
+            <Button
+              icon={<PlusCircleOutlined />}
+              type="primary"
+              onClick={() => onOpenForm()}
+            >
+              Thêm mới
+            </Button>
+          </Col>
+          {/* </WithPermission> */}
+          {/* <WithPermission permission={POLICIES.DOWNLOAD_PHARMAPROFILE}> */}
+            <Col>
+                <ExportExcelButton
+                  fileName="Danh sách nhà thuốc"
+                  api="pharma-profile"
+                  exportOption="pharma"
+                  query={query}
+                />
+            </Col>
+          {/* </WithPermission> */}
+        </Row>
       </Row>
       <Space style={{ marginBottom: 20 }}>
         <Typography style={{ fontSize: 14, marginRight: 20 }}>

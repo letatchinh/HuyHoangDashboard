@@ -69,9 +69,12 @@ export default function ExportExcelButton({ size, stylesButton, query, fileName,
           default:
             break;
         };
+        console.log(a)
         const temp = BASE_URL.concat(linkUrl, a);
+        console.log(temp)
         try {
           if (a !== '') {
+            console.log('vo day')
             axios.get(temp, {
               method: 'GET',
               responseType: 'blob',
