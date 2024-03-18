@@ -45,6 +45,7 @@ import ReceiptVoucherForm from "~/modules/receiptVoucher/components/ReceiptVouch
 import { Link } from "react-router-dom";
 import { PATH_APP } from "~/routes/allPath";
 import { useChangeDocumentTitle } from "~/utils/hook";
+import ExportExcelButton from "~/modules/export/component";
 
 const ColumnActions = ({ _id, deletePharmacy, onOpenForm }: propsType) => {
   return (
@@ -279,6 +280,7 @@ export default function Pharmacy() {
             value={keyword}
           />
         </Col>
+        <Row>
         <WithPermission permission={POLICIES.WRITE_PHARMAPROFILE}>
           <Col>
             <Button
@@ -289,7 +291,18 @@ export default function Pharmacy() {
               Thêm mới
             </Button>
           </Col>
-        </WithPermission>
+          </WithPermission>
+          <WithPermission permission={POLICIES.DOWNLOAD_PHARMAPROFILE}>
+            <Col>
+                <ExportExcelButton
+                  fileName="Danh sách nhà thuốc"
+                  api="pharma-profile"
+                  exportOption="pharma"
+                  query={query}
+                />
+            </Col>
+          </WithPermission>
+        </Row>
       </Row>
       <WithPermission permission={POLICIES.UPDATE_PHARMAPROFILE}>
         <Space style={{ marginBottom: 20 }}>
