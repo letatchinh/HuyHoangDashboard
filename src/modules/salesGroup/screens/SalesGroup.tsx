@@ -1,6 +1,7 @@
 import { Button, Tag } from "antd";
 import { ColumnsType } from "antd/es/table/InternalTable";
 import { get } from "lodash";
+import { useRef, useState } from "react";
 import ModalAnt from "~/components/Antd/ModalAnt";
 import TableAnt from "~/components/Antd/TableAnt";
 import Breadcrumb from "~/components/common/Breadcrumb";
@@ -13,12 +14,14 @@ import Member from "../components/Member";
 import Relationship from "../components/Relationship";
 import SalesGroupForm from "../components/SalesGroupForm";
 import TargetSalesGroup from "../components/TargetSalesGroup";
-import { SALES_GROUP_GEOGRAPHY_COLOR, SALES_GROUP_GEOGRAPHY_VI } from "../constants";
 import {
-  useDeleteSalesGroup,
+  SALES_GROUP_GEOGRAPHY_COLOR,
+  SALES_GROUP_GEOGRAPHY_VI
+} from "../constants";
+import {
   useGetSalesGroups,
   useGetSalesGroupsSearch,
-  useSalesGroupQueryParams,
+  useSalesGroupQueryParams
 } from "../salesGroup.hook";
 import { SalesGroupType } from "../salesGroup.modal";
 import useSalesGroupStore from "../salesGroupContext";
@@ -38,11 +41,12 @@ export default function SalesGroup() {
     onOpenFormTarget,
     onCloseFormTarget,
   } = useSalesGroupStore();
+  const rowSelect = useRef();
+  const [expandedRowKeys, setExpandedRowKeys]: any = useState([]);
   const [query] = useSalesGroupQueryParams();
   const [data, isLoading, actionUpdate] = useGetSalesGroups(query);
 
   const dataSearch = useGetSalesGroupsSearch();
-  const [, deleteSalesGroup]: any = useDeleteSalesGroup();
 
   const onSearch = (keyword: any) => {
     // Get Data Filter From Redux
@@ -60,6 +64,30 @@ export default function SalesGroup() {
 
     actionUpdate(resultSearch);
   };
+
+  const onExpand = (record : any) => {
+    const idSelect: any = get(record, "_id");
+    const indexRow :any = get(record,'indexRow');
+    
+    
+      if(rowSelect.current !== indexRow && indexRow){ // Click on The Record Have Index Diff rowSelect current
+
+        setExpandedRowKeys([idSelect]);
+          rowSelect.current = indexRow;
+          return 
+      }
+        onSetRowKey(idSelect);
+  }
+  const onSetRowKey = (idSelect:any) => {
+    if (expandedRowKeys.includes(idSelect)) {
+      setExpandedRowKeys(
+        expandedRowKeys?.filter((k: any) => k !== idSelect)
+      );
+    } else {
+      setExpandedRowKeys(expandedRowKeys.concat(idSelect));
+    }
+  };
+  
   const columns: ColumnsType = [
     {
       title: "Tên",
@@ -67,12 +95,10 @@ export default function SalesGroup() {
       key: "name",
       render: (name, rc) => {
         return (
-            <p>
-              {`${name} ${
-              get(rc, "alias") ? `(${get(rc, "alias")})` : ""
-            }`}
-              <Address managementArea={get(rc, "managementArea", [])} />
-            </p>
+          <p>
+            {`${name} ${get(rc, "alias") ? `(${get(rc, "alias")})` : ""}`}
+            <Address managementArea={get(rc, "managementArea", [])} />
+          </p>
         );
       },
     },
@@ -82,7 +108,11 @@ export default function SalesGroup() {
       dataIndex: "typeArea",
       width: 140,
       align: "center",
-      render: (typeArea, rc) => <Tag color={CLONE_SALES_GROUP_GEOGRAPHY_COLOR[typeArea]}>{CLONE_SALES_GROUP_GEOGRAPHY_VI?.[typeArea]}</Tag>
+      render: (typeArea, rc) => (
+        <Tag color={CLONE_SALES_GROUP_GEOGRAPHY_COLOR[typeArea]}>
+          {CLONE_SALES_GROUP_GEOGRAPHY_VI?.[typeArea]}
+        </Tag>
+      ),
     },
     {
       title: "Chỉ tiêu",
@@ -90,7 +120,11 @@ export default function SalesGroup() {
       dataIndex: "_id",
       width: "10%",
       align: "center",
-      render: (_id, rc) => <Button size="small" onClick={() => onOpenFormTarget(_id)}>Xem chỉ tiêu</Button>
+      render: (_id, rc) => (
+        <Button size="small" onClick={() => onOpenFormTarget(_id)}>
+          Xem chỉ tiêu
+        </Button>
+      ),
     },
     {
       title: "Thành viên",
@@ -130,6 +164,24 @@ export default function SalesGroup() {
           isShowButtonAdd
         />
         <TableAnt
+          expandable={{
+            expandedRowKeys,
+            onExpand: (open, record) => {
+              onExpand(record)
+            },
+          }}
+          onRow={(record: any) => {
+            
+            return {
+              onClick: (event: any) => {                
+                const cellIndex = event.target.cellIndex ?? event.target.offsetParent.cellIndex;
+                
+                if ([0, 1].includes(cellIndex)) {
+                  onExpand(record)
+                }
+              }, // click row
+            };
+          }}
           dataSource={dataSearch?.length ? dataSearch : data}
           loading={isLoading}
           rowKey={(rc) => rc?._id}
@@ -137,6 +189,7 @@ export default function SalesGroup() {
           size="small"
           pagination={false}
           bordered
+          style={{ marginTop: 20 }}
         />
       </WhiteBox>
       <ModalAnt
@@ -169,7 +222,7 @@ export default function SalesGroup() {
         open={isOpenTarget}
         footer={null}
         destroyOnClose
-        width={'auto'}
+        width={"auto"}
         className="modalScroll"
         centered
       >
