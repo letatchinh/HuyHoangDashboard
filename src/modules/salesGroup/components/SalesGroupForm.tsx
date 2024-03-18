@@ -1,6 +1,6 @@
 import { Button, Col, Divider, Form, Input, Row, Select, TreeSelect } from "antd";
 import { get } from "lodash";
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useMemo } from "react";
 import RenderLoading from "~/components/common/RenderLoading";
 import WithPermission from "~/components/common/WithPermission";
 import GeoTreeSelect from "~/modules/geo/components/GeoTreeSelect";
@@ -17,12 +17,16 @@ const SalesGroupForm = ({
   id,
   onCancel,
   onUpdate,
-  parentNear,
-  parentNearName,
-  parentNearPath
+  parentNear : parentNearFromList,
+  parentNearName : parentNearNameFromList,
+  parentNearPath : parentNearPathFromList,
 }: propsTypeSalesGroupForm): React.JSX.Element => {
-  const [salesGroup, isLoading] = useGetSalesGroup(id);
-console.log(parentNearPath,'parentNearPath');
+  const [salesGroup, isLoading]:any = useGetSalesGroup(id);
+  const parentNear = useMemo(() => id ? get(salesGroup,'parent._id','') : parentNearFromList,[salesGroup,id,parentNearFromList]);
+  const parentNearName = useMemo(() => id ? get(salesGroup,'parent.name','') : parentNearNameFromList,[salesGroup,id,parentNearNameFromList]);
+  const parentNearPath = useMemo(() => id ? get(salesGroup, "parent.managementArea", [])?.map(
+    (area: any) => get(area, "path")
+  ) :parentNearPathFromList ,[salesGroup,id,parentNearPathFromList]);
 
   const [form] = Form.useForm();
   const [isSubmitLoading, onCreate] = useCreateSalesGroup(onCancel);
@@ -56,6 +60,7 @@ console.log(parentNearPath,'parentNearPath');
   }
   return (
     <div className="flex-column-center">
+      {parentNear ? <i>*Nhóm cha: {parentNearName}</i> : ""}
       <Divider>
         <h5 className="text-center">{id ? "Cập nhật" : "Tạo mới"} nhóm bán hàng</h5>
       </Divider>
@@ -148,7 +153,7 @@ console.log(parentNearPath,'parentNearPath');
             Huỷ
           </Button>
         </div>
-        {parentNear ? <i>*Nhóm cha: {parentNearName}</i> : ""}
+        
       </Form>
     </div>
   );
