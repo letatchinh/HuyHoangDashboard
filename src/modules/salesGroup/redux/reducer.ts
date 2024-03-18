@@ -47,7 +47,7 @@ class SalesGroupClassExtend extends InstanceModuleRedux {
       getListSuccess: (state: initStateSlice, { payload }: any) => {
         try {
           state.isLoading = false;
-          state.list = payload?.map((item: any) => {
+          state.list = payload?.map((item: any,index:any) => {
             let nameChild = get(item, "name", "") + " " + get(item, "alias", ""); // Get Name And Alias Parent
             let memberChild: string = getMember(  get(item, "salesGroupPermission", [])); // Get memberChild Parent
 
@@ -60,6 +60,7 @@ class SalesGroupClassExtend extends InstanceModuleRedux {
               ...item,
               nameChild,
               memberChild,
+              indexRow:index + 1, // 0 Boolean is False
             };
           });
         } catch (error) {
