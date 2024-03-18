@@ -1,6 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { InstanceModuleRedux } from "~/redux/instanceModuleRedux";
-
+import { initStateSlice } from "~/redux/models";
+interface cloneInitState extends initStateSlice {
+  isLoadingSearch? : boolean,
+  getListSearchFailed? : any,
+  listSearch? : any,
+  // Add cloneInitState Type Here
+ }
 class MedicineClassExtend extends InstanceModuleRedux {
   clone;
   cloneInitState;
@@ -8,6 +14,20 @@ class MedicineClassExtend extends InstanceModuleRedux {
     super('medicine');
     this.clone = {
       ...this.initReducer,
+          // Get List
+    getListSearchRequest: (state:cloneInitState) => {
+      state.isLoadingSearch = true;
+      state.getListSearchFailed = null;
+    },
+    getListSearchSuccess: (state:cloneInitState , { payload }: any) => {
+      state.isLoadingSearch = false;
+      state.listSearch = payload;
+    },
+    getListSearchFailed: (state:cloneInitState, { payload }:{payload:any}) => {
+      state.isLoadingSearch = false;
+      state.getListSearchFailed = payload;
+      
+    },
       // Want Add more reducer Here...
     }
     this.cloneInitState = {

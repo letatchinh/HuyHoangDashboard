@@ -22,7 +22,6 @@ export type addressType = {
   export type FieldType = {
     name: string;
     minSale: number;
-    targetsTDV: number;
     phoneNumber: string;
     address: addressType;
     cumulativeDiscount : cumulativeDiscountType[]
