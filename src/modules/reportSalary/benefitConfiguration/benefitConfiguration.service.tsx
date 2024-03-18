@@ -4,6 +4,7 @@ import { TypeBenefit } from "./benefitConfiguration.modal";
 import CreateKpiExClusiveProduct from "./components/CreateKpiExClusiveProduct";
 import ValueShow from "./components/ValueShow";
 import {
+  GROUP_TYPE_BENEFIT,
   GROUP_TYPE_BENEFIT_BASE,
   GROUP_TYPE_BENEFIT_KPIS,
   GROUP_TYPE_BENEFIT_OVER,
@@ -219,12 +220,15 @@ export const actionByType = ({
   actionBenefitOver,
   actionBenefitWorking,
 }: ParamsActionByType) => {
-  
+  if (GROUP_TYPE_BENEFIT_BASE.includes(typeBenefit)) {
+    actionBenefit();
+    return;
+  }
   if (GROUP_TYPE_BENEFIT_KPIS.includes(typeBenefit)) {    
     actionKpis();
     return;
   }
-  if (GROUP_TYPE_BENEFIT_BASE.includes(typeBenefit)) {
+  if (GROUP_TYPE_BENEFIT.includes(typeBenefit)) {
     actionBenefit();
     return;
   }
@@ -253,10 +257,10 @@ export const CreateConditionByType = ({
   ComponentCreateConditionWorking,
   ComponentCreateConditionBenefitBase,
 }:ParamsCreateConditionByType) : React.JSX.Element => {
-  if (TYPE_BENEFIT.BENEFIT_BASE === typeBenefit) {
+  if (GROUP_TYPE_BENEFIT_BASE.includes(typeBenefit)) {
     return ComponentCreateConditionBenefitBase
   }
-  if (GROUP_TYPE_BENEFIT_BASE.includes(typeBenefit)) {
+  if (GROUP_TYPE_BENEFIT.includes(typeBenefit)) {
     return ComponentCreateConditionBenefit
   }
   if (GROUP_TYPE_BENEFIT_KPIS.includes(typeBenefit)) {    
@@ -287,13 +291,14 @@ export const ShowConditionByType = ({
   ComponentShowConditionWorking,
   ComponentShowConditionBenefitBase,
 }:ParamsShowConditionByType) : React.JSX.Element => {
-  if (TYPE_BENEFIT.BENEFIT_BASE === typeBenefit) {
+  
+  if (GROUP_TYPE_BENEFIT_BASE.includes(typeBenefit)) {
     return ComponentShowConditionBenefitBase
   }
   if (GROUP_TYPE_BENEFIT_KPIS.includes(typeBenefit)) {    
     return ComponentShowConditionKpis
   }
-  if (GROUP_TYPE_BENEFIT_BASE.includes(typeBenefit)) {
+  if (GROUP_TYPE_BENEFIT.includes(typeBenefit)) {
     return ComponentShowConditionBenefit
   }
   if (GROUP_TYPE_BENEFIT_OVER.includes(typeBenefit)) {
