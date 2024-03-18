@@ -1,60 +1,42 @@
-import {
-  ApartmentOutlined,
-  DeleteOutlined,
-  DownCircleOutlined,
-  DownOutlined,
-  InfoCircleOutlined,
-  MenuOutlined,
-  MoreOutlined,
-  SisternodeOutlined,
-} from "@ant-design/icons";
-import { Button, Dropdown, Flex, Popconfirm, Space, Tooltip, Typography } from "antd";
+import { Button, Tag } from "antd";
 import { ColumnsType } from "antd/es/table/InternalTable";
 import { get } from "lodash";
-import { useCallback, useState } from "react";
 import ModalAnt from "~/components/Antd/ModalAnt";
 import TableAnt from "~/components/Antd/TableAnt";
 import Breadcrumb from "~/components/common/Breadcrumb";
 import SelectSearch from "~/components/common/SelectSearch/SelectSearch";
 import WhiteBox from "~/components/common/WhiteBox";
-import WithPermission from "~/components/common/WithPermission";
-import POLICIES from "~/modules/policy/policy.auth";
-import { concatAddress, StringToSlug } from "~/utils/helpers";
+import { StringToSlug } from "~/utils/helpers";
+import Action from "../components/Action";
+import Address from "../components/Address";
+import Member from "../components/Member";
+import Relationship from "../components/Relationship";
+import SalesGroupForm from "../components/SalesGroupForm";
+import TargetSalesGroup from "../components/TargetSalesGroup";
+import { SALES_GROUP_GEOGRAPHY_COLOR, SALES_GROUP_GEOGRAPHY_VI } from "../constants";
 import {
-  useSalesGroupQueryParams,
   useDeleteSalesGroup,
   useGetSalesGroups,
   useGetSalesGroupsSearch,
-  useUpdateSalesGroup,
+  useSalesGroupQueryParams,
 } from "../salesGroup.hook";
 import { SalesGroupType } from "../salesGroup.modal";
-import SalesGroupForm from "../components/SalesGroupForm";
-import AssignTeamLead from "../components/AssignTeamLead";
-import useSalesGroupStore, { SalesGroupProvider } from "../salesGroupContext";
-import Member from "../components/Member";
-import TargetSalesGroup from "../components/TargetSalesGroup";
-import { RulesLeader, RulesMember } from "../salesGroup.service";
-import { SALES_GROUP_GEOGRAPHY, SALES_GROUP_GEOGRAPHY_VI } from "../constants";
-import Relationship from "../components/Relationship";
-import { MenuProps } from "antd/lib";
-import Address from "../components/Address";
-import Action from "../components/Action";
-const RulesMemberMethod = new RulesMember();
-const RulesLeaderMethod = new RulesLeader();
+import useSalesGroupStore from "../salesGroupContext";
 const CLONE_SALES_GROUP_GEOGRAPHY_VI: any = SALES_GROUP_GEOGRAPHY_VI;
+const CLONE_SALES_GROUP_GEOGRAPHY_COLOR: any = SALES_GROUP_GEOGRAPHY_COLOR;
 export default function SalesGroup() {
   const {
-    isSubmitLoading,
     updateSalesGroup,
     isOpenForm,
     onCloseForm,
     onOpenForm,
-    onOpenFormCreateGroupFromExistGroup,
     id,
     parentNear,
     isOpenFormRelation,
     onCloseFormRelation,
-    onOpenFormRelation,
+    isOpenTarget,
+    onOpenFormTarget,
+    onCloseFormTarget,
   } = useSalesGroupStore();
   const [query] = useSalesGroupQueryParams();
   const [data, isLoading, actionUpdate] = useGetSalesGroups(query);
@@ -85,14 +67,12 @@ export default function SalesGroup() {
       key: "name",
       render: (name, rc) => {
         return (
-          <div>
-            <p>{`${name} ${
+            <p>
+              {`${name} ${
               get(rc, "alias") ? `(${get(rc, "alias")})` : ""
-            }`}</p>
-            <div style={{ marginLeft: 25 }}>
-            <Address managementArea={get(rc,'managementArea',[])}/>
-            </div>
-          </div>
+            }`}
+              <Address managementArea={get(rc, "managementArea", [])} />
+            </p>
         );
       },
     },
@@ -100,19 +80,17 @@ export default function SalesGroup() {
       title: "Loại nhóm",
       key: "typeArea",
       dataIndex: "typeArea",
-      width: 100,
+      width: 140,
       align: "center",
-      render: (typeArea, rc) => CLONE_SALES_GROUP_GEOGRAPHY_VI?.[typeArea],
+      render: (typeArea, rc) => <Tag color={CLONE_SALES_GROUP_GEOGRAPHY_COLOR[typeArea]}>{CLONE_SALES_GROUP_GEOGRAPHY_VI?.[typeArea]}</Tag>
     },
     {
       title: "Chỉ tiêu",
       key: "targets",
       dataIndex: "_id",
-      width: "20%",
+      width: "10%",
       align: "center",
-      render: (_id, rc) => (
-        <TargetSalesGroup _id={_id} targetLead={get(rc, "targetLead", 0)} />
-      ),
+      render: (_id, rc) => <Button size="small" onClick={() => onOpenFormTarget(_id)}>Xem chỉ tiêu</Button>
     },
     {
       title: "Thành viên",
@@ -134,10 +112,10 @@ export default function SalesGroup() {
       key: "_id",
       align: "center",
       fixed: "right",
-      width: "15%",
+      width: 80,
       render(_id, rc) {
-        return <Action _id={_id} rc={rc}/>
-      } 
+        return <Action _id={_id} rc={rc} />;
+      },
     },
   ];
 
@@ -184,6 +162,18 @@ export default function SalesGroup() {
         width={"max-content"}
       >
         <Relationship id={id} />
+      </ModalAnt>
+
+      <ModalAnt
+        onCancel={onCloseFormTarget}
+        open={isOpenTarget}
+        footer={null}
+        destroyOnClose
+        width={'auto'}
+        className="modalScroll"
+        centered
+      >
+        <TargetSalesGroup _id={id} />
       </ModalAnt>
     </div>
   );

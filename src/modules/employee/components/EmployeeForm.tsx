@@ -213,7 +213,7 @@ export default function EmployeeForm(props: IProps) {
             {/* <Col></Col> */}
           </Row>
         </BaseBorderBox>
-        <BaseBorderBox title={"Thông tin chức vụ"}>
+        <BaseBorderBox title={"Thông tin vị trí"}>
           <Row
             gutter={48}
             align="middle"
@@ -221,7 +221,7 @@ export default function EmployeeForm(props: IProps) {
             className="employee-form__logo-row"
           >
             <Col span={12}>
-              <FormItem label="Chức vụ" name="employeeLevel">
+              <FormItem label="Vị trí" name="employeeLevel">
                 <Select options={EMPLOYEE_LEVEL_OPTIONS} />
               </FormItem>
             </Col>

@@ -30,11 +30,9 @@ export default function Member({ _id, data,typeArea,child }: propsType): React.J
         Trưởng nhóm:{" "}
         {teamLead ? (
           <PopoverCardEmployee employee={get(teamLead, "employee", "")}>
-        <Button type="text">
-        <Typography.Text strong>
+        <Typography.Text style={{cursor : 'pointer'}} strong>
             {get(teamLead, "employee.fullName", "")}
           </Typography.Text>
-        </Button>
           </PopoverCardEmployee>
         ) : (
           "(Chưa có)"

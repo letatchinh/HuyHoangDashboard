@@ -5,11 +5,14 @@ import { useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import { clearQuerySearch, getExistProp } from "~/utils/helpers";
 import {
-  getSelectors, useFetchByParam,
-  useQueryParams
+    getSelectors,
+    useFailed, useFetchByParam,
+    useQueryParams,
+    useSubmit,
+    useSuccess
 } from "~/utils/hook";
-import { reportSupplierSliceAction } from "./redux/reducer";
-const MODULE = "reportSupplier";
+import { reportEmployeeActions } from "./redux/reducer";
+const MODULE = "reportEmployee";
 const MODULE_VI = "";
 
 const {
@@ -20,24 +23,29 @@ const {
   getByIdSelector,
   getByIdFailedSelector,
   deleteSuccessSelector,
+  deleteFailedSelector,
+  isSubmitLoadingSelector,
   createSuccessSelector,
+  createFailedSelector,
+  updateSuccessSelector,
+  updateFailedSelector,
   pagingSelector,
 } = getSelectors(MODULE);
 
-export const useReportSupplierPaging = () => useSelector(pagingSelector);
+export const useReportEmployeePaging = () => useSelector(pagingSelector);
 
-export const useGetReportSuppliers = (param:any) => {
+export const useGetReportEmployees = (param:any) => {
   return useFetchByParam({
-    action: reportSupplierSliceAction.getListRequest,
+    action: reportEmployeeActions.getListRequest,
     loadingSelector: loadingSelector,
     dataSelector: listSelector,
     failedSelector: getListFailedSelector,
     param
   });
 };
-export const useGetReportSupplier = (id: any) => {
+export const useGetReportEmployee = (id: any) => {
   return useFetchByParam({
-    action: reportSupplierSliceAction.getByIdRequest,
+    action: reportEmployeeActions.getByIdRequest,
     loadingSelector: getByIdLoadingSelector,
     dataSelector: getByIdSelector,
     failedSelector: getByIdFailedSelector,
@@ -45,14 +53,49 @@ export const useGetReportSupplier = (id: any) => {
   });
 };
 
+export const useCreateReportEmployee = (callback?: any) => {
+  useSuccess(
+    createSuccessSelector,
+    `Tạo mới ${MODULE_VI} thành công`,
+    callback
+  );
+  useFailed(createFailedSelector);
 
-export const useReportSupplierQueryParams = () => {
+  return useSubmit({
+    action: reportEmployeeActions.createRequest,
+    loadingSelector: isSubmitLoadingSelector,
+  });
+};
+
+export const useUpdateReportEmployee = (callback?: any) => {
+  useSuccess(
+    updateSuccessSelector,
+    `Cập nhật ${MODULE_VI} thành công`,
+    callback
+  );
+  useFailed(updateFailedSelector);
+
+  return useSubmit({
+    action: reportEmployeeActions.updateRequest,
+    loadingSelector: isSubmitLoadingSelector,
+  });
+};
+
+export const useDeleteReportEmployee = (callback?: any) => {
+  useSuccess(deleteSuccessSelector, `Xoá ${MODULE_VI} thành công`, callback);
+  useFailed(deleteFailedSelector);
+
+  return useSubmit({
+    action: reportEmployeeActions.deleteRequest,
+    loadingSelector: isSubmitLoadingSelector,
+  });
+};
+
+export const useReportEmployeeQueryParams = () => {
   const query = useQueryParams();
   const limit = query.get("limit") || 10;
   const page = query.get("page") || 1;
   const keyword = query.get("keyword");
-  const startDate = query.get("startDate");
-  const endDate = query.get("endDate");
   const createSuccess = useSelector(createSuccessSelector);
   const deleteSuccess = useSelector(deleteSuccessSelector);
   return useMemo(() => {
@@ -60,15 +103,13 @@ export const useReportSupplierQueryParams = () => {
       page,
       limit,
       keyword,
-      startDate,
-      endDate,
     };
     return [queryParams];
     //eslint-disable-next-line
-  }, [page, limit, keyword, createSuccess, deleteSuccess, startDate, endDate]);
+  }, [page, limit, keyword, createSuccess, deleteSuccess]);
 };
 
-export const useUpdateReportSupplierParams = (
+export const useUpdateReportEmployeeParams = (
   query: any,
   listOptionSearch?: any[]
 ) => {

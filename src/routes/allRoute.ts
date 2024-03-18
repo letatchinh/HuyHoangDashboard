@@ -10,7 +10,6 @@ import Branch from "~/pages/Dashboard/Branch";
 import StatusConfig from "~/pages/Dashboard/StatusConfig";
 import EmployeePage from "~/pages/Dashboard/Employee";
 import UserPage from "~/pages/Dashboard/User";
-import ReportSupplierPage from "~/pages/Dashboard/ReportSupplier";
 import UserGroupPage from "~/pages/Dashboard/UserGroup";
 import VouchersPage from "~/pages/Dashboard/Vouchers";
 import Unit from "~/pages/Dashboard/Unit";
@@ -38,6 +37,7 @@ import CostManagement from "~/pages/Dashboard/CostManagement";
 import SalesGroupPage from "~/pages/Dashboard/SalesGroup";
 import BaseSalaryPage from "~/pages/Dashboard/BaseSalary";
 import BenefitConfigurationPage from "~/pages/Dashboard/BenefitConfiguration";
+import ReportEmployeePage from "~/pages/Dashboard/ReportEmployee";
 export const mainRoutes :PathRouteProps[] = [
   { path: PATH_APP.main.root, Component: Homepage },
 
@@ -82,7 +82,6 @@ export const mainRoutes :PathRouteProps[] = [
   { path: PATH_APP.vouchers.root, Component: VouchersPage },
   { path: PATH_APP.vouchers.pharmacy, Component: VouchersPage },
   { path: PATH_APP.vouchers.supplier, Component: VouchersPage },
-  { path: PATH_APP.report.supplier, Component: ReportSupplierPage },
   { path: PATH_APP.configDiscount.root, Component: ConfigDiscountPage },
 
   // Pharmacy
@@ -115,6 +114,8 @@ export const mainRoutes :PathRouteProps[] = [
   { path: PATH_APP.baseSalary.root, Component: BaseSalaryPage },
   // Cấu hình Hoa hồng
   { path: PATH_APP.benefitConfiguration.root, Component: BenefitConfigurationPage },
+  // Báo cáo nhân viên
+  { path: PATH_APP.report.employee, Component: ReportEmployeePage },
 
   { path: '/', Component: Homepage },
 ]

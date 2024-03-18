@@ -126,10 +126,11 @@ const Action = ({ _id, rc }: PropsType) => {
 
   return (
     <Dropdown
+    placement="bottomLeft"
       menu={{
         items,
       }}
-      trigger={["click"]}
+      trigger={["hover"]}
     >
       <Button shape="circle" icon={<MoreOutlined />}></Button>
     </Dropdown>

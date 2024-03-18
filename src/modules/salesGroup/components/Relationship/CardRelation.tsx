@@ -33,7 +33,7 @@ export default function CardRelation({
         )}
         {member && (
           <div>
-            TDV:
+            TDV:{" "}
             <PopoverCardEmployee employee={get(member, "employee", "")}>
               {get(member, "employee.fullName", "")}
             </PopoverCardEmployee>

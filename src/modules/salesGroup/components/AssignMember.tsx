@@ -58,7 +58,7 @@ export default function AssignMember({_id,member}: propsType): React.JSX.Element
         dataIndex : "fullName",
     },
     {
-        title : "Chức vụ",
+        title : "Vị trí",
         key : "employeeLevel",
         dataIndex : "employeeLevel",
         render : (employeeLevel : any) => CLONE_EMPLOYEE_LEVEL_VI[employeeLevel]

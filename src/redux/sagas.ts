@@ -28,13 +28,14 @@ import paymentVoucher from '~/modules/paymentVoucher';
 import receiptVoucher from '~/modules/receiptVoucher';
 import lkModule from '~/modules/sale/lk';
 import productsAllModule from '~/modules/productsAll';
-import reportSupplierModule from '~/modules/report/reportSupplier';
 import freelanceContractPharmacy from '~/modules/freelanceContractPharmacy';
 import costManagement from '~/modules/costManagement';
 import orderSupplier from '~/modules/sale/orderSupplier';
 import salesGroup from '~/modules/salesGroup';
 import baseSalary from '~/modules/reportSalary/baseSalary/index';
 import benefitConfiguration from '~/modules/reportSalary/benefitConfiguration/index';
+import reportEmployee from '~/modules/report/reportEmployee/index';
+
 export default function* rootSaga() {
   yield all([
     authModule.redux.saga(),
@@ -68,12 +69,12 @@ export default function* rootSaga() {
     receiptVoucher.redux.saga(),
     lkModule.redux.saga(),
     productsAllModule.redux.saga(),
-    reportSupplierModule.redux.saga(),
     orderSupplier.redux.saga(),
     freelanceContractPharmacy.redux.saga(),
     costManagement.redux.saga(),
     salesGroup.redux.saga(),
     baseSalary.redux.saga(),
     benefitConfiguration.redux.saga(),
+    reportEmployee.redux.saga(),
   ]);
 };

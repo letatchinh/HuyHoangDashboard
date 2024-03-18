@@ -16,7 +16,6 @@ import userModule from '~/modules/user';
 import userGroupModule from '~/modules/userGroup';
 import policy from '~/modules/policy';
 import vouchers from '~/modules/vouchers';
-import reportSupplier from '~/modules/report/reportSupplier';
 import manufacturerModule from '~/modules/manufacturer';
 import productUnitModule from '~/modules/productUnit';
 import rankingModule from '~/modules/ranking';
@@ -39,6 +38,7 @@ import orderSupplier from '~/modules/sale/orderSupplier';
 import salesGroup from '~/modules/salesGroup';
 import baseSalary from '~/modules/reportSalary/baseSalary/index';
 import benefitConfiguration from '~/modules/reportSalary/benefitConfiguration/index';
+import reportEmployee from '~/modules/report/reportEmployee/index';
 const authPersistConfig = {
     key: 'auth',
     storage: localStorage,
@@ -64,7 +64,6 @@ const rootReducer = combineReducers({
     userGroup: userGroupModule.redux.reducer,
     policy: policy.redux.reducer,
     vouchers: vouchers.redux.reducer,
-    reportSupplier: reportSupplier.redux.reducer,
     productGroup:productGroupModule.redux.reducer,
     manufacturer:manufacturerModule.redux.reducer,
     productUnit:productUnitModule.redux.reducer,
@@ -89,6 +88,7 @@ const rootReducer = combineReducers({
     salesGroup: salesGroup.redux.reducer,
     baseSalary: baseSalary.redux.reducer,
     benefitConfiguration: benefitConfiguration.redux.reducer,
+    reportEmployee: reportEmployee.redux.reducer,
 
 });
 export default rootReducer

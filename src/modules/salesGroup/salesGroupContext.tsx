@@ -10,15 +10,18 @@ export type GlobalSalesGroup = {
   isSubmitLoading: boolean;
   updateSalesGroup: (p: any) => void;
   deleteSalesGroup: (p: any) => void;
-  onOpenFormCreateGroupFromExistGroup: (p:any) => void;
-  onOpenForm: (p?:any) => void;
+  onOpenFormCreateGroupFromExistGroup: (p: any) => void;
+  onOpenForm: (p?: any) => void;
   onCloseForm: () => void;
-  onOpenFormRelation: (p?:any) => void;
+  onOpenFormRelation: (p?: any) => void;
   onCloseFormRelation: () => void;
   id?: any;
   parentNear?: any;
   isOpenForm: boolean;
   isOpenFormRelation: boolean;
+  isOpenTarget: boolean;
+  onOpenFormTarget: (p?: any) => void;
+  onCloseFormTarget: () => void;
 };
 const SalesGroup = createContext<GlobalSalesGroup>({
   isSubmitLoading: false,
@@ -33,6 +36,9 @@ const SalesGroup = createContext<GlobalSalesGroup>({
   parentNear: null,
   isOpenForm: false,
   isOpenFormRelation: false,
+  isOpenTarget: false,
+  onOpenFormTarget: () => {},
+  onCloseFormTarget: () => {},
 });
 
 type SalesGroupProviderProps = {
@@ -46,7 +52,8 @@ export function SalesGroupProvider({
   const [id, setId]: any = useState();
   const [parentNear, setParentNear]: any = useState();
   const [isOpenForm, setIsOpenForm]: any = useState(false);
-
+  const [isOpenTarget, setIsOpenTarget]: any = useState(false);
+  
   // Control form
   const onOpenForm = useCallback((idSelect?: any) => {
     if (idSelect) {
@@ -62,6 +69,7 @@ export function SalesGroupProvider({
     setIsOpenForm(false);
     setId(null);
     setParentNear(null);
+    setIsOpenTarget(false);
   }, []);
 
   const onOpenFormRelation = useCallback((idSelect?: any) => {
@@ -72,6 +80,17 @@ export function SalesGroupProvider({
   }, []);
   const onCloseFormRelation = useCallback(() => {
     setIsOpenFormRelation(false);
+    setId(null);
+  }, []);
+
+  const onOpenFormTarget = useCallback((idSelect?: any) => {
+    if (idSelect) {
+      setId(idSelect);
+    }
+    setIsOpenTarget(true);
+  }, []);
+  const onCloseFormTarget = useCallback(() => {
+    setIsOpenTarget(false);
     setId(null);
   }, []);
   const [isSubmitLoading, updateSalesGroup] = useUpdateSalesGroup(onCloseForm);
@@ -92,6 +111,9 @@ export function SalesGroupProvider({
         onOpenFormRelation,
         onCloseFormRelation,
         deleteSalesGroup,
+        isOpenTarget,
+        onOpenFormTarget,
+        onCloseFormTarget,
       }}
     >
       {children}
