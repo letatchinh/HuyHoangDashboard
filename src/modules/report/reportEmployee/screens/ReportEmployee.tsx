@@ -11,13 +11,20 @@ import {
     useGetReportEmployees,
     useReportEmployeeQueryParams
 } from "../reportEmployee.hook";
+import data from './data.json'
+import { get } from "lodash";
+import { EMPLOYEE_LEVEL_VI } from "~/modules/employee/constants";
+import { Typography } from "antd";
+import { formatter } from "~/utils/helpers";
+import dayjs from "dayjs";
 type propsType = {
 
 }
+const CLONE_EMPLOYEE_LEVEL_VI : any = EMPLOYEE_LEVEL_VI;
 export default function ReportEmployee(props:propsType) : React.JSX.Element {
       const [query] = useReportEmployeeQueryParams();
     //   const [data, isLoading] = useGetReportEmployees(query);
-      const [openDetail,setOpenDetail] = useState(true);
+      const [openDetail,setOpenDetail] = useState(false);
       const [id,setId] = useState<any>();
 
       const onOpenDetail = useCallback((idSelect : any) => {
@@ -31,16 +38,40 @@ export default function ReportEmployee(props:propsType) : React.JSX.Element {
       const [, deleteReportEmployee]: any = useDeleteReportEmployee();
     
       const columns: ColumnsType = [
+        {
+          title : "Tên nhân viên",
+          dataIndex : "employee",
+          key : "employee",
+          render: (employee: any) => <span>{get(employee,'employeeNumber')} - {get(employee,'fullName')}</span>
+        },
+        {
+          title : "Vị trí",
+          dataIndex : "employee",
+          key : "employee",
+          render: (employee: any) => CLONE_EMPLOYEE_LEVEL_VI?.[employee?.employeeLevel]
+        },
+        {
+          title : "Ngày kết toán",
+          dataIndex : "createdAt",
+          key : "createdAt",
+          render: (createdAt: any) => dayjs(createdAt).format("DD/MM/YYYY")
+        },
+        {
+          title : "Lương",
+          dataIndex : "salary",
+          key : "salary",
+          render: (salary: any) => <Typography.Text strong>{formatter(salary || 0)}</Typography.Text>
+        },
       ];
     return (
         <div>
-      <Breadcrumb title={"Nhóm bán hàng"} />
+      <Breadcrumb title={"Báo cáo lương"} />
       <WhiteBox>
         <SelectSearch
           showSelect={false}
         />
         <TableAnt
-        //   dataSource={data}
+          dataSource={data}
         //   loading={isLoading}
           rowKey={(rc) => rc?._id}
           columns={columns}

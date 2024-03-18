@@ -1,0 +1,17 @@
+{
+  "employee": {
+    "fullName": "Lê Tất Chính",
+    "employeeNumber": 10010,
+    "employeeLevel": "LEADER"
+  },
+  "salary": {
+    "baseSalary": 4000000,
+    "privateBenefitSalary": 1000000,
+    "teamBenefitSalary": 1000000,
+    "kpiSalary": 500000,
+    "workingBenefitSalary": 500000,
+    "totalSalary": 7000000
+  },
+  "createdAt": "2024-03-16T01:23:44.057Z",
+  "_id": "12331232123"
+}
