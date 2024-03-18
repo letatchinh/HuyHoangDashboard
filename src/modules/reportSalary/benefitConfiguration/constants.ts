@@ -74,9 +74,9 @@ export const TYPE_BENEFIT_VI = {
   BENEFIT_TEAMLEADER_OVER: "Thưởng vượt hoa hồng cho TeamLead",
   BENEFIT_ASM_OVER: "Thưởng vượt hoa hồng cho Asm",
 
-  KPIS_TDV: "Kpis Tdv",
+  KPIS_TDV: "Kpis TDV",
   KPIS_TEAMLEADER: "Kpis TeamLead",
-  KPIS_ASM: "Kpis Asm",
+  KPIS_ASM: "Kpis ASM",
 
   BENEFIT_WORKING: "Giờ làm việc hiệu quả",
 } as const;
@@ -95,7 +95,7 @@ export const GROUP_TYPE_BENEFIT_KPIS: any[] = [
   TYPE_BENEFIT.KPIS_ASM,
 ];
 
-export const GROUP_TYPE_BENEFIT_OVER_QUANTER: any[] = [
+export const GROUP_TYPE_BENEFIT_OVER_QUARTER: any[] = [
   TYPE_BENEFIT.BENEFIT_TDV_OVER__QUANTER,
   TYPE_BENEFIT.BENEFIT_TEAMLEADER_OVER__QUANTER,
   TYPE_BENEFIT.BENEFIT_ASM_OVER__QUANTER,
@@ -112,7 +112,7 @@ export const GROUP_TYPE_BENEFIT_OVER_MONTH: any[] = [
 ];
 
 export const GROUP_TYPE_BENEFIT_OVER: any[] = [
-  ...GROUP_TYPE_BENEFIT_OVER_QUANTER,
+  ...GROUP_TYPE_BENEFIT_OVER_QUARTER,
   ...GROUP_TYPE_BENEFIT_OVER_YEAR,
   ...GROUP_TYPE_BENEFIT_OVER_MONTH,
 ];
@@ -125,6 +125,6 @@ export const TYPE_KPI = {
 
 export const TYPE_KPI_VI = {
   COVER_POS: "Độ phủ thị trường",
-  EXCLUSIVE_PRODUCT: "Sản phẩm độc quyền",
+  EXCLUSIVE_PRODUCT: "SP độc quyền",
   IDEA: "Ý kiến đóng góp",
 };
