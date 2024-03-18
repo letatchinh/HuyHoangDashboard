@@ -23,6 +23,7 @@ import moment from "moment";
 import { useCallback, useMemo, useState } from "react";
 import {
   Button,
+  Checkbox,
   Col,
   Modal,
   Popconfirm,
@@ -46,6 +47,7 @@ import { Link } from "react-router-dom";
 import { PATH_APP } from "~/routes/allPath";
 import { useChangeDocumentTitle } from "~/utils/hook";
 import ExportExcelButton from "~/modules/export/component";
+import useCheckBoxExport from "~/modules/export/export.hook";
 
 const ColumnActions = ({ _id, deletePharmacy, onOpenForm }: propsType) => {
   return (
@@ -82,6 +84,9 @@ export default function Pharmacy() {
   const [isOpenForm, setIsOpenForm] = useState(false);
   const paging = usePharmacyPaging();
   const canWriteVoucher = useMatchPolicy(POLICIES.WRITE_VOUCHER);
+  const canDownload = useMatchPolicy(POLICIES.DOWNLOAD_PHARMAPROFILE);
+  const [arrCheckBox, onChangeCheckBox] = useCheckBoxExport();
+
 
   const onOpenForm = useCallback(
     (id?: any) => {
@@ -234,6 +239,24 @@ export default function Pharmacy() {
           );
         },
       },
+        ...(
+      canDownload ? [
+        {
+          title: 'Lựa chọn',
+          key: '_id',
+          width: 80,
+          align: 'center' as any,
+          render: (item: any, record: any) =>
+          {
+            const id = record._id;
+            return (
+              <Checkbox
+                checked= {arrCheckBox.includes(id)}
+                onChange={(e)=>onChangeCheckBox(e.target.checked, id)}
+          />)}
+        },
+      ]: []
+    ),
     ],
     []
   );
@@ -299,6 +322,7 @@ export default function Pharmacy() {
                   api="pharma-profile"
                   exportOption="pharma"
                   query={query}
+                  ids={arrCheckBox}
                 />
             </Col>
           </WithPermission>
