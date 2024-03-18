@@ -283,7 +283,7 @@ export default function ProductsAll(props: TypeProps): React.JSX.Element {
           width={1500}
           destroyOnClose
         >
-          <ShowStep onChangeStep={onChangeStep} onCloseModal={onCloseModal} step={step} />
+          <ShowStep onChangeStep={onChangeStep} onCloseModal={onCloseModal} step={step} setStep = {setStep} />
         </Modal>
         <Modal
           open={isOpenFormProduct}
