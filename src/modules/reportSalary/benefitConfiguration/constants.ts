@@ -46,11 +46,15 @@ export const GROUP_TYPE_BENEFIT_EMPLOYEE_LEVEL = {
     TYPE_BENEFIT.BENEFIT_ASM_OVER__QUANTER,
     TYPE_BENEFIT.BENEFIT_ASM_OVER__YEAR,
   ],
+  BENEFIT_WORKING:[
+    TYPE_BENEFIT.BENEFIT_WORKING
+  ]
 };
 export const GROUP_TYPE_BENEFIT_EMPLOYEE_LEVEL_VI = {
     TDV : "Trình dược viên",
     TEAMLEADER : "Trưởng nhóm bán hàng",
     ASM : "Quản lý vùng",
+    BENEFIT_WORKING : "Giờ làm việc hiệu quả",
 }
 export const TYPE_BENEFIT_VI = {
   BENEFIT_TDV: "Hoa hồng TDV",
@@ -80,6 +84,8 @@ export const TYPE_BENEFIT_VI = {
 export const GROUP_TYPE_BENEFIT_BASE: any[] = [
   TYPE_BENEFIT.BENEFIT_BASE,
   TYPE_BENEFIT.BENEFIT_TDV,
+];
+export const GROUP_TYPE_BENEFIT: any[] = [
   TYPE_BENEFIT.BENEFIT_TEAMLEADER,
   TYPE_BENEFIT.BENEFIT_ASM,
 ];

@@ -22,7 +22,8 @@ export default function ConditionShow ({
   const handleOpenChange = (newOpen: boolean) => {
     setOpen(newOpen);
   };
-  const { isRanger, gte, lt } = cond;
+  
+  const { isRanger, gte, lt } = cond || {};
 
   if (isRanger) {
     return (

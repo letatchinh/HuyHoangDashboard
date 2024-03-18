@@ -12,6 +12,7 @@ import CreateConditionBenefitBase from './CreateConditionOverBtn';
 import CreateConditionOverBtn from './CreateConditionOverBtn';
 import CreateConditionWorking from './CreateConditionWorking';
 import FormCondition from './FormCondition';
+import RemoveSupplierList from './RemoveSupplierList';
 type propsType = {
     typeBenefit? : TypeBenefit | null
 };
@@ -111,7 +112,9 @@ export default function TableConfig({typeBenefit}:propsType) : React.JSX.Element
           open={openRemoveSupplier}
           onCancel={onCloseRemoveSupplier}
           footer={false}
-        ></ModalAnt>
+        >
+          <RemoveSupplierList onCancel={onCloseRemoveSupplier}/>
+        </ModalAnt>
       </WhiteBox>
     </div>
     );

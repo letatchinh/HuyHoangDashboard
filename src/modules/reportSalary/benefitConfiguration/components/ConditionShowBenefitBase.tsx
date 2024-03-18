@@ -12,7 +12,7 @@ export default function ConditionShowBenefitBase({id}:propsType) : React.JSX.Ele
     title="Xoá điều kiện"
     onConfirm={() => deleteCondition({id})}
       >
-        <Button type="text" >X_Y</Button>
+        <Button type="text" >X-Y</Button>
       </Popconfirm>
     )
 }
