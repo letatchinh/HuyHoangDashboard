@@ -1,29 +1,30 @@
 import { Button } from "antd";
 import React, { useCallback } from "react";
-import { useCreateBenefit } from "../benefitConfiguration.hook";
-import { TypeBenefit } from "../benefitConfiguration.modal";
-import { TYPE_KPI } from "../constants";
+import { TypeBenefit, TypeKpi } from "../benefitConfiguration.modal";
+import { TYPE_KPI_VI } from "../constants";
 import useBenefitConfigStore from "../store/BenefitConfigContext";
 type propsType = {
   supplierId : any,
-  typeBenefit? : TypeBenefit | null
+  typeBenefit? : TypeBenefit | null,
+  kpiType : TypeKpi
 };
-export default function CreateKpiExClusiveProduct({
+export default function CreateKpiType({
   supplierId,
   typeBenefit,
+  kpiType,
 }: propsType): React.JSX.Element {
   const {createBenefit,isSubmitLoading} = useBenefitConfigStore();
   const onCreateBenefit = useCallback(() => {
     createBenefit({
       supplierId,
       typeBenefit,
-      kpiType: TYPE_KPI.EXCLUSIVE_PRODUCT, // Default TYPE_KPI.EXCLUSIVE_PRODUCT
+      kpiType,
     });
   }, [typeBenefit,supplierId,createBenefit]);
 
   return (
     <Button loading={isSubmitLoading} onClick={onCreateBenefit} size="small" type="dashed">
-      + SP độc quyền
+      + {TYPE_KPI_VI[kpiType]}
     </Button>
   );
 }

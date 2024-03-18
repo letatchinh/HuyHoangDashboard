@@ -32,6 +32,7 @@ export default function FormValue({defaultValue,benefitId,conditionId,hide,mutat
             max={100}
             value={value}
             onChange={(v: any) => setValue(v)}
+            onPressEnter={onCreateConfig}
           />
           <Button
             loading={isSubmitLoading}

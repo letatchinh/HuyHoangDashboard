@@ -1,7 +1,7 @@
 import { Button } from "antd";
 import { find, get, keys } from "lodash";
 import { TypeBenefit } from "./benefitConfiguration.modal";
-import CreateKpiExClusiveProduct from "./components/CreateKpiExClusiveProduct";
+import CreateKpiType from "./components/CreateKpiType";
 import ValueShow from "./components/ValueShow";
 import {
   GROUP_TYPE_BENEFIT,
@@ -51,8 +51,10 @@ export const getColumnsKpis = ({
   mutate,
 }: ParamsGetColumns) => {
 
-  let children: any[] = [
-    {
+  let children: any[] = [];
+
+  if(get(col,TYPE_KPI.COVER_POS)){
+    children.push({
       title: "Độ phủ thị trường",
       dataIndex: `${TYPE_KPI.COVER_POS}__${get(
         col,
@@ -71,8 +73,21 @@ export const getColumnsKpis = ({
           />
         );
       },
-    },
-  ];
+    },)
+  }else{
+    children.push({
+      title: (
+        <CreateKpiType
+          supplierId={get(col, "supplierId")}
+          typeBenefit={get(col, "typeBenefit")}
+          kpiType={TYPE_KPI.COVER_POS}
+        />
+      ),
+      width: 120,
+      align: "center",
+      render: (value: any, record: any) => <></>,
+    });
+  }
 
   if (get(col, `${TYPE_KPI.EXCLUSIVE_PRODUCT}`)) {
     // Push Exits
@@ -106,9 +121,10 @@ export const getColumnsKpis = ({
 
     children.push({
       title: (
-        <CreateKpiExClusiveProduct
+        <CreateKpiType
           supplierId={get(col, "supplierId")}
           typeBenefit={get(col, "typeBenefit")}
+          kpiType={TYPE_KPI.EXCLUSIVE_PRODUCT}
         />
       ),
       width: 120,

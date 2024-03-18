@@ -44,7 +44,7 @@ export default function SelectSupplierNotExist() : React.JSX.Element {
     return (
         <Popover
         content={<div>
-            <Select showSearch filterOption={filterOptionSlug} loading={loading} value={idSelect} onChange={(value) => setIdSelect(value)} style={{width : 300}} options={options}/>
+            <Select popupMatchSelectWidth={false} showSearch filterOption={filterOptionSlug} loading={loading} value={idSelect} onChange={(value) => setIdSelect(value)} style={{width : 300}} options={options}/>
             <Button loading={isSubmitLoading} onClick={onCreateBenefit} className='mt-2' type='primary'>
                 Thêm
             </Button>

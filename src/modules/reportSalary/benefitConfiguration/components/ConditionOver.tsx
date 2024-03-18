@@ -8,7 +8,6 @@ type propsType = {
 export default function ConditionOver({cond,id}:propsType) : React.JSX.Element {
     const {over} = cond || {};
     const [,deleteCondition] = useDeleteCondition();
-
     const time :string= useMemo(() => {
         let t = '';
         switch (over) {
