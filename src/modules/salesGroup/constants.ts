@@ -6,7 +6,7 @@ export const SALES_GROUP_GEOGRAPHY = {
 export const SALES_GROUP_GEOGRAPHY_VI = {
     REGION: 'Vùng',
     GROUP: 'Nhóm',
-    ZONE : 'Nhóm cá nhân',
+    ZONE : 'Cá nhân',
 } as any;
 export const SALES_GROUP_GEOGRAPHY_COLOR = {
     REGION: 'orange',
