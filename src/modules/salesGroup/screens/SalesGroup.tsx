@@ -45,7 +45,8 @@ export default function SalesGroup() {
   const [expandedRowKeys, setExpandedRowKeys]: any = useState([]);
   const [query] = useSalesGroupQueryParams();
   const [data, isLoading, actionUpdate] = useGetSalesGroups(query);
-
+  console.log(data,'data');
+  
   const dataSearch = useGetSalesGroupsSearch();
 
   const onSearch = (keyword: any) => {
@@ -93,12 +94,21 @@ export default function SalesGroup() {
       title: "Tên",
       dataIndex: "name",
       key: "name",
+      onCell : (data,index) => ({
+        style : {
+          borderTop : index === 0 ? "1px solid " + get(data,'color') : "unset",
+          borderBottom : '2px solid ' + get(data,'color'),
+          borderLeft : '2px solid ' + get(data,'color'),
+          borderRight : '2px solid ' + get(data,'color'),
+          boxSizing : 'border-box' 
+        }
+      }),
       render: (name, rc) => {
         return (
-          <p>
+          <div>
             {`${name} ${get(rc, "alias") ? `(${get(rc, "alias")})` : ""}`}
             <Address managementArea={get(rc, "managementArea", [])} />
-          </p>
+          </div>
         );
       },
     },

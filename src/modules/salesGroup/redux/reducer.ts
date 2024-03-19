@@ -8,8 +8,17 @@ function getMember(listMember: any[]): string {
     memberName += " " + get(mem, "employee.fullName", "");
   });
   return memberName;
-}
-function getDataFromChild(
+};
+
+const colorLevel : any = {
+  1 : 'orange',
+  2 : '#91caff', // blue
+  3 : '#d3adf7', // Purple
+  4 : '#87d068',
+  5 : 'black',
+};
+
+function getDataFromDeeplyChild(
   children: any[],
   nameChild: string,
   memberChild: string
@@ -23,11 +32,40 @@ function getDataFromChild(
 
       // Replay Function if Child Exist
       if (child?.children?.length) {
-        getDataFromChild(child.children, nameChild, memberChild); // Pass Next Child to the function
+        getDataFromDeeplyChild(child.children, nameChild, memberChild); // Pass Next Child to the function
       }
     });
   }
 }
+export function getRandomColor() {
+  var letters = '0123456789ABCDEF';
+  var color = '#';
+  for (var i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+  }
+  return color;
+}
+function setDataForDeeplyChild(children: any[],levelOfColor : any){
+  if (children?.length) {
+    return children.map((child: any) => {
+      // Replay Function if Child Exist
+      let childReturn : any;
+
+      if (child?.children?.length) {
+        childReturn = setDataForDeeplyChild(child.children,levelOfColor + 1); // Pass Next Child to the function
+      };
+
+      // set Data From Child
+        return {
+          ...child,
+          color : colorLevel?.[levelOfColor] ?? getRandomColor(), // Set Color For Child
+          children : childReturn
+        };;
+      /////
+    });
+  }
+}
+
 interface cloneInitState extends initStateSlice {
   // Add cloneInitState Type Here
   listTeamLead?: any;
@@ -46,21 +84,27 @@ class SalesGroupClassExtend extends InstanceModuleRedux {
       ...this.initReducer,
       getListSuccess: (state: initStateSlice, { payload }: any) => {
         try {
+
           state.isLoading = false;
           state.list = payload?.map((item: any,index:any) => {
             let nameChild = get(item, "name", "") + " " + get(item, "alias", ""); // Get Name And Alias Parent
             let memberChild: string = getMember(  get(item, "salesGroupPermission", [])); // Get memberChild Parent
 
-            getDataFromChild(
+            getDataFromDeeplyChild(
               get(item, "children", []),
               nameChild, // Get Name And Alias From Child
               memberChild, // Get Member Child
             ); // Call Current Children
+            
+            const children = setDataForDeeplyChild(get(item, "children", []),2);
+
             return {
               ...item,
               nameChild,
               memberChild,
               indexRow:index + 1, // 0 Boolean is False
+              children,
+              color : 'orange'
             };
           });
         } catch (error) {
