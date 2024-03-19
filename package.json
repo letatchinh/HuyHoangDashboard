@@ -47,7 +47,6 @@
     "react-doc-viewer": "^0.1.5",
     "react-dom": "18.2.0",
     "react-i18next": "14.0.0",
-    "react-infinite-scroll-component": "^6.1.0",
     "react-mentions": "^4.4.10",
     "react-organizational-chart": "^2.2.1",
     "react-redux": "9.0.4",

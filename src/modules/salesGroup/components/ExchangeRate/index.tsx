@@ -1,12 +1,12 @@
-import React from 'react';
-import ListExchange from './ListExchange';
+import React from "react";
+import ListExchange from "./ListExchange";
 type propsType = {
-  id: any
+  id: any;
 };
-export default function ExchangeRate(props:propsType) : React.JSX.Element {
+export default function ExchangeRate(props: propsType): React.JSX.Element {
   return (
     <div>
-      <ListExchange/>
+      <ListExchange />
     </div>
-  )
+  );
 }

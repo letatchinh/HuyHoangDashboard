@@ -21,7 +21,10 @@ export type GlobalSalesGroup = {
   isOpenFormRelation: boolean;
   isOpenFormExchangeRate: boolean;
   onCloseFormExchangeRate: () => void;
-  onOpenFormExchangeRate: () => void;
+  onOpenFormExchangeRate: (value?: any) => void;
+  setParentNear: any;
+  groupInfo: any,
+  setGroupInfo: any
 };
 const SalesGroup = createContext<GlobalSalesGroup>({
   isSubmitLoading: false,
@@ -39,6 +42,9 @@ const SalesGroup = createContext<GlobalSalesGroup>({
   isOpenFormExchangeRate: false,
   onCloseFormExchangeRate: () => { },
   onOpenFormExchangeRate: () => { },
+  setParentNear: () => { },
+  groupInfo: null,
+  setGroupInfo: () => { },
 });
 
 type SalesGroupProviderProps = {
@@ -53,6 +59,7 @@ export function SalesGroupProvider({
   const [parentNear, setParentNear]: any = useState();
   const [isOpenForm, setIsOpenForm]: any = useState(false);
   const [isOpenFormExchangeRate, setIsOpenFormExchangeRate]: any = useState(false);
+  const [groupInfo, setGroupInfo]: any = useState();
 
   // Control form
   const onOpenForm = useCallback((idSelect?: any) => {
@@ -117,6 +124,9 @@ export function SalesGroupProvider({
         isOpenFormExchangeRate,
         onOpenFormExchangeRate,
         onCloseFormExchangeRate,
+        setParentNear,
+        groupInfo,
+        setGroupInfo
       }}
     >
       {children}

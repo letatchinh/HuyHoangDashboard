@@ -1,62 +1,76 @@
-import { Button, Divider, Form, List, Skeleton,FormInstance } from "antd";
+import { Button, Divider, Form, List, Skeleton, FormInstance, Row } from "antd";
 import React, { useEffect, useState } from "react";
-import InfiniteScroll from "react-infinite-scroll-component";
 import SelectExchange from "./SelectExchange";
 import { PlusOutlined } from "@ant-design/icons";
+import useSalesGroupStore from "../../salesGroupContext";
+import { get, omit } from "lodash";
+import { useFetchState } from "~/utils/helpers";
+import apis from "~/modules/supplier/supplier.api";
 
 type propsType = {};
-const dataDefault = [
-  {
-    supplierAId: '65f65e9c81913f41f18db1f1',
-    exchangeRateA: 1,
-    exchangeRateB: 2,
-    supplierBId: '65f560a04e7e84b81e6de9ab',
-    id: '1'
-  },
-  {
-    supplierAId: '65f65e9c81913f41f18db1f1',
-    exchangeRateA: 1,
-    exchangeRateB: 2,
-    supplierBId: '65f560a04e7e84b81e6de9ab',
-    id: '2'
-  },
-]
-interface DataType {
+
+export interface DataType {
   key: React.Key;
   supplierAId: string;
   exchangeRateA: number;
   exchangeRateB: number;
   supplierBId: string;
-  _id: string;
-};
+}
 export default function ListExchange(props: propsType): React.JSX.Element {
+  const {
+    id,
+    onCloseFormExchangeRate,
+    updateSalesGroup,
+    parentNear,
+    groupInfo,
+  } = useSalesGroupStore();
   const [dataSource, setDataSource] = useState<DataType[]>([]);
   const [form] = Form.useForm();
-
   const [count, setCount] = useState(0);
 
-  //Handle 
+  const [suppliers, isLoading] = useFetchState({
+    api: apis.getAllPublic,
+    useDocs: false,
+  });
 
-  const save = async () => {
-    try {
-      const values = await form?.validateFields();
-      console.log(values,'values')
-      // handleSave({ ...record, ...values });
-    } catch (errInfo) {
-      console.log('Save failed:', errInfo);
+  //Fetch
+
+  useEffect(() => {
+    const mapData = (data: any[]) => {
+      const res = data?.map((item: any, index: number) => ({
+        key: index,
+        exchangeRateA: item?.exchangeRateA,
+        exchangeRateB: item?.exchangeRateB,
+        supplierAId: item?.supplierAId,
+        supplierBId: item?.supplierBId,
+      }));
+      setCount(res?.length);
+      return res;
+    };
+    if (groupInfo?.exchangeRateOverride) {
+      return setDataSource(mapData(groupInfo?.exchangeRateOverride));
+    } else if (parentNear) {
+      return setDataSource(parentNear?.exchangeRateOverride);
+    } else {
+      return setDataSource([]);
     }
-  };
+  }, [groupInfo]);
+
+  //Handle
 
   const handleAdd = () => {
-    const newData: DataType = {
-      key: count,
-      supplierAId: '',
+    const data = suppliers?.map((item: any) => ({
+      label: get(item, "name"),
+      value: get(item, "_id"),
+      disabled: false,
+    }));
+    const defaultData: any = {
+      supplierAId: data[0]?.value,
+      supplierBId: data[1]?.value,
       exchangeRateA: 1,
       exchangeRateB: 1,
-      supplierBId: '',
-      _id: ''
     };
-    setDataSource([...dataSource, newData]);
+    setDataSource([...dataSource, defaultData]);
     setCount(count + 1);
   };
   const handleDelete = (key: any) => {
@@ -74,38 +88,57 @@ export default function ListExchange(props: propsType): React.JSX.Element {
     });
     setDataSource(newData);
   };
-
-  useEffect(() => {
-    if (!dataSource?.length ){ 
-      handleAdd();
-    };
-  }, [dataSource]);
+  const onSubmit = () => {
+    try {
+      const newDataSource = dataSource?.map((item: any) => ({
+        ...omit(item, "key"),
+      }));
+      const data = {
+        exchangeRateOverride: [...newDataSource],
+        _id: id,
+      };
+      updateSalesGroup(data);
+      onCloseFormExchangeRate();
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
-    <div style={{width : '100%', padding : 20}}>
-      <div
-        style={{display : 'flex',justifyContent : 'flex-end'}}
-      >
-        <Button
-          icon={<PlusOutlined />}
-          onClick={() => handleAdd()}
-        > Thêm hàng</Button>
+    <div style={{ width: "100%", padding: 20 }}>
+      <div style={{ display: "flex", justifyContent: "flex-end" }}>
+        <Button icon={<PlusOutlined />} onClick={() => handleAdd()}>
+          {" "}
+          Thêm hàng
+        </Button>
       </div>
       <List
         dataSource={dataSource}
         renderItem={(item: any, index: any) => {
-          return(
-          <List.Item key={item.key}>
-            <SelectExchange 
-              index={index} 
-              value={item}
-              handleDelete={handleDelete}
-                save={save}
+          return (
+            <List.Item key={item.key}>
+              <SelectExchange
+                index={index}
+                value={item}
+                handleDelete={handleDelete}
+                onSave={handleSave}
                 form={form}
-            />
-          </List.Item>
-        )}}
+                setDataSource={setDataSource}
+                dataSource={dataSource}
+                suppliers={suppliers}
+              />
+            </List.Item>
+          );
+        }}
       />
+      <Row gutter={10} justify={"end"}>
+        <Button style={{ marginRight: 10 }} onClick={onCloseFormExchangeRate}>
+          Huỷ
+        </Button>
+        <Button type="primary" onClick={onSubmit}>
+          Cập nhật
+        </Button>
+      </Row>
     </div>
   );
 }

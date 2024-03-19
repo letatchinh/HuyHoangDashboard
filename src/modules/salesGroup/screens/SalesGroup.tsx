@@ -36,7 +36,9 @@ export default function SalesGroup() {
     onCloseFormRelation,
     isOpenFormExchangeRate,
     onOpenFormExchangeRate,
-    onCloseFormExchangeRate
+    onCloseFormExchangeRate,
+    setParentNear,
+    setGroupInfo
   } = useSalesGroupStore();
   const [query] = useSalesGroupQueryParams();
   const [data, isLoading, actionUpdate] = useGetSalesGroups(query);
@@ -116,8 +118,12 @@ export default function SalesGroup() {
       dataIndex: "exchangeRate",
       width: "10%",
       align: "center",
-      render: (_id, rc) => (
-        <Button type="link" onClick={() => onOpenFormExchangeRate()}>Nhập quy đổi</Button>
+      render: (_id, rc: any) => (
+        <Button type="link" onClick={() => {
+          onOpenFormExchangeRate(rc?._id);
+          setParentNear(rc?.parent);
+          setGroupInfo(rc);
+        }}>Nhập quy đổi</Button>
       ),
     },
     {
