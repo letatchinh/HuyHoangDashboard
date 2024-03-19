@@ -19,7 +19,7 @@ type propsType = {
 const CLONE_TYPE_BENEFIT_VI : any = TYPE_BENEFIT_VI;
 export default function TableConfig({typeBenefit}:propsType) : React.JSX.Element {
   const {isLoading,mutate,WIDTH_ITEM} = useBenefitConfigStore();
-  const ref : any = useRef();
+  // const ref : any = useRef();
     // Condition
     const [openCondition,setOpenCondition] = useState(false);
     const onOpenCondition = useCallback(() => {
@@ -40,11 +40,11 @@ export default function TableConfig({typeBenefit}:propsType) : React.JSX.Element
     const columns :any[]= useGetColumns();
     const dataSource : any[] = useGetDataSource();
     
-    useEffect(() => {
-      ref?.current?.scrollIntoView({ behavior: "smooth", block: "end", inline: "nearest" });
-    },[typeBenefit]);
+    // useEffect(() => {
+    //   ref?.current?.scrollIntoView({ behavior: "smooth", block: "end", inline: "nearest" });
+    // },[typeBenefit]);
     return (
-    <div ref={ref}>
+    <div>
         <WhiteBox>
         <Flex gap={10}>
           <CreateConditionByType
