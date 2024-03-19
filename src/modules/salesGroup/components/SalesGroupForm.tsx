@@ -26,7 +26,7 @@ const SalesGroupForm = ({
   const parentNearName = useMemo(() => id ? get(salesGroup,'parent.name','') : parentNearNameFromList,[salesGroup,id,parentNearNameFromList]);
   const parentNearPath = useMemo(() => id ? get(salesGroup, "parent.managementArea", [])?.map(
     (area: any) => get(area, "path")
-  ) :parentNearPathFromList ,[salesGroup,id,parentNearPathFromList]);
+  ) : parentNearPathFromList ,[salesGroup,id,parentNearPathFromList]);
 
   const [form] = Form.useForm();
   const [isSubmitLoading, onCreate] = useCreateSalesGroup(onCancel);
@@ -120,7 +120,7 @@ const SalesGroupForm = ({
                   treeCheckable={true}
                   treeDefaultExpandedKeys={['1', '2', '3']}
                   checkablePositions={!parentNearPath ? [RELATIVE_POSITION.IS_CHILD, RELATIVE_POSITION.IS_EQUAL] : [RELATIVE_POSITION.IS_CHILD]}
-                  enabledValues={parentNearPath}
+                  enabledValues={parentNearPath?.length ? parentNearPath : null}
                 />
               </Form.Item>
             </Col>
