@@ -174,7 +174,7 @@ export default function SalesGroup() {
             
             return {
               onClick: (event: any) => {                
-                const cellIndex = event.target.cellIndex ?? event.target.offsetParent.cellIndex;
+                const cellIndex = event?.target?.cellIndex ?? event?.target?.offsetParent?.cellIndex;
                 
                 if ([0, 1].includes(cellIndex)) {
                   onExpand(record)
