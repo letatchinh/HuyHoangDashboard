@@ -22,6 +22,12 @@ export type GlobalSalesGroup = {
   isOpenTarget: boolean;
   onOpenFormTarget: (p?: any) => void;
   onCloseFormTarget: () => void;
+  isOpenFormExchangeRate: boolean;
+  onCloseFormExchangeRate: () => void;
+  onOpenFormExchangeRate: (value?: any) => void;
+  setParentNear: any;
+  groupInfo: any,
+  setGroupInfo: any
 };
 const SalesGroup = createContext<GlobalSalesGroup>({
   isSubmitLoading: false,
@@ -39,6 +45,12 @@ const SalesGroup = createContext<GlobalSalesGroup>({
   isOpenTarget: false,
   onOpenFormTarget: () => {},
   onCloseFormTarget: () => {},
+  isOpenFormExchangeRate: false,
+  onCloseFormExchangeRate: () => { },
+  onOpenFormExchangeRate: () => { },
+  setParentNear: () => { },
+  groupInfo: null,
+  setGroupInfo: () => { },
 });
 
 type SalesGroupProviderProps = {
@@ -54,6 +66,9 @@ export function SalesGroupProvider({
   const [isOpenForm, setIsOpenForm]: any = useState(false);
   const [isOpenTarget, setIsOpenTarget]: any = useState(false);
   
+  const [isOpenFormExchangeRate, setIsOpenFormExchangeRate]: any = useState(false);
+  const [groupInfo, setGroupInfo]: any = useState();
+
   // Control form
   const onOpenForm = useCallback((idSelect?: any) => {
     if (idSelect) {
@@ -61,6 +76,7 @@ export function SalesGroupProvider({
     }
     setIsOpenForm(true);
   }, []);
+
   const onOpenFormCreateGroupFromExistGroup = useCallback((data?: any) => {
     setParentNear(data);
     setIsOpenForm(true);
@@ -93,6 +109,19 @@ export function SalesGroupProvider({
     setIsOpenTarget(false);
     setId(null);
   }, []);
+  const onOpenFormExchangeRate = useCallback((idSelect?: any) => {
+    if (idSelect) {
+      setId(idSelect);
+    }
+    setIsOpenFormExchangeRate(true);
+  }, []);
+
+  const onCloseFormExchangeRate = useCallback(() => {
+    setIsOpenFormExchangeRate(false);
+    setId(null);
+    setParentNear(null);
+  }, []);
+
   const [isSubmitLoading, updateSalesGroup] = useUpdateSalesGroup(onCloseForm);
   const [, deleteSalesGroup]: any = useDeleteSalesGroup();
 
@@ -114,6 +143,12 @@ export function SalesGroupProvider({
         isOpenTarget,
         onOpenFormTarget,
         onCloseFormTarget,
+        isOpenFormExchangeRate,
+        onOpenFormExchangeRate,
+        onCloseFormExchangeRate,
+        setParentNear,
+        groupInfo,
+        setGroupInfo
       }}
     >
       {children}
