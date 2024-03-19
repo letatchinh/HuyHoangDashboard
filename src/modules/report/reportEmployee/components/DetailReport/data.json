@@ -5,6 +5,7 @@
     "employeeNumber": 10010,
     "employeeLevel": "LEADER"
   },
+  "daysWorking" : 25,
   "salary": {
     "base": 4000000,
     "benefit": 1000000,
@@ -38,8 +39,106 @@
     ],
     "bonus" : {
       "overMonth" : [
-        
+        {
+          "rateBenefit" : 0.5,
+          "supplierId" : "65f65e5981913f41f18db1b1",
+          "supplierName" : "Vitatree",
+          "value" : 240000
+        },
+        {
+          "rateBenefit" : 0.5,
+          "supplierId" : "65f65e5981913f41f18db1b1",
+          "supplierName" : "Vitatree2",
+          "value" : 240000
+        }
+      ],
+      "overQuarter" : [
+        {
+          "rateBenefit" : 0.5,
+          "supplierId" : "65f65e5981913f41f18db1b1",
+          "supplierName" : "Vitatree",
+          "value" : 240000
+        },
+        {
+          "rateBenefit" : 0.5,
+          "supplierId" : "65f65e5981913f41f18db1b1",
+          "supplierName" : "Vitatree2",
+          "value" : 240000
+        }
+      ],
+      "overYear" : [
+        {
+          "rateBenefit" : 0.5,
+          "supplierId" : "65f65e5981913f41f18db1b1",
+          "supplierName" : "Vitatree",
+          "value" : 240000
+        },
+        {
+          "rateBenefit" : 0.5,
+          "supplierId" : "65f65e5981913f41f18db1b1",
+          "supplierName" : "Vitatree2",
+          "value" : 240000
+        }
+      ],
+      "workingBenefit":   [
+        {
+          "rateBenefit" : 0.5,
+          "supplierId" : "65f65e5981913f41f18db1b1",
+          "supplierName" : "Vitatree",
+          "value" : 240000
+        },
+        {
+          "rateBenefit" : 0.5,
+          "supplierId" : "65f65e5981913f41f18db1b1",
+          "supplierName" : "Vitatree2",
+          "value" : 240000
+        }
+      ],
+      "kpi" : {
+        "cover_pos" : [
+          {
+            "rateBenefit" : 0.5,
+            "supplierId" : "65f65e5981913f41f18db1b1",
+            "supplierName" : "Vitatree",
+            "value" : 240000
+          },
+          {
+            "rateBenefit" : 0.5,
+            "supplierId" : "65f65e5981913f41f18db1b1",
+            "supplierName" : "Vitatree2",
+            "value" : 240000
+          }
+        ],
+        "exclusive_product" : [
+          {
+            "rateBenefit" : 0.5,
+            "supplierId" : "65f65e5981913f41f18db1b1",
+            "supplierName" : "Vitatree",
+            "value" : 240000
+          },
+          {
+            "rateBenefit" : 0.5,
+            "supplierId" : "65f65e5981913f41f18db1b1",
+            "supplierName" : "Vitatree2",
+            "value" : 240000
+          }
+        ]
+      },
+      "targetsLeader" : [
+        {
+          "rateBenefit" : 0.5,
+          "supplierId" : "65f65e5981913f41f18db1b1",
+          "supplierName" : "Vitatree",
+          "value" : 240000
+        },
+        {
+          "rateBenefit" : 0.5,
+          "supplierId" : "65f65e5981913f41f18db1b1",
+          "supplierName" : "Vitatree2",
+          "value" : 240000
+        }
       ]
+
     }
   },
   "salesGroupsOfRulesLeader": {
