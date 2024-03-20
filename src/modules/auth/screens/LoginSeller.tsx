@@ -1,7 +1,7 @@
 import { Button, Form, Input, Space } from "antd";
 import { omit } from "lodash";
 import { useEffect } from "react";
-import { Link, redirect, useLocation, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import logoLight from "~/assets/images/logo-light.png";
 import WhiteBox from "~/components/common/WhiteBox";
 import AuthModule from "~/modules/auth";
@@ -13,16 +13,16 @@ type FieldType = {
   password: string;
   remember?: string;
 };
-export default function Login() {
+export default function LoginSeller() {
   const [isLoading, onLogin] = useLogin();
   const token = AuthModule.hook.useToken();
   const navigate = useNavigate();
   useEffect(() => {
     if (token) {
       navigate(PATH_APP.main.root);
-    }else {
-       navigate(PATH_APP.auth.login) ;
-    };
+    } else {
+      navigate(PATH_APP.auth.loginSeller);
+    }
   }, [token, navigate]);
   const onFinish = (values: any) => {
     onLogin(omit(values, ["remember"]));
@@ -64,13 +64,6 @@ export default function Login() {
             <Input.Password />
           </Form.Item>
 
-          {/* <Form.Item<FieldType>
-            name="remember"
-            valuePropName="checked"
-          >
-            <Checkbox>Ghi nhớ đăng nhập</Checkbox>
-          </Form.Item> */}
-
           <Form.Item>
             <Button
               loading={isLoading}
@@ -84,8 +77,8 @@ export default function Login() {
             </Button>
           </Form.Item>
           <Space style={{ width: "100%" , marginTop: "10px", display: "flex", justifyContent: "center"}}>
-            <span>Bạn là người bán hàng?</span>
-            <Button onClick={() => navigate(PATH_APP.auth.loginSeller)} target="_blank" type="link">Đăng nhập tại đây</Button>
+            <span>Bạn là người quản lý?</span>
+            <Button onClick={() => navigate(PATH_APP.auth.login)} target="_blank" type = 'link'>Đăng nhập tại đây</Button>
           </Space>
         </Form>
       </WhiteBox>

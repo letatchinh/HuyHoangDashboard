@@ -11,6 +11,9 @@ import BaseBorderBox from "~/components/common/BaseBorderBox/index";
 import { EMPLOYEE_LEVEL_OPTIONS } from "../constants";
 import AreaSelect from "~/components/common/AreaSelect/index";
 import { OPTION_AREA } from "~/constants/defaultValue";
+import Account from "~/components/common/Account";
+import useNotificationStore from "~/store/NotificationContext";
+import apis from "~/modules/user/user.api";
 
 const { Option } = Select;
 
@@ -33,6 +36,8 @@ export default function EmployeeForm(props: IProps) {
   const [form] = Form.useForm();
   const { id, handleCloseModal,  handleUpdate,handleCreate, isSubmitLoading} = props;
   const [imageUrl, setImageUrl] = useState<string>();
+
+  const [loadingValidateUsername, setLoadingValidateUsername] = useState<boolean>(false);
   useResetState(employeeSliceAction.resetAction);
   //address
   const [cityCode, setCityCode] = useState(null);
@@ -40,6 +45,7 @@ export default function EmployeeForm(props: IProps) {
   // hook
 
   const [employee, isLoading] = useGetEmployee(id);
+  const {onNotify}  = useNotificationStore();
   
   useEffect(() => {
     if (employee) {
@@ -93,6 +99,22 @@ export default function EmployeeForm(props: IProps) {
             wardId: null
           }
         });
+      };
+    };
+  };
+
+  const onFocusOutFullName = async () => {
+    const fullName = form.getFieldValue("fullName");
+    if (!id && fullName) {
+      // Only Create
+      try {
+        setLoadingValidateUsername(true);
+        const username = await apis.validateUsername({ fullName: fullName?.trim()});
+        form.setFieldsValue(username);
+        setLoadingValidateUsername(false);
+      } catch (error) {
+        setLoadingValidateUsername(false);
+        onNotify?.error("Lỗi khi lấy dữ liệu từ máy chủ");
       };
     };
   };
@@ -153,7 +175,7 @@ export default function EmployeeForm(props: IProps) {
                       },
                     ]}
                   >
-                    {isLoading ? <Skeleton.Input active /> : <Input />}
+                    {isLoading ? <Skeleton.Input active /> : <Input onBlur={onFocusOutFullName} />}
                   </FormItem>
                 </Col>
               </Row>
@@ -232,6 +254,7 @@ export default function EmployeeForm(props: IProps) {
             </Col>
           </Row>
         </BaseBorderBox>
+        <Account />
         <Row gutter={10} align="middle" justify={"center"}>
           <Col span={2}>
             <Button onClick={handleCloseModal}>Huỷ</Button>

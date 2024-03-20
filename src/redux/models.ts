@@ -37,6 +37,7 @@ export type initStateSlice<T=any> = {
     statusConfig:'statusConfig',
     configDiscount: 'configDiscount',
     employee:'employee',
+    employeeGroup:'employeeGroup',
     user: 'user',
     userGroup: 'userGroup',
     policy: 'policy',

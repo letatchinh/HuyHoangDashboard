@@ -38,6 +38,7 @@ import SalesGroupPage from "~/pages/Dashboard/SalesGroup";
 import BaseSalaryPage from "~/pages/Dashboard/BaseSalary";
 import BenefitConfigurationPage from "~/pages/Dashboard/BenefitConfiguration";
 import ReportEmployeePage from "~/pages/Dashboard/ReportEmployee";
+// import EmployeeGroupPage from "~/pages/Dashboard/EmployeeGroup";
 export const mainRoutes :PathRouteProps[] = [
   { path: PATH_APP.main.root, Component: Homepage },
 
@@ -74,7 +75,8 @@ export const mainRoutes :PathRouteProps[] = [
   // Employee
   { path: PATH_APP.todoList.workBoard, Component: WorkBoardPage },
   { path: PATH_APP.employee.root, Component: EmployeePage },
-
+  // { path: PATH_APP.employee.employeeGroup, Component: EmployeeGroupPage },
+  
   // User
   { path: PATH_APP.user.root, Component: UserPage },
 
@@ -122,5 +124,6 @@ export const mainRoutes :PathRouteProps[] = [
 
 export const authRoutes : PathRouteProps[] = [
     { path: '/login', Component: Auth.page.login },
+    { path: '/login-seller', Component: Auth.page.loginSeller },
   ];
 

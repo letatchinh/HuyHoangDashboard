@@ -27,6 +27,10 @@ import WithPermission from "~/components/common/WithPermission";
 import ExportExcelButton from "~/modules/export/component";
 import useCheckBoxExport from "~/modules/export/export.hook";
 import { useChangeDocumentTitle } from "~/utils/hook";
+
+interface Props {
+  currentTab: any;
+};
 interface ColumnActionProps {
   _id: string;
   deleteEmpolyee?: any;
@@ -67,7 +71,7 @@ const ColumnActions = ({
   );
 };
 
-export default function Employee() {
+export default function Employee({currentTab}: Props) {
   useResetStateEmployee();
   const { t }: any = useTranslate();
   //State
@@ -172,10 +176,10 @@ export default function Employee() {
     
   ];
 
-useChangeDocumentTitle("Danh sách nhân viên")
+  useChangeDocumentTitle("Danh sách nhân viên");
   return (
     <div>
-      <Breadcrumb title={t("Quản lý nhân viên")} />
+      {/* <Breadcrumb title={t("Quản lý nhân viên")} /> */}
       <WhiteBox>
         <SelectSearch
           showSelect={false}
