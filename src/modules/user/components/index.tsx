@@ -22,6 +22,7 @@ import { get } from "lodash";
 import { useDispatch } from "react-redux";
 import WithOrPermission from "~/components/common/WithOrPermission";
 import { useMatchPolicy } from "~/modules/policy/policy.hook";
+import { useChangeDocumentTitle } from "~/utils/hook";
 interface UserProps {
   currentTab: string | undefined;
 }
@@ -111,6 +112,8 @@ const UserEmployee = ({ currentTab }: UserProps) => {
   useEffect(() => {
   setOptions(groups?.map((group: any) => ({ label: group?.name, value: group?._id }))); 
   }, [groups]);
+
+  useChangeDocumentTitle("Quản lý người dùng")
 
   const columns: ColumnsType = [
     {

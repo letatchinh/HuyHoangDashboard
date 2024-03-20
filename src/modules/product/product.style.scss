@@ -1,0 +1,44 @@
+#medicine-autocomple-container {
+    .ant-select-dropdown {
+      top: -20px !important;
+    }
+  
+    .ant-table {
+      overflow-y: auto;
+      max-width: 880px;
+      max-height: 700px;
+    }
+  }
+  .right{
+    &--parent{
+      position: relative;
+      width: 90%!important;
+    }
+    &--child {
+      position: absolute;
+      left: calc(100% - 50px);
+      top: 0;
+      bottom: 0;
+      z-index: 2;
+    }
+  }
+.stock{
+  button{
+    opacity: 0;
+  }
+  &:hover > button {
+    opacity:1;
+  }
+}
+.imageProduct{
+  
+  & .ant-upload-list-picture-card{
+    display: flex!important;
+    justify-content: flex-start!important;
+    flex-wrap: wrap!important;
+  }
+  & .ant-upload-list-item-container:first-child{
+    width: 100%!important;
+    height: 150px!important;
+  }
+}

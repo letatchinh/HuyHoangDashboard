@@ -14,12 +14,12 @@ interface Props{
   setStatusAccount?: any;
 };
 
-const Account = ({ isLoading, required,statusAccount, setStatusAccount}: Props) => {
+const Account = ({ isLoading, required, statusAccount, setStatusAccount }: Props) => {
   return (
     <>
-      <Row>
-        <Col span={5}>
-          <h5 style={{ marginBottom: 20 }}>Thiết lập tài khoản:</h5>
+      <Row align={'middle'}>
+        <Col span={8}>
+          <h6 style={{ marginBottom: 20 }}>Thiết lập tài khoản:</h6>
         </Col>
         <Col span={4}>
         <Form.Item
@@ -27,16 +27,17 @@ const Account = ({ isLoading, required,statusAccount, setStatusAccount}: Props) 
           <Switch
               checked={statusAccount === 'ACTIVE'}
               onChange={(value) => setStatusAccount(value ? 'ACTIVE' : 'INACTIVE')}
-              unCheckedChildren='Cập nhật'
+              // unCheckedChildren='Cập nhật'
               // checkedChildren='Không cập nhật'
           />
         </Form.Item>
         </Col>
       </Row>
       <Row gutter={48} align="middle" justify="space-between">
-        <Col span={12}>
+        <Col span={24}>
           <Form.Item
             name="username"
+            labelAlign='left'
             label={<Tooltip
               placement='topLeft'
               zIndex={2001}
@@ -69,10 +70,11 @@ const Account = ({ isLoading, required,statusAccount, setStatusAccount}: Props) 
       </Row>
 
       <Row gutter={48} align="middle" justify="space-between">
-        <Col span={12}>
+        <Col span={24}>
           <Form.Item
             name="password"
             label="Mật khẩu"
+            labelAlign='left'
             rules={[
               {
                 required,
@@ -88,12 +90,13 @@ const Account = ({ isLoading, required,statusAccount, setStatusAccount}: Props) 
             )}
           </Form.Item>
         </Col>
-        <Col span={12}>
+        <Col span={24}>
           <Form.Item
             name="confirmPassword"
             label="Nhập lại mật khẩu"
             dependencies={['password']}
             {...formItemLayoutLong}
+            labelAlign='left'
             rules={[
               {
                 required,
@@ -109,11 +112,13 @@ const Account = ({ isLoading, required,statusAccount, setStatusAccount}: Props) 
                 }
               })
             ]}
+            labelCol={{span : 6}}
+            wrapperCol={{span : 18}}
           >
             {isLoading ? (
               <Skeleton.Input active />
             ) : (
-              <Input.Password disabled = {statusAccount === 'INACTIVE'} autoComplete="new-password" />
+              <Input.Password style={{width : '100%'}} disabled = {statusAccount === 'INACTIVE'} autoComplete="new-password" />
             )}
           </Form.Item>
         </Col>

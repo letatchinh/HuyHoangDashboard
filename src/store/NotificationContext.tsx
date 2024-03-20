@@ -3,12 +3,17 @@ import { createContext, useContext, useCallback } from "react";
 import { ArgsProps } from "antd/es/notification/interface";
 type NotificationType = "success" | "info" | "warning" | "error";
 
-type onNotifyType = {
-  success : (message?: string,options? : ArgsProps) => void
-  error : (message?: string,options? : ArgsProps) => void
-  warning : (message?: string,options? : ArgsProps) => void
-  info : (message?: string,options? : ArgsProps) => void
+interface OptionsNotification extends Omit<ArgsProps,"message">{
+
 }
+
+type onNotifyType = {
+  success : (message?: string,options? : OptionsNotification) => void
+  error : (message?: string,options? : OptionsNotification) => void
+  warning : (message?: string,options? : OptionsNotification) => void
+  info : (message?: string,options? : OptionsNotification) => void
+}
+
 export type GlobalNotification = {
   onNotify: onNotifyType | null;
 };
@@ -16,6 +21,11 @@ export type GlobalNotification = {
 const Notification = createContext<GlobalNotification>({
   onNotify: null,
 });
+
+const defaultOptions : OptionsNotification = {
+  placement : 'bottomRight'
+};
+
 
 export function NotificationProvider({
   children,
@@ -25,30 +35,34 @@ export function NotificationProvider({
   const [msg, contextHolder] = notification.useNotification();
 
 
-  const success : any  = useCallback((message?: string,moreOptions? : ArgsProps) => {
+  const success : any  = useCallback((message?: string,moreOptions? : OptionsNotification) => {
     const options : ArgsProps = {
       message,
+      ...defaultOptions,
       ...moreOptions,
     }
     return msg.success(options);
   },[notification])
-  const error : any = useCallback((message?: string,moreOptions? : ArgsProps) => {
+  const error : any = useCallback((message?: string,moreOptions? : OptionsNotification) => {
     const options : ArgsProps = {
       message,
+      ...defaultOptions,
       ...moreOptions,
     }
     msg.error(options);
   },[notification])
-  const warning : any = useCallback((message?: string,moreOptions? : ArgsProps) => {
+  const warning : any = useCallback((message?: string,moreOptions? : OptionsNotification) => {
     const options : ArgsProps = {
       message,
+      ...defaultOptions,
       ...moreOptions,
     }
     msg.warning(options);
   },[notification])
-  const info : any = useCallback((message?: string,moreOptions? : ArgsProps) => {
+  const info : any = useCallback((message?: string,moreOptions? : OptionsNotification) => {
     const options : ArgsProps = {
       message,
+      ...defaultOptions,
       ...moreOptions,
     }
     msg.info(options);

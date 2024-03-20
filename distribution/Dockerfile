@@ -1,5 +1,5 @@
 ############# Builder image #############
-FROM node:16-stretch as builder
+FROM node:20-alpine as builder
 
 WORKDIR /source.tmp
 

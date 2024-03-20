@@ -1,0 +1,92 @@
+.homepage {
+  width: calc(100% + 10px);
+  height: calc(100% + 10px);
+  position: absolute;
+  background-color: white;
+  top: -10px;
+  left: -10px;
+  bottom: -10px;
+  right: -10px;
+  padding: 20px;
+  &--overlay {
+    position: absolute;
+    background-image: url("../../assets/images/pharmacy-dbbg.svg");
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background-repeat: no-repeat;
+    background-size: 60%;
+    background-position: 50% 60%;
+  }
+  &--btnAction{
+    height: 120px!important;
+    width: 140px!important;
+    background-color: #DFE9EF;
+    outline: none;
+    border: none;
+    border-radius: $default-border-radius;
+    transition: 0.3s ease!important;
+    &__icon{
+        font-size: 42px!important;
+        color: rgb(123, 129, 144);
+    }
+    &__text{
+        color: rgb(91, 96, 107);
+        font-size: 14px;
+        font-weight: 500;
+    }
+    &:hover{
+        box-shadow: $default-box-shadow;
+    }
+    &:hover .homepage--btnAction__icon{
+        color: $color-primary!important;
+        transition: 0.3s ease!important;
+        transform: scale(1.1);
+    }
+    &:hover .homepage--btnAction__text{
+        color: $color-primary!important;
+        transition: 0.3s ease!important;
+    }
+  }
+  &--btnActionSecondary{
+    height: 100px!important;
+    width: 150px!important;
+    background-color: #fff;
+    outline: none;
+    border: none;
+    border-radius: $default-border-radius;
+    transition: 0.3s ease!important;
+    box-shadow: $default-box-shadow;
+    &__icon{
+        font-size: 38px!important;
+        color: rgb(123, 129, 144);
+    }
+    &__text{
+        color: rgb(91, 96, 107);
+        font-size: 14px;
+        font-weight: 500;
+    }
+    &:hover .homepage--btnAction__icon{
+        color: $color-primary!important;
+        transition: 0.3s ease!important;
+        transform: scale(1.1);
+    }
+    &:hover .homepage--btnAction__text{
+        color: $color-primary!important;
+        transition: 0.3s ease!important;
+    }
+    &.active{
+        background-color: #3481FF!important;
+        .homepage--btnActionSecondary__icon{
+            font-size: 38px!important;
+            color: white!important;
+        }
+        .homepage--btnActionSecondary__text{
+            color: white!important;
+            font-size: 14px;
+            font-weight: 500;
+        }
+    }
+  }
+}

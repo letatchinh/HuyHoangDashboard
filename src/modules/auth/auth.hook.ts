@@ -55,3 +55,8 @@ export const useGetProfile = () => {
     const profile = useSelector(profileSelector);
     return profile
 }
+
+export const useIsSuperAdmin = () : boolean => {
+    const profile = useSelector(profileSelector);
+    return get(profile,'user.isSuperAdmin')
+}
