@@ -15,7 +15,6 @@ export const PATH_APP = {
   },
   auth: {
     login: path(ROOTS.app, "/login"),
-    loginSeller: path(ROOTS.app, "/login-seller"),
   },
 
   worldPharma: {
@@ -54,7 +53,6 @@ export const PATH_APP = {
   },
   employee: {
     root: path(ROOTS.app, "/employee/*"),
-    // employeeGroup: path(ROOTS.app, "/employee-group"),
   },
 
   configDiscount: {

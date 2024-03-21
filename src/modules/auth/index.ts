@@ -5,11 +5,9 @@ import * as authModels from "./auth.modal";
 import Login from "./screens/Login";
 import reducer from "./redux/reducer";
 import saga from "./redux/saga";
-import LoginSeller from "./screens/LoginSeller";
 const ModuleAuth = {
     page : {
         login: Login,
-        loginSeller: LoginSeller
     },
     api : authApi,
     hook : authHooks,

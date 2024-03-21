@@ -10,9 +10,11 @@ import useCreateBillStore from "../../storeContext/CreateBillContext";
 import ProductSelectedTable from "../ProductSelectedTable";
 import SelectPharmacy from "../SelectPharmacy";
 import TotalBill from "./TotalBill";
+import ProductSelectedTableInDevice from "../ProductSelectedTableInDevice";
+import TotalBillInDevice from "./TotalBillInDevice";
+import SelectPharmacyInDevice from "../SelectPharmacyInDevice";
 type propsType = {};
-export default function SaleScreen(props: propsType): React.JSX.Element {
-  console.log('voday')
+export default function SaleScreenInDevice(props: propsType): React.JSX.Element {
  const {form,onValueChange,quotationItems,totalPriceAfterDiscount,verifyData,onRemoveTab,bill,onOpenModalResult,totalAmount} = useCreateBillStore();
  const {onNotify} = useNotificationStore();
  const callBackAfterSuccess = (newData : DataResultType) => {
@@ -99,25 +101,19 @@ try {
       }}
     >
       <Row gutter={16}>
-        <Col span={16}>
-          <ProductSelectedTable />
-        </Col>
-        <Col span={8} className="form-create-bill--payment">
+        {/* <Col span={16}>
+          <ProductSelectedTableInDevice />
+        </Col> */}
+        <Col span={24} className="form-create-bill--payment">
           <div>
-            <SelectPharmacy form={form} allowClear={false}/>
-            <Divider/>
-            <TotalBill />
+            <SelectPharmacyInDevice form={form} allowClear={false}/>
+            {/* <Divider/>
+            <TotalBillInDevice /> */}
           </div>
-          <div className="form-create-bill--payment__actions">
+        </Col>
+          {/* <div className="form-create-bill--payment__actions">
             <Row gutter={8} justify={"space-between"} align='middle' wrap={false}>
               <Col flex={1}>
-                {/* <Button
-                block
-                  className="form-create-bill--payment__actions__btnDebt"
-                  onClick={onOpenDebt}
-                >
-                  Hình thức thanh toán
-                </Button> */}
               </Col>
               <Col span={14}>
                 <Button
@@ -132,8 +128,7 @@ try {
                 </Button>
               </Col>
             </Row>
-          </div>
-        </Col>
+          </div> */}
       </Row>
     </Form>
   );

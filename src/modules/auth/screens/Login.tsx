@@ -7,6 +7,7 @@ import WhiteBox from "~/components/common/WhiteBox";
 import AuthModule from "~/modules/auth";
 import { PATH_APP } from "~/routes/allPath";
 import { useLogin } from "../auth.hook";
+import { ADAPTER_KEY } from "../constants";
 
 type FieldType = {
   login: string;
@@ -16,11 +17,16 @@ type FieldType = {
 export default function Login() {
   const [isLoading, onLogin] = useLogin();
   const token = AuthModule.hook.useToken();
+  const adapter = AuthModule.hook.useAdapter();
   const navigate = useNavigate();
   useEffect(() => {
     if (token) {
-      navigate(PATH_APP.main.root);
-    }else {
+      if (adapter === ADAPTER_KEY.STAFF) {
+        navigate(PATH_APP.main.root);
+      } else if(ADAPTER_KEY.EMPLOYEE){
+        navigate(PATH_APP.employee.root);
+      };
+    } else {
        navigate(PATH_APP.auth.login) ;
     };
   }, [token, navigate]);
@@ -83,10 +89,6 @@ export default function Login() {
               Đăng nhập
             </Button>
           </Form.Item>
-          <Space style={{ width: "100%" , marginTop: "10px", display: "flex", justifyContent: "center"}}>
-            <span>Bạn là người bán hàng?</span>
-            <Button onClick={() => navigate(PATH_APP.auth.loginSeller)} target="_blank" type="link">Đăng nhập tại đây</Button>
-          </Space>
         </Form>
       </WhiteBox>
     </div>

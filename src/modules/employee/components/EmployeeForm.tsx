@@ -249,7 +249,7 @@ export default function EmployeeForm(props: IProps) {
             </Col>
             <Col span={12}>
               <FormItem
-                  label="Nhóm người dùng"
+                  label="Nhóm nhân viên"
                   name="groups"
                   // rules={[
                   //   {
@@ -275,8 +275,7 @@ export default function EmployeeForm(props: IProps) {
             </FormItem> 
                 <FormItem
                   hidden 
-                  //save state userId when id is exits and not show on form
-                  label="Nhóm người dùng"
+                  // label="Nhóm người dùng"
                   name="userId"
                 >
                 </FormItem> 

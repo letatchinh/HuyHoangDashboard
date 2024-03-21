@@ -266,3 +266,38 @@ export const filterAcrossAccentsByLabel = (input: any, option: any) => {
     removeAccents(option?.label?.toLowerCase()).indexOf(removeAccents(input.toLowerCase())) >= 0
   );
 };
+
+interface DeviceInfo {
+  isMobile: boolean;
+  isTablet: boolean;
+  isDesktop: boolean;
+};
+
+export const DeviceDetector = () => {
+  const getDeviceInfo = (): DeviceInfo => {
+    const userAgent = navigator.userAgent.toLowerCase();
+    const isMobile = /mobile/.test(userAgent);
+    const isTablet = /tablet/.test(userAgent);
+    const isDesktop = !isMobile && !isTablet;
+
+    return {
+      isMobile: isMobile && !isTablet,
+      isTablet,
+      isDesktop,
+    };
+  };
+  const [deviceInfo, setDeviceInfo] = useState<DeviceInfo>(() => getDeviceInfo());
+  useEffect(() => {
+    const handleResize = () => {
+      setDeviceInfo(getDeviceInfo());
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
+  return getDeviceInfo();
+};

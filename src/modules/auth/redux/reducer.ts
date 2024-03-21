@@ -5,6 +5,7 @@ const initialState : any = {
     isLoading: false,
 
     token: null,
+    adapter: null,
     loginFailed: null,
 
     profile: null,
@@ -25,10 +26,12 @@ export const auth = createSlice({
             state.isLoading = true;
             state.token = null;
             state.loginFailed = null;
+            state.adapter = null;
         },
-        loginSuccess: (state, action: { payload: { token: any; branchId: any, } }) => {
-            const { token, branchId } = action.payload;
+        loginSuccess: (state, action: { payload: { token: any; branchId: any,adapter : any } }) => {
+            const { token, branchId,adapter } = action.payload;
             state.token = token;
+            state.adapter = adapter;
             setAxiosToken(token);
             setAxiosCompanyId(branchId); // Assuming branchId is the correct property name
             state.isLoading = false;

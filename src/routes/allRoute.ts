@@ -38,7 +38,6 @@ import SalesGroupPage from "~/pages/Dashboard/SalesGroup";
 import BaseSalaryPage from "~/pages/Dashboard/BaseSalary";
 import BenefitConfigurationPage from "~/pages/Dashboard/BenefitConfiguration";
 import ReportEmployeePage from "~/pages/Dashboard/ReportEmployee";
-// import EmployeeGroupPage from "~/pages/Dashboard/EmployeeGroup";
 export const mainRoutes :PathRouteProps[] = [
   { path: PATH_APP.main.root, Component: Homepage },
 
@@ -124,6 +123,5 @@ export const mainRoutes :PathRouteProps[] = [
 
 export const authRoutes : PathRouteProps[] = [
     { path: '/login', Component: Auth.page.login },
-    { path: '/login-seller', Component: Auth.page.loginSeller },
   ];
 
