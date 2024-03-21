@@ -142,7 +142,7 @@ export default function PharmacyForm({ onClose, id, handleUpdate }: Props) {
             allowPhoneNumber={false}
             allowEmail={false}
           />
-          <Row className="form__submit-box">
+          <Row className="form__submit-box" style={{justifyContent: 'center'}}>
             {isSubmitLoading ? (
               <Button disabled>Huỷ</Button>
             ) : (
@@ -151,7 +151,7 @@ export default function PharmacyForm({ onClose, id, handleUpdate }: Props) {
               </Link>
             )}
 
-            <Button type="primary" htmlType="submit" loading={isSubmitLoading}>
+            <Button type="primary" htmlType="submit" loading={isSubmitLoading} style={{marginLeft: 5}}>
               {id ? "Cập nhật" : "Thêm mới"}
             </Button>
           </Row>
