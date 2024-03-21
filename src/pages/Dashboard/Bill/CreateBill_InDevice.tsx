@@ -280,7 +280,7 @@ const CreateBillPageInDevice = (): React.JSX.Element => {
           }}
         >
           <Tabs
-          activeKey={activeKey}
+            activeKey={activeKey}
             destroyInactiveTabPane
             className="createBill__tabs"
             tabBarExtraContent={{
@@ -288,13 +288,13 @@ const CreateBillPageInDevice = (): React.JSX.Element => {
                 <Space>
                   <div className='layoutVertical--header__row__logo' onClick={() => navigate("/")}>
               <img src={logo}/>
-            </div>
-                  <SelectProduct
+              </div>
+                  {/* <SelectProduct
                   dataCurrent={dataSource?.[activeKey]}
                   onChangeBill={(newData: any) =>
                     onChangeBill(activeKey, newData)
                   }
-                />
+                /> */}
                 </Space>
               ),
               right: (
@@ -309,6 +309,7 @@ const CreateBillPageInDevice = (): React.JSX.Element => {
                 />
               ),
             }}
+            // tabPosition = 
             type="card"
             onChange={onChangeTab}
           >

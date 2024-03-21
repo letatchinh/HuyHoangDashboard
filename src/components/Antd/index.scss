@@ -1,0 +1,14 @@
+.search-ant{
+  margin-bottom: 5px;
+  width: 300px;
+}
+@media screen and (max-width: 768px) {
+.search-ant{
+  width: 200px
+}
+};
+@media screen and (max-width: 576px) {
+.search-ant{
+  width: 300px
+}
+};

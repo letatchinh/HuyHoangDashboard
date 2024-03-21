@@ -76,7 +76,10 @@ export default function SelectPharmacyInDevice({
   },[]);
   
   return (
-    <Row gutter={8} style={{ width: "100%" , backgroundColor: 'red'}}>
+    <Row gutter={8}
+    //  style={{ width: "100%"}}
+     className="quotation-page__select-pharmacy"
+    >
       {showIcon && <UserOutlined />}
       <Col flex={1}>
         <Form.Item<FormFieldCreateBill>
@@ -84,7 +87,7 @@ export default function SelectPharmacyInDevice({
           label={label}
           rules={[
             {
-              required: true,
+              required: validateFirst,
               message: "Vui lòng chọn nhà thuốc",
             },
           ]}

@@ -292,6 +292,7 @@ export default function Pharmacy() {
   return (
     <div>
       <Breadcrumb title={t("list-pharmacies")} />
+      <WhiteBox>
       <Row className="mb-3" justify={"space-between"}>
         <Col span={8}>
           <Search
@@ -356,7 +357,6 @@ export default function Pharmacy() {
           </Row>
         </Space>
       </WithPermission>
-      <WhiteBox>
         <TableAnt
           dataSource={pharmacies}
           loading={isLoading}
