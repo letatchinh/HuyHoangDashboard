@@ -35,6 +35,7 @@ import salesGroup from '~/modules/salesGroup';
 import baseSalary from '~/modules/reportSalary/baseSalary/index';
 import benefitConfiguration from '~/modules/reportSalary/benefitConfiguration/index';
 import reportEmployee from '~/modules/report/reportEmployee/index';
+import saleChannel from '~/modules/saleChannel';
 
 export default function* rootSaga() {
   yield all([
@@ -76,5 +77,6 @@ export default function* rootSaga() {
     baseSalary.redux.saga(),
     benefitConfiguration.redux.saga(),
     reportEmployee.redux.saga(),
+    saleChannel.redux.saga(),
   ]);
 };

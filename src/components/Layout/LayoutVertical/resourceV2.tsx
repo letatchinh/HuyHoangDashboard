@@ -145,6 +145,13 @@ import {
               key: PATH_APP.benefitConfiguration.root,
               // permission: [POLICIES.READ_AREACONFIGURATION],
             },
+            {
+              label: "Kênh bán hàng",
+              icon: <i className="fa-solid fa-cart-shopping"></i>,
+              path: PATH_APP.saleChannel.root,
+              key: PATH_APP.saleChannel.root,
+              permission: [POLICIES.READ_SALECHANNEL],
+            },
           ],
         },
       ],

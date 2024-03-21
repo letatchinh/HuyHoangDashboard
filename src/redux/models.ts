@@ -67,6 +67,7 @@ export type initStateSlice<T=any> = {
     baseSalary: "baseSalary",
     benefitConfiguration: "benefitConfiguration",
     reportEmployee: "reportEmployee",
+    saleChannel: "saleChannel",
     }as const
     
     

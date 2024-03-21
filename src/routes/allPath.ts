@@ -125,5 +125,7 @@ export const PATH_APP = {
   benefitConfiguration : {
     root:  path(ROOTS.app, '/benefit-configuration'),
   },
-
+  saleChannel: {
+    root: path(ROOTS.app, '/sale-channel'),
+  },
 };
