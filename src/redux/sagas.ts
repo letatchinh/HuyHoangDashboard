@@ -36,6 +36,7 @@ import baseSalary from '~/modules/reportSalary/baseSalary/index';
 import benefitConfiguration from '~/modules/reportSalary/benefitConfiguration/index';
 import reportEmployee from '~/modules/report/reportEmployee/index';
 
+import reportSupplierModule from '~/modules/report/reportSupplier'; //
 export default function* rootSaga() {
   yield all([
     authModule.redux.saga(),
@@ -76,5 +77,6 @@ export default function* rootSaga() {
     baseSalary.redux.saga(),
     benefitConfiguration.redux.saga(),
     reportEmployee.redux.saga(),
+    reportSupplierModule.redux.saga(),
   ]);
 };
