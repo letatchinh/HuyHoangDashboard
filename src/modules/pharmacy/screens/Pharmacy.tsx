@@ -16,7 +16,7 @@ import { omit, get } from "lodash";
 import { REF_COLLECTION_UPPER, STATUS, STATUS_NAMES } from "~/constants/defaultValue";
 import moment from "moment";
 // import ColumnActions from "~/components/common/ColumnAction";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import {
   Button,
   Checkbox,
@@ -100,7 +100,8 @@ export default function Pharmacy() {
     setPharmacyId(null);
   };
 
-  const columns: ColumnsType = [
+  const columns: ColumnsType  = useMemo(
+    () => [
     {
       title: "Mã nhà thuốc",
       dataIndex: "code",
@@ -174,22 +175,7 @@ export default function Pharmacy() {
         );
       },
     },
-    {
-      title: "Thao tác",
-      key: "action",
-      width: 150,
-      align : 'center',
-      render: (record) => {
-        return (
-          <ColumnActions
-            {...record}
-            onOpenForm={onOpenForm}
-            deletePharmacy={deletePharmacy}
-          />
-        );
-      },
-    },
-    // ...(
+      // ...(
     //   canDownload ? [
     //     {
     //       title: 'Lựa chọn',
@@ -207,7 +193,23 @@ export default function Pharmacy() {
     //     },
     //   ]: []
     // ),
-  ];
+    {
+      title: "Thao tác",
+      key: "action",
+      width: 150,
+      align : 'center',
+      render: (record) => {
+        return (
+          <ColumnActions
+            {...record}
+            onOpenForm={onOpenForm}
+            deletePharmacy={deletePharmacy}
+          />
+        );
+      },
+    },
+  
+  ],[arrCheckBox]);
 
   const onChangeStatus = (
     _id: any,
