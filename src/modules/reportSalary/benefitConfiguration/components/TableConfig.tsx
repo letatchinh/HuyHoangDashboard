@@ -1,5 +1,5 @@
 import { Button, Flex } from 'antd';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import ModalAnt from '~/components/Antd/ModalAnt';
 import TableAnt from '~/components/Antd/TableAnt';
 import WhiteBox from '~/components/common/WhiteBox';
@@ -8,8 +8,7 @@ import { TypeBenefit } from '../benefitConfiguration.modal';
 import { CreateConditionByType } from '../benefitConfiguration.service';
 import { TYPE_BENEFIT_VI } from '../constants';
 import useBenefitConfigStore from '../store/BenefitConfigContext';
-import CreateConditionBenefitBase from './CreateConditionOverBtn';
-import CreateConditionOverBtn from './CreateConditionOverBtn';
+import { default as CreateConditionBenefitBase, default as CreateConditionOverBtn } from './CreateConditionOverBtn';
 import CreateConditionWorking from './CreateConditionWorking';
 import FormCondition from './FormCondition';
 import RemoveSupplierList from './RemoveSupplierList';
@@ -19,7 +18,6 @@ type propsType = {
 const CLONE_TYPE_BENEFIT_VI : any = TYPE_BENEFIT_VI;
 export default function TableConfig({typeBenefit}:propsType) : React.JSX.Element {
   const {isLoading,mutate,WIDTH_ITEM} = useBenefitConfigStore();
-  // const ref : any = useRef();
     // Condition
     const [openCondition,setOpenCondition] = useState(false);
     const onOpenCondition = useCallback(() => {
@@ -40,9 +38,6 @@ export default function TableConfig({typeBenefit}:propsType) : React.JSX.Element
     const columns :any[]= useGetColumns();
     const dataSource : any[] = useGetDataSource();
     
-    // useEffect(() => {
-    //   ref?.current?.scrollIntoView({ behavior: "smooth", block: "end", inline: "nearest" });
-    // },[typeBenefit]);
     return (
     <div>
         <WhiteBox>
@@ -68,6 +63,7 @@ export default function TableConfig({typeBenefit}:propsType) : React.JSX.Element
             </Button>}
             ComponentCreateConditionOver={<CreateConditionOverBtn canCreate={!dataSource?.length} />}
             ComponentCreateConditionWorking={!dataSource?.length ? <CreateConditionWorking /> : <></>}
+            ComponentCreateConditionKpisConfigArea={<></>}
           />
           <Button
             className="mb-2"

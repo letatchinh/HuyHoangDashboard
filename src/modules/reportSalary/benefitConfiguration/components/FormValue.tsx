@@ -7,8 +7,9 @@ type propsType = {
     conditionId?: any;
     benefitId?: any;
     mutate : () => void;
+    max? : number;
 }
-export default function FormValue({defaultValue,benefitId,conditionId,hide,mutate}:propsType) : React.JSX.Element {
+export default function FormValue({defaultValue,benefitId,conditionId,hide,mutate,max= 100}:propsType) : React.JSX.Element {
     useResetAction();
     const [value, setValue] = useState(defaultValue);
     const onCallBack = useCallback(() => {
@@ -29,7 +30,7 @@ export default function FormValue({defaultValue,benefitId,conditionId,hide,mutat
         <Flex>
           <InputNumber
             min={0}
-            max={100}
+            max={max}
             value={value}
             onChange={(v: any) => setValue(v)}
             onPressEnter={onCreateConfig}

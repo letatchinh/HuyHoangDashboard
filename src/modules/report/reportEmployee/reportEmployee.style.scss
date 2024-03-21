@@ -3,3 +3,12 @@
         margin-top: 20px;
     }
 }
+
+.headerTableTargets {
+    background-color: #3481FF;
+    padding: 5px;
+    & span{
+        color: white;
+        font-weight: 600;
+    }
+}
