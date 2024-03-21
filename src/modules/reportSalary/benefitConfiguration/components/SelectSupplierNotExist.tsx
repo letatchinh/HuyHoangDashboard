@@ -36,7 +36,8 @@ export default function SelectSupplierNotExist() : React.JSX.Element {
                 typeBenefit,
                 kpiType: TYPE_KPI.COVER_POS, // Default TYPE_KPI.COVER_POS
               }),
-            actionBenefitWorking :() => createBenefit({supplierId:idSelect,typeBenefit})
+            actionBenefitWorking :() => createBenefit({supplierId:idSelect,typeBenefit}),
+            actionKpisConfigArea :() => createBenefit({supplierId:idSelect,typeBenefit}),
         });
         hide();
         setIdSelect(null)

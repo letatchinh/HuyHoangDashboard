@@ -2,6 +2,7 @@ export const TYPE_BENEFIT = {
   KPIS_TDV: "KPIS_TDV",
   KPIS_TEAMLEADER: "KPIS_TEAMLEADER",
   KPIS_ASM: "KPIS_ASM",
+  KPIS_CONFIG_AREA: "KPIS_CONFIG_AREA",
 
   BENEFIT_BASE: "BENEFIT_BASE",
   BENEFIT_TDV: "BENEFIT_TDV",
@@ -48,35 +49,40 @@ export const GROUP_TYPE_BENEFIT_EMPLOYEE_LEVEL = {
   ],
   BENEFIT_WORKING:[
     TYPE_BENEFIT.BENEFIT_WORKING
-  ]
+  ],
+  KPIS_CONFIG_AREA:[
+    TYPE_BENEFIT.KPIS_CONFIG_AREA
+  ],
 };
 export const GROUP_TYPE_BENEFIT_EMPLOYEE_LEVEL_VI = {
     TDV : "Trình dược viên",
     TEAMLEADER : "Trưởng nhóm bán hàng",
     ASM : "Quản lý vùng",
     BENEFIT_WORKING : "Giờ làm việc hiệu quả",
+    KPIS_CONFIG_AREA : "Cấu hình điểm bán hàng",
 }
 export const TYPE_BENEFIT_VI = {
   BENEFIT_TDV: "Hoa hồng TDV",
   BENEFIT_BASE: "Hoa hồng CTV",
   BENEFIT_TEAMLEADER: "Hoa hồng TeamLead",
-  BENEFIT_ASM: "Hoa hồng Asm",
+  BENEFIT_ASM: "Hoa hồng ASM",
 
   BENEFIT_TDV_OVER__QUANTER: "Hoa hồng TDV Quý",
-  BENEFIT_TEAMLEADER_OVER__QUANTER: "Hoa hồng TeamLoad Quý",
-  BENEFIT_ASM_OVER__QUANTER: "Hoa hồng Asm Quý",
+  BENEFIT_TEAMLEADER_OVER__QUANTER: "Hoa hồng TeamLead Quý",
+  BENEFIT_ASM_OVER__QUANTER: "Hoa hồng ASM Quý",
 
-  BENEFIT_TDV_OVER__YEAR: "Hoa hồng Tdv Năm",
+  BENEFIT_TDV_OVER__YEAR: "Hoa hồng TDV Năm",
   BENEFIT_TEAMLEADER_OVER__YEAR: "Hoa hồng TeamLead Năm",
-  BENEFIT_ASM_OVER__YEAR: "Hoa hồng Asm Năm",
+  BENEFIT_ASM_OVER__YEAR: "Hoa hồng ASM Năm",
 
   BENEFIT_TDV_OVER: "Thưởng vượt hoa hồng cho TDV",
   BENEFIT_TEAMLEADER_OVER: "Thưởng vượt hoa hồng cho TeamLead",
-  BENEFIT_ASM_OVER: "Thưởng vượt hoa hồng cho Asm",
+  BENEFIT_ASM_OVER: "Thưởng vượt hoa hồng cho ASM",
 
   KPIS_TDV: "Kpis TDV",
   KPIS_TEAMLEADER: "Kpis TeamLead",
   KPIS_ASM: "Kpis ASM",
+  KPIS_CONFIG_AREA: "Cấu hình điểm bán",
 
   BENEFIT_WORKING: "Giờ làm việc hiệu quả",
 } as const;
