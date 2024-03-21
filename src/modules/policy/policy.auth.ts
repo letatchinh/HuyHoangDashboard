@@ -42,6 +42,9 @@ const historySupplierMineral = 'historySupplierMineral';
 const cumulativeEvent = 'cumulativeEvent';
 
 const salesGroup = 'salesGroup';
+// Kênh bán hàng
+const salesChannel ='salesChannel';
+
 const RESOURCES = [
   //Setting
   configDiscount,
@@ -92,6 +95,8 @@ const RESOURCES = [
   shippingCost,
   
   salesGroup,
+
+  salesChannel,
 ];
 
 //ACTIONS
@@ -189,7 +194,11 @@ const RESOURCE = (): ResourceType => {
   ];
   const GROUP_SHIPPINGCOST: string[] = [
     shippingCost
-  ]
+  ];
+
+  const SALE_CHANNEL: string[] = [
+    salesChannel
+  ];
 
   return {
     GROUP_USER,
@@ -208,6 +217,7 @@ const RESOURCE = (): ResourceType => {
     GROUP_VOUCHER,
     GROUP_MEDICINE,
     GROUP_SHIPPINGCOST,
+    SALE_CHANNEL,
   };
 };
 

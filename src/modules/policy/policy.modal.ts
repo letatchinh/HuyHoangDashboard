@@ -21,6 +21,8 @@ export type ResourceType = {
   GROUP_VOUCHER: string[],
   GROUP_MEDICINE: string[],
   GROUP_SHIPPINGCOST: string[],
+  // Kênh bán hàng
+  SALE_CHANNEL: string[]
 };
 
 export type policyType = 'write' | 'read' | 'update' | 'delete' | 'download' | 'admin';
@@ -268,6 +270,15 @@ export type PoliciesType = {
   'UPDATE_AREACONFIGURATION' |
   'DELETE_AREACONFIGURATION' |
   'DOWNLOAD_AREACONFIGURATION' |
-  'ADMIN_AREACONFIGURATION' 
+  'ADMIN_AREACONFIGURATION' |
+
+  // Kênh bán hàng
+  'READ_SALECHANNEL' |
+  'WRITE_SALECHANNEL' |
+  'UPDATE_SALECHANNEL' |
+  'DELETE_SALECHANNEL' |
+  'DOWNLOAD_SALECHANNEL' |
+  'ADMIN_SALECHANNEL'
+  
   ]: [string, policyType];
 };

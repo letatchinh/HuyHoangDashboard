@@ -39,6 +39,8 @@ import SalesGroupPage from "~/pages/Dashboard/SalesGroup";
 import BaseSalaryPage from "~/pages/Dashboard/BaseSalary";
 import BenefitConfigurationPage from "~/pages/Dashboard/BenefitConfiguration";
 import ReportEmployeePage from "~/pages/Dashboard/ReportEmployee";
+import SaleChannel from "~/pages/Dashboard/SaleChannel";
+
 export const mainRoutes :PathRouteProps[] = [
   { path: PATH_APP.main.root, Component: Homepage },
 
@@ -119,6 +121,9 @@ export const mainRoutes :PathRouteProps[] = [
   // Báo cáo nhân viên
   { path: PATH_APP.report.employee, Component: ReportEmployeePage },
 
+  // Kênh bán hàng
+  { path: PATH_APP.saleChannel.root, Component: SaleChannel},
+  
   { path: '/', Component: Homepage },
 ]
 
