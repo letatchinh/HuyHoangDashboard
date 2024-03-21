@@ -5,6 +5,6 @@ type propsType = {
 }
 export default function index(props:propsType) : React.JSX.Element {
     return (
-        <ReportSupplierModule.page.index />
+        <ReportSupplierModule.page.index /> //
     )
 }
