@@ -5,6 +5,7 @@ import { PoliciesType, ResourceType } from './policy.modal';
 const branch = 'branch';
 const company = 'company';
 const employee = 'employee';
+const employeeGroup = 'employeeGroup';
 const user = 'user';
 const userGroup = 'userGroup';
 const pharmacy = 'pharmacy';
@@ -50,6 +51,7 @@ const RESOURCES = [
   branch,
   // company,
   employee,
+  employeeGroup,
   user,
   userGroup,
 
@@ -134,7 +136,8 @@ const RESOURCE = (): ResourceType => {
     userGroup
   ];
   const GROUP_EMPLOYEE : string[] = [
-    employee
+    employee,
+    employeeGroup
   ];
   const GROUP_MANUFACTURER : string[] = [
     manuFacturer

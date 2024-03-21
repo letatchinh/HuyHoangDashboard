@@ -24,7 +24,7 @@ export default function User() {
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const isMatchUser = useMatchPolicy(POLICIES.READ_EMPLOYEE);
-  const isMatchUserGroup = useMatchPolicy(POLICIES.READ_USERGROUP);
+  const isMatchUserGroup = useMatchPolicy(POLICIES.READ_EMPLOYEEGROUP);
 
   const onChange = (key: any) => {
     console.log(key,'key')

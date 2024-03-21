@@ -202,7 +202,7 @@ const EmployeeGroup = ({ currentTab }: EmployeeGroupProps) => {
                   alignContent: "center",
                 }}
               >
-                <WithOrPermission permission={[POLICIES.DELETE_USERGROUP]}>
+                <WithOrPermission permission={[POLICIES.DELETE_EMPLOYEEGROUP]}>
                 <Popconfirm
                   title="Bạn muốn xoá chi nhánh này?"
                   onConfirm={() => deleteGroup(groupId)}
@@ -219,7 +219,7 @@ const EmployeeGroup = ({ currentTab }: EmployeeGroupProps) => {
                   </Button>
                 </Popconfirm>{" "}
                 </WithOrPermission>
-                <WithOrPermission permission={[POLICIES.UPDATE_USERGROUP]}>
+                <WithOrPermission permission={[POLICIES.UPDATE_EMPLOYEEGROUP]}>
                 <Button
                   size="small"
                     onClick={() => {
@@ -231,7 +231,7 @@ const EmployeeGroup = ({ currentTab }: EmployeeGroupProps) => {
                   <EditOutlined /> Cập nhật
                 </Button>
                 </WithOrPermission>
-                <WithOrPermission permission={[POLICIES.WRITE_USERGROUP]}>
+                <WithOrPermission permission={[POLICIES.WRITE_EMPLOYEEGROUP]}>
                 <Button
                   style={styleButton}
                   size="small"
