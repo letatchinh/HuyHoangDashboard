@@ -2,11 +2,11 @@ import { put, call, takeLatest } from 'redux-saga/effects';
 import api from '../employeeGroup.api'; 
 import { employeeGroupActions } from './reducer';
 
-function* getListEmployeeGroup({payload:query} : any) : any {
+function* getListEmployeeGroup({ payload: query }: any): any {
   try {
-    const data = yield call(api.getAll,query);
+    const data = yield call(api.getAll, query);
     yield put(employeeGroupActions.getListSuccess(data));
-  } catch (error:any) {
+  } catch (error: any) {
     yield put(employeeGroupActions.getListFailed(error));
   }
 }

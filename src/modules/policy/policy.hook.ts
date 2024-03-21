@@ -95,8 +95,23 @@ export const useUpdatePolicy = () => {
     loadingSelector: isSubmitLoadingSelector,
   });
 };
+export const useUpdateEmployeePolicy = () => {
+  return useSubmit({
+    action: policySliceAction.updateResourcesEmployeeRequest,
+    loadingSelector: isSubmitLoadingSelector,
+  });
+};
 
 export const useDeletePolicy = (callback?: any) => {
+  useSuccess(deleteSuccessSelector, `Xoá ${MODULE_VI} thành công`, callback);
+  useFailed(deleteFailedSelector);
+
+  return useSubmit({
+    action: policySliceAction.deleteRequest,
+    loadingSelector: isSubmitLoadingSelector,
+  });
+};
+export const useDeleteEmployeePolicy = (callback?: any) => {
   useSuccess(deleteSuccessSelector, `Xoá ${MODULE_VI} thành công`, callback);
   useFailed(deleteFailedSelector);
 

@@ -92,8 +92,9 @@ class PolicyClassExtend extends InstanceModuleRedux {
       updateResourcesEmployeeRequest: (state: PolicyState , { payload}: any) => {
         state.isGetResourcesEmployeeLoading = true; 
       },
-      updateResourcesEmployeeSuccess: (state: PolicyState , { payload }: { payload: { actions: resources[], resources: resources[] } }) => {
-        state.resources = payload.resources;
+      updateResourcesEmployeeSuccess: (state: PolicyState, { payload }: { payload: { actions: resources[], resources: resources[] } }) => {
+        console.log(payload,'payload')
+        state.resourcesEmployee = payload.resources;
         state.isGetResourcesEmployeeLoading = false;
         state.actionsEmployee = payload.actions;
       },

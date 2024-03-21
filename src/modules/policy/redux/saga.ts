@@ -86,6 +86,19 @@ function* updateGroupPermission({ payload }: any) {
     yield put(policySliceAction.updateFailed(error));
   }
 }
+function* updateEmployeeGroupPermission({ payload }: any) {
+  try {
+    const { isAssgined, companyId, groupId, ...rest } = payload;
+    const request = isAssgined
+      ? api.updateEmployee
+      : api.deleteEmployee;
+
+    yield call(request, { ...rest, groupId });
+    // yield put(policySliceAction.updateSuccess);
+  } catch (error: any) {
+    yield put(policySliceAction.updateFailed(error));
+  }
+}
 
 export default function* policySaga() {
   yield takeLatest(policySliceAction.getListRequest, getListPolicy);
@@ -96,4 +109,5 @@ export default function* policySaga() {
   yield takeLatest(policySliceAction.getResourcesRequest, getResources);
   yield takeLatest(policySliceAction.getResourcesEmployeeRequest, getResourcesEmployee);
   yield takeLatest(policySliceAction.updateResourcesRequest, updateGroupPermission);
+  yield takeLatest(policySliceAction.updateResourcesEmployeeRequest, updateEmployeeGroupPermission);
 }

@@ -38,7 +38,7 @@ export const useEmployeeGroupPaging = () => useSelector(pagingSelector);
 const getSelectorPolicy = (key : string) => (state:any) => state.policy[key];
 const actionsSelector = getSelectorPolicy('actionsEmployee');
 
-export const useGetEmployeeGroups = (param:any) => {
+export const useGetEmployeeGroups = (param?: any) => {
   return useFetchByParam({
     action: employeeGroupActions.getListRequest,
     loadingSelector: loadingSelector,
@@ -54,6 +54,7 @@ export const useGetEmployeeGroup = (id: any) => {
     dataSelector: getByIdSelector,
     failedSelector: getByIdFailedSelector,
     param: id,
+    actionUpdate : employeeGroupActions.updatePolicyById,
   });
 };
 
@@ -102,6 +103,7 @@ export const useEmployeeGroupQueryParams = () => {
   const keyword = query.get("keyword");
   const createSuccess = useSelector(createSuccessSelector);
   const deleteSuccess = useSelector(deleteSuccessSelector);
+  const updateSuccess = useSelector(updateSuccessSelector);
   return useMemo(() => {
     const queryParams = {
       page,
@@ -110,7 +112,7 @@ export const useEmployeeGroupQueryParams = () => {
     };
     return [queryParams];
     //eslint-disable-next-line
-  }, [page, limit, keyword, createSuccess, deleteSuccess]);
+  }, [page, limit, keyword, createSuccess, deleteSuccess,updateSuccess]);
 };
 
 export const useUpdateEmployeeGroupParams = (

@@ -1,5 +1,5 @@
 import { Button, Col, Form, Input, Modal, Popconfirm, Row, Select, Skeleton } from "antd";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import UploadImage from "~/components/common/Upload/UploadImage";
 import AddressFormSection from "~/components/common/AddressFormSection";
 import {useGetEmployee, useUpdateEmployee } from "../employee.hook";
@@ -10,11 +10,13 @@ import POLICIES from "~/modules/policy/policy.auth";
 import BaseBorderBox from "~/components/common/BaseBorderBox/index";
 import { EMPLOYEE_LEVEL_OPTIONS } from "../constants";
 import AreaSelect from "~/components/common/AreaSelect/index";
-import { OPTION_AREA } from "~/constants/defaultValue";
+import { DEFAULT_BRANCH_ID, OPTION_AREA } from "~/constants/defaultValue";
 import Account from "~/components/common/Account";
 import useNotificationStore from "~/store/NotificationContext";
 import apis from "~/modules/user/user.api";
-
+import { useGetEmployeeGroups } from "~/modules/employeeGroup/employeeGroup.hook";
+import { useParams } from "react-router-dom";
+import { omit } from "lodash";
 const { Option } = Select;
 
 const FormItem = Form.Item;
@@ -38,11 +40,18 @@ export default function EmployeeForm(props: IProps) {
   const [imageUrl, setImageUrl] = useState<string>();
 
   const [loadingValidateUsername, setLoadingValidateUsername] = useState<boolean>(false);
+  const [statusAccount, setStatusAccount] = useState('ACTIVE');
   useResetState(employeeSliceAction.resetAction);
   //address
   const [cityCode, setCityCode] = useState(null);
   const [districtCode, setDistrictCode] = useState(null);
   // hook
+  const { branchId }: any = useParams();
+  const branchIdParam = useMemo(
+    () => ({ branchId: branchId ? branchId : DEFAULT_BRANCH_ID }),
+    [branchId]
+  );
+  const [groups, isLoadingGroups] = useGetEmployeeGroups(branchIdParam);
 
   const [employee, isLoading] = useGetEmployee(id);
   const {onNotify}  = useNotificationStore();
@@ -78,9 +87,15 @@ export default function EmployeeForm(props: IProps) {
         _id: id,
         avatar: imageUrl
       };
-      handleUpdate({...data});
+      if (statusAccount === 'ACTIVE') {
+        handleUpdate({...data});
+      } else {
+        handleUpdate({
+          ...omit(data,['username', 'password', 'confirmPassword']),
+        });
+      };
     } else {
-      handleCreate(employee);
+      handleCreate({...omit(employee, ['userId','updateAccount'])});
     };
   };
 
@@ -232,7 +247,40 @@ export default function EmployeeForm(props: IProps) {
                 </Col>
               </Row>
             </Col>
-            {/* <Col></Col> */}
+            <Col span={12}>
+              <FormItem
+                  label="Nhóm người dùng"
+                  name="groups"
+                  // rules={[
+                  //   {
+                  //     required: false,
+                  //     message: "Xin vui lòng chọn nhóm người dùng!",
+                  //   },
+                  // ]}
+                >
+              {isLoading || isLoadingGroups ? <Skeleton.Input active /> : (
+                <Select
+                  mode="multiple"
+                  allowClear
+                >
+                  {
+                      groups?.map(({ _id, name }: any) => (
+                        <Select.Option value={_id} key={_id}>
+                          {name}
+                        </Select.Option>
+                      ))
+                  }
+                </Select>
+                  )}
+            </FormItem> 
+                <FormItem
+                  hidden 
+                  //save state userId when id is exits and not show on form
+                  label="Nhóm người dùng"
+                  name="userId"
+                >
+                </FormItem> 
+          </Col>
           </Row>
         </BaseBorderBox>
         <BaseBorderBox title={"Thông tin vị trí"}>
@@ -254,7 +302,11 @@ export default function EmployeeForm(props: IProps) {
             </Col>
           </Row>
         </BaseBorderBox>
-        <Account />
+        <Account
+          isLoading={isLoading} required={id ? false : true}
+          statusAccount={statusAccount}
+          setStatusAccount={setStatusAccount}
+        />
         <Row gutter={10} align="middle" justify={"center"}>
           <Col span={2}>
             <Button onClick={handleCloseModal}>Huỷ</Button>

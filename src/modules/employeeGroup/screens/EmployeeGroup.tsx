@@ -26,25 +26,23 @@ import {
   useUpdateEmployeeGroup,
 } from "../employeeGroup.hook";
 import {
-  useResources,
   useResourcesEmployee,
-  useUpdatePolicy,
+  useUpdateEmployeePolicy,
 } from "~/modules/policy/policy.hook";
 import { DEFAULT_BRANCH_ID } from "~/constants/defaultValue";
-import toastr from "toastr";
 import POLICIES from "~/modules/policy/policy.auth";
-import { useResetState } from "~/utils/hook";
 import WithOrPermission from "~/components/common/WithOrPermission";
-import { useGetProfile, useProfile } from "~/modules/auth/auth.hook";
 import { useDispatch } from "react-redux";
 import { employeeGroupActions } from "../redux/reducer";
+import useNotificationStore from "~/store/NotificationContext";
+import EmployeeGroupForm from "../components/EmployeeForm";
 
 const styleButton = {
   alignContent: "center",
   display: "flex",
   alignItems: "center",
 };
-interface UserGroupProps {
+interface EmployeeGroupProps {
   currentTab?: string;
 };
 
@@ -69,7 +67,7 @@ const Permission = ({ isActive, onChange, disabled }: PermissionProps) => {
   );
 };
 
-const EmployeeGroup = ({ currentTab }: UserGroupProps) => {
+const EmployeeGroup = ({ currentTab }: EmployeeGroupProps) => {
   useResetEmployeeGroups();
   const dispatch = useDispatch();
   const resetAction = () => {
@@ -86,11 +84,12 @@ const EmployeeGroup = ({ currentTab }: UserGroupProps) => {
   const [groups, isLoading] = useGetEmployeeGroups(branchIdParam);
   const param = useMemo(() => (groupId), [groupId, reFetch]);
   const [group, isLoadingGroup, updateGroup] = useGetEmployeeGroup(param);
-  const [, handleUpdate] = useUpdatePolicy();
   const [, deleteGroup] = useDeleteEmployeeGroup();
+  const [reFetchId, setReFetchId] = useState<any>(false);
   const reFetchGroup = () => {
     return dispatch(employeeGroupActions.getByIdRequest(param));
   };
+  const {onNotify} = useNotificationStore();
   //State
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [id, setId] = useState<any>(null);
@@ -106,7 +105,9 @@ const EmployeeGroup = ({ currentTab }: UserGroupProps) => {
     setIsOpen(false);
     setId(null);
   };
-  const [, handleUpdateUser] = useUpdateEmployeeGroup(() => {
+
+  //Handle Form
+  const [, handleUpdateEmployee] = useUpdateEmployeeGroup(() => {
     onClose();
     resetAction();
   });
@@ -114,15 +115,19 @@ const EmployeeGroup = ({ currentTab }: UserGroupProps) => {
     onClose();
     resetAction();
   });
+
+  // Permission
+  const [, handleUpdate] = useUpdateEmployeePolicy();
+
   const [resources, isResourcesLoading] = useResourcesEmployee();
   useEffect(() => {
-    if (!groupId && groups.length && currentTab === 'user/group') {
-      navigate(`/user/group/${groups[0]._id}`);
+    if (!groupId && groups.length && currentTab === 'employee/group') {
+      navigate(`/employee/group/${groups[0]._id}`);
     };
   }, [groups, pathname, groupId]);
 
   const onSelectGroup = ({ key }: any) => {
-    const nextPath = `/user/group/${key}`;
+    const nextPath = `/employee/group/${key}`;
     navigate(nextPath);
   };
 
@@ -133,10 +138,10 @@ const EmployeeGroup = ({ currentTab }: UserGroupProps) => {
   }: onPermissionChangeProps) => {
     try {
       if (!canUpdate) return;
-      updateGroup({ isAssgined, resource, action }); // update Group in store redux
       handleUpdate({ isAssgined, resource, action, groupId });
-    } catch (error) {
-      toastr.error(get(error, "message", "Some error"));
+      updateGroup({ isAssgined, resource, action }); // update Group in store redux
+    } catch (error: any) {
+      onNotify?.error(get(error, "message", "Some error"));
     }
   };
   const renderPermission = (key: string) => (action: any, rc: any) => {
@@ -217,7 +222,9 @@ const EmployeeGroup = ({ currentTab }: UserGroupProps) => {
                 <WithOrPermission permission={[POLICIES.UPDATE_USERGROUP]}>
                 <Button
                   size="small"
-                  onClick={() => onOpenForm(groupId)}
+                    onClick={() => {
+                      onOpenForm(groupId);
+                    }}
                   type="primary"
                   style={styleButton}
                 >
@@ -252,26 +259,30 @@ const EmployeeGroup = ({ currentTab }: UserGroupProps) => {
           </div>
         </Col>
       </Row>
-        {/* <Modal
+        <Modal
             open={isOpen}
             footer={[]}
             onCancel={onClose}
             className="form-modal__user-group"
             afterClose={() => {
-              setReFetch(!reFetch);
-              reFeatchGroup();
-              }}
-        // destroyOnClose
+                if (reFetchId) {
+                  reFetchGroup();
+                  console.log(1)
+              };
+              setReFetchId(false);
+            }}
       >
-        <UserGroupForm
+        <EmployeeGroupForm
           isOpen={isOpen} 
-          onClose={onClose} id={id} 
+          onClose={onClose}
+          id={id} 
           setReFetch={setReFetch} 
           reFetch={reFetch}
           handleCreate={handleCreate}
-          handleUpdateUser={handleUpdateUser}
+          handleUpdateEmployee={handleUpdateEmployee}
+          setReFetchId={setReFetchId}
         />
-        </Modal> */}
+        </Modal>
     </div>
   );
 };
