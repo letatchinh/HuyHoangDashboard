@@ -212,6 +212,24 @@ export default function Pharmacy() {
           );
         },
       },
+      ...(
+        canDownload ? [
+          {
+            title: 'Lựa chọn',
+            key: '_id',
+            width: 80,
+            align: 'center' as any,
+            render: (item: any, record: any) =>
+            {
+              const id = record._id;
+              return (
+                <Checkbox
+                  checked= {arrCheckBox.includes(id)}
+                  onChange={(e)=>onChangeCheckBox(e.target.checked, id)}
+            />)}
+          },
+        ]: []
+      ),
       {
         title: "Thao tác",
         dataIndex: "_id",
@@ -239,26 +257,8 @@ export default function Pharmacy() {
           );
         },
       },
-        ...(
-      canDownload ? [
-        {
-          title: 'Lựa chọn',
-          key: '_id',
-          width: 80,
-          align: 'center' as any,
-          render: (item: any, record: any) =>
-          {
-            const id = record._id;
-            return (
-              <Checkbox
-                checked= {arrCheckBox.includes(id)}
-                onChange={(e)=>onChangeCheckBox(e.target.checked, id)}
-          />)}
-        },
-      ]: []
-    ),
     ],
-    []
+    [arrCheckBox]
   );
 
   const onChangeStatus = (
