@@ -1,23 +1,20 @@
 import { get } from "lodash";
 import {
-  createContext,
-  useContext,
-  useCallback,
-  useState,
-  useMemo,
+  createContext, useCallback, useContext, useMemo, useState
 } from "react";
 import ModalAnt from "~/components/Antd/ModalAnt";
+import { EMPLOYEE_LEVEL } from "~/modules/employee/constants";
+import { EmployeeLevelType } from "~/modules/employee/employee.modal";
 import Swap from "./components/DetailReport/Swap";
 import { useGetReportEmployee } from "./reportEmployee.hook";
 import {
-  DataSwapType,
-  EmployeeType,
-  ExchangeRateType,
-  TargetsSupplierItem,
+  DataSwapType, ExchangeRateType,
+  ReportEmployeeType,
+  TargetsSupplierItem
 } from "./reportEmployee.modal";
 import {
   handleConvertDataSourceDetailSalary,
-  ItemDataSource,
+  ItemDataSource
 } from "./reportEmployee.service";
 type DataInitSwap = Pick<
   DataSwapType,
@@ -33,11 +30,14 @@ export type GlobalDetailReport = {
   dataSourceDetailSalary: ItemDataSource[];
   employeeLevel: string;
   dataSwap?: DataInitSwap | null;
-  data?: any;
+  data?: ReportEmployeeType | null;
+  id?: any;
+  onCancel : () => void
 };
 
 const DetailReport = createContext<GlobalDetailReport>({
   onOpenSwap: () => {},
+  onCancel: () => {},
   dataSourceTargetsTeam: [],
   dataSourceTargetsSelf: [],
   exchangeRateOverrideTargetsTeam: [],
@@ -46,22 +46,25 @@ const DetailReport = createContext<GlobalDetailReport>({
   employeeLevel: "",
   dataSwap: null,
   data: null,
+  id: null,
 });
 
 export function DetailReportProvider({
   children,
   id,
+  onCancel,
 }: {
   children: any;
   id?: string;
+  onCancel : () => void
 }): React.JSX.Element {
   const [openSwap, setOpenSwap] = useState(false);
   const [dataSwap, setDataSwap] = useState<DataInitSwap | null>();
   const [data, isLoading] = useGetReportEmployee(id);
 
-  const onOpenSwap = useCallback((data?: DataInitSwap) => {
-    if (data) {
-      setDataSwap(data);
+  const onOpenSwap = useCallback((dataSwap?: DataInitSwap) => {
+    if (dataSwap) {
+      setDataSwap(dataSwap);
     }
     setOpenSwap(true);
   }, []);
@@ -97,7 +100,7 @@ export function DetailReportProvider({
       }),
     [data]
   );
-  const employeeLevel: string = useMemo(
+  const employeeLevel: EmployeeLevelType = useMemo(
     () => get(data, "employee.employeeLevel"),
     [data]
   );
@@ -114,6 +117,8 @@ export function DetailReportProvider({
         exchangeRateOverrideTargetsTeam,
         exchangeRateOverrideTargetsSelf,
         data,
+        id,
+        onCancel,
       }}
     >
       {children}
@@ -125,7 +130,7 @@ export function DetailReportProvider({
         onCancel={onCloseSwap}
         open={openSwap}
       >
-        <Swap />
+        <Swap onCloseSwap={onCloseSwap}/>
       </ModalAnt>
     </DetailReport.Provider>
   );

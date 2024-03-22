@@ -8,6 +8,7 @@ import {
     getSelectors,
     useFailed, useFetchByParam,
     useQueryParams,
+    useResetState,
     useSubmit,
     useSuccess
 } from "~/utils/hook";
@@ -34,6 +35,9 @@ const {
 } = getSelectors(MODULE);
 const updatePreviewSuccessSelector = getSelector('updatePreviewSuccess');
 const updatePreviewFailedSelector = getSelector('updatePreviewFailed');
+
+const updateStatusSuccessSelector = getSelector('updateStatusSuccess');
+const updateStatusFailedSelector = getSelector('updateStatusFailed');
 
 export const useReportEmployeePaging = () => useSelector(pagingSelector);
 
@@ -84,7 +88,21 @@ export const useUpdateReportEmployee = (callback?: any) => {
   });
 };
 
-export const useUpdatePreviewReportEmployee = (callback?: any) => {
+export const useUpdateStatusReportEmployee = (callback?: any) => {
+  useSuccess(
+    updateStatusSuccessSelector,
+    `Cập nhật ${MODULE_VI} thành công`,
+    callback
+  );
+  useFailed(updateStatusFailedSelector);
+
+  return useSubmit({
+    action: reportEmployeeActions.updateStatusRequest,
+    loadingSelector: isSubmitLoadingSelector,
+  });
+};
+
+export const useUpdatePreviewReportEmployee = (callback?: any) : any => {
   useSuccess(
     updatePreviewSuccessSelector,
     `Cập nhật ${MODULE_VI} thành công`,
@@ -113,8 +131,6 @@ export const useReportEmployeeQueryParams = () => {
   const limit = query.get("limit") || 10;
   const page = query.get("page") || 1;
   const keyword = query.get("keyword");
-  const createSuccess : any = useSelector(createSuccessSelector);
-  const deleteSuccess : any = useSelector(deleteSuccessSelector);
   return useMemo(() => {
     const queryParams = {
       page,
@@ -123,7 +139,7 @@ export const useReportEmployeeQueryParams = () => {
     };
     return [queryParams];
     //eslint-disable-next-line
-  }, [page, limit, keyword, createSuccess, deleteSuccess]);
+  }, [page, limit, keyword ]);
 };
 
 export const useUpdateReportEmployeeParams = (
@@ -158,3 +174,8 @@ export const useUpdateReportEmployeeParams = (
 
   return [keyword, { setKeyword, onParamChange }];
 };
+
+export const useResetAction = () => {
+    return useResetState(reportEmployeeActions.resetAction);
+
+}

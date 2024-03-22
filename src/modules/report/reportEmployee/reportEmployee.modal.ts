@@ -1,3 +1,7 @@
+import { EMPLOYEE_LEVEL } from '~/modules/employee/constants';
+import { EmployeeLevelType } from '~/modules/employee/employee.modal';
+import { STATUS_REPORT_EMPLOYEE } from './constants';
+
 export type TypeProps = {};
 
 export type DetailSalaryItem = {
@@ -36,6 +40,7 @@ export interface TargetsSupplierItem  {
 export type EmployeeType = {
   fullName: string,
   employeeNumber: string,
+  employeeId: string,
   employeeLevel: string,
   baseSalary : string,
   salesGroupName : string
@@ -62,4 +67,55 @@ export type Targets = {
   salesGroupAlias: string,
   targetSupplier: TargetsSupplierItem[],
   exchangeRateOverride: ExchangeRateType[]
+}
+
+export type SubmitDataUpdatePreview = {
+  employeeId : string,
+  targetsTeam? : {
+    targetSupplier : TargetsSupplierItem[]
+  },
+  targetsSelf? : {
+    targetSupplier : TargetsSupplierItem[]
+  },
+}
+
+export type ReportEmployeeType = {
+    _id: string,
+    startDate: string,
+    endDate: string,
+    session: string,
+    daysWorkingInfo?: {
+      daysWorking?: number,
+      daysWorkingCond?: number,
+      priceBillCond?: number
+    },
+    createById: string,
+    employee: {
+      fullName: string,
+      employeeNumber: number,
+      employeeId: string,
+      employeeLevel: EmployeeLevelType,
+      baseSalary: string,
+      baseSalaryValue: number,
+    },
+    salary: {
+      base : number,
+      bonus: {
+        overMonth: number,
+        overQuarter: number,
+        overYear: number,
+        workingBenefit: number,
+        cover_pos: number,
+        exclusive_product: number,
+        targetsLeader: number,
+      },
+      benefit: number,
+      totalSalary: number
+    },
+    status: keyof typeof STATUS_REPORT_EMPLOYEE,
+    detailSalary: DetailSalary,
+    createdAt: string,
+    updatedAt: string,
+    targetsSelf : Targets,
+    targetsTeam : Targets,
 }

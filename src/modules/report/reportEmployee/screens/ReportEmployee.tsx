@@ -7,22 +7,29 @@ import SelectSearch from "~/components/common/SelectSearch/SelectSearch";
 import WhiteBox from "~/components/common/WhiteBox";
 import DetailReport from "../components/DetailReport/index";
 import {
-  useDeleteReportEmployee,
   useGetReportEmployees,
+  useReportEmployeePaging,
   useReportEmployeeQueryParams,
+  useUpdateReportEmployeeParams
 } from "../reportEmployee.hook";
 // import data from "./data.json";
+import { Button, Typography } from "antd";
+import dayjs from "dayjs";
 import { get } from "lodash";
 import { EMPLOYEE_LEVEL_VI } from "~/modules/employee/constants";
-import { Button, Typography } from "antd";
-import { formatter } from "~/utils/helpers";
-import dayjs from "dayjs";
+import { formatter, pagingTable } from "~/utils/helpers";
 import { DetailReportProvider } from "../DetailReportContext";
+import Status from "~/components/common/Status/index";
+import { STATUS_REPORT_EMPLOYEE_VI } from "../constants";
 type propsType = {};
 const CLONE_EMPLOYEE_LEVEL_VI: any = EMPLOYEE_LEVEL_VI;
+const CLONE_STATUS_REPORT_EMPLOYEE_VI: any = STATUS_REPORT_EMPLOYEE_VI;
 export default function ReportEmployee(props: propsType): React.JSX.Element {
   const [query] = useReportEmployeeQueryParams();
-    const [data, isLoading] = useGetReportEmployees(query);
+  const [data, isLoading] = useGetReportEmployees(query);
+  const [keyword, { setKeyword, onParamChange }] =
+  useUpdateReportEmployeeParams(query);
+  const paging = useReportEmployeePaging();
   const [openDetail, setOpenDetail] = useState(false);
   const [id, setId] = useState<any>();
 
@@ -34,7 +41,6 @@ export default function ReportEmployee(props: propsType): React.JSX.Element {
     setOpenDetail(false);
     setId(null);
   }, []);
-  const [, deleteReportEmployee]: any = useDeleteReportEmployee();
 
   const columns: ColumnsType = [
     {
@@ -70,6 +76,15 @@ export default function ReportEmployee(props: propsType): React.JSX.Element {
       ),
     },
     {
+      title: "Trạng thái",
+      dataIndex: "status",
+      key: "status",
+      align: "center",
+      render: (status: any) => (
+      <Status status={status} statusVi={CLONE_STATUS_REPORT_EMPLOYEE_VI[status]}/>
+      ),
+    },
+    {
       title: "Thao tác",
       dataIndex: "_id",
       key: "_id",
@@ -85,14 +100,14 @@ export default function ReportEmployee(props: propsType): React.JSX.Element {
     <div>
       <Breadcrumb title={"Báo cáo lương"} />
       <WhiteBox>
-        <SelectSearch showSelect={false} />
+        {/* <SelectSearch showSelect={false} /> */}
         <TableAnt
           dataSource={data}
-          //   loading={isLoading}
+          loading={isLoading}
           rowKey={(rc) => rc?._id}
           columns={columns}
           size="small"
-          pagination={false}
+          pagination={pagingTable(paging,onParamChange)}
           bordered
         />
         <ModalAnt
@@ -104,7 +119,7 @@ export default function ReportEmployee(props: propsType): React.JSX.Element {
           open={openDetail}
           destroyOnClose
         >
-          <DetailReportProvider id={id}>
+          <DetailReportProvider onCancel={onCloseDetail} id={id}>
             <DetailReport />
           </DetailReportProvider>
         </ModalAnt>

@@ -1,11 +1,14 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { get } from "lodash";
+import { get, omit } from "lodash";
 import { InstanceModuleRedux } from "~/redux/instanceModuleRedux";
 import { initStateSlice } from "~/redux/models";
+import { handleCalculateReducer } from "../reportEmployee.service";
 interface cloneInitState extends initStateSlice {
   // Add cloneInitState Type Here
   updatePreviewFailed?: any;
   updatePreviewSuccess?: any;
+  updateStatusFailed?: any;
+  updateStatusSuccess?: any;
 }
 class ReportEmployeeClassExtend extends InstanceModuleRedux {
   cloneReducer;
@@ -24,43 +27,7 @@ class ReportEmployeeClassExtend extends InstanceModuleRedux {
         { payload }: { payload?: any }
       ) => {
         state.isGetByIdLoading = false;
-        state.byId = {
-          ...payload,
-          salary: {
-            ...get(payload, "salary"),
-            totalBonus: [
-              get(payload, "salary.bonus.overMonth", 0),
-              get(payload, "salary.bonus.overQuarter", 0),
-              get(payload, "salary.bonus.overYear", 0),
-              get(payload, "salary.bonus.workingBenefit", 0),
-              get(payload, "salary.bonus.cover_pos", 0),
-              get(payload, "salary.bonus.exclusive_product", 0),
-              get(payload, "salary.bonus.targetsLeader", 0),
-            ].reduce((sum, cur) => sum + cur, 0),
-          },
-          targetsTeam: {
-            ...get(payload, "targetsTeam", {}),
-            targetSupplier: get(payload, "targetsTeam.targetSupplier", [])?.map(
-              (target: any) => ({
-                ...target,
-                saleCanChange:
-                  get(target, "afterExchangeSale", 0) -
-                  get(target, "targetTeam", 0),
-              })
-            ),
-          },
-          targetsSelf: {
-            ...get(payload, "targetsSelf", {}),
-            targetSupplier: get(payload, "targetsSelf.targetSupplier", [])?.map(
-              (target: any) => ({
-                ...target,
-                saleCanChange:
-                  get(target, "afterExchangeSale", 0) -
-                  get(target, "minSale", 0),
-              })
-            ),
-          },
-        };
+        state.byId = handleCalculateReducer(payload);
       },
       getByIdFailed: (state: cloneInitState, { payload }: { payload: any }) => {
         state.isGetByIdLoading = false;
@@ -77,7 +44,7 @@ class ReportEmployeeClassExtend extends InstanceModuleRedux {
         { payload }: { payload: any }
       ) => {
         state.isSubmitLoading = false;
-        state.byId = payload;
+        state.byId = handleCalculateReducer(payload);
         state.updatePreviewSuccess = payload;
       },
       updatePreviewFailed: (
@@ -88,6 +55,37 @@ class ReportEmployeeClassExtend extends InstanceModuleRedux {
         state.updatePreviewFailed = payload;
       },
 
+      // Update Status
+      updateStatusRequest: (state: cloneInitState) => {
+        state.isSubmitLoading = true;
+        state.updateStatusFailed = null;
+      },
+      updateStatusSuccess: (
+        state: cloneInitState,
+        { payload }: { payload: any }
+      ) => {
+        state.isSubmitLoading = false;
+        state.list = state.list?.map((item:any) => get(item,'_id') === get(payload,'_id') ? payload : item);
+        state.updateStatusSuccess = payload;
+      },
+      updateStatusFailed: (
+        state: cloneInitState,
+        { payload }: { payload: any }
+      ) => {
+        state.isSubmitLoading = false;
+        state.updateStatusFailed = payload;
+      },
+
+  // Reset the state Action
+  resetAction: (state:any) => ({
+    ...state,
+    updatePreviewFailed : null,
+    updatePreviewSuccess : null,
+    updateSuccess : null,
+    updateFailed : null,
+    updateStatusFailed : null,
+    updateStatusSuccess : null,
+  }),
       // Want Add more reducer Here...
     };
     this.cloneInitState = {

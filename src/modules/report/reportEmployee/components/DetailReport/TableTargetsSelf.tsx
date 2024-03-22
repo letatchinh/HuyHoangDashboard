@@ -3,6 +3,7 @@ import { ColumnsType } from "antd/es/table/InternalTable";
 import { get } from "lodash";
 import React from "react";
 import { formatter } from "~/utils/helpers";
+import { STATUS_REPORT_EMPLOYEE } from "../../constants";
 import useDetailReportStore from "../../DetailReportContext";
 import { TargetsSupplierItem } from "../../reportEmployee.modal";
 import TableTargetsTemplate from "./TableTargetsTemplate";
@@ -12,7 +13,7 @@ type propsType = {
 export default function TableTargetsSelf({
   dataSource,
 }: propsType): React.JSX.Element {
-  const {onOpenSwap} = useDetailReportStore();
+  const { onOpenSwap, data } = useDetailReportStore();
   const columns: ColumnsType = [
     {
       title: "Nhà cung cấp",
@@ -24,18 +25,21 @@ export default function TableTargetsSelf({
       title: "Doanh số tối thiểu",
       dataIndex: "minSale",
       key: "minSale",
+      align: "center",
       render: (minSale: any) => formatter(minSale || 0),
     },
     {
       title: "Doanh số khoán",
       dataIndex: "mineralSale",
       key: "mineralSale",
+      align: "center",
       render: (mineralSale: any) => formatter(mineralSale || 0),
     },
     {
-      title: "Doanh số thực tế hoàn thành",
+      title: "Mức độ hoàn thành thực tế",
       dataIndex: "actuallySale",
       key: "actuallySale",
+      align: "center",
       render: (actuallySale: any, rc: any) => (
         <span
           style={{ color: actuallySale < get(rc, "minSale") ? "red" : "unset" }}
@@ -45,6 +49,23 @@ export default function TableTargetsSelf({
       ),
     },
     {
+      title: "Áp dụng quy đổi",
+      dataIndex: "afterExchangeSale",
+      key: "afterExchangeSale",
+      align: "center",
+      render: (afterExchangeSale: any, rc: any) => (
+        <span
+          style={{
+            color: afterExchangeSale < get(rc, "minSale") ? "red" : "unset",
+          }}
+        >
+          {formatter(afterExchangeSale || 0)}
+        </span>
+      ),
+    },
+  ];
+  if (get(data, "status") === STATUS_REPORT_EMPLOYEE.NEW) {
+    columns.push({
       title: "Thao tác",
       key: "_id",
       align: "center",
@@ -52,18 +73,22 @@ export default function TableTargetsSelf({
         <Button
           onClick={() =>
             onOpenSwap({
-              ...get(rc,'saleCanChange',0) > 0 && {resourceSupplierId: get(rc, "supplier._id")},
-              ...get(rc,'saleCanChange',0) <= 0 && {targetSupplierId: get(rc, "supplier._id")},
+              ...(get(rc, "saleCanChange", 0) > 0 && {
+                resourceSupplierId: get(rc, "supplier._id"),
+              }),
+              ...(get(rc, "saleCanChange", 0) <= 0 && {
+                targetSupplierId: get(rc, "supplier._id"),
+              }),
               type: "self",
             })
           }
-          type="text"
+          type="primary"
         >
           Quy đổi
         </Button>
       ),
-    },
-  ];
+    });
+  }
   return (
     <TableTargetsTemplate
       dataSource={dataSource}

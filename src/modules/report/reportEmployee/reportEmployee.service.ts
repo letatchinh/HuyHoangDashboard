@@ -1,5 +1,6 @@
 import { CSSProperties } from "@ant-design/cssinjs/lib/hooks/useStyleRegister";
 import { get } from "lodash";
+import { MIN_AFTER_CHANGE } from "./constants";
 import { DetailSalary, DetailSalaryItem } from "./reportEmployee.modal";
 const styleChildren :CSSProperties= {
     fontStyle : 'italic',
@@ -160,9 +161,9 @@ export class SwapStructure {
   maxValue;
   constructor({
     id,
-    rateSelf = 0,
+    rateSelf = 1,
     name,
-    rateTarget = 0,
+    rateTarget = 1,
     maxValue = 0,
   }: {
     id: string;
@@ -178,8 +179,51 @@ export class SwapStructure {
     this.maxValue = maxValue;
   }
   handleExchange(value: number): number {
+    if(!value) return 0;
     return Math.ceil((value * this.rateTarget) / this.rateSelf);
   }
 }
 
 
+
+export const handleCalculateReducer = (payload:any) => ({
+  ...payload,
+  salary: {
+    ...get(payload, "salary"),
+    totalBonus: [
+      get(payload, "salary.bonus.overMonth", 0),
+      get(payload, "salary.bonus.overQuarter", 0),
+      get(payload, "salary.bonus.overYear", 0),
+      get(payload, "salary.bonus.workingBenefit", 0),
+      get(payload, "salary.bonus.cover_pos", 0),
+      get(payload, "salary.bonus.exclusive_product", 0),
+      get(payload, "salary.bonus.targetsLeader", 0),
+    ].reduce((sum, cur) => sum + cur, 0),
+  },
+  targetsTeam: {
+    ...get(payload, "targetsTeam", {}),
+    targetSupplier: get(payload, "targetsTeam.targetSupplier", [])?.map(
+      (target: any) => ({
+        ...target,
+        saleCanChange: Math.max(
+          get(target, "afterExchangeSale", 0) -
+            get(target, "targetTeam", 0),
+          0
+        ),
+      })
+    ),
+  },
+  targetsSelf: {
+    ...get(payload, "targetsSelf", {}),
+    targetSupplier: get(payload, "targetsSelf.targetSupplier", [])?.map(
+      (target: any) => ({
+        ...target,
+        saleCanChange: Math.max(
+          get(target, "afterExchangeSale", 0) -
+            get(target, "minSale", 0),
+          0
+        ),
+      })
+    ),
+  },
+});

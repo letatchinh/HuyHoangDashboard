@@ -6,13 +6,18 @@ import InputNumberAnt from "~/components/Antd/InputNumberAnt";
 import { requireRules } from "~/constants/defaultValue";
 import { formatter } from "~/utils/helpers";
 import useDetailReportStore from "../../DetailReportContext";
+import { useResetAction, useUpdatePreviewReportEmployee } from "../../reportEmployee.hook";
 import {
   DataSwapType,
   ExchangeRateType,
+  SubmitDataUpdatePreview,
   TargetsSupplierItem,
 } from "../../reportEmployee.modal";
 import { SwapStructure } from "../../reportEmployee.service";
-type propsType = {};
+type propsType = {
+  onCloseSwap: () => void;
+
+};
 type SwapStructureType = {
   id: string;
   rateSelf: number;
@@ -21,7 +26,7 @@ type SwapStructureType = {
   maxValue?: number;
   handleExchange: (p?: any) => void;
 };
-export default function Swap(props: propsType): React.JSX.Element {
+export default function Swap({onCloseSwap}: propsType): React.JSX.Element {
   const [form] = Form.useForm();
   const {
     dataSwap,
@@ -29,8 +34,11 @@ export default function Swap(props: propsType): React.JSX.Element {
     dataSourceTargetsSelf,
     exchangeRateOverrideTargetsTeam,
     exchangeRateOverrideTargetsSelf,
-
+    data,
+    id
   } = useDetailReportStore();
+  const [isSubmitLoading,onPreviewUpdate] = useUpdatePreviewReportEmployee(onCloseSwap);
+  useResetAction();
   const dataExchangeHandle: ExchangeRateType[] = useMemo(() => {
     switch (dataSwap?.type) {
       case "team":
@@ -52,6 +60,7 @@ export default function Swap(props: propsType): React.JSX.Element {
     }
   }, [dataSwap, dataSourceTargetsTeam, dataSourceTargetsSelf]);
 
+  // Main Data
   const [dataExchangeSwap, setDataExchangeSwap] = useState<{
     source?: SwapStructureType;
     target?: SwapStructureType;
@@ -164,14 +173,37 @@ export default function Swap(props: propsType): React.JSX.Element {
     })
   };
 
-  const onExchange = () => {
-    console.log(dataSourceTargetsTeam,
-      dataSourceTargetsSelf);
-    
-  };
+
   const onFinish = (values: DataSwapType) => {
-    console.log(values, "values");
-    onExchange()
+    const {resourceValue = 0,targetValue = 0} = values;
+    const submitData : SubmitDataUpdatePreview = {
+      employeeId : get(data,'employee.employeeId',''),
+      targetsSelf : {
+        targetSupplier :  dataSwap?.type === 'team' ? dataSourceTargetsSelf : dataSourceTargetsSelf?.map((value:TargetsSupplierItem) => {
+          const isSource = dataExchangeSwap?.source?.id === value?.supplier?._id;
+          const isTarget = dataExchangeSwap?.target?.id === value?.supplier?._id;
+          return ({
+            ...value,
+            afterExchangeSale : isSource ? value?.afterExchangeSale - resourceValue : isTarget ? value?.afterExchangeSale + targetValue : value?.afterExchangeSale
+          })
+        })
+      },
+      targetsTeam : {
+        targetSupplier : dataSwap?.type === 'self' ? dataSourceTargetsTeam : dataSourceTargetsTeam?.map((value:TargetsSupplierItem) => {
+          const isSource = dataExchangeSwap?.source?.id === value?.supplier?._id;
+          const isTarget = dataExchangeSwap?.target?.id === value?.supplier?._id;
+          return ({
+            ...value,
+            afterExchangeSale : isSource ? value?.afterExchangeSale - resourceValue : isTarget ? value?.afterExchangeSale + targetValue : value?.afterExchangeSale
+          })
+        })
+      },
+    };
+    onPreviewUpdate({
+      ...submitData,
+      _id : id
+    })
+    
   };
   return (
     <Form
@@ -319,7 +351,7 @@ export default function Swap(props: propsType): React.JSX.Element {
           <Button type="text" icon={<SwapOutlined />} />
         </Flex>
       </Flex>
-      <Button size="large" block type="primary" htmlType="submit">
+      <Button loading={isSubmitLoading} size="large" block type="primary" htmlType="submit">
         Quy đổi
       </Button>
     </Form>

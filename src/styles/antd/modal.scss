@@ -19,7 +19,7 @@
   overflow: hidden!important;
   min-width: 80vw!important;
   & .ant-modal-content{
-      max-height: calc(95vh - 50px) !important;
+      max-height: calc(100vh) !important;
       overflow-y: scroll !important;;
   }
 }
