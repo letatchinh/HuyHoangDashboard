@@ -26,7 +26,6 @@ import {
 import { SalesGroupType } from "../salesGroup.modal";
 import useSalesGroupStore from "../salesGroupContext";
 import ExchangeRate from "../components/ExchangeRate";
-import TableSelect from "../components/ExchangeRate/TableSelect";
 const CLONE_SALES_GROUP_GEOGRAPHY_VI: any = SALES_GROUP_GEOGRAPHY_VI;
 const CLONE_SALES_GROUP_GEOGRAPHY_COLOR: any = SALES_GROUP_GEOGRAPHY_COLOR;
 export default function SalesGroup() {
