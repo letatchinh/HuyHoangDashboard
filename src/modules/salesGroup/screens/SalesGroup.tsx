@@ -22,7 +22,6 @@ import { SalesGroupType } from "../salesGroup.modal";
 import useSalesGroupStore from "../salesGroupContext";
 import { Button } from "antd";
 import ExchangeRate from "../components/ExchangeRate";
-import TableSelect from "../components/ExchangeRate/TableSelect";
 const CLONE_SALES_GROUP_GEOGRAPHY_VI: any = SALES_GROUP_GEOGRAPHY_VI;
 export default function SalesGroup() {
   const {

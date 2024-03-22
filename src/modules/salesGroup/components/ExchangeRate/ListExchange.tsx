@@ -1,11 +1,14 @@
-import { Button, Divider, Form, List, Skeleton, FormInstance, Row } from "antd";
+import { Button, Divider, Form, List, Skeleton, FormInstance, Row, Tooltip } from "antd";
 import React, { useEffect, useState } from "react";
 import SelectExchange from "./SelectExchange";
-import { PlusOutlined } from "@ant-design/icons";
+import { PlusOutlined, WarningOutlined } from "@ant-design/icons";
 import useSalesGroupStore from "../../salesGroupContext";
 import { get, omit } from "lodash";
 import { useFetchState } from "~/utils/helpers";
 import apis from "~/modules/supplier/supplier.api";
+import BaseBorderBox from "~/components/common/BaseBorderBox";
+import InfoParentExchange from "./InfoParentExchange";
+import useNotificationStore from "~/store/NotificationContext";
 
 type propsType = {};
 
@@ -25,8 +28,10 @@ export default function ListExchange(props: propsType): React.JSX.Element {
     groupInfo,
   } = useSalesGroupStore();
   const [dataSource, setDataSource] = useState<DataType[]>([]);
+  const [dataSourceParent, setDataSourceParent] = useState<DataType[]>([]);
   const [form] = Form.useForm();
   const [count, setCount] = useState(0);
+  const { onNotify } = useNotificationStore();
 
   const [suppliers, isLoading] = useFetchState({
     api: apis.getAllPublic,
@@ -37,6 +42,9 @@ export default function ListExchange(props: propsType): React.JSX.Element {
 
   useEffect(() => {
     const mapData = (data: any[]) => {
+      if (!data?.length) {
+        return [];
+      };
       const res = data?.map((item: any, index: number) => ({
         key: index,
         exchangeRateA: item?.exchangeRateA,
@@ -47,13 +55,8 @@ export default function ListExchange(props: propsType): React.JSX.Element {
       setCount(res?.length);
       return res;
     };
-    if (groupInfo?.exchangeRateOverride) {
-      return setDataSource(mapData(groupInfo?.exchangeRateOverride));
-    } else if (parentNear) {
-      return setDataSource(parentNear?.exchangeRateOverride);
-    } else {
-      return setDataSource([]);
-    }
+    setDataSourceParent(mapData(parentNear?.exchangeRateOverride));
+    setDataSource(mapData(groupInfo?.exchangeRateOverride));
   }, [groupInfo]);
 
   //Handle
@@ -69,6 +72,7 @@ export default function ListExchange(props: propsType): React.JSX.Element {
       supplierBId: data[1]?.value,
       exchangeRateA: 1,
       exchangeRateB: 1,
+      key: count,
     };
     setDataSource([...dataSource, defaultData]);
     setCount(count + 1);
@@ -104,33 +108,69 @@ export default function ListExchange(props: propsType): React.JSX.Element {
     }
   };
 
+  const onCopy = () => {
+    try {
+      const newData = [...dataSource, ...dataSourceParent];
+      const newDataSource = newData?.map((item: any, index: any) => ({
+        ...item,
+        key: index,
+      }));
+      setCount(newDataSource?.length);
+      setDataSource([...newDataSource]);
+    } catch (error) {
+      onNotify?.error("Sao chép thất bại, vui lòng thử lại!");
+    }
+  };
+
   return (
     <div style={{ width: "100%", padding: 20 }}>
       <div style={{ display: "flex", justifyContent: "flex-end" }}>
+        <Tooltip title = 'Sao chép dữ liệu từ "Giá trị mặc định" sang "Giá trị thay đổi"'>
+          <Button style={{ marginRight: 10 }} onClick={onCopy}>Sao chép</Button>
+        </Tooltip>
         <Button icon={<PlusOutlined />} onClick={() => handleAdd()}>
           {" "}
           Thêm hàng
         </Button>
       </div>
-      <List
-        dataSource={dataSource}
-        renderItem={(item: any, index: any) => {
-          return (
-            <List.Item key={item.key}>
-              <SelectExchange
-                index={index}
-                value={item}
-                handleDelete={handleDelete}
-                onSave={handleSave}
-                form={form}
-                setDataSource={setDataSource}
-                dataSource={dataSource}
-                suppliers={suppliers}
-              />
-            </List.Item>
-          );
-        }}
-      />
+      
+      <BaseBorderBox title={<Tooltip title = 'Giá trị mặc định được lấy từ vùng quản lý trên, không được phép thay đổi'>Giá trị mặc định <WarningOutlined /></Tooltip>}>
+        <List
+          dataSource={dataSourceParent}
+          renderItem={(item: any, index: any) => {
+            return (
+              <List.Item key={item.key}>
+                <InfoParentExchange
+                  index={index}
+                  value={item}
+                  suppliers={suppliers}
+                />
+              </List.Item>
+            );
+          }}
+        />
+      </BaseBorderBox>
+      <BaseBorderBox title={'Giá trị thay đổi'}>
+        <List
+          dataSource={dataSource}
+          renderItem={(item: any, index: any) => {
+            return (
+              <List.Item key={item.key}>
+                <SelectExchange
+                  index={index}
+                  value={item}
+                  handleDelete={handleDelete}
+                  onSave={handleSave}
+                  form={form}
+                  setDataSource={setDataSource}
+                  dataSource={dataSource}
+                  suppliers={suppliers}
+                />
+              </List.Item>
+            );
+          }}
+        />
+      </BaseBorderBox>
       <Row gutter={10} justify={"end"}>
         <Button style={{ marginRight: 10 }} onClick={onCloseFormExchangeRate}>
           Huỷ
