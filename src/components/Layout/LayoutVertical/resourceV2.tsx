@@ -13,6 +13,7 @@ import {
     MoneyCollectOutlined,
     BellFilled,
     FundProjectionScreenOutlined,
+    FieldTimeOutlined,
   } from "@ant-design/icons";
   import { MenuProps } from "antd";
   import React, { useCallback } from "react";
@@ -151,6 +152,13 @@ import {
               path: PATH_APP.saleChannel.root,
               key: PATH_APP.saleChannel.root,
               permission: [POLICIES.READ_SALECHANNEL],
+            },
+            {
+              label: "Cấu hình thời gian tự động",
+              path: PATH_APP.configurationCronTime.root,
+              key: PATH_APP.configurationCronTime.root,
+              icon: <FieldTimeOutlined />,
+              // permission: [POLICIES.READ_CONFIGDISCOUNT],
             },
           ],
         },

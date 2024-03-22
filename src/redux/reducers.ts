@@ -41,7 +41,7 @@ import baseSalary from '~/modules/reportSalary/baseSalary/index';
 import benefitConfiguration from '~/modules/reportSalary/benefitConfiguration/index';
 import reportEmployee from '~/modules/report/reportEmployee/index';
 import saleChannel from '~/modules/saleChannel/index';
-
+import configurationCronTime from "~/modules/configurationCronTime";
 const authPersistConfig = {
     key: 'auth',
     storage: localStorage,
@@ -95,5 +95,6 @@ const rootReducer = combineReducers({
     reportSupplier: reportSupplier.redux.reducer,
     saleChannel: saleChannel.redux.reducer,
 
+    configurationCronTime: configurationCronTime.redux.reducer,
 });
 export default rootReducer

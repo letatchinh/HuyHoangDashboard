@@ -36,8 +36,8 @@ import baseSalary from '~/modules/reportSalary/baseSalary/index';
 import benefitConfiguration from '~/modules/reportSalary/benefitConfiguration/index';
 import reportEmployee from '~/modules/report/reportEmployee/index';
 import saleChannel from '~/modules/saleChannel';
-
 import reportSupplierModule from '~/modules/report/reportSupplier'; //
+import configurationCronTime from "~/modules/configurationCronTime";
 export default function* rootSaga() {
   yield all([
     authModule.redux.saga(),
@@ -80,5 +80,6 @@ export default function* rootSaga() {
     reportEmployee.redux.saga(),
     reportSupplierModule.redux.saga(),
     saleChannel.redux.saga(),
+    configurationCronTime.redux.saga(),
   ]);
 };

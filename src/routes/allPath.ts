@@ -128,4 +128,8 @@ export const PATH_APP = {
   saleChannel: {
     root: path(ROOTS.app, '/sale-channel'),
   },
+  configurationCronTime: {
+    root: path(ROOTS.app, "/configuration-cronTime"),
+  },
+
 };

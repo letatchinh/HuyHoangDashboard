@@ -40,7 +40,7 @@ import BaseSalaryPage from "~/pages/Dashboard/BaseSalary";
 import BenefitConfigurationPage from "~/pages/Dashboard/BenefitConfiguration";
 import ReportEmployeePage from "~/pages/Dashboard/ReportEmployee";
 import SaleChannel from "~/pages/Dashboard/SaleChannel";
-
+import ConfigurationCronTime from "~/pages/Dashboard/ConfigurationCronTime";
 export const mainRoutes :PathRouteProps[] = [
   { path: PATH_APP.main.root, Component: Homepage },
 
@@ -120,6 +120,8 @@ export const mainRoutes :PathRouteProps[] = [
   { path: PATH_APP.benefitConfiguration.root, Component: BenefitConfigurationPage },
   // Báo cáo nhân viên
   { path: PATH_APP.report.employee, Component: ReportEmployeePage },
+  // Configuration Cron Time
+  { path: PATH_APP.configurationCronTime.root, Component: ConfigurationCronTime},
 
   // Kênh bán hàng
   { path: PATH_APP.saleChannel.root, Component: SaleChannel},

@@ -69,6 +69,7 @@ export type initStateSlice<T=any> = {
     reportEmployee: "reportEmployee",
     reportSupplier: "reportSupplier",
     saleChannel: "saleChannel",
+    configurationCronTime : "configurationCronTime",
     }as const
     
     
