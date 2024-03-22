@@ -18,7 +18,7 @@ const RESOURCES = [
   //User
   branch,
   // company,
-  // employee,
+  employee,
   user,
   userGroup,
 

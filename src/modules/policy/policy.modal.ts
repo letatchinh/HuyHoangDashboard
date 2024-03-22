@@ -5,7 +5,7 @@ export type ResourceType = {
   GROUP_USER: string[],
   GROUP_EMPLOYEE: string[],
   GROUP_WHBILL: string[],
-  GROUP_WHSETTING:  string[]
+  GROUP_WHSETTING: string[],
 };
 
 export type policyType = 'write' | 'read' | 'update' | 'delete' | 'download' | 'admin';

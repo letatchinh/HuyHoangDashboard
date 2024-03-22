@@ -1,5 +1,5 @@
 ############# Builder image #############
-FROM node:12.22.1-stretch as builder
+FROM node:16-stretch as builder
 
 WORKDIR /source.tmp
 

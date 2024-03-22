@@ -1,6 +1,7 @@
-// export const BASE_URL = process.env.REACT_APP_BASE_URL;
-export const BASE_URL = 'http://192.168.77.157:8555';
+import { get } from "lodash";
+import { devConfig } from "~/config";
 
+export const BASE_URL = get(devConfig,'baseUrl');
 export const DEFAULT_UPLOAD_ACTION = `${BASE_URL}/api/v1/file`;
 export const MAX_UPLOAD_FILE_SIZE_IN_MB = 2;
 
@@ -13,14 +14,14 @@ export interface OptionSelect {
 export const OptionStatus : OptionSelect[] = [
   {
     value:  null,
-    label: 'TC',
+    label: 'Tất cả',
   },
   {
     value: 'ACTIVE',
-    label: 'HĐ',
+    label: 'Hoạt động',
   },
   {
     value: 'INACTIVE',
-    label: 'KHĐ',
+    label: 'Không hoạt động',
   }
 ];
