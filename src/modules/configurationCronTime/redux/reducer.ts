@@ -12,11 +12,16 @@ class ConfigurationCronTimeClassExtend extends InstanceModuleRedux {
     this.cloneReducer = {
       ...this.initReducer,
       // Want Add more reducer Here...
-      getListSuccess: (state:initStateSlice , { payload }: any) => {
+      getListSuccess: (state: initStateSlice, { payload }: any) => {
         state.isLoading = false;
         state.list = payload;
       },
-    }
+      updateSuccess: (state: initStateSlice, { payload }: { payload: any }) => {
+        state.isLoading = false;
+        state.updateSuccess = payload;
+        state.list = payload;
+      },
+    };
     this.cloneInitState = {
       ...this.initialState,
       // Want Add more State Here...
@@ -34,7 +39,6 @@ class ConfigurationCronTimeClassExtend extends InstanceModuleRedux {
 
 const newSlice = new ConfigurationCronTimeClassExtend();
 const data = newSlice.createSlice();
-
 
 export const configurationCronTimeActions = data.actions;
 export default data.reducer;

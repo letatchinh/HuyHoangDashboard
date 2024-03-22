@@ -28,15 +28,8 @@ export default function ConfigurationCronTime(
     form.resetFields();
   }, [times, form]);
 
-  const data = times.cronTime;
-  // const mergedValue = useMemo(() => {
-  //   if (Array.isArray(data) && data.length > 0) {
-  //     return data[0];
-  //   }
-  //   return null;
-  // }, [data]);
   const mergedValue = useMemo(() => {
-  return times
+    return times;
   }, [times]);
   const onChangeStatus = (
     _id: any,
@@ -74,14 +67,11 @@ export default function ConfigurationCronTime(
     if (get(mergedValue, "_id")) {
       updateConfiguration({
         ...mergedValue,
-        value: {
-          ...form.getFieldsValue(),
-        },
+        ...form.getFieldsValue(),
       });
     }
   };
-  console.log(mergedValue, "mergedValue");
-    const layout = {
+  const layout = {
     labelCol: {
       xs: { span: 48 },
       sm: { span: 12 },
@@ -96,17 +86,22 @@ export default function ConfigurationCronTime(
       <Breadcrumb
         title={"Cấu hình thời gian tự động cho nhà cung cấp"}
       ></Breadcrumb>
-      <Row>
-        <Switch
-          checked={get(times, "status") === "ACTIVE"}
-          onChange={(value) =>
-            onChangeStatus(
-              get(times, "_id"),
-              value ? STATUS["ACTIVE"] : STATUS["INACTIVE"],
-              isLoading
-            )
-          }
-        />
+      <Row style={{marginBottom: '20px'}}>
+        <Col span={4}>
+          <h5>Trạng thái cấu hình: </h5>
+        </Col>
+        <Col span={4}>
+          <Switch
+            checked={get(times, "status") === "ACTIVE"}
+            onChange={(value) =>
+              onChangeStatus(
+                get(times, "_id"),
+                value ? STATUS["ACTIVE"] : STATUS["INACTIVE"],
+                isLoading
+              )
+            }
+          />
+        </Col>
       </Row>
       <Form
         {...layout}
@@ -117,85 +112,82 @@ export default function ConfigurationCronTime(
         requiredMark={false}
         name="basic"
         labelAlign="left"
-        style={{ maxWidth: 600 }}
+       
       >
         <Form.List name="cronTime">
-          {(fields, { add, remove }) => {
-            console.log(fields, "fields");
-
-            return (
-              <>
-                {fields.map((field, index) => (
-                  <Row key={index} style={{ width: "100%" }}>
-                    <Col span={10}>
-                      <Row style={{ width: "100%" }}>
-                        <Form.Item
-                          label={`Nhập giờ lần ` + (index + 1)}
-                          name={[index, "h"]}
-                          rules={[
-                            {
-                              type: "number",
-                              min: 0,
-                              max: 23,
-                              required: true,
-                              whitespace: true,
-                              message: "Vui lòng nhập giờ từ 0 đến 23",
-                            },
-                          ]}
-                        >
-                          <InputNumber
-                            defaultValue="0"
-                            style={{ width: "100%" }}
-                          />
-                        </Form.Item>
-                      </Row>
-                      <Row style={{ width: "100%" }}>
-                        <Form.Item
-                          label={`Nhập phút lần ` + (index + 1)}
-                          name={[index, "m"]}
-                          rules={[
-                            {
-                              type: "number",
-                              min: 0,
-                              max: 59,
-                              required: true,
-                              whitespace: true,
-                              message: "Vui lòng nhập phút từ 0 đến 59",
-                            },
-                          ]}
-                        >
-                          <InputNumber
-                            defaultValue="0"
-                            style={{ width: "100%" }}
-                          />
-                        </Form.Item>
-                      </Row>
-                    </Col>
-                    <Col span={12}>
-                      {fields.length > 1 ? (
-                        <MinusCircleOutlined
-                          className="dynamic-delete-button"
-                          onClick={() => remove(index)}
-                        />
-                      ) : null}
-                    </Col>
-                  </Row>
-                ))}
-                <Form.Item>
-                  <Button
-                    type="dashed"
-                    onClick={() => add({})}
-                    style={{
-                      width: "100%",
-                    }}
-                    icon={<PlusOutlined />}
+          {(fields, { add, remove }) => (
+            <>
+              {fields.map((field, index) => (
+                <Row
+                  key={index}
+                  style={{ width: "100%", marginBottom: 8 }}
+                  gutter={32}
+                >
+                  <Col span={10}>
+                    <Form.Item
+                      label={`Nhập giờ lần ` + (index + 1)}
+                      name={[index, "h"]}
+                      rules={[
+                        {
+                          type: "number",
+                          min: 0,
+                          max: 23,
+                          required: true,
+                          whitespace: true,
+                          message: "Vui lòng nhập giờ từ 0 đến 23",
+                        },
+                      ]}
+                    >
+                      <InputNumber defaultValue={0} style={{ width: "100%" }} />
+                    </Form.Item>
+                  </Col>
+                  <Col span={10}>
+                    <Form.Item
+                      label={`Nhập phút lần ` + (index + 1)}
+                      name={[index, "m"]}
+                      rules={[
+                        {
+                          type: "number",
+                          min: 0,
+                          max: 59,
+                          required: true,
+                          whitespace: true,
+                          message: "Vui lòng nhập phút từ 0 đến 59",
+                        },
+                      ]}
+                    >
+                      <InputNumber defaultValue={0} style={{ width: "100%" }} />
+                    </Form.Item>
+                  </Col>
+                  <Col
+                    span={4}
+                    style={{ alignItems: "center", justifyContent: "center" }}
                   >
-                    Thêm giờ/ phút
-                  </Button>
-                </Form.Item>
-              </>
-            );
-          }}
+                    {fields.length > 1 ? (
+                      <MinusCircleOutlined
+                        className="dynamic-delete-button"
+                        onClick={() => remove(index)}
+                      />
+                    ) : null}
+                  </Col>
+                </Row>
+              ))}
+
+              <Form.Item>
+                <Button
+                  type="dashed"
+                  onClick={() => add({})}
+                  style={{
+                    width: "100%",
+                    margin: "auto",
+                  }}
+                  icon={<PlusOutlined />}
+                >
+                  Thêm giờ/ phút
+                </Button>
+              </Form.Item>
+            </>
+          )}
         </Form.List>
         <Form.Item>
           <Button type="primary" htmlType="submit" onClick={onFinish}>
