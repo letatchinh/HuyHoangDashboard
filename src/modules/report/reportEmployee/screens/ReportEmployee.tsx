@@ -64,6 +64,7 @@ export default function ReportEmployee(props: propsType): React.JSX.Element {
       title: "Ngày kết toán",
       dataIndex: "createdAt",
       key: "createdAt",
+      align : 'center',
       render: (createdAt: any) => dayjs(createdAt).format("DD/MM/YYYY"),
     },
     {
@@ -102,13 +103,14 @@ export default function ReportEmployee(props: propsType): React.JSX.Element {
       <WhiteBox>
         {/* <SelectSearch showSelect={false} /> */}
         <TableAnt
-          dataSource={data}
+          dataSource={[...data,...data]}
           loading={isLoading}
           rowKey={(rc) => rc?._id}
           columns={columns}
           size="small"
           pagination={pagingTable(paging,onParamChange)}
           bordered
+          stickyTop
         />
         <ModalAnt
           centered

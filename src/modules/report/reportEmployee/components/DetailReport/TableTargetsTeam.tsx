@@ -1,4 +1,4 @@
-import { Button } from "antd";
+import { Button, Typography } from "antd";
 import { ColumnsType } from "antd/es/table/InternalTable";
 import { get } from "lodash";
 import React from "react";
@@ -49,13 +49,13 @@ export default function TableTargetsTeam({
       dataIndex: "afterExchangeSale",
       key: "afterExchangeSale",
       render: (afterExchangeSale: any, rc: any) => (
-        <span
+        <Typography.Text strong
           style={{
             color: afterExchangeSale < get(rc, "targetTeam") ? "red" : "unset",
           }}
         >
           {formatter(afterExchangeSale || 0)}
-        </span>
+        </Typography.Text>
       ),
     },
   ];
