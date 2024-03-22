@@ -1,4 +1,3 @@
-import { Table } from "antd";
 import { ColumnsType } from "antd/es/table/InternalTable";
 import { get } from "lodash";
 import React from "react";

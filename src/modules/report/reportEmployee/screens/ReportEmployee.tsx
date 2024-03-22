@@ -11,7 +11,7 @@ import {
   useGetReportEmployees,
   useReportEmployeeQueryParams,
 } from "../reportEmployee.hook";
-import data from "./data.json";
+// import data from "./data.json";
 import { get } from "lodash";
 import { EMPLOYEE_LEVEL_VI } from "~/modules/employee/constants";
 import { Button, Typography } from "antd";
@@ -22,7 +22,7 @@ type propsType = {};
 const CLONE_EMPLOYEE_LEVEL_VI: any = EMPLOYEE_LEVEL_VI;
 export default function ReportEmployee(props: propsType): React.JSX.Element {
   const [query] = useReportEmployeeQueryParams();
-  //   const [data, isLoading] = useGetReportEmployees(query);
+    const [data, isLoading] = useGetReportEmployees(query);
   const [openDetail, setOpenDetail] = useState(false);
   const [id, setId] = useState<any>();
 
@@ -66,7 +66,7 @@ export default function ReportEmployee(props: propsType): React.JSX.Element {
       key: "salary",
       align: "center",
       render: (salary: any) => (
-        <Typography.Text strong>{formatter(salary || 0)}</Typography.Text>
+        <Typography.Text strong>{formatter(get(salary,'totalSalary') || 0)}</Typography.Text>
       ),
     },
     {
@@ -102,8 +102,9 @@ export default function ReportEmployee(props: propsType): React.JSX.Element {
           footer={null}
           onCancel={onCloseDetail}
           open={openDetail}
+          destroyOnClose
         >
-          <DetailReportProvider>
+          <DetailReportProvider id={id}>
             <DetailReport />
           </DetailReportProvider>
         </ModalAnt>

@@ -29,6 +29,7 @@ export default function Swap(props: propsType): React.JSX.Element {
     dataSourceTargetsSelf,
     exchangeRateOverrideTargetsTeam,
     exchangeRateOverrideTargetsSelf,
+
   } = useDetailReportStore();
   const dataExchangeHandle: ExchangeRateType[] = useMemo(() => {
     switch (dataSwap?.type) {
@@ -56,9 +57,7 @@ export default function Swap(props: propsType): React.JSX.Element {
     target?: SwapStructureType;
   }>();
 
-  const onFinish = (values: DataSwapType) => {
-    console.log(values, "values");
-  };
+
   useEffect(() => {
     form.setFieldsValue({
       ...dataSwap,
@@ -163,7 +162,17 @@ export default function Swap(props: propsType): React.JSX.Element {
       source : dataExchangeSwap?.target,
       target : dataExchangeSwap?.source,
     })
-  }
+  };
+
+  const onExchange = () => {
+    console.log(dataSourceTargetsTeam,
+      dataSourceTargetsSelf);
+    
+  };
+  const onFinish = (values: DataSwapType) => {
+    console.log(values, "values");
+    onExchange()
+  };
   return (
     <Form
       labelCol={{ span: 8 }}

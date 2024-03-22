@@ -37,6 +37,16 @@ function* updateReportEmployee({payload} : any) : any {
     yield put(reportEmployeeActions.updateFailed(error));
   }
 }
+
+function* updatePreviewReportEmployee({payload} : any) : any {
+  try {
+    const data = yield call(api.updatePreview,payload);
+    yield put(reportEmployeeActions.updatePreviewSuccess(data));
+  } catch (error:any) {
+    yield put(reportEmployeeActions.updatePreviewFailed(error));
+  }
+}
+
 function* deleteReportEmployee({payload : id} : any) : any {
   try {
     const data = yield call(api.delete,id);
@@ -52,5 +62,6 @@ export default function* reportEmployeeSaga() {
   yield takeLatest(reportEmployeeActions.getByIdRequest, getByIdReportEmployee);
   yield takeLatest(reportEmployeeActions.createRequest, createReportEmployee);
   yield takeLatest(reportEmployeeActions.updateRequest, updateReportEmployee);
+  yield takeLatest(reportEmployeeActions.updatePreviewRequest, updatePreviewReportEmployee);
   yield takeLatest(reportEmployeeActions.deleteRequest, deleteReportEmployee);
 }

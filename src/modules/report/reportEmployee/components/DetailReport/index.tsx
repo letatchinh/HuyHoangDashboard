@@ -1,23 +1,21 @@
 import { Divider, Flex, Typography } from 'antd';
 import dayjs from 'dayjs';
 import { get } from 'lodash';
-import React, { useCallback, useMemo, useState } from 'react';
-import ModalAnt from '~/components/Antd/ModalAnt';
+import React from 'react';
 import WhiteBox from '~/components/common/WhiteBox';
 import { EMPLOYEE_LEVEL, EMPLOYEE_LEVEL_VI } from '~/modules/employee/constants';
 import { formatter } from '~/utils/helpers';
 import useDetailReportStore from '../../DetailReportContext';
-import { handleConvertDataSourceDetailSalary, ItemDataSource } from '../../reportEmployee.service';
-import data from './data.json';
+// import data from './data.json';
 import TableDetailSalary from './TableDetailSalary';
 import TableTargetsSelf from './TableTargetsSelf';
 import TableTargetsTeam from './TableTargetsTeam';
 type propsType = {
-
 };
 const CLONE_EMPLOYEE_LEVEL_VI : any = EMPLOYEE_LEVEL_VI
 export default function DetailReport(props:propsType) : React.JSX.Element {
-    const {dataSourceDetailSalary,dataSourceTargetsSelf,dataSourceTargetsTeam,employeeLevel} = useDetailReportStore();
+    
+    const {dataSourceDetailSalary,dataSourceTargetsSelf,dataSourceTargetsTeam,employeeLevel,data} = useDetailReportStore();
     return (
         <div className='detailContainer'>
             <Divider><h5 style={{textAlign : 'center'}}>Chi tiết lương</h5></Divider>

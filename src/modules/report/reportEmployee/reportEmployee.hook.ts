@@ -15,6 +15,7 @@ import { reportEmployeeActions } from "./redux/reducer";
 const MODULE = "reportEmployee";
 const MODULE_VI = "";
 
+const getSelector = (key : any) => (state : any) => state[MODULE][key];
 const {
   loadingSelector,
   listSelector,
@@ -31,6 +32,8 @@ const {
   updateFailedSelector,
   pagingSelector,
 } = getSelectors(MODULE);
+const updatePreviewSuccessSelector = getSelector('updatePreviewSuccess');
+const updatePreviewFailedSelector = getSelector('updatePreviewFailed');
 
 export const useReportEmployeePaging = () => useSelector(pagingSelector);
 
@@ -81,6 +84,20 @@ export const useUpdateReportEmployee = (callback?: any) => {
   });
 };
 
+export const useUpdatePreviewReportEmployee = (callback?: any) => {
+  useSuccess(
+    updatePreviewSuccessSelector,
+    `Cập nhật ${MODULE_VI} thành công`,
+    callback
+  );
+  useFailed(updatePreviewFailedSelector);
+
+  return useSubmit({
+    action: reportEmployeeActions.updatePreviewRequest,
+    loadingSelector: isSubmitLoadingSelector,
+  });
+};
+
 export const useDeleteReportEmployee = (callback?: any) => {
   useSuccess(deleteSuccessSelector, `Xoá ${MODULE_VI} thành công`, callback);
   useFailed(deleteFailedSelector);
@@ -96,8 +113,8 @@ export const useReportEmployeeQueryParams = () => {
   const limit = query.get("limit") || 10;
   const page = query.get("page") || 1;
   const keyword = query.get("keyword");
-  const createSuccess = useSelector(createSuccessSelector);
-  const deleteSuccess = useSelector(deleteSuccessSelector);
+  const createSuccess : any = useSelector(createSuccessSelector);
+  const deleteSuccess : any = useSelector(deleteSuccessSelector);
   return useMemo(() => {
     const queryParams = {
       page,
