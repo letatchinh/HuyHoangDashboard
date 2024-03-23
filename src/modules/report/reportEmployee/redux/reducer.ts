@@ -44,7 +44,8 @@ class ReportEmployeeClassExtend extends InstanceModuleRedux {
         { payload }: { payload: any }
       ) => {
         state.isSubmitLoading = false;
-        state.byId = handleCalculateReducer(payload);
+        const newById = handleCalculateReducer(payload);
+        state.byId = newById;
         state.updatePreviewSuccess = payload;
       },
       updatePreviewFailed: (

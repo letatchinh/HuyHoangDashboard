@@ -14,7 +14,7 @@ type propsType = {
 export default function TableTargetsTeam({
   dataSource,
 }: propsType): React.JSX.Element {
-  const { onOpenSwap, employeeLevel,data } = useDetailReportStore();
+  const { onOpenSwap, employeeLevel,data,loading } = useDetailReportStore();
   const columns: ColumnsType = [
     {
       title: "Nhà cung cấp",
@@ -30,7 +30,7 @@ export default function TableTargetsTeam({
       render: (targetTeam: any) => formatter(targetTeam || 0),
     },
     {
-      title: "Mức độ hoàn thành thực tế",
+      title: "Doanh số thực tế hoàn thành",
       dataIndex: "actuallySale",
       key: "actuallySale",
       align: "center",
@@ -89,6 +89,7 @@ export default function TableTargetsTeam({
     <TableTargetsTemplate
       dataSource={dataSource}
       columns={columns}
+      loading={loading}
       titleHeader="Chỉ tiêu nhóm"
     />
   );

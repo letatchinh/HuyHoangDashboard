@@ -45,19 +45,25 @@ const GeoTreeSelect = ({
 
   const areas = useMemo(() => subvn.getAreas(), []);
   const cities = useMemo(() => subvn.getProvinces(), []);
+  const wards = useMemo(() => subvn.getWards(), []);
+  const districts = useMemo(() => subvn.getDistricts(), []);
 
-  const wards = useMemo(
-    () => restProps?.multiple ? (selectedDistrictCode?.map((code : any) => subvn.getWardsByDistrictCode(code)))?.flat() :  subvn.getWardsByDistrictCode(selectedDistrictCode),
-    [selectedDistrictCode,restProps?.multiple]
-  );
+//   const wards : any[] = useMemo(
+//     () => restProps?.multiple ? ((selectedDistrictCode || [])?.map((code : any) => subvn.getWardsByDistrictCode(code)) || [])?.flat() :  subvn.getWardsByDistrictCode(selectedDistrictCode),
+//     [selectedDistrictCode,restProps?.multiple]
+//   );
+// console.log(wards,'wards');
+// console.log(selectedCityCode,'selectedCityCode');
 
-  const districts = useMemo(
-    () =>restProps?.multiple ? (selectedCityCode?.map((code : any) => subvn.getDistrictsByProvinceCode(code)))?.flat() :  subvn.getDistrictsByProvinceCode(selectedCityCode),
-    [selectedCityCode,restProps?.multiple]
-  );
+// const districts : any[] = useMemo(
+//   () =>restProps?.multiple ? ((selectedCityCode || [])?.map((code : any) => subvn.getDistrictsByProvinceCode(code)) || [])?.flat() :  subvn.getDistrictsByProvinceCode(selectedCityCode),
+//   [selectedCityCode,restProps?.multiple]
+//   );
+  console.log(districts,'districts');
 
   const [treeData, setTreeData] = useState([]);
-
+  console.log(treeData,'treeData');
+  
   const screens = useBreakpoint();
 
   let listHeight = 256;

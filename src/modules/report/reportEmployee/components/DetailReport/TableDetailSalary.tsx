@@ -3,11 +3,13 @@ import { get } from "lodash";
 import React from "react";
 import TableAnt from "~/components/Antd/TableAnt";
 import { formatter } from "~/utils/helpers";
+import useDetailReportStore from "../../DetailReportContext";
 import { ItemDataSource } from "../../reportEmployee.service";
 type propsType = {
     dataSource : ItemDataSource[]
 };
 export default function TableDetailSalary({dataSource}: propsType): React.JSX.Element {
+  const {loading} = useDetailReportStore();
     const columns: ColumnsType = [
         {
           title: "Tiêu chí",
@@ -39,12 +41,13 @@ export default function TableDetailSalary({dataSource}: propsType): React.JSX.El
       bordered
       rowKey={({key}) => key}
       columns={columns}
+      loading={loading}
       dataSource={dataSource}
       pagination={false}
       size="small"
-      expandable={{
-        expandRowByClick : true
-      }}
+      // expandable={{
+        // expandRowByClick : true
+      // }}
     />
   );
 }

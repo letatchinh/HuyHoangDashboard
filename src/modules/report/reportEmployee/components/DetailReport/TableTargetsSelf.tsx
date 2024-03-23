@@ -13,7 +13,7 @@ type propsType = {
 export default function TableTargetsSelf({
   dataSource,
 }: propsType): React.JSX.Element {
-  const { onOpenSwap, data } = useDetailReportStore();
+  const { onOpenSwap, data , loading } = useDetailReportStore();
   const columns: ColumnsType = [
     {
       title: "Nhà cung cấp",
@@ -36,7 +36,7 @@ export default function TableTargetsSelf({
       render: (mineralSale: any) => formatter(mineralSale || 0),
     },
     {
-      title: "Mức độ hoàn thành thực tế",
+      title: "Doanh số thực tế hoàn thành",
       dataIndex: "actuallySale",
       key: "actuallySale",
       align: "center",
@@ -93,6 +93,7 @@ export default function TableTargetsSelf({
     <TableTargetsTemplate
       dataSource={dataSource}
       columns={columns}
+      loading={loading}
       titleHeader="Chỉ tiêu cá nhân"
     />
   );

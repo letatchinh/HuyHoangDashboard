@@ -31,6 +31,7 @@ export type GlobalDetailReport = {
   employeeLevel: string;
   dataSwap?: DataInitSwap | null;
   data?: ReportEmployeeType | null;
+  loading: boolean;
   id?: any;
   onCancel : () => void
 };
@@ -47,6 +48,7 @@ const DetailReport = createContext<GlobalDetailReport>({
   dataSwap: null,
   data: null,
   id: null,
+  loading:false,
 });
 
 export function DetailReportProvider({
@@ -119,6 +121,7 @@ export function DetailReportProvider({
         data,
         id,
         onCancel,
+        loading : isLoading
       }}
     >
       {children}

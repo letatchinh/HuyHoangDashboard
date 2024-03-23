@@ -238,6 +238,7 @@ export default function Swap({onCloseSwap}: propsType): React.JSX.Element {
 
               >
                 <InputNumberAnt
+                
                   className="noPaddingAfterAddon"
                   addonAfter={
                     <Button
@@ -253,7 +254,7 @@ export default function Swap({onCloseSwap}: propsType): React.JSX.Element {
                     </Button>
                   }
                   disabled={!getFieldValue("targetSupplierId") || !getFieldValue("resourceSupplierId")}
-                  min={1}
+                  min={dataExchangeSwap?.source?.rateSelf}
                   max={dataExchangeSwap?.source?.maxValue}
                   step={500000}
                   style={{ width: "100%" }}
@@ -338,7 +339,7 @@ export default function Swap({onCloseSwap}: propsType): React.JSX.Element {
         style={{ background: "#FBFBFC", borderRadius: 5, padding: 5 }}
         justify={"space-between"}
       >
-        <span>Tỉ lệ quy đổi</span>
+        <strong>Tỉ lệ quy đổi</strong>
         <Flex gap={4} align={"center"}>
           <Typography.Text strong>
             {dataExchangeSwap?.source?.rateSelf || ""}
