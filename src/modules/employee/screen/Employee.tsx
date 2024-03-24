@@ -13,7 +13,7 @@ import {
   useUpdateEmployee,
   useUpdateEmployeeParams,
 } from "../employee.hook";
-import { Button, Col, Modal, Popconfirm, Row, Switch } from "antd";
+import { Button, Checkbox, Col, Modal, Popconfirm, Row, Switch } from "antd";
 import { useMemo, useState } from "react";
 import EmployeeForm from "../components/EmployeeForm";
 import TableAnt from "~/components/Antd/TableAnt";
@@ -23,6 +23,9 @@ import POLICIES from "~/modules/policy/policy.auth";
 import { useMatchPolicy } from "~/modules/policy/policy.hook";
 import { useDispatch } from "react-redux";
 import { employeeSliceAction } from "../redux/reducer";
+import WithPermission from "~/components/common/WithPermission";
+import ExportExcelButton from "~/modules/export/component";
+import useCheckBoxExport from "~/modules/export/export.hook";
 interface ColumnActionProps {
   _id: string;
   deleteEmpolyee?: any;
@@ -83,6 +86,8 @@ export default function Employee() {
   const isCanDelete = useMatchPolicy(POLICIES.DELETE_EMPLOYEE);
   const isCanUpdate = useMatchPolicy(POLICIES.UPDATE_EMPLOYEE);
   const shouldShowDevider = useMemo(() => isCanDelete && isCanUpdate, [isCanDelete, isCanUpdate]);
+  const canDownload = useMatchPolicy(POLICIES.DOWNLOAD_UNIT);
+  const [arrCheckBox, onChangeCheckBox] = useCheckBoxExport();
 
   //Handle
   const handleOpenModal = (id?: any) => {
@@ -144,7 +149,25 @@ export default function Employee() {
           />
         );
       },
-    }]:[]),
+    }] : []),
+    ...(
+      canDownload ? [
+        {
+          title: 'Lựa chọn',
+          key: '_id',
+          width: 80,
+          align: 'center' as any,
+          render: (item: any, record: any) =>
+          {
+            const id = record._id;
+            return (
+              <Checkbox
+                checked= {arrCheckBox.includes(id)}
+                onChange={(e)=>onChangeCheckBox(e.target.checked, id)}
+          />)}
+        },
+      ]: []
+    ) 
     
   ];
 
@@ -157,6 +180,17 @@ export default function Employee() {
           isShowButtonAdd
           handleOnClickButton={() => handleOpenModal()}
           permissionKey={[POLICIES.WRITE_EMPLOYEE]}
+          addComponent={
+            canDownload ?  <Col>
+                <ExportExcelButton
+                  api='employee'
+                  exportOption = 'employee'
+                  query={query}
+                  fileName='Danh sách nhân viên'
+                  ids={arrCheckBox}
+                />
+          </Col> : null
+          }
         />
         <TableAnt
           dataSource={data?.length ? data  : []}

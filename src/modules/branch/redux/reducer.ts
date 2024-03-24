@@ -13,9 +13,9 @@ class BranchClassExtentd extends InstanceModuleRedux {
     super('branch');
     this.clone = {
       ...this.initReducer,
-      getListSuccess: (state: initStateSlice<UserResponseOne>, { payload }: { payload?: PaginateResult<UserResponseOne> }) => {
+      getListSuccess: (state: initStateSlice<UserResponseOne>, { payload }: any) => {
         state.isLoading = false;
-        state.list = get(payload, 'docs', []);
+        state.list = payload;
       },
     }
   }
@@ -29,8 +29,8 @@ class BranchClassExtentd extends InstanceModuleRedux {
   
 }
 
-const newSlice = new BranchClassExtentd();
-const data = newSlice.createSlice();
+const branchSlice = new BranchClassExtentd();
+const data = branchSlice.createSlice();
 
 
 export const branchSliceAction   = data.actions;

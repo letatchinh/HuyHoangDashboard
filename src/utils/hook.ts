@@ -1,4 +1,5 @@
-import { useEffect } from 'react';
+import { get, union } from 'lodash';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import { ModuleRedux } from '~/redux/models';
@@ -11,8 +12,8 @@ type ActionUpdateFunction = (dataUpdate: any) => void;
 
 export const useSuccess = (
   successSelector: SuccessSelector,
-  mess: string | undefined,
-  onSuccess: (success: any) => void
+  mess?: string | undefined,
+  onSuccess?: (success: any) => void
 ): void => {
     const {onNotify} = useNotificationStore();
   const success = useSelector(successSelector);
@@ -26,7 +27,7 @@ export const useSuccess = (
         onSuccess(success)
       };
     }
-  }, [success, mess, onSuccess, onNotify]);
+  }, [success, mess, onSuccess]);
 };
 
 export const useFailed = (
@@ -76,6 +77,7 @@ interface UseFetchByParamProps extends UseFetchProps {
   param?: any;
   muteOnFailed?: boolean;
   actionUpdate?: any;
+  reFetch?: boolean;
 }
 
 export const useFetchByParam = (props: UseFetchByParamProps): [any, boolean, ActionUpdateFunction] => {
@@ -87,6 +89,7 @@ export const useFetchByParam = (props: UseFetchByParamProps): [any, boolean, Act
     param,
     muteOnFailed,
     actionUpdate,
+    reFetch,
   } = props;
 
   const dispatch = useDispatch();
@@ -95,7 +98,7 @@ export const useFetchByParam = (props: UseFetchByParamProps): [any, boolean, Act
 
   useEffect(() => {
     if (param) dispatch(action(param));
-  }, [dispatch, action, param]);
+  }, [dispatch, action, param,reFetch]);
 
   useFailed(failedSelector, undefined, undefined, muteOnFailed);
 
@@ -111,21 +114,38 @@ export const useFetchByParam = (props: UseFetchByParamProps): [any, boolean, Act
 interface UseSubmitProps {
     loadingSelector: (state: any) => boolean; // Adjust the state type based on your Redux store
     action: any // Adjust the values type based on your action requirements
+    callbackSubmit? : (p?:any) => void // Callback After Submit
   }
 
-export const useSubmit = ({ loadingSelector, action }:UseSubmitProps) : [boolean,(v:any) => void] => {
+export const useSubmit = ({ loadingSelector, action ,callbackSubmit}:UseSubmitProps) : [boolean,(v:any) => void] => {
     const dispatch = useDispatch();
     const isLoading = useSelector(loadingSelector);
   
-    const handleSubmit = (values:any) => {
-      dispatch(action(values));
-    };
+    const handleSubmit = useCallback((values:any) => {
+      if(callbackSubmit && typeof callbackSubmit === 'function'){
+        dispatch(action({...values,callbackSubmit}));
+      }else{
+        dispatch(action(values));
+      }
+    },[callbackSubmit,dispatch,action]);
   
     return [isLoading, handleSubmit];
   };
+
+interface UseActionProps {
+    action: any // Adjust the values type based on your action requirements
+  }
+
+export const useAction = ({ action }:UseActionProps) : (v:any) => void => {
+    const dispatch = useDispatch();
   
+    const handleAction = (values:any) => {
+      dispatch(action(values));
+    };
   
-  
+    return handleAction;
+  };
+
   export const useQueryParams = () => {
     return new URLSearchParams(useLocation().search);
   };
@@ -163,3 +183,108 @@ export const useSubmit = ({ loadingSelector, action }:UseSubmitProps) : [boolean
       pagingSelector: getSelector('paging')
     };
   };
+  
+  type ParamsUseFetchState = {
+    api : any,
+    query : any,
+    useDocs ?: boolean,
+  }
+  // export const useFetchState = ({api,query,useDocs}:ParamsUseFetchState) => {
+  //   const[data,setData] = useState([]);
+  //   const [isLoading,setIsLoading] = useState(false);
+  //   const {onNotify} = useNotificationStore();
+  //   useEffect(() => {
+  //     const fetch = async() => {
+  //       try {
+  //         const res = await api(query);
+  //         if(useDocs){
+
+  //         }
+  //       } catch (error : any) {
+  //         console.log(error);
+  //         onNotify?.error(error?.response?.data?.message || "Có lỗi gì đó xảy ra")
+  //       }
+  //     }
+  //   },[])
+  // }
+  interface FetchStateParams {
+    api: (query: any) => Promise<any>;
+    query?: any;
+    useDocs?: boolean;
+    init?: any[];
+    fieldGet?: string;
+    reFetch?: any; // Adjust the type based on your specific requirements
+    nullNotFetch?: boolean;
+    conditionRun?: boolean;
+  }
+  export const useFetchState = ({ api, query, useDocs = true, init = [], fieldGet,reFetch,nullNotFetch = false ,conditionRun = false} : FetchStateParams) : any => {
+    const [data, setData] = useState(init);
+    const [loading, setLoading] = useState(false);
+    const req = useCallback(api, [api]);
+    const fetch = useCallback(async () => {
+      try {
+        setLoading(true);
+        const response = await req(query);
+        if (fieldGet) {
+          setData(get(response, fieldGet))
+        } else {
+          if (useDocs) {
+            setData(get(response, 'docs', []));
+          } else {
+            setData(response);
+          }
+        }
+  
+        setLoading(false);
+      } catch (error) {
+        setLoading(false);
+      }
+    }, [query,reFetch])
+    useEffect(() => {
+      if(conditionRun){
+        fetch()
+      }else{
+        if(nullNotFetch){
+          !!query && fetch();
+        }else{
+          fetch()
+        }
+      }
+    }, [fetch,nullNotFetch,query]);
+    const dataReturn = useMemo(() => data, [data])
+    return [dataReturn, loading]
+  };
+
+  export const useCheckIsEllipsisActive = (target:any) => {
+    const isEllipsisActive = useCallback((e:any) =>{
+      if(!e) return false;
+      const parentNode = e?.parentNode;
+      return (e?.offsetWidth > parentNode?.offsetWidth);
+  },[])
+    const [isEllipsis,setIsEllipsis] = useState(false);
+    useEffect(() => {
+        const is = isEllipsisActive(target?.current);
+        setIsEllipsis(is);
+    },[target]);
+    return isEllipsis
+  }
+
+  export const useTags = (initialState = []) : any => {
+    const [state, setState] = useState(initialState);
+    const setUniqueState = (newState : any) => {
+      setState(union(newState));
+    };
+    return [state, setUniqueState];
+  };
+  type OptionsChangeDocumentType = {
+    dependency : any[]
+  }
+  export const useChangeDocumentTitle = (title : string,options? :OptionsChangeDocumentType ) => {
+    const dependency = useMemo(() => options?.dependency ?? [],[options?.dependency])
+    useEffect(() => {
+      document.title = title ?? "WorldPharma";
+      return () => {
+        document.title = "WorldPharma";
+      }
+    },dependency)
+  }

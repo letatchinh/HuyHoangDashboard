@@ -2,7 +2,7 @@ import { Button, Form, Input } from "antd";
 import { omit } from "lodash";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import logoLight from "~/assets/images/logo-light.svg";
+import logoLight from "~/assets/images/logo-light.png";
 import WhiteBox from "~/components/common/WhiteBox";
 import AuthModule from "~/modules/auth";
 import { PATH_APP } from "~/routes/allPath";

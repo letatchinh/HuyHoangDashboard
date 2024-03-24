@@ -1,3 +1,5 @@
 {
-    "list-branch" : "List Branch"
-}
+    "list-branch" : "List Branch",
+    "list-pharmacies": "List Pharmacy",
+    "debt": "Debt"
+}   

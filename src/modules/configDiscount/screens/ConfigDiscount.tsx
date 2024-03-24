@@ -1,3 +1,4 @@
+import React, { useEffect, useMemo, useState } from "react";
 import {
   ArrowDownOutlined,
   ArrowUpOutlined,
@@ -10,23 +11,22 @@ import {
   arrayMove,
   SortableContext,
   useSortable,
-  verticalListSortingStrategy,
+  verticalListSortingStrategy
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import React, { useEffect, useMemo, useState } from "react";
 import { Checkbox, message, Radio, Table } from "antd";
 import type { ColumnsType } from "antd/es/table";
-import {
-  useGetConfigDiscounts,
-  useUpdateConfigDiscount,
-} from "../configDiscount.hook";
-import { ConfigItem } from "../configDiscount.modal";
 import Breadcrumb from "~/components/common/Breadcrumb";
 import WhiteBox from "~/components/common/WhiteBox";
 import { useDispatch } from "react-redux";
 import { configDiscountSliceAction } from "../redux/reducer";
 import POLICIES from "~/modules/policy/policy.auth";
 import { useMatchPolicy } from "~/modules/policy/policy.hook";
+import {
+  useGetConfigDiscounts,
+  useUpdateConfigDiscount
+} from "../configDiscount.hook";
+import { ConfigItem } from "../configDiscount.modal";
 import useNotificationStore from "~/store/NotificationContext";
 
 interface RowProps extends React.HTMLAttributes<HTMLTableRowElement> {
@@ -248,5 +248,4 @@ const ConfigDiscount: React.FC = () => {
 };
 
 export default ConfigDiscount;
-
 
