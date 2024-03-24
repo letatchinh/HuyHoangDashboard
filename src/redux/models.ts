@@ -34,6 +34,7 @@ export type initStateSlice<T=any> = {
     supplier:'supplier',
     branch:'branch',
     geo:'geo',
+    configDiscount: 'configDiscount',
     employee:'employee',
     user: 'user',
     userGroup: 'userGroup',

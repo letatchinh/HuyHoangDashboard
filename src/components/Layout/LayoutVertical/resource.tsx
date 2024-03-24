@@ -52,6 +52,12 @@ export const resource: ItemType[] = [
             key: PATH_APP.worldPharma.productConfig,
             // permission :[POLICIES.READ_USERGROUP],
           },
+          {
+            label: "Cấu hình giảm giá",
+            path: PATH_APP.configDiscount.root,
+            key: PATH_APP.configDiscount.root,
+            permission :[POLICIES.READ_CONFIGDISCOUNT],
+          },
         ],
       },
     ],

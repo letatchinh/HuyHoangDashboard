@@ -6,6 +6,7 @@ import authModule from '~/modules/auth';
 import supplierModule from '~/modules/supplier';
 import branchModule from '~/modules/branch';
 import geoModule from '~/modules/geo';
+import configDiscount from '~/modules/configDiscount';
 import employeeModule from '~/modules/employee';
 import userModule from '~/modules/user';
 import userGroupModule from '~/modules/userGroup';
@@ -28,6 +29,7 @@ const rootReducer = combineReducers({
     supplier: supplierModule.redux.reducer,
     branch: branchModule.redux.reducer,
     geo: geoModule.redux.reducer,
+    configDiscount: configDiscount.redux.reducer,
     employee: employeeModule.redux.reducer,
     user: userModule.redux.reducer,
     userGroup: userGroupModule.redux.reducer,

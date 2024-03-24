@@ -3,6 +3,7 @@ import authModule from '~/modules/auth';
 import supplierModule from '~/modules/supplier';
 import branchModule from '~/modules/branch';
 import geoModule from '~/modules/geo';
+import configDiscountModule from '~/modules/configDiscount';
 import employeeModule from '~/modules/employee';
 import userModule from '~/modules/user';
 import userGroupModule from '~/modules/userGroup';
@@ -13,6 +14,7 @@ export default function* rootSaga() {
     supplierModule.redux.saga(),
     branchModule.redux.saga(),
     geoModule.redux.saga(),
+    configDiscountModule.redux.saga(),
     employeeModule.redux.saga(),
     userModule.redux.saga(),
     userGroupModule.redux.saga(),
