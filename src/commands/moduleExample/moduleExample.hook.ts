@@ -12,7 +12,7 @@ import { get } from "lodash";
 //     useSubmit,
 //     useSuccess
 // } from "~/utils/hook";
-// import { moduleExampleSliceAction } from "./redux/reducer";
+// import { moduleExampleActions } from "./redux/reducer";
 // const MODULE = "moduleExample";
 // const MODULE_VI = "";
 
@@ -37,7 +37,7 @@ import { get } from "lodash";
 
 // export const useGetModuleExamples = (param:any) => {
 //   return useFetchByParam({
-//     action: moduleExampleSliceAction.getListRequest,
+//     action: moduleExampleActions.getListRequest,
 //     loadingSelector: loadingSelector,
 //     dataSelector: listSelector,
 //     failedSelector: getListFailedSelector,
@@ -46,7 +46,7 @@ import { get } from "lodash";
 // };
 // export const useGetModuleExample = (id: any) => {
 //   return useFetchByParam({
-//     action: moduleExampleSliceAction.getByIdRequest,
+//     action: moduleExampleActions.getByIdRequest,
 //     loadingSelector: getByIdLoadingSelector,
 //     dataSelector: getByIdSelector,
 //     failedSelector: getByIdFailedSelector,
@@ -63,7 +63,7 @@ import { get } from "lodash";
 //   useFailed(createFailedSelector);
 
 //   return useSubmit({
-//     action: moduleExampleSliceAction.createRequest,
+//     action: moduleExampleActions.createRequest,
 //     loadingSelector: isSubmitLoadingSelector,
 //   });
 // };
@@ -77,7 +77,7 @@ import { get } from "lodash";
 //   useFailed(updateFailedSelector);
 
 //   return useSubmit({
-//     action: moduleExampleSliceAction.updateRequest,
+//     action: moduleExampleActions.updateRequest,
 //     loadingSelector: isSubmitLoadingSelector,
 //   });
 // };
@@ -87,7 +87,7 @@ import { get } from "lodash";
 //   useFailed(deleteFailedSelector);
 
 //   return useSubmit({
-//     action: moduleExampleSliceAction.deleteRequest,
+//     action: moduleExampleActions.deleteRequest,
 //     loadingSelector: isSubmitLoadingSelector,
 //   });
 // };
