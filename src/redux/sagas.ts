@@ -34,7 +34,6 @@ export default function* rootSaga() {
     vouchers.redux.saga(),
     productGroupModule.redux.saga(),
     manuFacturerModule.redux.saga(),
-    productUnitModule.redux.saga(),
     rankModule.redux.saga(),
     medicineModule.redux.saga(),
     productModule.redux.saga(),
