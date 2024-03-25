@@ -1,6 +1,6 @@
 import { GiftFilled, GiftTwoTone, SearchOutlined, StopOutlined } from '@ant-design/icons';
 import { AutoComplete, Badge, Empty, Tag, Typography } from 'antd';
-import { debounce, get } from 'lodash';
+import { compact, debounce, get } from 'lodash';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { v4 } from 'uuid';
 import TableAnt from '~/components/Antd/TableAnt';
@@ -9,6 +9,8 @@ import useNotificationStore from '~/store/NotificationContext';
 import { formatter } from '~/utils/helpers';
 import { ItemSearchProduct } from '../bill.modal';
 import { getCumulativeDiscount, selectProductSearch } from '../bill.service';
+import ImageProduct from './ImageProduct';
+
 type propsType = {
   dataCurrent : any,
   onChangeBill : (newData:any) => void,
@@ -102,6 +104,14 @@ export default function SelectProduct({dataCurrent,onChangeBill}:propsType) : Re
               pagination={false}
               rowKey={rc => rc._id}
               columns={[
+                {
+                  title: "",
+                  dataIndex: "images",
+                  key: "images",
+                  align:'center',
+                  width : 80,
+                  render: (images: any, record: any, index: number) => <ImageProduct images={images}/>
+                },
                 {
                   title: 'Tên thuốc',
                   dataIndex: 'name',

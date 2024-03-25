@@ -17,6 +17,7 @@ import ExportExcelButton from "~/modules/export/component";
 import useCheckBoxExport from "~/modules/export/export.hook";
 import { useArrCheckBoxRedux } from "../vouchers.hook";
 import { PATH_APP } from "~/routes/allPath";
+import { useChangeDocumentTitle } from "~/utils/hook";
 type propsType = {};
 type optionsSearch = {
   value: string;
@@ -153,7 +154,7 @@ export default function Vouchers(props: propsType): React.JSX.Element {
     navigate(`${pathname}`);
     setKeyword("");
   };
-
+useChangeDocumentTitle(`Số quỹ của ${pathname === PATH_APP.vouchers.pharmacy ? 'Nhà thuốc' : 'Nhà cung cấp'}`,{dependency : [pathname]})
   return (
     <>
       <WhiteBox>

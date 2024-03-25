@@ -1,37 +1,38 @@
-import React, { useState } from 'react';
-import { Checkbox, Col, Modal, Row, Select } from 'antd';
+import { Checkbox, Col, Modal, Row, Select, Typography } from 'antd';
 import { ColumnsType } from "antd/es/table/InternalTable";
-import { Table } from 'antd/lib';
 import { get } from 'lodash';
-import WhiteBox from '~/components/common/WhiteBox';
-import { formatter } from '~/utils/helpers';
-import Breadcrumb from '~/components/common/Breadcrumb';
-import { useChangeVariantDefault, useGetProductsAll, useProductsAllPaging, useProductsAllQueryParams, useSetSupplierInfo, useUpdateProductsAllParams } from '../productsAll.hook';
-import TableAnt from '~/components/Antd/TableAnt';
+import React, { useCallback, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useMatchPolicy } from '~/modules/policy/policy.hook';
-import POLICIES from '~/modules/policy/policy.auth';
-import FormProduct from '~/modules/product/components/FormProduct';
-import FormListSupplier from '../components/FormListSupplier';
+import TableAnt from '~/components/Antd/TableAnt';
+import Breadcrumb from '~/components/common/Breadcrumb';
 import SelectSearch from '~/components/common/SelectSearch/SelectSearch';
-import { DataType, TypeProps } from '../productsAll.modal';
-import ShowStep from '../components/ShowStep';
-import ActionColumn from '../components/ActionColumns';
-import { useDeleteProduct } from '~/modules/product/product.hook';
-import useCheckBoxExport from '~/modules/export/export.hook';
+import WhiteBox from '~/components/common/WhiteBox';
 import ExportExcelButton from '~/modules/export/component';
+import useCheckBoxExport from '~/modules/export/export.hook';
+import POLICIES from '~/modules/policy/policy.auth';
+import { useMatchPolicy } from '~/modules/policy/policy.hook';
+import FormProduct from '~/modules/product/components/FormProduct';
+import StockProduct from '~/modules/product/components/StockProduct';
+import { useChangeVariantDefault, useDeleteProduct, useGetProducts, useProductPaging, useUpdateProduct } from '~/modules/product/product.hook';
+import { formatter } from '~/utils/helpers';
+import { useChangeDocumentTitle } from '~/utils/hook';
+import ActionColumn from '../components/ActionColumns';
+import ShowStep from '../components/ShowStep';
+import { useProductsAllQueryParams, useUpdateProductsAllParams } from '../productsAll.hook';
+import { DataType, TypeProps } from '../productsAll.modal';
 
 export default function ProductsAll(props: TypeProps): React.JSX.Element {
   const [query, onTableChange] = useProductsAllQueryParams();
   const [keyword, { setKeyword, onParamChange }] = useUpdateProductsAllParams(query);
-  const [data, isLoading] = useGetProductsAll(query);
+  const [data, isLoading] = useGetProducts(query);
   const onChangeVariantDefault = useChangeVariantDefault();
   const [, onDelete] = useDeleteProduct();
-  const onSetSupplierInfo = useSetSupplierInfo();
+
+  // const onSetSupplierInfo = useSetSupplierInfo();
   const canReadSupplier = useMatchPolicy(POLICIES.READ_PRODUCT);
   const canUpdate = useMatchPolicy(POLICIES.UPDATE_PRODUCT);
   const canDelete = useMatchPolicy(POLICIES.DELETE_PRODUCT);
-  const paging = useProductsAllPaging();
+  const paging = useProductPaging();
   const [step, setStep] = useState(0);
 
   const [isOpen, setIsOpen] = useState(false);
@@ -59,11 +60,12 @@ export default function ProductsAll(props: TypeProps): React.JSX.Element {
     setId(id);
   };
   
-  const onCloseFormProduct = () => {
+  const onCloseFormProduct = useCallback(() => {
     setIsOpenFormProduct(false);
     setSupplierId(null);
     setId(null);
-  };
+  },[])
+  const [, onUpdateProduct] = useUpdateProduct(onCloseFormProduct);
 
   const onChangeStep = (step: number) => {
     setStep(step);
@@ -96,6 +98,8 @@ export default function ProductsAll(props: TypeProps): React.JSX.Element {
           key: "name",
           width : 300,
           render(name, record) {
+            const codeBySupplier = get(record,'codeBySupplier','');
+
             if (get(record, "variants", [])?.length > 1) {
               const options = get(record, "variants", [])?.map((item) => ({
                 label: get(item, "unit.name"),
@@ -103,10 +107,16 @@ export default function ProductsAll(props: TypeProps): React.JSX.Element {
               }));
               return (
                 <Row align={"middle"} gutter={4} wrap={false}>
+                  <Col>
+                  <Typography.Text strong>{codeBySupplier}</Typography.Text>
+                  </Col>
                   <Col>{name}</Col>
                   <Col>
                     <Select
                       style={{minWidth : 50}}
+                      dropdownStyle={{
+                        width : 'max-content'
+                      }}
                       value={get(record,'variant._id')}
                       options={options}
                       onChange={(value) =>
@@ -120,7 +130,10 @@ export default function ProductsAll(props: TypeProps): React.JSX.Element {
                 </Row>
               );
             } else {
-              return name + " " + `(${get(record, "variant.unit.name")})`;
+              return <span>
+              <Typography.Text strong>{codeBySupplier} - </Typography.Text>
+            {name + " " + `(${get(record, "variant.unit.name")})`}
+          </span>;
             }
           },
         },
@@ -138,6 +151,17 @@ export default function ProductsAll(props: TypeProps): React.JSX.Element {
           key: "variant",
           render(variant, record, index) {
             return formatter(get(variant,'cost',0))
+          },
+        },
+        {
+          title: "Tồn kho",
+          dataIndex: "stock",
+          key: "stock",
+          render(stock, record) {
+            return <StockProduct variantDefault={get(record,'variantDefault')} stock={stock ?? 0} handleUpdate={(newStock:number) => onUpdateProduct({
+              _id : get(record,'_id'),
+              stock : newStock
+            })}/>
           },
         },
         {
@@ -210,6 +234,8 @@ export default function ProductsAll(props: TypeProps): React.JSX.Element {
         ]: []
       ),
       ];
+
+      useChangeDocumentTitle("Danh sách sản phẩm")
     return (
       <div>
       <Breadcrumb title={isLoading ? "Đang tải..." : <p>Danh sách sản phẩm</p>} />
@@ -267,6 +293,7 @@ export default function ProductsAll(props: TypeProps): React.JSX.Element {
           destroyOnClose
         >
           <FormProduct
+            onUpdate={onUpdateProduct}
             onCancel={onCloseFormProduct}
             supplierId={supplierId as any}
             id= {id as any}

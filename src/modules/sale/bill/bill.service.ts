@@ -27,6 +27,7 @@ export const selectProductSearch = (data: any) => {
     selectVariant,
     quantity,
     codeBySupplier,
+    images,
   } = data;
   const variant = variants?.find(
     (item: any) => get(item, "_id") === selectVariant
@@ -43,6 +44,7 @@ export const selectProductSearch = (data: any) => {
     codeBySupplier,
     variant,
     variants,
+    images,
   };
   return submitData;
 };

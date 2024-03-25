@@ -16,7 +16,7 @@ import userModule from '~/modules/user';
 import userGroupModule from '~/modules/userGroup';
 import policy from '~/modules/policy';
 import vouchers from '~/modules/vouchers';
-import reportSupplier from '~/modules/report/reportSupplier';
+import reportSupplier from '~/modules/report/reportSupplier'; //
 import manufacturerModule from '~/modules/manufacturer';
 import productUnitModule from '~/modules/productUnit';
 import rankingModule from '~/modules/ranking';

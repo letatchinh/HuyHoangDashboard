@@ -12,12 +12,13 @@ interface propsType extends SelectProps {
   onChange? : (p:any) => void,
   allowClear? : boolean,
   showIcon? : boolean,
+  validateFirst? : boolean
 };
 type ItemSearch = {
   name: string;
   value: string;
 };
-export default function SelectPharmacy({form,onChange = () => {},allowClear = true,showIcon=true,...props}: propsType): React.JSX.Element {
+export default function SelectPharmacy({form,onChange = () => {},allowClear = true,showIcon=true,validateFirst = true,...props}: propsType): React.JSX.Element {
   const { onNotify } = useNotificationStore();
   const [loading,setLoading] = useState(false);
   const [initOption,setInitOption] = useState([]);
@@ -53,7 +54,9 @@ export default function SelectPharmacy({form,onChange = () => {},allowClear = tr
       
       setInitOption(newOptions);
       setLoading(false);
-      await form.validateFields(['pharmacyId']);
+      if(validateFirst){
+        await form.validateFields(['pharmacyId']);
+      }
     
     } catch (error) {
       setLoading(false);

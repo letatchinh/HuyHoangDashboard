@@ -20,13 +20,13 @@ type FieldType = {
   quantity: number;
   unitPrice: number;
 };
-const [form] = Form.useForm();
 export default function UpdateQuantity({
   quantity,
   unitPrice,
   onChangeStatusOrderItem,
   id,
 }: propsType): React.JSX.Element {
+  const [form] = Form.useForm();
   const onFinish = (values: FieldType) => {
     const submitData: UpdateOrderItem = {
       ...values,
