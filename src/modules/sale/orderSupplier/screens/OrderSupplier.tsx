@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import WhiteBox from "~/components/common/WhiteBox";
 import { STATUS_ORDER_SUPPLIER, STATUS_ORDER_SUPPLIER_VI } from "../constants";
 import ListOrder from "../components/ListOrder";
+import { useChangeDocumentTitle } from "~/utils/hook";
 type propsType = {};
 const CLONE_STATUS_ORDER_SUPPLIER_VI: any = STATUS_ORDER_SUPPLIER_VI;
 export default function OrderSupplier(props: propsType): React.JSX.Element {
@@ -12,6 +13,8 @@ export default function OrderSupplier(props: propsType): React.JSX.Element {
   const onChangeTab = (tab: string) => {
     setActiveKey(tab);
   };
+
+  useChangeDocumentTitle("Danh sách đơn mua")
   return (
     <div>
       <Typography.Title level={3}>Danh sách đơn hàng</Typography.Title>

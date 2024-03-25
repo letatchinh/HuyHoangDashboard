@@ -2,6 +2,8 @@ import { DropboxOutlined, InboxOutlined, MedicineBoxOutlined } from "@ant-design
 import { Col, Modal, Row } from "antd";
 import React, { useCallback, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import WithPermission from "~/components/common/WithPermission";
+import POLICIES from "~/modules/policy/policy.auth";
 import ShowStep from "~/modules/productsAll/components/ShowStep";
 import { PATH_APP } from "~/routes/allPath";
 import BtnAction from "../components/BtnAction";
@@ -24,6 +26,7 @@ export default function Homepage(props: propsType): React.JSX.Element {
     <div className="homepage">
       <div className="homepage--overlay" />
       <Row gutter={16}>
+        <WithPermission permission={POLICIES.WRITE_ORDERSUPPLIER}>
         <Col>
           <BtnAction
             onClick={() => goLink('/order-supplier/create')}
@@ -31,6 +34,8 @@ export default function Homepage(props: propsType): React.JSX.Element {
             icon={<InboxOutlined className="homepage--btnAction__icon" />}
           />
         </Col>
+        </WithPermission>
+        <WithPermission permission={POLICIES.WRITE_BILL}>
         <Col>
           <BtnAction
           onClick={() => goLink('/bill/create')}
@@ -38,6 +43,8 @@ export default function Homepage(props: propsType): React.JSX.Element {
             icon={<DropboxOutlined className="homepage--btnAction__icon" />}
           />
         </Col>
+        </WithPermission>
+        <WithPermission permission={POLICIES.UPDATE_SUPPLIER}>
         <Col>
           <BtnAction
           onClick={onOpenCreateProduct}
@@ -45,6 +52,8 @@ export default function Homepage(props: propsType): React.JSX.Element {
             icon={<MedicineBoxOutlined className="homepage--btnAction__icon" />}
           />
         </Col>
+        </WithPermission>
+        <WithPermission permission={POLICIES.READ_SUPPLIER}>
         <Col>
           <BtnAction
           onClick={() => goLink(PATH_APP.productAll.root)}
@@ -52,6 +61,7 @@ export default function Homepage(props: propsType): React.JSX.Element {
             icon={<i className="fa-solid fa-capsules homepage--btnAction__icon"></i>}
           />
         </Col>
+        </WithPermission>
       </Row>
       <Modal
         

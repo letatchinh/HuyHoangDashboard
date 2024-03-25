@@ -10,6 +10,8 @@ import {
 import { medicineSliceAction } from "./redux/reducer";
 const MODULE = "medicine";
 const MODULE_VI = "thuốc";
+const getSelector = (key : any) => (state : any) => state[MODULE][key];
+
 const {
   loadingSelector,
   listSelector,
@@ -19,6 +21,9 @@ const {
   getByIdFailedSelector,
   pagingSelector,
 } = getSelectors(MODULE);
+const isLoadingSearchSelector = getSelector('isLoadingSearch');
+const listSearchSelector = getSelector('listSearch');
+const getListSearchFailedSelectorSelector = getSelector('getListSearchFailedSelector');
 
 export const useMedicineQueryParams = () => {
   const query = useQueryParams();
@@ -75,6 +80,15 @@ export const useGetListMeddicine = (query: any) => {
     loadingSelector,
     dataSelector: listSelector,
     failedSelector: getListFailedSelector,
+    param: query,
+  });
+}
+export const useGetListMeddicineSearch = (query: any) => {
+  return useFetchByParam({
+    action: medicineSliceAction.getListSearchRequest,
+    loadingSelector : isLoadingSearchSelector,
+    dataSelector: listSearchSelector,
+    failedSelector: getListSearchFailedSelectorSelector,
     param: query,
   });
 }

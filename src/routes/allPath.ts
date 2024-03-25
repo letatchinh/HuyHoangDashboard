@@ -83,7 +83,7 @@ export const PATH_APP = {
     
 
     report: {
-      supplier: path(ROOTS.app, '/report/supplier'),
+      supplier: path(ROOTS.app, '/report/supplier'), //
     },
   
     botNotification : {

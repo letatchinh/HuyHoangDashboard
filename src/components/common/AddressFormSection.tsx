@@ -1,4 +1,4 @@
-import { Col, Form, Input, Row, Select, Skeleton } from 'antd';
+import { Col, Form, FormItemProps, Input, Row, Select, Skeleton } from 'antd';
 import { get } from 'lodash';
 import { useMemo, useState } from 'react';
 import { filterAcrossAccents } from '~/utils/helpers';
@@ -18,6 +18,10 @@ interface AddressFormSectionProps {
   allowPhoneNumber?: boolean;
   allowEmail?: boolean;
 }
+const FormItemProp : FormItemProps = {
+  labelAlign : 'left',
+}
+
 const AddressFormSection = (props: AddressFormSectionProps) => {
   const {
     isLoading,
@@ -44,6 +48,7 @@ const AddressFormSection = (props: AddressFormSectionProps) => {
       <Row gutter={48} align="middle" justify="space-between">
         <Col span={props?.span ?? 12}>
           <FormItem
+          {...FormItemProp}
             label="Thành Phố/Tỉnh"
             name={["address", "cityId"]}
             rules={[
@@ -90,6 +95,7 @@ const AddressFormSection = (props: AddressFormSectionProps) => {
           >
             {() => (
               <FormItem
+              {...FormItemProp}
                 label="Quận/Huyện"
                 name={["address", "districtId"]}
                 rules={[
@@ -139,6 +145,7 @@ const AddressFormSection = (props: AddressFormSectionProps) => {
           >
             {() => (
               <FormItem
+              {...FormItemProp}
                 label="Phường/Xã"
                 name={["address", "wardId"]}
                 rules={[
@@ -169,6 +176,7 @@ const AddressFormSection = (props: AddressFormSectionProps) => {
         </Col>
         <Col span={props?.span ?? 12}>
           <FormItem
+          {...FormItemProp}
             label="Đường phố"
             name={["address", "street"]}
             rules={[
@@ -187,6 +195,7 @@ const AddressFormSection = (props: AddressFormSectionProps) => {
         {allowEmail && (
           <Col span={props?.span ?? 12}>
             <FormItem
+            {...FormItemProp}
               label="Email"
               name="email"
               rules={[
@@ -203,6 +212,7 @@ const AddressFormSection = (props: AddressFormSectionProps) => {
         {allowPhoneNumber && (
           <Col span={props?.span ?? 12}>
             <FormItem
+            {...FormItemProp}
               label="Số điện thoại"
               name="phoneNumber"
               rules={[

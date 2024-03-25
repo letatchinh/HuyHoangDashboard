@@ -1,3 +1,41 @@
+# [1.5.0](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/compare/v1.4.0...v1.5.0) (2024-03-25)
+
+
+### Bug Fixes
+
+* [#1387](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1387) FE_Fix Trang các mặt hàng luỹ kế ([fe36fd3](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/fe36fd3f3d1bba667d46ea5186f026b26565e098))
+* [#1387](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1387) FE_Fix Trang các mặt hàng luỹ kế ([41da1b6](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/41da1b67c2a1afa7dbe747b3d79508f7e43ca225))
+* add codeBySupplier allProduct ([6e434fc](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/6e434fcf2910749ddac9e7d2195074bd37af48cd))
+* add minSale to Form ([76cdfd6](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/76cdfd6e96442634d76e964722959dfa47177056))
+* add Not ValidateFirst ([75571ae](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/75571ae90d919e3ccbe4a10c65bb938293a05870))
+* add targetsTDV ([5924cae](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/5924cae7749e57304193fd8534d6fde203b4c8ed))
+* add Title Document ([608e483](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/608e483e2038617ffc1e8cea9653a71afdd416e0))
+* change Hook Search Product ([f889c4b](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/f889c4b1226ba8c38f79aaae6fa0109c902f224c))
+* change placement notification ([0b2fc54](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/0b2fc54d44f7359ef691bb96710ead0a9af7e716))
+* check Function ([86a4bf3](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/86a4bf3fa5b3592e3c103e68ece9ad49c355eae0))
+* conflic report supplier ([5bf4279](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/5bf4279999d0b85afffe8212c8035224af7efa3e))
+* info Bill ([2e4e7d1](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/2e4e7d12d74509ae107f9ad7cdc8025fe37e2fc1))
+* init EmployeeId , Change Tab Init By Query ([ce10f4c](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/ce10f4c5ab0aa6a4c7b68548c2bd97b2e375076f))
+* Layout Form Profile, ([429c797](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/429c7971474c8f5b35f4f849e486512594a1576a))
+* max Value Create Receipt Voucher in Bill ([7780a77](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/7780a778c99c3d303b65ca275bfc04ff25569d0d))
+* notify twice ([ff3e804](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/ff3e80485193c2fa400c5785ab53c39100119984))
+* Phan Quyen ([dbfd110](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/dbfd110535687038bfdd8dba1b5158912a2db645))
+* ProductsAll paging ([564a2c0](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/564a2c09cdb528764f1e23e03d9ff3504e0245a1))
+* reCalculate discount ([e954e9e](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/e954e9e1f6716de306b3e34fac5d67d76aa2cdda))
+* remove icon Item SubMenu ([e65f4e5](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/e65f4e55527eef0a2264fb187c50b2449104ca50))
+* setList Images After Update ([3b23638](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/3b23638130420b9e9005bbb6bbd98fb3d41f5fa1))
+* width listProduct ([4ddd393](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/4ddd393a7ed90d375dc907a3ee902a1d6c22709b))
+
+
+### Features
+
+* [#1387](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1387) ([a13e292](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/a13e29221c89e8a3152f4c33493c4a843d392822))
+* [#1387](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1387) FE_Fix Trang các mặt hàng luỹ kế ([f952468](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/f952468f54948817b25586a4d3770c17e9c5632e))
+* [#1392](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1392) FE_Tồn kho mặt hàng ([c7a294b](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/c7a294b0692d04dd5682da38ae30955f7342fd60))
+* [#1395](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1395) FE_Thêm ảnh cho Mặt hàng ([9af6485](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/9af6485ac42a19aabad6073585df2e03c5287be3))
+* [#1395](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1395) FE_Thêm ảnh cho Mặt hàng ([de2dacb](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/de2dacb3a441ccaa1dfab4f2c4f2102fc225bf04))
+* add Stock for Product ([a923f7a](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/a923f7ab6e71f4a227de8eb4dd36bce9f7f33725))
+
 # [1.4.0](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/compare/v1.3.0...v1.4.0) (2024-03-24)
 
 
