@@ -4,7 +4,6 @@ export type TypeProps = {
 export type ResourceType = {
   GROUP_USER: string[],
   GROUP_EMPLOYEE: string[],
-  GROUP_WHBILL: string[],
   GROUP_WHSETTING:  string[]
   GROUP_MANUFACTURER: string[],
   UNIT: string[],
