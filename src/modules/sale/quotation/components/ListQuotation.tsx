@@ -296,6 +296,7 @@ export default function ListQuotation({
           <Space>
           <Form form={form} initialValues={{pharmacyId : query?.pharmacyId}}> 
         <SelectPharmacy
+        validateFirst={false}
           form={form}
           style={{ width: 200 }}
           showIcon={false}
