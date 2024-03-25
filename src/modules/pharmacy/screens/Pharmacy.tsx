@@ -23,6 +23,7 @@ import moment from "moment";
 import { useCallback, useMemo, useState } from "react";
 import {
   Button,
+  Checkbox,
   Col,
   Modal,
   Popconfirm,
@@ -45,6 +46,8 @@ import ReceiptVoucherForm from "~/modules/receiptVoucher/components/ReceiptVouch
 import { Link } from "react-router-dom";
 import { PATH_APP } from "~/routes/allPath";
 import { useChangeDocumentTitle } from "~/utils/hook";
+import ExportExcelButton from "~/modules/export/component";
+import useCheckBoxExport from "~/modules/export/export.hook";
 
 const ColumnActions = ({ _id, deletePharmacy, onOpenForm }: propsType) => {
   return (
@@ -81,6 +84,9 @@ export default function Pharmacy() {
   const [isOpenForm, setIsOpenForm] = useState(false);
   const paging = usePharmacyPaging();
   const canWriteVoucher = useMatchPolicy(POLICIES.WRITE_VOUCHER);
+  const canDownload = useMatchPolicy(POLICIES.DOWNLOAD_PHARMAPROFILE);
+  const [arrCheckBox, onChangeCheckBox] = useCheckBoxExport();
+
 
   const onOpenForm = useCallback(
     (id?: any) => {
@@ -206,6 +212,24 @@ export default function Pharmacy() {
           );
         },
       },
+      ...(
+        canDownload ? [
+          {
+            title: 'Lựa chọn',
+            key: '_id',
+            width: 80,
+            align: 'center' as any,
+            render: (item: any, record: any) =>
+            {
+              const id = record._id;
+              return (
+                <Checkbox
+                  checked= {arrCheckBox.includes(id)}
+                  onChange={(e)=>onChangeCheckBox(e.target.checked, id)}
+            />)}
+          },
+        ]: []
+      ),
       {
         title: "Thao tác",
         dataIndex: "_id",
@@ -234,7 +258,7 @@ export default function Pharmacy() {
         },
       },
     ],
-    []
+    [arrCheckBox]
   );
 
   const onChangeStatus = (
@@ -279,6 +303,7 @@ export default function Pharmacy() {
             value={keyword}
           />
         </Col>
+        <Row>
         <WithPermission permission={POLICIES.WRITE_PHARMAPROFILE}>
           <Col>
             <Button
@@ -289,7 +314,19 @@ export default function Pharmacy() {
               Thêm mới
             </Button>
           </Col>
-        </WithPermission>
+          </WithPermission>
+          <WithPermission permission={POLICIES.DOWNLOAD_PHARMAPROFILE}>
+            <Col>
+                <ExportExcelButton
+                  fileName="Danh sách nhà thuốc"
+                  api="pharma-profile"
+                  exportOption="pharma"
+                  query={query}
+                  ids={arrCheckBox}
+                />
+            </Col>
+          </WithPermission>
+        </Row>
       </Row>
       <WithPermission permission={POLICIES.UPDATE_PHARMAPROFILE}>
         <Space style={{ marginBottom: 20 }}>

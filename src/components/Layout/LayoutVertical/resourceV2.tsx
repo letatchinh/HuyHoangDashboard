@@ -5,12 +5,15 @@ import {
     DatabaseOutlined,
     DollarOutlined,
     HddOutlined,
+    StockOutlined,
     HomeOutlined,
     TrophyOutlined,
     ApartmentOutlined,
     ShopFilled,
     MoneyCollectOutlined,
     BellFilled,
+    FundProjectionScreenOutlined,
+    FieldTimeOutlined,
   } from "@ant-design/icons";
   import { MenuProps } from "antd";
   import React, { useCallback } from "react";
@@ -122,6 +125,55 @@ import {
               key: PATH_APP.botNotification.root,
               permission: [POLICIES.READ_NOTIFICATIONBOTMANAGER],
             },
+            {
+              label: "Nhóm bán hàng",
+              icon: <i className="fa-solid fa-chart-area"></i>,
+              path: PATH_APP.salesGroup.root,
+              key: PATH_APP.salesGroup.root,
+              permission: [POLICIES.READ_AREACONFIGURATION],
+            },
+            {
+              label: "Cấu hình lương vùng",
+              icon: <i className="fa-solid fa-money-bill-trend-up"></i>,
+              path: PATH_APP.baseSalary.root,
+              key: PATH_APP.baseSalary.root,
+              // permission: [POLICIES.READ_AREACONFIGURATION],
+            },
+            {
+              label: "Cấu hình hoa hồng",
+              icon: <i className="fa-brands fa-pagelines"></i>,
+              path: PATH_APP.benefitConfiguration.root,
+              key: PATH_APP.benefitConfiguration.root,
+              // permission: [POLICIES.READ_AREACONFIGURATION],
+            },
+            {
+              label: "Kênh bán hàng",
+              icon: <i className="fa-solid fa-cart-shopping"></i>,
+              path: PATH_APP.saleChannel.root,
+              key: PATH_APP.saleChannel.root,
+              permission: [POLICIES.READ_SALECHANNEL],
+            },
+            {
+              label: "Cấu hình thời gian tự động",
+              path: PATH_APP.configurationCronTime.root,
+              key: PATH_APP.configurationCronTime.root,
+              icon: <FieldTimeOutlined />,
+              // permission: [POLICIES.READ_CONFIGDISCOUNT],
+            },
+            {
+              label: "Loại nhà thuốc",
+              path: PATH_APP.typePharmacy.root,
+              key: PATH_APP.typePharmacy.root,
+              icon: <i className="fa-regular fa-house-medical-flag"></i>,
+              permission: [POLICIES.READ_TYPEPHARMACY],
+            },
+            {
+              label: "Nhóm nhà thuốc",
+              path: PATH_APP.typePharmacy.root,
+              key: PATH_APP.typePharmacy.root,
+              icon: <i className="fa-solid fa-notes-medical"></i>,
+              // permission: [POLICIES.READ_CONFIGDISCOUNT],
+            },
           ],
         },
       ],
@@ -207,6 +259,12 @@ import {
           key: PATH_APP.vouchers.pharmacy,
           permission: [POLICIES.READ_VOUCHER],
         },
+        {
+          label: "Hợp đồng khoán",
+          path: PATH_APP.freelanceContractPharmacy.root,
+          key: PATH_APP.freelanceContractPharmacy.root,
+          // permission: [POLICIES.READ_VOUCHER],
+        },
       ],
     },
   
@@ -224,6 +282,22 @@ import {
       ],
       icon: <i className="fa-solid fa-code-branch"></i>,
     },
+
+    // Báo cáo
+    {
+      label: "Báo cáo",
+      key: "report",
+      // permission: [POLICIES.READ_BRANCH],
+      children: [
+        {
+          label: "Báo cáo nhân viên",
+          path: PATH_APP.report.employee,
+          key: PATH_APP.report.employee,
+        },
+      ],
+      icon: <i className="fa-solid fa-code-branch"></i>,
+    },
+
     {
       label: "Quản lý công việc",
       key: "todoList",
@@ -265,6 +339,13 @@ import {
       key: PATH_APP.user.root,
       permission: [POLICIES.READ_USER, POLICIES.READ_USERGROUP],
     },
+    {
+      label: "Quản lý chi phí",
+      icon: <FundProjectionScreenOutlined />,
+      path: PATH_APP.costManagement.root,
+      key: PATH_APP.costManagement.root,
+      permission: [POLICIES.READ_SHIPPINGCOST],
+    }
   
   ];
   

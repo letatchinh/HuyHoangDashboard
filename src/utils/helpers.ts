@@ -58,14 +58,19 @@ export const getExistProp = (data: any) => {
 
   return result;
 };
-
+export const getAreaByCode = (areaCode? : string) => {
+  if(!areaCode) {return null};
+  const areas = subvn.getAreas();
+  return areas?.find((area) => areaCode === area?.code);
+}
 export const concatAddress = (address: any): string => {
   if (!address) return "";
-  const { street, ward, district, districtId, city, cityId, wardId } = address;
+  const { street, ward, district, districtId, city, cityId, wardId,area, areaId} = address;
   let ward_ = ward ?? get(subvn.getWardsByCode(wardId), "name");
   let district_ = district ?? get(subvn.getDistrictByCode(districtId), "name");
   let city_ = city ?? get(subvn.getCityByCode(cityId), "name");
-  return [street, ward_, district_, city_].filter(Boolean).join(", ");
+  let area_ = area ?? get(getAreaByCode(areaId), "name");
+  return [street, ward_, district_, city_,area_].filter(Boolean).join(", ");
 };
 
 export function removeAccents(str: any) {
@@ -109,37 +114,39 @@ export const getActive = (list : []) => list?.filter((item:any) => get(item,'sta
 interface UseExpandrowTableClick {
   select: string[];
   setSelect: React.Dispatch<React.SetStateAction<string[]>>;
-  onClick: (item: any) => () => void;
+  onClick: (item: any) => (param?:any) => void;
 }
 
 export const useExpandrowTableClick: () => UseExpandrowTableClick = () => {
   const [select, setSelect] = useState<string[]>([]);
 
-  const onClick = (item: any) => () => {
-    const parentId = item.parentId;
-    let children = item?.children ?? [];
-    const id = item._id;
-
-    if (children.length && id) {
-      function repeat(value: any): string[] {
-        let res = [value._id];
-        if (value?.children) {
-          let child = value?.children.map(repeat);
-          res = flattenDeep([...res, ...child]);
+  const onClick = (item: any) => (evt?:any) => {
+    if(evt.target?.cellIndex ===0){
+      const parentId = item.parentId;
+      let children = item?.children ?? [];
+      const id = item._id;
+  
+      if (children.length && id) {
+        function repeat(value: any): string[] {
+          let res = [value._id];
+          if (value?.children) {
+            let child = value?.children.map(repeat);
+            res = flattenDeep([...res, ...child]);
+          }
+          return res;
         }
-        return res;
-      }
-
-      children = children.map(repeat);
-
-      if (select.includes(id)) {
-        let filter = select.filter((_id) => _id !== id);
-        filter = filter.filter(
-          (_id) => !flattenDeep(children).includes(_id),
-        );
-        setSelect(filter);
-      } else {
-        setSelect(uniq(compact([...select, id, parentId])));
+  
+        children = children.map(repeat);
+  
+        if (select.includes(id)) {
+          let filter = select.filter((_id) => _id !== id);
+          filter = filter.filter(
+            (_id) => !flattenDeep(children).includes(_id),
+          );
+          setSelect(filter);
+        } else {
+          setSelect(uniq(compact([...select, id, parentId])));
+        }
       }
     }
   };
@@ -239,4 +246,23 @@ export const getValueQuery = (key : string) : any => {
   let params = new URLSearchParams(search);
   let foo = params.get(key);
   return foo;
+};
+
+export const getOptions = (constantVi : any) => {
+  let options : any[] = [];
+  forIn(constantVi,(value,key) => {
+    options.push({
+      label : value,
+      value : key
+    })
+  });
+  return options;
 }
+
+export const filterOptionSlug = (input:any,option:any) => StringToSlug(get(option,'label','')?.toLowerCase())?.includes(StringToSlug(input?.trim()?.toLowerCase()));
+
+export const filterAcrossAccentsByLabel = (input: any, option: any) => {
+  return (
+    removeAccents(option?.label?.toLowerCase()).indexOf(removeAccents(input.toLowerCase())) >= 0
+  );
+};

@@ -1,5 +1,6 @@
 import { get } from "lodash";
 import { devConfig } from "~/config";
+import { getOptions } from "~/utils/helpers";
 
 export const BASE_URL = get(devConfig,'baseUrl');
 export const DEFAULT_UPLOAD_ACTION = `${BASE_URL}api/v1/file`;
@@ -350,3 +351,25 @@ export const TASK_ITEM_TYPE_REQUEST = {
 };
 
 export const INFINITY = 999999999999; // 12
+
+export const AREA = {
+  V_I:'V_I',
+  V_II:'V_II',
+  V_III:'V_III',
+  V_IV:'V_IV',
+}
+export const AREA_VI= {
+  V_I:'Vùng 1',
+  V_II:'Vùng 2',
+  V_III:'Vùng 3',
+  V_IV:'Vùng 4',
+}
+
+export const OPTION_AREA = getOptions(AREA_VI);
+
+export const requireRules : any = [
+  {
+      required : true,
+      message : "Vui lòng nhập!"
+  }
+];

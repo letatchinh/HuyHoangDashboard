@@ -102,7 +102,7 @@ export default function Employee() {
 
   const [, handleUpdate] = useUpdateEmployee(() => {
     handleCloseModal();
-    // resetAction();
+    resetAction();
   });
   const [, handleDelete] = useDeleteEmployee(resetAction);
   const [isSubmitLoading, handleCreate] = useCreateEmployee(() => {

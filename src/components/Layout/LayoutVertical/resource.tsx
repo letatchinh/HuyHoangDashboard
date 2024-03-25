@@ -11,6 +11,7 @@ import {
   ShopFilled,
   MoneyCollectOutlined,
   BellFilled,
+  FieldTimeOutlined,
 } from "@ant-design/icons";
 import { MenuProps } from "antd";
 import React, { useCallback } from "react";
@@ -113,6 +114,13 @@ export const resource: ItemType[] = [
             path: PATH_APP.configDiscount.root,
             key: PATH_APP.configDiscount.root,
             permission :[POLICIES.READ_CONFIGDISCOUNT],
+          },
+          {
+            label: "Cấu hình thời gian tự động",
+            path: PATH_APP.configurationCronTime.root,
+            key: PATH_APP.configurationCronTime.root,
+            icon: <FieldTimeOutlined />,
+            // permission: [POLICIES.READ_CONFIGDISCOUNT],
           },
         ],
       },
@@ -267,6 +275,13 @@ export const resource: ItemType[] = [
     key: PATH_APP.botNotification.root,
     permission: [POLICIES.READ_NOTIFICATIONBOTMANAGER],
   },
+  {
+    label: "Quản lý chi phí",
+    icon: <DollarOutlined />,
+    path: PATH_APP.costManagement.root,
+    key: PATH_APP.costManagement.root,
+    // permission: [POLICIES.READ_LEDGER],
+  }
        
  ];
 

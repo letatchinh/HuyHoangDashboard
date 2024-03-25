@@ -8,17 +8,26 @@ import PharmacyModule from "~/modules/pharmacy";
 import useNotificationStore from "~/store/NotificationContext";
 import { FormFieldCreateBill } from "../bill.modal";
 interface propsType extends SelectProps {
-  form? : any,
-  onChange? : (p:any) => void,
-  allowClear? : boolean,
-  showIcon? : boolean,
-  validateFirst? : boolean
+  form?: any;
+  onChange?: (p: any) => void;
+  allowClear?: boolean;
+  showIcon?: boolean;
+  validateFirst?: boolean;
+  label?: string;
 };
 type ItemSearch = {
   name: string;
   value: string;
 };
-export default function SelectPharmacy({form,onChange = () => {},allowClear = true,showIcon=true,validateFirst = true,...props}: propsType): React.JSX.Element {
+export default function SelectPharmacy({
+  form,
+  onChange = () => {},
+  allowClear = true,
+  showIcon = true,
+  validateFirst = true,
+  label = "",
+  ...props
+}: propsType): React.JSX.Element {
   const { onNotify } = useNotificationStore();
   const [loading,setLoading] = useState(false);
   const [initOption,setInitOption] = useState([]);
@@ -70,29 +79,31 @@ export default function SelectPharmacy({form,onChange = () => {},allowClear = tr
     <Row gutter={8}>
       {showIcon && <UserOutlined />}
       <Col flex={1}>
-      <Form.Item<FormFieldCreateBill>
-      name={"pharmacyId"}
-      rules={[
-        {
-          required: true,
-          message: "Vui lòng chọn nhà thuốc",
-        },
-      ]}
-      colon={false}
-      style={{marginBottom: 'unset'}}
-    >
-      <DebounceSelect
-        size="large"
-        loading={loading}
-        placeholder="Chọn nhà thuốc"
-        fetchOptions={fetchOptions}
-        style={{ width: "100%" }}
-        initOptions={initOption}
-        allowClear={allowClear}
-        {...onChange && {onChange : (value : any) => onChange(value)}}
-        {...props}
-      />
-    </Form.Item>
+        <Form.Item<FormFieldCreateBill>
+          name={"pharmacyId"}
+          label={label}
+          rules={[
+            {
+              required: true,
+              message: "Vui lòng chọn nhà thuốc",
+            },
+          ]}
+          colon={false}
+          style={{ marginBottom: "unset" }}
+          wrapperCol={{ sm: 24 }}
+        >
+          <DebounceSelect
+            size="large"
+            loading={loading}
+            placeholder="Chọn nhà thuốc"
+            fetchOptions={fetchOptions}
+            style={{ width: "100%" }}
+            initOptions={initOption}
+            allowClear={allowClear}
+            {...(onChange && { onChange: (value: any) => onChange(value) })}
+            {...props}
+          />
+        </Form.Item>
       </Col>
     </Row>
   );

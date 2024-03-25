@@ -11,6 +11,7 @@ const pharmacy = 'pharmacy';
 const configDiscount = 'configDiscount';
 const pharmaProfile = 'pharmaProfile';
 const notificationBotManager = 'notificationBotManager';
+const shippingCost = 'shippingCost';
 
 
 // Đơn hàng
@@ -35,11 +36,20 @@ const voucher = 'voucher';
 const statusVoucher = 'statusVoucher';
 const historyVoucher = 'historyVoucher';
 
+const revenueSupplier = 'revenueSupplier';
+const historySupplierMineral = 'historySupplierMineral';
 // Quản lý luỹ kế
 const cumulativeEvent = 'cumulativeEvent';
 
 // Đơn hàng nhà cung cấp
 const orderSupplier = 'orderSupplier';
+const salesGroup = 'salesGroup';
+// Kênh bán hàng
+const salesChannel ='salesChannel';
+
+// Loại nhà thuốc
+const customerGroup = 'customerGroup';
+
 const RESOURCES = [
   //Setting
   configDiscount,
@@ -82,8 +92,18 @@ const RESOURCES = [
   todoList,
 
   medicine,
+
+  revenueSupplier,
+  historySupplierMineral,
+  
   cumulativeEvent,
   orderSupplier,
+  shippingCost,
+  
+  salesGroup,
+
+  salesChannel,
+  customerGroup,
 ];
 
 //ACTIONS
@@ -166,6 +186,8 @@ const RESOURCE = (): ResourceType => {
     supplier,
     product,
     debt,
+    revenueSupplier,
+    historySupplierMineral 
   ];
   
   const GROUP_WORK_MANAGERMENT: string[] = [
@@ -176,7 +198,19 @@ const RESOURCE = (): ResourceType => {
 
    const GROUP_MEDICINE: string[] = [
     medicine
-  ]
+  ];
+  const GROUP_SHIPPINGCOST: string[] = [
+    shippingCost
+  ];
+
+  const SALE_CHANNEL: string[] = [
+    salesChannel
+  ];
+
+  const TYPE_PHARMACY: string[] = [
+    customerGroup
+  ];
+
   return {
     GROUP_USER,
     GROUP_EMPLOYEE,
@@ -193,6 +227,9 @@ const RESOURCE = (): ResourceType => {
     GROUP_WORK_MANAGERMENT,
     GROUP_VOUCHER,
     GROUP_MEDICINE,
+    GROUP_SHIPPINGCOST,
+    SALE_CHANNEL,
+    TYPE_PHARMACY,
   };
 };
 
