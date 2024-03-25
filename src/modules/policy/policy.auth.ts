@@ -38,6 +38,8 @@ const historyVoucher = 'historyVoucher';
 // Quản lý luỹ kế
 const cumulativeEvent = 'cumulativeEvent';
 
+// Đơn hàng nhà cung cấp
+const orderSupplier = 'orderSupplier';
 const RESOURCES = [
   //Setting
   configDiscount,
@@ -81,6 +83,7 @@ const RESOURCES = [
 
   medicine,
   cumulativeEvent,
+  orderSupplier,
 ];
 
 //ACTIONS
