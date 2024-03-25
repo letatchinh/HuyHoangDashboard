@@ -92,11 +92,11 @@ export const useDeleteLk = (callback?: any) => {
   });
 };
 
-export const useLkQueryParams = (reFetch:boolean) => {
+export const useLkQueryParams = (reFetch:boolean,cumulativeSession : 'IN' | 'OUT') => {
   const query = useQueryParams();
   const limit = query.get("limit") || 10;
   const page = query.get("page") || 1;
-  const keyword = query.get("keyword");
+  const product = query.get("product");
   const pharmacyId = query.get("pharmacyId");
   const createSuccess = useSelector(createSuccessSelector);
   const deleteSuccess = useSelector(deleteSuccessSelector);
@@ -104,12 +104,13 @@ export const useLkQueryParams = (reFetch:boolean) => {
     const queryParams = {
       page,
       limit,
-      keyword,
+      product,
       pharmacyId,
+      cumulativeSession,
     };
     return [queryParams];
     //eslint-disable-next-line
-  }, [page, limit, keyword, createSuccess, deleteSuccess,pharmacyId,reFetch]);
+  }, [page, limit, product, createSuccess, deleteSuccess,pharmacyId,reFetch,cumulativeSession]);
 };
 
 export const useUpdateLkParams = (

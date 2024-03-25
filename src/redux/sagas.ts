@@ -28,7 +28,7 @@ import paymentVoucher from '~/modules/paymentVoucher';
 import receiptVoucher from '~/modules/receiptVoucher';
 import lkModule from '~/modules/sale/lk';
 import productsAllModule from '~/modules/productsAll';
-import reportSupplierModule from '~/modules/report/reportSupplier';
+import reportSupplierModule from '~/modules/report/reportSupplier'; //
 import orderSupplier from '~/modules/sale/orderSupplier/index';
 export default function* rootSaga() {
   yield all([

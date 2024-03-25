@@ -1,8 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { get } from "lodash";
 import { InstanceModuleRedux } from "~/redux/instanceModuleRedux";
 import { initStateSlice } from "~/redux/models";
+import { getPaging } from "~/utils/helpers";
 interface cloneInitState extends initStateSlice {
  // Add cloneInitState Type Here
+ getListSuccess? : any
 }
 class LkClassExtend extends InstanceModuleRedux {
   cloneReducer;
@@ -15,6 +18,11 @@ class LkClassExtend extends InstanceModuleRedux {
     }
     this.cloneInitState = {
       ...this.initialState,
+      getListSuccess: (state:initStateSlice , { payload }: any) => {
+        state.isLoading = false;
+        state.list = get(payload, "docs", []);
+        state.paging = getPaging(payload);
+      },
       // Want Add more State Here...
     }
   }

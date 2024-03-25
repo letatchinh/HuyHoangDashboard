@@ -224,3 +224,19 @@ export const convertQueryString = (queryString: any) => {
   ), '');
   return stringQuery;
 };
+
+export function getRandomColor() {
+  var letters = '0123456789ABCDEF';
+  var color = '#';
+  for (var i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+  }
+  return color;
+}
+
+export const getValueQuery = (key : string) : any => {
+  let search = window.location.search;
+  let params = new URLSearchParams(search);
+  let foo = params.get(key);
+  return foo;
+}

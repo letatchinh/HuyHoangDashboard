@@ -35,6 +35,9 @@ const voucher = 'voucher';
 const statusVoucher = 'statusVoucher';
 const historyVoucher = 'historyVoucher';
 
+// Quản lý luỹ kế
+const cumulativeEvent = 'cumulativeEvent';
+
 // Đơn hàng nhà cung cấp
 const orderSupplier = 'orderSupplier';
 const RESOURCES = [
@@ -79,6 +82,7 @@ const RESOURCES = [
   todoList,
 
   medicine,
+  cumulativeEvent,
   orderSupplier,
 ];
 
