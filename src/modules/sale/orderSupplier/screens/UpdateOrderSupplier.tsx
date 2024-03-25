@@ -16,7 +16,7 @@ import dayjs from "dayjs";
 import { get, omit } from "lodash";
 import PolicyModule from "policy";
 import React, { useCallback, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import ModalAnt from "~/components/Antd/ModalAnt";
 import Status from "~/components/common/Status/index";
 import WhiteBox from "~/components/common/WhiteBox";
@@ -32,6 +32,7 @@ import PaymentVoucherForm from "~/modules/paymentVoucher/components/PaymentVouch
 import { REF_COLLECTION_UPPER } from "~/constants/defaultValue";
 import WithPermission from "~/components/common/WithPermission";
 import POLICIES from "~/modules/policy/policy.auth";
+import VoucherInOrder from "~/modules/vouchers/components/VoucherInOrder";
 
 type propsType = {};
 const Layout = ({ label, children }: { label: any; children: any }) => (
@@ -73,11 +74,12 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
 
   // const queryGetDebtPharmacy = useMemo(() => ({pharmacyId : get(orderSupplier,'pharmacyId')}),[orderSupplier]);
   // const [debt,isLoadingDebt] = useFetchState({api : PharmacyModule.api.getDebt,query : queryGetDebtPharmacy});
-
+  const { id } = useParams();
   const [openCancel, setOpenCancel] = useState(false);
   const [cancelNote, setCancelNote] = useState("");
   const onOpenCancel = useCallback(() => setOpenCancel(true), []);
   const [open, setOpen] = useState(false);
+  const [openDetailVoucher, setOpenDetailVoucher] = useState(false);
   const [orderSelect, setOrderSelect] = useState<any>();
   const [supplierId, setSupplierId] = useState<string | null>("");
   const [debt, setDebt] = useState<number | null>();
@@ -102,6 +104,14 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
     setSupplierId(null);
     setOrderSelect(null);
   };
+
+  const onOpenDetailVouchers = (item: any) => {
+    setOpenDetailVoucher(true);
+  };
+  const onCloseDetailVouchers = () => {
+    setOpenDetailVoucher(false);
+  };
+
 
   const onCancelBill = () => {
     const payloadUpdate: PayloadUpdateOrderSupplier = {
@@ -190,7 +200,14 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
           <Col lg={16} md={24} sm={24}>
             <div className="bill-page-update--infoPharmacy">
               <WhiteBox>
-                <h6>Thông tin nhà cung cấp</h6>
+                <Row>
+                  <Col>
+                    <h6>Thông tin nhà cung cấp</h6>
+                  </Col>
+                  <Col style={{ position: 'absolute', right: 0, top: 5 }}>
+                    <Button type="link" onClick={onOpenDetailVouchers}>Xem chi tiết các phiếu</Button>
+                  </Col>
+                </Row>
                 <Row justify={"space-between"}>
                   <Col>
                     <Space
@@ -317,6 +334,19 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
             creditAccount: 1111,
             amountOfMoney: debt || 0
           }]}
+        />
+      </Modal>
+      <Modal
+        title="Danh sách phiếu thu - chi"
+        open={openDetailVoucher}
+        onCancel={onCloseDetailVouchers}
+        onOk={onCloseDetailVouchers}
+        width={1366}
+        footer={null}
+        destroyOnClose
+      >
+        <VoucherInOrder
+          billId = {id}
         />
       </Modal>
     </div>

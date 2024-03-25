@@ -2,10 +2,16 @@ import { createSlice } from "@reduxjs/toolkit";
 import { InstanceModuleRedux } from "~/redux/instanceModuleRedux";
 import { initStateSlice } from "~/redux/models";
 import{omit} from 'lodash'
+import { getPaging } from "~/utils/helpers";
 interface cloneInitState extends initStateSlice {
   // Add cloneInitState Type Here
   confirmSuccess?: any,
-  confirmFailed?: any
+  confirmFailed?: any,
+
+  listByBillId?: any,
+  isLoadingBillId?: boolean,
+  getListByBillIdFailed?: any,
+  pagingByBillId?: any
 };
 class PaymentVoucherClassExtend extends InstanceModuleRedux {
   cloneReducer;
@@ -41,9 +47,24 @@ class PaymentVoucherClassExtend extends InstanceModuleRedux {
         });
         state.updateSuccess = payload?.data;
       },
+
+        // Get List By Bill Id
+        getListByBillIdRequest: (state:cloneInitState) => {
+          state.isLoadingBillId = true;
+          state.getListByBillIdFailed = null;
+        },
+        getListByBillIdSuccess: (state:cloneInitState , { payload }: any) => {
+          state.isLoadingBillId = false;
+          state.listByBillId = payload;
+          state.pagingByBillId = getPaging(payload);
+        },
+        getListByBillIdFailed: (state:cloneInitState, { payload }:{payload:any}) => {
+          state.isLoadingBillId = false;
+          state.getListByBillIdFailed = payload;
+        },
       resetAction: (state:cloneInitState) => ({
         ...state,
-        ...omit(this.cloneInitState, ["list"]),
+        ...omit(this.cloneInitState, ["list, listByBillId, pagingByBillId"]),
       }),
       // Want Add more reducer Here...
     }
@@ -51,6 +72,13 @@ class PaymentVoucherClassExtend extends InstanceModuleRedux {
       ...this.initialState,
       confirmSuccess:  undefined,
       confirmFailed: undefined,
+
+      //Bill Id
+
+      listByBillId: [],
+      isLoadingBillId: false,
+      getListByBillIdFailed: undefined,
+      pagingByBillId: undefined,
       // Want Add more State Here...
     }
   }
