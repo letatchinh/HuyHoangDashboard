@@ -41,6 +41,19 @@ class SupplierClassExtend extends InstanceModuleRedux {
         state.isLoadingGetVoucherSupplier = false;
         state.getVoucherSupplierFailed = payload;
       },
+      getSuppliersProductAuthorRequest: (state: any) => {
+        state.isLoadingGetSuppliersProductAuthor = true;
+        state.getSuppliersProductAuthorFailed = null;
+      },
+      getSuppliersProductAuthorSuccess: (state: any, { payload }: any) => {
+        state.isLoadingGetSuppliersProductAuthor = false;
+        state.suppliersProductAuthor = payload;
+        state.pagingSuppliersProductAuthor = getPaging(payload);
+      },
+      getSuppliersProductAuthorFailed: (state: any, { payload }: any) => {
+        state.isLoadingGetSuppliersProductAuthor = false;
+        state.getSuppliersProductAuthorFailed = payload;
+      },
     };
     // Add More InitState
     this.cloneInitState = {
@@ -48,7 +61,12 @@ class SupplierClassExtend extends InstanceModuleRedux {
       isLoadingGetProductSupplier: false,
       getProductSupplierFailed: null,
       productSupplier: [],
+      // pagingProductSupplier: null,
       pagingProductSupplier: null,
+      isLoadingGetSuppliersProductAuthor: false,
+      suppliersProductAuthor: [],
+      pagingSuppliersProductAuthor: null, 
+      getSuppliersProductAuthorFailed: null, 
     };
   }
   createSlice() {

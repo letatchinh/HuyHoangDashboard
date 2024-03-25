@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import { clearQuerySearch, getExistProp, removeAccents } from "~/utils/helpers";
+import { fromJSON } from "./components/parse";
 import {
   getSelectors,
   useFailed,
@@ -40,6 +41,14 @@ const policySelector = getSelector('policy');
 const isGetPolicyLoadingSelector = getSelector('isGetPolicyLoading');
 const getPolicyFailedSelector = getSelector('getPolicyFailedSelector');
 
+const profileSelector = getSelector('profile');
+const isGetProfileLoadingSelector = getSelector('isGetProfileLoading');
+const getProfileFailedSelector = getSelector('getProfileFailed');
+
+const isSubmitProfileLoadingSelector = getSelector('isSubmitUpdateProfileLoading');
+const updateProfileSuccessSelector = getSelector('updateProfileSuccess');
+const updateProfileFailedSelector = getSelector('updateProfileFailed');
+
 export const useGetUsers = (params: any) => {
   return useFetchByParam({
     action: userSliceAction.getListRequest,
@@ -58,6 +67,42 @@ export const useGetUser = (id: any) => {
     failedSelector: getByIdFailedSelector,
     param: id,
   });
+};
+export const useGetProfileUser = () => {
+  return useFetch({
+    action: userSliceAction.getProfileRequest,
+    loadingSelector: isGetProfileLoadingSelector,
+    dataSelector: profileSelector,
+    failedSelector: getProfileFailedSelector,
+  });
+};
+
+export const useUpdateProfile = (callback?: any) => {
+  useSuccess(
+    updateProfileSuccessSelector,
+    `Cập nhật ${MODULE_VI} thành công`,
+    callback
+  );
+  useFailed(updateProfileFailedSelector);
+
+  return useSubmit({
+    action: userSliceAction.updateProfileRequest,
+    loadingSelector: isSubmitProfileLoadingSelector,
+  });
+};
+
+export const useInitUserProfile = (profile: any) => {
+  return useMemo(() => {
+    if (!profile) {
+      return {};
+    }
+
+    const initValues = {
+      ...fromJSON(profile),
+    };
+
+    return initValues;
+  }, [profile, profile?.user?._id]);
 };
 
 export const useCreateUser = (callback?: any) => {
@@ -175,7 +220,7 @@ export const autoCreateUsername = async ({ fullName, callApi }: any) => {
  
 //POLICY
 
-export const useGetPolicyCheckAllPage = (param?: any) => {
+export const useGetPolicyCheckAllPage = (param?: any) : any => {
   return useFetch({
     action: userSliceAction.getPolicyRequest,
     loadingSelector: isGetPolicyLoadingSelector,
@@ -188,3 +233,4 @@ export const useGetPolicyCheckAllPage = (param?: any) => {
 export const useResetGroups = () => {
   return useResetState(userSliceAction.resetAction);
 };
+

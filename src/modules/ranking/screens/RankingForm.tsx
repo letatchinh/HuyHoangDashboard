@@ -1,14 +1,11 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Button, Form, Input, Select, Spin } from 'antd';
 import { useGetlistRankingById, useDeleteRanking, useUpdateRanking,useCreateRanking,useResetAction } from '../ranking.hook';
-import {useGetManufacturerList} from '../../manufacturer/manufacturer.hook';
-import { filterAcrossAccents } from '~/utils/helpers';
 interface Props {
   id?: any;
   handleCloseForm?: () => void;
-  
-}
-
+  setId?:any;
+};
 interface FieldType {
   id: string
   name: string
@@ -16,7 +13,7 @@ interface FieldType {
   level: string
 }
 const { TextArea } = Input;
-const RankingForm: React.FC<Props> = ({ id, handleCloseForm }) => {
+const RankingForm: React.FC<Props> = ({ id,setId, handleCloseForm }) => {
   const [, createRanking] = useCreateRanking(handleCloseForm);
   const [rankingConfigById, isLoading] = useGetlistRankingById(id);
   const [form] = Form.useForm(); 
@@ -39,10 +36,11 @@ const RankingForm: React.FC<Props> = ({ id, handleCloseForm }) => {
       };
       if (id) {
         updateRanking({ ...data, id });
+        setId(null);
       }else {
         createRanking({ ...data });
-
-      }
+        form.resetFields()
+      };
   },[updateRanking,createRanking,id]);
   return (
     <>

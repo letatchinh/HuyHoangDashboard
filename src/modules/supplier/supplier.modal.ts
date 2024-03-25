@@ -38,8 +38,19 @@ export type addressType = {
     voucherSupplier?: T[];
     pagingVoucherSupplier?: any;
     totalAmountOrder?: number;
+    isLoadingGetSuppliersProductAuthor?: boolean;
+    getSuppliersProductAuthorFailed?: any;
+    suppliersProductAuthor?: T[];
+    pagingSuppliersProductAuthor?: any;
 };
 
+
+export type SearchByType = "date" | "month" | "quarter" | "year";
+export type FormFieldSearch = {
+  startDate?: any,
+  endDate?: any,
+  searchBy?: SearchByType,
+};
 export type STATUS_SUPPLIER_TYPE = {
   ACTIVE: "ACTIVE",
   INACTIVE: "INACTIVE",

@@ -1,4 +1,4 @@
-import { get } from 'lodash';
+import { get, union } from 'lodash';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useLocation } from 'react-router-dom';
@@ -27,7 +27,7 @@ export const useSuccess = (
         onSuccess(success)
       };
     }
-  }, [success, mess, onSuccess, onNotify]);
+  }, [success, mess, onSuccess]);
 };
 
 export const useFailed = (
@@ -77,6 +77,7 @@ interface UseFetchByParamProps extends UseFetchProps {
   param?: any;
   muteOnFailed?: boolean;
   actionUpdate?: any;
+  reFetch?: boolean;
 }
 
 export const useFetchByParam = (props: UseFetchByParamProps): [any, boolean, ActionUpdateFunction] => {
@@ -88,6 +89,7 @@ export const useFetchByParam = (props: UseFetchByParamProps): [any, boolean, Act
     param,
     muteOnFailed,
     actionUpdate,
+    reFetch,
   } = props;
 
   const dispatch = useDispatch();
@@ -96,7 +98,7 @@ export const useFetchByParam = (props: UseFetchByParamProps): [any, boolean, Act
 
   useEffect(() => {
     if (param) dispatch(action(param));
-  }, [dispatch, action, param]);
+  }, [dispatch, action, param,reFetch]);
 
   useFailed(failedSelector, undefined, undefined, muteOnFailed);
 
@@ -112,15 +114,20 @@ export const useFetchByParam = (props: UseFetchByParamProps): [any, boolean, Act
 interface UseSubmitProps {
     loadingSelector: (state: any) => boolean; // Adjust the state type based on your Redux store
     action: any // Adjust the values type based on your action requirements
+    callbackSubmit? : (p?:any) => void // Callback After Submit
   }
 
-export const useSubmit = ({ loadingSelector, action }:UseSubmitProps) : [boolean,(v:any) => void] => {
+export const useSubmit = ({ loadingSelector, action ,callbackSubmit}:UseSubmitProps) : [boolean,(v:any) => void] => {
     const dispatch = useDispatch();
     const isLoading = useSelector(loadingSelector);
   
-    const handleSubmit = (values:any) => {
-      dispatch(action(values));
-    };
+    const handleSubmit = useCallback((values:any) => {
+      if(callbackSubmit && typeof callbackSubmit === 'function'){
+        dispatch(action({...values,callbackSubmit}));
+      }else{
+        dispatch(action(values));
+      }
+    },[callbackSubmit,dispatch,action]);
   
     return [isLoading, handleSubmit];
   };
@@ -138,9 +145,7 @@ export const useAction = ({ action }:UseActionProps) : (v:any) => void => {
   
     return handleAction;
   };
-  
-  
-  
+
   export const useQueryParams = () => {
     return new URLSearchParams(useLocation().search);
   };
@@ -249,3 +254,37 @@ export const useAction = ({ action }:UseActionProps) : (v:any) => void => {
     const dataReturn = useMemo(() => data, [data])
     return [dataReturn, loading]
   };
+
+  export const useCheckIsEllipsisActive = (target:any) => {
+    const isEllipsisActive = useCallback((e:any) =>{
+      if(!e) return false;
+      const parentNode = e?.parentNode;
+      return (e?.offsetWidth > parentNode?.offsetWidth);
+  },[])
+    const [isEllipsis,setIsEllipsis] = useState(false);
+    useEffect(() => {
+        const is = isEllipsisActive(target?.current);
+        setIsEllipsis(is);
+    },[target]);
+    return isEllipsis
+  }
+
+  export const useTags = (initialState = []) : any => {
+    const [state, setState] = useState(initialState);
+    const setUniqueState = (newState : any) => {
+      setState(union(newState));
+    };
+    return [state, setUniqueState];
+  };
+  type OptionsChangeDocumentType = {
+    dependency : any[]
+  }
+  export const useChangeDocumentTitle = (title : string,options? :OptionsChangeDocumentType ) => {
+    const dependency = useMemo(() => options?.dependency ?? [],[options?.dependency])
+    useEffect(() => {
+      document.title = title ?? "WorldPharma";
+      return () => {
+        document.title = "WorldPharma";
+      }
+    },dependency)
+  }

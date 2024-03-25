@@ -1,10 +1,15 @@
-import { Button, Modal, Table } from 'antd';
+import { Button, Checkbox, Modal, Table } from 'antd';
 import dayjs from 'dayjs';
 import { get } from 'lodash';
 import React, { useEffect, useState } from 'react';
 import { useGetReceiptVouchers, useReceiptVoucherPaging, useReceiptVoucherQueryParams, useUpdateReceiptVoucherParams } from '~/modules/receiptVoucher/receiptVoucher.hook';
 import ReceiptVoucherForm from '~/modules/receiptVoucher/components/ReceiptVoucherForm';
 import StatusTag from '~/modules/vouchers/components/StatusTag';
+import { useMatchPolicy } from '~/modules/policy/policy.hook';
+import POLICIES from '~/modules/policy/policy.auth';
+import useCheckBoxExport from '~/modules/export/export.hook';
+import { useDispatch } from 'react-redux';
+import { vouchersSliceAction } from '~/modules/vouchers/redux/reducer';
 type propsType = {
   listOptionSearch?: any[];
   keyword?: string;
@@ -17,16 +22,21 @@ interface Column {
   key: string;
   render?: (text: any, record: any, index: number) => React.ReactNode;
   align?: string;
+  width?: number;
 };
 export default function ReceiptVouchers(props: propsType): React.JSX.Element {
   const { listOptionSearch, keyword: keywordProps, searchBy,setQueryReceipt } = props;
   
   //HOOK
   const [query, onTableChange] = useReceiptVoucherQueryParams();
+  console.log(query,'query');
+  
   const [keyword, {setkeyword, onParamChange}] = useUpdateReceiptVoucherParams(query, listOptionSearch);
   const paging = useReceiptVoucherPaging();
   const [vouchers, isLoading] = useGetReceiptVouchers(query);
-
+  const canDownload = useMatchPolicy(POLICIES.DOWNLOAD_UNIT);
+  const [arrCheckBox, onChangeCheckBox] = useCheckBoxExport();
+  const dispatch = useDispatch();
   //STATE
   const [id, setId] = useState<string | null>();
   const [isOpenForm, setIsOpenForm] = useState(false);
@@ -35,9 +45,13 @@ export default function ReceiptVouchers(props: propsType): React.JSX.Element {
 
   useEffect(() => {
     setQueryReceipt(query);
-  }, query);
+  }, [query]);
+
+  useEffect(() => {
+    const newArrCheckBox: any = arrCheckBox;
+    dispatch(vouchersSliceAction.updateArrCheckBox(newArrCheckBox))
+  }, [arrCheckBox]);
   
-// console.log(onParamChange)
   const onOpenForm = (id: string | null) => {
     setId(id);
     setIsOpenForm(true);
@@ -127,6 +141,24 @@ export default function ReceiptVouchers(props: propsType): React.JSX.Element {
       key: 'status',
       render: (text, record, index) => <StatusTag status={text}/>
     },
+    ...(
+      canDownload ? [
+        {
+          title: 'Lựa chọn',
+          key: '_id',
+          width: 80,
+          align: 'center' as any,
+          render: (item: any, record: any) =>
+          {
+            const id = record._id;
+            return (
+              <Checkbox
+                checked= {arrCheckBox?.includes(id)}
+                onChange={(e)=>onChangeCheckBox(e.target.checked, id)}
+          />)}
+        },
+      ]: []
+    ) 
   ];
   return (
     <>

@@ -45,6 +45,14 @@ export const useGetBranches = (params: any) => {
   });
 };
 
+// export const useGetBranches = () => {
+//   return useFetch({
+//     action: branchSliceAction.getListRequest,
+//     loadingSelector: loadingSelector,
+//     dataSelector: listSelector,
+//     failedSelector: getListFailedSelector,
+//   });
+// };
 export const useGetBranch = (id: any) => {
   return useFetchByParam({
     action: branchSliceAction.getByIdRequest,

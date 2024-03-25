@@ -19,7 +19,7 @@ export default function TabSupplier({id,onCancel,onUpdate,isSubmitLoading}:props
             {
                 label : "Báo cáo",
                 key : '1',
-                children : <Report />
+                children : <Report id={id}/>
             },]
         }
         return items

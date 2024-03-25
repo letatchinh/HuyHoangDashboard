@@ -35,10 +35,12 @@ export type initStateSlice<T=any> = {
     branch:'branch',
     geo:'geo',
     statusConfig:'statusConfig',
+    configDiscount: 'configDiscount',
     employee:'employee',
     user: 'user',
     userGroup: 'userGroup',
     policy: 'policy',
+    reportSupplier: 'reportSupplier',
     productGroup:'productGroup',
     manufacturer:'manufacturer',
     productUnit:'productUnit',
@@ -46,11 +48,20 @@ export type initStateSlice<T=any> = {
     medicine:'medicine',
     product:'product',
     workBoard:'workBoard',
-    configDiscount: 'configDiscount',
     pharmacy: "pharmacy",
+    // Đơn hàng
+    bill: "bill",
+    quotation: "quotation",
+    botNotification: "botNotification",
+    workSprint:'workSprint',
+    workList:'workList',
+    workTask:'workTask',
     vouchers: "vouchers",
     receiptVoucher: "receiptVoucher",
     paymentVoucher: "paymentVoucher",
+    lk: "lk",
+    productsAll: "productsAll",
+    orderSupplier: "orderSupplier"
     }as const
     
     

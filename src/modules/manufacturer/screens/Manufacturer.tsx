@@ -25,6 +25,7 @@ export default function Manufacturer() {
   const [id, setId] = useState(null);
   const handleCloseForm = useCallback(() => {
     setShowForm(false);
+    form.resetFields();
     setId(null);
   }, []);
   const [, deleteManufacturer] = useDeleteManufacturer();
@@ -50,9 +51,9 @@ export default function Manufacturer() {
   };
   const columns: ColumnsType<DataType> = [
     {
-      title: 'Tên nhà sản xuất',
+      title: 'Tên hãng sản xuất',
       dataIndex: 'name',
-      align: 'center',
+      align: 'left',
       key: 'name',
       render: (text: string) => <a>{text}</a>,
     },
@@ -99,10 +100,8 @@ export default function Manufacturer() {
                 Xóa
               </Button>
             </WithPermission>
-
           </Space>
         </>
-
       ),
     },
   ];
@@ -111,11 +110,11 @@ export default function Manufacturer() {
   };
   const options: SelectProps['options'] = [
     {
-      label: 'Active',
+      label: 'Hoạt động',
       value: 'ACTIVE',
     },
     {
-      label: 'InActive',
+      label: 'Không hoạt động',
       value: 'INACTIVE',
     },
   ];
@@ -126,7 +125,6 @@ export default function Manufacturer() {
         <Breadcrumb title={t('Quản lý hãng sản xuất')} />
         <div>
           <div className='product-config-content' style={{ marginBottom: 16, display: 'flex', gap: '30px' }}>
-            {/* <div style={{ width: '20%',height: '100%' }}> */}
             <WhiteBox style={{ width: '20%' }}>
               <label>Trạng thái:</label>
               <Select
@@ -140,7 +138,6 @@ export default function Manufacturer() {
                 options={options}
               />
             </WhiteBox>
-            {/* </div> */}
             <div style={{ width: '80%', height: '100%' }}>
               <div className="product-config-action" >
                 <Row justify="space-between">
@@ -189,12 +186,12 @@ export default function Manufacturer() {
         </div>
         <ModalAnt
           open={showForm}
-          title="Thêm nhà sản xuất"
+          title={id? 'Cập nhật hãng sản xuất':'Thêm hãng sản xuất'}
           onCancel={handleCloseForm}
           footer={null}
         // destroyOnClose
         >
-          <ManufacturerForm id={id} callBack={handleCloseForm} updateManufacturer={updateManufacturer} />
+          <ManufacturerForm id={id} setId={setId} callBack={handleCloseForm} updateManufacturer={updateManufacturer} />
         </ModalAnt>
       </div>
     </>

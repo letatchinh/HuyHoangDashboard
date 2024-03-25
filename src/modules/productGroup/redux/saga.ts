@@ -47,7 +47,6 @@ function* createProductConfig({payload}:any):any {
     
 }
 function* deleteProductConfig({payload:id}:any):any {
-    console.log(id);
     try {
         const data = yield call(apis.delete,id);
         yield put(productGroupSliceAction.deleteSuccess(data));

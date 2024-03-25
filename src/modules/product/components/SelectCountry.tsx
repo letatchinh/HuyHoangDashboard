@@ -1,6 +1,7 @@
 import { Form, Select, Space, Typography } from "antd";
 import { get } from "lodash";
 import React, { useCallback, useEffect, useState } from "react";
+import apis from "~/api";
 import api from "~/api";
 import RenderLoading from "~/components/common/RenderLoading";
 import { filterSelectWithLabel } from "~/utils/helpers";
@@ -17,7 +18,8 @@ type ItemCountry = {
 export default function SelectCountry({isLoading}: propsType): React.JSX.Element {
   const [option, setOption] = useState<{ label: string; value: number,code : string }[] | undefined>();
   const fetchOptionsCountry = useCallback(async () => {
-        let countries : ItemCountry[] = await api.country.getAll();
+        try {
+          let countries : ItemCountry[] = await api.country.getAll();
         for (let i = 0; i < countries.length; i++) {
           if(get(countries[i],'code')==='VN'){ 
             countries.unshift(countries.splice(i, 1)[0]) ;
@@ -29,7 +31,11 @@ export default function SelectCountry({isLoading}: propsType): React.JSX.Element
             label: get(item, "name", ""),
             value: get(item, "_id"),
             code : get(item, "code"),
-          })))
+          })));
+        } catch (error) {
+          console.log(error,'Error');
+          
+        }
       }, []);
     useEffect(() => {
         fetchOptionsCountry();

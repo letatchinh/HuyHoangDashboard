@@ -3,6 +3,7 @@ import { get } from 'lodash';
 import { useMemo, useState } from 'react';
 import { filterAcrossAccents } from '~/utils/helpers';
 import subvn from '~/core/subvn';
+import { validatePhoneNumberAntd } from '~/utils/validate';
 
 const FormItem = Form.Item;
 const { Option } = Select;
@@ -205,11 +206,7 @@ const AddressFormSection = (props: AddressFormSectionProps) => {
               label="Số điện thoại"
               name="phoneNumber"
               rules={[
-                {
-                  required: true,
-                  pattern: new RegExp(/^[0-9]{10,10}$/),
-                  message: "Xin vui lòng nhập đúng số điện thoại!",
-                },
+              ...validatePhoneNumberAntd
               ]}
             >
               {isLoading ? <Skeleton.Input active /> : <Input />}

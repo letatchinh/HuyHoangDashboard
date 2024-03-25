@@ -1,8 +1,8 @@
-import { Divider, Form, Radio, Switch, Typography } from "antd";
+import { Col, Divider, Form, Radio, Row, Switch, Typography } from "antd";
 import dayjs from "dayjs";
 import { get } from "lodash";
 import React, { useMemo } from "react";
-import { STATUS, STATUS_NAMES } from "~/constants/defaultValue";
+import { INFINITY, STATUS, STATUS_NAMES } from "~/constants/defaultValue";
 import { formatter } from "~/utils/helpers";
 import {
   TYPE_DISCOUNT,
@@ -11,84 +11,116 @@ import {
   TYPE_REWARD_VI,
   TYPE_VALUE_VI,
 } from "../constants";
+import { DiscountFactory } from "../cumulativeDiscount.service";
 type propsType = {
   data: any;
-  units: any;
-  name : any;
-  isSameTarget : boolean;
+  variants: any;
+  name: any;
+  isSameTarget: boolean;
 };
 const Layout = ({ label, value }: { label: string; value: any }) => (
-  <p>
-    {label}: <Typography.Text strong>{value}</Typography.Text>
-  </p>
+  <Row>
+    <Col span={3}>
+    {label}: 
+    </Col>
+    <Col>
+     <Typography.Text strong>{value}</Typography.Text>
+    </Col>
+  </Row>
 );
 const CLONE_TYPE_DISCOUNT_VI: any = TYPE_DISCOUNT_VI;
 const CLONE_TYPE_VALUE_VI: any = TYPE_VALUE_VI;
 const CLONE_TYPE_REWARD_VI: any = TYPE_REWARD_VI;
 
+const DiscountMethod = new DiscountFactory();
 export default function DiscountView({
   data,
-  units,
+  variants,
   name,
   isSameTarget,
 }: propsType): React.JSX.Element {
-
+  
   const conditionText = useMemo(() => {
-    const applyUnit = units?.find(
-      (unit: any) => get(unit, "_id") === get(data, "applyUnit")
+    const applyVariantId = variants?.find(
+      (variant: any) => get(variant, "_id") === get(data, "applyVariantId")
     );
-    let text = `Từ ${formatter(get(data, "condition.gte"))} ${
-      applyUnit ? get(applyUnit, "name", "") : "Đ"
-    } `;
-    if (get(data, "condition.lte")) {
-      text += `đến ${formatter(get(data, "condition.lte"))} ${
-        applyUnit ? get(applyUnit, "name", "") : "Đ"
-      }`;
+    let text = '';
+    switch (get(data,'typeDiscount')) {
+      case TYPE_DISCOUNT["DISCOUNT.SOFT.CONDITION"]:
+        if (get(data, "condition.lte")) {
+           text = `Mỗi ${formatter(get(data, "condition.gte"))} ${
+            applyVariantId ? get(applyVariantId, "unit.name", "") : "Đ"
+          } `;
+    
+          text += `Tối đa ${formatter(get(data, "condition.lte"))} ${
+            applyVariantId ? get(applyVariantId, "unit.name", "") : "Đ"
+          }`;
+        }else{
+           text = `Mỗi ${formatter(get(data, "condition.gte"))} ${
+            applyVariantId ? get(applyVariantId, "unit.name", "") : "Đ"
+          } `;
+        }
+        break;
+      case TYPE_DISCOUNT.LK:
+        if (get(data, "condition.lte")) {
+           text = `Từ ${formatter(get(data, "condition.gte"))} ${
+            applyVariantId ? get(applyVariantId, "unit.name", "") : "Đ"
+          } `;
+    
+          text += `đến ${formatter(get(data, "condition.lte"))} ${
+            applyVariantId ? get(applyVariantId, "unit.name", "") : "Đ"
+          }`;
+        }else{
+           text = `Lớn hơn ${formatter(get(data, "condition.gte"))} ${
+            applyVariantId ? get(applyVariantId, "unit.name", "") : "Đ"
+          } `;
+        }
+        break;
+    
+      default:
+        break;
     }
+  
     return text;
-  }, [data, units]);
+  }, [data, variants]);
 
   const valueText = useMemo(() => {
     let text = "";
-    if (get(data, "typeReward") === TYPE_REWARD.VALUE) {
-      text =
+    switch (get(data, "typeReward")) {
+      case TYPE_REWARD.VALUE:
+        text =
         formatter(get(data, "value", "")) +
         CLONE_TYPE_VALUE_VI[get(data, "valueType")];
-    } else {
-      text = CLONE_TYPE_REWARD_VI[get(data, "typeReward")];
+        break;
+        case TYPE_REWARD.PRODUCT:
+          text = get(data, "itemReward.quantity") + " " + get(data, "itemReward.name");
+          break;
+        case TYPE_REWARD.BONUS:
+          text = CLONE_TYPE_REWARD_VI[get(data, "typeReward")];
+          break;
+      default:
+        break;
     }
     return text;
   }, [data]);
-
-  const TimeText = useMemo(() => {
+  
+  const timesRewardText = useMemo(() => {
     let text = "";
-    if (get(data, "applyTimeSheet.isRepeat")) {
-      text = `Lặp lại hằng tháng từ ngày ${dayjs(
-        get(data, "applyTimeSheet.gte")
-      ).format("DD")} đến ngày ${dayjs(get(data, "applyTimeSheet.lte")).format(
-        "DD"
-      )}`;
-    } else {
-      text = `Từ ${dayjs(get(data, "applyTimeSheet.gte")).format(
-        "DD-MM-YYYY"
-      )} đến ${dayjs(get(data, "applyTimeSheet.lte")).format("DD-MM-YYYY")}`;
+    if(get(data,'timesReward') === INFINITY){
+      text += "Không giới hạn số lần/Đơn"
+    }else{
+      text += "Chỉ nhận tối đa "+get(data,'timesReward',1)+" lần/Đơn"
     }
+    return text;
+  },[data])
+
+  const ApplyTimeText = useMemo(() => {
+    let text = DiscountMethod.handleConvertTextViewApplyTimeSheet(get(data,'applyTimeSheet'),get(data,'typeDiscount'),get(data,'typeRepeat'))
     return text;
   }, [data]);
 
   const CumulativeText = useMemo(() => {
-    let text = "";
-    if (get(data, "cumulativeTimeSheet.isRepeat")) {
-      text = `Lặp lại hằng tháng từ ngày ${dayjs(
-        get(data, "cumulativeTimeSheet.gte")
-      ).format("DD")} đến ngày ${dayjs(get(data, "cumulativeTimeSheet.lte")).format(
-        "DD"
-      )}`;
-    } else {
-      text = `Từ ${dayjs(get(data, "cumulativeTimeSheet.gte")).format(
-        "DD-MM-YYYY"
-      )} đến ${dayjs(get(data, "cumulativeTimeSheet.lte")).format("DD-MM-YYYY")}`;
-    }
+    const text = DiscountMethod.handleConvertTextViewCumulativeTimeSheet(get(data,'cumulativeTimeSheet'),get(data,'typeRepeat'));
     return text;
   }, [data]);
 
@@ -100,30 +132,35 @@ export default function DiscountView({
         value={CLONE_TYPE_DISCOUNT_VI[get(data, "typeDiscount", "")]}
       />
       <Layout label="Giá trị chiết khấu" value={valueText} />
-      {get(data, "typeDiscount") === TYPE_DISCOUNT.LK && (
+      {get(data, "typeDiscount") !== 'LK' && <Layout label="Tần suất nhận" value={timesRewardText} />}
+      {[TYPE_DISCOUNT.LK,TYPE_DISCOUNT['DISCOUNT.SOFT.CONDITION']].includes(get(data, "typeDiscount")) && (
         <>
           <Layout label="Điều kiện nhận" value={conditionText} />
-          <Layout label="Thời gian tích luỹ" value={CumulativeText} />
-          <Layout label="Thời gian áp dụng" value={TimeText} />
+          {get(data, "typeDiscount") === TYPE_DISCOUNT.LK && <Layout label="Thời gian tích luỹ" value={CumulativeText} />}
+          <Layout label="Thời gian áp dụng" value={ApplyTimeText} />
         </>
       )}
       <Form.Item
-      name={[name,"status"]}
-      label="Trạng thái"
-      labelCol={{span : 2}}
+        name={[name, "status"]}
+        label="Trạng thái"
+        labelCol={{ span: 3 }}
       >
         <Radio.Group
-        size="small"
-        options={[{
-          label : STATUS_NAMES.ACTIVE,
-          value : STATUS.ACTIVE
-        },{
-          label : STATUS_NAMES.INACTIVE,
-          value : STATUS.INACTIVE
-        }]}
-        optionType="button"
-        buttonStyle="solid"
-      />
+          size="small"
+          disabled={!isSameTarget}
+          options={[
+            {
+              label: STATUS_NAMES.ACTIVE,
+              value: STATUS.ACTIVE,
+            },
+            {
+              label: STATUS_NAMES.INACTIVE,
+              value: STATUS.INACTIVE,
+            },
+          ]}
+          optionType="button"
+          buttonStyle="solid"
+        />
       </Form.Item>
     </div>
   );

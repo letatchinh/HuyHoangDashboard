@@ -11,6 +11,12 @@ import { MAP_STATUS_VOUCHERS_VI } from "~/constants/defaultValue";
 import dayjs from "dayjs";
 import { useLocation, useNavigate } from "react-router-dom";
 import { convertQueryString } from "~/utils/helpers";
+import WithPermission from "~/components/common/WithPermission";
+import POLICIES from "~/modules/policy/policy.auth";
+import ExportExcelButton from "~/modules/export/component";
+import useCheckBoxExport from "~/modules/export/export.hook";
+import { useArrCheckBoxRedux } from "../vouchers.hook";
+import { PATH_APP } from "~/routes/allPath";
 type propsType = {};
 type optionsSearch = {
   value: string;
@@ -59,7 +65,8 @@ export default function Vouchers(props: propsType): React.JSX.Element {
     []
   );
   const [date, setDate] = useState<any>(defaultDate);
-
+  const arrCheckBoxRedux = useArrCheckBoxRedux();
+  
   useEffect(() => {
     setKeyword('');
   }, [searchBy]);
@@ -150,7 +157,7 @@ export default function Vouchers(props: propsType): React.JSX.Element {
   return (
     <>
       <WhiteBox>
-        <Breadcrumb title="Sổ quỹ" />
+        <Breadcrumb title={`Sổ quỹ của ${pathname === PATH_APP.vouchers.pharmacy ? 'Nhà thuốc' : 'Nhà cung cấp'}`} />
         <div className="select-search">
           <div className="select-search__left">
             <Row gutter={5}>
@@ -161,7 +168,7 @@ export default function Vouchers(props: propsType): React.JSX.Element {
                   }}
                   options={optionsSearch}
                   showSearch
-                  placeholder={"Tiếm theo..."}
+                  placeholder={"Tìm kiếm theo..."}
                   value={searchBy}
                   onChange={onChangeSelect}
                   // onSelect={onSelect}
@@ -248,6 +255,17 @@ export default function Vouchers(props: propsType): React.JSX.Element {
                     ),
                   }[searchBy]
                 }
+              </Col>
+              <Col>
+                <WithPermission permission={POLICIES.DOWNLOAD_SUPPLIER}>
+                    <ExportExcelButton
+                      api= {'voucher'}
+                      exportOption = 'voucher'
+                      query={activeTab === '1' ? {...queryReceipt, typeVoucher: 'PT'} : {...queryPayment, typeVoucher: 'PC'}}
+                      fileName={activeTab === '1' ? 'Phiếu thu' : 'Phiếu chi'}
+                      ids={arrCheckBoxRedux}
+                    />
+                </WithPermission>
               </Col>
             </Row>
           </div>

@@ -90,7 +90,7 @@ const AccountingDetails = forwardRef(({
       dataIndex: 'amountOfMoney',
       key: 'amountOfMoney',
       render: (text: any) => floorFormatter(text),
-      editable: true,
+      editable: mode === COMPONENT_MODES.EDIT,
       component: 'InputNumber',
     },
     {

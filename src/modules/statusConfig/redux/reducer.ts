@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { get } from "lodash";
+import { get,omit } from "lodash";
 import { InstanceModuleRedux } from "~/redux/instanceModuleRedux";
 import { getPaging } from "~/utils/helpers";
 import { cloneInitState } from "../statusConfig.modal";
@@ -25,6 +25,10 @@ class StatusConfigClassExtend extends InstanceModuleRedux {
         state.isLoadingGetStatusConfig = false;
         state.getStatusConfigFailed = payload;
       },
+      resetAction: (state:cloneInitState) => ({
+        ...state,
+        ...omit(this.cloneInitState, ["list"]),
+      }),
     };
     // Add More InitState
     this.cloneInitState = {

@@ -25,9 +25,37 @@
         width: 100%!important;
     }
 }
+
+.link_{
+    text-decoration: unset !important;
+    font-weight: 600;
+}
+
+.form-custom{
+    & .ant-form-item {
+        margin-bottom: 2px !important;
+    }
+}
 .disabledLink {
     color: currentColor;
     opacity: 0.5;
     text-decoration: none;
     pointer-events: none;
+  }
+
+.ant-divider{
+    margin: 12px 0 !important;
+}
+
+.ant-table-container th {
+    font-weight: 500!important;
+}
+  .loadingFullContainer{
+    position: absolute;
+    inset: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.45);
+    z-index: 999;
   }

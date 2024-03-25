@@ -26,6 +26,7 @@ function* getByIdPolicy({payload:id} : any) : any {
     const data = yield call(api.getById,id);
     yield put(policySliceAction.getByIdSuccess(data));
   } catch (error:any) {
+    console.log(error)
     yield put(policySliceAction.getByIdFailed(error));
   }
 }

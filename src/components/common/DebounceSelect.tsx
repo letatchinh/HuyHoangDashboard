@@ -8,7 +8,6 @@ export interface DebounceSelectProps<ValueType = any>
   fetchOptions: (search?: string) => Promise<ValueType[]>;
   debounceTimeout?: number;
   initOptions? : any[]
-  value?:any
 }
 
 function DebounceSelect<
@@ -19,9 +18,9 @@ function DebounceSelect<
   } = any
 >({
   fetchOptions,
-  debounceTimeout = 500,
+  debounceTimeout = 300,
   initOptions,
-  value,
+
   ...props
 }: DebounceSelectProps<ValueType>) {
   const [fetching, setFetching] = useState(false);
@@ -36,7 +35,7 @@ function DebounceSelect<
   
   const debounceFetcher = useMemo(() => {
     setFetching(true);
-    const loadOptions = (value: string) => {
+    const loadOptions = (value: any) => {
     
       fetchRef.current += 1;
       const fetchId = fetchRef.current;
@@ -56,21 +55,20 @@ function DebounceSelect<
 
     return debounce(loadOptions, debounceTimeout);
   }, [fetchOptions, debounceTimeout]);
-
+  
   return (
     <Select
       allowClear
       filterOption={false}
       onSearch={debounceFetcher}
       notFoundContent={fetching ? <Spin size="small" /> : <Empty />}
-      {...props}
-      {...value && {value}}
       options={options}
       showSearch
       style={{ minWidth: 250 }}
       onFocus={() => {
-          debounceFetcher('');
+        debounceFetcher('');
       }}
+      {...props}
     />
   );
 }
