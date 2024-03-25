@@ -96,23 +96,22 @@ export const useDeleteEmployeeGroup = (callback?: any) => {
   });
 };
 
-export const useEmployeeGroupQueryParams = () => {
+export const useEmployeeGroupQueryParams = (branchIdQuery: any) => {
   const query = useQueryParams();
-  const limit = query.get("limit") || 10;
-  const page = query.get("page") || 1;
-  const keyword = query.get("keyword");
+  // const limit = query.get("limit") || 10;
+  // const page = query.get("page") || 1;
+  // const keyword = query.get("keyword");
+  const branchId = branchIdQuery || query.get("branchId");
   const createSuccess = useSelector(createSuccessSelector);
   const deleteSuccess = useSelector(deleteSuccessSelector);
   const updateSuccess = useSelector(updateSuccessSelector);
   return useMemo(() => {
     const queryParams = {
-      page,
-      limit,
-      keyword,
+      branchId
     };
     return [queryParams];
     //eslint-disable-next-line
-  }, [page, limit, keyword, createSuccess, deleteSuccess,updateSuccess]);
+  }, [createSuccess, deleteSuccess,updateSuccess,branchId]);
 };
 
 export const useUpdateEmployeeGroupParams = (

@@ -19,6 +19,7 @@ import {
   onSearchPermissions,
   useCreateEmployeeGroup,
   useDeleteEmployeeGroup,
+  useEmployeeGroupQueryParams,
   useGetEmployeeGroup,
   useGetEmployeeGroups,
   useResetEmployeeGroups,
@@ -78,10 +79,11 @@ const EmployeeGroup = ({ currentTab }: EmployeeGroupProps) => {
   const { pathname } = useLocation();
   const [reFetch, setReFetch] = useState(false);
   const branchIdParam = useMemo(
-    () => ({ branchId: branchId ? branchId : DEFAULT_BRANCH_ID }),
+    () => ( branchId ? branchId : DEFAULT_BRANCH_ID),
     [branchId, reFetch]
   );
-  const [groups, isLoading] = useGetEmployeeGroups(branchIdParam);
+  const [query] = useEmployeeGroupQueryParams(branchIdParam);
+  const [groups, isLoading] = useGetEmployeeGroups(query);
   const param = useMemo(() => (groupId), [groupId, reFetch]);
   const [group, isLoadingGroup, updateGroup] = useGetEmployeeGroup(param);
   const [, deleteGroup] = useDeleteEmployeeGroup();
@@ -110,6 +112,7 @@ const EmployeeGroup = ({ currentTab }: EmployeeGroupProps) => {
   const [, handleUpdateEmployee] = useUpdateEmployeeGroup(() => {
     onClose();
     resetAction();
+    setReFetchId(true);
   });
   const [isSubmitLoading, handleCreate] = useCreateEmployeeGroup(() => {
     onClose();
@@ -267,7 +270,6 @@ const EmployeeGroup = ({ currentTab }: EmployeeGroupProps) => {
             afterClose={() => {
                 if (reFetchId) {
                   reFetchGroup();
-                  console.log(1)
               };
               setReFetchId(false);
             }}
