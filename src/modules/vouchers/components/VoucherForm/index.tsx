@@ -69,11 +69,12 @@ import {
     provider?: string,
     method?:methodType,
     callback?:any,
-    max?:number,
+    max?: number,
+    billId?: any,
   };
   
   export default function VoucherForm(props: propsType): React.JSX.Element {
-    const { id , onClose, pharmacyId,refCollection, debt, from,totalAmount,reason,provider,method,callback,max} = props;
+    const { id , onClose, pharmacyId,refCollection, debt, from,totalAmount,reason,provider,method,callback,max,billId} = props;
     useResetAction();
     const dispatch = useDispatch();
     const {onNotify} = useNotificationStore();
@@ -225,8 +226,12 @@ import {
         if (id) {
           handleUpdate({ id: id, ...newValue });
         } else {
-          handleCreate(newValue);
-        }
+          if (billId) {
+            handleCreate({ ...newValue, billId: billId });
+          } else {
+            handleCreate(newValue);
+          };
+        };
       } catch (error) {
         console.error(error);
       }

@@ -69,11 +69,12 @@ type propsType = {
   debt?: any;
   from?: string;
   supplierId?:any,
-  dataAccountingDefault?: DataAccounting[]
+  dataAccountingDefault?: DataAccounting[],
+  billId?:any
 };
 
 export default function ReceiptVoucher(props: propsType): React.JSX.Element {
-  const { id , onClose, pharmacyId,supplierId,refCollection, debt, from,dataAccountingDefault} = props;
+  const { id , onClose, pharmacyId,supplierId,refCollection, debt, from,dataAccountingDefault,billId} = props;
   useResetAction();
   const [form] = Form.useForm();
   const ref = useRef();
@@ -189,11 +190,17 @@ export default function ReceiptVoucher(props: propsType): React.JSX.Element {
         accountingDetails: accountingDetails,
         totalAmount:sumBy([...accountingDetails],(item) => get(item,'amountOfMoney',0))
       };
-      console.log(newValue,'newValue')
       if (id) {
         handleUpdate({ id: id, ...newValue });
       } else {
-        handleCreate(newValue);
+        if (billId) {
+          handleCreate({
+            ...newValue,
+            billId,
+          });
+        } else {
+          handleCreate(newValue);
+        };
       }
     } catch (error) {
       console.error(error);

@@ -334,6 +334,7 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
             creditAccount: 1111,
             amountOfMoney: debt || 0
           }]}
+          billId = {id}
         />
       </Modal>
       <Modal

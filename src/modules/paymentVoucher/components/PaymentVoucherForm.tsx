@@ -74,14 +74,15 @@ import "./form.scss";
     refCollection?: string;
     debt?: number | null;
     dataAccountingDefault? : DataAccounting[],
-    method?:any
+    method?: any,
+    billId?: any,
   };
   
   export default function PaymentVoucherForm(
     props: propsType
   ): React.JSX.Element {
     useResetAction();
-    const { id, supplierId, onClose, refCollection, debt,pharmacyId,dataAccountingDefault,method } = props;
+    const { id, supplierId, onClose, refCollection, debt,pharmacyId,dataAccountingDefault,method,billId } = props;
     const [form] = Form.useForm();
     const ref = useRef();
     const [accountingDetails, setAccountingDetails] = useState([]);
@@ -200,7 +201,14 @@ import "./form.scss";
         if (id) {
           handleUpdate({ id: id, ...newValue });
         } else {
-          handleCreate(newValue);
+          if (billId) {
+            handleCreate({
+              ...newValue,
+              billId,
+            });
+          } else {
+            handleCreate(newValue);
+          };
         }
       } catch (error) {
         console.error(error);

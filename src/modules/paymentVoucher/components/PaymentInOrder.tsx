@@ -73,7 +73,7 @@ export default function PaymentInOrder(props: propsType): React.JSX.Element {
     <>
       <Table
         columns={columns as any}
-        dataSource={data || []}
+        dataSource={data?.docs || []}
         loading={isLoading}
         size='small'
         pagination={{
@@ -81,6 +81,7 @@ export default function PaymentInOrder(props: propsType): React.JSX.Element {
           showTotal: (total) => `Tổng cộng: ${total}`
         }}
         onChange={({ current, pageSize }: any) => onTableChange({ current, pageSize })}
+        footer={() => <span>Tổng đã chi: {data?.totalPrices || 0}đ</span>}
       />
       <Modal
         footer={null}

@@ -66,6 +66,7 @@ export function UpdateBillProvider({
         destroyOnClose
       >
         <VoucherModule.components.VoucherForm
+          billId = {bill?._id}
           callback={mutateBill}
           onClose={() => onCloseForm()}
           pharmacyId={pharmacyId}

@@ -15,7 +15,6 @@ export default function ReceiptInOrder(props: propsType): React.JSX.Element {
   const [query, onTableChange] = useReceiptVoucherByBillIdQueryParams(billId);
   const [data, isLoading] = useGetReceiptVoucherByBillId(query);
   const paging = usePagingByBillId();
-  console.log(data,'data')
   const columns: ColumnsType = [
     {
       title: 'Mã phiếu thu',
@@ -73,7 +72,7 @@ export default function ReceiptInOrder(props: propsType): React.JSX.Element {
     <>
       <Table
         columns={columns as any}
-        dataSource={data || []}
+        dataSource={data?.docs || []}
         loading={isLoading}
         size='small'
         pagination={{
@@ -81,6 +80,7 @@ export default function ReceiptInOrder(props: propsType): React.JSX.Element {
           showTotal: (total) => `Tổng cộng: ${total}`
         }}
         onChange={({ current, pageSize }: any) => onTableChange({ current, pageSize })}
+        footer={() => <span>Tổng đã thu: {data?.totalPrices || 0}đ</span>}
       />
       <Modal
         footer={null}
