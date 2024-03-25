@@ -45,6 +45,13 @@ export default function Homepage(props: propsType): React.JSX.Element {
             icon={<MedicineBoxOutlined className="homepage--btnAction__icon" />}
           />
         </Col>
+        <Col>
+          <BtnAction
+          onClick={() => goLink(PATH_APP.productAll.root)}
+            value="Danh sách sản phẩm"
+            icon={<i className="fa-solid fa-capsules homepage--btnAction__icon"></i>}
+          />
+        </Col>
       </Row>
       <Modal
         
