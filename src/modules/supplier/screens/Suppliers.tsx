@@ -60,7 +60,7 @@ export default function Supplier(): React.JSX.Element {
   const [isSubmitLoading, onDelete] = useDeleteSupplier();
   const paging = useSupplierPaging();
   const canWriteVoucher = useMatchPolicy(POLICIES.WRITE_VOUCHER);
-  const canReadDebt = useMatchPolicy(POLICIES.READ_DEBT);
+  const canReadDebt = useMatchPolicy(POLICIES.READ_DEBTSUPPILER);
 
   //Download
   const canDownload = useMatchPolicy(POLICIES.DOWNLOAD_PRODUCT);

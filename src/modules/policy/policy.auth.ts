@@ -25,7 +25,7 @@ const medicine = 'medicine';
 const quotation = 'quotation';
 // Nhà cung cấp
 const supplier = 'supplier';
-const debt = 'debt';
+const debtSupplier = 'debtSupplier';
 
 // Sản phẩm Nhà cung cấp
 const product = 'product';
@@ -69,7 +69,7 @@ const RESOURCES = [
   historyVoucher,
   supplier,
   product,
-  debt,
+  debtSupplier,
 
   // Pharmacy Profile
   pharmaProfile,
@@ -165,7 +165,7 @@ const RESOURCE = (): ResourceType => {
   const GROUP_SUPPLIER: string[] = [
     supplier,
     product,
-    debt,
+    debtSupplier,
   ];
   
   const GROUP_WORK_MANAGERMENT: string[] = [

@@ -4,7 +4,6 @@ export type TypeProps = {
 export type ResourceType = {
   GROUP_USER: string[],
   GROUP_EMPLOYEE: string[],
-  GROUP_WHBILL: string[],
   GROUP_WHSETTING:  string[]
   GROUP_MANUFACTURER: string[],
   UNIT: string[],
@@ -196,14 +195,14 @@ export type PoliciesType = {
   "ADMIN_HISTORYVOUCHER" |
   "HISTORYVOUCHER" |
   
-  //DEBT
-  "READ_DEBT" |
-  "WRITE_DEBT" |
-  "UPDATE_DEBT" |
-  "DELETE_DEBT" |
-  "DOWNLOAD_DEBT" |
-  "ADMIN_DEBT" |
-  "DEBT"|
+  //DEBTSUPPILER
+  "READ_DEBTSUPPILER" |
+  "WRITE_DEBTSUPPILER" |
+  "UPDATE_DEBTSUPPILER" |
+  "DELETE_DEBTSUPPILER" |
+  "DOWNLOAD_DEBTSUPPILER" |
+  "ADMIN_DEBTSUPPILER" |
+  "DEBTSUPPILER"|
 
   
   //GROUP_TODOSTATUSCONFIG
