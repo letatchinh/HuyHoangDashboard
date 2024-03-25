@@ -131,5 +131,8 @@ export const PATH_APP = {
   configurationCronTime: {
     root: path(ROOTS.app, "/configuration-cronTime"),
   },
+  typePharmacy: {
+    root: path(ROOTS.app, "/type-pharmacy")
+  },
 
 };

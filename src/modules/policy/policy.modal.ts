@@ -22,7 +22,9 @@ export type ResourceType = {
   GROUP_MEDICINE: string[],
   GROUP_SHIPPINGCOST: string[],
   // Kênh bán hàng
-  SALE_CHANNEL: string[]
+  SALE_CHANNEL: string[],
+  // Loại nhà thuốc
+  TYPE_PHARMACY: string[],
 };
 
 export type policyType = 'write' | 'read' | 'update' | 'delete' | 'download' | 'admin';
@@ -278,7 +280,14 @@ export type PoliciesType = {
   'UPDATE_SALECHANNEL' |
   'DELETE_SALECHANNEL' |
   'DOWNLOAD_SALECHANNEL' |
-  'ADMIN_SALECHANNEL'
-  
+  'ADMIN_SALECHANNEL' |
+
+  // Loại nhà thuốc
+  'READ_TYPEPHARMACY' |
+  'WRITE_TYPEPHARMACY' |
+  'UPDATE_TYPEPHARMACY' |
+  'DELETE_TYPEPHARMACY' |
+  'DOWNLOAD_TYPEPHARMACY' |
+  'ADMIN_TYPEPHARMACY'
   ]: [string, policyType];
 };

@@ -38,6 +38,8 @@ import reportEmployee from '~/modules/report/reportEmployee/index';
 import saleChannel from '~/modules/saleChannel';
 import reportSupplierModule from '~/modules/report/reportSupplier'; //
 import configurationCronTime from "~/modules/configurationCronTime";
+import typePharmacy from '~/modules/typePharmacy';
+
 export default function* rootSaga() {
   yield all([
     authModule.redux.saga(),
@@ -81,5 +83,6 @@ export default function* rootSaga() {
     reportSupplierModule.redux.saga(),
     saleChannel.redux.saga(),
     configurationCronTime.redux.saga(),
+    typePharmacy.redux.saga(),
   ]);
 };
