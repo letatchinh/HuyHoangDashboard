@@ -36,7 +36,6 @@ const updateListSuccessSelector = getSelector("updateListSuccess");
 const updateListFailedSelector = getSelector("updateListFailed");
 
 export const useConfigDiscountPaging = () => useSelector(pagingSelector);
-
 export const useGetConfigDiscounts = () => {
   return useFetch({
     action: configDiscountSliceAction.getListRequest,

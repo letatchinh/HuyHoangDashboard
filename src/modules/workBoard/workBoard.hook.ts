@@ -17,7 +17,7 @@ import { useSelector } from "react-redux";
 import { cloneInitState } from "./workBoard.modal";
 import { RootState } from "~/redux/store";
 const MODULE = "workBoard";
-const MODULE_VI = "Đơn vị tính";
+const MODULE_VI = "Không gian làm việc";
 const {
     loadingSelector,
     listSelector,
@@ -111,17 +111,17 @@ const {
         failedSelector: getListFailedSelector,
         param: query,
       })
-  }
-  export const useGetlistWorkBoardById = (id?: string) => {
+  };
+export const useGetBoardById = (id?: string) => {
     return useFetchByParam({
       action: workBoardActions.getByIdRequest,
       loadingSelector: getByIdLoadingSelector,
       dataSelector: getByIdSelector,
       failedSelector: getByIdFailedSelector,
       param: id,
-    });
+    })
   };
-  export const useGetAllManagers = () => {
+  export const useGetListManagers = () => {
     return useFetch({
       action: workBoardActions.getAllManagersRequest,
       loadingSelector: isLoadingGetAllManagers,
@@ -129,7 +129,7 @@ const {
       failedSelector: getAllManagersFailed,
     })
   };
-  export const useGetAllEmployee = () => {
+  export const useGetListStaffs = () => {
     return useFetch({
       action: workBoardActions.getAllEmployeeRequest,
       loadingSelector: isLoadingGetAllEmployee,
@@ -137,20 +137,22 @@ const {
       failedSelector: getAllEmployeeFailed,
     })
   };
-  export const useGetListManagerById = (id?:string) => {
-    return useFetch({
+  export const useGetListManagersByIdBoard = (id?:string) => {
+    return useFetchByParam({
       action: workBoardActions.getListManagerByIdRequest,
       loadingSelector: isLoadingGetListManagerById,
       dataSelector: listManagerById,
       failedSelector: getListManagerByIdFailed,
+      param: id
     })
   };
-  export const useGetListEmployeeById = (id?:string) => {
-    return useFetch({
+  export const useGetListStaffsByIdBoard = (id?:string) => {
+    return useFetchByParam({
       action: workBoardActions.getListEmployeeByIdRequest,
       loadingSelector: isLoadingListEmployeeById,
       dataSelector: listEmployeeById,
       failedSelector: getListEmployeeByIdFailed,
+      param: id
     })
   };
   export const useGetListBoard = () => {

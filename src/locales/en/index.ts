@@ -6,6 +6,7 @@ import statusConfig from '../en/starusConfig.json';
 import rankingManufacturer from '../en/rankingManufacturer.json';
 import unit from '../en/unit.json';
 import medicine from '../en/medicine.json';
+import workBoard from '../en/workBoard.json';
 const en = {
     ...dashboard,
     ...supplier,
@@ -17,5 +18,6 @@ const en = {
     ...rankingManufacturer,
     ...unit,
     ...medicine,
+    ...workBoard,
 }
 export default en;

@@ -12,7 +12,7 @@ import {
   Space,
   TimePicker,
 } from "antd";
-import { filter, head, keys, parseInt, range } from "lodash";
+import { filter, get, head, isArray, keys, parseInt, range } from "lodash";
 import { formatter } from "~/utils/helpers";
 import dayjs from "dayjs";
 import { Color } from "antd/es/color-picker";
@@ -72,11 +72,12 @@ const EditableCell = ({
   };
   useEffect(() => {
     if (editing) {
-      inputRef.current.focus();
+      inputRef?.current?.focus();
     }
   }, [editing]);
 
   const toggleEdit = () => {
+    if(!editable) return;
     setEditing(!editing);
 
     let value;
@@ -143,7 +144,6 @@ const EditableCell = ({
   };
 
   let childNode = children;
-
   if (editable) {
     childNode = editing ? (
       <Form.Item
@@ -154,7 +154,7 @@ const EditableCell = ({
         rules={[
           {
             required: required === false ? false : true,
-            message: `Vui lòng nhập ${title}.`,
+            message: `Vui lòng nhập ${typeof title === "string" ? title : ""}.`,
           },
         ]}
       >
@@ -246,14 +246,14 @@ const EditableCell = ({
         style={{
           paddingRight: 24,
         }}
-        onClick={toggleEdit}
+        // onClick={toggleEdit}
       >
         {children}
       </div>
     );
   }
 
-  return <td {...restProps}>{childNode}</td>;
+  return <td {...editable && !editing && {onClick : toggleEdit}} {...restProps}>{childNode}</td>;
 };
 
 export { EditableCell, EditableRow };

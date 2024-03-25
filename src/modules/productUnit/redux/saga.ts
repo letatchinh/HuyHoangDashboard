@@ -11,6 +11,15 @@ function* getListProductUnit({payload:query} : any) : any {
   }
 }
 
+function* getUnitAll() : any {
+  try {
+    const data = yield call(api.getAllPublic);
+    yield put(productUnitActions.getUnitAllSuccess(data));
+  } catch (error:any) {
+    yield put(productUnitActions.getUnitAllFailed(error));
+  }
+}
+
 function* getByIdProductUnit({payload:id} : any) : any {
   try {
     const data = yield call(api.getById,id);
@@ -53,4 +62,5 @@ export default function* productUnitSaga() {
   yield takeLatest(productUnitActions.createRequest, createProductUnit);
   yield takeLatest(productUnitActions.updateRequest, updateProductUnit);
   yield takeLatest(productUnitActions.deleteRequest, deleteProductUnit);
+  yield takeLatest(productUnitActions.getUnitAllRequest, getUnitAll);
 }

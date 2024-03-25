@@ -8,6 +8,12 @@ const employee = 'employee';
 const user = 'user';
 const userGroup = 'userGroup';
 const pharmacy = 'pharmacy';
+const configDiscount = 'configDiscount';
+const pharmaProfile = 'pharmaProfile';
+const notificationBotManager = 'notificationBotManager';
+
+
+// Đơn hàng
 const bill = 'bill';
 const manuFacturer = 'manufacturer';
 const unit = 'unit';
@@ -15,22 +21,65 @@ const productGroup='productGroup';
 const ranking = 'ranking';
 const medicine = 'medicine';
 
+// Đơn hàng tạm
+const quotation = 'quotation';
+// Nhà cung cấp
+const supplier = 'supplier';
+const debt = 'debt';
+
+// Sản phẩm Nhà cung cấp
+const product = 'product';
+const todoConfigStatus = 'todoConfigStatus';
+const todoList = 'todoList';
+const voucher = 'voucher';
+const statusVoucher = 'statusVoucher';
+const historyVoucher = 'historyVoucher';
+
+// Đơn hàng nhà cung cấp
+const orderSupplier = 'orderSupplier';
 const RESOURCES = [
+  //Setting
+  configDiscount,
+
+  //User
   branch,
   // company,
   employee,
   user,
   userGroup,
+
+
   // pharmacy,
-  // bill,
   manuFacturer,
   unit,
   ranking,
   // productGroup
   productGroup,
   //
-  medicine
+  medicine,
+  supplier,
+  product,
 
+  //VOUCHER
+  voucher,
+  statusVoucher,
+  historyVoucher,
+  supplier,
+  product,
+  debt,
+
+  // Pharmacy Profile
+  pharmaProfile,
+  
+  bill,
+  quotation,
+  // Bot Notification
+  notificationBotManager,
+  todoConfigStatus,
+  todoList,
+
+  medicine,
+  orderSupplier,
 ];
 
 //ACTIONS
@@ -64,14 +113,13 @@ const POLICIES : PoliciesType = RESOURCES.reduce((policies, resource) => {
 
 export default POLICIES;
 const RESOURCE = (): ResourceType => {
-  const GROUP_WHSETTING : string[] = [];
+  const GROUP_WHSETTING: string[] = [
+    configDiscount,
+  ];
   
   const GROUP_USER : string[] = [
     user,
     userGroup
-  ];
-  const GROUP_WHBILL: string[] = [
-    bill
   ];
   const GROUP_EMPLOYEE : string[] = [
     employee
@@ -91,17 +139,56 @@ const RESOURCE = (): ResourceType => {
   const GROUP_RANKING : string[] = [
     ranking
   ];
+  const GROUP_VOUCHER: string[] = [
+    voucher,
+    statusVoucher,
+    historyVoucher
+  ]
 
+  const PHARMA_PROFILE: string[] = [
+    pharmaProfile
+  ];
+  
+  const GROUP_BILL : string[] = [
+    bill,
+    quotation,
+  ];
+
+  const NOTIFICATION_BOT_MANAGER: string[] = [
+    notificationBotManager
+  ]
+  
+  const GROUP_SUPPLIER: string[] = [
+    supplier,
+    product,
+    debt,
+  ];
+  
+  const GROUP_WORK_MANAGERMENT: string[] = [
+    todoList,
+    todoConfigStatus,
+  ];
+
+
+   const GROUP_MEDICINE: string[] = [
+    medicine
+  ]
   return {
     GROUP_USER,
     GROUP_EMPLOYEE,
-    GROUP_WHBILL,
     GROUP_WHSETTING,
     GROUP_MANUFACTURER,
     UNIT,
     GROUP_PRODUCTGROUP,
     GROUP_RANKING,
     MEDICINE,
+    PHARMA_PROFILE,
+    GROUP_BILL,
+    NOTIFICATION_BOT_MANAGER,
+    GROUP_SUPPLIER,
+    GROUP_WORK_MANAGERMENT,
+    GROUP_VOUCHER,
+    GROUP_MEDICINE,
   };
 };
 
@@ -111,9 +198,9 @@ const RESOURCE = (): ResourceType => {
  * @returns {Array} [POLICIES.action_resources]
  */
 export const GROUP_POLICY : any = (action: any): void => {
-  forIn(RESOURCE(), (value, key, object : any) => {
+  return forIn(RESOURCE(), (value, key, object : any) => {
     object[key] = [];
-    if (Array.isArray(value)) {
+    // if (Array.isArray(value)) {
       value.forEach((keyPermission: string | undefined) => {
         if (keyPermission) {
           object[key].push(
@@ -121,10 +208,9 @@ export const GROUP_POLICY : any = (action: any): void => {
           );
         }
       });
-    }
+    // }
   });
 };
-
 export const CORE_ACTION = {
   READ: 'READ',
   WRITE: 'WRITE',

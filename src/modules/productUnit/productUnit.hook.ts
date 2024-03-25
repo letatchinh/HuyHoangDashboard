@@ -15,7 +15,8 @@ import { get, identity } from "lodash";
 import { clearQuerySearch, getExistProp } from "~/utils/helpers";
 import { useSelector } from "react-redux";
 const MODULE = "productUnit";
-const MODULE_VI = "đơn vị tính";
+const MODULE_VI = "Đơn vị tính";
+const getSelector = (key: string) => (state: any) => state[MODULE][key];
 const {
     loadingSelector,
     listSelector,
@@ -32,11 +33,14 @@ const {
     updateFailedSelector,
     pagingSelector,
   } = getSelectors(MODULE);
+  const isGetAllLoadingSelector = getSelector('isGetAllLoading');
+  const unitAllSelector = getSelector('unitAll');
+  const getUnitAllFailedSelector = getSelector('getUnitAllFailed');
 
   export const useProductUnitQueryParams = () => {
     const query = useQueryParams();
-    const limit = query.get("limit") || null;
-    const page = query.get("page") || null;
+    const limit = query.get("limit") || 10;
+    const page = query.get("page") || 1;
     const keyword = query.get("keyword");
     const status = query.get("status");
     const createSuccess = useSelector(createSuccessSelector);
@@ -134,3 +138,13 @@ const {
   export const useResetAction = () => {
     return useResetState(productUnitActions.resetAction);
   };
+
+  export const useGetListProductUnitAll = (reFetch? : boolean) => {
+    return useFetch({
+      action: productUnitActions.getUnitAllRequest,
+      loadingSelector: isGetAllLoadingSelector,
+      dataSelector: unitAllSelector,
+      failedSelector: getUnitAllFailedSelector,
+      payload : reFetch
+    })
+}

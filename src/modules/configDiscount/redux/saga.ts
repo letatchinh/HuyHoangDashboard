@@ -32,9 +32,9 @@ function* createConfigDiscount({payload} : any) : any {
 function* updateConfigDiscount({payload} : any) : any {
   try {
     const data = yield call(api.update,payload);
-    yield put(configDiscountSliceAction.updateSuccess(data));
+    yield put(configDiscountSliceAction.updateListSuccess(data));
   } catch (error:any) {
-    yield put(configDiscountSliceAction.updateFailed(error));
+    yield put(configDiscountSliceAction.updateListFailed(error));
   }
 }
 function* deleteConfigDiscount({payload : id} : any) : any {

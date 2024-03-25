@@ -12,6 +12,12 @@ import { useCallback } from "react";
 import { useEffect } from "react";
 import RenderLoading from "~/components/common/RenderLoading";
 import { validatePhoneNumberAntd } from "~/utils/validate";
+import { GiftTwoTone } from "@ant-design/icons";
+import { get } from "lodash";
+import { convertInitSupplier, convertSubmitData } from "../supplier.service";
+import CumulativeDiscountModule from '~/modules/cumulativeDiscount';
+import WithPermission from "~/components/common/WithPermission";
+import POLICIES from "~/modules/policy/policy.auth";
 
 const FormSupplier = ({
   id,
@@ -26,12 +32,14 @@ const FormSupplier = ({
   const [isSubmitLoading, onCreate] = useCreateSupplier(onCancel);
 
   useResetAction();
+
   const onFinish = useCallback(
     (values: FieldType) => {
+      const submitData = convertSubmitData(values)
       if (!id) {
-        onCreate(values);
+        onCreate(submitData);
       } else {
-        onUpdate({ ...values, _id: id });
+        onUpdate({ ...submitData, _id: id });
       }
     },
     [id, onCreate, onUpdate]
@@ -39,13 +47,31 @@ const FormSupplier = ({
 
   useEffect(() => {
     if (id && supplier) {
-      form.setFieldsValue(supplier);
+      const initSupplier = convertInitSupplier(supplier);
+      form.setFieldsValue(initSupplier);
     }
   }, [form, id, supplier]);
+
+  const onValuesChange = (value: any, values: any) => {
+    const key = Object.keys(value)[0];
+    switch (key) {
+      case "cumulativeDiscount":
+        const cumulativeDiscount = CumulativeDiscountModule.service.onDiscountChange(values[key]);
+        console.log(cumulativeDiscount,'cumulativeDiscount');
+        
+        form.setFieldsValue({
+          cumulativeDiscount,
+        });
+        break;
+
+      default:
+        break;
+    }
+  };
   return (
     <div className="flex-column-center">
       <Divider>
-        <h5 className="text-center">{id ? "Cập nhật" : "Tạo mới"} chi nhánh</h5>
+        <h5 className="text-center">{id ? "Cập nhật" : "Tạo mới"} nhà cung cấp</h5>
       </Divider>
       <Form
         form={form}
@@ -53,15 +79,16 @@ const FormSupplier = ({
         wrapperCol={{ sm: 24, md: 24, lg: 16, xl: 16 }}
         labelAlign="left"
         onFinish={onFinish}
+        onValuesChange={onValuesChange}
       >
         <BaseBorderBox title={"Thông tin"}>
           <Row justify={"space-between"} align="middle" gutter={48}>
             <Col span={12}>
               <Form.Item<FieldType>
-                label="Tên chi nhánh"
+                label="Tên nhà cung cấp"
                 name="name"
                 rules={[
-                  { required: true, message: "Vui lòng nhập tên chi nhánh" },
+                  { required: true, message: "Vui lòng nhập tên nhà cung cấp" },
                 ]}
               >
                 {RenderLoading(isLoading,<Input />)}
@@ -81,15 +108,25 @@ const FormSupplier = ({
         <BaseBorderBox title={"Địa chỉ"}>
           <AddressFormSection
             form={form}
-            cityCode={cityCode}
-            setCityCode={setCityCode}
-            districtCode={districtCode}
-            setDistrictCode={setDistrictCode}
+            // cityCode={cityCode}
+            // setCityCode={setCityCode}
+            // districtCode={districtCode}
+            // setDistrictCode={setDistrictCode}
             allowPhoneNumber={false}
             allowEmail={false}
           />
         </BaseBorderBox>
+        {/* <BaseBorderBox
+          title={
+            <span>
+              Chiết khấu <GiftTwoTone />
+            </span>
+          }
+        >
+          <CumulativeDiscountModule.components.DiscountList target={CumulativeDiscountModule.constants.TARGET.supplier} loading={isLoading} form={form} />
+        </BaseBorderBox> */}
         <div className="btn-footer">
+          <WithPermission permission={id ? POLICIES.UPDATE_SUPPLIER : POLICIES.WRITE_SUPPLIER}>
           <Button
             loading={isSubmitLoading}
             block
@@ -98,6 +135,7 @@ const FormSupplier = ({
           >
             {id ? "Cập nhật" : "Tạo mới"}
           </Button>
+          </WithPermission>
           <Button onClick={onCancel} block danger>
             Huỷ
           </Button>

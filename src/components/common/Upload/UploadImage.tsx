@@ -19,6 +19,10 @@ interface UploadImageProps {
   action?: string;
   children?: React.ReactNode;
   disabled?: boolean;
+  className?: string;
+  isShowImg?: boolean
+  setIsLoading?: any;
+  isLoading?: boolean;
 };
 
 const DEFAULT_RESOURCE: string = 'pharma';
@@ -31,10 +35,13 @@ const UploadImage: React.FC<UploadImageProps> = ({
   action = `${DEFAULT_UPLOAD_ACTION}/${DEFAULT_RESOURCE}`,
   children,
   disabled = false,
+  className,
+  isShowImg = true,
+  setIsLoading,
+  isLoading
 }) => {
   const [isCompressing, setIsCompressing] = useState(false);
   const [compressPercent, setCompressPercent] = useState<number>(0);
-  const [isLoading, setIsLoading] = useState(false);
 
   const beforeUpload = async (file: File) => {
     const isImage: boolean = allowedImageExtensions.includes(file.type);
@@ -74,11 +81,11 @@ const UploadImage: React.FC<UploadImageProps> = ({
 
   const handleChange = useCallback(
     (info: any) => {
-      if (info.file.status === 'uploading') {
+      if (info?.file?.status === 'uploading') {
         setIsLoading(true);
         return;
       }
-      if (info.file.status === 'done') {
+      if (info?.file?.status === 'done') {
         const imageUrl: string | undefined = info.file?.response?.url;
         setIsLoading(false);
         if (imageUrl) {
@@ -106,19 +113,18 @@ const UploadImage: React.FC<UploadImageProps> = ({
       </div>
     </div>
   );
-
   return (
     <Upload
       name="file"
       listType="picture-card"
-      className="avatar-uploader"
+      className= { className ?? "avatar-uploader"}
       showUploadList={false}
       action={action}
       beforeUpload={beforeUpload}
       onChange={handleChange}
       disabled={disabled}
     >
-      {imgUrl && !isCompressing && !isLoading ? (
+      { isShowImg &&(imgUrl && !isCompressing && !isLoading ? (
         <img
           src={imgUrl}
           alt="avatar"
@@ -126,7 +132,7 @@ const UploadImage: React.FC<UploadImageProps> = ({
         />
       ) : (
         uploadButton
-      )}
+        ))}
       {children}
     </Upload>
   );

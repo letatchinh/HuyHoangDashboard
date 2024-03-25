@@ -16,7 +16,7 @@ import {
 import { supplierSliceAction } from "./redux/reducer";
 import { cloneInitState } from "./supplier.modal";
 const MODULE = "supplier";
-const MODULE_VI = "Chi nhánh";
+const MODULE_VI = "Nhà cung cấp";
 const getSelector = (key: keyof cloneInitState) => (state: RootState) =>
   state[MODULE][key];
 
@@ -37,6 +37,18 @@ const {
   pagingSelector,
 } = getSelectors(MODULE);
 
+const voucherSupplierSelector = getSelector("voucherSupplier");
+const getVoucherSupplierFailedSelector = getSelector("getVoucherSupplierFailed");
+const isLoadingGetVoucherSupplierSelector = getSelector("isLoadingGetVoucherSupplier");
+const pagingVoucherSupplierSelector = getSelector("pagingVoucherSupplier");
+
+const totalAmountBillItemSupplierSelector = getSelector("totalAmountOrder");
+
+export const useTotalAmountBillItem = () => useSelector(totalAmountBillItemSupplierSelector);
+export const useSupplierPaging = () => useSelector(pagingSelector);
+export const useVoucherSupplierPaging = () =>
+  useSelector(pagingVoucherSupplierSelector);
+
 const productSupplierSelector = getSelector("productSupplier");
 const getProductSupplierFailedSelector = getSelector(
   "getProductSupplierFailed"
@@ -45,7 +57,17 @@ const isLoadingGetProductSupplierSelector = getSelector(
   "isLoadingGetProductSupplier"
 );
 const pagingProductSupplierSelector = getSelector("pagingProductSupplier");
-export const useSupplierPaging = () => useSelector(pagingSelector);
+
+const suppliersProductAuthorSelector = getSelector("suppliersProductAuthor");
+const isLoadingGetSuppliersProductAuthorSelector = getSelector(
+  "isLoadingGetSuppliersProductAuthor"
+);
+
+const getSuppliersProductAuthorFailedSelector = getSelector(
+  "getSuppliersProductAuthorFailed"
+);
+const pagingSuppliersProductAuthorSelector = getSelector("pagingSuppliersProductAuthor");
+
 export const useProductSupplierPaging = () =>
   useSelector(pagingProductSupplierSelector);
 
@@ -65,6 +87,16 @@ export const useGetSupplier = (id: any) => {
     dataSelector: getByIdSelector,
     failedSelector: getByIdFailedSelector,
     param: id,
+  });
+};
+
+export const useGetSuppliersProductAuthor = (param: any) => {
+  return useFetchByParam({
+    action: supplierSliceAction.getSuppliersProductAuthorRequest,
+    loadingSelector: isLoadingGetSuppliersProductAuthorSelector,
+    dataSelector: suppliersProductAuthorSelector,
+    failedSelector: getSuppliersProductAuthorFailedSelector,
+    param,
   });
 };
 
@@ -129,6 +161,32 @@ export const useSupplierQueryParams = () => {
     ]);
 };
 
+export const useSuppliersProductAuthorQueryParams = (keyword?:string) => {
+  const query = useQueryParams();
+  const [limit, setLimit] = useState(get(query, "limit") || 10);
+  const [page, setPage] = useState(get(query, "page") || 1);
+  const isSupplierMaster = true;
+
+  // const onTableChange: any = ({ current, pageSize }: any) => {
+  //   setLimit(pageSize);
+  //   setPage(current);
+  // };
+
+  return useMemo(() => {
+    const queryParams = {
+      page,
+      limit,
+      keyword,
+      isSupplierMaster
+    };
+    return [queryParams];
+    //eslint-disable-next-line
+  }, [page,
+     limit,
+     keyword,
+    ]);
+};
+
 export const useUpdateSupplierParams = (
   query: any,
   listOptionSearch?: any[]
@@ -162,6 +220,26 @@ export const useUpdateSupplierParams = (
   return [keyword, { setKeyword, onParamChange }];
 };
 
+//Product
+export const useProductSupplierQuery = (keyword?: any) => {
+  const [limit, setLimit] = useState<number | null | undefined>(10);
+  const [page, setPage] = useState<number | null | undefined>(1);
+  const onTableChange : any = ({ current, pageSize }: any) => {
+    setPage(current);
+    setLimit(pageSize);
+  };
+  return useMemo(() => {
+    const query = {
+      page,
+      limit,
+      keyword,
+    };
+    return [query,onTableChange];
+  }, [page,
+     limit,
+     keyword,
+    ]);
+};
 export const useGetProductSuppliers = (param: any) => {
   return useFetchByParam({
     action: supplierSliceAction.getProductSupplierRequest,
@@ -172,6 +250,59 @@ export const useGetProductSuppliers = (param: any) => {
   });
 };
 
+
+//Voucher
+
+export const useVoucherSupplierQuery = (keyword?: any) => {
+  const [limit, setLimit] = useState(10);
+  const [page, setPage] = useState(1);
+  const onTableChange : any = ({ current, pageSize }: any) => {
+    setPage(current);
+    setLimit(pageSize);
+  };
+  return useMemo(() => {
+    const query = {
+      page,
+      limit,
+      keyword,
+    };
+    return [query,onTableChange];
+  }, [page,
+     limit,
+     keyword,
+    ]);
+};
+
+export const useGetVoucherSuppliers = (param: any) => {
+  return useFetchByParam({
+    action: supplierSliceAction.getVoucherSupplierRequest,
+    loadingSelector: isLoadingGetVoucherSupplierSelector,
+    dataSelector: voucherSupplierSelector,
+    failedSelector: getVoucherSupplierFailedSelector,
+    param,
+  });
+};
+
 export const useResetAction = () => {
   return useResetState(supplierSliceAction.resetAction);
+};
+
+
+export const useDebtQueryParams = () => {
+  const query = useQueryParams();
+  const limit = query.get("limit") || 10;
+  const page = query.get("page") || 1;
+  const keyword = query.get("keyword");
+  return useMemo(() => {
+    const queryParams = {
+      page,
+      limit,
+      keyword,
+    };
+    return [queryParams];
+    //eslint-disable-next-line
+  }, [page,
+     limit,
+     keyword,
+    ]);
 };

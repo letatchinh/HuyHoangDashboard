@@ -25,15 +25,15 @@ build_staging:
     - docker login -u $CI_REGISTRY_USER -p $GL_CI_TOKEN $CI_REGISTRY
     - docker build -f distribution/Dockerfile -t $CI_REGISTRY/worldtech-ltd/worldpharma-dashboard:$ENCODED_REF .
     - docker push $CI_REGISTRY/worldtech-ltd/worldpharma-dashboard:$ENCODED_REF
-    - 'curl --silent -X POST --header "Content-Type: application/json" --header "Accept: application/json" --header "authorization: ${SWARM_KEY}" "$SWARM_URL?tag=$ENCODED_REF"'
+    - 'curl -X POST --header "Content-Type: application/json" --header "Accept: application/json" --header "authorization: ${SWARM_KEY}" "$SWARM_URL?tag=$ENCODED_REF"'
   after_script:
     # - apk add --update curl && rm -rf /var/cache/apk/*
     - PR_URL="https://gitlab.com/api/v4/projects/53411993/merge_requests/${MR_ID}/notes"
     - |
       if [ "$CI_JOB_STATUS" == "success" ]; then
-        curl --silent --location --request POST "${PR_URL}" --header "PRIVATE-TOKEN: ${GL_CI_TOKEN}" --header "Content-Type: application/json" --data-raw "{ \"body\": \"Build success.\" }"
+        curl --location --request POST "${PR_URL}" --header "PRIVATE-TOKEN: ${GL_CI_TOKEN}" --header "Content-Type: application/json" --data-raw "{ \"body\": \"Build success.\" }"
       else
-        curl  --silent --location --request POST "${PR_URL}" --header "PRIVATE-TOKEN: ${GL_CI_TOKEN}" --header "Content-Type: application/json" --data-raw "{ \"body\": \"Build failed.\" }"
+        curl  --location --request POST "${PR_URL}" --header "PRIVATE-TOKEN: ${GL_CI_TOKEN}" --header "Content-Type: application/json" --data-raw "{ \"body\": \"Build failed.\" }"
       fi
     
 build_release:

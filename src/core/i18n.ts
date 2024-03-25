@@ -7,7 +7,6 @@ const language : string = localStorage.getItem("I18N_LANGUAGE") || 'vi'
 if (!language) {
   localStorage.setItem("I18N_LANGUAGE", "vi")
 }
-
 i18next.use(initReactI18next).init({
   lng: language, // if you're using a language detector, do not define the lng option
   debug: true,

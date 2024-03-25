@@ -1,21 +1,20 @@
 ############# Builder image #############
 FROM node:16 as builder
 
-WORKDIR /app
+WORKDIR /source.tmp
 
 COPY . .
+RUN apt-get update && apt-get install -y git
+
+RUN npm install
 
 
-RUN npm install && \
-    npm run build
+FROM node:16
 
+WORKDIR /opt/worldpharmavn/dashboard
 
-FROM node:16 as runner
-WORKDIR /app
-COPY . .
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/package.json ./package.json
+COPY --from=builder /source.tmp .
 
 EXPOSE 3000
 
-CMD [ "npm","start"]
+CMD [ "npm", "start" ]
