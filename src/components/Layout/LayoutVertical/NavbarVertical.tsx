@@ -1,6 +1,6 @@
 import { ConfigProvider, Menu, MenuProps, Spin, Tooltip } from 'antd';
 import React, { useCallback, useMemo, useState , isValidElement, useEffect} from 'react';
-import NavbarItems, { resource } from './resourceV2';
+import { resource } from './resourceV2';
 import { useGetPolicyCheckAllPage } from '~/modules/user/user.hook';
 import { useGetProfile, useProfile } from '~/modules/auth/auth.hook';
 import { isMatchPolicy, useUserPolicy } from '~/modules/policy/policy.hook';
@@ -37,27 +37,23 @@ function getItem({ label, icon, children, path, key, permission }: ItemType): an
 const NavbarVertical: React.FC = () => {
 
   const [collapsed, setCollapsed] = useState(false);
-  const [isLoading, policy] = useGetPolicyCheckAllPage();
-  const toggleCollapsed = () => {
-    setCollapsed(!collapsed);
-  };
+
   const profile = useGetProfile();
   const [isLoadingPolicy, , policies] = useUserPolicy();
-  const [filteredResource,setFilteredResource]:any = useState([]);
 
+  const [filteredResource,setFilteredResource]:any = useState([]);
   useEffect(() => {
-    const checkPermission = (permission: any) : boolean => {
-      if (!permission || profile?.user?.isSuperAdmin ) return true;
+    const checkPermission = (permission: any): boolean => {
+      if (!permission || profile?.user?.isSuperAdmin) return true;
       
       for (const permissionItem of permission) {
-          if (isMatchPolicy(policies, permissionItem)) {
-            return true;
+        if (isMatchPolicy(policies, permissionItem)) {
+          return true;
         };
       };
       return false;
-  
-    }
-  
+    };
+
     const filterItems = (items: ItemType[]) => {
       return items.filter((item: ItemType) => {
         if ( !!item?.children?.length) {
@@ -71,7 +67,7 @@ const NavbarVertical: React.FC = () => {
       const filteredResource = filterItems(resource);
       setFilteredResource(filteredResource)
     };
-  },[policies, profile]);
+  }, [policies, profile]);
     const NewNavbarItems : any =  filteredResource?.map((first: any) => {
         if (first.children?.length) {
           const newChildFirst = first.children.map((second: any) => {
@@ -86,7 +82,7 @@ const NavbarVertical: React.FC = () => {
         } else {
           return getItem(first)
         };
-      });
+    });
   return (
     <div className='layoutVertical--content__navbar'>
       {isLoadingPolicy && <Spin className='layoutVertical--content__navbar__loading' tip="Đang lấy dữ liệu phân quyền"/>}

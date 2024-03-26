@@ -47,7 +47,8 @@ export default function SalesGroup() {
     onOpenFormExchangeRate,
     onCloseFormExchangeRate,
     setParentNear,
-    setGroupInfo
+    setGroupInfo,
+    canUpdate
   } = useSalesGroupStore();
   const rowSelect = useRef();
   const [expandedRowKeys, setExpandedRowKeys]: any = useState([]);
@@ -157,20 +158,21 @@ export default function SalesGroup() {
         />
       ),
     },
-    {
-      title: "Quy đổi",
-      key: "exchangeRate",
-      dataIndex: "exchangeRate",
-      width: "10%",
-      align: "center",
-      render: (_id, rc: any) => (
-        <Button type="link" onClick={() => {
-          onOpenFormExchangeRate(rc?._id);
-          setParentNear(rc?.parent);
-          setGroupInfo(rc);
-        }}>Nhập quy đổi</Button>
-      ),
-    },
+    ...(canUpdate ? [  {
+          title: "Quy đổi",
+          key: "exchangeRate",
+          dataIndex: "exchangeRate",
+          width: "10%",
+          align: "center" as any,
+          render: (_id : any, rc: any) => (
+            <Button type="link" onClick={() => {
+              onOpenFormExchangeRate(rc?._id);
+              setParentNear(rc?.parent);
+              setGroupInfo(rc);
+            }}>Nhập quy đổi</Button>
+          ),
+      }
+    ]: []),
     {
       title: "Thao tác",
       dataIndex: "_id",

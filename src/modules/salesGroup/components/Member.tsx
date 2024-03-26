@@ -8,13 +8,15 @@ import { MemberRulesInGroupType } from "../salesGroup.modal";
 import AssignMember from "./AssignMember";
 import AssignTeamLead from "./AssignTeamLead";
 import PopoverCardEmployee from "./PopoverCardEmployee";
+import useSalesGroupStore from "../salesGroupContext";
 type propsType = {
   _id?: string;
   typeArea?: any;
   data: MemberRulesInGroupType[];
   child ? : any[]
 };
-export default function Member({ _id, data,typeArea,child }: propsType): React.JSX.Element {
+export default function Member({ _id, data, typeArea, child }: propsType): React.JSX.Element {
+  const { canUpdate } = useSalesGroupStore();
   const teamLead = useMemo(
     () =>
       data?.find((member) => get(member, "rule") === RULE_SALES_GROUP.LEADER),
@@ -37,7 +39,7 @@ export default function Member({ _id, data,typeArea,child }: propsType): React.J
         ) : (
           "(Chưa có)"
         )}{" "}
-        <AssignTeamLead teamLead={teamLead} _id={_id} />
+      {canUpdate &&  <AssignTeamLead teamLead={teamLead} _id={_id} />}
       </Flex> : <></>}
       {!child?.length ? <Flex align={"center"} gap={10}>
         Trình dược viên:{" "}

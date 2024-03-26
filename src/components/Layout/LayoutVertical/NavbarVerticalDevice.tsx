@@ -1,6 +1,6 @@
 import { Button, ConfigProvider, Drawer, Menu, MenuProps, Spin, Tooltip } from 'antd';
 import React, { useCallback, useMemo, useState , isValidElement, useEffect} from 'react';
-import NavbarItems, { resource } from './resourceV2';
+import { resource } from './resourceV2';
 import { useGetPolicyCheckAllPage } from '~/modules/user/user.hook';
 import { useGetProfile, useProfile } from '~/modules/auth/auth.hook';
 import { isMatchPolicy, useUserPolicy } from '~/modules/policy/policy.hook';
@@ -38,8 +38,6 @@ function getItem({ label, icon, children, path, key, permission }: ItemType): an
 const NavbarVerticalDevice: React.FC = () => {
 
   const [collapsed, setCollapsed] = useState(false);
-
-  const [isLoading, policy] = useGetPolicyCheckAllPage();
 
   const [open, setOpen] = useState(false);
 

@@ -1,52 +1,21 @@
 // import { AppstoreFilled, AppstoreOutlined, ShopFilled,ApartmentOutlined } from "@ant-design/icons";
 import {
   AppstoreFilled,
-  AppstoreOutlined,
   DatabaseOutlined,
   DollarOutlined,
   HddOutlined,
-  StockOutlined,
   HomeOutlined,
   TrophyOutlined,
   ApartmentOutlined,
-  ShopFilled,
-  MoneyCollectOutlined,
   BellFilled,
   FundProjectionScreenOutlined,
 } from "@ant-design/icons";
 import { MenuProps } from "antd";
-import React, { useCallback } from "react";
-import { NavLink } from "react-router-dom";
+import React, { useCallback, useMemo } from "react";
 import { PATH_APP } from "~/routes/allPath";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUsers, faUser } from "@fortawesome/free-solid-svg-icons";
 import POLICIES, { GROUP_POLICY } from "~/modules/policy/policy.auth";
 type MenuItem = Required<MenuProps>["items"][number];
-function getItem({
-  label,
-  icon,
-  children,
-  path,
-  key,
-  permission,
-}: ItemType): any {
-  return {
-    key,
-    icon,
-    children,
-    permission,
-    label: path ? (
-      <NavLink
-        className={() => `layoutVertical--content__navbar__navLink`}
-        to={path}
-      >
-        {label}
-      </NavLink>
-    ) : (
-      label
-    ),
-  } as MenuItem;
-}
+
 type ItemType = {
   label: string;
   icon?: React.ReactNode;
@@ -81,7 +50,7 @@ const permissionSupplier = [
   POLICIES.READ_VOUCHER,
   POLICIES.READ_CUMULATIVESALESUPPLIER,
 ];
-export const resource: ItemType[] = [
+export const resource: ItemType[] =[
   {
     label: "WorldPharmaVN",
     key: "WorldPharmaVN",
@@ -347,20 +316,20 @@ export const resource: ItemType[] = [
   },
 ];
 
-//Required permission is string[][];
-const NavbarItems = resource.map((first) => {
-  if (first.children?.length) {
-    const newChildFirst = first.children.map((second) => {
-      if (second.children?.length) {
-        const newChildSecond = second.children.map((third) => getItem(third));
-        return getItem({ ...second, children: newChildSecond });
-      } else {
-        return getItem(second);
-      }
-    });
-    return getItem({ ...first, children: newChildFirst });
-  } else {
-    return getItem(first);
-  }
-});
-export default NavbarItems;
+// //Required permission is string[][];
+// const NavbarItems = resource.map((first) => {
+//   if (first.children?.length) {
+//     const newChildFirst = first.children.map((second) => {
+//       if (second.children?.length) {
+//         const newChildSecond = second.children.map((third) => getItem(third));
+//         return getItem({ ...second, children: newChildSecond });
+//       } else {
+//         return getItem(second);
+//       }
+//     });
+//     return getItem({ ...first, children: newChildFirst });
+//   } else {
+//     return getItem(first);
+//   }
+// });
+// export default NavbarItems;

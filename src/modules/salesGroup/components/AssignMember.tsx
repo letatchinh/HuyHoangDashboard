@@ -16,7 +16,7 @@ export default function AssignMember({_id,member}: propsType): React.JSX.Element
   const [open, setOpen] = useState(false);
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
     
-  const {isSubmitLoading,updateSalesGroup} = useSalesGroupStore();
+  const {isSubmitLoading,updateSalesGroup, canDelete} = useSalesGroupStore();
   const query = useMemo(() => open ? ({salesGroupId : _id}) : null,[open,_id]);
   const [data,isLoading] : [EmployeeType[],boolean] = useGetListMemberSalesGroups(query);
   const hide = useCallback(() => {
@@ -78,6 +78,13 @@ export default function AssignMember({_id,member}: propsType): React.JSX.Element
       >
         <Button icon={member ? <i className="fa-solid fa-repeat"></i> : <PlusCircleOutlined />}/>
       </Popover>
+      {/* {canDelete &&(member ? (
+          <Popconfirm title="Xác nhận gỡ trình dược viên" onConfirm={onRemove}>
+          <Tooltip title="Gỡ trình dược viên">
+          <Button danger icon={<DeleteOutlined />} />
+          </Tooltip>
+          </Popconfirm>
+        ) : null)} */}
     </div>
   );
 }
