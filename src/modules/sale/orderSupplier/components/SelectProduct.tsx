@@ -7,8 +7,10 @@ import TableAnt from '~/components/Antd/TableAnt';
 import ProductModule from '~/modules/product';
 import useNotificationStore from '~/store/NotificationContext';
 import { formatter } from '~/utils/helpers';
+import { selectProductSearch } from '../../bill/bill.service';
+import ImageProduct from '../../bill/components/ImageProduct';
 import { ItemSearchProduct } from '../orderSupplier.modal';
-import { getCumulativeDiscount, selectProductSearch } from '../orderSupplier.service';
+import { getCumulativeDiscount } from '../orderSupplier.service';
 type propsType = {
   dataCurrent : any,
   onChangeBill : (newData:any) => void,
@@ -29,7 +31,6 @@ export default function SelectProduct({dataCurrent,onChangeBill}:propsType) : Re
       orderSupplierItems : newData
     })
   };
-  console.log(dataCurrent,'dataCurrent');
   
     const fetchOptions = async (keyword?: string) => {
         try {
@@ -106,6 +107,14 @@ export default function SelectProduct({dataCurrent,onChangeBill}:propsType) : Re
               pagination={false}
               rowKey={rc => rc._id}
               columns={[
+                {
+                  title: "",
+                  dataIndex: "images",
+                  key: "images",
+                  align:'center',
+                  width : 80,
+                  render: (images: any, record: any, index: number) => <ImageProduct images={images}/>
+                },
                 {
                   title: 'Tên thuốc',
                   dataIndex: 'name',

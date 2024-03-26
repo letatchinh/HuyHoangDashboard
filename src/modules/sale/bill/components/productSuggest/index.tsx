@@ -1,12 +1,14 @@
 import React, { CSSProperties, useEffect, useMemo, useRef, useState } from "react";
 import { useBillProductSuggestPaging, useGetProductListSuggest } from "../../bill.hook";
-import { Button, Card, Carousel, Collapse, List, Row } from "antd";
+import { Button, Card, Carousel, Collapse, List, Popover, Row } from "antd";
 import { CaretLeftOutlined, CaretRightOutlined } from "@ant-design/icons";
 import { CollapseProps } from "antd/lib";
 import useCreateBillStore from "../../storeContext/CreateBillContext";
 import { getCumulativeDiscount, selectProductSearch } from "../../bill.service";
 import { get } from "lodash";
 import useNotificationStore from "~/store/NotificationContext";
+import { formatter } from "~/utils/helpers";
+import ImageProduct from "../ImageProduct";
 
 const contentStyle: React.CSSProperties = {
   margin: 0,
@@ -87,6 +89,7 @@ const ProductListSuggest: React.FC = () => {
         }}
         dataSource={products?.docs || []}
           renderItem={(item: any) => {
+            
             const disabled = quotationItems?.find((billItem: any) => billItem?.productId === item?._id) ? true : false;
           return (
           <List.Item
@@ -102,6 +105,9 @@ const ProductListSuggest: React.FC = () => {
                 cursor: disabled ? 'not-allowed' : 'pointer',
               }}
           >
+              <Popover content={<div style={{width : 120}}>
+              <ImageProduct images={get(item,'images',[])}/>
+              </div>}>
               <Card
               title={item?.productGroup?.name}
               headStyle={{
@@ -121,10 +127,11 @@ const ProductListSuggest: React.FC = () => {
                 opacity: disabled ? 0.5 : 1,
               }}
             >
-              <p>{`- ${item?.name}`}</p>
-              <p>{`- ${item?.variants[0]?.price}`}</p>
-              <p>{`Ncc: ${item?.manufacturer?.name}`}</p>
+              <p>{`Tên thuốc: ${item?.name}`}</p>
+              <p>{`Giá bán: ${formatter(item?.variants[0]?.price)}`}</p>
+              <p>{`NCC: ${item?.supplier?.name ?? ""}`}</p>
             </Card>
+              </Popover>
           </List.Item>
         )}}
         />

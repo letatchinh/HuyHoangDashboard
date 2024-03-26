@@ -6,6 +6,7 @@ import dayjs from "dayjs";
 import React from "react";
 import TableAnt from "~/components/Antd/TableAnt";
 import { formatter } from "~/utils/helpers";
+import { useChangeDocumentTitle } from "~/utils/hook";
 import {
   useGetReportSuppliers,
   useReportSupplierPaging,
@@ -96,6 +97,7 @@ export default function ReportSupplier(props: propsType): React.JSX.Element {
     }
     
   };
+  useChangeDocumentTitle("Doanh số tích luỹ của nhà cung cấp")
   return (
     <div>
       <h4>Báo cáo doanh thu của nhà cung cấp</h4>

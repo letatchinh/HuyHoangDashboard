@@ -8,6 +8,7 @@ import {
   EditableRow
 } from "~/components/common/EditableComponent";
 import { formatter } from "~/utils/helpers";
+import ImageProduct from "../../bill/components/ImageProduct";
 import { orderSupplier, variant } from "../orderSupplier.modal";
 import useCreateOrderSupplierStore from "../storeContext/CreateOrderSupplierContext";
 import ExpandRowDiscount from "./ExpandRowDiscount";
@@ -16,7 +17,7 @@ type propsType = {};
 export default function ProductSelectedTable(
   props: propsType
 ): React.JSX.Element {
-  const { orderSupplierItems, onSave,onRemove,bill } = useCreateOrderSupplierStore();  
+  const { orderSupplierItems, onSave,onRemove } = useCreateOrderSupplierStore();  
   const onSelect = (newVariantId : string,data : any) => {
     const variant = get(data,'variants',[])?.find((item : any) => get(item,'_id') === newVariantId);
     onSave({
@@ -27,10 +28,12 @@ export default function ProductSelectedTable(
   }
   const columns = [
     {
-      title: "STT",
-      dataIndex: "index",
-      key: "index",
-      render: (text: any, record: any, index: number) => index + 1,
+      title: "",
+      dataIndex: "images",
+      key: "images",
+      align:'center',
+      width : 80,
+      render: (images: any, record: any, index: number) => <ImageProduct images={images}/>
     },
     {
       title: "Tên thuốc",
@@ -68,7 +71,7 @@ export default function ProductSelectedTable(
       required: true,
     },
     {
-      title: "Giá bán",
+      title: "Giá niêm yết",
       dataIndex: "price",
       key: "price",
       align : 'center',

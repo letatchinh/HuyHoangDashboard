@@ -9,12 +9,15 @@ import BillModule from "~/modules/sale/bill";
 import CreateBillPage from "./pages/Dashboard/Bill/CreateBill";
 import packageJson from "../package.json";
 import CreateOrderSupplier from "./pages/Dashboard/OrderSupplier/CreateOrderSupplier";
+import { useUserPolicy } from "./modules/policy/policy.hook";
 
 function App(): React.JSX.Element {
   setupAxios();
   const token = AuthModule.hook.useToken();
   setAxiosToken(token);
   setAxiosCompanyId("99999"); // Fix Me , Just Init Project
+  useUserPolicy(); // Get Policies
+
   return (
     <>
       <Routes>

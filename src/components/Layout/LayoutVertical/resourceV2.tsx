@@ -66,7 +66,7 @@ import {
           label: "Danh sách sản phẩm",
           path: PATH_APP.productAll.root,
           key: PATH_APP.productAll.root,
-          icon: <i className="fa-solid fa-capsules"></i>,
+          // icon: <i className="fa-solid fa-capsules"></i>,
           permission: [POLICIES.READ_PRODUCT],
         },
         {
@@ -79,35 +79,35 @@ import {
               label: "Nhóm sản phẩm",
               path: PATH_APP.worldPharma.productGroup,
               key: PATH_APP.worldPharma.productGroup,
-              icon: <HddOutlined />,
+              // icon: <HddOutlined />,
               permission: [POLICIES.READ_PRODUCTGROUP],
             },
             {
               label: "Danh sách hãng sản xuất",
               path: PATH_APP.worldPharma.manufacturer,
               key: PATH_APP.worldPharma.manufacturer,
-              icon: <HomeOutlined />,
+              // icon: <HomeOutlined />,
               permission: [POLICIES.READ_MANUFACTURER],
             },
             {
               label: "Xếp hạng nhà cung cấp",
               path: PATH_APP.worldPharma.ranking,
               key: PATH_APP.worldPharma.ranking,
-              icon: <TrophyOutlined />,
+              // icon: <TrophyOutlined />,
               permission: [POLICIES.READ_RANKING],
             },
             {
               label: "Đơn vị tính",
               path: PATH_APP.worldPharma.unit,
               key: PATH_APP.worldPharma.unit,
-              icon: <DollarOutlined />,
+              // icon: <DollarOutlined />,
               permission: [POLICIES.READ_UNIT],
             },
             {
               label: "Danh sách thuốc",
               path: PATH_APP.worldPharma.medicine,
               key: PATH_APP.worldPharma.medicine,
-              icon: <DatabaseOutlined />,
+              // icon: <DatabaseOutlined />,
               permission: [POLICIES.READ_MEDICINE],
             },
             {
@@ -115,11 +115,11 @@ import {
               path: PATH_APP.configDiscount.root,
               key: PATH_APP.configDiscount.root,
               permission: [POLICIES.READ_CONFIGDISCOUNT],
-              icon : <i className="fa-solid fa-percent"></i>
+              // icon : <i className="fa-solid fa-percent"></i>
             },
             {
               label: "Thông báo tự động",
-              icon: <BellFilled />,
+              // icon: <BellFilled />,
               path: PATH_APP.botNotification.root,
               key: PATH_APP.botNotification.root,
               permission: [POLICIES.READ_NOTIFICATIONBOTMANAGER],
@@ -134,7 +134,7 @@ import {
       label: "Nhà cung cấp",
       icon: <i className="fa-solid fa-cubes"></i>,
       key: "supplier",
-      permission: [],
+      permission: [POLICIES.READ_SUPPLIER],
       children: [
         {
           label: "Danh sách nhà cung cấp",
@@ -146,7 +146,7 @@ import {
           label: "Đơn hàng",
           path: PATH_APP.orderSupplier.root,
           key: PATH_APP.orderSupplier.root,
-          // permission:[POLICIES.READ_BILL],
+          permission:[POLICIES.READ_ORDERSUPPLIER],
         },
         {
           label: "Doanh số tích luỹ",
@@ -170,6 +170,7 @@ import {
       label: "Nhà thuốc",
       icon: <i className="fa-solid fa-house-chimney-medical"></i>,
       key: "pharmacy",
+      permission: [POLICIES.READ_PHARMAPROFILE, POLICIES.READ_BILL,POLICIES.READ_QUOTATION,POLICIES.WRITE_QUOTATION,POLICIES.READ_CUMULATIVEEVENT,POLICIES.READ_VOUCHER],
       children: [
         {
           label: "Danh sách nhà thuốc",
@@ -199,7 +200,7 @@ import {
           label: "Luỹ kế mặt hàng",
           path: PATH_APP.bill.lk,
           key: PATH_APP.bill.lk,
-          permission: [POLICIES.READ_BILL],
+          permission: [POLICIES.READ_CUMULATIVEEVENT],
         },
         {
           label: "Phiếu",
@@ -234,7 +235,7 @@ import {
         {
           label: "Quản lý công việc",
           // key: "statusConfig",
-          icon: <ApartmentOutlined />,
+          // icon: <ApartmentOutlined />,
           path: PATH_APP.todoList.workBoard,
           key: PATH_APP.todoList.workBoard,
           permission: [POLICIES.READ_TODOLIST],
@@ -242,7 +243,7 @@ import {
         {
           label: "Cấu hình trạng thái",
           // key: "statusConfig",
-          icon: <AppstoreFilled />,
+          // icon: <AppstoreFilled />,
           path: PATH_APP.todoList.statusConfig,
           key: PATH_APP.todoList.statusConfig,
           permission: [POLICIES.READ_TODOCONFIGSTATUS],

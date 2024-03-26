@@ -28,7 +28,7 @@ import paymentVoucher from '~/modules/paymentVoucher';
 import receiptVoucher from '~/modules/receiptVoucher';
 import lkModule from '~/modules/sale/lk';
 import productsAllModule from '~/modules/productsAll';
-import reportSupplierModule from '~/modules/report/reportSupplier';
+import reportSupplierModule from '~/modules/report/reportSupplier'; //
 import orderSupplier from '~/modules/sale/orderSupplier/index';
 import costManagement from '~/modules/costManagement';
 export default function* rootSaga() {
@@ -46,7 +46,6 @@ export default function* rootSaga() {
     vouchers.redux.saga(),
     productGroupModule.redux.saga(),
     manuFacturerModule.redux.saga(),
-    productUnitModule.redux.saga(),
     rankModule.redux.saga(),
     medicineModule.redux.saga(),
     productModule.redux.saga(),

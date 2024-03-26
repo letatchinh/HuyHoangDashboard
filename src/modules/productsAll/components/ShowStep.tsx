@@ -16,7 +16,7 @@ export default function ShowStep({ onChangeStep, onCloseModal, step }: propsType
   const [supplierId, setSupplierId] = useState<string | null>(null);
   const [keyword, setKeyword] = useState<string>('');
   const supplierInfo = useSupplierInfoRedux();
-  useResetActionProductFullState();
+  // useResetActionProductFullState();
   
   const contentStyle: React.CSSProperties = {
     lineHeight: '260px',

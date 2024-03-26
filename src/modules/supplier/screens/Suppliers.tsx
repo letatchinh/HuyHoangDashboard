@@ -1,11 +1,11 @@
-import { DeleteOutlined, InfoCircleOutlined, InfoCircleTwoTone, PlusCircleOutlined, PlusCircleTwoTone } from "@ant-design/icons";
+import { BarsOutlined, DeleteOutlined, InfoCircleOutlined, InfoCircleTwoTone, PlusCircleOutlined, PlusCircleTwoTone } from "@ant-design/icons";
 import { Button, Checkbox, Col, Divider, Modal, Popconfirm, Row, Space, Switch, Typography} from "antd";
 import Search from "antd/es/input/Search";
 import { ColumnsType } from "antd/es/table/InternalTable";
 import { AlignType } from 'rc-table/lib/interface'
 import { get } from "lodash";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import ModalAnt from "~/components/Antd/ModalAnt";
 import TableAnt from "~/components/Antd/TableAnt";
 import Breadcrumb from "~/components/common/Breadcrumb";
@@ -35,6 +35,7 @@ import WithPermission from "~/components/common/WithPermission";
 import PermissionBadge from "~/components/common/PermissionBadge";
 import ExportExcelButton from "~/modules/export/component";
 import useCheckBoxExport from "~/modules/export/export.hook";
+import { useChangeDocumentTitle } from "~/utils/hook";
 export default function Supplier(): React.JSX.Element {
   const canUpdateSupplier = useMatchPolicy(POLICIES.UPDATE_SUPPLIER);
   const canReadProduct = useMatchPolicy(POLICIES.READ_PRODUCT);
@@ -51,6 +52,8 @@ export default function Supplier(): React.JSX.Element {
   const [debt, setDebt] = useState<number | null>();
   const [isOpenDesc, setIsOpenDesc] = useState<boolean>(false);
   //Hook
+  const navigate = useNavigate();
+
   const [query] = useSupplierQueryParams();
   const [keyword, { setKeyword, onParamChange }] = useUpdateSupplierParams(query);
   const [data, isLoading] = useGetSuppliers(query);
@@ -143,9 +146,13 @@ export default function Supplier(): React.JSX.Element {
         dataIndex: "_id",
         key: "listProduct",
         align: "center",
+        width : 180,
         render(_id : any) {
           return <PermissionBadge permissions={[POLICIES.READ_PRODUCT]} title="Bạn không có quyền xem sản phẩm">
-          <Link className={!canReadProduct ? "disabledLink" : ""} target={'_blank'} to={PATH_APP.product.root + "/" + _id}>Xem chi tiết sản phẩm</Link>
+          <Button type="primary" ghost  shape='round' disabled={!canReadProduct} onClick={() => navigate(PATH_APP.product.root + "/" + _id)} icon={<i className="fa-solid fa-cube"></i>}>
+            Xem mặt hàng
+          </Button>
+          {/* <Link className={!canReadProduct ? "disabledLink" : ""} target={'_blank'} to={PATH_APP.product.root + "/" + _id}><i className="fa-solid fa-book-medical"></i> Xem chi tiết sản phẩm</Link> */}
           </PermissionBadge>
         },
       },
@@ -272,6 +279,8 @@ export default function Supplier(): React.JSX.Element {
     ],
     [isSubmitLoading, onDelete, onOpenForm, onUpdateStatus]
   );
+  useChangeDocumentTitle("Danh sách nhà cung cấp");
+
   return (
     <div>
       <Breadcrumb title={t("list-supplier")} />

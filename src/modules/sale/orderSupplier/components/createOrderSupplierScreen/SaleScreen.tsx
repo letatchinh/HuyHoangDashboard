@@ -2,6 +2,8 @@ import { UserOutlined } from "@ant-design/icons";
 import { Button, Col, Divider, Form, Row } from "antd";
 import { get } from "lodash";
 import React, { useEffect, useMemo } from "react";
+import WithPermission from "~/components/common/WithPermission";
+import POLICIES from "~/modules/policy/policy.auth";
 import { FormFieldCreateBill, PayloadCreateBill } from "~/modules/sale/bill/bill.modal";
 import OrderSupplierModule from '~/modules/sale/orderSupplier';
 import SelectSupplier from "~/modules/supplier/components/SelectSupplier";
@@ -120,7 +122,8 @@ try {
                 </Button> */}
               </Col>
               <Col span={14}>
-                <Button
+              <WithPermission permission={POLICIES.WRITE_ORDERSUPPLIER}>
+              <Button
                   block
                   disabled={!orderSupplierItems?.length}
                   className="form-create-bill--payment__actions__btnPayment"
@@ -130,6 +133,7 @@ try {
                 >
                   {textSubmit}
                 </Button>
+              </WithPermission>
               </Col>
             </Row>
           </div>

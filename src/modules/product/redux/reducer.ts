@@ -18,7 +18,7 @@ class ProductClassExtend extends InstanceModuleRedux {
         // Find Variant Default
         const list = get(payload, "docs", [])?.map((item:any) => {
           const variant = get(item,'variants',[])?.find((v: any) => get(v,'variantIsDefault'));
-          return {...item, variant};
+          return {...item, variant,variantDefault : variant};
         });
         state.list = list;
         state.paging = getPaging(payload);
@@ -26,7 +26,7 @@ class ProductClassExtend extends InstanceModuleRedux {
       changeVariantDefault: (state:initStateSlice , { payload }: any) => {
         const {productId, variantId} = payload;
         const list = state.list?.map((item:any) => {
-          if(get(item,'_id') === productId){
+          if(get(item,'_id') === productId){ // Find Item
             const variant = get(item,'variants',[])?.find((v: any) => get(v,'_id') === variantId);
             return {...item, variant};
           }
@@ -38,6 +38,13 @@ class ProductClassExtend extends InstanceModuleRedux {
         ...state,
         ...omit(this.cloneInitState, ["list"]),
       }),
+
+      updateSuccess: (state:initStateSlice, { payload }:{payload:any}) => {
+        state.isSubmitLoading = false;
+        state.byId = payload;
+        state.list = state.list?.map((item:any) => get(item,'_id') === get(payload,'data._id') ? {...item,...get(payload,'data')} : item);
+        state.updateSuccess = payload;
+      },
       // Want Add more reducer Here...
     }
     this.cloneInitState = {
