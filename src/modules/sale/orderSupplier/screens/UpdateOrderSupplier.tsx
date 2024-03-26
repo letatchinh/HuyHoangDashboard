@@ -204,9 +204,11 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
                   <Col>
                     <h6>Thông tin nhà cung cấp</h6>
                   </Col>
-                  <Col style={{ position: 'absolute', right: 0, top: 5 }}>
-                    <Button type="link" onClick={onOpenDetailVouchers}>Xem chi tiết các phiếu</Button>
-                  </Col>
+                  <WithPermission permission={POLICIES.READ_VOUCHER}>
+                      <Col style={{ position: 'absolute', right: 0, top: 5 }}>
+                      <Button type="link" onClick={onOpenDetailVouchers}>Xem chi tiết các phiếu</Button>
+                      </Col>
+                  </WithPermission>
                 </Row>
                 <Row justify={"space-between"}>
                   <Col>
@@ -348,6 +350,7 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
       >
         <VoucherInOrder
           billId = {id}
+          defaultActiveTabKey="2"
         />
       </Modal>
     </div>

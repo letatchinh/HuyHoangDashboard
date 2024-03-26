@@ -1,10 +1,11 @@
 import { Tabs } from 'antd';
 import TabPane from 'antd/es/tabs/TabPane';
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 import PaymentInOrder from '~/modules/paymentVoucher/components/PaymentInOrder';
 import ReceiptInOrder from '~/modules/receiptVoucher/components/ReceiptInOrder';
 type propsType = {
   billId?: any,
+  defaultActiveTabKey?: string
 };
 interface VoucherContextProps {
   billId?: any,
@@ -14,11 +15,16 @@ const VoucherContext = createContext<VoucherContextProps>({
 })
 export const useVoucherInOrderStore = (): VoucherContextProps => useContext(VoucherContext);
 
-export default function VoucherInOrder({ billId}: propsType): React.JSX.Element {
-  const [activeTab, setActiveTab] = useState("1");
+export default function VoucherInOrder({ billId,defaultActiveTabKey}: propsType): React.JSX.Element {
+  const [activeTab, setActiveTab] = useState('1');
   const onChange = (activeTab: any) => {
     setActiveTab(activeTab);
   };
+  useEffect(() => {
+    if (defaultActiveTabKey) {
+      setActiveTab(defaultActiveTabKey);
+    };
+  }, [defaultActiveTabKey]);
   return (
     <VoucherContext.Provider value={{
       billId

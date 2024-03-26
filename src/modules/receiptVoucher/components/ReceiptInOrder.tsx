@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { ColumnsType } from "antd/es/table/InternalTable";
 import { Button, Modal, Table } from 'antd';
 import StatusTag from '~/modules/vouchers/components/StatusTag';
@@ -6,6 +6,7 @@ import dayjs from 'dayjs';
 import ReceiptVoucherForm from './ReceiptVoucherForm';
 import { useGetReceiptVoucherByBillId, usePagingByBillId, useReceiptVoucherByBillIdQueryParams } from '../receiptVoucher.hook';
 import { useVoucherInOrderStore } from '~/modules/vouchers/components/VoucherInOrder';
+import { formatNumberThreeComma } from '~/utils/helpers';
 
 type propsType = {
 
@@ -14,18 +15,32 @@ export default function ReceiptInOrder(props: propsType): React.JSX.Element {
   const { billId } = useVoucherInOrderStore();
   const [query, onTableChange] = useReceiptVoucherByBillIdQueryParams(billId);
   const [data, isLoading] = useGetReceiptVoucherByBillId(query);
+
+  const [refCollection, setRefCollection] = useState<string | undefined>();
+  const [id, setId] = useState<string | null>();
+  const [isOpenForm, setIsOpenForm] = useState(false);
+  const [voucher, setVoucher] = useState<any>();
+  const onOpenForm = (item: any) => {
+    setId(item?._id);
+    setRefCollection(item?.refCollection?.toUpperCase());
+    setIsOpenForm(true);
+    setVoucher(item)
+  };
+  const onClose = () => {
+    setId(null);
+    setIsOpenForm(false);
+  };
+
   const paging = usePagingByBillId();
   const columns: ColumnsType = [
     {
       title: 'Mã phiếu thu',
       dataIndex: 'codeSequence',
       key: 'codeSequence',
-      render: (text, record, index) => {
+      render: (text, record: any, index) => {
         return (
           <Button type='link' onClick={() => {
-            // onOpenForm(record?._id);
-            // setRefCollection(record?.refCollection?.toUpperCase());
-            // setItem(record);
+            onOpenForm(record);
           }}>
             {text}
           </Button>
@@ -80,20 +95,20 @@ export default function ReceiptInOrder(props: propsType): React.JSX.Element {
           showTotal: (total) => `Tổng cộng: ${total}`
         }}
         onChange={({ current, pageSize }: any) => onTableChange({ current, pageSize })}
-        footer={() => <span>Tổng đã thu: {data?.totalPrices || 0}đ</span>}
+        footer={() => <span>Tổng đã thu: {formatNumberThreeComma(data?.totalPrices) || 0}đ</span>}
       />
       <Modal
         footer={null}
-        // title={`Phiếu chi - ${item?.code}`}
-        // open={isOpenForm}
-        // onCancel={onClose}
+        title={`Phiếu chi - ${voucher?.code}`}
+        open={isOpenForm}
+        onCancel={onClose}
         width={1366}
         destroyOnClose
       >
         <ReceiptVoucherForm
-          // id={id}
-          // onClose={onClose}
-          // refCollection={refCollection}
+          id={id}
+          onClose={onClose}
+          refCollection={refCollection}
         />
       </Modal>
     </>
