@@ -36,9 +36,8 @@ export default function BaseSalary() {
   }, [data]);
 
   const isCheckRender = (component: any, key: any) => {
-    const objectKey = Object.keys(data?.baseSalary)?.includes(key);
-    return objectKey ? component : null
-  }
+    return component
+  };
 
   return (
     <div>

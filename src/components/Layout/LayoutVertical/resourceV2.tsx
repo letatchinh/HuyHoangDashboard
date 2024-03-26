@@ -65,6 +65,7 @@ const permissionOfSetup = [
   POLICIES.READ_AREACONFIGURATION,
   POLICIES.READ_CONFIGBASESALARY,
   POLICIES.READ_CONFIGBENEFIT,
+  POLICIES.READ_SALESGROUP
 ];
 const permissionPharma = [
   POLICIES.READ_PHARMAPROFILE,
@@ -154,7 +155,7 @@ export const resource: ItemType[] = [
             icon: <i className="fa-solid fa-chart-area"></i>,
             path: PATH_APP.salesGroup.root,
             key: PATH_APP.salesGroup.root,
-            permission: [POLICIES.READ_AREACONFIGURATION],
+            permission: [POLICIES.READ_SALESGROUP],
           },
           {
             label: "Cấu hình lương vùng",

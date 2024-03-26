@@ -139,7 +139,7 @@ const SalesGroupForm = ({
             </Col>
             </Row>
         <div className="btn-footer">
-          <WithPermission permission={id ? POLICIES.UPDATE_AREACONFIGURATION : POLICIES.UPDATE_AREACONFIGURATION}>
+          <WithPermission permission={id ? POLICIES.UPDATE_SALESGROUP : POLICIES.WRITE_SALESGROUP}>
           <Button
             loading={isSubmitLoading}
             block
