@@ -25,15 +25,17 @@ export default function CardRelation({
   typeArea,
 }: propsType): React.JSX.Element {
   return (
-    <Flex align={"center"} vertical>
-      <WhiteBox>
+  <Tag style={{padding : 5}} color={CLONE_SALES_GROUP_GEOGRAPHY_COLOR[typeArea]}>
+      <Flex align={"center"} vertical>
+      {/* <WhiteBox> */}
+        <Flex align={"center"} vertical>
         <Typography.Text strong><Tag color={CLONE_SALES_GROUP_GEOGRAPHY_COLOR[typeArea]}>{CLONE_SALES_GROUP_GEOGRAPHY_VI[typeArea]}</Tag>{name}</Typography.Text>
         
         {leader && (
           <div>
             Quản lý:{" "}
             <PopoverCardEmployee employee={get(leader, "employee", "")}>
-              {get(leader, "employee.fullName", "")}
+              <span style={{cursor: 'default'}}>{get(leader, "employee.fullName", "")}</span>
             </PopoverCardEmployee>
           </div>
         )}
@@ -41,17 +43,20 @@ export default function CardRelation({
           <div>
             TDV:{" "}
             <PopoverCardEmployee employee={get(member, "employee", "")}>
-              {get(member, "employee.fullName", "")}
+              <span style={{cursor: 'default'}}>{get(member, "employee.fullName", "")}</span>
             </PopoverCardEmployee>
           </div>
         )}
         {!leader && !member ? <Tag bordered={false} color={'error'}>Trống</Tag> : null}
-      </WhiteBox>
-      <Address
+        <Address
           onlyShowLastPath={!!parentNear}
           managementArea={managementArea}
           bordered={true}
         />
+        </Flex>
+      {/* </WhiteBox> */}
+      
     </Flex>
+  </Tag>
   );
 }

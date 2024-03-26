@@ -3,14 +3,28 @@ import { CaretDownOutlined, CarryOutOutlined } from '@ant-design/icons';
 import { xor, get } from 'lodash';
 
 import subVn from 'sub-vn';
-import { TreeSelect, Checkbox } from 'antd';
+import { TreeSelect, Checkbox, Tag } from 'antd';
 import { TreeSelectProps } from 'antd/lib/index';
 let areas = subVn.getDistricts();
+const tagRender = (props : any) => {
+  const { label, onClose } = props;
+  const onPreventMouseDown = (event : any) => {
+    event.preventDefault();
+    event.stopPropagation();
+  };
+  return (
+    <Tag
+      color={'blue'}
+      onMouseDown={onPreventMouseDown}
+      closable={true}
+      onClose={onClose}
+      style={{paddingTop : 5,paddingBottom : 5}}
+    >
+      {get(label,'props.name','')}
+    </Tag>
+  );
+};
 
-
-interface TreeSelectPropsOther extends TreeSelectProps {
-  tagRender?:any
-}
 const Item = ({
   name,
   path,
@@ -41,7 +55,7 @@ interface PropsType extends Omit<TreeSelectProps,'onChange'>  {
   initValue? : string[],
   onChange? : (p?: any,p2?:any,p3?:any) => void
 }
-const TreeSelectLocal = ({
+const GeoSelectTreeStatic = ({
   onChange : onChangeForm,
   blackList = [],
   parentList = [],
@@ -260,7 +274,7 @@ const TreeSelectLocal = ({
     onChangeForm && onChangeForm(newValue,labelList,extra);
   };
 
-  const tProps : TreeSelectPropsOther = {
+  const tProps : TreeSelectProps = {
     allowClear : true,
     treeData: endDataa,
     value : _value,
@@ -280,9 +294,10 @@ const TreeSelectLocal = ({
     style: {
       width: '100%',
     },
+    tagRender,
     ...props,
   };
 
   return <TreeSelect {...tProps} />;
 };
-export default TreeSelectLocal;
+export default GeoSelectTreeStatic;

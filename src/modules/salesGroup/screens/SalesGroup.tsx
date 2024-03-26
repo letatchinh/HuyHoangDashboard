@@ -246,6 +246,8 @@ export default function SalesGroup() {
         footer={null}
         destroyOnClose
         width={"max-content"}
+        centered
+        title="Chi tiết sơ đồ"
       >
         <Relationship id={id} />
       </ModalAnt>

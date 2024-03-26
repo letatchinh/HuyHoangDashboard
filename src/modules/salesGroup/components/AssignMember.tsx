@@ -77,10 +77,10 @@ export default function AssignMember({_id,member}: propsType): React.JSX.Element
     <div>
       <Popover
         content={<Flex vertical gap={10}>
-            <Table loading={isLoading} rowKey={(rc) => get(rc,'_id')} pagination={false} size='small' rowSelection={rowSelection} columns={columns} dataSource={data} />
+            <Table scroll={{y : 300}} style={{width : 500}} loading={isLoading} rowKey={(rc) => get(rc,'_id')} pagination={false} size='small' rowSelection={rowSelection} columns={columns} dataSource={data} />
             <Button loading={isSubmitLoading} onClick={onAssign} size="small" type="primary">Xác nhận</Button>
         </Flex>}
-        title="Danh sách nhân viên đang rảnh"
+        title="Danh sách nhân viên sẵn sàng"
         trigger="click"
         open={open}
         onOpenChange={handleOpenChange}

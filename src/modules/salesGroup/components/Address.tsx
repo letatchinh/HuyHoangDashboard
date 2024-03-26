@@ -22,7 +22,7 @@ export default function Address({
       key: uuid,
       label: "",
       children: (
-        <div style={{maxHeight : 50,overflowY : 'scroll',padding : '0 15px'}}>
+        <div style={{ maxHeight: 200, overflowY: "scroll", padding: "0 15px" }}>
           {addressString?.map((item: any) => (
             <Typography.Text style={{ display: "block" }} strong>
               {item}
@@ -33,12 +33,17 @@ export default function Address({
     }),
     [addressString]
   );
-  return (
+  return managementArea?.length ? (
     <Collapse
       collapsible={"icon"}
-      expandIcon={({isActive}) => (
-        <Flex style={{ userSelect: "none",width : '100%' }} gap={5} align={"center"}>
-          <i className="fa-solid fa-location-dot"></i> {isActive ? "Ẩn địa chỉ" : "Xem Địa chỉ"}
+      expandIcon={({ isActive }) => (
+        <Flex
+          style={{ userSelect: "none", width: "100%" }}
+          gap={5}
+          align={"center"}
+        >
+          <i className="fa-solid fa-location-dot"></i>{" "}
+          {isActive ? "Ẩn địa chỉ" : "Xem Địa chỉ"}
         </Flex>
       )}
       className="collapseCustom"
@@ -47,5 +52,7 @@ export default function Address({
       defaultActiveKey={["1"]}
       {...props}
     />
+  ) : (
+    <>(Không có địa chỉ)</>
   );
 }

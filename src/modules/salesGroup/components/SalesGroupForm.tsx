@@ -8,7 +8,7 @@ import {
   Select,
   TreeSelect,
 } from "antd";
-import { get, xor } from "lodash";
+import { get, uniq, xor } from "lodash";
 import React, { useCallback, useEffect, useId, useMemo } from "react";
 import RenderLoading from "~/components/common/RenderLoading";
 import WithPermission from "~/components/common/WithPermission";
@@ -26,7 +26,7 @@ import {
 } from "../salesGroup.hook";
 import { FieldTypeForm, propsTypeSalesGroupForm } from "../salesGroup.modal";
 import { convertInitData, convertSubmitData } from "../salesGroup.service";
-
+const getPath = (managementArea : any[]) => managementArea?.map((area: any) =>get(area, "path"))
 const SalesGroupForm = ({
   id,
   onCancel,
@@ -37,8 +37,11 @@ const SalesGroupForm = ({
 }: propsTypeSalesGroupForm): React.JSX.Element => {
   const keyTree = useId();
   const [blackList,isLoadingBlackList] = useFetchState({api : apis.getBlackList,useDocs : false});
-  
+
   const [salesGroup, isLoading]: any = useGetSalesGroup(id);
+  const parentExist = useMemo(() => getPath(get(salesGroup, "managementArea", [])),[salesGroup])
+  const blackList_ : any[] = useMemo(() => xor(blackList,parentExist),[blackList,parentExist]);
+
   const parentNear = useMemo(
     () => (id ? get(salesGroup, "parent._id", "") : parentNearFromList),
     [salesGroup, id, parentNearFromList]
@@ -50,24 +53,24 @@ const SalesGroupForm = ({
   const parentNearPath = useMemo(
     () =>
       id
-        ? get(salesGroup, "parent.managementArea", [])?.map((area: any) =>
-            get(area, "path")
-          )
+        ? getPath(get(salesGroup, "parent.managementArea", []))
         : parentNearPathFromList,
     [salesGroup, id, parentNearPathFromList]
   );
+
+  const rootParent = useMemo(() => xor(parentNearPath,parentExist),[parentExist,parentNearPath])
   const parentList = useMemo(() => {
-    if(!parentNearPath) return [];
-    return parentNearPath.filter(
+    if(!rootParent) return [];
+    return rootParent.filter(
       (path:any) => blackList.filter((blPath:any) => blPath === path).length === 1
     );
-  }, [blackList,parentNearPath]);
+  }, [blackList,rootParent]);
   const parentListDiff = useMemo(() => {
-    if(!parentNearPath) return [];
-    return parentNearPath.filter(
+    if(!rootParent) return [];
+    return rootParent.filter(
       (path:any) => blackList.filter((blPath:any) => blPath === path).length !== 1
     );
-  }, [blackList,parentNearPath]);
+  }, [blackList,rootParent]);
 
   const [form] = Form.useForm();
   const [isSubmitLoading, onCreate] = useCreateSalesGroup(onCancel);
@@ -143,7 +146,7 @@ const SalesGroupForm = ({
                 <Form.Item
                   label="Khu vực"
                   name={["managementArea"]}
-                  rules={[{ required: true, message: "Vui lòng chọn" }]}
+                  // rules={[{ required: true, message: "Vui lòng chọn" }]}
                 >
                   <GeoSelectTreeStatic
                     key={keyTree}
@@ -151,7 +154,7 @@ const SalesGroupForm = ({
                       setFieldsValue({ managementArea: value });
                     }}
                     initValue={getFieldValue("managementArea")}
-                    blackList={xor(blackList, parentListDiff)}
+                    blackList={xor(blackList_, parentListDiff)}
                     parentList={parentList}
                   />
                 </Form.Item>
