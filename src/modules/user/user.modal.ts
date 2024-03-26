@@ -16,7 +16,7 @@ export interface UserResponseOne {
       "cityId": string,
       "street":string
   },
-  "adapater"?: {
+  "adapter"?: {
       "_id": string,
       "groups"?: any[],
       "managementArea"?: any[],

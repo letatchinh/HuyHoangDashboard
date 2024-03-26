@@ -57,9 +57,9 @@ export default function UserForm(props: IProps) {
     if (user) {
       form.setFieldsValue({
         ...user,
-        username: user?.adapater?.user?.username,
-        groups: user?.adapater?.groups,
-        userId: user?.adapater?.userId
+        username: user?.adapter?.user?.username,
+        groups: user?.adapter?.groups,
+        userId: user?.adapter?.userId
       });
       setImageUrl(user?.avatar);
       setCityCode(user?.address?.cityId);
