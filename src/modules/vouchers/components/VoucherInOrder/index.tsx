@@ -5,7 +5,7 @@ import PaymentInOrder from '~/modules/paymentVoucher/components/PaymentInOrder';
 import ReceiptInOrder from '~/modules/receiptVoucher/components/ReceiptInOrder';
 type propsType = {
   billId?: any,
-  defaultActiveTabKey?: string
+  defaultActiveTabKey?: string,
 };
 interface VoucherContextProps {
   billId?: any,

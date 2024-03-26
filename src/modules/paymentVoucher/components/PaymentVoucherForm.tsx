@@ -81,7 +81,7 @@ import "./form.scss";
   export default function PaymentVoucherForm(
     props: propsType
   ): React.JSX.Element {
-    // useResetAction();
+    useResetAction();
     const { id, supplierId, onClose, refCollection, debt, pharmacyId, dataAccountingDefault, method, billId } = props;
     const [form] = Form.useForm();
     const ref = useRef();

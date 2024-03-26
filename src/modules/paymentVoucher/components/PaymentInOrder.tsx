@@ -9,6 +9,7 @@ import { useVoucherInOrderStore } from '~/modules/vouchers/components/VoucherInO
 import { useGetPaymentVoucherByBillId, usePagingByBillId, usePaymentVoucherByBillIdQueryParams } from '../paymentVoucher.hook';
 import { formatNumberThreeComma } from '~/utils/helpers';
 type propsType = {
+
 };
 export default function PaymentInOrder(props: propsType): React.JSX.Element {
   const { billId } = useVoucherInOrderStore();

@@ -67,6 +67,7 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
     paymentAmount,
     // createBy,
     note,
+    totalListPayment,
   } = orderSupplier || {};
   // const canUpdateOrderSupplier = PolicyModule.hook.useMatchPolicy(
   //   PolicyModule.POLICIES.UPDATE_BILL
@@ -96,7 +97,7 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
   const onOpenPayment = (item: any) => {
     setOpen(true);
     setSupplierId(item?.supplierId);
-    setDebt(item?.paymentAmount);
+    setDebt(item?.remaining);
     setOrderSelect(item);
   };
   const onClosePayment = () => {
@@ -265,7 +266,7 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
                   {get(createBy, "fullName", "")}
                 </Layout> */}
                 <Layout label={"Tổng số tiền"}>{formatter(totalPrice)}</Layout>
-                <Layout label={"Đã trả trước"}>-{formatter(totalPair)}</Layout>
+                <Layout label={"Đã trả trước"}>-{formatter(totalListPayment)}</Layout>
                 <Layout label={"Tổng số tiền còn lại"}>
                   <Typography.Text strong>
                     {formatter(paymentAmount)}

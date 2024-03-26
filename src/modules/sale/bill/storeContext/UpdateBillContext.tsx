@@ -34,8 +34,8 @@ export function UpdateBillProvider({
     const { id } = useParams();
     const [reFetch,setReFetch] = useState(false);
     const mutateBill = useCallback(() => setReFetch(!reFetch),[reFetch]);
-    const [bill,isLoading] = useGetBill(id,reFetch);
-    const {pharmacyId,totalPrice,codeSequence,_id,totalReceiptVoucherCompleted,remainAmount} = bill || {};
+    const [bill, isLoading] = useGetBill(id, reFetch);
+    const {pharmacyId,totalPrice,codeSequence,_id,totalReceiptVoucherCompleted,remainAmount, remaining} = bill || {};
     
     const [isOpenForm, setIsOpenForm] = useState(false);
 
@@ -71,7 +71,7 @@ export function UpdateBillProvider({
           onClose={() => onCloseForm()}
           pharmacyId={pharmacyId}
           refCollection={REF_COLLECTION_UPPER['PHARMA_PROFILE']}
-          totalAmount={remainAmount}
+          totalAmount={remaining}
           reason={`Thu tiền đơn hàng ${codeSequence || ""} `}
           from='Pharmacy'
           provider={pharmacyId}
