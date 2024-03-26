@@ -134,5 +134,8 @@ export const PATH_APP = {
   typePharmacy: {
     root: path(ROOTS.app, "/type-pharmacy")
   },
+  groupPharmacy: {
+    root: path(ROOTS.app, "/group-pharmacy")
+  },
 
 };

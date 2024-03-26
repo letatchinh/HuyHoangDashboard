@@ -50,6 +50,9 @@ const salesChannel ='salesChannel';
 // Loại nhà thuốc
 const customerGroup = 'customerGroup';
 
+// Nhóm nhà thuốc
+const customer = 'customer';
+
 const RESOURCES = [
   //Setting
   configDiscount,
@@ -104,6 +107,7 @@ const RESOURCES = [
 
   salesChannel,
   customerGroup,
+  customer,
 ];
 
 //ACTIONS
@@ -211,6 +215,10 @@ const RESOURCE = (): ResourceType => {
     customerGroup
   ];
 
+  const GROUP_PHARMACY: string[] = [
+    customer
+  ];
+
   return {
     GROUP_USER,
     GROUP_EMPLOYEE,
@@ -230,6 +238,7 @@ const RESOURCE = (): ResourceType => {
     GROUP_SHIPPINGCOST,
     SALE_CHANNEL,
     TYPE_PHARMACY,
+    GROUP_PHARMACY,
   };
 };
 

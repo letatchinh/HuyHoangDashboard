@@ -71,6 +71,7 @@ export type initStateSlice<T=any> = {
     saleChannel: "saleChannel",
     configurationCronTime : "configurationCronTime",
     typePharmacy: "typePharmacy",
+    groupPharmacy: "groupPharmacy",
     }as const
     
     

@@ -42,6 +42,7 @@ import ReportEmployeePage from "~/pages/Dashboard/ReportEmployee";
 import SaleChannel from "~/pages/Dashboard/SaleChannel";
 import ConfigurationCronTime from "~/pages/Dashboard/ConfigurationCronTime";
 import TypePharmacy from "~/pages/Dashboard/TypePharmacy";
+import GroupPharmacy from "~/pages/Dashboard/GroupPharmacy";
 export const mainRoutes :PathRouteProps[] = [
   { path: PATH_APP.main.root, Component: Homepage },
 
@@ -129,6 +130,9 @@ export const mainRoutes :PathRouteProps[] = [
 
   // Loại khách hàng
   { path: PATH_APP.typePharmacy.root, Component: TypePharmacy},
+
+  // Nhóm nhà thuốc
+  { path: PATH_APP.groupPharmacy.root, Component:  GroupPharmacy},
   
   { path: '/', Component: Homepage },
 ]
