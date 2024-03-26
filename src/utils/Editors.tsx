@@ -10,7 +10,7 @@ function Editors({ value, onChange }: PropsEditor) {
     return (
         <CKEditor
             id={'ckEditor5-editor'}
-            editor = {CustomEditor}
+            editor = {CustomEditor as any}
             data={value??''}
             onChange={(_ : any, editor : any) => {
             onChange(editor.getData());
