@@ -25,6 +25,7 @@ import {
 import ConditionOver from "./components/ConditionOver";
 import ConditionShow from "./components/ConditionShow";
 import ConditionShowBenefitBase from "./components/ConditionShowBenefitBase";
+import ConditionShowKpisConfigArea from "./components/ConditionShowKpisConfigArea";
 import ConditionShowWorking from "./components/ConditionShowWorking";
 import SelectSupplierNotExist from "./components/SelectSupplierNotExist";
 import { GROUP_TYPE_BENEFIT_OVER, TYPE_KPI } from "./constants";
@@ -388,6 +389,7 @@ export const useGetColumns = () => {
         <ShowConditionByType
             typeBenefit={typeBenefit}
             ComponentShowConditionBenefitBase={<ConditionShowBenefitBase id={get(rc,'_id')}/>}
+            ComponentShowConditionKpisConfigArea={<ConditionShowKpisConfigArea cond={get(rc,'cond')}/>}
             ComponentShowConditionBenefit={<ConditionShow
                 cond={cond}
                 mutate={mutate}
@@ -403,15 +405,6 @@ export const useGetColumns = () => {
             ComponentShowConditionOver={<ConditionOver cond={cond} id={get(rc,'_id')}/>}
             ComponentShowConditionWorking={<ConditionShowWorking rc={rc}/>}
           />
-        // GROUP_TYPE_BENEFIT_OVER.includes(typeBenefit) 
-        // ?
-        // <ConditionOver cond={cond} id={get(rc,'_id')}/>
-        // : <ConditionShow
-        //   cond={cond}
-        //   mutate={mutate}
-        //   rc={rc}
-        //   typeBenefit={typeBenefit}
-        // />
       ),
     };
     
@@ -422,7 +415,13 @@ export const useGetColumns = () => {
       actionBenefit: () => {
         cols = get(data, "col", []);
       },
+      actionKpisConfigArea: () => {
+        cols = get(data, "col", []);
+      },
       actionBenefitOver: () => {
+        cols = get(data, "col", []);
+      },
+      actionBenefitWorking: () => {
         cols = get(data, "col", []);
       },
       actionKpis: () => {
@@ -442,9 +441,6 @@ export const useGetColumns = () => {
         }
         cols = colsTemp;
       },
-      actionBenefitWorking: () => {
-        cols = get(data, "col", []);
-      },
     });
         // get Columns Table
 
@@ -463,6 +459,9 @@ export const useGetColumns = () => {
         },
         actionBenefitWorking: () => {
           column = getColumnsBenefit({ col: c, mutate, WIDTH_ITEM });
+        },
+        actionKpisConfigArea: () => {
+          column = getColumnsBenefit({ col: c, mutate, WIDTH_ITEM,suffix : "Điểm",max : 999999999 });
         },
       });
       return column;
@@ -509,6 +508,9 @@ export const useGetDataSource = () => {
       dataSource = getDataSourceKpis({ data, dataConfig });
     },
     actionBenefitWorking: () => {
+      dataSource = getDataSourceBenefit({ data, dataConfig });
+    },
+    actionKpisConfigArea: () => {
       dataSource = getDataSourceBenefit({ data, dataConfig });
     },
   });

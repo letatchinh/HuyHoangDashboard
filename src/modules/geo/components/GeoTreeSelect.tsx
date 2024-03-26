@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 
 import { Grid, TreeSelect } from "antd";
-import { compact, concat, get, head, sortBy, split, unionBy } from "lodash";
+import { compact, concat, get, head, isArray, sortBy, split, unionBy } from "lodash";
 import subvn from "~/core/subvn";
 import { RELATIVE_POSITION } from "../constants";
 
@@ -45,19 +45,40 @@ const GeoTreeSelect = ({
 
   const areas = useMemo(() => subvn.getAreas(), []);
   const cities = useMemo(() => subvn.getProvinces(), []);
-
-  const wards = useMemo(
-    () => restProps?.multiple ? (selectedDistrictCode?.map((code : any) => subvn.getWardsByDistrictCode(code)))?.flat() :  subvn.getWardsByDistrictCode(selectedDistrictCode),
+  const wards : any[] = useMemo(
+    () => {
+      if(restProps?.multiple || Number.isFinite(selectedDistrictCode)){
+        let rs : any = []; 
+        if(!selectedDistrictCode) return []
+        if(isArray(selectedDistrictCode)){
+          selectedDistrictCode?.forEach((code:any) => rs = rs.concat(subvn.getWardsByDistrictCode(code)))
+          return rs
+        }
+      }
+      return subvn.getWardsByDistrictCode(selectedDistrictCode)
+    },
     [selectedDistrictCode,restProps?.multiple]
   );
-
-  const districts = useMemo(
-    () =>restProps?.multiple ? (selectedCityCode?.map((code : any) => subvn.getDistrictsByProvinceCode(code)))?.flat() :  subvn.getDistrictsByProvinceCode(selectedCityCode),
+  const districts : any[] = useMemo(
+    () => {
+      if(restProps?.multiple || Number.isFinite(selectedCityCode)){
+        let rs : any = []; 
+        if(!selectedCityCode) return []
+        if(isArray(selectedCityCode)){
+          selectedCityCode?.forEach((code:any) => rs = rs.concat(subvn.getDistrictsByProvinceCode(code)))
+          return rs
+        }
+      }
+      return subvn.getDistrictsByProvinceCode(selectedCityCode)
+    },
     [selectedCityCode,restProps?.multiple]
   );
+  
+  console.log(districts,'districts');
 
   const [treeData, setTreeData] = useState([]);
-
+  console.log(treeData,'treeData');
+  
   const screens = useBreakpoint();
 
   let listHeight = 256;

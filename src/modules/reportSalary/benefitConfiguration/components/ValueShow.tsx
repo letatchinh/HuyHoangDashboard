@@ -7,12 +7,16 @@ type propsType = {
   conditionId?: any;
   benefitId?: any;
   mutate: () => void;
+  suffix?: any;
+  max?: number;
 };
 export default function ValueShow({
   value: defaultValue,
   benefitId,
   conditionId,
   mutate,
+  suffix = "%",
+  max = 100,
 }: propsType): React.JSX.Element {
   const [open, setOpen] = useState(false);
   const hide = () => {
@@ -34,10 +38,11 @@ export default function ValueShow({
           defaultValue={defaultValue}
           benefitId={benefitId}
           conditionId={conditionId}
+          max={max}
         />
       }
     >
-      <Button type="text">{defaultValue} %</Button>
+      <Button type="text">{defaultValue} {suffix}</Button>
     </Popover>
   );
 }

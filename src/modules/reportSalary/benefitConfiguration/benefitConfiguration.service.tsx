@@ -15,14 +15,18 @@ import {
 export const service = {};
 type ParamsGetColumns = {
   col: any;
+  suffix?: any;
   WIDTH_ITEM: number;
   mutate: () => void;
+  max?: number;
 };
 
 export const getColumnsBenefit = ({
   col,
   WIDTH_ITEM,
   mutate,
+  suffix = "%",
+  max = 100,
 }: ParamsGetColumns): any => {
   console.log(col, "col");
 
@@ -39,6 +43,8 @@ export const getColumnsBenefit = ({
           benefitId={get(col, "_id")}
           value={value || 0}
           mutate={mutate}
+          suffix={suffix}
+          max={max}
         />
       );
     },
@@ -184,7 +190,6 @@ export const getDataSourceBenefit = ({
       conditionId: get(r, "_id"),
     };
   });
-  console.log(dataSource,'dataSource');
   
   return dataSource;
 };
@@ -228,6 +233,7 @@ type ParamsActionByType = {
   actionBenefit: () => void;
   actionBenefitOver: () => void;
   actionBenefitWorking: () => void;
+  actionKpisConfigArea: () => void;
 };
 export const actionByType = ({
   typeBenefit,
@@ -235,6 +241,7 @@ export const actionByType = ({
   actionBenefit,
   actionBenefitOver,
   actionBenefitWorking,
+  actionKpisConfigArea,
 }: ParamsActionByType) => {
   if (GROUP_TYPE_BENEFIT_BASE.includes(typeBenefit)) {
     actionBenefit();
@@ -256,6 +263,10 @@ export const actionByType = ({
     actionBenefitWorking();
     return;
   }
+  if (TYPE_BENEFIT.KPIS_CONFIG_AREA === typeBenefit) {
+    actionKpisConfigArea();
+    return;
+  }
 };
 type ParamsCreateConditionByType = {
   typeBenefit?: TypeBenefit | null;
@@ -264,6 +275,7 @@ type ParamsCreateConditionByType = {
   ComponentCreateConditionBenefitBase: any;
   ComponentCreateConditionOver: any;
   ComponentCreateConditionWorking: any;
+  ComponentCreateConditionKpisConfigArea: any;
 };
 export const CreateConditionByType = ({
   typeBenefit,
@@ -272,6 +284,7 @@ export const CreateConditionByType = ({
   ComponentCreateConditionOver,
   ComponentCreateConditionWorking,
   ComponentCreateConditionBenefitBase,
+  ComponentCreateConditionKpisConfigArea,
 }:ParamsCreateConditionByType) : React.JSX.Element => {
   if (GROUP_TYPE_BENEFIT_BASE.includes(typeBenefit)) {
     return ComponentCreateConditionBenefitBase
@@ -288,6 +301,9 @@ export const CreateConditionByType = ({
   if (TYPE_BENEFIT.BENEFIT_WORKING === typeBenefit) {
     return ComponentCreateConditionWorking
   }
+  if (TYPE_BENEFIT.KPIS_CONFIG_AREA === typeBenefit) {
+    return ComponentCreateConditionKpisConfigArea
+  }
   return <></>
 }
 type ParamsShowConditionByType = {
@@ -297,6 +313,7 @@ type ParamsShowConditionByType = {
   ComponentShowConditionOver: any;
   ComponentShowConditionWorking: any;
   ComponentShowConditionBenefitBase: any;
+  ComponentShowConditionKpisConfigArea: any;
 };
 
 export const ShowConditionByType = ({
@@ -306,6 +323,7 @@ export const ShowConditionByType = ({
   ComponentShowConditionOver,
   ComponentShowConditionWorking,
   ComponentShowConditionBenefitBase,
+  ComponentShowConditionKpisConfigArea,
 }:ParamsShowConditionByType) : React.JSX.Element => {
   
   if (GROUP_TYPE_BENEFIT_BASE.includes(typeBenefit)) {
@@ -323,5 +341,9 @@ export const ShowConditionByType = ({
   if (TYPE_BENEFIT.BENEFIT_WORKING === typeBenefit) {
     return ComponentShowConditionWorking
   }
+  if (TYPE_BENEFIT.KPIS_CONFIG_AREA === typeBenefit) {
+    return ComponentShowConditionKpisConfigArea
+  }
   return <></>
 }
+

@@ -1,5 +1,6 @@
 import { BaseData } from "~/utils/Modal"
 import { EMPLOYEE_LEVEL } from "../employee/constants"
+import { EmployeeLevelType } from "../employee/employee.modal"
 import { RULE_SALES_GROUP } from "./constants"
 export type propsTypeSalesGroupForm = {
     id? : string,
@@ -23,7 +24,7 @@ export interface SalesGroupType extends BaseData {
 }
 
 export type EmployeeType = {
-    employeeLevel : keyof typeof EMPLOYEE_LEVEL,
+    employeeLevel : EmployeeLevelType,
     employeeNumber : number,
     fullName : string,
     phoneNumber : string,

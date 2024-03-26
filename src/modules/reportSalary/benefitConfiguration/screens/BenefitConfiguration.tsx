@@ -34,9 +34,6 @@ export default function BenefitConfiguration(
               {CLONE_GROUP_TYPE_BENEFIT_EMPLOYEE_LEVEL[k].map((key: any) => (
                 <BtnActionSecondary
                   className={key === active ? "active" : ""}
-                  icon={
-                    <SettingOutlined className="homepage--btnActionSecondary__icon" />
-                  }
                   value={CLONE_TYPE_BENEFIT_VI[key]}
                   onClick={() => onCreateBenefitTDV(key)}
                 />
