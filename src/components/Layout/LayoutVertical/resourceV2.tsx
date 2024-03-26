@@ -172,8 +172,7 @@ import {
               path: PATH_APP.groupPharmacy.root,
               key: PATH_APP.groupPharmacy.root,
               icon: <i className="fa-solid fa-notes-medical"></i>,
-              permission: [POLICIES.READ_GROUPPHARMACY
-              ],
+              permission: [POLICIES.READ_GROUPPHARMACY],
             },
           ],
         },
