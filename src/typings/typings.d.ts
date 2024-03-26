@@ -16,6 +16,7 @@ declare module 'sub-vn' {
   export function getWardsByCode(code: string): any;
   export function getCityByCode(code: string): any;
   export function getDistrictByCode(code: string): any;
+  export function getProvindByAreaCode(code: string): any;
 };
 
 

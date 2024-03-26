@@ -3,6 +3,7 @@ import requester from "~/api/requester";
 
 const apis = {
     getAll: (query?: any) => requester.get(`/api/v1/sales-group`, query),
+    getBlackList: () => requester.get(`/api/v1/check/sales-group`),
     getListTeamLead: (query?: any) => requester.get(`/api/v1/employee-search-lead`, query),
     getListMember: (query?: any) => requester.get(`/api/v1/employee-search-member`, query),
     getById: (id?: any) => requester.get(`/api/v1/sales-group/${id}`),

@@ -1,5 +1,5 @@
-import { PlusCircleOutlined } from "@ant-design/icons";
-import { Button, Flex, Popover, Table } from "antd";
+import { DeleteOutlined, PlusCircleOutlined } from "@ant-design/icons";
+import { Button, Flex, Popconfirm, Popover, Table, Tooltip } from "antd";
 import { TableRowSelection } from "antd/es/table/interface";
 import { get } from "lodash";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
@@ -63,7 +63,16 @@ export default function AssignMember({_id,member}: propsType): React.JSX.Element
         dataIndex : "employeeLevel",
         render : (employeeLevel : any) => CLONE_EMPLOYEE_LEVEL_VI[employeeLevel]
     },
-  ]
+  ];
+
+  const onRemove = useCallback(() => {
+    updateSalesGroup({
+      _id,
+      listUser: [],
+    });
+    hide();
+  }, [_id]);
+
   return (
     <div>
       <Popover
@@ -78,6 +87,13 @@ export default function AssignMember({_id,member}: propsType): React.JSX.Element
       >
         <Button icon={member ? <i className="fa-solid fa-repeat"></i> : <PlusCircleOutlined />}/>
       </Popover>
+      {member ? (
+          <Popconfirm title="Xác nhận gỡ trình dược viên" onConfirm={onRemove}>
+          <Tooltip title="Gỡ trình dược viên">
+          <Button danger icon={<DeleteOutlined />} />
+          </Tooltip>
+          </Popconfirm>
+        ) : null}
     </div>
   );
 }

@@ -291,7 +291,7 @@ import {
       icon: <i className="fa-solid fa-users"></i>,
       path: PATH_APP.employee.root,
       key: PATH_APP.employee.root,
-      permission: [POLICIES.READ_EMPLOYEE],
+      permission: [POLICIES.READ_EMPLOYEE,POLICIES.READ_EMPLOYEEPOSITION],
     },
     //Người dùng
     {

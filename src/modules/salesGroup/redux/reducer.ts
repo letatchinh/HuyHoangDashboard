@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { get } from "lodash";
 import { InstanceModuleRedux } from "~/redux/instanceModuleRedux";
 import { initStateSlice } from "~/redux/models";
+import { SALES_GROUP_GEOGRAPHY_COLOR } from "../constants";
 function getMember(listMember: any[]): string {
   let memberName = "";
   listMember?.forEach((mem: any) => {
@@ -11,10 +12,10 @@ function getMember(listMember: any[]): string {
 };
 
 const colorLevel : any = {
-  1 : 'orange',
-  2 : '#91caff', // blue
-  3 : '#d3adf7', // Purple
-  4 : '#87d068',
+  1 : SALES_GROUP_GEOGRAPHY_COLOR.AREA,
+  2 : SALES_GROUP_GEOGRAPHY_COLOR.REGION, // blue
+  3 : SALES_GROUP_GEOGRAPHY_COLOR.GROUP, // Purple
+  4 : SALES_GROUP_GEOGRAPHY_COLOR.ZONE,
   5 : 'black',
 };
 

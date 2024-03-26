@@ -1,7 +1,7 @@
 export type initStateSlice<T=any> = {
     isLoading?: boolean;
     list?: T[];
-    listSearch?: [];
+    listSearch?: T[];
     getListFailed?: any;
 
     paging?: {
