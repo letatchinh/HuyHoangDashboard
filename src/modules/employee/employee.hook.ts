@@ -37,7 +37,7 @@ const {
 
 export const useEmployeePaging = () => useSelector(pagingSelector);
 
-export const useGetEmployeees = (payload: object) => {
+export const useGetEmployees = (payload: object) => {
   return useFetchByParam({
     action: employeeSliceAction.getListRequest,
     loadingSelector: loadingSelector,

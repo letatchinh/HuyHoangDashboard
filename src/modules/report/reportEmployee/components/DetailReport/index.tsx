@@ -14,6 +14,8 @@ import { SubmitDataUpdatePreview } from '../../reportEmployee.modal';
 import TableDetailSalary from './TableDetailSalary';
 import TableTargetsSelf from './TableTargetsSelf';
 import TableTargetsTeam from './TableTargetsTeam';
+import WithPermission from '~/components/common/WithPermission';
+import POLICIES from '~/modules/policy/policy.auth';
 type propsType = {
 };
 const CLONE_EMPLOYEE_LEVEL_VI : any = EMPLOYEE_LEVEL_VI
@@ -75,7 +77,8 @@ export default function DetailReport(props:propsType) : React.JSX.Element {
                 {[EMPLOYEE_LEVEL.CTV,EMPLOYEE_LEVEL.LEADER,EMPLOYEE_LEVEL.TDV].includes(employeeLevel) && <TableTargetsSelf dataSource={dataSourceTargetsSelf}/>}
                 <TableDetailSalary dataSource={dataSourceDetailSalary}/>
             </div>
-            <Flex justify={'end'} gap={10}>
+            {<WithPermission permission={POLICIES.UPDATE_REPORTSALARY}>
+                <Flex justify={'end'} gap={10}>
             {get(data,'status') === STATUS_REPORT_EMPLOYEE.NEW ? <Popconfirm
             onConfirm={onCompleted}
             title="Xác nhận hoàn thành báo cáo sẽ không được chỉnh sửa thêm"
@@ -95,6 +98,8 @@ export default function DetailReport(props:propsType) : React.JSX.Element {
                 Lưu báo cáo
             </Button>}
             </Flex>
+            </WithPermission>
+            }
         </div>
     )
 }

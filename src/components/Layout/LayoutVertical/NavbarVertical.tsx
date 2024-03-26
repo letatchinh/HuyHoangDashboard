@@ -71,27 +71,25 @@ const NavbarVertical: React.FC = () => {
       const filteredResource = filterItems(resource);
       setFilteredResource(filteredResource)
     };
-  },[policies]);
-  // const filteredResource = filterItems(resource);
-    const NewNavbarItems : any = filteredResource?.map((first : any) => {
-  if (first.children?.length) {
-    const newChildFirst = first.children.map((second : any) => {
-      if (second.children?.length) {
-        const newChildSecond = second.children.map((third : any) => getItem(third));
-        return getItem({ ...second, children: newChildSecond });
-      } else {
-        return getItem(second)};
-    })
-    return getItem({ ...first, children: newChildFirst })
-  } else {
-    return getItem(first)
-  };
-  });
-  
+  },[policies, profile]);
+    const NewNavbarItems : any =  filteredResource?.map((first: any) => {
+        if (first.children?.length) {
+          const newChildFirst = first.children.map((second: any) => {
+            if (second.children?.length) {
+              const newChildSecond = second.children.map((third: any) => getItem(third));
+              return getItem({ ...second, children: newChildSecond });
+            } else {
+              return getItem(second)
+            };
+          })
+          return getItem({ ...first, children: newChildFirst })
+        } else {
+          return getItem(first)
+        };
+      });
   return (
     <div className='layoutVertical--content__navbar'>
       {isLoadingPolicy && <Spin className='layoutVertical--content__navbar__loading' tip="Đang lấy dữ liệu phân quyền"/>}
-      {/* <button onClick={toggleCollapsed}>asd</button> */}
       <div className='layoutVertical--content__navbar__wrapMenu'>
       <ConfigProvider theme={{
         components : {
@@ -108,7 +106,6 @@ const NavbarVertical: React.FC = () => {
       inlineCollapsed={collapsed}
       items={NewNavbarItems}
       theme='dark'
-
       />
       </ConfigProvider>
       </div>

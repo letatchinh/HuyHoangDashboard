@@ -5,6 +5,8 @@ import { useNavigate } from "react-router-dom";
 import ShowStep from "~/modules/productsAll/components/ShowStep";
 import { PATH_APP } from "~/routes/allPath";
 import BtnAction from "../components/BtnAction";
+import { useMatchPolicy } from "~/modules/policy/policy.hook";
+import POLICIES from "~/modules/policy/policy.auth";
 type propsType = {};
 export default function Homepage(props: propsType): React.JSX.Element {
   const navigate = useNavigate();
@@ -20,38 +22,45 @@ export default function Homepage(props: propsType): React.JSX.Element {
   const onChangeStep = (step: number) => {
     setStep(step);
   };
+
+  //Permission
+  const canWriteOrder = useMatchPolicy(POLICIES.WRITE_QUOTATION);
+  const canWriteBill = useMatchPolicy(POLICIES.WRITE_BILL);
+  const canWriteProduct = useMatchPolicy(POLICIES.WRITE_PRODUCT);
+  const canReadProduct = useMatchPolicy(POLICIES.READ_PRODUCT);
+
   return (
     <div className="homepage">
       <div className="homepage--overlay" />
       <Row gutter={16}>
-        <Col>
+      {canWriteBill &&  <Col>
           <BtnAction
             onClick={() => goLink('/order-supplier/create')}
             value="Tạo đơn mua"
             icon={<InboxOutlined className="homepage--btnAction__icon" />}
           />
-        </Col>
-        <Col>
+        </Col>}
+      {canWriteOrder &&  <Col>
           <BtnAction
           onClick={() => goLink('/bill/create')}
             value="Tạo đơn bán"
             icon={<DropboxOutlined className="homepage--btnAction__icon" />}
           />
-        </Col>
-        <Col>
+        </Col>}
+        {canWriteProduct && <Col>
           <BtnAction
           onClick={onOpenCreateProduct}
             value="Thêm mới thuốc"
             icon={<MedicineBoxOutlined className="homepage--btnAction__icon" />}
           />
-        </Col>
-        <Col>
+        </Col>}
+      {canReadProduct &&  <Col>
           <BtnAction
           onClick={() => goLink(PATH_APP.productAll.root)}
             value="Danh sách sản phẩm"
             icon={<i className="fa-solid fa-capsules homepage--btnAction__icon"></i>}
           />
-        </Col>
+        </Col>}
       </Row>
       <Modal
         

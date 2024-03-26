@@ -3,7 +3,7 @@ import { devConfig } from "~/config";
 import { getOptions } from "~/utils/helpers";
 
 export const BASE_URL = get(devConfig,'baseUrl');
-// export const BASE_URL = 'http://192.168.77.139:7000';
+// export const BASE_URL = 'http://192.168.77.129:7008';
 export const DEFAULT_UPLOAD_ACTION = `${BASE_URL}api/v1/file`;
 export const MAX_UPLOAD_FILE_SIZE_IN_MB = 2;
 

@@ -49,7 +49,8 @@ export default function FreelanceContractPharmacy(
   const [, updateContract] = useUpdateFreelanceContractPharmacy(onCloseForm);
   const [isSubmitLoading, deleteContract] = useDeleteFreelanceContractPharmacy();
   const paging = useFreelanceContractPharmacyPaging();
-  //   const canWriteVoucher = useMatchPolicy(POLICIES.WRITE_VOUCHER);
+  const canUpdateContract = useMatchPolicy(POLICIES.UPDATE_CONTRACTPHARMACY);
+  const canDeleteContract = useMatchPolicy(POLICIES.DELETE_CONTRACTPHARMACY);
 
   const onOpenForm = useCallback(
     (id?: any) => {
@@ -61,7 +62,6 @@ export default function FreelanceContractPharmacy(
     [setContractId, setIsOpenForm]
   );
 
-console.log(contractId, "contractId");
 
   const columns: ColumnsType = useMemo(
     () => [
@@ -129,13 +129,13 @@ console.log(contractId, "contractId");
           return moment(record).format("DD/MM/YYYY");
         },
       },
-      {
+      ...(canUpdateContract || canDeleteContract ?[{
         title: "Thao tác",
         dataIndex: "_id",
         // key: "actions",
         width: 150,
-        align: "center",
-        render: (record) => {
+        align: "center" as any,
+        render: (record: any) => {
           return (
             <div className="custom-table__actions">
               <WithPermission permission={POLICIES.UPDATE_PHARMAPROFILE}>
@@ -155,7 +155,7 @@ console.log(contractId, "contractId");
             </div>
           );
         },
-      },
+      }] : []),
     ],
     []
   );
@@ -174,7 +174,7 @@ console.log(contractId, "contractId");
             value={keyword}
           />
         </Col>
-        <WithPermission permission={POLICIES.WRITE_PHARMAPROFILE}>
+        <WithPermission permission={POLICIES.WRITE_CONTRACTPHARMACY}>
           <Col>
             <Button
               icon={<PlusCircleOutlined />}

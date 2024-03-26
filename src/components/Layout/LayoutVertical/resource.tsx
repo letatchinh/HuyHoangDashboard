@@ -214,7 +214,7 @@ export const resource: ItemType[] = [
         {
           label : "Thống kê bán hàng của nhà cung cấp",
           path : PATH_APP.report.supplier,
-          key : PATH_APP.report.supplier,
+          key: PATH_APP.report.supplier,
         }
       ],
       icon :<AppstoreFilled />,

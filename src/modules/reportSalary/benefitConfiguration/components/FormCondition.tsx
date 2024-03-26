@@ -4,6 +4,7 @@ import React, { useCallback, useEffect } from "react";
 import InputNumberAnt from "~/components/Antd/InputNumberAnt";
 import { useCreateCondition, useDeleteCondition, useResetAction, useUpdateCondition } from "../benefitConfiguration.hook";
 import { TypeBenefit } from "../benefitConfiguration.modal";
+import useBenefitConfigStore from "../store/BenefitConfigContext";
 type propsType = {
     typeBenefit? : TypeBenefit | null,
     mutate?: () => void;
@@ -20,7 +21,7 @@ export default function FormCondition({typeBenefit,mutate,onCancel,id,initData}:
     const [isSubmitLoading,createCondition] = useCreateCondition(onCallBack);
     const [,updateCondition] = useUpdateCondition(onCallBack);
     const [,deleteCondition] = useDeleteCondition(onCallBack);
-
+  const { canUpdateBenefit, canDeleteBenefit } = useBenefitConfigStore();
 
   const [form] = Form.useForm();
   const onFinish = (values: any) => {
@@ -70,9 +71,9 @@ export default function FormCondition({typeBenefit,mutate,onCancel,id,initData}:
       <Button loading={isSubmitLoading} type="primary" htmlType="submit">
         {id ? "Cập nhật" : "Tạo"}
       </Button>
-      {id ? <Button loading={isSubmitLoading} onClick={() => deleteCondition({id})} type="primary" danger>
+      {canDeleteBenefit && (id ? <Button loading={isSubmitLoading} onClick={() => deleteCondition({id})} type="primary" danger>
         Xoá Điều kiện
-      </Button> : null}
+      </Button> : null)}
       </Flex>
     </Form>
   );

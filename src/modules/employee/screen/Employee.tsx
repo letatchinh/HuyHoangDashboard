@@ -8,7 +8,7 @@ import {
   useDeleteEmployee,
   useEmployeePaging,
   useEmployeeQueryParams,
-  useGetEmployeees,
+  useGetEmployees,
   useResetStateEmployee,
   useUpdateEmployee,
   useUpdateEmployeeParams,
@@ -86,7 +86,7 @@ export default function Employee({currentTab}: Props) {
   const [query, onTableChange] = useEmployeeQueryParams();
   const [keyword, { setKeyword, onParamChange }] =
     useUpdateEmployeeParams(query);
-  const [data, isLoading] = useGetEmployeees(query);
+  const [data, isLoading] = useGetEmployees(query);
   const paging = useEmployeePaging();
   const isCanDelete = useMatchPolicy(POLICIES.DELETE_EMPLOYEE);
   const isCanUpdate = useMatchPolicy(POLICIES.UPDATE_EMPLOYEE);

@@ -13,7 +13,7 @@ type propsType = {
 export default function TableTargetsSelf({
   dataSource,
 }: propsType): React.JSX.Element {
-  const { onOpenSwap, data , loading } = useDetailReportStore();
+  const { onOpenSwap, data, loading,canUpdateReportSalary } = useDetailReportStore();
   const columns: ColumnsType = [
     {
       title: "Nhà cung cấp",
@@ -64,31 +64,33 @@ export default function TableTargetsSelf({
       ),
     },
   ];
-  if (get(data, "status") === STATUS_REPORT_EMPLOYEE.NEW) {
-    columns.push({
-      title: "Thao tác",
-      key: "_id",
-      align: "center",
-      render: (_id: any, rc: any) => (
-        <Button
-          onClick={() =>
-            onOpenSwap({
-              ...(get(rc, "saleCanChange", 0) > 0 && {
-                resourceSupplierId: get(rc, "supplier._id"),
-              }),
-              ...(get(rc, "saleCanChange", 0) <= 0 && {
-                targetSupplierId: get(rc, "supplier._id"),
-              }),
-              type: "self",
-            })
-          }
-          type="primary"
-        >
-          Quy đổi
-        </Button>
-      ),
-    });
-  }
+  if (canUpdateReportSalary) {
+    if (get(data, "status") === STATUS_REPORT_EMPLOYEE.NEW) {
+      columns.push({
+        title: "Thao tác",
+        key: "_id",
+        align: "center",
+        render: (_id: any, rc: any) => (
+          <Button
+            onClick={() =>
+              onOpenSwap({
+                ...(get(rc, "saleCanChange", 0) > 0 && {
+                  resourceSupplierId: get(rc, "supplier._id"),
+                }),
+                ...(get(rc, "saleCanChange", 0) <= 0 && {
+                  targetSupplierId: get(rc, "supplier._id"),
+                }),
+                type: "self",
+              })
+            }
+            type="primary"
+          >
+            Quy đổi
+          </Button>
+        ),
+      });
+    };
+  };
   return (
     <TableTargetsTemplate
       dataSource={dataSource}

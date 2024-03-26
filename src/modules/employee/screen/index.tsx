@@ -23,8 +23,9 @@ export default function User() {
   const [currentTab, setCurrentTab] = useState('');
   const navigate = useNavigate();
   const { pathname } = useLocation();
-  const isMatchUser = useMatchPolicy(POLICIES.READ_EMPLOYEE);
-  const isMatchUserGroup = useMatchPolicy(POLICIES.READ_EMPLOYEEGROUP);
+  const isMatchEmployee = useMatchPolicy(POLICIES.READ_EMPLOYEE);
+  const isMatchEmployeeGroup = useMatchPolicy(POLICIES.READ_EMPLOYEEGROUP);
+  const isMatchEmployeePositionGroup = useMatchPolicy(POLICIES.READ_EMPLOYEEPOSITION);
 
   const onChange = (key: any) => {
     console.log(key,'key')
@@ -35,9 +36,9 @@ export default function User() {
   useEffect(() => {
     let urlPush = "/employee";
     if (pathname === "/employee/*" || pathname === "/employee") {
-      if(isMatchUser) {
+      if(isMatchEmployee) {
         urlPush = "/employee";
-      } else if(isMatchUserGroup) {
+      } else if(isMatchEmployeeGroup) {
         urlPush += "-group";
       };
       const resultSubstring: string = urlPush.substring(1);
@@ -49,10 +50,10 @@ export default function User() {
   useEffect(() => {
     let urlPush = "/employee";
       switch (true) {
-        case isMatchUser:
+        case isMatchEmployee:
           urlPush = "/employee";
           break;
-        case isMatchUserGroup:
+        case isMatchEmployeeGroup:
           urlPush += "/group";
           break;
         default:
@@ -61,43 +62,49 @@ export default function User() {
     const resultSubstring: string = urlPush.substring(1);
     setCurrentTab(resultSubstring);
     navigate(urlPush);
-  }, [isMatchUserGroup, isMatchUser]);
+  }, [isMatchEmployeeGroup, isMatchEmployee]);
   return (
     <div>
-      <Breadcrumb title={t("Quản lý nhân viên")} />
-      <WhiteBox>
-        <Tabs
-          activeKey={currentTab}
-          onChange={(key) => onChange(key)}
-          defaultActiveKey={pathname}
-        >
-          {isMatchUser &&  <TabPane tab="Nhân viên" key="employee"/>}
-          {isMatchUserGroup &&  <TabPane tab="Nhóm nhân viên" key="employee/group" />}
-        </Tabs>
-        <Routes>
-          {isMatchUser ? (
-            <Route
-              path={``}
-              element={<Employee currentTab={currentTab} />}
-            />
-          ) : (
-            <React.Fragment />
-          )}
-          {isMatchUserGroup ? (
-            <Route
-              path={`group`}
-              element={<EmployeeGroup currentTab={currentTab} />}
-            >
-               <Route
-                path={`:groupId`}
-                element={<EmployeeGroup currentTab={currentTab} />}
-              />
-            </Route>
-          ) : (
-            <React.Fragment />
-          )}
-        </Routes>
-      </WhiteBox>
+      {
+        (isMatchEmployeeGroup || isMatchEmployee || isMatchEmployeePositionGroup) && (
+          <>
+            <Breadcrumb title={t("Quản lý nhân viên")} />
+            <WhiteBox>
+              <Tabs
+                activeKey={currentTab}
+                onChange={(key) => onChange(key)}
+                defaultActiveKey={pathname}
+              >
+                {(isMatchEmployee || isMatchEmployeePositionGroup) &&  <TabPane tab="Nhân viên" key="employee"/>}
+                {isMatchEmployeeGroup &&  <TabPane tab="Nhóm nhân viên" key="employee/group" />}
+              </Tabs>
+              <Routes>
+                {(isMatchEmployee || isMatchEmployeePositionGroup) ? (
+                  <Route
+                    path={``}
+                    element={<Employee currentTab={currentTab} />}
+                  />
+                ) : (
+                  <React.Fragment />
+                )}
+                {isMatchEmployeeGroup ? (
+                  <Route
+                    path={`group`}
+                    element={<EmployeeGroup currentTab={currentTab} />}
+                  >
+                    <Route
+                      path={`:groupId`}
+                      element={<EmployeeGroup currentTab={currentTab} />}
+                    />
+                  </Route>
+                ) : (
+                  <React.Fragment />
+                )}
+              </Routes>
+            </WhiteBox>
+          </>
+        )
+      }
     </div>
   );
 }

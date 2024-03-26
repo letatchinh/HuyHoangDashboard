@@ -16,6 +16,8 @@ import {
   handleConvertDataSourceDetailSalary,
   ItemDataSource
 } from "./reportEmployee.service";
+import { useMatchPolicy } from "~/modules/policy/policy.hook";
+import POLICIES from "~/modules/policy/policy.auth";
 type DataInitSwap = Pick<
   DataSwapType,
   "resourceSupplierId" | "targetSupplierId" | "type"
@@ -33,7 +35,8 @@ export type GlobalDetailReport = {
   data?: ReportEmployeeType | null;
   loading: boolean;
   id?: any;
-  onCancel : () => void
+  onCancel: () => void;
+  canUpdateReportSalary: boolean;
 };
 
 const DetailReport = createContext<GlobalDetailReport>({
@@ -48,7 +51,8 @@ const DetailReport = createContext<GlobalDetailReport>({
   dataSwap: null,
   data: null,
   id: null,
-  loading:false,
+  loading: false,
+  canUpdateReportSalary: false,
 });
 
 export function DetailReportProvider({
@@ -63,7 +67,7 @@ export function DetailReportProvider({
   const [openSwap, setOpenSwap] = useState(false);
   const [dataSwap, setDataSwap] = useState<DataInitSwap | null>();
   const [data, isLoading] = useGetReportEmployee(id);
-
+  const canUpdateReportSalary = useMatchPolicy(POLICIES.UPDATE_REPORTSALARY);
   const onOpenSwap = useCallback((dataSwap?: DataInitSwap) => {
     if (dataSwap) {
       setDataSwap(dataSwap);
@@ -121,7 +125,8 @@ export function DetailReportProvider({
         data,
         id,
         onCancel,
-        loading : isLoading
+        loading: isLoading,
+        canUpdateReportSalary
       }}
     >
       {children}
