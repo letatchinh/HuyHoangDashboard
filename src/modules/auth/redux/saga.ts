@@ -1,21 +1,21 @@
-import { put, call, takeLatest } from 'redux-saga/effects'; 
-import authModule from '~/modules/auth';
-import { authActions } from './reducer';
+import { put, call, takeLatest } from "redux-saga/effects";
+import authModule from "~/modules/auth";
+import { authActions } from "./reducer";
 
-function* login({ payload: user }: any){
+function* login({ payload: user }: any) {
   try {
-    const { token, branchId, adapater } = yield call(authModule.api.login, user);
-    if (adapater !== 'staff') {
-      throw new Error('Invalid adapter'); // user is not staff of WC
-    };
-    yield put(authActions.loginSuccess({token,branchId}));
+    const { token, branchId, adapter } = yield call(authModule.api.login, user);
+    if (adapter !== "staff") {
+      throw new Error("Invalid adapter"); // user is not staff of WC
+    }
+    yield put(authActions.loginSuccess({ token, branchId }));
   } catch (error: any) {
     console.log(error,'error');
     yield put(authActions.loginFailed(error));
   }
 }
 
-function* loginSuccess({ payload } : any) {
+function* loginSuccess({ payload }: any) {
   try {
     // const profile = yield call(authModule.api.getProfile);
     yield put(authActions.getProfileRequest());
@@ -24,9 +24,9 @@ function* loginSuccess({ payload } : any) {
   }
 }
 
-function* getProfile({payload : id} : any): any {
+function* getProfile({ payload: id }: any): any {
   try {
-    const profile = yield call(authModule.api.getProfile,id);
+    const profile = yield call(authModule.api.getProfile, id);
     yield put(authActions.getProfileSuccess(profile));
   } catch (error: any) {
     yield put(authActions.getProfileFailed(error));
