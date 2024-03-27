@@ -50,6 +50,7 @@ const permissionSupplier = [
   POLICIES.READ_VOUCHER,
   POLICIES.READ_CUMULATIVESALESUPPLIER,
 ];
+
 export const resource: ItemType[] =[
   {
     label: "WorldPharmaVN",
@@ -117,28 +118,28 @@ export const resource: ItemType[] =[
             icon: <BellFilled />,
             path: PATH_APP.botNotification.root,
             key: PATH_APP.botNotification.root,
-            permission: [POLICIES.READ_NOTIFICATIONBOTMANAGER],
+            permission: [POLICIES.READ_NOTIFICATIONBOTMANAGER], 
           },
           {
             label: "Nhóm bán hàng",
             icon: <i className="fa-solid fa-chart-area"></i>,
             path: PATH_APP.salesGroup.root,
             key: PATH_APP.salesGroup.root,
-            permission: [POLICIES.READ_SALESGROUP],
+            permission: [POLICIES.READ_SALESGROUP], 
           },
           {
             label: "Cấu hình lương vùng",
             icon: <i className="fa-solid fa-money-bill-trend-up"></i>,
             path: PATH_APP.baseSalary.root,
             key: PATH_APP.baseSalary.root,
-            permission: [POLICIES.READ_CONFIGBASESALARY],
+            permission: [POLICIES.READ_CONFIGBASESALARY], 
           },
           {
             label: "Cấu hình hoa hồng",
             icon: <i className="fa-brands fa-pagelines"></i>,
             path: PATH_APP.benefitConfiguration.root,
             key: PATH_APP.benefitConfiguration.root,
-            permission: [POLICIES.READ_CONFIGBENEFIT],
+            permission: [POLICIES.READ_CONFIGBENEFIT], 
           },
         ],
       },
