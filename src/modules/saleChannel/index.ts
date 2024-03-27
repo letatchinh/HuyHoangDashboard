@@ -6,6 +6,7 @@ import * as saleChannelService from "./saleChannel.service";
 import * as saleChannelModels from "./saleChannel.modal";
 import reducer from "./redux/reducer";
 import saga from "./redux/saga";
+import components from "./components";
 
 const moduleExport = {
     page : {
@@ -16,6 +17,7 @@ const moduleExport = {
     hook : saleChannelHook,
     service : saleChannelService,
     model : saleChannelModels,
-    redux : {reducer,saga}
+    redux : {reducer,saga},
+    components
 };
 export default moduleExport;
