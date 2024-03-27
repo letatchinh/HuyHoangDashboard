@@ -1,17 +1,14 @@
 export const SALES_GROUP_GEOGRAPHY = {
-    AREA : 'AREA',
     REGION: 'REGION',
     GROUP: 'GROUP',
     ZONE: 'ZONE',
   }
 export const SALES_GROUP_GEOGRAPHY_VI = {
-    AREA : 'Miền (Chưa phát triển)',
     REGION: 'Vùng',
     GROUP: 'Nhóm',
     ZONE : 'Cá nhân',
 } as any;
 export const SALES_GROUP_GEOGRAPHY_COLOR = {
-    AREA: '#496989',
     REGION: 'orange',
     GROUP: 'blue',
     ZONE : 'purple',

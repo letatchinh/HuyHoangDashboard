@@ -143,6 +143,13 @@ import {
               key: PATH_APP.benefitConfiguration.root,
               // permission: [POLICIES.READ_AREACONFIGURATION],
             },
+            {
+              label: "Thời gian báo cáo lương",
+              icon: <i className="fa-solid fa-clock-rotate-left"></i>,
+              path: PATH_APP.cronSalary.root,
+              key: PATH_APP.cronSalary.root,
+              // permission: [POLICIES.READ_AREACONFIGURATION],
+            },
           ],
         },
       ],

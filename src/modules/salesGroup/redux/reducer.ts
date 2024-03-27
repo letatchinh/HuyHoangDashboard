@@ -11,11 +11,19 @@ function getMember(listMember: any[]): string {
   return memberName;
 };
 
+// const colorLevel : any = {
+//   1 : SALES_GROUP_GEOGRAPHY_COLOR.AREA,
+//   2 : SALES_GROUP_GEOGRAPHY_COLOR.REGION, 
+//   3 : SALES_GROUP_GEOGRAPHY_COLOR.GROUP,
+//   4 : SALES_GROUP_GEOGRAPHY_COLOR.ZONE,
+//   5 : 'black',
+// };
+
 const colorLevel : any = {
-  1 : SALES_GROUP_GEOGRAPHY_COLOR.AREA,
-  2 : SALES_GROUP_GEOGRAPHY_COLOR.REGION, // blue
-  3 : SALES_GROUP_GEOGRAPHY_COLOR.GROUP, // Purple
-  4 : SALES_GROUP_GEOGRAPHY_COLOR.ZONE,
+  1 : 'orange',
+  2 : '#91caff', // blue
+  3 : '#d3adf7', // Purple
+  4 : '#87d068',
   5 : 'black',
 };
 

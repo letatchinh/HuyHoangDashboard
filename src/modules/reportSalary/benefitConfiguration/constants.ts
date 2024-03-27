@@ -65,7 +65,7 @@ export const TYPE_BENEFIT_VI = {
   BENEFIT_TDV: "Hoa hồng TDV",
   BENEFIT_BASE: "Hoa hồng CTV",
   BENEFIT_TEAMLEADER: "Thưởng theo quản lý đội nhóm",
-  BENEFIT_ASM: "Thưởng vượt trên doanh số khoán theo tháng",
+  BENEFIT_ASM: "Hoa hồng bán hàng theo tháng",
 
   BENEFIT_TDV_OVER__QUANTER: "Thưởng Quý",
   BENEFIT_TEAMLEADER_OVER__QUANTER: "Thưởng quý",

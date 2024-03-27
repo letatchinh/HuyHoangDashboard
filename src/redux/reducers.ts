@@ -37,6 +37,7 @@ import salesGroup from '~/modules/salesGroup';
 import baseSalary from '~/modules/reportSalary/baseSalary/index';
 import benefitConfiguration from '~/modules/reportSalary/benefitConfiguration/index';
 import reportEmployee from '~/modules/report/reportEmployee/index';
+import cronSalary from '~/modules/cronSalary';
 const authPersistConfig = {
     key: 'auth',
     storage: localStorage,
@@ -85,6 +86,7 @@ const rootReducer = combineReducers({
     baseSalary: baseSalary.redux.reducer,
     benefitConfiguration: benefitConfiguration.redux.reducer,
     reportEmployee: reportEmployee.redux.reducer,
+    cronSalary: cronSalary.redux.reducer,
 
 });
 export default rootReducer

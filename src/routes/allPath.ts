@@ -109,5 +109,8 @@ export const PATH_APP = {
   benefitConfiguration : {
     root:  path(ROOTS.app, '/benefit-configuration'),
   },
+  cronSalary : {
+    root:  path(ROOTS.app, '/cronSalary'),
+  },
 
 };
