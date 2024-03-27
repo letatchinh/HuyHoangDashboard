@@ -18,7 +18,9 @@ import useCheckBoxExport from "~/modules/export/export.hook";
 import { useArrCheckBoxRedux } from "../vouchers.hook";
 import { PATH_APP } from "~/routes/allPath";
 import { useChangeDocumentTitle } from "~/utils/hook";
-type propsType = {};
+type propsType = {
+  defaultActiveTab?: string;
+};
 type optionsSearch = {
   value: string;
   label: string;
@@ -50,10 +52,12 @@ const optionsSearch: optionsSearch[] = [
   // },
 ];
 
-export default function Vouchers(props: propsType): React.JSX.Element {
+export default function Vouchers({
+  defaultActiveTab = "1",
+}: propsType): React.JSX.Element {
   const navigate = useNavigate();
   const { pathname, search } = useLocation();
-  const [activeTab, setActiveTab] = useState("1");
+  const [activeTab, setActiveTab] = useState<any>('1');
   const [searchBy, setSearchBy] = useState(head(optionsSearch)?.value || "");
   const [keyword, setKeyword] = useState("");
   const [queryPayment, setQueryPayment] = useState<any>();
@@ -67,7 +71,9 @@ export default function Vouchers(props: propsType): React.JSX.Element {
   );
   const [date, setDate] = useState<any>(defaultDate);
   const arrCheckBoxRedux = useArrCheckBoxRedux();
-  
+  useEffect(() => {
+    pathname === PATH_APP.vouchers.pharmacy ? onChangeTab("1") : onChangeTab("2");
+  }, [pathname]);
   useEffect(() => {
     setKeyword('');
   }, [searchBy]);
@@ -75,7 +81,6 @@ export default function Vouchers(props: propsType): React.JSX.Element {
   useEffect(() => {
     onSearch();
   }, [date]);
-
   const onSearch = () => {
     let query;
     switch (activeTab) {
@@ -306,7 +311,7 @@ useChangeDocumentTitle(`Số quỹ của ${pathname === PATH_APP.vouchers.pharma
             </Row>
           </Col>
         </Row>
-        <Tabs defaultActiveKey="1" onChange={onChangeTab} destroyInactiveTabPane>
+        <Tabs defaultActiveKey= {activeTab}  onChange={onChangeTab} destroyInactiveTabPane>
           <Tabs.TabPane tab="Phiếu thu" key="1">
             <ReceiptVouchers
               listOptionSearch={optionsSearch}

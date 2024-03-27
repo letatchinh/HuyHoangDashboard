@@ -32,6 +32,15 @@ class PaymentVoucherClassExtend extends InstanceModuleRedux {
           }
           return item
         });
+        state.listByBillId = {
+          ...state.listByBillId,
+          docs: state.listByBillId?.docs?.map((item: any) => {
+            if (item._id === payload?.data?._id) {
+              return { ...item, ...payload?.data };
+            }
+            return item
+          }),
+        }
       },
       confirmPaymentVoucherFailed: (state: cloneInitState, { payload }: any) => {
         state.isSubmitLoading = false;
@@ -46,6 +55,15 @@ class PaymentVoucherClassExtend extends InstanceModuleRedux {
           return item
         });
         state.updateSuccess = payload?.data;
+        state.listByBillId = {
+          ...state.listByBillId,
+          docs: state.listByBillId?.docs?.map((item: any) => {
+            if (item._id === payload?.data?._id) {
+              return { ...item, ...payload?.data };
+            }
+            return item
+          }),
+        }
       },
 
         // Get List By Bill Id
@@ -64,7 +82,7 @@ class PaymentVoucherClassExtend extends InstanceModuleRedux {
         },
       resetAction: (state:cloneInitState) => ({
         ...state,
-        ...omit(this.cloneInitState, ["list, listByBillId, pagingByBillId"]),
+        ...omit(this.cloneInitState, ["list", "listByBillId", "pagingByBillId"]),
       }),
       // Want Add more reducer Here...
     }

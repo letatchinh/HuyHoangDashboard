@@ -32,7 +32,6 @@ export default function PaymentVouchers(props: propsType): React.JSX.Element {
   const [query, onTableChange] = usePaymentVoucherQueryParams();
   const [keyword, {setKeyword, onParamChange}] = useUpdatePaymentVoucherParams(query, listOptionSearch)
   const [vouchers, isLoading] = useGetPaymentVouchers(query);
-  console.log(vouchers,'vouchers')
   const paging = usePaymentVoucherPaging();
   const canDownload = useMatchPolicy(POLICIES.DOWNLOAD_UNIT);
   const [arrCheckBox, onChangeCheckBox] = useCheckBoxExport();

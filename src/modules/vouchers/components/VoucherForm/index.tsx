@@ -46,6 +46,7 @@ import {
   import POLICIES from "~/modules/policy/policy.auth";
   import { useGetBranch, useGetBranches } from "~/modules/branch/branch.hook";
   import useNotificationStore from "~/store/NotificationContext";
+import useUpdateBillStore from "~/modules/sale/bill/storeContext/UpdateBillContext";
   
   const mainRowGutter = 24;
   const FormItem = Form.Item;
@@ -101,6 +102,7 @@ import {
     const queryBranch = useMemo(() => ({page: 1, limit: 10}), []);
     const [branch] = useGetBranches(queryBranch);
     const [pharmacy] = useGetPharmacyId(memo); 
+    const { bill } = useUpdateBillStore();
   
     const [settingDocs, setSettingDocs] = useState({
       name: "CÔNG TY TNHH WORLDCARE MIỀN TRUNG",
@@ -222,7 +224,6 @@ import {
           totalAmount:total,
           method,
         };
-        console.log(newValue,'newValue')
         if (id) {
           handleUpdate({ id: id, ...newValue });
         } else {
@@ -343,7 +344,13 @@ import {
                       </FormItem>
                     </Col>
                   </Row>
-  
+                  { bill && <Row gutter={36}>
+                    <Col span={24}>
+                      <FormItem label="Mã đơn hàng">
+                        {isLoading ? <Skeleton.Input active /> : <Input defaultValue={bill?.codeSequence} readOnly />}
+                      </FormItem>
+                    </Col>
+                  </Row>}
                   <Row gutter={36}>
                     <Col span={24}>
                       <FormItem name="reason" label="Lý do thu">

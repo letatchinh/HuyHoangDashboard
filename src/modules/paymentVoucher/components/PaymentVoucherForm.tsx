@@ -54,6 +54,7 @@ import {
     useUpdatePaymentVoucher
 } from "../paymentVoucher.hook";
 import "./form.scss";
+import useUpdateOrderSupplierStore from "~/modules/sale/orderSupplier/storeContext/UpdateOrderSupplierContext";
   const mainRowGutter = 24;
   const FormItem = Form.Item;
   const { TabPane } = Tabs;
@@ -76,19 +77,23 @@ import "./form.scss";
     dataAccountingDefault? : DataAccounting[],
     method?: any,
     billId?: any,
+    mutateOrderSupplier?: any
   };
   
   export default function PaymentVoucherForm(
     props: propsType
   ): React.JSX.Element {
     useResetAction();
-    const { id, supplierId, onClose, refCollection, debt, pharmacyId, dataAccountingDefault, method, billId } = props;
+    const { id, supplierId, onClose, refCollection, debt, pharmacyId, dataAccountingDefault, method, billId,mutateOrderSupplier } = props;
     const [form] = Form.useForm();
     const ref = useRef();
     const [accountingDetails, setAccountingDetails] = useState([]);
     const [initEmployee, setInitEmployee] = useState<any[]>([]);
     //Hook
-    const [isSubmitLoading, handleCreate] = useCreatePaymentVoucher(onClose);
+    const [isSubmitLoading, handleCreate] = useCreatePaymentVoucher(() => {
+      onClose();
+      mutateOrderSupplier && mutateOrderSupplier();
+    });
     const [, handleUpdate] = useUpdatePaymentVoucher(onClose);
     const [, handleConfirm] = useConfirmPaymentVoucher(onClose);
     const [voucher, isLoading] = useGetPaymentVoucher(id);
@@ -98,7 +103,7 @@ import "./form.scss";
     const provider = useMemo(() => pharmacy ?? supplier,[pharmacy,supplier]);
     const [issueNumber, setIssueNumber] = useState(null);
     const [dataAccounting, setDataAccounting] = useState(dataAccountingDefault ?? []);
-    
+    const { orderSupplier } = useUpdateOrderSupplierStore();
     const isSupplier = useMemo(() => refCollection === 'supplier',[refCollection]);
     // use initWhPaymentVoucher to merge with other data that should be fetched from the API
     const mergedInitWhPaymentVoucher = useMemo(() => {
@@ -199,7 +204,11 @@ import "./form.scss";
           method
         };
         if (id) {
-          handleUpdate({ id: id, ...newValue });
+          if (billId || voucher?.method?.data?._id) {
+            handleUpdate({ id, ...newValue,billId: billId || voucher?.method?.data?._id });
+          } else {
+            handleUpdate({ id, ...newValue });
+          }
         } else {
           if (billId) {
             handleCreate({
@@ -316,6 +325,13 @@ import "./form.scss";
                     </Col>
                   </Row>
   
+                { orderSupplier && <Row gutter={36}>
+                    <Col span={24}>
+                      <FormItem label="Mã đơn hàng">
+                        {isLoading ? <Skeleton.Input active /> : <Input defaultValue={orderSupplier?.codeSequence} readOnly />}
+                      </FormItem>
+                    </Col>
+                  </Row>}
                   <Row gutter={36}>
                     <Col span={24}>
                       <FormItem name="reason" label="Lý do chi">

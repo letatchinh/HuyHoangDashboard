@@ -88,11 +88,11 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
     setOpenCancel(false);
     setCancelNote("");
   }, []);
-  const fucc = useCallback(()=>{
+
+  const [isSubmitLoading, updateBill] = useUpdateOrderSupplier(() => {
     onCloseCancel();
     mutateOrderSupplier();
-  },[])
-  const [isSubmitLoading, updateBill] = useUpdateOrderSupplier(fucc);
+  });
 
   const onOpenPayment = (item: any) => {
     setOpen(true);
@@ -123,7 +123,6 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
     updateBill(payloadUpdate);
   };
   const onFinish = (values: FormFieldBillType) => {
-    console.log(values)
     const payloadUpdate: PayloadUpdateOrderSupplier = {
       ...values,
       _id: get(orderSupplier, "_id"),
@@ -265,11 +264,11 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
                 {/* <Layout label={"Nhân viên tạo"}>
                   {get(createBy, "fullName", "")}
                 </Layout> */}
-                <Layout label={"Tổng số tiền"}>{formatter(totalPrice)}</Layout>
-                <Layout label={"Đã trả trước"}>-{formatter(totalListPayment)}</Layout>
+                <Layout label={"Tổng số tiền"}>{formatter(totalPrice || 0)}</Layout>
+                <Layout label={"Đã trả trước"}>-{formatter(totalPair || 0)}</Layout>
                 <Layout label={"Tổng số tiền còn lại"}>
                   <Typography.Text strong>
-                    {formatter(paymentAmount)}
+                    {formatter(paymentAmount || 0)}
                   </Typography.Text>
                 </Layout>
                 <Divider />
@@ -337,7 +336,8 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
             creditAccount: 1111,
             amountOfMoney: debt || 0
           }]}
-          billId = {id}
+          billId={id}
+          mutateOrderSupplier = { mutateOrderSupplier}
         />
       </Modal>
       <Modal

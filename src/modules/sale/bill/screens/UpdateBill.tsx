@@ -111,7 +111,6 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
     };
     updateBill(payloadUpdate);
   }
-  console.log(bill,'bill');
 
   // useChangeDocumentTitle(codeSequence ? "Đơn hàng - " + codeSequence : 'Loading...',{dependency : [codeSequence]})
   useEffect(() => {

@@ -46,6 +46,7 @@ import WithPermission from "~/components/common/WithPermission";
 import POLICIES from "~/modules/policy/policy.auth";
 import { useGetBranch, useGetBranches } from "~/modules/branch/branch.hook";
 import { useGetSupplier } from "~/modules/supplier/supplier.hook";
+import useUpdateBillStore from "~/modules/sale/bill/storeContext/UpdateBillContext";
 
 const mainRowGutter = 24;
 const FormItem = Form.Item;
@@ -94,7 +95,7 @@ export default function ReceiptVoucher(props: propsType): React.JSX.Element {
   const provider = useMemo(() => pharmacy ?? supplier,[pharmacy,supplier]);
 
   const [dataAccounting, setDataAccounting] = useState(dataAccountingDefault ?? []);
-
+  const { bill } = useUpdateBillStore();
   // use initWhPaymentVoucher to merge with other data that should be fetched from the API
   const mergedInitWhPaymentVoucher = useMemo(() => {
     if (!id) {
@@ -191,6 +192,11 @@ export default function ReceiptVoucher(props: propsType): React.JSX.Element {
         totalAmount:sumBy([...accountingDetails],(item) => get(item,'amountOfMoney',0))
       };
       if (id) {
+        if (billId || voucher?.method?.data?._id) {
+          handleUpdate({ id, ...newValue,billId: billId || voucher?.method?.data?._id });
+        } else {
+          handleUpdate({ id, ...newValue });
+        };
         handleUpdate({ id: id, ...newValue });
       } else {
         if (billId) {
@@ -308,7 +314,13 @@ export default function ReceiptVoucher(props: propsType): React.JSX.Element {
                     </FormItem>
                   </Col>
                 </Row>
-
+                { bill && <Row gutter={36}>
+                    <Col span={24}>
+                      <FormItem label="Mã đơn hàng">
+                        {isLoading ? <Skeleton.Input active /> : <Input defaultValue={bill?.codeSequence} readOnly />}
+                      </FormItem>
+                    </Col>
+                  </Row>}
                 <Row gutter={36}>
                   <Col span={24}>
                     <FormItem name="reason" label="Lý do thu">
