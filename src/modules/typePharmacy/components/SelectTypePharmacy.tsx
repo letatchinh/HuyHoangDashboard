@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import TypePharmacyModule from "~/modules/typePharmacy";
 import { get } from "lodash";
-import { Button, Col, Form, Modal, Row, Select } from "antd";
+import { Form, Select } from "antd";
 import { filterSelectWithLabel, useFetchState } from "~/utils/helpers";
 import RenderLoading from "~/components/common/RenderLoading";
 
