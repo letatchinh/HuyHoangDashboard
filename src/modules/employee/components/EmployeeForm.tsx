@@ -40,7 +40,7 @@ export default function EmployeeForm(props: IProps) {
   const [imageUrl, setImageUrl] = useState<string>();
 
   const [loadingValidateUsername, setLoadingValidateUsername] = useState<boolean>(false);
-  const [statusAccount, setStatusAccount] = useState('ACTIVE');
+  const [statusAccount, setStatusAccount] = useState('INACTIVE');
   useResetState(employeeSliceAction.resetAction);
   //address
   const [cityCode, setCityCode] = useState(null);
