@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import logo from '~/assets/images/logo.png';
 import NavbarVertical from './NavbarVertical';
 import ProfileMenu from './ProfileMenu';
+import Reflex from './Reflex';
 
 export default function LayoutVertical({ children }: { children: React.JSX.Element }) {
   const navigate = useNavigate();
@@ -19,10 +20,12 @@ export default function LayoutVertical({ children }: { children: React.JSX.Eleme
           </div>
         </header>
         <main className='layoutVertical--content'>
-            <NavbarVertical />
-            <div className='layoutVertical--content__mainContent'>
+            <Reflex
+            LeftComponent={<NavbarVertical />}
+            RightComponent={<div className='layoutVertical--content__mainContent'>
             {children}
-            </div>
+            </div>}
+            />
         </main>
     </div>
   )

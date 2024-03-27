@@ -10,6 +10,7 @@ import CreateBillPage from "./pages/Dashboard/Bill/CreateBill";
 import packageJson from "../package.json";
 import CreateOrderSupplier from "./pages/Dashboard/OrderSupplier/CreateOrderSupplier";
 import { useUserPolicy } from "./modules/policy/policy.hook";
+import Reflex from "./components/Layout/LayoutVertical/Reflex";
 
 function App(): React.JSX.Element {
   setupAxios();

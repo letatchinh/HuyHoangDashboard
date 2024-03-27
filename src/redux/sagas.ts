@@ -65,5 +65,6 @@ export default function* rootSaga() {
 
     reportSupplierModule.redux.saga(),
     orderSupplier.redux.saga(),
+    productUnitModule.redux.saga(),
   ]);
 };

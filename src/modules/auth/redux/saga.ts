@@ -5,9 +5,9 @@ import { authActions } from './reducer';
 function* login({ payload: user }: any){
   try {
     const { token, branchId, adapater } = yield call(authModule.api.login, user);
-    if (adapater !== 'staff') {
-      throw new Error('Invalid adapter'); // user is not staff of WC
-    };
+    // if (adapater !== 'staff') {
+    //   throw new Error('Invalid adapter'); // user is not staff of WC
+    // };
     yield put(authActions.loginSuccess({token,branchId}));
   } catch (error: any) {
     yield put(authActions.loginFailed(error));
