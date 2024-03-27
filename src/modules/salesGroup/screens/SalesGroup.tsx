@@ -149,7 +149,7 @@ export default function SalesGroup() {
       key: "salesGroupPermission",
       dataIndex: "_id",
       width: "30%",
-      render: (_id, rc) => (
+      render: (_id, rc:any) => (
         <Member
           _id={_id}
           data={get(rc, "salesGroupPermission", [])}
@@ -199,6 +199,7 @@ export default function SalesGroup() {
         <TableAnt
           expandable={{
             expandedRowKeys,
+            
             onExpand: (open, record) => {
               onExpand(record)
             },
@@ -247,6 +248,8 @@ export default function SalesGroup() {
         footer={null}
         destroyOnClose
         width={"max-content"}
+        centered
+        title="Chi tiết sơ đồ"
       >
         <Relationship id={id} />
       </ModalAnt>

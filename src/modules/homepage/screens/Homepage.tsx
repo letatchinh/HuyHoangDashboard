@@ -2,11 +2,12 @@ import { DropboxOutlined, InboxOutlined, MedicineBoxOutlined } from "@ant-design
 import { Col, Modal, Row } from "antd";
 import React, { useCallback, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import WithPermission from "~/components/common/WithPermission";
+import POLICIES from "~/modules/policy/policy.auth";
 import ShowStep from "~/modules/productsAll/components/ShowStep";
 import { PATH_APP } from "~/routes/allPath";
 import BtnAction from "../components/BtnAction";
 import { useMatchPolicy } from "~/modules/policy/policy.hook";
-import POLICIES from "~/modules/policy/policy.auth";
 type propsType = {};
 export default function Homepage(props: propsType): React.JSX.Element {
   const navigate = useNavigate();

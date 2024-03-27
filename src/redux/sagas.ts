@@ -36,6 +36,7 @@ import baseSalary from '~/modules/reportSalary/baseSalary/index';
 import benefitConfiguration from '~/modules/reportSalary/benefitConfiguration/index';
 import reportEmployee from '~/modules/report/reportEmployee/index';
 import employeeGroup from '~/modules/employeeGroup/index';
+import cronSalary from '~/modules/cronSalary/index';
 
 export default function* rootSaga() {
   yield all([
@@ -52,7 +53,6 @@ export default function* rootSaga() {
     vouchers.redux.saga(),
     productGroupModule.redux.saga(),
     manuFacturerModule.redux.saga(),
-    productUnitModule.redux.saga(),
     rankModule.redux.saga(),
     medicineModule.redux.saga(),
     productModule.redux.saga(),
@@ -78,5 +78,6 @@ export default function* rootSaga() {
     benefitConfiguration.redux.saga(),
     reportEmployee.redux.saga(),
     employeeGroup.redux.saga(),
+    cronSalary.redux.saga(),
   ]);
 };

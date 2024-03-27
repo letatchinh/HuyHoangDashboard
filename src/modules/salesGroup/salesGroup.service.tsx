@@ -87,7 +87,7 @@ export function getDeepChild (child : any[]){
     const leader = new RulesLeader().FindOne(get(c,'salesGroupPermission',[]));
     const member = new RulesMember().FindOne(get(c,'salesGroupPermission',[]));
     
-    return <TreeNode label={<CardRelation parentNear={get(c,'parentNear')} member={member} leader={leader} managementArea={get(c,'managementArea',[])}/>}>
+    return <TreeNode label={<CardRelation typeArea={get(c,'typeArea')} name={get(c,'name','')} parentNear={get(c,'parentNear')} member={member} leader={leader} managementArea={get(c,'managementArea',[])}/>}>
     {get(c,'children',[])?.length ? getDeepChild(get(c,'children',[])) : null} 
 </TreeNode>
   })

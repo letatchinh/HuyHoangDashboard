@@ -2,6 +2,7 @@ import { BaseData } from "~/utils/Modal"
 import { EMPLOYEE_LEVEL } from "../employee/constants"
 import { EmployeeLevelType } from "../employee/employee.modal"
 import { RULE_SALES_GROUP } from "./constants"
+import { SALES_GROUP_GEOGRAPHY } from "./constants"
 export type propsTypeSalesGroupForm = {
     id? : string,
     parentNear? : string,
@@ -10,11 +11,12 @@ export type propsTypeSalesGroupForm = {
     onCancel : () => void,
     onUpdate : (p:any) => void,
 }
+export type TypeAreaType = keyof typeof SALES_GROUP_GEOGRAPHY;
 export type FieldTypeForm = {
     name : string,
     alias : string,
     managementArea : string[]
-    typeArea : "REGION" | "GROUP" | "ZONE",
+    typeArea : TypeAreaType,
     parentNear ? : string,
 
 }

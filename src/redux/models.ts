@@ -1,7 +1,7 @@
 export type initStateSlice<T=any> = {
     isLoading?: boolean;
     list?: T[];
-    listSearch?: [];
+    listSearch?: T[];
     getListFailed?: any;
 
     paging?: {
@@ -68,6 +68,7 @@ export type initStateSlice<T=any> = {
     baseSalary: "baseSalary",
     benefitConfiguration: "benefitConfiguration",
     reportEmployee: "reportEmployee",
+    cronSalary: "cronSalary",
     }as const
     
     

@@ -11,6 +11,6 @@ export default function EmptyData({mess,...props}:propsType) : React.JSX.Element
             <img src={noData} alt="no Data" style={{width : '50%',height : '50%',maxWidth : 150,maxHeight : 180}}/>
             <Typography.Text {...props}>{mess ?? "Danh sách trống"}</Typography.Text>
             <p style={{fontSize : 12}}>(hoặc kiểm tra lại bộ tìm kiếm)</p>
-        </div>
+``        </div>
     )
 }

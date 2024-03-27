@@ -1,5 +1,5 @@
-import { PlusCircleOutlined } from "@ant-design/icons";
-import { Button, Flex, Popover, Table } from "antd";
+import { DeleteOutlined, PlusCircleOutlined } from "@ant-design/icons";
+import { Button, Flex, Popconfirm, Popover, Table, Tooltip } from "antd";
 import { TableRowSelection } from "antd/es/table/interface";
 import { get } from "lodash";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
@@ -63,15 +63,24 @@ export default function AssignMember({_id,member}: propsType): React.JSX.Element
         dataIndex : "employeeLevel",
         render : (employeeLevel : any) => CLONE_EMPLOYEE_LEVEL_VI[employeeLevel]
     },
-  ]
+  ];
+
+  const onRemove = useCallback(() => {
+    updateSalesGroup({
+      _id,
+      listUser: [],
+    });
+    hide();
+  }, [_id]);
+
   return (
     <div>
       <Popover
         content={<Flex vertical gap={10}>
-            <Table loading={isLoading} rowKey={(rc) => get(rc,'_id')} pagination={false} size='small' rowSelection={rowSelection} columns={columns} dataSource={data} />
+            <Table scroll={{y : 300}} style={{width : 500}} loading={isLoading} rowKey={(rc) => get(rc,'_id')} pagination={false} size='small' rowSelection={rowSelection} columns={columns} dataSource={data} />
             <Button loading={isSubmitLoading} onClick={onAssign} size="small" type="primary">Xác nhận</Button>
         </Flex>}
-        title="Danh sách nhân viên đang rảnh"
+        title="Danh sách nhân viên sẵn sàng"
         trigger="click"
         open={open}
         onOpenChange={handleOpenChange}

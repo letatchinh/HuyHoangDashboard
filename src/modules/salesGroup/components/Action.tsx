@@ -133,9 +133,9 @@ const Action = ({ _id, rc }: PropsType) => {
       menu={{
         items,
       }}
-      trigger={["hover"]}
+      trigger={["click"]}
     >
-      <Button shape="circle" icon={<MoreOutlined />}></Button>
+      <Button type="primary" shape="circle" icon={<MoreOutlined />}></Button>
     </Dropdown>
   );
 };

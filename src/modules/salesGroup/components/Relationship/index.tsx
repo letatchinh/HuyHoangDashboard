@@ -23,7 +23,7 @@ export default function Relationship({id}:propsType) : React.JSX.Element {
         lineWidth={'2px'}
         lineColor={'#3481ff'}
         lineBorderRadius={'10px'}
-        label={<CardRelation member={member} leader={leader} managementArea={get(salesGroup,'managementArea',[])}/>}
+        label={<CardRelation typeArea={get(salesGroup,'typeArea')}  name={get(salesGroup,'name')} member={member} leader={leader} managementArea={get(salesGroup,'managementArea',[])}/>}
       >
         {getDeepChild(child)}
       </Tree>

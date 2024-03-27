@@ -1,6 +1,6 @@
 export const TYPE_BENEFIT = {
   KPIS_TDV: "KPIS_TDV",
-  KPIS_TEAMLEADER: "KPIS_TEAMLEADER",
+  // KPIS_TEAMLEADER: "KPIS_TEAMLEADER",
   KPIS_ASM: "KPIS_ASM",
   KPIS_CONFIG_AREA: "KPIS_CONFIG_AREA",
 
@@ -35,7 +35,7 @@ export const GROUP_TYPE_BENEFIT_EMPLOYEE_LEVEL = {
   ],
   TEAMLEADER: [
     TYPE_BENEFIT.BENEFIT_TEAMLEADER,
-    TYPE_BENEFIT.KPIS_TEAMLEADER,
+    // TYPE_BENEFIT.KPIS_TEAMLEADER,
     TYPE_BENEFIT.BENEFIT_TEAMLEADER_OVER,
     TYPE_BENEFIT.BENEFIT_TEAMLEADER_OVER__QUANTER,
     TYPE_BENEFIT.BENEFIT_TEAMLEADER_OVER__YEAR,
@@ -64,24 +64,24 @@ export const GROUP_TYPE_BENEFIT_EMPLOYEE_LEVEL_VI = {
 export const TYPE_BENEFIT_VI = {
   BENEFIT_TDV: "Hoa hồng TDV",
   BENEFIT_BASE: "Hoa hồng CTV",
-  BENEFIT_TEAMLEADER: "Hoa hồng TeamLead",
-  BENEFIT_ASM: "Hoa hồng ASM",
+  BENEFIT_TEAMLEADER: "Thưởng theo quản lý đội nhóm",
+  BENEFIT_ASM: "Hoa hồng bán hàng theo tháng",
 
-  BENEFIT_TDV_OVER__QUANTER: "Hoa hồng TDV Quý",
-  BENEFIT_TEAMLEADER_OVER__QUANTER: "Hoa hồng TeamLead Quý",
-  BENEFIT_ASM_OVER__QUANTER: "Hoa hồng ASM Quý",
+  BENEFIT_TDV_OVER__QUANTER: "Thưởng Quý",
+  BENEFIT_TEAMLEADER_OVER__QUANTER: "Thưởng quý",
+  BENEFIT_ASM_OVER__QUANTER: "Thưởng Quý",
 
-  BENEFIT_TDV_OVER__YEAR: "Hoa hồng TDV Năm",
-  BENEFIT_TEAMLEADER_OVER__YEAR: "Hoa hồng TeamLead Năm",
-  BENEFIT_ASM_OVER__YEAR: "Hoa hồng ASM Năm",
+  BENEFIT_TDV_OVER__YEAR: "Thưởng năm",
+  BENEFIT_TEAMLEADER_OVER__YEAR: "Thưởng năm",
+  BENEFIT_ASM_OVER__YEAR: "Thưởng năm",
 
-  BENEFIT_TDV_OVER: "Thưởng vượt hoa hồng cho TDV",
-  BENEFIT_TEAMLEADER_OVER: "Thưởng vượt hoa hồng cho TeamLead",
-  BENEFIT_ASM_OVER: "Thưởng vượt hoa hồng cho ASM",
+  BENEFIT_TDV_OVER: "Thưởng vượt trên doanh số khoán theo tháng",
+  BENEFIT_TEAMLEADER_OVER: "Thưởng vượt trên doanh số khoán theo tháng ",
+  BENEFIT_ASM_OVER: "Thưởng vượt trên doanh số khoán theo tháng",
 
-  KPIS_TDV: "Kpis TDV",
-  KPIS_TEAMLEADER: "Kpis TeamLead",
-  KPIS_ASM: "Kpis ASM",
+  KPIS_TDV: "Thưởng KPI",
+  // KPIS_TEAMLEADER: "Thưởng KPI",
+  KPIS_ASM: "Thưởng KPI",
   KPIS_CONFIG_AREA: "Cấu hình điểm bán",
 
   BENEFIT_WORKING: "Giờ làm việc hiệu quả",
@@ -97,7 +97,7 @@ export const GROUP_TYPE_BENEFIT: any[] = [
 ];
 export const GROUP_TYPE_BENEFIT_KPIS: any[] = [
   TYPE_BENEFIT.KPIS_TDV,
-  TYPE_BENEFIT.KPIS_TEAMLEADER,
+  // TYPE_BENEFIT.KPIS_TEAMLEADER,
   TYPE_BENEFIT.KPIS_ASM,
 ];
 

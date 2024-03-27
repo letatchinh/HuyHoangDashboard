@@ -51,6 +51,8 @@ export default function AssignTeamLead({
         <Popover
           content={
             <List
+            className="scrollList"
+            style={{width : 300}}
               dataSource={data}
               loading={isLoading}
               renderItem={(item) => (

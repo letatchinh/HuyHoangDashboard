@@ -11,6 +11,7 @@ import packageJson from "../package.json";
 import CreateOrderSupplier from "./pages/Dashboard/OrderSupplier/CreateOrderSupplier";
 import CreateBillPageInDevice from "./pages/Dashboard/Bill/CreateBill_InDevice";
 import { DeviceDetector } from "./utils/helpers";
+import { useUserPolicy } from "./modules/policy/policy.hook";
 
 function App(): React.JSX.Element {
   const width = window.innerWidth;
@@ -20,7 +21,8 @@ function App(): React.JSX.Element {
   setAxiosCompanyId("99999"); // Fix Me , Just Init Project
 
   const device = DeviceDetector();
-  console.log(device,'device')
+  useUserPolicy(); // Get Policies
+
   return (
     <>
       <Routes>

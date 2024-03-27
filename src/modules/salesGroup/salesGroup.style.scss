@@ -1,0 +1,11 @@
+.collapseCustom{
+    background-color: transparent !important;;
+     & .ant-collapse-header{
+        padding: 0!important;
+     }
+}
+
+.scrollList {
+   max-height: 300px!important;
+   overflow-y: scroll !important;;
+}

@@ -53,6 +53,8 @@ const configBaseSalary = 'configBaseSalary';
 const configCronTime = 'configCronTime';
 const configBenefit = 'configBenefit';
 
+// Đơn hàng nhà cung cấp
+const orderSupplier = 'orderSupplier';
 const RESOURCES = [
   //Setting
   configDiscount,
@@ -111,6 +113,9 @@ const RESOURCES = [
   configBaseSalary,
   configCronTime,
   configBenefit,
+  medicine,
+  
+  orderSupplier,
 ];
 
 //ACTIONS
