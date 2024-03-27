@@ -20,7 +20,7 @@ const styleFooter :CSSProperties= {
 export const service = {};
 const ConvertChild = (DetailSalary: DetailSalaryItem[]) =>
   DetailSalary?.map((itemBenefit: DetailSalaryItem) => ({
-    title: `Thưởng sản phẩm ${itemBenefit?.supplierName || ""} nhận được ${itemBenefit?.rateBenefit > 0 ? `(${itemBenefit?.rateBenefit || ""}%)` : ""}`,
+    title: `Thưởng sản phẩm ${itemBenefit?.supplierName || ""} nhận được ${itemBenefit?.rateBenefit > 0 ? `(${get(itemBenefit,'rateBenefit',0) * 100 || ""}%)` : ""}`,
     value: itemBenefit?.value || 0,
     styleTitle : styleChildren,
   }));

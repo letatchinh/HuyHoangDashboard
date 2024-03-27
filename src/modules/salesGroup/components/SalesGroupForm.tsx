@@ -13,6 +13,7 @@ import React, { useCallback, useEffect, useId, useMemo } from "react";
 import RenderLoading from "~/components/common/RenderLoading";
 import WithPermission from "~/components/common/WithPermission";
 import GeoSelectTreeStatic from "~/modules/geo/components/GeoSelectTreeStatic";
+import GeoSelectTreeV2 from "~/modules/geo/components/GeoSelectTreeV2";
 import GeoTreeSelect from "~/modules/geo/components/GeoTreeSelect";
 import { RELATIVE_POSITION } from "~/modules/geo/constants";
 import POLICIES from "~/modules/policy/policy.auth";
@@ -39,8 +40,8 @@ const SalesGroupForm = ({
   const [blackList,isLoadingBlackList] = useFetchState({api : apis.getBlackList,useDocs : false});
 
   const [salesGroup, isLoading]: any = useGetSalesGroup(id);
-  const parentExist = useMemo(() => getPath(get(salesGroup, "managementArea", [])),[salesGroup])
-  const blackList_ : any[] = useMemo(() => xor(blackList,parentExist),[blackList,parentExist]);
+
+  const blackList_ : any[] = useMemo(() => uniq(blackList),[blackList]);
 
   const parentNear = useMemo(
     () => (id ? get(salesGroup, "parent._id", "") : parentNearFromList),
@@ -57,21 +58,26 @@ const SalesGroupForm = ({
         : parentNearPathFromList,
     [salesGroup, id, parentNearPathFromList]
   );
-
-  const rootParent = useMemo(() => xor(parentNearPath,parentExist),[parentExist,parentNearPath])
+  
+  const rootParent = useMemo(() => xor(parentNearPath,[]),[parentNearPath]);
+    
   const parentList = useMemo(() => {
     if(!rootParent) return [];
     return rootParent.filter(
-      (path:any) => blackList.filter((blPath:any) => blPath === path).length === 1
+      (path : any) => (blackList_).filter((blPath : any) => blPath === path).length === 1
     );
-  }, [blackList,rootParent]);
+  }, [blackList_,rootParent]);
+
+  console.log(parentList,'parentList');
+  
+
   const parentListDiff = useMemo(() => {
     if(!rootParent) return [];
     return rootParent.filter(
       (path:any) => blackList.filter((blPath:any) => blPath === path).length !== 1
     );
   }, [blackList,rootParent]);
-
+  
   const [form] = Form.useForm();
   const [isSubmitLoading, onCreate] = useCreateSalesGroup(onCancel);
 
@@ -148,12 +154,12 @@ const SalesGroupForm = ({
                   name={["managementArea"]}
                   // rules={[{ required: true, message: "Vui lòng chọn" }]}
                 >
-                  <GeoSelectTreeStatic
+                  <GeoSelectTreeV2
                     key={keyTree}
-                    onChange={(value) => {
+                    onChange={(value : any) => {
                       setFieldsValue({ managementArea: value });
                     }}
-                    initValue={getFieldValue("managementArea")}
+                    initalValue={getFieldValue("managementArea")}
                     blackList={xor(blackList_, parentListDiff)}
                     parentList={parentList}
                   />
