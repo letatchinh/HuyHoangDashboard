@@ -6,15 +6,15 @@ import { ADAPTER_KEY } from '../constants';
 function* login({ payload: user }: any){
   try {
     const { token, branchId, adapter } = yield call(authModule.api.login, user);
-    switch (adapter) {
+    switch (adapter) { 
       case ADAPTER_KEY.EMPLOYEE:
-        yield put(authActions.loginSuccess({token,branchId,adapter}));
+        yield put(authActions.loginSuccess({token,branchId,adapter})); 
         break;
-      case ADAPTER_KEY.STAFF:
-        yield put(authActions.loginSuccess({token,branchId,adapter}));
-        break;
+      case ADAPTER_KEY.STAFF: 
+        yield put(authActions.loginSuccess({token,branchId,adapter})); 
+        break; 
         default:
-        throw new Error('Invalid adapter');
+        throw new Error('Invalid adapter'); 
     };
   } catch (error: any) {
     yield put(authActions.loginFailed(error));
