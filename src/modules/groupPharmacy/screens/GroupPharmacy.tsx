@@ -245,8 +245,8 @@ export default function GroupPharmacy(props: propsType): React.JSX.Element {
             <Col>
               <ExportExcelButton
                 fileName="Danh sách nhóm nhà thuốc"
-                api="pharma-profile"
-                exportOption="pharma"
+                api="customer"
+                exportOption="customer"
                 query={query}
                 ids={arrCheckBox}
               />

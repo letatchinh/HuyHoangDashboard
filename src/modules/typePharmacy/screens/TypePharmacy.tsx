@@ -206,8 +206,8 @@ export default function TypePharmacy(props:propsType) : React.JSX.Element {
               <Col>
                   <ExportExcelButton
                     fileName="Danh sách loại nhà thuốc"
-                    api="pharma-profile"
-                    exportOption="pharma"
+                    api="customer-group"
+                    exportOption="customerGroup"
                     query={query}
                     ids={arrCheckBox}
                   />
