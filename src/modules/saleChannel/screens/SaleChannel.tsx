@@ -207,8 +207,8 @@ export default function SaleChannel(props:propsType) : React.JSX.Element {
             <Col>
                 <ExportExcelButton
                   fileName="Danh sách kênh bán hàng"
-                  api="pharma-profile"
-                  exportOption="pharma"
+                  api="sales-channel"
+                  exportOption="salesChannel"
                   query={query}
                   ids={arrCheckBox}
                 />
