@@ -67,7 +67,7 @@
     & .ant-table-content{
         overflow-y: scroll;
         max-height: calc(100vh - 50px - 39vh); // max height 100vh - Height Tab Header - Height Collapse in Footer
-        box-shadow: inset 0 -5px 5px rgba(0, 0, 0, 0.5);
+        // box-shadow: inset 0 -5px 5px rgba(0, 0, 0, 0.5);
     }
 }
 
@@ -167,3 +167,27 @@
         pointer-events: none;
     }
 }
+.hover-dot-between{
+    position: relative;
+    &::after , &::before{
+        content: '';
+        border-radius: 50%;
+        width: 5px;
+        height: 5px;
+        background-color: gray;
+        position: absolute;
+        top: 40%;
+        bottom: 0;
+        opacity: 0;
+        transition: 0.2s;
+    }
+    &::after{
+        right: -6px;
+    }
+    &::before{
+        left: -6px;
+    }
+    &:hover::after , &:hover::before{
+        opacity: 1!important;
+    }
+};

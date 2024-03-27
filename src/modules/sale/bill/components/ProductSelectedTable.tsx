@@ -1,6 +1,6 @@
 import { DeleteOutlined, GiftTwoTone, MinusCircleTwoTone, UpCircleTwoTone } from "@ant-design/icons";
 import { Badge, Select, Typography } from "antd";
-import { get } from "lodash";
+import { compact, get } from "lodash";
 import React, { useMemo } from "react";
 import TableAnt from "~/components/Antd/TableAnt";
 import {
@@ -12,6 +12,8 @@ import { quotation, variant } from "../bill.modal";
 import useCreateBillStore from "../storeContext/CreateBillContext";
 import ExpandRowDiscount from "./ExpandRowDiscount";
 import ProductListSuggest from "./productSuggest";
+import ImageProduct from "./ImageProduct";
+
 type propsType = {};
 export default function ProductSelectedTable(
   props: propsType
@@ -27,10 +29,12 @@ export default function ProductSelectedTable(
   }
   const columns = [
     {
-      title: "STT",
-      dataIndex: "index",
-      key: "index",
-      render: (text: any, record: any, index: number) => index + 1,
+      title: "",
+      dataIndex: "images",
+      key: "images",
+      align:'center',
+      width : 80,
+      render: (images: any, record: any, index: number) => <ImageProduct images={images}/>
     },
     {
       title: "Tên thuốc",
@@ -68,7 +72,7 @@ export default function ProductSelectedTable(
       required: true,
     },
     {
-      title: "Giá bán",
+      title: "Giá niêm yết",
       dataIndex: "price",
       key: "price",
       align : 'center',

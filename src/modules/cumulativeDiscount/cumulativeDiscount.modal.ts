@@ -73,7 +73,7 @@ export type TypeRepeatType = "ranger" | "month" | "quarter" | "nope" | "year" | 
     typeRepeat : TypeRepeatType
   
     timesReward : number,
-    itemReward? : {
+    itemReward? : { // phần thưởng hàng hoá
       name : string,
       quantity : number,
     }

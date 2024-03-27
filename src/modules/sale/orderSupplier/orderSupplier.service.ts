@@ -4,6 +4,7 @@ import BillModule from '~/modules/sale/bill';
 import { keyValidDataSource } from '~/pages/Dashboard/OrderSupplier/CreateOrderSupplier';
 import { TARGET, TYPE_DISCOUNT, TYPE_REWARD } from '../../cumulativeDiscount/constants';
 import { cumulativeDiscountType } from '../../cumulativeDiscount/cumulativeDiscount.modal';
+import { selectProductSearch } from '../bill/bill.service';
 import { DEFAULT_DEBT_TYPE } from './constants';
 import { FormFieldCreateOrderSupplier, orderSupplier, PayloadCreateOrderSupplier } from './orderSupplier.modal';
 export const reducerDiscountOrderSupplierItems = (orderSupplierItems: any[]) => {
@@ -105,35 +106,35 @@ export const reducerDiscountOrderSupplierItems = (orderSupplierItems: any[]) => 
     return newOrderSupplierItems;
   };
 
-  export const selectProductSearch = (data: any) => {
-    const {
-      name,
-      cumulativeDiscount,
-      _id: productId,
-      variants,
-      supplierId,
-      selectVariant,
-      quantity,
-      codeBySupplier,
-    } = data;
-    const variant = variants?.find(
-      (item: any) => get(item, "_id") === selectVariant
-    );
-    const submitData = {
-      name,
-      cumulativeDiscount, // Fixme
-      productId,
-      variantId: get(variant, "_id"),
-      quantity: quantity ?? 1,
-      exchangeValue: get(variant, "exchangeValue", 1),
-      unitPrice: get(variant, "price", 0),
-      supplierId,
-      codeBySupplier,
-      variant,
-      variants,
-    };
-    return submitData;
-  };
+  // export const selectProductSearch = (data: any) => {
+  //   const {
+  //     name,
+  //     cumulativeDiscount,
+  //     _id: productId,
+  //     variants,
+  //     supplierId,
+  //     selectVariant,
+  //     quantity,
+  //     codeBySupplier,
+  //   } = data;
+  //   const variant = variants?.find(
+  //     (item: any) => get(item, "_id") === selectVariant
+  //   );
+  //   const submitData = {
+  //     name,
+  //     cumulativeDiscount, // Fixme
+  //     productId,
+  //     variantId: get(variant, "_id"),
+  //     quantity: quantity ?? 1,
+  //     exchangeValue: get(variant, "exchangeValue", 1),
+  //     unitPrice: get(variant, "price", 0),
+  //     supplierId,
+  //     codeBySupplier,
+  //     variant,
+  //     variants,
+  //   };
+  //   return submitData;
+  // };
 
   type paramsGetDiscount = {
     supplierId: string;

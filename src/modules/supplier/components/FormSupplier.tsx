@@ -18,6 +18,7 @@ import { convertInitSupplier, convertSubmitData } from "../supplier.service";
 import CumulativeDiscountModule from '~/modules/cumulativeDiscount';
 import WithPermission from "~/components/common/WithPermission";
 import POLICIES from "~/modules/policy/policy.auth";
+import InputNumberAnt from "~/components/Antd/InputNumberAnt";
 
 const FormSupplier = ({
   id,

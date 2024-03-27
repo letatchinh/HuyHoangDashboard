@@ -22,3 +22,23 @@
       z-index: 2;
     }
   }
+.stock{
+  button{
+    opacity: 0;
+  }
+  &:hover > button {
+    opacity:1;
+  }
+}
+.imageProduct{
+  
+  & .ant-upload-list-picture-card{
+    display: flex!important;
+    justify-content: flex-start!important;
+    flex-wrap: wrap!important;
+  }
+  & .ant-upload-list-item-container:first-child{
+    width: 100%!important;
+    height: 150px!important;
+  }
+}

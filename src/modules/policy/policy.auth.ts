@@ -36,6 +36,12 @@ const voucher = 'voucher';
 const statusVoucher = 'statusVoucher';
 const historyVoucher = 'historyVoucher';
 const salesGroup = 'salesGroup';
+
+// Quản lý luỹ kế
+const cumulativeEvent = 'cumulativeEvent';
+
+// Đơn hàng nhà cung cấp
+const orderSupplier = 'orderSupplier';
 const RESOURCES = [
   //Setting
   configDiscount,
@@ -81,6 +87,8 @@ const RESOURCES = [
   
   salesGroup,
   employee_position,
+  cumulativeEvent,
+  orderSupplier,
 ];
 
 //ACTIONS

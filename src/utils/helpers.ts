@@ -248,3 +248,19 @@ export const filterAcrossAccentsByLabel = (input: any, option: any) => {
     removeAccents(option?.label?.toLowerCase()).indexOf(removeAccents(input.toLowerCase())) >= 0
   );
 };
+
+export function getRandomColor() {
+  var letters = '0123456789ABCDEF';
+  var color = '#';
+  for (var i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+  }
+  return color;
+}
+
+export const getValueQuery = (key : string) : any => {
+  let search = window.location.search;
+  let params = new URLSearchParams(search);
+  let foo = params.get(key);
+  return foo;
+}

@@ -26,6 +26,7 @@ import { employeeSliceAction } from "../redux/reducer";
 import WithPermission from "~/components/common/WithPermission";
 import ExportExcelButton from "~/modules/export/component";
 import useCheckBoxExport from "~/modules/export/export.hook";
+import { useChangeDocumentTitle } from "~/utils/hook";
 interface ColumnActionProps {
   _id: string;
   deleteEmpolyee?: any;
@@ -171,6 +172,7 @@ export default function Employee() {
     
   ];
 
+useChangeDocumentTitle("Danh sách nhân viên")
   return (
     <div>
       <Breadcrumb title={t("Quản lý nhân viên")} />
