@@ -37,7 +37,8 @@ const cumulativeSalesSupplier = 'cumulativeSalesSupplier';
 const product = 'product';
 const todoConfigStatus = 'todoConfigStatus';
 const todoList = 'todoList';
-const voucher = 'voucher';
+const voucherPharmacy = 'voucherPharmacy';
+const voucherSupplier = 'voucherSupplier';
 const statusVoucher = 'statusVoucher';
 const historyVoucher = 'historyVoucher';
 
@@ -81,7 +82,8 @@ const RESOURCES = [
   product,
   
   //VOUCHER
-  voucher,
+  voucherPharmacy,
+  voucherSupplier,
   statusVoucher,
   historyVoucher,
   
@@ -178,7 +180,6 @@ const RESOURCE = (): ResourceType => {
     ranking
   ];
   const GROUP_VOUCHER: string[] = [
-    voucher,
     statusVoucher,
     historyVoucher
   ]
@@ -186,6 +187,7 @@ const RESOURCE = (): ResourceType => {
   const GROUP_PHARMA: string[] = [
     pharmaProfile,
     contractPharmacy,
+    voucherPharmacy
   ];
   
   const GROUP_BILL : string[] = [
@@ -204,6 +206,7 @@ const RESOURCE = (): ResourceType => {
     revenueSupplier,
     historySupplierMineral,
     cumulativeSalesSupplier,
+    voucherSupplier
   ];
   
   const GROUP_WORK_MANAGERMENT: string[] = [

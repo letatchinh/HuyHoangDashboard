@@ -4,7 +4,7 @@ import UploadImage from "~/components/common/Upload/UploadImage";
 import AddressFormSection from "~/components/common/AddressFormSection";
 import {useGetEmployee, useUpdateEmployee } from "../employee.hook";
 import { employeeSliceAction } from "../redux/reducer";
-import { useResetState } from "~/utils/hook";
+import { useFetchByParam, useResetState } from "~/utils/hook";
 import WithOrPermission from "~/components/common/WithOrPermission";
 import POLICIES from "~/modules/policy/policy.auth";
 import BaseBorderBox from "~/components/common/BaseBorderBox/index";
@@ -14,9 +14,10 @@ import { DEFAULT_BRANCH_ID, OPTION_AREA } from "~/constants/defaultValue";
 import Account from "~/components/common/Account";
 import useNotificationStore from "~/store/NotificationContext";
 import apis from "~/modules/user/user.api";
-import { useGetEmployeeGroups } from "~/modules/employeeGroup/employeeGroup.hook";
 import { useParams } from "react-router-dom";
 import { omit } from "lodash";
+import { useFetchState } from "~/utils/helpers";
+import WithPermission from "~/components/common/WithPermission";
 const { Option } = Select;
 
 const FormItem = Form.Item;
@@ -51,8 +52,9 @@ export default function EmployeeForm(props: IProps) {
     () => ({ branchId: branchId ? branchId : DEFAULT_BRANCH_ID }),
     [branchId]
   );
-  const [groups, isLoadingGroups] = useGetEmployeeGroups(branchIdParam);
-
+  // const [groups, isLoadingGroups] = useGetEmployeeGroups(branchIdParam);
+  const [groups, isLoadingGroups] = useFetchState({api: apis.getListEmployeeGroup, query: branchIdParam,useDocs: false});
+  // const 
   const [employee, isLoading] = useGetEmployee(id);
   const {onNotify}  = useNotificationStore();
   
@@ -310,11 +312,13 @@ export default function EmployeeForm(props: IProps) {
           <Col span={2}>
             <Button onClick={handleCloseModal}>Huỷ</Button>
           </Col>
+          <WithPermission permission={id ? POLICIES.UPDATE_EMPLOYEE : POLICIES.WRITE_EMPLOYEE}>
           <Col span={4}>
             <Button type="primary" htmlType="submit" loading={isSubmitLoading}>
               {id ? "Cập nhật" : "Tạo mới"}
             </Button>
           </Col>
+          </WithPermission>
         </Row>
       </Form>
     </div>

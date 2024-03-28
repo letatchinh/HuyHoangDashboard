@@ -211,7 +211,7 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
                   <Col>
                     {/* <Typography.Text strong>Công nợ hiện tại : 0</Typography.Text> */}
                     {status !== STATUS_ORDER_SUPPLIER.CANCELLED && (
-                      <WithPermission permission={POLICIES.WRITE_VOUCHER}>
+                      <WithPermission permission={POLICIES.WRITE_VOUCHERSUPPLIER}>
                         <Button
                         disabled={paymentAmount <= 0}
                         type="primary"

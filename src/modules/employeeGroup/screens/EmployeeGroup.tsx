@@ -27,6 +27,7 @@ import {
   useUpdateEmployeeGroup,
 } from "../employeeGroup.hook";
 import {
+  useMatchPolicy,
   useResourcesEmployee,
   useUpdateEmployeePolicy,
 } from "~/modules/policy/policy.hook";
@@ -96,7 +97,7 @@ const EmployeeGroup = ({ currentTab }: EmployeeGroupProps) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [id, setId] = useState<any>(null);
   const [dataShow, setDataShow] = useState(null);
-  const canUpdate = true;
+  const canUpdate = useMatchPolicy(POLICIES.UPDATE_EMPLOYEEGROUP);
   // Action
   const onOpenForm = (id?: any) => {
     setId(id);
@@ -121,7 +122,6 @@ const EmployeeGroup = ({ currentTab }: EmployeeGroupProps) => {
 
   // Permission
   const [, handleUpdate] = useUpdateEmployeePolicy();
-
   const [resources, isResourcesLoading] = useResourcesEmployee();
   useEffect(() => {
     if (!groupId && groups.length && currentTab === 'employee/group') {

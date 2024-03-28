@@ -83,7 +83,7 @@ const NavbarVertical: React.FC = () => {
           return getItem(first)
         };
     });
-  return (
+    return (
     <div className='layoutVertical--content__navbar'>
       {isLoadingPolicy && <Spin className='layoutVertical--content__navbar__loading' tip="Đang lấy dữ liệu phân quyền"/>}
       <div className='layoutVertical--content__navbar__wrapMenu'>

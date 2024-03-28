@@ -25,10 +25,7 @@ export default function User() {
   const { pathname } = useLocation();
   const isMatchEmployee = useMatchPolicy(POLICIES.READ_EMPLOYEE);
   const isMatchEmployeeGroup = useMatchPolicy(POLICIES.READ_EMPLOYEEGROUP);
-  const isMatchEmployeePositionGroup = useMatchPolicy(POLICIES.READ_EMPLOYEEPOSITION);
-
   const onChange = (key: any) => {
-    console.log(key,'key')
     setCurrentTab(key);
     navigate(`/${key}`);
   };
@@ -36,10 +33,10 @@ export default function User() {
   useEffect(() => {
     let urlPush = "/employee";
     if (pathname === "/employee/*" || pathname === "/employee") {
-      if(isMatchEmployee) {
+      if (isMatchEmployee) {
         urlPush = "/employee";
-      } else if(isMatchEmployeeGroup) {
-        urlPush += "-group";
+      } else if (isMatchEmployeeGroup) {
+        urlPush += "/group";
       };
       const resultSubstring: string = urlPush.substring(1);
       setCurrentTab(resultSubstring);
@@ -47,26 +44,26 @@ export default function User() {
     };
   }, [pathname]);
 
-  useEffect(() => {
-    let urlPush = "/employee";
-      switch (true) {
-        case isMatchEmployee:
-          urlPush = "/employee";
-          break;
-        case isMatchEmployeeGroup:
-          urlPush += "/group";
-          break;
-        default:
-          break;
-    };
-    const resultSubstring: string = urlPush.substring(1);
-    setCurrentTab(resultSubstring);
-    navigate(urlPush);
-  }, [isMatchEmployeeGroup, isMatchEmployee]);
+  // useEffect(() => {
+  //   let urlPush = "/employee";
+  //     switch (true) {
+  //       case isMatchEmployee:
+  //         urlPush = "/employee";
+  //         break;
+  //       case isMatchEmployeeGroup:
+  //         urlPush += "/group";
+  //         break;
+  //       default:
+  //         break;
+  //   };
+  //   const resultSubstring: string = urlPush.substring(1);
+  //   setCurrentTab(resultSubstring);
+  //   navigate(urlPush);
+  // }, [isMatchEmployeeGroup, isMatchEmployee]);
   return (
     <div>
       {
-        (isMatchEmployeeGroup || isMatchEmployee || isMatchEmployeePositionGroup) && (
+        (isMatchEmployeeGroup || isMatchEmployee) && (
           <>
             <Breadcrumb title={t("Quản lý nhân viên")} />
             <WhiteBox>
@@ -75,11 +72,11 @@ export default function User() {
                 onChange={(key) => onChange(key)}
                 defaultActiveKey={pathname}
               >
-                {(isMatchEmployee || isMatchEmployeePositionGroup) &&  <TabPane tab="Nhân viên" key="employee"/>}
+                {(isMatchEmployee) &&  <TabPane tab="Nhân viên" key="employee"/>}
                 {isMatchEmployeeGroup &&  <TabPane tab="Nhóm nhân viên" key="employee/group" />}
               </Tabs>
               <Routes>
-                {(isMatchEmployee || isMatchEmployeePositionGroup) ? (
+                {(isMatchEmployee) ? (
                   <Route
                     path={``}
                     element={<Employee currentTab={currentTab} />}

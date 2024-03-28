@@ -14,6 +14,7 @@ import { MenuProps } from "antd";
 import React, { useCallback, useMemo } from "react";
 import { PATH_APP } from "~/routes/allPath";
 import POLICIES, { GROUP_POLICY } from "~/modules/policy/policy.auth";
+import { useMatchPolicy } from "~/modules/policy/policy.hook";
 type MenuItem = Required<MenuProps>["items"][number];
 
 type ItemType = {
@@ -43,13 +44,13 @@ const permissionPharma = [
   POLICIES.READ_QUOTATION,
   POLICIES.WRITE_QUOTATION,
   POLICIES.READ_CUMULATIVEEVENT,
-  POLICIES.READ_VOUCHER,
+  POLICIES.READ_VOUCHERPHARMACY,
 
 ];
 
 const permissionSupplier = [
   POLICIES.READ_SUPPLIER,
-  POLICIES.READ_VOUCHER,
+  POLICIES.READ_VOUCHERSUPPLIER,
   POLICIES.READ_CUMULATIVESALESUPPLIER,
   
 ];
@@ -59,6 +60,18 @@ const permissionEmployee = [
   POLICIES.READ_EMPLOYEEGROUP,
   POLICIES.READ_EMPLOYEEPOSITION
 ];
+
+// const RenderRouter = () => {
+//   const checkPermissionEmployee = useMatchPolicy(POLICIES.EMPLOYEE);
+//   const checkPermissionEmployeeGroup = useMatchPolicy(POLICIES.EMPLOYEEGROUP);
+//   if (checkPermissionEmployee) {
+//     return PATH_APP.employee.root;
+//   } else {
+//     if (checkPermissionEmployeeGroup) {
+//       return '/employee/group/:groupId'
+//     };
+//   };
+// };
 
 //
 export const resource: ItemType[] =[ 
@@ -187,7 +200,7 @@ export const resource: ItemType[] =[
         // icon: <MoneyCollectOutlined />,
         path: PATH_APP.vouchers.supplier,
         key: PATH_APP.vouchers.supplier,
-        permission: [POLICIES.READ_VOUCHER],//
+        permission: [POLICIES.READ_VOUCHERSUPPLIER],//
       },
     ],
   },
@@ -234,7 +247,7 @@ export const resource: ItemType[] =[
         // icon: <MoneyCollectOutlined />,
         path: PATH_APP.vouchers.pharmacy,
         key: PATH_APP.vouchers.pharmacy,
-        permission: [POLICIES.READ_VOUCHER],//
+        permission: [POLICIES.READ_VOUCHERPHARMACY],//
       },
       {
         label: "Hợp đồng khoán",
