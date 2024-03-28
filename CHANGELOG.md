@@ -1,3 +1,18 @@
+# [1.6.0](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/compare/v1.5.0...v1.6.0) (2024-03-28)
+
+
+### Bug Fixes
+
+* fix-todolist ([727206e](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/727206e58b3a5f1b6cde08d1ef58b3e9c71fc4c6))
+
+
+### Features
+
+* [#1390](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1390) cost-management ([fcb1ffc](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/fcb1ffce0a67e44f0f4a9d9daaa08ecb8aa3d5c3))
+* [#1390](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1390) feat-costManagement ([11e1bbe](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/11e1bbe99a4b817d251d4788c227ac32ed124fbb))
+* [#1467](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1467) update UI and handle value ([20e5e2b](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/20e5e2bf298107175e6b61ece2c3534a4aff713a))
+* feat-cost-management ([afc24ee](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/afc24ee26ee8544c1e12a605e410176974040032))
+
 # [1.5.0](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/compare/v1.4.0...v1.5.0) (2024-03-25)
 
 
