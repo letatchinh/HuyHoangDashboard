@@ -1,5 +1,5 @@
 import { AntDesignOutlined, UserOutlined } from "@ant-design/icons";
-import { Avatar, Button, Flex, Tooltip, Typography } from "antd";
+import { Avatar, Button, Flex, Popover, Tooltip, Typography } from "antd";
 import { get } from "lodash";
 import React, { useMemo } from "react";
 import AvatarShortOrName from "~/components/common/AvatarShortOrName";
@@ -7,6 +7,8 @@ import { RULE_SALES_GROUP, SALES_GROUP_GEOGRAPHY } from "../constants";
 import { MemberRulesInGroupType, TypeAreaType } from "../salesGroup.modal";
 import AssignMember from "./AssignMember";
 import AssignTeamLead from "./AssignTeamLead";
+import CardEmployee from "./CardEmployee";
+import ListMember from "./ListMember";
 import PopoverCardEmployee from "./PopoverCardEmployee";
 type propsType = {
   _id?: string;
@@ -21,13 +23,13 @@ export default function Member({ _id, data,typeArea,child }: propsType): React.J
     [data]
   );
   const member = useMemo(
-    () => data?.find((m) => get(m, "rule") === RULE_SALES_GROUP.MEMBER),
+    () => data?.filter((m) => get(m, "rule") === RULE_SALES_GROUP.MEMBER),
     [data]
   );
   return (
     <Flex vertical gap={10}>
-      {typeArea !== SALES_GROUP_GEOGRAPHY.ZONE  ? <Flex align={"center"} gap={10}>
-        {typeArea === SALES_GROUP_GEOGRAPHY.REGION ? "Trường vùng" : "Trưởng nhóm"}:{" "}
+       <Flex align={"center"} gap={5}>
+        Trưởng nhóm:{" "}
         {teamLead ? (
           <PopoverCardEmployee employee={get(teamLead, "employee", "")}>
         <Typography.Text style={{cursor : 'pointer'}} strong>
@@ -38,16 +40,16 @@ export default function Member({ _id, data,typeArea,child }: propsType): React.J
           "(Chưa có)"
         )}{" "}
         <AssignTeamLead teamLead={teamLead} _id={_id} />
-      </Flex> : <></>}
-      {(typeArea === SALES_GROUP_GEOGRAPHY.ZONE && !child?.length) ? <Flex align={"center"} gap={10}>
-        Trình dược viên:{" "}
+      </Flex> 
+    {teamLead ?  <Flex align={"center"} gap={5} >
+      <span style={{whiteSpace : 'nowrap'}}>Thành viên</span>:
         {member ? (
-        <Typography.Text strong>{get(member, "employee.fullName","")} </Typography.Text>
+          <ListMember member={member}/>
         ) : (
           "(Chưa có)"
         )}
         <AssignMember member={member} _id={_id} />
-      </Flex> : <></>}
+      </Flex>  : <></>}
     </Flex>
   );
 }

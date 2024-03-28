@@ -4,6 +4,7 @@ import React from "react";
 import WhiteBox from "~/components/common/WhiteBox";
 import {  SALES_GROUP_GEOGRAPHY_COLOR,SALES_GROUP_GEOGRAPHY_VI } from "../../constants";
 import Address from "../Address";
+import ListMember from "../ListMember";
 import PopoverCardEmployee from "../PopoverCardEmployee";
 type propsType = {
   managementArea?: any[];
@@ -24,12 +25,13 @@ export default function CardRelation({
   name,
   typeArea,
 }: propsType): React.JSX.Element {
+  
   return (
-  <Tag style={{padding : 5}} color={CLONE_SALES_GROUP_GEOGRAPHY_COLOR[typeArea]}>
-      <Flex align={"center"} vertical>
-      {/* <WhiteBox> */}
+  // <Tag style={{padding : 5}} color={CLONE_SALES_GROUP_GEOGRAPHY_COLOR[typeArea]}>
+      <Flex align={"center"} vertical >
+      <WhiteBox>
         <Flex align={"center"} vertical>
-        <Typography.Text strong><Tag color={CLONE_SALES_GROUP_GEOGRAPHY_COLOR[typeArea]}>{CLONE_SALES_GROUP_GEOGRAPHY_VI[typeArea]}</Tag>{name}</Typography.Text>
+        {/* <Typography.Text strong><Tag color={CLONE_SALES_GROUP_GEOGRAPHY_COLOR[typeArea]}>{CLONE_SALES_GROUP_GEOGRAPHY_VI[typeArea]}</Tag>{name}</Typography.Text> */}
         
         {leader && (
           <div>
@@ -39,14 +41,13 @@ export default function CardRelation({
             </PopoverCardEmployee>
           </div>
         )}
-        {member && (
-          <div>
-            TDV:{" "}
-            <PopoverCardEmployee employee={get(member, "employee", "")}>
+          <Flex align={'center'} gap={5}>
+            Thành viên:{" "}
+            {/* <PopoverCardEmployee employee={get(member, "employee", "")}>
               <span style={{cursor: 'default'}}>{get(member, "employee.fullName", "")}</span>
-            </PopoverCardEmployee>
-          </div>
-        )}
+            </PopoverCardEmployee> */}
+            {member?.length ? <ListMember member={member}/> : "Trống"}
+          </Flex>
         {!leader && !member ? <Tag bordered={false} color={'error'}>Trống</Tag> : null}
         <Address
           onlyShowLastPath={!!parentNear}
@@ -54,9 +55,9 @@ export default function CardRelation({
           bordered={true}
         />
         </Flex>
-      {/* </WhiteBox> */}
+      </WhiteBox>
       
     </Flex>
-  </Tag>
+  // </Tag>
   );
 }

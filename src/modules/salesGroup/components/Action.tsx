@@ -51,7 +51,6 @@ const Action = ({ _id, rc }: PropsType) => {
             onClick={() =>
               onOpenFormCreateGroupFromExistGroup({
                 parentNear: _id,
-                parentNearName: get(rc, "name", ""),
                 parentNearPath: get(rc, "managementArea", [])?.map(
                   (area: any) => get(area, "path")
                 ),

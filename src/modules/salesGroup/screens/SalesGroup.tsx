@@ -119,18 +119,18 @@ export default function SalesGroup() {
         );
       },
     },
-    {
-      title: "Loại nhóm",
-      key: "typeArea",
-      dataIndex: "typeArea",
-      width: 140,
-      align: "center",
-      render: (typeArea, rc) => (
-        <Tag color={CLONE_SALES_GROUP_GEOGRAPHY_COLOR[typeArea]}>
-          {CLONE_SALES_GROUP_GEOGRAPHY_VI?.[typeArea]}
-        </Tag>
-      ),
-    },
+    // {
+    //   title: "Loại nhóm",
+    //   key: "typeArea",
+    //   dataIndex: "typeArea",
+    //   width: 140,
+    //   align: "center",
+    //   render: (typeArea, rc) => (
+    //     <Tag color={CLONE_SALES_GROUP_GEOGRAPHY_COLOR[typeArea]}>
+    //       {CLONE_SALES_GROUP_GEOGRAPHY_VI?.[typeArea]}
+    //     </Tag>
+    //   ),
+    // },
     {
       title: "Chỉ tiêu",
       key: "targets",
@@ -222,7 +222,7 @@ export default function SalesGroup() {
           pagination={false}
           bordered
           style={{ marginTop: 20 }}
-          scroll={{ x: 1500 }}
+          // scroll={{ x: 1500 }}
         />
       </WhiteBox>
       <ModalAnt
@@ -236,7 +236,6 @@ export default function SalesGroup() {
           onUpdate={updateSalesGroup}
           id={id}
           parentNear={get(parentNear, "parentNear")}
-          parentNearName={get(parentNear, "parentNearName")}
           parentNearPath={get(parentNear, "parentNearPath")}
         />
       </ModalAnt>

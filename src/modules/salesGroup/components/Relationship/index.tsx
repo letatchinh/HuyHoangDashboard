@@ -14,7 +14,7 @@ export default function Relationship({id}:propsType) : React.JSX.Element {
     const [salesGroup, isLoading] = useGetSalesGroup(id);
     const child = useMemo(() => get(salesGroup,'children',[]),[salesGroup]);
     const leader = useMemo(() => RulesLeaderMethod.FindOne(get(salesGroup,'salesGroupPermission',[])),[salesGroup]);
-    const member = useMemo(() => RulesMemberMethod.FindOne(get(salesGroup,'salesGroupPermission',[])),[salesGroup]);
+    const member = useMemo(() => RulesMemberMethod.FindAll(get(salesGroup,'salesGroupPermission',[])),[salesGroup]);
     if(isLoading){
         return <div>Loading...</div>
     }

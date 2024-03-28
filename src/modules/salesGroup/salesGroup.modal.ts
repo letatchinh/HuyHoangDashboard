@@ -6,7 +6,6 @@ import { SALES_GROUP_GEOGRAPHY } from "./constants"
 export type propsTypeSalesGroupForm = {
     id? : string,
     parentNear? : string,
-    parentNearName? : string,
     parentNearPath? : string[],
     onCancel : () => void,
     onUpdate : (p:any) => void,
@@ -16,7 +15,7 @@ export type FieldTypeForm = {
     name : string,
     alias : string,
     managementArea : string[]
-    typeArea : TypeAreaType,
+    // typeArea : TypeAreaType,
     parentNear ? : string,
 
 }
