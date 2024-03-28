@@ -42,6 +42,9 @@ const cumulativeEvent = 'cumulativeEvent';
 
 // Đơn hàng nhà cung cấp
 const orderSupplier = 'orderSupplier';
+
+// Thời gian báo cáo lương
+const configReportSalaryAuto = 'configReportSalaryAuto';
 const RESOURCES = [
   //Setting
   configDiscount,
@@ -89,6 +92,7 @@ const RESOURCES = [
   employee_position,
   cumulativeEvent,
   orderSupplier,
+  configReportSalaryAuto,
 ];
 
 //ACTIONS

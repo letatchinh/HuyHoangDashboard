@@ -148,7 +148,7 @@ import {
               icon: <i className="fa-solid fa-clock-rotate-left"></i>,
               path: PATH_APP.cronSalary.root,
               key: PATH_APP.cronSalary.root,
-              // permission: [POLICIES.READ_AREACONFIGURATION],
+              permission: [POLICIES.READ_CONFIGREPORTSALARYAUTO],
             },
           ],
         },
