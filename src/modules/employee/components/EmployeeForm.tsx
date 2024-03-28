@@ -7,6 +7,8 @@ import { employeeSliceAction } from "../redux/reducer";
 import { useResetState } from "~/utils/hook";
 import WithOrPermission from "~/components/common/WithOrPermission";
 import POLICIES from "~/modules/policy/policy.auth";
+import AssignPharmacyModal from "~/modules/pharmacy/component/AssignPharmacyModal";
+import { get } from "lodash";
 
 const { Option } = Select;
 
@@ -204,6 +206,16 @@ export default function EmployeeForm(props: IProps) {
                 </FormItem>
               </Col>
             </Row>
+            <Row
+              gutter={48}
+              align="middle"
+              justify="space-between"
+              className="employee-form__logo-row"
+              >
+            <Col span={12}>
+            <AssignPharmacyModal id={id} setForm={(newValue:any) => form.setFieldsValue({pharmacies : newValue})} initDataSource={get(employee,'pharmacies',[])}/>
+            </Col>
+          </Row>
           </Col>
           {/* <Col></Col> */}
         </Row>
