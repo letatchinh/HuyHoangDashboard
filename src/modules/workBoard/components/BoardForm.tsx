@@ -106,6 +106,7 @@ const BoardForm: React.FC<BoardFormProps> = ({ id, handleCloseForm }) => {
       <Form.Item
         label="Tên"
         name="name"
+        rules={[{ required: true, message: 'Nhập tên không gian làm việc!' }]}
       >
         <Input />
       </Form.Item>
@@ -118,6 +119,7 @@ const BoardForm: React.FC<BoardFormProps> = ({ id, handleCloseForm }) => {
       <Form.Item
         label="Người quản lý"
         name="managers"
+        rules={[{ required: true, message: 'Chọn người quản lý!' }]}
       >
         {listManagers ? <Select
           mode="multiple"

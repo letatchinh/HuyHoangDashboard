@@ -33,7 +33,6 @@ export const TYPE_DISCOUNT = {
   export const TARGET = {
     product : "product",
     supplier : "supplier",
-    pharma_profile : "pharma_profile",
   }
 
   export const TYPE_REPEAT = {
