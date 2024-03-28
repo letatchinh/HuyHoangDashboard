@@ -212,7 +212,7 @@ export default function PharmacyForm({ onClose, id, handleUpdate }: Props) {
             </Col>
             <Col span={12}>
               <FormItem
-                label="Tần suất viếng thăm"
+                label="Tần suất quay lại"
                 name="frequencyOfVisits"
                 wrapperCol={{ sm: 24, md: 24, lg: 21 }}
               >

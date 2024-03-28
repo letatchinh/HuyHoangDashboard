@@ -117,8 +117,9 @@ export default function Pharmacy() {
         // dataIndex: "code",
         key: "code",
         width: 120,
-        render(record) {
+        render: (record) => {
           return (
+            <WithPermission permission={POLICIES.READ_PHARMAPROFILE}>
             <Link
               className="link_"
               to={`/pharmacy/${record?._id}`}
@@ -126,6 +127,7 @@ export default function Pharmacy() {
             >
               {record?.code}
             </Link>
+            </WithPermission>
           );
         },
       },
@@ -173,7 +175,7 @@ export default function Pharmacy() {
         title: "Công nợ",
         dataIndex: "resultDebt",
         key: "resultDebt",
-        width: 120,
+        width: 180,
         render(value) {
           return formatNumberThreeComma(value);
         },
@@ -371,6 +373,7 @@ export default function Pharmacy() {
           dataSource={pharmacies}
           loading={isLoading}
           rowKey={(rc) => rc?._id}
+          scroll={{x : 1500}}
           columns={columns}
           size="small"
           pagination={{
