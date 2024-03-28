@@ -31,7 +31,8 @@ const debt = 'debt';
 const product = 'product';
 const todoConfigStatus = 'todoConfigStatus';
 const todoList = 'todoList';
-const voucher = 'voucher';
+const voucherPharmacy = 'voucherPharmacy';
+const voucherSupplier = 'voucherSupplier';
 const statusVoucher = 'statusVoucher';
 const historyVoucher = 'historyVoucher';
 
@@ -64,7 +65,8 @@ const RESOURCES = [
   product,
 
   //VOUCHER
-  voucher,
+  voucherPharmacy,
+  voucherSupplier,
   statusVoucher,
   historyVoucher,
   supplier,
@@ -144,7 +146,8 @@ const RESOURCE = (): ResourceType => {
     ranking
   ];
   const GROUP_VOUCHER: string[] = [
-    voucher,
+    voucherSupplier,
+    voucherPharmacy,
     statusVoucher,
     historyVoucher
   ]

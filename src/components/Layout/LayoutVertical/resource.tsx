@@ -203,7 +203,7 @@ export const resource: ItemType[] = [
     icon: <MoneyCollectOutlined />,
     path : PATH_APP.vouchers.root,
     key: PATH_APP.vouchers.root,
-    permission :[POLICIES.READ_VOUCHER],
+    permission :[POLICIES.READ_VOUCHERPHARMACY],
   },
 
         // Báo cáo
