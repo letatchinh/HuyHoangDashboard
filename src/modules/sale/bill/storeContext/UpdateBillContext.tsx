@@ -6,20 +6,24 @@ import { useParams } from "react-router-dom";
 import ModalAnt from "~/components/Antd/ModalAnt";
 import { useGetBill } from "../bill.hook";
 import VoucherModule from '~/modules/vouchers';
-import {  REF_COLLECTION_UPPER } from "~/constants/defaultValue";
+import {  REF_COLLECTION, REF_COLLECTION_UPPER } from "~/constants/defaultValue";
 import { omit } from "lodash";
+import PaymentVoucherFormPharmacy from "~/modules/paymentVoucher/components/PaymentVoucherFormPharmacy";
 export type GlobalUpdateBill = {
     bill : any,
     isLoading : boolean,
     mutateBill : () => void,
-    onOpenForm : () => void,
-    
+    onOpenForm: () => void,
+    onOpenFormPayment: () => void
+    compareMoney: number
 };
 const UpdateBill = createContext<GlobalUpdateBill>({
     bill : null,
     isLoading : false,
     mutateBill : () => {},
-    onOpenForm : () => {},
+    onOpenForm: () => { },
+    onOpenFormPayment: () => { },
+    compareMoney: 0
 });
 
 type UpdateBillProviderProps = {
@@ -35,16 +39,26 @@ export function UpdateBillProvider({
     const [reFetch,setReFetch] = useState(false);
     const mutateBill = useCallback(() => setReFetch(!reFetch),[reFetch]);
     const [bill, isLoading] = useGetBill(id, reFetch);
-    const {pharmacyId,totalPrice,codeSequence,_id,totalReceiptVoucherCompleted,remainAmount, remaining} = bill || {};
-    
+    const {pharmacyId,totalPrice,codeSequence,_id,totalReceiptVoucherCompleted,remainAmount, remaining, pair} = bill || {};
     const [isOpenForm, setIsOpenForm] = useState(false);
+    const [isOpenFormPayment, setIsOpenFormPayment] = useState(false);
 
+  const compareMoney = useMemo(() => pair - totalPrice, [bill]);
+  
   const onOpenForm = () => {
     setIsOpenForm(true);
   };
 
   const onCloseForm = () => {
     setIsOpenForm(false);
+  };
+
+  const onOpenFormPayment = () => {
+    setIsOpenFormPayment(true);
+  };
+
+  const onCloseFormPayment = () => {
+    setIsOpenFormPayment(false);
   };
   
   return (
@@ -54,6 +68,8 @@ export function UpdateBillProvider({
         isLoading,
         mutateBill,
         onOpenForm,
+        onOpenFormPayment,
+        compareMoney
       }}
     >
       {children}
@@ -79,6 +95,24 @@ export function UpdateBillProvider({
           method={{
             data : omit(bill,['bill','billItems','historyStatus']),
             type : 'BILL'
+          }}
+        />
+      </ModalAnt>
+      <ModalAnt
+        title='Phiếu chi'
+        open={isOpenFormPayment}
+        onCancel={onCloseFormPayment}
+        width={'auto'}
+        footer={null}
+        destroyOnClose
+      >
+        <PaymentVoucherFormPharmacy
+          initData={{
+            pharmacyId: pharmacyId,
+            refCollection: REF_COLLECTION.PHARMA_PROFILE,
+            debt: compareMoney,
+            note: 'Chi cho nhà thuốc vì thu dư',
+            totalAmount: compareMoney,
           }}
         />
       </ModalAnt>

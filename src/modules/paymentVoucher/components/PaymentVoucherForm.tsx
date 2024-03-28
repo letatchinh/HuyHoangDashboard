@@ -55,6 +55,7 @@ import {
 } from "../paymentVoucher.hook";
 import "./form.scss";
 import useUpdateOrderSupplierStore from "~/modules/sale/orderSupplier/storeContext/UpdateOrderSupplierContext";
+import WithOrPermission from "~/components/common/WithOrPermission";
   const mainRowGutter = 24;
   const FormItem = Form.Item;
   const { TabPane } = Tabs;
@@ -525,19 +526,19 @@ import useUpdateOrderSupplierStore from "~/modules/sale/orderSupplier/storeConte
             </WithPermission>
             <Row className="staff-form__submit-box">
               {!id ? 
-                 <WithPermission permission={POLICIES.UPDATE_VOUCHER}>
+                 <WithOrPermission permission={[POLICIES.UPDATE_VOUCHERPHARMACY, POLICIES.UPDATE_VOUCHERSUPPLIER]}>
                  <Button icon={<SaveOutlined />} type="primary" htmlType="submit">
                    Lưu
                    </Button>
-                </WithPermission>
+                </WithOrPermission>
                 : (get(mergedInitWhPaymentVoucher, "status") !== WH_VOUCHER_STATUS.CONFIRMED
                 || get(mergedInitWhPaymentVoucher, "status") !== WH_VOUCHER_STATUS.REJECT
                 )
-                && <WithPermission permission={POLICIES.UPDATE_VOUCHER}>
-              <Button icon={<SaveOutlined />} type="primary" htmlType="submit">
+                &&  <WithOrPermission permission={[POLICIES.UPDATE_VOUCHERPHARMACY, POLICIES.UPDATE_VOUCHERSUPPLIER]}>
+                <Button icon={<SaveOutlined />} type="primary" htmlType="submit">
                 Lưu
                 </Button>
-            </WithPermission>}
+                </WithOrPermission>}
   
               {id &&
                 (!get(mergedInitWhPaymentVoucher, "status") ||

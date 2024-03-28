@@ -47,6 +47,7 @@ import POLICIES from "~/modules/policy/policy.auth";
 import { useGetBranch, useGetBranches } from "~/modules/branch/branch.hook";
 import { useGetSupplier } from "~/modules/supplier/supplier.hook";
 import useUpdateBillStore from "~/modules/sale/bill/storeContext/UpdateBillContext";
+import WithOrPermission from "~/components/common/WithOrPermission";
 
 const mainRowGutter = 24;
 const FormItem = Form.Item;
@@ -514,20 +515,21 @@ export default function ReceiptVoucher(props: propsType): React.JSX.Element {
           </WithPermission>
           <Row className="staff-form__submit-box">
             {!id ? 
-              <WithPermission permission={POLICIES.UPDATE_VOUCHER}>
+              <WithOrPermission permission={[POLICIES.UPDATE_VOUCHERPHARMACY, POLICIES.UPDATE_VOUCHERSUPPLIER]}>
               <Button icon={<SaveOutlined/>} type="primary" htmlType="submit">
                 Lưu
               </Button>
-              </WithPermission>
+              </WithOrPermission>
               :
             (get(mergedInitWhPaymentVoucher, "status") !== WH_VOUCHER_STATUS.CONFIRMED
               || get(mergedInitWhPaymentVoucher, "status") !== WH_VOUCHER_STATUS.REJECT
             )
-              &&  <WithPermission permission={POLICIES.UPDATE_VOUCHER}>
+              &&
+              <WithOrPermission permission={[POLICIES.UPDATE_VOUCHERPHARMACY, POLICIES.UPDATE_VOUCHERSUPPLIER]}>
             <Button icon={<SaveOutlined/>} type="primary" htmlType="submit">
               Lưu
             </Button>
-            </WithPermission>}
+            </WithOrPermission>}
 
             {id &&
               (!get(mergedInitWhPaymentVoucher, "status") ||
