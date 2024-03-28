@@ -317,7 +317,7 @@ export const resource: ItemType[] =[
 
   //Nhân viên
   {
-    label: "Nhân viên",
+    label: "Trình dược viên",
     icon: <i className="fa-solid fa-users"></i>,
     path: PATH_APP.employee.root,
     key: PATH_APP.employee.root,

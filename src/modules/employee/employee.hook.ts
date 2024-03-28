@@ -16,7 +16,7 @@ import {
 import { employeeSliceAction } from "./redux/reducer";
 import { useDispatch } from "react-redux";
 const MODULE  = "employee";
-const MODULE_VI  = "Nhân viên";
+const MODULE_VI  = "Trình dược viên";
 
 const {
   loadingSelector,

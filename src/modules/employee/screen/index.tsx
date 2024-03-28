@@ -65,15 +65,15 @@ export default function User() {
       {
         (isMatchEmployeeGroup || isMatchEmployee) && (
           <>
-            <Breadcrumb title={t("Quản lý nhân viên")} />
+            <Breadcrumb title={t("Quản lý trình dược viên")} />
             <WhiteBox>
               <Tabs
                 activeKey={currentTab}
                 onChange={(key) => onChange(key)}
                 defaultActiveKey={pathname}
               >
-                {(isMatchEmployee) &&  <TabPane tab="Nhân viên" key="employee"/>}
-                {isMatchEmployeeGroup &&  <TabPane tab="Nhóm nhân viên" key="employee/group" />}
+                {(isMatchEmployee) &&  <TabPane tab="Danh sách trình dược viên" key="employee"/>}
+                {isMatchEmployeeGroup &&  <TabPane tab="Nhóm trình dược viên" key="employee/group" />}
               </Tabs>
               <Routes>
                 {(isMatchEmployee) ? (

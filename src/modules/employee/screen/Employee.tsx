@@ -176,7 +176,7 @@ export default function Employee({currentTab}: Props) {
     
   ];
 
-  useChangeDocumentTitle("Danh sách nhân viên");
+  useChangeDocumentTitle("Danh sách trình dược viên");
   return (
     <div>
       {/* <Breadcrumb title={t("Quản lý nhân viên")} /> */}
@@ -185,6 +185,8 @@ export default function Employee({currentTab}: Props) {
           showSelect={false}
           isShowButtonAdd
           handleOnClickButton={() => handleOpenModal()}
+          onChange={setKeyword}
+          onSearch={(e: any)=> onParamChange({keyword: e})}
           permissionKey={[POLICIES.WRITE_EMPLOYEE]}
           addComponent={
             canDownload ?  <Col>
@@ -192,7 +194,7 @@ export default function Employee({currentTab}: Props) {
                   api='employee'
                   exportOption = 'employee'
                   query={query}
-                  fileName='Danh sách nhân viên'
+                  fileName='Danh sách trình dược viên'
                   ids={arrCheckBox}
                 />
           </Col> : null
@@ -205,7 +207,8 @@ export default function Employee({currentTab}: Props) {
           size="small"
           pagination={{
             ...paging,
-            showTotal: (total) => `Tổng cộng: ${total}`
+            showTotal: (total) => `Tổng cộng: ${total}`,
+            showSizeChanger: true,
           }}
           onChange={({current, pageSize}) => onTableChange({current, pageSize})}
         />

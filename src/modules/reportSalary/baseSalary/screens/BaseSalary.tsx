@@ -14,6 +14,8 @@ import {
 import { typeFormField } from "../baseSalary.modal";
 import { useMatchPolicy } from "~/modules/policy/policy.hook";
 import POLICIES from "~/modules/policy/policy.auth";
+import { useGetProfile } from "~/modules/auth/auth.hook";
+import { EMPLOYEE_LEVEL } from "~/modules/employee/constants";
 
 export default function BaseSalary() {
   const [form] = Form.useForm();
@@ -24,7 +26,8 @@ export default function BaseSalary() {
   const [isSubmitLoading, updateBaseSalary]: any = useUpdateBaseSalary();
   //permission
   const canUpdate = useMatchPolicy(POLICIES.UPDATE_CONFIGBASESALARY);
-
+  const { profile, user } = useGetProfile();
+  
   // Update Data
   const onFinish = useCallback((values: typeFormField) => {
     updateBaseSalary(values);
@@ -36,8 +39,13 @@ export default function BaseSalary() {
   }, [data]);
 
   const isCheckRender = (component: any, key: any) => {
-    return component
-  };
+    if (data?.baseSalary?.hasOwnProperty(key)) {
+        return component;
+    } else {
+        return null; 
+    }
+};
+
 
   return (
     <div>
@@ -62,7 +70,7 @@ export default function BaseSalary() {
                     readOnly = {!canUpdate}
                   />
                   </FormItem>,
-                  AREA.V_I
+                  'V_I'
                 )
               }
               {
@@ -79,7 +87,7 @@ export default function BaseSalary() {
                     readOnly = {!canUpdate}
                   />
                   </FormItem>,
-                  AREA.V_II
+                  'V_II'
                 )
               }
               {
@@ -96,7 +104,7 @@ export default function BaseSalary() {
                     readOnly = {!canUpdate}
                   />
                   </FormItem>,
-                  AREA.V_III
+                  'V_III'
                 )
               }
               {
@@ -113,11 +121,11 @@ export default function BaseSalary() {
                     readOnly = {!canUpdate}
                   />
                   </FormItem>,
-                  AREA.V_IV
+                  'V_IV'
                 )
               }
             </Flex>
-            <Flex align={"center"} gap={10} className="mt-1">
+            {(user?.isSuperAdmin || profile?.employeeLevel === EMPLOYEE_LEVEL.ASM)  && <Flex align={"center"} gap={10} className="mt-1">
               <h6 style={{ width: "15%" }} className="mt-2">
                 Lương quản lý vùng:{" "}
               </h6>
@@ -131,8 +139,8 @@ export default function BaseSalary() {
                   readOnly = {!canUpdate}
                   />
               </FormItem>
-            </Flex>
-            <Flex align={"center"} gap={10} className="mt-1">
+            </Flex>}
+          {(user?.isSuperAdmin || profile?.employeeLevel === EMPLOYEE_LEVEL.ASM)  &&  <Flex align={"center"} gap={10} className="mt-1">
               <h6 style={{ width: "15%" }} className="mt-2">
               Điều kiện hưởng lương cơ bản ASM:{" "}
               </h6>
@@ -143,7 +151,7 @@ export default function BaseSalary() {
               >
                 <InputNumber min={0} max={100} addonAfter={"%"} readOnly = {!canUpdate}/>
               </FormItem>
-            </Flex>
+            </Flex>}
             {canUpdate &&
               <Button loading={isSubmitLoading} htmlType="submit" type="primary">
               Cập nhật

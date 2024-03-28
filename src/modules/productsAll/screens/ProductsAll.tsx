@@ -20,6 +20,8 @@ import ActionColumn from '../components/ActionColumns';
 import ShowStep from '../components/ShowStep';
 import { useProductsAllQueryParams, useUpdateProductsAllParams } from '../productsAll.hook';
 import { DataType, TypeProps } from '../productsAll.modal';
+import { useSelector } from 'react-redux';
+import { ADAPTER_KEY } from '~/modules/auth/constants';
 
 export default function ProductsAll(props: TypeProps): React.JSX.Element {
   const [query, onTableChange] = useProductsAllQueryParams();
@@ -43,6 +45,7 @@ export default function ProductsAll(props: TypeProps): React.JSX.Element {
   //Download
   const canDownload = useMatchPolicy(POLICIES.DOWNLOAD_PRODUCT);
   const [arrCheckBox, onChangeCheckBox] = useCheckBoxExport();
+  const adapter = useSelector((state: any) => state?.auth?.adapter);
 
   const onOpenModal = (id: string | null) => {
     setIsOpen(true);
@@ -137,22 +140,24 @@ export default function ProductsAll(props: TypeProps): React.JSX.Element {
             }
           },
         },
-        {
+        ...(
+          adapter === ADAPTER_KEY.STAFF ? [{
           title: "Giá bán",
           dataIndex: "variant",
           key: "variant",
-          render(variant, record, index) {
+          render(variant: any, record: any, index: any) {
             return formatter(get(variant,'price'))
           },
-        },
-        {
+        }] : []),
+        ...(
+          adapter === ADAPTER_KEY.STAFF ? [{
           title: "Giá thu về",
           dataIndex: "variant",
           key: "variant",
-          render(variant, record, index) {
+          render(variant: any, record: any, index: any) {
             return formatter(get(variant,'cost',0))
           },
-        },
+          }] : []),
         {
           title: "Tồn kho",
           dataIndex: "stock",

@@ -147,7 +147,7 @@ export default function EmployeeForm(props: IProps) {
   return (
     <div className="employee-form">
       <h4 style={{ marginRight: "auto", paddingLeft: 27 }}>
-        {`${!id ? "Tạo mới " : "Cập nhật"}`} nhân viên
+        {`${!id ? "Tạo mới " : "Cập nhật"}`} trình dược viên
       </h4>
       <Form
         form={form}
@@ -169,26 +169,14 @@ export default function EmployeeForm(props: IProps) {
           >
             <Col span={12}>
               <Row gutter={36}>
-                {/* <Col span={24}>
-                  <FormItem
-                    label="Tên nhân viên"
-                    name="firstName"
-                    rules={[
-                      { required: true, message: 'Xin mời nhập tên nhân viên!' }
-                    ]}
-                  >
-                    {isLoading ? <Skeleton.Input active /> : <Input />}
-                  </FormItem>
-                </Col> */}
-
                 <Col span={24}>
                   <FormItem
-                    label="Họ và tên nhân viên"
+                    label="Họ và tên TDV"
                     name="fullName"
                     rules={[
                       {
                         required: true,
-                        message: "Xin mời nhập tên nhân viên!",
+                        message: "Xin mời nhập tên trình dược viên!",
                       },
                     ]}
                   >
@@ -251,7 +239,7 @@ export default function EmployeeForm(props: IProps) {
             </Col>
             <Col span={12}>
               <FormItem
-                  label="Nhóm nhân viên"
+                  label="Nhóm TDV"
                   name="groups"
                   // rules={[
                   //   {
