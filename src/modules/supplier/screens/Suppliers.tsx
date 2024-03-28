@@ -145,6 +145,14 @@ export default function Supplier(): React.JSX.Element {
         key: "name",
       },
       {
+        title: "Xếp hạng nhà cung cấp",
+        dataIndex: "ranking",
+        key: "ranking",
+        render(value: any) {
+          return value?.name
+        }
+      },
+      {
         title: "Danh sách sản phẩm",
         dataIndex: "_id",
         key: "listProduct",

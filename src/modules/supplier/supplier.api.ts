@@ -26,5 +26,6 @@ const apis = {
 
     //This is api for report
     getReport: (query?: any) => requester.get(`/api/v1/supplier-revenue-time/${query?.id}`, omit(query,['id'])),
+    getRanking: () => requester.get(`/api/v1/search/ranking`),
 }
 export default apis;
