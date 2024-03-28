@@ -1,6 +1,8 @@
 import { get } from 'lodash';
 import React, { useEffect, useState } from 'react';
 import BaseBorderBox from '~/components/common/BaseBorderBox/index';
+import WithOrPermission from '~/components/common/WithOrPermission';
+import POLICIES from '~/modules/policy/policy.auth';
 import { DataSourceItemType } from '../pharmacy.modal';
 import AssignPharmacy from './AssignPharmacy';
 import AssignPharmacyList from './AssignPharmacyList';
@@ -40,8 +42,9 @@ export default function AssignPharmacyModalChildren({initDataSource,setForm,id}:
         <BaseBorderBox title={"Danh sách nhà thuốc đã chọn"}>
         <AssignPharmacyList onRemove={onRemoveDataSource} dataSource={dataSource}/>
         </BaseBorderBox>
-
+        <WithOrPermission permission={[POLICIES.UPDATE_UPDATETHEPHARMACYFOREMPLOYEE,POLICIES.WRITE_UPDATETHEPHARMACYFOREMPLOYEE]}>
         <AssignPharmacy id={id} dataSource={dataSource} onChange={onAddDataSource}/>
+        </WithOrPermission>
         </>
     )
 }

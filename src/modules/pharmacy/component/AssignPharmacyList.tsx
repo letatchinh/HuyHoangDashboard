@@ -1,6 +1,8 @@
 import { Button, List } from "antd";
 import { get } from "lodash";
 import React, { useMemo } from "react";
+import WithOrPermission from "~/components/common/WithOrPermission";
+import POLICIES from "~/modules/policy/policy.auth";
 import { concatAddress } from "~/utils/helpers";
 import { DataSourceItemType } from "../pharmacy.modal";
 type propsType = {
@@ -21,9 +23,11 @@ export default function AssignPharmacyList({
       renderItem={(item: DataSourceItemType) => (
         <List.Item
           actions={[
-            <Button danger onClick={() => onRemove(get(item, "_id"))}>
+            <WithOrPermission permission={[POLICIES.UPDATE_UPDATETHEPHARMACYFOREMPLOYEE,POLICIES.WRITE_UPDATETHEPHARMACYFOREMPLOYEE]}>
+                <Button danger onClick={() => onRemove(get(item, "_id"))}>
               Gỡ
-            </Button>,
+            </Button>
+            </WithOrPermission>,
           ]}
         >
           <List.Item.Meta
