@@ -45,7 +45,7 @@ export default function ListOrder({ status }: propsType): React.JSX.Element {
   const [orderSelect, setOrderSelect] = useState<any>();
   const [supplierId, setSupplierId] = useState<string | null>("");
   const [debt, setDebt] = useState<number | null>();
-  const canWriteVoucher = useMatchPolicy(policyModule.POLICIES.WRITE_VOUCHER);
+  const canWriteVoucher = useMatchPolicy(policyModule.POLICIES.WRITE_VOUCHERSUPPLIER);
 
   const onOpenPayment = (item: any) => {
     setOpen(true);

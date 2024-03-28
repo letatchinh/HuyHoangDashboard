@@ -132,7 +132,7 @@ import {
       label: "Nhà cung cấp",
       icon: <i className="fa-solid fa-cubes"></i>,
       key: "supplier",
-      permission: [POLICIES.READ_SUPPLIER],
+      permission: [POLICIES.READ_SUPPLIER,POLICIES.READ_VOUCHERSUPPLIER, POLICIES.READ_ORDERSUPPLIER],
       children: [
         {
           label: "Danh sách nhà cung cấp",
@@ -158,7 +158,7 @@ import {
           // icon: <MoneyCollectOutlined />,
           path: PATH_APP.vouchers.supplier,
           key: PATH_APP.vouchers.supplier,
-          permission: [POLICIES.READ_VOUCHER],
+          permission: [POLICIES.READ_VOUCHERSUPPLIER],
         },
       ],
     },
@@ -168,7 +168,7 @@ import {
       label: "Nhà thuốc",
       icon: <i className="fa-solid fa-house-chimney-medical"></i>,
       key: "pharmacy",
-      permission: [POLICIES.READ_PHARMAPROFILE, POLICIES.READ_BILL,POLICIES.READ_QUOTATION,POLICIES.WRITE_QUOTATION,POLICIES.READ_CUMULATIVEEVENT,POLICIES.READ_VOUCHER],
+      permission: [POLICIES.READ_PHARMAPROFILE, POLICIES.READ_BILL,POLICIES.READ_QUOTATION,POLICIES.WRITE_QUOTATION,POLICIES.READ_CUMULATIVEEVENT,POLICIES.READ_VOUCHERPHARMACY],
       children: [
         {
           label: "Danh sách nhà thuốc",
@@ -205,7 +205,7 @@ import {
           // icon: <MoneyCollectOutlined />,
           path: PATH_APP.vouchers.pharmacy,
           key: PATH_APP.vouchers.pharmacy,
-          permission: [POLICIES.READ_VOUCHER],
+          permission: [POLICIES.READ_VOUCHERPHARMACY],
         },
       ],
     },

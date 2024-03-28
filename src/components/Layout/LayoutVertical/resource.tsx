@@ -112,7 +112,7 @@ export const resource: ItemType[] = [
             label: "Cấu hình giảm giá",
             path: PATH_APP.configDiscount.root,
             key: PATH_APP.configDiscount.root,
-            permission: [POLICIES.READ_CONFIGDISCOUNT],
+            permission :[POLICIES.READ_CONFIGDISCOUNT],
           },
         ],
       },
@@ -203,7 +203,7 @@ export const resource: ItemType[] = [
     icon: <MoneyCollectOutlined />,
     path : PATH_APP.vouchers.root,
     key: PATH_APP.vouchers.root,
-    permission :[POLICIES.READ_VOUCHER],
+    permission :[POLICIES.READ_VOUCHERPHARMACY],
   },
 
         // Báo cáo

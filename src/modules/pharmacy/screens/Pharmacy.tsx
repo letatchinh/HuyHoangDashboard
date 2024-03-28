@@ -80,7 +80,7 @@ export default function Pharmacy() {
   const [pharmacyId, setPharmacyId] = useState(null);
   const [isOpenForm, setIsOpenForm] = useState(false);
   const paging = usePharmacyPaging();
-  const canWriteVoucher = useMatchPolicy(POLICIES.WRITE_VOUCHER);
+  const canWriteVoucher = useMatchPolicy(POLICIES.WRITE_VOUCHERPHARMACY);
 
   const onOpenForm = useCallback(
     (id?: any) => {

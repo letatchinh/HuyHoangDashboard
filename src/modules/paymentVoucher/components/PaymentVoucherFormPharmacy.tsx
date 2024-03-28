@@ -419,7 +419,7 @@ import "./form.scss";
             {/* <WithPermission permission={POLICIES.READ_HISTORYVOUCHER}>
             </WithPermission> */}
             <Row className="staff-form__submit-box">
-              <WithPermission permission={POLICIES.UPDATE_VOUCHER}>
+              <WithPermission permission={POLICIES.UPDATE_VOUCHERPHARMACY}>
               <Button icon={<SaveOutlined/>} type="primary" htmlType="submit">
                 Lưu
               </Button>
