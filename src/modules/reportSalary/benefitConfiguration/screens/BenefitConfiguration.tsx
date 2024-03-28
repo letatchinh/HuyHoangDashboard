@@ -26,16 +26,20 @@ export default function BenefitConfiguration(
   const onCreateBenefitTDV = (typeBenefit: TypeBenefit) => {
     setActive(typeBenefit);
   };
-  const {profile} = useGetProfile();
-  const filterGroupType : any = useMemo(() => {
-    if (profile.employeeLevel === EMPLOYEE_LEVEL.ASM) {
+  const {profile, user} = useGetProfile();
+  const filterGroupType: any = useMemo(() => {
+    if (user?.isSuperAdmin) {
       return GROUP_TYPE_BENEFIT_EMPLOYEE_LEVEL
-    } else if (profile.employeeLevel === EMPLOYEE_LEVEL.TEAMLEADER) { 
-      return omit(GROUP_TYPE_BENEFIT_EMPLOYEE_LEVEL, 'ASM');
-    }else if(profile.employeeLevel === EMPLOYEE_LEVEL.TDV){
-      return omit(GROUP_TYPE_BENEFIT_EMPLOYEE_LEVEL, [EMPLOYEE_LEVEL.ASM,EMPLOYEE_LEVEL.TEAMLEADER],EMPLOYEE_LEVEL.CTV );
-    }else if(profile.employeeLevel === EMPLOYEE_LEVEL.CTV){
-      return omit(GROUP_TYPE_BENEFIT_EMPLOYEE_LEVEL, [EMPLOYEE_LEVEL.ASM,EMPLOYEE_LEVEL.TEAMLEADER,EMPLOYEE_LEVEL.TDV]);
+    } else {
+      if (profile.employeeLevel === EMPLOYEE_LEVEL.ASM) {
+        return GROUP_TYPE_BENEFIT_EMPLOYEE_LEVEL
+      } else if (profile.employeeLevel === EMPLOYEE_LEVEL.TEAMLEADER) {
+        return omit(GROUP_TYPE_BENEFIT_EMPLOYEE_LEVEL, 'ASM');
+      } else if (profile.employeeLevel === EMPLOYEE_LEVEL.TDV) {
+        return omit(GROUP_TYPE_BENEFIT_EMPLOYEE_LEVEL, [EMPLOYEE_LEVEL.ASM, EMPLOYEE_LEVEL.TEAMLEADER], EMPLOYEE_LEVEL.CTV);
+      } else if (profile.employeeLevel === EMPLOYEE_LEVEL.CTV) {
+        return omit(GROUP_TYPE_BENEFIT_EMPLOYEE_LEVEL, [EMPLOYEE_LEVEL.ASM, EMPLOYEE_LEVEL.TEAMLEADER, EMPLOYEE_LEVEL.TDV]);
+      };
     };
   } , [GROUP_TYPE_BENEFIT_EMPLOYEE_LEVEL]);
 
