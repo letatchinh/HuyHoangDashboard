@@ -146,7 +146,7 @@ export default function Pharmacy() {
         title: "Địa chỉ",
         dataIndex: "address",
         key: "address",
-        width: 300,
+        width: 350,
         render(value, record, index) {
           return concatAddress(value);
         },
@@ -159,6 +159,15 @@ export default function Pharmacy() {
         render: (record) => {
           return moment(record).format("DD/MM/YYYY");
         },
+      },
+      {
+        title: "Trình dược viên",
+        dataIndex: "employee",
+        key: "employee",
+        width: 180,
+        render: (record) => {
+          return get(record, "fullName")
+        }
       },
       {
         title: "Công nợ",
@@ -233,9 +242,10 @@ export default function Pharmacy() {
       {
         title: "Thao tác",
         dataIndex: "_id",
-        // key: "actions",
-        width: 150,
+        key: "_id",
         align: "center",
+        fixed : 'right',
+        width : 200,
         render: (record) => {
           return (
             <div className="custom-table__actions">

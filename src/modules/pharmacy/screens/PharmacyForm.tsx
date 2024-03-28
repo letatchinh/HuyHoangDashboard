@@ -11,7 +11,15 @@ import { PATH_APP } from "~/routes/allPath";
 import AddressFormSection from "~/components/common/AddressFormSection";
 import CumulativeDiscountModule from '~/modules/cumulativeDiscount';
 import { convertInitPharmacy, convertSubmitData } from "../pharmacy.service";
+import SelectTypePharmacy from "~/modules/typePharmacy/components/SelectTypePharmacy";
+import SelectGroupPharmacy from "~/modules/groupPharmacy/components/SelectGroupPharmacy";
+import SelectSaleChannel from "~/modules/saleChannel/components/SelectSaleChannel";
+import RenderLoading from "~/components/common/RenderLoading";
+import { filterSelectWithLabel } from "~/utils/helpers";
+import TextArea from "antd/es/input/TextArea";
+import AddressFormDelivery from "~/components/common/AddressFormDelivery";
 const FormItem = Form.Item;
+const { Option } = Select;
 interface Props {
   onClose: (p?: any) => void;
   id?: any;
@@ -33,11 +41,10 @@ export default function PharmacyForm({ onClose, id, handleUpdate }: Props) {
     } else {
       const initPharmacy = convertInitPharmacy(initPharmacyProfile);
       form.setFieldsValue(initPharmacy);
-
     }
   }, [initPharmacyProfile, id, form]);
 
-  const onValuesChange = (value: any,values : any) => {
+  const onValuesChange = (value: any, values: any) => {
     const key = Object.keys(value)[0];
     switch (key) {
       // case "cumulativeDiscount":
@@ -64,6 +71,11 @@ export default function PharmacyForm({ onClose, id, handleUpdate }: Props) {
     },
     [handleCreate, handleUpdate, id, onClose]
   );
+
+  const options = {
+    CITY: "CITY", // thành thị
+    COUNTRY: "COUNTRY", // nông thôn
+  };
   return (
     <div className="pharmacy-profile page-wraper form-page-content">
       <h4 style={{ margin: "20px 0 40px 20px" }}>
@@ -134,6 +146,110 @@ export default function PharmacyForm({ onClose, id, handleUpdate }: Props) {
             </Col>
           </Row>
           <AddressFormSection
+            form={form}
+            cityCode={cityCode}
+            setCityCode={setCityCode}
+            districtCode={districtCode}
+            setDistrictCode={setDistrictCode}
+            allowPhoneNumber={false}
+            allowEmail={false}
+          />
+          {/* <FormItem
+            label="Trình dược viên"
+            name="employeeId"
+            labelCol={{ sm: 24, md: 24, lg: 3 }}
+            wrapperCol={{ sm: 24, md: 24, lg: 21 }}
+          >
+            <Input defaultValue={"65bb15fc7f8c1b44dc90d3dd"}/>
+          </FormItem> */}
+          <Row gutter={48} align="middle" justify="space-between">
+            <Col span={12}>
+              <SelectTypePharmacy
+                isLoading={isLoading}
+                typePharmacy={pharmacy}
+              />
+            </Col>
+            <Col span={12}>
+              <SelectGroupPharmacy
+                isLoading={isLoading}
+                groupPharmacy={pharmacy}
+              />
+            </Col>
+          </Row>
+          <Row gutter={48} align="middle" justify="space-between">
+            <Col span={12}>
+              <FormItem
+                label="Hạng khách hàng"
+                name="customerRanking"
+                wrapperCol={{ sm: 24, md: 24, lg: 21 }}
+              >
+                <Input />
+              </FormItem>
+            </Col>
+            <Col span={12}>
+              <SelectSaleChannel isLoading={isLoading} saleChannel={pharmacy} />
+            </Col>
+          </Row>
+          <Row gutter={48} align="middle" justify="space-between">
+            <Col span={12}>
+              <FormItem
+                label="Khu vực"
+                name="urbanType"
+                wrapperCol={{ sm: 24, md: 24, lg: 21 }}
+              >
+                {RenderLoading(
+                  isLoading,
+                  <Select>
+                    <Option value="CITY" key="CITY">
+                      Thành thị
+                    </Option>
+                    <Option value="COUNTRY" key="COUNTRY">
+                      Nông thôn
+                    </Option>
+                  </Select>
+                )}
+              </FormItem>
+            </Col>
+            <Col span={12}>
+              <FormItem
+                label="Tần suất viếng thăm"
+                name="frequencyOfVisits"
+                wrapperCol={{ sm: 24, md: 24, lg: 21 }}
+              >
+                <Input />
+              </FormItem>
+            </Col>
+          </Row>
+          <Row gutter={48} align="middle" justify="space-between">
+            <Col span={12}>
+              <FormItem
+                label="Mã số thuế"
+                name="tax"
+                wrapperCol={{ sm: 24, md: 24, lg: 21 }}
+              >
+                <Input />
+              </FormItem>
+            </Col>
+            <Col span={12}>
+              <FormItem
+                label="Số hiệu GPHĐ"
+                name="operationLicenseNumber"
+                wrapperCol={{ sm: 24, md: 24, lg: 21 }}
+              >
+                <Input />
+              </FormItem>
+            </Col>
+          </Row>
+          <FormItem
+            label="Ghi chú"
+            name="note"
+            labelCol={{ sm: 24, md: 24, lg: 3 }}
+            wrapperCol={{ sm: 24, md: 24, lg: 21 }}
+          >
+            <TextArea />
+          </FormItem>
+          <h5 style={{textAlign: 'center'}}>Địa chỉ giao hàng</h5>
+          <AddressFormDelivery
             form={form}
             cityCode={cityCode}
             setCityCode={setCityCode}

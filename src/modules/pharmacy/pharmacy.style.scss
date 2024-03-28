@@ -1,0 +1,18 @@
+.content-field {
+  display: flex;
+  .label {
+    width: 30%;
+    line-height: 200%;
+  }
+  div {
+    width: 70%;
+    font-weight: 400;
+  }
+  hr {
+    margin: 1rem 0;
+    color: #0909091a !important;
+    background-color: currentColor;
+    border: 0;
+    opacity: 0.5;
+  }
+}
