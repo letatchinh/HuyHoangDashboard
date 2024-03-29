@@ -1,3 +1,13 @@
+## [1.6.1](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/compare/v1.6.0...v1.6.1) (2024-03-29)
+
+
+### Bug Fixes
+
+* cannot update and convert quotation ([5797bfd](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/5797bfd84ae2cb223d5784f8e8a27673a7ef8871))
+* change key login ([481fca9](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/481fca904eb133e7a3dc420213c74d3dcaedd10e))
+* fix baseUrl ([3c146d9](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/3c146d94f17a82d1dd285d758acaf8232ac1d268))
+* fix CkEditor ([676c386](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/676c3866b1e2477ab89a87bde7ea03f414b3c787))
+
 # [1.6.0](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/compare/v1.5.0...v1.6.0) (2024-03-28)
 
 
