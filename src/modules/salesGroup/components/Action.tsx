@@ -1,18 +1,16 @@
 import {
-    ApartmentOutlined,
-    DeleteOutlined,
-    InfoCircleOutlined,
-    MoreOutlined,
-    SisternodeOutlined,
+  ApartmentOutlined,
+  DeleteOutlined,
+  InfoCircleOutlined,
+  MoreOutlined,
+  SisternodeOutlined
 } from "@ant-design/icons";
 import { Button, Dropdown, MenuProps, Popconfirm, Tooltip } from "antd";
 import { get } from "lodash";
 import WithPermission from "~/components/common/WithPermission";
 import POLICIES from "~/modules/policy/policy.auth";
-import { SALES_GROUP_GEOGRAPHY } from "../constants";
-import { RulesLeader, RulesMember } from "../salesGroup.service";
+import { RulesLeader } from "../salesGroup.service";
 import useSalesGroupStore from "../salesGroupContext";
-const RulesMemberMethod = new RulesMember();
 const RulesLeaderMethod = new RulesLeader();
 type PropsType = {
   _id: string;
@@ -26,26 +24,22 @@ const Action = ({ _id, rc }: PropsType) => {
     onOpenFormRelation,
     deleteSalesGroup,
   } = useSalesGroupStore();
-  const existMember = RulesMemberMethod.isExist(
-    get(rc, "salesGroupPermission", [])
-  );
   const notExistLeader = !RulesLeaderMethod.isExist(
     get(rc, "salesGroupPermission", [])
   );
-  const isZone = get(rc, "typeArea") === SALES_GROUP_GEOGRAPHY.ZONE;
 
   const items: MenuProps["items"] = [
     {
       label: (
         <Tooltip
           title={
-            isZone || existMember || notExistLeader
+              notExistLeader
               ? "Đã có TDV hoặc đã là nhóm nhỏ hoặc không có quản lý"
               : ""
           }
         >
           <Button
-            disabled={existMember || isZone || notExistLeader}
+            disabled={ notExistLeader}
             block
             icon={<SisternodeOutlined />}
             onClick={() =>

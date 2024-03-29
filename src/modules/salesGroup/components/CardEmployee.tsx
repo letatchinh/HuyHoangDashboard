@@ -30,7 +30,7 @@ export default function CardEmployee({
       <Col flex={1}>
         <Flex vertical>
           <Typography.Text strong>{fullName}</Typography.Text>
-          <Tag color={CLONE_EMPLOYEE_LEVEL_COLOR?.[employeeLevel]}>
+          <Tag style={{width : 'max-content'}} color={CLONE_EMPLOYEE_LEVEL_COLOR?.[employeeLevel]}>
             {CLONE_EMPLOYEE_LEVEL_VI?.[employeeLevel]}
           </Tag>
           <Typography.Text type="secondary">{phoneNumber}</Typography.Text>

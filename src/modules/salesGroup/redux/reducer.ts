@@ -2,7 +2,6 @@ import { createSlice } from "@reduxjs/toolkit";
 import { get } from "lodash";
 import { InstanceModuleRedux } from "~/redux/instanceModuleRedux";
 import { initStateSlice } from "~/redux/models";
-import { SALES_GROUP_GEOGRAPHY_COLOR } from "../constants";
 import { RulesLeader } from "../salesGroup.service";
 const RulesLeaderMethod = new RulesLeader();
 function getMember(listMember: any[]): string {

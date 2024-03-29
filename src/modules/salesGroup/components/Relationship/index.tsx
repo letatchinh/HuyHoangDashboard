@@ -1,3 +1,4 @@
+import { Typography } from 'antd';
 import { get } from 'lodash';
 import React, { useMemo } from 'react';
 import { Tree } from 'react-organizational-chart';
@@ -19,6 +20,8 @@ export default function Relationship({id}:propsType) : React.JSX.Element {
         return <div>Loading...</div>
     }
     return (
+        <>
+        <Typography.Title style={{marginTop : 10}} level={5}>Chi tiết sơ đồ nhóm {get(salesGroup,'name','')}</Typography.Title>
         <Tree
         lineWidth={'2px'}
         lineColor={'#3481ff'}
@@ -27,5 +30,6 @@ export default function Relationship({id}:propsType) : React.JSX.Element {
       >
         {getDeepChild(child)}
       </Tree>
+        </>
     )
 }

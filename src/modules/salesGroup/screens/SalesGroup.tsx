@@ -1,4 +1,5 @@
-import { Button, Tag } from "antd";
+import { ApartmentOutlined, AppstoreOutlined } from "@ant-design/icons";
+import { Button, Flex } from "antd";
 import { ColumnsType } from "antd/es/table/InternalTable";
 import { get } from "lodash";
 import { useRef, useState } from "react";
@@ -10,14 +11,12 @@ import WhiteBox from "~/components/common/WhiteBox";
 import { StringToSlug } from "~/utils/helpers";
 import Action from "../components/Action";
 import Address from "../components/Address";
+import ExchangeRate from "../components/ExchangeRate";
 import Member from "../components/Member";
 import Relationship from "../components/Relationship";
 import SalesGroupForm from "../components/SalesGroupForm";
+import SalesGroupTree from "../components/SalesGroupTree";
 import TargetSalesGroup from "../components/TargetSalesGroup";
-import {
-  SALES_GROUP_GEOGRAPHY_COLOR,
-  SALES_GROUP_GEOGRAPHY_VI
-} from "../constants";
 import {
   useGetSalesGroups,
   useGetSalesGroupsSearch,
@@ -25,10 +24,6 @@ import {
 } from "../salesGroup.hook";
 import { SalesGroupType } from "../salesGroup.modal";
 import useSalesGroupStore from "../salesGroupContext";
-import ExchangeRate from "../components/ExchangeRate";
-import TableSelect from "../components/ExchangeRate/TableSelect";
-const CLONE_SALES_GROUP_GEOGRAPHY_VI: any = SALES_GROUP_GEOGRAPHY_VI;
-const CLONE_SALES_GROUP_GEOGRAPHY_COLOR: any = SALES_GROUP_GEOGRAPHY_COLOR;
 export default function SalesGroup() {
   const {
     updateSalesGroup,
@@ -52,7 +47,7 @@ export default function SalesGroup() {
   const [expandedRowKeys, setExpandedRowKeys]: any = useState([]);
   const [query] = useSalesGroupQueryParams();
   const [data, isLoading, actionUpdate] = useGetSalesGroups(query);
-  console.log(data,'data');
+  const [modeView,setModeView] = useState<'table' | 'tree'>('table');
   
   const dataSearch = useGetSalesGroupsSearch();
 
@@ -194,7 +189,13 @@ export default function SalesGroup() {
           showSelect={false}
           isShowButtonAdd
         />
-        <TableAnt
+        <Flex style={{marginTop : 20}}>
+          <Button.Group>
+            <Button onClick={() => setModeView('table')} type={modeView === 'table' ? 'primary' : 'default'} icon={<AppstoreOutlined />}/>
+            <Button onClick={() => setModeView('tree')} type={modeView === 'tree' ? 'primary' : 'default'} icon={<ApartmentOutlined />}/>
+          </Button.Group>
+        </Flex>
+        {modeView === 'table' && <TableAnt
           expandable={{
             expandedRowKeys,
             
@@ -222,8 +223,8 @@ export default function SalesGroup() {
           pagination={false}
           bordered
           style={{ marginTop: 20 }}
-          // scroll={{ x: 1500 }}
-        />
+        />}
+        {modeView === 'tree' && <SalesGroupTree dataSource={dataSearch?.length ? dataSearch : data}/>}
       </WhiteBox>
       <ModalAnt
         onCancel={onCloseForm}
@@ -246,7 +247,6 @@ export default function SalesGroup() {
         destroyOnClose
         width={"max-content"}
         centered
-        title="Chi tiết sơ đồ"
       >
         <Relationship id={id} />
       </ModalAnt>
