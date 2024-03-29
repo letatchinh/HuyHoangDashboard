@@ -8,10 +8,12 @@ import RenderLoading from "~/components/common/RenderLoading";
 type propsType = {
   isLoading: boolean;
   typePharmacy: any;
+  onChange: (value: string) => void;
 };
 export default function SelectTypePharmacy({
   isLoading,
   typePharmacy,
+  onChange
 }: propsType): React.JSX.Element {
   const [reFetch, setReFetch] = useState(false);
   const [typesPharmacy, loading] = useFetchState({
@@ -44,6 +46,7 @@ export default function SelectTypePharmacy({
             style={{ width: "100%" }}
             showSearch
             filterOption={filterSelectWithLabel}
+            onChange={onChange}
           />
         )}
       </Form.Item>

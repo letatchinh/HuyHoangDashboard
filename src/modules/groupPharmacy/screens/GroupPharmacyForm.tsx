@@ -1,5 +1,5 @@
 import { Button, Form, Input, Row } from "antd";
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   useCreateGroupPharmacy,
   useGetGroupPharmacy,
@@ -24,6 +24,7 @@ export const GroupPharmacyForm = ({ onClose, id, handleUpdate }: Props) => {
   const [isSubmitLoading, handleCreate] = useCreateGroupPharmacy(onClose);
   const [groupPharmacy, isLoading] = useGetGroupPharmacy(id);
   const initSalesChannel = useInitGroupPharmacy(groupPharmacy, id);
+  const [selectedCustomerGroupId, setSelectedCustomerGroupId] = useState<string | undefined>();
   useResetGroupPharmacyAction();
 
   useEffect(() => {
@@ -54,6 +55,9 @@ export const GroupPharmacyForm = ({ onClose, id, handleUpdate }: Props) => {
     },
     [handleCreate, handleUpdate, id, onClose]
   );
+  const onTypePharmacyChange = (value: string) => {
+    setSelectedCustomerGroupId(value);
+  };
   return (
     <div className="sale-channel page-wraper form-page-content">
       <h4 style={{ margin: "20px 0 40px 20px" }}>
@@ -77,6 +81,7 @@ export const GroupPharmacyForm = ({ onClose, id, handleUpdate }: Props) => {
 
           <SelectTypePharmacy
            isLoading={isLoading} typePharmacy={groupPharmacy}
+           onChange={onTypePharmacyChange}
           />
           <FormItem
             label="Hệ số"

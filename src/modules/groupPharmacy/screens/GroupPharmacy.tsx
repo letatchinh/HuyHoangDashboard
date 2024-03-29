@@ -89,11 +89,11 @@ export default function GroupPharmacy(props: propsType): React.JSX.Element {
       },
       {
         title: "Loại nhà thuốc",
-        dataIndex: "rateType",
-        key: 'name',
+        dataIndex: "customerGroup",
+        key: 'title',
         width: 220,
         render(value, record) {
-          return <Typography.Text>{value?.name}</Typography.Text>;
+          return <Typography.Text>{value?.title}</Typography.Text>;
         },
       },
       {
@@ -135,6 +135,26 @@ export default function GroupPharmacy(props: propsType): React.JSX.Element {
           );
         },
       },
+      ...(canDownload
+        ? [
+            {
+              title: "Lựa chọn",
+              key: "_id",
+              width: 80,
+              align: "center" as any,
+              
+              render: (item: any, record: any) => {
+                const id = record._id;
+                return (
+                  <Checkbox
+                    checked={arrCheckBox.includes(id)}
+                    onChange={(e) => onChangeCheckBox(e.target.checked, id)}
+                  />
+                );
+              },
+            },
+          ]
+        : []),
       {
         title: "Thao tác",
         dataIndex: "_id",
@@ -163,26 +183,7 @@ export default function GroupPharmacy(props: propsType): React.JSX.Element {
           );
         },
       },
-      ...(canDownload
-        ? [
-            {
-              title: "Lựa chọn",
-              key: "_id",
-              width: 80,
-              align: "center" as any,
-              
-              render: (item: any, record: any) => {
-                const id = record._id;
-                return (
-                  <Checkbox
-                    checked={arrCheckBox.includes(id)}
-                    onChange={(e) => onChangeCheckBox(e.target.checked, id)}
-                  />
-                );
-              },
-            },
-          ]
-        : []),
+      
     ],
     []
   );
@@ -288,6 +289,7 @@ export default function GroupPharmacy(props: propsType): React.JSX.Element {
           loading={isLoading}
           rowKey={(rc) => rc?._id}
           columns={columns}
+          scroll={{x : 1500}}
           size="small"
           pagination={{
             ...paging,

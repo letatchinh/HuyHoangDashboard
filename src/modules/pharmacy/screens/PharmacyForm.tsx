@@ -34,6 +34,7 @@ export default function PharmacyForm({ onClose, id, handleUpdate }: Props) {
   useResetPharmacyAction();
   const [cityCode, setCityCode]: any = useState();
   const [districtCode, setDistrictCode]: any = useState();
+  const [selectedCustomerGroupId, setSelectedCustomerGroupId] = useState<string | undefined>();
 
   useEffect(() => {
     if (!id) {
@@ -75,6 +76,9 @@ export default function PharmacyForm({ onClose, id, handleUpdate }: Props) {
   const options = {
     CITY: "CITY", // thành thị
     COUNTRY: "COUNTRY", // nông thôn
+  };
+  const onTypePharmacyChange = (value: string) => {
+    setSelectedCustomerGroupId(value);
   };
   return (
     <div className="pharmacy-profile page-wraper form-page-content">
@@ -167,12 +171,14 @@ export default function PharmacyForm({ onClose, id, handleUpdate }: Props) {
               <SelectTypePharmacy
                 isLoading={isLoading}
                 typePharmacy={pharmacy}
+                onChange={onTypePharmacyChange}
               />
             </Col>
             <Col span={12}>
               <SelectGroupPharmacy
                 isLoading={isLoading}
                 groupPharmacy={pharmacy}
+                customerGroupId={selectedCustomerGroupId}
               />
             </Col>
           </Row>
