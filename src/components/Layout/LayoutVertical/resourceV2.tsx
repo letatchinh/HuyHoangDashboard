@@ -61,19 +61,6 @@ const permissionEmployee = [
   POLICIES.READ_EMPLOYEEPOSITION
 ];
 
-// const RenderRouter = () => {
-//   const checkPermissionEmployee = useMatchPolicy(POLICIES.EMPLOYEE);
-//   const checkPermissionEmployeeGroup = useMatchPolicy(POLICIES.EMPLOYEEGROUP);
-//   if (checkPermissionEmployee) {
-//     return PATH_APP.employee.root;
-//   } else {
-//     if (checkPermissionEmployeeGroup) {
-//       return '/employee/group/:groupId'
-//     };
-//   };
-// };
-
-//
 export const resource: ItemType[] =[ 
   {
     label: "WorldPharmaVN",

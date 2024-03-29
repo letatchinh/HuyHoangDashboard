@@ -181,6 +181,8 @@ const RESOURCE = (): ResourceType => {
     ranking
   ];
   const GROUP_VOUCHER: string[] = [
+    voucherSupplier,
+    voucherPharmacy,
     statusVoucher,
     historyVoucher
   ]

@@ -30,7 +30,7 @@ export type GlobalDetailReport = {
   exchangeRateOverrideTargetsTeam: ExchangeRateType[];
   exchangeRateOverrideTargetsSelf: ExchangeRateType[];
   dataSourceDetailSalary: ItemDataSource[];
-  employeeLevel: string;
+  employeeLevel: string | EmployeeLevelType;
   dataSwap?: DataInitSwap | null;
   data?: ReportEmployeeType | null;
   loading: boolean;
