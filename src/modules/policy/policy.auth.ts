@@ -34,6 +34,9 @@ const todoList = 'todoList';
 const voucher = 'voucher';
 const statusVoucher = 'statusVoucher';
 const historyVoucher = 'historyVoucher';
+// Thời gian tự động chạy đơn mua
+const configCronTime = 'configCronTime';
+
 const RESOURCES = [
   //Setting
   configDiscount,
@@ -76,6 +79,7 @@ const RESOURCES = [
   todoList,
 
   medicine,
+  configCronTime,
 ];
 
 //ACTIONS
@@ -169,6 +173,10 @@ const RESOURCE = (): ResourceType => {
    const GROUP_MEDICINE: string[] = [
     medicine
   ]
+
+  const CONFIG_CRON_TIME: string[] = [
+    configCronTime
+  ]
   return {
     GROUP_USER,
     GROUP_EMPLOYEE,
@@ -185,6 +193,7 @@ const RESOURCE = (): ResourceType => {
     GROUP_WORK_MANAGERMENT,
     GROUP_VOUCHER,
     GROUP_MEDICINE,
+    CONFIG_CRON_TIME,
   };
 };
 

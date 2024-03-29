@@ -20,6 +20,7 @@ export type ResourceType = {
   GROUP_WORK_MANAGERMENT: string[],
   GROUP_VOUCHER: string[],
   GROUP_MEDICINE: string[],
+  CONFIG_CRON_TIME: string[],
 };
 
 export type policyType = 'write' | 'read' | 'update' | 'delete' | 'download' | 'admin';
@@ -226,6 +227,13 @@ export type PoliciesType = {
   'UPDATE_MEDICINE' |
   'DELETE_MEDICINE' |
   'DOWNLOAD_MEDICINE' |
-  'ADMIN_MEDICINE' 
+  'ADMIN_MEDICINE' |
+
+  'READ_CONFIGCRONTIME'|
+  'WRITE_CONFIGCRONTIME' |
+  'UPDATE_CONFIGCRONTIME' |
+  'DELETE_CONFIGCRONTIME' |
+  'DOWNLOAD_CONFIGCRONTIME' |
+  'ADMIN_CONFIGCRONTIME' 
   ]: [string, policyType];
 };

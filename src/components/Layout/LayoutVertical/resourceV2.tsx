@@ -128,7 +128,7 @@ import {
               path: PATH_APP.configurationCronTime.root,
               key: PATH_APP.configurationCronTime.root,
               icon: <FieldTimeOutlined />,
-              // permission: [POLICIES.READ_CONFIGDISCOUNT],
+              permission: [POLICIES.READ_CONFIGCRONTIME],
             },
           ],
         },
