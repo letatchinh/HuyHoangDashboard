@@ -130,7 +130,7 @@ export default function CostManagement(props: propsType): React.JSX.Element {
   const handleOpenUpdate = (id: any,price:any) => {
     setOpenForm(true);
     setPriceByProduct(price);
-      setId(id);
+    setId(id);
   };
   const handleOpenFormCreate = () => { 
     setId(null);
@@ -222,14 +222,6 @@ export default function CostManagement(props: propsType): React.JSX.Element {
         return formatter(get(variants,'cost',0))
       },
     },
-    // {
-    //   title: "Lợi nhuận",
-    //   dataIndex: "variants",
-    //   key: "variants",
-    //   render(variants, record, index) {
-    //     return formatter(get(variants,'profitValue',0))
-    //   },
-    // },
     {
       title: "Chi phí vận chuyển",
       dataIndex: "shippingCost",
@@ -270,21 +262,22 @@ export default function CostManagement(props: propsType): React.JSX.Element {
         <Button
           icon={<InfoCircleTwoTone />}
           onClick={() =>{ 
-            if(get(record,'totalPrices',0) === 0){
-            return messageApi.open({
-              type: "error",
-              content: "Sản phẩm chưa có doanh thu",
-              className: "custom-class",
-              style: {
-                bottom: "20px", /* Điều chỉnh khoảng cách từ bottom tùy ý */
-                right: "20px",
-                top: "90vh",
-                height: "150px",
+          //   if(get(record,'totalPrices',0) === 0){
+          //   return messageApi.open({
+          //     type: "error",
+          //     content: "Sản phẩm chưa có doanh thu",
+          //     className: "custom-class",
+          //     style: {
+          //       bottom: "20px",
+          //       right: "20px",
+          //       top: "90vh",
+          //       height: "150px",
 
-                position: "absolute",
-              },
-            });}
-           else return handleOpenUpdate(_id,get(record,'totalPrices',0))}
+          //       position: "absolute",
+          //     },
+          //   });}
+            //  else return 
+            handleOpenUpdate(_id,get(record,'totalPrices',0))}
           }
           type="primary"
           size="small"

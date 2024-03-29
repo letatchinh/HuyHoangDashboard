@@ -222,6 +222,15 @@ export function convertQueryToObject(){
 }
 export const formatNumberThreeComma = (num: any) => num?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 
+export const formatNumberIsPercent = (value: any) => {
+  if (!value) return '';
+  const floatValue = parseFloat(value);
+  if (floatValue <= 100) {
+      return floatValue.toString();
+  } else {
+      return (floatValue / 10).toString();
+  }
+};
 export const compactAddress = (address: any) => compact([address?.street, address?.ward, address?.district, address?.city]).join(", ") 
 
 export const convertQueryString = (queryString: any) => {
