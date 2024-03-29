@@ -14,14 +14,18 @@ export type ResourceType = {
   // Đơn hàng
   GROUP_BILL: string[],
   NOTIFICATION_BOT_MANAGER: string[],
-
   GROUP_SUPPLIER: string[],
-
   GROUP_WORK_MANAGERMENT: string[],
   GROUP_VOUCHER: string[],
   GROUP_MEDICINE: string[],
   GROUP_SHIPPINGCOST: string[],
   GROUP_REPORT: string[],
+  // Kênh bán hàng
+  SALE_CHANNEL: string[],
+  // Loại nhà thuốc
+  TYPE_PHARMACY: string[],
+  // Nhóm nhà thuốc
+  GROUP_PHARMACY: string[],
 };
 
 export type policyType = 'write' | 'read' | 'update' | 'delete' | 'download' | 'admin';
@@ -368,6 +372,30 @@ export type PoliciesType = {
   'UPDATE_ORDERSUPPLIER' |
   'DELETE_ORDERSUPPLIER' |
   'DOWNLOAD_ORDERSUPPLIER' |
-  'ADMIN_ORDERSUPPLIER' 
+  'ADMIN_ORDERSUPPLIER' |
+
+  // Kênh bán hàng
+  'READ_SALECHANNEL' |
+  'WRITE_SALECHANNEL' |
+  'UPDATE_SALECHANNEL' |
+  'DELETE_SALECHANNEL' |
+  'DOWNLOAD_SALECHANNEL' |
+  'ADMIN_SALECHANNEL' |
+
+  // Loại nhà thuốc
+  'READ_TYPEPHARMACY' |
+  'WRITE_TYPEPHARMACY' |
+  'UPDATE_TYPEPHARMACY' |
+  'DELETE_TYPEPHARMACY' |
+  'DOWNLOAD_TYPEPHARMACY' |
+  'ADMIN_TYPEPHARMACY' |
+
+  // Nhóm nhà thuốc
+  'READ_GROUPPHARMACY' | 
+  'WRITE_GROUPPHARMACY' |
+  'UPDATE_GROUPPHARMACY' |
+  'DELETE_GROUPPHARMACY' |
+  'DOWNLOAD_GROUPPHARMACY' |
+  'ADMIN_GROUPPHARMACY'
   ]: [string, policyType];
 };

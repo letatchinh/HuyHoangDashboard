@@ -37,6 +37,11 @@ import benefitConfiguration from '~/modules/reportSalary/benefitConfiguration/in
 import reportEmployee from '~/modules/report/reportEmployee/index';
 import employeeGroup from '~/modules/employeeGroup/index';
 import cronSalary from '~/modules/cronSalary/index';
+import saleChannel from '~/modules/saleChannel';
+import reportSupplierModule from '~/modules/report/reportSupplier'; //
+import configurationCronTime from "~/modules/configurationCronTime";
+import typePharmacy from '~/modules/typePharmacy';
+import groupPharmacy from '~/modules/groupPharmacy';
 
 export default function* rootSaga() {
   yield all([
@@ -79,5 +84,10 @@ export default function* rootSaga() {
     reportEmployee.redux.saga(),
     employeeGroup.redux.saga(),
     cronSalary.redux.saga(),
+    reportSupplierModule.redux.saga(),
+    saleChannel.redux.saga(),
+    configurationCronTime.redux.saga(),
+    typePharmacy.redux.saga(),
+    groupPharmacy.redux.saga(),
   ]);
 };

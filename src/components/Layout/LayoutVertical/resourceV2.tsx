@@ -9,6 +9,7 @@ import {
   ApartmentOutlined,
   BellFilled,
   FundProjectionScreenOutlined,
+  FieldTimeOutlined,
 } from "@ant-design/icons";
 import { MenuProps } from "antd";
 import React, { useCallback, useMemo } from "react";
@@ -150,6 +151,34 @@ export const resource: ItemType[] =[
             path: PATH_APP.benefitConfiguration.root,
             key: PATH_APP.benefitConfiguration.root,
             permission: [POLICIES.READ_CONFIGBENEFIT], //
+          },
+          {
+            label: "Kênh bán hàng",
+            icon: <i className="fa-solid fa-cart-shopping"></i>,
+            path: PATH_APP.saleChannel.root,
+            key: PATH_APP.saleChannel.root,
+            permission: [POLICIES.READ_SALECHANNEL],
+          },
+          {
+            label: "Cấu hình thời gian tự động",
+            path: PATH_APP.configurationCronTime.root,
+            key: PATH_APP.configurationCronTime.root,
+            icon: <FieldTimeOutlined />,
+            // permission: [POLICIES.READ_CONFIGDISCOUNT],
+          },
+          {
+            label: "Loại nhà thuốc",
+            path: PATH_APP.typePharmacy.root,
+            key: PATH_APP.typePharmacy.root,
+            icon: <i className="fa-solid fa-truck-medical"></i>,
+            permission: [POLICIES.READ_TYPEPHARMACY],
+          },
+          {
+            label: "Nhóm nhà thuốc",
+            path: PATH_APP.groupPharmacy.root,
+            key: PATH_APP.groupPharmacy.root,
+            icon: <i className="fa-solid fa-notes-medical"></i>,
+            permission: [POLICIES.READ_GROUPPHARMACY],
           },
         ],
       },

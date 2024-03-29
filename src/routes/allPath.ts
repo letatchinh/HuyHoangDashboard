@@ -128,5 +128,17 @@ export const PATH_APP = {
   cronSalary : {
     root:  path(ROOTS.app, '/cronSalary'),
   },
+  saleChannel: {
+    root: path(ROOTS.app, '/sale-channel'),
+  },
+  configurationCronTime: {
+    root: path(ROOTS.app, "/configuration-cronTime"),
+  },
+  typePharmacy: {
+    root: path(ROOTS.app, "/type-pharmacy")
+  },
+  groupPharmacy: {
+    root: path(ROOTS.app, "/group-pharmacy")
+  },
 
 };

@@ -16,6 +16,7 @@ import userModule from '~/modules/user';
 import userGroupModule from '~/modules/userGroup';
 import policy from '~/modules/policy';
 import vouchers from '~/modules/vouchers';
+import reportSupplier from '~/modules/report/reportSupplier'; //
 import manufacturerModule from '~/modules/manufacturer';
 import productUnitModule from '~/modules/productUnit';
 import rankingModule from '~/modules/ranking';
@@ -41,6 +42,11 @@ import benefitConfiguration from '~/modules/reportSalary/benefitConfiguration/in
 import reportEmployee from '~/modules/report/reportEmployee/index';
 import employeeGroup from '~/modules/employeeGroup/index';
 import cronSalary from '~/modules/cronSalary';
+import saleChannel from '~/modules/saleChannel/index';
+import configurationCronTime from "~/modules/configurationCronTime";
+import typePharmacy from '~/modules/typePharmacy';
+import groupPharmacy from '~/modules/groupPharmacy';
+
 const authPersistConfig = {
     key: 'auth',
     storage: localStorage,
@@ -94,5 +100,10 @@ const rootReducer = combineReducers({
     employeeGroup: employeeGroup.redux.reducer,
     cronSalary: cronSalary.redux.reducer,
 
+    reportSupplier: reportSupplier.redux.reducer,
+    saleChannel: saleChannel.redux.reducer,
+    configurationCronTime: configurationCronTime.redux.reducer,
+    typePharmacy: typePharmacy.redux.reducer,
+    groupPharmacy: groupPharmacy.redux.reducer,
 });
 export default rootReducer

@@ -56,6 +56,16 @@ const configBenefit = 'configBenefit';
 
 // Đơn hàng nhà cung cấp
 const orderSupplier = 'orderSupplier';
+
+// Kênh bán hàng
+const salesChannel ='salesChannel';
+
+// Loại nhà thuốc
+const customerGroup = 'customerGroup';
+
+// Nhóm nhà thuốc
+const customer = 'customer';
+
 const RESOURCES = [
   //Setting
   configDiscount,
@@ -108,6 +118,7 @@ const RESOURCES = [
   historySupplierMineral,
   
   cumulativeEvent,
+  orderSupplier,
   shippingCost,
   
   salesGroup,
@@ -119,6 +130,9 @@ const RESOURCES = [
   configBenefit,
   
   orderSupplier,
+  salesChannel,
+  customerGroup,
+  customer,
 ];
 
 //ACTIONS
@@ -229,7 +243,18 @@ const RESOURCE = (): ResourceType => {
     reportSalary,
     configBaseSalary,
     configCronTime,
-    configBenefit
+    configBenefit,
+  ]
+  const SALE_CHANNEL: string[] = [
+    salesChannel
+  ];
+
+  const TYPE_PHARMACY: string[] = [
+    customerGroup
+  ];
+
+  const GROUP_PHARMACY: string[] = [
+    customer
   ];
 
   return {
@@ -250,6 +275,9 @@ const RESOURCE = (): ResourceType => {
     GROUP_MEDICINE,
     GROUP_SHIPPINGCOST,
     GROUP_REPORT,
+    SALE_CHANNEL,
+    TYPE_PHARMACY,
+    GROUP_PHARMACY,
   };
 };
 

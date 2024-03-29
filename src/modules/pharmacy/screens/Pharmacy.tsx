@@ -117,8 +117,9 @@ export default function Pharmacy() {
         // dataIndex: "code",
         key: "code",
         width: 120,
-        render(record) {
+        render: (record) => {
           return (
+            <WithPermission permission={POLICIES.READ_PHARMAPROFILE}>
             <Link
               className="link_"
               to={`/pharmacy/${record?._id}`}
@@ -126,6 +127,7 @@ export default function Pharmacy() {
             >
               {record?.code}
             </Link>
+            </WithPermission>
           );
         },
       },
@@ -146,7 +148,7 @@ export default function Pharmacy() {
         title: "Địa chỉ",
         dataIndex: "address",
         key: "address",
-        width: 300,
+        width: 350,
         render(value, record, index) {
           return concatAddress(value);
         },
@@ -161,10 +163,19 @@ export default function Pharmacy() {
         },
       },
       {
+        title: "Trình dược viên",
+        dataIndex: "employee",
+        key: "employee",
+        width: 180,
+        render: (record) => {
+          return get(record, "fullName")
+        }
+      },
+      {
         title: "Công nợ",
         dataIndex: "resultDebt",
         key: "resultDebt",
-        width: 120,
+        width: 180,
         render(value) {
           return formatNumberThreeComma(value);
         },
@@ -212,12 +223,31 @@ export default function Pharmacy() {
           );
         },
       },
+      ...(
+        canDownload ? [
+          {
+            title: 'Lựa chọn',
+            key: '_id',
+            width: 80,
+            align: 'center' as any,
+            render: (item: any, record: any) =>
+            {
+              const id = record._id;
+              return (
+                <Checkbox
+                  checked= {arrCheckBox.includes(id)}
+                  onChange={(e)=>onChangeCheckBox(e.target.checked, id)}
+            />)}
+          },
+        ]: []
+      ),
       {
         title: "Thao tác",
         dataIndex: "_id",
-        // key: "actions",
-        width: 150,
+        key: "_id",
         align: "center",
+        fixed : 'right',
+        width : 200,
         render: (record) => {
           return (
             <div className="custom-table__actions">
@@ -239,26 +269,8 @@ export default function Pharmacy() {
           );
         },
       },
-        ...(
-      canDownload ? [
-        {
-          title: 'Lựa chọn',
-          key: '_id',
-          width: 80,
-          align: 'center' as any,
-          render: (item: any, record: any) =>
-          {
-            const id = record._id;
-            return (
-              <Checkbox
-                checked= {arrCheckBox.includes(id)}
-                onChange={(e)=>onChangeCheckBox(e.target.checked, id)}
-          />)}
-        },
-      ]: []
-    ),
     ],
-    []
+    [arrCheckBox]
   );
 
   const onChangeStatus = (
@@ -361,6 +373,7 @@ export default function Pharmacy() {
           dataSource={pharmacies}
           loading={isLoading}
           rowKey={(rc) => rc?._id}
+          scroll={{x : 1500}}
           columns={columns}
           size="small"
           pagination={{
