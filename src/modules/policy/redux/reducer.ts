@@ -11,6 +11,11 @@ interface PolicyState extends initStateSlice<resources> {
   isGetResourcesLoading?: boolean,
   getResourcesFailed?: any,
   actions?: resources[], 
+  
+  actionsEmployee?: resources[], 
+  resourcesEmployee?: resources[],
+  isGetResourcesEmployeeLoading?: boolean,
+  getResourcesEmployeeFailed?: any,
 };
 
 class PolicyClassExtend extends InstanceModuleRedux {
@@ -68,13 +73,50 @@ class PolicyClassExtend extends InstanceModuleRedux {
       updateResourceRedux: (state: PolicyState, { payload }: any) => {
         state.resources = state.resources;
       },
+
+      //Employee
+      
+      getResourcesEmployeeRequest: (state: PolicyState , { payload}: any) => {
+        state.isGetResourcesEmployeeLoading = true; 
+      },
+      getResourcesEmployeeSuccess: (state: PolicyState , { payload }: any) => {
+        state.resourcesEmployee = payload.resources;
+        state.isGetResourcesEmployeeLoading = false;
+        state.actionsEmployee = payload.actions;
+    
+      },
+      getResourcesEmployeeFailed: (state: PolicyState , { payload}: any) => {
+        state.isGetResourcesEmployeeLoading = false;
+        state.getResourcesEmployeeFailed = payload;
+      },
+      updateResourcesEmployeeRequest: (state: PolicyState , { payload}: any) => {
+        state.isGetResourcesEmployeeLoading = true; 
+      },
+      updateResourcesEmployeeSuccess: (state: PolicyState, { payload }: { payload: { actions: resources[], resources: resources[] } }) => {
+        console.log(payload,'payload')
+        state.resourcesEmployee = payload.resources;
+        state.isGetResourcesEmployeeLoading = false;
+        state.actionsEmployee = payload.actions;
+      },
+      updateResourcesEmployeeFailed: (state: PolicyState , { payload}: any) => {
+        state.isGetResourcesEmployeeLoading = false;
+        state.getResourcesEmployeeFailed = payload;
+      },
+      updateResourcesEmployeeRedux: (state: PolicyState, { payload }: any) => {
+        state.resourcesEmployee = state.resources;
+      },
       // Want Add more reducer Here...
     }
     this.cloneInitState = {
       ...this.initialState,
       resources: [],
       isGetResourcesLoading: false,
-      getResourcesFailed: false
+      getResourcesFailed: false,
+
+      actionsEmployee: [],
+      resourcesEmployee: [],
+      isGetResourcesEmployeeLoading: false,
+      getResourcesEmployeeFailed: false
       // Want Add more State Here...
     }
   }

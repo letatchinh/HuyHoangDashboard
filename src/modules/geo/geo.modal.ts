@@ -30,3 +30,7 @@ export type GeoState = {
     getAddressFailed: null | any;
     isLoadingGetAddress: boolean;
   };
+
+  export type PropsGeoTreeSelectType = {
+
+  }

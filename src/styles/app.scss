@@ -16,6 +16,9 @@
 @import "../modules/workSprint/workSprint.style.scss";
 @import "../modules/workTask/workTask.style.scss";
 @import "~/modules/supplier/supplier.style.scss";
+@import "~/modules/reportSalary/benefitConfiguration/benefitConfiguration.style.scss";
+@import "~/modules/report/reportEmployee/reportEmployee.style.scss";
+@import "~/modules/salesGroup/salesGroup.style.scss";
 
 
 // Component
@@ -27,4 +30,5 @@
 
 //Antd
 @import 'antd/modal.scss';
+@import 'antd/input.scss';
 @import "component/columnAction.scss";

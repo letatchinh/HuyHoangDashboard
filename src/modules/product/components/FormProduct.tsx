@@ -14,6 +14,7 @@ import {
   useCreateProduct,
   useGetProduct,
   useResetAction,
+  useUpdateProduct,
 } from "../product.hook";
 import {
   FieldTypeFormProduct,
@@ -27,6 +28,8 @@ import SelectProductGroup from "./SelectProductGroup";
 import Variants from "./Variants";
 import CumulativeDiscountModule from '~/modules/cumulativeDiscount';
 import { useSupplierInfoRedux } from "~/modules/productsAll/productsAll.hook";
+import { useDispatch } from "react-redux";
+import { productActions } from "../redux/reducer";
 
 import TabPane from "antd/es/tabs/TabPane";
 import useNotificationStore from "~/store/NotificationContext";
@@ -44,19 +47,35 @@ export default function FormProduct({
   id,
   onCancel,
   onUpdate,
+  setSupplierId,
+  setStep
 }: TypePropsFormProduct): React.JSX.Element {
   // const supplierInfo = useSupplierInfoRedux();
   const {onNotify} = useNotificationStore();
   const [form] = Form.useForm();
-  const [backupForm,setBackupForm] = useState<FieldTypeFormProduct[]>([]);
-  
-  const [isSubmitLoading, onCreate] = useCreateProduct(onCancel);
+  const [backupForm, setBackupForm] = useState<FieldTypeFormProduct[]>([]);
+  const dispatch = useDispatch();
+  const resetAction = () => {
+    return dispatch(productActions.resetAction());
+  };
+  const [isSubmitLoading, onCreate] = useCreateProduct(() => {
+    onCancel();
+    resetAction();
+    setSupplierId && setSupplierId(null);
+    setStep && setStep(0)
+  });
+  // const [, onUpdateProduct] = useUpdateProduct(() => {
+  //   onCancel();
+  //   resetAction();
+  //   setSupplierId && setSupplierId(null);
+  //   setStep &&  setStep(0);
+  // });
   const [product, isLoading] = useGetProduct(id);
-  // const [dataNotificationUndo,setDataNotificationUndo] = useState({
-  //   open : false,
-  //   description : null
-  // })
-  useResetAction();
+  const [dataNotificationUndo,setDataNotificationUndo] = useState({
+    open : false,
+    description : null
+  })
+  // useResetAction();
   
   const onUndoForm = (isLast = false) => {
     

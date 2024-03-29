@@ -2,7 +2,7 @@ import { Button, Col, Form, Input, Row, Select, Skeleton } from "antd";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import UploadImage from "~/components/common/Upload/UploadImage";
 import AddressFormSection from "~/components/common/AddressFormSection";
-import { useCreateUser, useGetUser, useUpdateUser } from "../user.hook";
+import { useCreateUser, useGetUser, useInitialValues, useUpdateUser } from "../user.hook";
 import Account from "~/components/common/Account";
 import apis from "../user.api";
 import toastr from "toastr";
@@ -43,6 +43,7 @@ export default function UserForm(props: IProps) {
     resetAction();
   });
   const [user, isLoading] = useGetUser(id);
+  const initialValues = useInitialValues(user);
 
   //fetch user groups
   const { branchId }: any = useParams();
@@ -55,6 +56,8 @@ export default function UserForm(props: IProps) {
 
   useEffect(() => {
     if (user) {
+      console.log(user, 'user')
+      console.log(form.getFieldsValue(),'  form.getFieldsValue()')
       form.setFieldsValue({
         ...user,
         username: user?.adapter?.user?.username,
@@ -133,7 +136,7 @@ export default function UserForm(props: IProps) {
         onValuesChange={onValuesChange}
         scrollToFirstError
         requiredMark={false}
-        // initialValues={initUser}
+        // initialValues={initialValues}
         labelCol={{ sm: 24, md: 24, lg: 8, xl: 8 }}
         wrapperCol={{ sm: 24, md: 24, lg: 16, xl: 16 }}
       >

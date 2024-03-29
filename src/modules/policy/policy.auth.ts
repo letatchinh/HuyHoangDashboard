@@ -5,14 +5,18 @@ import { PoliciesType, ResourceType } from './policy.modal';
 const branch = 'branch';
 const company = 'company';
 const employee = 'employee';
+const employeePosition = 'employeePosition'; //Key position for staff is seller 
+const employeeGroup = 'employeeGroup';
 const user = 'user';
 const userGroup = 'userGroup';
 const pharmacy = 'pharmacy';
 const configDiscount = 'configDiscount';
-const pharmaProfile = 'pharmaProfile';
 const notificationBotManager = 'notificationBotManager';
 const shippingCost = 'shippingCost';
 
+//Pharmacy
+const pharmaProfile = 'pharmaProfile';
+const contractPharmacy = 'contractPharmacy';
 
 // Đơn hàng
 const bill = 'bill';
@@ -27,17 +31,28 @@ const quotation = 'quotation';
 // Nhà cung cấp
 const supplier = 'supplier';
 const debt = 'debt';
+const cumulativeSalesSupplier = 'cumulativeSalesSupplier';
 
 // Sản phẩm Nhà cung cấp
 const product = 'product';
 const todoConfigStatus = 'todoConfigStatus';
 const todoList = 'todoList';
-const voucher = 'voucher';
+const voucherPharmacy = 'voucherPharmacy';
+const voucherSupplier = 'voucherSupplier';
 const statusVoucher = 'statusVoucher';
 const historyVoucher = 'historyVoucher';
 
+const revenueSupplier = 'revenueSupplier';
+const historySupplierMineral = 'historySupplierMineral';
 // Quản lý luỹ kế
 const cumulativeEvent = 'cumulativeEvent';
+
+const salesGroup = 'salesGroup';
+// Báo cáo
+const reportSalary = 'reportSalary';
+const configBaseSalary = 'configBaseSalary';
+const configCronTime = 'configCronTime';
+const configBenefit = 'configBenefit';
 
 // Đơn hàng nhà cung cấp
 const orderSupplier = 'orderSupplier';
@@ -49,11 +64,14 @@ const RESOURCES = [
   branch,
   // company,
   employee,
+  employeePosition,
+  employeeGroup,
   user,
   userGroup,
 
 
   // pharmacy,
+  contractPharmacy,
   manuFacturer,
   unit,
   ranking,
@@ -61,17 +79,19 @@ const RESOURCES = [
   productGroup,
   //
   medicine,
-  supplier,
   product,
-
+  
   //VOUCHER
-  voucher,
+  voucherPharmacy,
+  voucherSupplier,
   statusVoucher,
   historyVoucher,
-  supplier,
-  product,
+  
+  //Supplier
   debt,
-
+  supplier,
+  cumulativeSalesSupplier,
+  
   // Pharmacy Profile
   pharmaProfile,
   
@@ -82,9 +102,20 @@ const RESOURCES = [
   todoConfigStatus,
   todoList,
 
-  medicine,
-  shippingCost,
+  revenueSupplier,
+  historySupplierMineral,
+  
   cumulativeEvent,
+  shippingCost,
+  
+  salesGroup,
+
+  //Report
+  reportSalary,
+  configBaseSalary,
+  configCronTime,
+  configBenefit,
+  
   orderSupplier,
 ];
 
@@ -128,7 +159,9 @@ const RESOURCE = (): ResourceType => {
     userGroup
   ];
   const GROUP_EMPLOYEE : string[] = [
-    employee
+    employee,
+    employeeGroup,
+    employeePosition
   ];
   const GROUP_MANUFACTURER : string[] = [
     manuFacturer
@@ -146,13 +179,14 @@ const RESOURCE = (): ResourceType => {
     ranking
   ];
   const GROUP_VOUCHER: string[] = [
-    voucher,
     statusVoucher,
     historyVoucher
   ]
 
-  const PHARMA_PROFILE: string[] = [
-    pharmaProfile
+  const GROUP_PHARMA: string[] = [
+    pharmaProfile,
+    contractPharmacy,
+    voucherPharmacy
   ];
   
   const GROUP_BILL : string[] = [
@@ -168,6 +202,10 @@ const RESOURCE = (): ResourceType => {
     supplier,
     product,
     debt,
+    revenueSupplier,
+    historySupplierMineral,
+    cumulativeSalesSupplier,
+    voucherSupplier
   ];
   
   const GROUP_WORK_MANAGERMENT: string[] = [
@@ -181,7 +219,14 @@ const RESOURCE = (): ResourceType => {
   ];
   const GROUP_SHIPPINGCOST: string[] = [
     shippingCost
-  ]
+  ];
+
+  const GROUP_REPORT: string[] = [
+    reportSalary,
+    configBaseSalary,
+    configCronTime,
+    configBenefit
+  ];
 
   return {
     GROUP_USER,
@@ -192,7 +237,7 @@ const RESOURCE = (): ResourceType => {
     GROUP_PRODUCTGROUP,
     GROUP_RANKING,
     MEDICINE,
-    PHARMA_PROFILE,
+    GROUP_PHARMA,
     GROUP_BILL,
     NOTIFICATION_BOT_MANAGER,
     GROUP_SUPPLIER,
@@ -200,6 +245,7 @@ const RESOURCE = (): ResourceType => {
     GROUP_VOUCHER,
     GROUP_MEDICINE,
     GROUP_SHIPPINGCOST,
+    GROUP_REPORT,
   };
 };
 

@@ -108,7 +108,8 @@ export class InstanceModuleRedux{
     updateSuccess: (state:initStateSlice, { payload }:{payload:any}) => {
       state.isSubmitLoading = false;
       state.byId = payload;
-      state.list = state.list?.map((item:any) => get(item,'_id') === get(payload,'data._id') ? get(payload,'data') : item);
+      state.list = state.list?.map((item:any) => get(item,'_id') === get(payload,'_id') ? payload : item);
+      state.listSearch = state.listSearch?.map((item:any) => get(item,'_id') === get(payload,'_id') ? payload : item);
       state.updateSuccess = payload;
     },
     updateFailed: (state:initStateSlice, { payload }:{payload:any}) => {
@@ -150,7 +151,7 @@ export class InstanceModuleRedux{
     // Reset the state
     reset: () => this.initialState,
     // Reset the state Action
-    resetAction: (state:any) => ({
+    resetAction: (state:initStateSlice) => ({
       ...state,
       ...omit(this.initialState, ["list"]),
     }),

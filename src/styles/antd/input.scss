@@ -1,0 +1,5 @@
+.noPaddingAfterAddon{
+    & .ant-input-number-group-addon{
+        padding: 0!important;
+    }
+}

@@ -1,7 +1,7 @@
 import { Checkbox, Col, Modal, Row, Select, Typography } from 'antd';
 import { ColumnsType } from "antd/es/table/InternalTable";
 import { get } from 'lodash';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import TableAnt from '~/components/Antd/TableAnt';
 import Breadcrumb from '~/components/common/Breadcrumb';
@@ -20,6 +20,8 @@ import ActionColumn from '../components/ActionColumns';
 import ShowStep from '../components/ShowStep';
 import { useProductsAllQueryParams, useUpdateProductsAllParams } from '../productsAll.hook';
 import { DataType, TypeProps } from '../productsAll.modal';
+import { useSelector } from 'react-redux';
+import { ADAPTER_KEY } from '~/modules/auth/constants';
 
 export default function ProductsAll(props: TypeProps): React.JSX.Element {
   const [query, onTableChange] = useProductsAllQueryParams();
@@ -43,6 +45,8 @@ export default function ProductsAll(props: TypeProps): React.JSX.Element {
   //Download
   const canDownload = useMatchPolicy(POLICIES.DOWNLOAD_PRODUCT);
   const [arrCheckBox, onChangeCheckBox] = useCheckBoxExport();
+  const adapter = useSelector((state: any) => state?.auth?.adapter);
+  const isAdapterIsEmployee = useMemo(() => adapter === ADAPTER_KEY.EMPLOYEE, [adapter]);
 
   const onOpenModal = (id: string | null) => {
     setIsOpen(true);
@@ -137,33 +141,35 @@ export default function ProductsAll(props: TypeProps): React.JSX.Element {
             }
           },
         },
-        {
+        ...(
+          !isAdapterIsEmployee ? [{
           title: "Giá bán",
           dataIndex: "variant",
           key: "variant",
-          render(variant, record, index) {
+          render(variant: any, record: any, index: any) {
             return formatter(get(variant,'price'))
           },
-        },
-        {
-          title: "Giá Vốn",
+        }] : []),
+        ...(
+          !isAdapterIsEmployee ? [{
+          title: "Giá thu về",
           dataIndex: "variant",
           key: "variant",
-          render(variant, record, index) {
+          render(variant: any, record: any, index: any) {
             return formatter(get(variant,'cost',0))
           },
-        },
-        {
-          title: "Tồn kho",
+          }] : []),
+          ...(!isAdapterIsEmployee ? [{
+            title: "Tồn kho",
           dataIndex: "stock",
           key: "stock",
-          render(stock, record) {
+          render(stock: any, record: any) {
             return <StockProduct variantDefault={get(record,'variantDefault')} stock={stock ?? 0} handleUpdate={(newStock:number) => onUpdateProduct({
               _id : get(record,'_id'),
               stock : newStock
             })}/>
           },
-        },
+        }] : []),
         {
           title: "Nhóm sản phẩm",
           dataIndex: "productGroup",
@@ -283,7 +289,7 @@ export default function ProductsAll(props: TypeProps): React.JSX.Element {
           width={1500}
           destroyOnClose
         >
-          <ShowStep onChangeStep={onChangeStep} onCloseModal={onCloseModal} step={step} />
+          <ShowStep onChangeStep={onChangeStep} onCloseModal={onCloseModal} step={step} setStep = {setStep} />
         </Modal>
         <Modal
           open={isOpenFormProduct}

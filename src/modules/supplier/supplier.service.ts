@@ -6,14 +6,14 @@ export const convertInitSupplier = (supplier : any) => {
   const cumulativeDiscount = CumulativeDiscountModule.service.convertInitDiscount(get(supplier,'cumulativeDiscount',[]));
   return {
     ...supplier,
-    cumulativeDiscount
+    cumulativeDiscount,
   }
   };
 
 export const convertSubmitData = (values : FieldType) => {
     const submitData = {
       ...values,
-      cumulativeDiscount : CumulativeDiscountModule.service.convertSubmitDiscount(get(values,'cumulativeDiscount')),
+      cumulativeDiscount: CumulativeDiscountModule.service.convertSubmitDiscount(get(values, 'cumulativeDiscount')),
     };
 
     return submitData;

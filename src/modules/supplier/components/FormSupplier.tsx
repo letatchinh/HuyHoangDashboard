@@ -19,6 +19,7 @@ import CumulativeDiscountModule from '~/modules/cumulativeDiscount';
 import WithPermission from "~/components/common/WithPermission";
 import POLICIES from "~/modules/policy/policy.auth";
 import InputNumberAnt from "~/components/Antd/InputNumberAnt";
+import RankingSupplier from "./Ranking";
 
 const FormSupplier = ({
   id,
@@ -31,16 +32,17 @@ const FormSupplier = ({
   const [cityCode, setCityCode]: any = useState();
   const [districtCode, setDistrictCode]: any = useState();
   const [isSubmitLoading, onCreate] = useCreateSupplier(onCancel);
-
+  const [rankingId, setRankingId] = useState(null);
   useResetAction();
 
   const onFinish = useCallback(
     (values: FieldType) => {
       const submitData = convertSubmitData(values)
+      console.log(rankingId,'rankingId')
       if (!id) {
-        onCreate(submitData);
+        onCreate({...submitData, rankingId});
       } else {
-        onUpdate({ ...submitData, _id: id });
+        onUpdate({ ...submitData, _id: id, rankingId });
       }
     },
     [id, onCreate, onUpdate]
@@ -49,6 +51,7 @@ const FormSupplier = ({
   useEffect(() => {
     if (id && supplier) {
       const initSupplier = convertInitSupplier(supplier);
+      setRankingId(supplier?.rankingId)
       form.setFieldsValue(initSupplier);
     }
   }, [form, id, supplier]);
@@ -58,7 +61,6 @@ const FormSupplier = ({
     switch (key) {
       case "cumulativeDiscount":
         const cumulativeDiscount = CumulativeDiscountModule.service.onDiscountChange(values[key]);
-        console.log(cumulativeDiscount,'cumulativeDiscount');
         
         form.setFieldsValue({
           cumulativeDiscount,
@@ -117,6 +119,10 @@ const FormSupplier = ({
             allowEmail={false}
           />
         </BaseBorderBox>
+        <RankingSupplier
+          setRankingId={setRankingId}
+          rankingId = {rankingId}
+        />
         {/* <BaseBorderBox
           title={
             <span>

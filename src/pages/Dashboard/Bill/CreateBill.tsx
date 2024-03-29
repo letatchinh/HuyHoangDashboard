@@ -179,6 +179,8 @@ const CreateBillPage = (): React.JSX.Element => {
   // Initialize DataSource
   useEffect(() => {
     try {
+      console.log("RUN TEST");
+      
       // Not Have DataSource  initialize new Data
       const dataFromLocalStorage : any  = localStorage.getItem(KEY_DATA_PHARMACY);
       const isInValidDataSource : boolean = BillModule.service.validateDataStorageREINS(dataFromLocalStorage);
