@@ -116,7 +116,7 @@ export default function Employee({currentTab}: Props) {
 
   const columns: ColumnsType = [
     {
-      title: 'Mã nhân viên',
+      title: 'Mã trình dược viên',
       dataIndex: 'employeeNumber',
       key: 'employeeNumber',
       render: (value: any, record: any) => (
@@ -124,7 +124,7 @@ export default function Employee({currentTab}: Props) {
       ),
     },
     {
-      title: 'Tên nhân viên',
+      title: 'Tên trình dược viên',
       dataIndex: 'fullName',
       key: 'fullName'
     },
@@ -179,7 +179,7 @@ export default function Employee({currentTab}: Props) {
   useChangeDocumentTitle("Danh sách trình dược viên");
   return (
     <div>
-      {/* <Breadcrumb title={t("Quản lý nhân viên")} /> */}
+      {/* <Breadcrumb title={t("Quản lý trình dược viên")} /> */}
       <WhiteBox>
         <SelectSearch
           showSelect={false}
