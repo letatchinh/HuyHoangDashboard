@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo, useState } from "react";
 import TableAnt from "~/components/Antd/TableAnt";
 
-import { Button, Modal, Row, Space, Typography } from "antd";
+import { Button, Checkbox, Col, Modal, Row, Space, Typography } from "antd";
 import { ColumnsType } from "antd/es/table/InternalTable";
 import dayjs from "dayjs";
 import { get } from "lodash";
@@ -28,6 +28,9 @@ import { AlignType } from "rc-table/lib/interface";
 import PaymentVoucherForm from "~/modules/paymentVoucher/components/PaymentVoucherForm";
 import { REF_COLLECTION_UPPER } from "~/constants/defaultValue";
 import PaymentModule from "~/modules/paymentVoucher";
+import POLICIES from "~/modules/policy/policy.auth";
+import useCheckBoxExport from "~/modules/export/export.hook";
+import ExportExcelButton from "~/modules/export/component";
 
 type propsType = {
   status?: string;
@@ -46,6 +49,8 @@ export default function ListOrder({ status }: propsType): React.JSX.Element {
   const [supplierId, setSupplierId] = useState<string | null>("");
   const [debt, setDebt] = useState<number | null>();
   const canWriteVoucher = useMatchPolicy(policyModule.POLICIES.WRITE_VOUCHERSUPPLIER);
+  const canDownload = useMatchPolicy(policyModule.POLICIES.DOWNLOAD_ORDERSUPPLIER);
+  const [arrCheckBox, onChangeCheckBox] = useCheckBoxExport();
 
   const onOpenPayment = (item: any) => {
     setOpen(true);
@@ -82,6 +87,7 @@ export default function ListOrder({ status }: propsType): React.JSX.Element {
         dataIndex: "supplier",
         key: "supplier",
         align: "center",
+        width: 180,
         render(supplier, record, index) {
           return <Typography.Text>{get(supplier, "name", "")}</Typography.Text>;
         },
@@ -152,8 +158,23 @@ export default function ListOrder({ status }: propsType): React.JSX.Element {
           return <Typography.Text>{formatter(paymentAmount)}</Typography.Text>;
         },
       },
-
-      
+      ...(canDownload ? [
+        {
+          title: 'Lựa chọn',
+          key: '_id',
+          width: 80,
+          align: 'center' as any,
+          render: (item: any, record: any) =>
+          {
+            const id = record._id;
+            return (
+              <Checkbox
+                checked= {arrCheckBox.includes(id)}
+                onChange={(e)=>onChangeCheckBox(e.target.checked, id)}
+          />)}
+        },
+      ]: []
+    ) 
     ];
 
   if(canWriteVoucher){
@@ -176,6 +197,7 @@ export default function ListOrder({ status }: propsType): React.JSX.Element {
   return (
     <div className="bill-page">
       <Row align="middle" gutter={8}>
+        <Col span={12}>
         <Space>
           <SelectSupplier
             onChange={(value) => onParamChange({ supplierIds: value })}
@@ -183,16 +205,35 @@ export default function ListOrder({ status }: propsType): React.JSX.Element {
           />
           <SearchAnt onParamChange={onParamChange} />
         </Space>
-        <WithPermission permission={policyModule.POLICIES.WRITE_ORDERSUPPLIER}>
-          <Button
-            style={{ marginLeft: "auto" }}
-            onClick={() => window.open(PATH_APP.orderSupplier.create)}
-            type="primary"
-            icon={<PlusCircleTwoTone />}
-          >
-            Tạo đơn hàng
-          </Button>
-        </WithPermission>
+        </Col>
+        <Col span={12}>
+          <Row align={"middle"} justify={"end"}>
+            <Col>
+              <WithPermission permission={policyModule.POLICIES.DOWNLOAD_ORDERSUPPLIER}>
+                  <ExportExcelButton
+                        api='order-supplier'
+                        exportOption = 'orderSupplier'
+                        query={query}
+                        fileName='Danh sách đơn hàng nhà cung cấp'
+                        ids={arrCheckBox}
+                      />
+              </WithPermission>
+              
+            </Col>
+            <Col>
+              <WithPermission permission={policyModule.POLICIES.WRITE_ORDERSUPPLIER}>
+                <Button
+                  style={{ marginLeft: "auto" }}
+                  onClick={() => window.open(PATH_APP.orderSupplier.create)}
+                  type="primary"
+                  icon={<PlusCircleTwoTone />}
+                >
+                  Tạo đơn hàng
+                </Button>
+              </WithPermission>
+            </Col>
+          </Row>
+        </Col>
       </Row>
       <TableAnt
         stickyTop
@@ -201,6 +242,7 @@ export default function ListOrder({ status }: propsType): React.JSX.Element {
         loading={isLoading}
         pagination={pagingTable(paging, onParamChange)}
         size="small"
+        scroll={{ x: 1500 }}
       />
       <Modal
         title="Phiếu chi"

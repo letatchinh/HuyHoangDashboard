@@ -34,7 +34,7 @@ export default function ExportExcelButton({ size, stylesButton, query, fileName,
         const newQuery : any = Object.fromEntries(Object.entries(concatExportOption)?.filter(([_, v]) => v !== null && v !== undefined));
         let a = `?`
         const dateNow = moment(Date.now()).format("DD-MM-YYYY HH:mm")
-        const keyExportUrl = 'api/v1/export';
+        const keyExportUrl = '/api/v1/export';
         const linkUrl = keyExportUrl.concat(`/${api}`)
         switch (obj) {
           case '1':
@@ -72,12 +72,10 @@ export default function ExportExcelButton({ size, stylesButton, query, fileName,
           default:
             break;
         };
-        console.log(a)
         const temp = BASE_URL.concat(linkUrl, a);
         console.log(temp)
         try {
           if (a !== '') {
-            console.log('vo day')
             axios.get(temp, {
               method: 'GET',
               responseType: 'blob',

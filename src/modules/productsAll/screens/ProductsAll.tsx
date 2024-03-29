@@ -1,7 +1,7 @@
 import { Checkbox, Col, Modal, Row, Select, Typography } from 'antd';
 import { ColumnsType } from "antd/es/table/InternalTable";
 import { get } from 'lodash';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import TableAnt from '~/components/Antd/TableAnt';
 import Breadcrumb from '~/components/common/Breadcrumb';
@@ -46,6 +46,7 @@ export default function ProductsAll(props: TypeProps): React.JSX.Element {
   const canDownload = useMatchPolicy(POLICIES.DOWNLOAD_PRODUCT);
   const [arrCheckBox, onChangeCheckBox] = useCheckBoxExport();
   const adapter = useSelector((state: any) => state?.auth?.adapter);
+  const isAdapterIsEmployee = useMemo(() => adapter === ADAPTER_KEY.EMPLOYEE, [adapter]);
 
   const onOpenModal = (id: string | null) => {
     setIsOpen(true);
@@ -141,7 +142,7 @@ export default function ProductsAll(props: TypeProps): React.JSX.Element {
           },
         },
         ...(
-          adapter === ADAPTER_KEY.STAFF ? [{
+          !isAdapterIsEmployee ? [{
           title: "Giá bán",
           dataIndex: "variant",
           key: "variant",
@@ -150,7 +151,7 @@ export default function ProductsAll(props: TypeProps): React.JSX.Element {
           },
         }] : []),
         ...(
-          adapter === ADAPTER_KEY.STAFF ? [{
+          !isAdapterIsEmployee ? [{
           title: "Giá thu về",
           dataIndex: "variant",
           key: "variant",
@@ -158,17 +159,17 @@ export default function ProductsAll(props: TypeProps): React.JSX.Element {
             return formatter(get(variant,'cost',0))
           },
           }] : []),
-        {
-          title: "Tồn kho",
+          ...(!isAdapterIsEmployee ? [{
+            title: "Tồn kho",
           dataIndex: "stock",
           key: "stock",
-          render(stock, record) {
+          render(stock: any, record: any) {
             return <StockProduct variantDefault={get(record,'variantDefault')} stock={stock ?? 0} handleUpdate={(newStock:number) => onUpdateProduct({
               _id : get(record,'_id'),
               stock : newStock
             })}/>
           },
-        },
+        }] : []),
         {
           title: "Nhóm sản phẩm",
           dataIndex: "productGroup",
