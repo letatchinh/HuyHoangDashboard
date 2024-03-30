@@ -88,23 +88,25 @@ export default function ConfigurationCronTime(
       <Breadcrumb
         title={"Cấu hình thời gian tự động cho nhà cung cấp"}
       ></Breadcrumb>
-      <Row style={{ marginBottom: "20px" }}>
-        <Col span={4}>
-          <h5>Trạng thái cấu hình: </h5>
-        </Col>
-        <Col span={4}>
-          <Switch
-            checked={get(times, "status") === "ACTIVE"}
-            onChange={(value) =>
-              onChangeStatus(
-                get(times, "_id"),
-                value ? STATUS["ACTIVE"] : STATUS["INACTIVE"],
-                isLoading
-              )
-            }
-          />
-        </Col>
-      </Row>
+      <WithPermission permission={POLICIES.UPDATE_CONFIGCRONTIME}>
+        <Row style={{ marginBottom: "20px" }}>
+          <Col span={4}>
+            <h5>Trạng thái cấu hình: </h5>
+          </Col>
+          <Col span={4}>
+            <Switch
+              checked={get(times, "status") === "ACTIVE"}
+              onChange={(value) =>
+                onChangeStatus(
+                  get(times, "_id"),
+                  value ? STATUS["ACTIVE"] : STATUS["INACTIVE"],
+                  isLoading
+                )
+              }
+            />
+          </Col>
+        </Row>
+      </WithPermission>
       <Form
         {...layout}
         form={form}
@@ -160,17 +162,19 @@ export default function ConfigurationCronTime(
                       <InputNumber defaultValue={0} style={{ width: "100%" }} />
                     </Form.Item>
                   </Col>
-                  <Col
-                    span={4}
-                    style={{ alignItems: "center", justifyContent: "center" }}
-                  >
-                    {fields.length > 1 ? (
-                      <MinusCircleOutlined
-                        className="dynamic-delete-button"
-                        onClick={() => remove(index)}
-                      />
-                    ) : null}
-                  </Col>
+                  <WithPermission permission={POLICIES.UPDATE_CONFIGCRONTIME}>
+                    <Col
+                      span={4}
+                      style={{ alignItems: "center", justifyContent: "center" }}
+                    >
+                      {fields.length > 1 ? (
+                        <MinusCircleOutlined
+                          className="dynamic-delete-button"
+                          onClick={() => remove(index)}
+                        />
+                      ) : null}
+                    </Col>
+                  </WithPermission>
                 </Row>
               ))}
 
