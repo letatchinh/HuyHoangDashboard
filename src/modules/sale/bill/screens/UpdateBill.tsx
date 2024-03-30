@@ -212,19 +212,20 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
                     </div>
                   </Space>
                   </Col>
-                <Col>
-                  {/* <Typography.Text strong>Công nợ hiện tại : 0</Typography.Text> */}
-                  {status !== STATUS_BILL.CANCELLED && <Button disabled={remainAmount <= 0} type="primary" size="small" onClick={onOpenForm}>
-                    Tạo phiếu thu
-                  </Button>}
-                  </Col>
-                {compareMoney > 0 &&  <WithPermission permission={POLICIES.READ_VOUCHERPHARMACY}>
-                      <Col>
-                      <Button type="primary" size="small" onClick={onOpenFormPayment}>
-                        Tạo phiếu chi
-                      </Button>
+                  <Row gutter={10}>
+                    <Col>
+                    {status !== STATUS_BILL.CANCELLED && <Button disabled={remainAmount <= 0} type="primary" size="small" onClick={onOpenForm}>
+                      Tạo phiếu thu
+                    </Button>}
                     </Col>
-                  </WithPermission>}
+                  {compareMoney > 0 &&  <WithPermission permission={POLICIES.READ_VOUCHERPHARMACY}>
+                        <Col>
+                        <Button type="primary" size="small" onClick={onOpenFormPayment}>
+                          Tạo phiếu chi
+                        </Button>
+                      </Col>
+                    </WithPermission>}
+                  </Row>
               </Row>
               <Divider />
               <h6>Địa chỉ</h6>
