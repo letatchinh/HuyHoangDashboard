@@ -66,7 +66,7 @@ export default function Member({ _id, data, typeArea, child }: propsType): React
         title={`Danh sách thành viên`}
         open={isOpen}
         onCancel={onClose}
-        footer={null}
+        footer={<h6>Tổng số thành viên: {member?.length || 0}</h6>}
         width={600}
       >
         <ListMemberModal member={member}/>

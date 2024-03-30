@@ -24,7 +24,6 @@ member?: any
 
 const ListMemberModal = ({ member }: propsType) => {
 const CLONE_EMPLOYEE_LEVEL_VI : any = EMPLOYEE_LEVEL_VI;
-  console.log(member,'member')
   return (<List
     itemLayout="horizontal"
     dataSource={member}
