@@ -50,7 +50,7 @@ class ReceiptVoucherClassExtend extends InstanceModuleRedux {
       },
       resetAction: (state:cloneInitState) => ({
         ...state,
-        ...omit(this.cloneInitState, ["list, listByBillId, pagingByBillId"]),
+        ...omit(this.cloneInitState, ["list", "listByBillId", "pagingByBillId"]),
       }),
 
         // Get List By Bill Id

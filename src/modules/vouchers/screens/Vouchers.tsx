@@ -57,7 +57,8 @@ export default function Vouchers({
 }: propsType): React.JSX.Element {
   const navigate = useNavigate();
   const { pathname, search } = useLocation();
-  const [activeTab, setActiveTab] = useState<any>('1');
+  const activeTabMemo = useMemo(() => pathname === PATH_APP.vouchers.pharmacy ? "1" : "2", [pathname]);
+  const [activeTab, setActiveTab] = useState<any>(activeTabMemo);
   const [searchBy, setSearchBy] = useState(head(optionsSearch)?.value || "");
   const [keyword, setKeyword] = useState("");
   const [queryPayment, setQueryPayment] = useState<any>();
@@ -71,9 +72,7 @@ export default function Vouchers({
   );
   const [date, setDate] = useState<any>(defaultDate);
   const arrCheckBoxRedux = useArrCheckBoxRedux();
-  useEffect(() => {
-    pathname === PATH_APP.vouchers.pharmacy ? onChangeTab("1") : onChangeTab("2");
-  }, [pathname]);
+
   useEffect(() => {
     setKeyword('');
   }, [searchBy]);
@@ -153,7 +152,7 @@ export default function Vouchers({
     setKeyword("");
     navigate(`${pathname}`);
   };
-  
+
   const onChangeTab = (value: string) => {
     setActiveTab(value);
     navigate(`${pathname}`);
@@ -311,7 +310,7 @@ useChangeDocumentTitle(`Số quỹ của ${pathname === PATH_APP.vouchers.pharma
             </Row>
           </Col>
         </Row>
-        <Tabs defaultActiveKey= {activeTab}  onChange={onChangeTab} destroyInactiveTabPane>
+        <Tabs activeKey= {activeTabMemo}  onChange={onChangeTab} destroyInactiveTabPane>
           <Tabs.TabPane tab="Phiếu thu" key="1">
             <ReceiptVouchers
               listOptionSearch={optionsSearch}

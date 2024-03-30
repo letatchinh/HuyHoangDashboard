@@ -48,6 +48,7 @@ import { useGetBranch, useGetBranches } from "~/modules/branch/branch.hook";
 import { useGetSupplier } from "~/modules/supplier/supplier.hook";
 import useUpdateBillStore from "~/modules/sale/bill/storeContext/UpdateBillContext";
 import WithOrPermission from "~/components/common/WithOrPermission";
+import { receiptVoucherSliceAction } from "../redux/reducer";
 
 const mainRowGutter = 24;
 const FormItem = Form.Item;
@@ -83,8 +84,18 @@ export default function ReceiptVoucher(props: propsType): React.JSX.Element {
   const [accountingDetails, setAccountingDetails] = useState([]);
   const [initEmployee, setInitEmployee] = useState<any[]>([]);
   //Hook
-  const [isSubmitLoading, handleCreate] = useCreateReceiptVoucher(onClose);
-  const [, handleUpdate] = useUpdateReceiptVoucher(onClose);
+  const dispatch = useDispatch();
+  const resetAction = () => {
+    return dispatch(receiptVoucherSliceAction.resetAction());
+  };
+  const [isSubmitLoading, handleCreate] = useCreateReceiptVoucher(() => {
+    onClose();
+    resetAction();
+  });
+  const [, handleUpdate] = useUpdateReceiptVoucher(() => {
+    onClose();
+    resetAction();
+  });
   const [, handleConfirm] = useConfirmReceiptVoucher(onClose);
   const [voucher, isLoading] = useGetReceiptVoucher(id);
   const initReceiptVoucher = useInitWhReceiptVoucher(voucher);

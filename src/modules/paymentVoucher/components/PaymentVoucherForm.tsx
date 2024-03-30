@@ -56,6 +56,8 @@ import {
 import "./form.scss";
 import useUpdateOrderSupplierStore from "~/modules/sale/orderSupplier/storeContext/UpdateOrderSupplierContext";
 import WithOrPermission from "~/components/common/WithOrPermission";
+import { useDispatch } from "react-redux";
+import { paymentVoucherSliceAction } from "../redux/reducer";
   const mainRowGutter = 24;
   const FormItem = Form.Item;
   const { TabPane } = Tabs;
@@ -91,11 +93,19 @@ import WithOrPermission from "~/components/common/WithOrPermission";
     const [accountingDetails, setAccountingDetails] = useState([]);
     const [initEmployee, setInitEmployee] = useState<any[]>([]);
     //Hook
+    const dispatch = useDispatch();
+    const resetAction = () => {
+      return dispatch(paymentVoucherSliceAction.resetAction());
+    };
     const [isSubmitLoading, handleCreate] = useCreatePaymentVoucher(() => {
       onClose();
       mutateOrderSupplier && mutateOrderSupplier();
+      resetAction();
     });
-    const [, handleUpdate] = useUpdatePaymentVoucher(onClose);
+    const [, handleUpdate] = useUpdatePaymentVoucher(() => {
+      onClose();
+      resetAction();
+    });
     const [, handleConfirm] = useConfirmPaymentVoucher(onClose);
     const [voucher, isLoading] = useGetPaymentVoucher(id);
     const initPaymentVoucher = useInitWhPaymentVoucher(voucher);
