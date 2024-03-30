@@ -1,7 +1,7 @@
 import { CSSProperties } from "@ant-design/cssinjs/lib/hooks/useStyleRegister";
 import { get } from "lodash";
 import { MIN_AFTER_CHANGE } from "./constants";
-import { DetailSalary, DetailSalaryItem, ReportEmployeeType, Targets, TargetsSupplierItem } from "./reportEmployee.modal";
+import { DetailSalary, DetailSalaryItem, ReportEmployeeType, SalaryType, Targets, TargetsSupplierItem } from "./reportEmployee.modal";
 const styleChildren :CSSProperties= {
     fontStyle : 'italic',
 }
@@ -40,6 +40,7 @@ export const handleConvertDataSourceDetailSalary = ({
   totalSalary,
   bonus,
   benefit,
+  salary,
 }: {
   detailSalary: DetailSalary;
   baseSalary: number;
@@ -47,8 +48,8 @@ export const handleConvertDataSourceDetailSalary = ({
   bonus: number;
   totalSalary: number;
   daysWorking: number;
+  salary: SalaryType;
 }): ItemDataSource[] => {
-    
   let A: ItemDataSource,
     B: ItemDataSource,
     C: ItemDataSource,
@@ -76,7 +77,7 @@ export const handleConvertDataSourceDetailSalary = ({
   };
   const overMonth: ItemDataSource = {
     styleTitle : styleSubTitle,
-    value : undefined,
+    value : get(salary,'bonus.overMonth',0),
     // key : 'overMonth',
     title: "Thưởng vượt trên doanh số khoán theo tháng",
     children: ConvertChild(get(detailSalary, "bonus.overMonth", [])),
@@ -84,42 +85,42 @@ export const handleConvertDataSourceDetailSalary = ({
 
   const workingBenefit: ItemDataSource = {
     styleTitle : styleSubTitle,
-    value : undefined,
+    value : get(salary,'bonus.workingBenefit',0),
     // key : 'workingBenefit',
     title: `Thưởng theo làm việc hiệu quả (thực tế: ${daysWorking} ngày)`,
     children: ConvertChild(get(detailSalary, "bonus.workingBenefit", [])),
   };
   const cover_pos: ItemDataSource = {
     styleTitle : styleSubTitle,
-    value : undefined,
+    value : get(salary,'bonus.cover_pos',0),
     // key : 'cover_pos',
     title: `Thưởng đạt Độ phủ thị trường`,
     children: ConvertChild(get(detailSalary, "bonus.cover_pos", [])),
   };
   const exclusive_product: ItemDataSource = {
     styleTitle : styleSubTitle,
-    value : undefined,
+    value : get(salary,'bonus.exclusive_product',0),
     // key : 'exclusive_product',
     title: `Thưởng theo SP độc quyền`,
     children: ConvertChild(get(detailSalary, "bonus.exclusive_product", [])),
   };
   const team: ItemDataSource = {
     styleTitle : styleSubTitle,
-    value : undefined,
+    value : get(salary,'bonus.targetsLeader',0),
     // key : 'team',
     title: `Thưởng TeamLeader`,
     children: ConvertChild(get(detailSalary, "bonus.team", [])),
   };
   const overQuarter: ItemDataSource = {
     styleTitle : styleSubTitle,
-    value : undefined,
+    value : get(salary,'bonus.overQuarter',0),
     // key : 'overQuarter',
     title: `Thưởng Vượt Doanh số Quý`,
     children: ConvertChild(get(detailSalary, "bonus.overQuarter", [])),
   };
   const overYear: ItemDataSource = {
     styleTitle : styleSubTitle,
-    value : undefined,
+    value : get(salary,'bonus.overYear',0),
     // key : 'overYear',
     title: `Thưởng Vượt Doanh số Năm`,
     children: ConvertChild(get(detailSalary, "bonus.overYear", [])),

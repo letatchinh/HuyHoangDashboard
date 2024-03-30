@@ -99,6 +99,7 @@ export function DetailReportProvider({
         totalSalary: get(data, "salary.totalSalary",0),
         bonus: get(data, "salary.totalBonus",0),
         benefit: get(data, "salary.benefit",0),
+        salary : get(data,'salary'),
       }),
     [data]
   );

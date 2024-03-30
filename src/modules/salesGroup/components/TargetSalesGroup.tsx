@@ -12,6 +12,7 @@ import { get } from "lodash";
 import React, { useEffect, useMemo } from "react";
 import EmptyData from "~/components/Antd/EmptyData";
 import InputNumberAnt from "~/components/Antd/InputNumberAnt";
+import BaseBorderBox from "~/components/common/BaseBorderBox/index";
 import { requireRules } from "~/constants/defaultValue";
 import apis from "~/modules/supplier/supplier.api";
 import { useFetchState } from "~/utils/helpers";
@@ -75,6 +76,7 @@ export default function TargetSalesGroup({
         form={form}
         labelAlign="left"
         className="form-custom"
+        labelCol={{span : 8}}
       >
         <Form.Item hidden name={"_id"} />
         <Form.List name={"targetSupplier"}>
@@ -82,29 +84,27 @@ export default function TargetSalesGroup({
             <Flex vertical align={"center"} gap={20}>
               <Flex className="scrollList" vertical align={"center"}>
                 {fields.map(({ name, ...field }) => (
-                  <div style={{ width: "100%" }}>
+                  <BaseBorderBox style={{ width: "100%" }} title={<Form.Item
+                    {...field}
+                    label="Nhà cung cấp"
+                    name={[name, "supplierId"]}
+                    rules={requireRules}
+                    style={{width : 500}}
+                  >
+                    <Select
+                      popupMatchSelectWidth={false}
+                      loading={isLoading}
+                      options={options}
+                      style={{width : '100%'}}
+                    />
+                  </Form.Item>}>
                     <Row style={{ width: "100%" }} gutter={8}>
-                      <Col span={8}>
-                        <Form.Item
-                          {...field}
-                          label="Nhà cung cấp"
-                          name={[name, "supplierId"]}
-                          rules={requireRules}
-                        >
-                          <Select
-                            popupMatchSelectWidth={false}
-                            loading={isLoading}
-                            options={options}
-                            style={{width : '100%'}}
-                          />
-                        </Form.Item>
-                      </Col>
-                      <Col span={5}>
+                      <Col span={7}>
                         <Form.Item
                           {...field}
                           label="Chỉ tiêu tối thiểu"
                           name={[name, "minSale"]}
-                          tooltip="Doanh số tối thiểu của từng nhân viên"
+                          tooltip="Doanh số tối thiểu của từng nhân viên trong nhóm"
                           // rules={requireRules}
                         >
                           <InputNumberAnt
@@ -114,12 +114,12 @@ export default function TargetSalesGroup({
                           />
                         </Form.Item>
                       </Col>
-                      <Col span={5}>
+                      <Col span={7}>
                         <Form.Item
                           {...field}
                           label="Khoán cá nhân"
                           name={[name, "mineralSale"]}
-                          tooltip="Khoán cá nhân của từng nhân viên"
+                          tooltip="Khoán cá nhân của từng nhân viên trong nhóm"
                           // rules={requireRules}
                         >
                           <InputNumberAnt
@@ -129,12 +129,12 @@ export default function TargetSalesGroup({
                           />
                         </Form.Item>
                       </Col>
-                      <Col span={5}>
+                      <Col span={7}>
                           <Form.Item
                             {...field}
                             label="Chỉ tiêu nhóm"
                             name={[name, "targetTeam"]}
-                            tooltip="Doanh số khoán của trưởng nhóm"
+                            tooltip="Doanh số khoán của trưởng nhóm, dùng để tính thưởng đội nhóm"
                             // rules={requireRules}
                           >
                             <InputNumberAnt
@@ -154,9 +154,39 @@ export default function TargetSalesGroup({
                           />
                         </Tooltip>
                       </Col>
+                      <Col span={7}>
+                          <Form.Item
+                            {...field}
+                            label="Chỉ tiêu quý"
+                            name={[name, "targetQuarter"]}
+                            tooltip="Chỉ tiêu quý của tửng nhân viên trong nhóm"
+                            // rules={requireRules}
+                          >
+                            <InputNumberAnt
+                              step={500000}
+                              min={0}
+                              style={{ width: "100%" }}
+                            />
+                          </Form.Item>
+                      </Col>
+                      <Col span={7}>
+                          <Form.Item
+                            {...field}
+                            label="Chỉ tiêu năm"
+                            name={[name, "targetYear"]}
+                            tooltip="Chỉ tiêu năm của tửng nhân viên trong nhóm"
+                            // rules={requireRules}
+                          >
+                            <InputNumberAnt
+                              step={500000}
+                              min={0}
+                              style={{ width: "100%" }}
+                            />
+                          </Form.Item>
+                      </Col>
                     </Row>
                     <Divider />
-                  </div>
+                  </BaseBorderBox>
                 ))}
               </Flex>
               <Button

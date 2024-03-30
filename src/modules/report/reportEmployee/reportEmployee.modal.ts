@@ -78,7 +78,20 @@ export type SubmitDataUpdatePreview = {
     targetSupplier : TargetsSupplierItem[]
   },
 }
-
+export type SalaryType = {
+  base : number,
+  bonus: {
+    overMonth: number,
+    overQuarter: number,
+    overYear: number,
+    workingBenefit: number,
+    cover_pos: number,
+    exclusive_product: number,
+    targetsLeader: number,
+  },
+  benefit: number,
+  totalSalary: number
+};
 export type ReportEmployeeType = {
     _id: string,
     startDate: string,
@@ -98,20 +111,7 @@ export type ReportEmployeeType = {
       baseSalary: string,
       baseSalaryValue: number,
     },
-    salary: {
-      base : number,
-      bonus: {
-        overMonth: number,
-        overQuarter: number,
-        overYear: number,
-        workingBenefit: number,
-        cover_pos: number,
-        exclusive_product: number,
-        targetsLeader: number,
-      },
-      benefit: number,
-      totalSalary: number
-    },
+    salary: SalaryType,
     status: keyof typeof STATUS_REPORT_EMPLOYEE,
     detailSalary: DetailSalary,
     createdAt: string,
