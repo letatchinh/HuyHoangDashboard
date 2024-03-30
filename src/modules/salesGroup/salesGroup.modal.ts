@@ -30,12 +30,11 @@ export type EmployeeType = {
     fullName : string,
     phoneNumber : string,
     status  : "ACTIVE" | "INACTIVE",
-    _id : string
-
-
+    _id : string,
 }
 export type MemberRulesInGroupType = {
     employee : EmployeeType,
     employeeId : string,
-    rule : keyof typeof RULE_SALES_GROUP,
+    rule: keyof typeof RULE_SALES_GROUP,
+    name: string
 } 

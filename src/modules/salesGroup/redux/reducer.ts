@@ -36,7 +36,6 @@ function getDataFromDeeplyChild(
 ) {
   if (children?.length) {
     children.forEach((child: any) => {
-      console.log(child, "child");
       // get Data From Child
       nameChild =
         nameChild + " " + get(child, "name") + " " + get(child, "alias");
