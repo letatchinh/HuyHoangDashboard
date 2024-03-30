@@ -45,5 +45,6 @@ export interface DataType {
     createBy: string;
     createAt: Date;
     status: string,
+    // onCell`
     userCreate?:any,
   }

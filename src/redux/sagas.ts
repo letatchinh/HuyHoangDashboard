@@ -35,6 +35,7 @@ import benefitConfiguration from '~/modules/reportSalary/benefitConfiguration/in
 import reportEmployee from '~/modules/report/reportEmployee/index';
 import cronSalary from '~/modules/cronSalary/index';
 
+import costManagement from '~/modules/costManagement';
 export default function* rootSaga() {
   yield all([
     authModule.redux.saga(),
@@ -74,5 +75,7 @@ export default function* rootSaga() {
     benefitConfiguration.redux.saga(),
     reportEmployee.redux.saga(),
     cronSalary.redux.saga(),
+    orderSupplier.redux.saga(),
+    costManagement.redux.saga(),
   ]);
 };

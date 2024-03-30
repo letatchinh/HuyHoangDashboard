@@ -20,6 +20,7 @@ export type ResourceType = {
   GROUP_WORK_MANAGERMENT: string[],
   GROUP_VOUCHER: string[],
   GROUP_MEDICINE: string[],
+  GROUP_SHIPPINGCOST: string[],
 };
 
 export type policyType = 'write' | 'read' | 'update' | 'delete' | 'download' | 'admin';
@@ -251,6 +252,13 @@ export type PoliciesType = {
   'DELETE_EMPLOYEEPOSITION' |
   'DOWNLOAD_EMPLOYEEPOSITION' |
   'ADMIN_EMPLOYEEPOSITION' |
+  ''|
+  'READ_SHIPPINGCOST'|
+  'WRITE_SHIPPINGCOST' |
+  'UPDATE_SHIPPINGCOST' |
+  'DELETE_SHIPPINGCOST' |
+  'DOWNLOAD_SHIPPINGCOST' |
+  'ADMIN_SHIPPINGCOST' |
   //GROUP_TODOSTATUSCONFIG
   
   'READ_CUMULATIVEEVENT' |

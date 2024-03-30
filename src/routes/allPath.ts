@@ -1,3 +1,4 @@
+
 function path(root: any, sublink: any) {
   return `${root}${sublink}`;
 }
@@ -113,4 +114,9 @@ export const PATH_APP = {
     root:  path(ROOTS.app, '/cronSalary'),
   },
 
+  costManagement:{
+    root: path(ROOTS.app, "/cost-management"),
+    create: path(ROOTS.app, "/cost-management/create"),
+    update: path(ROOTS.app, "/cost-management/:id"),
+  }
 };

@@ -1,3 +1,28 @@
+## [1.6.1](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/compare/v1.6.0...v1.6.1) (2024-03-29)
+
+
+### Bug Fixes
+
+* cannot update and convert quotation ([5797bfd](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/5797bfd84ae2cb223d5784f8e8a27673a7ef8871))
+* change key login ([481fca9](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/481fca904eb133e7a3dc420213c74d3dcaedd10e))
+* fix baseUrl ([3c146d9](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/3c146d94f17a82d1dd285d758acaf8232ac1d268))
+* fix CkEditor ([676c386](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/676c3866b1e2477ab89a87bde7ea03f414b3c787))
+
+# [1.6.0](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/compare/v1.5.0...v1.6.0) (2024-03-28)
+
+
+### Bug Fixes
+
+* fix-todolist ([727206e](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/727206e58b3a5f1b6cde08d1ef58b3e9c71fc4c6))
+
+
+### Features
+
+* [#1390](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1390) cost-management ([fcb1ffc](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/fcb1ffce0a67e44f0f4a9d9daaa08ecb8aa3d5c3))
+* [#1390](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1390) feat-costManagement ([11e1bbe](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/11e1bbe99a4b817d251d4788c227ac32ed124fbb))
+* [#1467](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1467) update UI and handle value ([20e5e2b](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/20e5e2bf298107175e6b61ece2c3534a4aff713a))
+* feat-cost-management ([afc24ee](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/afc24ee26ee8544c1e12a605e410176974040032))
+
 # [1.5.0](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/compare/v1.4.0...v1.5.0) (2024-03-25)
 
 

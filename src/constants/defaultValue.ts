@@ -2,9 +2,8 @@ import { get } from "lodash";
 import { devConfig } from "~/config";
 import { getOptions } from "~/utils/helpers";
 
-export const BASE_URL = get(devConfig,'baseUrl');
-// export const BASE_URL = 'http://192.168.77.156:8555';
-export const DEFAULT_UPLOAD_ACTION = `${BASE_URL}/api/v1/file`;
+export const BASE_URL = 'config.REACT_APP_BASE_URL';
+export const DEFAULT_UPLOAD_ACTION = `${BASE_URL}api/v1/file`;
 export const MAX_UPLOAD_FILE_SIZE_IN_MB = 2;
 
 

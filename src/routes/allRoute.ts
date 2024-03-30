@@ -35,6 +35,7 @@ import BaseSalaryPage from "~/pages/Dashboard/BaseSalary";
 import BenefitConfigurationPage from "~/pages/Dashboard/BenefitConfiguration";
 import ReportEmployeePage from "~/pages/Dashboard/ReportEmployee";
 import CronSalaryPage from "~/pages/Dashboard/CronSalary";
+import CostManagement from "~/pages/Dashboard/CostManagement";
 export const mainRoutes :PathRouteProps[] = [
   { path: PATH_APP.main.root, Component: Homepage },
 
@@ -107,6 +108,7 @@ export const mainRoutes :PathRouteProps[] = [
 
   // Thời gian báo cáo lương
   { path: PATH_APP.cronSalary.root, Component: CronSalaryPage },
+  {path: PATH_APP.costManagement.root, Component: CostManagement},
 
   { path: '/', Component: Homepage },
 ]

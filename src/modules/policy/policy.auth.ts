@@ -12,6 +12,7 @@ const pharmacy = 'pharmacy';
 const configDiscount = 'configDiscount';
 const pharmaProfile = 'pharmaProfile';
 const notificationBotManager = 'notificationBotManager';
+const shippingCost = 'shippingCost';
 
 
 // Đơn hàng
@@ -90,6 +91,7 @@ const RESOURCES = [
   
   salesGroup,
   employee_position,
+  shippingCost,
   cumulativeEvent,
   orderSupplier,
   configReportSalaryAuto,
@@ -185,7 +187,11 @@ const RESOURCE = (): ResourceType => {
 
    const GROUP_MEDICINE: string[] = [
     medicine
+  ];
+  const GROUP_SHIPPINGCOST: string[] = [
+    shippingCost
   ]
+
   return {
     GROUP_USER,
     GROUP_EMPLOYEE,
@@ -202,6 +208,7 @@ const RESOURCE = (): ResourceType => {
     GROUP_WORK_MANAGERMENT,
     GROUP_VOUCHER,
     GROUP_MEDICINE,
+    GROUP_SHIPPINGCOST,
   };
 };
 
