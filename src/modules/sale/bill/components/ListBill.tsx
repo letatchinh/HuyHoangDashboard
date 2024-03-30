@@ -105,7 +105,7 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
         key: "pair",
         align: "center",
         render(pair, record, index) {
-          return <Typography.Text>{formatter(pair)}</Typography.Text>;
+          return <Typography.Text>{formatter(pair + get(record,'totalReceiptVoucherCompleted',0))}</Typography.Text>;
         },
       },
       {

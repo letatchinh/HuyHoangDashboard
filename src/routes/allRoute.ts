@@ -34,6 +34,7 @@ import SalesGroupPage from "~/pages/Dashboard/SalesGroup";
 import BaseSalaryPage from "~/pages/Dashboard/BaseSalary";
 import BenefitConfigurationPage from "~/pages/Dashboard/BenefitConfiguration";
 import ReportEmployeePage from "~/pages/Dashboard/ReportEmployee";
+import ReportSupplierPage from "~/pages/Dashboard/ReportSupplier";
 import CronSalaryPage from "~/pages/Dashboard/CronSalary";
 import CostManagement from "~/pages/Dashboard/CostManagement";
 export const mainRoutes :PathRouteProps[] = [
@@ -105,6 +106,7 @@ export const mainRoutes :PathRouteProps[] = [
   { path: PATH_APP.benefitConfiguration.root, Component: BenefitConfigurationPage },
   // Báo cáo nhân viên
   { path: PATH_APP.report.employee, Component: ReportEmployeePage },
+  { path: PATH_APP.report.supplier, Component: ReportSupplierPage },
 
   // Thời gian báo cáo lương
   { path: PATH_APP.cronSalary.root, Component: CronSalaryPage },
