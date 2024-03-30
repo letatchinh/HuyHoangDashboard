@@ -10,6 +10,8 @@ import {
 import { omit, get } from "lodash";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import { SYSTEM_CRON_TIME_TYPES } from "../constants";
+import WithPermission from "~/components/common/WithPermission";
+import POLICIES from "~/modules/policy/policy.auth";
 
 type propsType = {};
 const FormItem = Form.Item;
@@ -86,23 +88,25 @@ export default function ConfigurationCronTime(
       <Breadcrumb
         title={"Cấu hình thời gian tự động cho nhà cung cấp"}
       ></Breadcrumb>
-      <Row style={{marginBottom: '20px'}}>
-        <Col span={4}>
-          <h5>Trạng thái cấu hình: </h5>
-        </Col>
-        <Col span={4}>
-          <Switch
-            checked={get(times, "status") === "ACTIVE"}
-            onChange={(value) =>
-              onChangeStatus(
-                get(times, "_id"),
-                value ? STATUS["ACTIVE"] : STATUS["INACTIVE"],
-                isLoading
-              )
-            }
-          />
-        </Col>
-      </Row>
+      <WithPermission permission={POLICIES.UPDATE_CONFIGCRONTIME}>
+        <Row style={{ marginBottom: "20px" }}>
+          <Col span={4}>
+            <h5>Trạng thái cấu hình: </h5>
+          </Col>
+          <Col span={4}>
+            <Switch
+              checked={get(times, "status") === "ACTIVE"}
+              onChange={(value) =>
+                onChangeStatus(
+                  get(times, "_id"),
+                  value ? STATUS["ACTIVE"] : STATUS["INACTIVE"],
+                  isLoading
+                )
+              }
+            />
+          </Col>
+        </Row>
+      </WithPermission>
       <Form
         {...layout}
         form={form}
@@ -112,7 +116,6 @@ export default function ConfigurationCronTime(
         requiredMark={false}
         name="basic"
         labelAlign="left"
-       
       >
         <Form.List name="cronTime">
           {(fields, { add, remove }) => (
@@ -159,40 +162,46 @@ export default function ConfigurationCronTime(
                       <InputNumber defaultValue={0} style={{ width: "100%" }} />
                     </Form.Item>
                   </Col>
-                  <Col
-                    span={4}
-                    style={{ alignItems: "center", justifyContent: "center" }}
-                  >
-                    {fields.length > 1 ? (
-                      <MinusCircleOutlined
-                        className="dynamic-delete-button"
-                        onClick={() => remove(index)}
-                      />
-                    ) : null}
-                  </Col>
+                  <WithPermission permission={POLICIES.UPDATE_CONFIGCRONTIME}>
+                    <Col
+                      span={4}
+                      style={{ alignItems: "center", justifyContent: "center" }}
+                    >
+                      {fields.length > 1 ? (
+                        <MinusCircleOutlined
+                          className="dynamic-delete-button"
+                          onClick={() => remove(index)}
+                        />
+                      ) : null}
+                    </Col>
+                  </WithPermission>
                 </Row>
               ))}
 
               <Form.Item>
-                <Button
-                  type="dashed"
-                  onClick={() => add({})}
-                  style={{
-                    width: "100%",
-                    margin: "auto",
-                  }}
-                  icon={<PlusOutlined />}
-                >
-                  Thêm giờ/ phút
-                </Button>
+                <WithPermission permission={POLICIES.UPDATE_CONFIGCRONTIME}>
+                  <Button
+                    type="dashed"
+                    onClick={() => add({})}
+                    style={{
+                      width: "100%",
+                      margin: "auto",
+                    }}
+                    icon={<PlusOutlined />}
+                  >
+                    Thêm giờ/ phút
+                  </Button>
+                </WithPermission>
               </Form.Item>
             </>
           )}
         </Form.List>
         <Form.Item>
-          <Button type="primary" htmlType="submit" onClick={onFinish}>
-            {mergedValue ? "Cập nhật" : "Tạo cài đặt"}
-          </Button>
+          <WithPermission permission={POLICIES.UPDATE_CONFIGCRONTIME}>
+            <Button type="primary" htmlType="submit" onClick={onFinish}>
+              {mergedValue ? "Cập nhật" : "Tạo cài đặt"}
+            </Button>
+          </WithPermission>
         </Form.Item>
       </Form>
     </div>

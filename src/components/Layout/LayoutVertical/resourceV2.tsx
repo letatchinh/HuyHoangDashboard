@@ -37,6 +37,7 @@ const permissionOfSetup = [
   POLICIES.READ_CONFIGBASESALARY,
   POLICIES.READ_CONFIGBENEFIT,
   POLICIES.READ_SALESGROUP,
+  POLICIES.READ_CONFIGCRONTIME
 
 ];
 const permissionPharma = [
@@ -164,7 +165,7 @@ export const resource: ItemType[] =[
             path: PATH_APP.configurationCronTime.root,
             key: PATH_APP.configurationCronTime.root,
             icon: <FieldTimeOutlined />,
-            // permission: [POLICIES.READ_CONFIGDISCOUNT],
+            permission: [POLICIES.READ_CONFIGCRONTIME],
           },
           {
             label: "Loại nhà thuốc",
