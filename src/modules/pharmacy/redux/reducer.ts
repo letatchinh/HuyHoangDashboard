@@ -43,6 +43,33 @@ class PharmacyExtendModule extends InstanceModuleRedux {
         state.isLoadingGetHistoryPharmacy = false;
         state.getHistoryPharmacyFailed = payload;
       },
+      getAccumulationRequest: (state: any) => {
+        state.isLoadingGetAccumulation = true;
+        state.getAccumulationFailed = null;
+      },
+      getAccumulationSuccess: (state: any, { payload }: any) => {
+        state.isLoadingGetAccumulation = false;
+        state.accumulation = get(payload, "docs", []);
+        state.pagingAccumulation = getPaging(payload);
+      },
+      getAccumulationFailed: (state: any, { payload }: any) => {
+        state.isLoadingGetAccumulation = false;
+        state.getAccumulationFailed = payload;
+        // state.totalAmountBillItem = 0;
+      },
+      getAccumulationDetailRequest: (state: any) => {
+        state.isLoadingGetAccumulationDetail = true;
+        state.getAccumulationDetailFailed = null;
+      },
+      getAccumulationDetailSuccess: (state: any, { payload }: any) => {
+        state.isLoadingGetAccumulationDetail = false;
+        state.accumulationDetail = payload;
+        state.pagingAccumulationDetail = getPaging(payload);
+      },
+      getAccumulationDetailFailed: (state: any, { payload }: any) => {
+        state.isLoadingGetAccumulationDetail = false;
+        state.getAccumulationDetailFailed = payload;
+      },
     };
     this.cloneInitState = {
       ...this.initialState,

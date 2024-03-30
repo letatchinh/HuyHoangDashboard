@@ -6,6 +6,7 @@ import { authActions } from "./redux/reducer";
 
 const getSelector = (key : any) => (state : any) => state.auth[key];
 const tokenSelector = getSelector('token');
+const adapterSelector = getSelector('adapter');
 const isLoadingSelector = getSelector('isLoading');
 const profileSelector = getSelector('profile');
 const loginFailedSelector = getSelector('loginFailed');
@@ -37,6 +38,10 @@ export const useToken = () => {
     const token = useSelector(tokenSelector);
     return token
 };
+export const useAdapter = () => {
+    const adapter = useSelector(adapterSelector);
+    return adapter
+};
 
 // Get New Profile from Sever
 export const useProfile = () => {
@@ -54,4 +59,9 @@ export const useProfile = () => {
 export const useGetProfile = () => {
     const profile = useSelector(profileSelector);
     return profile
+}
+
+export const useIsSuperAdmin = () : boolean => {
+    const profile = useSelector(profileSelector);
+    return get(profile,'user.isSuperAdmin')
 }

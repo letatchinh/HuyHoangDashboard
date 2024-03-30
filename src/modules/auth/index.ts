@@ -7,7 +7,7 @@ import reducer from "./redux/reducer";
 import saga from "./redux/saga";
 const ModuleAuth = {
     page : {
-        login : Login,
+        login: Login,
     },
     api : authApi,
     hook : authHooks,

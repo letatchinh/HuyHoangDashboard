@@ -12,10 +12,12 @@ export default function BtnAction({
   onClick,
 }: propsType): React.JSX.Element {
   return (
-    <button onClick={onClick} className="homepage--btnAction">
+    <button  onClick={onClick} className="homepage--btnAction">
       <Flex vertical justify={"center"} align="center">
+        <div >
         {icon}
-        <span className="homepage--btnAction__text">{value}</span>
+        </div>
+        <span style={{height : 20}} className="homepage--btnAction__text">{value}</span>
       </Flex>
     </button>
   );

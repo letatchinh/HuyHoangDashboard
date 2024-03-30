@@ -8,6 +8,7 @@ import {
   useBranchPaging, useBranchQueryParams, useGetBranches, useUpdateBranchParams
 } from "../branch.hook";
 import SelectSearch from "~/components/common/SelectSearch/SelectSearch";
+import { useChangeDocumentTitle } from "~/utils/hook";
 const columns : ColumnsType = [
   {
     title : "Tên chi nhánh",
@@ -34,6 +35,7 @@ export default function Branch() {
   // const [keyword, { setKeyword, onParamChange }] = useUpdateBranchParams(query);
   const [data, isLoading] = useGetBranches(query);
   const paging = useBranchPaging(); 
+  useChangeDocumentTitle("Danh sách chi nhánh")
   return (
     <div>
       <Breadcrumb title={t("list-branch")} />

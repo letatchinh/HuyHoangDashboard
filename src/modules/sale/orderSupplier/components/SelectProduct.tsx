@@ -7,6 +7,7 @@ import TableAnt from '~/components/Antd/TableAnt';
 import ProductModule from '~/modules/product';
 import useNotificationStore from '~/store/NotificationContext';
 import { formatter } from '~/utils/helpers';
+import ImageProduct from '../../bill/components/ImageProduct';
 import { ItemSearchProduct } from '../orderSupplier.modal';
 import { getCumulativeDiscount, selectProductSearch } from '../orderSupplier.service';
 type propsType = {
@@ -29,7 +30,6 @@ export default function SelectProduct({dataCurrent,onChangeBill}:propsType) : Re
       orderSupplierItems : newData
     })
   };
-  console.log(dataCurrent,'dataCurrent');
   
     const fetchOptions = async (keyword?: string) => {
         try {
@@ -107,6 +107,14 @@ export default function SelectProduct({dataCurrent,onChangeBill}:propsType) : Re
               rowKey={rc => rc._id}
               columns={[
                 {
+                  title: "",
+                  dataIndex: "images",
+                  key: "images",
+                  align:'center',
+                  width : 80,
+                  render: (images: any, record: any, index: number) => <ImageProduct images={images}/>
+                },
+                {
                   title: 'Tên thuốc',
                   dataIndex: 'name',
                   key: 'name',
@@ -125,7 +133,7 @@ export default function SelectProduct({dataCurrent,onChangeBill}:propsType) : Re
                   key: 'variant',
                   align: 'center',
                   render(variant, record, index) {
-                    return <Typography.Text strong>{formatter(get(variant,'price',0))} 
+                    return <Typography.Text strong>{formatter(get(variant,'cost',0))} 
                     &nbsp;
                     {get(record,'cumulativeDiscount.length',0) ? <Badge size='small' count={get(record,'cumulativeDiscount.length',0)}>
                       <GiftTwoTone />

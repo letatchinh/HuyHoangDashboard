@@ -41,6 +41,10 @@ const getResourcesLoadingSelector = getSelector('isGetResourcesLoading');
 const resourcesSelector = getSelector('resources');
 const getResourcesFailedSelector = getSelector('getResourcesFailed');
 
+const getResourcesEmployeeLoadingSelector = getSelector('isGetResourcesEmployeeLoading');
+const resourcesEmployeeSelector = getSelector('resourcesEmployee');
+const getResourcesEmployeeFailedSelector = getSelector('getResourcesEmployeeFailed');
+
 const getSelectorUser = (key: string) => (state: any) => state.user[key];
 const policySelector = getSelectorUser('policy');
 const isGetPolicyLoadingSelector = getSelectorUser('isGetPolicyLoading');
@@ -91,8 +95,23 @@ export const useUpdatePolicy = () => {
     loadingSelector: isSubmitLoadingSelector,
   });
 };
+export const useUpdateEmployeePolicy = () => {
+  return useSubmit({
+    action: policySliceAction.updateResourcesEmployeeRequest,
+    loadingSelector: isSubmitLoadingSelector,
+  });
+};
 
 export const useDeletePolicy = (callback?: any) => {
+  useSuccess(deleteSuccessSelector, `Xoá ${MODULE_VI} thành công`, callback);
+  useFailed(deleteFailedSelector);
+
+  return useSubmit({
+    action: policySliceAction.deleteRequest,
+    loadingSelector: isSubmitLoadingSelector,
+  });
+};
+export const useDeleteEmployeePolicy = (callback?: any) => {
   useSuccess(deleteSuccessSelector, `Xoá ${MODULE_VI} thành công`, callback);
   useFailed(deleteFailedSelector);
 
@@ -154,6 +173,20 @@ export const useResources = () => {
     failedSelector: getResourcesFailedSelector,
     param: branchParam,
     // actionUpdate : updateResourceRedux,
+  });
+};
+
+export const useResourcesEmployee = () => {
+  const { id: branchId } = useParams();
+
+  const branchParam = useMemo(() => ({ branchId : branchId ? branchId : DEFAULT_BRANCH_ID }), [branchId]);
+
+  return useFetchByParam({
+    action: policySliceAction.getResourcesEmployeeRequest,
+    loadingSelector: getResourcesEmployeeLoadingSelector,
+    dataSelector: resourcesEmployeeSelector,
+    failedSelector: getResourcesEmployeeFailedSelector,
+    param: branchParam,
   });
 };
 

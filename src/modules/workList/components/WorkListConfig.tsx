@@ -46,7 +46,7 @@ const BoardConfig: FC<BoardConfigProps> = ({ name, id,dataTask, dataBoardConfigI
     <TaskForm setDropdownVisible={setDropdownVisible} dropdownVisible={dropdownVisible} />
   );
   return (
-    <div className="work-list-main" style={{ height: '100vh' }}>
+          <div className="work-list-main">
       <div className="work-list-column work-list-column_header" style={{ marginBottom: 10 }}>
         <Space direction="vertical" style={{ width: '100%' }}>
           <Row className="work-item-top" justify="center" align="middle" gutter={4}>
@@ -109,7 +109,7 @@ const BoardConfig: FC<BoardConfigProps> = ({ name, id,dataTask, dataBoardConfigI
             ref={provided.innerRef}
             className="work-list-column work-list-column_body"
             style={{
-              height: '100%',
+              height:'52vh',
               background: '#ffffff',
             }}
           >

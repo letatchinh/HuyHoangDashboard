@@ -56,7 +56,7 @@ export default function PharmacyForm({ onClose, id, handleUpdate }: Props) {
     (values: any) => {
       const submitData = convertSubmitData(values);
       if (id) {
-        handleUpdate({ ...values, _id: id });
+        handleUpdate({ ...submitData, _id: id });
       } else {
         handleCreate({ ...submitData });
       }

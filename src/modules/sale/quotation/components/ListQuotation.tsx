@@ -19,7 +19,7 @@ import Status from "~/components/common/Status/index";
 import BillModule from "~/modules/sale/bill";
 import { ItemDataSource } from "~/pages/Dashboard/Bill/CreateBill";
 import { PATH_APP } from "~/routes/allPath";
-import { pagingTable } from "~/utils/helpers";
+import { DeviceDetector, pagingTable } from "~/utils/helpers";
 import SelectPharmacy from "../../bill/components/SelectPharmacy";
 import { STATUS_QUOTATION, STATUS_QUOTATION_VI } from "../constants";
 import { PlusCircleTwoTone } from "@ant-design/icons";
@@ -29,6 +29,8 @@ import { useMatchPolicy } from "~/modules/policy/policy.hook";
 import POLICIES from "~/modules/policy/policy.auth";
 import useCheckBoxExport from "~/modules/export/export.hook";
 import ExportExcelButton from "~/modules/export/component";
+import SelectPharmacyInDevice from "../../bill/components/SelectPharmacyInDevice";
+import '../quotation.style.scss';
 type propsType = {
   status?: string;
 };
@@ -289,27 +291,37 @@ export default function ListQuotation({
     ],
     [arrCheckBox]
   );
+  const {isMobile} = DeviceDetector();
   return (
     <div className="quotation-page">
       <Row align="middle" gutter={8} justify={"space-between"}>
         <Col>
-          <Space>
-          <Form form={form} initialValues={{pharmacyId : query?.pharmacyId}}> 
-        <SelectPharmacy
-          form={form}
-          style={{ width: 200 }}
-          showIcon={false}
-          size={"middle"}
-          onChange={(value) =>
-            onParamChange({ pharmacyId: value })
-          }
-          />
-          </Form>
-        <SearchAnt
-          value={keyword}
-          onChange={(e) => setKeyword(e.target.value)}
-          onParamChange={onParamChange}
-        />
+          <Space className="quotation-page__wrap--search">
+            <Form form={form} initialValues={{pharmacyId : query?.pharmacyId}}> 
+              {!isMobile ? <SelectPharmacy
+                validateFirst={false}
+                form={form}
+                style={{ width: 200 }}
+                showIcon={false}
+                size={"middle"}
+                onChange={(value) =>
+                  onParamChange({ pharmacyId: value })
+                }
+                /> : <SelectPharmacyInDevice
+                validateFirst={false}
+                form={form}
+                showIcon={false}
+                size={"middle"}
+                onChange={(value) =>
+                  onParamChange({ pharmacyId: value })
+                }
+            />}
+            </Form>
+            <SearchAnt
+              value={keyword}
+              onChange={(e) => setKeyword(e.target.value)}
+              onParamChange={onParamChange}
+            />
           </Space>
         </Col>
         <Col>
@@ -340,6 +352,7 @@ export default function ListQuotation({
         loading={isLoading}
         pagination={pagingTable(paging, onParamChange)}
         size="small"
+        scroll={{ x: "max-content" }}
       />
     </div>
   );

@@ -1,7 +1,7 @@
 export type initStateSlice<T=any> = {
     isLoading?: boolean;
     list?: T[];
-    listSearch?: [];
+    listSearch?: T[];
     getListFailed?: any;
 
     paging?: {
@@ -37,10 +37,10 @@ export type initStateSlice<T=any> = {
     statusConfig:'statusConfig',
     configDiscount: 'configDiscount',
     employee:'employee',
+    employeeGroup:'employeeGroup',
     user: 'user',
     userGroup: 'userGroup',
     policy: 'policy',
-    reportSupplier: 'reportSupplier',
     productGroup:'productGroup',
     manufacturer:'manufacturer',
     productUnit:'productUnit',
@@ -63,6 +63,13 @@ export type initStateSlice<T=any> = {
     productsAll: "productsAll",
     orderSupplier: "orderSupplier",
     configurationCronTime : "configurationCronTime",
+    freelanceContractPharmacy: "freelanceContractPharmacy",
+    costManagement: "costManagement",
+    salesGroup: "salesGroup",
+    baseSalary: "baseSalary",
+    benefitConfiguration: "benefitConfiguration",
+    reportEmployee: "reportEmployee",
+    cronSalary: "cronSalary",
     }as const
     
     

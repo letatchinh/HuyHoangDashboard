@@ -14,7 +14,7 @@ import {
   useCreateProduct,
   useGetProduct,
   useResetAction,
-  useUpdateProduct
+  useUpdateProduct,
 } from "../product.hook";
 import {
   FieldTypeFormProduct,
@@ -28,9 +28,13 @@ import SelectProductGroup from "./SelectProductGroup";
 import Variants from "./Variants";
 import CumulativeDiscountModule from '~/modules/cumulativeDiscount';
 import { useSupplierInfoRedux } from "~/modules/productsAll/productsAll.hook";
+import { useDispatch } from "react-redux";
+import { productActions } from "../redux/reducer";
 
 import TabPane from "antd/es/tabs/TabPane";
 import useNotificationStore from "~/store/NotificationContext";
+import UploadImage from "~/components/common/Upload/UploadImage";
+import ImagesProduct from "./ImagesProduct";
 
 const CLONE_PRODUCT_TYPE_VI: any = PRODUCT_TYPE_VI;
 const CLONE_SALE_LEVEL_VI: any = SALE_LEVEL_VI;
@@ -42,20 +46,36 @@ export default function FormProduct({
   supplierId,
   id,
   onCancel,
+  onUpdate,
+  setSupplierId,
+  setStep
 }: TypePropsFormProduct): React.JSX.Element {
   // const supplierInfo = useSupplierInfoRedux();
   const {onNotify} = useNotificationStore();
   const [form] = Form.useForm();
-  const [backupForm,setBackupForm] = useState<FieldTypeFormProduct[]>([]);
-  
-  const [isSubmitLoading, onCreate] = useCreateProduct(onCancel);
-  const [, onUpdate] = useUpdateProduct(onCancel);
+  const [backupForm, setBackupForm] = useState<FieldTypeFormProduct[]>([]);
+  const dispatch = useDispatch();
+  const resetAction = () => {
+    return dispatch(productActions.resetAction());
+  };
+  const [isSubmitLoading, onCreate] = useCreateProduct(() => {
+    onCancel();
+    resetAction();
+    setSupplierId && setSupplierId(null);
+    setStep && setStep(0)
+  });
+  // const [, onUpdateProduct] = useUpdateProduct(() => {
+  //   onCancel();
+  //   resetAction();
+  //   setSupplierId && setSupplierId(null);
+  //   setStep &&  setStep(0);
+  // });
   const [product, isLoading] = useGetProduct(id);
-  // const [dataNotificationUndo,setDataNotificationUndo] = useState({
-  //   open : false,
-  //   description : null
-  // })
-  useResetAction();
+  const [dataNotificationUndo,setDataNotificationUndo] = useState({
+    open : false,
+    description : null
+  })
+  // useResetAction();
   
   const onUndoForm = (isLast = false) => {
     
@@ -73,9 +93,12 @@ export default function FormProduct({
 
   const onFinish = (values: FieldTypeFormProduct) => {
     const submitData = convertSubmitData({values,supplierId});
+      console.log(submitData,'submitData');
       
     if (id) {
-      onUpdate({ ...submitData, _id: id });
+      if(onUpdate){
+        onUpdate({ ...submitData, _id: id });
+      }
     } else {
       onCreate(submitData);
     }
@@ -155,7 +178,7 @@ export default function FormProduct({
   };
   return (
     <div>
-      <h5>Tạo mới thuốc</h5>
+      <h5>{id ? "Cập nhật thuốc" : "Tạo mới thuốc"}</h5>
       <Form
         form={form}
         onFinish={onFinish}
@@ -180,14 +203,39 @@ export default function FormProduct({
           <Row {...layoutRow}>
             <Col span={12}>
               {RenderLoading(isLoading, <MedicineName form={form} />)}
-            </Col>
-            <Col span={12}>
               <Form.Item<FieldTypeFormProduct> label="Hình thức" name="type">
                 {RenderLoading(isLoading, <Select options={optionsType} />)}
               </Form.Item>
+              <Form.Item<FieldTypeFormProduct>
+                label="Mức độ đẩy hàng"
+                name="saleLevel"
+              >
+                {RenderLoading(
+                  isLoading,
+                  <Select options={optionsSaleLevel} />
+                )}
+                </Form.Item>
+                <Form.Item<FieldTypeFormProduct>
+                label="Mã sản phẩm"
+                name="codeBySupplier"
+                tooltip="Mã dành cho nhà cung cấp"
+                rules={[
+                  { required: true, message: "Vui lòng nhập mã sản phẩm" },
+                ]}
+              >
+                {RenderLoading(isLoading, <Input />)}
+              </Form.Item>
             </Col>
+            <Col span={12}>
+            <ImagesProduct form={form} isLoading={isLoading}/>
+            </Col>
+            {/* <Col span={12}>
+              <Form.Item<FieldTypeFormProduct> label="Hình thức" name="type">
+                {RenderLoading(isLoading, <Select options={optionsType} />)}
+              </Form.Item>
+            </Col> */}
           </Row>
-          <Row {...layoutRow}>
+          {/* <Row {...layoutRow}>
             <Col span={12}>
               <Form.Item<FieldTypeFormProduct>
                 label="Mức độ đẩy hàng"
@@ -211,7 +259,7 @@ export default function FormProduct({
                 {RenderLoading(isLoading, <Input />)}
               </Form.Item>
             </Col>
-          </Row>
+          </Row> */}
         </BaseBorderBox>
 
         <BaseBorderBox title={"Thông tin chung"}>

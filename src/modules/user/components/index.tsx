@@ -22,6 +22,7 @@ import { get } from "lodash";
 import { useDispatch } from "react-redux";
 import WithOrPermission from "~/components/common/WithOrPermission";
 import { useMatchPolicy } from "~/modules/policy/policy.hook";
+import { useChangeDocumentTitle } from "~/utils/hook";
 interface UserProps {
   currentTab: string | undefined;
 }
@@ -30,22 +31,22 @@ interface ColumnActionProps {
   deleteUserEmployee: any;
   shouldShowDevider: any;
   onOpenForm?: any;
-  adapater?: any
+  adapter?: any
 }
 const ColumnActions = ({
   _id,
   deleteUserEmployee,
   shouldShowDevider,
   onOpenForm,
-  adapater
+  adapter
 }: ColumnActionProps) => {
   return (
     <div className="custom-table__actions">
       <WithOrPermission permission={[POLICIES.UPDATE_USER]}>
       <p onClick={() => onOpenForm(_id)}>Sửa</p>
       </WithOrPermission>
-      {  !adapater?.user?.isSuperAdmin && shouldShowDevider && <p>|</p>}
-    {!adapater?.user?.isSuperAdmin &&   <WithOrPermission permission={[POLICIES.DELETE_USER]}>
+      {  !adapter?.user?.isSuperAdmin && shouldShowDevider && <p>|</p>}
+    {!adapter?.user?.isSuperAdmin &&   <WithOrPermission permission={[POLICIES.DELETE_USER]}>
         <Popconfirm
         title="Bạn muốn xoá người dùng này?"
         onConfirm={() => deleteUserEmployee(_id)}
@@ -112,6 +113,8 @@ const UserEmployee = ({ currentTab }: UserProps) => {
   setOptions(groups?.map((group: any) => ({ label: group?.name, value: group?._id }))); 
   }, [groups]);
 
+  useChangeDocumentTitle("Quản lý người dùng")
+
   const columns: ColumnsType = [
     {
       title: "Tên nhân viên",
@@ -120,7 +123,7 @@ const UserEmployee = ({ currentTab }: UserProps) => {
     },
     {
       title: "Tên người dùng",
-      dataIndex: "adapater",
+      dataIndex: "adapter",
       key: "username",
       render: (value) => <p>{value?.user?.username}</p>,
     },
@@ -132,11 +135,11 @@ const UserEmployee = ({ currentTab }: UserProps) => {
     },
     {
       title: "Nhóm người dùng	",
-      dataIndex: "adapater",
+      dataIndex: "adapter",
       key: "groups",
-      render: (adapater, rc) => (
+      render: (adapter, rc) => (
         <div className="speciality-tags">
-          {adapater?.groups?.map((group: any, index: number) => {
+          {adapter?.groups?.map((group: any, index: number) => {
             return (
               <Tag color="blue" key={index}>
                 {group?.name}
@@ -155,13 +158,13 @@ const UserEmployee = ({ currentTab }: UserProps) => {
       render: (status, record: any) => {
         return(
           <Switch
-          disabled={record?.adapater?.user?.isSuperAdmin}
+          disabled={record?.adapter?.user?.isSuperAdmin}
           checked={status === "ACTIVE"}
           onChange={() =>
             updateUser({
               status: status === 'INACTIVE' ? "ACTIVE" : "INACTIVE",
               id: record?._id,
-              userId: record?.adapater?.userId,
+              userId: record?.adapter?.userId,
             })
           }
         />
@@ -178,7 +181,7 @@ const UserEmployee = ({ currentTab }: UserProps) => {
             deleteUserEmployee={deleteUser}
             shouldShowDevider={shouldShowDevider}
             onOpenForm={() => handleOpenModal(record?._id)}
-            adapater={record?.adapater}
+            adapter={record?.adapter}
           />
         );
       },

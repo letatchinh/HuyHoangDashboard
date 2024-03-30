@@ -1,13 +1,13 @@
 import { AutoComplete, Form, Table } from 'antd';
 import { useEffect, useRef, useState } from 'react';
-import { useGetListMeddicine } from '~/modules/medicine/medicine.hook';
+import { useGetListMeddicineSearch } from '~/modules/medicine/medicine.hook';
 
 let timeOut : any = null;
 const FormItem = Form.Item;
 
 const MedicineName = ({ form } : any) => {
   const [search, setSearch] = useState({});
-  const [medicineOptions, isLoading] = useGetListMeddicine(Object.keys(search).length === 0 ? null : search);
+  const [medicineOptions, isLoading] = useGetListMeddicineSearch(Object.keys(search).length === 0 ? null : search);
 
   const inputEl : any = useRef(null);
 

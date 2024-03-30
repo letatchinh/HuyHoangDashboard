@@ -30,10 +30,10 @@ import StepStatus from "../components/StepStatus";
 import { STATUS_BILL, STATUS_BILL_VI } from "../constants";
 import useUpdateBillStore from "../storeContext/UpdateBillContext";
 type propsType = {};
-const Layout = ({ label, children }: { label: any; children: any }) => (
-  <Row justify={"space-between"} align="middle">
+const Layout = ({ label, children,strong }: { label: any; children: any,strong?:boolean }) => (
+  <Row className="hover-dot-between" justify={"space-between"} align="middle">
     <Col span={12}>
-      <span>{label}: </span>
+      {strong ? <strong>{label}: </strong> : <span>{label}</span>}
     </Col>
 
     <Col>
@@ -98,6 +98,7 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
     };
     updateBill(payloadUpdate);
   }
+  console.log(bill,'bill');
 
   // useChangeDocumentTitle(codeSequence ? "Đơn hàng - " + codeSequence : 'Loading...',{dependency : [codeSequence]})
   useEffect(() => {
@@ -219,11 +220,13 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
               <Layout label={"Nhân viên tạo"}>
                 {get(createBy, "fullName", "")}
               </Layout>
-              <Layout label={"Tổng số tiền"}>{formatter(get(bill,'totalAmount',totalPrice + +(pair || 0)))}</Layout>
-              <Layout label={"Đã trả trước"}>-{formatter(pair)}</Layout>
+              <Layout label={"Tổng số tiền"}>{formatter(get(bill,'totalAmountBill',0))}</Layout>
+              <Layout label={"Chiết khấu"}>-{formatter(get(bill,'totalDiscountBill',0))}</Layout>
+              <Layout label={"Tổng số tiền sau chiết khấu"}>{formatter(get(bill,'totalAfterDiscountBill',0))}</Layout>
+              {/* <Layout label={"Đã trả trước"}>-{formatter(pair)}</Layout> */}
               <Layout label={"Đã thanh toán"}>-{formatter(totalReceiptAmount)}</Layout>
-              <Layout label={"Đã thanh toán và xác nhận"}>-{formatter(totalReceiptVoucherCompleted)}</Layout>
-              <Layout label={"Tổng số tiền còn lại"}>
+              <Layout label={"Đã thanh toán và xác nhận"}>-{formatter(totalReceiptVoucherCompleted + (pair || 0))}</Layout>
+              <Layout strong label={"Tổng số tiền còn lại"}>
                 <Typography.Text strong>
                   {formatter(remainAmount)}
                 </Typography.Text>

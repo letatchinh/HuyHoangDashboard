@@ -3,13 +3,13 @@ import { initReactI18next } from 'react-i18next';
 import dashboardVi from '~/locales/vi';
 import dashboardEn from '~/locales/en';
 export const defaultNS = 'dashboard';
-const language : string = localStorage.getItem("I18N_LANGUAGE") || 'vi'
+const language : string | null = localStorage.getItem("I18N_LANGUAGE");
 if (!language) {
   localStorage.setItem("I18N_LANGUAGE", "vi")
 }
 i18next.use(initReactI18next).init({
-  lng: language, // if you're using a language detector, do not define the lng option
-  debug: true,
+  lng: language || 'vi', // default 'vi
+  // debug: true,
   resources: {
     vi : {
       dashboard : dashboardVi

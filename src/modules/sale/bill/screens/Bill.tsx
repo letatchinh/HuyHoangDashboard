@@ -2,6 +2,7 @@ import { Tabs, Typography } from "antd";
 import { keys } from "lodash";
 import React, { useState } from "react";
 import WhiteBox from "~/components/common/WhiteBox";
+import { useChangeDocumentTitle } from "~/utils/hook";
 import ListBill from "../components/ListBill";
 import { STATUS_BILL, STATUS_BILL_VI } from "../constants";
 type propsType = {};
@@ -12,6 +13,8 @@ export default function Bill(props: propsType): React.JSX.Element {
   const onChangeTab = (tab: string) => {
     setActiveKey(tab);
   };
+  useChangeDocumentTitle("Danh sách đơn bán")
+
   return (
     <div>
       <Typography.Title level={3}>Danh sách đơn hàng</Typography.Title>
