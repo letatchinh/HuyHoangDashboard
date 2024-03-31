@@ -23,6 +23,8 @@ import POLICIES from "~/modules/policy/policy.auth";
 import useCheckBoxExport from "~/modules/export/export.hook";
 import WithPermission from "~/components/common/WithPermission";
 import ExportExcelButton from "~/modules/export/component";
+import { CalculateBill } from "../bill.service";
+const CalculateBillMethod = new CalculateBill();
 type propsType = {
   status?: string;
 };
@@ -105,7 +107,7 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
         key: "pair",
         align: "center",
         render(pair, record, index) {
-          return <Typography.Text>{formatter(pair + get(record,'totalReceiptVoucherCompleted',0))}</Typography.Text>;
+          return <Typography.Text>{formatter(pair + get(record,'totalReceiptVoucherCompleted'))}</Typography.Text>;
         },
       },
       {
@@ -114,7 +116,9 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
         key: "totalPrice",
         align: "center",
         render(totalPrice, record, index) {
-          return <Typography.Text>{formatter(totalPrice)}</Typography.Text>;
+          const remainAmount = CalculateBillMethod.remainAmount(record);
+
+          return <Typography.Text>{formatter(remainAmount)}</Typography.Text>;
         },
       },
       ...(
