@@ -267,6 +267,13 @@ export const resource: ItemType[] = [
     key: PATH_APP.botNotification.root,
     permission: [POLICIES.READ_NOTIFICATIONBOTMANAGER],
   },
+  {
+    label: "Quản lý chi phí",
+    icon: <DollarOutlined />,
+    path: PATH_APP.costManagement.root,
+    key: PATH_APP.costManagement.root,
+    // permission: [POLICIES.READ_LEDGER],
+  }
        
  ];
 

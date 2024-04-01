@@ -109,37 +109,39 @@ export const getActive = (list : []) => list?.filter((item:any) => get(item,'sta
 interface UseExpandrowTableClick {
   select: string[];
   setSelect: React.Dispatch<React.SetStateAction<string[]>>;
-  onClick: (item: any) => () => void;
+  onClick: (item: any) => (param?:any) => void;
 }
 
 export const useExpandrowTableClick: () => UseExpandrowTableClick = () => {
   const [select, setSelect] = useState<string[]>([]);
 
-  const onClick = (item: any) => () => {
-    const parentId = item.parentId;
-    let children = item?.children ?? [];
-    const id = item._id;
-
-    if (children.length && id) {
-      function repeat(value: any): string[] {
-        let res = [value._id];
-        if (value?.children) {
-          let child = value?.children.map(repeat);
-          res = flattenDeep([...res, ...child]);
+  const onClick = (item: any) => (evt?:any) => {
+    if(evt.target?.cellIndex ===0){
+      const parentId = item.parentId;
+      let children = item?.children ?? [];
+      const id = item._id;
+  
+      if (children.length && id) {
+        function repeat(value: any): string[] {
+          let res = [value._id];
+          if (value?.children) {
+            let child = value?.children.map(repeat);
+            res = flattenDeep([...res, ...child]);
+          }
+          return res;
         }
-        return res;
-      }
-
-      children = children.map(repeat);
-
-      if (select.includes(id)) {
-        let filter = select.filter((_id) => _id !== id);
-        filter = filter.filter(
-          (_id) => !flattenDeep(children).includes(_id),
-        );
-        setSelect(filter);
-      } else {
-        setSelect(uniq(compact([...select, id, parentId])));
+  
+        children = children.map(repeat);
+  
+        if (select.includes(id)) {
+          let filter = select.filter((_id) => _id !== id);
+          filter = filter.filter(
+            (_id) => !flattenDeep(children).includes(_id),
+          );
+          setSelect(filter);
+        } else {
+          setSelect(uniq(compact([...select, id, parentId])));
+        }
       }
     }
   };
@@ -215,6 +217,15 @@ export function convertQueryToObject(){
 }
 export const formatNumberThreeComma = (num: any) => num?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 
+export const formatNumberIsPercent = (value: any) => {
+  if (!value) return '';
+  const floatValue = parseFloat(value);
+  if (floatValue <= 100) {
+      return floatValue.toString();
+  } else {
+      return (floatValue / 10).toString();
+  }
+};
 export const compactAddress = (address: any) => compact([address?.street, address?.ward, address?.district, address?.city]).join(", ") 
 
 export const convertQueryString = (queryString: any) => {

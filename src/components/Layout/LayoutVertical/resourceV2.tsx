@@ -5,12 +5,14 @@ import {
     DatabaseOutlined,
     DollarOutlined,
     HddOutlined,
+    StockOutlined,
     HomeOutlined,
     TrophyOutlined,
     ApartmentOutlined,
     ShopFilled,
     MoneyCollectOutlined,
     BellFilled,
+    FundProjectionScreenOutlined,
   } from "@ant-design/icons";
   import { MenuProps } from "antd";
   import React, { useCallback } from "react";
@@ -265,6 +267,13 @@ import {
       key: PATH_APP.user.root,
       permission: [POLICIES.READ_USER, POLICIES.READ_USERGROUP],
     },
+    {
+      label: "Quản lý chi phí",
+      icon: <FundProjectionScreenOutlined />,
+      path: PATH_APP.costManagement.root,
+      key: PATH_APP.costManagement.root,
+      permission: [POLICIES.READ_SHIPPINGCOST],
+    }
   
   ];
   
