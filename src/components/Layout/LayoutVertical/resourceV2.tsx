@@ -262,7 +262,7 @@ import {
       // permission: [POLICIES.READ_BRANCH],
       children: [
         {
-          label: "Báo cáo nhân viên",
+          label: "Báo cáo lương trình dược viên",
           path: PATH_APP.report.employee,
           key: PATH_APP.report.employee,
         },

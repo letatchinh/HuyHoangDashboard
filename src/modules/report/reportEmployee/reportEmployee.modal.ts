@@ -77,9 +77,11 @@ export type SubmitDataUpdatePreview = {
   targetsSelf? : {
     targetSupplier : TargetsSupplierItem[]
   },
+  baseAdmin? : number
 }
 export type SalaryType = {
   base : number,
+  baseAdmin : number,
   bonus: {
     overMonth: number,
     overQuarter: number,

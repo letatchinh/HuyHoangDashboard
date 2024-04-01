@@ -32,6 +32,7 @@ export default function DetailReport(props:propsType) : React.JSX.Element {
             targetsTeam : {
                 targetSupplier : get(data,'targetsTeam.targetSupplier',[])
             },
+            baseAdmin : get(data,'salary.baseAdmin',0)
         };
         updateReport({
             ...submitData,

@@ -15,7 +15,12 @@ export default function TableDetailSalary({dataSource}: propsType): React.JSX.El
           title: "Tiêu chí",
           dataIndex: "title",
           key: "title",
-          render : (title,rc) => <span style={get(rc,'styleTitle',{})}>{title}</span>
+          render : (title,rc) => {
+            const AfterTitle : any = get(rc,'afterTitle');
+            console.log(AfterTitle,'AfterTitle');
+            
+            return <span style={get(rc,'styleTitle',{})}>{title} {AfterTitle && AfterTitle}</span>
+          }
         },
         {
           title: "Thành tiền",

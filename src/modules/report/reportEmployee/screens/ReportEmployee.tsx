@@ -99,7 +99,7 @@ export default function ReportEmployee(props: propsType): React.JSX.Element {
   ];
   return (
     <div>
-      <Breadcrumb title={"Báo cáo lương"} />
+      <Breadcrumb title={"Báo cáo lương trình dược viên"} />
       <WhiteBox>
         {/* <SelectSearch showSelect={false} /> */}
         <TableAnt

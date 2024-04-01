@@ -2,6 +2,7 @@ import { CSSProperties } from "@ant-design/cssinjs/lib/hooks/useStyleRegister";
 import { get } from "lodash";
 import { MIN_AFTER_CHANGE } from "./constants";
 import { DetailSalary, DetailSalaryItem, ReportEmployeeType, SalaryType, Targets, TargetsSupplierItem } from "./reportEmployee.modal";
+import BaseAdminBtn from "./components/BaseAdminBtn";
 const styleChildren :CSSProperties= {
     fontStyle : 'italic',
 }
@@ -26,7 +27,8 @@ const ConvertChild = (DetailSalary: DetailSalaryItem[]) =>
   }));
 
 export interface ItemDataSource  {
-  title: string;
+  title: any;
+  afterTitle? : any;
   value?: number | undefined; // set undefined To prevent Show String at Title
   children?: ItemDataSource[];
   styleTitle? : CSSProperties;
@@ -41,6 +43,7 @@ export const handleConvertDataSourceDetailSalary = ({
   bonus,
   benefit,
   salary,
+  _id,
 }: {
   detailSalary: DetailSalary;
   baseSalary: number;
@@ -49,6 +52,7 @@ export const handleConvertDataSourceDetailSalary = ({
   totalSalary: number;
   daysWorking: number;
   salary: SalaryType;
+  _id?: string;
 }): ItemDataSource[] => {
   let A: ItemDataSource,
     B: ItemDataSource,
@@ -63,11 +67,21 @@ export const handleConvertDataSourceDetailSalary = ({
         value: baseSalary,
         styleTitle : styleChildren,
       },
+    
     ],
     key: "A",
     value : baseSalary
   };
-
+  // Salary = 0 Will Add This
+  if(baseSalary === 0){
+    A?.children?.push({
+      title: "Lương cơ bản (Thầm quyền)",
+      value: get(salary,'baseAdmin',0),
+      styleTitle : styleChildren,
+      afterTitle : <BaseAdminBtn _id={_id}/>
+    },)
+  };
+  
   B = {
     title: "2. Hoa hồng bán hàng (B)",
     styleTitle : styleTitle,
