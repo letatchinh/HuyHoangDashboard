@@ -3,6 +3,7 @@ import requester from "~/api/requester";
 
 const pharmacy = {
     getAll: (query?: any) => requester.get(`api/v1/pharma-profile`, query),
+    getAssign: (query?: any) => requester.get(`api/v1/search-pharmacy`, query),
     search: (query?: any) => requester.post(`api/v1/pharma-profile-search`, query),
     getById: (id?: any) => requester.get(`api/v1/pharma-profile/${id}`),
     getHistoryById: (id?: any) => requester.get(`api/v1/history-bill-pharma-profile/${id}`),

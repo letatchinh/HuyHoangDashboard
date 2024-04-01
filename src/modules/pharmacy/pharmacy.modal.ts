@@ -46,3 +46,11 @@ export type FormFieldSearch = {
   endDate?: any,
   searchBy?: SearchByType,
 };
+
+export type DataSourceItemType = {
+  name: string;
+  code: string;
+  phoneNumber: string;
+  address: any;
+  _id: string;
+};

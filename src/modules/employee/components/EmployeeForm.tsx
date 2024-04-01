@@ -18,6 +18,9 @@ import { useParams } from "react-router-dom";
 import { omit } from "lodash";
 import { useFetchState } from "~/utils/helpers";
 import WithPermission from "~/components/common/WithPermission";
+import AssignPharmacyModal from "~/modules/pharmacy/component/AssignPharmacyModal";
+import { get } from "lodash";
+
 const { Option } = Select;
 
 const FormItem = Form.Item;
@@ -270,6 +273,16 @@ export default function EmployeeForm(props: IProps) {
                 >
                 </FormItem> 
           </Col>
+          </Row>
+          <Row
+              gutter={48}
+              align="middle"
+              justify="space-between"
+              className="employee-form__logo-row"
+              >
+            <Col span={12}>
+            <AssignPharmacyModal id={id} setForm={(newValue:any) => form.setFieldsValue({pharmacies : newValue})} initDataSource={get(employee,'pharmacies',[])}/>
+            </Col>
           </Row>
         </BaseBorderBox>
         <BaseBorderBox title={"Thông tin vị trí"}>

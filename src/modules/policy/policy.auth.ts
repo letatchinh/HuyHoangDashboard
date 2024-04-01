@@ -66,6 +66,8 @@ const customerGroup = 'customerGroup';
 // Nhóm nhà thuốc
 const customer = 'customer';
 
+// Cập nhật Nhà thuốc đảm nhiệm cho nhân viên
+const updateThePharmacyForEmployee = 'updateThePharmacyForEmployee';
 const RESOURCES = [
   //Setting
   configDiscount,
@@ -133,6 +135,8 @@ const RESOURCES = [
   salesChannel,
   customerGroup,
   customer,
+  
+  updateThePharmacyForEmployee,
 ];
 
 //ACTIONS
