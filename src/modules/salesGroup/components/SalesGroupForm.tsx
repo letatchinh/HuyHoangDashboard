@@ -197,7 +197,6 @@ const SalesGroupForm = ({
             <Form.Item<FieldTypeForm>
               label="Trực thuộc nhóm"
               name="parentNear"
-              rules={[{ required: true, message: "Vui lòng nhập!" }]}
             >
               {RenderLoading(
                 isLoading,
