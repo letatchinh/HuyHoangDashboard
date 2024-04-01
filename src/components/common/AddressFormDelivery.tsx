@@ -65,7 +65,7 @@ const AddressFormDelivery = (props: AddressFormSectionProps) => {
                   onChange={(e) => {
                     setCityCode && setCityCode(e);
                     form && form.setFieldsValue && form.setFieldsValue({
-                      address : {
+                      addressDelivery : {
                         districtId : null,
                         wardId : null
                       }
@@ -89,7 +89,7 @@ const AddressFormDelivery = (props: AddressFormSectionProps) => {
         <Col span={props?.span ?? 12}>
           <FormItem
             shouldUpdate={(pre, next) =>
-              get(pre, "address.cityId") !== get(next, "address.cityId")
+              get(pre, "addressDelivery.cityId") !== get(next, "addressDelivery.cityId")
             }
             noStyle
           >
@@ -113,7 +113,7 @@ const AddressFormDelivery = (props: AddressFormSectionProps) => {
                     onChange={(value) => {
                       setDistrictCode && setDistrictCode(value);
                       form && form.setFieldsValue && form.setFieldsValue({
-                        address : {
+                        addressDelivery : {
                           wardId : null
                         }
                       });
@@ -138,8 +138,8 @@ const AddressFormDelivery = (props: AddressFormSectionProps) => {
         <Col span={props?.span ?? 12}>
           <FormItem
             shouldUpdate={(pre, next) =>
-              get(pre, "address.cityId") !== get(next, "address.cityId") ||
-              get(pre, "address.districtId") !== get(next, "address.districtId")
+              get(pre, "addressDelivery.cityId") !== get(next, "addressDelivery.cityId") ||
+              get(pre, "addressDelivery.districtId") !== get(next, "addressDelivery.districtId")
             }
             noStyle
           >
