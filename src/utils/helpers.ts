@@ -58,14 +58,19 @@ export const getExistProp = (data: any) => {
 
   return result;
 };
-
+export const getAreaByCode = (areaCode? : string) => {
+  if(!areaCode) {return null};
+  const areas = subvn.getAreas();
+  return areas?.find((area) => areaCode === area?.code);
+}
 export const concatAddress = (address: any): string => {
   if (!address) return "";
-  const { street, ward, district, districtId, city, cityId, wardId } = address;
+  const { street, ward, district, districtId, city, cityId, wardId,area, areaId} = address;
   let ward_ = ward ?? get(subvn.getWardsByCode(wardId), "name");
   let district_ = district ?? get(subvn.getDistrictByCode(districtId), "name");
   let city_ = city ?? get(subvn.getCityByCode(cityId), "name");
-  return [street, ward_, district_, city_].filter(Boolean).join(", ");
+  let area_ = area ?? get(getAreaByCode(areaId), "name");
+  return [street, ward_, district_, city_,area_].filter(Boolean).join(", ");
 };
 
 export function removeAccents(str: any) {
@@ -250,4 +255,58 @@ export const getValueQuery = (key : string) : any => {
   let params = new URLSearchParams(search);
   let foo = params.get(key);
   return foo;
+};
+
+export const getOptions = (constantVi : any) => {
+  let options : any[] = [];
+  forIn(constantVi,(value,key) => {
+    options.push({
+      label : value,
+      value : key
+    })
+  });
+  return options;
 }
+
+export const filterOptionSlug = (input:any,option:any) => StringToSlug(get(option,'label','')?.toLowerCase())?.includes(StringToSlug(input?.trim()?.toLowerCase()));
+
+export const filterAcrossAccentsByLabel = (input: any, option: any) => {
+  return (
+    removeAccents(option?.label?.toLowerCase()).indexOf(removeAccents(input.toLowerCase())) >= 0
+  );
+};
+
+interface DeviceInfo {
+  isMobile: boolean;
+  isTablet: boolean;
+  isDesktop: boolean;
+};
+
+export const DeviceDetector = () => {
+  const getDeviceInfo = (): DeviceInfo => {
+    const userAgent = navigator.userAgent.toLowerCase();
+    const isMobile = /mobile/.test(userAgent);
+    const isTablet = /tablet/.test(userAgent);
+    const isDesktop = !isMobile && !isTablet;
+
+    return {
+      isMobile: isMobile && !isTablet,
+      isTablet,
+      isDesktop,
+    };
+  };
+  const [deviceInfo, setDeviceInfo] = useState<DeviceInfo>(() => getDeviceInfo());
+  useEffect(() => {
+    const handleResize = () => {
+      setDeviceInfo(getDeviceInfo());
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
+  return getDeviceInfo();
+};

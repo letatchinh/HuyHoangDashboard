@@ -2,11 +2,13 @@ import { UploadFile } from "antd"
 import { cumulativeDiscountType } from "../cumulativeDiscount/cumulativeDiscount.modal"
 
 export type TypePropsFormProduct = {
-    supplierId?:string,
-    id?:string,
-    onCancel : () => void,
-    onUpdate? : (p:any) => void
-}
+  supplierId?: string,
+  id?: string,
+  onCancel: () => void,
+  setSupplierId?: any;
+  onUpdate? : (p:any) => void
+  setStep?: any
+};
 export type TypePropsListProduct = {
     supplierId?:string,
 }

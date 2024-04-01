@@ -1,0 +1,23 @@
+[
+    {
+        "employee" : {
+            "fullName" : "Lê Tất Chính",
+            "employeeNumber" : 10010,
+            "employeeLevel" : "LEADER"
+        },
+        "totalSalary" : 7000000,
+        "createdAt" : "2024-03-16T01:23:44.057Z",
+        "_id" : 123123
+    },
+    {
+        "employee" : {
+            "fullName" : "Dương Tất Chính",
+            "employeeNumber" : 10011,
+            "employeeLevel" : "TDV"
+        },
+        "totalSalary" : 6000000,
+        "createdAt" : "2024-03-16T01:23:44.057Z",
+        "_id" : 1231232
+
+    }
+]

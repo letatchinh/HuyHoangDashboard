@@ -1,12 +1,13 @@
-import { Button, Form, Input } from "antd";
+import { Button, Form, Input, Space } from "antd";
 import { omit } from "lodash";
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, redirect, useLocation, useNavigate } from "react-router-dom";
 import logoLight from "~/assets/images/logo-light.png";
 import WhiteBox from "~/components/common/WhiteBox";
 import AuthModule from "~/modules/auth";
 import { PATH_APP } from "~/routes/allPath";
 import { useLogin } from "../auth.hook";
+import { ADAPTER_KEY } from "../constants";
 
 type FieldType = {
   login: string;
@@ -16,13 +17,18 @@ type FieldType = {
 export default function Login() {
   const [isLoading, onLogin] = useLogin();
   const token = AuthModule.hook.useToken();
+  const adapter = AuthModule.hook.useAdapter();
   const navigate = useNavigate();
   useEffect(() => {
     if (token) {
-      navigate(PATH_APP.main.root);
+      if (adapter === ADAPTER_KEY.STAFF) {
+        navigate(PATH_APP.main.root);
+      } else if(ADAPTER_KEY.EMPLOYEE){
+        navigate(PATH_APP.employee.root);
+      };
     } else {
-      navigate(PATH_APP.auth.login);
-    }
+       navigate(PATH_APP.auth.login) ;
+    };
   }, [token, navigate]);
   const onFinish = (values: any) => {
     onLogin(omit(values, ["remember"]));

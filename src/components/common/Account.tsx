@@ -21,6 +21,8 @@ const Account = ({ isLoading, required, statusAccount, setStatusAccount }: Props
         <Col span={8}>
           <h6 style={{ marginBottom: 20 }}>Thiết lập tài khoản:</h6>
         </Col>
+        {
+          statusAccount && 
         <Col span={4}>
         <Form.Item
           name="updateAccount">
@@ -32,6 +34,7 @@ const Account = ({ isLoading, required, statusAccount, setStatusAccount }: Props
           />
         </Form.Item>
         </Col>
+        }
       </Row>
       <Row gutter={48} align="middle" justify="space-between">
         <Col span={24}>
@@ -54,7 +57,7 @@ const Account = ({ isLoading, required, statusAccount, setStatusAccount }: Props
             </Tooltip>}
             rules={[
               {
-                required: true,
+                required: false,
                 pattern: new RegExp(/^[A-Za-z0-9_@.]{1,30}$/),
                 message: 'Xin vui lòng nhập đúng tên tài khoản!'
               },
@@ -86,7 +89,7 @@ const Account = ({ isLoading, required, statusAccount, setStatusAccount }: Props
             {isLoading ? (
               <Skeleton.Input active />
             ) : (
-              <Input.Password disabled = {statusAccount === 'INACTIVE'} autoComplete="off" />
+              <Input.Password disabled = {statusAccount ? statusAccount === 'INACTIVE' : false} autoComplete="off" />
             )}
           </Form.Item>
         </Col>
@@ -95,7 +98,6 @@ const Account = ({ isLoading, required, statusAccount, setStatusAccount }: Props
             name="confirmPassword"
             label="Nhập lại mật khẩu"
             dependencies={['password']}
-            {...formItemLayoutLong}
             labelAlign='left'
             rules={[
               {
@@ -112,13 +114,11 @@ const Account = ({ isLoading, required, statusAccount, setStatusAccount }: Props
                 }
               })
             ]}
-            labelCol={{span : 6}}
-            wrapperCol={{span : 18}}
           >
             {isLoading ? (
               <Skeleton.Input active />
             ) : (
-              <Input.Password style={{width : '100%'}} disabled = {statusAccount === 'INACTIVE'} autoComplete="new-password" />
+              <Input.Password style={{width : '100%'}} disabled = {statusAccount ? statusAccount === 'INACTIVE' : false}  autoComplete="new-password" />
             )}
           </Form.Item>
         </Col>

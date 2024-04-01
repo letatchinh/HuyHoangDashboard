@@ -15,6 +15,11 @@ class BotNotificationClassExtend extends InstanceModuleRedux {
         state.isLoading = false;
         state.list = payload;
       },
+      updateSuccess: (state: initStateSlice, { payload }: { payload: any }) => {
+        state.isLoading = false;
+        state.updateSuccess = payload;
+        state.list = payload;
+      },
     };
     this.cloneInitState = {
       ...this.initialState,

@@ -54,7 +54,7 @@ export default function LkTabItem({
   // Hook
   const isSuperAdmin = useIsSuperAdmin();
   const canDownload = useMatchPolicy(POLICIES.DOWNLOAD_CUMULATIVEEVENT);
-  const canReadVoucher = useMatchPolicy(POLICIES.READ_VOUCHER)
+  const canReadVoucher = useMatchPolicy(POLICIES.READ_VOUCHERPHARMACY)
   const [form] = Form.useForm();
   const [reFetch, setReFetch] = useState(false);
   const mutate = useCallback(() => setReFetch(!reFetch), [reFetch]);
@@ -191,7 +191,7 @@ export default function LkTabItem({
             <SearchOutlined /> {get(voucher, "codeSequence", "")}
           </Typography.Link>
           </Flex> :
-          <WithPermission permission={POLICIES.WRITE_VOUCHER}>
+          <WithPermission permission={POLICIES.WRITE_VOUCHERPHARMACY}>
             <Button
               disabled={!!voucher ?? !isInApplyTime}
               onClick={() => {

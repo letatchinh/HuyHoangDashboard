@@ -12,10 +12,12 @@ import saga from "./redux/saga";
 import UpdateBill from "./screens/UpdateBill";
 import  {UpdateBillProvider}  from "./storeContext/UpdateBillContext";
 import { CreateBillProvider } from "./storeContext/CreateBillContext";
+import CreateBillInDevice from "./screens/CreateBill_InDevice";
 const moduleExport = {
     page : {
         index : BillScreen,
         create : CreateBill,
+        createInDevice : CreateBillInDevice,
         update : UpdateBill
     },
     api : billApi,

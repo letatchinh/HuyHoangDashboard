@@ -7,10 +7,9 @@ import TableAnt from '~/components/Antd/TableAnt';
 import ProductModule from '~/modules/product';
 import useNotificationStore from '~/store/NotificationContext';
 import { formatter } from '~/utils/helpers';
-import { selectProductSearch } from '../../bill/bill.service';
 import ImageProduct from '../../bill/components/ImageProduct';
 import { ItemSearchProduct } from '../orderSupplier.modal';
-import { getCumulativeDiscount } from '../orderSupplier.service';
+import { getCumulativeDiscount, selectProductSearch } from '../orderSupplier.service';
 type propsType = {
   dataCurrent : any,
   onChangeBill : (newData:any) => void,
@@ -134,7 +133,7 @@ export default function SelectProduct({dataCurrent,onChangeBill}:propsType) : Re
                   key: 'variant',
                   align: 'center',
                   render(variant, record, index) {
-                    return <Typography.Text strong>{formatter(get(variant,'price',0))} 
+                    return <Typography.Text strong>{formatter(get(variant,'cost',0))} 
                     &nbsp;
                     {get(record,'cumulativeDiscount.length',0) ? <Badge size='small' count={get(record,'cumulativeDiscount.length',0)}>
                       <GiftTwoTone />

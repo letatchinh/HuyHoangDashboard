@@ -49,4 +49,45 @@
         transition: 0.3s ease!important;
     }
   }
+  &--btnActionSecondary{
+    // height: 100px!important;
+    padding: 5px;
+    width: 150px!important;
+    background-color: #fff;
+    outline: none;
+    border: none;
+    border-radius: $default-border-radius;
+    transition: 0.3s ease!important;
+    box-shadow: $default-box-shadow;
+    &__icon{
+        font-size: 38px!important;
+        color: rgb(123, 129, 144);
+    }
+    &__text{
+        color: rgb(91, 96, 107);
+        font-size: 14px;
+        font-weight: 500;
+    }
+    &:hover .homepage--btnAction__icon{
+        color: $color-primary!important;
+        transition: 0.3s ease!important;
+        transform: scale(1.1);
+    }
+    &:hover .homepage--btnAction__text{
+        color: $color-primary!important;
+        transition: 0.3s ease!important;
+    }
+    &.active{
+        background-color: #3481FF!important;
+        .homepage--btnActionSecondary__icon{
+            font-size: 38px!important;
+            color: white!important;
+        }
+        .homepage--btnActionSecondary__text{
+            color: white!important;
+            font-size: 14px;
+            font-weight: 500;
+        }
+    }
+  }
 }

@@ -15,8 +15,8 @@ import {
   useSuccess,
 } from "~/utils/hook";
 import { userSliceAction } from "./redux/reducer";
-const MODULE  = "user";
-const MODULE_VI  = "Người dùng";
+const MODULE = "user";
+const MODULE_VI = "Người dùng";
 
 const {
   loadingSelector,
@@ -37,17 +37,19 @@ const {
 const getSelector = (key: string) => (state: any) => state.user[key];
 
 export const useUserPaging = () => useSelector(pagingSelector);
-const policySelector = getSelector('policy');
-const isGetPolicyLoadingSelector = getSelector('isGetPolicyLoading');
-const getPolicyFailedSelector = getSelector('getPolicyFailedSelector');
+const policySelector = getSelector("policy");
+const isGetPolicyLoadingSelector = getSelector("isGetPolicyLoading");
+const getPolicyFailedSelector = getSelector("getPolicyFailedSelector");
 
-const profileSelector = getSelector('profile');
-const isGetProfileLoadingSelector = getSelector('isGetProfileLoading');
-const getProfileFailedSelector = getSelector('getProfileFailed');
+const profileSelector = getSelector("profile");
+const isGetProfileLoadingSelector = getSelector("isGetProfileLoading");
+const getProfileFailedSelector = getSelector("getProfileFailed");
 
-const isSubmitProfileLoadingSelector = getSelector('isSubmitUpdateProfileLoading');
-const updateProfileSuccessSelector = getSelector('updateProfileSuccess');
-const updateProfileFailedSelector = getSelector('updateProfileFailed');
+const isSubmitProfileLoadingSelector = getSelector(
+  "isSubmitUpdateProfileLoading"
+);
+const updateProfileSuccessSelector = getSelector("updateProfileSuccess");
+const updateProfileFailedSelector = getSelector("updateProfileFailed");
 
 export const useGetUsers = (params: any) => {
   return useFetchByParam({
@@ -153,7 +155,7 @@ export const useUserQueryParams = () => {
 
   const createSuccess = useSelector(createSuccessSelector);
   const updateSuccess = useSelector(updateSuccessSelector);
-  const onTableChange : any = ({ current, pageSize }: any) => {
+  const onTableChange: any = ({ current, pageSize }: any) => {
     setLimit(pageSize);
     setPage(current);
   };
@@ -164,17 +166,14 @@ export const useUserQueryParams = () => {
       limit,
       keyword,
       groupIds,
-      status
+      status,
     };
-    return [queryParams,onTableChange];
+    return [queryParams, onTableChange];
     //eslint-disable-next-line
-  }, [page, limit, keyword, createSuccess, groupIds,status, updateSuccess]);
+  }, [page, limit, keyword, createSuccess, groupIds, status, updateSuccess]);
 };
 
-export const useUpdateUserParams = (
-  query: any,
-  listOptionSearch?: any[]
-) => {
+export const useUpdateUserParams = (query: any, listOptionSearch?: any[]) => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const [keyword, setKeyword] = useState(get(query, "keyword"));
@@ -187,7 +186,7 @@ export const useUpdateUserParams = (
 
     if (!param.page) {
       query.page = 1;
-    };
+    }
 
     // Convert Query and Params to Search Url Param
     const searchString = new URLSearchParams(
@@ -204,23 +203,25 @@ export const useUpdateUserParams = (
 };
 
 const adapterValidateUsername = async (username: any, callApi: any) => {
-  const res = await callApi({ username: removeAccents(username?.toLowerCase()) }) // API Get username
-  return get(res, 'username', '')
+  const res = await callApi({
+    username: removeAccents(username?.toLowerCase()),
+  }); // API Get username
+  return get(res, "username", "");
 };
 export const autoCreateUsername = async ({ fullName, callApi }: any) => {
-  const splitFullName = fullName?.trim()?.split(' ')
-  let username = last(splitFullName)
+  const splitFullName = fullName?.trim()?.split(" ");
+  let username = last(splitFullName);
   for (let i = 0; i <= splitFullName?.length - 2; i++) {
-    const value = get(splitFullName, `${i}.[0]`, '')
-    username += value
-  };
-  const newUserName = await adapterValidateUsername(username, callApi)
-  return newUserName
+    const value = get(splitFullName, `${i}.[0]`, "");
+    username += value;
+  }
+  const newUserName = await adapterValidateUsername(username, callApi);
+  return newUserName;
 };
- 
+
 //POLICY
 
-export const useGetPolicyCheckAllPage = (param?: any) : any => {
+export const useGetPolicyCheckAllPage = (param?: any): any => {
   return useFetch({
     action: userSliceAction.getPolicyRequest,
     loadingSelector: isGetPolicyLoadingSelector,
@@ -234,3 +235,17 @@ export const useResetGroups = () => {
   return useResetState(userSliceAction.resetAction);
 };
 
+export const useInitialValues = (user: any) => {
+  const data = {
+    fullName: user?.email ,
+    email: user?.email ,
+    gender: user?.email ,
+    phoneNumber: user?.email ,
+    idNumber: user?.email ,
+    userId: user?.adapter?.userId ,
+    username: user?.adapter?.username,
+    groups: user?.adapter?.groups || [],
+    address: user?.address || {},
+  };
+  return data;
+};
