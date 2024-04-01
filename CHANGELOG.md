@@ -1,3 +1,16 @@
+# [1.7.0](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/compare/v1.6.1...v1.7.0) (2024-04-01)
+
+
+### Bug Fixes
+
+* typescript ([69027cb](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/69027cbf29f4619ef33baffd66d486a226a220f5))
+
+
+### Features
+
+* [#1485](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1485) FE_Gắn nhà thuốc cho nhân viên ([9c470b3](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/9c470b3729ca0d94e83c5892721329d31f86988b))
+* [#1485](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1485) FE_Gắn nhà thuốc cho nhân viên ([ab06004](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/ab06004a1e2d4ece497588fbe5040af3a26828d9))
+
 ## [1.6.1](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/compare/v1.6.0...v1.6.1) (2024-03-29)
 
 
