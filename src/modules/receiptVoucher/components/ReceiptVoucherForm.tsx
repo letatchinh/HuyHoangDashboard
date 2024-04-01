@@ -23,6 +23,7 @@ import {
   DEFAULT_BRANCH_ID,
   LANGUAGE,
   REF_COLLECTION,
+  requireRules,
   TYPE_VOUCHER,
   WH_PAYMENT_METHOD,
   WH_PAYMENT_METHOD_VI,
@@ -47,6 +48,10 @@ import POLICIES from "~/modules/policy/policy.auth";
 import { useGetBranch, useGetBranches } from "~/modules/branch/branch.hook";
 import { useGetSupplier } from "~/modules/supplier/supplier.hook";
 import WithOrPermission from "~/components/common/WithOrPermission";
+import { receiptVoucherSliceAction } from "../redux/reducer";
+import { methodType } from "~/modules/vouchers/vouchers.modal";
+import { METHOD_TYPE_OPTIONS } from "~/modules/vouchers/constants";
+import SelectBillCreateVoucherByPharmacyId from "~/modules/sale/bill/components/SelectBillCreateVoucherByPharmacyId";
 
 const mainRowGutter = 24;
 const FormItem = Form.Item;
@@ -70,11 +75,13 @@ type propsType = {
   debt?: any;
   from?: string;
   supplierId?:any,
-  dataAccountingDefault?: DataAccounting[]
+  dataAccountingDefault?: DataAccounting[],
+  billId?:any,
+  method? : methodType
 };
 
 export default function ReceiptVoucher(props: propsType): React.JSX.Element {
-  const { id , onClose, pharmacyId,supplierId,refCollection, debt, from,dataAccountingDefault} = props;
+  const { id , onClose, pharmacyId,supplierId,refCollection, debt, from,dataAccountingDefault,billId,method} = props;
   useResetAction();
   const [form] = Form.useForm();
   const ref = useRef();
@@ -86,6 +93,8 @@ export default function ReceiptVoucher(props: propsType): React.JSX.Element {
   const [, handleConfirm] = useConfirmReceiptVoucher(onClose);
   const [voucher, isLoading] = useGetReceiptVoucher(id);
   const initReceiptVoucher = useInitWhReceiptVoucher(voucher);
+  console.log(initReceiptVoucher,'initReceiptVoucher');
+  
   const memo = useMemo(() => pharmacyId, [pharmacyId]);
   const queryBranch = useMemo(() => ({page: 1, limit: 10}), []);
   const [branch] = useGetBranches(queryBranch);
@@ -145,6 +154,11 @@ export default function ReceiptVoucher(props: propsType): React.JSX.Element {
           accountingDate : dayjs(),
           dateOfIssue : dayjs(),
         });
+      }
+      if(method){
+        form.setFieldsValue({
+          method
+        })
       }
     } else {
       form.setFieldsValue(
@@ -457,6 +471,24 @@ export default function ReceiptVoucher(props: propsType): React.JSX.Element {
               </Col>
             </Row>
           </BaseBorderBox>
+
+          <BaseBorderBox title={"Thông tin liên quan"}>
+              <Row gutter={16}> 
+                <Col span={12}>
+                  <FormItem label="Loại dữ liệu" name={["method","type"]} labelCol={{ lg: 8 }}>
+                    {render(<Select allowClear onClear={() => form.setFieldsValue({
+                        method : null
+                      })
+                      
+                    } options={METHOD_TYPE_OPTIONS}/>)}
+                  </FormItem>
+                </Col>
+                <Col span={12}>
+                {render(<SelectBillCreateVoucherByPharmacyId id={id ? get(initReceiptVoucher,'pharmacyId') : (pharmacyId || null)}/>)}
+                </Col>
+              </Row>
+            </BaseBorderBox>
+
           <Tabs
             // defaultActiveKey={'1'}
             destroyInactiveTabPane
