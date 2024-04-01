@@ -90,8 +90,10 @@ export default function EmployeeForm(props: IProps) {
       const data : object = {
         ...employee,
         _id: id,
-        avatar: imageUrl
+        avatar: imageUrl,
+        pharmacies : employee?.employeeLevel === EMPLOYEE_LEVEL.ASM ? [] : get(employee,'pharmacies',[]),
       };
+      
       if (statusAccount === 'ACTIVE') {
         handleUpdate({...data});
       } else {
@@ -121,6 +123,7 @@ export default function EmployeeForm(props: IProps) {
         });
       };
     };
+    
   };
 
   const onFocusOutFullName = async () => {
@@ -147,6 +150,7 @@ export default function EmployeeForm(props: IProps) {
     [setImageUrl]
   );
 
+  const employeeLevel = Form.useWatch('employeeLevel',form);
   return (
     <div className="employee-form">
       <h4 style={{ marginRight: "auto", paddingLeft: 27 }}>
@@ -274,16 +278,7 @@ export default function EmployeeForm(props: IProps) {
                 </FormItem> 
           </Col>
           </Row>
-          <Row
-              gutter={48}
-              align="middle"
-              justify="space-between"
-              className="employee-form__logo-row"
-              >
-            <Col span={12}>
-            <AssignPharmacyModal id={id} setForm={(newValue:any) => form.setFieldsValue({pharmacies : newValue})} initDataSource={get(employee,'pharmacies',[])}/>
-            </Col>
-          </Row>
+        
         </BaseBorderBox>
         <BaseBorderBox title={"Thông tin vị trí"}>
           <Row
@@ -303,6 +298,16 @@ export default function EmployeeForm(props: IProps) {
               </FormItem>
             </Col>
           </Row>
+          {employeeLevel !== EMPLOYEE_LEVEL.ASM && <Row
+              gutter={48}
+              align="middle"
+              justify="space-between"
+              className="employee-form__logo-row"
+              >
+            <Col span={12}>
+            <AssignPharmacyModal id={id} setForm={(newValue:any) => form.setFieldsValue({pharmacies : newValue})} initDataSource={get(employee,'pharmacies',[])}/>
+            </Col>
+          </Row>}
         </BaseBorderBox>
         <Account
           isLoading={isLoading} required={id ? false : true}

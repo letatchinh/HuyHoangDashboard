@@ -5,6 +5,8 @@ import { DetailSalary, DetailSalaryItem, ReportEmployeeType, SalaryType, Targets
 import BaseAdminBtn from "./components/BaseAdminBtn";
 import { BonusOtherType } from "../reportSupplier/reportSupplier.modal";
 import BonusOtherForm from "./components/BonusOtherForm";
+import { EmployeeLevelType } from "~/modules/employee/employee.modal";
+import { EMPLOYEE_LEVEL } from "~/modules/employee/constants";
 const styleChildren :CSSProperties= {
     fontStyle : 'italic',
 }
@@ -49,6 +51,7 @@ export const handleConvertDataSourceDetailSalary = ({
   bonusOther,
   totalBonusOther,
   employeeId,
+  employeeLevel,
 }: {
   detailSalary: DetailSalary;
   baseSalary: number;
@@ -61,6 +64,7 @@ export const handleConvertDataSourceDetailSalary = ({
   bonusOther : BonusOtherType[],
   totalBonusOther : number,
   employeeId : string,
+  employeeLevel : EmployeeLevelType,
 }): ItemDataSource[] => {
   let A: ItemDataSource,
     B: ItemDataSource,
@@ -157,7 +161,7 @@ export const handleConvertDataSourceDetailSalary = ({
       workingBenefit,
       cover_pos,
       exclusive_product,
-      team,
+      // team,
       overQuarter,
       overYear,
     ],
@@ -165,6 +169,9 @@ export const handleConvertDataSourceDetailSalary = ({
     value : bonus
   };
 
+  if(employeeLevel === EMPLOYEE_LEVEL.LEADER ){
+    C.children?.splice(4,0,team)
+  }
   const ItemAddBonusMethod = {
     title: "",
       value: undefined,
