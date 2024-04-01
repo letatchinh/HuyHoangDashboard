@@ -45,7 +45,8 @@ function getDataFromDeeplyChild(
       const leader = RulesLeaderMethod.FindOne(
         get(child, "salesGroupPermission", [])
       );
-      if (leader) {
+      // if (leader) {
+      if (true) {
         groupHaveLeader.push(child);
       }
       /////
@@ -125,7 +126,7 @@ class SalesGroupClassExtend extends InstanceModuleRedux {
             const leader = RulesLeaderMethod.FindOne(
               get(item, "salesGroupPermission", [])
             );
-            if (leader) {
+            if (true) {
               groupHaveLeader.push(item);
             }
             getDataFromDeeplyChild(
