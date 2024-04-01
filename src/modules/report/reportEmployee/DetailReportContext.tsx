@@ -114,7 +114,10 @@ export function DetailReportProvider({
         bonus: get(data, "salary.totalBonus", 0),
         benefit: get(data, "salary.benefit", 0),
         salary: get(data, "salary"),
-        _id : id
+        _id : id,
+        bonusOther : get(data,'bonusOther',[]),
+        totalBonusOther : get(data,'totalBonusOther',0),
+        employeeId : get(data,'employee.employeeId',"")
       }),
     [data]
   );

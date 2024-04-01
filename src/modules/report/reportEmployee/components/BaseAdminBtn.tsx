@@ -2,10 +2,12 @@ import { Button, Form, InputNumber, Popover } from 'antd';
 import React, { memo, useCallback, useState } from 'react';
 import InputNumberAnt from '~/components/Antd/InputNumberAnt';
 import { useUpdatePreviewReportEmployee } from '../reportEmployee.hook';
+import { SubmitDataUpdatePreview } from '../reportEmployee.modal';
 type propsType = {
  _id ? : string;
+ employeeId : string,
 }
- function BaseAdminBtn({_id}:propsType) : React.JSX.Element {
+ function BaseAdminBtn({_id,employeeId}:propsType) : React.JSX.Element {
     const [form] = Form.useForm();
     const [open, setOpen] = useState(false);
     const hide = useCallback(() => {
@@ -16,10 +18,12 @@ type propsType = {
     };
     const [isSubmitLoading,onPreviewUpdate] = useUpdatePreviewReportEmployee(hide);
     const onFinish = ({baseAdmin}:{baseAdmin : number}) => {
-        onPreviewUpdate({
+        const submitData : SubmitDataUpdatePreview = {
             _id,
             baseAdmin,
-        })
+            employeeId,
+        };
+        onPreviewUpdate(submitData)
     }
     return (
         <Popover 

@@ -3,6 +3,8 @@ import { get } from "lodash";
 import { MIN_AFTER_CHANGE } from "./constants";
 import { DetailSalary, DetailSalaryItem, ReportEmployeeType, SalaryType, Targets, TargetsSupplierItem } from "./reportEmployee.modal";
 import BaseAdminBtn from "./components/BaseAdminBtn";
+import { BonusOtherType } from "../reportSupplier/reportSupplier.modal";
+import BonusOtherForm from "./components/BonusOtherForm";
 const styleChildren :CSSProperties= {
     fontStyle : 'italic',
 }
@@ -44,6 +46,9 @@ export const handleConvertDataSourceDetailSalary = ({
   benefit,
   salary,
   _id,
+  bonusOther,
+  totalBonusOther,
+  employeeId,
 }: {
   detailSalary: DetailSalary;
   baseSalary: number;
@@ -53,10 +58,14 @@ export const handleConvertDataSourceDetailSalary = ({
   daysWorking: number;
   salary: SalaryType;
   _id?: string;
+  bonusOther : BonusOtherType[],
+  totalBonusOther : number,
+  employeeId : string,
 }): ItemDataSource[] => {
   let A: ItemDataSource,
     B: ItemDataSource,
     C: ItemDataSource,
+    D: ItemDataSource,
     FOOTER: ItemDataSource[];
   A = {
     title: "1. Lương cơ bản (A)",
@@ -78,7 +87,7 @@ export const handleConvertDataSourceDetailSalary = ({
       title: "Lương cơ bản (Thầm quyền)",
       value: get(salary,'baseAdmin',0),
       styleTitle : styleChildren,
-      afterTitle : <BaseAdminBtn _id={_id}/>
+      afterTitle : <BaseAdminBtn employeeId={employeeId} _id={_id}/>
     },)
   };
   
@@ -156,6 +165,30 @@ export const handleConvertDataSourceDetailSalary = ({
     value : bonus
   };
 
+  const ItemAddBonusMethod = {
+    title: "",
+      value: undefined,
+      styleTitle : styleChildren,
+      afterTitle : <BonusOtherForm employeeId={employeeId} bonusOther={bonusOther} _id={_id}/>
+  }
+  D = {
+    title: "4. Thưởng/phạt (D)",
+    styleTitle : styleTitle,
+    children:   [
+      ItemAddBonusMethod,
+      ...bonusOther?.map((item: BonusOtherType) => ({
+        title: get(item,'content',''),
+        value: get(item,'value') * get(item,'mathMethod'),
+        styleTitle : {
+          ...styleChildren,
+          color : get(item,'mathMethod') === 1 ? 'green' : 'red'
+        },
+      }))
+    ],
+    key: "D",
+    value : totalBonusOther,
+  }
+
   FOOTER = [
     {
       title: "TỔNG THU NHẬP TRONG THÁNG",
@@ -164,7 +197,7 @@ export const handleConvertDataSourceDetailSalary = ({
       styleTitle : styleFooter,
     },
   ];
-  const dataSource: ItemDataSource[] = [A, B, C, ...FOOTER];
+  const dataSource: ItemDataSource[] = [A, B, C, D, ...FOOTER];
   return dataSource;
 };
 
@@ -215,7 +248,9 @@ export const handleCalculateReducer = (payload:ReportEmployeeType) => {
         get(payload, "salary.bonus.cover_pos", 0),
         get(payload, "salary.bonus.exclusive_product", 0),
         get(payload, "salary.bonus.targetsLeader", 0),
+
       ].reduce((sum, cur) => sum + cur, 0),
+      totalBonusOther : (payload?.bonusOther || [])?.reduce((sum : number, cur : BonusOtherType) => sum + (get(cur,'value') * get(cur,'mathMethod',0)),0)
     },
     targetsTeam: {
       ...get(payload, "targetsTeam", {}),

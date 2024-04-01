@@ -103,7 +103,7 @@ export default function ReportEmployee(props: propsType): React.JSX.Element {
       <WhiteBox>
         {/* <SelectSearch showSelect={false} /> */}
         <TableAnt
-          dataSource={[...data,...data]}
+          dataSource={data}
           loading={isLoading}
           rowKey={(rc) => rc?._id}
           columns={columns}
