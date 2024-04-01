@@ -138,10 +138,10 @@ export default function FreelanceContractPharmacy(
         render: (record: any) => {
           return (
             <div className="custom-table__actions">
-              <WithPermission permission={POLICIES.UPDATE_PHARMAPROFILE}>
+              <WithPermission permission={POLICIES.UPDATE_CONTRACTPHARMACY}>
                 <p onClick={() => onOpenForm(record)}>Sửa</p>
               </WithPermission>
-              <WithPermission permission={POLICIES.DELETE_PHARMAPROFILE}>
+              <WithPermission permission={POLICIES.DELETE_CONTRACTPHARMACY}>
                 <p>|</p>
                 <Popconfirm
                   title={`Bạn muốn xoá hợp đồng này?`}
