@@ -67,7 +67,7 @@ export default function ListProduct({
       render(name, record) {
         const codeBySupplier = get(record,'codeBySupplier','');
         if (get(record, "variants", [])?.length > 1) {
-          const options = get(record, "variants", [])?.map((item) => ({
+          const options = get(record, "variants", [])?.map((item:any) => ({
             label: get(item, "unit.name"),
             value: get(item, "_id"),
           }));
