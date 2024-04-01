@@ -12,7 +12,7 @@ type propsType = {
 
 }
 export default function SelectSupplierNotExist() : React.JSX.Element {
-    const {typeBenefit,reFetch,createBenefit,isSubmitLoading} = useBenefitConfigStore();
+    const {typeBenefit,reFetch,createBenefit,isSubmitLoading, canWriteBenefit} = useBenefitConfigStore();
     const [data,loading] = useFetchState({api : apis.getSupplierToAddBenefit,useDocs : false,query : typeBenefit,reFetch});
     const [idSelect,setIdSelect] = useState<string | null>();
     const [open, setOpen] = useState(false);
@@ -55,9 +55,9 @@ export default function SelectSupplierNotExist() : React.JSX.Element {
         open={open}
         onOpenChange={handleOpenChange}
       >
-        <Tooltip title="Thêm nhà cung cấp" placement='bottom'>
+      {canWriteBenefit &&  <Tooltip title="Thêm nhà cung cấp" placement='bottom'>
         <Button icon={<PlusCircleOutlined />} type='primary' block/> 
-        </Tooltip>
+        </Tooltip>}
       </Popover>
     )
 }

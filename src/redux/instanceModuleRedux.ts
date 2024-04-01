@@ -151,7 +151,7 @@ export class InstanceModuleRedux{
     // Reset the state
     reset: () => this.initialState,
     // Reset the state Action
-    resetAction: (state:any) => ({
+    resetAction: (state:initStateSlice) => ({
       ...state,
       ...omit(this.initialState, ["list"]),
     }),

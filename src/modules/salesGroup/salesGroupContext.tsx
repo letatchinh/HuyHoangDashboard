@@ -6,6 +6,8 @@ import {
   useState,
 } from "react";
 import { useDeleteSalesGroup, useUpdateSalesGroup } from "./salesGroup.hook";
+import { useMatchPolicy } from "../policy/policy.hook";
+import POLICIES from "../policy/policy.auth";
 export type GlobalSalesGroup = {
   isSubmitLoading: boolean;
   updateSalesGroup: (p: any) => void;
@@ -27,7 +29,10 @@ export type GlobalSalesGroup = {
   onOpenFormExchangeRate: (value?: any) => void;
   setParentNear: any;
   groupInfo: any,
-  setGroupInfo: any
+  setGroupInfo: any,
+  canWrite: boolean,
+  canDelete: boolean,
+  canUpdate: boolean,
 };
 const SalesGroup = createContext<GlobalSalesGroup>({
   isSubmitLoading: false,
@@ -51,6 +56,9 @@ const SalesGroup = createContext<GlobalSalesGroup>({
   setParentNear: () => { },
   groupInfo: null,
   setGroupInfo: () => { },
+  canWrite: false,
+  canDelete: false,
+  canUpdate: false,
 });
 
 type SalesGroupProviderProps = {
@@ -68,6 +76,11 @@ export function SalesGroupProvider({
   
   const [isOpenFormExchangeRate, setIsOpenFormExchangeRate]: any = useState(false);
   const [groupInfo, setGroupInfo]: any = useState();
+
+  //Permission
+  const canWrite = useMatchPolicy(POLICIES.WRITE_SALESGROUP);
+  const canDelete = useMatchPolicy(POLICIES.DELETE_SALESGROUP);
+  const canUpdate = useMatchPolicy(POLICIES.UPDATE_SALESGROUP);
 
   // Control form
   const onOpenForm = useCallback((idSelect?: any) => {
@@ -148,7 +161,10 @@ export function SalesGroupProvider({
         onCloseFormExchangeRate,
         setParentNear,
         groupInfo,
-        setGroupInfo
+        setGroupInfo,
+        canWrite,
+        canDelete,
+        canUpdate
       }}
     >
       {children}

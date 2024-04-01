@@ -241,6 +241,22 @@ export const convertQueryString = (queryString: any) => {
   return stringQuery;
 };
 
+export function getRandomColor() {
+  var letters = '0123456789ABCDEF';
+  var color = '#';
+  for (var i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+  }
+  return color;
+}
+
+export const getValueQuery = (key : string) : any => {
+  let search = window.location.search;
+  let params = new URLSearchParams(search);
+  let foo = params.get(key);
+  return foo;
+};
+
 export const getOptions = (constantVi : any) => {
   let options : any[] = [];
   forIn(constantVi,(value,key) => {
@@ -260,18 +276,37 @@ export const filterAcrossAccentsByLabel = (input: any, option: any) => {
   );
 };
 
-export function getRandomColor() {
-  var letters = '0123456789ABCDEF';
-  var color = '#';
-  for (var i = 0; i < 6; i++) {
-      color += letters[Math.floor(Math.random() * 16)];
-  }
-  return color;
-}
+interface DeviceInfo {
+  isMobile: boolean;
+  isTablet: boolean;
+  isDesktop: boolean;
+};
 
-export const getValueQuery = (key : string) : any => {
-  let search = window.location.search;
-  let params = new URLSearchParams(search);
-  let foo = params.get(key);
-  return foo;
-}
+export const DeviceDetector = () => {
+  const getDeviceInfo = (): DeviceInfo => {
+    const userAgent = navigator.userAgent.toLowerCase();
+    const isMobile = /mobile/.test(userAgent);
+    const isTablet = /tablet/.test(userAgent);
+    const isDesktop = !isMobile && !isTablet;
+
+    return {
+      isMobile: isMobile && !isTablet,
+      isTablet,
+      isDesktop,
+    };
+  };
+  const [deviceInfo, setDeviceInfo] = useState<DeviceInfo>(() => getDeviceInfo());
+  useEffect(() => {
+    const handleResize = () => {
+      setDeviceInfo(getDeviceInfo());
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
+  return getDeviceInfo();
+};

@@ -5,6 +5,7 @@ export const EMPLOYEE_LEVEL = {
   TDV: "TDV",
   ASM: "ASM",
   CTV: "CTV",
+  TEAMLEADER: 'TEAMLEADER'
 };
 
 export const EMPLOYEE_LEVEL_VI = {

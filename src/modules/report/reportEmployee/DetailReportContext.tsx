@@ -24,6 +24,8 @@ import {
   handleConvertDataSourceDetailSalary,
   ItemDataSource,
 } from "./reportEmployee.service";
+import { useMatchPolicy } from "~/modules/policy/policy.hook";
+import POLICIES from "~/modules/policy/policy.auth";
 type DataInitSwap = Pick<
   DataSwapType,
   "resourceSupplierId" | "targetSupplierId" | "type"
@@ -36,7 +38,7 @@ export type GlobalDetailReport = {
   exchangeRateOverrideTargetsTeam: ExchangeRateType[];
   exchangeRateOverrideTargetsSelf: ExchangeRateType[];
   dataSourceDetailSalary: ItemDataSource[];
-  employeeLevel: string;
+  employeeLevel: string | EmployeeLevelType;
   dataSwap?: DataInitSwap | null;
   data?: ReportEmployeeType | null;
   loading: boolean;
@@ -44,6 +46,7 @@ export type GlobalDetailReport = {
   onCancel: () => void;
   isSubmitLoadingPreview: boolean;
   onPreviewUpdate: (p?: any) => void;
+  canUpdateReportSalary: boolean;
 };
 
 const DetailReport = createContext<GlobalDetailReport>({
@@ -61,6 +64,7 @@ const DetailReport = createContext<GlobalDetailReport>({
   loading: false,
   isSubmitLoadingPreview: false,
   onPreviewUpdate: () => {},
+  canUpdateReportSalary: false,
 });
 
 export function DetailReportProvider({
@@ -78,6 +82,7 @@ export function DetailReportProvider({
   const [isSubmitLoadingPreview, onPreviewUpdate] =
     useUpdatePreviewReportEmployee();
 
+  const canUpdateReportSalary = useMatchPolicy(POLICIES.UPDATE_REPORTSALARY);
   const onOpenSwap = useCallback((dataSwap?: DataInitSwap) => {
     if (dataSwap) {
       setDataSwap(dataSwap);
@@ -143,6 +148,7 @@ export function DetailReportProvider({
         loading: isLoading,
         isSubmitLoadingPreview,
         onPreviewUpdate,
+        canUpdateReportSalary
       }}
     >
       {children}

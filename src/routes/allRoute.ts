@@ -30,18 +30,30 @@ import PharmacyDetail from "~/modules/pharmacy/screens/PharmacyDetail";
 import Lk from "~/pages/Dashboard/Lk";
 import OrderSupplier from "~/pages/Dashboard/OrderSupplier";
 import UpdateOrderSupplier from "~/pages/Dashboard/OrderSupplier/UpdateOrderSupplier";
+import { FreelanceContractPharmacyPage } from "~/pages/Dashboard/FreelanceContractPharmacy";
+import RevenueSupplier from "~/modules/supplier/components/Revenue";
+import TotalRevenueList from "~/modules/supplier/components/Revenue/TotalRevenueList";
+import CostManagement from "~/pages/Dashboard/CostManagement";
 import SalesGroupPage from "~/pages/Dashboard/SalesGroup";
 import BaseSalaryPage from "~/pages/Dashboard/BaseSalary";
 import BenefitConfigurationPage from "~/pages/Dashboard/BenefitConfiguration";
 import ReportEmployeePage from "~/pages/Dashboard/ReportEmployee";
 import ReportSupplierPage from "~/pages/Dashboard/ReportSupplier";
 import CronSalaryPage from "~/pages/Dashboard/CronSalary";
-import CostManagement from "~/pages/Dashboard/CostManagement";
+import SaleChannel from "~/pages/Dashboard/SaleChannel";
+import ConfigurationCronTime from "~/pages/Dashboard/ConfigurationCronTime";
+import TypePharmacy from "~/pages/Dashboard/TypePharmacy";
+import GroupPharmacy from "~/pages/Dashboard/GroupPharmacy";
 export const mainRoutes :PathRouteProps[] = [
   { path: PATH_APP.main.root, Component: Homepage },
 
   // Supplier
   { path: PATH_APP.supplier.root, Component: Supplier },
+
+  //Revenue Supplier
+  { path: PATH_APP.revenueSupplier.revenue, Component: RevenueSupplier },
+  { path: PATH_APP.revenueSupplier.revenueDetail, Component: RevenueSupplier },
+  { path: PATH_APP.revenueSupplier.revenueAll, Component: TotalRevenueList },
 
   // worldPharma
   { path: PATH_APP.worldPharma.productGroup, Component: ProductGroupPage },
@@ -68,7 +80,8 @@ export const mainRoutes :PathRouteProps[] = [
   // Employee
   { path: PATH_APP.todoList.workBoard, Component: WorkBoardPage },
   { path: PATH_APP.employee.root, Component: EmployeePage },
-
+  // { path: PATH_APP.employee.employeeGroup, Component: EmployeeGroupPage },
+  
   // User
   { path: PATH_APP.user.root, Component: UserPage },
 
@@ -97,6 +110,10 @@ export const mainRoutes :PathRouteProps[] = [
   // Order Supplier
   { path: PATH_APP.orderSupplier.root, Component: OrderSupplier},
   { path: PATH_APP.orderSupplier.update, Component: UpdateOrderSupplier},
+
+  // Freelance Contract Pharmacy
+  { path: PATH_APP.freelanceContractPharmacy.root, Component: FreelanceContractPharmacyPage},
+  {path: PATH_APP.costManagement.root, Component: CostManagement},
   
   // Nhóm bán hàng
   { path: PATH_APP.salesGroup.root, Component: SalesGroupPage },
@@ -107,11 +124,22 @@ export const mainRoutes :PathRouteProps[] = [
   // Báo cáo nhân viên
   { path: PATH_APP.report.employee, Component: ReportEmployeePage },
   { path: PATH_APP.report.supplier, Component: ReportSupplierPage },
-
+  
+  // Configuration Cron Time
+  { path: PATH_APP.configurationCronTime.root, Component: ConfigurationCronTime},
   // Thời gian báo cáo lương
   { path: PATH_APP.cronSalary.root, Component: CronSalaryPage },
   {path: PATH_APP.costManagement.root, Component: CostManagement},
 
+  // Kênh bán hàng
+  { path: PATH_APP.saleChannel.root, Component: SaleChannel},
+
+  // Loại khách hàng
+  { path: PATH_APP.typePharmacy.root, Component: TypePharmacy},
+
+  // Nhóm nhà thuốc
+  { path: PATH_APP.groupPharmacy.root, Component:  GroupPharmacy},
+  
   { path: '/', Component: Homepage },
 ]
 

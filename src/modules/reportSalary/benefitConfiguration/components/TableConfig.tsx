@@ -17,7 +17,8 @@ type propsType = {
 };
 const CLONE_TYPE_BENEFIT_VI : any = TYPE_BENEFIT_VI;
 export default function TableConfig({typeBenefit}:propsType) : React.JSX.Element {
-  const {isLoading,mutate,WIDTH_ITEM} = useBenefitConfigStore();
+  const { isLoading, mutate, WIDTH_ITEM, canUpdateBenefit, canDeleteBenefit } = useBenefitConfigStore();
+  console.log(canUpdateBenefit,'canUpdateBenefit')
     // Condition
     const [openCondition,setOpenCondition] = useState(false);
     const onOpenCondition = useCallback(() => {
@@ -42,7 +43,7 @@ export default function TableConfig({typeBenefit}:propsType) : React.JSX.Element
     <div>
         <WhiteBox>
         <Flex gap={10}>
-          <CreateConditionByType
+        { canUpdateBenefit && <CreateConditionByType
             typeBenefit={typeBenefit}
             ComponentCreateConditionBenefitBase={<CreateConditionBenefitBase canCreate={!dataSource?.length}/>}
             ComponentCreateConditionBenefit={<Button
@@ -64,15 +65,15 @@ export default function TableConfig({typeBenefit}:propsType) : React.JSX.Element
             ComponentCreateConditionOver={<CreateConditionOverBtn canCreate={!dataSource?.length} />}
             ComponentCreateConditionWorking={!dataSource?.length ? <CreateConditionWorking /> : <></>}
             ComponentCreateConditionKpisConfigArea={<></>}
-          />
-          <Button
+          />}
+          {canDeleteBenefit && <Button
             className="mb-2"
             danger
             shape="round"
             onClick={onOpenRemoveSupplier}
           >
             Gỡ nhà cung cấp
-          </Button>
+          </Button>}
         </Flex>
 
         <TableAnt

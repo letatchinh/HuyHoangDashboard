@@ -7,6 +7,8 @@ import {
   useGetReportConfigBenefitTable,
 } from "../benefitConfiguration.hook";
 import { TypeBenefit } from "../benefitConfiguration.modal";
+import { useMatchPolicy } from "~/modules/policy/policy.hook";
+import POLICIES from "~/modules/policy/policy.auth";
 // type BenefitConfigType = "success" | "info" | "warning" | "error";
 const WIDTH_ITEM = 240;
 
@@ -19,7 +21,10 @@ export type GlobalBenefitConfig = {
   isLoading: boolean;
   reFetch: boolean;
   WIDTH_ITEM : number
-  typeBenefit : TypeBenefit
+  typeBenefit: TypeBenefit,
+  canUpdateBenefit?: boolean,
+  canDeleteBenefit?: boolean,
+  canWriteBenefit?: boolean,
 };
 
 const BenefitConfig = createContext<GlobalBenefitConfig>({
@@ -31,7 +36,10 @@ const BenefitConfig = createContext<GlobalBenefitConfig>({
   dataConfig: null,
   mutate: () => {},
   WIDTH_ITEM : 200,
-  typeBenefit : 'BENEFIT_TDV'
+  typeBenefit: 'BENEFIT_TDV',
+  canUpdateBenefit: false,
+  canDeleteBenefit: false,
+  canWriteBenefit: false
 });
 
 export function BenefitConfigProvider({
@@ -56,6 +64,10 @@ export function BenefitConfigProvider({
   }, [mutate]);
   const [isSubmitLoading, createBenefit] = useCreateBenefit(onCallBack);
 
+  //permission
+  const canUpdateBenefit = useMatchPolicy(POLICIES.UPDATE_CONFIGBENEFIT);
+  const canDeleteBenefit = useMatchPolicy(POLICIES.DELETE_CONFIGBENEFIT);
+  const canWriteBenefit = useMatchPolicy(POLICIES.WRITE_CONFIGBENEFIT);
   return (
     <BenefitConfig.Provider
       value={{
@@ -68,6 +80,9 @@ export function BenefitConfigProvider({
         WIDTH_ITEM,
         typeBenefit,
         reFetch,
+        canUpdateBenefit,
+        canDeleteBenefit,
+        canWriteBenefit
       }}
     >
       {children}

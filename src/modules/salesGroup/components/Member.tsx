@@ -11,6 +11,7 @@ import CardEmployee from "./CardEmployee";
 import ListMember from "./ListMember";
 import PopoverCardEmployee from "./PopoverCardEmployee";
 import ListMemberModal from "./ListMemberModal";
+import useSalesGroupStore from "../salesGroupContext";
 type propsType = {
   _id?: string;
   typeArea?: TypeAreaType;
@@ -19,6 +20,7 @@ type propsType = {
 };
 export default function Member({ _id, data, typeArea, child }: propsType): React.JSX.Element {
   const [isOpen, setIsOpen] = useState(false);
+  const { canUpdate } = useSalesGroupStore();
   const teamLead = useMemo(
     () =>
       data?.find((member) => get(member, "rule") === RULE_SALES_GROUP.LEADER),
@@ -50,7 +52,7 @@ export default function Member({ _id, data, typeArea, child }: propsType): React
           ) : (
             "(Chưa có)"
           )}{" "}
-          <AssignTeamLead teamLead={teamLead} _id={_id} />
+          {canUpdate && <AssignTeamLead teamLead={teamLead} _id={_id} />}
         </Flex> 
       {teamLead ?  <Flex align={"center"} gap={5} >
         <Button type="link" onClick={onOpen} style={{whiteSpace : 'nowrap'}}>Thành viên</Button>:

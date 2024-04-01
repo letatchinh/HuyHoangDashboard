@@ -12,6 +12,10 @@ import {
   useUpdateBaseSalary,
 } from "../baseSalary.hook";
 import { typeFormField } from "../baseSalary.modal";
+import { useMatchPolicy } from "~/modules/policy/policy.hook";
+import POLICIES from "~/modules/policy/policy.auth";
+import { useGetProfile } from "~/modules/auth/auth.hook";
+import { EMPLOYEE_LEVEL } from "~/modules/employee/constants";
 
 export default function BaseSalary() {
   const [form] = Form.useForm();
@@ -20,7 +24,10 @@ export default function BaseSalary() {
   const [query] = useBaseSalaryQueryParams();
   const [data, isLoading] = useGetBaseSalarys(query);
   const [isSubmitLoading, updateBaseSalary]: any = useUpdateBaseSalary();
-
+  //permission
+  const canUpdate = useMatchPolicy(POLICIES.UPDATE_CONFIGBASESALARY);
+  const { profile, user } = useGetProfile();
+  
   // Update Data
   const onFinish = useCallback((values: typeFormField) => {
     updateBaseSalary(values);
@@ -31,6 +38,15 @@ export default function BaseSalary() {
     form.setFieldsValue({ ...data});
   }, [data]);
 
+  const isCheckRender = (component: any, key: any) => {
+    if (data?.baseSalary?.hasOwnProperty(key)) {
+        return component;
+    } else {
+        return null; 
+    }
+};
+
+
   return (
     <div>
       <Breadcrumb title={"Cấu hình vùng"} />
@@ -40,53 +56,76 @@ export default function BaseSalary() {
           <Form onFinish={onFinish} form={form}>
             <Flex gap={10} align="center">
               <h6 style={{ width: "15%" }}>Lương cơ bản vùng: </h6>
-              <FormItem
-                className="mb-0"
-                name={["baseSalary", AREA.V_I]}
-                rules={requireRules}
-              >
-                <InputNumberAnt
-                  style={{ width: 180 }}
-                  addonAfter={<span>Vùng 1</span>}
-                  min={0}
-                />
-              </FormItem>
-              <FormItem
-                className="mb-0"
-                name={["baseSalary", AREA.V_II]}
-                rules={requireRules}
-              >
-                <InputNumberAnt
-                  style={{ width: 180 }}
-                  addonAfter={<span>Vùng 2</span>}
-                  min={0}
-                />
-              </FormItem>
-              <FormItem
-                className="mb-0"
-                name={["baseSalary", AREA.V_III]}
-                rules={requireRules}
-                
-              >
-                <InputNumberAnt
-                  style={{ width: 180 }}
-                  addonAfter={<span>Vùng 3</span>}
-                  min={0}
-                />
-              </FormItem>
-              <FormItem
-                className="mb-0"
-                name={["baseSalary", AREA.V_IV]}
-                rules={requireRules}
-              >
-                <InputNumberAnt
-                  style={{ width: 180 }}
-                  addonAfter={<span>Vùng 4</span>}
-                  min={0}
-                />
-              </FormItem>
+              {
+                isCheckRender(
+                  <FormItem
+                  className="mb-0"
+                  name={["baseSalary", AREA.V_I]}
+                  rules={requireRules}
+                >
+                  <InputNumberAnt
+                    style={{ width: 180 }}
+                    addonAfter={<span>Vùng 1</span>}
+                    min={0}
+                    readOnly = {!canUpdate}
+                  />
+                  </FormItem>,
+                  'V_I'
+                )
+              }
+              {
+                isCheckRender(
+                  <FormItem
+                  className="mb-0"
+                  name={["baseSalary", AREA.V_II]}
+                  rules={requireRules}
+                >
+                  <InputNumberAnt
+                    style={{ width: 180 }}
+                    addonAfter={<span>Vùng 2</span>}
+                    min={0}
+                    readOnly = {!canUpdate}
+                  />
+                  </FormItem>,
+                  'V_II'
+                )
+              }
+              {
+                isCheckRender(
+                  <FormItem
+                  className="mb-0"
+                  name={["baseSalary", AREA.V_III]}
+                  rules={requireRules}
+                >
+                  <InputNumberAnt
+                    style={{ width: 180 }}
+                    addonAfter={<span>Vùng 3</span>}
+                    min={0}
+                    readOnly = {!canUpdate}
+                  />
+                  </FormItem>,
+                  'V_III'
+                )
+              }
+              {
+                isCheckRender(
+                  <FormItem
+                  className="mb-0"
+                  name={["baseSalary", AREA.V_IV]}
+                  rules={requireRules}
+                >
+                  <InputNumberAnt
+                    style={{ width: 180 }}
+                    addonAfter={<span>Vùng 4</span>}
+                    min={0}
+                    readOnly = {!canUpdate}
+                  />
+                  </FormItem>,
+                  'V_IV'
+                )
+              }
             </Flex>
-            <Flex align={"center"} gap={10} className="mt-1">
+            {(user?.isSuperAdmin || profile?.employeeLevel === EMPLOYEE_LEVEL.ASM)  && <Flex align={"center"} gap={10} className="mt-1">
               <h6 style={{ width: "15%" }} className="mt-2">
                 Lương quản lý vùng:{" "}
               </h6>
@@ -95,10 +134,13 @@ export default function BaseSalary() {
                 name={"baseSalaryASM"}
                 rules={requireRules}
               >
-                <InputNumberAnt  min={0}/>
+                <InputNumberAnt
+                  min={0}
+                  readOnly = {!canUpdate}
+                  />
               </FormItem>
-            </Flex>
-            <Flex align={"center"} gap={10} className="mt-1">
+            </Flex>}
+          {(user?.isSuperAdmin || profile?.employeeLevel === EMPLOYEE_LEVEL.ASM)  &&  <Flex align={"center"} gap={10} className="mt-1">
               <h6 style={{ width: "15%" }} className="mt-2">
               Điều kiện hưởng lương cơ bản ASM:{" "}
               </h6>
@@ -107,12 +149,14 @@ export default function BaseSalary() {
                 name={"baseConditionSalaryASM"}
                 rules={requireRules}
               >
-                <InputNumber min={0} max={100} addonAfter={"%"}/>
+                <InputNumber min={0} max={100} addonAfter={"%"} readOnly = {!canUpdate}/>
               </FormItem>
-            </Flex>
-            <Button loading={isSubmitLoading} htmlType="submit" type="primary">
+            </Flex>}
+            {canUpdate &&
+              <Button loading={isSubmitLoading} htmlType="submit" type="primary">
               Cập nhật
-            </Button>
+              </Button>
+            }
           </Form>
         )}
       </WhiteBox>

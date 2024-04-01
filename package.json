@@ -1,12 +1,13 @@
 {
   "name": "world-pharma-vn",
-  "version": "1.6.1",
+  "version": "1.8.0",
   "private": true,
   "engines": {
     "node": ">=20.0.0",
     "npm": ">=7.0.0"
   },
   "dependencies": {
+    "@ant-design/charts": "^2.0.3",
     "@ant-design/icons": "5.2.6",
     "@ckeditor/ckeditor5-react": "6.0.0",
     "@dnd-kit/core": "^6.1.0",
@@ -42,6 +43,7 @@
     "path": "0.12.7",
     "rc-tween-one": "3.0.6",
     "react": "18.2.0",
+    "react-apexcharts": "^1.4.1",
     "react-beautiful-dnd": "^13.1.1",
     "react-color": "^2.19.3",
     "react-dom": "18.2.0",
@@ -100,6 +102,7 @@
     "@types/toastr": "^2.1.43",
     "@types/uuid": "^9.0.7",
     "semantic-release": "^18.0.0",
+    "tslib": "^2.6.2",
     "typescript": "4.9.5"
   }
 }

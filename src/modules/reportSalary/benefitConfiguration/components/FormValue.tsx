@@ -1,6 +1,7 @@
 import { Button, Flex, InputNumber } from 'antd';
 import React, { useCallback, useState } from 'react';
 import { useCreateConfig, useResetAction } from '../benefitConfiguration.hook';
+import useBenefitConfigStore from '../store/BenefitConfigContext';
 type propsType = {
     defaultValue:number;
     hide: () => void;
@@ -17,7 +18,7 @@ export default function FormValue({defaultValue,benefitId,conditionId,hide,mutat
         mutate && mutate();
     },[mutate])
     const [isSubmitLoading,createConfig] = useCreateConfig(onCallBack);
-    
+  const { canUpdateBenefit } = useBenefitConfigStore();
     const onCreateConfig = () => {
       const submitData = {
         reportBenefitId: benefitId,
@@ -35,13 +36,13 @@ export default function FormValue({defaultValue,benefitId,conditionId,hide,mutat
             onChange={(v: any) => setValue(v)}
             onPressEnter={onCreateConfig}
           />
-          <Button
+        {canUpdateBenefit &&  <Button
             loading={isSubmitLoading}
             type="primary"
             onClick={onCreateConfig}
           >
             Sửa
-          </Button>
+          </Button>}
         </Flex>
     )
 }

@@ -5,15 +5,18 @@ import { PoliciesType, ResourceType } from './policy.modal';
 const branch = 'branch';
 const company = 'company';
 const employee = 'employee';
-const employee_position = 'employee_position';
+const employeePosition = 'employeePosition'; //Key position for staff is seller 
+const employeeGroup = 'employeeGroup';
 const user = 'user';
 const userGroup = 'userGroup';
 const pharmacy = 'pharmacy';
 const configDiscount = 'configDiscount';
-const pharmaProfile = 'pharmaProfile';
 const notificationBotManager = 'notificationBotManager';
 const shippingCost = 'shippingCost';
 
+//Pharmacy
+const pharmaProfile = 'pharmaProfile';
+const contractPharmacy = 'contractPharmacy';
 
 // Đơn hàng
 const bill = 'bill';
@@ -27,25 +30,46 @@ const medicine = 'medicine';
 const quotation = 'quotation';
 // Nhà cung cấp
 const supplier = 'supplier';
-const debt = 'debt';
+const cumulativeSalesSupplier = 'cumulativeSalesSupplier';
+const debtSupplier = 'debtSupplier';
 
 // Sản phẩm Nhà cung cấp
 const product = 'product';
 const todoConfigStatus = 'todoConfigStatus';
 const todoList = 'todoList';
-const voucher = 'voucher';
+const voucherPharmacy = 'voucherPharmacy';
+const voucherSupplier = 'voucherSupplier';
 const statusVoucher = 'statusVoucher';
 const historyVoucher = 'historyVoucher';
-const salesGroup = 'salesGroup';
 
+const revenueSupplier = 'revenueSupplier';
+const historySupplierMineral = 'historySupplierMineral';
 // Quản lý luỹ kế
 const cumulativeEvent = 'cumulativeEvent';
+
+const salesGroup = 'salesGroup';
+// Báo cáo
+const reportSalary = 'reportSalary';
+const configBaseSalary = 'configBaseSalary';
+const configCronTime = 'configCronTime';
+const configBenefit = 'configBenefit';
 
 // Đơn hàng nhà cung cấp
 const orderSupplier = 'orderSupplier';
 
 // Thời gian báo cáo lương
 const configReportSalaryAuto = 'configReportSalaryAuto';
+// Kênh bán hàng
+const salesChannel ='salesChannel';
+
+// Loại nhà thuốc
+const customerGroup = 'customerGroup';
+
+// Nhóm nhà thuốc
+const customer = 'customer';
+
+// Cập nhật Nhà thuốc đảm nhiệm cho nhân viên
+const updateThePharmacyForEmployee = 'updateThePharmacyForEmployee';
 const RESOURCES = [
   //Setting
   configDiscount,
@@ -54,11 +78,14 @@ const RESOURCES = [
   branch,
   // company,
   employee,
+  employeePosition,
+  employeeGroup,
   user,
   userGroup,
 
 
   // pharmacy,
+  contractPharmacy,
   manuFacturer,
   unit,
   ranking,
@@ -66,16 +93,20 @@ const RESOURCES = [
   productGroup,
   //
   medicine,
-  supplier,
   product,
-
+  
   //VOUCHER
-  voucher,
+  voucherPharmacy,
+  voucherSupplier,
   statusVoucher,
   historyVoucher,
+  
+  //Supplier
+  cumulativeSalesSupplier,
+  
   supplier,
   product,
-  debt,
+  debtSupplier,
 
   // Pharmacy Profile
   pharmaProfile,
@@ -87,13 +118,27 @@ const RESOURCES = [
   todoConfigStatus,
   todoList,
 
-  medicine,
+  revenueSupplier,
+  historySupplierMineral,
   
-  salesGroup,
-  employee_position,
-  shippingCost,
   cumulativeEvent,
   orderSupplier,
+  shippingCost,
+  
+  salesGroup,
+
+  //Report
+  reportSalary,
+  configBaseSalary,
+  configCronTime,
+  configBenefit,
+  
+  orderSupplier,
+  salesChannel,
+  customerGroup,
+  customer,
+  
+  updateThePharmacyForEmployee,
   configReportSalaryAuto,
 ];
 
@@ -137,7 +182,9 @@ const RESOURCE = (): ResourceType => {
     userGroup
   ];
   const GROUP_EMPLOYEE : string[] = [
-    employee
+    employee,
+    employeeGroup,
+    employeePosition
   ];
   const GROUP_MANUFACTURER : string[] = [
     manuFacturer
@@ -155,13 +202,16 @@ const RESOURCE = (): ResourceType => {
     ranking
   ];
   const GROUP_VOUCHER: string[] = [
-    voucher,
+    voucherSupplier,
+    voucherPharmacy,
     statusVoucher,
     historyVoucher
   ]
 
-  const PHARMA_PROFILE: string[] = [
-    pharmaProfile
+  const GROUP_PHARMA: string[] = [
+    pharmaProfile,
+    contractPharmacy,
+    voucherPharmacy
   ];
   
   const GROUP_BILL : string[] = [
@@ -176,7 +226,11 @@ const RESOURCE = (): ResourceType => {
   const GROUP_SUPPLIER: string[] = [
     supplier,
     product,
-    debt,
+    revenueSupplier,
+    historySupplierMineral,
+    cumulativeSalesSupplier,
+    voucherSupplier,
+    debtSupplier,
   ];
   
   const GROUP_WORK_MANAGERMENT: string[] = [
@@ -190,7 +244,25 @@ const RESOURCE = (): ResourceType => {
   ];
   const GROUP_SHIPPINGCOST: string[] = [
     shippingCost
+  ];
+
+  const GROUP_REPORT: string[] = [
+    reportSalary,
+    configBaseSalary,
+    configCronTime,
+    configBenefit,
   ]
+  const SALE_CHANNEL: string[] = [
+    salesChannel
+  ];
+
+  const TYPE_PHARMACY: string[] = [
+    customerGroup
+  ];
+
+  const GROUP_PHARMACY: string[] = [
+    customer
+  ];
 
   return {
     GROUP_USER,
@@ -201,7 +273,7 @@ const RESOURCE = (): ResourceType => {
     GROUP_PRODUCTGROUP,
     GROUP_RANKING,
     MEDICINE,
-    PHARMA_PROFILE,
+    GROUP_PHARMA,
     GROUP_BILL,
     NOTIFICATION_BOT_MANAGER,
     GROUP_SUPPLIER,
@@ -209,6 +281,10 @@ const RESOURCE = (): ResourceType => {
     GROUP_VOUCHER,
     GROUP_MEDICINE,
     GROUP_SHIPPINGCOST,
+    GROUP_REPORT,
+    SALE_CHANNEL,
+    TYPE_PHARMACY,
+    GROUP_PHARMACY,
   };
 };
 

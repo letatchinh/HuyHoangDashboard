@@ -197,7 +197,7 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
                       className="bill-page-update--infoPharmacy__info"
                       align="center"
                     >
-                      <Avatar />
+                      {/* <Avatar /> */}
                       <div>
                         <p className="bill-page-update--infoPharmacy__info__name">
                           {get(orderSupplier, "supplier.name", "")}
@@ -211,7 +211,7 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
                   <Col>
                     {/* <Typography.Text strong>Công nợ hiện tại : 0</Typography.Text> */}
                     {status !== STATUS_ORDER_SUPPLIER.CANCELLED && (
-                      <WithPermission permission={POLICIES.WRITE_VOUCHER}>
+                      <WithPermission permission={POLICIES.WRITE_VOUCHERSUPPLIER}>
                         <Button
                         disabled={paymentAmount <= 0}
                         type="primary"

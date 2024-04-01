@@ -28,7 +28,6 @@ export const getColumnsBenefit = ({
   suffix = "%",
   max = 100,
 }: ParamsGetColumns): any => {
-  console.log(col, "col");
 
   return {
     title: get(col, "supplierId.name", ""),

@@ -28,7 +28,7 @@ export default function TargetSalesGroup({
   _id,
 }: propsType): React.JSX.Element {
   const [form] = Form.useForm();
-  const { isSubmitLoading, updateSalesGroup } = useSalesGroupStore();
+  const { isSubmitLoading, updateSalesGroup, canUpdate } = useSalesGroupStore();
   const [salesGroup, loading] = useGetSalesGroup(_id);
   const [suppliers, isLoading] = useFetchState({
     api: apis.getAllPublic,
@@ -189,21 +189,21 @@ export default function TargetSalesGroup({
                   </BaseBorderBox>
                 ))}
               </Flex>
-              <Button
+            {canUpdate &&  <Button
                 style={{ width: 200 }}
                 icon={<PlusCircleOutlined />}
                 onClick={() => add()}
               >
                 Thêm nhà cung cấp
-              </Button>
+              </Button>}
             </Flex>
           )}
         </Form.List>
-        <Flex justify={"end"}>
+      {canUpdate &&  <Flex justify={"end"}>
           <Button loading={isSubmitLoading} type="primary" htmlType="submit">
             Cập nhật
           </Button>
-        </Flex>
+        </Flex>}
       </Form>
     </div>
   );

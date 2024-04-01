@@ -23,6 +23,9 @@ const Action = ({ _id, rc }: PropsType) => {
     onOpenFormCreateGroupFromExistGroup,
     onOpenFormRelation,
     deleteSalesGroup,
+    canDelete,
+    canWrite,
+    canUpdate,
   } = useSalesGroupStore();
   const notExistLeader = !RulesLeaderMethod.isExist(
     get(rc, "salesGroupPermission", [])
@@ -38,7 +41,7 @@ const Action = ({ _id, rc }: PropsType) => {
               : ""
           }
         >
-          <Button
+        {canWrite &&  <Button
             disabled={ notExistLeader}
             block
             icon={<SisternodeOutlined />}
@@ -54,7 +57,7 @@ const Action = ({ _id, rc }: PropsType) => {
             type="dashed"
           >
             Tạo nhóm
-          </Button>
+          </Button>}
         </Tooltip>
       ),
       key: "0",
@@ -94,7 +97,7 @@ const Action = ({ _id, rc }: PropsType) => {
     },
     {
       label: (
-        <WithPermission permission={POLICIES.DELETE_AREACONFIGURATION}>
+        <WithPermission permission={POLICIES.DELETE_SALESGROUP}>
           <Popconfirm
             title="Bạn muốn xoá địa chỉ này?"
             onConfirm={() => deleteSalesGroup(_id)}

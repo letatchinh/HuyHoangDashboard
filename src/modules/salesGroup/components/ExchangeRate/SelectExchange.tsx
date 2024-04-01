@@ -79,7 +79,7 @@ export default function SelectExchange({
         <Space>Từ: </Space>
         <Select
           placeholder="Vui lòng chọn nhà cung cấp"
-          style={{ flex: 1, width: "350px" }}
+          style={{ flex: 1, width: "320px",maxWidth: '320px',  minWidth: '320px'  }}
           onSelect={(e: any) => handleSave({ supplierAId: e })}
           onClick={() => onCheckSelect("supplierBId")}
           showSearch
@@ -92,7 +92,7 @@ export default function SelectExchange({
         <Space>Sang: </Space>
         <Select
           placeholder="Vui lòng chọn nhà cung cấp"
-          style={{ flex: 1, width: "350px" }}
+          style={{ flex: 1, width: "320px", maxWidth: '320px',  minWidth: '320px' }}
           onSelect={(e: any) => handleSave({ supplierBId: e })}
           onClick={() => onCheckSelect("supplierAId")}
           showSearch

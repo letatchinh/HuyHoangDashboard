@@ -40,6 +40,7 @@ export default function Manufacturer() {
     description: string;
     _id: string;
     status: String,
+    activity: any,
   };
   const handleOpenForm = useCallback((id?: any) => {
     if (id) { setId(id); }

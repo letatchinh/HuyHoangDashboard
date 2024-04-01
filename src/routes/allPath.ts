@@ -27,6 +27,13 @@ export const PATH_APP = {
 
   supplier: {
     root: path(ROOTS.app, "/supplier"),
+    revenue: path(ROOTS.app, "/supplier-revenue"),
+  },
+  revenueSupplier: {
+    root: path(ROOTS.app, "/supplier-revenue"),
+    revenue: path(ROOTS.app, "/supplier-revenue/:id"),
+    revenueDetail: path(ROOTS.app, "/supplier-revenue/:id/detail/:revenueId"),
+    revenueAll: path(ROOTS.app, "/supplier-revenue-all/:id"),
   },
 
   branch: {
@@ -45,7 +52,7 @@ export const PATH_APP = {
     workTask: path(ROOTS.app, "/work-task-item/:taskId"),
   },
   employee: {
-    root: path(ROOTS.app, "/employee"),
+    root: path(ROOTS.app, "/employee/*"),
   },
 
   configDiscount: {
@@ -100,6 +107,14 @@ export const PATH_APP = {
     create: path(ROOTS.app, "/order-supplier/create"),
     update: path(ROOTS.app, "/order-supplier/:id"),
   },
+  freelanceContractPharmacy: {
+    root: path(ROOTS.app, "/freelance-contract-pharmacy"),
+  },
+  costManagement:{
+    root: path(ROOTS.app, "/cost-management"),
+    create: path(ROOTS.app, "/cost-management/create"),
+    update: path(ROOTS.app, "/cost-management/:id"),
+  },
 
   salesGroup : {
     root:  path(ROOTS.app, '/area-configuration'),
@@ -113,10 +128,17 @@ export const PATH_APP = {
   cronSalary : {
     root:  path(ROOTS.app, '/cronSalary'),
   },
+  saleChannel: {
+    root: path(ROOTS.app, '/sale-channel'),
+  },
+  configurationCronTime: {
+    root: path(ROOTS.app, "/configuration-cronTime"),
+  },
+  typePharmacy: {
+    root: path(ROOTS.app, "/type-pharmacy")
+  },
+  groupPharmacy: {
+    root: path(ROOTS.app, "/group-pharmacy")
+  },
 
-  costManagement:{
-    root: path(ROOTS.app, "/cost-management"),
-    create: path(ROOTS.app, "/cost-management/create"),
-    update: path(ROOTS.app, "/cost-management/:id"),
-  }
 };

@@ -8,6 +8,7 @@ import TableAnt from "~/components/Antd/TableAnt";
 import Breadcrumb from "~/components/common/Breadcrumb";
 import SelectSearch from "~/components/common/SelectSearch/SelectSearch";
 import WhiteBox from "~/components/common/WhiteBox";
+import POLICIES from "~/modules/policy/policy.auth";
 import { StringToSlug } from "~/utils/helpers";
 import Action from "../components/Action";
 import Address from "../components/Address";
@@ -41,7 +42,8 @@ export default function SalesGroup() {
     onOpenFormExchangeRate,
     onCloseFormExchangeRate,
     setParentNear,
-    setGroupInfo
+    setGroupInfo,
+    canUpdate
   } = useSalesGroupStore();
   const rowSelect = useRef();
   const [expandedRowKeys, setExpandedRowKeys]: any = useState([]);
@@ -152,20 +154,21 @@ export default function SalesGroup() {
         />
       ),
     },
-    {
-      title: "Quy đổi",
-      key: "exchangeRate",
-      dataIndex: "exchangeRate",
-      width: "10%",
-      align: "center",
-      render: (_id, rc: any) => (
-        <Button type="link" onClick={() => {
-          onOpenFormExchangeRate(rc?._id);
-          setParentNear(rc?.parent);
-          setGroupInfo(rc);
-        }}>Nhập quy đổi</Button>
-      ),
-    },
+    ...(canUpdate ? [  {
+          title: "Quy đổi",
+          key: "exchangeRate",
+          dataIndex: "exchangeRate",
+          width: "10%",
+          align: "center" as any,
+          render: (_id : any, rc: any) => (
+            <Button type="link" onClick={() => {
+              onOpenFormExchangeRate(rc?._id);
+              setParentNear(rc?.parent);
+              setGroupInfo(rc);
+            }}>Nhập quy đổi</Button>
+          ),
+      }
+    ]: []),
     {
       title: "Thao tác",
       dataIndex: "_id",
@@ -178,7 +181,6 @@ export default function SalesGroup() {
       },
     },
   ];
-
   return (
     <div>
       <Breadcrumb title={"Nhóm bán hàng"} />
@@ -188,6 +190,7 @@ export default function SalesGroup() {
           handleOnClickButton={() => onOpenForm()}
           showSelect={false}
           isShowButtonAdd
+          permissionKey={[POLICIES.WRITE_SALESGROUP]}
         />
         <Flex style={{marginTop : 20}}>
           <Button.Group>

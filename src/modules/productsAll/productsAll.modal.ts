@@ -8,4 +8,10 @@ export interface DataType {
   description: string;
   _id: string;
   status: String,
+  variant: any,
+  supplier: any,
+  stock: any,
+  productGroup: any,
+  manufacturer: any,
+  productDetail: any,
 };
