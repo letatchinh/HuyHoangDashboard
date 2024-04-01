@@ -237,7 +237,7 @@ export default function BotNotification(props: propsType): React.JSX.Element {
             }}
             style={{ backgroundColor: "#3481FF", color: "white", marginLeft: '30%' }}
           >
-            {isUpdateLoading && <Spin size="large" />}Cập nhật
+            Cập nhật
           </Button>
         </Form>
       </div>

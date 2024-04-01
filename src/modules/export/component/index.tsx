@@ -40,6 +40,7 @@ export default function ExportExcelButton({ size, stylesButton, query, fileName,
           case '1':
             const newObj_1 : any = {
               ...omit(newQuery, ['page', 'limit']),
+              exportOptionV2: 'ALL'
             };
             let queryString_1 = Object.keys(newObj_1).map(key => `${encodeURIComponent(key)}=${encodeURIComponent(newObj_1[key])}`).join('&');
             a = a.concat(queryString_1);
@@ -52,6 +53,7 @@ export default function ExportExcelButton({ size, stylesButton, query, fileName,
                 const newObj_2 : any = {
                   ...omit(newQuery, ['page', 'limit']),
                   ids,
+                  exportOptionV2 : 'OPTION' 
                 };
                 let queryString_2 = Object.keys(newObj_2).map(key => `${encodeURIComponent(key)}=${encodeURIComponent(newObj_2[key])}`)?.join('&');
                 a = a.concat(queryString_2);
@@ -62,6 +64,7 @@ export default function ExportExcelButton({ size, stylesButton, query, fileName,
             const newObj_3 = {
               ...newQuery,
               exportOption: newExportOption,
+              exportOptionV2: "PAGING"
             };
             let queryString_3 = Object.keys(newObj_3).map(key => `${encodeURIComponent(key)}=${encodeURIComponent(newObj_3[key])}`).join('&');
             a = a.concat(queryString_3);
@@ -70,6 +73,7 @@ export default function ExportExcelButton({ size, stylesButton, query, fileName,
             break;
         };
         const temp = BASE_URL.concat(linkUrl, a);
+        console.log(temp)
         try {
           if (a !== '') {
             axios.get(temp, {

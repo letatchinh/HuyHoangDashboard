@@ -4,6 +4,7 @@ import {
   Button,
   Col,
   Form,
+  FormItemProps,
   Input,
   Row,
   Select,
@@ -25,7 +26,9 @@ interface ModalProfileProps {
   handleUpdateProfile?: any;
   isLoadingSubmit?: boolean;
 };
-
+const FormItemProp : FormItemProps = {
+  labelAlign : 'left',
+}
  const ModalProfile: React.FC<ModalProfileProps> = ({ onCloseForm,handleUpdateProfile ,isLoadingSubmit}) => {
   const [form] = Form.useForm();
    const [profile, isLoading]: any = useGetProfileUser();
@@ -141,10 +144,10 @@ interface ModalProfileProps {
           >
             {
               <BaseBorderBox style={{ paddingBottom: 8 }} title={<h5>Thông tin người dùng</h5>}>
-                <Form.Item name={'fullName'} label='Tên nhân viên'>
+                <Form.Item {...FormItemProp} name={'fullName'} label='Tên nhân viên'>
                   {render(<Input></Input>)}
                 </Form.Item>
-                <Form.Item name={'gender'} label='Giới tính'>
+                <Form.Item {...FormItemProp} name={'gender'} label='Giới tính'>
                   {render(
                     <Select>
                       <Option value='M' key='male'>

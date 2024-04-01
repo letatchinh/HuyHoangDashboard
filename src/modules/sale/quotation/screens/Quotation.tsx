@@ -2,6 +2,7 @@ import { Tabs, Typography } from "antd";
 import { keys } from "lodash";
 import React, { useState } from "react";
 import WhiteBox from "~/components/common/WhiteBox";
+import { useChangeDocumentTitle } from "~/utils/hook";
 import ListQuotation from "../components/ListQuotation";
 import { STATUS_QUOTATION, STATUS_QUOTATION_VI } from "../constants";
 type propsType = {};
@@ -12,6 +13,7 @@ export default function Quotation(props: propsType): React.JSX.Element {
   const onChangeTab = (tab: string) => {
     setActiveKey(tab);
   };
+  useChangeDocumentTitle("Danh sách đơn hàng tạm")
   return (
     <div>
       <Typography.Title level={3}>Danh sách đơn hàng tạm</Typography.Title>

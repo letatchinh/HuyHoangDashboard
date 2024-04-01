@@ -1,5 +1,6 @@
 import { CloseCircleOutlined, SaveOutlined } from "@ant-design/icons";
 import {
+  Alert,
     Button,
     Col, DatePicker,
     Form,
@@ -31,6 +32,7 @@ import apiPaymentVoucher from "~/modules/paymentVoucher/paymentVoucher.api";
 import { useGetPharmacyId } from "~/modules/pharmacy/pharmacy.hook";
 import POLICIES from "~/modules/policy/policy.auth";
 import apiStaff from "~/modules/user/user.api";
+import { useGetProfileUser } from "~/modules/user/user.hook";
 import AccountingDetails from "~/modules/vouchers/components/AccountingDetailTable/AccountingDetailTable";
 import { concatAddress } from "~/utils/helpers";
 import { useCreatePaymentVoucher, useResetAction } from "../paymentVoucher.hook";
@@ -55,7 +57,10 @@ import "./form.scss";
   };
   
   export default function PaymentVoucherFormPharmacy(props: propsType): React.JSX.Element {
+    useResetAction();
+
     const { onClose, initData,callback} = props;
+    const [profile] = useGetProfileUser();
     const {debt,pharmacyId,refCollection,method,totalAmount} = initData;
     const [form] = Form.useForm();
     const ref = useRef();
@@ -76,7 +81,7 @@ import "./form.scss";
   
     const [dataAccounting, setDataAccounting] = useState([
       {
-        content: `Chi cho nhà thuốc`,
+        content: `Phát thưởng luỹ kế cho nhà thuốc`,
         debitAccount: 635,
         creditAccount: DEFAULT_ACCOUNT,
         amountOfMoney: totalAmount || 0,
@@ -116,7 +121,7 @@ import "./form.scss";
         if (pharmacy) {
           form.setFieldsValue({
             pharmacy: pharmacy?.name,
-            pharmacyReceive: pharmacy?.name,
+            receiver: pharmacy?.name,
             provider: pharmacy?._id,
             code: pharmacy?.code,
             paymentMethod : "COD",
@@ -125,7 +130,13 @@ import "./form.scss";
             reason: "Chi cho nhà thuốc đạt luỹ kế",
           });
         };
-    }, [pharmacy]);
+        if(profile){
+          fetchOptionEmployee(get(profile,'profile.fullName'));
+          form.setFieldsValue({
+            employeeId : get(profile,'profile._id')
+          })
+        }
+    }, [pharmacy,profile]);
     useEffect(() => {
         fetchIssueNumber();
     }, [mergedInitWhPaymentVoucher]);
@@ -170,6 +181,7 @@ import "./form.scss";
   
     return (
       <div className="page-wraper">
+        <Alert message="Lưu ý: Phiếu này không được chỉnh sửa thông tin hạch toán" type="info" showIcon />
         <div className="container-fluid">
           <Form
             autoComplete="off"
@@ -351,12 +363,6 @@ import "./form.scss";
                         label="Số chứng từ"
                         name="issueNumber"
                         labelCol={{ lg: 8 }}
-                        // rules={[
-                        //   {
-                        //     required: true,
-                        //     message: 'Vui lòng nhập số chứng từ!',
-                        //   }
-                        // ]}
                       >
                         {isLoading ? <Skeleton.Input active /> : <Input  disabled/>}
                       </FormItem>
@@ -410,10 +416,10 @@ import "./form.scss";
                 </Space>
               </TabPane>
             </Tabs>
-            <WithPermission permission={POLICIES.READ_HISTORYVOUCHER}>
-            </WithPermission>
+            {/* <WithPermission permission={POLICIES.READ_HISTORYVOUCHER}>
+            </WithPermission> */}
             <Row className="staff-form__submit-box">
-              <WithPermission permission={POLICIES.UPDATE_VOUCHER}>
+              <WithPermission permission={POLICIES.UPDATE_VOUCHERPHARMACY}>
               <Button icon={<SaveOutlined/>} type="primary" htmlType="submit">
                 Lưu
               </Button>

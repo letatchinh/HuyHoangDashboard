@@ -16,7 +16,7 @@ import userModule from '~/modules/user';
 import userGroupModule from '~/modules/userGroup';
 import policy from '~/modules/policy';
 import vouchers from '~/modules/vouchers';
-import reportSupplier from '~/modules/report/reportSupplier';
+import reportSupplier from '~/modules/report/reportSupplier'; //
 import manufacturerModule from '~/modules/manufacturer';
 import productUnitModule from '~/modules/productUnit';
 import rankingModule from '~/modules/ranking';
@@ -33,8 +33,20 @@ import paymentVoucher from '~/modules/paymentVoucher';
 import receiptVoucher from '~/modules/receiptVoucher';
 import lkModule from '~/modules/sale/lk';
 import productsAll from '~/modules/productsAll';
-import orderSupplier from '~/modules/sale/orderSupplier/index';
 import freelanceContractPharmacy from '~/modules/freelanceContractPharmacy';
+import costManagement from '~/modules/costManagement';
+import orderSupplier from '~/modules/sale/orderSupplier';
+import salesGroup from '~/modules/salesGroup';
+import baseSalary from '~/modules/reportSalary/baseSalary/index';
+import benefitConfiguration from '~/modules/reportSalary/benefitConfiguration/index';
+import reportEmployee from '~/modules/report/reportEmployee/index';
+import employeeGroup from '~/modules/employeeGroup/index';
+import cronSalary from '~/modules/cronSalary';
+import saleChannel from '~/modules/saleChannel/index';
+import configurationCronTime from "~/modules/configurationCronTime";
+import typePharmacy from '~/modules/typePharmacy';
+import groupPharmacy from '~/modules/groupPharmacy';
+
 const authPersistConfig = {
     key: 'auth',
     storage: localStorage,
@@ -60,7 +72,6 @@ const rootReducer = combineReducers({
     userGroup: userGroupModule.redux.reducer,
     policy: policy.redux.reducer,
     vouchers: vouchers.redux.reducer,
-    reportSupplier: reportSupplier.redux.reducer,
     productGroup:productGroupModule.redux.reducer,
     manufacturer:manufacturerModule.redux.reducer,
     productUnit:productUnitModule.redux.reducer,
@@ -81,6 +92,18 @@ const rootReducer = combineReducers({
     productsAll: productsAll.redux.reducer,
     orderSupplier: orderSupplier.redux.reducer,
     freelanceContractPharmacy: freelanceContractPharmacy.redux.reducer,
+    costManagement: costManagement.redux.reducer,
+    salesGroup: salesGroup.redux.reducer,
+    baseSalary: baseSalary.redux.reducer,
+    benefitConfiguration: benefitConfiguration.redux.reducer,
+    reportEmployee: reportEmployee.redux.reducer,
+    employeeGroup: employeeGroup.redux.reducer,
+    cronSalary: cronSalary.redux.reducer,
 
+    reportSupplier: reportSupplier.redux.reducer,
+    saleChannel: saleChannel.redux.reducer,
+    configurationCronTime: configurationCronTime.redux.reducer,
+    typePharmacy: typePharmacy.redux.reducer,
+    groupPharmacy: groupPharmacy.redux.reducer,
 });
 export default rootReducer

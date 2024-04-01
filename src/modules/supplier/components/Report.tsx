@@ -110,11 +110,11 @@ export default function Report({ id }: propsType): React.JSX.Element {
         key : '0',
         children : <SaleReport query={queryGetBills} searchBy={searchBy} searchByVi={searchByVi} />,
     },
-    {
-        label : "Lịch sử bán hàng",
-        key : '1',
-        children : <HistoryReport />,
-    },
+    // {
+    //     label : "Lịch sử bán hàng",
+    //     key : '1',
+    //     children : <HistoryReport />,
+    // },
 ]
   return (
     <div className="report-supplier">

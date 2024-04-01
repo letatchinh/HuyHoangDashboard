@@ -46,7 +46,7 @@ export default function DiscountList({
     form.setFieldsValue({
       cumulativeDiscount: concat(discountList, discountCopy),
     });
-    onNotify?.success("Copy thành công");
+    onNotify?.success("Copy thành công", { placement: "topRight" });
     
   }
   return (

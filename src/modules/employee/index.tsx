@@ -6,10 +6,11 @@ import * as employeeHook from "./employee.hook";
 // import employeeModels from "./employee.modal";
 import reducer from "./redux/reducer";
 import saga from "./redux/saga";
+import TabsEmployee from "./screen";
 
 const moduleExport = {
     page : {
-        index : EmployeeScreen,
+        index : TabsEmployee,
     },
     api : employeeApi,
     // auth : employeeAuth,

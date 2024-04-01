@@ -21,6 +21,15 @@ function* getResources({ payload: query }: any): any {
   }
 };
 
+function* getResourcesEmployee({ payload: query }: any): any {
+  try {
+    const data = yield call(api.getAllEmployee, query);
+    yield put(policySliceAction.getResourcesEmployeeSuccess(data));
+  } catch (error: any) {
+    yield put(policySliceAction.getResourcesEmployeeFailed(error));
+  }
+};
+
 function* getByIdPolicy({payload:id} : any) : any {
   try {
     const data = yield call(api.getById,id);
@@ -77,6 +86,19 @@ function* updateGroupPermission({ payload }: any) {
     yield put(policySliceAction.updateFailed(error));
   }
 }
+function* updateEmployeeGroupPermission({ payload }: any) {
+  try {
+    const { isAssgined, companyId, groupId, ...rest } = payload;
+    const request = isAssgined
+      ? api.updateEmployee
+      : api.deleteEmployee;
+
+    yield call(request, { ...rest, groupId });
+    // yield put(policySliceAction.updateSuccess);
+  } catch (error: any) {
+    yield put(policySliceAction.updateFailed(error));
+  }
+}
 
 export default function* policySaga() {
   yield takeLatest(policySliceAction.getListRequest, getListPolicy);
@@ -85,5 +107,7 @@ export default function* policySaga() {
   yield takeLatest(policySliceAction.updateRequest, updatePolicy);
   yield takeLatest(policySliceAction.deleteRequest, deletePolicy);
   yield takeLatest(policySliceAction.getResourcesRequest, getResources);
+  yield takeLatest(policySliceAction.getResourcesEmployeeRequest, getResourcesEmployee);
   yield takeLatest(policySliceAction.updateResourcesRequest, updateGroupPermission);
+  yield takeLatest(policySliceAction.updateResourcesEmployeeRequest, updateEmployeeGroupPermission);
 }

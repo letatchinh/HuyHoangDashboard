@@ -35,7 +35,7 @@ export function UpdateBillProvider({
     const [reFetch,setReFetch] = useState(false);
     const mutateBill = useCallback(() => setReFetch(!reFetch),[reFetch]);
     const [bill,isLoading] = useGetBill(id,reFetch);
-    const {pharmacyId,totalPrice,codeSequence,_id,totalReceiptVoucherCompleted} = bill || {};
+    const {pharmacyId,totalPrice,codeSequence,_id,totalReceiptVoucherCompleted,remainAmount} = bill || {};
     
     const [isOpenForm, setIsOpenForm] = useState(false);
 
@@ -46,7 +46,7 @@ export function UpdateBillProvider({
   const onCloseForm = () => {
     setIsOpenForm(false);
   };
-
+  
   return (
     <UpdateBill.Provider
       value={{
@@ -70,11 +70,11 @@ export function UpdateBillProvider({
           onClose={() => onCloseForm()}
           pharmacyId={pharmacyId}
           refCollection={REF_COLLECTION_UPPER['PHARMA_PROFILE']}
-          totalAmount={totalPrice - totalReceiptVoucherCompleted}
+          totalAmount={remainAmount}
           reason={`Thu tiền đơn hàng ${codeSequence || ""} `}
           from='Pharmacy'
           provider={pharmacyId}
-          max={totalPrice - totalReceiptVoucherCompleted}
+          max={remainAmount}
           method={{
             data : omit(bill,['bill','billItems','historyStatus']),
             type : 'BILL'

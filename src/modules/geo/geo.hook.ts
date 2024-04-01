@@ -56,3 +56,12 @@ export const useWards = (districtCode: any) =>
     failedSelector: getWardsFailedSelector,
     param: districtCode,
   });
+
+  export const useDistricts = (cityCode:any) =>
+  useFetchByParam({
+    action: geoActions.getDistrictsRequest,
+    loadingSelector: districtsLoadingSelector,
+    dataSelector: districtsSelector,
+    failedSelector: getDistrictsFailedSelector,
+    param: cityCode
+  });

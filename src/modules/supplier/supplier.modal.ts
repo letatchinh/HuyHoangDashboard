@@ -21,6 +21,7 @@ export type addressType = {
   };
   export type FieldType = {
     name: string;
+    minSale: number;
     phoneNumber: string;
     address: addressType;
     cumulativeDiscount : cumulativeDiscountType[]
@@ -42,6 +43,40 @@ export type addressType = {
     getSuppliersProductAuthorFailed?: any;
     suppliersProductAuthor?: T[];
     pagingSuppliersProductAuthor?: any;
+
+    isLoadingGetRevenueSupplier?: boolean;
+    getRevenueSupplierFailed?: any;
+    revenueSupplier?: any;
+    pagingRevenueSupplier?: any;
+
+    isLoadingGetTotalRevenue?: boolean;
+    totalRevenue?: any;
+    getTotalRevenueFailed?: any;
+
+    updateRevenueSuccess?: any;
+    updateRevenueFailed?: any;
+
+    createTotalRevenueSuccess?: any;
+    createTotalRevenueFailed?: any;
+
+    updateTotalRevenueSuccess?: any;
+    updateTotalRevenueFailed?: any;
+
+    isLoadingGetListTotalRevenue?: boolean;
+    getListTotalRevenueFailed?: any;
+    revenueListTotal?: T[];
+    pagingListTotalRevenue?: any;
+
+    isLoadingGetListProductGroupRevenue ?: boolean;
+    productGroupRevenue?: any;
+    getProductGroupsRevenueFailed?: any;
+
+    updateRevenueProductGroupsSuccess?: any;
+    updateRevenueProductGroupsFailed?: any;
+    
+    pagingListProductGroupRevenue ?: any;
+    revenueId?: any;
+    isLoadingSubmitRevenue?: boolean;
 };
 
 
@@ -51,10 +86,17 @@ export type FormFieldSearch = {
   endDate?: any,
   searchBy?: SearchByType,
 };
+
 export type STATUS_SUPPLIER_TYPE = {
   ACTIVE: "ACTIVE",
   INACTIVE: "INACTIVE",
 };
+
+export const STATUS_SUPPLIER_TYPE_VI : any= {
+  ACTIVE: "Hoạt động",
+  INACTIVE: "Ngưng hoạt động",
+};
+
 export type STATUS_BILL_TYPE = {
   NEW: "NEW",
   PROCESSING: "PROCESSING",
@@ -66,4 +108,10 @@ export type STATUS_BILL_VI_TYPE = {
   PROCESSING: "Đang xử lý",
   COMPLETED: "Đã hoàn thành",
   CANCELLED: "Đã huỷ",
+};
+
+export const PROVIDER_COLLECTION_CONTRACT_MINERAL = {
+  pharma_profile: 'pharma_profile',
+  supplier: 'supplier',
+  TDV: 'TDV',
 };

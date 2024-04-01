@@ -1,7 +1,7 @@
 import { Col, Modal, Row, Select, Typography } from "antd";
 import { ColumnsType } from "antd/es/table/InternalTable";
 import { get } from "lodash";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import TableAnt from "~/components/Antd/TableAnt";
 import ActionColumn from "~/components/common/ActionColumn/index";
 import SelectSearch from "~/components/common/SelectSearch/SelectSearch";
@@ -13,10 +13,14 @@ import {
   useGetProducts,
   useProductPaging,
   useProductQueryParams,
+  useUpdateProduct,
   useUpdateProductParams
 } from "../product.hook";
 import { TypePropsListProduct } from "../product.modal";
 import FormProduct from "./FormProduct";
+import StockProduct from "./StockProduct";
+import { useAdapter } from "~/modules/auth/auth.hook";
+import { ADAPTER_KEY } from "~/modules/auth/constants";
 export default function ListProduct({
   supplierId,
 }: TypePropsListProduct): React.JSX.Element {
@@ -31,6 +35,8 @@ export default function ListProduct({
 
   const [isSubmitLoading, onDelete] = useDeleteProduct();
   const paging = useProductPaging();
+  const adapter = useAdapter();
+  const isAdapterIsEmployee = useMemo(() => adapter === ADAPTER_KEY.EMPLOYEE, [adapter]);
 
   const onOpenForm = useCallback((id?: string) => {
     if (id) {
@@ -43,6 +49,7 @@ export default function ListProduct({
     setId(null);
     setOpenForm(false);
   }, []);
+  const [, onUpdateProduct] = useUpdateProduct(onCloseForm);
   const columns: ColumnsType = [
     {
       title: "Mã thuốc",
@@ -60,7 +67,7 @@ export default function ListProduct({
       render(name, record) {
         const codeBySupplier = get(record,'codeBySupplier','');
         if (get(record, "variants", [])?.length > 1) {
-          const options = get(record, "variants", [])?.map((item) => ({
+          const options = get(record, "variants", [])?.map((item:any) => ({
             label: get(item, "unit.name"),
             value: get(item, "_id"),
           }));
@@ -73,6 +80,9 @@ export default function ListProduct({
               <Col>
                 <Select
                   style={{minWidth : 50}}
+                  dropdownStyle={{
+                    width : 'max-content'
+                  }}
                   value={get(record,'variant._id')}
                   options={options}
                   onChange={(value) =>
@@ -93,22 +103,33 @@ export default function ListProduct({
         }
       },
     },
-    {
+  ...(!isAdapterIsEmployee? [{
       title: "Giá bán",
       dataIndex: "variant",
       key: "variant",
-      render(variant, record, index) {
+      render(variant: any, record: any, index: any) {
         return formatter(get(variant,'price'))
       },
-    },
-    {
-      title: "Giá thu về",
+    }]:[]),
+  ...(!isAdapterIsEmployee? [{
+    title: "Giá thu về",
       dataIndex: "variant",
       key: "variant",
-      render(variant, record, index) {
+      render(variant: any, record: any, index: any) {
         return formatter(get(variant,'cost',0))
       },
-    },
+    }]:[]),
+  ...(!isAdapterIsEmployee? [{
+    title: "Tồn kho",
+      dataIndex: "stock",
+      key: "stock",
+      render(stock: any, record: any) {
+        return <StockProduct variantDefault={get(record,'variantDefault')} stock={stock ?? 0} handleUpdate={(newStock:number) => onUpdateProduct({
+          _id : get(record,'_id'),
+          stock : newStock
+        })}/>
+      },
+    }]:[]),
     {
       title: "Nhóm sản phẩm",
       dataIndex: "productGroup",
@@ -196,7 +217,7 @@ export default function ListProduct({
           footer={null}
           onCancel={onCloseForm}
         >
-          <FormProduct id={id} supplierId={supplierId} onCancel={onCloseForm} />
+          <FormProduct onUpdate={onUpdateProduct} id={id} supplierId={supplierId} onCancel={onCloseForm} />
         </Modal>
       </WhiteBox>
     </div>

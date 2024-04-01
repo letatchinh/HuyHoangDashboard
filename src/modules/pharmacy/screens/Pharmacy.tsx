@@ -23,6 +23,7 @@ import moment from "moment";
 import { useCallback, useMemo, useState } from "react";
 import {
   Button,
+  Checkbox,
   Col,
   Modal,
   Popconfirm,
@@ -44,6 +45,9 @@ import ModalAnt from "~/components/Antd/ModalAnt";
 import ReceiptVoucherForm from "~/modules/receiptVoucher/components/ReceiptVoucherForm";
 import { Link } from "react-router-dom";
 import { PATH_APP } from "~/routes/allPath";
+import { useChangeDocumentTitle } from "~/utils/hook";
+import ExportExcelButton from "~/modules/export/component";
+import useCheckBoxExport from "~/modules/export/export.hook";
 
 const ColumnActions = ({ _id, deletePharmacy, onOpenForm }: propsType) => {
   return (
@@ -79,7 +83,10 @@ export default function Pharmacy() {
   const [pharmacyId, setPharmacyId] = useState(null);
   const [isOpenForm, setIsOpenForm] = useState(false);
   const paging = usePharmacyPaging();
-  const canWriteVoucher = useMatchPolicy(POLICIES.WRITE_VOUCHER);
+  const canWriteVoucher = useMatchPolicy(POLICIES.WRITE_VOUCHERPHARMACY);
+  const canDownload = useMatchPolicy(POLICIES.DOWNLOAD_PHARMAPROFILE);
+  const [arrCheckBox, onChangeCheckBox] = useCheckBoxExport();
+
 
   const onOpenForm = useCallback(
     (id?: any) => {
@@ -110,8 +117,9 @@ export default function Pharmacy() {
         // dataIndex: "code",
         key: "code",
         width: 120,
-        render(record) {
+        render: (record) => {
           return (
+            <WithPermission permission={POLICIES.READ_PHARMAPROFILE}>
             <Link
               className="link_"
               to={`/pharmacy/${record?._id}`}
@@ -119,6 +127,7 @@ export default function Pharmacy() {
             >
               {record?.code}
             </Link>
+            </WithPermission>
           );
         },
       },
@@ -139,7 +148,7 @@ export default function Pharmacy() {
         title: "Địa chỉ",
         dataIndex: "address",
         key: "address",
-        width: 300,
+        width: 350,
         render(value, record, index) {
           return concatAddress(value);
         },
@@ -154,10 +163,19 @@ export default function Pharmacy() {
         },
       },
       {
+        title: "Trình dược viên",
+        dataIndex: "employee",
+        key: "employee",
+        width: 180,
+        render: (record) => {
+          return get(record, "fullName")
+        }
+      },
+      {
         title: "Công nợ",
         dataIndex: "resultDebt",
         key: "resultDebt",
-        width: 120,
+        width: 180,
         render(value) {
           return formatNumberThreeComma(value);
         },
@@ -205,12 +223,31 @@ export default function Pharmacy() {
           );
         },
       },
+      ...(
+        canDownload ? [
+          {
+            title: 'Lựa chọn',
+            key: '_id',
+            width: 80,
+            align: 'center' as any,
+            render: (item: any, record: any) =>
+            {
+              const id = record._id;
+              return (
+                <Checkbox
+                  checked= {arrCheckBox.includes(id)}
+                  onChange={(e)=>onChangeCheckBox(e.target.checked, id)}
+            />)}
+          },
+        ]: []
+      ),
       {
         title: "Thao tác",
         dataIndex: "_id",
-        // key: "actions",
-        width: 150,
+        key: "_id",
         align: "center",
+        fixed : 'right',
+        width : 200,
         render: (record) => {
           return (
             <div className="custom-table__actions">
@@ -233,7 +270,7 @@ export default function Pharmacy() {
         },
       },
     ],
-    []
+    [arrCheckBox]
   );
 
   const onChangeStatus = (
@@ -263,10 +300,11 @@ export default function Pharmacy() {
         break;
     }
   };
-
+  useChangeDocumentTitle("Danh sách nhà thuốc")
   return (
     <div>
       <Breadcrumb title={t("list-pharmacies")} />
+      <WhiteBox>
       <Row className="mb-3" justify={"space-between"}>
         <Col span={8}>
           <Search
@@ -278,6 +316,7 @@ export default function Pharmacy() {
             value={keyword}
           />
         </Col>
+        <Row>
         <WithPermission permission={POLICIES.WRITE_PHARMAPROFILE}>
           <Col>
             <Button
@@ -288,7 +327,19 @@ export default function Pharmacy() {
               Thêm mới
             </Button>
           </Col>
-        </WithPermission>
+          </WithPermission>
+          <WithPermission permission={POLICIES.DOWNLOAD_PHARMAPROFILE}>
+            <Col>
+                <ExportExcelButton
+                  fileName="Danh sách nhà thuốc"
+                  api="pharma-profile"
+                  exportOption="pharma"
+                  query={query}
+                  ids={arrCheckBox}
+                />
+            </Col>
+          </WithPermission>
+        </Row>
       </Row>
       <WithPermission permission={POLICIES.UPDATE_PHARMAPROFILE}>
         <Space style={{ marginBottom: 20 }}>
@@ -318,11 +369,11 @@ export default function Pharmacy() {
           </Row>
         </Space>
       </WithPermission>
-      <WhiteBox>
         <TableAnt
           dataSource={pharmacies}
           loading={isLoading}
           rowKey={(rc) => rc?._id}
+          scroll={{x : 1500}}
           columns={columns}
           size="small"
           pagination={{

@@ -30,6 +30,8 @@ import useUpdateOrderSupplierStore from "../storeContext/UpdateOrderSupplierCont
 import { useResetOrderSupplier, useUpdateOrderSupplier } from "../orderSupplier.hook";
 import PaymentVoucherForm from "~/modules/paymentVoucher/components/PaymentVoucherForm";
 import { REF_COLLECTION_UPPER } from "~/constants/defaultValue";
+import WithPermission from "~/components/common/WithPermission";
+import POLICIES from "~/modules/policy/policy.auth";
 
 type propsType = {};
 const Layout = ({ label, children }: { label: any; children: any }) => (
@@ -123,14 +125,14 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
     form.setFieldsValue({ note });
   }, [note]);
   return (
-    <div className="orderSupplier-page-update">
+    <div className="bill-page-update">
       <Form form={form} onFinish={onFinish}>
         {isLoading && <Spin fullscreen />}
         <Link className="link_" to={PATH_APP.orderSupplier.root}>
           <LeftOutlined /> Đơn hàng
         </Link>
 
-        <div className="orderSupplier-page-update--infoBill">
+        <div className="bill-page-update--infoBill">
           <Row justify={"space-between"} align="middle" gutter={24}>
             <Col lg={9} md={24} sm={24}>
               <Row align="middle" gutter={8} wrap={false}>
@@ -144,6 +146,7 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
                 </Col>
                 <Col>
                   <Space>
+                    <WithPermission permission={POLICIES.UPDATE_ORDERSUPPLIER}>
                     <Button
                       type="primary"
                       danger
@@ -159,6 +162,7 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
                     >
                       Huỷ đơn
                     </Button>
+                    </WithPermission>
                   </Space>
                 </Col>
               </Row>
@@ -184,21 +188,21 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
         <Row gutter={8}>
           {/* // Info Pharmacy  */}
           <Col lg={16} md={24} sm={24}>
-            <div className="orderSupplier-page-update--infoPharmacy">
+            <div className="bill-page-update--infoPharmacy">
               <WhiteBox>
                 <h6>Thông tin nhà cung cấp</h6>
                 <Row justify={"space-between"}>
                   <Col>
                     <Space
-                      className="orderSupplier-page-update--infoPharmacy__info"
+                      className="bill-page-update--infoPharmacy__info"
                       align="center"
                     >
                       <Avatar />
                       <div>
-                        <p className="orderSupplier-page-update--infoPharmacy__info__name">
+                        <p className="bill-page-update--infoPharmacy__info__name">
                           {get(orderSupplier, "supplier.name", "")}
                         </p>
-                        {/* <p className="orderSupplier-page-update--infoPharmacy__info__phone">
+                        {/* <p className="bill-page-update--infoPharmacy__info__phone">
                           {get(orderSupplier, "pharmacy.phoneNumber", "")}
                         </p> */}
                       </div>
@@ -207,7 +211,8 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
                   <Col>
                     {/* <Typography.Text strong>Công nợ hiện tại : 0</Typography.Text> */}
                     {status !== STATUS_ORDER_SUPPLIER.CANCELLED && (
-                      <Button
+                      <WithPermission permission={POLICIES.WRITE_VOUCHERSUPPLIER}>
+                        <Button
                         disabled={paymentAmount <= 0}
                         type="primary"
                         size="small"
@@ -215,6 +220,7 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
                       >
                         Tạo phiếu chi
                       </Button>
+                      </WithPermission>
                     )}
                   </Col>
                 </Row>
@@ -226,7 +232,7 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
           </Col>
           {/* Thông tin đơn hàng */}
           <Col lg={8} md={24} sm={24}>
-            <div className="orderSupplier-page-update--infoBillRight">
+            <div className="bill-page-update--infoBillRight">
               <WhiteBox>
                 <Space className="justify-content-between w-100">
                   <h6>Thông tin đơn hàng</h6>
@@ -251,6 +257,7 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
                 <Form.Item<FormFieldBillType> name={"note"}>
                   <TextArea />
                 </Form.Item>
+                <WithPermission permission={POLICIES.UPDATE_ORDERSUPPLIER}>
                 <Button
                   style={{ marginLeft: "auto", display: "block", marginTop: 5 }}
                   type="primary"
@@ -259,12 +266,13 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
                   icon={<SendOutlined />}
                   size="small"
                 />
+                </WithPermission>
               </WhiteBox>
             </div>
           </Col>
         </Row>
       </Form>
-      <div className="orderSupplier-page-update--infoBillItem">
+      <div className="bill-page-update--infoBillItem">
         <WhiteBox>
           <h6>Thông tin sản phẩm</h6>
           <OrderItemModule.components.ListOrderItem statusBill={status} />

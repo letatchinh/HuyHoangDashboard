@@ -76,7 +76,7 @@ export default function SelectPharmacy({
   },[]);
   
   return (
-    <Row gutter={8}>
+    <Row gutter={8}  >
       {showIcon && <UserOutlined />}
       <Col flex={1}>
         <Form.Item<FormFieldCreateBill>

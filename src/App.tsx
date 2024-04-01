@@ -9,12 +9,20 @@ import BillModule from "~/modules/sale/bill";
 import CreateBillPage from "./pages/Dashboard/Bill/CreateBill";
 import packageJson from "../package.json";
 import CreateOrderSupplier from "./pages/Dashboard/OrderSupplier/CreateOrderSupplier";
+import CreateBillPageInDevice from "./pages/Dashboard/Bill/CreateBill_InDevice";
+import { DeviceDetector } from "./utils/helpers";
+import { useUserPolicy } from "./modules/policy/policy.hook";
 
 function App(): React.JSX.Element {
+  const width = window.innerWidth;
   setupAxios();
   const token = AuthModule.hook.useToken();
   setAxiosToken(token);
   setAxiosCompanyId("99999"); // Fix Me , Just Init Project
+
+  const device = DeviceDetector();
+  // useUserPolicy(); // Get Policies
+
   return (
     <>
       <Routes>
@@ -31,12 +39,12 @@ function App(): React.JSX.Element {
         <Route
           key={PATH_APP.bill.create}
           path={PATH_APP.bill.create}
-          Component={() => <CreateBillPage />}
+          Component={() =>  device?.isMobile !== true ? <CreateBillPage/> :  <CreateBillPageInDevice />}
         />
         <Route
           key={PATH_APP.orderSupplier.create}
           path={PATH_APP.orderSupplier.create}
-          Component={() => <CreateOrderSupplier />}
+          Component={() =>  <CreateOrderSupplier />}
         />
       </Routes>
       <div
