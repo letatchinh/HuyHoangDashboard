@@ -41,6 +41,9 @@ const cumulativeEvent = 'cumulativeEvent';
 
 // Đơn hàng nhà cung cấp
 const orderSupplier = 'orderSupplier';
+
+// Cập nhật Nhà thuốc đảm nhiệm cho nhân viên
+const updateThePharmacyForEmployee = 'updateThePharmacyForEmployee';
 const RESOURCES = [
   //Setting
   configDiscount,
@@ -86,6 +89,8 @@ const RESOURCES = [
   shippingCost,
   cumulativeEvent,
   orderSupplier,
+  
+  updateThePharmacyForEmployee,
 ];
 
 //ACTIONS

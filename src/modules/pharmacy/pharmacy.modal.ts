@@ -17,3 +17,11 @@ export interface cloneInitState<T = any> extends initStateSlice {
   historyPharmacy?: T[];
   pagingHistoryPharmacy?: any;
 };
+
+export type DataSourceItemType = {
+  name: string;
+  code: string;
+  phoneNumber: string;
+  address: any;
+  _id: string;
+};
