@@ -8,9 +8,10 @@ import { useResetState } from "~/utils/hook";
 import WithOrPermission from "~/components/common/WithOrPermission";
 import POLICIES from "~/modules/policy/policy.auth";
 import BaseBorderBox from "~/components/common/BaseBorderBox/index";
-import { EMPLOYEE_LEVEL_OPTIONS } from "../constants";
+import { EMPLOYEE_LEVEL, EMPLOYEE_LEVEL_OPTIONS } from "../constants";
 import AreaSelect from "~/components/common/AreaSelect/index";
 import { OPTION_AREA } from "~/constants/defaultValue";
+import { get } from "lodash";
 
 const { Option } = Select;
 
@@ -222,7 +223,7 @@ export default function EmployeeForm(props: IProps) {
           >
             <Col span={12}>
               <FormItem label="Vị trí" name="employeeLevel">
-                <Select options={EMPLOYEE_LEVEL_OPTIONS} />
+                <Select options={EMPLOYEE_LEVEL_OPTIONS.filter((option) => get(option,'value') !== EMPLOYEE_LEVEL.CTV)} />
               </FormItem>
             </Col>
             <Col span={12}>
