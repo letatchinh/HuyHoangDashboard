@@ -3,9 +3,9 @@ import { get, omit } from "lodash";
 // import { cumulativeDiscountType } from "~/modules/cumulativeDiscount/cumulativeDiscount.modal";
 import { InstanceModuleRedux } from "~/redux/instanceModuleRedux";
 import { initStateSlice } from "~/redux/models";
-import { CalculateBill, CalculateDiscountFactory } from "../bill.service";
+// import { CalculateBill, CalculateDiscountFactory } from "../bill.service";
 import { STATUS_BILL } from "../constants";
-const CalculateBillMethod = new CalculateBill();
+// const CalculateBillMethod = new CalculateBill();
 interface cloneInitState extends initStateSlice {
  // Add cloneInitState Type Here
  isGetDebtLoading? : boolean,
