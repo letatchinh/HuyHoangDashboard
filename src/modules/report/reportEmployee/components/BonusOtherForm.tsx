@@ -1,29 +1,46 @@
 import { Button, Form, Input, Select } from "antd";
 import TextArea from "antd/es/input/TextArea";
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect } from "react";
 import InputNumberAnt from "~/components/Antd/InputNumberAnt";
 import { requireRules } from "~/constants/defaultValue";
 import { BonusOtherType } from "../../reportSupplier/reportSupplier.modal";
-import { useUpdatePreviewReportEmployee } from "../reportEmployee.hook";
+import { useResetAction, useUpdatePreviewReportEmployee } from "../reportEmployee.hook";
 import { SubmitDataUpdatePreview } from "../reportEmployee.modal";
+import { get } from "axios";
 type propsType = {
     _id? : string,
     bonusOther : BonusOtherType[],
-    employeeId: string
+    employeeId: string,
+    indexUpdate? : number
 };
-export default function BonusOtherForm({_id,bonusOther,employeeId}: propsType): React.JSX.Element {
+export default function BonusOtherForm({_id,bonusOther,employeeId,indexUpdate}: propsType): React.JSX.Element {
+  useResetAction();
   const [form] = Form.useForm();
   const callBackSubmit = useCallback(() => form.resetFields(),[])
   const [isSubmitLoadingPreview, onPreviewUpdate] =
   useUpdatePreviewReportEmployee(callBackSubmit);
   const onFinish = (values:BonusOtherType) => {
+    
     const submitData :SubmitDataUpdatePreview =  {
         _id,
         employeeId,
-        bonusOther : [...bonusOther,values]
+      
     }
-    onPreviewUpdate(submitData)
+    if(Number.isFinite(indexUpdate)){      
+    submitData.bonusOther =  bonusOther.map((item :BonusOtherType,index:number) => index === indexUpdate ? values : item)
+    }else{
+    submitData.bonusOther =  [...bonusOther,values];
+    }
+    onPreviewUpdate(submitData);
   };
+
+  useEffect(() => {
+    if(Number.isFinite(indexUpdate)){
+      const findOne = bonusOther?.find((item : BonusOtherType,index:number) => index === indexUpdate);
+      form.setFieldsValue({...findOne})
+    }
+  },[indexUpdate,bonusOther,form]);
+
   return (
     <Form initialValues={{
         mathMethod : 1
@@ -49,7 +66,7 @@ export default function BonusOtherForm({_id,bonusOther,employeeId}: propsType): 
         />
       </Form.Item>
       <Button loading={isSubmitLoadingPreview} type="primary"  htmlType="submit" shape="round">
-        Thêm
+        {Number.isFinite(indexUpdate) ? "Cập nhật" :"Thêm"}
       </Button>
     </Form>
   );

@@ -7,6 +7,8 @@ import { BonusOtherType } from "../reportSupplier/reportSupplier.modal";
 import BonusOtherForm from "./components/BonusOtherForm";
 import { EmployeeLevelType } from "~/modules/employee/employee.modal";
 import { EMPLOYEE_LEVEL } from "~/modules/employee/constants";
+import { Popover } from "antd";
+import UpdateAndDelete from "./components/UpdateAndDelete";
 const styleChildren :CSSProperties= {
     fontStyle : 'italic',
 }
@@ -33,6 +35,7 @@ const ConvertChild = (DetailSalary: DetailSalaryItem[]) =>
 export interface ItemDataSource  {
   title: any;
   afterTitle? : any;
+  beforeTitle? : any;
   value?: number | undefined; // set undefined To prevent Show String at Title
   children?: ItemDataSource[];
   styleTitle? : CSSProperties;
@@ -183,13 +186,14 @@ export const handleConvertDataSourceDetailSalary = ({
     styleTitle : styleTitle,
     children:   [
       ItemAddBonusMethod,
-      ...bonusOther?.map((item: BonusOtherType) => ({
+      ...bonusOther?.map((item: BonusOtherType,index:number) => ({
         title: get(item,'content',''),
         value: get(item,'value') * get(item,'mathMethod'),
         styleTitle : {
           ...styleChildren,
           color : get(item,'mathMethod') === 1 ? 'green' : 'red'
         },
+        beforeTitle : <UpdateAndDelete employeeId={employeeId} bonusOther={bonusOther} _id={_id} indexUpdate={index}/>
       }))
     ],
     key: "D",

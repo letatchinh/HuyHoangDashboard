@@ -5,6 +5,7 @@ import TableAnt from "~/components/Antd/TableAnt";
 import { formatter } from "~/utils/helpers";
 import useDetailReportStore from "../../DetailReportContext";
 import { ItemDataSource } from "../../reportEmployee.service";
+import { Flex } from "antd";
 type propsType = {
     dataSource : ItemDataSource[]
 };
@@ -17,9 +18,9 @@ export default function TableDetailSalary({dataSource}: propsType): React.JSX.El
           key: "title",
           render : (title,rc) => {
             const AfterTitle : any = get(rc,'afterTitle');
-            console.log(AfterTitle,'AfterTitle');
+            const BeforeTitle : any = get(rc,'beforeTitle');
             
-            return <span style={get(rc,'styleTitle',{})}>{title} {AfterTitle && AfterTitle}</span>
+            return <Flex align="center"><span style={get(rc,'styleTitle',{})}>{BeforeTitle && BeforeTitle}{title} {AfterTitle && AfterTitle}</span></Flex>
           }
         },
         {
