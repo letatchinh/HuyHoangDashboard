@@ -339,4 +339,18 @@ const policyRule = {
   ADMIN_CONFIGREPORTSALARYAUTO: "ADMIN_CONFIGREPORTSALARYAUTO",
 } as const;
 
-export type PoliciesRuleType = keyof typeof policyRule
+// Can Delete When PR to Master
+const Temp_policyRule = {
+  ...policyRule,
+  READ_VOUCHER : "READ_VOUCHER",
+  WRITE_VOUCHER: "WRITE_VOUCHER",
+  UPDATE_VOUCHER: "UPDATE_VOUCHER",
+  DELETE_VOUCHER: "DELETE_VOUCHER",
+  DOWNLOAD_VOUCHER: "DOWNLOAD_VOUCHER",
+  READ_DEBT : "READ_DEBT",
+  WRITE_DEBT: "WRITE_DEBT",
+  UPDATE_DEBT: "UPDATE_DEBT",
+  DELETE_DEBT: "DELETE_DEBT",
+  DOWNLOAD_DEBT: "DOWNLOAD_DEBT",
+} as const
+export type PoliciesRuleType = keyof typeof Temp_policyRule
