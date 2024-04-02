@@ -180,6 +180,7 @@ export default function Manufacturer() {
                       onParamChange({ page, limit: pageSize });
                     },
                   }}
+                  stickyTop
                 />
               </WhiteBox>
             </div>

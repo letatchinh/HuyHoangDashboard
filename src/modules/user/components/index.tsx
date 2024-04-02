@@ -214,6 +214,7 @@ const UserEmployee = ({ currentTab }: UserProps) => {
           showTotal: (total) => `Tổng cộng: ${total}`,
         }}
         onChange={({current, pageSize}: any)=> onTableChange({current, pageSize})}
+        stickyTop
       />
       <Modal
         open={isOpenModal}

@@ -1,4 +1,4 @@
-import { Button, Checkbox, Modal, Table } from 'antd';
+import { Button, Checkbox, Modal, Table, Typography } from 'antd';
 import dayjs from 'dayjs';
 import { get, toUpper } from 'lodash';
 import React, { useEffect, useState } from 'react';
@@ -10,6 +10,9 @@ import POLICIES from '~/modules/policy/policy.auth';
 import useCheckBoxExport from '~/modules/export/export.hook';
 import { useDispatch } from 'react-redux';
 import { vouchersSliceAction } from '~/modules/vouchers/redux/reducer';
+import TableAnt from '~/components/Antd/TableAnt';
+import { PATH_APP } from '~/routes/allPath';
+import { useLocation } from 'react-router-dom';
 type propsType = {
   listOptionSearch?: any[];
   keyword?: string;
@@ -27,7 +30,8 @@ interface Column {
 
 export default function PaymentVouchers(props: propsType): React.JSX.Element {
   const { listOptionSearch, keyword: keywordProps, searchBy ,setQueryPayment} = props;
-  
+  const { pathname } = useLocation();
+
   //HOOK
   const [query, onTableChange] = usePaymentVoucherQueryParams();
   const [keyword, {setKeyword, onParamChange}] = useUpdatePaymentVoucherParams(query, listOptionSearch)
@@ -111,6 +115,25 @@ export default function PaymentVouchers(props: propsType): React.JSX.Element {
       },
     },
     {
+      title: 'Đơn hàng',
+      dataIndex: 'bill',
+      key: 'bill',
+      align : 'center',
+      render: (bill, record, index) => {
+        const order = (get(record,'order'));
+        if(bill){
+          return <Typography.Link onClick={() => window.open(
+            PATH_APP.bill.root + "?page=1&limit=10&keyword=" + get(bill, "codeSequence")
+          )} strong>{get(bill,'codeSequence','')}</Typography.Link>
+        };
+        if(order){
+          return <Typography.Link onClick={() => window.open(
+            PATH_APP.orderSupplier.root + "?page=1&limit=10&keyword=" + get(order, "codeSequence")
+          )} strong>{get(order,'codeSequence','')}</Typography.Link>
+        }
+      }
+    },
+    {
       title: 'Ngày tạo',
       dataIndex: 'createdAt',
       key: 'createdAt',
@@ -147,10 +170,24 @@ export default function PaymentVouchers(props: propsType): React.JSX.Element {
       ]: []
     ) 
   ];
-  
+  if(pathname === PATH_APP.vouchers.pharmacy){
+    columns.splice(5,0,{
+      title: 'Nhà thuốc',
+      dataIndex: 'pharma_profile',
+      key: 'pharma_profile',
+      render: (pharma_profile, record, index) => get(pharma_profile,'name',''),
+    },)
+  }else{
+    columns.splice(5,0,{
+      title: 'Nhà cung cấp',
+      dataIndex: 'supplier',
+      key: 'supplier',
+      render: (supplier, record, index) => get(supplier,'name',''),
+    },)
+  }
   return (
     <>
-      <Table
+      <TableAnt
         columns={columns as any}
         dataSource={vouchers}
         loading={isLoading}
@@ -160,6 +197,8 @@ export default function PaymentVouchers(props: propsType): React.JSX.Element {
           showTotal: (total) => `Tổng cộng: ${total}`
         }}
         onChange={({ current, pageSize }: any) => onTableChange({ current, pageSize })}
+        scroll={{x : 1500}}
+        stickyTop
       />
       <Modal
         footer={null}

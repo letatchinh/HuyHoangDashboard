@@ -1,5 +1,5 @@
 import { DeleteOutlined, InfoCircleTwoTone, PlusCircleOutlined, SearchOutlined } from '@ant-design/icons';
-import { Button, Checkbox,Select, Col, Form, Row, Space, Switch, message } from 'antd';
+import { Button, Checkbox,Select, Col, Form, Row, Space, Switch, message, Flex } from 'antd';
 import Search from 'antd/es/input/Search';
 import { ColumnsType } from 'antd/es/table';
 import React, { useCallback, useState } from 'react';
@@ -71,7 +71,7 @@ export default function ProductUnit(props: propsType): React.JSX.Element {
       title: 'Thao tác',
       dataIndex: 'status',
       align: 'center',
-      width: '120px',
+      // width: '120px',
       key: 'status',
       render: (_, record) => (
         <Switch
@@ -87,9 +87,9 @@ export default function ProductUnit(props: propsType): React.JSX.Element {
       title: 'Hành động',
       key: 'action',
       align: 'center',
-      width: '180px',
+      // width: '180px',
       render: (_, record) => (
-        <Space size="middle">
+        <Flex vertical>
           <WithPermission permission={POLICIES.UPDATE_UNIT}>
             <Button icon={<InfoCircleTwoTone />} type="primary" onClick={() => handleOpenForm(record?._id)}>
               Xem chi tiết
@@ -100,7 +100,7 @@ export default function ProductUnit(props: propsType): React.JSX.Element {
               Xóa
             </Button>
           </WithPermission>
-        </Space>
+        </Flex>
       ),
     },
     ...(
@@ -108,7 +108,7 @@ export default function ProductUnit(props: propsType): React.JSX.Element {
         {
           title: 'Lựa chọn',
           key: '_id',
-          width: 80,
+          // width: 80,
           align: 'center' as any,
           render: (item: any, record: any) =>
           {
@@ -179,7 +179,7 @@ export default function ProductUnit(props: propsType): React.JSX.Element {
                     </WithPermission>
                   </Col>
                   <Col>
-                    <WithPermission permission={POLICIES.DOWNLOAD_SUPPLIER}>
+                    <WithPermission permission={POLICIES.DOWNLOAD_UNIT}>
                         <ExportExcelButton
                           api='unit'
                           exportOption = 'unit'
@@ -209,6 +209,7 @@ export default function ProductUnit(props: propsType): React.JSX.Element {
                   onParamChange({ page, limit: pageSize });
                 },
               }}
+              stickyTop
             />
           </WhiteBox>
         </div>

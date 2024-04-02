@@ -89,5 +89,6 @@ export default function* rootSaga() {
     configurationCronTime.redux.saga(),
     typePharmacy.redux.saga(),
     groupPharmacy.redux.saga(),
+    productUnitModule.redux.saga(),
   ]);
 };

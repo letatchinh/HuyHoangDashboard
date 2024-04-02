@@ -149,7 +149,7 @@ export default function ListQuotation({
         dataIndex: "pharmacy",
         key: "pharmacy",
         align: "center",
-        width: "30%",
+        // width: "30%",
         render(pharmacy, record, index) {
           return <Typography.Text>{get(pharmacy, "name", "")}</Typography.Text>;
         },
@@ -352,7 +352,7 @@ export default function ListQuotation({
         loading={isLoading}
         pagination={pagingTable(paging, onParamChange)}
         size="small"
-        scroll={{ x: "max-content" }}
+        scroll={{ x: 1500 }}
       />
     </div>
   );

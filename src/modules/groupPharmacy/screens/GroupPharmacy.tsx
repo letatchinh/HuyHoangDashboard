@@ -299,6 +299,7 @@ export default function GroupPharmacy(props: propsType): React.JSX.Element {
             showSizeChanger: true,
             showTotal: (total) => `Tổng cộng: ${total} `,
           }}
+          stickyTop
         />
       </WhiteBox>
       <ModalAnt

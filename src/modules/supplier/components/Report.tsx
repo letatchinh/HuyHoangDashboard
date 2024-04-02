@@ -25,6 +25,8 @@ import ChartBill from "./ChartBill";
 import { TabsProps } from "antd/lib/index";
 import SaleReport from "./SaleReport";
 import HistoryReport from "./HistoryReport";
+import WithPermission from "~/components/common/WithPermission";
+import POLICIES from "~/modules/policy/policy.auth";
 type propsType = {
   id: string | null;
 };
@@ -132,6 +134,7 @@ export default function Report({ id }: propsType): React.JSX.Element {
             />
           </Card>
         </Col>
+        <WithPermission permission={POLICIES.READ_DEBTSUPPLIER}>
         <Col lg={4} md={6} sm={10}>
           <Card bordered={false}>
             <Statistic
@@ -143,6 +146,7 @@ export default function Report({ id }: propsType): React.JSX.Element {
             />
           </Card>
         </Col>
+        </WithPermission>
       </Row>
       <h5 className="my-3">Thống kê doanh thu</h5>
       <Form

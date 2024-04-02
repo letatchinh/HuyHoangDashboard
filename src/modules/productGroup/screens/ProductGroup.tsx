@@ -242,6 +242,7 @@ export default function ProductConfig() {
                     onParamChange({ page, limit: pageSize });
                   },
                 }}
+                stickyTop
               />
             </WhiteBox>
           </div>

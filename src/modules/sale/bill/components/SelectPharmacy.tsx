@@ -14,6 +14,7 @@ interface propsType extends SelectProps {
   showIcon?: boolean;
   validateFirst?: boolean;
   label?: string;
+  id? : string,
 };
 type ItemSearch = {
   name: string;
@@ -26,6 +27,7 @@ export default function SelectPharmacy({
   showIcon = true,
   validateFirst = true,
   label = "",
+  id,
   ...props
 }: propsType): React.JSX.Element {
   const { onNotify } = useNotificationStore();
@@ -49,10 +51,11 @@ export default function SelectPharmacy({
   
   useEffect(() => {
     const fetchInit = async() => {
+      
     try {
       setLoading(true);
       const pharmacies = await PharmacyModule.api.search({
-        id : form.getFieldValue("pharmacyId"),
+        ...id && {id},
         keyword : ''
       });
       

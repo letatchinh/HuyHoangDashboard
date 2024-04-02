@@ -62,10 +62,12 @@ export default function Supplier(): React.JSX.Element {
   const [isSubmitLoading, onDelete] = useDeleteSupplier();
   const paging = useSupplierPaging();
   const canWriteVoucher = useMatchPolicy(POLICIES.WRITE_VOUCHERSUPPLIER);
-  const canReadDebt = useMatchPolicy(POLICIES.READ_DEBTSUPPILER);
+  const canReadDebt = useMatchPolicy(POLICIES.READ_DEBTSUPPLIER);
 
   //Download
-  const canDownload = useMatchPolicy(POLICIES.DOWNLOAD_PRODUCT);
+  const canDownload = useMatchPolicy(POLICIES.DOWNLOAD_SUPPLIER);
+  console.log(canDownload,'canDownload');
+  
   const [arrCheckBox, onChangeCheckBox] = useCheckBoxExport();
 
   //Revenue
@@ -179,7 +181,7 @@ export default function Supplier(): React.JSX.Element {
         key: "phoneNumber",
         align: "center",
       },
-      ...(!isAdapterIsEmployee ?[{
+      ...(!isAdapterIsEmployee && canReadDebt ?[{
         title: "Công nợ",
         dataIndex: "resultDebt",
         key: "resultDebt",
@@ -273,6 +275,7 @@ export default function Supplier(): React.JSX.Element {
         key: "_id",
         align: "center",
         fixed: 'right',
+        width : 180,
         render(_id) {
           return (
             <Space direction="vertical">
@@ -324,7 +327,7 @@ export default function Supplier(): React.JSX.Element {
 
   return (
     <div>
-      <Breadcrumb title={t("list-supplier")} />
+      {/* <Breadcrumb title={t("list-supplier")} /> */}  <Breadcrumb title={t("Danh sách nhà cung cấp")} />
       <Row className="mb-3" justify={"space-between"}>
         <Col span={8}>
           <Search
@@ -336,7 +339,7 @@ export default function Supplier(): React.JSX.Element {
         </Col>
         <Col>
           <Space>
-            <WithPermission permission={POLICIES.DOWNLOAD_BILL}>
+            <WithPermission permission={POLICIES.DOWNLOAD_SUPPLIER}>
                 <Col>
                   <ExportExcelButton
                     api='supplier'
@@ -370,7 +373,7 @@ export default function Supplier(): React.JSX.Element {
           loading={isLoading}
           columns={columns}
           rowKey={(rc) => rc?._id}
-          scroll={{x : 'max-content'}}
+          scroll={{x : 2500}}
           stickyTop
           size="small"
           pagination={{

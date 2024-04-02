@@ -201,6 +201,7 @@ export default function FreelanceContractPharmacy(
             showSizeChanger: true,
             showTotal: (total) => `Tổng cộng: ${total} `,
           }}
+          stickyTop
         />
       </WhiteBox>
       <ModalAnt

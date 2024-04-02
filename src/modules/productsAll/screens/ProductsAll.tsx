@@ -176,6 +176,8 @@ export default function ProductsAll(props: TypeProps): React.JSX.Element {
             title: "Giá thu về",
             dataIndex: "variant",
             key: "variant",
+            width : 130,
+            align : 'center',
             render(variant: any, record: any, index: any) {
               return formatter(get(variant, "cost", 0));
             },
@@ -315,7 +317,7 @@ export default function ProductsAll(props: TypeProps): React.JSX.Element {
           style={{ marginBottom: "20px" }}
           dataSource={data ?? []}
           columns={columns}
-          scroll={{ x: "max-content" }}
+          scroll={{ x: 2500 }}
           size="small"
           pagination={{
             ...paging,
@@ -324,6 +326,7 @@ export default function ProductsAll(props: TypeProps): React.JSX.Element {
           }}
           onChange={onTableChange}
           loading={isLoading}
+          stickyTop
         />
       </WhiteBox>
       <Modal

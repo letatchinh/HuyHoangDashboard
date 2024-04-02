@@ -38,7 +38,7 @@ export default function Branch() {
   useChangeDocumentTitle("Danh sách chi nhánh")
   return (
     <div>
-      <Breadcrumb title={t("list-branch")} />
+      <Breadcrumb title={t("Danh sách chi nhánh")} />
       <WhiteBox>
         <SelectSearch
         showSelect = {false}
@@ -58,6 +58,7 @@ export default function Branch() {
           //   showTotal: (total) => `Tổng cộng: ${total}`,
           // }}
           pagination={false}
+          stickyTop
         />
       </WhiteBox>
     </div>

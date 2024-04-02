@@ -225,6 +225,7 @@ export default function SalesGroup() {
           bordered
           style={{ marginTop: 20 }}
           scroll={{ x: 1500 }}
+          stickyTop
         />
       </WhiteBox>
       <ModalAnt
