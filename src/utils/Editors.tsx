@@ -1,10 +1,10 @@
-import React from 'react'
-import { CKEditor } from '@ckeditor/ckeditor5-react';
-import CustomEditor from 'ckeditor5-custom-build/build/ckeditor';
-interface PropsEditor {
-  value?: any,
-  onChange?: any
-};
+// import React from 'react'
+// import { CKEditor } from '@ckeditor/ckeditor5-react';
+// import CustomEditor from 'ckeditor5-custom-build/build/ckeditor';
+// interface PropsEditor {
+//   value?: any,
+//   onChange?: any
+// };
 
 function Editors({ value, onChange }: PropsEditor) {
     return (
@@ -19,4 +19,4 @@ function Editors({ value, onChange }: PropsEditor) {
     )
 };
 
-export default Editors;
+// export default Editors;

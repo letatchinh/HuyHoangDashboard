@@ -41,7 +41,7 @@ export default function ProductsAll(props: TypeProps): React.JSX.Element {
   const [, onDelete] = useDeleteProduct();
 
   // const onSetSupplierInfo = useSetSupplierInfo();
-  const canReadSupplier = useMatchPolicy(POLICIES.READ_PRODUCT);
+  const canReadSupplier = useMatchPolicy(POLICIES.READ_SUPPLIER);
   const canUpdate = useMatchPolicy(POLICIES.UPDATE_PRODUCT);
   const canDelete = useMatchPolicy(POLICIES.DELETE_PRODUCT);
   const paging = useProductPaging();

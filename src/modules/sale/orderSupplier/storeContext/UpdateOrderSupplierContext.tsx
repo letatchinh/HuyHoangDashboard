@@ -23,7 +23,7 @@ const UpdateOrderSupplier = createContext<GlobalUpdateOrderSupplier>({
   orderSupplier: null,
   isLoading: false,
   mutateOrderSupplier: () => {},
-  onOpenForm: () => {},
+  onOpenForm: () => { },
 });
 
 type UpdateOrderSupplierProviderProps = {

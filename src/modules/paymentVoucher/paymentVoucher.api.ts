@@ -1,8 +1,9 @@
-import { get } from "lodash";
+import { get, omit } from "lodash";
 import requester from "~/api/requester";
 
 const apis = {
     getAll: (query?: any) => requester.get(`/api/v1/payment-voucher`, query),
+    getAllByBillId: (query?: any) => requester.get(`/api/v1/payment-voucher-bill-item/${get(query,'billId')}`, omit(query,'billId')),
     getById: (id?: any) => requester.get(`/api/v1/payment-voucher/${id}`),
     create: (data?: any) => requester.post(`/api/v1/payment-voucher`, data),
     update: (data?: any) => requester.put(`/api/v1/payment-voucher/${get(data,'id')}`, data),

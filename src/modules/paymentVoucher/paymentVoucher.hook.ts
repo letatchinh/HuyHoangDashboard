@@ -45,6 +45,13 @@ export const usePaymentVoucherPaging = () => useSelector(pagingSelector);
 const confirmPaymentSuccessSelector = getSelector('confirmSuccess');
 const confirmPaymentFailedSelector = getSelector('confirmFailed');
 
+const getListByBillIdSelector = getSelector('listByBillId');
+const getListByBillIdFailedSelector = getSelector('getListByBillIdFailed');
+const getPagingByBillIdSelector = getSelector('pagingByBillId');
+const isLoadingByBillIdSelector = getSelector('isLoadingBillId');
+
+export const usePagingByBillId = () => useSelector(getPagingByBillIdSelector);
+
 export const useGetPaymentVouchers = (param:any) => {
   return useFetchByParam({
     action: paymentVoucherSliceAction.getListRequest,
@@ -60,6 +67,16 @@ export const useGetPaymentVoucher = (id: any) => {
     loadingSelector: getByIdLoadingSelector,
     dataSelector: getByIdSelector,
     failedSelector: getByIdFailedSelector,
+    param: id,
+  });
+};
+
+export const useGetPaymentVoucherByBillId = (id: any) => {
+  return useFetchByParam({
+    action: paymentVoucherSliceAction.getListByBillIdRequest,
+    loadingSelector: isLoadingByBillIdSelector,
+    dataSelector: getListByBillIdSelector,
+    failedSelector: getListByBillIdFailedSelector,
     param: id,
   });
 };
@@ -165,6 +182,47 @@ export const usePaymentVoucherQueryParams = () => {
     status,
     totalAmount,
     reason,pathname]);
+};
+
+export const usePaymentVoucherByBillIdQueryParams = (id: any) => {
+  const query = useQueryParams();
+  const {pathname} = useLocation() 
+  const typeVoucher = TYPE_VOUCHER.PC;
+  const [limit, setLimit] = useState(query.get("limit") || 10); 
+  const [page, setPage] = useState(query.get("page") || 1);
+  const billId = id;
+  // const keyword = query.get("keyword");
+  // const codeSequence = query.get("codeSequence");
+  // const status = query.get("status");
+  // const totalAmount = query.get("totalAmount");
+  // const reason = query.get("reason");
+  const startDate = query.get('startDate') || dayjs().startOf('month').format("YYYY-MM-DDTHH:mm:ss");
+  const endDate = query.get('endDate') || dayjs().endOf('month').format("YYYY-MM-DDTHH:mm:ss");
+  // const createSuccess = useSelector(createSuccessSelector);
+  // const deleteSuccess = useSelector(deleteSuccessSelector);
+
+  const onTableChange : any = ({ current, pageSize }: any) => {
+    setLimit(pageSize);
+    setPage(current);
+  };
+
+  return useMemo(() => {
+    const queryParams = {
+      page,
+      limit,
+      typeVoucher,
+      // keyword,
+      billId,
+      endDate,
+      startDate,
+      // codeSequence,
+      // status,
+      // totalAmount,
+      // reason,
+    };
+    return [queryParams,onTableChange];
+    //eslint-disable-next-line
+  }, [page, limit,startDate, endDate,pathname, billId]);
 };
 
 export const useUpdatePaymentVoucherParams = (

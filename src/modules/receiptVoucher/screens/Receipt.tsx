@@ -32,7 +32,6 @@ export default function ReceiptVouchers(props: propsType): React.JSX.Element {
   const { pathname } = useLocation();
   //HOOK
   const [query, onTableChange] = useReceiptVoucherQueryParams();
-  console.log(query,'query');
   
   const [keyword, {setkeyword, onParamChange}] = useUpdateReceiptVoucherParams(query, listOptionSearch);
   const paging = useReceiptVoucherPaging();

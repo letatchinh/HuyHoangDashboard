@@ -48,7 +48,8 @@ import "./form.scss";
     refCollection?: any;
     debt?: any;
     method? : any;
-    totalAmount? : number;
+    totalAmount?: number;
+    note?: string;
   }
   type propsType = {
     onClose?: any;
@@ -61,7 +62,7 @@ import "./form.scss";
 
     const { onClose, initData,callback} = props;
     const [profile] = useGetProfileUser();
-    const {debt,pharmacyId,refCollection,method,totalAmount} = initData;
+    const { debt, pharmacyId, refCollection, method, totalAmount,note = "Chi cho nhà thuốc đạt luỹ kế" } = initData;
     const [form] = Form.useForm();
     const ref = useRef();
     const [accountingDetails, setAccountingDetails] = useState([]);
@@ -127,7 +128,7 @@ import "./form.scss";
             paymentMethod : "COD",
             accountingDate : dayjs(),
             dateOfIssue : dayjs(),
-            reason: "Chi cho nhà thuốc đạt luỹ kế",
+            reason: note,
           });
         };
         if(profile){
