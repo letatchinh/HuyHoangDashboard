@@ -47,6 +47,7 @@ import {
   import { useGetBranch, useGetBranches } from "~/modules/branch/branch.hook";
   import useNotificationStore from "~/store/NotificationContext";
 import WithOrPermission from "~/components/common/WithOrPermission";
+import { methodType } from "../../vouchers.modal";
   
   const mainRowGutter = 24;
   const FormItem = Form.Item;
@@ -54,10 +55,7 @@ import WithOrPermission from "~/components/common/WithOrPermission";
   const { confirm } = Modal;
   const { Option } = Select;
   const DEFAULT_ACCOUNT = 1111;
-  type methodType = {
-    data : any,
-    type : "BILL" | "LK" | "BILLITEM" | "ORDER" | "ORDERITEM"
-  }
+
   type propsType = {
     id?: any;
     onClose?: any;
@@ -492,6 +490,8 @@ import WithOrPermission from "~/components/common/WithOrPermission";
                 </Col>
               </Row>
             </BaseBorderBox>
+
+            
             <Tabs
               // defaultActiveKey={'1'}
               destroyInactiveTabPane
