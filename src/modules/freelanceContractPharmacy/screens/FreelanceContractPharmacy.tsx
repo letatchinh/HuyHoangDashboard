@@ -129,7 +129,7 @@ export default function FreelanceContractPharmacy(
           return moment(record).format("DD/MM/YYYY");
         },
       },
-      ...(canUpdateContract || canDeleteContract ?[{
+      {
         title: "Thao tác",
         dataIndex: "_id",
         // key: "actions",
@@ -155,7 +155,7 @@ export default function FreelanceContractPharmacy(
             </div>
           );
         },
-      }] : []),
+      },
     ],
     []
   );
