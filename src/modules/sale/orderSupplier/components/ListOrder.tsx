@@ -226,7 +226,7 @@ export default function ListOrder({ status }: propsType): React.JSX.Element {
             onChange={(value) => onParamChange({ supplierIds: value })}
             mode="multiple"
           />
-          <SearchAnt onParamChange={onParamChange} />
+          <SearchAnt value={keyword} onChange={(e) => setKeyword(e.target.value)} onParamChange={onParamChange} />
         </Space>
         </Col>
         <Col span={8}>
