@@ -8,7 +8,7 @@ import { useFetchByParam, useResetState } from "~/utils/hook";
 import WithOrPermission from "~/components/common/WithOrPermission";
 import POLICIES from "~/modules/policy/policy.auth";
 import BaseBorderBox from "~/components/common/BaseBorderBox/index";
-import { EMPLOYEE_LEVEL_OPTIONS } from "../constants";
+import { EMPLOYEE_LEVEL, EMPLOYEE_LEVEL_OPTIONS } from "../constants";
 import AreaSelect from "~/components/common/AreaSelect/index";
 import { DEFAULT_BRANCH_ID, OPTION_AREA } from "~/constants/defaultValue";
 import Account from "~/components/common/Account";
@@ -90,8 +90,10 @@ export default function EmployeeForm(props: IProps) {
       const data : object = {
         ...employee,
         _id: id,
-        avatar: imageUrl
+        avatar: imageUrl,
+        pharmacies : employee?.employeeLevel === EMPLOYEE_LEVEL.ASM ? [] : get(employee,'pharmacies',[]),
       };
+      
       if (statusAccount === 'ACTIVE') {
         handleUpdate({...data});
       } else {
@@ -121,6 +123,7 @@ export default function EmployeeForm(props: IProps) {
         });
       };
     };
+    
   };
 
   const onFocusOutFullName = async () => {
@@ -147,6 +150,7 @@ export default function EmployeeForm(props: IProps) {
     [setImageUrl]
   );
 
+  const employeeLevel = Form.useWatch('employeeLevel',form);
   return (
     <div className="employee-form">
       <h4 style={{ marginRight: "auto", paddingLeft: 27 }}>
@@ -274,16 +278,7 @@ export default function EmployeeForm(props: IProps) {
                 </FormItem> 
           </Col>
           </Row>
-          <Row
-              gutter={48}
-              align="middle"
-              justify="space-between"
-              className="employee-form__logo-row"
-              >
-            <Col span={12}>
-            <AssignPharmacyModal id={id} setForm={(newValue:any) => form.setFieldsValue({pharmacies : newValue})} initDataSource={get(employee,'pharmacies',[])}/>
-            </Col>
-          </Row>
+        
         </BaseBorderBox>
         <BaseBorderBox title={"Thông tin vị trí"}>
           <Row
@@ -294,7 +289,7 @@ export default function EmployeeForm(props: IProps) {
           >
             <Col span={12}>
               <FormItem label="Vị trí" name="employeeLevel">
-                <Select options={EMPLOYEE_LEVEL_OPTIONS} />
+                <Select options={EMPLOYEE_LEVEL_OPTIONS.filter((option) => get(option,'value') !== EMPLOYEE_LEVEL.CTV)} />
               </FormItem>
             </Col>
             <Col span={12}>
@@ -303,6 +298,16 @@ export default function EmployeeForm(props: IProps) {
               </FormItem>
             </Col>
           </Row>
+          {employeeLevel !== EMPLOYEE_LEVEL.ASM && <Row
+              gutter={48}
+              align="middle"
+              justify="space-between"
+              className="employee-form__logo-row"
+              >
+            <Col span={12}>
+            <AssignPharmacyModal id={id} setForm={(newValue:any) => form.setFieldsValue({pharmacies : newValue})} initDataSource={get(employee,'pharmacies',[])}/>
+            </Col>
+          </Row>}
         </BaseBorderBox>
         <Account
           isLoading={isLoading} required={id ? false : true}

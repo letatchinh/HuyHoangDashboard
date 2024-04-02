@@ -68,6 +68,12 @@ export class RulesMember {
       (m) => get(m, "rule") === RULE_SALES_GROUP.MEMBER
     );
   }
+  FindAll(salesGroupPermission: MemberRulesInGroupType[]) {
+    return salesGroupPermission?.filter(
+      (m) => get(m, "rule") === RULE_SALES_GROUP.MEMBER
+    );
+  }
+  
 }
 export class RulesLeader {
   isExist(salesGroupPermission: MemberRulesInGroupType[]) {
@@ -85,7 +91,7 @@ export class RulesLeader {
 export function getDeepChild (child : any[]){
   return child?.map((c : any) => {
     const leader = new RulesLeader().FindOne(get(c,'salesGroupPermission',[]));
-    const member = new RulesMember().FindOne(get(c,'salesGroupPermission',[]));
+    const member = new RulesMember().FindAll(get(c,'salesGroupPermission',[]));
     
     return <TreeNode label={<CardRelation typeArea={get(c,'typeArea')} name={get(c,'name','')} parentNear={get(c,'parentNear')} member={member} leader={leader} managementArea={get(c,'managementArea',[])}/>}>
     {get(c,'children',[])?.length ? getDeepChild(get(c,'children',[])) : null} 

@@ -38,7 +38,7 @@ export default function Address({
       collapsible={"icon"}
       expandIcon={({ isActive }) => (
         <Flex
-          style={{ userSelect: "none", width: "100%" }}
+          style={{ userSelect: "none", width: "100%",paddingInline : 5 }}
           gap={5}
           align={"center"}
         >

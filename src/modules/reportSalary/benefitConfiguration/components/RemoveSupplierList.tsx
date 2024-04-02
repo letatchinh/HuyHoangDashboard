@@ -35,7 +35,6 @@ export default function RemoveSupplierList({onCancel}:propsType) : React.JSX.Ele
             <Select
             popupMatchSelectWidth={false}
             optionRender={({label,data}) => {
-                console.log(data,'data');
                 
                 const {item} = data || {};
                 if(GROUP_TYPE_BENEFIT_KPIS.includes(get(item,'typeBenefit'))){
