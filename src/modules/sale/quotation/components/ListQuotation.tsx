@@ -352,7 +352,7 @@ export default function ListQuotation({
         loading={isLoading}
         pagination={pagingTable(paging, onParamChange)}
         size="small"
-        scroll={{ x: 1500 }}
+        // scroll={{ x: 1500 }}
       />
     </div>
   );
