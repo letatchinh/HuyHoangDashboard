@@ -294,12 +294,13 @@ export const resource: ItemType[] =[
   {
     label: "Báo cáo",
     key: "report",
-    // permission: [POLICIES.READ_BRANCH],
+    permission: [POLICIES.READ_REPORTSALARY],
     children: [
       {
         label: "Báo cáo lương trình dược viên",
         path: PATH_APP.report.employee,
         key: PATH_APP.report.employee,
+        permission : [POLICIES.READ_REPORTSALARY]
       },
     ],
     icon: <i className="fa-solid fa-code-branch"></i>,

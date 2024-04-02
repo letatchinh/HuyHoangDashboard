@@ -21,6 +21,7 @@ import { formatter, pagingTable } from "~/utils/helpers";
 import { DetailReportProvider } from "../DetailReportContext";
 import Status from "~/components/common/Status/index";
 import { STATUS_REPORT_EMPLOYEE_VI } from "../constants";
+import SearchAnt from "~/components/Antd/SearchAnt";
 type propsType = {};
 const CLONE_EMPLOYEE_LEVEL_VI: any = EMPLOYEE_LEVEL_VI;
 const CLONE_STATUS_REPORT_EMPLOYEE_VI: any = STATUS_REPORT_EMPLOYEE_VI;
@@ -101,7 +102,7 @@ export default function ReportEmployee(props: propsType): React.JSX.Element {
     <div>
       <Breadcrumb title={"Báo cáo lương trình dược viên"} />
       <WhiteBox>
-        {/* <SelectSearch showSelect={false} /> */}
+      <SearchAnt value={keyword} onChange={(e) => setKeyword(e.target.value)} onParamChange={onParamChange} />
         <TableAnt
           dataSource={data}
           loading={isLoading}
