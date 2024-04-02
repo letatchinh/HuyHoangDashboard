@@ -1,3 +1,10 @@
+## [1.8.1](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/compare/v1.8.0...v1.8.1) (2024-04-02)
+
+
+### Bug Fixes
+
+* ProductUnit Saga ([aea7b19](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/aea7b193d0a03498780597611822346eb25bc6f8))
+
 # [1.8.0](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/compare/v1.7.0...v1.8.0) (2024-04-01)
 
 
