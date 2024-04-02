@@ -9,9 +9,10 @@ type propsType = {
   onChangeStep?: any;
   onCloseModal?: any;
   step?: any;
+  setStep?: any;
 };
 
-export default function ShowStep({ onChangeStep, onCloseModal, step }: propsType): React.JSX.Element {
+export default function ShowStep({ onChangeStep, onCloseModal, step, setStep }: propsType): React.JSX.Element {
   const { token } = theme.useToken();
   const [supplierId, setSupplierId] = useState<string | null>(null);
   const [keyword, setKeyword] = useState<string>('');
@@ -45,7 +46,8 @@ export default function ShowStep({ onChangeStep, onCloseModal, step }: propsType
       content: <FormProduct
         onCancel={onCloseModal}
         supplierId={supplierId as any}
-        // setSupplierId={setSupplierId}
+        setSupplierId={setSupplierId}
+        setStep = {setStep}
       />,
     },
   ];

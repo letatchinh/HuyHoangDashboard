@@ -1,0 +1,20 @@
+.quotation-page{
+  &__select-pharmacy{
+    width: 200px;
+  }
+  &__wrap--search{
+    display: flex;
+  };
+}
+
+@media screen and (max-width: 576px) {
+  .quotation-page{
+    &__wrap--search{
+      display: block;
+    };
+    &__select-pharmacy{
+      width: 305px;
+      margin-bottom: 5px;
+    }
+  }
+}

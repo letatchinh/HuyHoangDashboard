@@ -4,9 +4,12 @@ import logo from '~/assets/images/logo.png';
 import NavbarVertical from './NavbarVertical';
 import ProfileMenu from './ProfileMenu';
 import Reflex from './Reflex';
+import { DeviceDetector } from '~/utils/helpers';
+import NavbarVerticalDevice from './NavbarVerticalDevice';
 
 export default function LayoutVertical({ children }: { children: React.JSX.Element }) {
   const navigate = useNavigate();
+  const device = DeviceDetector();
   return (
     <div className='layoutVertical'>
         <header className='layoutVertical--header'>
@@ -18,15 +21,13 @@ export default function LayoutVertical({ children }: { children: React.JSX.Eleme
               <ProfileMenu />
             </div>
           </div>
-        </header>
-        <main className='layoutVertical--content'>
-            <Reflex
-            LeftComponent={<NavbarVertical />}
+      </header>
+      <Reflex
+            LeftComponent={  !device.isMobile ? <NavbarVertical /> :  <NavbarVerticalDevice /> }
             RightComponent={<div className='layoutVertical--content__mainContent'>
             {children}
             </div>}
             />
-        </main>
     </div>
   )
 }

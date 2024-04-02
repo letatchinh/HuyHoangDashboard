@@ -36,6 +36,8 @@ import PermissionBadge from "~/components/common/PermissionBadge";
 import ExportExcelButton from "~/modules/export/component";
 import useCheckBoxExport from "~/modules/export/export.hook";
 import { useChangeDocumentTitle } from "~/utils/hook";
+import { useAdapter } from "~/modules/auth/auth.hook";
+import { ADAPTER_KEY } from "~/modules/auth/constants";
 export default function Supplier(): React.JSX.Element {
   const canUpdateSupplier = useMatchPolicy(POLICIES.UPDATE_SUPPLIER);
   const canReadProduct = useMatchPolicy(POLICIES.READ_PRODUCT);
@@ -59,13 +61,18 @@ export default function Supplier(): React.JSX.Element {
   const [data, isLoading] = useGetSuppliers(query);
   const [isSubmitLoading, onDelete] = useDeleteSupplier();
   const paging = useSupplierPaging();
-  const canWriteVoucher = useMatchPolicy(POLICIES.WRITE_VOUCHER);
-  const canReadDebt = useMatchPolicy(POLICIES.READ_DEBT);
+  const canWriteVoucher = useMatchPolicy(POLICIES.WRITE_VOUCHERSUPPLIER);
+  const canReadDebt = useMatchPolicy(POLICIES.READ_DEBTSUPPILER);
 
   //Download
   const canDownload = useMatchPolicy(POLICIES.DOWNLOAD_PRODUCT);
   const [arrCheckBox, onChangeCheckBox] = useCheckBoxExport();
 
+  //Revenue
+  const canReadRevenue = useMatchPolicy(POLICIES.READ_REVENUESUPPLIER);
+
+  const adapter = useAdapter();
+  const isAdapterIsEmployee = useMemo(() => adapter === ADAPTER_KEY.EMPLOYEE, [adapter]);
   // Control form
   const onOpenForm = useCallback((idSelect?: any) => {
     if (idSelect) {
@@ -99,7 +106,6 @@ export default function Supplier(): React.JSX.Element {
     setSupplierId(null);
   };
   const onOpenDesc = (item?: any) => {
-    console.log(item,'item')
     setSupplierId(item?._id)
     setIsOpenDesc(true);
   };
@@ -124,6 +130,7 @@ export default function Supplier(): React.JSX.Element {
         title: "Mã nhà cung cấp",
         dataIndex: "code",
         key: "code",
+        width : 180,
         render (value, rc) {
           return (
             canReadDebt ?  <Button
@@ -140,12 +147,22 @@ export default function Supplier(): React.JSX.Element {
         title: "Nhà cung cấp",
         dataIndex: "name",
         key: "name",
+        width : 180,
       },
       {
+        title: "Xếp hạng nhà cung cấp",
+        dataIndex: "ranking",
+        key: "ranking",
+        width : 180,
+        render(value: any) {
+          return value?.name
+        }
+      },
+      ...(canReadProduct ? [{
         title: "Danh sách sản phẩm",
         dataIndex: "_id",
         key: "listProduct",
-        align: "center",
+        align: "center" as any,
         width : 180,
         render(_id : any) {
           return <PermissionBadge permissions={[POLICIES.READ_PRODUCT]} title="Bạn không có quyền xem sản phẩm">
@@ -155,22 +172,42 @@ export default function Supplier(): React.JSX.Element {
           {/* <Link className={!canReadProduct ? "disabledLink" : ""} target={'_blank'} to={PATH_APP.product.root + "/" + _id}><i className="fa-solid fa-book-medical"></i> Xem chi tiết sản phẩm</Link> */}
           </PermissionBadge>
         },
-      },
+      }]: []),
       {
         title: "Số điện thoại",
         dataIndex: "phoneNumber",
         key: "phoneNumber",
         align: "center",
       },
-      {
+      ...(!isAdapterIsEmployee ?[{
         title: "Công nợ",
         dataIndex: "resultDebt",
         key: "resultDebt",
-        align: "center",
-        render(value) {
+        align: "center" as any,
+        render(value: any) {
           return formatNumberThreeComma(value);
         },
-      },
+      }] : []),
+      ...(!isAdapterIsEmployee ? [{
+        title: "Doanh số tích luỹ",
+        dataIndex: "revenueCamulative",
+        key: "revenueCamulative",
+        align: "center" as any,
+        width: 150,
+        render(value: any) {
+          return formatNumberThreeComma(value ?? 0);
+        },
+      }]: []),
+      ...(canReadRevenue ? ( !isAdapterIsEmployee ?[{
+        title: "Doanh số khoán",
+        dataIndex: "_id",
+        key: "salasContract",
+        align: "center" as AlignType,
+        width: 150,
+        render(_id: any) {
+          return <Link  target={'_blank'} to={PATH_APP.revenueSupplier.root + "/" + _id}>Xem chi tiết</Link>
+        },
+      }] : []): []),
       ...(
         canWriteVoucher ? [
           {
@@ -178,6 +215,7 @@ export default function Supplier(): React.JSX.Element {
             dataIndex: "name",
             key: "name",
             align: "center" as AlignType,
+            width: 150,
             render(value: any, rc: any) {
               return (
                 <Space>
@@ -188,16 +226,20 @@ export default function Supplier(): React.JSX.Element {
           },
         ]: []
       ),
-      {
-        title: "Trạng thái",
-        dataIndex: "status",
-        key: "status",
-        align: "center",
-        width: "10%",
-        render(value,record) {
-          return <Switch disabled={!canUpdateSupplier} value={value === STATUS_SUPPLIER.ACTIVE} onChange={() => onUpdateStatus(value === STATUS_SUPPLIER.ACTIVE ? STATUS_SUPPLIER.INACTIVE : STATUS_SUPPLIER.ACTIVE,get(record,'_id'))}/>;
-        },
-      },
+      ...(
+        canUpdateSupplier ? [
+          {
+            title: "Trạng thái",
+            dataIndex: "status",
+            key: "status",
+            align: "center" as any,
+            width: "10%",
+            render(value: any,record: any) {
+              return <Switch disabled={!canUpdateSupplier} value={value === STATUS_SUPPLIER.ACTIVE} onChange={() => onUpdateStatus(value === STATUS_SUPPLIER.ACTIVE ? STATUS_SUPPLIER.INACTIVE : STATUS_SUPPLIER.ACTIVE,get(record,'_id'))}/>;
+            }
+          }
+        ]: []
+      ),
       {
         title: "Địa chỉ",
         dataIndex: "address",
@@ -225,7 +267,6 @@ export default function Supplier(): React.JSX.Element {
           },
         ] : []
       ),
-      
       {
         title: "Thao tác",
         dataIndex: "_id",
@@ -277,7 +318,7 @@ export default function Supplier(): React.JSX.Element {
         },
       },
     ],
-    [isSubmitLoading, onDelete, onOpenForm, onUpdateStatus]
+    [isSubmitLoading, onDelete, onOpenForm, onUpdateStatus, arrCheckBox]
   );
   useChangeDocumentTitle("Danh sách nhà cung cấp");
 
@@ -329,7 +370,7 @@ export default function Supplier(): React.JSX.Element {
           loading={isLoading}
           columns={columns}
           rowKey={(rc) => rc?._id}
-          scroll={{x : 1500}}
+          scroll={{x : 'max-content'}}
           stickyTop
           size="small"
           pagination={{

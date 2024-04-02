@@ -9,6 +9,7 @@ import { FormFieldCreateBill, quotation } from "~/modules/sale/bill/bill.modal";
 import SelectProduct from "~/modules/sale/bill/components/SelectProduct";
 import logo from '~/assets/images/logo.png';
 import ModalAnt from "~/components/Antd/ModalAnt";
+import { useUserPolicy } from "~/modules/policy/policy.hook";
 
 export const KEY_DATA_PHARMACY = "bill-pharmacy";
 export const KEY_PRIORITY = "key-priority"; // Tab Will Use this key and Remove then (If Have)
@@ -55,7 +56,7 @@ const Label = ({ label, onRemove }: { label?: any; onRemove: () => void }) => (
 
 const CreateBillPage = (): React.JSX.Element => {
   const navigate = useNavigate();
-  
+  useUserPolicy(); // Get Policy
   
   const [tabs, setTabs] = useState<TabsProps["items"]>();
   const [activeKey, setActiveKey]: any = useState();
@@ -178,6 +179,8 @@ const CreateBillPage = (): React.JSX.Element => {
   // Initialize DataSource
   useEffect(() => {
     try {
+      console.log("RUN TEST");
+      
       // Not Have DataSource  initialize new Data
       const dataFromLocalStorage : any  = localStorage.getItem(KEY_DATA_PHARMACY);
       const isInValidDataSource : boolean = BillModule.service.validateDataStorageREINS(dataFromLocalStorage);

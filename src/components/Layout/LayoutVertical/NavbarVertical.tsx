@@ -1,6 +1,6 @@
 import { ConfigProvider, Menu, MenuProps, Spin, Tooltip } from 'antd';
 import React, { useCallback, useMemo, useState , isValidElement, useEffect} from 'react';
-import NavbarItems, { resource } from './resourceV2';
+import { resource } from './resourceV2';
 import { useGetPolicyCheckAllPage } from '~/modules/user/user.hook';
 import { useGetProfile, useProfile } from '~/modules/auth/auth.hook';
 import { isMatchPolicy, useUserPolicy } from '~/modules/policy/policy.hook';
@@ -37,27 +37,23 @@ function getItem({ label, icon, children, path, key, permission }: ItemType): an
 const NavbarVertical: React.FC = () => {
 
   const [collapsed, setCollapsed] = useState(false);
-  const [isLoading, policy] = useGetPolicyCheckAllPage();
-  const toggleCollapsed = () => {
-    setCollapsed(!collapsed);
-  };
+
   const profile = useGetProfile();
   const [isLoadingPolicy, , policies] = useUserPolicy();
-  const [filteredResource,setFilteredResource]:any = useState([]);
 
+  const [filteredResource,setFilteredResource]:any = useState([]);
   useEffect(() => {
-    const checkPermission = (permission: any) : boolean => {
-      if (!permission || profile?.user?.isSuperAdmin ) return true;
+    const checkPermission = (permission: any): boolean => {
+      if (!permission || profile?.user?.isSuperAdmin) return true;
       
       for (const permissionItem of permission) {
-          if (isMatchPolicy(policies, permissionItem)) {
-            return true;
+        if (isMatchPolicy(policies, permissionItem)) {
+          return true;
         };
       };
       return false;
-  
-    }
-  
+    };
+
     const filterItems = (items: ItemType[]) => {
       return items.filter((item: ItemType) => {
         if ( !!item?.children?.length) {
@@ -71,27 +67,25 @@ const NavbarVertical: React.FC = () => {
       const filteredResource = filterItems(resource);
       setFilteredResource(filteredResource)
     };
-  },[policies]);
-  // const filteredResource = filterItems(resource);
-    const NewNavbarItems : any = filteredResource?.map((first : any) => {
-  if (first.children?.length) {
-    const newChildFirst = first.children.map((second : any) => {
-      if (second.children?.length) {
-        const newChildSecond = second.children.map((third : any) => getItem(third));
-        return getItem({ ...second, children: newChildSecond });
-      } else {
-        return getItem(second)};
-    })
-    return getItem({ ...first, children: newChildFirst })
-  } else {
-    return getItem(first)
-  };
-  });
-  
-  return (
+  }, [policies, profile]);
+    const NewNavbarItems : any =  filteredResource?.map((first: any) => {
+        if (first.children?.length) {
+          const newChildFirst = first.children.map((second: any) => {
+            if (second.children?.length) {
+              const newChildSecond = second.children.map((third: any) => getItem(third));
+              return getItem({ ...second, children: newChildSecond });
+            } else {
+              return getItem(second)
+            };
+          })
+          return getItem({ ...first, children: newChildFirst })
+        } else {
+          return getItem(first)
+        };
+    });
+    return (
     <div className='layoutVertical--content__navbar'>
-      {/* {isLoadingPolicy && <Spin className='layoutVertical--content__navbar__loading' tip="Đang lấy dữ liệu phân quyền"/>} */}
-      {/* <button onClick={toggleCollapsed}>asd</button> */}
+      {isLoadingPolicy && <Spin className='layoutVertical--content__navbar__loading' tip="Đang lấy dữ liệu phân quyền"/>}
       <div className='layoutVertical--content__navbar__wrapMenu'>
       <ConfigProvider theme={{
         components : {
@@ -108,7 +102,6 @@ const NavbarVertical: React.FC = () => {
       inlineCollapsed={collapsed}
       items={NewNavbarItems}
       theme='dark'
-
       />
       </ConfigProvider>
       </div>

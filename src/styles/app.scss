@@ -16,7 +16,13 @@
 @import "../modules/workSprint/workSprint.style.scss";
 @import "../modules/workTask/workTask.style.scss";
 @import "~/modules/supplier/supplier.style.scss";
+@import "~/modules/reportSalary/benefitConfiguration/benefitConfiguration.style.scss";
+@import "~/modules/report/reportEmployee/reportEmployee.style.scss";
+@import "~/modules/salesGroup/salesGroup.style.scss";
+@import "../modules/pharmacy/pharmacy.style.scss";
 
+
+@import "../modules/configurationCronTime/configurationCronTime.style.scss";
 // Component
 @import "~/components/Layout/LayoutVertical/index.scss";
 @import "component/whiteBox";
@@ -26,4 +32,6 @@
 
 //Antd
 @import 'antd/modal.scss';
+@import 'antd/input.scss';
+@import 'antd/List.scss';
 @import "component/columnAction.scss";

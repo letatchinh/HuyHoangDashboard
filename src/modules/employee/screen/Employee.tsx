@@ -8,7 +8,7 @@ import {
   useDeleteEmployee,
   useEmployeePaging,
   useEmployeeQueryParams,
-  useGetEmployeees,
+  useGetEmployees,
   useResetStateEmployee,
   useUpdateEmployee,
   useUpdateEmployeeParams,
@@ -27,6 +27,10 @@ import WithPermission from "~/components/common/WithPermission";
 import ExportExcelButton from "~/modules/export/component";
 import useCheckBoxExport from "~/modules/export/export.hook";
 import { useChangeDocumentTitle } from "~/utils/hook";
+
+interface Props {
+  currentTab: any;
+};
 interface ColumnActionProps {
   _id: string;
   deleteEmpolyee?: any;
@@ -67,7 +71,7 @@ const ColumnActions = ({
   );
 };
 
-export default function Employee() {
+export default function Employee({currentTab}: Props) {
   useResetStateEmployee();
   const { t }: any = useTranslate();
   //State
@@ -82,7 +86,7 @@ export default function Employee() {
   const [query, onTableChange] = useEmployeeQueryParams();
   const [keyword, { setKeyword, onParamChange }] =
     useUpdateEmployeeParams(query);
-  const [data, isLoading] = useGetEmployeees(query);
+  const [data, isLoading] = useGetEmployees(query);
   const paging = useEmployeePaging();
   const isCanDelete = useMatchPolicy(POLICIES.DELETE_EMPLOYEE);
   const isCanUpdate = useMatchPolicy(POLICIES.UPDATE_EMPLOYEE);
@@ -102,7 +106,7 @@ export default function Employee() {
 
   const [, handleUpdate] = useUpdateEmployee(() => {
     handleCloseModal();
-    // resetAction();
+    resetAction();
   });
   const [, handleDelete] = useDeleteEmployee(resetAction);
   const [isSubmitLoading, handleCreate] = useCreateEmployee(() => {
@@ -112,7 +116,7 @@ export default function Employee() {
 
   const columns: ColumnsType = [
     {
-      title: 'Mã nhân viên',
+      title: 'Mã trình dược viên',
       dataIndex: 'employeeNumber',
       key: 'employeeNumber',
       render: (value: any, record: any) => (
@@ -120,7 +124,7 @@ export default function Employee() {
       ),
     },
     {
-      title: 'Tên nhân viên',
+      title: 'Tên trình dược viên',
       dataIndex: 'fullName',
       key: 'fullName'
     },
@@ -172,15 +176,17 @@ export default function Employee() {
     
   ];
 
-useChangeDocumentTitle("Danh sách nhân viên")
+  useChangeDocumentTitle("Danh sách trình dược viên");
   return (
     <div>
-      <Breadcrumb title={t("Quản lý nhân viên")} />
+      {/* <Breadcrumb title={t("Quản lý trình dược viên")} /> */}
       <WhiteBox>
         <SelectSearch
           showSelect={false}
           isShowButtonAdd
           handleOnClickButton={() => handleOpenModal()}
+          onChange={setKeyword}
+          onSearch={(e: any)=> onParamChange({keyword: e})}
           permissionKey={[POLICIES.WRITE_EMPLOYEE]}
           addComponent={
             canDownload ?  <Col>
@@ -188,7 +194,7 @@ useChangeDocumentTitle("Danh sách nhân viên")
                   api='employee'
                   exportOption = 'employee'
                   query={query}
-                  fileName='Danh sách nhân viên'
+                  fileName='Danh sách trình dược viên'
                   ids={arrCheckBox}
                 />
           </Col> : null
@@ -201,7 +207,8 @@ useChangeDocumentTitle("Danh sách nhân viên")
           size="small"
           pagination={{
             ...paging,
-            showTotal: (total) => `Tổng cộng: ${total}`
+            showTotal: (total) => `Tổng cộng: ${total}`,
+            showSizeChanger: true,
           }}
           onChange={({current, pageSize}) => onTableChange({current, pageSize})}
         />

@@ -46,6 +46,7 @@ import {
   import POLICIES from "~/modules/policy/policy.auth";
   import { useGetBranch, useGetBranches } from "~/modules/branch/branch.hook";
   import useNotificationStore from "~/store/NotificationContext";
+import WithOrPermission from "~/components/common/WithOrPermission";
   
   const mainRowGutter = 24;
   const FormItem = Form.Item;
@@ -531,11 +532,11 @@ import {
             </Collapse>}
             </WithPermission>
             <Row className="staff-form__submit-box">
-              <WithPermission permission={POLICIES.UPDATE_VOUCHER}>
+              <WithOrPermission permission={[POLICIES.UPDATE_VOUCHERPHARMACY || POLICIES.UPDATE_VOUCHERPHARMACY]}>
               <Button icon={<SaveOutlined/>} type="primary" htmlType="submit">
                 Lưu
               </Button>
-              </WithPermission>
+              </WithOrPermission>
   
               {id &&
                 (!get(mergedInitWhPaymentVoucher, "status") ||
