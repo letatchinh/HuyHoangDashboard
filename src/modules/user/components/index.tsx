@@ -50,10 +50,12 @@ const ColumnActions = ({
     {!adapter?.user?.isSuperAdmin &&   <WithOrPermission permission={[POLICIES.DELETE_USER]}>
         <Popconfirm
         title="Bạn muốn xoá người dùng này?"
-        onConfirm={() => deleteUserEmployee(_id)}
+          onConfirm={() =>{
+            deleteUserEmployee(_id);
+            console.log(1)
+          }}
         okText="Xoá"
         cancelText="Huỷ"
-        disabled
       >
         <p>Xóa</p>
       </Popconfirm>{" "}

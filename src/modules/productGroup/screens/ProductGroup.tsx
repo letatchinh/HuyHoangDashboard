@@ -31,7 +31,7 @@ export default function ProductConfig() {
   const [id, setId] = useState(null);
   const paging =useProductConfigPaging();
   const [form] = Form.useForm();
-  const [search, setSearch] = useState(get(query, 'status') || '');
+  const [search, setSearch] = useState(get(query, 'status') || null);
   const handleCloseForm = useCallback(() => {
     setShowForm(false);
     form.resetFields();
@@ -43,6 +43,7 @@ export default function ProductConfig() {
   const [keyword, { setKeyword, onParamChange }] = useUpdateProductConfigParams(query);
   const { t }: any = useTranslate();
   const canUpdate = useMatchPolicy(POLICIES.UPDATE_PRODUCTGROUP);
+  const canDelete = useMatchPolicy(POLICIES.DELETE_PRODUCTGROUP);
 
   //Download
   const canDownload = useMatchPolicy(POLICIES.DOWNLOAD_UNIT);
@@ -79,21 +80,25 @@ export default function ProductConfig() {
       dataIndex: 'code',
       width: '200px',
       align: 'center',
-      render: (text: string) => <a href='#' style={{ textDecoration: 'none' }}>{text}</a>,
+      render: (text: string,record: any) => (
+        canUpdate ? (
+          <Button  type="link" onClick={() => handleOpenUpdate(record?._id)}>
+        {text}
+        </Button>
+        ): text
+      )
     },
     {
       title: 'Tên danh mục thuốc',
       dataIndex: 'name',
       align: 'center',
       key: 'name',
-      render: (text: string) => <a>{text}</a>,
     },
     {
       title: 'Ghi chú',
       dataIndex: 'note',
       align: 'center',
       key: 'note',
-      render: (text: string) => <a>{text}</a>,
     },
     {
       title: 'Thao tác',
@@ -111,26 +116,17 @@ export default function ProductConfig() {
         />
       )
     },
-    {
+    ...(canDelete ?[{
       title: 'Hành động',
       key: 'action',
-      align: 'center',
+      align: 'center' as any,
       width: '180px',
-      render: (_, record) => (
-        <Space size="middle">
-          <WithPermission permission={POLICIES.UPDATE_PRODUCTGROUP}>
-            <Button icon={<InfoCircleTwoTone />} type="primary" onClick={() => handleOpenUpdate(record?._id)}>
-              Xem chi tiết
-            </Button>
-          </WithPermission>
-          <WithPermission permission={POLICIES.DELETE_PRODUCTGROUP}>
+      render: (value: any, record: any) => (
             <Button icon={<DeleteOutlined />} style={{ color: 'red' }} onClick={() => handleDelete(record._id)}>
               Xóa
             </Button>
-          </WithPermission>
-        </Space>
       ),
-    },
+    }]: []),
     ...(
       canDownload ? [
         {
@@ -167,87 +163,80 @@ export default function ProductConfig() {
   return (
     <div className='product-config'>
       <Breadcrumb title={t('Quản lý danh mục nhóm sản phẩm')} />
-      <div>
-        <div className='product-config-content' style={{ marginBottom: 16, display: 'flex', gap: '30px' }}>
-          {/* <div style={{ width: '20%',height: '100%' }}> */}
-          <WhiteBox style={{ width: '20%' }}>
-            <label>Trạng thái:</label>
-            <Select
-              style={{ height: '50px', padding: '5px 0px', width: '100%' }}
-              value={search}
-              // onChange={(e) => setKeyword(e.target.value)}
-              // value={keyword}
+      <Row  gutter={16} style={{ marginBottom: '10px' }}>
+        <Col span={12}>
+          <Row gutter = {16}>
+            <Col span={12}>
+            <Search
+              placeholder="Nhập bất kì để tìm..."
+              value={keyword}
+              onChange={(e) => (setKeyword(e.target.value))}
               allowClear
-              onChange={(e) => {
-                setSearch(e)
-                onParamChange({ ['status']: e });
-              }}
-              options={options}
+              onSearch={onSearch}
+              enterButton={<SearchOutlined />}
             />
-          </WhiteBox>
-          {/* </div> */}
-          <div style={{ width: '80%', height: '100%' }}>
-            <div className="product-config-action" >
-              <Row justify="space-between">
-                <Col span={8}>
-                  <Search
-                    style={{ height: '50px', padding: '5px 0px' }}
-                    placeholder="Nhập bất kì để tìm..."
-                    value={keyword}
-                    allowClear
-                    onChange={(e) => (setKeyword(e.target.value))
-                    }
-                    onSearch={onSearch}
-                    enterButton={<SearchOutlined />}
-                  />
-                </Col>
-                <Col>
-                  <Row>
-                    <Col>
-                    <WithPermission permission={POLICIES.WRITE_PRODUCTGROUP}>
-                      <Button icon={<PlusCircleOutlined />} onClick={handleOpenFormCreate} type="primary">
-                        Thêm mới
-                      </Button>
-                    </WithPermission>
-                    </Col>
-                    <WithPermission permission={POLICIES.DOWNLOAD_PRODUCTGROUP}>
-                      <Col>
-                        <ExportExcelButton
-                          api='product-group'
-                          exportOption = 'productGroup'
-                          query={query}
-                          fileName='Danh mục nhóm sản phẩm'
-                          ids={arrCheckBox}
-                        />
-                      </Col>
-                   </WithPermission>
-                  </Row>
-                  
-                </Col>
-              </Row>
-            </div>
-            <WhiteBox>
-              <TableAnt
-                dataSource={listProductConfig}
-                loading={isLoading}
-                columns={columns}
-                size="small"
-                pagination={{
-                  ...paging,
-                  pageSizeOptions: pageSizeOptions,
-                  showSizeChanger: true, // Hiển thị dropdown chọn kích thước trang
-                  defaultPageSize: 10, // Kích thước trang mặc định
-                  showTotal: (total) => `Tổng cộng: ${total} `,
-                  onChange(page, pageSize) {
-                    onParamChange({ page, limit: pageSize });
-                  },
+          </Col>
+          <Col span={12}>
+              <Select
+                placeholder="Tìm theo trạng thái"
+                style={{
+                  width: "200px",
                 }}
-                stickyTop
+                value={search}
+                allowClear
+                onChange={(e) => {
+                  setSearch(e)
+                  onParamChange({ ['status']: e });
+                }}
+                options={options}
               />
-            </WhiteBox>
-          </div>
-        </div>
-      </div>
+            </Col>
+          </Row>
+        </Col>
+        <Col span = {12}>
+          <Row justify={'end'}>
+            <Col>
+            <WithPermission permission={POLICIES.WRITE_PRODUCTGROUP}>
+              <Button icon={<PlusCircleOutlined />} onClick={handleOpenFormCreate} type="primary">
+                Thêm mới
+              </Button>
+            </WithPermission>
+            </Col>
+            <WithPermission permission={POLICIES.DOWNLOAD_PRODUCTGROUP}>
+              <Col>
+                <ExportExcelButton
+                  api='product-group'
+                  exportOption = 'productGroup'
+                  query={query}
+                  fileName='Danh mục nhóm sản phẩm'
+                  ids={arrCheckBox}
+                />
+              </Col>
+            </WithPermission>
+          </Row>
+          
+        </Col>
+      </Row>
+      <WhiteBox>
+        <TableAnt
+          dataSource={listProductConfig}
+          loading={isLoading}
+          columns={columns}
+          size="small"
+          pagination={{
+            ...paging,
+            pageSizeOptions: pageSizeOptions,
+            showSizeChanger: true,
+            defaultPageSize: 10, 
+            showTotal: (total) => `Tổng cộng: ${total} `,
+            onChange(page, pageSize) {
+              onParamChange({ page, limit: pageSize });
+            },
+          }}
+          scroll={{ x: 'max-content' }}
+          stickyTop
+        />
+      </WhiteBox>
       <ModalAnt
         open={showForm}
         title={id ? 'Cập nhật danh mục sản phẩm' : 'Tạo mới danh mục sản phẩm'}
