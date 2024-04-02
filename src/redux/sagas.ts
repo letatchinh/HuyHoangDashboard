@@ -76,6 +76,7 @@ export default function* rootSaga() {
     lkModule.redux.saga(),
     productsAllModule.redux.saga(),
     orderSupplier.redux.saga(),
+    productUnitModule.redux.saga(),
     freelanceContractPharmacy.redux.saga(),
     costManagement.redux.saga(),
     salesGroup.redux.saga(),

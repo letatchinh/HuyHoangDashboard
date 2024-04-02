@@ -51,6 +51,7 @@
     "react-mentions": "^4.4.10",
     "react-organizational-chart": "^2.2.1",
     "react-redux": "9.0.4",
+    "react-reflex": "^4.2.6",
     "react-resizable": "^3.0.5",
     "react-router-dom": "6.21.1",
     "react-scripts": "5.0.1",
