@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import logo from '~/assets/images/logo.png';
 import NavbarVertical from './NavbarVertical';
 import ProfileMenu from './ProfileMenu';
+import Reflex from './Reflex';
 import { DeviceDetector } from '~/utils/helpers';
 import NavbarVerticalDevice from './NavbarVerticalDevice';
 
@@ -21,22 +22,12 @@ export default function LayoutVertical({ children }: { children: React.JSX.Eleme
             </div>
           </div>
       </header>
-      {
-        !device.isMobile ?
-        <main className='layoutVertical--content'>
-              <NavbarVertical />
-            <div className='layoutVertical--content__mainContent'>
+      <Reflex
+            LeftComponent={  !device.isMobile ? <NavbarVertical /> :  <NavbarVerticalDevice /> }
+            RightComponent={<div className='layoutVertical--content__mainContent'>
             {children}
-            </div>
-          </main>
-          :
-          <main>
-             <NavbarVerticalDevice /> 
-            <div className='layoutVertical--content__mainContent'>
-            {children}
-            </div>
-        </main>
-      }
+            </div>}
+            />
     </div>
   )
 }
