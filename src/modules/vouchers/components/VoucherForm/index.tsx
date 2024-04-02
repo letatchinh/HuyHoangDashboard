@@ -48,6 +48,7 @@ import {
   import useNotificationStore from "~/store/NotificationContext";
 import WithOrPermission from "~/components/common/WithOrPermission";
 import useUpdateBillStore from "~/modules/sale/bill/storeContext/UpdateBillContext";
+import { methodType } from "../../vouchers.modal";
   
   const mainRowGutter = 24;
   const FormItem = Form.Item;
@@ -55,10 +56,7 @@ import useUpdateBillStore from "~/modules/sale/bill/storeContext/UpdateBillConte
   const { confirm } = Modal;
   const { Option } = Select;
   const DEFAULT_ACCOUNT = 1111;
-  type methodType = {
-    data : any,
-    type : "BILL" | "LK" | "BILLITEM" | "ORDER" | "ORDERITEM"
-  }
+
   type propsType = {
     id?: any;
     onClose?: any;
@@ -504,6 +502,8 @@ import useUpdateBillStore from "~/modules/sale/bill/storeContext/UpdateBillConte
                 </Col>
               </Row>
             </BaseBorderBox>
+
+            
             <Tabs
               // defaultActiveKey={'1'}
               destroyInactiveTabPane

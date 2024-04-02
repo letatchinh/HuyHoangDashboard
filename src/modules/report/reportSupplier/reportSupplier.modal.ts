@@ -8,3 +8,9 @@ export type FormFieldSearch = {
     endDate?: any,
     searchBy?: SearchByType,
   }
+
+export type BonusOtherType = {
+  value : number,
+  content : string,
+  mathMethod : 1 | -1
+}

@@ -1,3 +1,41 @@
+# [1.9.0](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/compare/v1.8.1...v1.9.0) (2024-04-02)
+
+
+### Bug Fixes
+
+* [#1414](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1414) ([0feb809](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/0feb8098f5b12fb35fc212ada23d8ac7cce3d286))
+* [#1414](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1414) ([0fb3e96](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/0fb3e96469a0d6ea96b78131d098a3bf269f2d84))
+* [#1414](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1414) ([ec210a1](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/ec210a1631f24ee418959a5f47a289c4f52c12b5))
+* [#1414](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1414) ([43c59e8](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/43c59e8a0224d91c1ff7c492bc9ad0c2ecd83a81))
+* [#1414](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1414) ([3f91b65](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/3f91b65bf4cb157ae72fa70a1d044aa99e6d785f))
+* [#1414](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1414) ([8c899a8](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/8c899a87475f4779164765327381d960f9a9f931))
+* merge ([fe58f76](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/fe58f7665f2033b9de2d67995b7ee496ce9aeaf9))
+* rateBenefit ([7b7d537](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/7b7d537de1f6b08528359c0552b5c38686579de9))
+* rebase defaultValue ([f70e796](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/f70e79607df169f3bdd88917bb5beb92d95bb41f))
+* remove CTV ([92e8c95](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/92e8c95957e03db628d4f56c49b39b5dfec48cad))
+* remove require ([4524af0](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/4524af09ff05779f2f46e296969d07caec69a0d9))
+* to run code ([7326dd6](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/7326dd600491be658eb5c6bb796832bd8566cd7b))
+* totalPayment Bill Customer ([22e3e98](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/22e3e986933845a1b1bf9dddec6a204ac1716751))
+
+
+### Features
+
+* [#1414](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1414) ([eee0c9a](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/eee0c9a33f402982497136211e3eb3bb8fdc350d))
+* [#1414](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1414) ([5ef8d5b](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/5ef8d5b6c53287748ae66abfd0a1595871103d7c))
+* [#1414](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1414) ([358b5bd](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/358b5bde25f3c5fa1145ee8969e0d6c1f18d2636))
+* [#1414](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1414) BaseAdmin ([c3be82c](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/c3be82c6470374fa8137ee07c84cab4b463df95b))
+* [#1414](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1414) show list member ([929ebae](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/929ebae984e65063131898a287192ab0fdb77e61))
+* [#1414](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1414) show total member ([e0cbfda](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/e0cbfda275fd547dfd8a8fe55c75f16d924d4f02))
+* [#1482](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1482) ([a7c655e](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/a7c655ecffb4bcd6dd40e3a2e26ac6a908620a10))
+* [#1498](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1498) FE_Thêm Thông tin Đơn hàng vào phiếu thu ([3e52e5a](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/3e52e5a17a9dc87a6fd14cdfd454def9d9e223b2))
+
+## [1.8.1](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/compare/v1.8.0...v1.8.1) (2024-04-02)
+
+
+### Bug Fixes
+
+* ProductUnit Saga ([aea7b19](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/aea7b193d0a03498780597611822346eb25bc6f8))
+
 # [1.8.0](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/compare/v1.7.0...v1.8.0) (2024-04-01)
 
 

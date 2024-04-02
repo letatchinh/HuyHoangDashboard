@@ -273,6 +273,7 @@ export const useInitWhReceiptVoucher = (whReceiptVoucher: any) => {
       dateOfIssue: dayjs(dateOfIssue),
       name: pharmaProfile?.name,
       address: compactAddress(pharmaProfile?.address),
+      pharmacyId : pharmaProfile?._id
     };
     const initValues = {
       ...fromJSON(newValue),

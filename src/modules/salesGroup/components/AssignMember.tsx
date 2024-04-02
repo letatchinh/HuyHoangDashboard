@@ -1,7 +1,8 @@
 import { DeleteOutlined, PlusCircleOutlined } from "@ant-design/icons";
 import { Button, Flex, Popconfirm, Popover, Table, Tooltip } from "antd";
+import Search from "antd/es/input/Search";
 import { TableRowSelection } from "antd/es/table/interface";
-import { get } from "lodash";
+import { debounce, get } from "lodash";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { EMPLOYEE_LEVEL_VI } from "~/modules/employee/constants";
 import { useGetListMemberSalesGroups } from "../salesGroup.hook";
@@ -9,15 +10,16 @@ import { EmployeeType, MemberRulesInGroupType } from "../salesGroup.modal";
 import useSalesGroupStore from "../salesGroupContext";
 type propsType = {
     _id? : string,
-    member? : MemberRulesInGroupType,
+    member? : MemberRulesInGroupType[],
 };
 const CLONE_EMPLOYEE_LEVEL_VI : any = EMPLOYEE_LEVEL_VI;
 export default function AssignMember({_id,member}: propsType): React.JSX.Element {
   const [open, setOpen] = useState(false);
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
-    
-  const {isSubmitLoading,updateSalesGroup, canDelete} = useSalesGroupStore();
-  const query = useMemo(() => open ? ({salesGroupId : _id}) : null,[open,_id]);
+  const [keyword,setKeyword] = useState("");
+
+  const {isSubmitLoading,updateSalesGroup,canDelete} = useSalesGroupStore();
+  const query = useMemo(() => open ? ({salesGroupId : _id,keyword}) : null,[open,_id,keyword]);
   const [data,isLoading] : [EmployeeType[],boolean] = useGetListMemberSalesGroups(query);
   const hide = useCallback(() => {
     setOpen(false);
@@ -36,19 +38,14 @@ export default function AssignMember({_id,member}: propsType): React.JSX.Element
 
   const rowSelection : TableRowSelection<any> = {
     selectedRowKeys,
-    onSelect : (record, selected) => {
-      if(selected){
-        setSelectedRowKeys([get(record,'_id')]);
-      }else{
-        setSelectedRowKeys([])
-      }
+    onChange : (selectedRowKeys) => {
+      setSelectedRowKeys(selectedRowKeys)
     },
-    hideSelectAll : true,
   };
 
   useEffect(() => {
     // Init Selected Row key By Member in data
-    setSelectedRowKeys([get(member,'employeeId','')])
+    setSelectedRowKeys(member?.map((mem) => get(mem,'employeeId','')) || [])
   },[member]);
 
   const columns : any = [
@@ -72,25 +69,50 @@ export default function AssignMember({_id,member}: propsType): React.JSX.Element
     });
     hide();
   }, [_id]);
+  const debounceFetcher = debounce(setKeyword, 300);
 
   return (
     <div>
       <Popover
-        content={<Flex vertical gap={10}>
-            <Table scroll={{y : 300}} style={{width : 500}} loading={isLoading} rowKey={(rc) => get(rc,'_id')} pagination={false} size='small' rowSelection={rowSelection} columns={columns} dataSource={data} />
-            <Button loading={isSubmitLoading} onClick={onAssign} size="small" type="primary">Xác nhận</Button>
-        </Flex>}
+        content={
+          <Flex vertical gap={10}>
+            <Search placeholder="Tìm kiếm..." onSearch={(value) => setKeyword(value)} onChange={({target}) => debounceFetcher(target.value)}/>
+            <Table
+              scroll={{ y: 300 }}
+              style={{ width: 500 }}
+              loading={isLoading}
+              rowKey={(rc) => get(rc, "_id")}
+              pagination={false}
+              size="small"
+              rowSelection={rowSelection}
+              columns={columns}
+              dataSource={data}
+            />
+            <Button
+              loading={isSubmitLoading}
+              onClick={onAssign}
+              size="small"
+              type="primary"
+            >
+              Xác nhận
+            </Button>
+          </Flex>
+        }
         title="Danh sách nhân viên sẵn sàng"
         trigger="click"
         open={open}
         onOpenChange={handleOpenChange}
       >
-        <Button icon={member ? <i className="fa-solid fa-repeat"></i> : <PlusCircleOutlined />}/>
+        <Button
+          icon={
+            <PlusCircleOutlined />
+          }
+        />
       </Popover>
       {/* {canDelete &&(member ? (
           <Popconfirm title="Xác nhận gỡ trình dược viên" onConfirm={onRemove}>
           <Tooltip title="Gỡ trình dược viên">
-          <Button danger icon={<DeleteOutlined />} />
+            <Button danger icon={<DeleteOutlined />} />
           </Tooltip>
           </Popconfirm>
         ) : null)} */}

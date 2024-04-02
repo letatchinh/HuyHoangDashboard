@@ -1,20 +1,28 @@
 import { get } from "lodash";
 import {
-  createContext, useCallback, useContext, useMemo, useState
+  createContext,
+  useCallback,
+  useContext,
+  useMemo,
+  useState,
 } from "react";
 import ModalAnt from "~/components/Antd/ModalAnt";
 import { EMPLOYEE_LEVEL } from "~/modules/employee/constants";
 import { EmployeeLevelType } from "~/modules/employee/employee.modal";
 import Swap from "./components/DetailReport/Swap";
-import { useGetReportEmployee } from "./reportEmployee.hook";
 import {
-  DataSwapType, ExchangeRateType,
+  useGetReportEmployee,
+  useUpdatePreviewReportEmployee,
+} from "./reportEmployee.hook";
+import {
+  DataSwapType,
+  ExchangeRateType,
   ReportEmployeeType,
-  TargetsSupplierItem
+  TargetsSupplierItem,
 } from "./reportEmployee.modal";
 import {
   handleConvertDataSourceDetailSalary,
-  ItemDataSource
+  ItemDataSource,
 } from "./reportEmployee.service";
 import { useMatchPolicy } from "~/modules/policy/policy.hook";
 import POLICIES from "~/modules/policy/policy.auth";
@@ -36,6 +44,8 @@ export type GlobalDetailReport = {
   loading: boolean;
   id?: any;
   onCancel: () => void;
+  isSubmitLoadingPreview: boolean;
+  onPreviewUpdate: (p?: any) => void;
   canUpdateReportSalary: boolean;
 };
 
@@ -52,6 +62,8 @@ const DetailReport = createContext<GlobalDetailReport>({
   data: null,
   id: null,
   loading: false,
+  isSubmitLoadingPreview: false,
+  onPreviewUpdate: () => {},
   canUpdateReportSalary: false,
 });
 
@@ -62,11 +74,14 @@ export function DetailReportProvider({
 }: {
   children: any;
   id?: string;
-  onCancel : () => void
+  onCancel: () => void;
 }): React.JSX.Element {
   const [openSwap, setOpenSwap] = useState(false);
   const [dataSwap, setDataSwap] = useState<DataInitSwap | null>();
   const [data, isLoading] = useGetReportEmployee(id);
+  const [isSubmitLoadingPreview, onPreviewUpdate] =
+    useUpdatePreviewReportEmployee();
+
   const canUpdateReportSalary = useMatchPolicy(POLICIES.UPDATE_REPORTSALARY);
   const onOpenSwap = useCallback((dataSwap?: DataInitSwap) => {
     if (dataSwap) {
@@ -98,11 +113,17 @@ export function DetailReportProvider({
     () =>
       handleConvertDataSourceDetailSalary({
         baseSalary: get(data, "salary.base", 0),
-        daysWorking: get(data, "daysWorkingInfo.daysWorking",0),
+        daysWorking: get(data, "daysWorkingInfo.daysWorking", 0),
         detailSalary: get(data, "detailSalary"),
-        totalSalary: get(data, "salary.totalSalary",0),
-        bonus: get(data, "salary.totalBonus",0),
-        benefit: get(data, "salary.benefit",0),
+        totalSalary: get(data, "salary.totalSalary", 0),
+        bonus: get(data, "salary.totalBonus", 0),
+        benefit: get(data, "salary.benefit", 0),
+        salary: get(data, "salary"),
+        _id : id,
+        bonusOther : get(data,'bonusOther',[]),
+        totalBonusOther : get(data,'totalBonusOther',0),
+        employeeId : get(data,'employee.employeeId',""),
+        employeeLevel : get(data,'employee.employeeLevel')
       }),
     [data]
   );
@@ -110,7 +131,7 @@ export function DetailReportProvider({
     () => get(data, "employee.employeeLevel"),
     [data]
   );
-  
+
   return (
     <DetailReport.Provider
       value={{
@@ -126,6 +147,8 @@ export function DetailReportProvider({
         id,
         onCancel,
         loading: isLoading,
+        isSubmitLoadingPreview,
+        onPreviewUpdate,
         canUpdateReportSalary
       }}
     >
@@ -138,7 +161,7 @@ export function DetailReportProvider({
         onCancel={onCloseSwap}
         open={openSwap}
       >
-        <Swap onCloseSwap={onCloseSwap}/>
+        <Swap onCloseSwap={onCloseSwap} />
       </ModalAnt>
     </DetailReport.Provider>
   );

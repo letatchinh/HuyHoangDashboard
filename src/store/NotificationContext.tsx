@@ -40,7 +40,9 @@ export function NotificationProvider({
       message,
       ...defaultOptions,
       ...moreOptions,
-    }
+    };
+    // Destroy Before Call to Notification To Prevent MultiNotification
+    msg.destroy();
     return msg.success(options);
   },[notification])
   const error : any = useCallback((message?: string,moreOptions? : OptionsNotification) => {
@@ -49,6 +51,8 @@ export function NotificationProvider({
       ...defaultOptions,
       ...moreOptions,
     }
+    // Destroy Before Call to Notification To Prevent MultiNotification
+    msg.destroy();
     msg.error(options);
   },[notification])
   const warning : any = useCallback((message?: string,moreOptions? : OptionsNotification) => {
@@ -57,6 +61,8 @@ export function NotificationProvider({
       ...defaultOptions,
       ...moreOptions,
     }
+    // Destroy Before Call to Notification To Prevent MultiNotification
+    msg.destroy();
     msg.warning(options);
   },[notification])
   const info : any = useCallback((message?: string,moreOptions? : OptionsNotification) => {
@@ -65,6 +71,8 @@ export function NotificationProvider({
       ...defaultOptions,
       ...moreOptions,
     }
+    // Destroy Before Call to Notification To Prevent MultiNotification
+    msg.destroy();
     msg.info(options);
   },[notification])
   const onNotify : onNotifyType = {

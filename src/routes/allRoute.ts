@@ -123,6 +123,8 @@ export const mainRoutes :PathRouteProps[] = [
   { path: PATH_APP.benefitConfiguration.root, Component: BenefitConfigurationPage },
   // Báo cáo nhân viên
   { path: PATH_APP.report.employee, Component: ReportEmployeePage },
+  { path: PATH_APP.report.supplier, Component: ReportSupplierPage },
+  
   // Configuration Cron Time
   { path: PATH_APP.configurationCronTime.root, Component: ConfigurationCronTime},
   
@@ -138,8 +140,6 @@ export const mainRoutes :PathRouteProps[] = [
   // Nhóm nhà thuốc
   { path: PATH_APP.groupPharmacy.root, Component:  GroupPharmacy},
   
-  // Báo cáo nhà cung cấp
-  { path: PATH_APP.report.supplier, Component: ReportSupplierPage }, // Dung Co bo tui
   
   { path: '/', Component: Homepage },
 ]

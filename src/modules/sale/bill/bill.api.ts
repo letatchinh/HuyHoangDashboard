@@ -12,5 +12,6 @@ const apis = {
     getDiscount: ({saleType = 'pharmacy',...data}) => requester.post(`/api/v1/bill-valid-discount?saleType=${saleType}`, data),
     getDebtRule: () => requester.get(`/api/v1/debt-rule`),
     getListProductSuggest: (query?: any) => requester.get(`/api/v1/bill-product-suggest`, query),
+    getBillToReceiptVoucher: (id?: any) => requester.get(`/api/v1/bills-of-pharmacy/${id}`),
 }
 export default apis;
