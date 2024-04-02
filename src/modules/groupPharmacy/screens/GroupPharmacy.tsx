@@ -52,8 +52,8 @@ export default function GroupPharmacy(props: propsType): React.JSX.Element {
   const [groupPharmacyId, setGroupPharmacyId] = useState(null);
   const [isOpenForm, setIsOpenForm] = useState(false);
   const paging = useGroupPharmacyPaging();
-  const canWriteVoucher = useMatchPolicy(POLICIES.WRITE_GROUPPHARMACY);
-  const canDownload = useMatchPolicy(POLICIES.DOWNLOAD_GROUPPHARMACY);
+  const canWriteVoucher = useMatchPolicy(POLICIES.WRITE_CUSTOMER);
+  const canDownload = useMatchPolicy(POLICIES.DOWNLOAD_CUSTOMER);
   const [arrCheckBox, onChangeCheckBox] = useCheckBoxExport();
 
   const onOpenForm = useCallback(
@@ -119,7 +119,7 @@ export default function GroupPharmacy(props: propsType): React.JSX.Element {
         align: "center",
         render: (status, record) => {
           return (
-            <WithPermission permission={POLICIES.UPDATE_GROUPPHARMACY}>
+            <WithPermission permission={POLICIES.UPDATE_CUSTOMER}>
               <Switch
                 checked={status === "ACTIVE"}
                 onChange={(value) =>
@@ -165,10 +165,10 @@ export default function GroupPharmacy(props: propsType): React.JSX.Element {
         render: (record) => {
           return (
             <div className="custom-table__actions">
-              <WithPermission permission={POLICIES.UPDATE_SALECHANNEL}>
+              <WithPermission permission={POLICIES.UPDATE_CUSTOMER}>
                 <p onClick={() => onOpenForm(record)}>Sửa</p>
               </WithPermission>
-              <WithPermission permission={POLICIES.DELETE_SALECHANNEL}>
+              <WithPermission permission={POLICIES.DELETE_CUSTOMER}>
                 <p>|</p>
                 <Popconfirm
                   title={`Bạn muốn xoá nhóm nhà thuốc này?`}
@@ -231,7 +231,7 @@ export default function GroupPharmacy(props: propsType): React.JSX.Element {
           />
         </Col>
         <Row>
-          <WithPermission permission={POLICIES.WRITE_SALECHANNEL}>
+          <WithPermission permission={POLICIES.WRITE_CUSTOMER}>
             <Col>
               <Button
                 icon={<PlusCircleOutlined />}
@@ -242,7 +242,7 @@ export default function GroupPharmacy(props: propsType): React.JSX.Element {
               </Button>
             </Col>
           </WithPermission>
-          <WithPermission permission={POLICIES.DOWNLOAD_SALECHANNEL}>
+          <WithPermission permission={POLICIES.DOWNLOAD_CUSTOMER}>
             <Col>
               <ExportExcelButton
                 fileName="Danh sách nhóm nhà thuốc"
@@ -255,7 +255,7 @@ export default function GroupPharmacy(props: propsType): React.JSX.Element {
           </WithPermission>
         </Row>
       </Row>
-      <WithPermission permission={POLICIES.UPDATE_SALECHANNEL}>
+      <WithPermission permission={POLICIES.UPDATE_CUSTOMER}>
         <Space style={{ marginBottom: 20 }}>
           <Typography style={{ fontSize: 14, marginRight: 20 }}>
             Phân loại trạng thái theo :

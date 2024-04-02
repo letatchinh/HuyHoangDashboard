@@ -158,7 +158,7 @@ export const resource: ItemType[] =[
             icon: <i className="fa-solid fa-cart-shopping"></i>,
             path: PATH_APP.saleChannel.root,
             key: PATH_APP.saleChannel.root,
-            permission: [POLICIES.READ_SALECHANNEL],
+            permission: [POLICIES.READ_SALESCHANNEL],
           },
           {
             label: "Cấu hình thời gian tự động",
