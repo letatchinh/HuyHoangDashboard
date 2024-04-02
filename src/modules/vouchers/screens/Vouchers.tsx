@@ -310,7 +310,7 @@ useChangeDocumentTitle(`Số quỹ của ${pathname === PATH_APP.vouchers.pharma
             </Row>
           </Col>
         </Row>
-        <Tabs activeKey= {activeTabMemo}  onChange={onChangeTab} destroyInactiveTabPane>
+        <Tabs activeKey= {activeTab} defaultActiveKey= {activeTabMemo}  onChange={onChangeTab} destroyInactiveTabPane>
           <Tabs.TabPane tab="Phiếu thu" key="1">
             <ReceiptVouchers
               listOptionSearch={optionsSearch}
