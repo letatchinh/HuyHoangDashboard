@@ -14,7 +14,6 @@ import ManufacturerForm from './ManufacturerForm';
 import WithPermission from '~/components/common/WithPermission';
 import POLICIES from '~/modules/policy/policy.auth';
 import { useMatchPolicy } from '~/modules/policy/policy.hook';
-import Action from './Action';
 export default function Manufacturer() {
   const [showForm, setShowForm] = useState(false);
   const [search, setSearch] = useState(null)
