@@ -258,6 +258,11 @@ const EmployeeGroup = ({ currentTab }: EmployeeGroupProps) => {
               columns={columns}
               dataSource={dataShow ?? resources}
               className="employee-group__table"
+              pagination={{
+                showSizeChanger : true,
+                showTotal: (total) => `Tổng cộng: ${total} `,
+                size:"small"
+              }}
             />
           </div>
         </Col>

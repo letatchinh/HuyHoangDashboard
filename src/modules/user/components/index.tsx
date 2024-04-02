@@ -23,6 +23,7 @@ import { useDispatch } from "react-redux";
 import WithOrPermission from "~/components/common/WithOrPermission";
 import { useMatchPolicy } from "~/modules/policy/policy.hook";
 import { useChangeDocumentTitle } from "~/utils/hook";
+import { pagingTable } from "~/utils/helpers";
 interface UserProps {
   currentTab: string | undefined;
 }
@@ -209,11 +210,8 @@ const UserEmployee = ({ currentTab }: UserProps) => {
         loading={isLoading}
         columns={columns}
         size="small"
-        pagination={{
-          ...paging,
-          showTotal: (total) => `Tổng cộng: ${total}`,
-        }}
-        onChange={({current, pageSize}: any)=> onTableChange({current, pageSize})}
+        pagination={pagingTable(paging,onParamChange)}
+        // onChange={({current, pageSize}: any)=> onTableChange({current, pageSize})}
         stickyTop
       />
       <Modal

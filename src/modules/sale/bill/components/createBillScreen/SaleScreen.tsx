@@ -110,16 +110,16 @@ try {
             <TotalBill />
           </div>
           <div className="form-create-bill--payment__actions">
-            <Row gutter={8} justify={"space-between"} align='middle' wrap={false}>
-              <Col flex={1}>
-                {/* <Button
+            <Row gutter={8} justify={"center"} align='middle' wrap={false}>
+              {/* <Col flex={1}>
+                <Button
                 block
                   className="form-create-bill--payment__actions__btnDebt"
                   onClick={onOpenDebt}
                 >
                   Hình thức thanh toán
-                </Button> */}
-              </Col>
+                </Button>
+              </Col> */}
               <Col span={14}>
                 <Button
                   block

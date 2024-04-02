@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo, useState } from "react";
 import TableAnt from "~/components/Antd/TableAnt";
 
-import { Button, Checkbox, Col, Flex, Modal, Row, Space, Tag, Typography } from "antd";
+import { Button, Checkbox, Col, Flex, Modal, Radio, Row, Space, Tag, Typography } from "antd";
 import { ColumnsType } from "antd/es/table/InternalTable";
 import dayjs from "dayjs";
 import { get } from "lodash";
@@ -31,6 +31,7 @@ import PaymentModule from "~/modules/paymentVoucher";
 import POLICIES from "~/modules/policy/policy.auth";
 import useCheckBoxExport from "~/modules/export/export.hook";
 import ExportExcelButton from "~/modules/export/component";
+import { RadioChangeEvent } from "antd/lib/index";
 
 type propsType = {
   status?: string;
@@ -64,7 +65,11 @@ export default function ListOrder({ status }: propsType): React.JSX.Element {
     setSupplierId(null);
     setOrderSelect(null);
   };
-
+  const onChangeCreateBy = ({ target: { value } } : RadioChangeEvent) => {
+    onParamChange({
+      createBy : value,
+    })
+  };
   const columns: ColumnsType = [
       {
         title: "Mã đơn hàng",
@@ -197,10 +202,25 @@ export default function ListOrder({ status }: propsType): React.JSX.Element {
       },
     },)
   }
+
+  const options : any = [
+    {
+      label : 'Tất cả',
+      value : null,
+    },
+    {
+      label : 'Tự động',
+      value : '1',
+    },
+    {
+      label : 'Thủ công',
+      value : '0',
+    },
+  ]
   return (
     <div className="bill-page">
       <Row align="middle" gutter={8}>
-        <Col span={12}>
+        <Col flex={1}>
         <Space>
           <SelectSupplier
             onChange={(value) => onParamChange({ supplierIds: value })}
@@ -209,7 +229,7 @@ export default function ListOrder({ status }: propsType): React.JSX.Element {
           <SearchAnt onParamChange={onParamChange} />
         </Space>
         </Col>
-        <Col span={12}>
+        <Col span={8}>
           <Row align={"middle"} justify={"end"}>
             <Col>
               <WithPermission permission={policyModule.POLICIES.DOWNLOAD_ORDERSUPPLIER}>
@@ -238,6 +258,16 @@ export default function ListOrder({ status }: propsType): React.JSX.Element {
           </Row>
         </Col>
       </Row>
+    <Flex align={'center'} gap={10}>
+      <span>Hình thức tạo: </span>
+      <Radio.Group
+          options={options}
+        onChange={onChangeCreateBy}
+        value={query?.createBy}
+        optionType="button"
+        buttonStyle="solid"
+      />
+    </Flex>
       <TableAnt
         stickyTop
         columns={columns}
