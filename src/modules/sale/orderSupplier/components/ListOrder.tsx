@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo, useState } from "react";
 import TableAnt from "~/components/Antd/TableAnt";
 
-import { Button, Checkbox, Col, Modal, Row, Space, Typography } from "antd";
+import { Button, Checkbox, Col, Flex, Modal, Row, Space, Tag, Typography } from "antd";
 import { ColumnsType } from "antd/es/table/InternalTable";
 import dayjs from "dayjs";
 import { get } from "lodash";
@@ -99,9 +99,12 @@ export default function ListOrder({ status }: propsType): React.JSX.Element {
         align: "center",
         render(createdAt, record, index) {
           return (
-            <Typography.Text strong>
+            <Flex vertical align={'center'}>
+              {get(record,'createAuto') && <Tag color={'blue'}>Hệ thống tạo</Tag>}
+              <Typography.Text strong>
               {dayjs(createdAt).format("DD/MM/YYYY HH:mm")}
             </Typography.Text>
+            </Flex>
           );
         },
       },
