@@ -17,6 +17,8 @@ import dayjs from "dayjs";
 import InputNumberAnt from "~/components/Antd/InputNumberAnt";
 import moment from "moment";
 import { get } from "lodash";
+import UploadListFile from "../component/UploadListFile";
+import UploadFileProgress from "~/modules/workTask/components/Task/UploadFileProgress";
 
 const { RangePicker } = DatePicker;
 const FormItem = Form.Item;
@@ -171,6 +173,14 @@ const FreelanceContractPharmacyForm = ({
             ) : (
               <DatePicker format={"DD/MM/YYYY"} placeholder="Ngày kết thúc" />
             )}
+          </FormItem>
+
+          <FormItem
+            label="File đính kèm"
+            name="files"
+            wrapperCol={{ sm: 24, md: 24, lg: 21 }}
+          >
+            <UploadListFile />
           </FormItem>
 
           <Row className="form__submit-box" justify={"center"} gutter={16}>
