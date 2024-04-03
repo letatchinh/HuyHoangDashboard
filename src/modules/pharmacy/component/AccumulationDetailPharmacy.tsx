@@ -94,7 +94,7 @@ export default function AccumulationDetailPharmacy(props: propsAccumulationDetai
         },
       },
     ],
-    []
+    [data]
   );
 
   return (

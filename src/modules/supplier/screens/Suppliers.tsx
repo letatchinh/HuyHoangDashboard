@@ -321,7 +321,7 @@ export default function Supplier(): React.JSX.Element {
         },
       },
     ],
-    [isSubmitLoading, onDelete, onOpenForm, onUpdateStatus, arrCheckBox]
+    [isSubmitLoading, onDelete, onOpenForm, onUpdateStatus, arrCheckBox,canReadDebt,canWriteVoucher,canUpdateSupplier,canDownload,isAdapterIsEmployee, canReadProduct]
   );
   useChangeDocumentTitle("Danh sách nhà cung cấp");
 

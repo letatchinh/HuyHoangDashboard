@@ -157,7 +157,7 @@ export default function FreelanceContractPharmacy(
         },
       }] : []),
     ],
-    []
+    [canUpdateContract,canDeleteContract, contracts]
   );
 
   return (

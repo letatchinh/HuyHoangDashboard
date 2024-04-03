@@ -81,7 +81,7 @@ export default function Vouchers(props: propsType): React.JSX.Element {
         render: (text, record, index) => <StatusTag status={text}/>
       },
     ],
-    []
+    [data]
   );
 
   return (

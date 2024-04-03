@@ -125,7 +125,7 @@ export default function RevenueProducts({ totalRevenueId }: propsType): React.JS
         }
       }] : []),
     ],
-    [data]
+    [data,canUpdate]
   );
   return (
     <>
