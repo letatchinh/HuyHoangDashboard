@@ -1,3 +1,10 @@
+## [1.10.1](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/compare/v1.10.0...v1.10.1) (2024-04-03)
+
+
+### Bug Fixes
+
+* sub vn ([ba31d09](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/ba31d0936fcc859d160a3a902b8b69d0ab7f3ee1))
+
 # [1.10.0](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/compare/v1.9.0...v1.10.0) (2024-04-03)
 
 
