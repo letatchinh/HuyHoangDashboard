@@ -1,3 +1,10 @@
+# [1.11.0](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/compare/v1.10.1...v1.11.0) (2024-04-03)
+
+
+### Features
+
+* trigger release ([a916ae8](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/a916ae865bfad32f490813f0d12d4107174dc41e))
+
 ## [1.10.1](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/compare/v1.10.0...v1.10.1) (2024-04-03)
 
 
