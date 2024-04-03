@@ -212,8 +212,7 @@ const UserEmployee = ({ currentTab }: UserProps) => {
         loading={isLoading}
         columns={columns}
         size="small"
-        pagination={pagingTable(paging,onParamChange)}
-        // onChange={({current, pageSize}: any)=> onTableChange({current, pageSize})}
+        onChange={({current, pageSize}: any)=> onTableChange({current, pageSize})}
         stickyTop
       />
       <Modal
