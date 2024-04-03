@@ -53,7 +53,7 @@ const permissionPharma = [
 const permissionSupplier = [
   POLICIES.READ_SUPPLIER,
   POLICIES.READ_VOUCHERSUPPLIER,
-  POLICIES.READ_CUMULATIVESALESUPPLIER,
+  POLICIES.READ_CUMULATIVESALESSUPPLIER,
   
 ];
 
@@ -209,7 +209,7 @@ export const resource: ItemType[] =[
         label: "Doanh số tích luỹ",
         path: PATH_APP.report.supplier,
         key: PATH_APP.report.supplier,
-        permission: [POLICIES.READ_CUMULATIVESALESUPPLIER],//
+        permission: [POLICIES.READ_CUMULATIVESALESSUPPLIER],//
       },
 
       {

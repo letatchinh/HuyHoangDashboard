@@ -9,7 +9,16 @@ function* getListReceiptVoucher({payload:query} : any) : any {
   } catch (error:any) {
     yield put(receiptVoucherSliceAction.getListFailed(error));
   }
-}
+};
+
+function* getListReceiptVoucherByBillId({payload:query} : any) : any {
+  try {
+    const data = yield call(api.getAllByBillId,query);
+    yield put(receiptVoucherSliceAction.getListByBillIdSuccess(data));
+  } catch (error:any) {
+    yield put(receiptVoucherSliceAction.getListByBillIdFailed(error));
+  }
+};
 
 function* getByIdReceiptVoucher({payload:id} : any) : any {
   try {
@@ -58,6 +67,7 @@ function* confirmReceiptVoucher({payload} : any) : any {
 
 export default function* receiptVoucherSaga() {
   yield takeLatest(receiptVoucherSliceAction.getListRequest, getListReceiptVoucher);
+  yield takeLatest(receiptVoucherSliceAction.getListByBillIdRequest, getListReceiptVoucherByBillId);
   yield takeLatest(receiptVoucherSliceAction.getByIdRequest, getByIdReceiptVoucher);
   yield takeLatest(receiptVoucherSliceAction.createRequest, createReceiptVoucher);
   yield takeLatest(receiptVoucherSliceAction.updateRequest, updateReceiptVoucher);

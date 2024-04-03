@@ -270,7 +270,7 @@ export default function Pharmacy() {
         },
       },
     ],
-    [arrCheckBox]
+    [arrCheckBox,canWriteVoucher,canDownload]
   );
 
   const onChangeStatus = (

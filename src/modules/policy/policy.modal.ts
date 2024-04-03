@@ -11,7 +11,6 @@ export type ResourceType = {
   GROUP_RANKING: string[];
   MEDICINE: string[];
   GROUP_PHARMA: string[];
-  PHARMA_PROFILE: string[],
   // Đơn hàng
   GROUP_BILL: string[];
   NOTIFICATION_BOT_MANAGER: string[];

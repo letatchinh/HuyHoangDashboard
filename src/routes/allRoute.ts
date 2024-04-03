@@ -127,18 +127,19 @@ export const mainRoutes :PathRouteProps[] = [
   
   // Configuration Cron Time
   { path: PATH_APP.configurationCronTime.root, Component: ConfigurationCronTime},
+  
   // Thời gian báo cáo lương
   { path: PATH_APP.cronSalary.root, Component: CronSalaryPage },
-  {path: PATH_APP.costManagement.root, Component: CostManagement},
-
+  
   // Kênh bán hàng
   { path: PATH_APP.saleChannel.root, Component: SaleChannel},
-
+  
   // Loại khách hàng
   { path: PATH_APP.typePharmacy.root, Component: TypePharmacy},
-
+  
   // Nhóm nhà thuốc
   { path: PATH_APP.groupPharmacy.root, Component:  GroupPharmacy},
+  
   
   { path: '/', Component: Homepage },
 ]

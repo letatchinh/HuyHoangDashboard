@@ -155,6 +155,7 @@ export const useUserQueryParams = () => {
 
   const createSuccess = useSelector(createSuccessSelector);
   const updateSuccess = useSelector(updateSuccessSelector);
+  const deleteSuccess = useSelector(deleteSuccessSelector);
   const onTableChange: any = ({ current, pageSize }: any) => {
     setLimit(pageSize);
     setPage(current);
@@ -170,7 +171,7 @@ export const useUserQueryParams = () => {
     };
     return [queryParams, onTableChange];
     //eslint-disable-next-line
-  }, [page, limit, keyword, createSuccess, groupIds, status, updateSuccess]);
+  }, [page, limit, keyword, createSuccess, groupIds, status, updateSuccess,deleteSuccessSelector]);
 };
 
 export const useUpdateUserParams = (query: any, listOptionSearch?: any[]) => {

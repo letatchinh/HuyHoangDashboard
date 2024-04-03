@@ -47,6 +47,7 @@ import {
   import { useGetBranch, useGetBranches } from "~/modules/branch/branch.hook";
   import useNotificationStore from "~/store/NotificationContext";
 import WithOrPermission from "~/components/common/WithOrPermission";
+import useUpdateBillStore from "~/modules/sale/bill/storeContext/UpdateBillContext";
 import { methodType } from "../../vouchers.modal";
   
   const mainRowGutter = 24;
@@ -68,11 +69,12 @@ import { methodType } from "../../vouchers.modal";
     provider?: string,
     method?:methodType,
     callback?:any,
-    max?:number,
+    max?: number,
+    billId?: any,
   };
   
   export default function VoucherForm(props: propsType): React.JSX.Element {
-    const { id , onClose, pharmacyId,refCollection, debt, from,totalAmount,reason,provider,method,callback,max} = props;
+    const { id , onClose, pharmacyId,refCollection, debt, from,totalAmount,reason,provider,method,callback,max,billId} = props;
     useResetAction();
     const dispatch = useDispatch();
     const {onNotify} = useNotificationStore();
@@ -99,6 +101,7 @@ import { methodType } from "../../vouchers.modal";
     const queryBranch = useMemo(() => ({page: 1, limit: 10}), []);
     const [branch] = useGetBranches(queryBranch);
     const [pharmacy] = useGetPharmacyId(memo); 
+    const { bill } = useUpdateBillStore();
   
     const [settingDocs, setSettingDocs] = useState({
       name: "CÔNG TY TNHH WORLDCARE MIỀN TRUNG",
@@ -220,12 +223,15 @@ import { methodType } from "../../vouchers.modal";
           totalAmount:total,
           method,
         };
-        console.log(newValue,'newValue')
         if (id) {
           handleUpdate({ id: id, ...newValue });
         } else {
-          handleCreate(newValue);
-        }
+          if (billId) {
+            handleCreate({ ...newValue, billId: billId });
+          } else {
+            handleCreate(newValue);
+          };
+        };
       } catch (error) {
         console.error(error);
       }
@@ -337,7 +343,13 @@ import { methodType } from "../../vouchers.modal";
                       </FormItem>
                     </Col>
                   </Row>
-  
+                  { bill && <Row gutter={36}>
+                    <Col span={24}>
+                      <FormItem label="Mã đơn hàng">
+                        {isLoading ? <Skeleton.Input active /> : <Input defaultValue={bill?.codeSequence} readOnly />}
+                      </FormItem>
+                    </Col>
+                  </Row>}
                   <Row gutter={36}>
                     <Col span={24}>
                       <FormItem name="reason" label="Lý do thu">
@@ -532,7 +544,7 @@ import { methodType } from "../../vouchers.modal";
             </Collapse>}
             </WithPermission>
             <Row className="staff-form__submit-box">
-              <WithOrPermission permission={[POLICIES.UPDATE_VOUCHERPHARMACY || POLICIES.UPDATE_VOUCHERPHARMACY]}>
+              <WithOrPermission permission={[POLICIES.UPDATE_VOUCHERPHARMACY, POLICIES.WRITE_VOUCHERPHARMACY]}>
               <Button icon={<SaveOutlined/>} type="primary" htmlType="submit">
                 Lưu
               </Button>

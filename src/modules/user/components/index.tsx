@@ -23,6 +23,7 @@ import { useDispatch } from "react-redux";
 import WithOrPermission from "~/components/common/WithOrPermission";
 import { useMatchPolicy } from "~/modules/policy/policy.hook";
 import { useChangeDocumentTitle } from "~/utils/hook";
+import { pagingTable } from "~/utils/helpers";
 interface UserProps {
   currentTab: string | undefined;
 }
@@ -49,10 +50,12 @@ const ColumnActions = ({
     {!adapter?.user?.isSuperAdmin &&   <WithOrPermission permission={[POLICIES.DELETE_USER]}>
         <Popconfirm
         title="Bạn muốn xoá người dùng này?"
-        onConfirm={() => deleteUserEmployee(_id)}
+          onConfirm={() =>{
+            deleteUserEmployee(_id);
+            console.log(1)
+          }}
         okText="Xoá"
         cancelText="Huỷ"
-        disabled
       >
         <p>Xóa</p>
       </Popconfirm>{" "}
@@ -209,11 +212,8 @@ const UserEmployee = ({ currentTab }: UserProps) => {
         loading={isLoading}
         columns={columns}
         size="small"
-        pagination={{
-          ...paging,
-          showTotal: (total) => `Tổng cộng: ${total}`,
-        }}
         onChange={({current, pageSize}: any)=> onTableChange({current, pageSize})}
+        stickyTop
       />
       <Modal
         open={isOpenModal}

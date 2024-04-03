@@ -11,6 +11,15 @@ function* getListPaymentVoucher({payload:query} : any) : any {
   }
 };
 
+function* getListPaymentVoucherByBillId({payload:query} : any) : any {
+  try {
+    const data = yield call(api.getAllByBillId,query);
+    yield put(paymentVoucherSliceAction.getListByBillIdSuccess(data));
+  } catch (error:any) {
+    yield put(paymentVoucherSliceAction.getListByBillIdFailed(error));
+  }
+};
+
 function* getByIdPaymentVoucher({payload:id} : any) : any {
   try {
     const data = yield call(api.getById,id);
@@ -59,6 +68,7 @@ function* deletePaymentVoucher({payload : id} : any) : any {
 
 export default function* paymentVoucherSaga() {
   yield takeLatest(paymentVoucherSliceAction.getListRequest, getListPaymentVoucher);
+  yield takeLatest(paymentVoucherSliceAction.getListByBillIdRequest, getListPaymentVoucherByBillId);
   yield takeLatest(paymentVoucherSliceAction.getByIdRequest, getByIdPaymentVoucher);
   yield takeLatest(paymentVoucherSliceAction.createRequest, createPaymentVoucher);
   yield takeLatest(paymentVoucherSliceAction.updateRequest, updatePaymentVoucher);
