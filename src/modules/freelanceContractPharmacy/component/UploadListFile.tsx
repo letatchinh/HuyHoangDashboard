@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { UploadOutlined } from "@ant-design/icons";
-import { Button, Upload, notification } from "antd";
+import { Button, Upload, UploadFile, UploadProps, notification } from "antd";
 import { BASE_URL } from "~/constants/defaultValue";
 import { useProgressContext } from "~/modules/workTask/components/Task/TaskProgress";
 import { get } from "lodash";
@@ -15,45 +15,33 @@ const propsUpload = {
   },
 };
 export default function UploadListFile() {
-  const [tempFileList, setFileListTemp] = useState([]);
-  const { setFileList, onUpdateProgress, index, item, progress } =
-    useProgressContext();
+  const [fileList, setFileList] = useState<UploadFile[]>([])
 
-  const onChange = ({ file, fileList }: any) => {
-    setFileListTemp(fileList);
-    if (file?.status === "done") {
-      const progressId = get(progress, "_id");
-      const data = JSON.parse(JSON.stringify([...item]));
-      const convertFile = (fileItem: any) => {
-        return {
-          name: fileItem.name,
-          url: fileItem.response?.url ?? "",
-        };
-      };
-      if (!data[1]?.fileList) Object.assign(data[1], { fileList: [] });
-
-      data[1].fileList.push(convertFile(file));
-      onUpdateProgress(progressId, index, data);
-      setFileListTemp(fileList);
-      setFileList((e: any) => [...e, ...fileList?.map(convertFile)]);
-      setTimeout(() => {
-        setFileListTemp([]);
-      }, 1000);
-
-      notification.success({ message: `${file.name} tải lên thành công.` });
-    } else if (file?.status === "error") {
-      notification.error({ message: `${file.name} tải lên thất bại.` });
-    }
-  };
- console.log(item, "item");
+    const handleChange: UploadProps['onChange'] = (info) => {
+      let newFileList = [...info.fileList];
+  
+      // 1. Limit the number of uploaded files
+      // Only to show two recent uploaded files, and old ones will be replaced by the new
+      // newFileList = newFileList.slice(-2);
+  
+      newFileList = newFileList.map((file) => {
+        if (file.response) {
+          file.url = file.response.url;
+        }
+        return file;
+      });
+      setFileList(newFileList);
+    };
  
 
   return (
-    <Upload.Dragger
-      {...{ ...propsUpload, onChange, fileList: tempFileList }}
+    <Upload
+      {...propsUpload}
+      fileList={fileList}
+      onChange={handleChange}
       listType="text"
     >
       <Button icon={<UploadOutlined />}>Upload</Button>
-    </Upload.Dragger>
+    </Upload>
   );
 }

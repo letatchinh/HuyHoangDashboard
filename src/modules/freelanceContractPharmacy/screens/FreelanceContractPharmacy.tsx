@@ -130,6 +130,15 @@ export default function FreelanceContractPharmacy(
         },
       },
       {
+        title: "File đính kèm",
+        dataIndex: "files",
+        key: "files",
+        // align: "center",
+        render(record) {
+          return <Typography.Text>{record}</Typography.Text>;
+        },
+      },
+      {
         title: "Thao tác",
         dataIndex: "_id",
         // key: "actions",
