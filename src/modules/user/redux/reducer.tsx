@@ -4,6 +4,7 @@ import { InstanceModuleRedux } from "~/redux/instanceModuleRedux";
 import { initStateSlice } from "~/redux/models";
 import { UserResponseOne } from "../user.modal";
 import { createSlice } from "@reduxjs/toolkit";
+import { getPaging } from "~/utils/helpers";
 
 interface UserState extends initStateSlice{
   policy?: {},
@@ -28,6 +29,7 @@ class UserClassExtend extends InstanceModuleRedux {
       getListSuccess: (state: UserState, { payload }: { payload?: PaginateResult<UserResponseOne> }) => {
         state.isLoading = false;
         state.list = get(payload, 'docs', []);
+        state.paging = getPaging(payload);
       },
       getPolicyRequest: (state: UserState, { payload }: any) => {
         state.policy = {};

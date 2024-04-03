@@ -52,7 +52,6 @@ const ColumnActions = ({
         onConfirm={() => deleteUserEmployee(_id)}
         okText="Xoá"
         cancelText="Huỷ"
-        disabled
       >
         <p>Xóa</p>
       </Popconfirm>{" "}
@@ -212,6 +211,7 @@ const UserEmployee = ({ currentTab }: UserProps) => {
         pagination={{
           ...paging,
           showTotal: (total) => `Tổng cộng: ${total}`,
+          showSizeChanger: true
         }}
         onChange={({current, pageSize}: any)=> onTableChange({current, pageSize})}
       />
