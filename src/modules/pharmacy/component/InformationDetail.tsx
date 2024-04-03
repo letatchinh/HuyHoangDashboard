@@ -3,11 +3,14 @@ import { propsType } from "../pharmacy.modal";
 import { useGetPharmacyId } from "../pharmacy.hook";
 import { Col, Form, Row } from "antd";
 import { concatAddress } from "~/utils/helpers";
+import { get } from "lodash";
+import { URBAN_VI } from "~/constants/defaultValue";
 
 export default function InformationDetail(props: propsType) {
   const { pharmacyId } = props;
   const [info, isLoading] = useGetPharmacyId(pharmacyId);
   const [form] = Form.useForm();
+  const {urbanType} = info as {urbanType:keyof typeof URBAN_VI };
 
   return (
     <div>
@@ -106,6 +109,22 @@ export default function InformationDetail(props: propsType) {
             <div className="content-field">
               <div className="label">Tần suất viếng thăm: </div>
               <div>{info?.frequencyOfVisits}</div>
+            </div>
+            <hr style={{color: '#0000001a'}}/>
+          </Col>
+        </Row>
+        <Row gutter={36}>
+          <Col span={12}>
+            <div className="content-field">
+              <div className="label">Hạng khách hàng: </div>
+              <div>{info?.customerRanking}</div>
+            </div>
+            <hr style={{color: '#0000001a'}}/>
+          </Col>
+          <Col span={12}>
+            <div className="content-field">
+              <div className="label">Khu vực: </div>
+              <div>{URBAN_VI[urbanType]}</div>
             </div>
             <hr style={{color: '#0000001a'}}/>
           </Col>

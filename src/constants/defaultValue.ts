@@ -373,3 +373,13 @@ export const requireRules : any = [
       message : "Vui lòng nhập!"
   }
 ];
+
+export const METHOD_PAYMENT_VI = {
+  COD: 'Thu hộ',
+  DEPOSIT: 'Trả trước',
+}
+
+export const URBAN_VI = {
+  CITY: 'Thành thị',
+  COUNTRY: 'Nông thôn',
+} as const

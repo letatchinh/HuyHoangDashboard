@@ -264,6 +264,10 @@ const RESOURCE = (): ResourceType => {
     customer
   ];
 
+  const PHARMA_PROFILE: string[]= [
+    pharmaProfile
+  ]
+
   return {
     GROUP_USER,
     GROUP_EMPLOYEE,
@@ -285,6 +289,7 @@ const RESOURCE = (): ResourceType => {
     SALE_CHANNEL,
     TYPE_PHARMACY,
     GROUP_PHARMACY,
+    PHARMA_PROFILE
   };
 };
 
