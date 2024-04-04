@@ -70,10 +70,10 @@ export default function DebtPharmacy(props: propsType) {
     () => ({
       ...query,
       pharmaId: pharmacyId,
-      ...date,
-      status: searchByStatus?.toString(),
+      // ...date,
+      // status: searchByStatus?.toString(),
     }),
-    [pharmacyId, query, date, searchByStatus]
+    [pharmacyId, query]
   );
   const [data, isLoading] = useGetPharmacyDebt(newQuery);
   

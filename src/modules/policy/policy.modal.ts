@@ -21,11 +21,11 @@ export type ResourceType = {
   GROUP_SHIPPINGCOST: string[];
   GROUP_REPORT: string[];
   // Kênh bán hàng
-  SALE_CHANNEL: string[];
+  SALES_CHANNEL: string[];
   // Loại nhà thuốc
-  TYPE_PHARMACY: string[];
+  CUSTOMER_GROUP: string[];
   // Nhóm nhà thuốc
-  GROUP_PHARMACY: string[];
+  CUSTOMER: string[];
 };
 
 export type policyType =

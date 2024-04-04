@@ -252,15 +252,15 @@ const RESOURCE = (): ResourceType => {
     configCronTime,
     configBenefit,
   ]
-  const SALE_CHANNEL: string[] = [
+  const SALES_CHANNEL: string[] = [
     salesChannel
   ];
 
-  const TYPE_PHARMACY: string[] = [
+  const CUSTOMER_GROUP: string[] = [
     customerGroup
   ];
 
-  const GROUP_PHARMACY: string[] = [
+  const CUSTOMER: string[] = [
     customer
   ];
 
@@ -282,9 +282,9 @@ const RESOURCE = (): ResourceType => {
     GROUP_MEDICINE,
     GROUP_SHIPPINGCOST,
     GROUP_REPORT,
-    SALE_CHANNEL,
-    TYPE_PHARMACY,
-    GROUP_PHARMACY,
+    SALES_CHANNEL,
+    CUSTOMER_GROUP,
+    CUSTOMER,
   };
 };
 

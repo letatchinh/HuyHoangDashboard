@@ -129,7 +129,16 @@ export default function FreelanceContractPharmacy(
           return moment(record).format("DD/MM/YYYY");
         },
       },
-      ...(canUpdateContract || canDeleteContract ?[{
+      {
+        title: "File đính kèm",
+        dataIndex: "files",
+        key: "files",
+        // align: "center",
+        render(record) {
+          return <Typography.Text>{record}</Typography.Text>;
+        },
+      },
+      {
         title: "Thao tác",
         dataIndex: "_id",
         // key: "actions",
@@ -155,7 +164,7 @@ export default function FreelanceContractPharmacy(
             </div>
           );
         },
-      }] : []),
+      },
     ],
     [canUpdateContract,canDeleteContract, contracts]
   );

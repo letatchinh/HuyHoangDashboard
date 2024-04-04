@@ -37,8 +37,8 @@ export default function SaleChannel(props:propsType) : React.JSX.Element {
   const [saleChannelId, setSaleChannelId] = useState(null);
   const [isOpenForm, setIsOpenForm] = useState(false);
   const paging = useSaleChannelPaging();
-  const canWriteVoucher = useMatchPolicy(POLICIES.WRITE_SALECHANNEL);
-  const canDownload = useMatchPolicy(POLICIES.DOWNLOAD_SALECHANNEL);
+  const canWriteVoucher = useMatchPolicy(POLICIES.WRITE_SALESCHANNEL);
+  const canDownload = useMatchPolicy(POLICIES.DOWNLOAD_SALESCHANNEL);
   const [arrCheckBox, onChangeCheckBox] = useCheckBoxExport();
 
 
@@ -84,7 +84,7 @@ export default function SaleChannel(props:propsType) : React.JSX.Element {
         align: "center",
         render: (status, record) => {
           return (
-            <WithPermission permission={POLICIES.UPDATE_SALECHANNEL}>
+            <WithPermission permission={POLICIES.UPDATE_SALESCHANNEL}>
               <Switch
                 checked={status === "ACTIVE"}
                 onChange={(value) =>
@@ -109,10 +109,10 @@ export default function SaleChannel(props:propsType) : React.JSX.Element {
         render: (record) => {
           return (
             <div className="custom-table__actions">
-              <WithPermission permission={POLICIES.UPDATE_SALECHANNEL}>
+              <WithPermission permission={POLICIES.UPDATE_SALESCHANNEL}>
                 <p onClick={() => onOpenForm(record)}>Sửa</p>
               </WithPermission>
-              <WithPermission permission={POLICIES.DELETE_SALECHANNEL}>
+              <WithPermission permission={POLICIES.DELETE_SALESCHANNEL}>
                 <p>|</p>
                 <Popconfirm
                   title={`Bạn muốn xoá kênh bán hàng này?`}
@@ -192,7 +192,7 @@ export default function SaleChannel(props:propsType) : React.JSX.Element {
           />
         </Col>
         <Row>
-        <WithPermission permission={POLICIES.WRITE_SALECHANNEL}>
+        <WithPermission permission={POLICIES.WRITE_SALESCHANNEL}>
           <Col>
             <Button
               icon={<PlusCircleOutlined />}
@@ -203,7 +203,7 @@ export default function SaleChannel(props:propsType) : React.JSX.Element {
             </Button>
           </Col>
           </WithPermission>
-          <WithPermission permission={POLICIES.DOWNLOAD_SALECHANNEL}>
+          <WithPermission permission={POLICIES.DOWNLOAD_SALESCHANNEL}>
             <Col>
                 <ExportExcelButton
                   fileName="Danh sách kênh bán hàng"
@@ -216,7 +216,7 @@ export default function SaleChannel(props:propsType) : React.JSX.Element {
           </WithPermission>
         </Row>
       </Row>
-      <WithPermission permission={POLICIES.UPDATE_SALECHANNEL}>
+      <WithPermission permission={POLICIES.UPDATE_SALESCHANNEL}>
         <Space style={{ marginBottom: 20 }}>
           <Typography style={{ fontSize: 14, marginRight: 20 }}>
             Phân loại trạng thái theo :

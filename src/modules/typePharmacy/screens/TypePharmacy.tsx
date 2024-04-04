@@ -36,8 +36,8 @@ export default function TypePharmacy(props:propsType) : React.JSX.Element {
     const [typePharmacyId, setTypePharmacyId] = useState(null);
     const [isOpenForm, setIsOpenForm] = useState(false);
     const paging = useTypePharmacyPaging();
-    const canWriteVoucher = useMatchPolicy(POLICIES.WRITE_TYPEPHARMACY);
-    const canDownload = useMatchPolicy(POLICIES.DOWNLOAD_TYPEPHARMACY);
+    const canWriteVoucher = useMatchPolicy(POLICIES.WRITE_CUSTOMERGROUP);
+    const canDownload = useMatchPolicy(POLICIES.DOWNLOAD_CUSTOMERGROUP);
     const [arrCheckBox, onChangeCheckBox] = useCheckBoxExport();
   
   
@@ -83,7 +83,7 @@ export default function TypePharmacy(props:propsType) : React.JSX.Element {
           align: "center",
           render: (status, record) => {
             return (
-              <WithPermission permission={POLICIES.UPDATE_TYPEPHARMACY}>
+              <WithPermission permission={POLICIES.UPDATE_CUSTOMERGROUP}>
                 <Switch
                   checked={status === "ACTIVE"}
                   onChange={(value) =>
@@ -108,10 +108,10 @@ export default function TypePharmacy(props:propsType) : React.JSX.Element {
           render: (record) => {
             return (
               <div className="custom-table__actions">
-                <WithPermission permission={POLICIES.UPDATE_TYPEPHARMACY}>
+                <WithPermission permission={POLICIES.UPDATE_CUSTOMERGROUP}>
                   <p onClick={() => onOpenForm(record)}>Sửa</p>
                 </WithPermission>
-                <WithPermission permission={POLICIES.DELETE_TYPEPHARMACY}>
+                <WithPermission permission={POLICIES.DELETE_CUSTOMERGROUP}>
                   <p>|</p>
                   <Popconfirm
                     title={`Bạn muốn xoá loại nhà thuốc này?`}
@@ -191,7 +191,7 @@ export default function TypePharmacy(props:propsType) : React.JSX.Element {
             />
           </Col>
           <Row>
-          <WithPermission permission={POLICIES.WRITE_TYPEPHARMACY}>
+          <WithPermission permission={POLICIES.WRITE_CUSTOMERGROUP}>
             <Col>
               <Button
                 icon={<PlusCircleOutlined />}
@@ -202,7 +202,7 @@ export default function TypePharmacy(props:propsType) : React.JSX.Element {
               </Button>
             </Col>
             </WithPermission>
-            <WithPermission permission={POLICIES.DOWNLOAD_TYPEPHARMACY}>
+            <WithPermission permission={POLICIES.DOWNLOAD_CUSTOMERGROUP}>
               <Col>
                   <ExportExcelButton
                     fileName="Danh sách loại nhà thuốc"
@@ -215,7 +215,7 @@ export default function TypePharmacy(props:propsType) : React.JSX.Element {
             </WithPermission>
           </Row>
         </Row>
-        <WithPermission permission={POLICIES.UPDATE_TYPEPHARMACY}>
+        <WithPermission permission={POLICIES.UPDATE_CUSTOMERGROUP}>
           <Space style={{ marginBottom: 20 }}>
             <Typography style={{ fontSize: 14, marginRight: 20 }}>
               Phân loại trạng thái theo :
