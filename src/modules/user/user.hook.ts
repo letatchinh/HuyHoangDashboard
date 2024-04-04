@@ -160,10 +160,17 @@ export const useUserQueryParams = () => {
     setLimit(pageSize);
     setPage(current);
   };
-
+  const data = useSelector(listSelector);
+  const newPage = useMemo(() => {
+    if (!data?.length && page > 1) {
+      setPage(page - 1);
+      return page - 1;  
+    };
+    return page;
+  }, [data, page]);
   return useMemo(() => {
     const queryParams = {
-      page,
+      page: newPage,
       limit,
       keyword,
       groupIds,
@@ -171,7 +178,7 @@ export const useUserQueryParams = () => {
     };
     return [queryParams, onTableChange];
     //eslint-disable-next-line
-  }, [page, limit, keyword, createSuccess, groupIds, status, updateSuccess,deleteSuccess]);
+  }, [page, limit, keyword, createSuccess, groupIds, status, updateSuccess,deleteSuccess,newPage]);
 };
 
 export const useUpdateUserParams = (query: any, listOptionSearch?: any[]) => {

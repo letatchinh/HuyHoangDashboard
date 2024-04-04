@@ -69,6 +69,7 @@ const UserEmployee = ({ currentTab }: UserProps) => {
   const [id, setId] = useState(null);
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [query, onTableChange] = useUserQueryParams();
+  console.log(query,'query')
   const [keyword, { setKeyword, onParamChange }] = useUpdateUserParams(query);
   const [data, isLoading] = useGetUsers(query);
   const paging = useUserPaging();
