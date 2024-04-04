@@ -42,6 +42,13 @@ export const useReceiptVoucherPaging = () => useSelector(pagingSelector);
 const confirmReceiptSuccessSelector = getSelector('confirmSuccess');
 const confirmReceiptFailedSelector = getSelector('confirmFailed');
 
+const getListByBillIdSelector = getSelector('listByBillId');
+const getListByBillIdFailedSelector = getSelector('getListByBillIdFailed');
+const getPagingByBillIdSelector = getSelector('pagingByBillId');
+const isLoadingByBillIdSelector = getSelector('isLoadingBillId');
+
+export const usePagingByBillId = () => useSelector(getPagingByBillIdSelector);
+
 export const useGetReceiptVouchers = (param:any) => {
   return useFetchByParam({
     action: receiptVoucherSliceAction.getListRequest,
@@ -57,6 +64,16 @@ export const useGetReceiptVoucher = (id: any) => {
     loadingSelector: getByIdLoadingSelector,
     dataSelector: getByIdSelector,
     failedSelector: getByIdFailedSelector,
+    param: id,
+  });
+};
+
+export const useGetReceiptVoucherByBillId = (id: any) => {
+  return useFetchByParam({
+    action: receiptVoucherSliceAction.getListByBillIdRequest,
+    loadingSelector: isLoadingByBillIdSelector,
+    dataSelector: getListByBillIdSelector,
+    failedSelector: getListByBillIdFailedSelector,
     param: id,
   });
 };
@@ -163,6 +180,47 @@ export const useReceiptVoucherQueryParams = () => {
   }, [page, limit, keyword, createSuccess, deleteSuccess,startDate, endDate,codeSequence, status, totalAmount, reason,pathname]);
 };
 
+export const useReceiptVoucherByBillIdQueryParams = (id?: any) => {
+  const query = useQueryParams();
+  const {pathname} = useLocation() 
+  const typeVoucher = TYPE_VOUCHER.PT;
+  const [limit, setLimit] = useState(query.get("limit") || 10); 
+  const [page, setPage] = useState(query.get("page") || 1);
+  const billId = id || null;
+  // const keyword = query.get("keyword");
+  // const codeSequence = query.get("codeSequence");
+  // const status = query.get("status");
+  // const totalAmount = query.get("totalAmount");
+  // const reason = query.get("reason");
+  const startDate = query.get('startDate') || dayjs().startOf('month').format("YYYY-MM-DDTHH:mm:ss");
+  const endDate = query.get('endDate') || dayjs().endOf('month').format("YYYY-MM-DDTHH:mm:ss");
+  // const createSuccess = useSelector(createSuccessSelector);
+  // const deleteSuccess = useSelector(deleteSuccessSelector);
+
+  const onTableChange : any = ({ current, pageSize }: any) => {
+    setLimit(pageSize);
+    setPage(current);
+  };
+
+  return useMemo(() => {
+    const queryParams = {
+      page,
+      limit,
+      typeVoucher,
+      billId,
+      // keyword,
+      endDate,
+      startDate,
+      // codeSequence,
+      // status,
+      // totalAmount,
+      // reason,
+    };
+    return [queryParams,onTableChange];
+    //eslint-disable-next-line
+  }, [page, limit,startDate, endDate,billId]);
+};
+
 export const useUpdateReceiptVoucherParams = (
   query: any,
   listOptionSearch?: any[]
@@ -215,6 +273,7 @@ export const useInitWhReceiptVoucher = (whReceiptVoucher: any) => {
       dateOfIssue: dayjs(dateOfIssue),
       name: pharmaProfile?.name,
       address: compactAddress(pharmaProfile?.address),
+      pharmacyId : pharmaProfile?._id
     };
     const initValues = {
       ...fromJSON(newValue),

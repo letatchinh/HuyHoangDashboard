@@ -38,6 +38,7 @@ import SalesGroupPage from "~/pages/Dashboard/SalesGroup";
 import BaseSalaryPage from "~/pages/Dashboard/BaseSalary";
 import BenefitConfigurationPage from "~/pages/Dashboard/BenefitConfiguration";
 import ReportEmployeePage from "~/pages/Dashboard/ReportEmployee";
+import ReportSupplierPage from "~/pages/Dashboard/ReportSupplier";
 import CronSalaryPage from "~/pages/Dashboard/CronSalary";
 import SaleChannel from "~/pages/Dashboard/SaleChannel";
 import ConfigurationCronTime from "~/pages/Dashboard/ConfigurationCronTime";
@@ -122,20 +123,23 @@ export const mainRoutes :PathRouteProps[] = [
   { path: PATH_APP.benefitConfiguration.root, Component: BenefitConfigurationPage },
   // Báo cáo nhân viên
   { path: PATH_APP.report.employee, Component: ReportEmployeePage },
+  { path: PATH_APP.report.supplier, Component: ReportSupplierPage },
+  
   // Configuration Cron Time
   { path: PATH_APP.configurationCronTime.root, Component: ConfigurationCronTime},
-
+  
   // Thời gian báo cáo lương
   { path: PATH_APP.cronSalary.root, Component: CronSalaryPage },
-
+  
   // Kênh bán hàng
   { path: PATH_APP.saleChannel.root, Component: SaleChannel},
-
+  
   // Loại khách hàng
   { path: PATH_APP.typePharmacy.root, Component: TypePharmacy},
-
+  
   // Nhóm nhà thuốc
   { path: PATH_APP.groupPharmacy.root, Component:  GroupPharmacy},
+  
   
   { path: '/', Component: Homepage },
 ]

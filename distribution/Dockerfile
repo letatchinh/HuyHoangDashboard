@@ -6,7 +6,7 @@ WORKDIR /source.tmp
 COPY . .
 
 
-RUN npm install && \
+RUN npm install --verbose && \
     npm run build
 
 ############# Runner image #############

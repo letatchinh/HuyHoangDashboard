@@ -1,3 +1,92 @@
+## [1.11.1](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/compare/v1.11.0...v1.11.1) (2024-04-03)
+
+
+### Bug Fixes
+
+* fix build ([9550824](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/9550824ca50eee2ab280103358b22c848eb4e029))
+
+# [1.11.0](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/compare/v1.10.1...v1.11.0) (2024-04-03)
+
+
+### Features
+
+* trigger release ([a916ae8](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/a916ae865bfad32f490813f0d12d4107174dc41e))
+
+## [1.10.1](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/compare/v1.10.0...v1.10.1) (2024-04-03)
+
+
+### Bug Fixes
+
+* sub vn ([ba31d09](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/ba31d0936fcc859d160a3a902b8b69d0ab7f3ee1))
+
+# [1.10.0](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/compare/v1.9.0...v1.10.0) (2024-04-03)
+
+
+### Bug Fixes
+
+* [#1471](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1471) update voucher ([820f0c8](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/820f0c89912488351a96c0599720f048ecac25ac))
+* [#1488](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1488) update condition create voucher in order pharmacy ([ca2da67](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/ca2da67ef8fd3e090b5d01455ad4d3c8f3ad5d90))
+* [#1499](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1499) ([df50b78](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/df50b78f7ad6cc7c7d3a9c31329f56a30e51b2c4))
+* [#1499](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1499) FE_FIX release 02-04 ([87e5688](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/87e56883483d72d2c086e3a36c0dd4b664ae7e2b))
+* [#1506](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1506) paging user ([e00eb33](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/e00eb336b070c407ae8e36de6a2fde4768a65e96))
+* add Keyword to Search Component of Order Supplier ([12afa5d](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/12afa5d14636ef0d5a376e744f2af023bcc672ba))
+* DEFAULT_UPLOAD_ACTION ([ec1b475](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/ec1b475e4a0c86629855229f96beda2d62e0962e))
+* delete user ([6b2934c](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/6b2934c17f90f73cb51cec24a44220d46e733b65))
+* delete user ([2efe169](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/2efe1699ee5543efe8b742d5786c32d8b00ee6a9))
+* Paging, Not Ask Againg OrderSupplier , Filter CreateBy OrderSupplier ([f026c29](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/f026c2928690fa6c04fd1a6f29f4da4683e49ea0))
+* table Quotaion ([ce286c0](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/ce286c0b2b62c5a1d834df28f29fbc7d72c51474))
+* update default tab ([2fa1629](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/2fa162946d7e5786cab90c5f8c9f2ce00099668d))
+* update import ([543f3f4](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/543f3f4752a188df29b44e52de8f5c87e0b5ccbc))
+* update re-render columns ([976b437](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/976b437212c83f040aaf88ae6930e57dab0bc2a8))
+
+
+### Features
+
+* [#1471](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1471) add billId when create voucher ([772ec04](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/772ec04dafd383e0a917296f83d56a365750a94a))
+* [#1471](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1471) update voucher ([64255ab](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/64255ab337b66d8a79991449ffbb419bae41f9c5))
+* [#1471](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1471) update voucher ([e2fc0fa](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/e2fc0fa64f53e65ca4f880e5399f1c82f2511b70))
+* [#1471](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1471) voucher in order ([7624be8](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/7624be8ac0390578dc86eb1f3ca1fdf884c2cbaf))
+* [#1488](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1488) update UI ([a027560](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/a0275608f7396bf0123d3f3dbe88042598f76e16))
+* [#1488](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1488) update voucher ([e5600c1](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/e5600c1073585893c4298781793a1fb4bcd7f62b))
+
+# [1.9.0](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/compare/v1.8.1...v1.9.0) (2024-04-02)
+
+
+### Bug Fixes
+
+* [#1414](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1414) ([0feb809](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/0feb8098f5b12fb35fc212ada23d8ac7cce3d286))
+* [#1414](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1414) ([0fb3e96](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/0fb3e96469a0d6ea96b78131d098a3bf269f2d84))
+* [#1414](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1414) ([ec210a1](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/ec210a1631f24ee418959a5f47a289c4f52c12b5))
+* [#1414](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1414) ([43c59e8](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/43c59e8a0224d91c1ff7c492bc9ad0c2ecd83a81))
+* [#1414](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1414) ([3f91b65](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/3f91b65bf4cb157ae72fa70a1d044aa99e6d785f))
+* [#1414](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1414) ([8c899a8](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/8c899a87475f4779164765327381d960f9a9f931))
+* merge ([fe58f76](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/fe58f7665f2033b9de2d67995b7ee496ce9aeaf9))
+* rateBenefit ([7b7d537](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/7b7d537de1f6b08528359c0552b5c38686579de9))
+* rebase defaultValue ([f70e796](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/f70e79607df169f3bdd88917bb5beb92d95bb41f))
+* remove CTV ([92e8c95](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/92e8c95957e03db628d4f56c49b39b5dfec48cad))
+* remove require ([4524af0](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/4524af09ff05779f2f46e296969d07caec69a0d9))
+* to run code ([7326dd6](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/7326dd600491be658eb5c6bb796832bd8566cd7b))
+* totalPayment Bill Customer ([22e3e98](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/22e3e986933845a1b1bf9dddec6a204ac1716751))
+
+
+### Features
+
+* [#1414](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1414) ([eee0c9a](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/eee0c9a33f402982497136211e3eb3bb8fdc350d))
+* [#1414](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1414) ([5ef8d5b](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/5ef8d5b6c53287748ae66abfd0a1595871103d7c))
+* [#1414](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1414) ([358b5bd](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/358b5bde25f3c5fa1145ee8969e0d6c1f18d2636))
+* [#1414](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1414) BaseAdmin ([c3be82c](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/c3be82c6470374fa8137ee07c84cab4b463df95b))
+* [#1414](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1414) show list member ([929ebae](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/929ebae984e65063131898a287192ab0fdb77e61))
+* [#1414](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1414) show total member ([e0cbfda](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/e0cbfda275fd547dfd8a8fe55c75f16d924d4f02))
+* [#1482](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1482) ([a7c655e](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/a7c655ecffb4bcd6dd40e3a2e26ac6a908620a10))
+* [#1498](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1498) FE_Thêm Thông tin Đơn hàng vào phiếu thu ([3e52e5a](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/3e52e5a17a9dc87a6fd14cdfd454def9d9e223b2))
+
+## [1.8.1](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/compare/v1.8.0...v1.8.1) (2024-04-02)
+
+
+### Bug Fixes
+
+* ProductUnit Saga ([aea7b19](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/aea7b193d0a03498780597611822346eb25bc6f8))
+
 # [1.8.0](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/compare/v1.7.0...v1.8.0) (2024-04-01)
 
 

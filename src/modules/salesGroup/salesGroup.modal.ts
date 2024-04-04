@@ -6,7 +6,6 @@ import { SALES_GROUP_GEOGRAPHY } from "./constants"
 export type propsTypeSalesGroupForm = {
     id? : string,
     parentNear? : string,
-    parentNearName? : string,
     parentNearPath? : string[],
     onCancel : () => void,
     onUpdate : (p:any) => void,
@@ -16,7 +15,7 @@ export type FieldTypeForm = {
     name : string,
     alias : string,
     managementArea : string[]
-    typeArea : TypeAreaType,
+    // typeArea : TypeAreaType,
     parentNear ? : string,
 
 }
@@ -31,12 +30,11 @@ export type EmployeeType = {
     fullName : string,
     phoneNumber : string,
     status  : "ACTIVE" | "INACTIVE",
-    _id : string
-
-
+    _id : string,
 }
 export type MemberRulesInGroupType = {
     employee : EmployeeType,
     employeeId : string,
-    rule : keyof typeof RULE_SALES_GROUP,
+    rule: keyof typeof RULE_SALES_GROUP,
+    name: string
 } 

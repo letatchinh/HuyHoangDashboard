@@ -35,7 +35,7 @@ export default function Swap({onCloseSwap}: propsType): React.JSX.Element {
     exchangeRateOverrideTargetsTeam,
     exchangeRateOverrideTargetsSelf,
     data,
-    id
+    id,
   } = useDetailReportStore();
   const [isSubmitLoading,onPreviewUpdate] = useUpdatePreviewReportEmployee(onCloseSwap);
   useResetAction();

@@ -43,6 +43,8 @@ const listMemberSelector = getSelector('listMember');
 const isLoadingGetListMemberSelector = getSelector('isLoadingGetListMember');
 const getListMemberFailedSelector = getSelector('getListMemberFailed');
 
+const groupHaveLeaderSelector = getSelector('groupHaveLeader');
+
 export const useSalesGroupPaging = () => useSelector(pagingSelector);
 
 export const useGetSalesGroups = (param:any) => {
@@ -56,6 +58,7 @@ export const useGetSalesGroups = (param:any) => {
   });
 };
 export const useGetSalesGroupsSearch  = (): SalesGroupType[] => useSelector(listSearchSelector);
+export const useGetGroupHaveLeader  = (): any[] => useSelector(groupHaveLeaderSelector);
 export const useGetSalesGroup = (id: any) => {
   return useFetchByParam({
     action: salesGroupActions.getByIdRequest,

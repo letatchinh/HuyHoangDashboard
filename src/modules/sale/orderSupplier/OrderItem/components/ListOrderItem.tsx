@@ -27,6 +27,7 @@ import {
 } from "../../constants";
 import useUpdateOrderSupplierStore from "../../storeContext/UpdateOrderSupplierContext";
 import ExpandRowOrderItem from "./ExpandRowOrderItem";
+import ConfirmStatusOrderItem from "./ConfirmStatusOrderItem";
 type propsType = {
   statusBill: any;
 };
@@ -43,6 +44,7 @@ export default function ListOrderItem({
   );
   const [itemActive, setItemActive] = useState<any>();
   const { orderSupplier, mutateOrderSupplier } = useUpdateOrderSupplierStore();
+  const [askAgain,setAskAgain] = useState(true);
 
   const { orderSupplierItems } = orderSupplier || {};
   const [orderItemIdCancel, setOrderItemIdCancel] = useState<any>();
@@ -189,11 +191,11 @@ export default function ListOrderItem({
       key: "status",
       align: "center",
       render(status, record, index) {
-        const { nextStatus, message } = getNextStatus({
-          status,
-          lotNumber: get(record, "lotNumber"),
-          expirationDate: get(record, "expirationDate"),
-        });
+        // const { nextStatus, message } = getNextStatus({
+        //   status,
+        //   lotNumber: get(record, "lotNumber"),
+        //   expirationDate: get(record, "expirationDate"),
+        // });
         return (
           <div className="d-flex flex-column align-items-center">
             <ToolTipBadge
@@ -207,53 +209,7 @@ export default function ListOrderItem({
                 statusVi={CLONE_STATUS_ORDER_ITEM_VI?.[status]}
               />
             </ToolTipBadge>
-            {nextStatus && (
-              <WithPermission permission={PolicyModule.POLICIES.UPDATE_ORDERSUPPLIER}>
-                <Flex gap={"small"} align="center" justify={"center"}>
-                  <Popconfirm
-                    title={
-                      "Chuyển đổi sang trạng thái " +
-                      CLONE_STATUS_ORDER_ITEM_VI[nextStatus]
-                    }
-                    okText="Ok"
-                    cancelText="Huỷ"
-                    onConfirm={() =>
-                      onChangeStatusOrderItem({
-                        id: get(record, "_id", ""),
-                        status: nextStatus,
-                      })
-                    }
-                  >
-                    <Tooltip title={message}>
-                      <Button
-                        icon={<ArrowUpOutlined />}
-                        block
-                        type="primary"
-                        disabled={isDisabledAll || !!message}
-                        loading={isSubmitLoading}
-                      >
-                        {CLONE_STATUS_ORDER_ITEM_VI[nextStatus]}
-                      </Button>
-                    </Tooltip>
-                  </Popconfirm>
-                  {status === STATUS_ORDER_ITEM.NEW && (
-                    <WithPermission
-                      permission={PolicyModule.POLICIES.UPDATE_ORDERSUPPLIER}
-                    >
-                      <Button
-                        type="primary"
-                        block
-                        danger
-                        loading={isSubmitLoading}
-                        onClick={() => onOpenCancel(get(record, "_id", ""))}
-                      >
-                        Huỷ đơn
-                      </Button>
-                    </WithPermission>
-                  )}
-                </Flex>
-              </WithPermission>
-            )}
+            <ConfirmStatusOrderItem askAgain={askAgain} setAskAgain={setAskAgain} billItem={record} onChangeStatusBillItem={onChangeStatusOrderItem} onOpenCancel={onOpenCancel} isDisabledAll={isDisabledAll} isSubmitLoading={isSubmitLoading} key={get(record,'_id')}/>
           </div>
         );
       },

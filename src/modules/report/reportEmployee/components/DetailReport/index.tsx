@@ -1,7 +1,7 @@
 import { CheckCircleOutlined, SaveOutlined } from '@ant-design/icons';
 import { Button, Divider, Flex, Popconfirm, Typography } from 'antd';
 import dayjs from 'dayjs';
-import { compact, get } from 'lodash';
+import { compact, get, uniqBy } from 'lodash';
 import React from 'react';
 import WhiteBox from '~/components/common/WhiteBox';
 import { EMPLOYEE_LEVEL, EMPLOYEE_LEVEL_VI } from '~/modules/employee/constants';
@@ -34,6 +34,8 @@ export default function DetailReport(props:propsType) : React.JSX.Element {
             targetsTeam : {
                 targetSupplier : get(data,'targetsTeam.targetSupplier',[])
             },
+            baseAdmin : get(data,'salary.baseAdmin',0),
+            bonusOther : get(data,'bonusOther',[])
         };
         updateReport({
             ...submitData,
@@ -60,7 +62,7 @@ export default function DetailReport(props:propsType) : React.JSX.Element {
                 <div>
                     <p>Họ và tên: <Typography.Text strong>{get(data,'employee.fullName','')}</Typography.Text></p>
                     <p>Vị trí: <Typography.Text strong>{get(CLONE_EMPLOYEE_LEVEL_VI,employeeLevel,'')}</Typography.Text></p>
-                    <p>Khu vực: <Typography.Text strong>{compact([data?.targetsTeam?.salesGroupName,data?.targetsSelf?.salesGroupName]).join(' , ')}</Typography.Text></p>
+                    <p>Khu vực: <Typography.Text strong>{compact(uniqBy([data?.targetsTeam?.salesGroupName,data?.targetsSelf?.salesGroupName],(e) => get(e,'_id'))).join(' , ')}</Typography.Text></p>
                     <p>Lương cơ bản vùng: <Typography.Text strong>{formatter(get(data,'employee.baseSalaryValue',0))}</Typography.Text></p>
                 </div>
                 <h6 style={{textAlign : 'center'}}>Từ ngày: {dayjs(get(data,'startDate')).format("DD-MM-YYYY")} - đến ngày: {dayjs(get(data,'endDate')).format("DD-MM-YYYY")}</h6>

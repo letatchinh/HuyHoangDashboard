@@ -1,7 +1,14 @@
 import { CSSProperties } from "@ant-design/cssinjs/lib/hooks/useStyleRegister";
 import { get } from "lodash";
 import { MIN_AFTER_CHANGE } from "./constants";
-import { DetailSalary, DetailSalaryItem, ReportEmployeeType, Targets, TargetsSupplierItem } from "./reportEmployee.modal";
+import { DetailSalary, DetailSalaryItem, ReportEmployeeType, SalaryType, Targets, TargetsSupplierItem } from "./reportEmployee.modal";
+import BaseAdminBtn from "./components/BaseAdminBtn";
+import { BonusOtherType } from "../reportSupplier/reportSupplier.modal";
+import BonusOtherForm from "./components/BonusOtherForm";
+import { EmployeeLevelType } from "~/modules/employee/employee.modal";
+import { EMPLOYEE_LEVEL } from "~/modules/employee/constants";
+import { Popover } from "antd";
+import UpdateAndDelete from "./components/UpdateAndDelete";
 const styleChildren :CSSProperties= {
     fontStyle : 'italic',
 }
@@ -20,13 +27,15 @@ const styleFooter :CSSProperties= {
 export const service = {};
 const ConvertChild = (DetailSalary: DetailSalaryItem[]) =>
   DetailSalary?.map((itemBenefit: DetailSalaryItem) => ({
-    title: `Thưởng sản phẩm ${itemBenefit?.supplierName || ""} nhận được ${itemBenefit?.rateBenefit > 0 ? `(${get(itemBenefit,'rateBenefit',0) * 100 || ""}%)` : ""}`,
+    title: `Thưởng sản phẩm ${itemBenefit?.supplierName || ""} nhận được ${itemBenefit?.rateBenefit > 0 ? `(${get(itemBenefit,'rateBenefit',0) || ""}%)` : ""}`,
     value: itemBenefit?.value || 0,
     styleTitle : styleChildren,
   }));
 
 export interface ItemDataSource  {
-  title: string;
+  title: any;
+  afterTitle? : any;
+  beforeTitle? : any;
   value?: number | undefined; // set undefined To prevent Show String at Title
   children?: ItemDataSource[];
   styleTitle? : CSSProperties;
@@ -40,6 +49,12 @@ export const handleConvertDataSourceDetailSalary = ({
   totalSalary,
   bonus,
   benefit,
+  salary,
+  _id,
+  bonusOther,
+  totalBonusOther,
+  employeeId,
+  employeeLevel,
 }: {
   detailSalary: DetailSalary;
   baseSalary: number;
@@ -47,11 +62,17 @@ export const handleConvertDataSourceDetailSalary = ({
   bonus: number;
   totalSalary: number;
   daysWorking: number;
+  salary: SalaryType;
+  _id?: string;
+  bonusOther : BonusOtherType[],
+  totalBonusOther : number,
+  employeeId : string,
+  employeeLevel : EmployeeLevelType,
 }): ItemDataSource[] => {
-    
   let A: ItemDataSource,
     B: ItemDataSource,
     C: ItemDataSource,
+    D: ItemDataSource,
     FOOTER: ItemDataSource[];
   A = {
     title: "1. Lương cơ bản (A)",
@@ -62,11 +83,21 @@ export const handleConvertDataSourceDetailSalary = ({
         value: baseSalary,
         styleTitle : styleChildren,
       },
+    
     ],
     key: "A",
     value : baseSalary
   };
-
+  // Salary = 0 Will Add This
+  if(baseSalary === 0){
+    A?.children?.push({
+      title: "Lương cơ bản (Thầm quyền)",
+      value: get(salary,'baseAdmin',0),
+      styleTitle : styleChildren,
+      afterTitle : <BaseAdminBtn employeeId={employeeId} _id={_id}/>
+    },)
+  };
+  
   B = {
     title: "2. Hoa hồng bán hàng (B)",
     styleTitle : styleTitle,
@@ -76,7 +107,7 @@ export const handleConvertDataSourceDetailSalary = ({
   };
   const overMonth: ItemDataSource = {
     styleTitle : styleSubTitle,
-    value : undefined,
+    value : get(salary,'bonus.overMonth',0),
     // key : 'overMonth',
     title: "Thưởng vượt trên doanh số khoán theo tháng",
     children: ConvertChild(get(detailSalary, "bonus.overMonth", [])),
@@ -84,42 +115,42 @@ export const handleConvertDataSourceDetailSalary = ({
 
   const workingBenefit: ItemDataSource = {
     styleTitle : styleSubTitle,
-    value : undefined,
+    value : get(salary,'bonus.workingBenefit',0),
     // key : 'workingBenefit',
     title: `Thưởng theo làm việc hiệu quả (thực tế: ${daysWorking} ngày)`,
     children: ConvertChild(get(detailSalary, "bonus.workingBenefit", [])),
   };
   const cover_pos: ItemDataSource = {
     styleTitle : styleSubTitle,
-    value : undefined,
+    value : get(salary,'bonus.cover_pos',0),
     // key : 'cover_pos',
     title: `Thưởng đạt Độ phủ thị trường`,
     children: ConvertChild(get(detailSalary, "bonus.cover_pos", [])),
   };
   const exclusive_product: ItemDataSource = {
     styleTitle : styleSubTitle,
-    value : undefined,
+    value : get(salary,'bonus.exclusive_product',0),
     // key : 'exclusive_product',
     title: `Thưởng theo SP độc quyền`,
     children: ConvertChild(get(detailSalary, "bonus.exclusive_product", [])),
   };
   const team: ItemDataSource = {
     styleTitle : styleSubTitle,
-    value : undefined,
+    value : get(salary,'bonus.targetsLeader',0),
     // key : 'team',
     title: `Thưởng TeamLeader`,
     children: ConvertChild(get(detailSalary, "bonus.team", [])),
   };
   const overQuarter: ItemDataSource = {
     styleTitle : styleSubTitle,
-    value : undefined,
+    value : get(salary,'bonus.overQuarter',0),
     // key : 'overQuarter',
     title: `Thưởng Vượt Doanh số Quý`,
     children: ConvertChild(get(detailSalary, "bonus.overQuarter", [])),
   };
   const overYear: ItemDataSource = {
     styleTitle : styleSubTitle,
-    value : undefined,
+    value : get(salary,'bonus.overYear',0),
     // key : 'overYear',
     title: `Thưởng Vượt Doanh số Năm`,
     children: ConvertChild(get(detailSalary, "bonus.overYear", [])),
@@ -133,13 +164,41 @@ export const handleConvertDataSourceDetailSalary = ({
       workingBenefit,
       cover_pos,
       exclusive_product,
-      team,
+      // team,
       overQuarter,
       overYear,
     ],
     key: "C",
     value : bonus
   };
+
+  if(employeeLevel === EMPLOYEE_LEVEL.LEADER ){
+    C.children?.splice(4,0,team)
+  }
+  const ItemAddBonusMethod = {
+    title: "",
+      value: undefined,
+      styleTitle : styleChildren,
+      afterTitle : <BonusOtherForm employeeId={employeeId} bonusOther={bonusOther} _id={_id}/>
+  }
+  D = {
+    title: "4. Thưởng/phạt (D)",
+    styleTitle : styleTitle,
+    children:   [
+      ItemAddBonusMethod,
+      ...bonusOther?.map((item: BonusOtherType,index:number) => ({
+        title: get(item,'content',''),
+        value: get(item,'value') * get(item,'mathMethod'),
+        styleTitle : {
+          ...styleChildren,
+          color : get(item,'mathMethod') === 1 ? 'green' : 'red'
+        },
+        beforeTitle : <UpdateAndDelete employeeId={employeeId} bonusOther={bonusOther} _id={_id} indexUpdate={index}/>
+      }))
+    ],
+    key: "D",
+    value : totalBonusOther,
+  }
 
   FOOTER = [
     {
@@ -149,7 +208,7 @@ export const handleConvertDataSourceDetailSalary = ({
       styleTitle : styleFooter,
     },
   ];
-  const dataSource: ItemDataSource[] = [A, B, C, ...FOOTER];
+  const dataSource: ItemDataSource[] = [A, B, C, D, ...FOOTER];
   return dataSource;
 };
 
@@ -200,7 +259,9 @@ export const handleCalculateReducer = (payload:ReportEmployeeType) => {
         get(payload, "salary.bonus.cover_pos", 0),
         get(payload, "salary.bonus.exclusive_product", 0),
         get(payload, "salary.bonus.targetsLeader", 0),
+
       ].reduce((sum, cur) => sum + cur, 0),
+      totalBonusOther : (payload?.bonusOther || [])?.reduce((sum : number, cur : BonusOtherType) => sum + (get(cur,'value') * get(cur,'mathMethod',0)),0)
     },
     targetsTeam: {
       ...get(payload, "targetsTeam", {}),

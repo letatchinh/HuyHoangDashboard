@@ -374,7 +374,7 @@ export default function CostManagement(props: propsType): React.JSX.Element {
             {...props}
           />
         </Col>
-        <Col flex={1}>
+        {/* <Col flex={1}>
           <Form
             form={form}
             onFinish={onFinish}
@@ -446,7 +446,7 @@ export default function CostManagement(props: propsType): React.JSX.Element {
               </Col>
             </Row>
           </Form>
-        </Col>
+        </Col> */}
       </Row>
       <WhiteBox>
         <h5>Đơn vị: VND</h5>

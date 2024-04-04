@@ -14,6 +14,7 @@ type propsType = {};
 export default function SaleScreen(props: propsType): React.JSX.Element {
   console.log('voday')
  const {form,onValueChange,quotationItems,totalPriceAfterDiscount,verifyData,onRemoveTab,bill,onOpenModalResult,totalAmount} = useCreateBillStore();
+ 
  const {onNotify} = useNotificationStore();
  const callBackAfterSuccess = (newData : DataResultType) => {
   onRemoveTab();
@@ -104,21 +105,21 @@ try {
         </Col>
         <Col span={8} className="form-create-bill--payment">
           <div>
-            <SelectPharmacy form={form} allowClear={false}/>
+            <SelectPharmacy id={get(bill,'pharmacyId')} form={form} allowClear={false}/>
             <Divider/>
             <TotalBill />
           </div>
           <div className="form-create-bill--payment__actions">
-            <Row gutter={8} justify={"space-between"} align='middle' wrap={false}>
-              <Col flex={1}>
-                {/* <Button
+            <Row gutter={8} justify={"center"} align='middle' wrap={false}>
+              {/* <Col flex={1}>
+                <Button
                 block
                   className="form-create-bill--payment__actions__btnDebt"
                   onClick={onOpenDebt}
                 >
                   Hình thức thanh toán
-                </Button> */}
-              </Col>
+                </Button>
+              </Col> */}
               <Col span={14}>
                 <Button
                   block

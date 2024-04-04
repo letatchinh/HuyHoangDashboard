@@ -127,26 +127,26 @@ export default function SaleChannel(props:propsType) : React.JSX.Element {
           );
         },
       },
-        ...(
-      canDownload ? [
-        {
-          title: 'Lựa chọn',
-          key: '_id',
-          width: 80,
-          align: 'center' as any,
-          render: (item: any, record: any) =>
+      ...(
+        canDownload ? [
           {
-            const id = record._id;
-            return (
-              <Checkbox
-                checked= {arrCheckBox.includes(id)}
-                onChange={(e)=>onChangeCheckBox(e.target.checked, id)}
-          />)}
-        },
-      ]: []
-    ),
+            title: 'Lựa chọn',
+            key: '_id',
+            width: 80,
+            align: 'center' as any,
+            render: (item: any, record: any) => {
+              const id = record._id;
+              return (
+                <Checkbox
+                  checked={arrCheckBox.includes(id)}
+                  onChange={(e) => onChangeCheckBox(e.target.checked, id)}
+                />)
+            }
+          },
+        ] : []
+      ),
     ],
-    [arrCheckBox, canDownload]
+    [canDownload,arrCheckBox]
   );
 
   const onChangeStatus = (
@@ -259,6 +259,7 @@ export default function SaleChannel(props:propsType) : React.JSX.Element {
             showSizeChanger: true,
             showTotal: (total) => `Tổng cộng: ${total} `,
           }}
+          stickyTop
         />
       </WhiteBox>
       <ModalAnt

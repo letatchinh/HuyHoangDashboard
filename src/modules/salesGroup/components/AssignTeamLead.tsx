@@ -1,6 +1,7 @@
 import { DeleteOutlined, PlusCircleOutlined } from "@ant-design/icons";
 import { Avatar, Button, Flex, List, Popconfirm, Popover, Tooltip } from "antd";
-import { get } from "lodash";
+import Search from "antd/es/input/Search";
+import { debounce, get } from "lodash";
 import React, { useCallback, useMemo, useState } from "react";
 import AvatarShortOrName from "~/components/common/AvatarShortOrName";
 import { EMPLOYEE_LEVEL_VI } from "~/modules/employee/constants";
@@ -17,7 +18,7 @@ export default function AssignTeamLead({
 }: propsType): React.JSX.Element {
   const [open, setOpen] = useState(false);
   const { isSubmitLoading, updateSalesGroup } = useSalesGroupStore();
-  const [keyword] = useState("");
+  const [keyword,setKeyword] = useState("");
   const query = useMemo(() => (open ? { keyword } : null), [keyword, open]);
   const [data, isLoading] = useGetListTeamLeadSalesGroups(query);
   const hide = useCallback(() => {
@@ -44,13 +45,16 @@ export default function AssignTeamLead({
     });
     hide();
   }, [_id]);
-
+  const debounceFetcher = debounce(setKeyword, 300);
   return (
     <div>
       <Flex gap={5}>
+      
         <Popover
           content={
-            <List
+          <>
+          <Search onSearch={(value) => setKeyword(value)} onChange={({target}) => debounceFetcher(target.value)}/>
+          <List
             className="scrollList"
             style={{width : 300}}
               dataSource={data}
@@ -82,6 +86,7 @@ export default function AssignTeamLead({
                 </List.Item>
               )}
             />
+          </>
           }
           title="Danh sách người quản lý sẵn sàng"
           trigger="click"

@@ -12,6 +12,7 @@ import CreateOrderSupplier from "./pages/Dashboard/OrderSupplier/CreateOrderSupp
 import CreateBillPageInDevice from "./pages/Dashboard/Bill/CreateBill_InDevice";
 import { DeviceDetector } from "./utils/helpers";
 import { useUserPolicy } from "./modules/policy/policy.hook";
+import Reflex from "./components/Layout/LayoutVertical/Reflex";
 
 function App(): React.JSX.Element {
   const width = window.innerWidth;

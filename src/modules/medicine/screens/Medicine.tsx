@@ -99,6 +99,7 @@ export default function Medicine() {
                 onParamChange({ page, limit: pageSize });
               },
             }}
+            stickyTop
           />
         </WhiteBox>
       </div>

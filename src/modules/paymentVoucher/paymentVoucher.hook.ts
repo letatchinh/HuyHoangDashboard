@@ -14,10 +14,11 @@ import {
     useSuccess
 } from "~/utils/hook";
 import { paymentVoucherSliceAction } from "./redux/reducer";
-import { TYPE_VOUCHER } from "~/constants/defaultValue";
+import { REF_COLLECTION, TYPE_VOUCHER } from "~/constants/defaultValue";
 import dayjs from "dayjs";
 import PharmacyModule from '~/modules/pharmacy';
 import SupplierModule from '~/modules/supplier';
+import { PATH_APP } from "~/routes/allPath";
 const MODULE = "paymentVoucher";
 const MODULE_VI = "";
 
@@ -44,6 +45,13 @@ export const usePaymentVoucherPaging = () => useSelector(pagingSelector);
 const confirmPaymentSuccessSelector = getSelector('confirmSuccess');
 const confirmPaymentFailedSelector = getSelector('confirmFailed');
 
+const getListByBillIdSelector = getSelector('listByBillId');
+const getListByBillIdFailedSelector = getSelector('getListByBillIdFailed');
+const getPagingByBillIdSelector = getSelector('pagingByBillId');
+const isLoadingByBillIdSelector = getSelector('isLoadingBillId');
+
+export const usePagingByBillId = () => useSelector(getPagingByBillIdSelector);
+
 export const useGetPaymentVouchers = (param:any) => {
   return useFetchByParam({
     action: paymentVoucherSliceAction.getListRequest,
@@ -59,6 +67,16 @@ export const useGetPaymentVoucher = (id: any) => {
     loadingSelector: getByIdLoadingSelector,
     dataSelector: getByIdSelector,
     failedSelector: getByIdFailedSelector,
+    param: id,
+  });
+};
+
+export const useGetPaymentVoucherByBillId = (id: any) => {
+  return useFetchByParam({
+    action: paymentVoucherSliceAction.getListByBillIdRequest,
+    loadingSelector: isLoadingByBillIdSelector,
+    dataSelector: getListByBillIdSelector,
+    failedSelector: getListByBillIdFailedSelector,
     param: id,
   });
 };
@@ -116,6 +134,8 @@ export const useDeletePaymentVoucher = (callback?: any) => {
 
 export const usePaymentVoucherQueryParams = () => {
   const query = useQueryParams();
+  const {pathname} = useLocation() 
+
   const typeVoucher = TYPE_VOUCHER.PC;
   const [limit, setLimit] = useState(query.get("limit") || 10); 
   const [page, setPage] = useState(query.get("page") || 1);
@@ -134,6 +154,14 @@ export const usePaymentVoucherQueryParams = () => {
     setPage(current);
   };
 
+  // TODO: Default RefCollection By PathName
+  let refCollection : 'pharma_profile' | 'supplier' | null = null;
+  if(pathname === PATH_APP.vouchers.pharmacy ){
+    refCollection = REF_COLLECTION.PHARMA_PROFILE
+  }
+  if(pathname === PATH_APP.vouchers.supplier ){
+    refCollection = REF_COLLECTION.SUPPLIER
+  }
   return useMemo(() => {
     const queryParams = {
       page,
@@ -146,13 +174,55 @@ export const usePaymentVoucherQueryParams = () => {
       status,
       totalAmount,
       reason,
+      ...refCollection && {refCollection},
     };
     return [queryParams, onTableChange];
     //eslint-disable-next-line
   }, [page, limit, keyword, createSuccess, deleteSuccess, startDate, endDate, codeSequence,
     status,
     totalAmount,
-    reason,]);
+    reason,pathname]);
+};
+
+export const usePaymentVoucherByBillIdQueryParams = (id: any) => {
+  const query = useQueryParams();
+  const {pathname} = useLocation() 
+  const typeVoucher = TYPE_VOUCHER.PC;
+  const [limit, setLimit] = useState(query.get("limit") || 10); 
+  const [page, setPage] = useState(query.get("page") || 1);
+  const billId = id;
+  // const keyword = query.get("keyword");
+  // const codeSequence = query.get("codeSequence");
+  // const status = query.get("status");
+  // const totalAmount = query.get("totalAmount");
+  // const reason = query.get("reason");
+  const startDate = query.get('startDate') || dayjs().startOf('month').format("YYYY-MM-DDTHH:mm:ss");
+  const endDate = query.get('endDate') || dayjs().endOf('month').format("YYYY-MM-DDTHH:mm:ss");
+  // const createSuccess = useSelector(createSuccessSelector);
+  // const deleteSuccess = useSelector(deleteSuccessSelector);
+
+  const onTableChange : any = ({ current, pageSize }: any) => {
+    setLimit(pageSize);
+    setPage(current);
+  };
+
+  return useMemo(() => {
+    const queryParams = {
+      page,
+      limit,
+      typeVoucher,
+      // keyword,
+      billId,
+      endDate,
+      startDate,
+      // codeSequence,
+      // status,
+      // totalAmount,
+      // reason,
+    };
+    return [queryParams,onTableChange];
+    //eslint-disable-next-line
+  }, [page, limit,startDate, endDate,pathname, billId]);
 };
 
 export const useUpdatePaymentVoucherParams = (

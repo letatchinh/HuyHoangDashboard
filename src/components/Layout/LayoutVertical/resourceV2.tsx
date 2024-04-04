@@ -53,7 +53,7 @@ const permissionPharma = [
 const permissionSupplier = [
   POLICIES.READ_SUPPLIER,
   POLICIES.READ_VOUCHERSUPPLIER,
-  POLICIES.READ_CUMULATIVESALESUPPLIER,
+  POLICIES.READ_CUMULATIVESALESSUPPLIER,
   
 ];
 
@@ -209,7 +209,7 @@ export const resource: ItemType[] =[
         label: "Doanh số tích luỹ",
         path: PATH_APP.report.supplier,
         key: PATH_APP.report.supplier,
-        permission: [POLICIES.READ_CUMULATIVESALESUPPLIER],//
+        permission: [POLICIES.READ_CUMULATIVESALESSUPPLIER],//
       },
 
       {
@@ -290,18 +290,17 @@ export const resource: ItemType[] =[
     ],
     icon: <i className="fa-solid fa-code-branch"></i>,
   },
-
   // Báo cáo
   {
     label: "Báo cáo",
     key: "report",
-    permission: [POLICIES.READ_REPORTSALARY],//
+    permission: [POLICIES.READ_REPORTSALARY],
     children: [
       {
-        label: "Báo cáo nhân viên",
+        label: "Báo cáo lương trình dược viên",
         path: PATH_APP.report.employee,
         key: PATH_APP.report.employee,
-        permission: [POLICIES.READ_REPORTSALARY],//
+        permission : [POLICIES.READ_REPORTSALARY]
       },
     ],
     icon: <i className="fa-solid fa-code-branch"></i>,

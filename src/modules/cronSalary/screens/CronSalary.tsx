@@ -5,7 +5,9 @@ import InputNumberAnt from "~/components/Antd/InputNumberAnt";
 import Breadcrumb from "~/components/common/Breadcrumb";
 import RenderLoading from "~/components/common/RenderLoading";
 import WhiteBox from "~/components/common/WhiteBox";
+import WithOrPermission from "~/components/common/WithOrPermission";
 import { AREA, requireRules } from "~/constants/defaultValue";
+import POLICIES from "~/modules/policy/policy.auth";
 import { CRONJOB_REPORT_SALARY } from "../constants";
 import {
   useCronSalaryQueryParams,
@@ -67,9 +69,11 @@ export default function CronSalary() {
                   min={1}
                 />
               </FormItem>
+              <WithOrPermission permission={[POLICIES.WRITE_CONFIGREPORTSALARYAUTO,POLICIES.UPDATE_CONFIGREPORTSALARYAUTO]}>
               <Button style={{width : 150}} loading={isSubmitLoading} htmlType="submit" type="primary">
               Cập nhật
-            </Button>
+              </Button>
+              </WithOrPermission>
             </Flex>
             
           </Form>

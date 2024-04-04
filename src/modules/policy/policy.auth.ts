@@ -57,6 +57,8 @@ const configBenefit = 'configBenefit';
 // Đơn hàng nhà cung cấp
 const orderSupplier = 'orderSupplier';
 
+// Thời gian báo cáo lương
+const configReportSalaryAuto = 'configReportSalaryAuto';
 // Kênh bán hàng
 const salesChannel ='salesChannel';
 
@@ -137,6 +139,7 @@ const RESOURCES = [
   customer,
   
   updateThePharmacyForEmployee,
+  configReportSalaryAuto,
 ];
 
 //ACTIONS

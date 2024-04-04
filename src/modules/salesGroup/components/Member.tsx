@@ -1,13 +1,16 @@
 import { AntDesignOutlined, UserOutlined } from "@ant-design/icons";
-import { Avatar, Button, Flex, Tooltip, Typography } from "antd";
+import { Avatar, Button, Flex, Modal, Popover, Tooltip, Typography } from "antd";
 import { get } from "lodash";
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import AvatarShortOrName from "~/components/common/AvatarShortOrName";
 import { RULE_SALES_GROUP, SALES_GROUP_GEOGRAPHY } from "../constants";
 import { MemberRulesInGroupType, TypeAreaType } from "../salesGroup.modal";
 import AssignMember from "./AssignMember";
 import AssignTeamLead from "./AssignTeamLead";
+import CardEmployee from "./CardEmployee";
+import ListMember from "./ListMember";
 import PopoverCardEmployee from "./PopoverCardEmployee";
+import ListMemberModal from "./ListMemberModal";
 import useSalesGroupStore from "../salesGroupContext";
 type propsType = {
   _id?: string;
@@ -16,40 +19,60 @@ type propsType = {
   child ? : any[]
 };
 export default function Member({ _id, data, typeArea, child }: propsType): React.JSX.Element {
+  const [isOpen, setIsOpen] = useState(false);
   const { canUpdate } = useSalesGroupStore();
   const teamLead = useMemo(
     () =>
       data?.find((member) => get(member, "rule") === RULE_SALES_GROUP.LEADER),
     [data]
-  );
-  const member = useMemo(
-    () => data?.find((m) => get(m, "rule") === RULE_SALES_GROUP.MEMBER),
-    [data]
-  );
+    );
+    const member = useMemo(
+      () => data?.filter((m) => get(m, "rule") === RULE_SALES_GROUP.MEMBER),
+      [data]
+    );
+
+  const onOpen = () => {
+    setIsOpen(true);
+  };
+  const onClose = () => {
+    setIsOpen(false);
+  };
+
   return (
-    <Flex vertical gap={10}>
-      {typeArea !== SALES_GROUP_GEOGRAPHY.ZONE  ? <Flex align={"center"} gap={10}>
-        {typeArea === SALES_GROUP_GEOGRAPHY.REGION ? "Trường vùng" : "Trưởng nhóm"}:{" "}
-        {teamLead ? (
-          <PopoverCardEmployee employee={get(teamLead, "employee", "")}>
-        <Typography.Text style={{cursor : 'pointer'}} strong>
-            {get(teamLead, "employee.fullName", "")}
-          </Typography.Text>
-          </PopoverCardEmployee>
-        ) : (
-          "(Chưa có)"
-        )}{" "}
-      {canUpdate &&  <AssignTeamLead teamLead={teamLead} _id={_id} />}
-      </Flex> : <></>}
-      {(typeArea === SALES_GROUP_GEOGRAPHY.ZONE && !child?.length) ? <Flex align={"center"} gap={10}>
-        Trình dược viên:{" "}
-        {member ? (
-        <Typography.Text strong>{get(member, "employee.fullName","")} </Typography.Text>
-        ) : (
-          "(Chưa có)"
-        )}
-        <AssignMember member={member} _id={_id} />
-      </Flex> : <></>}
-    </Flex>
+    <>
+      <Flex vertical gap={10}>
+        <Flex align={"center"} gap={5}>
+          Trưởng nhóm:{" "}
+          {teamLead ? (
+            <PopoverCardEmployee employee={get(teamLead, "employee", "")}>
+          <Typography.Text style={{cursor : 'pointer'}} strong>
+              {get(teamLead, "employee.fullName", "")}
+            </Typography.Text>
+            </PopoverCardEmployee>
+          ) : (
+            "(Chưa có)"
+          )}{" "}
+          {canUpdate && <AssignTeamLead teamLead={teamLead} _id={_id} />}
+        </Flex> 
+      {teamLead ?  <Flex align={"center"} gap={5} >
+        <Button type="link" onClick={onOpen} style={{whiteSpace : 'nowrap'}}>Thành viên</Button>:
+          {member ? (
+            <ListMember member={member}/>
+          ) : (
+            "(Chưa có)"
+          )}
+          <AssignMember member={member} _id={_id} />
+        </Flex>  : <></>}
+      </Flex>
+      <Modal
+        title={`Danh sách thành viên`}
+        open={isOpen}
+        onCancel={onClose}
+        footer={<h6>Tổng số thành viên: {member?.length || 0}</h6>}
+        width={600}
+      >
+        <ListMemberModal member={member}/>
+      </Modal>
+    </>
   );
 }

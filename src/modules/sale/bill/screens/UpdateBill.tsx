@@ -4,6 +4,7 @@ import {
   Button,
   Col,
   Divider, Form,
+  Modal,
   Row,
   Space,
   Spin,
@@ -14,7 +15,7 @@ import dayjs from "dayjs";
 import { get, omit } from "lodash";
 import PolicyModule from "policy";
 import React, { useCallback, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import ModalAnt from "~/components/Antd/ModalAnt";
 import Status from "~/components/common/Status/index";
 import WhiteBox from "~/components/common/WhiteBox";
@@ -29,6 +30,9 @@ import { PayloadUpdateBill } from "../bill.modal";
 import StepStatus from "../components/StepStatus";
 import { STATUS_BILL, STATUS_BILL_VI } from "../constants";
 import useUpdateBillStore from "../storeContext/UpdateBillContext";
+import VoucherInOrder from "~/modules/vouchers/components/VoucherInOrder";
+import WithPermission from "~/components/common/WithPermission";
+import POLICIES from "~/modules/policy/policy.auth";
 type propsType = {};
 const Layout = ({ label, children,strong }: { label: any; children: any,strong?:boolean }) => (
   <Row className="hover-dot-between" justify={"space-between"} align="middle">
@@ -49,7 +53,7 @@ const CLONE_STATUS_BILL: any = STATUS_BILL;
 export default function UpdateBill(props: propsType): React.JSX.Element {
   const [form] = Form.useForm();
   useResetBillAction();
-  const { bill, isLoading,mutateBill,onOpenForm } = useUpdateBillStore();
+  const { bill, isLoading,mutateBill,onOpenForm, compareMoney,onOpenFormPayment } = useUpdateBillStore();
   const {
     codeSequence,
     createdAt,
@@ -71,10 +75,19 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
   
   // const queryGetDebtPharmacy = useMemo(() => ({pharmacyId : get(bill,'pharmacyId')}),[bill]);
   // const [debt,isLoadingDebt] = useFetchState({api : PharmacyModule.api.getDebt,query : queryGetDebtPharmacy});
-  
+  const { id } = useParams();
   const [openCancel, setOpenCancel] = useState(false);
   const [cancelNote, setCancelNote] = useState("");
   const onOpenCancel = useCallback(() => setOpenCancel(true), []);
+  const [openDetailVoucher, setOpenDetailVoucher] = useState(false);
+
+  const onOpenDetailVouchers = (item: any) => {
+    setOpenDetailVoucher(true);
+  };
+  const onCloseDetailVouchers = () => {
+    setOpenDetailVoucher(false);
+  };
+
   const onCloseCancel = useCallback(() => {
     setOpenCancel(false);
     setCancelNote("");
@@ -98,8 +111,6 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
     };
     updateBill(payloadUpdate);
   }
-  console.log(bill,'bill');
-
   // useChangeDocumentTitle(codeSequence ? "Đơn hàng - " + codeSequence : 'Loading...',{dependency : [codeSequence]})
   useEffect(() => {
     form.setFieldsValue({note})
@@ -174,7 +185,16 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
         <Col lg={16} md={24} sm={24}>
           <div className="bill-page-update--infoPharmacy">
             <WhiteBox>
-              <h6>Thông tin khách hàng</h6>
+                <Row>
+                  <Col>
+                    <h6>Thông tin khách hàng</h6>
+                  </Col>
+                  <WithPermission permission={POLICIES.READ_VOUCHERPHARMACY}>
+                  <Col style={{ position: 'absolute', right: 0, top: 5 }}>
+                    <Button type="link" onClick={onOpenDetailVouchers}>Xem chi tiết các phiếu</Button>
+                  </Col>
+                  </WithPermission>
+                </Row>
               <Row justify={"space-between"}>
                 <Col>
                   <Space
@@ -191,13 +211,21 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
                       </p>
                     </div>
                   </Space>
-                </Col>
-                <Col>
-                  {/* <Typography.Text strong>Công nợ hiện tại : 0</Typography.Text> */}
-                  {status !== STATUS_BILL.CANCELLED && <Button disabled={remainAmount <= 0} type="primary" size="small" onClick={onOpenForm}>
-                    Tạo phiếu thu
-                  </Button>}
-                </Col>
+                  </Col>
+                  <Row gutter={10}>
+                    <Col>
+                    {status !== STATUS_BILL.CANCELLED && <Button disabled={remainAmount <= 0} type="primary" size="small" onClick={onOpenForm}>
+                      Tạo phiếu thu
+                    </Button>}
+                    </Col>
+                  {compareMoney > 0 &&  <WithPermission permission={POLICIES.READ_VOUCHERPHARMACY}>
+                        <Col>
+                        <Button type="primary" size="small" onClick={onOpenFormPayment}>
+                          Tạo phiếu chi
+                        </Button>
+                      </Col>
+                    </WithPermission>}
+                  </Row>
               </Row>
               <Divider />
               <h6>Địa chỉ</h6>
@@ -265,7 +293,20 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
           placeholder="Vui lòng nhập lý do huỷ đơn!"
         />
       </ModalAnt>
-    
+      <Modal
+        title="Danh sách phiếu thu - chi"
+        open={openDetailVoucher}
+        onCancel={onCloseDetailVouchers}
+        onOk={onCloseDetailVouchers}
+        width={1366}
+        footer={null}
+        destroyOnClose
+      >
+        <VoucherInOrder
+          billId={id}
+          defaultActiveTabKey="1"
+        />
+      </Modal>
     </div>
   );
 }

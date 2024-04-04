@@ -145,7 +145,7 @@ export default function TypePharmacy(props:propsType) : React.JSX.Element {
         ]: []
       ),
       ],
-      [canDownload, arrCheckBox]
+      [arrCheckBox,canDownload]
     );
   
     const onChangeStatus = (

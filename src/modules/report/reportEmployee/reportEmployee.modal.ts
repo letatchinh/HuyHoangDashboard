@@ -1,5 +1,6 @@
 import { EMPLOYEE_LEVEL } from '~/modules/employee/constants';
 import { EmployeeLevelType } from '~/modules/employee/employee.modal';
+import { BonusOtherType } from '../reportSupplier/reportSupplier.modal';
 import { STATUS_REPORT_EMPLOYEE } from './constants';
 
 export type TypeProps = {};
@@ -71,14 +72,31 @@ export type Targets = {
 
 export type SubmitDataUpdatePreview = {
   employeeId : string,
+  _id? : string,
   targetsTeam? : {
     targetSupplier : TargetsSupplierItem[]
   },
   targetsSelf? : {
     targetSupplier : TargetsSupplierItem[]
   },
+  baseAdmin? : number,
+  bonusOther? : BonusOtherType[]
 }
-
+export type SalaryType = {
+  base : number,
+  baseAdmin : number,
+  bonus: {
+    overMonth: number,
+    overQuarter: number,
+    overYear: number,
+    workingBenefit: number,
+    cover_pos: number,
+    exclusive_product: number,
+    targetsLeader: number,
+  },
+  benefit: number,
+  totalSalary: number
+};
 export type ReportEmployeeType = {
     _id: string,
     startDate: string,
@@ -98,24 +116,12 @@ export type ReportEmployeeType = {
       baseSalary: string,
       baseSalaryValue: number,
     },
-    salary: {
-      base : number,
-      bonus: {
-        overMonth: number,
-        overQuarter: number,
-        overYear: number,
-        workingBenefit: number,
-        cover_pos: number,
-        exclusive_product: number,
-        targetsLeader: number,
-      },
-      benefit: number,
-      totalSalary: number
-    },
+    salary: SalaryType,
     status: keyof typeof STATUS_REPORT_EMPLOYEE,
     detailSalary: DetailSalary,
     createdAt: string,
     updatedAt: string,
     targetsSelf : Targets,
     targetsTeam : Targets,
+    bonusOther : BonusOtherType[]
 }

@@ -54,7 +54,10 @@ import {
     useUpdatePaymentVoucher
 } from "../paymentVoucher.hook";
 import "./form.scss";
+import useUpdateOrderSupplierStore from "~/modules/sale/orderSupplier/storeContext/UpdateOrderSupplierContext";
 import WithOrPermission from "~/components/common/WithOrPermission";
+import { useDispatch } from "react-redux";
+import { paymentVoucherSliceAction } from "../redux/reducer";
   const mainRowGutter = 24;
   const FormItem = Form.Item;
   const { TabPane } = Tabs;
@@ -75,21 +78,34 @@ import WithOrPermission from "~/components/common/WithOrPermission";
     refCollection?: string;
     debt?: number | null;
     dataAccountingDefault? : DataAccounting[],
-    method?:any
+    method?: any,
+    billId?: any,
+    mutateOrderSupplier?: any
   };
   
   export default function PaymentVoucherForm(
     props: propsType
   ): React.JSX.Element {
     useResetAction();
-    const { id, supplierId, onClose, refCollection, debt,pharmacyId,dataAccountingDefault,method } = props;
+    const { id, supplierId, onClose, refCollection, debt, pharmacyId, dataAccountingDefault, method, billId,mutateOrderSupplier } = props;
     const [form] = Form.useForm();
     const ref = useRef();
     const [accountingDetails, setAccountingDetails] = useState([]);
     const [initEmployee, setInitEmployee] = useState<any[]>([]);
     //Hook
-    const [isSubmitLoading, handleCreate] = useCreatePaymentVoucher(onClose);
-    const [, handleUpdate] = useUpdatePaymentVoucher(onClose);
+    const dispatch = useDispatch();
+    const resetAction = () => {
+      return dispatch(paymentVoucherSliceAction.resetAction());
+    };
+    const [isSubmitLoading, handleCreate] = useCreatePaymentVoucher(() => {
+      onClose();
+      mutateOrderSupplier && mutateOrderSupplier();
+      resetAction();
+    });
+    const [, handleUpdate] = useUpdatePaymentVoucher(() => {
+      onClose();
+      resetAction();
+    });
     const [, handleConfirm] = useConfirmPaymentVoucher(onClose);
     const [voucher, isLoading] = useGetPaymentVoucher(id);
     const initPaymentVoucher = useInitWhPaymentVoucher(voucher);
@@ -98,7 +114,7 @@ import WithOrPermission from "~/components/common/WithOrPermission";
     const provider = useMemo(() => pharmacy ?? supplier,[pharmacy,supplier]);
     const [issueNumber, setIssueNumber] = useState(null);
     const [dataAccounting, setDataAccounting] = useState(dataAccountingDefault ?? []);
-    
+    const { orderSupplier } = useUpdateOrderSupplierStore();
     const isSupplier = useMemo(() => refCollection === 'supplier',[refCollection]);
     // use initWhPaymentVoucher to merge with other data that should be fetched from the API
     const mergedInitWhPaymentVoucher = useMemo(() => {
@@ -201,9 +217,20 @@ import WithOrPermission from "~/components/common/WithOrPermission";
           method
         };
         if (id) {
-          handleUpdate({ id: id, ...newValue });
+          if (billId || voucher?.method?.data?._id) {
+            handleUpdate({ id, ...newValue,billId: billId || voucher?.method?.data?._id });
+          } else {
+            handleUpdate({ id, ...newValue });
+          }
         } else {
-          handleCreate(newValue);
+          if (billId) {
+            handleCreate({
+              ...newValue,
+              billId,
+            });
+          } else {
+            handleCreate(newValue);
+          };
         }
       } catch (error) {
         console.error(error);
@@ -311,6 +338,13 @@ import WithOrPermission from "~/components/common/WithOrPermission";
                     </Col>
                   </Row>
   
+                { orderSupplier && <Row gutter={36}>
+                    <Col span={24}>
+                      <FormItem label="Mã đơn hàng">
+                        {isLoading ? <Skeleton.Input active /> : <Input defaultValue={orderSupplier?.codeSequence} readOnly />}
+                      </FormItem>
+                    </Col>
+                  </Row>}
                   <Row gutter={36}>
                     <Col span={24}>
                       <FormItem name="reason" label="Lý do chi">
@@ -512,7 +546,7 @@ import WithOrPermission from "~/components/common/WithOrPermission";
                 : (get(mergedInitWhPaymentVoucher, "status") !== WH_VOUCHER_STATUS.CONFIRMED
                 || get(mergedInitWhPaymentVoucher, "status") !== WH_VOUCHER_STATUS.REJECT
                 )
-                && <WithOrPermission permission={[POLICIES.UPDATE_VOUCHERPHARMACY, POLICIES.UPDATE_VOUCHERSUPPLIER]}>
+                && <WithOrPermission permission={[POLICIES.UPDATE_VOUCHERPHARMACY, POLICIES.WRITE_VOUCHERSUPPLIER]}>
               <Button icon={<SaveOutlined />} type="primary" htmlType="submit">
                 Lưu
                 </Button>

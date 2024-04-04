@@ -166,7 +166,7 @@ export default function FreelanceContractPharmacy(
         },
       },
     ],
-    []
+    [canUpdateContract,canDeleteContract, contracts]
   );
 
   return (
@@ -210,6 +210,7 @@ export default function FreelanceContractPharmacy(
             showSizeChanger: true,
             showTotal: (total) => `Tổng cộng: ${total} `,
           }}
+          stickyTop
         />
       </WhiteBox>
       <ModalAnt

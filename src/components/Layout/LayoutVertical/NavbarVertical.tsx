@@ -106,6 +106,8 @@ const NavbarVertical: React.FC = () => {
       </ConfigProvider>
       </div>
     </div>
+
+
   );
 };
 

@@ -6,24 +6,19 @@ import {
   Input,
   Row,
   Select,
-  TreeSelect,
+  TreeSelect
 } from "antd";
-import { get, uniq, xor } from "lodash";
-import React, { useCallback, useEffect, useId, useMemo } from "react";
+import { get } from "lodash";
+import React, { useCallback, useEffect, useMemo } from "react";
 import RenderLoading from "~/components/common/RenderLoading";
 import WithPermission from "~/components/common/WithPermission";
-import GeoSelectTreeStatic from "~/modules/geo/components/GeoSelectTreeStatic";
-import GeoSelectTreeV2 from "~/modules/geo/components/GeoSelectTreeV2";
 import GeoTreeSelect from "~/modules/geo/components/GeoTreeSelect";
 import { RELATIVE_POSITION } from "~/modules/geo/constants";
 import POLICIES from "~/modules/policy/policy.auth";
-import { useFetchState } from "~/utils/hook";
-import { OPTIONS_SALES_GROUP_GEOGRAPHY } from "../constants";
-import apis from "../salesGroup.api";
+import { filterOptionSlug } from "~/utils/helpers";
 import {
-  useCreateSalesGroup,
-  useGetSalesGroup,
-  useResetAction,
+  useCreateSalesGroup, useGetGroupHaveLeader, useGetSalesGroup,
+  useResetAction
 } from "../salesGroup.hook";
 import { FieldTypeForm, propsTypeSalesGroupForm } from "../salesGroup.modal";
 import { convertInitData, convertSubmitData } from "../salesGroup.service";
@@ -33,23 +28,40 @@ const SalesGroupForm = ({
   onCancel,
   onUpdate,
   parentNear: parentNearFromList,
-  parentNearName: parentNearNameFromList,
   parentNearPath: parentNearPathFromList,
 }: propsTypeSalesGroupForm): React.JSX.Element => {
-  const keyTree = useId();
-  const [blackList,isLoadingBlackList] = useFetchState({api : apis.getBlackList,useDocs : false});
+  //*** */ Not Delete
 
+  // const keyTree = useId();
+  // const [blackList,isLoadingBlackList] = useFetchState({api : apis.getBlackList,useDocs : false});
+  // const blackList_ : any[] = useMemo(() => uniq(blackList),[blackList]);
+  // const rootParent = useMemo(() => xor(parentNearPath,[]),[parentNearPath]);
+    
+  // const parentList = useMemo(() => {
+  //   if(!rootParent) return [];
+  //   return rootParent.filter(
+  //     (path : any) => (blackList_).filter((blPath : any) => blPath === path).length === 1
+  //   );
+  // }, [blackList_,rootParent]);
+
+  
+
+  // const parentListDiff = useMemo(() => {
+  //   if(!rootParent) return [];
+  //   return rootParent.filter(
+  //     (path:any) => blackList.filter((blPath:any) => blPath === path).length !== 1
+  //   );
+  // }, [blackList,rootParent]);
+  //
   const [salesGroup, isLoading]: any = useGetSalesGroup(id);
-
-  const blackList_ : any[] = useMemo(() => uniq(blackList),[blackList]);
-
+  const groupHaveLeader: any[] = useGetGroupHaveLeader();
+  const optionsGroupHaveLeader = groupHaveLeader?.map((item:any) => ({
+    label : get(item,'name'),
+    value : get(item,'_id'),
+  }));
   const parentNear = useMemo(
     () => (id ? get(salesGroup, "parent._id", "") : parentNearFromList),
     [salesGroup, id, parentNearFromList]
-  );
-  const parentNearName = useMemo(
-    () => (id ? get(salesGroup, "parent.name", "") : parentNearNameFromList),
-    [salesGroup, id, parentNearNameFromList]
   );
   const parentNearPath = useMemo(
     () =>
@@ -59,24 +71,7 @@ const SalesGroupForm = ({
     [salesGroup, id, parentNearPathFromList]
   );
   
-  const rootParent = useMemo(() => xor(parentNearPath,[]),[parentNearPath]);
-    
-  const parentList = useMemo(() => {
-    if(!rootParent) return [];
-    return rootParent.filter(
-      (path : any) => (blackList_).filter((blPath : any) => blPath === path).length === 1
-    );
-  }, [blackList_,rootParent]);
 
-  console.log(parentList,'parentList');
-  
-
-  const parentListDiff = useMemo(() => {
-    if(!rootParent) return [];
-    return rootParent.filter(
-      (path:any) => blackList.filter((blPath:any) => blPath === path).length !== 1
-    );
-  }, [blackList,rootParent]);
   
   const [form] = Form.useForm();
   const [isSubmitLoading, onCreate] = useCreateSalesGroup(onCancel);
@@ -99,16 +94,16 @@ const SalesGroupForm = ({
   useEffect(() => {
     if (id && salesGroup) {
       const initSalesGroup = convertInitData(salesGroup);
-      form.setFieldsValue(initSalesGroup);
-    } else {
-      form.setFieldsValue({ parentNear });
-    }
-  }, [form, id, salesGroup]);
+      form.setFieldsValue({
+        ...initSalesGroup,
+        parentNear
+      });
+    } 
+  }, [form, id, salesGroup,parentNear]);
 
   const onValuesChange = (value: any, values: any) => {};
   return (
     <div className="flex-column-center">
-      {parentNear ? <i>*Nhóm cha: {parentNearName}</i> : ""}
       <Divider>
         <h5 className="text-center">
           {id ? "Cập nhật" : "Tạo mới"} nhóm bán hàng
@@ -148,13 +143,13 @@ const SalesGroupForm = ({
         <Row justify={"space-between"} align="middle" gutter={48}>
           <Col span={24}>
             <Form.Item shouldUpdate noStyle>
-              {({ setFieldsValue, getFieldValue }) => (
+              {() => (
                 <Form.Item
                   label="Khu vực"
                   name={["managementArea"]}
                   // rules={[{ required: true, message: "Vui lòng chọn" }]}
                 >
-                  <GeoSelectTreeV2
+                  {/* <GeoSelectTreeV2
                     key={keyTree}
                     onChange={(value : any) => {
                       setFieldsValue({ managementArea: value });
@@ -162,13 +157,28 @@ const SalesGroupForm = ({
                     initalValue={getFieldValue("managementArea")}
                     blackList={xor(blackList_, parentListDiff)}
                     parentList={parentList}
-                  />
+                  /> */}
+                    <GeoTreeSelect
+                  autoClearSearchValue
+                  labelInValue={true}
+                  listItemHeight={200}
+                  multiple={true}
+                  showCheckedStrategy={TreeSelect.SHOW_ALL}
+                  showEnabledValuesOnly={true}
+                  showSearch={true}
+                  size="large"
+                  treeCheckStrictly={true}
+                  treeCheckable={true}
+                  treeDefaultExpandedKeys={['1', '2', '3']}
+                  checkablePositions={!parentNearPath ? [RELATIVE_POSITION.IS_CHILD, RELATIVE_POSITION.IS_EQUAL] : [RELATIVE_POSITION.IS_CHILD]}
+                  // enabledValues={parentNearPath?.length ? parentNearPath : null}
+                />
                 </Form.Item>
               )}
             </Form.Item>
           </Col>
         </Row>
-        <Row justify={"space-between"} align="middle" gutter={48}>
+        {/* <Row justify={"space-between"} align="middle" gutter={48}>
           <Col span={24}>
             <Form.Item<FieldTypeForm>
               label="Loại nhóm"
@@ -178,6 +188,19 @@ const SalesGroupForm = ({
               {RenderLoading(
                 isLoading,
                 <Select options={OPTIONS_SALES_GROUP_GEOGRAPHY} />
+              )}
+            </Form.Item>
+          </Col>
+        </Row> */}
+        <Row justify={"space-between"} align="middle" gutter={48}>
+          <Col span={24}>
+            <Form.Item<FieldTypeForm>
+              label="Trực thuộc nhóm"
+              name="parentNear"
+            >
+              {RenderLoading(
+                isLoading,
+                <Select filterOption={filterOptionSlug} showSearch options={optionsGroupHaveLeader} />
               )}
             </Form.Item>
           </Col>
