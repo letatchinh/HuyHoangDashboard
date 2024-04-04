@@ -1,3 +1,16 @@
+## [1.11.2](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/compare/v1.11.1...v1.11.2) (2024-04-04)
+
+
+### Bug Fixes
+
+* [#1501](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1501) - add form upload file contract ([316d9da](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/316d9da40160824c6dda172b47d670769d93dc59))
+* add variable in table ([1bc879c](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/1bc879c12342b382f639d3911efcca98acba3d41))
+* delete user ([674e131](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/674e13164eb6515dc7ae1fff5b4392f95f295dd4))
+* fix permission key sale channel, type pharmacy, group pharmacy ([970ec07](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/970ec07add56a29031c64dd51c9c55c1bf2ae02a))
+* paging user ([10b4bd9](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/10b4bd9ea677a65ace9f4e7800c9be26d61523fd))
+* permission freelance contract ([9c0c2b2](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/9c0c2b272ba106c2b8271b9dcff1245316a22598))
+* upload file in freelance contract ([24cf167](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/24cf1674e9f29f69a2d8852c77d5ac7cdc9e07b5))
+
 ## [1.11.1](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/compare/v1.11.0...v1.11.1) (2024-04-03)
 
 
