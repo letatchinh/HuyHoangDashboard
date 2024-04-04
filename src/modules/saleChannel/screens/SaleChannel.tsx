@@ -146,7 +146,7 @@ export default function SaleChannel(props:propsType) : React.JSX.Element {
       ]: []
     ),
     ],
-    []
+    [arrCheckBox, canDownload]
   );
 
   const onChangeStatus = (

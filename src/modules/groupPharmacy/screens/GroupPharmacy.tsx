@@ -185,7 +185,7 @@ export default function GroupPharmacy(props: propsType): React.JSX.Element {
       },
       
     ],
-    []
+    [arrCheckBox, canDownload]
   );
 
   const onChangeStatus = (
