@@ -4,6 +4,8 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { STATUS } from "~/constants/defaultValue";
 
 import subvn from "~/core/subvn";
+import { useAdapter } from "~/modules/auth/auth.hook";
+import { ADAPTER_KEY } from "~/modules/auth/constants";
 
 export const getPaging = (response: any) => ({
   current: response.page,
@@ -309,4 +311,10 @@ export const DeviceDetector = () => {
   }, []);
 
   return getDeviceInfo();
+};
+
+export const useIsAdapterSystem = () => {
+  const adapter = useAdapter();
+  const isAdapterSystem = useMemo(() => adapter === ADAPTER_KEY.STAFF, [adapter]);
+  return !!isAdapterSystem; // return true if adapter is system
 };

@@ -62,6 +62,7 @@ export default function HistoryPharmacy(props: propsType) {
 
   const [searchByStatus, setSearchByStatus] = useState<string[]>([]);
   const paging = useHistoryPharmacyPaging();
+  const canReadBill = useMatchPolicy(POLICIES.READ_BILL);
 
   const [isOpenForm, setIsOpenForm] = useState(false);
 
@@ -78,9 +79,9 @@ export default function HistoryPharmacy(props: propsType) {
         width: 120,
         render(codeSequence) {
           return (
-            <Link className="link_" to={`/bill?keyword=${codeSequence}`} target={'_blank'}>
+            canReadBill ?<Link className="link_" to={`/bill?keyword=${codeSequence}`} target={'_blank'}>
               {codeSequence}
-            </Link>
+            </Link> : codeSequence
           );
         },
       },

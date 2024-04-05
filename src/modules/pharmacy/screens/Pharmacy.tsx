@@ -1,6 +1,6 @@
 import { ColumnsType } from "antd/es/table";
 import useTranslate from "~/lib/translation";
-import { concatAddress, formatNumberThreeComma } from "~/utils/helpers";
+import { concatAddress, formatNumberThreeComma, useIsAdapterSystem } from "~/utils/helpers";
 import {
   useDeletePharmacy,
   useGetPharmacies,
@@ -85,9 +85,13 @@ export default function Pharmacy() {
   const paging = usePharmacyPaging();
   const canWriteVoucher = useMatchPolicy(POLICIES.WRITE_VOUCHERPHARMACY);
   const canDownload = useMatchPolicy(POLICIES.DOWNLOAD_PHARMAPROFILE);
+
+  const canReadDebt = useMatchPolicy(POLICIES.READ_DEBTPHARMACY);
+  const canUpdatePharma = useMatchPolicy(POLICIES.UPDATE_PHARMAPROFILE);
+  const canDeletePharma = useMatchPolicy(POLICIES.DELETE_PHARMAPROFILE);
   const [arrCheckBox, onChangeCheckBox] = useCheckBoxExport();
-
-
+  const isAdapterSystem = useIsAdapterSystem();
+  
   const onOpenForm = useCallback(
     (id?: any) => {
       if (id) {
@@ -171,15 +175,15 @@ export default function Pharmacy() {
           return get(record, "fullName")
         }
       },
-      {
+      ...(canReadDebt ? [{
         title: "Công nợ",
         dataIndex: "resultDebt",
         key: "resultDebt",
         width: 180,
-        render(value) {
+        render(value: any) {
           return formatNumberThreeComma(value);
         },
-      },
+      }]:[]),
       ...(canWriteVoucher
         ? [
             {
@@ -241,21 +245,25 @@ export default function Pharmacy() {
           },
         ]: []
       ),
-      {
+      ...(canDeletePharma || canUpdatePharma ?[{
         title: "Thao tác",
         dataIndex: "_id",
         key: "_id",
-        align: "center",
-        fixed : 'right',
+        align: "center" as any,
+        fixed : 'right' as any,
         width : 200,
-        render: (record) => {
+        render: (record: any) => {
           return (
             <div className="custom-table__actions">
               <WithPermission permission={POLICIES.UPDATE_PHARMAPROFILE}>
                 <p onClick={() => onOpenForm(record)}>Sửa</p>
               </WithPermission>
+              <WithPermission permission={POLICIES.UPDATE_PHARMAPROFILE}>
+                <WithPermission permission={POLICIES.DELETE_PHARMAPROFILE}>
+                  <p>|</p>
+                </WithPermission>
+              </WithPermission>
               <WithPermission permission={POLICIES.DELETE_PHARMAPROFILE}>
-                <p>|</p>
                 <Popconfirm
                   title={`Bạn muốn xoá nhà thuốc này?`}
                   onConfirm={() => deletePharmacy(record)}
@@ -267,10 +275,10 @@ export default function Pharmacy() {
               </WithPermission>
             </div>
           );
-        },
-      },
+        }
+      }]: []),
     ],
-    [arrCheckBox,canWriteVoucher,canDownload]
+    [arrCheckBox,canWriteVoucher,canDownload, canReadDebt]
   );
 
   const onChangeStatus = (

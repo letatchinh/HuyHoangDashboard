@@ -58,6 +58,8 @@ export default function DebtPharmacy(props: propsType) {
   const [value, setValue] = useState("");
   const [query, onTableChange] = usePharmacyDebtQuery();
   const [searchByStatus, setSearchByStatus] = useState<string[]>([]);
+  const canReadBill = useMatchPolicy(POLICIES.READ_BILL);
+
   const defaultDate = useMemo(
     () => ({
       startDate: dayjs().startOf("month").format("YYYY-MM-DDTHH:mm:ss"),
@@ -91,9 +93,10 @@ export default function DebtPharmacy(props: propsType) {
         width: 120,
         render(codeSequence) {
           return (
-            <Link className="link_" to={`/bill?keyword=${codeSequence}`} target={'_blank'}>
+            canReadBill ?  <Link className="link_" to={`/bill?keyword=${codeSequence}`} target={'_blank'}>
               {codeSequence}
-            </Link>
+            </Link> 
+              : codeSequence
           );
         },
       },

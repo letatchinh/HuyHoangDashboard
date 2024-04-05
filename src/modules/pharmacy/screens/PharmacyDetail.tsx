@@ -13,12 +13,17 @@ import BackBtn from "~/components/common/BackBtn";
 import { PATH_APP } from "~/routes/allPath";
 import AccumulationPharmacy from "../component/AccumulationPharmacy";
 import InformationDetail from "../component/InformationDetail";
+import { useIsAdapterSystem } from "~/utils/helpers";
 
 const { TabPane } = Tabs;
 
 export default function PharmacyDetail() {
   const { t }: any = useTranslate();
   const { id: pharmacyId }: any = useParams();
+  const isAdapterSystem = useIsAdapterSystem();
+  const canReadDebt = useMatchPolicy(POLICIES.READ_DEBTPHARMACY);
+  const canReadHistory = useMatchPolicy(POLICIES.READ_HISTORYBILLPHARMA);
+  const canReadAccumulate = useMatchPolicy(POLICIES.READ_ACCUMULATEPHARMAPROFILE);
 
   const [activeTab, setActiveTab] = useState("1");
   const onChangeTab = (key: string) => {
@@ -41,18 +46,18 @@ export default function PharmacyDetail() {
           <TabPane tab="Thông tin" key="1">
             <InformationDetail pharmacyId={pharmacyId} />
           </TabPane>
-          <TabPane tab="Lịch sử" key="2">
+        {canReadHistory &&  <TabPane tab="Lịch sử" key="2">
             <HistoryPharmacy pharmacyId={pharmacyId} />
-          </TabPane>
-          <TabPane tab="Công nợ" key="3">
+          </TabPane>}
+        { canReadDebt && <TabPane tab="Công nợ" key="3">
             <DebtPharmacy pharmacyId={pharmacyId} />
-          </TabPane>
-          <TabPane tab="Tích luỹ sản phẩm" key="4">
+          </TabPane>}
+          {canReadAccumulate &&<TabPane tab="Tích luỹ sản phẩm" key="4">
             <AccumulationPharmacy pharmacyId={pharmacyId} targetType="PRODUCT"/>
-          </TabPane>
-          <TabPane tab="Tích luỹ danh mục" key="5">
+          </TabPane>}
+          {canReadAccumulate &&<TabPane tab="Tích luỹ danh mục" key="5">
           <AccumulationPharmacy pharmacyId={pharmacyId} targetType="GROUP"/>
-          </TabPane>
+          </TabPane>}
         </Tabs>
       </WhiteBox>
     </div>
