@@ -21,6 +21,9 @@ import FormProduct from "./FormProduct";
 import StockProduct from "./StockProduct";
 import { useAdapter } from "~/modules/auth/auth.hook";
 import { ADAPTER_KEY } from "~/modules/auth/constants";
+// import ConfigTable from "~/components/common/ConfigTable";
+import POLICIES from "~/modules/policy/policy.auth";
+import { useMatchPolicy } from "~/modules/policy/policy.hook";
 export default function ListProduct({
   supplierId,
 }: TypePropsListProduct): React.JSX.Element {
@@ -37,6 +40,8 @@ export default function ListProduct({
   const paging = useProductPaging();
   const adapter = useAdapter();
   const isAdapterIsEmployee = useMemo(() => adapter === ADAPTER_KEY.EMPLOYEE, [adapter]);
+  const canUpdate = useMatchPolicy(POLICIES.UPDATE_PRODUCT);
+  const canDelete = useMatchPolicy(POLICIES.DELETE_PRODUCT);
 
   const onOpenForm = useCallback((id?: string) => {
     if (id) {
@@ -163,53 +168,56 @@ export default function ListProduct({
         return get(value,'element')
       },
     },
-    {
+    ...(canUpdate || canDelete ?[{
       title: "Thao tác",
       dataIndex: "_id",
       key: "_id",
-      align: "center",
-      fixed : 'right',
+      align: "center" as any,
+      fixed : 'right'as any,
       width : 200,
-      render(_id, record, index) {
+      render(_id: any, record: any, index: number) {
         return <ActionColumn 
         _id={_id}
         onDetailClick={onOpenForm}
         onDelete={onDelete}
         />
       },
-    },
+    }]:[]),
   ];
 
   return (
     <div>
       <WhiteBox>
       <SelectSearch 
-      isShowButtonAdd
-      showSelect={false}
-      handleOnClickButton={() => onOpenForm()}
-      onSearch={(value : any) => onParamChange({keyword: value?.trim()})
-      }
-      />
-
-        <TableAnt
-          dataSource={data}
-          loading={isLoading}
-          rowKey={(rc) => rc?._id}
-          columns={columns}
-          scroll={{x : 2000}}
-          stickyTop
-          size="small"
-          pagination={{
-            ...paging,
-            onChange(page, pageSize) {
-              onParamChange({ page, limit: pageSize });
-            },
-            showSizeChanger : true,
-            showTotal: (total) => `Tổng cộng: ${total} `,
-            size:"small"
-          }}
+        isShowButtonAdd
+          showSelect={false}
+          permissionKey={[POLICIES.WRITE_PRODUCT]}
+        handleOnClickButton={() => onOpenForm()}
+        onSearch={(value : any) => onParamChange({keyword: value?.trim()})
+        }
         />
-
+          {/* <ConfigTable> */}
+            <TableAnt
+            className="table-striped-rows-custom"
+            bordered
+            dataSource={data}
+            loading={isLoading}
+            rowKey={(rc) => rc?._id}
+            columns={columns}
+            scroll={{x : 2000}}
+            stickyTop
+            size="small"
+            pagination={{
+              ...paging,
+              onChange(page, pageSize) {
+                onParamChange({ page, limit: pageSize });
+              },
+              showSizeChanger : true,
+              showTotal: (total) => `Tổng cộng: ${total} `,
+              size:"small"
+            }}
+            />
+          {/* </ConfigTable> */}
         <Modal
           open={openForm}
           destroyOnClose
