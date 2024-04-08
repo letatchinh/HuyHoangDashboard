@@ -40,10 +40,10 @@ export default function SelectTypePharmacy({
         {RenderLoading(
           isLoading,
           <Select
-            className="right--parent"
+            // className="right--parent"
             placeholder="Loại nhà thuốc"
             options={options}
-            style={{ width: "100%" }}
+            // style={{ width: "100%" }}
             showSearch
             filterOption={filterSelectWithLabel}
             onChange={onChange}
