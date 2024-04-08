@@ -9,12 +9,12 @@ import WithPermission from "~/components/common/WithPermission";
 import POLICIES from "~/modules/policy/policy.auth";
 import { PROCESS_STATUS, PROCESS_STATUS_VI } from "../pharmacy.modal";
 import { get } from "lodash";
+import { useIsAdapterSystem } from "~/utils/helpers";
 type propsType = {
   onOpenForm: any;
   onDelete: any;
   _id: string;
   isSubmitLoading?: boolean;
-  isShowConvert?: boolean;
   record?: any;
   onConvert?: any;
 };
@@ -23,7 +23,6 @@ export default function ActionColumns({
   onDelete,
   _id,
   isSubmitLoading,
-  isShowConvert = false,
   record,
   onConvert,
 }: propsType): React.JSX.Element {
@@ -32,9 +31,10 @@ export default function ActionColumns({
       record?.processStatus === PROCESS_STATUS.APPROVED ? "#8ce312" : "#ff4141",
     [record]
   );
+  const isAdapter = useIsAdapterSystem();
   return (
     <Space direction="vertical">
-      {get(record, "processStatus") &&
+      {isAdapter &&(get(record, "processStatus") &&
         record?.processStatus === PROCESS_STATUS.NEW && (
           <>
             <WithPermission permission={POLICIES.UPDATE_PHARMAPROFILE}>
@@ -43,7 +43,7 @@ export default function ActionColumns({
                 onConfirm={() =>
                   onConvert({ _id, processStatus: PROCESS_STATUS.APPROVED })
                 }
-                okText="Xoá"
+                okText="Đồng ý"
                 cancelText="Huỷ"
               >
                 <Button
@@ -62,7 +62,7 @@ export default function ActionColumns({
                 onConfirm={() =>
                   onConvert({ _id, processStatus: PROCESS_STATUS.CANCELED })
                 }
-                okText="Xoá"
+                okText="Đồng ý"
                 cancelText="Huỷ"
               >
                 <Button block size="small" danger>
@@ -71,18 +71,7 @@ export default function ActionColumns({
               </Popconfirm>
             </WithPermission>
           </>
-        )}
-      {get(record, "processStatus") &&
-        record?.processStatus !== PROCESS_STATUS.NEW && (
-          <Button
-            style={{ backgroundColor: typeColorButton, color: "white" }}
-            disabled
-            size="small"
-          >
-            {PROCESS_STATUS_VI[record?.processStatus]}
-          </Button>
-        )}
-
+        ))}
       <WithPermission permission={POLICIES.UPDATE_PHARMAPROFILE}>
         <Button
           block

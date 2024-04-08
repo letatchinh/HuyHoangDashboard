@@ -30,6 +30,7 @@ import {
   Popconfirm,
   Radio,
   Row,
+  Select,
   Space,
   Switch,
   Tabs,
@@ -39,7 +40,7 @@ import {
 import Search from "antd/es/input/Search";
 import { PlusCircleOutlined } from "@ant-design/icons";
 import PharmacyForm from "./PharmacyForm";
-import { PROCESS_STATUS, propsType } from "../pharmacy.modal";
+import { PROCESS_STATUS, PROCESS_STATUS_VI, propsType } from "../pharmacy.modal";
 import WithPermission from "~/components/common/WithPermission";
 import POLICIES from "~/modules/policy/policy.auth";
 import { useMatchPolicy } from "~/modules/policy/policy.hook";
@@ -51,6 +52,7 @@ import { useChangeDocumentTitle } from "~/utils/hook";
 import ExportExcelButton from "~/modules/export/component";
 import useCheckBoxExport from "~/modules/export/export.hook";
 import ActionColumns from "./ActionColumns";
+import StatusProcess from "./StatusProcess";
 
 export default function Pharmacy() {
   const { t }: any = useTranslate();
@@ -80,7 +82,7 @@ export default function Pharmacy() {
   const onChangeTab = (newActiveKey: string) => {
     setActiveTab(newActiveKey);
     setApproved(newActiveKey !== '1' ? false : true);
-    onParamChange({ page: 1, approved: newActiveKey !== '1' ? false : true });
+    onParamChange({ page: 1, approved: newActiveKey !== '1' ? false : true ,status: null, processStatus: null});
   };
 
   const onOpenForm = useCallback(
@@ -175,6 +177,24 @@ export default function Pharmacy() {
           return formatNumberThreeComma(value);
         },
       },
+      {
+        title: "Người tạo",
+        dataIndex: "createdBy",
+        key: "createdBy",
+        width: 180,
+        render(value) {
+          return value?.fullName
+        },
+      },
+      {
+        title: "Người duyệt",
+        dataIndex: "approveBy",
+        key: "approveBy",
+        width: 180,
+        render(value) {
+          return value?.fullName
+        },
+      },
       ...(canWriteVoucher
         ? [
             {
@@ -194,36 +214,42 @@ export default function Pharmacy() {
             },
           ]
         : []),
-      {
+      ...(activeTab === '1' ? [{
         title: "Trạng thái",
         key: "status",
         dataIndex: "status",
         width: 100,
-        align: "center",
-        render: (status, record) => {
+        align: "center" as any,
+        render: (status: any, record: any) => {
           return (
             canUpdate ?
-            <WithPermission permission={POLICIES.UPDATE_PHARMAPROFILE}>
-              <Switch
-                checked={status === "ACTIVE"}
-                onChange={(value) =>
-                  onChangeStatus(
-                    get(record, "_id"),
-                    value ? STATUS["ACTIVE"] : STATUS["INACTIVE"],
-                    isLoading,
-                    record
-                  )
-                }
-              />
-              </WithPermission>
-              : (
+              <WithPermission permission={POLICIES.UPDATE_PHARMAPROFILE}>
                 <Switch
                   checked={status === "ACTIVE"}
+                  onChange={(value) =>
+                    onChangeStatus(
+                      get(record, "_id"),
+                      value ? STATUS["ACTIVE"] : STATUS["INACTIVE"],
+                      isLoading,
+                      record
+                    )
+                  }
                 />
-              )
-          );
-        },
-      },
+              </WithPermission>
+              : <Switch checked={status === "ACTIVE"} />
+          )
+        }
+      }]: []),
+      ...(activeTab === '2' ? [{
+        title: "Trạng thái",
+        key: "processStatus",
+        dataIndex: "processStatus",
+        width: 100,
+        align: "center" as any,
+        render: (processStatus: any, record: any) => {
+          return <StatusProcess processStatus={processStatus}/>
+        }
+      }]: []),
       ...(
         canDownload ? [
           {
@@ -257,14 +283,13 @@ export default function Pharmacy() {
               onOpenForm={onOpenForm}
               _id={_id}
               isSubmitLoading={isLoadingSubmit}
-              isShowConvert={record?.processStatus}
               record={record}
             />
           );
         },
       }]: []),
     ],
-    [arrCheckBox,canWriteVoucher,canDownload, canUpdate, canDelete]
+    [arrCheckBox,canWriteVoucher,canDownload, canUpdate, canDelete,activeTab]
   );
 
   const onChangeStatus = (
@@ -282,7 +307,7 @@ export default function Pharmacy() {
   };
 
   const onChange = (e: any) => {
-    onParamChange({ ...query, status: e.target.value })
+    onParamChange({ ...query, status: e.target.value ,processStatus: null})
   };
 
   useChangeDocumentTitle("Danh sách nhà thuốc")
@@ -290,43 +315,50 @@ export default function Pharmacy() {
     <div>
       <Breadcrumb title={t("list-pharmacies")} />
       <WhiteBox>
-      <Row className="mb-3" justify={"space-between"}>
-        <Col span={8}>
-          <Search
-            enterButton="Tìm kiếm"
-            placeholder="Nhập để tìm kiếm"
-            allowClear
-            onSearch={() => onParamChange({ keyword })}
-            onChange={(e) => setKeyword(e.target.value)}
-            value={keyword}
-          />
-        </Col>
-        <Row>
-        <WithPermission permission={POLICIES.WRITE_PHARMAPROFILE}>
-          <Col>
-            <Button
-              icon={<PlusCircleOutlined />}
-              type="primary"
-              onClick={() => onOpenForm()}
-            >
-              Thêm mới
-            </Button>
-          </Col>
-          </WithPermission>
-          <WithPermission permission={POLICIES.DOWNLOAD_PHARMAPROFILE}>
-            <Col>
-                <ExportExcelButton
-                  fileName="Danh sách nhà thuốc"
-                  api="pharma-profile"
-                  exportOption="pharma"
-                  query={query}
-                  ids={arrCheckBox}
+      <Row className="mb-3">
+        <Col span = {12}>
+            <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
+              <Col span={12}>
+                  <Search
+                  style ={{width : '100%'}}
+                  enterButton="Tìm kiếm"
+                  placeholder="Nhập để tìm kiếm"
+                  allowClear
+                  onSearch={() => onParamChange({ keyword })}
+                  onChange={(e) => setKeyword(e.target.value)}
+                  value={keyword}
                 />
+                </Col>
+            </Row>
+        </Col>
+        <Col span = {12}>
+          <Row justify={"end"} gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
+          <WithPermission permission={POLICIES.WRITE_PHARMAPROFILE}>
+            <Col>
+              <Button
+                icon={<PlusCircleOutlined />}
+                type="primary"
+                onClick={() => onOpenForm()}
+              >
+                Thêm mới
+              </Button>
             </Col>
-          </WithPermission>
-        </Row>
+            </WithPermission>
+            <WithPermission permission={POLICIES.DOWNLOAD_PHARMAPROFILE}>
+              <Col>
+                  <ExportExcelButton
+                    fileName="Danh sách nhà thuốc"
+                    api="pharma-profile"
+                    exportOption="pharma"
+                    query={query}
+                    ids={arrCheckBox}
+                  />
+              </Col>
+            </WithPermission>
+          </Row>
+        </Col>
       </Row>
-      <WithPermission permission={POLICIES.UPDATE_PHARMAPROFILE}>
+      {activeTab === "1" && <WithPermission permission={POLICIES.UPDATE_PHARMAPROFILE}>
         <Space style={{ marginBottom: 20 }}>
           <Typography style={{ fontSize: 14, marginRight: 20 }}>
             Phân loại trạng thái theo :
@@ -344,14 +376,32 @@ export default function Pharmacy() {
             </Radio.Group>
           </Row>
         </Space>
-      </WithPermission>
+        </WithPermission>}
+        {activeTab === "2" && <Space style={{ marginBottom: 20 }}>
+          <Typography style={{ fontSize: 14, marginRight: 20 }}>
+            Phân loại trạng thái theo :
+          </Typography>
+          <Row gutter={14}>
+            <Radio.Group
+              onChange={(e) => onParamChange({ ...query,status: null, processStatus: e.target.value })}
+              optionType="button"
+              buttonStyle="solid"
+              defaultValue={query?.processStatus}
+            >
+              {Object.entries(PROCESS_STATUS_VI).map(([key, value]: any) => (
+                    <Radio.Button key={key} value={key}>{value}</Radio.Button>
+                  ))}
+            </Radio.Group>
+          </Row>
+        </Space>
+        }
           <Tabs defaultActiveKey={activeTab} onChange={onChangeTab} destroyInactiveTabPane>
           <Tabs.TabPane key={'1'} tab='Chính thức' >
             <TableAnt
             dataSource={pharmacies}
             loading={isLoading}
             rowKey={(rc) => rc?._id}
-            scroll={{x : 1500}}
+            scroll={{x : 'max-content'}}
             columns={columns}
             size="small"
             pagination={{
@@ -369,7 +419,7 @@ export default function Pharmacy() {
               dataSource={pharmacies}
               loading={isLoading}
               rowKey={(rc) => rc?._id}
-              scroll={{x : 1500}}
+              scroll={{x : 'max-content'}}
               columns={columns}
               size="small"
               pagination={{

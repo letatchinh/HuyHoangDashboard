@@ -74,3 +74,8 @@ export const PROCESS_STATUS_VI : any = {
   NEW: 'Đang chờ duyệt',
   CANCELED: 'Đã huỷ',
 };
+export const PROCESS_STATUS_VI_COLOR : any = {
+  APPROVED: '#8ce312',
+  NEW: '#B3C8CF',
+  CANCELED: '#ff4141',
+};
