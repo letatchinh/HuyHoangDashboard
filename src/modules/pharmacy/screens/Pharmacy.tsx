@@ -12,7 +12,7 @@ import {
 import Breadcrumb from "~/components/common/Breadcrumb";
 import WhiteBox from "~/components/common/WhiteBox";
 import TableAnt from "~/components/Antd/TableAnt";
-import { omit, get } from "lodash";
+import { omit, get, map, truncate } from "lodash";
 import {
   REF_COLLECTION_UPPER,
   STATUS,
@@ -25,17 +25,19 @@ import {
   Button,
   Checkbox,
   Col,
+  Flex,
   Modal,
   Popconfirm,
   Radio,
   Row,
   Space,
   Switch,
+  Tooltip,
   Typography,
   message,
 } from "antd";
 import Search from "antd/es/input/Search";
-import { PlusCircleOutlined } from "@ant-design/icons";
+import { FileTextOutlined, PlusCircleOutlined } from "@ant-design/icons";
 import PharmacyForm from "./PharmacyForm";
 import { propsType } from "../pharmacy.modal";
 import WithPermission from "~/components/common/WithPermission";
@@ -183,7 +185,26 @@ export default function Pharmacy() {
         render(value: any) {
           return formatNumberThreeComma(value);
         },
-      }]:[]),
+      }] : []),
+      {
+        title: "File đính kèm",
+        dataIndex: "files",
+        key: "files",
+        width: 180,
+        align: "left",
+        render(record) {
+          const render = map(record, (item) => (
+            <Tooltip title={item?.name?.length > 16 ? item?.name : ""}>
+              <a download href={item?.url} target="_blank" style={{ cursor: "pointer"}}>
+                <FileTextOutlined style={{ marginRight: '5px'}} />
+                {truncate(item?.name, { 'length': 16 })}
+              </a>
+            </Tooltip>
+          ))
+          return <Flex vertical >{render}</Flex>
+        },
+      },
+      
       ...(canWriteVoucher
         ? [
             {

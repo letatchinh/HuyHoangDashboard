@@ -18,6 +18,8 @@ import RenderLoading from "~/components/common/RenderLoading";
 import { filterSelectWithLabel } from "~/utils/helpers";
 import TextArea from "antd/es/input/TextArea";
 import AddressFormDelivery from "~/components/common/AddressFormDelivery";
+import BaseBorderBox from "~/components/common/BaseBoderBox";
+import UploadListFile from "~/modules/freelanceContractPharmacy/component/UploadListFile";
 const FormItem = Form.Item;
 const { Option } = Select;
 interface Props {
@@ -97,6 +99,7 @@ export default function PharmacyForm({ onClose, id, handleUpdate }: Props) {
           wrapperCol={{ sm: 24, md: 24, lg: 18 }}
           labelAlign="left"
         >
+          <BaseBorderBox title={"Thông tin chung"}>
           <FormItem
             label="Tên nhà thuốc"
             name="name"
@@ -149,24 +152,16 @@ export default function PharmacyForm({ onClose, id, handleUpdate }: Props) {
               </FormItem>
             </Col>
           </Row>
-          <AddressFormSection
-            form={form}
-            cityCode={cityCode}
-            setCityCode={setCityCode}
-            districtCode={districtCode}
-            setDistrictCode={setDistrictCode}
-            allowPhoneNumber={false}
-            allowEmail={false}
-          />
-          {/* <FormItem
-            label="Trình dược viên"
-            name="employeeId"
-            labelCol={{ sm: 24, md: 24, lg: 3 }}
-            wrapperCol={{ sm: 24, md: 24, lg: 21 }}
-          >
-            <Input defaultValue={"65bb15fc7f8c1b44dc90d3dd"}/>
-          </FormItem> */}
-          <Row gutter={48} align="middle" justify="space-between">
+            <AddressFormSection
+              form={form}
+              cityCode={cityCode}
+              setCityCode={setCityCode}
+              districtCode={districtCode}
+              setDistrictCode={setDistrictCode}
+              allowPhoneNumber={false}
+              allowEmail={false}
+            />
+              <Row gutter={48} align="middle" justify="space-between">
             <Col span={12}>
               <SelectTypePharmacy
                 isLoading={isLoading}
@@ -254,16 +249,31 @@ export default function PharmacyForm({ onClose, id, handleUpdate }: Props) {
           >
             <TextArea />
           </FormItem>
-          <h5 style={{textAlign: 'center'}}>Địa chỉ giao hàng</h5>
-          <AddressFormDelivery
-            form={form}
-            cityCode={cityCode}
-            setCityCode={setCityCode}
-            districtCode={districtCode}
-            setDistrictCode={setDistrictCode}
-            allowPhoneNumber={false}
-            allowEmail={false}
-          />
+          </BaseBorderBox>
+          <BaseBorderBox title={"Danh sách đính kèm"}>
+            <UploadListFile
+              contract={pharmacy}
+            />
+          </BaseBorderBox>
+          <BaseBorderBox title={"Địa chỉ giao hàng"}>
+            <AddressFormDelivery
+              form={form}
+              cityCode={cityCode}
+              setCityCode={setCityCode}
+              districtCode={districtCode}
+              setDistrictCode={setDistrictCode}
+              allowPhoneNumber={false}
+              allowEmail={false}
+            />
+          </BaseBorderBox>
+          {/* <FormItem
+            label="Trình dược viên"
+            name="employeeId"
+            labelCol={{ sm: 24, md: 24, lg: 3 }}
+            wrapperCol={{ sm: 24, md: 24, lg: 21 }}
+          >
+            <Input defaultValue={"65bb15fc7f8c1b44dc90d3dd"}/>
+          </FormItem> */}
           <Row className="form__submit-box" style={{justifyContent: 'center'}}>
             {isSubmitLoading ? (
               <Button disabled>Huỷ</Button>

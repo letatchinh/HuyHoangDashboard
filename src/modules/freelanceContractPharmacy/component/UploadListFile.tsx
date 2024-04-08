@@ -90,7 +90,6 @@ const UploadListFile = ({contract}: props) => {
       setFileListUrl([...data]);
     };
   }, [contract]);
-console.log(fileListUrl,'fileListUrl')
   const onChange = ({ file, fileList }: any) => {
       setFileListUrl([...fileList]); // set file list to first state
     if (file.status !== 'uploading') {
