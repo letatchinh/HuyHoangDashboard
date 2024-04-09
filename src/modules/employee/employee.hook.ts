@@ -96,7 +96,7 @@ export const useDeleteEmployee = (callback?: any) => {
 
 export const useEmployeeQueryParams = () => {
   const query = useQueryParams();
-  const [page, setPage] = useState(query.get("page") || 1);
+  const [page, setPage] = useState<any>(query.get("page") || 1);
   const [limit, setLimit] = useState(query.get("limit") || 10);
   const keyword = query.get("keyword");
 
@@ -107,6 +107,15 @@ export const useEmployeeQueryParams = () => {
   
   const createSuccess = useSelector(createSuccessSelector);
   const deleteSuccess = useSelector(deleteSuccessSelector);
+  const data = useSelector(listSelector);
+
+  const newPage = useMemo(() => {
+    if (!data?.length && page > 1) {
+      setPage(page - 1);
+      return page - 1;  
+    };
+    return page;
+  }, [data, page]);
   return useMemo(() => {
     const queryParams = {
       page,
@@ -115,7 +124,7 @@ export const useEmployeeQueryParams = () => {
     };
     return [queryParams, onTableChange];
     //eslint-disable-next-line
-  }, [page, limit, keyword, createSuccess, deleteSuccess]);
+  }, [page, limit, keyword, createSuccess, deleteSuccess,newPage]);
 };
 
 export const useUpdateEmployeeParams = (

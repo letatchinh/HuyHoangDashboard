@@ -32,6 +32,8 @@ import POLICIES from "~/modules/policy/policy.auth";
 import useCheckBoxExport from "~/modules/export/export.hook";
 import ExportExcelButton from "~/modules/export/component";
 import { RadioChangeEvent } from "antd/lib/index";
+import ConfigTable from "~/components/common/ConfigTable";
+import DateTimeTable from "~/components/common/DateTimeTable";
 
 type propsType = {
   status?: string;
@@ -106,9 +108,10 @@ export default function ListOrder({ status }: propsType): React.JSX.Element {
           return (
             <Flex vertical align={'center'}>
               {get(record,'createAuto') && <Tag color={'blue'}>Hệ thống tạo</Tag>}
-              <Typography.Text strong>
+              {/* <Typography.Text strong>
               {dayjs(createdAt).format("DD/MM/YYYY HH:mm")}
-            </Typography.Text>
+            </Typography.Text> */}
+              <DateTimeTable data={createdAt}/>
             </Flex>
           );
         },
@@ -267,16 +270,20 @@ export default function ListOrder({ status }: propsType): React.JSX.Element {
         optionType="button"
         buttonStyle="solid"
       />
-    </Flex>
-      <TableAnt
-        stickyTop
-        columns={columns}
-        dataSource={orderSuppliers}
-        loading={isLoading}
-        pagination={pagingTable(paging, onParamChange)}
-        size="small"
-        scroll={{ x: 1500 }}
-      />
+      </Flex>
+      <ConfigTable>
+        <TableAnt
+          className="table-striped-rows-custom"
+          bordered
+          stickyTop
+          columns={columns}
+          dataSource={orderSuppliers}
+          loading={isLoading}
+          pagination={pagingTable(paging, onParamChange)}
+          size="small"
+          scroll={{ x: 1500 }}
+        />
+      </ConfigTable>
       <Modal
         title="Phiếu chi"
         open={open}
