@@ -54,13 +54,13 @@ export default function TypePharmacy(props:propsType) : React.JSX.Element {
     const columns: ColumnsType = useMemo(
       () => [
         {
-          title: "Mã loại nhà thuốc",
+          title: "Mã loại khách hàng",
           dataIndex: "code",
           key: "code",
           width: 120,
         },
         {
-          title: "Tên loại nhà thuốc",
+          title: "Tên loại khách hàng",
           dataIndex: "title",
           key: "title",
           width: 250,
@@ -114,7 +114,7 @@ export default function TypePharmacy(props:propsType) : React.JSX.Element {
                 <WithPermission permission={POLICIES.DELETE_CUSTOMERGROUP}>
                   <p>|</p>
                   <Popconfirm
-                    title={`Bạn muốn xoá loại nhà thuốc này?`}
+                    title={`Bạn muốn xoá loại khách hàng này?`}
                     onConfirm={() => deleteTypePharmacy(record)}
                     okText="Xoá"
                     cancelText="Huỷ"
@@ -175,10 +175,10 @@ export default function TypePharmacy(props:propsType) : React.JSX.Element {
           break;
       }
     };
-    useChangeDocumentTitle("Danh sách loại nhà thuốc")
+    useChangeDocumentTitle("Danh sách loại khách hàng")
     return (
       <div>
-        <Breadcrumb title={"Loại nhà thuốc"} />
+        <Breadcrumb title={"Loại khách hàng"} />
         <Row className="mb-3" justify={"space-between"}>
           <Col span={8}>
             <Search
@@ -205,7 +205,7 @@ export default function TypePharmacy(props:propsType) : React.JSX.Element {
             <WithPermission permission={POLICIES.DOWNLOAD_CUSTOMERGROUP}>
               <Col>
                   <ExportExcelButton
-                    fileName="Danh sách loại nhà thuốc"
+                    fileName="Danh sách loại khách hàng"
                     api="customer-group"
                     exportOption="customerGroup"
                     query={query}

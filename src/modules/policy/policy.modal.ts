@@ -1,32 +1,37 @@
 import { PoliciesRuleType } from "./policy.rule";
 
 export type TypeProps = {};
-export type ResourceType = {
-  GROUP_USER: string[];
-  GROUP_EMPLOYEE: string[];
-  GROUP_WHSETTING: string[];
-  GROUP_MANUFACTURER: string[];
-  UNIT: string[];
-  GROUP_PRODUCTGROUP: string[];
-  GROUP_RANKING: string[];
-  MEDICINE: string[];
-  GROUP_PHARMA: string[];
+const ResourceTypeRule = {
+  GROUP_USER:'GROUP_USER',
+  GROUP_EMPLOYEE:'GROUP_EMPLOYEE',
+  GROUP_WHSETTING:'GROUP_WHSETTING',
+  GROUP_MANUFACTURER:'GROUP_MANUFACTURER',
+  UNIT:'UNIT',
+  GROUP_PRODUCTGROUP:'GROUP_PRODUCTGROUP',
+  GROUP_RANKING:'GROUP_RANKING',
+  MEDICINE:'MEDICINE',
+  GROUP_PHARMA:'GROUP_PHARMA',
+  PHARMA_PROFILE:'PHARMA_PROFILE',
   // Đơn hàng
-  GROUP_BILL: string[];
-  NOTIFICATION_BOT_MANAGER: string[];
-  GROUP_SUPPLIER: string[];
-  GROUP_WORK_MANAGERMENT: string[];
-  GROUP_VOUCHER: string[];
-  GROUP_MEDICINE: string[];
-  GROUP_SHIPPINGCOST: string[];
-  GROUP_REPORT: string[];
+  GROUP_BILL:'GROUP_BILL',
+  NOTIFICATION_BOT_MANAGER:'NOTIFICATION_BOT_MANAGER',
+  GROUP_SUPPLIER:'GROUP_SUPPLIER',
+  GROUP_WORK_MANAGERMENT:'GROUP_WORK_MANAGERMENT',
+  GROUP_VOUCHER:'GROUP_VOUCHER',
+  GROUP_MEDICINE:'GROUP_MEDICINE',
+  GROUP_SHIPPINGCOST:'GROUP_SHIPPINGCOST',
+  GROUP_REPORT:'GROUP_REPORT',
   // Kênh bán hàng
-  SALES_CHANNEL: string[];
+  SALES_CHANNEL:'SALE_CHANNEL',
   // Loại nhà thuốc
-  CUSTOMER_GROUP: string[];
+  CUSTOMER_GROUP:'CUSTOMER_GROUP',
   // Nhóm nhà thuốc
-  CUSTOMER: string[];
+  CUSTOMER:'CUSTOMER',
 };
+
+type newType =  typeof ResourceTypeRule
+
+export type ResourceType = { [ key in keyof newType] : string[]}
 
 export type policyType =
   | "write"

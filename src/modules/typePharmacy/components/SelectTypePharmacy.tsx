@@ -33,15 +33,15 @@ export default function SelectTypePharmacy({
   return (
     <>
       <Form.Item
-        label="Loại nhà thuốc"
+        label="Loại khách hàng"
         name="customerGroupId"
-        rules={[{ required: true, message: "Vui lòng chọn loại nhà thuốc!" }]}
+        rules={[{ required: true, message: "Vui lòng chọn loại khách hàng!" }]}
       >
         {RenderLoading(
           isLoading,
           <Select
             className="right--parent"
-            placeholder="Loại nhà thuốc"
+            placeholder="Loại khách hàng"
             options={options}
             style={{ width: "100%" }}
             showSearch
