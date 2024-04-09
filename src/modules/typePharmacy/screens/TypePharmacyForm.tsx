@@ -50,7 +50,7 @@ export default function TypePharmacyForm({ onClose, id, handleUpdate }: Props) {
   return (
     <div className="type-pharmacy page-wraper form-page-content">
       <h4 style={{ margin: "20px 0 40px 20px" }}>
-        {id ? " Cập nhật" : "Thêm mới"} loại nhà thuốc
+        {id ? " Cập nhật" : "Thêm mới"} loại khách hàng
       </h4>
       <div className="container-fluid">
         <Form
@@ -64,16 +64,16 @@ export default function TypePharmacyForm({ onClose, id, handleUpdate }: Props) {
           wrapperCol={{ sm: 24, md: 24, lg: 16, xl: 16 }}
           labelAlign="left"
         >
-          <FormItem label="Mã loại nhà thuốc" name="code">
+          <FormItem label="Mã loại khách hàng" name="code">
             <Input disabled />
           </FormItem>
           <FormItem
-            label="Tên loại nhà thuốc"
+            label="Tên loại khách hàng"
             name="title"
             rules={[
               {
                 required: true,
-                message: "Xin vui lòng nhập tên loại nhà thuốc",
+                message: "Xin vui lòng nhập tên loại khách hàng",
               },
             ]}
           >

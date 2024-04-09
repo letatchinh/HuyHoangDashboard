@@ -21,9 +21,9 @@ import FormProduct from "./FormProduct";
 import StockProduct from "./StockProduct";
 import { useAdapter } from "~/modules/auth/auth.hook";
 import { ADAPTER_KEY } from "~/modules/auth/constants";
-// import ConfigTable from "~/components/common/ConfigTable";
 import POLICIES from "~/modules/policy/policy.auth";
 import { useMatchPolicy } from "~/modules/policy/policy.hook";
+import ConfigTable from "~/components/common/ConfigTable";
 export default function ListProduct({
   supplierId,
 }: TypePropsListProduct): React.JSX.Element {
@@ -189,14 +189,13 @@ export default function ListProduct({
     <div>
       <WhiteBox>
       <SelectSearch 
-        isShowButtonAdd
-          showSelect={false}
-          permissionKey={[POLICIES.WRITE_PRODUCT]}
-        handleOnClickButton={() => onOpenForm()}
-        onSearch={(value : any) => onParamChange({keyword: value?.trim()})
-        }
-        />
-          {/* <ConfigTable> */}
+      isShowButtonAdd
+      showSelect={false}
+      handleOnClickButton={() => onOpenForm()}
+      onSearch={(value : any) => onParamChange({keyword: value?.trim()})}
+      permissionKey={[POLICIES.WRITE_PRODUCT]}
+      />
+          <ConfigTable>
             <TableAnt
             className="table-striped-rows-custom"
             bordered
@@ -217,7 +216,7 @@ export default function ListProduct({
               size:"small"
             }}
             />
-          {/* </ConfigTable> */}
+          </ConfigTable>
         <Modal
           open={openForm}
           destroyOnClose

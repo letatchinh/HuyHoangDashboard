@@ -26,7 +26,7 @@ export default function Homepage(props: propsType): React.JSX.Element {
 
   //Permission
   const canWriteOrder = useMatchPolicy(POLICIES.WRITE_QUOTATION);
-  const canWriteBill = useMatchPolicy(POLICIES.WRITE_BILL);
+  const canWriteOrderSupplier = useMatchPolicy(POLICIES.WRITE_ORDERSUPPLIER);
   const canWriteProduct = useMatchPolicy(POLICIES.WRITE_PRODUCT);
   const canReadProduct = useMatchPolicy(POLICIES.READ_PRODUCT);
 
@@ -34,7 +34,7 @@ export default function Homepage(props: propsType): React.JSX.Element {
     <div className="homepage">
       <div className="homepage--overlay" />
       <Row gutter={16}>
-      {canWriteBill &&  <Col>
+      {canWriteOrderSupplier &&  <Col>
           <BtnAction
             onClick={() => goLink('/order-supplier/create')}
             value="Tạo đơn mua"

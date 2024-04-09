@@ -8,6 +8,7 @@ export default function InformationDetail(props: propsType) {
   const { pharmacyId } = props;
   const [info, isLoading] = useGetPharmacyId(pharmacyId);
   const [form] = Form.useForm();
+  // const {urbanType} = info as {urbanType:keyof typeof URBAN_VI };
 
   return (
     <div>
@@ -81,14 +82,14 @@ export default function InformationDetail(props: propsType) {
         <Row gutter={36}>
           <Col span={12}>
             <div className="content-field">
-              <div className="label">Loại nhà thuốc: </div>
+              <div className="label">Loại khách hàng: </div>
               <div>{info?.customerGroup?.title}</div>
             </div>
             <hr style={{color: '#0000001a'}}/>
           </Col>
           <Col span={12}>
             <div className="content-field">
-              <div className="label">Nhóm nhà thuốc: </div>
+              <div className="label">Nhóm khách hàng: </div>
               <div>{info?.customer?.rateType} - {info?.customer?.title}</div>
             </div>
             <hr style={{color: '#0000001a'}}/>
@@ -106,6 +107,22 @@ export default function InformationDetail(props: propsType) {
             <div className="content-field">
               <div className="label">Tần suất viếng thăm: </div>
               <div>{info?.frequencyOfVisits}</div>
+            </div>
+            <hr style={{color: '#0000001a'}}/>
+          </Col>
+        </Row>
+        <Row gutter={36}>
+          <Col span={12}>
+            <div className="content-field">
+              <div className="label">Hạng khách hàng: </div>
+              <div>{info?.customerRanking}</div>
+            </div>
+            <hr style={{color: '#0000001a'}}/>
+          </Col>
+          <Col span={12}>
+            <div className="content-field">
+              <div className="label">Khu vực: </div>
+              <div>{info?.urbanType === 'CITY' ? 'Thành phố' : info?.urbanType === 'COUNTRY' ? 'Nông thôn' : ''}</div>
             </div>
             <hr style={{color: '#0000001a'}}/>
           </Col>
