@@ -1,4 +1,5 @@
 import { TablePaginationConfig } from "antd";
+import dayjs from "dayjs";
 import { forIn, get, groupBy, keys,flattenDeep,compact,uniq } from "lodash";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { STATUS } from "~/constants/defaultValue";
@@ -310,3 +311,23 @@ export const DeviceDetector = () => {
 
   return getDeviceInfo();
 };
+
+//
+var utc = require('dayjs/plugin/utc')
+dayjs.extend(utc)
+
+export const vietnamMoment = (v: any, formatTime?: any) => {
+  if (v) {
+    // const utcMoment = dayjs.utc(v);
+    const utcMoment = dayjs(v);
+    if (formatTime) {
+      return utcMoment.format(formatTime);
+    }
+    else {
+      return utcMoment
+    }
+  }
+  return null
+ 
+};
+//
