@@ -7,7 +7,7 @@ import {
   useUpdateBillParams,
 } from "../bill.hook";
 
-import { Checkbox, Col, Row, Space, Typography } from "antd";
+import { Checkbox, Col, ConfigProvider, Row, Space, Typography } from "antd";
 import { ColumnsType } from "antd/es/table/InternalTable";
 import dayjs from "dayjs";
 import { get, includes } from "lodash";
@@ -24,6 +24,7 @@ import useCheckBoxExport from "~/modules/export/export.hook";
 import WithPermission from "~/components/common/WithPermission";
 import ExportExcelButton from "~/modules/export/component";
 import { CalculateBill } from "../bill.service";
+import DateTimeTable from "~/components/common/DateTimeTable";
 const CalculateBillMethod = new CalculateBill();
 type propsType = {
   status?: string;
@@ -41,7 +42,7 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
   const columns: ColumnsType = useMemo(
     () => [
       {
-        title: "Mã đơn hàng",
+        title: <p style={{color: '#333', fontWeight: 'bold'}}>Mã đơn hàng</p>,
         dataIndex: "codeSequence",
         key: "codeSequence",
         align: "center",
@@ -60,12 +61,13 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
         title: "Ngày tạo đơn",
         dataIndex: "createdAt",
         key: "createdAt",
-        align: "center",
+        align: "left",
         render(createdAt, record, index) {
           return (
-            <Typography.Text strong>
-              {dayjs(createdAt).format("DD/MM/YYYY HH:mm")}
-            </Typography.Text>
+            // <Typography.Text strong>
+            //   {dayjs(createdAt).format("DD/MM/YYYY HH:mm")}
+            // </Typography.Text>
+            <DateTimeTable data={createdAt} />
           );
         },
       },
@@ -73,7 +75,7 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
         title: "Tên nhà thuốc",
         dataIndex: "pharmacy",
         key: "pharmacy",
-        align: "center",
+        align: "left",
         render(pharmacy, record, index) {
           return <Typography.Text>{get(pharmacy, "name", "")}</Typography.Text>;
         },
@@ -93,19 +95,19 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
         title: "Lý do huỷ",
         dataIndex: "cancelNote",
         key: "cancelNote",
-        align: "center",
+        align: "left",
       },
       {
         title: "Ghi chú",
         dataIndex: "note",
         key: "note",
-        align: "center",
+        align: "left",
       },
       {
         title: "Khách đã trả",
         dataIndex: "pair",
         key: "pair",
-        align: "center",
+        align: "left",
         render(pair, record, index) {
           return <Typography.Text>{formatter(pair + get(record,'totalReceiptVoucherCompleted'))}</Typography.Text>;
         },
@@ -114,7 +116,7 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
         title: "Khách phải trả",
         dataIndex: "totalPrice",
         key: "totalPrice",
-        align: "center",
+        align: "left",
         render(totalPrice, record, index) {
           const remainAmount = CalculateBillMethod.remainAmount(record);
 
@@ -127,7 +129,7 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
             title: 'Lựa chọn',
             key: '_id',
             width: 80,
-            align: 'center' as any,
+            align: 'left' as any,
             render: (item: any, record: any) => {
               const id = record?._id;
               return (
@@ -139,16 +141,14 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
           },
         ] : []
       ),
-    ], [arrCheckBox]
+    ], [arrCheckBox,canDownload]
   );
-  console.log(query?.supplierIds,'query?.supplierIds');
-  
   return (
     <div className="bill-page">
       {/* <Space> */}
         <Row justify={"space-between"}>
           <Col span={12}>
-          <Space>
+      <Space >
         <SelectSupplier
           value={query?.supplierIds ? query?.supplierIds?.split(',') : []}
           onChange={(value) => onParamChange({ supplierIds: value?.length ? value : null })}
@@ -170,15 +170,26 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
               </Col>
           </WithPermission>
         </Row>
-      {/* </Space> */}
-      <TableAnt
+      <ConfigProvider
+        theme={{
+          components: {
+            Table: {
+              headerBg: '#C4E4FF',
+            },
+          },
+        }}
+      >
+        <TableAnt
         stickyTop
+        className="table-striped-rows-custom"
         columns={columns}
         dataSource={bills}
         loading={isLoading}
         pagination={pagingTable(paging, onParamChange)}
         size="small"
+        bordered
       />
+      </ConfigProvider>
     </div>
   );
 }
