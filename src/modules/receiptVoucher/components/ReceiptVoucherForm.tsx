@@ -104,7 +104,6 @@ export default function ReceiptVoucher(props: propsType): React.JSX.Element {
   const [, handleConfirm] = useConfirmReceiptVoucher(onClose);
   const [voucher, isLoading] = useGetReceiptVoucher(id);
   const initReceiptVoucher = useInitWhReceiptVoucher(voucher);
-  console.log(initReceiptVoucher,'initReceiptVoucher');
   
   const memo = useMemo(() => pharmacyId, [pharmacyId]);
   const queryBranch = useMemo(() => ({page: 1, limit: 10}), []);
@@ -504,7 +503,10 @@ export default function ReceiptVoucher(props: propsType): React.JSX.Element {
               <Row gutter={16}> 
                 <Col span={12}>
                   <FormItem label="Loại dữ liệu" name={["method","type"]} labelCol={{ lg: 8 }}>
-                    {render(<Select allowClear onClear={() => form.setFieldsValue({
+                  {render(
+                    <Select
+                      allowClear
+                      onClear={() => form.setFieldsValue({
                         method : null
                       })
                       
@@ -512,7 +514,10 @@ export default function ReceiptVoucher(props: propsType): React.JSX.Element {
                   </FormItem>
                 </Col>
                 <Col span={12}>
-                {render(<SelectBillCreateVoucherByPharmacyId id={id ? get(initReceiptVoucher,'pharmacyId') : (pharmacyId || null)}/>)}
+                {render(<SelectBillCreateVoucherByPharmacyId
+                  id={id ? get(initReceiptVoucher, 'pharmacyId') : (pharmacyId || null)}
+                  optionsDefault = {get(initReceiptVoucher, 'bill',[]) } 
+                />)}
                 </Col>
               </Row>
             </BaseBorderBox>
