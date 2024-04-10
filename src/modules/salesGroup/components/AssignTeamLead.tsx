@@ -8,10 +8,14 @@ import { EMPLOYEE_LEVEL_VI } from "~/modules/employee/constants";
 import { getShortName } from "~/utils/helpers";
 import { useGetListTeamLeadSalesGroups } from "../salesGroup.hook";
 import useSalesGroupStore from "../salesGroupContext";
+import {GROUP_TYPE_BENEFIT_EMPLOYEE_LEVEL_VI } from "~/modules/reportSalary/benefitConfiguration/constants";
+
 type propsType = {
   _id?: string;
   teamLead: any;
 };
+const CLONE_GROUP_TYPE_BENEFIT_EMPLOYEE_LEVEL_VI: any = GROUP_TYPE_BENEFIT_EMPLOYEE_LEVEL_VI;
+
 export default function AssignTeamLead({
   _id,
   teamLead,
@@ -93,7 +97,7 @@ export default function AssignTeamLead({
           open={open}
           onOpenChange={handleOpenChange}
         >
-          <Tooltip title={teamLead ? "Thay đổi trưởng nhóm" : "Thêm trưởng nhóm"}>
+          <Tooltip title={teamLead ? `Thay đổi ${CLONE_GROUP_TYPE_BENEFIT_EMPLOYEE_LEVEL_VI[get(teamLead, "employee.employeeLevel", "")]}` : `Thêm quản lý`}>
           <Button
             icon={
               teamLead ? (
@@ -106,8 +110,8 @@ export default function AssignTeamLead({
           </Tooltip>
         </Popover>
         {teamLead ? (
-          <Popconfirm title="Xác nhận gỡ trưởng nhóm" onConfirm={onRemove}>
-          <Tooltip title="Gỡ trưởng nhóm">
+          <Popconfirm title= {`Xác nhận gỡ ${CLONE_GROUP_TYPE_BENEFIT_EMPLOYEE_LEVEL_VI[get(teamLead, "employee.employeeLevel", "")]}`} onConfirm={onRemove}>
+          <Tooltip title={`Gỡ ${CLONE_GROUP_TYPE_BENEFIT_EMPLOYEE_LEVEL_VI[get(teamLead, "employee.employeeLevel", "")]}`}>
           <Button danger icon={<DeleteOutlined />} />
           </Tooltip>
           </Popconfirm>

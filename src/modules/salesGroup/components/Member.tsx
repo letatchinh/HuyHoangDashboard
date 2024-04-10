@@ -12,12 +12,15 @@ import ListMember from "./ListMember";
 import PopoverCardEmployee from "./PopoverCardEmployee";
 import ListMemberModal from "./ListMemberModal";
 import useSalesGroupStore from "../salesGroupContext";
+import {GROUP_TYPE_BENEFIT_EMPLOYEE_LEVEL_VI } from "~/modules/reportSalary/benefitConfiguration/constants";
 type propsType = {
   _id?: string;
   typeArea?: TypeAreaType;
   data: MemberRulesInGroupType[];
   child ? : any[]
 };
+const CLONE_GROUP_TYPE_BENEFIT_EMPLOYEE_LEVEL_VI: any = GROUP_TYPE_BENEFIT_EMPLOYEE_LEVEL_VI;
+
 export default function Member({ _id, data, typeArea, child }: propsType): React.JSX.Element {
   const [isOpen, setIsOpen] = useState(false);
   const { canUpdate } = useSalesGroupStore();
@@ -37,24 +40,30 @@ export default function Member({ _id, data, typeArea, child }: propsType): React
   const onClose = () => {
     setIsOpen(false);
   };
-
+console.log(teamLead,'teamLead')
   return (
     <>
       <Flex vertical gap={10}>
         <Flex align={"center"} gap={5}>
-          Trưởng nhóm:{" "}
+          {/* Trưởng nhóm:{" "} */}
           {teamLead ? (
+            <>
+              {teamLead?.employee?.employeeLevel === 'ASM' || teamLead?.employee?.employeeLevel === 'LEADER'
+                ?  <Typography.Text strong>{CLONE_GROUP_TYPE_BENEFIT_EMPLOYEE_LEVEL_VI[get(teamLead, "employee.employeeLevel", "")]}:</Typography.Text>
+                : <></>
+              }
             <PopoverCardEmployee employee={get(teamLead, "employee", "")}>
-          <Typography.Text style={{cursor : 'pointer'}} strong>
-              {get(teamLead, "employee.fullName", "")}
-            </Typography.Text>
+              <Typography.Text style={{cursor : 'pointer'}} strong>
+                {get(teamLead, "employee.fullName", "")}
+              </Typography.Text>
             </PopoverCardEmployee>
+            </>
           ) : (
             "(Chưa có)"
           )}{" "}
           {canUpdate && <AssignTeamLead teamLead={teamLead} _id={_id} />}
         </Flex> 
-      {teamLead ?  <Flex align={"center"} gap={5} >
+      {/* {teamLead ?  <Flex align={"center"} gap={5} >
         <Button type="link" onClick={onOpen} style={{whiteSpace : 'nowrap'}}>Thành viên</Button>:
           {member ? (
             <ListMember member={member}/>
@@ -62,7 +71,7 @@ export default function Member({ _id, data, typeArea, child }: propsType): React
             "(Chưa có)"
           )}
           <AssignMember member={member} _id={_id} />
-        </Flex>  : <></>}
+        </Flex>  : <></>} */}
       </Flex>
       <Modal
         title={`Danh sách thành viên`}
