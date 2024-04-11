@@ -13,6 +13,9 @@ function* login({ payload: user }: any) {
       case ADAPTER_KEY.STAFF: 
         yield put(authActions.loginSuccess({token,branchId,adapter})); 
         break; 
+      case ADAPTER_KEY.PARTNER: 
+        yield put(authActions.loginSuccess({token,branchId,adapter}));
+        break;
         default:
         throw new Error('Invalid adapter'); 
     };

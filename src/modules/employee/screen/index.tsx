@@ -16,7 +16,7 @@ import { useMatchPolicy } from "~/modules/policy/policy.hook";
 import Employee from "./Employee";
 import Breadcrumb from "~/components/common/Breadcrumb";
 import EmployeeGroup from "~/modules/employeeGroup/screens/EmployeeGroup";
-
+import Collaborator from "~/modules/collaborator/screens/Collaborator";
 
 export default function User() {
   const { t }: any = useTranslate();
@@ -25,6 +25,7 @@ export default function User() {
   const { pathname } = useLocation();
   const isMatchEmployee = useMatchPolicy(POLICIES.READ_EMPLOYEE);
   const isMatchEmployeeGroup = useMatchPolicy(POLICIES.READ_EMPLOYEEGROUP);
+  const isMatchCollaborator = useMatchPolicy(POLICIES.READ_PARTNER);
   const onChange = (key: any) => {
     setCurrentTab(key);
     navigate(`/${key}`);
@@ -37,7 +38,10 @@ export default function User() {
         urlPush = "/employee";
       } else if (isMatchEmployeeGroup) {
         urlPush += "/group";
-      };
+      }
+      else if (isMatchCollaborator) {
+        urlPush += "/collaborator";
+      }
       const resultSubstring: string = urlPush.substring(1);
       setCurrentTab(resultSubstring);
       navigate(urlPush);
@@ -62,46 +66,57 @@ export default function User() {
   // }, [isMatchEmployeeGroup, isMatchEmployee]);
   return (
     <div>
-      {
-        (isMatchEmployeeGroup || isMatchEmployee) && (
-          <>
-            <Breadcrumb title={t("Quản lý trình dược viên")} />
-            <WhiteBox>
-              <Tabs
-                activeKey={currentTab}
-                onChange={(key) => onChange(key)}
-                defaultActiveKey={pathname}
-              >
-                {(isMatchEmployee) &&  <TabPane tab="Danh sách trình dược viên" key="employee"/>}
-                {isMatchEmployeeGroup &&  <TabPane tab="Nhóm trình dược viên" key="employee/group" />}
-              </Tabs>
-              <Routes>
-                {(isMatchEmployee) ? (
+      {(isMatchEmployeeGroup || isMatchEmployee || isMatchCollaborator) && (
+        <>
+          <Breadcrumb title={t("Quản lý trình dược viên")} />
+          <WhiteBox>
+            <Tabs
+              activeKey={currentTab}
+              onChange={(key) => onChange(key)}
+              defaultActiveKey={pathname}
+            >
+              {isMatchEmployee && (
+                <TabPane tab="Danh sách trình dược viên" key="employee" />
+              )}
+              {isMatchEmployeeGroup && (
+                <TabPane tab="Nhóm trình dược viên" key="employee/group" />
+              )}
+              {isMatchCollaborator && (
+                <TabPane tab="Danh sách cộng tác viên" key="employee/collaborator" />
+              )}
+            </Tabs>
+            <Routes>
+              {isMatchEmployee ? (
+                <Route
+                  path={``}
+                  element={<Employee currentTab={currentTab} />}
+                />
+              ) : (
+                <React.Fragment />
+              )}
+              {isMatchEmployeeGroup ? (
+                <Route
+                  path={`group`}
+                  element={<EmployeeGroup currentTab={currentTab} />}
+                >
                   <Route
-                    path={``}
-                    element={<Employee currentTab={currentTab} />}
-                  />
-                ) : (
-                  <React.Fragment />
-                )}
-                {isMatchEmployeeGroup ? (
-                  <Route
-                    path={`group`}
+                    path={`:groupId`}
                     element={<EmployeeGroup currentTab={currentTab} />}
-                  >
-                    <Route
-                      path={`:groupId`}
-                      element={<EmployeeGroup currentTab={currentTab} />}
-                    />
-                  </Route>
-                ) : (
-                  <React.Fragment />
-                )}
-              </Routes>
-            </WhiteBox>
-          </>
-        )
-      }
+                  />
+                </Route>
+              ) : (
+                <React.Fragment />
+              )}
+              {isMatchCollaborator ? (
+                <Route path={`collaborator`} element={<Collaborator currentTab={currentTab} />} />
+              ) : (
+                <React.Fragment />
+              )}
+            </Routes>
+          </WhiteBox>
+        </>
+      )
+    }
     </div>
   );
 }

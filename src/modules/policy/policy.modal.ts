@@ -27,6 +27,7 @@ const ResourceTypeRule = {
   CUSTOMER_GROUP:'CUSTOMER_GROUP',
   // Nhóm nhà thuốc
   CUSTOMER:'CUSTOMER',
+  PARTNER: 'PARTNER',
 };
 
 type newType =  typeof ResourceTypeRule

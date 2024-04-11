@@ -141,4 +141,8 @@ export const PATH_APP = {
     root: path(ROOTS.app, "/group-pharmacy")
   },
 
+  // collaborator: {
+  //   root: path(ROOTS.app, "/collaborator"),
+  // }
+
 };

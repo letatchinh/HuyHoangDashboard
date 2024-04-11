@@ -44,6 +44,7 @@ import SaleChannel from "~/pages/Dashboard/SaleChannel";
 import ConfigurationCronTime from "~/pages/Dashboard/ConfigurationCronTime";
 import TypePharmacy from "~/pages/Dashboard/TypePharmacy";
 import GroupPharmacy from "~/pages/Dashboard/GroupPharmacy";
+import CollaboratorPage from "~/pages/Dashboard/Collaborator";
 export const mainRoutes :PathRouteProps[] = [
   { path: PATH_APP.main.root, Component: Homepage },
 
@@ -81,6 +82,7 @@ export const mainRoutes :PathRouteProps[] = [
   { path: PATH_APP.todoList.workBoard, Component: WorkBoardPage },
   { path: PATH_APP.employee.root, Component: EmployeePage },
   // { path: PATH_APP.employee.employeeGroup, Component: EmployeeGroupPage },
+  // { path: PATH_APP.collaborator.root, Component: CollaboratorPage},
   
   // User
   { path: PATH_APP.user.root, Component: UserPage },
