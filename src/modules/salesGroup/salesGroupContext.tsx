@@ -9,6 +9,8 @@ import { useDeleteSalesGroup, useUpdateSalesGroup } from "./salesGroup.hook";
 import { useMatchPolicy } from "../policy/policy.hook";
 import POLICIES from "../policy/policy.auth";
 import { Modal } from "antd";
+import { useDispatch } from "react-redux";
+import { salesGroupActions } from "./redux/reducer";
 export type GlobalSalesGroup = {
   isSubmitLoading: boolean;
   updateSalesGroup: (p: any) => void;
@@ -84,6 +86,10 @@ export function SalesGroupProvider({
   const canDelete = useMatchPolicy(POLICIES.DELETE_SALESGROUP);
   const canUpdate = useMatchPolicy(POLICIES.UPDATE_SALESGROUP);
 
+  const dispatch = useDispatch();
+  const resetState = () => {
+    return dispatch(salesGroupActions.resetAction());
+  };
   // Control form
   const onOpenForm = useCallback((idSelect?: any) => {
     if (idSelect) {
@@ -137,7 +143,10 @@ export function SalesGroupProvider({
     setParentNear(null);
   }, []);
 
-  const [isSubmitLoading, updateSalesGroup] = useUpdateSalesGroup(onCloseForm);
+  const [isSubmitLoading, updateSalesGroup] = useUpdateSalesGroup(() => {
+    onCloseForm();
+    resetState();
+  });
   const [, deleteSalesGroup]: any = useDeleteSalesGroup();
 
   return (

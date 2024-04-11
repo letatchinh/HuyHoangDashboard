@@ -40,21 +40,22 @@ export default function SalesGroupTree({
     value: key,
     label: value,
     }));
-  // const openModel = (id?: string) => {
-  //   setId(id)
-  //   let a;
-  //   a = modal.info({
-  //     icon: <></>,
-  //     content:  <TargetSalesGroup other={a} _id={id as any} />,
-  //     width: "auto",
-  //     mask: true,
-  //     maskClosable:true,
-  //     className: "modalScroll",
-  //     centered: true,
-  //      onCancel: () => setId(null),
-  //     footer: <></>,
-  //  })
-  // }
+
+  const openModel = (id?: string) => {
+    setId(id)
+     modal.info({
+      icon: <></>,
+      content:  <TargetSalesGroup _id={id as any} />,
+      width: "auto",
+      mask: true,
+      maskClosable:true,
+      className: "modalScroll",
+      centered: true,
+       onCancel: () => setId(null),
+      footer: <></>,
+   })
+  }
+
 
   const [typeEmployeeLevel, setTypeEmployeeLevel] = useState(null);
   const TitleRender = (item: any) => {
@@ -76,8 +77,8 @@ export default function SalesGroupTree({
 
           <Flex className="sale-tree__title--flex">
             <Button size="small" onClick={() => {
-              // openModel(item?._id)
-              onOpenFormTarget(item?._id)
+              openModel(item?._id)
+              // onOpenFormTarget(item?._id)
             }}>
               Xem chỉ tiêu
             </Button>
@@ -133,7 +134,7 @@ export default function SalesGroupTree({
             <Action _id={_id} rc={item} />
           </Flex>
         </Flex>
-        <ModalAnt
+        {/* <ModalAnt
           onCancel={onCloseFormTarget}
           open={isOpenTarget}
           footer={null}
@@ -143,7 +144,7 @@ export default function SalesGroupTree({
           centered
         >
           <TargetSalesGroup _id={id} />
-        </ModalAnt>
+        </ModalAnt> */}
         { contextHolder}
       </div>
     );

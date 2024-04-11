@@ -4,7 +4,7 @@ import {
   Col,
   Divider,
   Flex,
-  Form, Row,
+  Form, Modal, Row,
   Select,
   Tooltip
 } from "antd";
@@ -21,14 +21,12 @@ import useSalesGroupStore from "../salesGroupContext";
 import { HookAPI } from "antd/es/modal/useModal";
 type propsType = {
   _id: string;
-  other?: any;
 };
 type FormFieldType = {
   _id: string;
 };
 export default function TargetSalesGroup({
   _id,
-  other,
 }: propsType): React.JSX.Element {
   const [form] = Form.useForm();
   const { isSubmitLoading, updateSalesGroup, canUpdate } = useSalesGroupStore();
@@ -52,10 +50,11 @@ export default function TargetSalesGroup({
   );
 
   const onFinish = (values: FormFieldType) => {
+    Object.assign(values, {
+      callback() {
+      Modal.destroyAll()
+    }})
     updateSalesGroup(values);
-    other.info({
-      destroy: ()=>{}
-    })
   };
 
   useEffect(() => {

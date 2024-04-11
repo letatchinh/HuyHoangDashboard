@@ -1,6 +1,7 @@
 import { put, call, takeLatest } from 'redux-saga/effects';
 import api from '../salesGroup.api'; 
 import { salesGroupActions } from './reducer';
+import { get, omit } from 'lodash';
 
 function* getListSalesGroup({payload:query} : any) : any {
   try {
@@ -48,7 +49,11 @@ function* createSalesGroup({payload} : any) : any {
 
 function* updateSalesGroup({payload} : any) : any {
   try {
-    const data = yield call(api.update,payload);
+    
+    const data = yield call(api.update,omit(payload,'callback'));
+    if (typeof get(payload, 'callback', '') === 'function') {
+      payload.callback()
+    }
     yield put(salesGroupActions.updateSuccess(data));
   } catch (error:any) {
     yield put(salesGroupActions.updateFailed(error));
