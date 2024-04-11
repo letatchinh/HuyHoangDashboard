@@ -57,8 +57,8 @@ export default function SalesGroupTree({
   }
 
 
-  const [typeEmployeeLevel, setTypeEmployeeLevel] = useState(null);
   const TitleRender = (item: any) => {
+    const [typeEmployeeLevel, setTypeEmployeeLevel] = useState(null);
     const { _id } = item;
     const data = get(item, "salesGroupPermission", []);
     const teamLead = data?.find(
@@ -157,7 +157,7 @@ export default function SalesGroupTree({
           switcherIcon={<DownOutlined />}
           defaultExpandedKeys={["0-0-0"]}
           treeData={dataSource}
-          titleRender={(item: any) => TitleRender(item)}
+          titleRender={(item: any) => <TitleRender {...item}/>}
           fieldNames={{
             title: "name",
           }}
