@@ -24,7 +24,6 @@ export default function AssignMember({_id,member}: propsType): React.JSX.Element
   const hide = useCallback(() => {
     setOpen(false);
   },[])
-  
   const handleOpenChange = (newOpen: boolean) => {
     setOpen(newOpen);
   };
@@ -38,7 +37,7 @@ export default function AssignMember({_id,member}: propsType): React.JSX.Element
 
   const rowSelection : TableRowSelection<any> = {
     selectedRowKeys,
-    onChange : (selectedRowKeys) => {
+    onChange: (selectedRowKeys) => {
       setSelectedRowKeys(selectedRowKeys)
     },
   };
@@ -79,7 +78,7 @@ export default function AssignMember({_id,member}: propsType): React.JSX.Element
             <Search placeholder="Tìm kiếm..." onSearch={(value) => setKeyword(value)} onChange={({target}) => debounceFetcher(target.value)}/>
             <Table
               scroll={{ y: 300 }}
-              style={{ width: 500 }}
+              style={{ width: 500, zIndex: 99999}}
               loading={isLoading}
               rowKey={(rc) => get(rc, "_id")}
               pagination={false}

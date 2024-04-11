@@ -8,6 +8,7 @@ import {
 import { useDeleteSalesGroup, useUpdateSalesGroup } from "./salesGroup.hook";
 import { useMatchPolicy } from "../policy/policy.hook";
 import POLICIES from "../policy/policy.auth";
+import { Modal } from "antd";
 export type GlobalSalesGroup = {
   isSubmitLoading: boolean;
   updateSalesGroup: (p: any) => void;
@@ -33,6 +34,7 @@ export type GlobalSalesGroup = {
   canWrite: boolean,
   canDelete: boolean,
   canUpdate: boolean,
+  setId:(p?: any)=> void
 };
 const SalesGroup = createContext<GlobalSalesGroup>({
   isSubmitLoading: false,
@@ -59,6 +61,7 @@ const SalesGroup = createContext<GlobalSalesGroup>({
   canWrite: false,
   canDelete: false,
   canUpdate: false,
+  setId: () =>{},
 });
 
 type SalesGroupProviderProps = {
@@ -76,7 +79,6 @@ export function SalesGroupProvider({
   
   const [isOpenFormExchangeRate, setIsOpenFormExchangeRate]: any = useState(false);
   const [groupInfo, setGroupInfo]: any = useState();
-
   //Permission
   const canWrite = useMatchPolicy(POLICIES.WRITE_SALESGROUP);
   const canDelete = useMatchPolicy(POLICIES.DELETE_SALESGROUP);
@@ -147,6 +149,7 @@ export function SalesGroupProvider({
         onOpenFormCreateGroupFromExistGroup,
         onCloseForm,
         id,
+        setId,
         parentNear,
         isOpenForm,
         isOpenFormRelation,
@@ -164,7 +167,7 @@ export function SalesGroupProvider({
         setGroupInfo,
         canWrite,
         canDelete,
-        canUpdate
+        canUpdate,
       }}
     >
       {children}

@@ -13,13 +13,14 @@ import PopoverCardEmployee from "./PopoverCardEmployee";
 import ListMemberModal from "./ListMemberModal";
 import useSalesGroupStore from "../salesGroupContext";
 import {GROUP_TYPE_BENEFIT_EMPLOYEE_LEVEL_VI } from "~/modules/reportSalary/benefitConfiguration/constants";
+import { EMPLOYEE_LEVEL_VI } from "~/modules/employee/constants";
 type propsType = {
   _id?: string;
   typeArea?: TypeAreaType;
   data: MemberRulesInGroupType[];
   child ? : any[]
 };
-const CLONE_GROUP_TYPE_BENEFIT_EMPLOYEE_LEVEL_VI: any = GROUP_TYPE_BENEFIT_EMPLOYEE_LEVEL_VI;
+const CLONE_GROUP_TYPE_BENEFIT_EMPLOYEE_LEVEL_VI: any = EMPLOYEE_LEVEL_VI;
 
 export default function Member({ _id, data, typeArea, child }: propsType): React.JSX.Element {
   const [isOpen, setIsOpen] = useState(false);
@@ -40,18 +41,16 @@ export default function Member({ _id, data, typeArea, child }: propsType): React
   const onClose = () => {
     setIsOpen(false);
   };
-console.log(teamLead,'teamLead')
   return (
     <>
       <Flex vertical gap={10}>
         <Flex align={"center"} gap={5}>
-          {/* Trưởng nhóm:{" "} */}
           {teamLead ? (
             <>
-              {teamLead?.employee?.employeeLevel === 'ASM' || teamLead?.employee?.employeeLevel === 'LEADER'
+              {/* {teamLead?.employee?.employeeLevel === 'ASM' || teamLead?.employee?.employeeLevel === 'LEADER'
                 ?  <Typography.Text strong>{CLONE_GROUP_TYPE_BENEFIT_EMPLOYEE_LEVEL_VI[get(teamLead, "employee.employeeLevel", "")]}:</Typography.Text>
                 : <></>
-              }
+              } */}
             <PopoverCardEmployee employee={get(teamLead, "employee", "")}>
               <Typography.Text style={{cursor : 'pointer'}} strong>
                 {get(teamLead, "employee.fullName", "")}

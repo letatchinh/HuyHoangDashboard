@@ -192,13 +192,13 @@ export default function SalesGroup() {
           isShowButtonAdd
           permissionKey={[POLICIES.WRITE_SALESGROUP]}
         />
-        <Flex style={{marginTop : 20}}>
+        {/* <Flex style={{marginTop : 20}}>
           <Button.Group>
             <Button onClick={() => setModeView('table')} type={modeView === 'table' ? 'primary' : 'default'} icon={<AppstoreOutlined />}/>
             <Button onClick={() => setModeView('tree')} type={modeView === 'tree' ? 'primary' : 'default'} icon={<ApartmentOutlined />}/>
           </Button.Group>
-        </Flex>
-        {modeView === 'table' && <TableAnt
+        </Flex> */}
+        {/* {modeView === 'table' && <TableAnt
           expandable={{
             expandedRowKeys,
             
@@ -226,8 +226,9 @@ export default function SalesGroup() {
           pagination={false}
           bordered
           style={{ marginTop: 20 }}
-        />}
-        {modeView === 'tree' && <SalesGroupTree dataSource={dataSearch?.length ? dataSearch : data}/>}
+        />} */}
+        {/* {modeView === 'tree' && <SalesGroupTree dataSource={dataSearch?.length ? dataSearch : data}/>} */}
+        <SalesGroupTree dataSource={dataSearch?.length ? dataSearch : data}/>
       </WhiteBox>
       <ModalAnt
         onCancel={onCloseForm}

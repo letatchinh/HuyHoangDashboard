@@ -9,9 +9,9 @@ export const EMPLOYEE_LEVEL = {
 };
 
 export const EMPLOYEE_LEVEL_VI = {
+  ASM: "ASM",
   LEADER: "TEAM LEADER",
   TDV: "Trình dược viên",
-  ASM: "ASM",
   CTV: "Cộng tác viên",
 };
 

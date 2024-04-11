@@ -18,14 +18,17 @@ import apis from "~/modules/supplier/supplier.api";
 import { useFetchState } from "~/utils/helpers";
 import { useGetSalesGroup } from "../salesGroup.hook";
 import useSalesGroupStore from "../salesGroupContext";
+import { HookAPI } from "antd/es/modal/useModal";
 type propsType = {
   _id: string;
+  other?: any;
 };
 type FormFieldType = {
   _id: string;
 };
 export default function TargetSalesGroup({
   _id,
+  other,
 }: propsType): React.JSX.Element {
   const [form] = Form.useForm();
   const { isSubmitLoading, updateSalesGroup, canUpdate } = useSalesGroupStore();
@@ -34,7 +37,6 @@ export default function TargetSalesGroup({
     api: apis.getAllPublic,
     useDocs: false,
   });
-
   const targetSupplier = Form.useWatch("targetSupplier", form);
 
   const options = useMemo(
@@ -51,6 +53,9 @@ export default function TargetSalesGroup({
 
   const onFinish = (values: FormFieldType) => {
     updateSalesGroup(values);
+    other.info({
+      destroy: ()=>{}
+    })
   };
 
   useEffect(() => {

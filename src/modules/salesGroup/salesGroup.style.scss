@@ -9,3 +9,21 @@
    max-height: 300px!important;
    overflow-y: scroll !important;;
 }
+
+.sale-tree{
+   margin: 10px;
+   width: '100%';
+   overflow: hidden;
+   overflow-x: scroll !important;
+   align-items: stretch;
+   &__title--flex{
+   margin: 10px;
+   &__name{
+      display: flex;
+      flex-direction: column
+   }
+   };
+   &__title{
+      overflow-y: scroll !important;
+   }
+}; 

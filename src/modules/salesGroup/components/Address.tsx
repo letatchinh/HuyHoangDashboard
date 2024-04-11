@@ -1,4 +1,4 @@
-import { Collapse, Flex, Tag, Typography } from "antd";
+import { Collapse, Flex, Tag, Tooltip, Typography } from "antd";
 import type { CollapseProps } from "antd";
 import React, { useId, useMemo } from "react";
 import { convertAddress } from "../salesGroup.service";
@@ -33,26 +33,11 @@ export default function Address({
     }),
     [addressString]
   );
-  return managementArea?.length ? (
-    <Collapse
-      collapsible={"icon"}
-      expandIcon={({ isActive }) => (
-        <Flex
-          style={{ userSelect: "none", width: "100%",paddingInline : 5 }}
-          gap={5}
-          align={"center"}
-        >
-          <i className="fa-solid fa-location-dot"></i>{" "}
-          {isActive ? "Ẩn địa chỉ" : "Xem Địa chỉ"}
-        </Flex>
-      )}
-      className="collapseCustom"
-      bordered={false}
-      items={[items]}
-      defaultActiveKey={["1"]}
-      {...props}
-    />
-  ) : (
-    <>(Không có địa chỉ)</>
-  );
-}
+  return (<Tooltip
+    trigger={['click']}
+    placement= {'right'}
+    title={addressString}
+  >{managementArea?.length ? <span style={{fontSize: 11}}>  <i className="fa-solid fa-location-dot"></i> Xem địa chỉ</span> : 'Không có địa chỉ'}
+  </Tooltip>)
+    
+};

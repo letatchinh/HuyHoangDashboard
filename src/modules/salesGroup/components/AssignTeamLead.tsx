@@ -5,16 +5,14 @@ import { debounce, get } from "lodash";
 import React, { useCallback, useMemo, useState } from "react";
 import AvatarShortOrName from "~/components/common/AvatarShortOrName";
 import { EMPLOYEE_LEVEL_VI } from "~/modules/employee/constants";
-import { getShortName } from "~/utils/helpers";
 import { useGetListTeamLeadSalesGroups } from "../salesGroup.hook";
 import useSalesGroupStore from "../salesGroupContext";
-import {GROUP_TYPE_BENEFIT_EMPLOYEE_LEVEL_VI } from "~/modules/reportSalary/benefitConfiguration/constants";
 
 type propsType = {
   _id?: string;
   teamLead: any;
 };
-const CLONE_GROUP_TYPE_BENEFIT_EMPLOYEE_LEVEL_VI: any = GROUP_TYPE_BENEFIT_EMPLOYEE_LEVEL_VI;
+const CLONE_GROUP_TYPE_BENEFIT_EMPLOYEE_LEVEL_VI: any = EMPLOYEE_LEVEL_VI;
 
 export default function AssignTeamLead({
   _id,
@@ -23,7 +21,7 @@ export default function AssignTeamLead({
   const [open, setOpen] = useState(false);
   const { isSubmitLoading, updateSalesGroup } = useSalesGroupStore();
   const [keyword,setKeyword] = useState("");
-  const query = useMemo(() => (open ? { keyword } : null), [keyword, open]);
+  const query = useMemo(() => (open ? { keyword, salesGroupId : _id } : null), [keyword, open]);
   const [data, isLoading] = useGetListTeamLeadSalesGroups(query);
   const hide = useCallback(() => {
     setOpen(false);
