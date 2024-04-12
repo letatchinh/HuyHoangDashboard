@@ -14,7 +14,7 @@ import {
   useUpdateEmployee,
   useUpdateEmployeeParams,
 } from "../employee.hook";
-import { Button, Checkbox, Col, Modal, Popconfirm, Row, Switch } from "antd";
+import { Button, Checkbox, Col, Modal, Popconfirm, Row, Switch, Tag } from "antd";
 import { useMemo, useState } from "react";
 import EmployeeForm from "../components/EmployeeForm";
 import TableAnt from "~/components/Antd/TableAnt";
@@ -28,6 +28,7 @@ import WithPermission from "~/components/common/WithPermission";
 import ExportExcelButton from "~/modules/export/component";
 import useCheckBoxExport from "~/modules/export/export.hook";
 import { useChangeDocumentTitle } from "~/utils/hook";
+import { PROCESS_STATUS, PROCESS_STATUS_VI } from "~/constants/defaultValue";
 
 interface Props {
   currentTab: any;
@@ -39,6 +40,7 @@ interface ColumnActionProps {
   shouldShowDevider?: any;
   onOpenForm?: any;
   status: string
+  processStatus?: any,
 };
 const ColumnActions = ({
   _id,
@@ -47,15 +49,25 @@ const ColumnActions = ({
   shouldShowDevider,
   onOpenForm,
   status,
+  processStatus
 }: ColumnActionProps) => {
   return (
     <div className="custom-table__actions">
       <WithOrPermission permission={[POLICIES.UPDATE_EMPLOYEE]}>
-        <Switch
+      {processStatus === "APPROVED" ? (
+                    <Switch
+                    style={{marginRight: 10}}
+                    checked={status === 'ACTIVE'}
+                    onChange={(e)=> updateEmployee({_id, status: status === 'ACTIVE' ? 'INACTIVE' : 'ACTIVE'})}
+                  />
+                  ) : (
+                    <></>
+                  )}
+        {/* <Switch
           style={{marginRight: 10}}
           checked={status === 'ACTIVE'}
           onChange={(e)=> updateEmployee({_id, status: status === 'ACTIVE' ? 'INACTIVE' : 'ACTIVE'})}
-        />
+        /> */}
       </WithOrPermission>
       {shouldShowDevider && <p>|</p>}
       <WithOrPermission permission={[POLICIES.DELETE_EMPLOYEE]}>
@@ -151,10 +163,10 @@ export default function Employee({currentTab}: Props) {
             width: 200,
             render: (processStatus: any, record: any) => {             
               return (
-                <WithOrPermission permission={[POLICIES.UPDATE_PARTNER]}>
+                <WithOrPermission permission={[POLICIES.UPDATE_EMPLOYEE]}>
                   {processStatus === "NEW" ? (
                       <Popconfirm
-                        title="Bạn muốn duyệt CTV này?"
+                        title="Bạn muốn duyệt TDV này?"
                         onConfirm={() =>
                           onConfirmProcess(record?._id, processStatus)
                         }
@@ -185,6 +197,14 @@ export default function Employee({currentTab}: Props) {
       dataIndex: 'email',
       key: 'email',
     },
+    {
+      title: "Được tạo bởi",
+      dataIndex: "historyStatus",
+      key: "historyStatus",
+      render: (record) => {
+        return record.NEW ? record.NEW.createdBy : record.APPROVED.createdBy;
+      },
+    },
   ...(isCanUpdate || isCanDelete ?[{
       title: 'Thao tác',
       key: 'action',
@@ -198,6 +218,7 @@ export default function Employee({currentTab}: Props) {
             status={record?.status}
             deleteEmpolyee={handleDelete}
             updateEmployee={handleUpdate}
+            processStatus={record?.processStatus}
           />
         );
       },

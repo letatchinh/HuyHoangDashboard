@@ -125,6 +125,7 @@ export const useEmployeeQueryParams = () => {
   
   const createSuccess = useSelector(createSuccessSelector);
   const deleteSuccess = useSelector(deleteSuccessSelector);
+  const convertSuccess = useSelector(convertSuccessSelector);
   const data = useSelector(listSelector);
 
   const newPage = useMemo(() => {
@@ -136,13 +137,13 @@ export const useEmployeeQueryParams = () => {
   }, [data, page]);
   return useMemo(() => {
     const queryParams = {
-      page,
+      page,     
       limit,
       keyword,
     };
     return [queryParams, onTableChange];
     //eslint-disable-next-line
-  }, [page, limit, keyword, createSuccess, deleteSuccess,newPage]);
+  }, [page, limit, keyword, createSuccess, deleteSuccess,newPage, convertSuccess]);
 };
 
 export const useUpdateEmployeeParams = (
