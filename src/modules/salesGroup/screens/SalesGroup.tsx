@@ -267,16 +267,6 @@ export default function SalesGroup() {
         <TargetSalesGroup _id={id} />
         </ModalAnt>
 
-      <ModalAnt
-        title="Nhập quy đổi cho từng nhóm nhà cung cấp"
-        onCancel={onCloseFormExchangeRate}
-        open={isOpenFormExchangeRate}
-        footer={null}
-        destroyOnClose
-        width={1200}
-      >
-        <ExchangeRate id={id} />
-      </ModalAnt>
     </div>
   );
 }

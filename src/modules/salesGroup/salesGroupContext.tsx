@@ -8,7 +8,6 @@ import {
 import { useDeleteSalesGroup, useUpdateSalesGroup } from "./salesGroup.hook";
 import { useMatchPolicy } from "../policy/policy.hook";
 import POLICIES from "../policy/policy.auth";
-import { Modal } from "antd";
 import { useDispatch } from "react-redux";
 import { salesGroupActions } from "./redux/reducer";
 export type GlobalSalesGroup = {

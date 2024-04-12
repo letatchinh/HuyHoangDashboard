@@ -1,6 +1,6 @@
 import { Collapse, Flex, Tag, Tooltip, Typography } from "antd";
 import type { CollapseProps } from "antd";
-import React, { useId, useMemo } from "react";
+import React, { useId, useMemo, useRef } from "react";
 import { convertAddress } from "../salesGroup.service";
 interface TypeProps extends CollapseProps {
   managementArea?: any[];
@@ -12,6 +12,7 @@ export default function Address({
   onlyShowLastPath,
   ...props
 }: TypeProps): React.JSX.Element {
+  const ref = useRef();
   const uuid = useId();
   const addressString = useMemo(
     () => convertAddress(managementArea, onlyShowLastPath),
@@ -33,11 +34,19 @@ export default function Address({
     }),
     [addressString]
   );
-  return (<Tooltip
-    trigger={['click']}
-    placement= {'right'}
-    title={addressString}
-  >{managementArea?.length ? <span style={{fontSize: 11}}>  <i className="fa-solid fa-location-dot"></i> Xem địa chỉ</span> : 'Không có địa chỉ'}
-  </Tooltip>)
+  return (
+    <div style={{width: '80px'}}>
+      <Tooltip
+        style = {{width: '50px'}}
+        trigger={['click']}
+        placement= {'right'}
+        title={addressString}
+      >
+        {/* <span> */}
+        {managementArea?.length ? <span style={{ fontSize: 11 }}>  <i className="fa-solid fa-location-dot"></i> Xem địa chỉ</span> : 'Không có địa chỉ'}
+        {/* </span> */}
+      </Tooltip>
+    </div>
+  )
     
 };

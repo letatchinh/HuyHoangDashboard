@@ -53,7 +53,7 @@ function* updateSalesGroup({payload} : any) : any {
     const data = yield call(api.update,omit(payload,'callback'));
     if (typeof get(payload, 'callback', '') === 'function') {
       payload.callback()
-    }
+    };
     yield put(salesGroupActions.updateSuccess(data));
   } catch (error:any) {
     yield put(salesGroupActions.updateFailed(error));

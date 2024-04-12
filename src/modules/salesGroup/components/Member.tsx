@@ -1,5 +1,5 @@
 import { AntDesignOutlined, UserOutlined } from "@ant-design/icons";
-import { Avatar, Button, Flex, Modal, Popover, Tooltip, Typography } from "antd";
+import { Avatar, Button, ConfigProvider, Flex, Modal, Popover, Tooltip, Typography } from "antd";
 import { get } from "lodash";
 import React, { useMemo, useState } from "react";
 import AvatarShortOrName from "~/components/common/AvatarShortOrName";
@@ -51,10 +51,18 @@ export default function Member({ _id, data, typeArea, child }: propsType): React
                 ?  <Typography.Text strong>{CLONE_GROUP_TYPE_BENEFIT_EMPLOYEE_LEVEL_VI[get(teamLead, "employee.employeeLevel", "")]}:</Typography.Text>
                 : <></>
               } */}
-            <PopoverCardEmployee employee={get(teamLead, "employee", "")}>
-              <Typography.Text style={{cursor : 'pointer'}} strong>
-                {get(teamLead, "employee.fullName", "")}
-              </Typography.Text>
+              <PopoverCardEmployee employee={get(teamLead, "employee", "")}>
+                <ConfigProvider
+                  theme={{
+                    token: {
+                      fontSizeHeading5: 14
+                    },
+                  }}
+                >
+                  <Typography.Title style={{cursor : 'pointer', width: '181px'}} ellipsis level={5}>
+                    {get(teamLead, "employee.fullName", "")}
+                  </Typography.Title>
+                </ConfigProvider>
             </PopoverCardEmployee>
             </>
           ) : (
