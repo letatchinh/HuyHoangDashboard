@@ -74,10 +74,8 @@ const GeoTreeSelect = ({
     [selectedCityCode,restProps?.multiple]
   );
   
-  console.log(districts,'districts');
 
   const [treeData, setTreeData] = useState([]);
-  console.log(treeData,'treeData');
   
   const screens = useBreakpoint();
 

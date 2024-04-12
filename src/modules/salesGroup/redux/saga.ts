@@ -49,7 +49,6 @@ function* createSalesGroup({payload} : any) : any {
 
 function* updateSalesGroup({payload} : any) : any {
   try {
-    
     const data = yield call(api.update,omit(payload,'callback'));
     if (typeof get(payload, 'callback', '') === 'function') {
       payload.callback()

@@ -1,8 +1,8 @@
 import { ApartmentOutlined, AppstoreOutlined } from "@ant-design/icons";
 import { Button, Flex } from "antd";
 import { ColumnsType } from "antd/es/table/InternalTable";
-import { get } from "lodash";
-import { useRef, useState } from "react";
+import { get, initial } from "lodash";
+import { useMemo, useRef, useState } from "react";
 import ModalAnt from "~/components/Antd/ModalAnt";
 import TableAnt from "~/components/Antd/TableAnt";
 import Breadcrumb from "~/components/common/Breadcrumb";
@@ -92,7 +92,20 @@ export default function SalesGroup() {
       setExpandedRowKeys(expandedRowKeys.concat(idSelect));
     }
   };
-  
+
+  const filterDataSource = useMemo(() => {
+    function loop(item: any) {
+      let itemData = {
+        value: item._id,
+        title: item.name,
+      }
+      if (item?.children?.length) {
+        Object.assign(itemData, { children: item.children.map(loop) })
+      }
+      return itemData
+    }
+    return initial(data).map(loop)
+  }, [data]);
   const columns: ColumnsType = [
     {
       title: "Tên",
@@ -242,6 +255,7 @@ export default function SalesGroup() {
           id={id}
           parentNear={get(parentNear, "parentNear")}
           parentNearPath={get(parentNear, "parentNearPath")}
+          dataSourceTree = {filterDataSource}
         />
       </ModalAnt>
       <ModalAnt
