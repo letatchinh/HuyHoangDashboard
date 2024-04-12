@@ -242,7 +242,7 @@ export default function CollaboratorForm(props: IProps) {
                     name="referralCode"
                     rules={[...validatePhoneNumberAntd]}
                   >
-                    {isLoading ? <Skeleton.Input active /> : <Input />}
+                    {!id ? (isLoading ? <Skeleton.Input active /> : <Input />) : <Input disabled />}
                   </FormItem>
                 </Col>
               </Row>

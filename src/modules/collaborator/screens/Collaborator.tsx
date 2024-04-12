@@ -88,7 +88,7 @@ export default function Collaborator({
   currentTab,
 }: propsType): React.JSX.Element {
   useResetCollaboratorAction();
-  const isSuperAdmin = useIsSuperAdmin();
+  // const isSuperAdmin = useIsSuperAdmin();
   //State
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [id, setId] = useState(null);
@@ -139,14 +139,10 @@ export default function Collaborator({
   const onChangeStatus = (
     _id: any,
     status: any,
-    isSubmitLoading: any,
-    record: any
   ) => {
     handleUpdate({
       _id,
       status,
-      isSubmitLoading,
-      ...omit(record, ["_id", "status"]),
     });
   };
 
@@ -182,11 +178,10 @@ export default function Collaborator({
             key: "processStatus",
             dataIndex: "processStatus",
             width: 200,
-            render: ({ processStatus, record }: any) => {
+            render: (processStatus: any, record: any) => {             
               return (
-                <WithOrPermission permission={[POLICIES.UPDATE_PARTNER]}>
+                <WithOrPermission permission={POLICIES.UPDATE_PARTNER}>
                   {processStatus === "NEW" ? (
-                    isSuperAdmin && (
                       <Popconfirm
                         title="Bạn muốn duyệt CTV này?"
                         onConfirm={() =>
@@ -199,7 +194,6 @@ export default function Collaborator({
                           {PROCESS_STATUS_VI["NEW"]}
                         </Button>
                       </Popconfirm>
-                    )
                   ) : (
                     <Tag color="blue">{PROCESS_STATUS_VI["APPROVED"]}</Tag>
                   )}
@@ -245,7 +239,7 @@ export default function Collaborator({
             key: "status",
             dataIndex: "status",
             width: 100,
-            render: ({ status, record }: any) => {
+            render: (status: any, record: any) => {
               return (
                 <WithOrPermission permission={[POLICIES.UPDATE_PARTNER]}>
                   {record?.processStatus === "APPROVED" ? (
@@ -255,8 +249,6 @@ export default function Collaborator({
                         onChangeStatus(
                           get(record, "_id"),
                           value ? STATUS["ACTIVE"] : STATUS["INACTIVE"],
-                          isLoading,
-                          record
                         )
                       }
                     />
