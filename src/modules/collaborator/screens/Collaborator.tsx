@@ -160,11 +160,11 @@ export default function Collaborator({
       title: "Mã cộng tác viên",
       dataIndex: "partnerNumber",
       key: "partnerNumber",
-      render: (value: any, record: any) => (
-        <Button type="link" onClick={() => handleOpenModal(record._id)}>
-          {value}
-        </Button>
-      ),
+      // render: (value: any, record: any) => (
+      //   <Button type="link" onClick={() => handleOpenModal(record._id)}>
+      //     {value}
+      //   </Button>
+      // ),
     },
     {
       title: "Tên cộng tác viên",
