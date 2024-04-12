@@ -5,9 +5,15 @@ import { initStateSlice } from "~/redux/models";
 import { createSlice } from "@reduxjs/toolkit";
 import { UserResponseOne } from "~/modules/user/user.modal";
 import { getPaging } from "~/utils/helpers";
-
+interface cloneInitState extends initStateSlice {
+  // Add cloneInitState Type Here
+  convertFailed?: any,
+  convertSuccess?: any,
+ }
+ 
 class EmployeeClassExtentd extends InstanceModuleRedux {
   clone;
+  cloneInitState : cloneInitState;
   constructor() {
     super('employee');
     this.clone = {
@@ -28,6 +34,28 @@ class EmployeeClassExtentd extends InstanceModuleRedux {
           };
         });
       },
+      convertRequest: (state: cloneInitState) => {
+        state.isSubmitLoading = true;
+        state.convertFailed = null;
+      },
+
+      convertSuccess: (
+        state: cloneInitState,
+        { payload }: { payload: any }
+      ) => {
+        state.isSubmitLoading = false;
+        state.convertSuccess = payload;
+      },
+      convertFailed: (state: cloneInitState, { payload }: { payload: any }) => {
+        state.isSubmitLoading = false;
+        state.convertFailed = payload;
+      },
+    }
+    this.cloneInitState = {
+      ...this.initialState,
+      convertFailed: null,
+      convertSuccess: null,
+      // Want Add more State Here...
     }
   }
   createSlice() {

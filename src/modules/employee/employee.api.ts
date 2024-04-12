@@ -8,5 +8,6 @@ const apis = {
     update: (data?: any) => requester.put(`/api/v1/employee/${get(data ,'_id' , 'id')}`, data),
     delete: (id?: any) => requester.delete(`/api/v1/employee/${id}`),
     getALLAuthenticated: (query?: any) => requester.get('/api/v1/employee-all', query),
+    convert: (data?: any) => requester.put(`/api/v1/employee-convert/${get(data ,'_id' , 'id')}`, data),
 }
 export default apis;

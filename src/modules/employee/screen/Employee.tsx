@@ -4,6 +4,7 @@ import WhiteBox from "~/components/common/WhiteBox";
 import useTranslate from "~/lib/translation";
 import { concatAddress } from "~/utils/helpers";
 import {
+  useConvertEmployee,
   useCreateEmployee,
   useDeleteEmployee,
   useEmployeePaging,
@@ -113,6 +114,19 @@ export default function Employee({currentTab}: Props) {
     handleCloseModal();
     resetAction();
   });
+  const [, convertEmployee] = useConvertEmployee(() => {
+    handleCloseModal();
+    resetAction();
+  });
+  const onConfirmProcess = (_id: any, processStatus: any) => {
+    convertEmployee({
+      _id,
+      processStatus:
+        processStatus === PROCESS_STATUS.NEW
+          ? PROCESS_STATUS.APPROVED
+          : PROCESS_STATUS.NEW,
+    });
+  };
 
   const columns: ColumnsType = [
     {
@@ -128,6 +142,39 @@ export default function Employee({currentTab}: Props) {
       dataIndex: 'fullName',
       key: 'fullName'
     },
+    ...(isCanUpdate
+      ? [
+          {
+            title: "Xét duyệt",
+            key: "processStatus",
+            dataIndex: "processStatus",
+            width: 200,
+            render: (processStatus: any, record: any) => {             
+              return (
+                <WithOrPermission permission={[POLICIES.UPDATE_PARTNER]}>
+                  {processStatus === "NEW" ? (
+                      <Popconfirm
+                        title="Bạn muốn duyệt CTV này?"
+                        onConfirm={() =>
+                          onConfirmProcess(record?._id, processStatus)
+                        }
+                        okText="Duyệt"
+                        cancelText="Huỷ"
+                      >
+                        <Button color="green">
+                          {PROCESS_STATUS_VI["NEW"]}
+                        </Button>
+                      </Popconfirm>
+                  ) : (
+                    <Tag color="blue">{PROCESS_STATUS_VI["APPROVED"]}</Tag>
+                  )}
+                </WithOrPermission>
+              );
+            },
+          },
+        ]
+      : []),
+
     {
       title: 'Số điện thoại',
       dataIndex: 'phoneNumber',

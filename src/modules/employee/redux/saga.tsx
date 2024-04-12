@@ -46,6 +46,14 @@ function* deleteEmployee({payload : id} : any) : any {
   }
 }
 
+function* convertEmployee({ payload }: any): any {
+  try {
+    const data = yield call(api.convert,payload);
+    yield put(employeeSliceAction.convertSuccess(data));
+  } catch (error:any) {
+    yield put(employeeSliceAction.convertFailed(error));
+  }
+}
 
 export default function* employeeSaga() {
   yield takeLatest(employeeSliceAction.getListRequest, getListEmployee);
@@ -53,4 +61,5 @@ export default function* employeeSaga() {
   yield takeLatest(employeeSliceAction.createRequest, createEmployee);
   yield takeLatest(employeeSliceAction.updateRequest, updateEmployee);
   yield takeLatest(employeeSliceAction.deleteRequest, deleteEmployee);
+  yield takeLatest(employeeSliceAction.convertRequest, convertEmployee);
 }

@@ -18,6 +18,7 @@ import { useDispatch } from "react-redux";
 const MODULE  = "employee";
 const MODULE_VI  = "Trình dược viên";
 
+const getSelector = (key: string) => (state: any) => state.employee[key];
 const {
   loadingSelector,
   listSelector,
@@ -34,6 +35,9 @@ const {
   updateFailedSelector,
   pagingSelector,
 } = getSelectors(MODULE);
+const convertSuccessSelector = getSelector("convertSuccess");
+const convertFailedSelector = getSelector("convertFailed");
+
 
 export const useEmployeePaging = () => useSelector(pagingSelector);
 
@@ -90,6 +94,20 @@ export const useDeleteEmployee = (callback?: any) => {
 
   return useSubmit({
     action: employeeSliceAction.deleteRequest,
+    loadingSelector: isSubmitLoadingSelector,
+  });
+};
+
+export const useConvertEmployee = (callback?: any) => {
+  useSuccess(
+    convertSuccessSelector,
+    `Cập nhật ${MODULE_VI} thành công`,
+    callback
+  );
+  useFailed(convertFailedSelector);
+
+  return useSubmit({
+    action: employeeSliceAction.convertRequest,
     loadingSelector: isSubmitLoadingSelector,
   });
 };
