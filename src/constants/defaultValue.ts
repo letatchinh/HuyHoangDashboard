@@ -373,3 +373,13 @@ export const requireRules : any = [
       message : "Vui lòng nhập!"
   }
 ];
+
+export const PROCESS_STATUS = {
+  APPROVED: 'APPROVED',
+  NEW: 'NEW',
+}
+
+export const PROCESS_STATUS_VI = {
+  APPROVED: 'Đã duyệt',
+  NEW: 'Mới',
+}

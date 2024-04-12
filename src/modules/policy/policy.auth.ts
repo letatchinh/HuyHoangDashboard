@@ -70,6 +70,10 @@ const customer = 'customer';
 
 // Cập nhật Nhà thuốc đảm nhiệm cho nhân viên
 const updateThePharmacyForEmployee = 'updateThePharmacyForEmployee';
+
+// Cộng tác viên
+const partner = 'partner';
+
 const RESOURCES = [
   //Setting
   configDiscount,
@@ -140,6 +144,7 @@ const RESOURCES = [
   
   updateThePharmacyForEmployee,
   configReportSalaryAuto,
+  partner,
 ];
 
 //ACTIONS
@@ -266,7 +271,11 @@ const RESOURCE = (): ResourceType => {
 
   const PHARMA_PROFILE: string[]= [
     pharmaProfile
-  ]
+  ];
+
+  const PARTNER: string[] = [
+    partner
+  ];
 
   return {
     GROUP_USER,
@@ -290,6 +299,7 @@ const RESOURCE = (): ResourceType => {
     CUSTOMER_GROUP,
     CUSTOMER,
     PHARMA_PROFILE,
+    PARTNER,
   };
 };
 

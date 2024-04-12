@@ -43,6 +43,7 @@ import reportSupplierModule from '~/modules/report/reportSupplier'; //
 import configurationCronTime from "~/modules/configurationCronTime";
 import typePharmacy from '~/modules/typePharmacy';
 import groupPharmacy from '~/modules/groupPharmacy';
+import collaborator from '~/modules/collaborator';
 
 export default function* rootSaga() {
   yield all([
@@ -94,5 +95,6 @@ export default function* rootSaga() {
     typePharmacy.redux.saga(),
     groupPharmacy.redux.saga(),
     productUnitModule.redux.saga(),
+    collaborator.redux.saga(),
   ]);
 };

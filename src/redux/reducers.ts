@@ -46,6 +46,7 @@ import saleChannel from '~/modules/saleChannel/index';
 import configurationCronTime from "~/modules/configurationCronTime";
 import typePharmacy from '~/modules/typePharmacy';
 import groupPharmacy from '~/modules/groupPharmacy';
+import collaborator from '~/modules/collaborator';
 
 const authPersistConfig = {
     key: 'auth',
@@ -105,5 +106,6 @@ const rootReducer = combineReducers({
     configurationCronTime: configurationCronTime.redux.reducer,
     typePharmacy: typePharmacy.redux.reducer,
     groupPharmacy: groupPharmacy.redux.reducer,
+    collaborator: collaborator.redux.reducer,
 });
 export default rootReducer

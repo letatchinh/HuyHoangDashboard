@@ -23,3 +23,13 @@ export const EMPLOYEE_LEVEL_COLOR = {
 };
 
 export const EMPLOYEE_LEVEL_OPTIONS = getOptions(EMPLOYEE_LEVEL_VI);
+
+export const TYPE_EMPLOYEE = {
+  TDV: 'TDV',
+  CTV: 'CTV',
+};
+
+export const TYPE_EMPLOYEE_VI = {
+  TDV: 'Trình dược viên',
+  CTV: 'Cộng tác viên',
+};
