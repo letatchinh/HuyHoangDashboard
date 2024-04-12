@@ -135,14 +135,14 @@ export default function Collaborator({
   const onChangeStatus = (
     _id: any,
     status: any,
-    isSubmitLoading: any,
-    record: any,
+    // isSubmitLoading: any,
+    // record: any,
   ) => {
     handleUpdate({
       _id,
       status,
-      isSubmitLoading,
-      ...omit(record, ["_id", "referralCode"]),
+      // isSubmitLoading,
+      // ...omit(record, ["_id", "referralCode"]),
     });
   };
 
@@ -249,8 +249,8 @@ export default function Collaborator({
                         onChangeStatus(
                           get(record, "_id"),
                           value ? STATUS["ACTIVE"] : STATUS["INACTIVE"],
-                          isSubmitLoading,
-                          record
+                          // isSubmitLoading,
+                          // record
                         )
                       }
                     />
