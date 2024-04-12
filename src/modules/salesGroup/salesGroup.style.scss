@@ -33,13 +33,14 @@
    };
    &__flex--content:not(:last-child){
       display: flex;
-      align-items: center;
+      // align-items: center;
       justify-content: flex-end;
       width: 70%;
    };
       &__name{
          display: flex;
          flex-direction: column;
+         align-self: center;
          flex-grow: 1;
          min-width: 200px;
          margin-right: 10px;

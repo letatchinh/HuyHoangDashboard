@@ -81,7 +81,7 @@ export default function TitleRender(item: any) {
     <div className="sale-tree__title">
       <Flex className="sale-tree__flex--container">
         <div className="sale-tree__title--flex__name ">  
-          <h6>{item?.name}</h6>
+          <div style={{fontSize: '16px', fontWeight: '500'}}>{item?.name}</div>
           <Address managementArea={get(item, "managementArea", [])} />
         </div>
         <Flex className="sale-tree__flex--content">
