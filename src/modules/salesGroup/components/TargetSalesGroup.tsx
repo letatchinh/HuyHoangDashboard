@@ -93,7 +93,7 @@ export default function TargetSalesGroup({
                     label="Nhà cung cấp"
                     name={[name, "supplierId"]}
                     rules={requireRules}
-                    style={{width : 500}}
+                    style={{width : 700}}
                   >
                     <Select
                       popupMatchSelectWidth={false}

@@ -66,7 +66,7 @@ export default function Member({ _id, data, typeArea, child }: propsType): React
             </PopoverCardEmployee>
             </>
           ) : (
-            "(Chưa có)"
+            <span style={{ color: "red" }}>(Chưa có)</span>
           )}{" "}
           {canUpdate && <AssignTeamLead teamLead={teamLead} _id={_id} />}
         </Flex> 

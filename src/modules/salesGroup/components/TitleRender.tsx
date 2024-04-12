@@ -103,7 +103,7 @@ export default function TitleRender(item: any) {
                 {member ? (
                   <ListMember member={member}/>
                 ) : (
-                  "(Chưa có)"
+                  <span style={{ color: "red" }}>(Chưa có)</span>
                 )}
                 <AssignMember member={member} _id={_id} />
               </Flex> 
