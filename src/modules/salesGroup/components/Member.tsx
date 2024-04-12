@@ -59,7 +59,7 @@ export default function Member({ _id, data, typeArea, child }: propsType): React
                     },
                   }}
                 >
-                  <Typography.Title style={{cursor : 'pointer', width: '181px'}} ellipsis level={5}>
+                  <Typography.Title style={{cursor : 'pointer', width: '176px'}} ellipsis level={5}>
                     {get(teamLead, "employee.fullName", "")}
                   </Typography.Title>
                 </ConfigProvider>

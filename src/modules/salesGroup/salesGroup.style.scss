@@ -31,7 +31,7 @@
       width: 100%;
       align-items: center;
    };
-   &__flex--content{
+   &__flex--content:not(:last-child){
       display: flex;
       align-items: center;
       justify-content: flex-end;
@@ -60,8 +60,9 @@
          }
       };
       &__action{
-         min-width: 35px;
-         margin-right: 10px;
+         min-width: 45px;
+         justify-content: center;
+         // margin-right: 10px;
       };
       &__target{
          min-width: 100px;
