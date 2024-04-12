@@ -35,17 +35,15 @@ import WhiteBox from "~/components/common/WhiteBox";
 import SelectSearch from "~/components/common/SelectSearch/SelectSearch";
 import ExportExcelButton from "~/modules/export/component";
 import TableAnt from "~/components/Antd/TableAnt";
-import EmployeeForm from "~/modules/employee/components/EmployeeForm";
 import { get, omit } from "lodash";
 import {
   PROCESS_STATUS,
   PROCESS_STATUS_VI,
   STATUS,
-  STATUS_NAMES,
 } from "~/constants/defaultValue";
 import CollaboratorForm from "../components/CollaboratorForm";
 import moment from "moment";
-import { useIsSuperAdmin } from "~/modules/auth/auth.hook";
+import Breadcrumb from "~/components/common/Breadcrumb";
 
 interface ColumnActionProps {
   _id: string;
@@ -88,7 +86,6 @@ export default function Collaborator({
   currentTab,
 }: propsType): React.JSX.Element {
   useResetCollaboratorAction();
-  // const isSuperAdmin = useIsSuperAdmin();
   //State
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [id, setId] = useState(null);
@@ -99,8 +96,7 @@ export default function Collaborator({
   };
 
   const [query] = useCollaboratorQueryParams();
-  const [keyword, { setKeyword, onParamChange }] =
-    useUpdateCollaboratorParams(query);
+  const [keyword, { setKeyword, onParamChange }] = useUpdateCollaboratorParams(query);
   const [data, isLoading] = useGetCollaborators(query);
   const paging = useCollaboratorPaging();
   const isCanDelete = useMatchPolicy(POLICIES.DELETE_PARTNER);
@@ -139,10 +135,14 @@ export default function Collaborator({
   const onChangeStatus = (
     _id: any,
     status: any,
+    isSubmitLoading: any,
+    record: any,
   ) => {
     handleUpdate({
       _id,
       status,
+      isSubmitLoading,
+      ...omit(record, ["_id", "referralCode"]),
     });
   };
 
@@ -180,7 +180,7 @@ export default function Collaborator({
             width: 200,
             render: (processStatus: any, record: any) => {             
               return (
-                <WithOrPermission permission={POLICIES.UPDATE_PARTNER}>
+                <WithOrPermission permission={[POLICIES.UPDATE_PARTNER]}>
                   {processStatus === "NEW" ? (
                       <Popconfirm
                         title="Bạn muốn duyệt CTV này?"
@@ -249,6 +249,8 @@ export default function Collaborator({
                         onChangeStatus(
                           get(record, "_id"),
                           value ? STATUS["ACTIVE"] : STATUS["INACTIVE"],
+                          isSubmitLoading,
+                          record
                         )
                       }
                     />
@@ -319,7 +321,7 @@ export default function Collaborator({
   };
   return (
     <div>
-      {/* <Breadcrumb title={t("Quản lý cộng tác viên")} /> */}
+      <Breadcrumb title={"Quản lý cộng tác viên"} />
       <WhiteBox>
         <Row className="mb-3" justify={"space-between"}>
           <SelectSearch

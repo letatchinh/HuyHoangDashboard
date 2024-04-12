@@ -57,7 +57,7 @@ export default function CollaboratorForm(props: IProps) {
     () => ({ branchId: branchId ? branchId : DEFAULT_BRANCH_ID }),
     [branchId]
   );
-  // const [groups, isLoadingGroups] = useGetEmployeeGroups(branchIdParam);
+
   const [groups, isLoadingGroups] = useFetchState({
     api: apis.getListEmployeeGroup,
     query: branchIdParam,

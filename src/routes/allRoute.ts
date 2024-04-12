@@ -82,7 +82,6 @@ export const mainRoutes :PathRouteProps[] = [
   { path: PATH_APP.todoList.workBoard, Component: WorkBoardPage },
   { path: PATH_APP.employee.root, Component: EmployeePage },
   // { path: PATH_APP.employee.employeeGroup, Component: EmployeeGroupPage },
-  // { path: PATH_APP.collaborator.root, Component: CollaboratorPage},
   
   // User
   { path: PATH_APP.user.root, Component: UserPage },
@@ -142,6 +141,8 @@ export const mainRoutes :PathRouteProps[] = [
   // Nhóm nhà thuốc
   { path: PATH_APP.groupPharmacy.root, Component:  GroupPharmacy},
   
+  // Cộng tác viên
+  { path: PATH_APP.collaborator.root, Component: CollaboratorPage},
   
   { path: '/', Component: Homepage },
 ]
