@@ -1,10 +1,9 @@
-import { Button, ConfigProvider, Drawer, Menu, MenuProps, Spin, Tooltip } from 'antd';
-import React, { useCallback, useMemo, useState , isValidElement, useEffect} from 'react';
+import { Button, Drawer, Menu, MenuProps, Spin, Tooltip } from 'antd';
+import React, {  useState , useEffect} from 'react';
 import { resource } from './resourceV2';
 import { useGetPolicyCheckAllPage } from '~/modules/user/user.hook';
 import { useGetProfile, useProfile } from '~/modules/auth/auth.hook';
 import { isMatchPolicy, useUserPolicy } from '~/modules/policy/policy.hook';
-import { NavLink } from 'react-router-dom';
 import NavbarItem from './NavbarItem';
 import { keys } from 'lodash';
 import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';

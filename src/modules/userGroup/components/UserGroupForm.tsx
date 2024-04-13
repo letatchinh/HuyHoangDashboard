@@ -1,11 +1,8 @@
-import React, { useEffect, useMemo, useState } from "react";
-import { Button, Checkbox, Form, Input, Modal, Row, Skeleton } from "antd";
+import React, { useEffect, useState } from "react";
+import { Button, Form, Input, Row, Skeleton } from "antd";
 import { useParams } from "react-router-dom";
-import { useCreateUserGroup, useGetUserGroup, useUpdateUserGroup } from "../userGroup.hook";
-import toastr from "toastr";
+import {  useGetUserGroup } from "../userGroup.hook";
 import { DEFAULT_BRANCH_ID } from "~/constants/defaultValue";
-import { useDispatch } from "react-redux";
-import { userGroupSliceAction } from "../redux/reducer";
 
 type propsType = {
   isOpen?: boolean;

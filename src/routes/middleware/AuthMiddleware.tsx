@@ -1,5 +1,5 @@
 import React from "react";
-import { Route, Navigate, PathRouteProps } from "react-router-dom";
+import {Navigate } from "react-router-dom";
 import { PATH_APP } from "../allPath";
 interface RedirectToProps {
   path: string;

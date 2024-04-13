@@ -9,12 +9,10 @@ import {
   Dropdown,
   Input,
   List,
-  MenuProps,
   Popconfirm,
   Progress,
   Row,
   Typography,
-  Upload,
 } from "antd";
 import Text from "antd/lib/typography/Text";
 import { get } from "lodash";
@@ -23,8 +21,7 @@ import TaskProgress from "./Task/TaskProgress";
 import AddTodo from "./AddTodo";
 import useTaskItemStore from "~/store/TaskItemContext";
 import BaseBorderBox from "~/components/common/BaseBorderBox";
-import { useFormTaskContext } from "~/modules/workList/screens/WorkList";
-import { useReset, useResetAction } from "../workTask.hook";
+import { useResetAction } from "../workTask.hook";
 
 interface PropsFooter {
   onAddProcess?: any;

@@ -1,4 +1,3 @@
-import moment from "moment";
 import { get } from "lodash";
 
 import { WH_VOUCHER_CODE_PREFIX } from "~/constants/defaultValue";

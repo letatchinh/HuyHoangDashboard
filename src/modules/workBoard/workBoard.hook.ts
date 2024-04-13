@@ -11,7 +11,7 @@ import {
 import { workBoardActions } from "./redux/reducer";
 import { useEffect, useMemo, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { get, identity } from "lodash";
+import { get } from "lodash";
 import { clearQuerySearch, getExistProp } from "~/utils/helpers";
 import { useSelector } from "react-redux";
 import { cloneInitState } from "./workBoard.modal";
