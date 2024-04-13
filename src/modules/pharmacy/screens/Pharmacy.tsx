@@ -35,7 +35,7 @@ import {
   message,
 } from "antd";
 import Search from "antd/es/input/Search";
-import { PlusCircleOutlined } from "@ant-design/icons";
+import { ImportOutlined, PlusCircleOutlined } from "@ant-design/icons";
 import PharmacyForm from "./PharmacyForm";
 import { propsType } from "../pharmacy.modal";
 import WithPermission from "~/components/common/WithPermission";
@@ -48,6 +48,7 @@ import { PATH_APP } from "~/routes/allPath";
 import { useChangeDocumentTitle } from "~/utils/hook";
 import ExportExcelButton from "~/modules/export/component";
 import useCheckBoxExport from "~/modules/export/export.hook";
+import { FormImportFile } from "~/components/common/ImportFile/FormImportFile";
 
 const ColumnActions = ({ _id, deletePharmacy, onOpenForm }: propsType) => {
   return (
@@ -300,36 +301,62 @@ export default function Pharmacy() {
         break;
     }
   };
-  useChangeDocumentTitle("Danh sách nhà thuốc")
+  useChangeDocumentTitle("Danh sách nhà thuốc");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const showModal = () => {
+    setIsModalOpen(true);
+  };
+  const handleOk = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
+
   return (
     <div>
       <Breadcrumb title={t("list-pharmacies")} />
       <WhiteBox>
-      <Row className="mb-3" justify={"space-between"}>
-        <Col span={8}>
-          <Search
-            enterButton="Tìm kiếm"
-            placeholder="Nhập để tìm kiếm"
-            allowClear
-            onSearch={() => onParamChange({ keyword })}
-            onChange={(e) => setKeyword(e.target.value)}
-            value={keyword}
-          />
-        </Col>
-        <Row>
-        <WithPermission permission={POLICIES.WRITE_PHARMAPROFILE}>
-          <Col>
-            <Button
-              icon={<PlusCircleOutlined />}
-              type="primary"
-              onClick={() => onOpenForm()}
-            >
-              Thêm mới
-            </Button>
+        <Row className="mb-3" justify={"space-between"}>
+          <Col span={8}>
+            <Search
+              enterButton="Tìm kiếm"
+              placeholder="Nhập để tìm kiếm"
+              allowClear
+              onSearch={() => onParamChange({ keyword })}
+              onChange={(e) => setKeyword(e.target.value)}
+              value={keyword}
+            />
           </Col>
-          </WithPermission>
-          <WithPermission permission={POLICIES.DOWNLOAD_PHARMAPROFILE}>
-            <Col>
+          <Row>
+            <WithPermission permission={POLICIES.WRITE_PHARMAPROFILE}>
+              <Col>
+                <Button
+                  icon={<PlusCircleOutlined />}
+                  type="primary"
+                    style={{ float: "right", margin: "0px 10px" }}
+                  onClick={() => onOpenForm()}
+                >
+                  Thêm mới
+                </Button>
+              </Col>
+            </WithPermission>
+            <WithPermission permission={POLICIES.WRITE_PHARMAPROFILE}>
+              <Col>
+                <Button
+                icon={<ImportOutlined />}
+                  type="primary"
+                   style={{ float: "right", margin: "0px 10px" }}
+                  onClick={showModal}
+                >
+                  {" "}
+                  Import
+                </Button>
+              </Col>
+            </WithPermission> 
+            <WithPermission permission={POLICIES.DOWNLOAD_PHARMAPROFILE}>
+              <Col>
                 <ExportExcelButton
                   fileName="Danh sách nhà thuốc"
                   api="pharma-profile"
@@ -420,6 +447,12 @@ export default function Pharmacy() {
           }]}
         />
       </Modal>
+      <FormImportFile
+        onModule={handleOk}
+        isModalOpen={isModalOpen}
+        onClose={handleCancel}
+        query={query}
+      />
     </div>
   );
 }
