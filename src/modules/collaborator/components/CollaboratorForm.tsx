@@ -240,7 +240,6 @@ export default function CollaboratorForm(props: IProps) {
                   <FormItem
                     label="SDT người mời"
                     name="referralCode"
-                    rules={[...validatePhoneNumberAntd]}
                   >
                     {!id ? (isLoading ? <Skeleton.Input active /> : <Input />) : <Input disabled />}
                   </FormItem>
