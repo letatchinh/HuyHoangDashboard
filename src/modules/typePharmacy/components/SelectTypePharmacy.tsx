@@ -40,7 +40,7 @@ export default function SelectTypePharmacy({
         {RenderLoading(
           isLoading,
           <Select
-            className="right--parent"
+            // className="right--parent"
             placeholder="Loại khách hàng"
             options={options}
             style={{ width: "100%" }}

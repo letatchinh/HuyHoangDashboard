@@ -1,4 +1,13 @@
-import { Button, Col, Form, Input, Modal, Row, Select, Skeleton } from "antd";
+import {
+  Button,
+  Col,
+  DatePicker,
+  Form,
+  Input,
+  Row,
+  Select,
+  Skeleton,
+} from "antd";
 import {
   useCreatePharmacy,
   useGetPharmacyId,
@@ -9,15 +18,15 @@ import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { PATH_APP } from "~/routes/allPath";
 import AddressFormSection from "~/components/common/AddressFormSection";
-import CumulativeDiscountModule from '~/modules/cumulativeDiscount';
 import { convertInitPharmacy, convertSubmitData } from "../pharmacy.service";
 import SelectTypePharmacy from "~/modules/typePharmacy/components/SelectTypePharmacy";
 import SelectGroupPharmacy from "~/modules/groupPharmacy/components/SelectGroupPharmacy";
 import SelectSaleChannel from "~/modules/saleChannel/components/SelectSaleChannel";
 import RenderLoading from "~/components/common/RenderLoading";
-import { filterSelectWithLabel } from "~/utils/helpers";
 import TextArea from "antd/es/input/TextArea";
 import AddressFormDelivery from "~/components/common/AddressFormDelivery";
+import { get } from "lodash";
+import AddressForm from "~/components/common/AddressForm";
 const FormItem = Form.Item;
 const { Option } = Select;
 interface Props {
@@ -34,7 +43,9 @@ export default function PharmacyForm({ onClose, id, handleUpdate }: Props) {
   useResetPharmacyAction();
   const [cityCode, setCityCode]: any = useState();
   const [districtCode, setDistrictCode]: any = useState();
-  const [selectedCustomerGroupId, setSelectedCustomerGroupId] = useState<string | undefined>();
+  const [selectedCustomerGroupId, setSelectedCustomerGroupId] = useState<
+    string | undefined
+  >();
 
   useEffect(() => {
     if (!id) {
@@ -73,10 +84,6 @@ export default function PharmacyForm({ onClose, id, handleUpdate }: Props) {
     [handleCreate, handleUpdate, id, onClose]
   );
 
-  const options = {
-    CITY: "CITY", // thành thị
-    COUNTRY: "COUNTRY", // nông thôn
-  };
   const onTypePharmacyChange = (value: string) => {
     setSelectedCustomerGroupId(value);
   };
@@ -108,14 +115,27 @@ export default function PharmacyForm({ onClose, id, handleUpdate }: Props) {
           >
             <Input />
           </FormItem>
-          <FormItem
-            label="Tên người đại diện"
-            name={["infoPolicy", "fullName"]}
-            labelCol={{ sm: 24, md: 24, lg: 3 }}
-            wrapperCol={{ sm: 24, md: 24, lg: 21 }}
-          >
-            <Input />
-          </FormItem>
+
+          <Row gutter={48} align="middle" justify="space-between">
+            <Col span={12}>
+              <FormItem
+                label="Chủ sở hữu"
+                name={["infoPolicy", "fullName"]}
+                wrapperCol={{ sm: 24, md: 24, lg: 21 }}
+              >
+                <Input />
+              </FormItem>
+            </Col>
+            <Col span={12}>
+              <FormItem
+                label="Trình dược viên"
+                name="employeeId"
+                wrapperCol={{ sm: 24, md: 24, lg: 21 }}
+              >
+                <Input />
+              </FormItem>
+            </Col>
+          </Row>
           <Row gutter={48} align="middle" justify="space-between">
             <Col span={12}>
               <FormItem
@@ -149,6 +169,38 @@ export default function PharmacyForm({ onClose, id, handleUpdate }: Props) {
               </FormItem>
             </Col>
           </Row>
+          <Row gutter={48} align="middle" justify="space-between">
+            <Col span={12}>
+              <FormItem
+                label="Ngày sinh"
+                name={["infoPolicy", "dateOfBirth"]}
+                wrapperCol={{ sm: 24, md: 24, lg: 21 }}
+              >
+                {/* <DatePicker format={"DD/MM/YYYY"} placeholder="Ngày sinh" /> */}
+              </FormItem>
+            </Col>
+            <Col span={12}>
+              <FormItem
+                label="Số di động"
+                name="cellPhone"
+                wrapperCol={{ sm: 24, md: 24, lg: 21 }}
+                rules={[
+                  {
+                    // required: true,
+                    pattern: new RegExp(/^[0-9]{10,13}$/),
+                    message: "Xin vui lòng nhập đúng số điện thoại!",
+                  },
+                ]}
+              >
+                {isLoading ? (
+                  <Skeleton.Input active />
+                ) : (
+                  <Input maxLength={15} minLength={10} />
+                )}
+              </FormItem>
+            </Col>
+          </Row>
+          <h5 style={{ textAlign: "center" }}>Địa chỉ nhà thuốc</h5>
           <AddressFormSection
             form={form}
             cityCode={cityCode}
@@ -158,14 +210,7 @@ export default function PharmacyForm({ onClose, id, handleUpdate }: Props) {
             allowPhoneNumber={false}
             allowEmail={false}
           />
-          {/* <FormItem
-            label="Trình dược viên"
-            name="employeeId"
-            labelCol={{ sm: 24, md: 24, lg: 3 }}
-            wrapperCol={{ sm: 24, md: 24, lg: 21 }}
-          >
-            <Input defaultValue={"65bb15fc7f8c1b44dc90d3dd"}/>
-          </FormItem> */}
+
           <Row gutter={48} align="middle" justify="space-between">
             <Col span={12}>
               <SelectTypePharmacy
@@ -180,20 +225,6 @@ export default function PharmacyForm({ onClose, id, handleUpdate }: Props) {
                 groupPharmacy={pharmacy}
                 customerGroupId={selectedCustomerGroupId}
               />
-            </Col>
-          </Row>
-          <Row gutter={48} align="middle" justify="space-between">
-            <Col span={12}>
-              <FormItem
-                label="Hạng khách hàng"
-                name="customerRanking"
-                wrapperCol={{ sm: 24, md: 24, lg: 21 }}
-              >
-                <Input />
-              </FormItem>
-            </Col>
-            <Col span={12}>
-              <SelectSaleChannel isLoading={isLoading} saleChannel={pharmacy} />
             </Col>
           </Row>
           <Row gutter={48} align="middle" justify="space-between">
@@ -217,9 +248,51 @@ export default function PharmacyForm({ onClose, id, handleUpdate }: Props) {
               </FormItem>
             </Col>
             <Col span={12}>
+              <SelectSaleChannel isLoading={isLoading} saleChannel={pharmacy} />
+            </Col>
+          </Row>
+          <FormItem
+            label="Khu vực"
+            name="areaPharma"
+            labelCol={{ sm: 24, md: 24, lg: 3 }}
+            wrapperCol={{ sm: 24, md: 24, lg: 21 }}
+          >
+            <Input />
+          </FormItem>
+          <Row gutter={48} align="middle" justify="space-between">
+            <Col span={12}>
+              <FormItem
+                label="Tuyến thứ"
+                name="secondaryLine"
+                wrapperCol={{ sm: 24, md: 24, lg: 21 }}
+              >
+                <Input />
+              </FormItem>
+            </Col>
+            <Col span={12}>
               <FormItem
                 label="Tần suất quay lại"
                 name="frequencyOfVisits"
+                wrapperCol={{ sm: 24, md: 24, lg: 21 }}
+              >
+                <Input />
+              </FormItem>
+            </Col>
+          </Row>
+          <Row gutter={48} align="middle" justify="space-between">
+            <Col span={12}>
+              <FormItem
+                label="Hạng khách hàng"
+                name="customerRanking"
+                wrapperCol={{ sm: 24, md: 24, lg: 21 }}
+              >
+                <Input />
+              </FormItem>
+            </Col>
+            <Col span={12}>
+              <FormItem
+                label="Số hợp đồng"
+                name="contractNumber"
                 wrapperCol={{ sm: 24, md: 24, lg: 21 }}
               >
                 <Input />
@@ -246,6 +319,46 @@ export default function PharmacyForm({ onClose, id, handleUpdate }: Props) {
               </FormItem>
             </Col>
           </Row>
+          <Row gutter={48} align="middle" justify="space-between">
+            <Col span={12}>
+              <FormItem
+                label="Số tài khoản"
+                name="accountNumber"
+                wrapperCol={{ sm: 24, md: 24, lg: 21 }}
+              >
+                {isLoading ? <Skeleton.Input active /> : <Input />}
+              </FormItem>
+            </Col>
+            <Col span={12}>
+              <FormItem
+                label="Chủ tài khoản"
+                name="accountOwner"
+                wrapperCol={{ sm: 24, md: 24, lg: 21 }}
+              >
+                <Input />
+              </FormItem>
+            </Col>
+          </Row>
+          <Row gutter={48} align="middle" justify="space-between">
+            <Col span={12}>
+              <FormItem
+                label="Tên ngân hàng"
+                name="bankName"
+                wrapperCol={{ sm: 24, md: 24, lg: 21 }}
+              >
+                <Input />
+              </FormItem>
+            </Col>
+            <Col span={12}>
+              <FormItem
+                label="Chiết khấu %"
+                name="discountPercentage"
+                wrapperCol={{ sm: 24, md: 24, lg: 21 }}
+              >
+                <Input />
+              </FormItem>
+            </Col>
+          </Row>
           <FormItem
             label="Ghi chú"
             name="note"
@@ -254,7 +367,7 @@ export default function PharmacyForm({ onClose, id, handleUpdate }: Props) {
           >
             <TextArea />
           </FormItem>
-          <h5 style={{textAlign: 'center'}}>Địa chỉ giao hàng</h5>
+          <h5 style={{ textAlign: "center" }}>Địa chỉ giao hàng</h5>
           <AddressFormDelivery
             form={form}
             cityCode={cityCode}
@@ -264,7 +377,21 @@ export default function PharmacyForm({ onClose, id, handleUpdate }: Props) {
             allowPhoneNumber={false}
             allowEmail={false}
           />
-          <Row className="form__submit-box" style={{justifyContent: 'center'}}>
+          <h5 style={{ textAlign: "center" }}>Địa chỉ xuất hoá đơn</h5>
+          <AddressForm
+            form={form}
+            address="addressInvoicing"
+            cityCode={cityCode}
+            setCityCode={setCityCode}
+            districtCode={districtCode}
+            setDistrictCode={setDistrictCode}
+            allowPhoneNumber={false}
+            allowEmail={false}
+          />
+          <Row
+            className="form__submit-box"
+            style={{ justifyContent: "center" }}
+          >
             {isSubmitLoading ? (
               <Button disabled>Huỷ</Button>
             ) : (
@@ -273,7 +400,12 @@ export default function PharmacyForm({ onClose, id, handleUpdate }: Props) {
               </Link>
             )}
 
-            <Button type="primary" htmlType="submit" loading={isSubmitLoading} style={{marginLeft: 5}}>
+            <Button
+              type="primary"
+              htmlType="submit"
+              loading={isSubmitLoading}
+              style={{ marginLeft: 5 }}
+            >
               {id ? "Cập nhật" : "Thêm mới"}
             </Button>
           </Row>

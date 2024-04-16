@@ -57,7 +57,7 @@ export default function SelectGroupPharmacy({
         {RenderLoading(
           isLoading,
           <Select
-            className="right--parent"
+            // className="right--parent"
             placeholder="Nhóm khách hàng"
             options={options}
             style={{ width: "100%" }}
