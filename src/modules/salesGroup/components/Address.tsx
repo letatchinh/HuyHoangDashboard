@@ -1,6 +1,6 @@
-import { Collapse, Flex, Tag, Typography } from "antd";
+import { Collapse, ConfigProvider, Flex, List, Tag, Tooltip, Typography } from "antd";
 import type { CollapseProps } from "antd";
-import React, { useId, useMemo } from "react";
+import React, { useId, useMemo, useRef } from "react";
 import { convertAddress } from "../salesGroup.service";
 interface TypeProps extends CollapseProps {
   managementArea?: any[];
@@ -12,6 +12,7 @@ export default function Address({
   onlyShowLastPath,
   ...props
 }: TypeProps): React.JSX.Element {
+  const ref = useRef();
   const uuid = useId();
   const addressString = useMemo(
     () => convertAddress(managementArea, onlyShowLastPath),
@@ -33,26 +34,58 @@ export default function Address({
     }),
     [addressString]
   );
-  return managementArea?.length ? (
-    <Collapse
-      collapsible={"icon"}
-      expandIcon={({ isActive }) => (
-        <Flex
-          style={{ userSelect: "none", width: "100%",paddingInline : 5 }}
-          gap={5}
-          align={"center"}
+  return (
+    <div style={{ width: '80px', textAlign: 'center', lineHeight: 1
+     }}>
+      <ConfigProvider
+        theme={{
+          token: {
+            paddingSM: 0,
+            paddingXS: 0,
+          },
+          components: {
+            List: {
+              itemPadding: '5px 10px',
+              itemPaddingSM: '5px 10px',
+              itemPaddingLG: '5px 10px'
+            }
+          }
+        }}
+      >
+        <Tooltip
+          style = {{
+            width: 'max-content',
+          }}
+          overlayInnerStyle={{
+            width: 'max-content',
+          }}
+          overlayStyle={{
+            width: 'max-content',
+            maxWidth: 'unset'
+          }}
+          trigger={['click']}
+          placement= {'right'}
+          title={
+          <List
+            style={{
+            backgroundColor: 'white'
+            }}
+            size="small"
+            bordered
+            dataSource={addressString}
+            renderItem={(item: string) => (
+              <List.Item>
+                {item}
+              </List.Item>
+            )}
+          />}
         >
-          <i className="fa-solid fa-location-dot"></i>{" "}
-          {isActive ? "Ẩn địa chỉ" : "Xem Địa chỉ"}
-        </Flex>
-      )}
-      className="collapseCustom"
-      bordered={false}
-      items={[items]}
-      defaultActiveKey={["1"]}
-      {...props}
-    />
-  ) : (
-    <>(Không có địa chỉ)</>
-  );
-}
+          {/* <span> */}
+          {managementArea?.length ? <span style={{ fontSize: 11, lineHeight: 1 }}>  <i className="fa-solid fa-location-dot"></i> Xem địa chỉ</span> : 'Không có địa chỉ'}
+          {/* </span> */}
+        </Tooltip>
+      </ConfigProvider>
+    </div>
+  )
+    
+};

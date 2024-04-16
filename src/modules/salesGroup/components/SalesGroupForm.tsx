@@ -6,6 +6,7 @@ import {
   Input,
   Row,
   Select,
+  Tree,
   TreeSelect
 } from "antd";
 import { get } from "lodash";
@@ -22,6 +23,8 @@ import {
 } from "../salesGroup.hook";
 import { FieldTypeForm, propsTypeSalesGroupForm } from "../salesGroup.modal";
 import { convertInitData, convertSubmitData } from "../salesGroup.service";
+import useSalesGroupStore from "../salesGroupContext";
+import { DownOutlined } from "@ant-design/icons";
 const getPath = (managementArea : any[]) => managementArea?.map((area: any) =>get(area, "path"))
 const SalesGroupForm = ({
   id,
@@ -29,6 +32,7 @@ const SalesGroupForm = ({
   onUpdate,
   parentNear: parentNearFromList,
   parentNearPath: parentNearPathFromList,
+  dataSourceTree
 }: propsTypeSalesGroupForm): React.JSX.Element => {
   //*** */ Not Delete
 
@@ -55,6 +59,7 @@ const SalesGroupForm = ({
   //
   const [salesGroup, isLoading]: any = useGetSalesGroup(id);
   const groupHaveLeader: any[] = useGetGroupHaveLeader();
+  const { parentNear: parentNearStore } = useSalesGroupStore();
   const optionsGroupHaveLeader = groupHaveLeader?.map((item:any) => ({
     label : get(item,'name'),
     value : get(item,'_id'),
@@ -81,7 +86,6 @@ const SalesGroupForm = ({
   const onFinish = useCallback(
     (values: FieldTypeForm) => {
       const submitData = convertSubmitData(values);
-
       if (!id) {
         onCreate(submitData);
       } else {
@@ -101,6 +105,11 @@ const SalesGroupForm = ({
     } 
   }, [form, id, salesGroup,parentNear]);
 
+  useEffect(() => {
+    if (parentNearStore) {
+      form.setFieldsValue({ parentNear: parentNearStore?.parentNear });
+    };
+  }, [parentNearStore]);
   const onValuesChange = (value: any, values: any) => {};
   return (
     <div className="flex-column-center">
@@ -200,7 +209,15 @@ const SalesGroupForm = ({
             >
               {RenderLoading(
                 isLoading,
-                <Select filterOption={filterOptionSlug} showSearch options={optionsGroupHaveLeader} />
+                // <Select filterOption={filterOptionSlug} showSearch options={optionsGroupHaveLeader} allowClear />
+                  <TreeSelect
+                    className="sale-tree"
+                    switcherIcon={<DownOutlined />}
+                    treeData={dataSourceTree}
+                    treeDefaultExpandAll
+                    allowClear
+                    treeLine = {true}
+                />
               )}
             </Form.Item>
           </Col>
