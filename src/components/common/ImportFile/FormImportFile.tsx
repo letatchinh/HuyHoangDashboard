@@ -1,10 +1,11 @@
 import { Button, Modal, Space, Upload, message } from "antd";
-import { get, has } from "lodash";
-import { useCallback, useState } from "react";
-import { Link } from "react-router-dom";
-import ModalAnt from "~/components/Antd/ModalAnt";
+import { get } from "lodash";
+import { useState } from "react";
 import { BASE_URL } from "~/constants/defaultValue";
 import importExcel from "./importExcel";
+import useNotificationStore from "~/store/NotificationContext";
+import axios from "axios";
+import { UploadFile, UploadProps } from "antd/lib";
 
 type propsType = {
   isModalOpen?: any;
@@ -12,36 +13,43 @@ type propsType = {
   onModule?: any;
   query?: any;
 };
+interface Errors {
+  message?: string;
+}
 export function FormImportFile({
   isModalOpen,
   onClose,
   onModule,
   query,
 }: propsType) {
-  const [fileList, setFileList] = useState<any[]>([]);
-  const [errors, setErrors] = useState<any>('');
-  const [disabled, setDisabled] = useState(true);
-  const [complete, setComplete] = useState(false);
-  const [uploading, setUploading] = useState(false);
+  const [fileList, setFileList] = useState<UploadFile[]>([]);
+  const [errors, setErrors] = useState<Errors | null>(null);
+  const [disabled, setDisabled] = useState<boolean>(true);
+  const [complete, setComplete] = useState<boolean>(false);
+  const [uploading, setUploading] = useState<boolean>(false);
 
   const handleUpload = async () => {
     const formData = new FormData();
-    formData.append("file", fileList[0]?.originFileObj);
+    fileList.forEach((file) => {
+      formData.append("files", file.originFileObj as Blob);
+    });
 
     if (!fileList[0]) {
       message.destroy();
       message.error("Chưa có file để thực hiện thao tác");
       return;
     }
+
     setUploading(true);
-    const response = await importExcel.postFile(formData)
+
+    const response = await importExcel.postFile(formData);
     switch (response?.status) {
       case true:
-        message.success("Thực hiện thành công")
+        message.success("Thực hiện thành công");
         break;
       default:
-        setErrors({message:response.message})
-        message.warning("File nhập tồn tại dữ liệu trùng hoặc trống")
+        setErrors({ message: response.message });
+        message.warning("File nhập tồn tại dữ liệu trùng hoặc trống");
         break;
     }
     setTimeout(() => {
@@ -49,7 +57,7 @@ export function FormImportFile({
       setComplete(true);
     }, 2000);
   };
-  const onFileChange = async ({ file, fileList }: any) => {
+  const onFileChange: UploadProps["onChange"] = async ({ file, fileList }) => {
     setUploading(true);
     if (file.status === "removed") {
       setErrors(null);
@@ -75,9 +83,10 @@ export function FormImportFile({
     }
     setUploading(false);
   };
-  const props = {
-    onRemove: (file: any) => {
-      const index = fileList.indexOf(file);
+
+  const props: UploadProps = {
+    onRemove: (file) => {
+      const index = fileList.indexOf(file as UploadFile);
       const newFileList = fileList.slice();
       newFileList.splice(index, 1);
       setFileList(newFileList);
@@ -85,24 +94,57 @@ export function FormImportFile({
         setDisabled(true);
       }
     },
-    beforeUpload: (file: any) => {
-      setFileList([...fileList, file]);
+    beforeUpload: (file) => {
+      setFileList([...fileList, file as UploadFile]);
       setDisabled(false);
       return false;
     },
     fileList,
   };
 
+  const { onNotify } = useNotificationStore();
+  const handleOnClick = async () => {
+    try {
+      if (query) {
+        let a = `?`;
+        const keyExportUrl = "/api/v1/export-pharma";
+        try {
+          if (a !== "") {
+            axios
+              .get(keyExportUrl, {
+                method: "GET",
+                responseType: "blob",
+              })
+              .then((response) => {
+                const url = window.URL.createObjectURL(
+                  new Blob([response.data])
+                );
+                const link = document.createElement("a");
+                link.href = url;
+                link.setAttribute("target", "_blank");
+                link.setAttribute("download", `FileMauNhaThuoc.xlsx`);
+                document.body.appendChild(link);
+                link.click();
+              });
+          }
+        } catch (error: any) {
+          onNotify?.error(error || "Có lỗi xảy ra!");
+        }
+      }
+    } catch (error: any) {
+      onNotify?.error(error || "Có lỗi xảy ra!");
+    }
+  };
   return (
     <Modal
       width={700}
-    //   height={600}
+      //   height={600}
       open={isModalOpen}
       onCancel={onClose}
       onOk={() => onModule((value: any) => !value)}
       footer={[
         <Button
-          key={"import"}
+          key="import"
           type="primary"
           disabled={disabled}
           loading={uploading}
@@ -113,7 +155,7 @@ export function FormImportFile({
           Import
         </Button>,
         <Button
-          key={"done"}
+          key="done"
           hidden={!complete}
           type="primary"
           onClick={() => {
@@ -144,8 +186,7 @@ export function FormImportFile({
             <a
               target="_blank"
               style={{ color: "#1990ff" }}
-              href={`${BASE_URL}/api/v1/export-pharma`}
-              download
+              onClick={handleOnClick}
             >
               {" "}
               Excel file
@@ -157,34 +198,30 @@ export function FormImportFile({
         <Upload
           {...props}
           fileList={fileList}
+          // listType="text"
           style={{ width: "60%", color: "#1990ff" }}
           onChange={onFileChange}
           accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
           maxCount={1}
         >
-          <Button
-            key={"select"}
-            type="primary"
-            htmlType="submit"
-            // style={{ marginRight: '5px' }}
-          >
+          <Button key={"select"} type="primary" htmlType="submit">
             Chọn file dữ liệu
           </Button>
           <div style={{ marginTop: "5px", marginBottom: "1rem" }}>
             <i>
-              *Hệ thống cho phép nhập tối đa <b>2000 nhà thuốc</b>{" "}
-              mỗi lần từ file
+              *Hệ thống cho phép nhập tối đa <b>2000 nhà thuốc</b> mỗi lần từ
+              file
             </i>
           </div>
         </Upload>
         <div style={{ marginTop: "10px", display: "block" }}>
-          {errors?.key && (
+          {errors?.message && (
             <>
               <Space style={{ color: "red" }}>{errors?.message} </Space>
               {/* <Link to={PATH_CLINIC.processImport.root} /> */}
               <a href={`${BASE_URL}/api/v1/export-pharma`} download>
-              Tải về file
-            </a>
+                Tải về file
+              </a>
             </>
           )}
         </div>
