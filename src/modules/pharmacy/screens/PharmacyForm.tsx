@@ -176,7 +176,7 @@ export default function PharmacyForm({ onClose, id, handleUpdate }: Props) {
                 name={["infoPolicy", "dateOfBirth"]}
                 wrapperCol={{ sm: 24, md: 24, lg: 21 }}
               >
-                {/* <DatePicker format={"DD/MM/YYYY"} placeholder="Ngày sinh" /> */}
+                <DatePicker format={"DD/MM/YYYY"} placeholder="Ngày sinh" />
               </FormItem>
             </Col>
             <Col span={12}>
@@ -230,7 +230,7 @@ export default function PharmacyForm({ onClose, id, handleUpdate }: Props) {
           <Row gutter={48} align="middle" justify="space-between">
             <Col span={12}>
               <FormItem
-                label="Khu vực"
+                label="Vùng"
                 name="urbanType"
                 wrapperCol={{ sm: 24, md: 24, lg: 21 }}
               >
