@@ -1,32 +1,33 @@
 import {
   Button,
   Col,
-  DatePicker,
   Form,
   Input,
   InputNumber,
   Row,
   Select,
+  Tooltip,
   Typography,
 } from "antd";
-import { debounce, get, head } from "lodash";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { get, head, omit } from "lodash";
+import React, {  useEffect, useMemo, useState } from "react";
 import BaseBorderBox from "~/components/common/BaseBorderBox/index";
-import RenderLoading from "~/components/common/RenderLoading";
-// import { Pie } from "@ant-design/charts";
-
-import { DatePickerProps } from "antd/lib";
-import dayjs from "dayjs";
-import { Layout } from "~/modules/sale/bill/components/createBillScreen/TotalBill";
 import useNotificationStore from "~/store/NotificationContext";
-import { formatNumberIsPercent, formatNumberThreeComma, formatter } from "~/utils/helpers";
+import { formatNumberThreeComma, formatter } from "~/utils/helpers";
 import {
-  useCreateCostManagement,
+  convertData,
+  convertDataSubmit,
+  handleConvertCost,
   useGetCostManagement,
   useResetAction,
-  useUpdateCostManagement,
 } from "../costManagement.hook";
 import SkeletonInput from "antd/es/skeleton/Input";
+import { useQueryParams } from "~/utils/hook";
+import dayjs from "dayjs";
+import { Layout } from "~/modules/sale/bill/components/createBillScreen/TotalBill";
+import DatePickerAnt from "./DatePicker";
+import { useCostManagementContext } from "../screens/CostManagement";
+import { InfoCircleOutlined } from "@ant-design/icons";
 
 interface Variant {
   label: string,
@@ -44,252 +45,127 @@ const optionsReferenceUnit = [
   },
   {
     label: "Phần trăm",
-    value: "percent",
+    value: "PERCENT",
   },
 ];
-const formatPercent = /^(\d+(\.\d{1,2})?)%?$/;
-export default function CostManagementForm({
-  id,
-  onCancel,
-  priceByProduct,
-  startDate,
-  endDate,
-  setId,
-}: any): React.JSX.Element {
+
+interface Props{
+}
+
+export default function CostManagementForm({}: Props): React.JSX.Element {
   const { onNotify } = useNotificationStore();
+  const { date, typeDate, id, onUpdate, onCancel, isSubmitLoading} = useCostManagementContext();
   const [form] = Form.useForm();
-  const [backupForm, setBackupForm] = useState<any[]>([]);
-  const [isSubmitLoading, onUpdate] = useUpdateCostManagement(onCancel);
-  const [costManagementById, isLoading] = useGetCostManagement(id);
-  const [toTalPrice, setToTalPrice] = useState(0); 
-  const [priceMemo, setPriceMemo] = useState(0);
-  const [shippingId, setShippingId] = useState(null);
-  const [profitVal, setProfitVal] = useState(0);
+  const query = useQueryParams();
+  const newQuery = useMemo(() => ({
+    id: id,
+    startDate: dayjs(date?.startDate).startOf(typeDate as any).format("YYYY-MM-DD HH:mm:ss") ?? query.get("startDate"),
+    endDate: dayjs(date?.endDate).endOf(typeDate  as any).format("YYYY-MM-DD HH:mm:ss") ?? query.get("endDate"),
+  }), [id]);
+  const [costManagementById, isLoading] = useGetCostManagement(id && newQuery);
   const [optionsVariants, setOptionVariants] = useState<Variant[]>([]);
-  const [variantId, setVariantId] = useState <any>(null);
-  useResetAction();
+  const [variantId, setVariantId] = useState<any>(null);
+  const [data, setData] = useState<any>([]);
   const [referenceUnit, setReferenceUnit] = useState<any>(head(optionsReferenceUnit)?.value);
-
-  // const handleChangReferenceUnit = useCallback(
-  //   (value?: any) => {
-  //     if (value) {
-  //       setReferenceUnit(value);
-  //     }
-  //     const price1 = form.getFieldValue("totalPrices").replace(/,/g, "");
-  //     setPriceMemo(price1);
-  //     form.setFieldsValue({
-  //       cost: {
-  //         pharmaceutical: 0,
-  //         operations: 0,
-  //         marketing: 0,
-  //         management: 0,
-  //         logistic: 0,
-  //       },
-  //       financialCost: 0,
-  //     });
-  //     // };
-  //   },
-  //   [form]
-  // );
-
-  // const onFinish = (values: any) => {
-  //   const formattedValues: any = {
-  //     ...values,
-  //     startDate: dayjs(values.startDate).format("YYYY-MM-DD"),
-  //     endDate: dayjs(values.endDate).format("YYYY-MM-DD"),
-  //   };
-  //   const { cost, financialCost } = values;
-  //   const costShipping = {
-  //     pharmaceutical: cost?.pharmaceutical
-  //       ? parseFloat(cost?.pharmaceutical)
-  //       : 0,
-  //     operations: parseFloat(cost?.operations) ?? 0,
-  //     marketing: parseFloat(cost?.marketing) ?? 0,
-  //     management: parseFloat(cost?.management) ?? 0,
-  //     logistic: parseFloat(cost?.logistic) ?? 0,
-  //     financialCost: parseFloat(financialCost) ?? 0,
-
-  //     get count() {
-  //       return (
-  //         this.pharmaceutical +
-  //         this.operations +
-  //         this.marketing +
-  //         this.management
-  //       );
-  //     },
-  //   };
-
-  //   const distributionChannel = costShipping.count;
-
-  //   if (referenceUnit === "percent") {
-  //     const percentKeys = [
-  //       "marketing",
-  //       "management",
-  //       "pharmaceutical",
-  //       "logistic",
-  //       "operations",
-  //     ];
-  //     percentKeys.forEach((key) => {
-  //       formattedValues.cost[key] = (toTalPrice * values.cost[key]) / 100;
-  //     });
-  //     onUpdate({
-  //       ...formattedValues,
-  //       financialCost: (toTalPrice * financialCost) / 100,
-  //       cost: {
-  //         ...cost,
-  //         distributionChannel: (toTalPrice * distributionChannel) / 100,
-  //       },
-  //       _id: shippingId,
-  //     });
-  //     form.resetFields();
-  //     setId(null);
-  //   } else {
-  //     onUpdate({
-  //       ...formattedValues,
-  //       cost: { ...cost, distributionChannel: distributionChannel },
-  //       _id: shippingId,
-  //     });
-  //     form.resetFields();
-  //     setId(null);
-  //   }
-  // };
+  const handleConvert = handleConvertCost(data,setData, referenceUnit);
+  useResetAction();
+  const [profit, setProfit] = useState(0);
+  const [variantCurrent, setVariantCurrent] = useState<any>(null);
   useEffect(() => {
     if (costManagementById && id) {
-      const {
-        shippingCost,
-        variants,
-        name,
-        profitValue,
-      } = costManagementById;
+      setData({
+        ...costManagementById,
+        variants :costManagementById?.variants?.map((item: any) => ({
+          ...item,
+          variantId: item?._id,
+        ...convertData(item),
+        }))
+      });
+      const {variants,name} = costManagementById;
       const optionsV = variants?.map((item: any) => ({
         label: item?.unit?.name || item?.variantCode,
         value: item._id,
       }));
       setOptionVariants(optionsV);
       setVariantId(optionsV[0]?.value || null);
-      setShippingId(get(shippingCost, "_id", null));
-      // setProfitVal(profitValue);
       form.setFieldsValue({
         name: name ?? "",
       });
-      setBackupForm([costManagementById]);
-    } else {
-      setBackupForm([form.getFieldsValue()]);
-    }
+    };
   }, [costManagementById, id, form]);
-  
-  //Handle Variant
+
   useEffect(() => {
-    if (variantId) { 
-      const findCost = costManagementById?.shippingCost?.cost?.find((item: any) => item?.variantId === variantId);
-      const infoVariant = costManagementById?.variants?.find((item: any) => item?._id === variantId);
+    if (data && variantId) {
+      const variant = data?.variants?.find((item: any) => item?._id === variantId);
+      const expense = get(variant, 'logistic.VND', 0) + get(variant, 'totalRevenueEmployee.VND', 0) + get(variant, 'operations.VND', 0) + get(variant, 'financialCost.VND', 0) + get(variant, 'marketing.VND', 0) + get(variant, 'management.VND', 0);
+      const profit = +((variant?.totalRevenueVariant || 0) - expense);
+      if (variantId) { 
       form.setFieldsValue({
         variant: variantId,
-        cost: {
-          distributionChannel: findCost?.distributionChannel ?? 0,
-          pharmaceutical: findCost?.pharmaceutical ?? 0,
-          operations: findCost?.operations ?? 0,
-          marketing: findCost?.marketing ?? 0,
-          management: findCost?.management ?? 0,
-          logistic: findCost?.logistic ?? 0,
-        },
-        code: infoVariant?.variantCode,
-        costPrice: infoVariant?.cost,
-        price: infoVariant?.price
+        distributionChannel: variant?.distributionChannel ?? 0,
+        code: variant?.variantCode,
+        costPrice: variant?.cost,
+        totalRevenueVariant: variant?.totalRevenueVariant,
+        totalQuantity: variant?.totalQuantity,
+        ...variant,
+        price: variant?.price,
       });
-
     };
-  }, [variantId, costManagementById, id,optionsVariants]);
 
+      setVariantCurrent(variant);
+      setProfit(profit);
+    };
+  }, [data, variantId, optionsVariants]);
+  
   //Handle referenceUnit
   useEffect(() => {
-    if (costManagementById && id) { 
+    if (data && id) { 
       form.setFieldsValue({
         referenceUnit,
       });
     };
   }, [referenceUnit,costManagementById,id]);
-  
-  const onChange: DatePickerProps["onChange"] = (date, dateString) => {
-    console.log(date, dateString);
-  };
-  const onValuesChange = (valueChange: any, values: any) => {
-    const onSetRecoverForm = () =>
-      setBackupForm((pre: any[]) => [...pre, values]);
-    const debounceSetRecover = debounce(onSetRecoverForm, 0);
-    debounceSetRecover();
-  };
 
+  const onFinish = (values: any) => {
+    const startDate = dayjs(date?.startDate)?.startOf('month').format("YYYY-MM-DD HH:mm:ss");
+    const endDate = dayjs(date?.endDate)?.endOf('month').format("YYYY-MM-DD HH:mm:ss");
+    const submitData = convertDataSubmit(data?.variants);
+    onUpdate({
+      data: submitData,
+      _id: costManagementById?._id,
+      startDate,
+      endDate
+    })
+  };
   //Handle render UI
-  const renderLoading = (component: any) =>
-    isLoading ? <SkeletonInput /> : component;
-  
-  // const checkTypePriceIsRender = (component_1: any, component_2: any) => {
-  //   return referenceUnit === "VND"
-  //     ? renderLoading(component_1)
-  //     : renderLoading(component_2);
-  // };
-
-  const checkTypePriceIsRender_ = () => {
-    /**
-     * Nhập đối số field
-     * return lại giá trị lợi nhuận khi đang nhập
-     */
-    return (
-      <InputNumber
-        onBlur={(e: any) => {
-          const a = priceMemo - e.target.value;
-          setPriceMemo(a);
-        }}
-        style={{ width: "100%" }}
-        formatter={formatNumberThreeComma}
-      />
-    );
-  };
+  const renderLoading = (component: any) => isLoading ? <SkeletonInput /> : component;
 
   const addonAfter = useMemo(() => referenceUnit === "VND" ? "VND" : "%", [referenceUnit]);
-  const maxInput = useMemo(() => referenceUnit !== "VND" ? 100 : undefined, [referenceUnit]);
-  const formatterInput = useMemo(()=>referenceUnit === "VND" ? formatNumberThreeComma : formatNumberIsPercent,[referenceUnit])
+
   return (
     <div>
-      <h5>Tạo mới chi phí</h5>
       <Form
         form={form}
-        // onFinish={onFinish}
         labelCol={{ span: 8 }}
         wrapperCol={{ span: 16 }}
         labelAlign="left"
         scrollToFirstError={true}
-        // initialValues={{
-        //   variants: [
-        //     {
-        //       exchangeValue: 1,
-        //       variantIsDefault: true,
-        //     },
-        //   ],
-        // }}
-        onValuesChange={onValuesChange}
+        onFinish={onFinish}
       >
-        <BaseBorderBox title={"Khoảng ngày"}>
-          <Row {...layoutRow}>
-            <Col style={{ paddingBottom: 10 }} span={12}>
-              <Form.Item<any> label="Ngày bắt đầu" name={"startDate"}>
-                <DatePicker onChange={onChange} />
-              </Form.Item>
-            </Col>
-            <Col style={{ paddingBottom: 10 }} span={12}>
-              <Form.Item<any> label="Ngày kết thúc" name={"endDate"}>
-                <DatePicker onChange={onChange} />
-              </Form.Item>
-            </Col>
-          </Row>
+        <BaseBorderBox title={'Thời gian'}>
+          <Form.Item
+            label={"Thời gian"}
+          >
+            <DatePickerAnt disabled = {true}/>
+          </Form.Item>
+
         </BaseBorderBox>
         <BaseBorderBox title={'Hệ số'}>
-          <Row>
+          <Row gutter ={16}>
             <Col span={12}>
               <Form.Item name={"variant"} label={"Đơn vị sản phẩm"}>
                 <Select
-                  style={{ width: 120 }}
+                  style={{ width: '100%' }}
                   options={optionsVariants}
                   onChange={(value) => setVariantId(value)}
                 />
@@ -298,30 +174,32 @@ export default function CostManagementForm({
             <Col span={12}>
               <Form.Item name={"referenceUnit"} label={"Đơn vị quy chiếu"}>
                 <Select
-                  style={{ width: 120 }}
+                  style={{ width: '100%'  }}
                   value={referenceUnit}
-                  options={optionsReferenceUnit}
-                  onChange={(value) => setReferenceUnit(value)}
+                  options={variantCurrent?.totalRevenueVariant > 0 ? optionsReferenceUnit : [optionsReferenceUnit[0]]}
+                  onChange={setReferenceUnit}
                 />
               </Form.Item>
             </Col>
-          </Row></BaseBorderBox>
+          </Row>
+        </BaseBorderBox>
+        
         <BaseBorderBox title={"Thông tin sản phẩm"}>
           <Row {...layoutRow}>
             <Col span={12}>
-              <Form.Item<any> label="Mã sản phẩm" name={"code"}>
+              <Form.Item label="Mã sản phẩm" name={"code"}>
                 {renderLoading(<Input readOnly />)}
               </Form.Item>
             </Col>
             <Col span={12}>
-              <Form.Item<any> label="Tên sản phẩm" name={"name"}>
+              <Form.Item label="Tên sản phẩm" name={"name"}>
                 {renderLoading(<Input readOnly />)}
               </Form.Item>
             </Col>
           </Row>
           <Row {...layoutRow}>
             <Col span={12}>
-              <Form.Item<any> label="Giá thu về" name={"costPrice"}>
+              <Form.Item label="Giá thu về" name={"costPrice"}>
                 {renderLoading(
                   <InputNumber
                     readOnly
@@ -332,7 +210,7 @@ export default function CostManagementForm({
               </Form.Item>
             </Col>
             <Col span={12}>
-              <Form.Item<any> label="Giá niêm yết" name={"price"}>
+              <Form.Item label="Giá niêm yết" name={"price"}>
                 {renderLoading(
                   <InputNumber
                     readOnly
@@ -345,16 +223,16 @@ export default function CostManagementForm({
           </Row>
           <Row {...layoutRow}>
             <Col style={{ paddingBottom: 10 }} span={12}>
-              <Form.Item<any> label="Số lượng đã bán" name={"totalPrices"}>
+              <Form.Item label="Số lượng đã bán" name={"totalQuantity"}>
                 {renderLoading(
-                  <InputNumber readOnly style={{ width: "100%" }} />
+                  <InputNumber readOnly style={{ width: "100%" }}formatter={formatNumberThreeComma} />
                 )}
               </Form.Item>
             </Col>
             <Col style={{ paddingBottom: 10 }} span={12}>
-              <Form.Item<any> label="Doanh thu" name={"totalPrices"}>
+              <Form.Item label="Doanh thu" name={"totalRevenueVariant"}>
                 {renderLoading(
-                  <InputNumber readOnly style={{ width: "100%" }} />
+                  <InputNumber readOnly style={{ width: "100%" }} formatter={formatNumberThreeComma}/>
                 )}
               </Form.Item>
             </Col>
@@ -363,98 +241,107 @@ export default function CostManagementForm({
         <BaseBorderBox title={"Thông tin chi phí vận chuyển (1)"}>
           <Row {...layoutRow}>
             <Col span={12}>
-              <Form.Item<any>
+              <Form.Item
                 label="Chi phí vận chuyển"
-                name={["cost", "logistic"]}
+                name={["logistic", referenceUnit]}
               >
                   <InputNumber
                     min={0}
-                    max={maxInput}
                     style={{ width: "100%" }}
-                    formatter={formatterInput}
-                    addonAfter= {addonAfter}
+                    formatter={formatNumberThreeComma}
+                    addonAfter={addonAfter}
+                    onChange={(value)=> handleConvert("logistic", value, form.getFieldValue("variant"))}
                   />
               </Form.Item>
             </Col>
           </Row>
         </BaseBorderBox>
+
         <BaseBorderBox title={"Thông tin chi phí kênh phân phối (2)"}>
           <Row {...layoutRow}>
             <Col span={12}>
-              <Form.Item<any>
-                label="Chi phí trình dược viên"
-                name={["cost", "pharmaceutical"]}
-              >
+              <Form.Item
+                labelCol={{ span: 10 }}
+                wrapperCol={{ span: 14 }}
+                label= {
+                  <Tooltip title="Chi phí trình dược viên sẽ được hệ thống tự động tính toán">
+                    Chi phí trình dược viên  <InfoCircleOutlined/>
+                  </Tooltip>
+                }
+                name={["totalRevenueEmployee",referenceUnit]}
+              > 
                   <InputNumber
                     min={0}
-                    max={maxInput}
+                    readOnly
                     style={{ width: "100%" }}
-                    formatter={formatterInput}
+                    formatter={formatNumberThreeComma}
                     addonAfter= {addonAfter}
                   />
               </Form.Item>
             </Col>
             <Col span={12}>
-              <Form.Item<any>
+              <Form.Item
                 label="Chi phí vận hành"
-                name={["cost", "operations"]}
+                name={ ["operations",referenceUnit]}
               >
                 <InputNumber
                     min={0}
-                    max={maxInput}
                     style={{ width: "100%" }}
-                    formatter={formatterInput}
+                    formatter={formatNumberThreeComma}
                     addonAfter= {addonAfter}
+                    onChange={(value)=> handleConvert("operations", value, form.getFieldValue("variant"))}
                   />
               </Form.Item>
             </Col>
           </Row>
           <Row {...layoutRow}>
             <Col span={12}>
-              <Form.Item<any>
+              <Form.Item
                 label="Chi phí marketing"
-                name={["cost", "marketing"]}
+                name={ ["marketing",referenceUnit]}
               >
                 <InputNumber
                     min={0}
-                    max={maxInput}
                     style={{ width: "100%" }}
-                    formatter={formatterInput}
+                    formatter={formatNumberThreeComma}
                     addonAfter= {addonAfter}
+                    onChange={(value)=> handleConvert("marketing", value, form.getFieldValue("variant"))}
                   />
               </Form.Item>
             </Col>
             <Col span={12}>
-              <Form.Item<any>
+              <Form.Item
                 label="Chi phí quản lý"
-                name={["cost", "management"]}
+                name={ ["management", referenceUnit]}
               >
                 <InputNumber
                     min={0}
-                    max={maxInput}
                     style={{ width: "100%" }}
-                    formatter={formatterInput}
+                    formatter={formatNumberThreeComma}
                     addonAfter= {addonAfter}
+                    onChange={(value)=> handleConvert("management", value, form.getFieldValue("variant"))}
                   />
               </Form.Item>
             </Col>
           </Row>
         </BaseBorderBox>
+
         <BaseBorderBox title={"Tổng tin chi phí tài chính (3)"}>
           <Row {...layoutRow}>
             <Col span={12}>
-              <Form.Item<any> label="Chi phí tài chính" name={"financialCost"}>
+              <Form.Item label="Chi phí tài chính" name={ ["financialCost", referenceUnit]}>
                 <InputNumber
                     min={0}
-                    max={maxInput}
                     style={{ width: "100%" }}
-                    formatter={formatterInput}
+                    formatter={formatNumberThreeComma}
                     addonAfter= {addonAfter}
+                    onChange={(value)=> handleConvert("financialCost", value, form.getFieldValue("variant"))}
                   />
               </Form.Item>
             </Col>
           </Row>
         </BaseBorderBox>
+        
         <BaseBorderBox>
           <Row {...layoutRow}>
             <Col span={6}>
@@ -463,10 +350,10 @@ export default function CostManagementForm({
                 label={"Lợi nhuận:"}
               >
                 <Typography.Text
-                  type={profitVal <= 0 ? "danger" : "success"}
+                  type={profit <= 0 ? "danger" : "success"}
                   strong
                 >
-                  {formatter(profitVal)}đ
+                  {formatter(profit)}đ
                 </Typography.Text>
               </Layout>
             </Col>

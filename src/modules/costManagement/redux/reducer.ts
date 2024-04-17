@@ -12,21 +12,16 @@ class CostManagementClassExtend extends InstanceModuleRedux {
     super('costManagement');
     this.cloneReducer = {
       ...this.initReducer,
-      changeVariantDefault: (state:initStateSlice , { payload }: any) => {
-        const {productId, variantId} = payload;
-        const list = state.list?.map((item:any) => {
-          if(get(item,'_id') === productId){
-            const variant = get(item,'variants',[])?.find((v: any) => get(v,'_id') === variantId);
-            return {...item, variant};
-          }
-          return item;
-        });
-        state.list = list;
+      updateSuccess: (state: cloneInitState, { payload }: any) => {
+        state.list = state.list?.map((item: any) => get(item, '_id') === get(payload, 'data._id') ? payload?.data : item);
+        state.updateSuccess = payload;
+        state.isSubmitLoading = false;
       },
-      resetActionFullState: (state:any) => ({
+      resetActionFullState: (state:cloneInitState) => ({
         ...state,
-        ...omit(this.cloneInitState, ["list"]),
+        ...omit(this.cloneInitState, ["list", "paging"]),
       }),
+
       // Want Add more reducer Here...
     }
     this.cloneInitState = {
@@ -49,4 +44,5 @@ const data = newSlice.createSlice();
 
 
 export const costManagementActions = data.actions;
-export default data.reducer;
+const reducer = data.reducer
+export default reducer;
