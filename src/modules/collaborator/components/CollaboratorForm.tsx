@@ -2,8 +2,10 @@ import {
   Badge,
   Button,
   Col,
+  Flex,
   Form,
   Input,
+  Radio,
   Row,
   Select,
   Skeleton,
@@ -27,6 +29,7 @@ import UploadImage from "~/components/common/Upload/UploadImage";
 import { InfoCircleTwoTone } from "@ant-design/icons";
 import apis from "~/modules/user/user.api";
 import { validatePhoneNumberAntd } from "~/utils/validate";
+import InputNumberAnt from "~/components/Antd/InputNumberAnt";
 
 const FormItem = Form.Item;
 const { Option } = Select;
@@ -165,7 +168,15 @@ export default function CollaboratorForm(props: IProps) {
         onValuesChange={onValuesChange}
         scrollToFirstError
         requiredMark={false}
-        // initialValues={initEmployee}
+        initialValues={{
+          fee: [
+            {
+              typeFee: "SUB_FEE",
+              value: 0,
+              typeValue: "PERCENT",
+            },
+          ],
+        }}
         labelCol={{ sm: 24, md: 24, lg: 8, xl: 8 }}
         wrapperCol={{ sm: 24, md: 24, lg: 16, xl: 16 }}
       >
@@ -234,11 +245,16 @@ export default function CollaboratorForm(props: IProps) {
             <Col span={12}>
               <Row gutter={36}>
                 <Col span={24}>
-                  <FormItem
-                    label="SDT người mời"
-                    name="referralCode"
-                  >
-                    {!id ? (isLoading ? <Skeleton.Input active /> : <Input />) : <Input disabled />}
+                  <FormItem label="SDT người mời" name="referralCode">
+                    {!id ? (
+                      isLoading ? (
+                        <Skeleton.Input active />
+                      ) : (
+                        <Input />
+                      )
+                    ) : (
+                      <Input disabled />
+                    )}
                   </FormItem>
                 </Col>
               </Row>
@@ -288,6 +304,55 @@ export default function CollaboratorForm(props: IProps) {
               ></FormItem>
             </Col>
           </Row>
+
+          <Form.List
+            name="fee"
+          >
+            {(fields, {}) => (
+              <>
+                {fields.map((field, index) => (
+                  <Row
+                    gutter={48}
+                    align="middle"
+                    justify="space-between"
+                    className="employee-form__logo-row"
+                  >
+                    <Col span={12}>
+                      <Flex justify={'space-between'} align='center'>
+                        <FormItem
+                          label="Phụ phí bán hàng"
+                          name={[index, "value"]}
+                          rules={[
+                            ({ getFieldValue }) => ({
+                              validator(_, value) {
+                                if (getFieldValue(['fee',index,'typeValue']) === 'PERCENT' && value > 100) {
+                                  return Promise.reject(new Error('Phần trăm phải bé hơn 100%!'));
+                                }
+                                return Promise.resolve();
+                              
+                              }
+                            })
+                          ]}
+                        >
+                          {isLoading ? (
+                            <Skeleton.Input active />
+                          ) : (
+                            <InputNumberAnt addonAfter={<FormItem style={{marginBottom : 'unset'}} name={[index, "typeValue"]}>
+                            <Radio.Group size="small" buttonStyle="solid">
+                                <Radio.Button value="PERCENT">%</Radio.Button>
+                                <Radio.Button value="VALUE">Giá trị</Radio.Button>
+                              </Radio.Group>
+                            </FormItem>}/>
+                          )}
+                        </FormItem>
+                        
+                      </Flex>
+                    </Col>
+                  </Row>
+                ))}
+              </>
+            )}
+          </Form.List>
         </BaseBorderBox>
 
         <Account

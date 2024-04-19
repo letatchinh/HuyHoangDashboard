@@ -22,7 +22,7 @@ export interface ItemDataSource extends FormFieldCreateBill  {
   quotationItems: quotation[]; // BillItems
   dataUpdateQuotation? : DataUpdateQuotationType; // Data When Handle With Exist Quotation
 };
-export const keyValidDataSource = ['typeTab','quotationItems','pharmacyId','dataUpdateQuotation','pair','debtType'];
+export const keyValidDataSource = ['typeTab','quotationItems','pharmacyId','dataUpdateQuotation','pair','debtType','fee'];
 
 export interface DataSourceType  {
   [key: string]: ItemDataSource;
@@ -61,7 +61,8 @@ const CreateBillPage = (): React.JSX.Element => {
   const [tabs, setTabs] = useState<TabsProps["items"]>();
   const [activeKey, setActiveKey]: any = useState();
   const [dataSource, setDataSource]: any = useState<DataSourceType>({});
-
+  console.log(dataSource,'dataSource');
+  
   const [dataResult,setDataResult] = useState<DataResultType | null>();
   const [openModalResult,setOpenModalResult] = useState(false);
 
@@ -148,6 +149,8 @@ const CreateBillPage = (): React.JSX.Element => {
     onRemoveDataSource(targetKey);
   };
   const onChangeBill = (activeKey: any, newData: ItemDataSource) => {
+    console.log(newData,'newData');
+    
     const dataFromLocalStorage = localStorage.getItem(KEY_DATA_PHARMACY);
     const dataReady = JSON.parse(dataFromLocalStorage || "");
     const newDataSource = {
@@ -158,6 +161,9 @@ const CreateBillPage = (): React.JSX.Element => {
         ...newData, // Change New Data Source
       },
     };    
+    console.log(newDataSource,'newDataSource');
+    console.log(newData,'newData');
+    
     setDataSource(newDataSource);
   };
   const verifyData = (targetKey: string, callback?: () => void) => {
@@ -184,6 +190,7 @@ const CreateBillPage = (): React.JSX.Element => {
       // Not Have DataSource  initialize new Data
       const dataFromLocalStorage : any  = localStorage.getItem(KEY_DATA_PHARMACY);
       const isInValidDataSource : boolean = BillModule.service.validateDataStorageREINS(dataFromLocalStorage);
+      
       if (
         isInValidDataSource
         ) {
@@ -192,7 +199,8 @@ const CreateBillPage = (): React.JSX.Element => {
 
         // Data source is Ready
         const dataReady: DataSourceType = JSON.parse(dataFromLocalStorage);
-        
+        console.log(dataReady,'dataReady');
+
         let newTabs: TabsProps['items'] = [];
         forIn(dataReady, (value, key) => {
           switch (get(value,'typeTab')) {

@@ -9,9 +9,10 @@ import {
 } from "react";
 import { v4 } from "uuid";
 import QuotationModule from '~/modules/sale/quotation';
+import { getValueOfPercent } from "~/utils/helpers";
 import { DEFAULT_DEBT_TYPE } from "../../quotation/constants";
 import { useGetDebtRule } from "../bill.hook";
-import { DebtType, quotation } from "../bill.modal";
+import { DebtType, FeeType, quotation } from "../bill.modal";
 import { onVerifyData, reducerDiscountQuotationItems } from "../bill.service";
 const TYPE_DISCOUNT = {
   "DISCOUNT.CORE": "DISCOUNT.CORE",
@@ -35,7 +36,7 @@ type DiscountDetail = {
 };
 export type GlobalCreateBill = {
   quotationItems: DataItem[];
-  onSave: (newRow: DataItem) => void;
+  onSave: (newRow: DataItem | any) => void;
   onAdd: (newRow: Omit<DataItem, "key">) => void;
   onRemove: (productId: string) => void;
   form: any;
@@ -45,6 +46,7 @@ export type GlobalCreateBill = {
   totalPriceAfterDiscount: number;
   totalAmount: number;
   totalDiscount: number;
+  totalDiscountOther: number;
   totalDiscountFromProduct: DiscountDetail | null;
   totalDiscountFromSupplier: DiscountDetail | null;
   verifyData : (callback?:any) => void,
@@ -52,6 +54,7 @@ export type GlobalCreateBill = {
   debt : DebtType[];
   bill : any,
   onOpenModalResult : (data:any) => void
+  onChangeBill : (data:any) => void
   mutateReValidate : () => void
 };
 const CreateBill = createContext<GlobalCreateBill>({
@@ -66,6 +69,7 @@ const CreateBill = createContext<GlobalCreateBill>({
   totalPriceAfterDiscount: 0,
   totalAmount: 0,
   totalDiscount : 0,
+  totalDiscountOther : 0,
   totalDiscountFromProduct : null,
   totalDiscountFromSupplier: null,
   verifyData: () => {},
@@ -74,6 +78,7 @@ const CreateBill = createContext<GlobalCreateBill>({
   bill : null,
   onOpenModalResult: () => {},
   mutateReValidate: () => {},
+  onChangeBill: () => {},
 });
 
 type CreateBillProviderProps = {
@@ -148,6 +153,8 @@ export function CreateBillProvider({
 
 
   const onValueChange = (value: any, values: any) => {
+    console.log(values,'values');
+    
     const key: any = Object.keys(value)[0];
     switch (key) {
       case "pharmacyId":
@@ -156,6 +163,16 @@ export function CreateBillProvider({
         });
         // Revalidate after change Pharmacy
         mutateReValidate();
+        break;
+
+      case "fee":
+        const newFee = values[key]?.map((item:FeeType) => item?.typeValue === 'PERCENT' && item?.value > 100 ? {...item,value : 100} : item);
+        form.setFieldsValue({
+          fee : newFee
+        })
+        onChangeBill({
+          fee: newFee,
+        });
         break;
 
       case "debtType":
@@ -175,6 +192,9 @@ export function CreateBillProvider({
   };
 
   const pair = Form.useWatch('pair',form) || 0;
+  const fee = Form.useWatch('fee',form) || 0;
+  console.log(quotationItems,'quotationItems');
+
   const totalPrice = useMemo(
     () =>
       quotationItems?.reduce(
@@ -184,7 +204,6 @@ export function CreateBillProvider({
       ),
     [quotationItems]
   );
-console.log(quotationItems,'quotationItems');
 
   const totalAmount = useMemo(
     () =>
@@ -195,10 +214,12 @@ console.log(quotationItems,'quotationItems');
     [quotationItems]
   );
 
+  const totalFee = useMemo(() => (fee || [])?.reduce((sum : number,cur : FeeType) => sum + (cur?.typeValue === 'PERCENT' ? getValueOfPercent(totalPrice,cur?.value) : cur?.value),0),[fee,totalPrice]);
+  
   const totalPriceAfterDiscount = useMemo(
     () =>
-    totalAmount - pair,
-    [quotationItems,pair]
+    totalAmount - pair + totalFee,
+    [quotationItems,pair,totalFee]
   );
   const totalDiscount = useMemo(
     () =>
@@ -208,6 +229,16 @@ console.log(quotationItems,'quotationItems');
       ),
     [quotationItems]
   );
+
+  const totalDiscountOther = useMemo(
+    () =>
+      quotationItems?.reduce(
+        (sum: number, cur: any) => sum + get(cur, "totalDiscountOther",0),
+        0
+      ),
+    [quotationItems]
+  );
+
   const totalDiscountFromProduct = useMemo(
     () =>
       quotationItems?.reduce(
@@ -258,10 +289,12 @@ console.log(quotationItems,'quotationItems');
   // Initalize Data And Calculate Discount
   useEffect(() => {
     const initDebt = debt?.find((debt : DebtType) => get(debt, "key") === DEFAULT_DEBT_TYPE);    
+    
     form.setFieldsValue({
       debtType :  form.getFieldValue('debtType') || get(bill,'debtType') ||  get(initDebt,'key'),
       pharmacyId : get(bill,'pharmacyId'),
-      pair : get(bill,'pair',0)
+      pair : get(bill,'pair',0),
+      fee : get(bill,'fee')
     });
     if (get(bill, "pharmacyId")) {
       const newQuotationItems: any[] = reducerDiscountQuotationItems(get(bill, "quotationItems", []));
@@ -291,6 +324,8 @@ console.log(quotationItems,'quotationItems');
         onOpenModalResult,
         mutateReValidate,
         totalAmount,
+        onChangeBill,
+        totalDiscountOther,
       }}
     >
       {children}

@@ -21,7 +21,7 @@ export interface ItemDataSource extends FormFieldCreateBill  {
   quotationItems: quotation[]; // BillItems
   dataUpdateQuotation? : DataUpdateQuotationType; // Data When Handle With Exist Quotation
 };
-export const keyValidDataSource = ['typeTab','quotationItems','pharmacyId','dataUpdateQuotation','pair','debtType'];
+export const keyValidDataSource = ['typeTab','quotationItems','pharmacyId','dataUpdateQuotation','pair','debtType','fee'];
 
 export interface DataSourceType  {
   [key: string]: ItemDataSource;

@@ -8,17 +8,19 @@ import {
   EditableRow
 } from "~/components/common/EditableComponent";
 import { formatter } from "~/utils/helpers";
-import { quotation, variant } from "../bill.modal";
+import { DiscountOtherType, quotation, variant } from "../bill.modal";
 import useCreateBillStore from "../storeContext/CreateBillContext";
 import ExpandRowDiscount from "./ExpandRowDiscount";
 import ProductListSuggest from "./productSuggest";
 import ImageProduct from "./ImageProduct";
+import DiscountOther from "./DiscountOther";
 
 type propsType = {};
 export default function ProductSelectedTable(
   props: propsType
 ): React.JSX.Element {
   const { quotationItems, onSave,onRemove,bill } = useCreateBillStore();  
+  
   const onSelect = (newVariantId : string,data : any) => {
     const variant = get(data,'variants',[])?.find((item : any) => get(item,'_id') === newVariantId);
     onSave({
@@ -165,11 +167,30 @@ export default function ProductSelectedTable(
         pagination={false}
       expandable={{
         expandedRowRender: (record: quotation) => (
-          <ExpandRowDiscount data={get(record, "cumulativeDiscount")} />
+          <div>
+            <DiscountOther price={get(record,'variant.price',0)} dataSource={get(record,'discountOther',[])} onAdd={(newDiscountOther:DiscountOtherType) => onSave({
+              ...record,
+              discountOther : [...get(record,'discountOther',[]),newDiscountOther]
+            })}
+            onUpdate={(newDiscountOther:DiscountOtherType,index:number) => {
+              const cloneDcOther = [...get(record,'discountOther',[])];
+              cloneDcOther?.splice(index,1,newDiscountOther)
+              onSave({
+                ...record,
+                discountOther : cloneDcOther
+              })
+            }}
+            onRemove={(index:number) => onSave({
+              ...record,
+              discountOther : get(record,'discountOther',[])?.filter((i:any,idx:number) => idx !== index)
+            })}
+            />
+            <ExpandRowDiscount data={get(record, "cumulativeDiscount")} />
+          </div>
         ),
         defaultExpandAllRows: true,
-        rowExpandable: (record: quotation) =>
-          !!get(record, "cumulativeDiscount", []).length,
+        // rowExpandable: (record: quotation) =>
+        //   !!get(record, "cumulativeDiscount", []).length,
         expandIcon: ({ expanded, onExpand, record ,expandable}) =>
         expandable ? 
           expanded ? (

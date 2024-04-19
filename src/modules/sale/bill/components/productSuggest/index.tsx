@@ -20,6 +20,7 @@ const contentStyle: React.CSSProperties = {
 };
 
 const ProductListSuggest: React.FC = () => {
+  const { quotationItems, onAdd, bill } = useCreateBillStore();
   const [page, setPage] = useState(1)
   const [limit, setLimit] = useState(4)
   const [keyword, setKeyword] = useState("");
@@ -30,13 +31,14 @@ const ProductListSuggest: React.FC = () => {
       keyword,
       page: page,
       limit: limit,
+      saleOfId : get(bill,'pharmacyId')
     }),
     [page, limit, keyword]
   );
   const [products, isLoading] = useGetProductListSuggest(query);
   const paging = useBillProductSuggestPaging();
   const inputEl : any = useRef(null);
-  const { quotationItems, onAdd, bill } = useCreateBillStore();
+
   const { onNotify } = useNotificationStore();
   const [collapseActive, setCollapseActive] = useState(false);
 

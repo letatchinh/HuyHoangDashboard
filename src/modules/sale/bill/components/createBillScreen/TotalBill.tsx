@@ -1,5 +1,5 @@
 import { InfoCircleFilled, QuestionCircleFilled } from "@ant-design/icons";
-import { Col, Divider, Flex, Form, Row, Tooltip, Typography } from "antd";
+import { Col, Divider, Flex, Form, Radio, Row, Tooltip, Typography } from "antd";
 import React from "react";
 import InputNumberAnt from "~/components/Antd/InputNumberAnt";
 import { formatter } from "~/utils/helpers";
@@ -42,8 +42,10 @@ export default function TotalBill(props: propsType): React.JSX.Element {
     totalDiscountFromSupplier,
     form,
     totalAmount,
+    totalDiscountOther,
   } = useCreateBillStore();
   const debtType = Form.useWatch('debtType',form);
+  const fee = Form.useWatch('fee',form);
   
   return (
     <Flex vertical gap={"small"}>
@@ -93,7 +95,7 @@ export default function TotalBill(props: propsType): React.JSX.Element {
       ) : null}
       <Layout label={"Tổng chiết khấu"}>
       <Typography.Text type="warning" strong>
-        {formatter(totalDiscount)}
+        {formatter(totalDiscount + totalDiscountOther)}
       </Typography.Text>
         </Layout>
       <Layout tooltip="Tổng tiền sau chiết khấu có lúc không bằng Tổng tiền - Tổng chiết khấu" label={"Tổng tiền sau chiết khấu"}>
@@ -103,7 +105,7 @@ export default function TotalBill(props: propsType): React.JSX.Element {
         </Layout>
         <SelectDebt />
         {debtType === 'DEPOSIT' && <Layout label={"Khách trả trước"}>
-        <Form.Item<FormFieldCreateBill> name="pair" style={{margin : 0}} rules={[
+        <Form.Item<FormFieldCreateBill> name="pair" style={{marginBottom : 'unset'}} rules={[
           {
             validator(_, value) {
               if (value <= totalAmount) {
@@ -116,6 +118,44 @@ export default function TotalBill(props: propsType): React.JSX.Element {
           <InputNumberAnt addonAfter={'VNĐ'} style={{width : 200}} min={0} max={totalAmount}/>
         </Form.Item>
       </Layout>}
+    {fee ? <Layout label={'Phụ phí'}>
+    <Form.Item shouldUpdate noStyle>
+      {({getFieldValue}) =>   <Form.List 
+      name="fee"
+          >
+            {(fields, {}) => (
+              <>
+                {fields.map((field, index) => (
+                        <Form.Item
+                        style={{marginBottom : 'unset'}}
+                          // label="Phụ phí bán hàng"
+                          name={[index, "value"]}
+                          rules={[
+                            ({}) => ({
+                              validator(_, value) {
+                                if (getFieldValue(['fee',index,'typeValue']) === 'PERCENT' && value > 100) {
+                                  return Promise.reject(new Error('Phần trăm phải bé hơn 100%!'));
+                                }
+                                return Promise.resolve();
+                              
+                              }
+                            })
+                          ]}
+                        >
+                          <InputNumberAnt {...getFieldValue(['fee',index,'typeValue']) === 'PERCENT' && {max : 100}} addonAfter={<Form.Item style={{marginBottom : 'unset'}} name={[index, "typeValue"]}>
+                            <Radio.Group size="small" buttonStyle="solid">
+                                <Radio.Button value="PERCENT">%</Radio.Button>
+                                <Radio.Button value="VALUE">Giá trị</Radio.Button>
+                              </Radio.Group>
+                            </Form.Item>}/>
+                        </Form.Item>
+                        
+                ))}
+              </>
+            )}
+          </Form.List>}
+    </Form.Item>
+      </Layout> : <Form.Item hidden name={'fee'}/>}
       <div
         style={{
           width: "100%",

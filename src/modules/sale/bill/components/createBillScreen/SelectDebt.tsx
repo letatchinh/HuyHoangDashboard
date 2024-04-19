@@ -16,6 +16,7 @@ export default function SelectDebt(props:propsType) : React.JSX.Element {
         <Form.Item<FormFieldCreateBill>
         name={"debtType"}
         label="Hình thức công nợ"
+        style={{marginBottom : 'unset'}}
         >
             <Select options={options} variant='borderless' />
         </Form.Item>

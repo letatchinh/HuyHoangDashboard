@@ -317,3 +317,6 @@ export const DeviceDetector = () => {
 
   return getDeviceInfo();
 };
+
+export const getValueOfMath = (valueTarget:number,valueDiscount : number,typeValue : 'PERCENT' | 'VALUE') =>  typeValue === 'PERCENT' ?  valueDiscount * valueTarget / 100 : valueDiscount;
+export const getValueOfPercent = (value:number,percent : number) =>   value * percent / 100;

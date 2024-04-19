@@ -22,6 +22,7 @@ export const convertDataQuotation = ({data,quotationItems,totalPriceAfterDiscoun
           'expirationDate',
           'codeBySupplier',
           'quantity',
+          'discountOther',
         ]),
       }));
       // Todo : Verify Data When Send to sever (Not implemented)

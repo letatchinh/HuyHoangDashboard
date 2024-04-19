@@ -211,6 +211,7 @@ export default function ListQuotation({
                       },
                       pair: get(record, "pair", 0),
                       debtType: get(record, "debtType"),
+                      fee : get(record,'fee')
                     });
                   }}
                   type="primary"
@@ -235,6 +236,7 @@ export default function ListQuotation({
                       },
                       pair: get(record, "pair", 0),
                       debtType: get(record, "debtType"),
+                      fee : get(record,'fee')
                     });
                   }}
                   size="small"

@@ -12,8 +12,7 @@ import SelectPharmacy from "../SelectPharmacy";
 import TotalBill from "./TotalBill";
 type propsType = {};
 export default function SaleScreen(props: propsType): React.JSX.Element {
-  console.log('voday')
- const {form,onValueChange,quotationItems,totalPriceAfterDiscount,verifyData,onRemoveTab,bill,onOpenModalResult,totalAmount} = useCreateBillStore();
+ const {form,onValueChange,quotationItems,totalPriceAfterDiscount,verifyData,onRemoveTab,bill,onOpenModalResult,totalAmount,onChangeBill,mutateReValidate} = useCreateBillStore();
  
  const {onNotify} = useNotificationStore();
  const callBackAfterSuccess = (newData : DataResultType) => {
@@ -89,6 +88,8 @@ try {
   }, []); 
 
   useChangeDocumentTitle("Tạo đơn hàng");
+  
+  
   return (
     <Form
       className="form-create-bill"
@@ -96,7 +97,7 @@ try {
       onFinish={onFinish}
       onValuesChange={onValueChange}
       initialValues={{
-        pair : 0
+        pair : 0,
       }}
     >
       <Row gutter={16}>
@@ -105,7 +106,17 @@ try {
         </Col>
         <Col span={8} className="form-create-bill--payment">
           <div>
-            <SelectPharmacy id={get(bill,'pharmacyId')} form={form} allowClear={false}/>
+            <SelectPharmacy onChange={(value,option) => {
+              const fee = get(option,'data.fee');
+                form.setFieldsValue({
+                  fee
+                });
+              form.setFieldsValue({
+                pharmacyId : value
+              });
+              onChangeBill({pharmacyId : value,fee});
+              mutateReValidate();
+            }} id={get(bill,'pharmacyId')} form={form} allowClear={false}/>
             <Divider/>
             <TotalBill />
           </div>

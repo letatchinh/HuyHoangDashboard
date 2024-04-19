@@ -59,11 +59,18 @@ export interface quotation  {
     lotNumber : string,
     expirationDate : string,
     codeBySupplier : string,
+    discountOther : DiscountOtherType[]
+}
+export interface FeeType  {
+    typeFee : 'SUB_FEE',
+    typeValue : 'PERCENT' | 'VALUE',
+    value : number
 }
 export interface FormFieldCreateBill {
     pharmacyId : string | null,
     debtType : string | null,
-    pair : number
+    pair : number,
+    fee? : FeeType[],
 }
 export interface PayloadCreateBill extends FormFieldCreateBill {
     quotationItems : Omit<quotation,'variant' | 'variants'>[],
@@ -77,7 +84,11 @@ export interface PayloadUpdateBill  {
     status? : "CANCELLED",
     _id : string
 }
-
+export interface DiscountOtherType {
+    discountType : 'PERCENT' | 'VALUE',
+    value : number,
+    name : string
+}
 export interface ItemSearchProduct  {
     cumulativeDiscount : typeCumulativeDiscount[],
     medicalCode : string,

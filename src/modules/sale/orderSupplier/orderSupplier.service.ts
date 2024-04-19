@@ -185,7 +185,7 @@ export const reducerDiscountOrderSupplierItems = (orderSupplierItems: any[]) => 
       const verify = async () => {
         try {
           // Get Variants
-          const response = await BillModule.api.verify({ billSample });
+          const response = await BillModule.api.verifyBill({ billSample,pharmacyId : get(bill, "supplierId") });
           const concatQuantity = get(bill, "orderSupplierItems", [])?.map(
             (item: any) => {
               const findInResponse = response?.find(

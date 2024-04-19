@@ -68,6 +68,7 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
     totalReceiptVoucherCompleted,
     totalReceiptAmount,
     remainAmount,
+    totalFee,
   } = bill || {};
   const canUpdateBill = PolicyModule.hook.useMatchPolicy(
     PolicyModule.POLICIES.UPDATE_BILL
@@ -249,6 +250,7 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
                 {get(createBy, "fullName", "")}
               </Layout>
               <Layout label={"Tổng số tiền"}>{formatter(get(bill,'totalAmountBill',0))}</Layout>
+              <Layout label={"Phụ phí"}>{formatter(get(bill,'totalFee',0))}</Layout>
               <Layout label={"Chiết khấu"}>-{formatter(get(bill,'totalDiscountBill',0))}</Layout>
               <Layout label={"Tổng số tiền sau chiết khấu"}>{formatter(get(bill,'totalAfterDiscountBill',0))}</Layout>
               {/* <Layout label={"Đã trả trước"}>-{formatter(pair)}</Layout> */}
