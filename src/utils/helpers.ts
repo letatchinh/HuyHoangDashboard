@@ -303,17 +303,17 @@ export const DeviceDetector = () => {
     };
   };
   const [deviceInfo, setDeviceInfo] = useState<DeviceInfo>(() => getDeviceInfo());
-  useEffect(() => {
-    const handleResize = () => {
-      setDeviceInfo(getDeviceInfo());
-    };
+  // useEffect(() => { // Close Code Because Make Re-Render Each Resize And Your Variable Not use
+  //   const handleResize = () => {
+  //     setDeviceInfo(getDeviceInfo());
+  //   };
 
-    window.addEventListener('resize', handleResize);
+  //   window.addEventListener('resize', handleResize);
 
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
-  }, []);
+  //   return () => {
+  //     window.removeEventListener('resize', handleResize);
+  //   };
+  // }, []);
 
   return getDeviceInfo();
 };
