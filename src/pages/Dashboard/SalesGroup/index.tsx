@@ -11,13 +11,16 @@ const SalesGroupPage = () => {
     <Breadcrumb title={"Nhóm bán hàng"} />
     <Tabs
     type="card"
+    style={{
+      height: "calc(100% - 68px)",
+    }}
     >
       <TabPane tab="Nhóm bán hàng OTC" key={1}>
         <SalesGroupProvider>
           <SalesGroup.page.index />
         </SalesGroupProvider>
       </TabPane>
-      <TabPane tab="Nhóm bán hàng B2C" key={2}>
+      <TabPane tab="Nhóm bán hàng B2C" style={{height:'100%'}} key={2}>
         <BuyGroup />
       </TabPane>
     </Tabs>
