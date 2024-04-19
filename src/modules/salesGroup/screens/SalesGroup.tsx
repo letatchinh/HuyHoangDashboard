@@ -196,7 +196,7 @@ export default function SalesGroup() {
   ];
   return (
     <div>
-      <Breadcrumb title={"Nhóm bán hàng"} />
+      
       <WhiteBox>
         <SelectSearch
           onChange={(e: any) => onSearch(e.target.value)}

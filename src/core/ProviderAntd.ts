@@ -8,6 +8,6 @@ export const theme : ThemeConfig = {
         darkSubMenuItemBg : '#1C2842',
         iconSize : 16,
         fontSize : 16,
-      }
+      },
     }
   }

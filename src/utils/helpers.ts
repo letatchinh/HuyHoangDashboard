@@ -164,16 +164,19 @@ interface FetchStateParams {
   reFetch?: any; // Adjust the type based on your specific requirements
   nullNotFetch?: boolean;
   conditionRun?: boolean;
+  shouldRun?: boolean;
 }
 
-export const useFetchState = ({ api, query, useDocs = true, init = [], fieldGet,reFetch,nullNotFetch = false ,conditionRun = false} : FetchStateParams) : any => {
+export const useFetchState = ({ api, query, useDocs = true, init = [], fieldGet,reFetch,nullNotFetch = false ,conditionRun = false,shouldRun=true} : FetchStateParams) : any => {
   const [data, setData] = useState(init);
   const [loading, setLoading] = useState(false);
+  const [totalDocs, setTotalDocs] = useState(0);
   const req = useCallback(api, [api]);
   const fetch = useCallback(async () => {
     try {
       setLoading(true);
       const response = await req(query);
+      setTotalDocs(get(response,'totalDocs',0));
       if (fieldGet) {
         setData(get(response, fieldGet))
       } else {
@@ -190,18 +193,21 @@ export const useFetchState = ({ api, query, useDocs = true, init = [], fieldGet,
     }
   }, [query,reFetch])
   useEffect(() => {
-    if(conditionRun){
-      fetch()
-    }else{
-      if(nullNotFetch){
-        !!query && fetch();
-      }else{
+    if(shouldRun){
+      if(conditionRun){
         fetch()
+      }else{
+        if(nullNotFetch){
+          !!query && fetch();
+        }else{
+          fetch()
+        }
       }
     }
+
   }, [fetch,nullNotFetch,query]);
   const dataReturn = useMemo(() => data, [data])
-  return [dataReturn, loading]
+  return [dataReturn, loading,totalDocs]
 };
 
 
@@ -269,6 +275,7 @@ export const getOptions = (constantVi : any) => {
 }
 
 export const filterOptionSlug = (input:any,option:any) => StringToSlug(get(option,'label','')?.toLowerCase())?.includes(StringToSlug(input?.trim()?.toLowerCase()));
+export const filterSlug = (input:any,target:any) => StringToSlug(target?.toLowerCase())?.includes(StringToSlug(input?.trim()?.toLowerCase()));
 
 export const filterAcrossAccentsByLabel = (input: any, option: any) => {
   return (

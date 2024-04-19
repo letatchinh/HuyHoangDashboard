@@ -383,3 +383,11 @@ export const PROCESS_STATUS_VI = {
   APPROVED: 'Đã duyệt',
   NEW: 'Mới',
 }
+export const DISCOUNT_TYPE = {
+  PERCENT : "PERCENT",
+  VALUE : "VALUE",
+}
+export const DISCOUNT_TYPE_VI = {
+  PERCENT : "%",
+  VALUE : "Giá trị",
+}

@@ -12,28 +12,28 @@ export default function Address({
   onlyShowLastPath,
   ...props
 }: TypeProps): React.JSX.Element {
-  const ref = useRef();
-  const uuid = useId();
+  // const ref = useRef();
+  // const uuid = useId();
   const addressString = useMemo(
     () => convertAddress(managementArea, onlyShowLastPath),
     [managementArea, onlyShowLastPath]
   );
-  const items: any = useMemo(
-    () => ({
-      key: uuid,
-      label: "",
-      children: (
-        <div style={{ maxHeight: 200, overflowY: "scroll", padding: "0 15px" }}>
-          {addressString?.map((item: any) => (
-            <Typography.Text style={{ display: "block" }} strong>
-              {item}
-            </Typography.Text>
-          ))}
-        </div>
-      ),
-    }),
-    [addressString]
-  );
+  // const items: any = useMemo(
+  //   () => ({
+  //     key: uuid,
+  //     label: "",
+  //     children: (
+  //       <div style={{ maxHeight: 200, overflowY: "scroll", padding: "0 15px" }}>
+  //         {addressString?.map((item: any) => (
+  //           <Typography.Text style={{ display: "block" }} strong>
+  //             {item}
+  //           </Typography.Text>
+  //         ))}
+  //       </div>
+  //     ),
+  //   }),
+  //   [addressString]
+  // );
   return (
     <div style={{ width: '80px', textAlign: 'center', lineHeight: 1
      }}>
@@ -73,8 +73,8 @@ export default function Address({
             size="small"
             bordered
             dataSource={addressString}
-            renderItem={(item: string) => (
-              <List.Item>
+            renderItem={(item: string,index) => (
+              <List.Item key={index}>
                 {item}
               </List.Item>
             )}

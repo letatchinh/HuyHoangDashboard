@@ -73,14 +73,14 @@ export function getRandomColor() {
   return color;
 }
 
-function setDataForDeeplyChild(children: any[], levelOfColor: any) {
+function setDataForDeeplyChild(children: any[], levelOfColor: any,key : any) {
   if (children?.length) {
-    return children.map((child: any) => {
+    return children.map((child: any,index :number) => {
       // Replay Function if Child Exist
       let childReturn: any;
 
       if (child?.children?.length) {
-        childReturn = setDataForDeeplyChild(child.children, levelOfColor + 1); // Pass Next Child to the function
+        childReturn = setDataForDeeplyChild(child.children, levelOfColor + 1,key + '-' + index); // Pass Next Child to the function
       }
 
       // set Data From Child
@@ -88,6 +88,7 @@ function setDataForDeeplyChild(children: any[], levelOfColor: any) {
         ...child,
         color: colorLevel?.[levelOfColor] ?? getRandomColor(), // Set Color For Child
         children: childReturn,
+        key : key + '-' + index
       };
       /////
     });
@@ -138,16 +139,18 @@ class SalesGroupClassExtend extends InstanceModuleRedux {
 
             const children = setDataForDeeplyChild(
               get(item, "children", []),
-              2
+              2,
+              index
             );
 
             return {
               ...item,
               nameChild,
               memberChild,
-              indexRow: index + 1, // 0 Boolean is False
+              indexRow: index + 1, // 0 Falsy is False
               children,
               color: "orange",
+              key : index
             };
           });
           state.groupHaveLeader = groupHaveLeader;

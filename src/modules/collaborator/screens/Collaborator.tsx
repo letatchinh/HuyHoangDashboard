@@ -26,6 +26,7 @@ import {
   Row,
   Space,
   Switch,
+  Tabs,
   Tag,
   Typography,
 } from "antd";
@@ -44,6 +45,8 @@ import {
 import CollaboratorForm from "../components/CollaboratorForm";
 import moment from "moment";
 import Breadcrumb from "~/components/common/Breadcrumb";
+import TabPane from "antd/es/tabs/TabPane";
+import CollaboratorProduct from "../components/CollaboratorProduct";
 
 interface ColumnActionProps {
   _id: string;
@@ -99,6 +102,7 @@ export default function Collaborator({
   const [keyword, { setKeyword, onParamChange }] = useUpdateCollaboratorParams(query);
   const [data, isLoading] = useGetCollaborators(query);
   const paging = useCollaboratorPaging();
+  
   const isCanDelete = useMatchPolicy(POLICIES.DELETE_PARTNER);
   const isCanUpdate = useMatchPolicy(POLICIES.UPDATE_PARTNER);
   const shouldShowDevider = useMemo(
@@ -170,6 +174,7 @@ export default function Collaborator({
       title: "Tên cộng tác viên",
       dataIndex: "fullName",
       key: "fullName",
+      render : (value: any, record: any) => <Typography.Link onClick={() => handleOpenModal(get(record,'_id'))}>{value}</Typography.Link>
     },
     ...(isCanUpdate
       ? [
@@ -177,7 +182,8 @@ export default function Collaborator({
             title: "Xét duyệt",
             key: "processStatus",
             dataIndex: "processStatus",
-            width: 200,
+            width: 90,
+            align : 'center',
             render: (processStatus: any, record: any) => {             
               return (
                 <WithOrPermission permission={[POLICIES.UPDATE_PARTNER]}>
@@ -201,7 +207,7 @@ export default function Collaborator({
               );
             },
           },
-        ]
+        ] as ColumnsType
       : []),
     {
       title: "Số điện thoại",
@@ -222,14 +228,6 @@ export default function Collaborator({
       key: "parent",
       render: (record) => {
         return record?.fullName;
-      },
-    },
-    {
-      title: "Được tạo bởi",
-      dataIndex: "historyStatus",
-      key: "historyStatus",
-      render: (record) => {
-        return record.NEW ? record.NEW.createdBy : record.APPROVED.createdBy;
       },
     },
     ...(isCanUpdate
@@ -335,8 +333,8 @@ export default function Collaborator({
               canDownload ? (
                 <Col>
                   <ExportExcelButton
-                    api="employee"
-                    exportOption="employee"
+                    api="partner"
+                    exportOption="partner"
                     query={query}
                     fileName="Danh sách cộng tác viên"
                     ids={arrCheckBox}
@@ -397,23 +395,42 @@ export default function Collaborator({
         open={isOpenModal}
         onCancel={() => setIsOpenModal(false)}
         onOk={() => setIsOpenModal(false)}
-        className="form-modal"
+        className="form-modal modalScroll"
         footer={null}
         width={1020}
-        style={{ top: 50 }}
+        centered
+        // style={{ top: 50 }}
         afterClose={() => {
           setIsOpenModal(false);
         }}
         destroyOnClose
       >
-        <CollaboratorForm
-          id={id}
-          handleCloseModal={handleCloseModal}
-          handleUpdate={handleUpdate}
-          resetAction={resetAction}
-          handleCreate={handleCreate}
-          isSubmitLoading={isSubmitLoading}
-        />
+          <h4 >
+        {`${!id ? "Tạo mới " : "Cập nhật"}`} cộng tác viên
+      </h4>
+        <Tabs
+        destroyInactiveTabPane
+        items={[
+          {
+            key: '1',
+            label: 'Hồ sơ',
+            children: <CollaboratorForm
+              id={id}
+              handleCloseModal={handleCloseModal}
+              handleUpdate={handleUpdate}
+              resetAction={resetAction}
+              handleCreate={handleCreate}
+              isSubmitLoading={isSubmitLoading}
+            />,
+          },
+          {
+            key: '2',
+            label: "Sản phẩm đảm nhiệm",
+            children: <CollaboratorProduct id={id}/>,
+            disabled : !id
+          }
+        ]}>
+        </Tabs>
       </Modal>
     </div>
   );

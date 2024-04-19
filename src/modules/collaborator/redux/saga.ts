@@ -55,6 +55,33 @@ function* convertCollaborator({payload} : any) : any {
   }
 }
 
+function* addProductCollaborator({payload} : any) : any {
+  try {
+    const data = yield call(api.addProduct, payload);
+    yield put(collaboratorActions.addProductSuccess(data));
+  } catch (error: any) {
+    yield put(collaboratorActions.addProductFailed(error));
+  }
+}
+
+function* removeProductCollaborator({payload} : any) : any {
+  try {
+    const data = yield call(api.removeProduct, payload);
+    yield put(collaboratorActions.removeProductSuccess(data));
+  } catch (error: any) {
+    yield put(collaboratorActions.removeProductFailed(error));
+  }
+}
+
+function* updateProductCollaborator({payload} : any) : any {
+  try {
+    const data = yield call(api.updateProduct, payload);
+    yield put(collaboratorActions.updateProductSuccess(data));
+  } catch (error: any) {
+    yield put(collaboratorActions.updateProductFailed(error));
+  }
+}
+
 export default function* collaboratorSaga() {
   yield takeLatest(collaboratorActions.getListRequest, getListCollaborator);
   yield takeLatest(collaboratorActions.getByIdRequest, getByIdCollaborator);
@@ -62,4 +89,7 @@ export default function* collaboratorSaga() {
   yield takeLatest(collaboratorActions.updateRequest, updateCollaborator);
   yield takeLatest(collaboratorActions.deleteRequest, deleteCollaborator);
   yield takeLatest(collaboratorActions.convertRequest, convertCollaborator);
+  yield takeLatest(collaboratorActions.addProductRequest, addProductCollaborator);
+  yield takeLatest(collaboratorActions.removeProductRequest, removeProductCollaborator);
+  yield takeLatest(collaboratorActions.updateProductRequest, updateProductCollaborator);
 }

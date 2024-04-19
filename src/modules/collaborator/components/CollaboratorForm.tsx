@@ -158,9 +158,6 @@ export default function CollaboratorForm(props: IProps) {
 
   return (
     <div className="employee-form">
-      <h4 style={{ marginRight: "auto", paddingLeft: 27 }}>
-        {`${!id ? "Tạo mới " : "Cập nhật"}`} cộng tác viên
-      </h4>
       <Form
         form={form}
         autoComplete="off"

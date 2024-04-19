@@ -3,6 +3,10 @@ import requester from "~/api/requester";
 
 const apis = {
     getAll: (query?: any) => requester.get(`/api/v1/partner`, query),
+    searchProduct: (query?: any) => requester.post(`/api/v1/product-search-assign-partner`, query),
+    addProduct: (query?: any) => requester.put(`/api/v1/partner-add-product`, query),
+    updateProduct: (query?: any) => requester.put(`/api/v1/partner-update-discount-product`, query),
+    removeProduct: (query?: any) => requester.delete(`/api/v1/partner-remove-product`, query),
     getById: (id?: any) => requester.get(`/api/v1/partner/${id}`),
     create: (data?: any) => requester.post(`/api/v1/partner`, data),
     update: (data?: any) => requester.put(`/api/v1/partner/${get(data,'_id')}`, data),

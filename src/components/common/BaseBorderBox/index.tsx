@@ -6,12 +6,14 @@ import './index.scss';
 type propsType = {
     children : React.ReactNode,
     title? : any,
-    style? : React.CSSProperties
+    style? : React.CSSProperties,
+    styleContent? : React.CSSProperties,
 }
 const BaseBorderBox = ({
   children,
   title,
   style={},
+  styleContent = {}
 }:propsType) => {
 
   return (
@@ -26,6 +28,7 @@ const BaseBorderBox = ({
         <h6>{title}</h6>
       </Divider>
       <div
+      style={styleContent}
         className='base-border-box__content'
       >
         {children}
