@@ -9,7 +9,7 @@ import {
   useUpdateQuotationParams,
 } from "../quotation.hook";
 
-import { Button, Checkbox, Col, Popconfirm, Row, Space, Typography,Form } from "antd";
+import { Button, Checkbox, Col, Popconfirm, Row, Space, Typography,Form, Tooltip } from "antd";
 import { ColumnsType } from "antd/es/table/InternalTable";
 import dayjs from "dayjs";
 import { get } from "lodash";
@@ -33,6 +33,7 @@ import SelectPharmacyInDevice from "../../bill/components/SelectPharmacyInDevice
 import '../quotation.style.scss';
 import ConfigTable from "~/components/common/ConfigTable";
 import DateTimeTable from "~/components/common/DateTimeTable";
+import ToolTipBadge from "~/components/common/ToolTipBadge";
 type propsType = {
   status?: string;
 };
@@ -71,8 +72,8 @@ export default function ListQuotation({
     () => [
       {
         title: "Mã đơn hàng tạm",
-        dataIndex: "code",
-        key: "code",
+        dataIndex: "codeSequence",
+        key: "codeSequence",
         align: "center",
         // render(code, record, index) {
         //   return (
@@ -154,7 +155,13 @@ export default function ListQuotation({
         align: "center",
         // width: "30%",
         render(pharmacy, record, index) {
-          return <Typography.Text>{get(pharmacy, "name", "")}</Typography.Text>;
+          const processStatus = get(pharmacy,'processStatus');
+          return <>
+          <Tooltip className="mx-1" title={processStatus ? 'Cộng tác viên' : 'Nhà thuốc'}>
+          {processStatus ? <i className="fa-solid fa-user-tie"></i> : <i className="fa-solid fa-house-medical"></i>}
+          </Tooltip>
+          <Typography.Text>{get(pharmacy, "name", "")}</Typography.Text>
+          </>
         },
       },
       {
