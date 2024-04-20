@@ -1,9 +1,11 @@
+import { TreeDataNode } from "antd";
 import { get } from "lodash";
 import { TreeNode } from "react-organizational-chart";
+import { v4 } from "uuid";
 import { concatAddress } from "~/utils/helpers";
 import CardRelation from "./components/Relationship/CardRelation";
 import { RULE_SALES_GROUP } from "./constants";
-import { FieldTypeForm, MemberRulesInGroupType } from "./salesGroup.modal";
+import { BuyGroupType, FieldTypeForm, MemberRulesInGroupType } from "./salesGroup.modal";
 
 export const service = {};
 export const convertSubmitData = (data: FieldTypeForm) => {
@@ -98,4 +100,20 @@ export function getDeepChild (child : any[]){
     {get(c,'children',[])?.length ? getDeepChild(get(c,'children',[])) : null} 
 </TreeNode>
   })
+};
+interface TreeDataNodeCustom extends TreeDataNode {
+  data : BuyGroupType
 }
+const dataItem = (item : BuyGroupType) : TreeDataNodeCustom => ({
+  title : item?.fullName || "",
+  key : v4(),
+  children : deepChild(item?.children),
+  data : item
+ })
+const deepChild = (children : BuyGroupType[]) : TreeDataNodeCustom[] | undefined => {
+  if(children?.length){
+    return children?.map((item:BuyGroupType) => dataItem(item))
+  }
+  return undefined
+}
+export const convertDataTreeBuyGroup = (dataSource:BuyGroupType[]) : TreeDataNodeCustom[] => dataSource?.map((data:BuyGroupType) => dataItem(data))

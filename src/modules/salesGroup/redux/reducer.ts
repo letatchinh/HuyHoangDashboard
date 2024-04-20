@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { get } from "lodash";
 import { InstanceModuleRedux } from "~/redux/instanceModuleRedux";
 import { initStateSlice } from "~/redux/models";
-import { RulesLeader } from "../salesGroup.service";
+import { convertDataTreeBuyGroup, RulesLeader } from "../salesGroup.service";
 const RulesLeaderMethod = new RulesLeader();
 function getMember(listMember: any[]): string {
   let memberName = "";
@@ -104,6 +104,9 @@ interface cloneInitState extends initStateSlice {
   isLoadingGetListMember?: boolean;
   getListMemberFailed?: any;
   groupHaveLeader?: any;
+
+  getListBuyGroupFailed?: any;
+  listBuyGroup?: any;
 }
 class SalesGroupClassExtend extends InstanceModuleRedux {
   cloneReducer;
@@ -191,7 +194,21 @@ class SalesGroupClassExtend extends InstanceModuleRedux {
         state.isLoadingGetListMember = false;
         state.getListMemberFailed = payload;
       },
-
+      // Get List Buy Group
+      getListBuyGroupRequest: (state:cloneInitState) => {
+        state.isLoading = true;
+        state.getListBuyGroupFailed = null;
+      },
+      getListBuyGroupSuccess: (state:cloneInitState , { payload }: any) => {
+        state.isLoading = false;
+        state.listBuyGroup = convertDataTreeBuyGroup(payload);
+      },
+      getListBuyGroupFailed: (state:cloneInitState, { payload }:{payload:any}) => {
+        state.isLoading = false;
+        state.getListBuyGroupFailed = payload;
+        
+      },
+  
       // Want Add more reducer Here...
     };
     this.cloneInitState = {

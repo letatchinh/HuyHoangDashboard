@@ -37,7 +37,6 @@ interface IProps {
   id?: string | null;
   handleCloseModal: () => void;
   handleUpdate?: any;
-  resetAction?: any;
   handleCreate?: any;
   isSubmitLoading?: boolean;
 }

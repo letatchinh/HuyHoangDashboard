@@ -26,14 +26,15 @@ const ProductListSuggest: React.FC = () => {
   const [keyword, setKeyword] = useState("");
   const productSuggest: any = document.querySelector('.product-suggest');
   const tableSelectedProductContent : any = document.querySelector('.table-selected-product .ant-table-content');
+  const saleOfId = useMemo(() => bill?.pharmacyId,[bill?.pharmacyId]);
   const query = useMemo(
     () => ({
       keyword,
       page: page,
       limit: limit,
-      saleOfId : get(bill,'pharmacyId')
+      saleOfId
     }),
-    [page, limit, keyword]
+    [page, limit, keyword,saleOfId]
   );
   const [products, isLoading] = useGetProductListSuggest(query);
   const paging = useBillProductSuggestPaging();

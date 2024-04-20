@@ -20,7 +20,7 @@ export default function SelectProduct({dataCurrent,onChangeBill}:propsType) : Re
   const [dataSearch,setDataSearch] = useState([]);
   const [loading,setLoading] = useState(false);
   const inputEl : any = useRef(null);
-
+  const pharmacyId = useMemo(() => dataCurrent?.pharmacyId,[dataCurrent?.pharmacyId]);
   const onAdd = (row: any) => {
     const quotationItems = get(dataCurrent,'quotationItems',[]);
     const newData = [
@@ -34,11 +34,13 @@ export default function SelectProduct({dataCurrent,onChangeBill}:propsType) : Re
   
     const fetchOptions = async (keyword?: string) => {
         try {
+          console.log(dataCurrent,'dataCurrent');
+
           setLoading(true);
           const products = await ProductModule.api.search({
             keyword,
             limit: 20,
-            pharmacyId : get(dataCurrent,'pharmacyId'),
+            pharmacyId,
           }); 
           const newDataSearch = products?.map((item: ItemSearchProduct) => ({
             ...item,
@@ -68,8 +70,8 @@ export default function SelectProduct({dataCurrent,onChangeBill}:propsType) : Re
           }
       };
       useEffect(() => {
-        debounceFetcher('')
-      },[]);
+        pharmacyId && debounceFetcher('')
+      },[pharmacyId]);
       const mappingProductId : { [key: string]: boolean } = useMemo(() => {
         let mapProductId : any = {};
         get(dataCurrent,'quotationItems',[])?.forEach((item:any) => {

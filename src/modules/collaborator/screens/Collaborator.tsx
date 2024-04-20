@@ -418,7 +418,6 @@ export default function Collaborator({
               id={id}
               handleCloseModal={handleCloseModal}
               handleUpdate={handleUpdate}
-              resetAction={resetAction}
               handleCreate={handleCreate}
               isSubmitLoading={isSubmitLoading}
             />,

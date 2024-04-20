@@ -11,6 +11,14 @@ function* getListSalesGroup({payload:query} : any) : any {
     yield put(salesGroupActions.getListFailed(error));
   }
 }
+function* getListBuyGroup({payload:query} : any) : any {
+  try {
+    const data = yield call(api.getAllBuyGroup,query);
+    yield put(salesGroupActions.getListBuyGroupSuccess(data));
+  } catch (error:any) {
+    yield put(salesGroupActions.getListBuyGroupFailed(error));
+  }
+}
 
 function* getListTeamLeadSalesGroup({payload:query} : any) : any {
   try {
@@ -70,6 +78,7 @@ function* deleteSalesGroup({payload : id} : any) : any {
 
 export default function* salesGroupSaga() {
   yield takeLatest(salesGroupActions.getListRequest, getListSalesGroup);
+  yield takeLatest(salesGroupActions.getListBuyGroupRequest, getListBuyGroup);
   yield takeLatest(salesGroupActions.getListTeamLeadRequest, getListTeamLeadSalesGroup);
   yield takeLatest(salesGroupActions.getListMemberRequest, getListMemberSalesGroup);
   yield takeLatest(salesGroupActions.getByIdRequest, getByIdSalesGroup);
