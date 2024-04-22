@@ -61,7 +61,7 @@ export const GroupPharmacyForm = ({ onClose, id, handleUpdate }: Props) => {
   return (
     <div className="sale-channel page-wraper form-page-content">
       <h4 style={{ margin: "20px 0 40px 20px" }}>
-        {id ? " Cập nhật" : "Thêm mới"} nhóm nhà thuốc
+        {id ? " Cập nhật" : "Thêm mới"} nhóm khách hàng
       </h4>
       <div className="container-fluid">
         <Form
@@ -75,7 +75,7 @@ export const GroupPharmacyForm = ({ onClose, id, handleUpdate }: Props) => {
           wrapperCol={{ sm: 24, md: 24, lg: 16, xl: 16 }}
           labelAlign="left"
         >
-          <FormItem label="Mã nhóm nhà thuốc" name="code">
+          <FormItem label="Mã nhóm khách hàng" name="code">
             <Input disabled />
           </FormItem>
 
@@ -96,12 +96,12 @@ export const GroupPharmacyForm = ({ onClose, id, handleUpdate }: Props) => {
             <Input />
           </FormItem>
           <FormItem
-            label="Nhóm nhà thuốc"
+            label="Nhóm khách hàng"
             name="title"
             rules={[
               {
                 required: true,
-                message: "Xin vui lòng nhập nhóm nhà thuốc",
+                message: "Xin vui lòng nhập nhóm khách hàng",
               },
             ]}
           >

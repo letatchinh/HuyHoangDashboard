@@ -21,6 +21,7 @@ import FormProduct from "./FormProduct";
 import StockProduct from "./StockProduct";
 import { useAdapter } from "~/modules/auth/auth.hook";
 import { ADAPTER_KEY } from "~/modules/auth/constants";
+import ConfigTable from "~/components/common/ConfigTable";
 export default function ListProduct({
   supplierId,
 }: TypePropsListProduct): React.JSX.Element {
@@ -190,26 +191,28 @@ export default function ListProduct({
       onSearch={(value : any) => onParamChange({keyword: value?.trim()})
       }
       />
-
-        <TableAnt
-          dataSource={data}
-          loading={isLoading}
-          rowKey={(rc) => rc?._id}
-          columns={columns}
-          scroll={{x : 2000}}
-          stickyTop
-          size="small"
-          pagination={{
-            ...paging,
-            onChange(page, pageSize) {
-              onParamChange({ page, limit: pageSize });
-            },
-            showSizeChanger : true,
-            showTotal: (total) => `Tổng cộng: ${total} `,
-            size:"small"
-          }}
-        />
-
+          <ConfigTable>
+            <TableAnt
+            className="table-striped-rows-custom"
+            bordered
+            dataSource={data}
+            loading={isLoading}
+            rowKey={(rc) => rc?._id}
+            columns={columns}
+            scroll={{x : 2000}}
+            stickyTop
+            size="small"
+            pagination={{
+              ...paging,
+              onChange(page, pageSize) {
+                onParamChange({ page, limit: pageSize });
+              },
+              showSizeChanger : true,
+              showTotal: (total) => `Tổng cộng: ${total} `,
+              size:"small"
+            }}
+            />
+          </ConfigTable>
         <Modal
           open={openForm}
           destroyOnClose

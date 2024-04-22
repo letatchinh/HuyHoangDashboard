@@ -4,7 +4,7 @@ import {
   Col,
   Divider,
   Flex,
-  Form, Row,
+  Form, Modal, Row,
   Select,
   Tooltip
 } from "antd";
@@ -18,6 +18,7 @@ import apis from "~/modules/supplier/supplier.api";
 import { useFetchState } from "~/utils/helpers";
 import { useGetSalesGroup } from "../salesGroup.hook";
 import useSalesGroupStore from "../salesGroupContext";
+import { HookAPI } from "antd/es/modal/useModal";
 type propsType = {
   _id: string;
 };
@@ -34,7 +35,6 @@ export default function TargetSalesGroup({
     api: apis.getAllPublic,
     useDocs: false,
   });
-
   const targetSupplier = Form.useWatch("targetSupplier", form);
 
   const options = useMemo(
@@ -50,6 +50,10 @@ export default function TargetSalesGroup({
   );
 
   const onFinish = (values: FormFieldType) => {
+    Object.assign(values, {
+      callback() {
+      Modal.destroyAll()
+    }})
     updateSalesGroup(values);
   };
 
@@ -89,7 +93,7 @@ export default function TargetSalesGroup({
                     label="Nhà cung cấp"
                     name={[name, "supplierId"]}
                     rules={requireRules}
-                    style={{width : 500}}
+                    style={{width : 700}}
                   >
                     <Select
                       popupMatchSelectWidth={false}

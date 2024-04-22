@@ -50,15 +50,15 @@ export default function SelectGroupPharmacy({
   return (
     <>
       <Form.Item
-        label="Nhóm nhà thuốc"
+        label="Nhóm khách hàng"
         name="customerId"
-        rules={[{ required: true, message: "Vui lòng chọn nhóm nhà thuốc!" }]}
+        rules={[{ required: true, message: "Vui lòng chọn nhóm khách hàng!" }]}
       >
         {RenderLoading(
           isLoading,
           <Select
             className="right--parent"
-            placeholder="Nhóm nhà thuốc"
+            placeholder="Nhóm khách hàng"
             options={options}
             style={{ width: "100%" }}
             showSearch

@@ -69,7 +69,7 @@ export default function GroupPharmacy(props: propsType): React.JSX.Element {
   const columns: ColumnsType = useMemo(
     () => [
       {
-        title: "Mã nhóm nhà thuốc",
+        title: "Mã nhóm khách hàng",
         dataIndex: "code",
         key: "code",
         width: 120,
@@ -82,13 +82,13 @@ export default function GroupPharmacy(props: propsType): React.JSX.Element {
       },
       
       {
-        title: "Tên nhóm nhà thuốc",
+        title: "Tên nhóm khách hàng",
         dataIndex: "title",
         key: "title",
         width: 220,
       },
       {
-        title: "Loại nhà thuốc",
+        title: "Loại khách hàng",
         dataIndex: "customerGroup",
         key: 'title',
         width: 220,
@@ -171,7 +171,7 @@ export default function GroupPharmacy(props: propsType): React.JSX.Element {
               <WithPermission permission={POLICIES.DELETE_CUSTOMER}>
                 <p>|</p>
                 <Popconfirm
-                  title={`Bạn muốn xoá nhóm nhà thuốc này?`}
+                  title={`Bạn muốn xoá nhóm khách hàng này?`}
                   onConfirm={() => deleteGroupPharmacy(record)}
                   okText="Xoá"
                   cancelText="Huỷ"
@@ -215,10 +215,10 @@ export default function GroupPharmacy(props: propsType): React.JSX.Element {
         break;
     }
   };
-  useChangeDocumentTitle("Danh sách nhóm nhà thuốc");
+  useChangeDocumentTitle("Danh sách nhóm khách hàng");
   return (
     <div>
-      <Breadcrumb title={"Nhóm nhà thuốc"} />
+      <Breadcrumb title={"Nhóm khách hàng"} />
       <Row className="mb-3" justify={"space-between"}>
         <Col span={8}>
           <Search
@@ -245,7 +245,7 @@ export default function GroupPharmacy(props: propsType): React.JSX.Element {
           <WithPermission permission={POLICIES.DOWNLOAD_CUSTOMER}>
             <Col>
               <ExportExcelButton
-                fileName="Danh sách nhóm nhà thuốc"
+                fileName="Danh sách nhóm khách hàng"
                 api="customer"
                 exportOption="customer"
                 query={query}

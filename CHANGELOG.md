@@ -1,3 +1,40 @@
+## [1.11.5](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/compare/v1.11.4...v1.11.5) (2024-04-12)
+
+
+### Bug Fixes
+
+* [#1531](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1531) handle create group ([9c47cfb](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/9c47cfb0a8373b36bf8e3e063de0ef813f499fdf))
+* [#1531](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1531) handle form ([1f80958](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/1f80958f5d948df24864a222533f30a7240b3c7f))
+* [#1531](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1531) modal ([04d04da](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/04d04daaddbf4e29bb953c51633d9e5b7f195b83))
+* [#1531](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1531) show sale group ([1b94e75](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/1b94e75e73b605523e3eddadfaa6c25cc55b9b4c))
+* [#1531](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1531) state tree ([bbc504e](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/bbc504e2b50e556f9e33d62f3e52c1aab77b0692))
+* [#1531](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1531) style ([d1a406b](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/d1a406ba3653db4adbcbc046bdb5c43728e3e0ee))
+* [#1531](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1531) style ([6591ec2](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/6591ec29709865c3e257f9f674c720c34909b832))
+* [#1531](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1531) style tree ([ccf0dcd](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/ccf0dcd38dfdf648a18a58defb9f2e2a43d30a3d))
+* [#1531](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1531) update UI ([05c7207](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/05c7207a778545f38ba61e950c8c86a2cd26af3b))
+* package lock ([2689eae](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/2689eae92039ceadd81f975f61a230147975fcdb))
+
+## [1.11.4](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/compare/v1.11.3...v1.11.4) (2024-04-09)
+
+
+### Bug Fixes
+
+* update data sub-vn ([4ac00b6](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/4ac00b6d038a8e413d14bd0da06bd8f43e2a1ab0))
+
+## [1.11.3](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/compare/v1.11.2...v1.11.3) (2024-04-09)
+
+
+### Bug Fixes
+
+* [#1512](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1512) config UI table ([aec8453](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/aec8453a3cf055b9cbd1780a284137c4bf654dab))
+* [#1514](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1514) update data sub-vn ([065c79d](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/065c79dd9481be678af838776fe52c598efa9d59))
+* add urban type in detail information pharmacy ([5a58c47](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/5a58c474da3b48a6bf9a8cd0a50108a92786ec24))
+* change key permission ([499fed0](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/499fed05b4312439ea951f685a6e109d79c65a05))
+* change name field in type ([615af70](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/615af7060b4f287e045245a73a56e9bbf6d1044f))
+* paging employee ([e21dd95](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/e21dd953068ed56651f3e4a91e25ed75cccfeb76))
+* permission rule and fix name urban in detail pharmacy ([d9cff96](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/d9cff961f9589d6f30c3640da181d848f78c4384))
+* sub-vn ([e64c75d](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/e64c75d42a4fb112a93ff8d50f5a5cfe914d5c0a))
+
 ## [1.11.2](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/compare/v1.11.1...v1.11.2) (2024-04-04)
 
 

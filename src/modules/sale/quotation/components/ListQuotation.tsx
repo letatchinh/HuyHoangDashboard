@@ -31,6 +31,8 @@ import useCheckBoxExport from "~/modules/export/export.hook";
 import ExportExcelButton from "~/modules/export/component";
 import SelectPharmacyInDevice from "../../bill/components/SelectPharmacyInDevice";
 import '../quotation.style.scss';
+import ConfigTable from "~/components/common/ConfigTable";
+import DateTimeTable from "~/components/common/DateTimeTable";
 type propsType = {
   status?: string;
 };
@@ -108,9 +110,10 @@ export default function ListQuotation({
         render(createdAt, record, index) {
           return (
             <div>
-              <Typography.Text strong>
+              {/* <Typography.Text strong>
                 {dayjs(createdAt).format("DD/MM/YYYY HH:mm")}
-              </Typography.Text>
+              </Typography.Text> */}
+                <DateTimeTable data={createdAt}/>
               <p>-</p>
               Bởi:{" "}
               <Typography.Text strong>
@@ -256,7 +259,7 @@ export default function ListQuotation({
                     ghost
                     type="primary"
                     size="small"
-                    // disabled={get(record,'status') !== STATUS_QUOTATION.NEW}
+                  // disabled={get(record,'status') !== STATUS_QUOTATION.NEW}
                   >
                     Sao chép
                   </Button>
@@ -278,7 +281,7 @@ export default function ListQuotation({
                     block
                     danger
                     size="small"
-                    // disabled={get(record,'status') !== STATUS_QUOTATION.NEW}
+                  // disabled={get(record,'status') !== STATUS_QUOTATION.NEW}
                   >
                     Xoá
                   </Button>
@@ -289,7 +292,7 @@ export default function ListQuotation({
         },
       },
     ],
-    [arrCheckBox]
+    [arrCheckBox, canDownload]
   );
   const {isMobile} = DeviceDetector();
   return (
@@ -345,15 +348,18 @@ export default function ListQuotation({
           </Space>
         </Col>
       </Row>
-      <TableAnt
-        stickyTop
-        columns={columns}
-        dataSource={quotations}
-        loading={isLoading}
-        pagination={pagingTable(paging, onParamChange)}
-        size="small"
-        // scroll={{ x: 1500 }}
-      />
+      <ConfigTable>
+          <TableAnt
+          className="table-striped-rows-custom"
+          bordered
+          stickyTop
+          columns={columns}
+          dataSource={quotations}
+          loading={isLoading}
+          pagination={pagingTable(paging, onParamChange)}
+          size="small"
+          />
+      </ConfigTable>
     </div>
   );
 }

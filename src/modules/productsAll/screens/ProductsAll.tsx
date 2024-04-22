@@ -31,6 +31,7 @@ import {
 import { DataType, TypeProps } from "../productsAll.modal";
 import { useSelector } from "react-redux";
 import { ADAPTER_KEY } from "~/modules/auth/constants";
+import ConfigTable from "~/components/common/ConfigTable";
 
 export default function ProductsAll(props: TypeProps): React.JSX.Element {
   const [query, onTableChange] = useProductsAllQueryParams();
@@ -313,21 +314,25 @@ export default function ProductsAll(props: TypeProps): React.JSX.Element {
         }
       />
       <WhiteBox>
-        <TableAnt
-          style={{ marginBottom: "20px" }}
-          dataSource={data ?? []}
-          columns={columns}
-          scroll={{ x: 2500 }}
-          size="small"
-          pagination={{
-            ...paging,
-            showTotal: (total) => `Tổng cộng: ${total}`,
-            showSizeChanger: true,
-          }}
-          onChange={onTableChange}
-          loading={isLoading}
-          stickyTop
-        />
+          <ConfigTable>
+            <TableAnt
+            className="table-striped-rows-custom"
+            bordered
+            style={{ marginBottom: "20px" }}
+            dataSource={data ?? []}
+            columns={columns}
+            scroll={{ x: 2500 }}
+            size="small"
+            pagination={{
+              ...paging,
+              showTotal: (total) => `Tổng cộng: ${total}`,
+              showSizeChanger: true,
+            }}
+            onChange={onTableChange}
+            loading={isLoading}
+            stickyTop
+            />
+          </ConfigTable>
       </WhiteBox>
       <Modal
         open={isOpen}

@@ -1,4 +1,4 @@
-import { Button, Divider, Form, List, Skeleton, FormInstance, Row, Tooltip } from "antd";
+import { Button, Divider, Form, List, Skeleton, FormInstance, Row, Tooltip, Modal } from "antd";
 import React, { useEffect, useState } from "react";
 import SelectExchange from "./SelectExchange";
 import { PlusOutlined, WarningOutlined } from "@ant-design/icons";
@@ -26,6 +26,9 @@ export default function ListExchange(props: propsType): React.JSX.Element {
     updateSalesGroup,
     parentNear,
     groupInfo,
+    setParentNear,
+    setGroupInfo,
+    isSubmitLoading
   } = useSalesGroupStore();
   const [dataSource, setDataSource] = useState<DataType[]>([]);
   const [dataSourceParent, setDataSourceParent] = useState<DataType[]>([]);
@@ -37,8 +40,13 @@ export default function ListExchange(props: propsType): React.JSX.Element {
     api: apis.getAllPublic,
     useDocs: false,
   });
-
+  const onClose = () => {
+    Modal.destroyAll();
+    setParentNear(null)
+    setGroupInfo(null)
+  };
   //Fetch
+  
 
   useEffect(() => {
     const mapData = (data: any[]) => {
@@ -101,8 +109,11 @@ export default function ListExchange(props: propsType): React.JSX.Element {
         exchangeRateOverride: [...newDataSource],
         _id: id,
       };
+      Object.assign(data, {
+        callback: onClose
+      })
+      // onClose(data);
       updateSalesGroup(data);
-      onCloseFormExchangeRate();
     } catch (error) {
       console.log(error);
     }
@@ -172,10 +183,18 @@ export default function ListExchange(props: propsType): React.JSX.Element {
         />
       </BaseBorderBox>
       <Row gutter={10} justify={"end"}>
-        <Button style={{ marginRight: 10 }} onClick={onCloseFormExchangeRate}>
+        <Button
+          style={{ marginRight: 10 }}
+          onClick={onClose}
+          loading =  { isSubmitLoading}
+        >
           Huỷ
         </Button>
-        <Button type="primary" onClick={onSubmit}>
+        <Button
+          type="primary"
+          onClick={onSubmit}
+          loading =  { isSubmitLoading}
+        >
           Cập nhật
         </Button>
       </Row>
