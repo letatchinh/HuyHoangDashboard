@@ -1,6 +1,5 @@
 import React, { useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeftOutlined } from '@ant-design/icons';
 import { useGetWorkSprints } from '../workSprint.hook';
 import { useFormTaskContext } from '~/modules/workList/screens/WorkList';
 

@@ -10,7 +10,7 @@ import components from "./components";
 
 const moduleExport = {
     page : {
-        index : NotificationScreen,
+        // index : NotificationScreen,
     },
     api : notificationApi,
     auth : notificationAuth,

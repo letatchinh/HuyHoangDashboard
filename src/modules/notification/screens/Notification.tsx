@@ -10,6 +10,7 @@
 // import GroupButtonNotify from '../components/GroupButton';
 // import SimpleBar from 'simplebar-react';
 // import NotificationItem from '../components/NotificationItem';
+// import SkeletonList from '~/components/common/SkeletonList';
 
 // interface NotificationDropdownProps extends WithTranslation {}
 

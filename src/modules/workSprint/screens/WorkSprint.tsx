@@ -1,5 +1,5 @@
-import React, { Suspense, createContext, lazy, memo, useCallback, useContext, useMemo, useState } from 'react';
-import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
+import React, { Suspense, createContext, memo, useCallback, useContext, useMemo, useState } from 'react';
+import {useLocation, useNavigate } from 'react-router-dom';
 import { clone } from 'lodash';
 import NavBoard from '../components/NavBoard';
 import SprintList from '../components/SprintList';

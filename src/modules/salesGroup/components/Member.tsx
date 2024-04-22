@@ -1,18 +1,12 @@
-import { AntDesignOutlined, UserOutlined } from "@ant-design/icons";
-import { Avatar, Button, ConfigProvider, Flex, Modal, Popover, Tooltip, Typography } from "antd";
+import {  ConfigProvider, Flex, Modal, Typography } from "antd";
 import { get } from "lodash";
 import React, { useMemo, useState } from "react";
-import AvatarShortOrName from "~/components/common/AvatarShortOrName";
-import { RULE_SALES_GROUP, SALES_GROUP_GEOGRAPHY } from "../constants";
+import { RULE_SALES_GROUP } from "../constants";
 import { MemberRulesInGroupType, TypeAreaType } from "../salesGroup.modal";
-import AssignMember from "./AssignMember";
 import AssignTeamLead from "./AssignTeamLead";
-import CardEmployee from "./CardEmployee";
-import ListMember from "./ListMember";
 import PopoverCardEmployee from "./PopoverCardEmployee";
 import ListMemberModal from "./ListMemberModal";
 import useSalesGroupStore from "../salesGroupContext";
-import {GROUP_TYPE_BENEFIT_EMPLOYEE_LEVEL_VI } from "~/modules/reportSalary/benefitConfiguration/constants";
 import { EMPLOYEE_LEVEL_VI } from "~/modules/employee/constants";
 type propsType = {
   _id?: string;
@@ -20,7 +14,6 @@ type propsType = {
   data: MemberRulesInGroupType[];
   child ? : any[]
 };
-const CLONE_GROUP_TYPE_BENEFIT_EMPLOYEE_LEVEL_VI: any = EMPLOYEE_LEVEL_VI;
 
 export default function Member({ _id, data, typeArea, child }: propsType): React.JSX.Element {
   const [isOpen, setIsOpen] = useState(false);

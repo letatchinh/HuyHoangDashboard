@@ -35,7 +35,7 @@ import {
   import { useConfirmReceiptVoucher, useCreateReceiptVoucher, useGetReceiptVoucher, useInitWhReceiptVoucher, useResetAction, useUpdateReceiptVoucher } from '~/modules/receiptVoucher/receiptVoucher.hook'
   import { compactAddress, concatAddress, formatter } from "~/utils/helpers";
   import dayjs from "dayjs";
-  import { omit, unset, get, sumBy } from "lodash";
+  import { omit, get, sumBy } from "lodash";
   import { CheckOutlined, CloseCircleOutlined, ExclamationCircleOutlined, SaveOutlined } from "@ant-design/icons";
   import { Link } from "react-router-dom";
   import apiEmployee from "~/modules/employee/employee.api";

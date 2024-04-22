@@ -1,8 +1,8 @@
-import { get, groupBy, isArray, isString, last } from "lodash";
+import { get, isArray,} from "lodash";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
-import { clearQuerySearch, getExistProp, removeAccents } from "~/utils/helpers";
+import { clearQuerySearch, getExistProp} from "~/utils/helpers";
 import {
   getSelectors,
   useFailed,

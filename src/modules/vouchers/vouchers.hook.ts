@@ -13,7 +13,6 @@ import {
     useSuccess
 } from "~/utils/hook";
 import { vouchersSliceAction } from "./redux/reducer";
-import { useDispatch } from "react-redux";
 const MODULE = "vouchers";
 const MODULE_VI = "";
 
