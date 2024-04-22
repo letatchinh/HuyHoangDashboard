@@ -15,8 +15,8 @@ export default function CollaboratorScreen(props: propsType): React.JSX.Element 
   const navigate = useNavigate();
 
   const { pathname } = useLocation();
-  const isCollatorabor = useMatchPolicy(POLICIES.READ_PARTNER);
-  const isCollatoraborGroup = useMatchPolicy(POLICIES.READ_PARTNERGROUP);
+  const isCollaborator = useMatchPolicy(POLICIES.READ_PARTNER);
+  const isCollaboratorGroup = useMatchPolicy(POLICIES.READ_PARTNERGROUP);
 
   useEffect(() => {
     let urlPush = '/collaborator';
@@ -24,16 +24,17 @@ export default function CollaboratorScreen(props: propsType): React.JSX.Element 
       pathname === '/collaborator' + "/*" ||
       pathname === '/collaborator'
     ) {
-      if (isCollatorabor) {
-        urlPush = '/collaborator';
-      } else if (isCollatoraborGroup) {
-        urlPush += '/collaborator' + "/group";
-      }
+      if (isCollaborator) {
+         urlPush = '/collaborator';
+      };
+      if (!isCollaborator && isCollaboratorGroup) {
+        urlPush += '/group';
+      };
       const resultSubstring: string = urlPush.substring(1);
       setCurrentTab(resultSubstring);
       navigate(urlPush);
-    }
-  }, [pathname]);
+    };
+  }, [pathname,isCollaborator,isCollaboratorGroup]);
 
   const onChange = (key: any) => {
     setCurrentTab(key);
@@ -42,7 +43,7 @@ export default function CollaboratorScreen(props: propsType): React.JSX.Element 
 
   return (
     <div>
-      {(isCollatoraborGroup || isCollatorabor) && (
+      {(isCollaboratorGroup || isCollaborator) && (
         <>
           <WhiteBox>
             <Tabs
@@ -52,15 +53,15 @@ export default function CollaboratorScreen(props: propsType): React.JSX.Element 
               destroyInactiveTabPane
               
             >
-              {isCollatorabor && (
+              {isCollaborator && (
                 <TabPane tab="Danh sách cộng tác viên" key="collaborator" />
               )}
-              {isCollatoraborGroup && (
+              {isCollaboratorGroup && (
                 <TabPane tab="Nhóm cộng tác viên" key="collaborator/group" />
               )}
             </Tabs>
             <Routes>
-              {isCollatorabor ? (
+              {isCollaborator ? (
                 <Route
                   path={``}
                   element={<Collaborator currentTab={currentTab} />}
@@ -68,7 +69,7 @@ export default function CollaboratorScreen(props: propsType): React.JSX.Element 
               ) : (
                 <React.Fragment />
               )}
-              {isCollatoraborGroup ? (
+              {isCollaboratorGroup ? (
                 <Route
                 path={`group`}
                 element={<CollaboratorGroup currentTab={currentTab} />}

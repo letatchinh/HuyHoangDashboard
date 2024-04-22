@@ -146,6 +146,7 @@ const RESOURCES = [
   updateThePharmacyForEmployee,
   configReportSalaryAuto,
   partner,
+  partnerGroup
 ];
 
 //ACTIONS
@@ -275,7 +276,8 @@ const RESOURCE = (): ResourceType => {
   ];
 
   const PARTNER: string[] = [
-    partner
+    partner,
+    partnerGroup
   ];
 
   return {

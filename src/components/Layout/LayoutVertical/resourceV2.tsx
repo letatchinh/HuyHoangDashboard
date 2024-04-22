@@ -373,7 +373,7 @@ export const resource: ItemType[] =[
     icon: <i className="fa-solid fa-circle-nodes"></i>,
     path: PATH_APP.collaborator.root,
     key: PATH_APP.collaborator.root,
-    permission: [POLICIES.READ_PARTNER],//
+    permission: [POLICIES.READ_PARTNER, POLICIES.READ_PARTNERGROUP],//
   },
 ];
 
