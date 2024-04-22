@@ -82,6 +82,15 @@ function* updateProductCollaborator({payload} : any) : any {
   }
 }
 
+function* updateAddressCollaborator({payload} : any) : any {
+  try {
+    const data = yield call(api.updateAddress, payload);
+    yield put(collaboratorActions.updateAddressSuccess(data));
+  } catch (error: any) {
+    yield put(collaboratorActions.updateAddressFailed(error));
+  }
+}
+
 export default function* collaboratorSaga() {
   yield takeLatest(collaboratorActions.getListRequest, getListCollaborator);
   yield takeLatest(collaboratorActions.getByIdRequest, getByIdCollaborator);
@@ -92,4 +101,5 @@ export default function* collaboratorSaga() {
   yield takeLatest(collaboratorActions.addProductRequest, addProductCollaborator);
   yield takeLatest(collaboratorActions.removeProductRequest, removeProductCollaborator);
   yield takeLatest(collaboratorActions.updateProductRequest, updateProductCollaborator);
+  yield takeLatest(collaboratorActions.updateAddressRequest, updateAddressCollaborator);
 }

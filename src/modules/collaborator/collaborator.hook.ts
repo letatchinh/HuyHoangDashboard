@@ -46,6 +46,9 @@ const removeProductFailedSelector = getSelector("removeProductFailed");
 const updateProductSuccessSelector = getSelector("updateProductSuccess");
 const updateProductFailedSelector = getSelector("updateProductFailed");
 
+const updateAddressSuccessSelector = getSelector("updateAddressSuccess");
+const updateAddressFailedSelector = getSelector("updateAddressFailed");
+
 export const useCollaboratorPaging = () => useSelector(pagingSelector);
 
 export const useGetCollaborators = (param:any) => {
@@ -220,4 +223,18 @@ export const useUpdateCollaboratorParams = (
 
 export const useResetCollaboratorAction = () => {
   useResetState(collaboratorActions.resetAction);
+};
+
+export const useUpdateAddressCollaborator = (callback?: any) => {
+  useSuccess(
+    updateAddressSuccessSelector,
+    ``,
+    callback
+  );
+  useFailed(updateAddressFailedSelector);
+
+  return useSubmit({
+    action: collaboratorActions.updateAddressRequest,
+    loadingSelector: isSubmitLoadingSelector,
+  });
 };

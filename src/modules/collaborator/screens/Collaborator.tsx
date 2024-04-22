@@ -46,6 +46,7 @@ import CollaboratorForm from "../components/CollaboratorForm";
 import moment from "moment";
 import Breadcrumb from "~/components/common/Breadcrumb";
 import CollaboratorProduct from "../components/CollaboratorProduct";
+import CollaboratorAddress from "../components/CollaboratorAddress";
 
 interface ColumnActionProps {
   _id: string;
@@ -407,6 +408,12 @@ export default function Collaborator({
             key: '2',
             label: "Sản phẩm đảm nhiệm",
             children: <CollaboratorProduct id={id}/>,
+            disabled : !id
+          },
+          {
+            key: '3',
+            label: "Sổ địa chỉ",
+            children: <CollaboratorAddress id={id}/>,
             disabled : !id
           }
         ]}>

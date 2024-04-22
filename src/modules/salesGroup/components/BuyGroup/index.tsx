@@ -16,6 +16,7 @@ import LoadingTree from "~/components/Antd/LoadingTree";
 import ModalAnt from "~/components/Antd/ModalAnt";
 import AvatarShortOrName from "~/components/common/AvatarShortOrName";
 import { useCreateCollaborator, useUpdateCollaborator } from "~/modules/collaborator/collaborator.hook";
+import CollaboratorAddress from "~/modules/collaborator/components/CollaboratorAddress";
 import CollaboratorForm from "~/modules/collaborator/components/CollaboratorForm";
 import CollaboratorProduct from "~/modules/collaborator/components/CollaboratorProduct";
 import { useBuyGroupQueryParams, useGetBuyGroups } from "../../salesGroup.hook";
@@ -179,6 +180,12 @@ export default function BuyGroup(props: propsType): React.JSX.Element {
             key: '2',
             label: "Sản phẩm đảm nhiệm",
             children: <CollaboratorProduct id={id}/>,
+            disabled : !id
+          },
+          {
+            key: '3',
+            label: "Sổ địa chỉ",
+            children: <CollaboratorAddress id={id}/>,
             disabled : !id
           }
         ]}>

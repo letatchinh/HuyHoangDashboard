@@ -11,6 +11,8 @@ interface cloneInitState extends initStateSlice {
  removeProductSuccess?: any,
  updateProductFailed?: any,
  updateProductSuccess?: any,
+ updateAddressFailed?: any,
+ updateAddressSuccess?: any,
 }
 class CollaboratorClassExtend extends InstanceModuleRedux {
   cloneReducer;
@@ -94,6 +96,26 @@ class CollaboratorClassExtend extends InstanceModuleRedux {
       updateProductFailed: (state: cloneInitState, { payload }: { payload: any }) => {
         state.isSubmitLoading = false;
         state.updateProductFailed = payload;
+      },
+
+      updateAddressRequest: (state: cloneInitState) => {
+        state.isSubmitLoading = true;
+        state.updateAddressFailed = null;
+      },
+      updateAddressSuccess: (
+        state: cloneInitState,
+        { payload }: { payload: any }
+      ) => {
+        state.isSubmitLoading = false;
+        state.byId = {
+          ...state.byId,
+          addressStories : payload
+        }
+        state.updateAddressSuccess = payload;
+      },
+      updateAddressFailed: (state: cloneInitState, { payload }: { payload: any }) => {
+        state.isSubmitLoading = false;
+        state.updateAddressFailed = payload;
       },
 
     }
