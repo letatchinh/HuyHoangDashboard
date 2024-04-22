@@ -245,7 +245,7 @@ export default function CollaboratorForm(props: IProps) {
               <Row gutter={36}>
                 <Col span={24}>
                   <FormItem label="SDT người mời" name="referralCode">
-                    {!id ? (
+                    {(!id || !get(collaborator,'referralCode')) ? (
                       isLoading ? (
                         <Skeleton.Input active />
                       ) : (

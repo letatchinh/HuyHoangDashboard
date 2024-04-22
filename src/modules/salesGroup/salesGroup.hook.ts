@@ -49,6 +49,7 @@ const listBuyGroupSelector = getSelector('listBuyGroup');
 const getListBuyGroupFailedSelector = getSelector('getListBuyGroupFailed');
 
 const createSuccessPartnerSelector = (state : any) => state['collaborator']['createSuccess'];
+const updateSuccessPartnerSelector = (state : any) => state['collaborator']['updateSuccess'];
 
 export const useSalesGroupPaging = () => useSelector(pagingSelector);
 
@@ -205,7 +206,7 @@ export const useBuyGroupQueryParams = () => {
   const page = query.get("page") || 1;
   const keyword = query.get("keyword");
   const createPartnerSuccess = useSelector(createSuccessPartnerSelector);
-  console.log(createPartnerSuccess,'createPartnerSuccess');
+  const updatePartnerSuccess = useSelector(updateSuccessPartnerSelector);
   return useMemo(() => {
     const queryParams = {
       page,
@@ -214,7 +215,7 @@ export const useBuyGroupQueryParams = () => {
     };
     return [queryParams];
     //eslint-disable-next-line
-  }, [page, limit, keyword,createPartnerSuccess]);
+  }, [page, limit, keyword,createPartnerSuccess,updatePartnerSuccess]);
 };
 export const useGetBuyGroups = (param:any) => {
   return useFetchByParam({

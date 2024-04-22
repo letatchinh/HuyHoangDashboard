@@ -155,7 +155,8 @@ export default function ListQuotation({
         align: "center",
         // width: "30%",
         render(pharmacy, record, index) {
-          const refCollection = get(pharmacy,'refCollection','pharma_profile');
+          
+          const refCollection = get(record,'refCollection','pharma_profile');
           return <>
           <Tooltip className="mx-1" title={refCollection === 'partner' ? 'Cộng tác viên' : 'Nhà thuốc'}>
           {refCollection === 'partner' ? <i className="fa-solid fa-user-tie"></i> : <i className="fa-solid fa-house-medical"></i>}
@@ -306,7 +307,7 @@ export default function ListQuotation({
   const {isMobile} = DeviceDetector();
   return (
     <div className="quotation-page">
-      <Row align="middle" gutter={8} justify={"space-between"}>
+      <Row align="middle"  justify={"space-between"}>
         <Col>
           <Space className="quotation-page__wrap--search">
             <Form form={form} initialValues={{pharmacyId : query?.pharmacyId}}> 

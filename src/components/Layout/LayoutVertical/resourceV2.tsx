@@ -42,11 +42,15 @@ const permissionOfSetup = [
 ];
 const permissionPharma = [
   POLICIES.READ_PHARMAPROFILE,
+  POLICIES.READ_CUMULATIVEEVENT,
+  POLICIES.READ_VOUCHERPHARMACY,
+
+];
+
+const permissionBill = [
   POLICIES.READ_BILL,
   POLICIES.READ_QUOTATION,
   POLICIES.WRITE_QUOTATION,
-  POLICIES.READ_CUMULATIVEEVENT,
-  POLICIES.READ_VOUCHERPHARMACY,
 
 ];
 
@@ -236,24 +240,6 @@ export const resource: ItemType[] =[
         permission: [POLICIES.READ_PHARMAPROFILE],//
       },
       {
-        label: "Đơn hàng",
-        path: PATH_APP.bill.root,
-        key: PATH_APP.bill.root,
-        permission: [POLICIES.READ_BILL],//
-      },
-      {
-        label: "Đơn hàng tạm",
-        path: PATH_APP.quotation.root,
-        key: PATH_APP.quotation.root,
-        permission: [POLICIES.READ_QUOTATION],//
-      },
-      {
-        label: "Tạo đơn hàng tạm",
-        path: PATH_APP.bill.create,
-        key: PATH_APP.bill.create,
-        permission: [POLICIES.WRITE_QUOTATION],//
-      },
-      {
         label: "Luỹ kế mặt hàng",
         path: PATH_APP.bill.lk,
         key: PATH_APP.bill.lk,
@@ -271,6 +257,34 @@ export const resource: ItemType[] =[
         path: PATH_APP.freelanceContractPharmacy.root,
         key: PATH_APP.freelanceContractPharmacy.root,
         permission: [POLICIES.READ_CONTRACTPHARMACY],//
+      },
+    ],
+  },
+
+  // Đơn hàng
+  {
+    label: "Đơn hàng",
+    icon: <i className="fa-solid fa-boxes-packing"></i>,
+    key: "bill",
+    permission: [...permissionBill],//
+    children: [
+      {
+        label: "Đơn hàng",
+        path: PATH_APP.bill.root,
+        key: PATH_APP.bill.root,
+        permission: [POLICIES.READ_BILL],//
+      },
+      {
+        label: "Đơn hàng tạm",
+        path: PATH_APP.quotation.root,
+        key: PATH_APP.quotation.root,
+        permission: [POLICIES.READ_QUOTATION],//
+      },
+      {
+        label: "Tạo đơn hàng tạm",
+        path: PATH_APP.bill.create,
+        key: PATH_APP.bill.create,
+        permission: [POLICIES.WRITE_QUOTATION],//
       },
     ],
   },
