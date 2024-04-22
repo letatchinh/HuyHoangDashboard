@@ -155,10 +155,10 @@ export default function ListQuotation({
         align: "center",
         // width: "30%",
         render(pharmacy, record, index) {
-          const processStatus = get(pharmacy,'processStatus');
+          const refCollection = get(pharmacy,'refCollection','pharma_profile');
           return <>
-          <Tooltip className="mx-1" title={processStatus ? 'Cộng tác viên' : 'Nhà thuốc'}>
-          {processStatus ? <i className="fa-solid fa-user-tie"></i> : <i className="fa-solid fa-house-medical"></i>}
+          <Tooltip className="mx-1" title={refCollection === 'partner' ? 'Cộng tác viên' : 'Nhà thuốc'}>
+          {refCollection === 'partner' ? <i className="fa-solid fa-user-tie"></i> : <i className="fa-solid fa-house-medical"></i>}
           </Tooltip>
           <Typography.Text>{get(pharmacy, "name", "")}</Typography.Text>
           </>
