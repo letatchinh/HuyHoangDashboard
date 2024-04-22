@@ -73,6 +73,7 @@ const updateThePharmacyForEmployee = 'updateThePharmacyForEmployee';
 
 // Cộng tác viên
 const partner = 'partner';
+const partnerGroup = 'partnerGroup';
 
 const RESOURCES = [
   //Setting

@@ -36,7 +36,7 @@ import WhiteBox from "~/components/common/WhiteBox";
 import SelectSearch from "~/components/common/SelectSearch/SelectSearch";
 import ExportExcelButton from "~/modules/export/component";
 import TableAnt from "~/components/Antd/TableAnt";
-import { get, omit } from "lodash";
+import { get } from "lodash";
 import {
   PROCESS_STATUS,
   PROCESS_STATUS_VI,
@@ -45,7 +45,6 @@ import {
 import CollaboratorForm from "../components/CollaboratorForm";
 import moment from "moment";
 import Breadcrumb from "~/components/common/Breadcrumb";
-import TabPane from "antd/es/tabs/TabPane";
 import CollaboratorProduct from "../components/CollaboratorProduct";
 
 interface ColumnActionProps {
@@ -55,6 +54,7 @@ interface ColumnActionProps {
   onOpenForm?: any;
   status: string;
   isLoading: boolean;
+  currentTab?: any;
 }
 const ColumnActions = ({
   _id,
@@ -304,18 +304,8 @@ export default function Collaborator({
 
   useChangeDocumentTitle("Danh sách cộng tác viên");
 
-  const onChange = ({ target }: any) => {
-    switch (target.value) {
-      case 2:
-        onParamChange({ ...query, processStatus: PROCESS_STATUS["NEW"] });
-        break;
-      case 3:
-        onParamChange({ ...query, processStatus: PROCESS_STATUS["APPROVED"] });
-        break;
-      default:
-        onParamChange({ ...query, processStatus: "" });
-        break;
-    }
+  const onChange = (e: any) => {
+    onParamChange({ ...query, processStatus: e.target.value});
   };
   return (
     <div>
@@ -354,22 +344,13 @@ export default function Collaborator({
                 onChange={onChange}
                 optionType="button"
                 buttonStyle="solid"
-                defaultValue={(() => {
-                  switch (query?.processStatus) {
-                    case "NEW":
-                      return 2;
-                    case "APPROVED":
-                      return 3;
-                    default:
-                      return 1;
-                  }
-                })()}
+                defaultValue={query?.processStatus || null}
               >
-                <Radio.Button value={1}>Tất cả</Radio.Button>
-                <Radio.Button value={2}>
+                <Radio.Button value={null}>Tất cả</Radio.Button>
+                <Radio.Button value={'NEW'}>
                   {PROCESS_STATUS_VI["NEW"]}
                 </Radio.Button>
-                <Radio.Button value={3}>
+                <Radio.Button value={'APPROVED'}>
                   {PROCESS_STATUS_VI["APPROVED"]}
                 </Radio.Button>
               </Radio.Group>

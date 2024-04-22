@@ -75,6 +75,8 @@ export type initStateSlice<T=any> = {
     typePharmacy: "typePharmacy",
     groupPharmacy: "groupPharmacy",
     collaborator: "collaborator",
+    collaboratorGroup: "collaboratorGroup",
+
     }as const
     
     

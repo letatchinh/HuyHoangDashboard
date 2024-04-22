@@ -44,6 +44,7 @@ import configurationCronTime from "~/modules/configurationCronTime";
 import typePharmacy from '~/modules/typePharmacy';
 import groupPharmacy from '~/modules/groupPharmacy';
 import collaborator from '~/modules/collaborator';
+import collaboratorGroup from '~/modules/collaboratorGroup';
 
 export default function* rootSaga() {
   yield all([
@@ -96,5 +97,6 @@ export default function* rootSaga() {
     groupPharmacy.redux.saga(),
     productUnitModule.redux.saga(),
     collaborator.redux.saga(),
+    collaboratorGroup.redux.saga(),
   ]);
 };

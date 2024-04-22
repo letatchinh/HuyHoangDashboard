@@ -28,7 +28,6 @@ import AddressFormSection from "~/components/common/AddressFormSection";
 import UploadImage from "~/components/common/Upload/UploadImage";
 import { InfoCircleTwoTone } from "@ant-design/icons";
 import apis from "~/modules/user/user.api";
-import { validatePhoneNumberAntd } from "~/utils/validate";
 import InputNumberAnt from "~/components/Antd/InputNumberAnt";
 
 const FormItem = Form.Item;
@@ -260,6 +259,7 @@ export default function CollaboratorForm(props: IProps) {
             </Col>
             <Col span={12}>
               <FormItem
+                
                 label={
                   <Tooltip
                     placement="topLeft"

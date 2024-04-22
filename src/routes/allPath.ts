@@ -142,7 +142,7 @@ export const PATH_APP = {
   },
 
   collaborator: {
-    root: path(ROOTS.app, "/collaborator"),
+    root: path(ROOTS.app, "/collaborator/*"),
   }
 
 };
