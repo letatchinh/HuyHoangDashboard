@@ -6,7 +6,6 @@ type propsType = {
   dataSource: any[];
 };
 
-
 export default function SalesGroupTree({
   dataSource,
 }: propsType): React.JSX.Element {

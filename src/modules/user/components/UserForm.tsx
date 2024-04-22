@@ -5,13 +5,13 @@ import AddressFormSection from "~/components/common/AddressFormSection";
 import { useCreateUser, useGetUser, useInitialValues, useUpdateUser } from "../user.hook";
 import Account from "~/components/common/Account";
 import apis from "../user.api";
-import toastr from "toastr";
 import { DEFAULT_BRANCH_ID } from "~/constants/defaultValue";
 import { useResetState } from "~/utils/hook";
 import { userSliceAction } from "../redux/reducer";
 import {omit} from "lodash";
 import { useParams } from "react-router-dom";
 import { useGetUserGroups } from "~/modules/userGroup/userGroup.hook";
+import useNotificationStore from "~/store/NotificationContext";
 
 const { Option } = Select;
 
@@ -44,7 +44,7 @@ export default function UserForm(props: IProps) {
   });
   const [user, isLoading] = useGetUser(id);
   const initialValues = useInitialValues(user);
-
+  const {onNotify} = useNotificationStore();
   //fetch user groups
   const { branchId }: any = useParams();
   const branchIdParam = useMemo(
@@ -109,9 +109,9 @@ export default function UserForm(props: IProps) {
         const username = await apis.validateUsername({ fullName: fullName?.trim()});
         form.setFieldsValue(username);
         setLoadingValidateUsername(false);
-      } catch (error) {
+      } catch (error: any) {
         setLoadingValidateUsername(false);
-        toastr.error("Lỗi khi lấy dữ liệu từ máy chủ");
+        onNotify?.error("Lỗi khi lấy dữ liệu từ máy chủ");
       };
     };
   };

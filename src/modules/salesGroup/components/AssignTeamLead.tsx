@@ -1,5 +1,5 @@
 import { DeleteOutlined, PlusCircleOutlined } from "@ant-design/icons";
-import { Avatar, Button, Flex, List, Popconfirm, Popover, Tooltip } from "antd";
+import {  Button, Flex, List, Popconfirm, Popover, Tooltip } from "antd";
 import Search from "antd/es/input/Search";
 import { debounce, get } from "lodash";
 import React, { useCallback, useMemo, useState } from "react";

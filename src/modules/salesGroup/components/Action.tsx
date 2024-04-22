@@ -5,7 +5,7 @@ import {
   MoreOutlined,
   SisternodeOutlined
 } from "@ant-design/icons";
-import { Button, Dropdown, MenuProps, Popconfirm, Tooltip } from "antd";
+import { Button, Dropdown, MenuProps, Popconfirm } from "antd";
 import { get } from "lodash";
 import WithPermission from "~/components/common/WithPermission";
 import POLICIES from "~/modules/policy/policy.auth";

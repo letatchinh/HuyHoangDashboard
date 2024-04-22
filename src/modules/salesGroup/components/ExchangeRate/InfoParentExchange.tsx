@@ -1,11 +1,5 @@
-import { DeleteOutlined } from "@ant-design/icons";
-import { Flex, Form, Input, InputNumber, Select, Space, Spin } from "antd";
-import { get } from "lodash";
-import React, {  useEffect, useMemo, useState } from "react";
-import {
-  filterOptionSlug,
-} from "~/utils/helpers";
-import { DataType } from "./ListExchange";
+import { Flex, Input, InputNumber, Space, Spin } from "antd";
+import React, {useState } from "react";
 type propsType = {
   value?: any;
   index?: any;

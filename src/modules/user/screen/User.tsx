@@ -1,6 +1,5 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect } from "react";
 import WhiteBox from "~/components/common/WhiteBox";
-import useTranslate from "~/lib/translation";
 import { Tabs } from "antd";
 import { useState } from "react";
 import TabPane from "antd/es/tabs/TabPane";
@@ -9,7 +8,6 @@ import UserGroup from "~/modules/userGroup/screens/UserGroup";
 import {
   Routes,
   Route,
-  Link,
   useNavigate,
   useLocation,
 } from "react-router-dom";
@@ -18,7 +16,6 @@ import { useMatchPolicy } from "~/modules/policy/policy.hook";
 
 
 export default function User() {
-  const { t }: any = useTranslate();
   const [currentTab, setCurrentTab] = useState('');
   const navigate = useNavigate();
   const { pathname } = useLocation();

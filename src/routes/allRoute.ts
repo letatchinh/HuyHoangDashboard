@@ -10,7 +10,6 @@ import Branch from "~/pages/Dashboard/Branch";
 import StatusConfig from "~/pages/Dashboard/StatusConfig";
 import EmployeePage from "~/pages/Dashboard/Employee";
 import UserPage from "~/pages/Dashboard/User";
-import UserGroupPage from "~/pages/Dashboard/UserGroup";
 import VouchersPage from "~/pages/Dashboard/Vouchers";
 import Unit from "~/pages/Dashboard/Unit";
 import MedicinePage from "~/pages/Dashboard/Medicine";

@@ -1,6 +1,5 @@
 import { Col, Input, Row, Skeleton } from "antd";
 import { Suspense, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
 
 import { CloseOutlined, ExportOutlined } from "@ant-design/icons";
 import Text from "antd/lib/typography/Text";
