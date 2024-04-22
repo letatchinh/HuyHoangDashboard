@@ -71,6 +71,7 @@ export interface FormFieldCreateBill {
     debtType : string | null,
     pair : number,
     fee? : FeeType[],
+    deliveryAddress? : string
 }
 export interface PayloadCreateBill extends FormFieldCreateBill {
     quotationItems : Omit<quotation,'variant' | 'variants'>[],

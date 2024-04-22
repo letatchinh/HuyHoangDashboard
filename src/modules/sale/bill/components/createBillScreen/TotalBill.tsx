@@ -1,8 +1,9 @@
 import { InfoCircleFilled, QuestionCircleFilled } from "@ant-design/icons";
-import { Col, Divider, Flex, Form, Radio, Row, Tooltip, Typography } from "antd";
+import { AutoComplete, Col, Divider, Flex, Form, Input, Radio, Row, Tooltip, Typography } from "antd";
+import TextArea from "antd/es/input/TextArea";
 import React from "react";
 import InputNumberAnt from "~/components/Antd/InputNumberAnt";
-import { formatter } from "~/utils/helpers";
+import { concatAddress, filterOptionSlug, formatter } from "~/utils/helpers";
 import { FormFieldCreateBill } from "../../bill.modal";
 import useCreateBillStore from "../../storeContext/CreateBillContext";
 import SelectDebt from "./SelectDebt";
@@ -23,13 +24,17 @@ export const Layout = ({
       <Typography.Text
         style={{ fontSize: isLarge ? 18 : 14, fontWeight: isLarge ? 600 : 400 }}
       >
-        {label} &nbsp;
+        {label}: &nbsp;
       {tooltip && <Tooltip title={tooltip}>
           <InfoCircleFilled />
         </Tooltip>}
       </Typography.Text>
     </Col>
-    <Col>{children}</Col>
+    <Col flex={1}>
+      <Flex style={{width : '100%'}} justify={'end'}>
+      {children}
+      </Flex>
+    </Col>
   </Row>
 );
 export default function TotalBill(props: propsType): React.JSX.Element {
@@ -43,6 +48,7 @@ export default function TotalBill(props: propsType): React.JSX.Element {
     form,
     totalAmount,
     totalDiscountOther,
+    address,
   } = useCreateBillStore();
   const debtType = Form.useWatch('debtType',form);
   const fee = Form.useWatch('fee',form);
@@ -156,6 +162,29 @@ export default function TotalBill(props: propsType): React.JSX.Element {
           </Form.List>}
     </Form.Item>
       </Layout> : <Form.Item hidden name={'fee'}/>}
+
+      <Layout label={'Địa chỉ giao hàng'}>
+      <Form.Item  shouldUpdate noStyle>
+    {() => <Form.Item
+    
+    name={'deliveryAddress'}
+    style={{marginBottom : 'unset',width : '100%'}}
+    >
+    <AutoComplete
+    popupMatchSelectWidth={false}
+    options={address?.map((add) => ({
+      label : concatAddress(add),
+      value : concatAddress(add),
+    }))}
+    filterOption={filterOptionSlug}
+    >
+      <TextArea
+        placeholder="Nhập địa chỉ"
+      />
+    </AutoComplete>
+    </Form.Item>}
+  </Form.Item>
+      </Layout>
       <div
         style={{
           width: "100%",

@@ -5,6 +5,7 @@ import { FormFieldCreateBill, PayloadCreateBill } from "~/modules/sale/bill/bill
 import QuotationModule from '~/modules/sale/quotation';
 import { DataResultType } from "~/pages/Dashboard/Bill/CreateBill";
 import useNotificationStore from "~/store/NotificationContext";
+import { concatAddress } from "~/utils/helpers";
 import { useChangeDocumentTitle } from "~/utils/hook";
 import useCreateBillStore from "../../storeContext/CreateBillContext";
 import ProductSelectedTable from "../ProductSelectedTable";
@@ -12,7 +13,7 @@ import SelectPharmacy from "../SelectPharmacy";
 import TotalBill from "./TotalBill";
 type propsType = {};
 export default function SaleScreen(props: propsType): React.JSX.Element {
- const {form,onValueChange,quotationItems,totalPriceAfterDiscount,verifyData,onRemoveTab,bill,onOpenModalResult,totalAmount,onChangeBill,mutateReValidate} = useCreateBillStore();
+ const {form,onValueChange,quotationItems,totalPriceAfterDiscount,verifyData,onRemoveTab,bill,onOpenModalResult,totalAmount,onChangeBill,mutateReValidate,setAddress} = useCreateBillStore();
  
  const {onNotify} = useNotificationStore();
  const callBackAfterSuccess = (newData : DataResultType) => {
@@ -108,13 +109,16 @@ try {
           <div>
             <SelectPharmacy onChange={(value,option) => {
               const fee = get(option,'data.fee');
+              const deliveryAddress = concatAddress(get(option,'data.address'));
+              const address = get(option,'data.addressStories',[]);
+              
                 form.setFieldsValue({
-                  fee
+                  fee,
+                  pharmacyId : value,
+                  deliveryAddress,
                 });
-              form.setFieldsValue({
-                pharmacyId : value
-              });
-              onChangeBill({pharmacyId : value,fee});
+                setAddress(address)
+              onChangeBill({pharmacyId : value,fee,deliveryAddress});
               mutateReValidate();
             }} id={get(bill,'pharmacyId')} form={form} allowClear={false}/>
             <Divider/>

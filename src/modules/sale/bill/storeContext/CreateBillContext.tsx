@@ -55,7 +55,9 @@ export type GlobalCreateBill = {
   bill : any,
   onOpenModalResult : (data:any) => void
   onChangeBill : (data:any) => void
-  mutateReValidate : () => void
+  mutateReValidate : () => void;
+  address : any[],
+  setAddress : (p:any) => void
 };
 const CreateBill = createContext<GlobalCreateBill>({
   quotationItems: [],
@@ -79,6 +81,8 @@ const CreateBill = createContext<GlobalCreateBill>({
   onOpenModalResult: () => {},
   mutateReValidate: () => {},
   onChangeBill: () => {},
+  address : [],
+  setAddress : () => {}
 });
 
 type CreateBillProviderProps = {
@@ -103,6 +107,7 @@ export function CreateBillProvider({
   const [quotationItems, setQuotationItems] = useState<DataItem[]>([]);
   const [form] = Form.useForm();
   const [debt,isLoadingDebt] = useGetDebtRule();
+  const [address,setAddress] = useState([]);
 
   // Controller Data
   const onSave = (row: DataItem) => {
@@ -153,7 +158,6 @@ export function CreateBillProvider({
 
 
   const onValueChange = (value: any, values: any) => {
-    console.log(values,'values');
     
     const key: any = Object.keys(value)[0];
     switch (key) {
@@ -172,6 +176,17 @@ export function CreateBillProvider({
         })
         onChangeBill({
           fee: newFee,
+        });
+        break;
+
+      case "deliveryAddress":
+        // Set Form
+          form.setFieldsValue({
+          [key] : values[key]
+        });
+        // Set LocalStorage
+        onChangeBill({
+          [key]: values[key],
         });
         break;
 
@@ -294,7 +309,8 @@ export function CreateBillProvider({
       debtType :  form.getFieldValue('debtType') || get(bill,'debtType') ||  get(initDebt,'key'),
       pharmacyId : get(bill,'pharmacyId'),
       pair : get(bill,'pair',0),
-      fee : get(bill,'fee')
+      fee : get(bill,'fee'),
+      deliveryAddress : get(bill,'deliveryAddress'),
     });
     if (get(bill, "pharmacyId")) {
       const newQuotationItems: any[] = reducerDiscountQuotationItems(get(bill, "quotationItems", []));
@@ -326,6 +342,8 @@ export function CreateBillProvider({
         totalAmount,
         onChangeBill,
         totalDiscountOther,
+        address,
+        setAddress,
       }}
     >
       {children}

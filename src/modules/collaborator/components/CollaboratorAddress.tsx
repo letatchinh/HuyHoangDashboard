@@ -15,11 +15,16 @@ import CollaboratorAddressForm from "./CollaboratorAddressForm";
 type propsType = {
   id?: any;
 };
+const ret=(_:any)=>_?.isDefault?1:0
 export default function CollaboratorAddress({
   id,
 }: propsType): React.JSX.Element {
   const [collaborator, isLoading]: any = useGetCollaborator(id);
-  const dataSource : AddressPartnerType[] = useMemo(() => get(collaborator, "addressStories", []),[collaborator]);
+  const dataSource : AddressPartnerType[] = useMemo(() =>{
+    let _=[...get(collaborator, "addressStories", [])]
+    _.sort((a,b)=>ret(b)-ret(a));
+    return _
+  },[collaborator]);
   const [open,setOpen] = useState(false);
   const [dataUpdate,setDataUpdate] = useState<AddressPartnerType | null>();
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
@@ -106,7 +111,7 @@ export default function CollaboratorAddress({
       rowSelection={rowSelection}
       rowKey={rc => rc?.hash}
       loading={isLoading}
-      dataSource={get(collaborator, "addressStories", [])}
+      dataSource={dataSource}
       columns={columns}
       pagination={false}
       size='small'
