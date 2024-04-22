@@ -1,4 +1,4 @@
-import { get } from "lodash";
+import { get, omit } from "lodash";
 import requester from "~/api/requester";
 
 const apis = {
@@ -9,5 +9,6 @@ const apis = {
     delete: (id?: any) => requester.delete(`/api/v1/employee/${id}`),
     getALLAuthenticated: (query?: any) => requester.get('/api/v1/employee-all', query),
     convert: (data?: any) => requester.put(`/api/v1/employee-convert/${get(data ,'_id' , 'id')}`, data),
+    getMyEmployee: (query?: any) => requester.get(`/api/v1/employee-referral/${query?.id}`,(omit(query,['id']))),
 }
 export default apis;

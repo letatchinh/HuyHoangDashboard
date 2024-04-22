@@ -2,7 +2,6 @@ import { useSelector } from "react-redux";
 import {
   getSelectors,
   useFailed,
-  useFetch,
   useFetchByParam,
   useQueryParams,
   useResetState,
@@ -347,7 +346,6 @@ export const useAccumulationDetailQuery = () => {
 
 export const useGetAccumulationDetail = (id: any, params: any) => {
   const memoParams = useMemo(() => ({ id, ...params }),[id, params]);
-  console.log(memoParams,'memoParams');
   
   return useFetchByParam({
     action: pharmacySliceAction.getAccumulationDetailRequest,

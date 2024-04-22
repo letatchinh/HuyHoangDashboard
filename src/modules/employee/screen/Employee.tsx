@@ -1,8 +1,5 @@
 import { ColumnsType } from "antd/es/table/InternalTable";
-import Breadcrumb from "~/components/common/Breadcrumb";
 import WhiteBox from "~/components/common/WhiteBox";
-import useTranslate from "~/lib/translation";
-import { concatAddress } from "~/utils/helpers";
 import {
   useConvertEmployee,
   useCreateEmployee,
@@ -24,11 +21,11 @@ import POLICIES from "~/modules/policy/policy.auth";
 import { useMatchPolicy } from "~/modules/policy/policy.hook";
 import { useDispatch } from "react-redux";
 import { employeeSliceAction } from "../redux/reducer";
-import WithPermission from "~/components/common/WithPermission";
 import ExportExcelButton from "~/modules/export/component";
 import useCheckBoxExport from "~/modules/export/export.hook";
 import { useChangeDocumentTitle } from "~/utils/hook";
 import { PROCESS_STATUS, PROCESS_STATUS_VI } from "~/constants/defaultValue";
+import ExpandRowEmployee from "../components/ExpandRowEmployee";
 
 interface Props {
   currentTab: any;
@@ -49,20 +46,25 @@ const ColumnActions = ({
   shouldShowDevider,
   onOpenForm,
   status,
-  processStatus
+  processStatus,
 }: ColumnActionProps) => {
   return (
     <div className="custom-table__actions">
       <WithOrPermission permission={[POLICIES.UPDATE_EMPLOYEE]}>
-      {processStatus === "APPROVED" ? (
-                    <Switch
-                    style={{marginRight: 10}}
-                    checked={status === 'ACTIVE'}
-                    onChange={(e)=> updateEmployee({_id, status: status === 'ACTIVE' ? 'INACTIVE' : 'ACTIVE'})}
-                  />
-                  ) : (
-                    <></>
-                  )}
+        {processStatus === "APPROVED" ? (
+          <Switch
+            style={{ marginRight: 10 }}
+            checked={status === "ACTIVE"}
+            onChange={(e) =>
+              updateEmployee({
+                _id,
+                status: status === "ACTIVE" ? "INACTIVE" : "ACTIVE",
+              })
+            }
+          />
+        ) : (
+          <></>
+        )}
         {/* <Switch
           style={{marginRight: 10}}
           checked={status === 'ACTIVE'}
@@ -84,9 +86,8 @@ const ColumnActions = ({
   );
 };
 
-export default function Employee({currentTab}: Props) {
+export default function Employee({ currentTab }: Props) {
   useResetStateEmployee();
-  const { t }: any = useTranslate();
   //State
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [id, setId] = useState(null);
@@ -106,6 +107,7 @@ export default function Employee({currentTab}: Props) {
   const shouldShowDevider = useMemo(() => isCanDelete && isCanUpdate, [isCanDelete, isCanUpdate]);
   const canDownload = useMatchPolicy(POLICIES.DOWNLOAD_UNIT);
   const [arrCheckBox, onChangeCheckBox] = useCheckBoxExport();
+  const [itemActive, setItemActive] = useState<any>();
 
   //Handle
   const handleOpenModal = (id?: any) => {
@@ -205,43 +207,47 @@ export default function Employee({currentTab}: Props) {
         return record.NEW ? record.NEW.createdBy : record.APPROVED.createdBy;
       },
     },
-  ...(isCanUpdate || isCanDelete ?[{
-      title: 'Thao tác',
-      key: 'action',
-      render: (record: any) => {
-        return (
-          <ColumnActions
-            {...record}
-            // deleteUserEmployee={deleteUser}
-            shouldShowDevider={shouldShowDevider}
-            onOpenForm={() => handleOpenModal(record?._id)}
-            status={record?.status}
-            deleteEmpolyee={handleDelete}
-            updateEmployee={handleUpdate}
-            processStatus={record?.processStatus}
-          />
-        );
-      },
-    }] : []),
-    ...(
-      canDownload ? [
-        {
-          title: 'Lựa chọn',
-          key: '_id',
-          width: 80,
-          align: 'center' as any,
-          render: (item: any, record: any) =>
+    ...(isCanUpdate || isCanDelete
+      ? [
           {
-            const id = record._id;
-            return (
-              <Checkbox
-                checked= {arrCheckBox.includes(id)}
-                onChange={(e)=>onChangeCheckBox(e.target.checked, id)}
-          />)}
-        },
-      ]: []
-    ) 
-    
+            title: "Thao tác",
+            key: "action",
+            render: (record: any) => {
+              return (
+                <ColumnActions
+                  {...record}
+                  // deleteUserEmployee={deleteUser}
+                  shouldShowDevider={shouldShowDevider}
+                  onOpenForm={() => handleOpenModal(record?._id)}
+                  status={record?.status}
+                  deleteEmpolyee={handleDelete}
+                  updateEmployee={handleUpdate}
+                  processStatus={record?.processStatus}
+                />
+              );
+            },
+          },
+        ]
+      : []),
+    ...(canDownload
+      ? [
+          {
+            title: "Lựa chọn",
+            key: "_id",
+            width: 80,
+            align: "center" as any,
+            render: (item: any, record: any) => {
+              const id = record._id;
+              return (
+                <Checkbox
+                  checked={arrCheckBox.includes(id)}
+                  onChange={(e) => onChangeCheckBox(e.target.checked, id)}
+                />
+              );
+            },
+          },
+        ]
+      : []),
   ];
 
   useChangeDocumentTitle("Danh sách trình dược viên");
@@ -278,7 +284,18 @@ export default function Employee({currentTab}: Props) {
             showTotal: (total) => `Tổng cộng: ${total}`,
             showSizeChanger: true,
           }}
-          onChange={({current, pageSize}) => onTableChange({current, pageSize})}
+          onChange={({ current, pageSize }) =>
+            onTableChange({ current, pageSize })
+          }
+          expandable={{
+            expandedRowRender: (record: any) => (
+              <ExpandRowEmployee _id={record._id} />
+            ),
+            expandedRowKeys: [itemActive],
+          }}
+          onExpand={(expanded, record) => {
+            expanded ? setItemActive(record._id) : setItemActive(null);
+          }}
         />
       </WhiteBox>
       <Modal

@@ -38,6 +38,9 @@ const {
 const convertSuccessSelector = getSelector("convertSuccess");
 const convertFailedSelector = getSelector("convertFailed");
 
+const getMyEmployeeLoadingSelector = getSelector("isGetMyEmployeeLoading");
+const getMyEmployeeSelector = getSelector("myEmployee"); 
+const getMyEmployeeFailedSelector = getSelector("getMyEmployeeFailed");
 
 export const useEmployeePaging = () => useSelector(pagingSelector);
 
@@ -196,4 +199,14 @@ export const autoCreateUsername = async ({ fullName, callApi }: any) => {
 
 export const useResetStateEmployee = () => {
   return useResetState(employeeSliceAction.resetAction);
+};
+
+export const useGetMyEmployee = (id: any) => {
+  return useFetchByParam({
+    action: employeeSliceAction.getMyEmployeeRequest,
+    loadingSelector: getMyEmployeeLoadingSelector,
+    dataSelector: getMyEmployeeSelector,
+    failedSelector: getMyEmployeeFailedSelector,
+    param: id,
+  });
 };

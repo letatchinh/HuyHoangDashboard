@@ -1,14 +1,15 @@
 import { get } from "lodash";
-import { PaginateResult } from "~/lib/@types";
 import { InstanceModuleRedux } from "~/redux/instanceModuleRedux";
 import { initStateSlice } from "~/redux/models";
 import { createSlice } from "@reduxjs/toolkit";
-import { UserResponseOne } from "~/modules/user/user.modal";
 import { getPaging } from "~/utils/helpers";
 interface cloneInitState extends initStateSlice {
   // Add cloneInitState Type Here
   convertFailed?: any,
   convertSuccess?: any,
+  isGetMyEmployeeLoading?: any,
+  getMyEmployeeFailed?: any,
+  myEmployee?: any[]
  }
  
 class EmployeeClassExtentd extends InstanceModuleRedux {
@@ -49,6 +50,19 @@ class EmployeeClassExtentd extends InstanceModuleRedux {
       convertFailed: (state: cloneInitState, { payload }: { payload: any }) => {
         state.isSubmitLoading = false;
         state.convertFailed = payload;
+      },
+
+      getMyEmployeeRequest: (state: cloneInitState) => {
+        state.isGetMyEmployeeLoading = true;
+        state.getMyEmployeeFailed = null;
+      },
+      getMyEmployeeSuccess: (state: cloneInitState, { payload }: { payload?:any }) => {
+        state.isGetMyEmployeeLoading = false;
+        state.myEmployee = payload;
+      },
+      getMyEmployeeFailed: (state: cloneInitState, { payload }: { payload:any }) => {
+        state.isGetMyEmployeeLoading = false;
+        state.getMyEmployeeFailed = payload;
       },
     }
     this.cloneInitState = {
