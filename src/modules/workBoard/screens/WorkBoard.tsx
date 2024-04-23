@@ -34,6 +34,7 @@ const WorkBoard: React.FC<WorkFlowProps> = () => {
   const [openDetail, setOpenDetail] = useState(false);
   const paging = useWorkBoardPaging();
   const { t }: any = useTranslate();
+  const [destroy,setDestroy] = useState(false);
   const handleDelete = (id: string) => {
     deleteWorkList(id);
   };
@@ -41,6 +42,7 @@ const WorkBoard: React.FC<WorkFlowProps> = () => {
     setOpen(true);
     if (id) {
       setId(id);
+      setDestroy(true)
     }
   };
   const handleOpenFormDetail = (id: string) => {
@@ -199,11 +201,11 @@ const WorkBoard: React.FC<WorkFlowProps> = () => {
         {/* )} */}
       </div>
       {/* </TabBranch> */}
-      <Modal open={isOpenForm} footer={null} onCancel={() => setOpen(false)} width={700} destroyOnClose
+      <Modal  open={isOpenForm} footer={null} onCancel={handleCloseForm} width={700} destroyOnClose={destroy} afterClose={() => setDestroy(false)}
         title={id ? 'Chỉnh sửa không gian làm việc' : 'Thêm không gian làm việc'}
       >
         <Suspense fallback={<div>...</div>}>
-          <BoardForm id={id} handleCloseForm={handleCloseForm} />
+          <BoardForm setDestroy={setDestroy} id={id} handleCloseForm={handleCloseForm} />
         </Suspense>
       </Modal>
       <Modal open={openDetail} footer={null} onCancel={() => setOpenDetail(false)} width={750} destroyOnClose

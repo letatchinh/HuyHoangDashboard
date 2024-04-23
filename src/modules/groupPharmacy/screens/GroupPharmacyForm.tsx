@@ -17,11 +17,15 @@ interface Props {
   onClose: (p?: any) => void;
   id?: any;
   handleUpdate?: any;
+  setDestroy?: any;
 }
 
-export const GroupPharmacyForm = ({ onClose, id, handleUpdate }: Props) => {
+export const GroupPharmacyForm = ({ onClose, id, handleUpdate,setDestroy }: Props) => {
   const [form] = Form.useForm();
-  const [isSubmitLoading, handleCreate] = useCreateGroupPharmacy(onClose);
+  const [isSubmitLoading, handleCreate] = useCreateGroupPharmacy(() => {
+    onClose();
+    setDestroy  && setDestroy(true);
+  });
   const [groupPharmacy, isLoading] = useGetGroupPharmacy(id);
   const initSalesChannel = useInitGroupPharmacy(groupPharmacy, id);
   const [selectedCustomerGroupId, setSelectedCustomerGroupId] = useState<string | undefined>();

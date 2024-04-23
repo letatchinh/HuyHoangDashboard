@@ -93,6 +93,7 @@ export default function Collaborator({
   //State
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [id, setId] = useState(null);
+  const [destroy,setDestroy] = useState(false);
   //Fetch
   const dispatch = useDispatch();
   const resetAction = () => {
@@ -117,6 +118,9 @@ export default function Collaborator({
   const handleOpenModal = (id?: any) => {
     setIsOpenModal(true);
     setId(id);
+    if(id){
+      setDestroy(true);
+    }
   };
   const handleCloseModal = () => {
     setIsOpenModal(false);
@@ -135,6 +139,7 @@ export default function Collaborator({
   const [isSubmitLoading, handleCreate] = useCreateCollaborator(() => {
     handleCloseModal();
     resetAction();
+    setDestroy(true);
   });
 
   const onChangeStatus = (
@@ -383,9 +388,9 @@ export default function Collaborator({
         centered
         // style={{ top: 50 }}
         afterClose={() => {
-          setIsOpenModal(false);
+          setDestroy(false);
         }}
-        destroyOnClose
+        destroyOnClose={destroy}
       >
           <h4 >
         {`${!id ? "Tạo mới " : "Cập nhật"}`} cộng tác viên

@@ -25,7 +25,7 @@ export default function TypePharmacy(props:propsType) : React.JSX.Element {
     const [query] = useTypePharmacyQueryParams();
     const [keyword, { setKeyword, onParamChange }] = useUpdateTypePharmacyParams(query);
     const [typePharmacies, isLoading] = useGetTypePharmacies(query);
-  
+    const [destroy,setDestroy] = useState(false);
     const onCloseForm = useCallback(() => {
       setTypePharmacyId(null);
       setIsOpenForm(false);
@@ -45,6 +45,7 @@ export default function TypePharmacy(props:propsType) : React.JSX.Element {
       (id?: any) => {
         if (id) {
           setTypePharmacyId(id);
+          setDestroy(true);
         }
         setIsOpenForm(true);
       },
@@ -265,9 +266,14 @@ export default function TypePharmacy(props:propsType) : React.JSX.Element {
           open={isOpenForm}
           onCancel={onCloseForm}
           footer={[]}
-          destroyOnClose
+          afterClose={() => {
+            setDestroy(false);
+          }}
+          destroyOnClose={destroy}
+  
         >
           <TypePharmacyForm
+            setDestroy={setDestroy}
             onClose={onCloseForm}
             id={typePharmacyId}
             handleUpdate={updateTypePharmacy}

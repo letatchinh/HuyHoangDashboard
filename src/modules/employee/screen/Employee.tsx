@@ -74,6 +74,7 @@ const ColumnActions = ({
 export default function Employee({currentTab}: Props) {
   useResetStateEmployee();
   const { t }: any = useTranslate();
+  const [destroy,setDestroy] = useState(false);
   //State
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [id, setId] = useState(null);
@@ -98,10 +99,12 @@ export default function Employee({currentTab}: Props) {
   const handleOpenModal = (id?: any) => {
     setIsOpenModal(true);
     setId(id);
+    id && setDestroy(true);
   };
   const handleCloseModal = () => {
     setIsOpenModal(false);
-    setId(null)
+    setId(null);
+    setDestroy(false);
   };
 
   const [, handleUpdate] = useUpdateEmployee(() => {
@@ -112,6 +115,7 @@ export default function Employee({currentTab}: Props) {
   const [isSubmitLoading, handleCreate] = useCreateEmployee(() => {
     handleCloseModal();
     resetAction();
+    setDestroy(true);
   });
 
   const columns: ColumnsType = [
@@ -222,9 +226,9 @@ export default function Employee({currentTab}: Props) {
         width={1020}
         style={{ top: 50 }}
         afterClose={() => {
-          setIsOpenModal(false)
+          setDestroy(false)
         }}
-        destroyOnClose
+        destroyOnClose={destroy}
       >
         <EmployeeForm
           id={id}

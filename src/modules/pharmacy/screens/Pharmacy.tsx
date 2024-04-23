@@ -68,6 +68,7 @@ const ColumnActions = ({ _id, deletePharmacy, onOpenForm }: propsType) => {
 
 export default function Pharmacy() {
   const { t }: any = useTranslate();
+  const [destroy,setDestroy] = useState(false);
   const [query] = usePharmacyQueryParams();
   const [keyword, { setKeyword, onParamChange }] =
     useUpdatePharmacyParams(query);
@@ -92,6 +93,7 @@ export default function Pharmacy() {
     (id?: any) => {
       if (id) {
         setPharmacyId(id);
+        setDestroy(true);
       }
       setIsOpenForm(true);
     },
@@ -391,9 +393,11 @@ export default function Pharmacy() {
         open={isOpenForm}
         onCancel={onCloseForm}
         footer={[]}
-        destroyOnClose
+        destroyOnClose={destroy}
+        afterClose={() => setDestroy(false)}
       >
         <PharmacyForm
+          setDestroy={setDestroy}
           onClose={onCloseForm}
           id={pharmacyId}
           handleUpdate={updatePharmacy}

@@ -24,11 +24,15 @@ interface Props {
   onClose: (p?: any) => void;
   id?: any;
   handleUpdate?: any;
+  setDestroy : any
 }
 
-export default function PharmacyForm({ onClose, id, handleUpdate }: Props) {
+export default function PharmacyForm({ onClose, id, handleUpdate,setDestroy }: Props) {
   const [form] = Form.useForm();
-  const [isSubmitLoading, handleCreate] = useCreatePharmacy(onClose);
+  const [isSubmitLoading, handleCreate] = useCreatePharmacy(() => {
+    onClose();
+    setDestroy && setDestroy(true)
+  });
   const [pharmacy, isLoading] = useGetPharmacyId(id);
   const initPharmacyProfile = useInitPharmacy(pharmacy, id);
   useResetPharmacyAction();

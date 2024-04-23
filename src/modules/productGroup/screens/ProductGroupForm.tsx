@@ -5,7 +5,8 @@ interface Props {
   id?: any;
   callBack?: () => void;
   setId?: any;
-  updateProductConfig: (data: any) => void;
+  updateProductConfig?: (data?: any) => void;
+  setDestroy? : (data?: any) => void
 };
 interface FieldType {
   code: string
@@ -15,8 +16,11 @@ interface FieldType {
   isAction: String
 };
 const { TextArea } = Input;
-const ProductConfigForm: React.FC<Props> = ({ id,setId, callBack, updateProductConfig }) => {
-  const [, createProductConfig] = useCreateProductConfig(callBack);
+const ProductConfigForm: React.FC<Partial<Props>> = ({ id,setId, callBack, updateProductConfig,setDestroy }) => {
+  const [, createProductConfig] = useCreateProductConfig(() => {
+    callBack && callBack();
+    setDestroy && setDestroy(true)
+  });
   const [productConfigById, isLoading] = useGetlistProductConfigById(id);
   const [form] = Form.useForm();
   useResetAction();
@@ -37,7 +41,7 @@ const ProductConfigForm: React.FC<Props> = ({ id,setId, callBack, updateProductC
       ...values,
     };
     if (id) {
-      updateProductConfig({ ...data, id });
+      updateProductConfig && updateProductConfig({ ...data, id });
       form.resetFields()
       setId(null);
     } else {

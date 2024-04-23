@@ -23,12 +23,16 @@ import apis from '~/modules/statusConfig/statusConfig.api';
 interface BoardFormProps {
   id?: string;
   handleCloseForm: () => void;
+  setDestroy? : any
 };
-const BoardForm: React.FC<BoardFormProps> = ({ id, handleCloseForm }) => {
+const BoardForm: React.FC<BoardFormProps> = ({ id, handleCloseForm,setDestroy }) => {
   const _id = useMemo(() => id, [id]);
   const [form] = Form.useForm();
   const { Option } = Select;
-  const [isSubmitLoading, createBoard] = useCreateWorkBoard(handleCloseForm);
+  const [isSubmitLoading, createBoard] = useCreateWorkBoard(() => {
+    handleCloseForm();
+    setDestroy && setDestroy(true)
+  });
   const [isSubmit, updateBoard] = useUpdateWorkBoard(handleCloseForm);
   const [boardById, isLoading] = useGetBoardById(id);
   const [query] = useStatusConfigQueryParams();
