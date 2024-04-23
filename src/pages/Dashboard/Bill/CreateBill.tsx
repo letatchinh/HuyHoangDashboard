@@ -148,7 +148,6 @@ const CreateBillPage = (): React.JSX.Element => {
     onRemoveDataSource(targetKey);
   };
   const onChangeBill = (activeKey: any, newData: ItemDataSource) => {
-    console.log(newData,'newData');
     
     const dataFromLocalStorage = localStorage.getItem(KEY_DATA_PHARMACY);
     const dataReady = JSON.parse(dataFromLocalStorage || "");
@@ -160,8 +159,6 @@ const CreateBillPage = (): React.JSX.Element => {
         ...newData, // Change New Data Source
       },
     };    
-    console.log(newDataSource,'newDataSource');
-    console.log(newData,'newData');
     
     setDataSource(newDataSource);
   };

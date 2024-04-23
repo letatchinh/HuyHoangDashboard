@@ -57,7 +57,8 @@ export type GlobalCreateBill = {
   onChangeBill : (data:any) => void
   mutateReValidate : () => void;
   address : any[],
-  setAddress : (p:any) => void
+  setAddress : (p:any) => void;
+  setFormAndLocalStorage : (newValue : any) => void
 };
 const CreateBill = createContext<GlobalCreateBill>({
   quotationItems: [],
@@ -82,7 +83,8 @@ const CreateBill = createContext<GlobalCreateBill>({
   mutateReValidate: () => {},
   onChangeBill: () => {},
   address : [],
-  setAddress : () => {}
+  setAddress : () => {},
+  setFormAndLocalStorage : () => {},
 });
 
 type CreateBillProviderProps = {
@@ -208,7 +210,6 @@ export function CreateBillProvider({
 
   const pair = Form.useWatch('pair',form) || 0;
   const fee = Form.useWatch('fee',form) || 0;
-  console.log(quotationItems,'quotationItems');
 
   const totalPrice = useMemo(
     () =>
@@ -318,6 +319,18 @@ export function CreateBillProvider({
     }
   }, [bill,debt,form,totalPrice]);
 
+  const setFormAndLocalStorage = useCallback((newValue : any) => {
+    console.log(newValue,'newValue');
+    
+    form.setFieldsValue({
+      ...newValue
+    })
+    onChangeBill({
+      ...newValue
+    })
+  },[]);
+  console.log(form.getFieldsValue(),'Form');
+  
   return (
     <CreateBill.Provider
       value={{
@@ -344,6 +357,7 @@ export function CreateBillProvider({
         totalDiscountOther,
         address,
         setAddress,
+        setFormAndLocalStorage,
       }}
     >
       {children}

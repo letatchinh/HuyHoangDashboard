@@ -1,11 +1,14 @@
 import { InfoCircleFilled, QuestionCircleFilled } from "@ant-design/icons";
-import { AutoComplete, Col, Divider, Flex, Form, Input, Radio, Row, Tooltip, Typography } from "antd";
+import { AutoComplete, Button, Col, Divider, Flex, Form, Input, Radio, Row, Tooltip, Typography } from "antd";
 import TextArea from "antd/es/input/TextArea";
-import React from "react";
+import React, { useCallback, useState } from "react";
 import InputNumberAnt from "~/components/Antd/InputNumberAnt";
+import ModalAnt from "~/components/Antd/ModalAnt";
+import AddressForm from "~/components/common/AddressForm";
 import { concatAddress, filterOptionSlug, formatter } from "~/utils/helpers";
 import { FormFieldCreateBill } from "../../bill.modal";
 import useCreateBillStore from "../../storeContext/CreateBillContext";
+import SuggestAddress from "../SuggestAddress";
 import SelectDebt from "./SelectDebt";
 type propsType = {};
 export const Layout = ({
@@ -19,8 +22,7 @@ export const Layout = ({
   isLarge?: boolean;
   tooltip?: string;
 }) => (
-  <Row justify={"space-between"} align="middle">
-    <Col>
+  <Flex gap={8} justify={"space-between"} align="middle" wrap={'nowrap'}>
       <Typography.Text
         style={{ fontSize: isLarge ? 18 : 14, fontWeight: isLarge ? 600 : 400 }}
       >
@@ -29,13 +31,10 @@ export const Layout = ({
           <InfoCircleFilled />
         </Tooltip>}
       </Typography.Text>
-    </Col>
-    <Col flex={1}>
-      <Flex style={{width : '100%'}} justify={'end'}>
+      <Flex style={{flex : 1}} justify={'end'}>
       {children}
       </Flex>
-    </Col>
-  </Row>
+  </Flex>
 );
 export default function TotalBill(props: propsType): React.JSX.Element {
   const {
@@ -48,11 +47,20 @@ export default function TotalBill(props: propsType): React.JSX.Element {
     form,
     totalAmount,
     totalDiscountOther,
-    address,
+    setFormAndLocalStorage,
   } = useCreateBillStore();
+  const [openAddress,setOpenAddress] = useState(false);
+  const onOpenAddress = useCallback(() => setOpenAddress(true),[]);
+  const onCloseAddress = useCallback(() => setOpenAddress(false),[]);
   const debtType = Form.useWatch('debtType',form);
   const fee = Form.useWatch('fee',form);
-  
+  const onChangeAddress = useCallback((values : any) => {
+    const addressString = concatAddress(values?.address);
+    setFormAndLocalStorage({
+      deliveryAddress : addressString
+    })
+    onCloseAddress();
+  },[])
   return (
     <Flex vertical gap={"small"}>
       <Layout label={"Số lượng mặt hàng"}>{formatter(totalQuantity)}</Layout>
@@ -161,30 +169,31 @@ export default function TotalBill(props: propsType): React.JSX.Element {
             )}
           </Form.List>}
     </Form.Item>
-      </Layout> : <Form.Item hidden name={'fee'}/>}
+      </Layout> : <Form.Item hidden name={'fee'}/>
+    }
 
-      <Layout label={'Địa chỉ giao hàng'}>
-      <Form.Item  shouldUpdate noStyle>
-    {() => <Form.Item
-    
-    name={'deliveryAddress'}
-    style={{marginBottom : 'unset',width : '100%'}}
-    >
-    <AutoComplete
-    popupMatchSelectWidth={false}
-    options={address?.map((add) => ({
-      label : concatAddress(add),
-      value : concatAddress(add),
-    }))}
-    filterOption={filterOptionSlug}
-    >
-      <TextArea
-        placeholder="Nhập địa chỉ"
-      />
-    </AutoComplete>
-    </Form.Item>}
-  </Form.Item>
-      </Layout>
+      <Layout label={<span><i className="fa-solid fa-location-dot"></i> Địa chỉ giao</span>}>
+        <Form.Item  shouldUpdate noStyle>
+          {({getFieldValue}) => <Form.Item
+          name={'deliveryAddress'}
+          style={{marginBottom : 'unset',width : '100%'}}
+          >
+          {/* <AutoComplete
+          popupMatchSelectWidth={false}
+          options={address?.map((add) => ({
+            label : concatAddress(add),
+            value : concatAddress(add),
+          }))}
+          filterOption={filterOptionSlug}
+          >
+            <TextArea
+              placeholder="Nhập địa chỉ"
+            />
+          </AutoComplete> */}
+        <Typography.Text>{getFieldValue('deliveryAddress')} <Button onClick={onOpenAddress} type="primary" ghost>Thay đổi</Button></Typography.Text>
+      </Form.Item>}
+    </Form.Item>
+    </Layout>
       <div
         style={{
           width: "100%",
@@ -199,6 +208,10 @@ export default function TotalBill(props: propsType): React.JSX.Element {
           {formatter(totalPriceAfterDiscount)}
         </Typography.Text>
       </Layout>
+      <ModalAnt title={"Thay đổi địa chỉ giao hàng"} width={1000} open={openAddress} onCancel={onCloseAddress} footer={null} destroyOnClose centered>
+        <SuggestAddress onClose={onCloseAddress}/>
+        <AddressForm onSubmit={(values) => onChangeAddress(values)}/>
+      </ModalAnt>
     </Flex>
   );
 }

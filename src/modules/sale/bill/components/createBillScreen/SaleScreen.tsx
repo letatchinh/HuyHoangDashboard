@@ -13,7 +13,7 @@ import SelectPharmacy from "../SelectPharmacy";
 import TotalBill from "./TotalBill";
 type propsType = {};
 export default function SaleScreen(props: propsType): React.JSX.Element {
- const {form,onValueChange,quotationItems,totalPriceAfterDiscount,verifyData,onRemoveTab,bill,onOpenModalResult,totalAmount,onChangeBill,mutateReValidate,setAddress} = useCreateBillStore();
+ const {form,onValueChange,quotationItems,totalPriceAfterDiscount,onRemoveTab,bill,onOpenModalResult,totalAmount,mutateReValidate,setAddress,setFormAndLocalStorage} = useCreateBillStore();
  
  const {onNotify} = useNotificationStore();
  const callBackAfterSuccess = (newData : DataResultType) => {
@@ -111,14 +111,13 @@ try {
               const fee = get(option,'data.fee');
               const deliveryAddress = concatAddress(get(option,'data.address'));
               const address = get(option,'data.addressStories',[]);
-              
-                form.setFieldsValue({
+              setFormAndLocalStorage({
                   fee,
                   pharmacyId : value,
                   deliveryAddress,
                 });
-                setAddress(address)
-              onChangeBill({pharmacyId : value,fee,deliveryAddress});
+
+              setAddress(address);
               mutateReValidate();
             }} id={get(bill,'pharmacyId')} form={form} allowClear={false}/>
             <Divider/>
