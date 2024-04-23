@@ -5,17 +5,18 @@ import {
   Flex,
   Form,
   Input,
+  InputNumber,
   Radio,
   Row,
   Select,
   Skeleton,
   Tooltip,
 } from "antd";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useResetState } from "~/utils/hook";
 import { collaboratorActions } from "../redux/reducer";
 import { useParams } from "react-router-dom";
-import { DEFAULT_BRANCH_ID } from "~/constants/defaultValue";
+import { DEFAULT_BRANCH_ID, requireRules } from "~/constants/defaultValue";
 import { useFetchState } from "~/utils/helpers";
 import { get, omit } from "lodash";
 import useNotificationStore from "~/store/NotificationContext";
@@ -26,7 +27,7 @@ import WithPermission from "~/components/common/WithPermission";
 import POLICIES from "~/modules/policy/policy.auth";
 import AddressFormSection from "~/components/common/AddressFormSection";
 import UploadImage from "~/components/common/Upload/UploadImage";
-import { InfoCircleTwoTone } from "@ant-design/icons";
+import { CalendarOutlined, InfoCircleTwoTone } from "@ant-design/icons";
 import apis from "~/modules/user/user.api";
 import InputNumberAnt from "~/components/Antd/InputNumberAnt";
 
@@ -40,6 +41,8 @@ interface IProps {
   isSubmitLoading?: boolean;
 }
 export default function CollaboratorForm(props: IProps) {
+  const refMonth : any = useRef();
+  const refYear : any = useRef();
   const [form] = Form.useForm();
   const { id, handleCloseModal, handleUpdate, handleCreate, isSubmitLoading } =
     props;
@@ -112,7 +115,7 @@ export default function CollaboratorForm(props: IProps) {
     }
   };
 
-  const onValuesChange = ({ address }: any) => {
+  const onValuesChange = ({ address,birthDate }: any,values:any) => {
     if (address) {
       if (address.cityId) {
         form.setFieldsValue({
@@ -128,6 +131,46 @@ export default function CollaboratorForm(props: IProps) {
           },
         });
       }
+    };
+
+    if(birthDate){
+      const onlyNumber = (any:any) => {
+        if(!any) return ''
+        return Number(String(any)?.replaceAll(/[^0-9]/g, ''));
+      }
+      const date = birthDate?.date;
+      const month = birthDate?.month;
+      if(date){
+        if(String(date).length >= 2){
+          refMonth.current?.focus()
+        }
+      }
+      if(month){
+        if(String(month).length >= 2){
+          refYear.current?.focus()
+        }
+      };
+      
+      let newDate = onlyNumber(values?.birthDate?.date);
+      if(newDate < 0 || newDate > 31){
+        newDate = 1
+      }
+      let newMonth = onlyNumber(values?.birthDate?.month);
+      if(newMonth < 0 || newMonth > 12){
+        newMonth = 1
+      }
+      let newYear = onlyNumber(values?.birthDate?.year);
+      if(String(newYear).length > 4){
+        newYear = 1998
+      }
+      form.setFieldsValue({
+        birthDate : {
+          date : newDate,
+          month : newMonth,
+          year : newYear,
+          fullText : [newDate,newMonth,newYear].join('/')
+        }
+      })
     }
   };
 
@@ -352,6 +395,76 @@ export default function CollaboratorForm(props: IProps) {
               </>
             )}
           </Form.List>
+          <Row
+            gutter={48}
+            align="middle"
+            justify="space-between"
+            className="employee-form__logo-row"
+          >
+            <Col span={12}>
+              <FormItem label="Nghề nghiệp" name="career">
+                <Input />
+              </FormItem>
+            </Col>
+            <Col span={12}>
+              <FormItem label="Nơi công tác" name="workplace">
+                <Input />
+              </FormItem>
+            </Col>
+          </Row>
+          <Row
+            gutter={48}
+            align="middle"
+            justify="space-between"
+            className="employee-form__logo-row"
+          >
+            <Col span={12}>
+            <FormItem name={['birthDate','fullText']} hidden />
+              <FormItem label="Ngày sinh">
+                <Flex justify={'end'} align={'center'} gap={2}>
+                <FormItem rules={[
+                  () => ({
+                    validator(_, value) {
+                      if (Number(value) < 1 || !String(value).length) {
+                        return Promise.reject(new Error(''));
+                        
+                      }
+                      return Promise.resolve();
+                    }
+                  })
+
+                ]} style={{marginBottom : 'unset'}} name={['birthDate','date']}><Input placeholder="Ngày"  inputMode="numeric"/></FormItem> /
+                <FormItem
+                rules={[
+                  () => ({
+                    validator(_, value) {
+                      if (Number(value) < 1 || !String(value).length) {
+                        return Promise.reject(new Error(''));
+                        
+                      }
+                      return Promise.resolve();
+                    }
+                  })
+
+                ]}
+                style={{marginBottom : 'unset'}} name={['birthDate','month']}><Input placeholder="Tháng" inputMode="numeric" ref={refMonth} /></FormItem> /
+                <FormItem
+                rules={[
+                  () => ({
+                    validator(_, value) {
+                      if (String(value).length !== 4 ) {
+                        return Promise.reject(new Error(''));
+                        
+                      }
+                      return Promise.resolve();
+                    }
+                  })
+                ]}
+                style={{marginBottom : 'unset'}} name={['birthDate','year']}><Input placeholder="Năm" inputMode="numeric" ref={refYear}/></FormItem>
+                </Flex>
+              </FormItem>
+            </Col>
+          </Row>
         </BaseBorderBox>
 
         <Account
