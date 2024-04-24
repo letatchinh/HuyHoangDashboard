@@ -18,7 +18,6 @@ export const useLogin = (callback? : any) => {
     return useSubmit({
         loadingSelector : isLoadingSelector,
         action : authActions.loginRequest,
-        
     })
 };
 export function useLogout () : [boolean, () => void] {

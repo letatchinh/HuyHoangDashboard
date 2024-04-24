@@ -38,14 +38,15 @@ export async function getTokenFCM (msg=messaging) {
     } 
     console.log("Pass Check Denied GetTokenFCM");
     // console.log(vapidKeyFirebase.vapidKey,'vapidKeyFirebase.vapidKey');
-    return  getToken(msg, { vapidKey: vapidKeyFirebase.vapidKey }).then((currentToken: any) => {
+    console.log(getToken(msg, { vapidKey: vapidKeyFirebase.vapidKey }),'getToken(msg, { vapidKey: vapidKeyFirebase.vapidKey })');
+    return getToken(msg, { vapidKey: vapidKeyFirebase.vapidKey })?.then((currentToken: any) => {
         console.log("doing in GetToken Firebase");
           if (currentToken) {
             console.log("got token");
               return currentToken;
           } else {
             console.log("Not got token");
-              console.log('No registration token available. Request permission to generate one.');
+            console.log('No registration token available. Request permission to generate one.');
           }
       }).catch((err: any) => {
         console.log(err,'Erro In Get Token Firebase');
@@ -56,10 +57,12 @@ function requestPermission() {
     if ("Notification" in window) {
         console.log("Have Notification In Window");
         if (Notification.permission === 'granted') {
-            console.log("'Notification permission is granted");
+            console.log("Notification permission is granted");
             return getTokenFCM().then((currentToken: any) => {
+                console.log(currentToken,'currentToken')
                 if (currentToken) {
                     console.log("HAVE TOKEN");
+                    console.log(currentToken,'currentToken')
                     apis.subscribeToken(currentToken);
                 } else {
                     console.log('No registration token available. Request permission to generate one.');
@@ -86,12 +89,12 @@ function onMessageListener () {
             postMessageNewWhBillFirebase({...get(payload, 'notification'),data:getDataPayload('billQuotation','')})
               break;
       
-          case !!getDataPayload('productDelivery'):
-            postMessageNewWhBillFirebase({...get(payload, 'notification'),data:getDataPayload('productDelivery','')})
-              break;
-          case !!getDataPayload('taskItem'):
-            postMessageNewWhBillFirebase({...get(payload, 'notification'),data:getDataPayload('taskItem','')})
-              break;
+        //   case !!getDataPayload('productDelivery'):
+        //     postMessageNewWhBillFirebase({...get(payload, 'notification'),data:getDataPayload('productDelivery','')})
+        //       break;
+        //   case !!getDataPayload('taskItem'):
+        //     postMessageNewWhBillFirebase({...get(payload, 'notification'),data:getDataPayload('taskItem','')})
+        //       break;
       
           default:
               break;

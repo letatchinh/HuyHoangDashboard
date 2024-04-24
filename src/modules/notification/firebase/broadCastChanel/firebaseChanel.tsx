@@ -8,7 +8,6 @@ export const postMessageNewWhBillFirebase = (payload: any) => {
     bc_firebase_chanel.close();
 }
 export const useOnMessageNewWhBillFirebase = (callback: any) => {
-  console.log('first');
   useEffect(() => {
     const bc_firebase_chanel_listen = new BroadcastChannel("bc_firebase_chanel");
     bc_firebase_chanel_listen.onmessage = (ev) => {

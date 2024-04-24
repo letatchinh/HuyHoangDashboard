@@ -30,7 +30,7 @@ export const auth = createSlice({
             state.adapter = null;
         },
         loginSuccess: (state, action: { payload: { token: any; branchId: any,adapter : any } }) => {
-            const { token, branchId,adapter } = action.payload;
+            const { token, branchId, adapter } = action.payload;
             state.token = token;
             state.adapter = adapter;
             setAxiosToken(token);
@@ -39,7 +39,7 @@ export const auth = createSlice({
             // setTimeout(() => {
             //     window.location.reload();
             // }, 100);
-            subscribeToken(token);
+            // token && subscribeToken(token);
           },
         loginFailed: (state, { payload }  : any) => {
             state.loginFailed = payload;

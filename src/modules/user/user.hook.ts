@@ -268,5 +268,5 @@ export const unSubscribeToken = () => {
 };
 
 export const subscribeToken = (tokenFcm: any) => { // NOT NEED TO ASYNC
-  apis.subscribeToken(tokenFcm)
+  tokenFcm && apis.subscribeToken(tokenFcm)
 };

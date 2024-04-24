@@ -24,13 +24,13 @@ interface NotificationItemProps {
 }
 
 const NotificationItem: React.FC<NotificationItemProps> = ({ data, onClickItem, updateStatus }) => {
-  console.log(data,'data')
   const { createdAt, status, url, content, type } = data;
   const isRead = useMemo(() => STATUS_READ.read === status, [status]);
 
   const navigateUrl = () => {
     if (status === STATUS_READ.unread) {
-      updateStatus({ id: get(data, '_id'), status: STATUS_READ.read });
+      console.log(status,'statusstatus')
+      // updateStatus({ id: get(data, '_id'), status: STATUS_READ.read });
     }
     if (onClickItem && typeof onClickItem === 'function') {
       onClickItem();
@@ -38,38 +38,22 @@ const NotificationItem: React.FC<NotificationItemProps> = ({ data, onClickItem, 
   };
 
   const onChangeStatus = (status: string) => {
-    updateStatus({ id: get(data, '_id'), status });
+    console.log(status,'status')
+    // updateStatus({ id: get(data, '_id'), status });
   };
 
   const items: MenuProps['items'] = [
     {
       key: uuidv4(),
       label: (
-        <Button icon={<CloseOutlined />} onClick={() => onChangeStatus(STATUS_READ.unread)} type='text' >Đánh dấu chưa đọc</Button>
+        isRead ?
+          <Button icon={<CloseOutlined />} onClick={() => onChangeStatus(STATUS_READ.unread)} type='text' >Đánh dấu chưa đọc</Button>
+          : <Button icon={<CheckOutlined />} onClick={() => onChangeStatus(STATUS_READ.read)} type='text' >Đánh dấu đã đọc</Button>
       ),
     },
-    {
-      key: uuidv4(),
-      label: (
-        <Button icon={<CheckOutlined />} onClick={() => onChangeStatus(STATUS_READ.read)} type='text' >Đánh dấu đã đọc</Button>
-      ),
-    }
   ];
   return (
     <Dropdown
-      // menu={
-      //   <Menu className='notification-item--actionGroup__menu'>
-      //     {isRead ? (
-      //       <Menu.Item key={uuidv4()} onClick={() => onChangeStatus(STATUS_READ.unread)} icon={<CloseOutlined />}>
-      //         <span>Đánh dấu chưa đọc</span>
-      //       </Menu.Item>
-      //     ) : (
-      //       <Menu.Item key={uuidv4()} onClick={() => onChangeStatus(STATUS_READ.read)} icon={<CheckOutlined />}>
-      //         <span>Đánh dấu đã đọc</span>
-      //       </Menu.Item>
-      //     )}
-      //   </Menu>
-      // }
       menu={{items}}
       trigger={['contextMenu']}
     >

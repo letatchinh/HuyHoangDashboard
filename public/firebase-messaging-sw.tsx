@@ -34,10 +34,10 @@ const messaging = firebase.messaging();
       case !!getDataPayload('billQuotation'):{
         bc_firebase_chanel.postMessage({ ...payload?.notification, data: getDataPayload('billQuotation', '') });
         break;}
-        case !!getDataPayload('taskItem'):{
-          bc_firebase_chanel.postMessage({ ...payload?.notification, data: getDataPayload('taskItem', '') });
-          break;
-        }
+        // case !!getDataPayload('taskItem'):{
+        //   bc_firebase_chanel.postMessage({ ...payload?.notification, data: getDataPayload('taskItem', '') });
+        //   break;
+        // }
         default:
           break;
         }
