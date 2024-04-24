@@ -3,7 +3,8 @@ import requester from "~/api/requester";
 
 const apis = {
     getAll: (query?: any) => requester.get(`/api/v1/staffs`, query),
-    getListEmployeeGroup: (query?: any) => requester.get(`/api/v1/list-partner-group`, query),
+    getListEmployeeGroup: (query?: any) => requester.get(`/api/v1/list-employee-group`, query),
+    getListPartnerGroup: (query?: any) => requester.get(`/api/v1/list-partner-group`, query),
     getAllAuthorIsVoucher: (query?: any) => requester.get(`/api/v1/staffs-voucher`, query),
     getById: (id?: any) => requester.get(`/api/v1/staff/${id}`),
     create: (data?: any) => requester.post(`/api/v1/staff-create`, data),

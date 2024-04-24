@@ -1,9 +1,11 @@
 import { TablePaginationConfig } from "antd";
 import { forIn, get, groupBy, keys,flattenDeep,compact,uniq } from "lodash";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { STATUS } from "~/constants/defaultValue";
+import { REF_COLLECTION, STATUS } from "~/constants/defaultValue";
 
 import subvn from "~/core/subvn";
+import POLICIES, { CORE_ACTION } from "~/modules/policy/policy.auth";
+import { PoliciesType, policyType } from "~/modules/policy/policy.modal";
 
 export const getPaging = (response: any) => ({
   current: response.page,
@@ -41,7 +43,7 @@ export const clearQuerySearch = (
     if (groupByKey[key] && keys(param)?.some((e) => groupByKey[e])) {
       obj[key] = null;
     }
-  });
+  }); 
 };
 
 export const getExistProp = (data: any) => {
@@ -319,4 +321,21 @@ export const DeviceDetector = () => {
 };
 
 export const getValueOfMath = (valueTarget:number,valueDiscount : number,typeValue : 'PERCENT' | 'VALUE') =>  typeValue === 'PERCENT' ?  valueDiscount * valueTarget / 100 : valueDiscount;
-export const getValueOfPercent = (value:number,percent : number) =>   value * percent / 100;
+export const getValueOfPercent = (value: number, percent: number) => value * percent / 100;
+
+type typePoly= keyof PoliciesType;
+type ActionPolicy = keyof typeof CORE_ACTION
+type KeyPolicy = 'QUOTATION' | 'BILL';
+
+export const permissionConvert = (query:any)=>(action: ActionPolicy, key: KeyPolicy)  => {
+  const per =  (k:KeyPolicy)=>(pr:any)=> action.concat('_').concat(k) .concat(pr) as typePoly ;
+  const _ = ['PARTNER', 'EMPLOYEE', 'PHARMACY']
+  if (!get(query, 'refCollection')) {
+    return POLICIES[ per(key)('')] as [string,policyType] 
+  };
+  const objEntry = _.map((e) => [REF_COLLECTION[e], per(key)(e)])
+  let objj = Object.fromEntries(objEntry) as {
+    [key in keyof typeof query ]: typePoly
+  } 
+  return POLICIES[ objj[ get(query,'refCollection') as any ] ]as [string,policyType] 
+};

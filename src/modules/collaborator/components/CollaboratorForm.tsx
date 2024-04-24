@@ -63,7 +63,7 @@ export default function CollaboratorForm(props: IProps) {
   );
 
   const [groups, isLoadingGroups] = useFetchState({
-    api: apis.getListEmployeeGroup,
+    api: apis.getListPartnerGroup,
     query: branchIdParam,
     useDocs: false,
   });

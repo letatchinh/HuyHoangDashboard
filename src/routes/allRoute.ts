@@ -77,9 +77,10 @@ export const mainRoutes :PathRouteProps[] = [
   // TodoList
   { path: PATH_APP.todoList.statusConfig, Component: StatusConfig },
 
-  // Employee
+  // Trình dược viên
   { path: PATH_APP.todoList.workBoard, Component: WorkBoardPage },
   { path: PATH_APP.employee.root, Component: EmployeePage },
+  { path: PATH_APP.bill.employee, Component: EmployeePage },
   // { path: PATH_APP.employee.employeeGroup, Component: EmployeeGroupPage },
   
   // User

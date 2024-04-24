@@ -44,7 +44,8 @@ const permissionPharma = [
   POLICIES.READ_PHARMAPROFILE,
   POLICIES.READ_CUMULATIVEEVENT,
   POLICIES.READ_VOUCHERPHARMACY,
-
+  POLICIES.READ_BILLPHARMACY,
+  POLICIES.READ_QUOTATIONPHARMACY,
 ];
 
 const permissionBill = [
@@ -64,7 +65,17 @@ const permissionSupplier = [
 const permissionEmployee = [
   POLICIES.READ_EMPLOYEE,
   POLICIES.READ_EMPLOYEEGROUP,
-  POLICIES.READ_EMPLOYEEPOSITION
+  POLICIES.READ_EMPLOYEEPOSITION,
+  POLICIES.READ_BILLEMPLOYEE,
+  POLICIES.READ_QUOTATIONEMPLOYEE,
+];
+
+const permissionCollaborator = [
+  POLICIES.READ_PARTNER,
+  POLICIES.READ_PARTNERGROUP,
+  POLICIES.READ_BILLPARTNER,
+  POLICIES.READ_QUOTATIONPARTNER,
+  POLICIES.WRITE_QUOTATIONPARTNER,
 ];
 
 export const resource: ItemType[] =[ 
@@ -240,6 +251,18 @@ export const resource: ItemType[] =[
         permission: [POLICIES.READ_PHARMAPROFILE],//
       },
       {
+        label: "Đơn hàng",
+        path: PATH_APP.bill.pharmacy,
+        key: PATH_APP.bill.pharmacy,
+        permission: [POLICIES.READ_BILLPHARMACY],//
+      },
+      {
+        label: "Đơn hàng tạm",
+        path: PATH_APP.quotation.pharmacy,
+        key: PATH_APP.quotation.pharmacy,
+        permission: [POLICIES.READ_QUOTATIONPHARMACY],//
+      },
+      {
         label: "Luỹ kế mặt hàng",
         path: PATH_APP.bill.lk,
         key: PATH_APP.bill.lk,
@@ -345,13 +368,38 @@ export const resource: ItemType[] =[
     ],
   },
 
-  //Nhân viên
+  //Trình dược viên
   {
     label: "Trình dược viên",
-    icon: <i className="fa-solid fa-users"></i>,
-    path: PATH_APP.employee.root,
-    key: PATH_APP.employee.root,
+    key: 'employeeManagement',
+    icon: <i className="fa-solid fa-clipboard-list"></i>,
     permission: [...permissionEmployee],//
+    children: [
+      {
+        label: "Quản lý trình dược viên",
+        path: PATH_APP.employee.root,
+        key: PATH_APP.employee.root,
+        permission: [POLICIES.READ_EMPLOYEE , POLICIES.READ_EMPLOYEEGROUP],//
+      },
+      {
+        label: "Đơn hàng",
+        path: PATH_APP.bill.employee,
+        key: PATH_APP.bill.employee,
+        permission: [POLICIES.READ_BILLEMPLOYEE],//
+      },
+      {
+        label: "Đơn hàng tạm",
+        path: PATH_APP.quotation.employee,
+        key: PATH_APP.quotation.employee,
+        permission: [POLICIES.READ_QUOTATIONEMPLOYEE],//
+      },
+      {
+        label: "Tạo đơn hàng tạm",
+        path: PATH_APP.bill.create,
+        key: PATH_APP.bill.create,
+        permission: [POLICIES.WRITE_QUOTATIONEMPLOYEE],//
+      },
+    ]
   },
   //Người dùng
   {
@@ -370,10 +418,35 @@ export const resource: ItemType[] =[
   },
   {
     label: "Cộng tác viên",
+    key: 'collaboratorManagement',
     icon: <i className="fa-solid fa-circle-nodes"></i>,
-    path: PATH_APP.collaborator.root,
-    key: PATH_APP.collaborator.root,
-    permission: [POLICIES.READ_PARTNER, POLICIES.READ_PARTNERGROUP],//
+    permission: [...permissionCollaborator],//
+    children: [
+      {
+        label: "Quản lý cộng tác viên",
+        path:  PATH_APP.collaborator.root,
+        key: PATH_APP.collaborator.root,
+        permission: [POLICIES.READ_PARTNER, POLICIES.READ_PARTNERGROUP],//
+      },
+      {
+        label: "Đơn hàng",
+        path: PATH_APP.bill.collaborator,
+        key: PATH_APP.bill.collaborator,
+        permission: [POLICIES.READ_BILLPARTNER],//
+      },
+      {
+        label: "Đơn hàng tạm",
+        path: PATH_APP.quotation.collaborator,
+        key: PATH_APP.quotation.collaborator,
+        permission: [POLICIES.READ_QUOTATIONPARTNER],//
+      },
+      {
+        label: "Tạo đơn hàng tạm",
+        path: PATH_APP.bill.create,
+        key: PATH_APP.bill.create,
+        permission: [POLICIES.WRITE_QUOTATIONPARTNER],//
+      },
+    ]
   },
 ];
 

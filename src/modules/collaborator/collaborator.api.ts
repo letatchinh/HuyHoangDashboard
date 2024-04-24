@@ -13,6 +13,7 @@ const apis = {
     create: (data?: any) => requester.post(`/api/v1/partner`, data),
     update: (data?: any) => requester.put(`/api/v1/partner/${get(data,'_id')}`, data),
     delete: (id?: any) => requester.delete(`/api/v1/partner/${id}`),
-    convert: (data?:any) => requester.put(`/api/v1/partner-convert/${get(data,'_id')}`, data)
+    convert: (data?:any) => requester.put(`/api/v1/partner-convert/${get(data,'_id')}`, data),
+    getALLAuthenticated: (query?: any) => requester.get(`/api/v1/partner-authenticated`, query),
 }
 export default apis;
