@@ -23,7 +23,7 @@ const FormItemProp : FormItemProps = {
   labelAlign : 'left',
 }
 
-const AddressForm = (props: AddressFormSectionProps) => {
+const AddressCommonForm = (props: AddressFormSectionProps) => {
   const {
     isLoading,
     form,
@@ -230,4 +230,4 @@ const AddressForm = (props: AddressFormSectionProps) => {
   );
 };
 
-export default AddressForm;
+export default AddressCommonForm;
