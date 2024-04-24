@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { get } from 'lodash';
 import { removeAxiosToken, setAxiosCompanyId, setAxiosToken } from '~/api/requester';
+import { subscribeToken, unSubscribeToken } from '~/modules/user/user.hook';
 const initialState : any = {
     isLoading: false,
 
@@ -35,15 +36,17 @@ export const auth = createSlice({
             setAxiosToken(token);
             setAxiosCompanyId(branchId); // Assuming branchId is the correct property name
             state.isLoading = false;
-            setTimeout(() => {
-                window.location.reload();
-            }, 100);
+            // setTimeout(() => {
+            //     window.location.reload();
+            // }, 100);
+            subscribeToken(token);
           },
         loginFailed: (state, { payload }  : any) => {
             state.loginFailed = payload;
             state.isLoading = false;
         },
         logoutRequest: async() => {
+            unSubscribeToken();
             removeAxiosToken();
             return initialState
         },

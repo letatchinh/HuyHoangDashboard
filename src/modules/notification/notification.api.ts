@@ -2,10 +2,11 @@ import { get } from "lodash";
 import requester from "~/api/requester";
 
 const apis = {
-    getAll: (query?: any) => requester.get(`/api/v1/notification`, query),
-    getById: (id?: any) => requester.get(`/api/v1/notification/${id}`),
-    create: (data?: any) => requester.post(`/api/v1/notification`, data),
-    update: (data?: any) => requester.put(`/api/v1/notification/${get(data,'_id')}`, data),
-    delete: (id?: any) => requester.delete(`/api/v1/notification/${id}`),
+    subscribeToken: (token: any) => requester.post(`/api/v1/devices_fcm`,{token}),
+    unSubscribeToken: (token: any) => requester.delete(`/api/v1/devices_fcm`,{token}),
+    getMyNotification : (query: any) => requester.get(`/api/v1/notifications`,query),
+    updateStatus : ({id,status}: any) => requester.put(`/api/v1/notifications/${id}`,{status}),
+    updateManyStatus : ({ids,status}: any) => requester.put(`/api/v1/notifications-many-status`,{ids,status}),
+    updateAllToRead : () => requester.put(`/api/v1/notifications-status-read`),
 }
 export default apis;

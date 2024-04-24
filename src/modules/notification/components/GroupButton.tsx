@@ -1,6 +1,7 @@
-import { Button, Typography, DatePicker } from 'antd';
-import { DatePickerType } from 'antd/es/date-picker';
 import React, { useState } from 'react';
+import { Button, Typography, DatePicker } from 'antd';
+import '../notification.style.scss'
+
 const { RangePicker } = DatePicker;
 
 export type RangeValueType<DateType> = [

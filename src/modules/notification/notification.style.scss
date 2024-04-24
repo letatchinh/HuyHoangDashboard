@@ -1,0 +1,148 @@
+.notification{
+  background-color: red;
+};
+
+// 
+// _dropdown.scss
+// 
+$box-shadow: 0 2px 4px rgba(15,34,58,.12);
+$gray-300: #343747;
+$border-color: $gray-300;
+$dropdown-link-hover-bg: $gray-300;
+
+.dropdown-menu {
+  box-shadow: $box-shadow;
+  animation-name: DropDownSlide;
+  animation-duration: .3s;
+  animation-fill-mode: both;  
+  margin: 0;
+  position: absolute;
+  z-index: 1000;
+  &.show {
+    top: 100%!important;
+  }
+}
+
+.dropdown-menu-end[style] {
+  left: auto!important;
+  right: 0!important;
+}
+
+.dropdown-menu-right {
+  right: 0!important;
+  left: auto!important;
+}
+
+.dropdown-menu[data-popper-placement^=right],.dropdown-menu[data-popper-placement^=top],.dropdown-menu[data-popper-placement^=left]{
+  top: auto !important;
+  animation: none !important;
+}
+
+@keyframes DropDownSlide {
+  100% {
+      -webkit-transform: translateY(0);
+      transform: translateY(0)
+  }
+  0% {
+      -webkit-transform: translateY(10px);
+      transform: translateY(10px)
+  }
+}
+
+@media (min-width: 600px) {
+  .dropdown-menu-lg {
+    width: 320px;
+  }
+
+  .dropdown-menu-md {
+    width: 240px;
+  }
+}
+
+.dropdown-divider{
+  border-top-color: $border-color;
+}
+
+// Dropdown size
+
+.dropdown-mega-menu-xl{
+  width: 40rem;
+}
+
+.dropdown-mega-menu-lg{
+  width: 26rem;
+}
+
+.dropup .dropdown-menu {
+  top: auto !important;
+  bottom: 100% !important;
+  transform: translate3d(5px, 5px, 0px) !important;
+}
+
+.GroupButtonNotify{
+  padding-left: 10px;
+  & button{
+    border-radius: 30px!important;
+    &.activeNotify{
+      background-color: #EAF5FF!important;
+      & span {
+        color: #3D7FF3!important;
+      }
+    }
+  }
+};
+
+.text-reset {
+  color: inherit !important; 
+};
+
+.notification-item {
+  position: relative;
+  cursor: pointer;
+  .d-flex {
+      padding: 0.75rem 1rem;
+      display: flex;
+      border-radius: 16px;
+      &:hover {
+          background-color:  #ebedef;
+      }
+  }
+  &--action{
+      &__circleBlue{
+          width: 10px;
+          height: 10px;
+          border-radius: 50%;
+          background-color: #1976F1;
+          align-self: center;
+      }
+  }
+  
+  &--actionGroup{
+      
+      &__btn{
+          width: 30px;
+          height: 30px;
+          border-radius:  50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          box-shadow: 0 2px 4px 2px rgba(15, 34, 58, 0.12);
+          background-color: white;
+          
+          &:hover{
+              background-color: #F2F2F2;
+              transition: 0.2s ease;
+          }
+          &__label{
+              margin: 0;
+              padding: 0;
+              color: #5A626C;
+              font-size: 24px;
+          }
+      }
+      &__menu{
+          border-radius: 10px!important;
+      }
+  }
+
+}

@@ -2,6 +2,7 @@ import { put, call, takeLatest } from 'redux-saga/effects';
 import api from '../user.api'; 
 import { userSliceAction } from './reducer';
 import { setAxiosCompanyId } from '~/api/requester';
+import { getTokenFCM } from '~/modules/notification/firebase';
 
 function* getListUser({ payload: query }: any): any {
   try {
@@ -76,6 +77,16 @@ function* updateProfile({payload} : any) : any {
   }
 };
 
+function* subscribeFcmFirebase(): any{
+  try {
+    const tokenFcm = yield call(getTokenFCM);
+    yield put(userSliceAction.subscribeFcmFirebaseSuccess(tokenFcm));
+
+  } catch (error) {
+    // yield put({ type: LOGIN_FAILED, payload: error });
+  }
+}
+
 export default function* userSaga() {
   yield takeLatest(userSliceAction.getListRequest, getListUser);
   yield takeLatest(userSliceAction.getByIdRequest, getByIdUser);
@@ -85,4 +96,5 @@ export default function* userSaga() {
   yield takeLatest(userSliceAction.getPolicyRequest,getPolicy );
   yield takeLatest(userSliceAction.getProfileRequest,getProfile );
   yield takeLatest(userSliceAction.updateProfileRequest,updateProfile );
+  yield takeLatest(userSliceAction.subscribeFcmFirebaseRequest,subscribeFcmFirebase );
 }

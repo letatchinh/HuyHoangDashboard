@@ -1,13 +1,14 @@
 import React, { memo, useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { Dropdown, Menu } from 'antd';
+import { Button, Dropdown, Menu } from 'antd';
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
 import { get } from 'lodash';
-import moment from 'moment';
 import { v4 as uuidv4 } from 'uuid';
 import { vietnamMoment } from '~/utils/helpers';
 import dayjs from 'dayjs';
 import { STATUS_READ, TYPE_NOTIFICATION_ICON } from '../notification.modal';
+import { MenuProps } from 'antd/lib';
+import '../notification.style.scss'
 
 interface NotificationItemProps {
   data: {
@@ -23,6 +24,7 @@ interface NotificationItemProps {
 }
 
 const NotificationItem: React.FC<NotificationItemProps> = ({ data, onClickItem, updateStatus }) => {
+  console.log(data,'data')
   const { createdAt, status, url, content, type } = data;
   const isRead = useMemo(() => STATUS_READ.read === status, [status]);
 
@@ -39,24 +41,39 @@ const NotificationItem: React.FC<NotificationItemProps> = ({ data, onClickItem, 
     updateStatus({ id: get(data, '_id'), status });
   };
 
+  const items: MenuProps['items'] = [
+    {
+      key: uuidv4(),
+      label: (
+        <Button icon={<CloseOutlined />} onClick={() => onChangeStatus(STATUS_READ.unread)} type='text' >Đánh dấu chưa đọc</Button>
+      ),
+    },
+    {
+      key: uuidv4(),
+      label: (
+        <Button icon={<CheckOutlined />} onClick={() => onChangeStatus(STATUS_READ.read)} type='text' >Đánh dấu đã đọc</Button>
+      ),
+    }
+  ];
   return (
     <Dropdown
-      overlay={
-        <Menu className='notification-item--actionGroup__menu'>
-          {isRead ? (
-            <Menu.Item key={uuidv4()} onClick={() => onChangeStatus(STATUS_READ.unread)} icon={<CloseOutlined />}>
-              <span>Đánh dấu chưa đọc</span>
-            </Menu.Item>
-          ) : (
-            <Menu.Item key={uuidv4()} onClick={() => onChangeStatus(STATUS_READ.read)} icon={<CheckOutlined />}>
-              <span>Đánh dấu đã đọc</span>
-            </Menu.Item>
-          )}
-        </Menu>
-      }
+      // menu={
+      //   <Menu className='notification-item--actionGroup__menu'>
+      //     {isRead ? (
+      //       <Menu.Item key={uuidv4()} onClick={() => onChangeStatus(STATUS_READ.unread)} icon={<CloseOutlined />}>
+      //         <span>Đánh dấu chưa đọc</span>
+      //       </Menu.Item>
+      //     ) : (
+      //       <Menu.Item key={uuidv4()} onClick={() => onChangeStatus(STATUS_READ.read)} icon={<CheckOutlined />}>
+      //         <span>Đánh dấu đã đọc</span>
+      //       </Menu.Item>
+      //     )}
+      //   </Menu>
+      // }
+      menu={{items}}
       trigger={['contextMenu']}
     >
-      <Link to={url} onClick={navigateUrl} className='text-reset notification-item'>
+      <Link to={url} onClick={navigateUrl} className='text-reset notification-item'  style={{textDecoration: 'none'}}>
         <div className='d-flex align-items-start'>
           <div className='avatar-xs me-3'>
             <span className='avatar-title bg-primary rounded-circle font-size-16'>

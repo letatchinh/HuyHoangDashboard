@@ -15,6 +15,8 @@ import {
   useSuccess,
 } from "~/utils/hook";
 import { userSliceAction } from "./redux/reducer";
+import apis from "../notification/notification.api";
+import { useToken } from "../auth/auth.hook";
 const MODULE = "user";
 const MODULE_VI = "Người dùng";
 
@@ -256,4 +258,15 @@ export const useInitialValues = (user: any) => {
     address: user?.address || {},
   };
   return data;
+};
+
+export const unSubscribeToken = () => {
+// const token = useToken();
+
+  let tokenFcm = get(JSON.parse(localStorage?.getItem("persist:user") as any), 'tokenFcm', JSON.stringify(''));
+  apis.unSubscribeToken(JSON.parse(tokenFcm))
+};
+
+export const subscribeToken = (tokenFcm: any) => { // NOT NEED TO ASYNC
+  apis.subscribeToken(tokenFcm)
 };
