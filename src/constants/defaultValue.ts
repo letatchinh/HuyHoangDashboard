@@ -60,11 +60,14 @@ export const REF_COLLECTION_UPPER : any= {
   SUPPLIER: 'SUPPLIER',
 };
 
-export const REF_COLLECTION : any= {
+export const REF_COLLECTION: any = {
   // BILL: 'bill',
   // BILLITEM: 'billItem',
-  PHARMA_PROFILE: 'pharma_profile',
-  SUPPLIER: 'supplier',
+  PHARMA_PROFILE: "pharma_profile",
+  PHARMACY: "pharma_profile",
+  SUPPLIER: "supplier",
+  EMPLOYEE: "employee",
+  PARTNER: "partner",
 };
 
 export const TYPE_METHOD = {
