@@ -43,7 +43,7 @@ export default function SelectTypePharmacy({
             // className="right--parent"
             placeholder="Loại khách hàng"
             options={options}
-            style={{ width: "100%" }}
+            // style={{ width: "100%" }}
             showSearch
             filterOption={filterSelectWithLabel}
             onChange={onChange}

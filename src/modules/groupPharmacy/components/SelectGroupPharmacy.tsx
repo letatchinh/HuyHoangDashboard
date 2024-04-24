@@ -4,48 +4,23 @@ import { get } from "lodash";
 import { Form, Select } from "antd";
 import { filterSelectWithLabel, useFetchState } from "~/utils/helpers";
 import RenderLoading from "~/components/common/RenderLoading";
+import apis from "../groupPharmacy.api";
 
 type propsType = {
   isLoading: boolean;
-  groupPharmacy: any;
-  customerGroupId: any;
 };
 export default function SelectGroupPharmacy({
   isLoading,
-  groupPharmacy,
-  customerGroupId,
 }: propsType): React.JSX.Element {
-  const [groupsPharmacy, setGroupsPharmacy] = useState<any[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
-
-  const fetchGroupPharmacy = async (customerGroupId: string) => {
-    setLoading(true);
-    try {
-      const response = await GroupPharmacyModule.api.search({ customerGroupId });
-      if (response) {
-        setGroupsPharmacy(response);
-      }
-    } catch (error) {
-      console.error('Failed to fetch groups pharmacy:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const [groups, isLoadingGroups] = useFetchState({api: apis.search ,useDocs: false});
   const options = useMemo(
     () =>
-      groupsPharmacy?.map((item: any) => ({
+      groups?.map((item: any) => ({
         label: get(item, "title"),
         value: get(item, "_id"),
       })),
-    [groupsPharmacy]
+    [groups]
   );
-  useEffect(() => {
-    if (customerGroupId) {
-      fetchGroupPharmacy(customerGroupId);
-    } else {
-      setGroupsPharmacy([]);
-    }
-  }, [customerGroupId]);
 
   return (
     <>
@@ -60,9 +35,10 @@ export default function SelectGroupPharmacy({
             // className="right--parent"
             placeholder="Nhóm khách hàng"
             options={options}
-            style={{ width: "100%" }}
+            // style={{ width: "100%" }}
             showSearch
             filterOption={filterSelectWithLabel}
+            loading={isLoadingGroups}
           />
         )}
       </Form.Item>

@@ -53,6 +53,7 @@ export default function PharmacyForm({ onClose, id, handleUpdate }: Props) {
     } else {
       const initPharmacy = convertInitPharmacy(initPharmacyProfile);
       form.setFieldsValue(initPharmacy);
+      setSelectedCustomerGroupId(get(initPharmacy, "customerGroupId"));
     }
   }, [initPharmacyProfile, id, form]);
 
@@ -146,7 +147,7 @@ export default function PharmacyForm({ onClose, id, handleUpdate }: Props) {
                 rules={[
                   {
                     required: true,
-                    pattern: new RegExp(/^[0-9]/),
+                    pattern: new RegExp(/^[0-9]{10,13}$/),
                     message: "Xin vui lòng nhập đúng số điện thoại!",
                   },
                 ]}
@@ -222,8 +223,6 @@ export default function PharmacyForm({ onClose, id, handleUpdate }: Props) {
             <Col span={12}>
               <SelectGroupPharmacy
                 isLoading={isLoading}
-                groupPharmacy={pharmacy}
-                customerGroupId={selectedCustomerGroupId}
               />
             </Col>
           </Row>
