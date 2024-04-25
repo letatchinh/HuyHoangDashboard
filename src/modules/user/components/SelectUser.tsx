@@ -1,7 +1,7 @@
 import { Select, SelectProps } from 'antd';
 import { get } from 'lodash';
 import React, { useMemo } from 'react';
-import { useFetchState } from '~/utils/helpers';
+import { filterSelectWithLabel, useFetchState } from '~/utils/helpers';
 import apis from '../user.api';
 interface TypeProps extends SelectProps{
     defaultUsers? : any[],
@@ -18,13 +18,15 @@ export default function SelectUser({defaultUsers,...props}:TypeProps) : React.JS
         value : get(item,'_id')
     }))),[users,defaultUsers]);
     return (
-        <Select 
-        options={options}
-        loading={isLoading}
-        allowClear
-        style={{minWidth : 200}}
-        placeholder="Nhân viên"
-        popupMatchSelectWidth={false}
+        <Select
+            options={options}
+            loading={isLoading}
+            allowClear
+            style={{ minWidth: 200 }}
+            placeholder="Nhân viên"
+            popupMatchSelectWidth={false}
+            filterOption={filterSelectWithLabel}
+            showSearch
         {...props}
         />
     )

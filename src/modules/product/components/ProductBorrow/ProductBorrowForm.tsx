@@ -5,6 +5,7 @@ import SelectCollaborator from '~/modules/collaborator/components/SelectSearch';
 import UploadListFile from '~/modules/freelanceContractPharmacy/component/UploadListFile';
 import SelectUser from '~/modules/user/components/SelectUser';
 import FormSelectProduct from './FormSelectProduct';
+import CollaboratorProduct from '~/modules/collaborator/components/CollaboratorProduct';
 type propsType = {
 
 };
@@ -29,6 +30,7 @@ const styles = {
 };
 export default function ProductBorrowForm(props: propsType): React.JSX.Element {
   const [form] = Form.useForm();
+  const [partnerId, setPartnerId] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
   const openForm = () => {
     setIsOpen(true);
@@ -37,7 +39,6 @@ export default function ProductBorrowForm(props: propsType): React.JSX.Element {
   const onClose = () => {
     setIsOpen(false);
   };
-
   return (
     <div>
       <Form
@@ -54,7 +55,9 @@ export default function ProductBorrowForm(props: propsType): React.JSX.Element {
             </Col>
             <Col span={12}>
               <Form.Item label='Người mượn' name='receidverId'>
-                <SelectCollaborator/>
+                <SelectCollaborator
+                  onChange={(value: any) => setPartnerId(value)}
+                />
             </Form.Item>
             </Col>
           </Row>
@@ -62,7 +65,7 @@ export default function ProductBorrowForm(props: propsType): React.JSX.Element {
       
         <BaseBorderBox styleContent = {{minHeight: '300px'}} title={'Danh sách sản phẩm mượn'}>
           <Space>
-              <Button onClick={openForm}>Chọn sản phẩm</Button>
+              <Button onClick={openForm} disabled = {!partnerId}>Chọn sản phẩm</Button>
           </Space>
         </BaseBorderBox>
 
@@ -84,7 +87,8 @@ export default function ProductBorrowForm(props: propsType): React.JSX.Element {
         destroyOnClose
         width={1300}
       >
-        <FormSelectProduct/>
+        <FormSelectProduct id={partnerId} />
+        {/* <CollaboratorProduct id={partnerId} /> */}
       </Modal>
     </div>
   )

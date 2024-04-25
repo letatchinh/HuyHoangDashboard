@@ -276,3 +276,7 @@ export const useDeleteProductBorrow = (callback?: any) => {
     loadingSelector: isSubmitLoadingSelector,
   });
 };
+
+export const useConvertProductListCollaborator = (data: any) => {
+  return data?.products?.map((item: any) => item?.product);
+};
