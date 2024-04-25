@@ -15,6 +15,7 @@ import {
   useSuccess,
 } from "~/utils/hook";
 import { productActions } from "./redux/reducer";
+import dayjs from "dayjs";
 const MODULE = "product";
 const MODULE_VI = "";
 
@@ -36,6 +37,25 @@ const {
 } = getSelectors(MODULE);
 
 export const useProductPaging = () => useSelector(pagingSelector);
+
+const getSelector = (key: string) => (state: any) => state.product[key];
+const listBorrowSelector = getSelector("listBorrow");
+const getListBorrowFailedSelector = getSelector("getListBorrowFailed");
+
+const getByIdBorrowSelector = getSelector("getByIdBorrow");
+const getByIdBorrowFailedSelector = getSelector("getByIdBorrowFailed");
+
+const createBorrowSuccessSelector = getSelector("createBorrowSuccess");
+const createBorrowFailedSelector = getSelector("createBorrowFailed");
+
+const updateBorrowSuccessSelector = getSelector("updateBorrowSuccess");
+const updateBorrowFailedSelector = getSelector("updateBorrowFailed");
+
+const deleteBorrowSuccessSelector = getSelector("deleteBorrowSuccess");
+const deleteBorrowFailedSelector = getSelector("deleteBorrowFailed");
+
+const pagingBorrowSelector = getSelector("pagingBorrow");
+export const usePagingBorrow = ()=>  useSelector(pagingBorrowSelector);
 
 export const useGetProducts = (param: any) => {
   return useFetchByParam({
@@ -163,6 +183,7 @@ export const useResetAction = () => {
 //   return onchange;
 // };
 
+
 export const useChangeVariantDefault = () => {
   return useAction({
     action: productActions.changeVariantDefault,
@@ -170,4 +191,88 @@ export const useChangeVariantDefault = () => {
 };
 export const useResetActionProductFullState = () => {
   return useResetState(productActions.resetActionFullState);
+};
+
+// ----BORROW_PRODUCT------
+
+export const useProductBorrowQueryParams = () => {
+  const query = useQueryParams();
+  const limit = query.get("limit") || 10;
+  const page = query.get("page") || 1;
+  const keyword = query.get("keyword");
+  const createSuccess = useSelector(createBorrowSuccessSelector);
+  const deleteSuccess = useSelector(deleteBorrowSuccessSelector);
+  const startDate = query.get('startDate') || dayjs().startOf('month').format("YYYY-MM-DDTHH:mm:ss");
+  const endDate = query.get('endDate') || dayjs().endOf('month').format("YYYY-MM-DDTHH:mm:ss");
+
+  return useMemo(() => {
+    const queryParams = {
+      page,
+      limit,
+      keyword,
+      startDate,
+      endDate,
+      // supplierId,
+    };
+    return [queryParams];
+    //eslint-disable-next-line
+  }, [page, limit, keyword, createSuccess, deleteSuccess, startDate, endDate]);
+};
+
+
+export const useGetProductsBorrow = (param: any) => {
+  return useFetchByParam({
+    action: productActions.getListBorrowRequest,
+    loadingSelector: loadingSelector,
+    dataSelector: listBorrowSelector,
+    failedSelector: getListBorrowFailedSelector,
+    param,
+  });
+};
+export const useGetProductBorrow = (id: any) => {
+  return useFetchByParam({
+    action: productActions.getByIdBorrowRequest,
+    loadingSelector: getByIdLoadingSelector,
+    dataSelector: getByIdBorrowSelector,
+    failedSelector: getByIdBorrowFailedSelector,
+    param: id,
+  });
+};
+
+export const useCreateProductBorrow = (callback?: any) => {
+  useSuccess(
+    createBorrowSuccessSelector,
+    `Tạo mới phiếu mượn sản phẩm thành công`,
+    callback
+  );
+  useFailed(createBorrowFailedSelector);
+
+  return useSubmit({
+    action: productActions.createBorrowRequest,
+    loadingSelector: isSubmitLoadingSelector,
+  });
+};
+
+export const useUpdateProductBorrow = (callback?: any) => {
+  useSuccess(
+    updateBorrowSuccessSelector,
+    `Cập nhật phiếu mượn sản phẩm thành công`,
+    callback
+  );
+  useFailed(updateBorrowFailedSelector);
+
+  return useSubmit({
+    action: productActions.updateBorrowRequest,
+    loadingSelector: isSubmitLoadingSelector,
+  });
+};
+
+export const useDeleteProductBorrow = (callback?: any) => {
+  useSuccess(deleteBorrowSuccessSelector, `Xoá phiếu mượn sản phẩm thành công`, callback);
+  useFailed(deleteBorrowFailedSelector);
+
+  return useSubmit({
+    action: productActions.deleteBorrowRequest,
+    loadingSelector: isSubmitLoadingSelector,
+  });
 };

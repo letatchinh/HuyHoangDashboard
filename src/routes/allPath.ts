@@ -44,6 +44,7 @@ export const PATH_APP = {
   product: {
     root: path(ROOTS.app, "/product"),
     edit: path(ROOTS.app, "/product/:supplierId"),
+    borrow: path(ROOTS.app, "/product-borrow"),
   },
   todoList: {
     statusConfig: path(ROOTS.app, "/statusConfig"),

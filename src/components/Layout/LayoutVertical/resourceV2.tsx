@@ -446,6 +446,12 @@ export const resource: ItemType[] =[
         key: PATH_APP.bill.create,
         permission: [POLICIES.WRITE_QUOTATIONPARTNER],//
       },
+      {
+        label: "Quản lý sản phẩm mượn",
+        path: PATH_APP.product.borrow,
+        key: PATH_APP.product.borrow,
+        // permission: [POLICIES],//
+      },
     ]
   },
 ];
