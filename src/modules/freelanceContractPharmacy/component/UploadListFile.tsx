@@ -96,10 +96,10 @@ const UploadListFile = ({contract}: props) => {
         setFileListUrl([...fileList]);
       };
     if (file.status === 'done') {
-        setFileListUrl([...fileList]);
-      } else if (file.status === 'error') {
-        console.log(file.status,'adasda');
-      };
+      setFileListUrl([...fileList]);
+    } else if (file.status === 'error') {
+      onNotify?.error(`Lỗi khi tải ảnh lên, chỉ được tải lên tệp nhỏ hơn 1MB`);
+    }
   };
   return (
     <Form.Item
