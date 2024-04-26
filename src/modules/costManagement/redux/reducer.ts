@@ -2,8 +2,10 @@ import { createSlice } from "@reduxjs/toolkit";
 import { get,omit } from "lodash";
 import { InstanceModuleRedux } from "~/redux/instanceModuleRedux";
 import { initStateSlice } from "~/redux/models";
+import { getPaging } from "~/utils/helpers";
 interface cloneInitState extends initStateSlice {
- // Add cloneInitState Type Here
+  // Add cloneInitState Type Here
+  totalRevenue?: number | null | undefined
 }
 class CostManagementClassExtend extends InstanceModuleRedux {
   cloneReducer;
@@ -12,6 +14,12 @@ class CostManagementClassExtend extends InstanceModuleRedux {
     super('costManagement');
     this.cloneReducer = {
       ...this.initReducer,
+      getListSuccess: (state:cloneInitState , { payload }: any) => {
+        state.isLoading = false;
+        state.list = get(payload, "docs", []);
+        state.paging = getPaging(payload);
+        state.totalRevenue = payload?.totalRevenue || 0
+      },
       updateSuccess: (state: cloneInitState, { payload }: any) => {
         state.list = state.list?.map((item: any) => get(item, '_id') === get(payload, 'data._id') ? payload?.data : item);
         state.updateSuccess = payload;
@@ -26,6 +34,7 @@ class CostManagementClassExtend extends InstanceModuleRedux {
     }
     this.cloneInitState = {
       ...this.initialState,
+      totalRevenue: 0
       // Want Add more State Here...
     }
   }

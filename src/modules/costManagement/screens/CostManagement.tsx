@@ -18,6 +18,7 @@ import {
   useUpdateCostManagementParams,
   handleChangeVariant,
   useUpdateCostManagement,
+  useTotalRevenue,
 } from "../costManagement.hook";
 import {
   InfoCircleTwoTone,
@@ -85,6 +86,8 @@ export const useCostManagementContext = (): ContextCostManagement => useContext(
   const handleConvertVariant = handleChangeVariant(data, setData);
   const [date, setDate] = useState<any>();
   const [typeDate, setTypeDate] = useState<PickerType>('month');
+  const totalRevenue = useTotalRevenue();
+   
    const dispatch = useDispatch();
    const resetState = () => {
      return dispatch(costManagementActions.resetActionFullState());
@@ -309,7 +312,8 @@ export const useCostManagementContext = (): ContextCostManagement => useContext(
       </Row>
       <WhiteBox>
         {/* <h5>Đơn vị: VND</h5> */}
-        <TableAnt
+          <TableAnt
+            footer={() => <h5>{`Tổng doanh thu theo thời gian: ${totalRevenue} đ`}</h5>}
           dataSource={data || []}
           loading={isLoading}
           columns={columns}

@@ -71,6 +71,7 @@ export default function CostManagementForm({}: Props): React.JSX.Element {
   useResetAction();
   const [profit, setProfit] = useState(0);
   const [variantCurrent, setVariantCurrent] = useState<any>(null);
+  
   useEffect(() => {
     if (costManagementById && id) {
       setData({
@@ -97,7 +98,7 @@ export default function CostManagementForm({}: Props): React.JSX.Element {
   useEffect(() => {
     if (data && variantId) {
       const variant = data?.variants?.find((item: any) => item?._id === variantId);
-      const expense = get(variant, 'logistic.VND', 0) + get(variant, 'totalRevenueEmployee.VND', 0) + get(variant, 'operations.VND', 0) + get(variant, 'financialCost.VND', 0) + get(variant, 'marketing.VND', 0) + get(variant, 'management.VND', 0);
+      const expense = get(variant, 'logistic.VND', 0) + get(variant, 'costEmployee.VND', 0) + get(variant, 'operations.VND', 0) + get(variant, 'financialCost.VND', 0) + get(variant, 'marketing.VND', 0) + get(variant, 'management.VND', 0);
       const profit = +((variant?.totalRevenueVariant || 0) - expense);
       if (variantId) { 
       form.setFieldsValue({
@@ -264,11 +265,11 @@ export default function CostManagementForm({}: Props): React.JSX.Element {
                 labelCol={{ span: 10 }}
                 wrapperCol={{ span: 14 }}
                 label= {
-                  <Tooltip title="Chi phí trình dược viên sẽ được hệ thống tự động tính toán">
+                  <Tooltip title="Chi phí trình dược viên sẽ được hệ thống tự động tính toán = (DS sản phẩm / Tổng DS) * Tổng CP TDV ">
                     Chi phí trình dược viên  <InfoCircleOutlined/>
                   </Tooltip>
                 }
-                name={["totalRevenueEmployee",referenceUnit]}
+                name={["costEmployee",referenceUnit]}
               > 
                   <InputNumber
                     min={0}

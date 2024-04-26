@@ -37,6 +37,9 @@ const {
   pagingSelector,
 } = getSelectors(MODULE);
 
+const getSelector = (key: any) => (state: any) => state.costManagement[key];
+const totalRevenueSelector = getSelector('totalRevenue');
+export const useTotalRevenue = () => useSelector(totalRevenueSelector);
 export const useCostManagementPaging = () => useSelector(pagingSelector);
 
 export const useGetCostManagements = (param?:any) => {
@@ -196,7 +199,7 @@ export const convertData = (variant: any) => {
    marketing: convertVariantDefault(variant, 'marketing'),
    management: convertVariantDefault(variant, 'management'),
    financialCost: convertVariantDefault(variant, 'financialCost'),
-   totalRevenueEmployee: convertVariantDefault(variant, 'totalRevenueEmployee'),
+   costEmployee: convertVariantDefault(variant, 'costEmployee')
  };
 };
 
@@ -230,6 +233,7 @@ export const handleConvertCost = (data: any,setData: any, typeVariant: string) =
 };
 
 export const convertDataSubmit = (values: any) => {
+  console.log(values,'data')
   const data = values?.map((item: any) => ({
     financialCost: item?.financialCost?.VND || 0,
     logistic: item?.logistic.VND || 0,
@@ -237,6 +241,7 @@ export const convertDataSubmit = (values: any) => {
     marketing: item?.marketing.VND || 0,
     operations: item?.operations.VND || 0, 
     variantId: item?.variantId,
+    cosEmployee: item?.cosEmployee || 0,
   }))
   return data
 };
