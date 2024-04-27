@@ -28,6 +28,7 @@ import AddressFormDelivery from "~/components/common/AddressFormDelivery";
 import { get } from "lodash";
 import AddressCommonForm from "~/components/common/AddressCommonForm";
 import BaseBorderBox from "~/components/common/BaseBorderBox";
+import SelectEmployee from "~/modules/employee/components/SelectEmployee";
 const FormItem = Form.Item;
 const { Option } = Select;
 interface Props {
@@ -123,13 +124,10 @@ export default function PharmacyForm({ onClose, id, handleUpdate }: Props) {
                 </FormItem>
               </Col>
               <Col span={12}>
-                <FormItem
-                  label="Trình dược viên"
-                  name="employeeId"
-                  wrapperCol={{ sm: 24, md: 24, lg: 21 }}
-                >
-                  <Input />
-                </FormItem>
+                <SelectEmployee 
+                 isLoading={isLoading}
+                 employeeSeller={pharmacy}
+                 />
               </Col>
             </Row>
             <Row gutter={48} align="middle" justify="space-between">
@@ -377,13 +375,11 @@ export default function PharmacyForm({ onClose, id, handleUpdate }: Props) {
           <BaseBorderBox title={"Địa chỉ xuất hoá đơn"}>
             <AddressCommonForm
               form={form}
-              address="addressInvoicing"
+              addressType="addressInvoicing"
               cityCode={cityCode}
               setCityCode={setCityCode}
               districtCode={districtCode}
               setDistrictCode={setDistrictCode}
-              allowPhoneNumber={false}
-              allowEmail={false}
             />
           </BaseBorderBox>
           <Row
