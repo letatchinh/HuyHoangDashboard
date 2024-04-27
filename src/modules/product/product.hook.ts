@@ -1,9 +1,9 @@
-import { get } from "lodash";
+import { get, omit } from "lodash";
 import { useEffect, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
-import { clearQuerySearch, getExistProp } from "~/utils/helpers";
+import { clearQuerySearch, convertFiles, getExistProp } from "~/utils/helpers";
 import {
   getSelectors,
   useAction,
@@ -16,6 +16,8 @@ import {
 } from "~/utils/hook";
 import { productActions } from "./redux/reducer";
 import dayjs from "dayjs";
+import { ColumnsType } from "antd/es/table";
+
 const MODULE = "product";
 const MODULE_VI = "";
 
@@ -42,7 +44,7 @@ const getSelector = (key: string) => (state: any) => state.product[key];
 const listBorrowSelector = getSelector("listBorrow");
 const getListBorrowFailedSelector = getSelector("getListBorrowFailed");
 
-const getByIdBorrowSelector = getSelector("getByIdBorrow");
+const getByIdBorrowSelector = getSelector("byIdBorrow");
 const getByIdBorrowFailedSelector = getSelector("getByIdBorrowFailed");
 
 const createBorrowSuccessSelector = getSelector("createBorrowSuccess");
@@ -279,4 +281,32 @@ export const useDeleteProductBorrow = (callback?: any) => {
 
 export const useConvertProductListCollaborator = (data: any) => {
   return data?.products?.map((item: any) => item?.product);
+};
+
+export const useConvertDataAssignProductsCol = (products: any[], selectedRowKey: any[]) => {
+  return  products?.filter(product => selectedRowKey?.includes(product._id));
+};
+
+export const SubmitProductsBorrow = (values: any) => {
+  return {
+    ...omit(values, ["dateRefun"]),
+    items: values?.data?.map((item: any) => ({
+      productId: item._id,
+      variantId: item.variantCurrent._id,
+      quantity: item.quantity,
+      priceBefore: item?.variantCurrent?.price,
+      note: item?.note || "",
+      dateRefun: dayjs(item?.dateRefun).format("YYYY-MM-DD"),
+    })),
+    files: convertFiles(values?.files?.fileList
+    ),
+  };
+};
+
+export const convertProductsBorrowById = (data: any, products: any[] | undefined) => {
+  console.log(products,'products')
+  const items = data?.items?.map((item: any) => item?._id);
+  console.log(items,'items')
+  const listProducts = products?.filter(product => items?.includes(product._id));
+  console.log(listProducts,'listProducts')
 };

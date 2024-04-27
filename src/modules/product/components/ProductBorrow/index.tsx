@@ -5,6 +5,12 @@ import ProductBorrowForm from './ProductBorrowForm';
 import Breadcrumb from '~/components/common/Breadcrumb';
 import { ColumnsType } from 'antd/es/table';
 import {useGetProductsBorrow, usePagingBorrow, useProductBorrowQueryParams, useUpdateProductParams } from '../../product.hook';
+import ProductBorrowContextProvider, { useProductBorrowContext } from './Context';
+import dayjs from 'dayjs';
+import { REF_TYPE_OBJECT } from '../../constants';
+import { toUpper } from 'lodash';
+import StatusTag from './Status';
+import Action from '~/components/common/Action';
 type propsType = {
 
 }
@@ -13,20 +19,19 @@ export default function ProductBorrow(props: propsType): React.JSX.Element {
   const [keyword, { setKeyword, onParamChange }] = useUpdateProductParams(query);
   const [list, isLoading] = useGetProductsBorrow(query);
   const paging = usePagingBorrow();
-
   const [isOpen, setIsOpen] = useState(false);
   const [id, setId] = useState<string | null>();
-  const openForm = (id?: string | null) => {
-    setIsOpen(true);
+  const [isOpenForm, setIsOpenForm] = useState<boolean>(false);
+
+  const openFormVoucher = (id?: any) => {
+    setIsOpenForm(true);
     setId(id);
   };
 
-  const onClose = () => {
-    setIsOpen(false);
+  const onCloseVoucher = () => {
+    setIsOpenForm(false);
     setId(null);
   };
-
-  console.log(list,'list')
   
   const columns  : ColumnsType = useMemo(() => [
     {
@@ -42,6 +47,7 @@ export default function ProductBorrow(props: propsType): React.JSX.Element {
       key: 'createdAt',
       align: 'center',
       width: 100,
+      render: (item: any, record: any, index) => dayjs(item)?.format('YYYY-MM-DD HH:mm')
     },
     {
       title: 'Người tạo',
@@ -49,6 +55,19 @@ export default function ProductBorrow(props: propsType): React.JSX.Element {
       key: 'fullName',
       align: 'center',
       width: 100,
+      render:(fullName : any)=>{
+        return fullName?.fullName
+      }
+    },
+    {
+      title: 'Nhóm đối tượng',
+      dataIndex: 'refColReceidverId',
+      key: 'refColReceidverId',
+      align: 'center',
+      width: 100,
+      render:(fullName : any)=>{
+        return REF_TYPE_OBJECT[toUpper(fullName)]
+      }
     },
     {
       title: 'Người mượn',
@@ -56,31 +75,46 @@ export default function ProductBorrow(props: propsType): React.JSX.Element {
       key: 'fullName',
       align: 'center',
       width: 100,
+      render:(fullName : any)=>{
+        return fullName?.fullName
+      }
     },
-    {
-      title: 'Sản phẩm',
-      dataIndex: 'items',
-      key: 'name',
-      align: 'center',
-      width: 100,
-    },
+    // {
+    //   title: 'Sản phẩm',
+    //   dataIndex: 'items',
+    //   key: 'name',
+    //   align: 'center',
+    //   width: 100,
+    // },
     {
       title: 'Trạng thái',
       dataIndex: 'status',
       key: 'status',
       align: 'center',
       width: 100,
+      render: (status: any, record: any, index) => <StatusTag status= {status}/>
     },
     {
       title: 'Thao tác',
       key: 'key',
       align: 'center',
       width: 100,
+      render: (_, record, index) => (
+        <Action
+          _id={record._id}
+          canDelete
+          canUpdate
+          title='phiếu mượn sản phẩm'
+          onDetailClick={() => openFormVoucher(record._id)}
+          // onDelete
+        />
+      )
     },
 
   ], [list]);
+
   return (
-    <>
+    <ProductBorrowContextProvider>
       <Breadcrumb title={'Quản lý mượn sản phẩm'}/>
       <Row justify={"space-between"} className='row__search'>
         <Col span={12}></Col>
@@ -90,7 +124,7 @@ export default function ProductBorrow(props: propsType): React.JSX.Element {
             <Col span={12}>
               <Button
                 type='primary'
-              onClick={() => openForm(null)}
+                onClick={()=> openFormVoucher && openFormVoucher(null)}
               >Tạo phiếu mượn sản phẩm</Button>
             </Col>
           </Row>
@@ -110,6 +144,7 @@ export default function ProductBorrow(props: propsType): React.JSX.Element {
             stickyTop
             className="table-striped-rows-custom"
             columns={columns}
+            dataSource={list}
             size="small"
             bordered
             scroll={{ y: '60vh' }}
@@ -120,16 +155,16 @@ export default function ProductBorrow(props: propsType): React.JSX.Element {
             }}
           />
         </ConfigProvider>
-      <Modal
-        title= {`${id ? 'Cập nhật': 'Tạo mới'} phiếu mượn sản phẩm`}
-        open={isOpen}
-        onCancel={onClose}
-        footer={null}
-        width= {1200}
-        destroyOnClose
-      >
-        <ProductBorrowForm/>
-      </Modal>
-    </>
+        <Modal
+          title= {`${id ? 'Cập nhật': 'Tạo mới'} phiếu mượn sản phẩm`}
+          open={isOpenForm}
+          onCancel={onCloseVoucher}
+          footer={null}
+          width= {1200}
+          destroyOnClose
+        >
+        <ProductBorrowForm id={id} />
+        </Modal>
+    </ProductBorrowContextProvider>
   )
 }

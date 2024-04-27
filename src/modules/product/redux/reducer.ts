@@ -3,7 +3,7 @@ import { get, omit } from "lodash";
 import { InstanceModuleRedux } from "~/redux/instanceModuleRedux";
 import { initStateSlice } from "~/redux/models";
 import { getPaging } from "~/utils/helpers";
-interface cloneInitState extends initStateSlice {
+ interface cloneInitState extends initStateSlice {
   // Add cloneInitState Type Here
   listBorrow?: any[];
   getListBorrowFailed?: any;
@@ -50,7 +50,7 @@ class ProductClassExtend extends InstanceModuleRedux {
         });
         state.list = list;
       },
-      resetActionFullState: (state:any) => ({
+      resetActionFullState: (state:cloneInitState) => ({
         ...state,
         ...omit(this.cloneInitState, ["list"]),
       }),
@@ -80,7 +80,7 @@ class ProductClassExtend extends InstanceModuleRedux {
       getByIdBorrowRequest: (state:cloneInitState , { payload }: any) => {
         state.isGetByIdLoading = true;
       },
-      getByIdBorrowSuccess: (state:cloneInitState , { payload }: any) => {
+      getByIdBorrowSuccess: (state: cloneInitState, { payload }: any) => {
         state.isGetByIdLoading = false;
         state.byIdBorrow = payload;
       },
@@ -130,10 +130,11 @@ class ProductClassExtend extends InstanceModuleRedux {
     deleteBorrowFailed: (state:cloneInitState, { payload }:{payload:any}) => {
       state.isSubmitLoading = false;
       state.deleteBorrowFailed = payload;
-    },
-  
-
-
+      },
+      resetActionProductBorrow: (state:cloneInitState) => ({
+        ...state,
+        ...omit(this.cloneInitState, ["listBorrow", "pagingBorrow"]),
+      }),
 
       //-----BORROW_PRODUCT-----
 
