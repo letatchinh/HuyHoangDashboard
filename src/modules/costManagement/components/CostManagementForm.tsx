@@ -265,7 +265,7 @@ export default function CostManagementForm({}: Props): React.JSX.Element {
                 labelCol={{ span: 10 }}
                 wrapperCol={{ span: 14 }}
                 label= {
-                  <Tooltip title="Chi phí trình dược viên sẽ được hệ thống tự động tính toán = (DS sản phẩm / Tổng DS) * Tổng CP TDV ">
+                  <Tooltip title="Chi phí trình dược viên sẽ được hệ thống tự động tính toán = (DS sản phẩm / Tổng DS) * Tổng chi phí TDV ">
                     Chi phí trình dược viên  <InfoCircleOutlined/>
                   </Tooltip>
                 }

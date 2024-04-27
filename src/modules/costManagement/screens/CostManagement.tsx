@@ -29,7 +29,7 @@ import CostManagementForm from "../components/CostManagementForm";
 import { get } from "lodash";  
 import TableAnt from "~/components/Antd/TableAnt";
 import { ColumnsType } from "antd/es/table";
-import { formatter } from "~/utils/helpers";
+import { formatNumberThreeComma, formatter } from "~/utils/helpers";
 import DatePickerAnt from "../components/DatePicker";
 import { useDispatch } from "react-redux";
 import { costManagementActions } from "../redux/reducer";
@@ -313,7 +313,7 @@ export const useCostManagementContext = (): ContextCostManagement => useContext(
       <WhiteBox>
         {/* <h5>Đơn vị: VND</h5> */}
           <TableAnt
-            footer={() => <h5>{`Tổng doanh thu theo thời gian: ${totalRevenue} đ`}</h5>}
+            footer={() => <h5>{`Tổng doanh thu theo thời gian: ${isLoading ? "Đang tải..." : formatNumberThreeComma(totalRevenue)} đ`}</h5>}
           dataSource={data || []}
           loading={isLoading}
           columns={columns}

@@ -18,7 +18,7 @@ class CostManagementClassExtend extends InstanceModuleRedux {
         state.isLoading = false;
         state.list = get(payload, "docs", []);
         state.paging = getPaging(payload);
-        state.totalRevenue = payload?.totalRevenue || 0
+        state.totalRevenue = payload?.totalRevenueProduct || 0
       },
       updateSuccess: (state: cloneInitState, { payload }: any) => {
         state.list = state.list?.map((item: any) => get(item, '_id') === get(payload, 'data._id') ? payload?.data : item);
