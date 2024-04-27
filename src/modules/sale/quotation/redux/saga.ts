@@ -28,7 +28,7 @@ function* createQuotation({payload} : any) : any {
     if(callbackSubmit){
       callbackSubmit({
         type : 'createQuotation',
-        code : get(data,'code')
+        codeSequence : get(data,'codeSequence')
       })
     }
     yield put(quotationActions.createSuccess(data));
@@ -44,7 +44,7 @@ function* updateQuotation({payload} : any) : any {
     if(callbackSubmit){
       callbackSubmit({
         type : 'updateQuotation',
-        code : get(data,'code')
+        codeSequence : get(data,'codeSequence')
       })
     }
     yield put(quotationActions.updateSuccess(data));
@@ -60,7 +60,7 @@ function* convertQuotation({payload} : any) : any {
     if(callbackSubmit){
       callbackSubmit({
         type : 'convertQuotation',
-        code : get(data,'code')
+        codeSequence : get(data,'codeSequence')
       })
     }
     yield put(quotationActions.convertSuccess(data));
@@ -71,14 +71,7 @@ function* convertQuotation({payload} : any) : any {
 
 function* copyQuotation({payload : id} : any) : any {
   try {
-    // const {callbackSubmit,...params} = payload
     const data = yield call(api.copy,id);
-    // if(callbackSubmit){
-    //   callbackSubmit({
-    //     type : 'copyQuotation',
-    //     code : get(data,'code')
-    //   })
-    // }
     yield put(quotationActions.copySuccess(data));
   } catch (error:any) {
     yield put(quotationActions.copyFailed(error));

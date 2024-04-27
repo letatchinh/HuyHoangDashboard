@@ -18,7 +18,7 @@ import { INFINITY } from "~/constants/defaultValue";
 import { getValueOfMath } from "~/utils/helpers";
 const TYPE_DISCOUNT: any = CumulativeDiscountModule.constants.TYPE_DISCOUNT;
 const TARGET: any = CumulativeDiscountModule.constants.TARGET;
-export const selectProductSearch = (data: any) => {
+export const selectProductSearchBill = (data: any) => {
   const {
     name,
     cumulativeDiscount,
@@ -29,6 +29,7 @@ export const selectProductSearch = (data: any) => {
     quantity,
     codeBySupplier,
     images,
+    discountOther,
   } = data;
   const variant = variants?.find(
     (item: any) => get(item, "_id") === selectVariant
@@ -46,6 +47,7 @@ export const selectProductSearch = (data: any) => {
     variant,
     variants,
     images,
+    discountOther,
   };
   return submitData;
 };
@@ -97,8 +99,9 @@ export const onVerifyData = ({
       try {
         // Get Variants
         const response = await apis.verifyBill({ billSample,pharmacyId : get(bill, "pharmacyId") });
-        const concatQuantity = get(bill, "quotationItems", [])?.map(
+        const InheritItem = get(bill, "quotationItems", [])?.map(
           (item: any) => {
+            console.log(item,'ITEMM');
             const findInResponse = response?.find(
               (res: any) => get(item, "variantId") === get(res, "selectVariant")
             );
@@ -107,6 +110,7 @@ export const onVerifyData = ({
               return {
                 ...findInResponse,
                 quantity: get(item, "quantity", 1),
+                discountOther: get(item, "discountOther", []),
                 // Inherit More here
               };
             } else {
@@ -114,15 +118,15 @@ export const onVerifyData = ({
             }
           }
         );
-        let items: any = compact(concatQuantity)?.map((quotation: any) => {
-          const dataSearch = selectProductSearch(quotation);
+        let items: any = compact(InheritItem)?.map((quotation: any) => {
+          const dataSearch = selectProductSearchBill(quotation);
 
           return {
             ...dataSearch,
             key: v4(),
           };
         });
-
+        console.log(items,'itemsitems');
         // Validate Discount
         const cumulativeDiscount = await getCumulativeDiscount({
           quotationItems: items,
@@ -247,6 +251,9 @@ export class CalculateDiscountFactory {
       minRewardSoftCondition * get(itemReward, "quantity", 0);
     return quantityClamp;
   }
+  totalDiscountOther(price : any,value : any,typeDiscount : any,quantity : any){
+    return getValueOfMath(price,value,typeDiscount) * quantity
+  }
 }
 
 export const reducerDiscountQuotationItems = (quotationItems: any[]) => {
@@ -332,10 +339,9 @@ export const reducerDiscountQuotationItems = (quotationItems: any[]) => {
 
       const totalDiscountOther = (quotation?.discountOther || [])?.reduce(
         (sum: number, cur: DiscountOtherType) =>
-          sum + getValueOfMath(get(quotation, "variant.price", 1),cur?.value,cur?.discountType),
+          sum + CalculateDiscountMethod.totalDiscountOther(get(quotation, "variant.price", 1),cur?.value,cur?.typeDiscount,quantityActual),
         0
       );
-        console.log(totalDiscountOther,'totalDiscountOther');
       const totalPrice =
         get(quotation, "variant.price", 1) * quantityActual - totalDiscount - totalDiscountOther;
       return {

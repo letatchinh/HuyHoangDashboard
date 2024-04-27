@@ -9,7 +9,7 @@ import useNotificationStore from '~/store/NotificationContext';
 import { formatter } from '~/utils/helpers';
 import ImageProduct from '../../bill/components/ImageProduct';
 import { ItemSearchProduct } from '../orderSupplier.modal';
-import { getCumulativeDiscount, selectProductSearch } from '../orderSupplier.service';
+import { getCumulativeDiscount, selectProductSearchOrder } from '../orderSupplier.service';
 type propsType = {
   dataCurrent : any,
   onChangeBill : (newData:any) => void,
@@ -56,7 +56,7 @@ export default function SelectProduct({dataCurrent,onChangeBill}:propsType) : Re
       const onSelect = async(data:any) => {
           try {
             inputEl.current.blur();
-          const orderSupplier : any = selectProductSearch(data);
+          const orderSupplier : any = selectProductSearchOrder(data);
           const cumulativeDiscount = await getCumulativeDiscount({supplierId : get(dataCurrent,'supplierId'),orderSupplierItems : [orderSupplier]});
           const orderSupplierWithCumulative = {
             ...orderSupplier,

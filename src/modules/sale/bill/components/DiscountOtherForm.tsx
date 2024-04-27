@@ -23,7 +23,7 @@ export default function DiscountOtherForm({onAdd, onUpdate,initData,index}: prop
     })
   },[initData]);
   const onValueChange = (value: any,values:DiscountOtherType) => {
-    if(values?.discountType === 'PERCENT' && values?.value > 100){
+    if(values?.typeDiscount === 'PERCENT' && values?.value > 100){
         form.setFieldsValue({
             value : 100
         })
@@ -41,7 +41,7 @@ export default function DiscountOtherForm({onAdd, onUpdate,initData,index}: prop
           addonAfter={
             <Form.Item<DiscountOtherType>
               style={{ marginBottom: "unset" }}
-              name={"discountType"}
+              name={"typeDiscount"}
             >
               <Radio.Group size="small" buttonStyle="solid">
                 <Radio.Button value="PERCENT">%</Radio.Button>

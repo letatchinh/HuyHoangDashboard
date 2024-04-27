@@ -62,7 +62,7 @@ export interface quotation  {
     discountOther : DiscountOtherType[]
 }
 export interface FeeType  {
-    typeFee : 'SUB_FEE',
+    typeFee : 'SUB_FEE' | 'LOGISTIC',
     typeValue : 'PERCENT' | 'VALUE',
     value : number
 }
@@ -86,7 +86,7 @@ export interface PayloadUpdateBill  {
     _id : string
 }
 export interface DiscountOtherType {
-    discountType : 'PERCENT' | 'VALUE',
+    typeDiscount : 'PERCENT' | 'VALUE',
     value : number,
     name : string
 }
