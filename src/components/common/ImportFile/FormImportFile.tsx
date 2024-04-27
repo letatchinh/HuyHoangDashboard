@@ -13,6 +13,12 @@ type propsType = {
   onModule?: any;
   query?: any;
 };
+
+const propsFile: UploadProps = {
+  name: "file",
+  multiple: true,
+  action: `${BASE_URL}/api/v1/import-pharma`,
+};
 interface Errors {
   message?: string;
 }
@@ -22,27 +28,22 @@ export function FormImportFile({
   onModule,
   query,
 }: propsType) {
-  const [fileList, setFileList] = useState<UploadFile[]>([]);
+  const [fileList, setFileList] = useState<any[]>([]);
   const [errors, setErrors] = useState<Errors | null>(null);
   const [disabled, setDisabled] = useState<boolean>(true);
   const [complete, setComplete] = useState<boolean>(false);
   const [uploading, setUploading] = useState<boolean>(false);
+  const { onNotify } = useNotificationStore();
 
   const handleUpload = async () => {
-    const formData = new FormData();
-    fileList.forEach((file) => {
-      formData.append("files", file.originFileObj as Blob);
-    });
-
     if (!fileList[0]) {
       message.destroy();
       message.error("Chưa có file để thực hiện thao tác");
       return;
     }
-
     setUploading(true);
 
-    const response = await importExcel.postFile(formData);
+    const response = await importExcel.postFile(fileList[0]?.originFileObj);
     switch (response?.status) {
       case true:
         message.success("Thực hiện thành công");
@@ -57,6 +58,7 @@ export function FormImportFile({
       setComplete(true);
     }, 2000);
   };
+  //
   const onFileChange: UploadProps["onChange"] = async ({ file, fileList }) => {
     setUploading(true);
     if (file.status === "removed") {
@@ -102,31 +104,26 @@ export function FormImportFile({
     fileList,
   };
 
-  const { onNotify } = useNotificationStore();
+  // Export file mẫu
   const handleOnClick = async () => {
     try {
       if (query) {
-        let a = `?`;
         const keyExportUrl = "/api/v1/export-pharma";
         try {
-          if (a !== "") {
-            axios
-              .get(keyExportUrl, {
-                method: "GET",
-                responseType: "blob",
-              })
-              .then((response) => {
-                const url = window.URL.createObjectURL(
-                  new Blob([response.data])
-                );
-                const link = document.createElement("a");
-                link.href = url;
-                link.setAttribute("target", "_blank");
-                link.setAttribute("download", `FileMauNhaThuoc.xlsx`);
-                document.body.appendChild(link);
-                link.click();
-              });
-          }
+          axios
+            .get(keyExportUrl, {
+              method: "GET",
+              responseType: "blob",
+            })
+            .then((response) => {
+              const url = window.URL.createObjectURL(new Blob([response.data]));
+              const link = document.createElement("a");
+              link.href = url;
+              link.setAttribute("target", "_blank");
+              link.setAttribute("download", `FileMauNhaThuoc.xlsx`);
+              document.body.appendChild(link);
+              link.click();
+            });
         } catch (error: any) {
           onNotify?.error(error || "Có lỗi xảy ra!");
         }
@@ -135,6 +132,35 @@ export function FormImportFile({
       onNotify?.error(error || "Có lỗi xảy ra!");
     }
   };
+
+  const handleOnClickError = async () => {
+    try {
+      if (query) {
+        const keyExportUrl = "/api/v1/export-pharma-error";
+        try {
+          axios
+            .get(keyExportUrl, {
+              method: "GET",
+              responseType: "blob",
+            })
+            .then((response) => {
+              const url = window.URL.createObjectURL(new Blob([response.data]));
+              const link = document.createElement("a");
+              link.href = url;
+              link.setAttribute("target", "_blank");
+              link.setAttribute("download", `ErrorNhaThuoc.xlsx`);
+              document.body.appendChild(link);
+              link.click();
+            });
+        } catch (error: any) {
+          onNotify?.error(error || "Có lỗi xảy ra!");
+        }
+      }
+    } catch (error: any) {
+      onNotify?.error(error || "Có lỗi xảy ra!");
+    }
+  };
+
   return (
     <Modal
       width={700}
@@ -219,7 +245,11 @@ export function FormImportFile({
             <>
               <Space style={{ color: "red" }}>{errors?.message} </Space>
               {/* <Link to={PATH_CLINIC.processImport.root} /> */}
-              <a href={`${BASE_URL}/api/v1/export-pharma`} download>
+              <a
+                target="_blank"
+                style={{ color: "#1990ff" }}
+                onClick={handleOnClickError}
+              >
                 Tải về file
               </a>
             </>

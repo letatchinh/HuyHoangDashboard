@@ -32,7 +32,7 @@ const requester = {
     axios.post(url, data, config).then(responseBody),
   postFormData: (url : string, data? : any, config : AxiosRequestConfig = {}) => {
     const bodyFormData = new FormData();
-    bodyFormData.append('file', data);
+    bodyFormData.append('files', data);
     return axios({
       method: 'post',
       url,
