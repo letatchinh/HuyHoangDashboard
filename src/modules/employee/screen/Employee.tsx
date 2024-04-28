@@ -252,7 +252,7 @@ export default function Employee({currentTab}: Props) {
           },
           {
             key: '2',
-            label: "Sản phẩm đảm nhiệm",
+            label: "Sản phẩm giới thiệu",
             children: <CollaboratorProduct id={id} useAddProduct={useAddProductEmployee} useRemoveProduct={useRemoveProductEmployee} useUpdateProduct={useUpdateProductEmployee} useGetUser={useGetEmployee} apiSearchProduct={apis.searchProduct}/>,
             disabled : !id
           },
