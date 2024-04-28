@@ -15,7 +15,8 @@ type propsType = {
   mutate : () => void,
   setKeyword : (kw:any) => void,
   totalDocs : number,
-  loading : boolean
+  loading : boolean,
+  useAddProduct : any
 };
 export default function SelectProduct({
   id,
@@ -24,8 +25,9 @@ export default function SelectProduct({
   totalDocs,
   setKeyword,
   loading,
+  useAddProduct,
 }: propsType): React.JSX.Element {
-  const [isSubmitLoading, addProduct] = useAddProductCollaborator();
+  const [isSubmitLoading, addProduct] = useAddProduct();
 
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
 

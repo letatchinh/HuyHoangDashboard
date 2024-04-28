@@ -2,15 +2,19 @@ import React, { useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
 import { collaboratorActions } from "../redux/reducer";
 import {
+  useAddProductCollaborator,
   useCollaboratorPaging,
   useCollaboratorQueryParams,
   useConvertCollaborator,
   useCreateCollaborator,
   useDeleteCollaborator,
+  useGetCollaborator,
   useGetCollaborators,
+  useRemoveProductCollaborator,
   useResetCollaboratorAction,
   useUpdateCollaborator,
   useUpdateCollaboratorParams,
+  useUpdateProductCollaborator,
 } from "../collaborator.hook";
 import { useMatchPolicy } from "~/modules/policy/policy.hook";
 import useCheckBoxExport from "~/modules/export/export.hook";
@@ -47,6 +51,7 @@ import moment from "moment";
 import Breadcrumb from "~/components/common/Breadcrumb";
 import CollaboratorProduct from "../components/CollaboratorProduct";
 import CollaboratorAddress from "../components/CollaboratorAddress";
+import apis from "~/modules/collaborator/collaborator.api";
 
 interface ColumnActionProps {
   _id: string;
@@ -412,7 +417,7 @@ export default function Collaborator({
           {
             key: '2',
             label: "Sản phẩm đảm nhiệm",
-            children: <CollaboratorProduct id={id}/>,
+            children: <CollaboratorProduct useAddProduct={useAddProductCollaborator} id={id} useRemoveProduct={useRemoveProductCollaborator} useUpdateProduct={useUpdateProductCollaborator} useGetUser={useGetCollaborator} apiSearchProduct={apis.searchProduct}/>,
             disabled : !id
           },
           {

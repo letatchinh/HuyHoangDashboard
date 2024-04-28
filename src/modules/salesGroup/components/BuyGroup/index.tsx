@@ -15,10 +15,12 @@ import React, { useCallback, useState } from "react";
 import LoadingTree from "~/components/Antd/LoadingTree";
 import ModalAnt from "~/components/Antd/ModalAnt";
 import AvatarShortOrName from "~/components/common/AvatarShortOrName";
-import { useCreateCollaborator, useUpdateCollaborator } from "~/modules/collaborator/collaborator.hook";
+import apis from "~/modules/collaborator/collaborator.api";
+import { useCreateCollaborator, useGetCollaborator, useRemoveProductCollaborator, useUpdateCollaborator, useUpdateProductCollaborator } from "~/modules/collaborator/collaborator.hook";
 import CollaboratorAddress from "~/modules/collaborator/components/CollaboratorAddress";
 import CollaboratorForm from "~/modules/collaborator/components/CollaboratorForm";
 import CollaboratorProduct from "~/modules/collaborator/components/CollaboratorProduct";
+import { useAddProductEmployee } from "~/modules/employee/employee.hook";
 import { useBuyGroupQueryParams, useGetBuyGroups } from "../../salesGroup.hook";
 import { BuyGroupType } from "../../salesGroup.modal";
 type propsType = {};
@@ -179,7 +181,7 @@ export default function BuyGroup(props: propsType): React.JSX.Element {
           {
             key: '2',
             label: "Sản phẩm đảm nhiệm",
-            children: <CollaboratorProduct id={id}/>,
+            children: <CollaboratorProduct id={id} useAddProduct={useAddProductEmployee} useRemoveProduct={useRemoveProductCollaborator} useUpdateProduct={useUpdateProductCollaborator} useGetUser={useGetCollaborator} apiSearchProduct={apis.searchProduct}/>,
             disabled : !id
           },
           {

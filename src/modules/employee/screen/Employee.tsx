@@ -4,16 +4,20 @@ import WhiteBox from "~/components/common/WhiteBox";
 import useTranslate from "~/lib/translation";
 import { concatAddress } from "~/utils/helpers";
 import {
+  useAddProductEmployee,
   useCreateEmployee,
   useDeleteEmployee,
   useEmployeePaging,
   useEmployeeQueryParams,
+  useGetEmployee,
   useGetEmployees,
+  useRemoveProductEmployee,
   useResetStateEmployee,
   useUpdateEmployee,
   useUpdateEmployeeParams,
+  useUpdateProductEmployee,
 } from "../employee.hook";
-import { Button, Checkbox, Col, Modal, Popconfirm, Row, Switch } from "antd";
+import { Button, Checkbox, Col, Modal, Popconfirm, Row, Switch, Tabs } from "antd";
 import { useMemo, useState } from "react";
 import EmployeeForm from "../components/EmployeeForm";
 import TableAnt from "~/components/Antd/TableAnt";
@@ -27,6 +31,8 @@ import WithPermission from "~/components/common/WithPermission";
 import ExportExcelButton from "~/modules/export/component";
 import useCheckBoxExport from "~/modules/export/export.hook";
 import { useChangeDocumentTitle } from "~/utils/hook";
+import CollaboratorProduct from "~/modules/collaborator/components/CollaboratorProduct";
+import apis from "~/modules/collaborator/collaborator.api";
 
 interface Props {
   currentTab: any;
@@ -230,14 +236,30 @@ export default function Employee({currentTab}: Props) {
         }}
         destroyOnClose={destroy}
       >
-        <EmployeeForm
-          id={id}
-          handleCloseModal={handleCloseModal}
-          handleUpdate={handleUpdate}
-          resetAction={resetAction}
-          handleCreate = {handleCreate}
-          isSubmitLoading={isSubmitLoading}
-        />
+        <Tabs
+        destroyInactiveTabPane
+        items={[
+          {
+            key: '1',
+            label: 'Hồ sơ',
+            children: <EmployeeForm
+            id={id}
+            handleCloseModal={handleCloseModal}
+            handleUpdate={handleUpdate}
+            resetAction={resetAction}
+            handleCreate = {handleCreate}
+            isSubmitLoading={isSubmitLoading}
+          />,
+          },
+          {
+            key: '2',
+            label: "Sản phẩm đảm nhiệm",
+            children: <CollaboratorProduct id={id} useAddProduct={useAddProductEmployee} useRemoveProduct={useRemoveProductEmployee} useUpdateProduct={useUpdateProductEmployee} useGetUser={useGetEmployee} apiSearchProduct={apis.searchProduct}/>,
+            disabled : !id
+          },
+        ]}>
+        </Tabs>
+        
       </Modal>
     </div>
   );

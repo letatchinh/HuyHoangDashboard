@@ -6,6 +6,19 @@ import { createSlice } from "@reduxjs/toolkit";
 import { UserResponseOne } from "~/modules/user/user.modal";
 import { getPaging } from "~/utils/helpers";
 
+interface cloneInitState extends initStateSlice {
+  // Add cloneInitState Type Here
+  convertFailed?: any,
+  convertSuccess?: any,
+  addProductFailed?: any,
+  addProductSuccess?: any,
+  removeProductFailed?: any,
+  removeProductSuccess?: any,
+  updateProductFailed?: any,
+  updateProductSuccess?: any,
+  updateAddressFailed?: any,
+  updateAddressSuccess?: any,
+ }
 class EmployeeClassExtentd extends InstanceModuleRedux {
   clone;
   constructor() {
@@ -27,6 +40,65 @@ class EmployeeClassExtentd extends InstanceModuleRedux {
             return item;
           };
         });
+      },
+      addProductRequest: (state: cloneInitState) => {
+        state.isSubmitLoading = true;
+        state.addProductFailed = null;
+      },
+      addProductSuccess: (
+        state: cloneInitState,
+        { payload }: { payload: any }
+      ) => {
+        state.isSubmitLoading = false;
+        state.byId = {
+          ...state.byId,
+          products : payload
+        }
+        state.addProductSuccess = payload;
+      },
+      addProductFailed: (state: cloneInitState, { payload }: { payload: any }) => {
+        state.isSubmitLoading = false;
+        state.addProductFailed = payload;
+      },
+
+      removeProductRequest: (state: cloneInitState) => {
+        state.isSubmitLoading = true;
+        state.removeProductFailed = null;
+      },
+      removeProductSuccess: (
+        state: cloneInitState,
+        { payload }: { payload: any }
+      ) => {
+        state.isSubmitLoading = false;
+        state.byId = {
+          ...state.byId,
+          products : payload
+        }
+        state.removeProductSuccess = payload;
+      },
+      removeProductFailed: (state: cloneInitState, { payload }: { payload: any }) => {
+        state.isSubmitLoading = false;
+        state.removeProductFailed = payload;
+      },
+
+      updateProductRequest: (state: cloneInitState) => {
+        state.isSubmitLoading = true;
+        state.updateProductFailed = null;
+      },
+      updateProductSuccess: (
+        state: cloneInitState,
+        { payload }: { payload: any }
+      ) => {
+        state.isSubmitLoading = false;
+        state.byId = {
+          ...state.byId,
+          products : payload
+        }
+        state.updateProductSuccess = payload;
+      },
+      updateProductFailed: (state: cloneInitState, { payload }: { payload: any }) => {
+        state.isSubmitLoading = false;
+        state.updateProductFailed = payload;
       },
     }
   }
