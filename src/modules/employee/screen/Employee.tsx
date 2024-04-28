@@ -32,8 +32,7 @@ import ExportExcelButton from "~/modules/export/component";
 import useCheckBoxExport from "~/modules/export/export.hook";
 import { useChangeDocumentTitle } from "~/utils/hook";
 import CollaboratorProduct from "~/modules/collaborator/components/CollaboratorProduct";
-import apis from "~/modules/collaborator/collaborator.api";
-
+import apis from '../employee.api';
 interface Props {
   currentTab: any;
 };
