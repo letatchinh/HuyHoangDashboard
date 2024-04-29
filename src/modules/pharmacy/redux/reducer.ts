@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { get } from "lodash";
+import { get ,omit} from "lodash";
 import { InstanceModuleRedux } from "~/redux/instanceModuleRedux";
 import { initStateSlice } from "~/redux/models";
 import { getPaging } from "~/utils/helpers";
@@ -70,12 +70,37 @@ class PharmacyExtendModule extends InstanceModuleRedux {
         state.isLoadingGetAccumulationDetail = false;
         state.getAccumulationDetailFailed = payload;
       },
+      convertRequest: (state: cloneInitState) => {
+        state.isSubmitLoading =  true;
+      },
+      convertSuccess: (state: cloneInitState, { payload }: any) => {
+        state.isSubmitLoading =  false;
+        state.convertSuccess = payload;
+        state.list = state.list?.map((item: any) => {
+          if (get(item, "_id") === get(payload, "_id")) {
+            return payload;
+          }
+          return item;
+        })
+      },
+      convertFailed: (state: cloneInitState, { payload }: any) => {
+        state.isSubmitLoading =  false;
+        state.convertFailed = payload;
+      },
+      resetAction: (state:cloneInitState) => ({
+        ...state,
+        ...omit(this.initialState, ["list"]),
+      }),
+    
     };
     this.cloneInitState = {
       ...this.initialState,
       isLoadingGetHistoryPharmacy: false,
       getHistoryPharmacyFailed: null,
       historyPharmacy: [],
+
+      convertSuccess: undefined,
+      convertFailed: undefined,
     }
   }
   createSlice() {

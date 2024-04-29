@@ -1,10 +1,8 @@
-import { ApartmentOutlined, AppstoreOutlined } from "@ant-design/icons";
-import { Button, Flex } from "antd";
+import { Button } from "antd";
 import { ColumnsType } from "antd/es/table/InternalTable";
-import { get } from "lodash";
-import { useRef, useState } from "react";
+import { get, initial } from "lodash";
+import { useMemo, useRef, useState } from "react";
 import ModalAnt from "~/components/Antd/ModalAnt";
-import TableAnt from "~/components/Antd/TableAnt";
 import Breadcrumb from "~/components/common/Breadcrumb";
 import SelectSearch from "~/components/common/SelectSearch/SelectSearch";
 import WhiteBox from "~/components/common/WhiteBox";
@@ -12,7 +10,6 @@ import POLICIES from "~/modules/policy/policy.auth";
 import { StringToSlug } from "~/utils/helpers";
 import Action from "../components/Action";
 import Address from "../components/Address";
-import ExchangeRate from "../components/ExchangeRate";
 import Member from "../components/Member";
 import Relationship from "../components/Relationship";
 import SalesGroupForm from "../components/SalesGroupForm";
@@ -92,7 +89,20 @@ export default function SalesGroup() {
       setExpandedRowKeys(expandedRowKeys.concat(idSelect));
     }
   };
-  
+
+  const filterDataSource = useMemo(() => {
+    function loop(item: any) {
+      let itemData = {
+        value: item._id,
+        title: item.name,
+      }
+      if (item?.children?.length) {
+        Object.assign(itemData, { children: item.children.map(loop) })
+      }
+      return itemData
+    }
+    return initial(data).map(loop)
+  }, [data]);
   const columns: ColumnsType = [
     {
       title: "Tên",
@@ -192,13 +202,13 @@ export default function SalesGroup() {
           isShowButtonAdd
           permissionKey={[POLICIES.WRITE_SALESGROUP]}
         />
-        <Flex style={{marginTop : 20}}>
+        {/* <Flex style={{marginTop : 20}}>
           <Button.Group>
             <Button onClick={() => setModeView('table')} type={modeView === 'table' ? 'primary' : 'default'} icon={<AppstoreOutlined />}/>
             <Button onClick={() => setModeView('tree')} type={modeView === 'tree' ? 'primary' : 'default'} icon={<ApartmentOutlined />}/>
           </Button.Group>
-        </Flex>
-        {modeView === 'table' && <TableAnt
+        </Flex> */}
+        {/* {modeView === 'table' && <TableAnt
           expandable={{
             expandedRowKeys,
             
@@ -226,8 +236,9 @@ export default function SalesGroup() {
           pagination={false}
           bordered
           style={{ marginTop: 20 }}
-        />}
-        {modeView === 'tree' && <SalesGroupTree dataSource={dataSearch?.length ? dataSearch : data}/>}
+        />} */}
+        {/* {modeView === 'tree' && <SalesGroupTree dataSource={dataSearch?.length ? dataSearch : data}/>} */}
+        <SalesGroupTree dataSource={dataSearch?.length ? dataSearch : data}/>
       </WhiteBox>
       <ModalAnt
         onCancel={onCloseForm}
@@ -241,6 +252,7 @@ export default function SalesGroup() {
           id={id}
           parentNear={get(parentNear, "parentNear")}
           parentNearPath={get(parentNear, "parentNearPath")}
+          dataSourceTree = {filterDataSource}
         />
       </ModalAnt>
       <ModalAnt
@@ -266,16 +278,6 @@ export default function SalesGroup() {
         <TargetSalesGroup _id={id} />
         </ModalAnt>
 
-      <ModalAnt
-        title="Nhập quy đổi cho từng nhóm nhà cung cấp"
-        onCancel={onCloseFormExchangeRate}
-        open={isOpenFormExchangeRate}
-        footer={null}
-        destroyOnClose
-        width={1200}
-      >
-        <ExchangeRate id={id} />
-      </ModalAnt>
     </div>
   );
 }

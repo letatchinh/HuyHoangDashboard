@@ -56,8 +56,8 @@ export const GROUP_TYPE_BENEFIT_EMPLOYEE_LEVEL = {
 };
 export const GROUP_TYPE_BENEFIT_EMPLOYEE_LEVEL_VI = {
     TDV : "Trình dược viên",
-    TEAMLEADER : "Trưởng nhóm bán hàng",
-    ASM : "Quản lý vùng",
+    TEAMLEADER : "TEAM LEADER",
+    ASM : "ASM",
     BENEFIT_WORKING : "Giờ làm việc hiệu quả",
     KPIS_CONFIG_AREA : "Cấu hình điểm bán hàng",
 }

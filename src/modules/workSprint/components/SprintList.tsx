@@ -1,6 +1,6 @@
-import React, { Suspense, lazy, memo, useCallback, useEffect, useMemo, useState } from 'react';
-import { Button, Col, Dropdown, Menu, Row, Select, Space } from 'antd';
-import { DownOutlined, PlusOutlined } from '@ant-design/icons';
+import React, { Suspense, memo,  useEffect, useMemo, useState } from 'react';
+import { Button, Col, Row, Select, Space } from 'antd';
+import { PlusOutlined } from '@ant-design/icons';
 import { get } from 'lodash';
 import { useGetListManagersByIdBoard } from '~/modules/workBoard/workBoard.hook';
 import { useParams, useNavigate } from 'react-router-dom';

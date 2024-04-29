@@ -86,13 +86,10 @@ export default function* rootSaga() {
     reportEmployee.redux.saga(),
     employeeGroup.redux.saga(),
     cronSalary.redux.saga(),
-    orderSupplier.redux.saga(),
-    costManagement.redux.saga(),
     reportSupplierModule.redux.saga(),
     saleChannel.redux.saga(),
     configurationCronTime.redux.saga(),
     typePharmacy.redux.saga(),
     groupPharmacy.redux.saga(),
-    productUnitModule.redux.saga(),
   ]);
 };

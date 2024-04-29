@@ -19,6 +19,7 @@ export const convertSubmitData = (data: FieldTypeForm) => {
             path: get(option, "value"),
           }
     ),
+    parentNear: get(data, "parentNear", null),
   };
 };
 

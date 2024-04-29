@@ -11,9 +11,8 @@ import {
   Space
 } from 'antd';
 import moment from 'moment';
-import { useEffect } from 'react';
 // import { HISTORY_TASK_ITEM_TYPE, TASK_ITEM_STATUS_NAME } from '~/constants/defaultValue';
-import { head, isArray, pull } from 'lodash';
+import { isArray } from 'lodash';
 import WithPermission from '~/components/common/WithPermission';
 import POLICIES from '~/modules/policy/policy.auth';
 import { TASK_ITEM_STATUS_NAME, TaskItemStatusKey } from '~/constants/defaultValue';

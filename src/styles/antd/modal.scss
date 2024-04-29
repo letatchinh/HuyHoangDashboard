@@ -20,8 +20,11 @@
   min-width: 80vw!important;
   & .ant-modal-content{
       max-height: calc(100vh) !important;
-      overflow-y: scroll !important;;
+      overflow-y: scroll !important;
   }
+  &.ant-modal-wrap .ant-modal-centered{
+    background-color: rgba(239, 232, 232, 0.951);
+  };
 }
 .scrollList{
   max-height: calc(90vh - 250px)!important;

@@ -38,7 +38,7 @@ export default function SelectSaleChannel({
         {RenderLoading(
           isLoading,
           <Select
-            className="right--parent"
+            // className="right--parent"
             placeholder="Kênh bán hàng"
             options={options}
             style={{ width: "100%" }}

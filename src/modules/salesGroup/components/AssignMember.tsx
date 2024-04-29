@@ -1,5 +1,5 @@
-import { DeleteOutlined, PlusCircleOutlined } from "@ant-design/icons";
-import { Button, Flex, Popconfirm, Popover, Table, Tooltip } from "antd";
+import { PlusCircleOutlined } from "@ant-design/icons";
+import { Button, Flex, Popover, Table } from "antd";
 import Search from "antd/es/input/Search";
 import { TableRowSelection } from "antd/es/table/interface";
 import { debounce, get } from "lodash";
@@ -17,14 +17,12 @@ export default function AssignMember({_id,member}: propsType): React.JSX.Element
   const [open, setOpen] = useState(false);
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [keyword,setKeyword] = useState("");
-
-  const {isSubmitLoading,updateSalesGroup,canDelete} = useSalesGroupStore();
+  const {isSubmitLoading,updateSalesGroup, canDelete, canUpdate} = useSalesGroupStore();
   const query = useMemo(() => open ? ({salesGroupId : _id,keyword}) : null,[open,_id,keyword]);
   const [data,isLoading] : [EmployeeType[],boolean] = useGetListMemberSalesGroups(query);
   const hide = useCallback(() => {
     setOpen(false);
   },[])
-  
   const handleOpenChange = (newOpen: boolean) => {
     setOpen(newOpen);
   };
@@ -38,7 +36,7 @@ export default function AssignMember({_id,member}: propsType): React.JSX.Element
 
   const rowSelection : TableRowSelection<any> = {
     selectedRowKeys,
-    onChange : (selectedRowKeys) => {
+    onChange: (selectedRowKeys) => {
       setSelectedRowKeys(selectedRowKeys)
     },
   };
@@ -46,7 +44,7 @@ export default function AssignMember({_id,member}: propsType): React.JSX.Element
   useEffect(() => {
     // Init Selected Row key By Member in data
     setSelectedRowKeys(member?.map((mem) => get(mem,'employeeId','')) || [])
-  },[member]);
+  },[]);
 
   const columns : any = [
     {
@@ -79,7 +77,7 @@ export default function AssignMember({_id,member}: propsType): React.JSX.Element
             <Search placeholder="Tìm kiếm..." onSearch={(value) => setKeyword(value)} onChange={({target}) => debounceFetcher(target.value)}/>
             <Table
               scroll={{ y: 300 }}
-              style={{ width: 500 }}
+              style={{ width: 500}}
               loading={isLoading}
               rowKey={(rc) => get(rc, "_id")}
               pagination={false}
