@@ -1,44 +1,44 @@
-import { useEffect, useMemo, useState } from "react";
-import GroupPharmacyModule from "~/modules/groupPharmacy";
+import { useMemo } from "react";
 import { get } from "lodash";
 import { Form, Select } from "antd";
 import { filterSelectWithLabel, useFetchState } from "~/utils/helpers";
 import RenderLoading from "~/components/common/RenderLoading";
-import apis from "../groupPharmacy.api";
+import apis from "../employee.api";
 
 type propsType = {
   isLoading: boolean;
+  employeeSeller?: any;
 };
-export default function SelectGroupPharmacy({
+export default function SelectEmployee({
   isLoading,
+  employeeSeller,
 }: propsType): React.JSX.Element {
-  const [groups, isLoadingGroups] = useFetchState({api: apis.search ,useDocs: false});
+  const [employees, isLoadingEmployees] = useFetchState({api: apis.search ,useDocs: false});
   const options = useMemo(
     () =>
-      groups?.map((item: any) => ({
-        label: get(item, "title"),
+      employees?.map((item: any) => ({
+        label: get(item, "fullName"),
         value: get(item, "_id"),
       })),
-    [groups]
+    [employees]
   );
 
   return (
     <>
       <Form.Item
-        label="Nhóm khách hàng"
-        name="customerId"
-        rules={[{ required: true, message: "Vui lòng chọn nhóm khách hàng!" }]}
+        label="Trình dược viên"
+        name="employeeId"
+        // rules={[{ required: true, message: "Vui lòng chọn nhóm khách hàng!" }]}
       >
         {RenderLoading(
           isLoading,
           <Select
             // className="right--parent"
-            placeholder="Nhóm khách hàng"
+            placeholder="Trình dược viên"
             options={options}
-            // style={{ width: "100%" }}
             showSearch
             filterOption={filterSelectWithLabel}
-            loading={isLoadingGroups}
+            loading={isLoadingEmployees}
           />
         )}
       </Form.Item>

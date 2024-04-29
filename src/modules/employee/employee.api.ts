@@ -12,5 +12,6 @@ const apis = {
     addProduct: (query?: any) => requester.put(`/api/v1/employee-add-product`, query),
     updateProduct: (query?: any) => requester.put(`/api/v1/employee-update-discount-product`, query),
     removeProduct: (query?: any) => requester.delete(`/api/v1/employee-remove-product`, query),
+    search: (query?: any) => requester.get(`/api/v1/employee-assign-pharmacy-search`, query),
 }
 export default apis;
