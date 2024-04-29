@@ -1,34 +1,29 @@
 import { Button, ConfigProvider, Flex, Modal, Select } from "antd";
 import { get, omit } from "lodash";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { EMPLOYEE_LEVEL_VI } from "~/modules/employee/constants";
 import { RULE_SALES_GROUP } from "../constants";
 import useSalesGroupStore from "../salesGroupContext";
 import Action from "./Action";
 import Address from "./Address";
 import AssignMember from "./AssignMember";
+import ExchangeRate from "./ExchangeRate";
 import ListMember from "./ListMember";
 import Member from "./Member";
 import TargetSalesGroup from "./TargetSalesGroup";
-import ModalAnt from "~/components/Antd/ModalAnt";
-import ExchangeRate from "./ExchangeRate";
 
 export default function TitleRender(item: any) {
   const {
-    onOpenFormExchangeRate,
     setParentNear,
     setGroupInfo,
     setId,
-    onCloseFormExchangeRate,
-    id,
-    isOpenFormExchangeRate,
   } = useSalesGroupStore();
   
-  const optionConvertToArrayBenefit = Object.entries(omit(EMPLOYEE_LEVEL_VI,['CTV']))
+  const optionConvertToArrayBenefit = useMemo(() => Object.entries(omit(EMPLOYEE_LEVEL_VI,['CTV']))
   .map(([key, value]) => ({
     value: key,
     label: value,
-  }));
+  })),[])
   
   const [modal, contextHolder] = Modal.useModal();
   const [typeEmployeeLevel, setTypeEmployeeLevel] = useState(null);
@@ -156,7 +151,6 @@ export default function TitleRender(item: any) {
           </Flex>
 
           <Flex className="sale-tree__title--flex__action">
-            {/* <Space>Thao tác:</Space> */}
             <Action _id={_id} rc={item} />
           </Flex>
         </Flex>

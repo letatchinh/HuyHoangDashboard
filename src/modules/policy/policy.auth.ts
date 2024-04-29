@@ -19,6 +19,7 @@ const pharmaProfile = 'pharmaProfile';
 const contractPharmacy = 'contractPharmacy';
 const debtPharmacy = 'debtPharmacy';
 const accumulatePharmaProfile = 'accumulatePharmaProfile';
+const billPharmacy = 'billPharmacy';
 
 // Đơn hàng
 const bill = 'bill';
@@ -28,9 +29,14 @@ const productGroup='productGroup';
 const ranking = 'ranking';
 const medicine = 'medicine';
 const historyBillPharma = 'historyBillPharma';
+const billPartner = 'billPartner';
+const billEmployee = 'billEmployee';
 
 // Đơn hàng tạm
 const quotation = 'quotation';
+const quotationPartner = 'quotationPartner';
+const quotationEmployee = 'quotationEmployee';
+const quotationPharmacy = 'quotationPharmacy';
 // Nhà cung cấp
 const supplier = 'supplier';
 const cumulativeSalesSupplier = 'cumulativeSalesSupplier';
@@ -73,6 +79,13 @@ const customer = 'customer';
 
 // Cập nhật Nhà thuốc đảm nhiệm cho nhân viên
 const updateThePharmacyForEmployee = 'updateThePharmacyForEmployee';
+
+// Cộng tác viên
+const partner = 'partner';
+const partnerGroup = 'partnerGroup';
+
+
+//------RESOURCES --------
 const RESOURCES = [
   //Setting
   configDiscount,
@@ -118,9 +131,19 @@ const RESOURCES = [
   // Pharmacy Profile
   pharmaProfile,
   
+  // -----BILL---
   bill,
+  billPartner,
+  billEmployee,
+  billPharmacy,
+
+  //------Quotation------
   quotation,
-  // Bot Notification
+  quotationPartner,
+  quotationEmployee,
+  quotationPharmacy,
+  
+  // ------Bot Notification-----
   notificationBotManager,
   todoConfigStatus,
   todoList,
@@ -146,6 +169,8 @@ const RESOURCES = [
   
   updateThePharmacyForEmployee,
   configReportSalaryAuto,
+  partner,
+  partnerGroup
 ];
 
 //ACTIONS
@@ -224,6 +249,12 @@ const RESOURCE = (): ResourceType => {
   const GROUP_BILL : string[] = [
     bill,
     quotation,
+    billPartner,
+    billEmployee,
+    billPharmacy,
+    quotationPartner,
+    quotationEmployee,
+    quotationPharmacy
   ];
 
   const NOTIFICATION_BOT_MANAGER: string[] = [
@@ -273,7 +304,12 @@ const RESOURCE = (): ResourceType => {
 
   const PHARMA_PROFILE: string[]= [
     pharmaProfile
-  ]
+  ];
+
+  const PARTNER: string[] = [
+    partner,
+    partnerGroup
+  ];
 
   return {
     GROUP_USER,
@@ -297,6 +333,7 @@ const RESOURCE = (): ResourceType => {
     CUSTOMER_GROUP,
     CUSTOMER,
     PHARMA_PROFILE,
+    PARTNER,
   };
 };
 

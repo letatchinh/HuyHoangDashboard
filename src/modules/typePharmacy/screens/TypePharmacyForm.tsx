@@ -10,11 +10,15 @@ interface Props {
   onClose: (p?: any) => void;
   id?: any;
   handleUpdate?: any;
+  setDestroy?: any;
 }
 
-export default function TypePharmacyForm({ onClose, id, handleUpdate }: Props) {
+export default function TypePharmacyForm({ onClose, id, handleUpdate,setDestroy }: Props) {
   const [form] = Form.useForm();
-  const [isSubmitLoading, handleCreate] = useCreateTypePharmacy(onClose);
+  const [isSubmitLoading, handleCreate] = useCreateTypePharmacy(() => {
+    onClose();
+    setDestroy && setDestroy(true);
+  });
   const [typePharmacy, isLoading] = useGetTypePharmacy(id);
   const initTypesPharmacy = useInitTypePharmacy(typePharmacy, id);
   useResetTypePharmacyAction();

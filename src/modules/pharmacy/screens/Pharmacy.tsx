@@ -64,6 +64,7 @@ import StatusProcess from "./StatusProcess";
 
 export default function Pharmacy() {
   const { t }: any = useTranslate();
+  const [destroy,setDestroy] = useState(false);
   const [approved, setApproved] = useState(true);
   const [query] = usePharmacyQueryParams(approved);
   const [keyword, { setKeyword, onParamChange }] =
@@ -106,6 +107,7 @@ export default function Pharmacy() {
     (id?: any) => {
       if (id) {
         setPharmacyId(id);
+        setDestroy(true);
       }
       setIsOpenForm(true);
     },
@@ -524,9 +526,11 @@ export default function Pharmacy() {
         open={isOpenForm}
         onCancel={onCloseForm}
         footer={[]}
-        destroyOnClose
+        destroyOnClose={destroy}
+        afterClose={() => setDestroy(false)}
       >
         <PharmacyForm
+          setDestroy={setDestroy}
           onClose={onCloseForm}
           id={pharmacyId}
           handleUpdate={updatePharmacy}

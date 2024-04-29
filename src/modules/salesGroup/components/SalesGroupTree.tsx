@@ -1,7 +1,6 @@
 import { DownOutlined } from "@ant-design/icons";
-import { Tree} from "antd";
+import { Tree } from "antd";
 import React from "react";
-import { GROUP_TYPE_BENEFIT_EMPLOYEE_LEVEL_VI } from "~/modules/reportSalary/benefitConfiguration/constants";
 import TitleRender from "./TitleRender";
 type propsType = {
   dataSource: any[];

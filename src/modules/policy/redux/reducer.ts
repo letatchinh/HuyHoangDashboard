@@ -16,6 +16,11 @@ interface PolicyState extends initStateSlice<resources> {
   resourcesEmployee?: resources[],
   isGetResourcesEmployeeLoading?: boolean,
   getResourcesEmployeeFailed?: any,
+
+  actionsCollaborator?: resources[], 
+  resourcesCollaborator?: resources[],
+  isGetResourcesCollaboratorLoading?: boolean,
+  getResourcesCollaboratorFailed?: any,
 };
 
 class PolicyClassExtend extends InstanceModuleRedux {
@@ -105,6 +110,37 @@ class PolicyClassExtend extends InstanceModuleRedux {
       updateResourcesEmployeeRedux: (state: PolicyState, { payload }: any) => {
         state.resourcesEmployee = state.resources;
       },
+
+        //Collaborator
+      
+        getResourcesCollaboratorRequest: (state: PolicyState , { payload}: any) => {
+          state.isGetResourcesCollaboratorLoading = true; 
+        },
+        getResourcesCollaboratorSuccess: (state: PolicyState , { payload }: any) => {
+          state.resourcesCollaborator = payload.resources;
+          state.isGetResourcesCollaboratorLoading = false;
+          state.actionsCollaborator = payload.actions;
+      
+        },
+        getResourcesCollaboratorFailed: (state: PolicyState , { payload}: any) => {
+          state.isGetResourcesCollaboratorLoading = false;
+          state.getResourcesCollaboratorFailed = payload;
+        },
+        updateResourcesCollaboratorRequest: (state: PolicyState , { payload}: any) => {
+          state.isGetResourcesCollaboratorLoading = true; 
+        },
+        updateResourcesCollaboratorSuccess: (state: PolicyState, { payload }: { payload: { actions: resources[], resources: resources[] } }) => {
+          state.resourcesCollaborator = payload.resources;
+          state.isGetResourcesCollaboratorLoading = false;
+          state.actionsCollaborator = payload.actions;
+        },
+        updateResourcesCollaboratorFailed: (state: PolicyState , { payload}: any) => {
+          state.isGetResourcesCollaboratorLoading = false;
+          state.getResourcesCollaboratorFailed = payload;
+        },
+        updateResourcesCollaboratorRedux: (state: PolicyState, { payload }: any) => {
+          state.resourcesCollaborator = state.resources;
+        },
       // Want Add more reducer Here...
     }
     this.cloneInitState = {
@@ -116,7 +152,12 @@ class PolicyClassExtend extends InstanceModuleRedux {
       actionsEmployee: [],
       resourcesEmployee: [],
       isGetResourcesEmployeeLoading: false,
-      getResourcesEmployeeFailed: false
+      getResourcesEmployeeFailed: false,
+
+      actionsCollaborator: [],
+      resourcesCollaborator: [],
+      isGetResourcesCollaboratorLoading: false,
+      getResourcesCollaboratorFailed: false
       // Want Add more State Here...
     }
   }

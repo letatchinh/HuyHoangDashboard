@@ -130,12 +130,15 @@ export const useDeleteQuotation = (callback?: any) => {
 
 
 
-export const useQuotationQueryParams = (status? : string) => {
+export const useQuotationQueryParams = (status?: string) => {
   const query = useQueryParams();
   const limit = query.get("limit") || 10;
   const page = query.get("page") || 1;
   const keyword = query.get("keyword");
   const pharmacyId = query.get("pharmacyId");
+  const refCollection = query.get("refCollection");
+  const employeeIds = query.get("employeeIds");
+  const partnerIds = query.get("partnerIds");
   const createSuccess = useSelector(createSuccessSelector);
   const copySuccess = useSelector(copySuccessSelector);
   const deleteSuccess = useSelector(deleteSuccessSelector);
@@ -146,10 +149,13 @@ export const useQuotationQueryParams = (status? : string) => {
       keyword,
       status,
       pharmacyId,
+      refCollection,
+      employeeIds,
+      partnerIds
     };
     return [queryParams];
     //eslint-disable-next-line
-  }, [page, limit, keyword, createSuccess, deleteSuccess,status,pharmacyId,copySuccess]);
+  }, [page, limit, keyword, createSuccess, deleteSuccess,status,pharmacyId,copySuccess,refCollection, partnerIds, employeeIds]);
 };
 
 export const useUpdateQuotationParams = (

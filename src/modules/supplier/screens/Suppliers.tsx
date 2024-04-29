@@ -45,6 +45,7 @@ export default function Supplier(): React.JSX.Element {
   const { t }: any = useTranslate();
 
   // State Form
+  const [destroy,setDestroy] = useState(false);
   const [id, setId]: any = useState();
   const [isOpenForm, setIsOpenForm]: any = useState(false);
   const [idSupplierCreateProduct, setIdSupplierCreateProduct]: any = useState();
@@ -79,6 +80,7 @@ export default function Supplier(): React.JSX.Element {
   const onOpenForm = useCallback((idSelect?: any) => {
     if (idSelect) {
       setId(idSelect);
+      setDestroy(true)
     }
     setIsOpenForm(true);
   }, []);
@@ -391,9 +393,10 @@ export default function Supplier(): React.JSX.Element {
         open={isOpenForm}
         onCancel={onCloseForm}
         footer={null}
-        destroyOnClose
+        destroyOnClose={destroy}
+        afterClose={() => setDestroy(false)}
       >
-        <TabSupplier id={id} onCancel={onCloseForm} onUpdate={onUpdate} isSubmitLoading={isSubmitLoading}/>
+        <TabSupplier setDestroy={setDestroy} id={id} onCancel={onCloseForm} onUpdate={onUpdate} isSubmitLoading={isSubmitLoading}/>
       </ModalAnt>
 
       <ModalAnt

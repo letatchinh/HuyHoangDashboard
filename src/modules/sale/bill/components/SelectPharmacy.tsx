@@ -9,7 +9,6 @@ import useNotificationStore from "~/store/NotificationContext";
 import { FormFieldCreateBill } from "../bill.modal";
 interface propsType extends SelectProps {
   form?: any;
-  onChange?: (p: any) => void;
   allowClear?: boolean;
   showIcon?: boolean;
   validateFirst?: boolean;
@@ -22,7 +21,6 @@ type ItemSearch = {
 };
 export default function SelectPharmacy({
   form,
-  onChange = () => {},
   allowClear = true,
   showIcon = true,
   validateFirst = true,
@@ -36,11 +34,14 @@ export default function SelectPharmacy({
   const fetchOptions : any = async (keyword : string) => {
     try {
       const pharmacies = await PharmacyModule.api.search({
+        ...id && !keyword && {id},
         keyword : keyword || "",
+        optionWith : {id : [id]}
       });
       const newOptions = get(pharmacies,'docs',[])?.map((item: ItemSearch) => ({
         label: get(item, "name"),
         value: get(item, "_id"),
+        data : item
       }));
       
       return newOptions;
@@ -55,13 +56,14 @@ export default function SelectPharmacy({
     try {
       setLoading(true);
       const pharmacies = await PharmacyModule.api.search({
-        ...id && {id},
-        keyword : ''
+        // ...id && {id},
+        optionWith : {id : [id]}
       });
       
       const newOptions = get(pharmacies,'docs',[])?.map((item: ItemSearch) => ({
         label: get(item, "name"),
         value: get(item, "_id"),
+        data : item
       }));
       
       setInitOption(newOptions);
@@ -103,7 +105,6 @@ export default function SelectPharmacy({
             style={{ width: "100%" }}
             initOptions={initOption}
             allowClear={allowClear}
-            {...(onChange && { onChange: (value: any) => onChange(value) })}
             {...props}
           />
         </Form.Item>

@@ -15,11 +15,15 @@ interface Props {
   onClose: (p?: any) => void;
   id?: any;
   handleUpdate?: any;
+  setDestroy?: any;
 }
 
-export default function SaleChannelForm({ onClose, id, handleUpdate }: Props) {
+export default function SaleChannelForm({ onClose, id, handleUpdate,setDestroy }: Props) {
   const [form] = Form.useForm();
-  const [isSubmitLoading, handleCreate] = useCreateSaleChannel(onClose);
+  const [isSubmitLoading, handleCreate] = useCreateSaleChannel(() => {
+    onClose();
+    setDestroy && setDestroy(true)
+  });
   const [saleChannel, isLoading] = useGetSaleChannel(id);
   const initSalesChannel = useInitSaleChannel(saleChannel, id);
   useResetSaleChannelAction();
