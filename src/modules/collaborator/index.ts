@@ -1,4 +1,4 @@
-import CollaboratorScreen from "./screens/Collaborator";
+import CollaboratorScreen from "./screens/index";
 import collaboratorApi from "./collaborator.api";
 import * as collaboratorAuth from "./collaborator.auth";
 import * as collaboratorHook from "./collaborator.hook";

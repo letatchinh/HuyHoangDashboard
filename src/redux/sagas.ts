@@ -44,6 +44,7 @@ import configurationCronTime from "~/modules/configurationCronTime";
 import typePharmacy from '~/modules/typePharmacy';
 import groupPharmacy from '~/modules/groupPharmacy';
 import collaborator from '~/modules/collaborator';
+import collaboratorGroup from '~/modules/collaboratorGroup';
 
 export default function* rootSaga() {
   yield all([
@@ -87,14 +88,12 @@ export default function* rootSaga() {
     reportEmployee.redux.saga(),
     employeeGroup.redux.saga(),
     cronSalary.redux.saga(),
-    orderSupplier.redux.saga(),
-    costManagement.redux.saga(),
     reportSupplierModule.redux.saga(),
     saleChannel.redux.saga(),
     configurationCronTime.redux.saga(),
     typePharmacy.redux.saga(),
     groupPharmacy.redux.saga(),
-    productUnitModule.redux.saga(),
     collaborator.redux.saga(),
+    collaboratorGroup.redux.saga(),
   ]);
 };

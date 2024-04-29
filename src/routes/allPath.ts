@@ -1,3 +1,4 @@
+import { REF_COLLECTION } from "~/constants/defaultValue";
 
 function path(root: any, sublink: any) {
   return `${root}${sublink}`;
@@ -68,12 +69,18 @@ export const PATH_APP = {
     create: path(ROOTS.app, "/bill/create"),
     quotation: path(ROOTS.app, "/quotation"),
     lk: path(ROOTS.app, "/lk"),
+    pharmacy: path(ROOTS.app, `/bill?refCollection=${REF_COLLECTION.PHARMA_PROFILE}`),
+    employee: path(ROOTS.app, `/bill?refCollection=${REF_COLLECTION.EMPLOYEE}`),
+    collaborator: path(ROOTS.app, `/bill?refCollection=${REF_COLLECTION.PARTNER}`),
   },
 
   quotation: {
     root: path(ROOTS.app, "/quotation"),
     update: path(ROOTS.app, "/quotation/:id"),
     create: path(ROOTS.app, "/quotation/create"),
+    pharmacy: path(ROOTS.app, `/quotation?refCollection=${REF_COLLECTION.PHARMA_PROFILE}`),
+    employee: path(ROOTS.app, `/quotation?refCollection=${REF_COLLECTION.EMPLOYEE}`),
+    collaborator: path(ROOTS.app, `/quotation?refCollection=${REF_COLLECTION.PARTNER}`),
   },
   vouchers: {
     root: path(ROOTS.app, "/vouchers"),
@@ -142,7 +149,7 @@ export const PATH_APP = {
   },
 
   collaborator: {
-    root: path(ROOTS.app, "/collaborator"),
+    root: path(ROOTS.app, "/collaborator/*"),
   }
 
 };

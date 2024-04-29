@@ -1,5 +1,5 @@
 import { UserOutlined, UsergroupAddOutlined } from '@ant-design/icons'
-import { Button, Col, Dropdown, Row, Tag, Typography , MenuProps, Menu} from 'antd'
+import { Button, Col, Dropdown, Row, Tag, Typography} from 'antd'
 import Text from 'antd/lib/typography/Text'
 import { get } from 'lodash'
 import React, { useMemo } from 'react'
@@ -12,10 +12,6 @@ import useTaskItemStore from '~/store/TaskItemContext'
 interface Props {
   dataTask?: any
 };
-type DropdownProps = {
-    getPopupContainer: (triggerNode: HTMLElement) => HTMLElement;
-  };
-  
 export default function Assigner({ dataTask }: Props) {
     const { _id } = dataTask || {};
     const { assign: { canAssign } } = useTaskItemStore();

@@ -38,6 +38,7 @@ import { GroupPharmacyForm } from "./GroupPharmacyForm";
 type propsType = {};
 export default function GroupPharmacy(props: propsType): React.JSX.Element {
   const [query] = useGroupPharmacyQueryParams();
+  const [destroy,setDestroy] = useState(false);
   const [keyword, { setKeyword, onParamChange }] =
     useUpdateGroupPharmacyParams(query);
   const [pharmacies, isLoading] = useGetGroupsPharmacy(query);
@@ -60,6 +61,7 @@ export default function GroupPharmacy(props: propsType): React.JSX.Element {
     (id?: any) => {
       if (id) {
         setGroupPharmacyId(id);
+        setDestroy(true);
       }
       setIsOpenForm(true);
     },
@@ -307,9 +309,14 @@ export default function GroupPharmacy(props: propsType): React.JSX.Element {
         open={isOpenForm}
         onCancel={onCloseForm}
         footer={[]}
-        destroyOnClose
+        afterClose={() => {
+          setDestroy(false);
+        }}
+        destroyOnClose={destroy}
+
       >
         <GroupPharmacyForm
+          setDestroy={setDestroy}
           onClose={onCloseForm}
           id={groupPharmacyId}
           handleUpdate={updateGroupPharmacy}

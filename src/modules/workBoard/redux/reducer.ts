@@ -1,5 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { get } from "lodash";
 // import { InstanceModuleRedux } from "~/redux/instanceModuleRedux";
 import { cloneInitState } from "../workBoard.modal";
 import { InstanceModuleRedux } from "~/modules/workSprint/workSprint.modal";

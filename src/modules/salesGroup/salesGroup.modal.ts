@@ -8,7 +8,8 @@ export type propsTypeSalesGroupForm = {
     parentNear? : string,
     parentNearPath? : string[],
     onCancel : () => void,
-    onUpdate : (p:any) => void,
+    onUpdate: (p: any) => void,
+    dataSourceTree : any[]
 }
 export type TypeAreaType = keyof typeof SALES_GROUP_GEOGRAPHY;
 export type FieldTypeForm = {
@@ -38,3 +39,13 @@ export type MemberRulesInGroupType = {
     rule: keyof typeof RULE_SALES_GROUP,
     name: string
 } 
+
+export type BuyGroupType = {
+    fullName : string,
+    phoneNumber : string,
+    avatar : string,
+    code : string,
+    _id : string,
+    children : BuyGroupType[],
+    type : 'partner' | 'employee'
+}

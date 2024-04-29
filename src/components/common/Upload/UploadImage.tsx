@@ -1,4 +1,4 @@
-import { LoadingOutlined, PlusOutlined, UploadOutlined } from '@ant-design/icons';
+import { LoadingOutlined } from '@ant-design/icons';
 import { message, Modal, Progress, Upload, UploadProps } from 'antd';
 import { UploadChangeParam } from 'antd/es/upload/interface';
 import { UploadFile } from 'antd/lib/index';

@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import TableAnt from "~/components/Antd/TableAnt";
 import {
   useBillPaging,
@@ -9,14 +9,13 @@ import {
 
 import { Checkbox, Col, ConfigProvider, Row, Space, Typography } from "antd";
 import { ColumnsType } from "antd/es/table/InternalTable";
-import dayjs from "dayjs";
-import { get, includes } from "lodash";
+import { get } from "lodash";
 import { Link } from "react-router-dom";
 import SearchAnt from "~/components/Antd/SearchAnt";
 import Status from "~/components/common/Status/index";
 import SelectSupplier from "~/modules/supplier/components/SelectSupplier";
 import { PATH_APP } from "~/routes/allPath";
-import { formatter, pagingTable } from "~/utils/helpers";
+import { formatter, pagingTable, permissionConvert } from "~/utils/helpers";
 import { STATUS_BILL_VI } from "../constants";
 import { useMatchPolicy } from "~/modules/policy/policy.hook";
 import POLICIES from "~/modules/policy/policy.auth";
@@ -25,6 +24,10 @@ import WithPermission from "~/components/common/WithPermission";
 import ExportExcelButton from "~/modules/export/component";
 import { CalculateBill } from "../bill.service";
 import DateTimeTable from "~/components/common/DateTimeTable";
+import SelectEmployee from "~/modules/employee/components/SelectSearch";
+import { REF_COLLECTION } from "~/constants/defaultValue";
+import SelectCollaborator from "~/modules/collaborator/components/SelectSearch";
+import { useIsAdapterSystem } from "~/utils/hook";
 const CalculateBillMethod = new CalculateBill();
 type propsType = {
   status?: string;
@@ -35,9 +38,11 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
   const [keyword, { setKeyword, onParamChange }] = useUpdateBillParams(query);
   const [bills, isLoading] = useGetBills(query);
   const paging = useBillPaging();
-
+  const isSystem = useIsAdapterSystem();
   //Download
-  const canDownload = useMatchPolicy(POLICIES.DOWNLOAD_PRODUCT);
+  const onPermissionCovert = useCallback(permissionConvert(query),[query])
+  const canDownload = useMatchPolicy(onPermissionCovert('DOWNLOAD', 'BILL'));
+
   const [arrCheckBox, onChangeCheckBox] = useCheckBoxExport();
   const columns: ColumnsType = useMemo(
     () => [
@@ -148,17 +153,31 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
       {/* <Space> */}
         <Row justify={"space-between"}>
           <Col span={12}>
-      <Space >
-        <SelectSupplier
-          value={query?.supplierIds ? query?.supplierIds?.split(',') : []}
-          onChange={(value) => onParamChange({ supplierIds: value?.length ? value : null })}
-          mode="multiple"
-          style={{width : 200}}
-        />
-        <SearchAnt value={keyword} onChange={(e) => setKeyword(e.target.value)} onParamChange={onParamChange} />
-      </Space>
+            <Space style={{alignItems: 'normal'}}>
+              <SelectSupplier
+                value={query?.supplierIds ? query?.supplierIds?.split(',') : []}
+                onChange={(value) => onParamChange({ supplierIds: value?.length ? value : null })}
+                mode="multiple"
+                style={{width : 250}}
+              />
+            {isSystem && query.refCollection !== REF_COLLECTION.PHARMA_PROFILE && query.refCollection && (query.refCollection === REF_COLLECTION.EMPLOYEE ? <SelectEmployee
+              value={query?.employeeIds ? query?.employeeIds?.split(',') : []}
+              onChange={(value) => onParamChange({ employeeIds: value?.length ? value : null })}
+              mode="multiple"
+              style={{ width: 200 }}
+            />
+              :
+              <SelectCollaborator
+                value={query?.partnerIds ? query?.partnerIds?.split(',') : []}
+                onChange={(value) => onParamChange({ partnerIds: value?.length ? value : null })}
+                mode="multiple"
+                style={{ width: 200 }}
+              />)
+            }
+            <SearchAnt style={{ alignSelf: 'center' }} value={keyword} onChange={(e) => setKeyword(e.target.value)} onParamChange={onParamChange} />
+            </Space>
           </Col>
-            <WithPermission permission={POLICIES.DOWNLOAD_BILL}>
+            <WithPermission permission={onPermissionCovert('DOWNLOAD', 'BILL')}>
               <Col>
                 <ExportExcelButton
                   api='bill'
@@ -188,6 +207,7 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
         pagination={pagingTable(paging, onParamChange)}
         size="small"
         bordered
+        scroll={{ y: '60vh' }}
       />
       </ConfigProvider>
     </div>

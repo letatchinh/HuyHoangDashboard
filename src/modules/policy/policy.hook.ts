@@ -45,6 +45,10 @@ const getResourcesEmployeeLoadingSelector = getSelector('isGetResourcesEmployeeL
 const resourcesEmployeeSelector = getSelector('resourcesEmployee');
 const getResourcesEmployeeFailedSelector = getSelector('getResourcesEmployeeFailed');
 
+const getResourcesCollaboratorLoadingSelector = getSelector('isGetResourcesCollaboratorLoading');
+const resourcesCollaboratorSelector = getSelector('resourcesCollaborator');
+const getResourcesCollaboratorFailedSelector = getSelector('getResourcesCollaboratorFailed');
+
 const getSelectorUser = (key: string) => (state: any) => state.user[key];
 const policySelector = getSelectorUser('policy');
 const isGetPolicyLoadingSelector = getSelectorUser('isGetPolicyLoading');
@@ -98,6 +102,13 @@ export const useUpdatePolicy = () => {
 export const useUpdateEmployeePolicy = () => {
   return useSubmit({
     action: policySliceAction.updateResourcesEmployeeRequest,
+    loadingSelector: isSubmitLoadingSelector,
+  });
+};
+
+export const useUpdateCollaboratorPolicy = () => {
+  return useSubmit({
+    action: policySliceAction.updateResourcesCollaboratorRequest,
     loadingSelector: isSubmitLoadingSelector,
   });
 };
@@ -186,6 +197,20 @@ export const useResourcesEmployee = () => {
     loadingSelector: getResourcesEmployeeLoadingSelector,
     dataSelector: resourcesEmployeeSelector,
     failedSelector: getResourcesEmployeeFailedSelector,
+    param: branchParam,
+  });
+};
+
+export const useResourcesCollaborator = () => {
+  const { id: branchId } = useParams();
+
+  const branchParam = useMemo(() => ({ branchId : branchId ? branchId : DEFAULT_BRANCH_ID }), [branchId]);
+
+  return useFetchByParam({
+    action: policySliceAction.getResourcesCollaboratorRequest,
+    loadingSelector: getResourcesCollaboratorLoadingSelector,
+    dataSelector: resourcesCollaboratorSelector,
+    failedSelector: getResourcesCollaboratorFailedSelector,
     param: branchParam,
   });
 };

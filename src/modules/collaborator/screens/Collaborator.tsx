@@ -2,15 +2,19 @@ import React, { useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
 import { collaboratorActions } from "../redux/reducer";
 import {
+  useAddProductCollaborator,
   useCollaboratorPaging,
   useCollaboratorQueryParams,
   useConvertCollaborator,
   useCreateCollaborator,
   useDeleteCollaborator,
+  useGetCollaborator,
   useGetCollaborators,
+  useRemoveProductCollaborator,
   useResetCollaboratorAction,
   useUpdateCollaborator,
   useUpdateCollaboratorParams,
+  useUpdateProductCollaborator,
 } from "../collaborator.hook";
 import { useMatchPolicy } from "~/modules/policy/policy.hook";
 import useCheckBoxExport from "~/modules/export/export.hook";
@@ -26,6 +30,7 @@ import {
   Row,
   Space,
   Switch,
+  Tabs,
   Tag,
   Typography,
 } from "antd";
@@ -35,7 +40,7 @@ import WhiteBox from "~/components/common/WhiteBox";
 import SelectSearch from "~/components/common/SelectSearch/SelectSearch";
 import ExportExcelButton from "~/modules/export/component";
 import TableAnt from "~/components/Antd/TableAnt";
-import { get, omit } from "lodash";
+import { get } from "lodash";
 import {
   PROCESS_STATUS,
   PROCESS_STATUS_VI,
@@ -44,6 +49,9 @@ import {
 import CollaboratorForm from "../components/CollaboratorForm";
 import moment from "moment";
 import Breadcrumb from "~/components/common/Breadcrumb";
+import CollaboratorProduct from "../components/CollaboratorProduct";
+import CollaboratorAddress from "../components/CollaboratorAddress";
+import apis from "~/modules/collaborator/collaborator.api";
 
 interface ColumnActionProps {
   _id: string;
@@ -52,6 +60,7 @@ interface ColumnActionProps {
   onOpenForm?: any;
   status: string;
   isLoading: boolean;
+  currentTab?: any;
 }
 const ColumnActions = ({
   _id,
@@ -89,6 +98,7 @@ export default function Collaborator({
   //State
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [id, setId] = useState(null);
+  const [destroy,setDestroy] = useState(false);
   //Fetch
   const dispatch = useDispatch();
   const resetAction = () => {
@@ -99,6 +109,7 @@ export default function Collaborator({
   const [keyword, { setKeyword, onParamChange }] = useUpdateCollaboratorParams(query);
   const [data, isLoading] = useGetCollaborators(query);
   const paging = useCollaboratorPaging();
+  
   const isCanDelete = useMatchPolicy(POLICIES.DELETE_PARTNER);
   const isCanUpdate = useMatchPolicy(POLICIES.UPDATE_PARTNER);
   const shouldShowDevider = useMemo(
@@ -112,6 +123,9 @@ export default function Collaborator({
   const handleOpenModal = (id?: any) => {
     setIsOpenModal(true);
     setId(id);
+    if(id){
+      setDestroy(true);
+    }
   };
   const handleCloseModal = () => {
     setIsOpenModal(false);
@@ -130,6 +144,7 @@ export default function Collaborator({
   const [isSubmitLoading, handleCreate] = useCreateCollaborator(() => {
     handleCloseModal();
     resetAction();
+    setDestroy(true);
   });
 
   const onChangeStatus = (
@@ -170,6 +185,7 @@ export default function Collaborator({
       title: "Tên cộng tác viên",
       dataIndex: "fullName",
       key: "fullName",
+      render : (value: any, record: any) => <Typography.Link onClick={() => handleOpenModal(get(record,'_id'))}>{value}</Typography.Link>
     },
     ...(isCanUpdate
       ? [
@@ -177,7 +193,8 @@ export default function Collaborator({
             title: "Xét duyệt",
             key: "processStatus",
             dataIndex: "processStatus",
-            width: 200,
+            width: 90,
+            align : 'center',
             render: (processStatus: any, record: any) => {             
               return (
                 <WithOrPermission permission={[POLICIES.UPDATE_PARTNER]}>
@@ -201,7 +218,7 @@ export default function Collaborator({
               );
             },
           },
-        ]
+        ] as ColumnsType
       : []),
     {
       title: "Số điện thoại",
@@ -222,14 +239,6 @@ export default function Collaborator({
       key: "parent",
       render: (record) => {
         return record?.fullName;
-      },
-    },
-    {
-      title: "Được tạo bởi",
-      dataIndex: "historyStatus",
-      key: "historyStatus",
-      render: (record) => {
-        return record.NEW ? record.NEW.createdBy : record.APPROVED.createdBy;
       },
     },
     ...(isCanUpdate
@@ -306,18 +315,8 @@ export default function Collaborator({
 
   useChangeDocumentTitle("Danh sách cộng tác viên");
 
-  const onChange = ({ target }: any) => {
-    switch (target.value) {
-      case 2:
-        onParamChange({ ...query, processStatus: PROCESS_STATUS["NEW"] });
-        break;
-      case 3:
-        onParamChange({ ...query, processStatus: PROCESS_STATUS["APPROVED"] });
-        break;
-      default:
-        onParamChange({ ...query, processStatus: "" });
-        break;
-    }
+  const onChange = (e: any) => {
+    onParamChange({ ...query, processStatus: e.target.value});
   };
   return (
     <div>
@@ -335,8 +334,8 @@ export default function Collaborator({
               canDownload ? (
                 <Col>
                   <ExportExcelButton
-                    api="employee"
-                    exportOption="employee"
+                    api="partner"
+                    exportOption="partner"
                     query={query}
                     fileName="Danh sách cộng tác viên"
                     ids={arrCheckBox}
@@ -356,22 +355,13 @@ export default function Collaborator({
                 onChange={onChange}
                 optionType="button"
                 buttonStyle="solid"
-                defaultValue={(() => {
-                  switch (query?.processStatus) {
-                    case "NEW":
-                      return 2;
-                    case "APPROVED":
-                      return 3;
-                    default:
-                      return 1;
-                  }
-                })()}
+                defaultValue={query?.processStatus || null}
               >
-                <Radio.Button value={1}>Tất cả</Radio.Button>
-                <Radio.Button value={2}>
+                <Radio.Button value={null}>Tất cả</Radio.Button>
+                <Radio.Button value={'NEW'}>
                   {PROCESS_STATUS_VI["NEW"]}
                 </Radio.Button>
-                <Radio.Button value={3}>
+                <Radio.Button value={'APPROVED'}>
                   {PROCESS_STATUS_VI["APPROVED"]}
                 </Radio.Button>
               </Radio.Group>
@@ -397,23 +387,47 @@ export default function Collaborator({
         open={isOpenModal}
         onCancel={() => setIsOpenModal(false)}
         onOk={() => setIsOpenModal(false)}
-        className="form-modal"
+        className="form-modal modalScroll"
         footer={null}
         width={1020}
-        style={{ top: 50 }}
+        centered
+        // style={{ top: 50 }}
         afterClose={() => {
-          setIsOpenModal(false);
+          setDestroy(false);
         }}
-        destroyOnClose
+        destroyOnClose={destroy}
       >
-        <CollaboratorForm
-          id={id}
-          handleCloseModal={handleCloseModal}
-          handleUpdate={handleUpdate}
-          resetAction={resetAction}
-          handleCreate={handleCreate}
-          isSubmitLoading={isSubmitLoading}
-        />
+          <h4 >
+        {`${!id ? "Tạo mới " : "Cập nhật"}`} cộng tác viên
+      </h4>
+        <Tabs
+        destroyInactiveTabPane
+        items={[
+          {
+            key: '1',
+            label: 'Hồ sơ',
+            children: <CollaboratorForm
+              id={id}
+              handleCloseModal={handleCloseModal}
+              handleUpdate={handleUpdate}
+              handleCreate={handleCreate}
+              isSubmitLoading={isSubmitLoading}
+            />,
+          },
+          {
+            key: '2',
+            label: "Sản phẩm đảm nhiệm",
+            children: <CollaboratorProduct useAddProduct={useAddProductCollaborator} id={id} useRemoveProduct={useRemoveProductCollaborator} useUpdateProduct={useUpdateProductCollaborator} useGetUser={useGetCollaborator} apiSearchProduct={apis.searchProduct}/>,
+            disabled : !id
+          },
+          {
+            key: '3',
+            label: "Sổ địa chỉ",
+            children: <CollaboratorAddress id={id}/>,
+            disabled : !id
+          }
+        ]}>
+        </Tabs>
       </Modal>
     </div>
   );

@@ -10,11 +10,18 @@ interface cloneInitState extends initStateSlice {
   isGetMyEmployeeLoading?: any,
   getMyEmployeeFailed?: any,
   myEmployee?: any[]
- }
  
+  addProductFailed?: any,
+  addProductSuccess?: any,
+  removeProductFailed?: any,
+  removeProductSuccess?: any,
+  updateProductFailed?: any,
+  updateProductSuccess?: any,
+  updateAddressFailed?: any,
+  updateAddressSuccess?: any,
+ }
 class EmployeeClassExtentd extends InstanceModuleRedux {
   clone;
-  cloneInitState : cloneInitState;
   constructor() {
     super('employee');
     this.clone = {
@@ -64,12 +71,62 @@ class EmployeeClassExtentd extends InstanceModuleRedux {
         state.isGetMyEmployeeLoading = false;
         state.getMyEmployeeFailed = payload;
       },
-    }
-    this.cloneInitState = {
-      ...this.initialState,
-      convertFailed: null,
-      convertSuccess: null,
-      // Want Add more State Here...
+    addProductRequest: (state: cloneInitState) => {
+      state.isSubmitLoading = true;
+      state.addProductFailed = null;
+    },
+    addProductSuccess: (state: cloneInitState, { payload }: { payload?:any }) => {
+        state.byId = {
+          ...state.byId,
+          products : payload
+        }
+        state.isSubmitLoading = false;
+        state.addProductSuccess = payload;
+      },
+      addProductFailed: (state: cloneInitState, { payload }: { payload: any }) => {
+        state.isSubmitLoading = false;
+        state.addProductFailed = payload;
+      },
+
+      removeProductRequest: (state: cloneInitState) => {
+        state.isSubmitLoading = true;
+        state.removeProductFailed = null;
+      },
+      removeProductSuccess: (
+        state: cloneInitState,
+        { payload }: { payload: any }
+      ) => {
+        state.isSubmitLoading = false;
+        state.byId = {
+          ...state.byId,
+          products : payload
+        }
+        state.removeProductSuccess = payload;
+      },
+      removeProductFailed: (state: cloneInitState, { payload }: { payload: any }) => {
+        state.isSubmitLoading = false;
+        state.removeProductFailed = payload;
+      },
+
+      updateProductRequest: (state: cloneInitState) => {
+        state.isSubmitLoading = true;
+        state.updateProductFailed = null;
+      },
+      updateProductSuccess: (
+        state: cloneInitState,
+        { payload }: { payload: any }
+      ) => {
+        state.isSubmitLoading = false;
+        state.byId = {
+          ...state.byId,
+          products : payload
+        }
+        state.updateProductSuccess = payload;
+      },
+      updateProductFailed: (state: cloneInitState, { payload }: { payload: any }) => {
+        state.isSubmitLoading = false;
+        state.updateProductFailed = payload;
+      },
     }
   }
   createSlice() {

@@ -1,11 +1,11 @@
-import { Button, Col, Form, Input, Row, Skeleton } from "antd";
+import { Button, Form, Input, Row } from "antd";
 import {
   useCreateSaleChannel,
   useGetSaleChannel,
   useInitSaleChannel,
   useResetSaleChannelAction,
 } from "../saleChannel.hook";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect } from "react";
 import { convertInitSaleChannel } from "../saleChannel.service";
 import { Link } from "react-router-dom";
 import { PATH_APP } from "~/routes/allPath";
@@ -15,11 +15,15 @@ interface Props {
   onClose: (p?: any) => void;
   id?: any;
   handleUpdate?: any;
+  setDestroy?: any;
 }
 
-export default function SaleChannelForm({ onClose, id, handleUpdate }: Props) {
+export default function SaleChannelForm({ onClose, id, handleUpdate,setDestroy }: Props) {
   const [form] = Form.useForm();
-  const [isSubmitLoading, handleCreate] = useCreateSaleChannel(onClose);
+  const [isSubmitLoading, handleCreate] = useCreateSaleChannel(() => {
+    onClose();
+    setDestroy && setDestroy(true)
+  });
   const [saleChannel, isLoading] = useGetSaleChannel(id);
   const initSalesChannel = useInitSaleChannel(saleChannel, id);
   useResetSaleChannelAction();

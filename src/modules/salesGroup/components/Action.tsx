@@ -5,7 +5,7 @@ import {
   MoreOutlined,
   SisternodeOutlined
 } from "@ant-design/icons";
-import { Button, Dropdown, MenuProps, Popconfirm, Tooltip } from "antd";
+import { Button, Dropdown, MenuProps, Popconfirm } from "antd";
 import { get } from "lodash";
 import WithPermission from "~/components/common/WithPermission";
 import POLICIES from "~/modules/policy/policy.auth";
@@ -34,15 +34,15 @@ const Action = ({ _id, rc }: PropsType) => {
   const items: MenuProps["items"] = [
     {
       label: (
-        <Tooltip
-          title={
-              notExistLeader
-              ? "Đã có TDV hoặc đã là nhóm nhỏ hoặc không có quản lý"
-              : ""
-          }
-        >
-        {canWrite &&  <Button
-            disabled={ notExistLeader}
+        // <Tooltip
+        //   title={
+        //       notExistLeader
+        //       ? "Đã có TDV hoặc đã là nhóm nhỏ hoặc không có quản lý"
+        //       : ""
+        //   }
+        // >
+        canWrite &&  <Button
+            // disabled={ notExistLeader}
             block
             icon={<SisternodeOutlined />}
             onClick={() =>
@@ -57,8 +57,8 @@ const Action = ({ _id, rc }: PropsType) => {
             type="dashed"
           >
             Tạo nhóm
-          </Button>}
-        </Tooltip>
+          </Button>
+        // </Tooltip>
       ),
       key: "0",
     },

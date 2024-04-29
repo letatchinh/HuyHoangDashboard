@@ -16,6 +16,7 @@ import POLICIES from '~/modules/policy/policy.auth';
 import { useMatchPolicy } from '~/modules/policy/policy.hook';
 export default function Manufacturer() {
   const [showForm, setShowForm] = useState(false);
+  const [destroy, setDestroy] = useState(false);
   const [search, setSearch] = useState(null)
   const paging = useManufacturerPaging();
   const [query] = useManufacturerQueryParams();
@@ -44,7 +45,10 @@ export default function Manufacturer() {
     activity: any,
   };
   const handleOpenForm = useCallback((id?: any) => {
-    if (id) { setId(id); }
+    if (id) { 
+      setId(id);
+      setDestroy(true)
+     }
     setShowForm(true);
   }, []);
   const handleDelete = (id: any) => {
@@ -185,8 +189,10 @@ export default function Manufacturer() {
           title={id? 'Cập nhật hãng sản xuất':'Thêm hãng sản xuất'}
           onCancel={handleCloseForm}
           footer={null}
+          destroyOnClose={destroy}
+          afterClose={() => setDestroy(false)}
         >
-          <ManufacturerForm id={id} setId={setId} callBack={handleCloseForm} updateManufacturer={updateManufacturer} />
+          <ManufacturerForm setDestroy={setDestroy} id={id} setId={setId} callBack={handleCloseForm} updateManufacturer={updateManufacturer} />
         </ModalAnt>
       </div>
     </>

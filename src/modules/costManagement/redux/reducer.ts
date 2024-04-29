@@ -2,8 +2,10 @@ import { createSlice } from "@reduxjs/toolkit";
 import { get,omit } from "lodash";
 import { InstanceModuleRedux } from "~/redux/instanceModuleRedux";
 import { initStateSlice } from "~/redux/models";
+import { getPaging } from "~/utils/helpers";
 interface cloneInitState extends initStateSlice {
- // Add cloneInitState Type Here
+  // Add cloneInitState Type Here
+  totalRevenue?: number | null | undefined
 }
 class CostManagementClassExtend extends InstanceModuleRedux {
   cloneReducer;
@@ -12,25 +14,27 @@ class CostManagementClassExtend extends InstanceModuleRedux {
     super('costManagement');
     this.cloneReducer = {
       ...this.initReducer,
-      changeVariantDefault: (state:initStateSlice , { payload }: any) => {
-        const {productId, variantId} = payload;
-        const list = state.list?.map((item:any) => {
-          if(get(item,'_id') === productId){
-            const variant = get(item,'variants',[])?.find((v: any) => get(v,'_id') === variantId);
-            return {...item, variant};
-          }
-          return item;
-        });
-        state.list = list;
+      getListSuccess: (state:cloneInitState , { payload }: any) => {
+        state.isLoading = false;
+        state.list = get(payload, "docs", []);
+        state.paging = getPaging(payload);
+        state.totalRevenue = payload?.totalRevenueProduct || 0
       },
-      resetActionFullState: (state:any) => ({
+      updateSuccess: (state: cloneInitState, { payload }: any) => {
+        state.list = state.list?.map((item: any) => get(item, '_id') === get(payload, 'data._id') ? payload?.data : item);
+        state.updateSuccess = payload;
+        state.isSubmitLoading = false;
+      },
+      resetActionFullState: (state:cloneInitState) => ({
         ...state,
-        ...omit(this.cloneInitState, ["list"]),
+        ...omit(this.cloneInitState, ["list", "paging"]),
       }),
+
       // Want Add more reducer Here...
     }
     this.cloneInitState = {
       ...this.initialState,
+      totalRevenue: 0
       // Want Add more State Here...
     }
   }
@@ -49,4 +53,5 @@ const data = newSlice.createSlice();
 
 
 export const costManagementActions = data.actions;
-export default data.reducer;
+const reducer = data.reducer
+export default reducer;

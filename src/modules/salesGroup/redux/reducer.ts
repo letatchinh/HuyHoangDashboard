@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { get } from "lodash";
 import { InstanceModuleRedux } from "~/redux/instanceModuleRedux";
 import { initStateSlice } from "~/redux/models";
-import { RulesLeader } from "../salesGroup.service";
+import { convertDataTreeBuyGroup, RulesLeader } from "../salesGroup.service";
 const RulesLeaderMethod = new RulesLeader();
 function getMember(listMember: any[]): string {
   let memberName = "";
@@ -73,14 +73,14 @@ export function getRandomColor() {
   return color;
 }
 
-function setDataForDeeplyChild(children: any[], levelOfColor: any) {
+function setDataForDeeplyChild(children: any[], levelOfColor: any,key : any) {
   if (children?.length) {
-    return children.map((child: any) => {
+    return children.map((child: any,index :number) => {
       // Replay Function if Child Exist
       let childReturn: any;
 
       if (child?.children?.length) {
-        childReturn = setDataForDeeplyChild(child.children, levelOfColor + 1); // Pass Next Child to the function
+        childReturn = setDataForDeeplyChild(child.children, levelOfColor + 1,key + '-' + index); // Pass Next Child to the function
       }
 
       // set Data From Child
@@ -88,6 +88,7 @@ function setDataForDeeplyChild(children: any[], levelOfColor: any) {
         ...child,
         color: colorLevel?.[levelOfColor] ?? getRandomColor(), // Set Color For Child
         children: childReturn,
+        key : key + '-' + index
       };
       /////
     });
@@ -103,6 +104,9 @@ interface cloneInitState extends initStateSlice {
   isLoadingGetListMember?: boolean;
   getListMemberFailed?: any;
   groupHaveLeader?: any;
+
+  getListBuyGroupFailed?: any;
+  listBuyGroup?: any;
 }
 class SalesGroupClassExtend extends InstanceModuleRedux {
   cloneReducer;
@@ -138,16 +142,18 @@ class SalesGroupClassExtend extends InstanceModuleRedux {
 
             const children = setDataForDeeplyChild(
               get(item, "children", []),
-              2
+              2,
+              index
             );
 
             return {
               ...item,
               nameChild,
               memberChild,
-              indexRow: index + 1, // 0 Boolean is False
+              indexRow: index + 1, // 0 Falsy is False
               children,
               color: "orange",
+              key : index
             };
           });
           state.groupHaveLeader = groupHaveLeader;
@@ -188,7 +194,21 @@ class SalesGroupClassExtend extends InstanceModuleRedux {
         state.isLoadingGetListMember = false;
         state.getListMemberFailed = payload;
       },
-
+      // Get List Buy Group
+      getListBuyGroupRequest: (state:cloneInitState) => {
+        state.isLoading = true;
+        state.getListBuyGroupFailed = null;
+      },
+      getListBuyGroupSuccess: (state:cloneInitState , { payload }: any) => {
+        state.isLoading = false;
+        state.listBuyGroup = convertDataTreeBuyGroup(payload);
+      },
+      getListBuyGroupFailed: (state:cloneInitState, { payload }:{payload:any}) => {
+        state.isLoading = false;
+        state.getListBuyGroupFailed = payload;
+        
+      },
+  
       // Want Add more reducer Here...
     };
     this.cloneInitState = {

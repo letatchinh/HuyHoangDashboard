@@ -30,6 +30,15 @@ function* getResourcesEmployee({ payload: query }: any): any {
   }
 };
 
+function* getResourcesCollaborator({ payload: query }: any): any {
+  try {
+    const data = yield call(api.getAllCollaborator, query);
+    yield put(policySliceAction.getResourcesCollaboratorSuccess(data));
+  } catch (error: any) {
+    yield put(policySliceAction.getResourcesCollaboratorFailed(error));
+  }
+};
+
 function* getByIdPolicy({payload:id} : any) : any {
   try {
     const data = yield call(api.getById,id);
@@ -98,6 +107,19 @@ function* updateEmployeeGroupPermission({ payload }: any) {
   } catch (error: any) {
     yield put(policySliceAction.updateFailed(error));
   }
+};
+
+function* updateCollaboratorGroupPermission({ payload }: any) {
+  try {
+    const { isAssgined, companyId, groupId, ...rest } = payload;
+    const request = isAssgined
+      ? api.updateCollaborator
+      : api.deleteCollaborator;
+
+    yield call(request, { ...rest, groupId });
+  } catch (error: any) {
+    yield put(policySliceAction.updateResourcesCollaboratorFailed(error));
+  }
 }
 
 export default function* policySaga() {
@@ -110,4 +132,6 @@ export default function* policySaga() {
   yield takeLatest(policySliceAction.getResourcesEmployeeRequest, getResourcesEmployee);
   yield takeLatest(policySliceAction.updateResourcesRequest, updateGroupPermission);
   yield takeLatest(policySliceAction.updateResourcesEmployeeRequest, updateEmployeeGroupPermission);
+  yield takeLatest(policySliceAction.getResourcesCollaboratorRequest, getResourcesCollaborator);
+  yield takeLatest(policySliceAction.updateResourcesCollaboratorRequest, updateCollaboratorGroupPermission);
 }

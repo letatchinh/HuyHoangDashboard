@@ -10,7 +10,6 @@ import Branch from "~/pages/Dashboard/Branch";
 import StatusConfig from "~/pages/Dashboard/StatusConfig";
 import EmployeePage from "~/pages/Dashboard/Employee";
 import UserPage from "~/pages/Dashboard/User";
-import UserGroupPage from "~/pages/Dashboard/UserGroup";
 import VouchersPage from "~/pages/Dashboard/Vouchers";
 import Unit from "~/pages/Dashboard/Unit";
 import MedicinePage from "~/pages/Dashboard/Medicine";
@@ -78,9 +77,10 @@ export const mainRoutes :PathRouteProps[] = [
   // TodoList
   { path: PATH_APP.todoList.statusConfig, Component: StatusConfig },
 
-  // Employee
+  // Trình dược viên
   { path: PATH_APP.todoList.workBoard, Component: WorkBoardPage },
   { path: PATH_APP.employee.root, Component: EmployeePage },
+  { path: PATH_APP.bill.employee, Component: EmployeePage },
   // { path: PATH_APP.employee.employeeGroup, Component: EmployeeGroupPage },
   
   // User

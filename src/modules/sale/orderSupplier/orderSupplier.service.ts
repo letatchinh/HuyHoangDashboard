@@ -106,7 +106,7 @@ export const reducerDiscountOrderSupplierItems = (orderSupplierItems: any[]) => 
     return newOrderSupplierItems;
   };
 
-  export const selectProductSearch = (data: any) => {
+  export const selectProductSearchOrder = (data: any) => {
     const {
       name,
       cumulativeDiscount,
@@ -185,7 +185,7 @@ export const reducerDiscountOrderSupplierItems = (orderSupplierItems: any[]) => 
       const verify = async () => {
         try {
           // Get Variants
-          const response = await BillModule.api.verify({ billSample });
+          const response = await BillModule.api.verifyBill({ billSample,pharmacyId : get(bill, "supplierId") });
           const concatQuantity = get(bill, "orderSupplierItems", [])?.map(
             (item: any) => {
               const findInResponse = response?.find(
@@ -204,7 +204,7 @@ export const reducerDiscountOrderSupplierItems = (orderSupplierItems: any[]) => 
             }
           );
           let items: any = compact(concatQuantity)?.map((orderSupplier: any) => {
-            const dataSearch = selectProductSearch(orderSupplier);
+            const dataSearch = selectProductSearchOrder(orderSupplier);
   
             return {
               ...dataSearch,

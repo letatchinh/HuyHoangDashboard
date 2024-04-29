@@ -1,9 +1,13 @@
 import { TablePaginationConfig } from "antd";
 import { forIn, get, groupBy, keys,flattenDeep,compact,uniq } from "lodash";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { STATUS } from "~/constants/defaultValue";
+import { REF_COLLECTION, STATUS } from "~/constants/defaultValue";
 
 import subvn from "~/core/subvn";
+import POLICIES, { CORE_ACTION } from "~/modules/policy/policy.auth";
+import { PoliciesType, policyType } from "~/modules/policy/policy.modal";
+import { useAdapter } from "~/modules/auth/auth.hook";
+import { ADAPTER_KEY } from "~/modules/auth/constants";
 
 export const getPaging = (response: any) => ({
   current: response.page,
@@ -41,7 +45,7 @@ export const clearQuerySearch = (
     if (groupByKey[key] && keys(param)?.some((e) => groupByKey[e])) {
       obj[key] = null;
     }
-  });
+  }); 
 };
 
 export const getExistProp = (data: any) => {
@@ -164,16 +168,19 @@ interface FetchStateParams {
   reFetch?: any; // Adjust the type based on your specific requirements
   nullNotFetch?: boolean;
   conditionRun?: boolean;
+  shouldRun?: boolean;
 }
 
-export const useFetchState = ({ api, query, useDocs = true, init = [], fieldGet,reFetch,nullNotFetch = false ,conditionRun = false} : FetchStateParams) : any => {
+export const useFetchState = ({ api, query, useDocs = true, init = [], fieldGet,reFetch,nullNotFetch = false ,conditionRun = false,shouldRun=true} : FetchStateParams) : any => {
   const [data, setData] = useState(init);
   const [loading, setLoading] = useState(false);
+  const [totalDocs, setTotalDocs] = useState(0);
   const req = useCallback(api, [api]);
   const fetch = useCallback(async () => {
     try {
       setLoading(true);
       const response = await req(query);
+      setTotalDocs(get(response,'totalDocs',0));
       if (fieldGet) {
         setData(get(response, fieldGet))
       } else {
@@ -190,18 +197,21 @@ export const useFetchState = ({ api, query, useDocs = true, init = [], fieldGet,
     }
   }, [query,reFetch])
   useEffect(() => {
-    if(conditionRun){
-      fetch()
-    }else{
-      if(nullNotFetch){
-        !!query && fetch();
-      }else{
+    if(shouldRun){
+      if(conditionRun){
         fetch()
+      }else{
+        if(nullNotFetch){
+          !!query && fetch();
+        }else{
+          fetch()
+        }
       }
     }
+
   }, [fetch,nullNotFetch,query]);
   const dataReturn = useMemo(() => data, [data])
-  return [dataReturn, loading]
+  return [dataReturn, loading,totalDocs]
 };
 
 
@@ -269,6 +279,7 @@ export const getOptions = (constantVi : any) => {
 }
 
 export const filterOptionSlug = (input:any,option:any) => StringToSlug(get(option,'label','')?.toLowerCase())?.includes(StringToSlug(input?.trim()?.toLowerCase()));
+export const filterSlug = (input:any,target:any) => StringToSlug(target?.toLowerCase())?.includes(StringToSlug(input?.trim()?.toLowerCase()));
 
 export const filterAcrossAccentsByLabel = (input: any, option: any) => {
   return (
@@ -296,17 +307,43 @@ export const DeviceDetector = () => {
     };
   };
   const [deviceInfo, setDeviceInfo] = useState<DeviceInfo>(() => getDeviceInfo());
-  useEffect(() => {
-    const handleResize = () => {
-      setDeviceInfo(getDeviceInfo());
-    };
+  // useEffect(() => { // Close Code Because Make Re-Render Each Resize And Your Variable Not use
+  //   const handleResize = () => {
+  //     setDeviceInfo(getDeviceInfo());
+  //   };
 
-    window.addEventListener('resize', handleResize);
+  //   window.addEventListener('resize', handleResize);
 
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
-  }, []);
+  //   return () => {
+  //     window.removeEventListener('resize', handleResize);
+  //   };
+  // }, []);
 
   return getDeviceInfo();
 };
+
+export const getValueOfMath = (valueTarget:number,valueDiscount : number,typeValue : 'PERCENT' | 'VALUE') =>  typeValue === 'PERCENT' ?  valueDiscount * valueTarget / 100 : valueDiscount;
+export const getValueOfPercent = (value: number, percent: number) => value * percent / 100;
+
+type typePoly= keyof PoliciesType;
+type ActionPolicy = keyof typeof CORE_ACTION
+type KeyPolicy = 'QUOTATION' | 'BILL';
+
+export const permissionConvert = (query:any)=>(action: ActionPolicy, key: KeyPolicy)  => {
+  const per =  (k:KeyPolicy)=>(pr:any)=> action.concat('_').concat(k) .concat(pr) as typePoly ;
+  const _ = ['PARTNER', 'EMPLOYEE', 'PHARMACY']
+  if (!get(query, 'refCollection')) {
+    return POLICIES[ per(key)('')] as [string,policyType] 
+  };
+  const objEntry = _.map((e) => [REF_COLLECTION[e], per(key)(e)])
+  let objj = Object.fromEntries(objEntry) as {
+    [key in keyof typeof query ]: typePoly
+  } 
+  return POLICIES[ objj[ get(query,'refCollection') as any ] ]as [string,policyType] 
+};
+export const useIsAdapterSystem = () => {
+  const adapter = useAdapter();
+  const isAdapterSystem = useMemo(() => adapter === ADAPTER_KEY.STAFF, [adapter]);
+  return !!isAdapterSystem; // return true if adapter is system
+};
+

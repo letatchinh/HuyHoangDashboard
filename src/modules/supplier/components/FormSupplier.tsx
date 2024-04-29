@@ -25,13 +25,15 @@ const FormSupplier = ({
   id,
   onCancel,
   onUpdate,
+  setDestroy,
 }: propsTypeFormSupplier): React.JSX.Element => {
   const [supplier, isLoading] = useGetSupplier(id);
   
   const [form] = Form.useForm();
-  const [cityCode, setCityCode]: any = useState();
-  const [districtCode, setDistrictCode]: any = useState();
-  const [isSubmitLoading, onCreate] = useCreateSupplier(onCancel);
+  const [isSubmitLoading, onCreate] = useCreateSupplier(() => {
+    onCancel();
+    setDestroy && setDestroy(true)
+  });
   const [rankingId, setRankingId] = useState(null);
   useResetAction();
 

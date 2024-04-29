@@ -17,8 +17,8 @@ import { employeeSliceAction } from "./redux/reducer";
 import { useDispatch } from "react-redux";
 const MODULE  = "employee";
 const MODULE_VI  = "Trình dược viên";
+const getSelector = (key: string) => (state: any) => state[MODULE][key];
 
-const getSelector = (key: string) => (state: any) => state.employee[key];
 const {
   loadingSelector,
   listSelector,
@@ -41,7 +41,14 @@ const convertFailedSelector = getSelector("convertFailed");
 const getMyEmployeeLoadingSelector = getSelector("isGetMyEmployeeLoading");
 const getMyEmployeeSelector = getSelector("myEmployee"); 
 const getMyEmployeeFailedSelector = getSelector("getMyEmployeeFailed");
+const addProductSuccessSelector = getSelector("addProductSuccess");
+const addProductFailedSelector = getSelector("addProductFailed");
 
+const removeProductSuccessSelector = getSelector("removeProductSuccess");
+const removeProductFailedSelector = getSelector("removeProductFailed");
+
+const updateProductSuccessSelector = getSelector("updateProductSuccess");
+const updateProductFailedSelector = getSelector("updateProductFailed");
 export const useEmployeePaging = () => useSelector(pagingSelector);
 
 export const useGetEmployees = (payload: object) => {
@@ -208,5 +215,45 @@ export const useGetMyEmployee = (id: any) => {
     dataSelector: getMyEmployeeSelector,
     failedSelector: getMyEmployeeFailedSelector,
     param: id,
+  });
+};
+export const useAddProductEmployee = (callback?: any) => {
+  useSuccess(
+    addProductSuccessSelector,
+    '',
+    callback
+  );
+  useFailed(addProductFailedSelector);
+
+  return useSubmit({
+    action: employeeSliceAction.addProductRequest,
+    loadingSelector: isSubmitLoadingSelector,
+  });
+};
+export const useRemoveProductEmployee = (callback?: any) => {
+  useSuccess(
+    removeProductSuccessSelector,
+    ``,
+    callback
+  );
+  useFailed(removeProductFailedSelector);
+
+  return useSubmit({
+    action: employeeSliceAction.removeProductRequest,
+    loadingSelector: isSubmitLoadingSelector,
+  });
+};
+
+export const useUpdateProductEmployee = (callback?: any) => {
+  useSuccess(
+    updateProductSuccessSelector,
+    '',
+    callback
+  );
+  useFailed(updateProductFailedSelector);
+
+  return useSubmit({
+    action: employeeSliceAction.updateProductRequest,
+    loadingSelector: isSubmitLoadingSelector,
   });
 };

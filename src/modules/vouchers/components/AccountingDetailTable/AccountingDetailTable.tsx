@@ -1,10 +1,10 @@
 import React, { forwardRef, useState, useEffect, useImperativeHandle } from 'react';
 
 import { get } from 'lodash';
-import { Button, InputNumber, Space, Table, Tooltip } from 'antd';
+import { Button, Space, Table, Tooltip } from 'antd';
 
 import { ACCOUNTS, COMPONENT_MODES } from '~/constants/defaultValue';
-import { InfoCircleOutlined, MinusCircleOutlined, PlusCircleOutlined, PlusSquareOutlined } from '@ant-design/icons';
+import { InfoCircleOutlined, MinusCircleOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import './index.scss'
 import { floorFormatter, formatNumberThreeComma } from '~/utils/helpers';
 import { EditableCell, EditableRow } from '~/components/common/EditableComponent';

@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import CommentTask from "./CommentTask";
 import { Avatar, Button, Space, Tooltip } from "antd";
-import { get, includes, isNil, sortBy } from "lodash";
+import { get, includes, isNil } from "lodash";
 import Text from "antd/lib/typography/Text";
 import dayjs from "dayjs";
 import {

@@ -10,5 +10,10 @@ const apis = {
     getALLAuthenticated: (query?: any) => requester.get('/api/v1/employee-all', query),
     convert: (data?: any) => requester.put(`/api/v1/employee-convert/${get(data ,'_id' , 'id')}`, data),
     getMyEmployee: (query?: any) => requester.get(`/api/v1/employee-referral/${query?.id}`,(omit(query,['id']))),
+    searchProduct : (query : any) => requester.post(`/api/v1/product-search-assign-employee`,query),
+    addProduct: (query?: any) => requester.put(`/api/v1/employee-add-product`, query),
+    updateProduct: (query?: any) => requester.put(`/api/v1/employee-update-discount-product`, query),
+    removeProduct: (query?: any) => requester.delete(`/api/v1/employee-remove-product`, query),
+    search: (query?: any) => requester.get(`/api/v1/employee-assign-pharmacy-search`, query),
 }
 export default apis;

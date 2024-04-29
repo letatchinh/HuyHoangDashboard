@@ -37,6 +37,18 @@ const {
 const convertSuccessSelector = getSelector("convertSuccess");
 const convertFailedSelector = getSelector("convertFailed");
 
+const addProductSuccessSelector = getSelector("addProductSuccess");
+const addProductFailedSelector = getSelector("addProductFailed");
+
+const removeProductSuccessSelector = getSelector("removeProductSuccess");
+const removeProductFailedSelector = getSelector("removeProductFailed");
+
+const updateProductSuccessSelector = getSelector("updateProductSuccess");
+const updateProductFailedSelector = getSelector("updateProductFailed");
+
+const updateAddressSuccessSelector = getSelector("updateAddressSuccess");
+const updateAddressFailedSelector = getSelector("updateAddressFailed");
+
 export const useCollaboratorPaging = () => useSelector(pagingSelector);
 
 export const useGetCollaborators = (param:any) => {
@@ -110,6 +122,48 @@ export const useConvertCollaborator = (callback?: any) => {
   });
 };
 
+export const useAddProductCollaborator = (callback?: any) => {
+  useSuccess(
+    addProductSuccessSelector,
+    '',
+    callback
+  );
+  useFailed(addProductFailedSelector);
+
+  return useSubmit({
+    action: collaboratorActions.addProductRequest,
+    loadingSelector: isSubmitLoadingSelector,
+  });
+};
+
+export const useRemoveProductCollaborator = (callback?: any) => {
+  useSuccess(
+    removeProductSuccessSelector,
+    ``,
+    callback
+  );
+  useFailed(removeProductFailedSelector);
+
+  return useSubmit({
+    action: collaboratorActions.removeProductRequest,
+    loadingSelector: isSubmitLoadingSelector,
+  });
+};
+
+export const useUpdateProductCollaborator = (callback?: any) => {
+  useSuccess(
+    updateProductSuccessSelector,
+    '',
+    callback
+  );
+  useFailed(updateProductFailedSelector);
+
+  return useSubmit({
+    action: collaboratorActions.updateProductRequest,
+    loadingSelector: isSubmitLoadingSelector,
+  });
+};
+
 export const useCollaboratorQueryParams = () => {
   const query = useQueryParams();
   const limit = query.get("limit") || 10;
@@ -169,4 +223,18 @@ export const useUpdateCollaboratorParams = (
 
 export const useResetCollaboratorAction = () => {
   useResetState(collaboratorActions.resetAction);
+};
+
+export const useUpdateAddressCollaborator = (callback?: any) => {
+  useSuccess(
+    updateAddressSuccessSelector,
+    ``,
+    callback
+  );
+  useFailed(updateAddressFailedSelector);
+
+  return useSubmit({
+    action: collaboratorActions.updateAddressRequest,
+    loadingSelector: isSubmitLoadingSelector,
+  });
 };
