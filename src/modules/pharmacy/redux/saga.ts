@@ -38,6 +38,15 @@ function* updatePharmacy({ payload }: any): any {
   }
 }
 
+function* convertPharmacy({ payload }: any): any {
+  try {
+    const data = yield call(api.convert, payload);
+    yield put(pharmacySliceAction.convertSuccess(data));
+  } catch (error: any) {
+    yield put(pharmacySliceAction.convertFailed(error));
+  }
+};
+
 function* deletePharmacy({ payload: id }: any): any {
   try {
     const data = yield call(api.delete, id);
@@ -93,4 +102,5 @@ export default function* pharmacySaga(): any {
   yield takeLatest(pharmacySliceAction.getHistoryPharmacyRequest, getHistoryPharmacy);
   yield takeLatest(pharmacySliceAction.getAccumulationRequest, getAccumulation);
   yield takeLatest(pharmacySliceAction.getAccumulationDetailRequest, getAccumulationDetail);
+  yield takeLatest(pharmacySliceAction.convertRequest, convertPharmacy);
 }
