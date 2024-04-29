@@ -5,12 +5,14 @@ export type propsTypeFormSupplier = {
   onCancel : () => void,
   onUpdate : (p:any) => void,
   isSubmitLoading : boolean,
+  setDestroy : any
 }
 export type propsTypeTabSupplier = {
     id? : any,
     onCancel : () => void,
     onUpdate : (p:any) => void,
     isSubmitLoading : boolean,
+    setDestroy : any
 
 }
 export type addressType = {

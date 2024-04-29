@@ -6,6 +6,7 @@ interface Props {
   callBack?: () => void;
   setId?:any
   updateProductUnit: (data: any) => void;
+  setDestroy?:any;
 };
 interface FieldType {
   code: string
@@ -15,9 +16,12 @@ interface FieldType {
   isAction:String
 };
 const { TextArea } = Input;
-const ProductUnitForm: React.FC<Props> = ({ id,setId, callBack,updateProductUnit }) => {
+const ProductUnitForm: React.FC<Props> = ({ id,setId, callBack,updateProductUnit,setDestroy }) => {
   // const [, updateProductUnit] = useUpdateProductUnit(callBack);
-  const [, createProductUnit] = useCreateProductUnit(callBack);
+  const [, createProductUnit] = useCreateProductUnit(() => {
+    callBack && callBack();
+    setDestroy  && setDestroy(true);
+  });
   const [productUnitById, isLoading] = useGetlistProductUnitById(id);
   const [form] = Form.useForm();
   useResetAction();

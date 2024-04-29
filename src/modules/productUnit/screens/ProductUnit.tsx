@@ -42,6 +42,7 @@ import useCheckboxExport from "~/modules/export/export.hook";
 type propsType = {};
 export default function ProductUnit(props: propsType): React.JSX.Element {
   const [query] = useProductUnitQueryParams();
+  const [destroy,setDestroy] = useState(false);
   const [keyword, { setKeyword, onParamChange }] =
     useUpdateProductUnitParams(query);
   const [showForm, setShowForm] = useState(false);
@@ -68,7 +69,10 @@ export default function ProductUnit(props: propsType): React.JSX.Element {
     status: string;
   }
   const handleOpenForm = useCallback((id?: any) => {
-    if (id) setId(id);
+    if (id) {
+      setId(id);
+      setDestroy(true);
+    };
     setShowForm(true);
   }, []);
   const handleDelete = (id: any) => {
@@ -252,7 +256,10 @@ export default function ProductUnit(props: propsType): React.JSX.Element {
         title={id ? "Cập nhật đơn vị tính" : "Tạo đơn vị tính"}
         onCancel={handleCloseForm}
         footer={null}
-        // destroyOnClose
+        afterClose={() => {
+          setDestroy(false);
+        }}
+        destroyOnClose={destroy}
         width={800}
       >
         <ProductUnitForm
@@ -260,6 +267,7 @@ export default function ProductUnit(props: propsType): React.JSX.Element {
           setId={setId}
           updateProductUnit={updateProductUnit}
           callBack={handleCloseForm}
+          setDestroy={setDestroy}
         />
       </ModalAnt>
     </>

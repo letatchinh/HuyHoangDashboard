@@ -26,7 +26,7 @@ export default function SaleChannel(props:propsType) : React.JSX.Element {
   const [keyword, { setKeyword, onParamChange }] =
     useUpdateSaleChannelParams(query);
   const [pharmacies, isLoading] = useGetSaleChannels(query);
-
+  const [destroy,setDestroy] = useState(false);
   const onCloseForm = useCallback(() => {
     setSaleChannelId(null);
     setIsOpenForm(false);
@@ -46,6 +46,7 @@ export default function SaleChannel(props:propsType) : React.JSX.Element {
     (id?: any) => {
       if (id) {
         setSaleChannelId(id);
+        setDestroy(true);
       }
       setIsOpenForm(true);
     },
@@ -267,9 +268,14 @@ export default function SaleChannel(props:propsType) : React.JSX.Element {
         open={isOpenForm}
         onCancel={onCloseForm}
         footer={[]}
-        destroyOnClose
+        afterClose={() => {
+          setDestroy(false);
+        }}
+        destroyOnClose={destroy}
+
       >
         <SaleChannelForm
+        setDestroy={setDestroy}
           onClose={onCloseForm}
           id={saleChannelId}
           handleUpdate={updateSaleChannel}

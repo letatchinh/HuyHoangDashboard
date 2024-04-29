@@ -12,6 +12,8 @@ export default function Address({
   onlyShowLastPath,
   ...props
 }: TypeProps): React.JSX.Element {
+  // const ref = useRef();
+  // const uuid = useId();
   const addressString = useMemo(
     () => convertAddress(managementArea, onlyShowLastPath),
     [managementArea, onlyShowLastPath]
@@ -55,8 +57,8 @@ export default function Address({
             size="small"
             bordered
             dataSource={addressString}
-            renderItem={(item: string) => (
-              <List.Item>
+            renderItem={(item: string,index) => (
+              <List.Item key={index}>
                 {item}
               </List.Item>
             )}

@@ -131,6 +131,9 @@ export const useBillQueryParams = (status? : string) => {
   const page = query.get("page") || 1;
   const keyword = query.get("keyword");
   const supplierIds = query.get("supplierIds");
+  const employeeIds = query.get("employeeIds");
+  const partnerIds = query.get("partnerIds");
+  const refCollection = query.get("refCollection");
   const createSuccess = useSelector(createSuccessSelector);
   const deleteSuccess = useSelector(deleteSuccessSelector);
   return useMemo(() => {
@@ -140,10 +143,13 @@ export const useBillQueryParams = (status? : string) => {
       keyword,
       status,
       supplierIds,
+      refCollection,
+      employeeIds,
+      partnerIds
     };
     return [queryParams];
     //eslint-disable-next-line
-  }, [page, limit, keyword, createSuccess, deleteSuccess,status,supplierIds]);
+  }, [page, limit, keyword, createSuccess, deleteSuccess,status,supplierIds,refCollection,employeeIds, partnerIds]);
 };
 
 export const useUpdateBillParams = (query: any, listOptionSearch?: any[]) => {
@@ -151,7 +157,6 @@ export const useUpdateBillParams = (query: any, listOptionSearch?: any[]) => {
   const { pathname } = useLocation();
   const [keyword, setKeyword] = useState(get(query, "keyword"));
   useEffect(() => {
-    console.log(query,'query');
     setKeyword(get(query, "keyword"));
     
   }, [query]);

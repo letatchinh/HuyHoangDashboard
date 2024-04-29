@@ -87,7 +87,8 @@ export default function SelectProductGroup({
             onClose();
             setReFetch(!reFetch)
           }}
-          updateProductConfig={() => {}}
+          // setDestroy={()=>{}}
+          // updateProductConfig={() => {}}
         />
       </Modal>
     </>

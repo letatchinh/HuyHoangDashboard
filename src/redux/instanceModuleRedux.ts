@@ -153,7 +153,7 @@ export class InstanceModuleRedux{
     // Reset the state Action
     resetAction: (state:initStateSlice) => ({
       ...state,
-      ...omit(this.initialState, ["list"]),
+      ...omit(this.initialState, ["list",'paging']),
     }),
 };
 

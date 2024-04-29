@@ -1,10 +1,13 @@
-import { get, union } from 'lodash';
+import { get, isNil, union } from 'lodash';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import { ModuleRedux } from '~/redux/models';
 import { RootState } from '~/redux/store';
 import useNotificationStore from '~/store/NotificationContext';
+import { StringToSlug } from './helpers';
+import { useAdapter } from '~/modules/auth/auth.hook';
+import { ADAPTER_KEY } from '~/modules/auth/constants';
 
 type SuccessSelector = (state: RootState) => any;
 type FailedSelector = (state: RootState) => any;
@@ -291,3 +294,20 @@ export const useAction = ({ action }:UseActionProps) : (v:any) => void => {
       }
     },dependency)
   }
+
+
+  export const onSearchPermissions = (keyword: string = '', resource: any[] = [], updateResources: (data: any) => void) => {
+    if (isNil(keyword) || keyword === '') return updateResources(resource);
+    const resultSearch = resource?.filter(item => {
+      return StringToSlug(get(item, 'name', '')?.toLowerCase())?.includes(StringToSlug(keyword?.trim()?.toLowerCase()));
+    });
+    updateResources(resultSearch);
+  };
+
+  export const useIsAdapterSystem = () => {
+    const adapter = useAdapter();
+    const isAdapterSystem = useMemo(() => adapter === ADAPTER_KEY.STAFF, [adapter]);
+    return !!isAdapterSystem; // return true if adapter is system
+  };
+  
+  

@@ -19,13 +19,14 @@ const FormItem = Form.Item;
 interface IProps {
   id?: string | null;
   handleCloseModal: () => void;
+  setDestroy?: any;
   updateUser?: any;
   resetAction?: any;
 };
 
 export default function UserForm(props: IProps) {
   const [form] = Form.useForm();
-  const { id, handleCloseModal, updateUser: handleUpdate, resetAction } = props;
+  const { id, handleCloseModal, updateUser: handleUpdate, resetAction,setDestroy } = props;
   const [imageUrl, setImageUrl] = useState<string>('');
   const [loadingValidateUsername, setLoadingValidateUsername] =
     useState<boolean>(false);
@@ -41,6 +42,7 @@ export default function UserForm(props: IProps) {
   const [, handleCreate] = useCreateUser(() => {
     handleCloseModal();
     resetAction();
+    setDestroy && setDestroy(true)
   });
   const [user, isLoading] = useGetUser(id);
   const initialValues = useInitialValues(user);
@@ -55,6 +57,8 @@ export default function UserForm(props: IProps) {
   useResetState(userSliceAction.resetAction);
 
   useEffect(() => {
+    console.log('okla');
+    
     if (user) {
       console.log(user, 'user')
       console.log(form.getFieldsValue(),'  form.getFieldsValue()')
@@ -70,6 +74,7 @@ export default function UserForm(props: IProps) {
       setWardCode(user?.address?.wardId);
     };
     if (!id) {
+      form.resetFields();
       form.setFieldsValue({ groups: [] });
     };
   }, [id, user]);
@@ -262,7 +267,7 @@ export default function UserForm(props: IProps) {
         />
         <Row gutter={10} align="middle" justify={"center"}>
           <Col span={2}>
-            <Button>Huỷ</Button>
+            <Button onClick={handleCloseModal}>Huỷ</Button>
           </Col>
           <Col span={4}>
             <Button type="primary" htmlType="submit">

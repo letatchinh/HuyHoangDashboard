@@ -39,3 +39,13 @@ export type MemberRulesInGroupType = {
     rule: keyof typeof RULE_SALES_GROUP,
     name: string
 } 
+
+export type BuyGroupType = {
+    fullName : string,
+    phoneNumber : string,
+    avatar : string,
+    code : string,
+    _id : string,
+    children : BuyGroupType[],
+    type : 'partner' | 'employee'
+}

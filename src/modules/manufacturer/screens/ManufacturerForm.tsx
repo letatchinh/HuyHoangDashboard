@@ -7,6 +7,7 @@ interface Props {
   id?: any
   callBack: () => void
   setId?:any
+  setDestroy?:any
   updateManufacturer: (data: any) => void,
 };
 interface FieldType {
@@ -16,9 +17,12 @@ interface FieldType {
   description: string
   isAction: String
 };
-const ManufacturerForm: React.FC<Props> = ({ id,setId, callBack, updateManufacturer }) => {
+const ManufacturerForm: React.FC<Props> = ({ id,setId, callBack, updateManufacturer,setDestroy }) => {
   const [manufacturer, loading] = useGetManufacturerById(id);
-  const [, createManufacturer] = useCreateManufacturer(callBack);
+  const [, createManufacturer] = useCreateManufacturer(() => {
+    callBack();
+    setDestroy && setDestroy(true)
+  });
   const [form] = Form.useForm<FieldType>();
   useResetAction();
   useEffect(() => {

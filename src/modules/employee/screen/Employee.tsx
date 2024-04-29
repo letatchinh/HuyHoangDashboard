@@ -4,16 +4,20 @@ import WhiteBox from "~/components/common/WhiteBox";
 import useTranslate from "~/lib/translation";
 import { concatAddress } from "~/utils/helpers";
 import {
+  useAddProductEmployee,
   useCreateEmployee,
   useDeleteEmployee,
   useEmployeePaging,
   useEmployeeQueryParams,
+  useGetEmployee,
   useGetEmployees,
+  useRemoveProductEmployee,
   useResetStateEmployee,
   useUpdateEmployee,
   useUpdateEmployeeParams,
+  useUpdateProductEmployee,
 } from "../employee.hook";
-import { Button, Checkbox, Col, Modal, Popconfirm, Row, Switch } from "antd";
+import { Button, Checkbox, Col, Modal, Popconfirm, Row, Switch, Tabs } from "antd";
 import { useMemo, useState } from "react";
 import EmployeeForm from "../components/EmployeeForm";
 import TableAnt from "~/components/Antd/TableAnt";
@@ -27,7 +31,8 @@ import WithPermission from "~/components/common/WithPermission";
 import ExportExcelButton from "~/modules/export/component";
 import useCheckBoxExport from "~/modules/export/export.hook";
 import { useChangeDocumentTitle } from "~/utils/hook";
-
+import CollaboratorProduct from "~/modules/collaborator/components/CollaboratorProduct";
+import apis from '../employee.api';
 interface Props {
   currentTab: any;
 };
@@ -74,6 +79,7 @@ const ColumnActions = ({
 export default function Employee({currentTab}: Props) {
   useResetStateEmployee();
   const { t }: any = useTranslate();
+  const [destroy,setDestroy] = useState(false);
   //State
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [id, setId] = useState(null);
@@ -98,10 +104,12 @@ export default function Employee({currentTab}: Props) {
   const handleOpenModal = (id?: any) => {
     setIsOpenModal(true);
     setId(id);
+    id && setDestroy(true);
   };
   const handleCloseModal = () => {
     setIsOpenModal(false);
-    setId(null)
+    setId(null);
+    setDestroy(false);
   };
 
   const [, handleUpdate] = useUpdateEmployee(() => {
@@ -112,6 +120,7 @@ export default function Employee({currentTab}: Props) {
   const [isSubmitLoading, handleCreate] = useCreateEmployee(() => {
     handleCloseModal();
     resetAction();
+    setDestroy(true);
   });
 
   const columns: ColumnsType = [
@@ -222,18 +231,34 @@ export default function Employee({currentTab}: Props) {
         width={1020}
         style={{ top: 50 }}
         afterClose={() => {
-          setIsOpenModal(false)
+          setDestroy(false)
         }}
-        destroyOnClose
+        destroyOnClose={destroy}
       >
-        <EmployeeForm
-          id={id}
-          handleCloseModal={handleCloseModal}
-          handleUpdate={handleUpdate}
-          resetAction={resetAction}
-          handleCreate = {handleCreate}
-          isSubmitLoading={isSubmitLoading}
-        />
+        <Tabs
+        destroyInactiveTabPane
+        items={[
+          {
+            key: '1',
+            label: 'Hồ sơ',
+            children: <EmployeeForm
+            id={id}
+            handleCloseModal={handleCloseModal}
+            handleUpdate={handleUpdate}
+            resetAction={resetAction}
+            handleCreate = {handleCreate}
+            isSubmitLoading={isSubmitLoading}
+          />,
+          },
+          {
+            key: '2',
+            label: "Sản phẩm giới thiệu",
+            children: <CollaboratorProduct id={id} useAddProduct={useAddProductEmployee} useRemoveProduct={useRemoveProductEmployee} useUpdateProduct={useUpdateProductEmployee} useGetUser={useGetEmployee} apiSearchProduct={apis.searchProduct}/>,
+            disabled : !id
+          },
+        ]}>
+        </Tabs>
+        
       </Modal>
     </div>
   );

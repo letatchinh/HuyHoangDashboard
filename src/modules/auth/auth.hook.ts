@@ -61,6 +61,12 @@ export const useGetProfile = () => {
     return profile
 }
 
+// Get Role From redux
+export const useGetRole = () : 'pharma_proflie'| 'staff' | 'supplier' | 'employee' | 'partner' => {
+    const profile = useSelector(profileSelector);
+    return profile?.role
+}
+
 export const useIsSuperAdmin = () : boolean => {
     const profile = useSelector(profileSelector);
     return get(profile,'user.isSuperAdmin')

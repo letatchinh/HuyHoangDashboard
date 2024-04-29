@@ -9,6 +9,12 @@ const apis = {
     update: ({ groupId, ...rest}: any) => requester.put(`/api/v1/user-group/${groupId}/permission`, { ...rest }),
     updateEmployee: ({ groupId, ...rest}: any) => requester.put(`/api/v1/employee-group/${groupId}/permission`, { ...rest }),
     delete: ({ groupId, ...rest}: any) => requester.delete(`/api/v1/user-group/${groupId}/permission`, { ...rest }),
-    deleteEmployee: ({ groupId, ...rest}: any) => requester.delete(`/api/v1/employee-group/${groupId}/permission`, { ...rest }),
+    deleteEmployee: ({ groupId, ...rest }: any) => requester.delete(`/api/v1/employee-group/${groupId}/permission`, { ...rest }),
+
+    // Collaborator
+    getAllCollaborator: (query?: any) => requester.get(`/api/v1/resource-permission-partner`, query),
+    createCollaborator: (data?: any) => requester.post(`/api/v1/partner-group`, data),
+    updateCollaborator: ({ groupId, ...rest }: any) => requester.put(`/api/v1/partner-group/${groupId}/permission`, { ...rest }),
+    deleteCollaborator: ({ groupId, ...rest }: any) => requester.delete(`/api/v1/partner-group/${groupId}/permission`, { ...rest }),
 }
 export default apis;
