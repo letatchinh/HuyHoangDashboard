@@ -1,11 +1,11 @@
-import { Button, Col, Form, Input, Row, Skeleton } from "antd";
+import { Button, Form, Input, Row } from "antd";
 import {
   useCreateSaleChannel,
   useGetSaleChannel,
   useInitSaleChannel,
   useResetSaleChannelAction,
 } from "../saleChannel.hook";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect } from "react";
 import { convertInitSaleChannel } from "../saleChannel.service";
 import { Link } from "react-router-dom";
 import { PATH_APP } from "~/routes/allPath";

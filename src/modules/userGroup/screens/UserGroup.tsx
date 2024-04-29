@@ -31,13 +31,11 @@ import {
   useUpdatePolicy,
 } from "~/modules/policy/policy.hook";
 import { DEFAULT_BRANCH_ID } from "~/constants/defaultValue";
-import toastr from "toastr";
 import POLICIES from "~/modules/policy/policy.auth";
-import { useResetState } from "~/utils/hook";
 import { userGroupSliceAction } from "../redux/reducer";
 import WithOrPermission from "~/components/common/WithOrPermission";
-import { useGetProfile, useProfile } from "~/modules/auth/auth.hook";
 import { useDispatch } from "react-redux";
+import useNotificationStore from "~/store/NotificationContext";
 
 const styleButton = {
   alignContent: "center",
@@ -100,6 +98,9 @@ const UserGroup = ({ currentTab }: UserGroupProps) => {
   const reFeatchGroup = () => {
     return dispatch(userGroupSliceAction.getByIdRequest(param));
   };
+
+  const {onNotify} = useNotificationStore();
+
   //State
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [id, setId] = useState<any>(null);
@@ -146,7 +147,7 @@ const UserGroup = ({ currentTab }: UserGroupProps) => {
       updateGroup({ isAssgined, resource, action }); // update Group in store redux
       handleUpdate({ isAssgined, resource, action, groupId });
     } catch (error) {
-      toastr.error(get(error, "message", "Some error"));
+      onNotify?.error(get(error, "message", "Some error"));
     }
   };
   const renderPermission = (key: string) => (action: any, rc: any) => {

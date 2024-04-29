@@ -19,8 +19,6 @@ import React, {
   useContext,
   useEffect,
   useState,
-  Dispatch,
-  SetStateAction,
 } from "react";
 import {
   CopyOutlined,

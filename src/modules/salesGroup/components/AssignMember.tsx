@@ -1,5 +1,5 @@
-import { DeleteOutlined, PlusCircleOutlined } from "@ant-design/icons";
-import { Button, Flex, Popconfirm, Popover, Table, Tooltip } from "antd";
+import { PlusCircleOutlined } from "@ant-design/icons";
+import { Button, Flex, Popover, Table } from "antd";
 import Search from "antd/es/input/Search";
 import { TableRowSelection } from "antd/es/table/interface";
 import { debounce, get } from "lodash";

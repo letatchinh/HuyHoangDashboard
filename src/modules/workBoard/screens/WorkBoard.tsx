@@ -1,6 +1,6 @@
 
-import React, { Suspense, useState, lazy, useCallback } from 'react';
-import { Button, Col, Form, Modal, Row, Select, Space, Switch, Table, message } from 'antd';
+import React, { Suspense, useState, useCallback } from 'react';
+import { Button, Col, Form, Modal, Row, Space, Table } from 'antd';
 import Search from 'antd/lib/input/Search';
 import Breadcrumb from '~/components/common/Breadcrumb';
 import { useDeleteWorkBoard, useGetlistWorkBoard, useUpdateWorkBoardParams, useWorkBoardPaging, useWorkBoardQueryParams } from '../workBoard.hook';

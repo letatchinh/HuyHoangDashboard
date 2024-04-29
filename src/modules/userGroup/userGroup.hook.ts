@@ -1,7 +1,7 @@
-import { get, groupBy, isNil, last } from "lodash";
+import { get, isNil, last } from "lodash";
 import { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { StringToSlug, clearQuerySearch, getExistProp, removeAccents } from "~/utils/helpers";
 import {
   getSelectors,
@@ -14,7 +14,6 @@ import {
   useSuccess,
 } from "~/utils/hook";
 import { userGroupSliceAction } from "./redux/reducer";
-import { useDispatch } from "react-redux";
 import { policySliceAction } from "../policy/redux/reducer";
 const MODULE  = "userGroup";
 const MODULE_VI  = "Nhóm người dùng";

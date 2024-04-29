@@ -2,7 +2,6 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowLeftOutlined, CloseOutlined, DownOutlined } from '@ant-design/icons';
 import { Button, Drawer, Tree } from 'antd';
-import Text from 'antd/lib/typography/Text';
 import { compact, pick } from 'lodash';
 import { ResizableBox } from 'react-resizable';
 import { useSprintContext } from '../screens/WorkSprint';

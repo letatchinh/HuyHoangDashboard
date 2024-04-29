@@ -1,6 +1,6 @@
-import { Collapse, ConfigProvider, Flex, List, Tag, Tooltip, Typography } from "antd";
+import { ConfigProvider, List, Tooltip } from "antd";
 import type { CollapseProps } from "antd";
-import React, { useId, useMemo, useRef } from "react";
+import React, { useId, useMemo } from "react";
 import { convertAddress } from "../salesGroup.service";
 interface TypeProps extends CollapseProps {
   managementArea?: any[];
@@ -12,27 +12,9 @@ export default function Address({
   onlyShowLastPath,
   ...props
 }: TypeProps): React.JSX.Element {
-  const ref = useRef();
-  const uuid = useId();
   const addressString = useMemo(
     () => convertAddress(managementArea, onlyShowLastPath),
     [managementArea, onlyShowLastPath]
-  );
-  const items: any = useMemo(
-    () => ({
-      key: uuid,
-      label: "",
-      children: (
-        <div style={{ maxHeight: 200, overflowY: "scroll", padding: "0 15px" }}>
-          {addressString?.map((item: any) => (
-            <Typography.Text style={{ display: "block" }} strong>
-              {item}
-            </Typography.Text>
-          ))}
-        </div>
-      ),
-    }),
-    [addressString]
   );
   return (
     <div style={{ width: '80px', textAlign: 'center', lineHeight: 1
