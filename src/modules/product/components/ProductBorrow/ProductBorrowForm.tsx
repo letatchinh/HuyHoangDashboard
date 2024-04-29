@@ -6,15 +6,16 @@ import FormSelectProduct from "./FormSelectProduct";
 import { ColumnsType } from "antd/es/table";
 import { get } from "lodash";
 import TableAnt from "~/components/Antd/TableAnt";
-import { useProductBorrowContext } from "./Context";
 import { formatNumberThreeComma } from "~/utils/helpers";
 import dayjs from "dayjs";
 import { SubmitProductsBorrow, convertProductsBorrowById, useCreateProductBorrow, useGetProductBorrow } from "../../product.hook";
 import UploadListFile from "~/components/common/UploadFileList";
 import { useDispatch } from "react-redux";
 import { productActions } from "../../redux/reducer";
+import useProductBorrowContext from "./ProductBorrowContext";
 type propsType = {
   id?: string | null;
+  onCloseVoucher?: any;
 };
 
 const styles = {
@@ -35,10 +36,9 @@ const styles = {
     xxl: { span: 12 },
   },
 };
-export default function ProductBorrowForm({id}: propsType): React.JSX.Element {
-  const { dataSelected, products } = useProductBorrowContext();
+export default function ProductBorrowForm({id, onCloseVoucher}: propsType): React.JSX.Element {
+  const { dataSelected, products,setDataSelected,setSelectedRowKeys } = useProductBorrowContext();
   const [productBorrow, loading] = useGetProductBorrow(id);
-  console.log(convertProductsBorrowById(productBorrow,products ),'productBorrow');
   const dispatch = useDispatch();
   const resetAction = () => {
     return dispatch(productActions.resetActionProductBorrow());
@@ -48,8 +48,18 @@ export default function ProductBorrowForm({id}: propsType): React.JSX.Element {
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
-    
-  }, []);
+    if (!id) { 
+      form.resetFields();
+      setDataSelected([]);
+      setSelectedRowKeys([]);
+    } else {
+      form.setFieldsValue(productBorrow);
+      const dateRefun = productBorrow?.items[0]?.dateRefun;
+      form.setFieldsValue({ dateRefun: dayjs(dateRefun) });
+      // setDataSelected(convertProductsBorrowById(productBorrow, products));
+      setSelectedRowKeys(productBorrow?.items?.map((item: any) => item?.productId));
+    }
+  }, [productBorrow,id]);
   const openForm = () => {
     setIsOpen(true);
   };
@@ -59,7 +69,7 @@ export default function ProductBorrowForm({id}: propsType): React.JSX.Element {
   };
 
   const [isSubmitLoading, handleCreate] = useCreateProductBorrow(() => {
-    onClose();
+    onCloseVoucher();
     resetAction();
   });
 
@@ -164,7 +174,7 @@ export default function ProductBorrowForm({id}: propsType): React.JSX.Element {
               className="mb-2"
               type="primary"
               onClick={openForm}
-              disabled={!partnerId}
+              disabled={!id ? !partnerId: !id}
               loading ={isSubmitLoading}
             >
               Chọn sản phẩm
@@ -179,7 +189,7 @@ export default function ProductBorrowForm({id}: propsType): React.JSX.Element {
                 footer={() => (
                   <h6
                     style={{ textAlign: "right", marginTop: 10 }}
-                  >{`Tổng số: ${get(dataSelected, "length", 0)}`}</h6>
+                  >{`Tổng số: ${dataSelected?.length || 0}`}</h6>
                 )}
               />
             </Form.Item>
@@ -195,7 +205,7 @@ export default function ProductBorrowForm({id}: propsType): React.JSX.Element {
         </BaseBorderBox>
         <Row>
           <Col span={24} style={{ textAlign: "center", marginTop: "20px" }}>
-            <Button loading={isSubmitLoading} type="primary" htmlType="submit" disabled = {!dataSelected.length}>
+            <Button loading={isSubmitLoading} type="primary" htmlType="submit" disabled = {!dataSelected?.length}>
             {`${id ? "Cập nhật" : "Tạo mới"}`}
             </Button>
           </Col>

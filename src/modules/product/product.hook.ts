@@ -284,16 +284,16 @@ export const useConvertProductListCollaborator = (data: any) => {
 };
 
 export const useConvertDataAssignProductsCol = (products: any[], selectedRowKey: any[]) => {
-  return  products?.filter(product => selectedRowKey?.includes(product._id));
+  return  products?.filter(product => selectedRowKey?.includes(product?._id));
 };
 
 export const SubmitProductsBorrow = (values: any) => {
   return {
     ...omit(values, ["dateRefun"]),
     items: values?.data?.map((item: any) => ({
-      productId: item._id,
-      variantId: item.variantCurrent._id,
-      quantity: item.quantity,
+      productId: item?._id,
+      variantId: item?.variantCurrent?._id,
+      quantity: item?.quantity,
       priceBefore: item?.variantCurrent?.price,
       note: item?.note || "",
       dateRefun: dayjs(item?.dateRefun).format("YYYY-MM-DD"),
@@ -304,9 +304,6 @@ export const SubmitProductsBorrow = (values: any) => {
 };
 
 export const convertProductsBorrowById = (data: any, products: any[] | undefined) => {
-  console.log(products,'products')
-  const items = data?.items?.map((item: any) => item?._id);
-  console.log(items,'items')
-  const listProducts = products?.filter(product => items?.includes(product._id));
-  console.log(listProducts,'listProducts')
+  const items = data?.items?.map((item: any) => item?.productId);
+return products?.filter(product => items?.includes(product._id));
 };

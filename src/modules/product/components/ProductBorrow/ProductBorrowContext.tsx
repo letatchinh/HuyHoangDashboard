@@ -1,11 +1,12 @@
-import { ReactNode, createContext, useContext, useMemo, useState } from "react";
+import { ReactNode, createContext, useContext, useEffect, useMemo, useState } from "react";
 import { useFetchState } from "~/utils/helpers";
 import apis from "../../product.api";
 import { useConvertDataAssignProductsCol } from "../../product.hook";
 import { Modal } from "antd";
 import ProductBorrowForm from "./ProductBorrowForm";
+import { get } from "lodash";
 
-export type UseProductBorrowContext = {
+export interface productBorrowContext {
   selectedRowKeys: any[];
   setSelectedRowKeys: any;
   setDataSelected: any;
@@ -19,7 +20,7 @@ export type UseProductBorrowContext = {
   products?: any[];
 };
 
-const ProductBorrowContext = createContext<UseProductBorrowContext>({
+const ProductBorrowContext = createContext<productBorrowContext>({
   selectedRowKeys: [],
   setSelectedRowKeys: () => { },
   dataSelected: [],
@@ -35,7 +36,7 @@ const ProductBorrowContext = createContext<UseProductBorrowContext>({
 interface propsType {
   children?: ReactNode;
 }
-export default function ProductBorrowContextProvider({children}: propsType) {
+export function ProductBorrowContextProvider({children}: propsType) {
   const [selectedRowKeys, setSelectedRowKeys] = useState<any[]>([]);
   const [dataSelected, setDataSelected] = useState<any[]>([]);
   const [supplierId, setSupplierId] = useState<any[]>([]);
@@ -55,9 +56,23 @@ export default function ProductBorrowContextProvider({children}: propsType) {
     useDocs: true,
     query: newQuery,
   });
-  const productOfCollaborator = useConvertDataAssignProductsCol(products?.docs,selectedRowKeys);
-
-
+  const productOfCollaborator = useConvertDataAssignProductsCol(products, selectedRowKeys);
+  console.log(selectedRowKeys,'selectedRowKeys')
+  useEffect(() => {
+    if (selectedRowKeys?.length) {
+      console.log(1)
+      const data = productOfCollaborator?.map((item: any) => ({
+        _id: item?._id,
+        variants: get(item, "variants", []),
+        variantCurrent: get(item, "variants", [])[0],
+        name: get(item, "name", ""),
+        quantity: 1,
+    }));
+      setDataSelected(data);
+    }else{
+      setDataSelected([]);
+    }
+  }, [selectedRowKeys]);
   return (
       <ProductBorrowContext.Provider value={{
         selectedRowKeys,
@@ -70,11 +85,11 @@ export default function ProductBorrowContextProvider({children}: propsType) {
         setKeyword,
         productOfCollaborator,
         isLoadingProducts,
-        products
+        products,
       }}>
         {children}
       </ProductBorrowContext.Provider>
    )
 };
-const useProductBorrowContext = (): UseProductBorrowContext => useContext(ProductBorrowContext);
-export { useProductBorrowContext };
+const useProductBorrowContext = (): productBorrowContext => useContext(ProductBorrowContext);
+export default useProductBorrowContext

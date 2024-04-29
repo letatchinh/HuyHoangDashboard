@@ -5,12 +5,12 @@ import ProductBorrowForm from './ProductBorrowForm';
 import Breadcrumb from '~/components/common/Breadcrumb';
 import { ColumnsType } from 'antd/es/table';
 import {useGetProductsBorrow, usePagingBorrow, useProductBorrowQueryParams, useUpdateProductParams } from '../../product.hook';
-import ProductBorrowContextProvider, { useProductBorrowContext } from './Context';
 import dayjs from 'dayjs';
 import { REF_TYPE_OBJECT } from '../../constants';
 import { toUpper } from 'lodash';
 import StatusTag from './Status';
 import Action from '~/components/common/Action';
+import { ProductBorrowContextProvider } from './ProductBorrowContext';
 type propsType = {
 
 }
@@ -145,6 +145,7 @@ export default function ProductBorrow(props: propsType): React.JSX.Element {
             className="table-striped-rows-custom"
             columns={columns}
             dataSource={list}
+            loading = {isLoading}
             size="small"
             bordered
             scroll={{ y: '60vh' }}
@@ -163,7 +164,7 @@ export default function ProductBorrow(props: propsType): React.JSX.Element {
           width= {1200}
           destroyOnClose
         >
-        <ProductBorrowForm id={id} />
+        <ProductBorrowForm id={id} onCloseVoucher={onCloseVoucher} />
         </Modal>
     </ProductBorrowContextProvider>
   )

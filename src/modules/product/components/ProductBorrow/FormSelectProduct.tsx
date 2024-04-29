@@ -1,37 +1,23 @@
 import {
   Button,
-  Checkbox,
   Col,
   Flex,
   InputNumber,
-  List,
   Row,
   Select,
-  Space,
   Typography,
 } from "antd";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo} from "react";
 import BaseBorderBox from "~/components/common/BaseBorderBox";
-import SelectProductGroups from "~/modules/productGroup/screens/SelectProductGroup";
 import {
-  useConvertDataAssignProductsCol,
   useConvertProductListCollaborator,
-  useGetProducts,
-  useProductQueryParams,
-  useUpdateProductParams,
 } from "../../product.hook";
 import Search from "antd/es/input/Search";
-import { useFetchState } from "~/utils/helpers";
-import apis from "../../product.api";
 import { useGetCollaborator } from "~/modules/collaborator/collaborator.hook";
-import SelectSupplier from "~/modules/supplier/components/SelectSupplier";
-import supplierModule from "~/modules/supplier";
 import { ColumnsType } from "antd/es/table";
 import { get, omit } from "lodash";
 import TableAnt from "~/components/Antd/TableAnt";
-import EmptyData from "~/components/Antd/EmptyData";
-import { SyncOutlined } from "@ant-design/icons";
-import { useProductBorrowContext } from "./Context";
+import useProductBorrowContext from "./ProductBorrowContext";
 type propsType = {
   id?: string | null;
 };
@@ -39,43 +25,32 @@ export default function FormSelectProduct({
   id,
 }: propsType): React.JSX.Element {
   const {
-    dataSelected, 
-    selectedRowKeys, 
+    dataSelected,
+    selectedRowKeys,
     setDataSelected,
-    setSelectedRowKeys, 
-    supplierId, 
-    setSupplierId, 
-    productOfCollaborator, 
-    isLoadingProducts,
-    setKeyword } = useProductBorrowContext();
-  // const [supplierFilterId, setSupplierFilterId] = useState();
-  // const [suppliers, loadingSupplier] = useFetchState({
-  //   api: supplierModule.api.getAllPublic,
-  //   useDocs: false,
-  // });
-  
+    setSelectedRowKeys,
+    productOfCollaborator,
+    setKeyword,
+  } = useProductBorrowContext();
   const [collaborator, isLoading]: any = useGetCollaborator(id);
   const productsCollaborator = useConvertProductListCollaborator(collaborator);
 
-  useEffect(() => {
-    if (selectedRowKeys?.length) {
-      setDataSelected(
-        productOfCollaborator?.map((item: any) => ({
-          _id: item?._id,
-          variants: get(item, "variants", []),
-          variantCurrent: get(item, "variants", [])[0],
-          name: get(item, "name", ""),
-          quantity: 1,
-        }))
-      );
-    }else{
-      setDataSelected([]);
-    }
-  }, [selectedRowKeys]);
+  // useEffect(() => {
+  //   if (selectedRowKeys?.length) {
+  //     console.log(1)
+  //     const data = productOfCollaborator?.map((item: any) => ({
+  //       _id: item?._id,
+  //       variants: get(item, "variants", []),
+  //       variantCurrent: get(item, "variants", [])[0],
+  //       name: get(item, "name", ""),
+  //       quantity: 1,
+  //   }));
+  //     setDataSelected(data);
+  //   }else{
+  //     setDataSelected([]);
+  //   }
+  // }, [selectedRowKeys]);
 
-  useEffect(() => {
-    console.log(dataSelected,'dataSelected')
-  }, [dataSelected]);
 
   const onSelectChange = (newSelectedRowKeys: any[]) => {
     setSelectedRowKeys(newSelectedRowKeys);
@@ -226,9 +201,6 @@ export default function FormSelectProduct({
                   />
               </div> */}
               <TableAnt
-                // locale={{
-                //   emptyText : <EmptyData mess={<Button type='primary' ghost icon={<SyncOutlined />} onClick={mutate}>Thử lại</Button>}/>
-                // }}
                 loading={isLoading}
                 rowSelection={rowSelection}
                 columns={columnsReady}
@@ -259,14 +231,6 @@ export default function FormSelectProduct({
                 height: "600px",
               }}
             >
-              {/* <div className="d-flex align-items-center ml-1 gap-2 mb-1">
-                <Typography.Text strong>Chọn nhà cung cấp:</Typography.Text>
-                  <SelectSupplier
-                    value={supplierFilterId}
-                    onChange={(value) => setSupplierFilterId(value)}
-                    defaultSuppliers={suppliers}
-                  />
-              </div> */}
               <TableAnt
                 loading={isLoading}
                 rowSelection={rowSelection}
@@ -281,7 +245,7 @@ export default function FormSelectProduct({
                     <Typography.Text style={{ fontStyle: "italic" }} strong>
                       Tổng sản phẩm:{" "}
                       {selectedRowKeys?.length
-                        ? `${selectedRowKeys.length} / ${productsCollaborator?.length}`
+                        ? `${selectedRowKeys?.length} / ${productsCollaborator?.length}`
                         : productsCollaborator?.length}
                     </Typography.Text>
                   </Flex>
