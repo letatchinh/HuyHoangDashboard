@@ -1,3 +1,15 @@
+## [1.12.1](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/compare/v1.12.0...v1.12.1) (2024-04-29)
+
+
+### Bug Fixes
+
+* [#1467](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1467) action update, handle, permission, self test ([539d27d](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/539d27d9a70e30710978daba27a87f709bed4135))
+* [#1541](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1541) performance code ([305478e](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/305478ec4050b703d608d96d18ebbab51db65a06))
+* [#1541](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1541) performance package ([80e20c3](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/80e20c3e6d5071b3e74498145e8d8feda344afe3))
+* change field and show totalRevenue ([a4ca9a4](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/a4ca9a4a996eae04ec95b36b2c3342cd93713f0f))
+* performance lib ([9775e1c](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/9775e1c3b6c4d0582ed47a12907ea72fc7f4aff4))
+* show totalRevenue ([90c52a9](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/90c52a9a3067f57c617cb6ba94f70d3f295659bb))
+
 # [1.12.0](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/compare/v1.11.5...v1.12.0) (2024-04-29)
 
 
