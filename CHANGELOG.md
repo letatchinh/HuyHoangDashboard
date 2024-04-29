@@ -1,3 +1,22 @@
+# [1.12.0](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/compare/v1.11.5...v1.12.0) (2024-04-29)
+
+
+### Bug Fixes
+
+* [#1522](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1522) CRUD, self test ([bd68183](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/bd681838aeea1378db83f1037022422ceb2f4aea))
+* [#1533](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1533) - add select employee seller ([64f7070](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/64f707052319045fb373502f8d1b186af2d3d45b))
+* [#1533](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1533) - change name file adress common ([c87ac20](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/c87ac2001401ff9fe9a0d50ed8c52fe7a37ffb11))
+* [#1533](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1533) - change name vi field urban type ([fa81514](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/fa8151426c06ba874bb57e3bf6970806400846ae))
+* [#1533](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1533) add api export error file ([f56f915](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/f56f915db39a47c60b2b1c09e608d81414bd7e3f))
+* [#1533](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1533) add infomation for pharmacy ([19ce91b](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/19ce91b236831f757e2c2b3bb1487d94b8571caf))
+* [#1533](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1533) form select employee seller ([0c71449](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/0c71449ec8cb67f8f15814d0c88eb1e41f4cc001))
+* fix file export from modal import pharmacy ([3be2001](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/3be2001ea210bd84527d688b623319fcbaa9352e))
+
+
+### Features
+
+* convert pharmacy ([aac0b5d](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/aac0b5d3a045d613df96c11780c600ff63f02ac4))
+
 ## [1.11.5](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/compare/v1.11.4...v1.11.5) (2024-04-12)
 
 
