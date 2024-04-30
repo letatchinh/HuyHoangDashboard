@@ -1,4 +1,4 @@
-import { get } from "lodash";
+import { get, omit } from "lodash";
 import requester from "~/api/requester";
 
 const apis = {
@@ -8,6 +8,8 @@ const apis = {
     update: (data?: any) => requester.put(`/api/v1/employee/${get(data ,'_id' , 'id')}`, data),
     delete: (id?: any) => requester.delete(`/api/v1/employee/${id}`),
     getALLAuthenticated: (query?: any) => requester.get('/api/v1/employee-all', query),
+    convert: (data?: any) => requester.put(`/api/v1/employee-convert/${get(data ,'_id' , 'id')}`, data),
+    getMyEmployee: (query?: any) => requester.get(`/api/v1/employee-referral/${query?.id}`,(omit(query,['id']))),
     searchProduct : (query : any) => requester.post(`/api/v1/product-search-assign-employee`,query),
     addProduct: (query?: any) => requester.put(`/api/v1/employee-add-product`, query),
     updateProduct: (query?: any) => requester.put(`/api/v1/employee-update-discount-product`, query),
