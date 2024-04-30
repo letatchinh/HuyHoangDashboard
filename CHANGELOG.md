@@ -1,3 +1,16 @@
+## [1.13.1](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/compare/v1.13.0...v1.13.1) (2024-04-30)
+
+
+### Bug Fixes
+
+* [#1518](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1518) permission ([fa70ab5](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/fa70ab5c768011c1eed469b4b47d8504bb72713a))
+* [#1518](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1518) permission product ([3b08305](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/3b08305b3c0386c9c853d5f7e1da530cd0d701f0))
+* [#1520](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1520) - add message error too large ([dbc2b9b](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/dbc2b9b100860096f7a356d28efd7b5fed3543f9))
+* [#1520](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1520) upload file ([2e2aa0a](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/2e2aa0ad3b5327604f5ee53c20f0eccc2b0065f4))
+* [#1524](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1524) add files ([fbcaa7f](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/fbcaa7fed83ca5bef1c6c97f2d5dadb155deba25))
+* get conflict ([c74049c](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/c74049c817c444e71092ad8f8730d73ecbaa2d21))
+* show info bill ([b9399d0](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/b9399d0e24d88580662f855798a536d0bbd7f5f3))
+
 # [1.13.0](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/compare/v1.12.1...v1.13.0) (2024-04-29)
 
 
