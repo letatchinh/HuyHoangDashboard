@@ -1,3 +1,11 @@
+## [1.13.2](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/compare/v1.13.1...v1.13.2) (2024-04-30)
+
+
+### Bug Fixes
+
+* [#1536](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1536) - add column approved employee seller ([abe5387](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/abe53879cf175c874a0509b98d53d6c153fbad92))
+* [#1536](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1536) add column create by in table employee seller ([091552e](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/091552eae4a96cc0837009e70fea75d152a55e3e))
+
 ## [1.13.1](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/compare/v1.13.0...v1.13.1) (2024-04-30)
 
 
