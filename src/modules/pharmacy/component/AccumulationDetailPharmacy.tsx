@@ -25,6 +25,7 @@ interface UserProps {
 export default function AccumulationDetailPharmacy(props: propsAccumulationDetail) {
   const { t }: any = useTranslate();
   const { _id, pharmacyId, targetType, date } = props;
+  const canReadBill = useMatchPolicy(POLICIES.READ_BILL);
 
   const defaultDate = useMemo(
     () => ({
@@ -58,13 +59,13 @@ export default function AccumulationDetailPharmacy(props: propsAccumulationDetai
         width: 120,
         render(codeSequence) {
           return (
-            <Link
+            canReadBill ?<Link
               className="link_"
               to={`/bill?keyword=${codeSequence}`}
               target={"_blank"}
             >
               {codeSequence}
-            </Link>
+            </Link> : codeSequence
           );
         },
       },

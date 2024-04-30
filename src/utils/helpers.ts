@@ -346,4 +346,3 @@ export const useIsAdapterSystem = () => {
   const isAdapterSystem = useMemo(() => adapter === ADAPTER_KEY.STAFF, [adapter]);
   return !!isAdapterSystem; // return true if adapter is system
 };
-

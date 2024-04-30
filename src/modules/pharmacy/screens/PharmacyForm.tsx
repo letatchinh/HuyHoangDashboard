@@ -25,6 +25,7 @@ import SelectSaleChannel from "~/modules/saleChannel/components/SelectSaleChanne
 import RenderLoading from "~/components/common/RenderLoading";
 import TextArea from "antd/es/input/TextArea";
 import AddressFormDelivery from "~/components/common/AddressFormDelivery";
+import UploadListFile from "~/modules/freelanceContractPharmacy/component/UploadListFile";
 import { get } from "lodash";
 import AddressCommonForm from "~/components/common/AddressCommonForm";
 import BaseBorderBox from "~/components/common/BaseBorderBox";

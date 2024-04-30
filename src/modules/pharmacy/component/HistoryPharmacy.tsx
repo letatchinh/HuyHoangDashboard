@@ -1,5 +1,4 @@
 import { ColumnsType } from "antd/es/table";
-import useTranslate from "~/lib/translation";
 import { formatter } from "~/utils/helpers";
 import {
   useGetHistoryPharmacy,
@@ -9,13 +8,14 @@ import WhiteBox from "~/components/common/WhiteBox";
 import TableAnt from "~/components/Antd/TableAnt";
 import {  get } from "lodash";
 import moment from "moment";
-// import ColumnActions from "~/components/common/ColumnAction";
 import {  useMemo, useState } from "react";
 import { propsType } from "../pharmacy.modal";
 import { Link } from "react-router-dom";
 import Status from "~/components/common/Status";
 import { STATUS_BILL_VI } from "~/modules/sale/bill/constants";
 import ExpandHistoryPharmacy from "./ExpandHistoryPharmacy";
+import { useMatchPolicy } from "~/modules/policy/policy.hook";
+import POLICIES from "~/modules/policy/policy.auth";
 
 interface UserProps {
   currentTab: string | undefined;
@@ -27,6 +27,7 @@ export default function HistoryPharmacy(props: propsType) {
   const { pharmacyId } = props;
   const [history, isLoading] = useGetHistoryPharmacy(pharmacyId);
   const paging = useHistoryPharmacyPaging();
+  const canReadBill = useMatchPolicy(POLICIES.READ_BILL);
 
   const [itemActive, setItemActive] = useState<any>();
 
@@ -39,9 +40,9 @@ export default function HistoryPharmacy(props: propsType) {
         width: 120,
         render(codeSequence) {
           return (
-            <Link className="link_" to={`/bill?keyword=${codeSequence}`} target={'_blank'}>
+            canReadBill ?<Link className="link_" to={`/bill?keyword=${codeSequence}`} target={'_blank'}>
               {codeSequence}
-            </Link>
+            </Link> : codeSequence
           );
         },
       },

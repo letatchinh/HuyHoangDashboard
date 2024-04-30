@@ -17,6 +17,8 @@ const shippingCost = 'shippingCost';
 //Pharmacy
 const pharmaProfile = 'pharmaProfile';
 const contractPharmacy = 'contractPharmacy';
+const debtPharmacy = 'debtPharmacy';
+const accumulatePharmaProfile = 'accumulatePharmaProfile';
 const billPharmacy = 'billPharmacy';
 
 // Đơn hàng
@@ -26,6 +28,7 @@ const unit = 'unit';
 const productGroup='productGroup';
 const ranking = 'ranking';
 const medicine = 'medicine';
+const historyBillPharma = 'historyBillPharma';
 const billPartner = 'billPartner';
 const billEmployee = 'billEmployee';
 
@@ -102,12 +105,15 @@ const RESOURCES = [
   manuFacturer,
   unit,
   ranking,
-
+  debtPharmacy,
+  accumulatePharmaProfile,
+  
   // productGroup
   productGroup,
   //
   medicine,
   product,
+  historyBillPharma,
   
   //VOUCHER
   voucherPharmacy,
@@ -157,7 +163,6 @@ const RESOURCES = [
   configCronTime,
   configBenefit,
   
-  orderSupplier,
   salesChannel,
   customerGroup,
   customer,
@@ -237,7 +242,8 @@ const RESOURCE = (): ResourceType => {
   const GROUP_PHARMA: string[] = [
     pharmaProfile,
     contractPharmacy,
-    voucherPharmacy
+    voucherPharmacy,
+    debtPharmacy
   ];
   
   const GROUP_BILL : string[] = [

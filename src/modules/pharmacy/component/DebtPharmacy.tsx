@@ -7,15 +7,14 @@ import {
 } from "../pharmacy.hook";
 import TableAnt from "~/components/Antd/TableAnt";
 import moment from "moment";
-// import ColumnActions from "~/components/common/ColumnAction";
 import { useMemo, useState } from "react";
 import {
   Row,
 } from "antd";
-// import PharmacyForm from "./PharmacyForm";
 import { propsType } from "../pharmacy.modal";
 import { Link } from "react-router-dom";
-import dayjs from "dayjs";
+import { useMatchPolicy } from "~/modules/policy/policy.hook";
+import POLICIES from "~/modules/policy/policy.auth";
 
 interface UserProps {
   currentTab: string | undefined;
@@ -24,13 +23,8 @@ interface UserProps {
 export default function DebtPharmacy(props: propsType) {
   const { pharmacyId } = props;
   const [query, onTableChange] = usePharmacyDebtQuery();
-  // const defaultDate = useMemo(
-  //   () => ({
-  //     startDate: dayjs().startOf("month").format("YYYY-MM-DDTHH:mm:ss"),
-  //     endDate: dayjs().endOf("month").format("YYYY-MM-DDTHH:mm:ss"),
-  //   }),
-  //   []
-  // );
+  const canReadBill = useMatchPolicy(POLICIES.READ_BILL);
+
   const newQuery = useMemo(
     () => ({
       ...query,
@@ -53,9 +47,10 @@ export default function DebtPharmacy(props: propsType) {
         width: 120,
         render(codeSequence) {
           return (
-            <Link className="link_" to={`/bill?keyword=${codeSequence}`} target={'_blank'}>
+            canReadBill ?  <Link className="link_" to={`/bill?keyword=${codeSequence}`} target={'_blank'}>
               {codeSequence}
-            </Link>
+            </Link> 
+              : codeSequence
           );
         },
       },

@@ -1,6 +1,6 @@
 import { ColumnsType } from "antd/es/table";
 import useTranslate from "~/lib/translation";
-import { concatAddress, formatNumberThreeComma } from "~/utils/helpers";
+import { concatAddress, formatNumberThreeComma, useIsAdapterSystem } from "~/utils/helpers";
 import {
   useConvertPharmacy,
   useDeletePharmacy,
@@ -13,7 +13,7 @@ import {
 import Breadcrumb from "~/components/common/Breadcrumb";
 import WhiteBox from "~/components/common/WhiteBox";
 import TableAnt from "~/components/Antd/TableAnt";
-import { omit, get } from "lodash";
+import { omit, get, map, truncate } from "lodash";
 import {
   REF_COLLECTION_UPPER,
   STATUS,
@@ -26,6 +26,7 @@ import {
   Button,
   Checkbox,
   Col,
+  Flex,
   Modal,
   Popconfirm,
   Radio,
@@ -33,12 +34,13 @@ import {
   Select,
   Space,
   Switch,
+  Tooltip,
   Tabs,
   Typography,
   message,
 } from "antd";
 import Search from "antd/es/input/Search";
-import { ImportOutlined, PlusCircleOutlined } from "@ant-design/icons";
+import { FileTextOutlined,ImportOutlined, PlusCircleOutlined } from "@ant-design/icons";
 import PharmacyForm from "./PharmacyForm";
 import {
   PROCESS_STATUS,
@@ -81,6 +83,10 @@ export default function Pharmacy() {
   const paging = usePharmacyPaging();
   const canWriteVoucher = useMatchPolicy(POLICIES.WRITE_VOUCHERPHARMACY);
   const canDownload = useMatchPolicy(POLICIES.DOWNLOAD_PHARMAPROFILE);
+
+  const canReadDebt = useMatchPolicy(POLICIES.READ_DEBTPHARMACY);
+  const canUpdatePharma = useMatchPolicy(POLICIES.UPDATE_PHARMAPROFILE);
+  const canDeletePharma = useMatchPolicy(POLICIES.DELETE_PHARMAPROFILE);
   const [arrCheckBox, onChangeCheckBox] = useCheckBoxExport();
   const [activeTab, setActiveTab] = useState("1");
   const [isLoadingSubmit, handleConvert] = useConvertPharmacy();
@@ -181,13 +187,31 @@ export default function Pharmacy() {
           return get(record, "fullName");
         },
       },
-      {
+      ...(canReadDebt ? [{
         title: "Công nợ",
         dataIndex: "resultDebt",
         key: "resultDebt",
         width: 180,
-        render(value) {
+        render(value: any) {
           return formatNumberThreeComma(value);
+        },
+      }] : []),
+      {
+        title: "File đính kèm",
+        dataIndex: "files",
+        key: "files",
+        width: 180,
+        align: "left",
+        render(record) {
+          const render = map(record, (item) => (
+            <Tooltip title={item?.name?.length > 16 ? item?.name : ""}>
+              <a download href={item?.url} target="_blank" style={{ cursor: "pointer"}}>
+                <FileTextOutlined style={{ marginRight: '5px'}} />
+                {truncate(item?.name, { 'length': 16 })}
+              </a>
+            </Tooltip>
+          ))
+          return <Flex vertical >{render}</Flex>
         },
       },
       {
