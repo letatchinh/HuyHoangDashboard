@@ -69,5 +69,6 @@
 }
 .product-borrow-table{
   overflow-y: scroll;
-  height: 500px;
+  min-height: 100px;
+  max-height: 400px;
 }
