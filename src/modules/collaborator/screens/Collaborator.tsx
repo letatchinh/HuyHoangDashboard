@@ -346,7 +346,7 @@ export default function Collaborator({
           />
         </Row>
         <WithOrPermission permission={[POLICIES.UPDATE_PARTNER]}>
-          <Space style={{ marginBottom: 20 }}>
+          <Space style={{ marginBottom: 20, marginTop: 20 }}>
             <Typography style={{ fontSize: 14, marginRight: 20 }}>
               Phân loại trạng thái theo :
             </Typography>

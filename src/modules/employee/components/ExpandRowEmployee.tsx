@@ -32,9 +32,11 @@ export default function ExpandRowEmployee({
               return (
                 <Link
                   className="link_"
-                  to={`/collaborator?&keyword=${phoneNumber}`}
+                  to={`/collaborator?keyword=${phoneNumber}`}
                   target={"_blank"}
-                ></Link>
+                >
+                  {phoneNumber}
+                </Link>
               );
             },
           },

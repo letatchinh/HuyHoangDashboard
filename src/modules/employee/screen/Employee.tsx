@@ -288,6 +288,7 @@ export default function Employee({ currentTab }: Props) {
           dataSource={data?.length ? data  : []}
           loading={isLoading}
           columns={columns}
+          rowKey={rc => rc._id}
           size="small"
           pagination={{
             ...paging,
