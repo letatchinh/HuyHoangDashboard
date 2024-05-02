@@ -14,7 +14,7 @@ export default function CollaboratorScreen(props: propsType): React.JSX.Element 
   const [currentTab, setCurrentTab] = useState("");
   const navigate = useNavigate();
 
-  const { pathname } = useLocation();
+  const { pathname, search } = useLocation();
   const isCollaborator = useMatchPolicy(POLICIES.READ_PARTNER);
   const isCollaboratorGroup = useMatchPolicy(POLICIES.READ_PARTNERGROUP);
 
@@ -32,9 +32,9 @@ export default function CollaboratorScreen(props: propsType): React.JSX.Element 
       };
       const resultSubstring: string = urlPush.substring(1);
       setCurrentTab(resultSubstring);
-      navigate(urlPush);
+      navigate(urlPush + search);
     };
-  }, [pathname,isCollaborator,isCollaboratorGroup]);
+  }, [pathname,isCollaborator,isCollaboratorGroup,search]);
 
   const onChange = (key: any) => {
     setCurrentTab(key);
