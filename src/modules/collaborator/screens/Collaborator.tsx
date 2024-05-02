@@ -327,7 +327,8 @@ export default function Collaborator({
             showSelect={false}
             isShowButtonAdd
             handleOnClickButton={() => handleOpenModal()}
-            onChange={setKeyword}
+            onChange={(e : any) => setKeyword(e.target.value)}
+            keyword={keyword}
             onSearch={(e: any) => onParamChange({ keyword: e })}
             permissionKey={[POLICIES.WRITE_PARTNER]}
             addComponent={
