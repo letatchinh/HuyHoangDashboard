@@ -1,3 +1,12 @@
+## [1.13.3](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/compare/v1.13.2...v1.13.3) (2024-05-02)
+
+
+### Bug Fixes
+
+* [#1556](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1556) - change base url ([28a973c](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/28a973c4c0ea16728659b01cb7af2dc84b4da9ac))
+* [#1556](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1556) - loading search ([ca022eb](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/ca022ebc5a6e7a57dac45e8e3bdd9262154c9366))
+* [#1556](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1556) expand my employee seller ([b24aade](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/b24aadeae7da91c374caedc6b55ddc3fe95d95f2))
+
 ## [1.13.2](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/compare/v1.13.1...v1.13.2) (2024-04-30)
 
 
