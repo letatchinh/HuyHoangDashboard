@@ -8,7 +8,7 @@ import { get } from "lodash";
 import TableAnt from "~/components/Antd/TableAnt";
 import { formatNumberThreeComma } from "~/utils/helpers";
 import dayjs from "dayjs";
-import { SubmitProductsBorrow, convertProductsBorrowById, useCreateProductBorrow, useGetProductBorrow } from "../../product.hook";
+import { SubmitProductsBorrow, convertProductsBorrowById, useCreateProductBorrow, useGetProductBorrow, useUpdateProductBorrow } from "../../product.hook";
 import UploadListFile from "~/components/common/UploadFileList";
 import { useDispatch } from "react-redux";
 import { productActions } from "../../redux/reducer";
@@ -56,7 +56,7 @@ export default function ProductBorrowForm({id, onCloseVoucher}: propsType): Reac
       form.setFieldsValue(productBorrow);
       const dateRefun = productBorrow?.items[0]?.dateRefun;
       form.setFieldsValue({ dateRefun: dayjs(dateRefun) });
-      // setDataSelected(convertProductsBorrowById(productBorrow, products));
+      setPartnerId(productBorrow?.receidverId);
       setSelectedRowKeys(productBorrow?.items?.map((item: any) => item?.productId));
     }
   }, [productBorrow,id]);
@@ -72,13 +72,17 @@ export default function ProductBorrowForm({id, onCloseVoucher}: propsType): Reac
     onCloseVoucher();
     resetAction();
   });
+  const [, handleUpdate] = useUpdateProductBorrow(() => {
+    onCloseVoucher();
+    resetAction();
+  });
 
   const onFinish = (values: any) => {
     const submitData = SubmitProductsBorrow({ ...values, data: dataSelected });
     if (!id) {
       handleCreate(submitData);
     } else {
-      console.log('dasdsdsads');
+      handleUpdate({ ...submitData, _id: id });
     }
   };
   const renderLoading = (component: React.ReactNode) => {
@@ -181,14 +185,16 @@ export default function ProductBorrowForm({id, onCloseVoucher}: propsType): Reac
             </Button>
             <Form.Item name={"data"} noStyle>
               <TableAnt
+                className="product-borrow-table"
                 columns={columns}
                 dataSource={dataSelected}
                 size="small"
                 pagination={false}
+                stickyTop
                 bordered
                 footer={() => (
                   <h6
-                    style={{ textAlign: "right", marginTop: 10 }}
+                    style={{ textAlign: "left", marginTop: 10 }}
                   >{`Tổng số: ${dataSelected?.length || 0}`}</h6>
                 )}
               />
@@ -203,13 +209,14 @@ export default function ProductBorrowForm({id, onCloseVoucher}: propsType): Reac
             </Col>
           </Row>
         </BaseBorderBox>
-        <Row>
+      {!id &&  <Row>
           <Col span={24} style={{ textAlign: "center", marginTop: "20px" }}>
             <Button loading={isSubmitLoading} type="primary" htmlType="submit" disabled = {!dataSelected?.length}>
-            {`${id ? "Cập nhật" : "Tạo mới"}`}
+              {/* {`${id ? "Cập nhật" : "Tạo mới"}`} */}
+              Tạo mới
             </Button>
           </Col>
-        </Row>
+        </Row>}
       </Form>
       <Modal
         title="Chọn sản phẩm"

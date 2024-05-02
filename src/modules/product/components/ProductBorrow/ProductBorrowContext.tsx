@@ -57,10 +57,8 @@ export function ProductBorrowContextProvider({children}: propsType) {
     query: newQuery,
   });
   const productOfCollaborator = useConvertDataAssignProductsCol(products, selectedRowKeys);
-  console.log(selectedRowKeys,'selectedRowKeys')
   useEffect(() => {
     if (selectedRowKeys?.length) {
-      console.log(1)
       const data = productOfCollaborator?.map((item: any) => ({
         _id: item?._id,
         variants: get(item, "variants", []),

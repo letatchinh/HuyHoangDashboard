@@ -204,6 +204,7 @@ export const useProductBorrowQueryParams = () => {
   const keyword = query.get("keyword");
   const createSuccess = useSelector(createBorrowSuccessSelector);
   const deleteSuccess = useSelector(deleteBorrowSuccessSelector);
+  const updateSuccess = useSelector(updateBorrowSuccessSelector);
   const startDate = query.get('startDate') || dayjs().startOf('month').format("YYYY-MM-DDTHH:mm:ss");
   const endDate = query.get('endDate') || dayjs().endOf('month').format("YYYY-MM-DDTHH:mm:ss");
 
@@ -214,11 +215,12 @@ export const useProductBorrowQueryParams = () => {
       keyword,
       startDate,
       endDate,
+      updateSuccess
       // supplierId,
     };
     return [queryParams];
     //eslint-disable-next-line
-  }, [page, limit, keyword, createSuccess, deleteSuccess, startDate, endDate]);
+  }, [page, limit, keyword, createSuccess, deleteSuccess, startDate, endDate,updateSuccess]);
 };
 
 

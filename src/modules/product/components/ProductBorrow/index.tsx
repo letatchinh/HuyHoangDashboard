@@ -4,7 +4,7 @@ import TableAnt from '~/components/Antd/TableAnt';
 import ProductBorrowForm from './ProductBorrowForm';
 import Breadcrumb from '~/components/common/Breadcrumb';
 import { ColumnsType } from 'antd/es/table';
-import {useGetProductsBorrow, usePagingBorrow, useProductBorrowQueryParams, useUpdateProductParams } from '../../product.hook';
+import {useDeleteProductBorrow, useGetProductsBorrow, usePagingBorrow, useProductBorrowQueryParams, useUpdateProductParams } from '../../product.hook';
 import dayjs from 'dayjs';
 import { REF_TYPE_OBJECT } from '../../constants';
 import { toUpper } from 'lodash';
@@ -22,6 +22,7 @@ export default function ProductBorrow(props: propsType): React.JSX.Element {
   const [isOpen, setIsOpen] = useState(false);
   const [id, setId] = useState<string | null>();
   const [isOpenForm, setIsOpenForm] = useState<boolean>(false);
+  const [,onDelete] = useDeleteProductBorrow();
 
   const openFormVoucher = (id?: any) => {
     setIsOpenForm(true);
@@ -106,7 +107,7 @@ export default function ProductBorrow(props: propsType): React.JSX.Element {
           canUpdate
           title='phiếu mượn sản phẩm'
           onDetailClick={() => openFormVoucher(record._id)}
-          // onDelete
+          onDelete = {onDelete}
         />
       )
     },

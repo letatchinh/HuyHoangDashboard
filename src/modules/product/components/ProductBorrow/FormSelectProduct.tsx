@@ -1,5 +1,4 @@
 import {
-  Button,
   Col,
   Flex,
   InputNumber,
@@ -7,7 +6,7 @@ import {
   Select,
   Typography,
 } from "antd";
-import React, { useEffect, useMemo} from "react";
+import React, {useMemo, useState} from "react";
 import BaseBorderBox from "~/components/common/BaseBorderBox";
 import {
   useConvertProductListCollaborator,
@@ -15,9 +14,10 @@ import {
 import Search from "antd/es/input/Search";
 import { useGetCollaborator } from "~/modules/collaborator/collaborator.hook";
 import { ColumnsType } from "antd/es/table";
-import { get, omit } from "lodash";
+import { get } from "lodash";
 import TableAnt from "~/components/Antd/TableAnt";
 import useProductBorrowContext from "./ProductBorrowContext";
+import { filterSelectWithLabel } from "~/utils/helpers";
 type propsType = {
   id?: string | null;
 };
@@ -34,23 +34,7 @@ export default function FormSelectProduct({
   } = useProductBorrowContext();
   const [collaborator, isLoading]: any = useGetCollaborator(id);
   const productsCollaborator = useConvertProductListCollaborator(collaborator);
-
-  // useEffect(() => {
-  //   if (selectedRowKeys?.length) {
-  //     console.log(1)
-  //     const data = productOfCollaborator?.map((item: any) => ({
-  //       _id: item?._id,
-  //       variants: get(item, "variants", []),
-  //       variantCurrent: get(item, "variants", [])[0],
-  //       name: get(item, "name", ""),
-  //       quantity: 1,
-  //   }));
-  //     setDataSelected(data);
-  //   }else{
-  //     setDataSelected([]);
-  //   }
-  // }, [selectedRowKeys]);
-
+  const [productsList, setProductsList] = useState<any[]>([]);
 
   const onSelectChange = (newSelectedRowKeys: any[]) => {
     setSelectedRowKeys(newSelectedRowKeys);
@@ -59,6 +43,15 @@ export default function FormSelectProduct({
   const rowSelection = {
     selectedRowKeys,
     onChange: onSelectChange,
+  };
+
+  const onSearch = (e: any) => {
+    const newOptions: any = productsCollaborator?.filter((item: any) => {
+      if (item?.name?.toLowerCase().includes(e?.toLowerCase()) || item?.codeBySupplier?.toLowerCase().includes(e?.toLowerCase())) {
+        return item;
+      };
+    });
+    setProductsList(newOptions);
   };
 
   const handleChangeValueData = (key: any, value: any, productId: string) => {
@@ -98,11 +91,8 @@ export default function FormSelectProduct({
               position: "sticky",
             }}
             placeholder="Tìm sản phẩm"
-            onSearch={setKeyword}
             allowClear
-            onChange={(e: any) => {
-              if (e === "") setKeyword(e.target.value);
-            }}
+            onChange={(e: any)=> onSearch(e.target.value)}
           />
         ),
         dataIndex: "product",
@@ -204,7 +194,7 @@ export default function FormSelectProduct({
                 loading={isLoading}
                 rowSelection={rowSelection}
                 columns={columnsReady}
-                dataSource={productsCollaborator}
+                dataSource={ productsList?.length ? productsList :productsCollaborator}
                 size="small"
                 pagination={false}
                 rowKey={(rc) => rc?._id}
