@@ -214,6 +214,7 @@ export default function AccumulationPharmacy(props: propsAccumulation) {
                 date={date}
               />
             ),
+            rowExpandable: () => targetType !== "GROUP",
             expandedRowKeys: [itemActive],
           }}
           onExpand={(expanded, record) => {

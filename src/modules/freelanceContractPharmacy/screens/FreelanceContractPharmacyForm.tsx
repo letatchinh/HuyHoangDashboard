@@ -63,10 +63,10 @@ const FreelanceContractPharmacyForm = ({
     (values: any) => {
       const submitData = convertSubmitData(values);
       if (id) {
-        handleUpdate({ ...values, _id: id });
+        handleUpdate({ ...submitData, _id: id });
       } else {
         handleCreate({ ...submitData });
-      }
+      };
       onClose();
     },
     [handleCreate, handleUpdate, id, onClose]
@@ -175,13 +175,15 @@ const FreelanceContractPharmacyForm = ({
             )}
           </FormItem>
 
-          <FormItem
+          {/* <FormItem
             label="File đính kèm"
             name="files"
             wrapperCol={{ sm: 24, md: 24, lg: 21 }}
-          >
-            <UploadListFile />
-          </FormItem>
+          > */}
+          <UploadListFile
+            contract={contract}
+          />
+          {/* </FormItem> */}
 
           <Row className="form__submit-box" justify={"center"} gutter={16}>
             <Col>

@@ -5,6 +5,7 @@ import { useFetchState } from "~/utils/hook";
 import apis from "../bill.api";
 type propsType = {
   id?: string;
+  optionsDefault?: any;
 };
 type ResponseGetBill = {
   codeSequence: string;
@@ -12,12 +13,14 @@ type ResponseGetBill = {
 };
 export default function SelectBillCreateVoucherByPharmacyId({
   id,
+  optionsDefault,
 }: propsType): React.JSX.Element {
   const query = useMemo(() => id, [id]);
   const [bill, isLoading] = useFetchState({
     api: apis.getBillToReceiptVoucher,
     query,
     useDocs: false,
+    nullNotFetch: true,
   });
   const options = useMemo(
     () =>
@@ -27,6 +30,10 @@ export default function SelectBillCreateVoucherByPharmacyId({
       })),
     [bill]
   );
+  const newOptionsDefault = useMemo(() => ([{
+    value: optionsDefault?._id,
+    label: optionsDefault?.codeSequence,
+  }]),[optionsDefault])
   return (
     <Form.Item shouldUpdate noStyle>
       {({ getFieldValue }) =>
@@ -37,7 +44,7 @@ export default function SelectBillCreateVoucherByPharmacyId({
             name={["method", "data", "_id"]}
             labelCol={{ lg: 8 }}
           >
-            <Select options={options} loading={isLoading} />
+            <Select options={ id ? newOptionsDefault : options} loading={isLoading} />
           </Form.Item>
         )
       }

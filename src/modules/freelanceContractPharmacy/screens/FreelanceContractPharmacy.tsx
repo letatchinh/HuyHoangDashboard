@@ -17,20 +17,22 @@ import WithPermission from "~/components/common/WithPermission";
 import {
   Button,
   Col,
+  Flex,
   Popconfirm,
   Radio,
   Row,
   Space,
+  Tooltip,
   Typography,
 } from "antd";
 import Search from "antd/es/input/Search";
-import { PlusCircleOutlined } from "@ant-design/icons";
+import { FileTextOutlined, PlusCircleOutlined } from "@ant-design/icons";
 import WhiteBox from "~/components/common/WhiteBox";
 import TableAnt from "~/components/Antd/TableAnt";
 import ModalAnt from "~/components/Antd/ModalAnt";
 import FreelanceContractPharmacyForm from "./FreelanceContractPharmacyForm";
 import Breadcrumb from "~/components/common/Breadcrumb";
-import { get } from "lodash";
+import { get, map, slice, truncate, words } from "lodash";
 type propsType = {};
 export default function FreelanceContractPharmacy(
   props: propsType
@@ -73,8 +75,8 @@ export default function FreelanceContractPharmacy(
       },
       {
         title: "Tên nhà thuốc",
-        dataIndex: "pharmacyId",
-        key: "pharmacyId",
+        dataIndex: "pharmacyProfile",
+        key: "pharmacyProfile",
         // align: "center",
         render(pharmacyId, record, index) {
           return <Typography.Text>{get(pharmacyId, "name", "")}</Typography.Text>;
@@ -133,16 +135,26 @@ export default function FreelanceContractPharmacy(
         title: "File đính kèm",
         dataIndex: "files",
         key: "files",
-        // align: "center",
+        width: 150,
+        align: "left",
         render(record) {
-          return <Typography.Text>{record}</Typography.Text>;
+          const render = map(record, (item) => (
+            <Tooltip title={item?.name?.length > 16 ? item?.name : ""}>
+              <a download href={item?.url} target="_blank" style={{ cursor: "pointer"}}>
+                <FileTextOutlined style={{ marginRight: '5px'}} />
+                {truncate(item?.name, { 'length': 16 })}
+              </a>
+            </Tooltip>
+          ))
+          return <Flex vertical >{render}</Flex>
         },
       },
-      {
+    ...(canUpdateContract || canDeleteContract ? [{
         title: "Thao tác",
         dataIndex: "_id",
+        fixed:'right' as any,
         // key: "actions",
-        width: 150,
+        width: 110,
         align: "center" as any,
         render: (record: any) => {
           return (
@@ -164,7 +176,7 @@ export default function FreelanceContractPharmacy(
             </div>
           );
         },
-      },
+      }] : []),
     ],
     [canUpdateContract,canDeleteContract, contracts]
   );
@@ -210,6 +222,7 @@ export default function FreelanceContractPharmacy(
             showSizeChanger: true,
             showTotal: (total) => `Tổng cộng: ${total} `,
           }}
+          scroll={{ x: "max-content" }}
           stickyTop
         />
       </WhiteBox>

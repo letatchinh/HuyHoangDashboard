@@ -27,6 +27,7 @@ const { Search } = Input;
 
 export default function ProductConfig() {
   const [showForm, setShowForm] = useState(false);
+  const [destroy, setDestroy] = useState(false);
   const [query] = useProductConfigQueryParams();
   const [id, setId] = useState(null);
   const paging =useProductConfigPaging();
@@ -242,10 +243,11 @@ export default function ProductConfig() {
         title={id ? 'Cập nhật danh mục sản phẩm' : 'Tạo mới danh mục sản phẩm'}
         onCancel={handleCloseForm1}
         footer={null}
-        // destroyOnClose
+        destroyOnClose={destroy}
         width={800}
+        afterClose={() => setDestroy(false)}
       >
-        <ProductGroupForm id={id} setId={setId} callBack={handleCloseForm} updateProductConfig={updateProductConfig} />
+        <ProductGroupForm setDestroy={setDestroy} id={id} setId={setId} callBack={handleCloseForm} updateProductConfig={updateProductConfig} />
       </ModalAnt>
     </div>
   );

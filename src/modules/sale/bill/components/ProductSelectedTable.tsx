@@ -1,24 +1,26 @@
 import { DeleteOutlined, GiftTwoTone, MinusCircleTwoTone, UpCircleTwoTone } from "@ant-design/icons";
-import { Badge, Select, Typography } from "antd";
+import { Badge, Button, Select, Tooltip, Typography } from "antd";
 import { compact, get } from "lodash";
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import TableAnt from "~/components/Antd/TableAnt";
 import {
   EditableCell,
   EditableRow
 } from "~/components/common/EditableComponent";
 import { formatter } from "~/utils/helpers";
-import { quotation, variant } from "../bill.modal";
+import { DiscountOtherType, quotation, variant } from "../bill.modal";
 import useCreateBillStore from "../storeContext/CreateBillContext";
 import ExpandRowDiscount from "./ExpandRowDiscount";
 import ProductListSuggest from "./productSuggest";
 import ImageProduct from "./ImageProduct";
+import DiscountOther from "./DiscountOther";
 
 type propsType = {};
 export default function ProductSelectedTable(
   props: propsType
 ): React.JSX.Element {
   const { quotationItems, onSave,onRemove,bill } = useCreateBillStore();  
+  const [selectRowKey,setSelectRowKey] = useState<any[]>([]);
   const onSelect = (newVariantId : string,data : any) => {
     const variant = get(data,'variants',[])?.find((item : any) => get(item,'_id') === newVariantId);
     onSave({
@@ -26,6 +28,14 @@ export default function ProductSelectedTable(
       variant,
       variantId : newVariantId
     }) 
+  }
+  const onChangeRowKey = (newKey : string) => {
+    if(selectRowKey.includes(newKey)){
+      setSelectRowKey(selectRowKey.filter(item => item !== newKey))
+    }else{
+      setSelectRowKey([...selectRowKey,newKey])
+    }
+ 
   }
   const columns = [
     {
@@ -94,7 +104,9 @@ export default function ProductSelectedTable(
       dataIndex: "totalDiscount",
       key: "totalDiscount",
       align : 'center',
-      render : (totalDiscount : number) => formatter(totalDiscount)
+      render : (totalDiscount : number,record:any) => <Tooltip title="Xem chi tiết chiết khấu">
+        <Button type="text" onClick={() => onChangeRowKey(record?.productId)}>{formatter(totalDiscount + get(record,'totalDiscountOther',0))}</Button>
+      </Tooltip>
     },
     {
       title: "Thành tiền",
@@ -162,23 +174,45 @@ export default function ProductSelectedTable(
       className="table-selected-product"
       {...tableProps}
       size="small"
-        pagination={false}
+      rowKey={rc => rc?.productId}
+      pagination={false}
       expandable={{
-        expandedRowRender: (record: quotation) => (
-          <ExpandRowDiscount data={get(record, "cumulativeDiscount")} />
-        ),
-        defaultExpandAllRows: true,
-        rowExpandable: (record: quotation) =>
-          !!get(record, "cumulativeDiscount", []).length,
-        expandIcon: ({ expanded, onExpand, record ,expandable}) =>
-        expandable ? 
+        expandedRowRender: (record: quotation) => {
+          return (
+            <div>
+              <DiscountOther 
+              totalDiscountOther={get(record,'totalDiscountOther',0)} 
+              dataSource={get(record,'discountOther',[])} 
+              onAdd={(newDiscountOther:DiscountOtherType) => onSave({
+                ...record,
+                discountOther : [...get(record,'discountOther',[]),newDiscountOther]
+              })}
+              onUpdate={(newDiscountOther:DiscountOtherType,index:number) => {
+                const cloneDcOther = [...get(record,'discountOther',[])];
+                cloneDcOther?.splice(index,1,newDiscountOther)
+                onSave({
+                  ...record,
+                  discountOther : cloneDcOther
+                })
+              }}
+              onRemove={(index:number) => onSave({
+                ...record,
+                discountOther : get(record,'discountOther',[])?.filter((i:any,idx:number) => idx !== index)
+              })}
+              />
+              <ExpandRowDiscount data={get(record, "cumulativeDiscount")} />
+            </div>
+          )
+        },
+        expandedRowKeys : selectRowKey,
+        expandIcon: ({ expanded, record }) =>
           expanded ? (
-            <UpCircleTwoTone onClick={(e: any) => onExpand(record, e)} />
+            <UpCircleTwoTone onClick={(e: any) => onChangeRowKey(record?.productId)} />
           ) : (
             <Badge size="small" count={get(record, "cumulativeDiscount", []).length}>
-              <GiftTwoTone style={{fontSize : 24}} onClick={(e: any) => onExpand(record, e)} />
+              <GiftTwoTone style={{fontSize : 24}} onClick={(e: any) => onChangeRowKey(record?.productId)} />
             </Badge>
-          ) : null,
+          ),
       }}
     />
     {bill?.pharmacyId &&  <ProductListSuggest/>}

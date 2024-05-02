@@ -73,7 +73,7 @@ const UserEmployee = ({ currentTab }: UserProps) => {
   const [id, setId] = useState(null);
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [query, onTableChange] = useUserQueryParams();
-  console.log(query,'query')
+  const [destroy,setDestroy] = useState(false);
   const [keyword, { setKeyword, onParamChange }] = useUpdateUserParams(query);
   const [data, isLoading] = useGetUsers(query);
   const paging = useUserPaging();
@@ -93,10 +93,12 @@ const UserEmployee = ({ currentTab }: UserProps) => {
   const handleOpenModal = (id?: any) => {
     setIsOpenModal(true);
     setId(id);
+    id && setDestroy(true)
   };
   const handleCloseModal = () => {
     setIsOpenModal(false);
     setId(null);
+    setDestroy(false)
   };
 
   const [, deleteUser] = useDeleteUser();
@@ -229,10 +231,11 @@ const UserEmployee = ({ currentTab }: UserProps) => {
         footer={null}
         width={1020}
         style={{ top: 50 }}
-        destroyOnClose
+        destroyOnClose={destroy}
+        afterClose={() => setDestroy(false)}
         // title= {`${id ? "Cập nhật" : "Thêm mới"} nhân viên`}
       >
-        <UserForm id={id} handleCloseModal={handleCloseModal} updateUser={updateUser} resetAction={resetAction} />
+        <UserForm setDestroy={setDestroy} id={id} handleCloseModal={handleCloseModal} updateUser={updateUser} resetAction={resetAction} />
       </Modal>
     </div>
   );

@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useCallback, useMemo } from "react";
 import TableAnt from "~/components/Antd/TableAnt";
 import {
   useCopyQuotation,
@@ -9,33 +9,36 @@ import {
   useUpdateQuotationParams,
 } from "../quotation.hook";
 
-import { Button, Checkbox, Col, Popconfirm, Row, Space, Typography,Form } from "antd";
+import { Button, Checkbox, Col, Popconfirm, Row, Space, Typography,Form, Tooltip } from "antd";
 import { ColumnsType } from "antd/es/table/InternalTable";
 import dayjs from "dayjs";
 import { get } from "lodash";
-import { Link } from "react-router-dom";
+import { Link} from "react-router-dom";
 import SearchAnt from "~/components/Antd/SearchAnt";
 import Status from "~/components/common/Status/index";
 import BillModule from "~/modules/sale/bill";
 import { ItemDataSource } from "~/pages/Dashboard/Bill/CreateBill";
 import { PATH_APP } from "~/routes/allPath";
-import { DeviceDetector, pagingTable } from "~/utils/helpers";
+import { DeviceDetector, pagingTable, permissionConvert } from "~/utils/helpers";
 import SelectPharmacy from "../../bill/components/SelectPharmacy";
 import { STATUS_QUOTATION, STATUS_QUOTATION_VI } from "../constants";
 import { PlusCircleTwoTone } from "@ant-design/icons";
 import WithPermission from "~/components/common/WithPermission";
-import policyModule from 'policy';
 import { useMatchPolicy } from "~/modules/policy/policy.hook";
-import POLICIES from "~/modules/policy/policy.auth";
 import useCheckBoxExport from "~/modules/export/export.hook";
 import ExportExcelButton from "~/modules/export/component";
 import SelectPharmacyInDevice from "../../bill/components/SelectPharmacyInDevice";
 import '../quotation.style.scss';
 import ConfigTable from "~/components/common/ConfigTable";
 import DateTimeTable from "~/components/common/DateTimeTable";
+import SelectEmployee from "~/modules/employee/components/SelectSearch";
+import SelectCollaborator from "~/modules/collaborator/components/SelectSearch";
+import { REF_COLLECTION } from "~/constants/defaultValue";
+import { useIsAdapterSystem } from "~/utils/hook";
 type propsType = {
   status?: string;
 };
+
 const CLONE_STATUS_QUOTATION_VI: any = STATUS_QUOTATION_VI;
 export default function ListQuotation({
   status,
@@ -63,17 +66,21 @@ export default function ListQuotation({
     window.open(PATH_APP.bill.create);
   };
   //Download
-  const canDownload = useMatchPolicy(POLICIES.DOWNLOAD_PRODUCT);
   const [arrCheckBox, onChangeCheckBox] = useCheckBoxExport();
+  const isSystem = useIsAdapterSystem();
 
+  const onPermissionCovert = useCallback(permissionConvert(query),[query])
+
+  const canDownload = useMatchPolicy(onPermissionCovert('DOWNLOAD', 'QUOTATION'));
 
   const columns: ColumnsType = useMemo(
     () => [
       {
         title: "Mã đơn hàng tạm",
-        dataIndex: "code",
-        key: "code",
+        dataIndex: "codeSequence",
+        key: "codeSequence",
         align: "center",
+        width: 100,
         // render(code, record, index) {
         //   return (
         //     <Link
@@ -90,6 +97,7 @@ export default function ListQuotation({
         dataIndex: "bill",
         key: "bill",
         align: "center",
+        width: 100,
         render(bill, record, index) {
           return (
             <Link
@@ -106,6 +114,7 @@ export default function ListQuotation({
         title: "Ngày tạo đơn",
         dataIndex: "createdAt",
         key: "createdAt",
+        width: 100,
         align: "center",
         render(createdAt, record, index) {
           return (
@@ -113,7 +122,7 @@ export default function ListQuotation({
               {/* <Typography.Text strong>
                 {dayjs(createdAt).format("DD/MM/YYYY HH:mm")}
               </Typography.Text> */}
-                <DateTimeTable data={createdAt}/>
+              <DateTimeTable data={createdAt} />
               <p>-</p>
               Bởi:{" "}
               <Typography.Text strong>
@@ -127,6 +136,7 @@ export default function ListQuotation({
         title: "Ngày chuyển đổi",
         dataIndex: "historyStatus",
         key: "historyStatus",
+        width: 100,
         align: "center",
         render(historyStatus, record, index) {
           return (
@@ -151,16 +161,25 @@ export default function ListQuotation({
         title: "Tên nhà thuốc",
         dataIndex: "pharmacy",
         key: "pharmacy",
+        width: 100,
         align: "center",
         // width: "30%",
         render(pharmacy, record, index) {
-          return <Typography.Text>{get(pharmacy, "name", "")}</Typography.Text>;
+          
+          const refCollection = get(record, 'refCollection', 'pharma_profile');
+          return <>
+            <Tooltip className="mx-1" title={refCollection === 'partner' ? 'Cộng tác viên' : 'Nhà thuốc'}>
+              {refCollection === 'partner' ? <i className="fa-solid fa-user-tie"></i> : <i className="fa-solid fa-house-medical"></i>}
+            </Tooltip>
+            <Typography.Text>{get(pharmacy, "name", "")}</Typography.Text>
+          </>
         },
       },
       {
         title: "Trạng thái",
         dataIndex: "status",
         key: "status",
+        width: 100,
         align: "center",
         render(status, record, index) {
           return (
@@ -189,15 +208,16 @@ export default function ListQuotation({
           },
         ] : []
       ),
-      {
+        {
         title: "Thao tác",
         dataIndex: "_id",
         key: "action",
-        align: "center",
-        render(_id, record: any, index) {
+        width: 100,
+        align: "center" as any,
+        render(_id: any, record: any, index: number) {
           return (
             <Space direction="vertical">
-              <WithPermission permission={policyModule.POLICIES.WRITE_BILL}>
+              <WithPermission permission={onPermissionCovert('WRITE', 'BILL')}>
                 <Button
                   disabled={get(record, "status") !== STATUS_QUOTATION.NEW}
                   block
@@ -211,6 +231,8 @@ export default function ListQuotation({
                       },
                       pair: get(record, "pair", 0),
                       debtType: get(record, "debtType"),
+                      fee: get(record, 'fee'),
+                      deliveryAddress: get(record, 'deliveryAddress'),
                     });
                   }}
                   type="primary"
@@ -220,7 +242,7 @@ export default function ListQuotation({
                 </Button>
               </WithPermission>
               <WithPermission
-                permission={policyModule.POLICIES.UPDATE_QUOTATION}
+                permission={onPermissionCovert('UPDATE', 'QUOTATION')}
               >
                 <Button
                   block
@@ -235,6 +257,8 @@ export default function ListQuotation({
                       },
                       pair: get(record, "pair", 0),
                       debtType: get(record, "debtType"),
+                      fee: get(record, 'fee'),
+                      deliveryAddress: get(record, 'deliveryAddress'),
                     });
                   }}
                   size="small"
@@ -243,7 +267,7 @@ export default function ListQuotation({
                 </Button>
               </WithPermission>
               <WithPermission
-                permission={policyModule.POLICIES.WRITE_QUOTATION}
+                permission={onPermissionCovert('WRITE', 'QUOTATION')}
               >
                 <Popconfirm
                   title="Bạn muốn sao chép đơn hàng tạm này?"
@@ -266,7 +290,7 @@ export default function ListQuotation({
                 </Popconfirm>
               </WithPermission>
               <WithPermission
-                permission={policyModule.POLICIES.DELETE_QUOTATION}
+                permission={onPermissionCovert('DELETE', 'QUOTATION')}
               >
                 <Popconfirm
                   title="Bạn muốn xoá đơn hàng tạm này?"
@@ -292,19 +316,18 @@ export default function ListQuotation({
         },
       },
     ],
-    [arrCheckBox, canDownload]
-  );
-  const {isMobile} = DeviceDetector();
+    [arrCheckBox, canDownload]);
+  const { isMobile } = DeviceDetector();
   return (
     <div className="quotation-page">
-      <Row align="middle" gutter={8} justify={"space-between"}>
+      <Row className="quotation-page__wrap" align="middle"  justify={"space-between"}>
         <Col>
           <Space className="quotation-page__wrap--search">
             <Form form={form} initialValues={{pharmacyId : query?.pharmacyId}}> 
               {!isMobile ? <SelectPharmacy
                 validateFirst={false}
                 form={form}
-                style={{ width: 200 }}
+                style={{ width: 250 }}
                 showIcon={false}
                 size={"middle"}
                 onChange={(value) =>
@@ -320,16 +343,31 @@ export default function ListQuotation({
                 }
             />}
             </Form>
+            { isSystem && query.refCollection !== REF_COLLECTION.PHARMA_PROFILE  && query.refCollection && (query.refCollection === REF_COLLECTION.EMPLOYEE ? <SelectEmployee
+              value={query?.employeeIds ? query?.employeeIds?.split(',') : []}
+              onChange={(value) => onParamChange({ employeeIds: value?.length ? value : null })}
+              mode="multiple"
+              style={{ width: 200 }}
+            />
+              :
+              <SelectCollaborator
+                value={query?.partnerIds ? query?.partnerIds?.split(',') : []}
+                onChange={(value) => onParamChange({ partnerIds: value?.length ? value : null })}
+                mode="multiple"
+                style={{ width: 200 }}
+              />)
+            }
             <SearchAnt
               value={keyword}
               onChange={(e) => setKeyword(e.target.value)}
               onParamChange={onParamChange}
+              style={{ width: 200 }}
             />
           </Space>
         </Col>
         <Col>
           <Space>
-            <WithPermission permission={POLICIES.DOWNLOAD_QUOTATION}>
+            <WithPermission permission={onPermissionCovert('DOWNLOAD', 'QUOTATION')}>
                 <Col>
                   <ExportExcelButton
                     api='billQuotation'
@@ -340,7 +378,7 @@ export default function ListQuotation({
                   />
                 </Col>
             </WithPermission>
-            <WithPermission permission={policyModule.POLICIES.WRITE_QUOTATION}>
+            <WithPermission permission={onPermissionCovert('WRITE', 'QUOTATION')}>
             <Button style={{marginLeft : 'auto'}} onClick={() => window.open(PATH_APP.bill.create)} type="primary" icon={<PlusCircleTwoTone />}>
               Tạo đơn hàng tạm
             </Button>
@@ -358,6 +396,7 @@ export default function ListQuotation({
           loading={isLoading}
           pagination={pagingTable(paging, onParamChange)}
           size="small"
+          scroll={{ y: '60vh', x: 'max-content' }}
           />
       </ConfigTable>
     </div>

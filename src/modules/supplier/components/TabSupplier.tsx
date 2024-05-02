@@ -5,13 +5,13 @@ import FormSupplier from './FormSupplier';
 import Report from './Report';
 
 
-export default function TabSupplier({id,onCancel,onUpdate,isSubmitLoading}:propsTypeTabSupplier) : React.JSX.Element {
+export default function TabSupplier({id,onCancel,onUpdate,isSubmitLoading,setDestroy}:propsTypeTabSupplier) : React.JSX.Element {
     const Items : TabsProps['items'] = useMemo(() => {
         let items : TabsProps['items']= [
             {
                 label : "Thông tin",
                 key : '0',
-                children : <FormSupplier onUpdate={onUpdate} isSubmitLoading={isSubmitLoading} id={id} onCancel={onCancel}/>,
+                children : <FormSupplier setDestroy={setDestroy} onUpdate={onUpdate} isSubmitLoading={isSubmitLoading} id={id} onCancel={onCancel}/>,
             },
         ];
         if(id){

@@ -4,11 +4,12 @@ import { Button, Card, Carousel, Collapse, List, Popover, Row } from "antd";
 import { CaretLeftOutlined, CaretRightOutlined } from "@ant-design/icons";
 import { CollapseProps } from "antd/lib";
 import useCreateBillStore from "../../storeContext/CreateBillContext";
-import { getCumulativeDiscount, selectProductSearch } from "../../bill.service";
+import { getCumulativeDiscount, selectProductSearchBill } from "../../bill.service";
 import { get } from "lodash";
 import useNotificationStore from "~/store/NotificationContext";
 import { formatter } from "~/utils/helpers";
 import ImageProduct from "../ImageProduct";
+import { DiscountOtherType } from "../../bill.modal";
 
 const contentStyle: React.CSSProperties = {
   margin: 0,
@@ -20,23 +21,26 @@ const contentStyle: React.CSSProperties = {
 };
 
 const ProductListSuggest: React.FC = () => {
+  const { quotationItems, onAdd, bill,partner } = useCreateBillStore();
   const [page, setPage] = useState(1)
   const [limit, setLimit] = useState(4)
   const [keyword, setKeyword] = useState("");
   const productSuggest: any = document.querySelector('.product-suggest');
   const tableSelectedProductContent : any = document.querySelector('.table-selected-product .ant-table-content');
+  const saleOfId = useMemo(() => bill?.pharmacyId,[bill?.pharmacyId]);
   const query = useMemo(
     () => ({
       keyword,
       page: page,
       limit: limit,
+      saleOfId
     }),
-    [page, limit, keyword]
+    [page, limit, keyword,saleOfId]
   );
   const [products, isLoading] = useGetProductListSuggest(query);
   const paging = useBillProductSuggestPaging();
   const inputEl : any = useRef(null);
-  const { quotationItems, onAdd, bill } = useCreateBillStore();
+
   const { onNotify } = useNotificationStore();
   const [collapseActive, setCollapseActive] = useState(false);
 
@@ -44,8 +48,21 @@ const ProductListSuggest: React.FC = () => {
     setCollapseActive(!collapseActive);
   };
   const onSelect = async(data:any) => {
-    // inputEl.current.blur();
-    const billItem: any = selectProductSearch(data);
+    const productInPartner = get(partner, "products", [])?.find(
+      (p: any) => get(p, "productId") === get(data, "_id")
+    );
+    
+    const discountOther: DiscountOtherType[] = productInPartner ? [
+      {
+        typeDiscount: get(productInPartner, "discount.discountType"),
+        value: get(productInPartner, "discount.value"),
+        name: "Chiết khấu từ cộng tác viên",
+      },
+    ] : [];
+    const billItem: any = selectProductSearchBill({
+      ...data,
+      discountOther,
+    });
     const cumulativeDiscount = await getCumulativeDiscount({pharmacyId : get(bill,'pharmacyId'),quotationItems : [billItem]});
     const billItemWithCumulative = {
       ...billItem,

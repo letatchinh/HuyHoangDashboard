@@ -5,6 +5,7 @@ interface Props {
   id?: any;
   handleCloseForm?: () => void;
   setId?:any;
+  setDestroy?:any;
 };
 interface FieldType {
   id: string
@@ -13,8 +14,11 @@ interface FieldType {
   level: string
 }
 const { TextArea } = Input;
-const RankingForm: React.FC<Props> = ({ id,setId, handleCloseForm }) => {
-  const [, createRanking] = useCreateRanking(handleCloseForm);
+const RankingForm: React.FC<Props> = ({ id,setId, handleCloseForm,setDestroy }) => {
+  const [, createRanking] = useCreateRanking(() => {
+    handleCloseForm && handleCloseForm();
+    setDestroy  && setDestroy(true);
+  });
   const [rankingConfigById, isLoading] = useGetlistRankingById(id);
   const [form] = Form.useForm(); 
    const [, updateRanking] = useUpdateRanking(handleCloseForm);

@@ -45,6 +45,12 @@ const getListMemberFailedSelector = getSelector('getListMemberFailed');
 
 const groupHaveLeaderSelector = getSelector('groupHaveLeader');
 
+const listBuyGroupSelector = getSelector('listBuyGroup');
+const getListBuyGroupFailedSelector = getSelector('getListBuyGroupFailed');
+
+const createSuccessPartnerSelector = (state : any) => state['collaborator']['createSuccess'];
+const updateSuccessPartnerSelector = (state : any) => state['collaborator']['updateSuccess'];
+
 export const useSalesGroupPaging = () => useSelector(pagingSelector);
 
 export const useGetSalesGroups = (param:any) => {
@@ -126,6 +132,7 @@ export const useSalesGroupQueryParams = () => {
   }, [page, limit, keyword, createSuccess, deleteSuccess,updateSuccess]);
 };
 
+
 export const useUpdateSalesGroupParams = (
   query: any,
   listOptionSearch?: any[]
@@ -191,3 +198,41 @@ export const useResetAction = () => {
   //     }))
   //   ]
   // }
+
+
+export const useBuyGroupQueryParams = () => {
+  const query = useQueryParams();
+  const limit = query.get("limit") || 10;
+  const page = query.get("page") || 1;
+  const keyword = query.get("keyword");
+  const createPartnerSuccess = useSelector(createSuccessPartnerSelector);
+  const updatePartnerSuccess = useSelector(updateSuccessPartnerSelector);
+  return useMemo(() => {
+    const queryParams = {
+      page,
+      limit,
+      keyword,
+    };
+    return [queryParams];
+    //eslint-disable-next-line
+  }, [page, limit, keyword,createPartnerSuccess,updatePartnerSuccess]);
+};
+export const useGetBuyGroups = (param:any) => {
+  return useFetchByParam({
+    action: salesGroupActions.getListBuyGroupRequest,
+    loadingSelector: loadingSelector,
+    dataSelector: listBuyGroupSelector,
+    failedSelector: getListBuyGroupFailedSelector,
+    param
+  });
+};
+
+export const useGetBuyGroup = (id: any) => {
+  return useFetchByParam({
+    action: salesGroupActions.getByIdRequest,
+    loadingSelector: getByIdLoadingSelector,
+    dataSelector: getByIdSelector,
+    failedSelector: getByIdFailedSelector,
+    param: id,
+  });
+};

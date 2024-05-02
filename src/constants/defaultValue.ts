@@ -6,7 +6,7 @@ import { getOptions } from "~/utils/helpers";
 // export const BASE_URL = 'https://pharma-dashboard.congtyso.com';
 export const BASE_URL = 'http://192.168.77.129:7008';
 export const DEFAULT_UPLOAD_ACTION = `${BASE_URL}/api/v1/file`;
-export const MAX_UPLOAD_FILE_SIZE_IN_MB = 2;
+export const MAX_UPLOAD_FILE_SIZE_IN_MB = 1;
 
 export const DEFAULT_BRANCH_ID = 99999;
 export const STATUS = {
@@ -61,11 +61,14 @@ export const REF_COLLECTION_UPPER : any= {
   SUPPLIER: 'SUPPLIER',
 };
 
-export const REF_COLLECTION : any= {
+export const REF_COLLECTION: any = {
   // BILL: 'bill',
   // BILLITEM: 'billItem',
-  PHARMA_PROFILE: 'pharma_profile',
-  SUPPLIER: 'supplier',
+  PHARMA_PROFILE: "pharma_profile",
+  PHARMACY: "pharma_profile",
+  SUPPLIER: "supplier",
+  EMPLOYEE: "employee",
+  PARTNER: "partner",
 };
 
 export const TYPE_METHOD = {
@@ -374,3 +377,21 @@ export const requireRules : any = [
       message : "Vui lòng nhập!"
   }
 ];
+
+export const PROCESS_STATUS = {
+  APPROVED: 'APPROVED',
+  NEW: 'NEW',
+}
+
+export const PROCESS_STATUS_VI = {
+  APPROVED: 'Đã duyệt',
+  NEW: 'Mới',
+}
+export const DISCOUNT_TYPE = {
+  PERCENT : "PERCENT",
+  VALUE : "VALUE",
+}
+export const DISCOUNT_TYPE_VI = {
+  PERCENT : "%",
+  VALUE : "Giá trị",
+}

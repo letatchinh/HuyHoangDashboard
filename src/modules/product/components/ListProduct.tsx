@@ -21,6 +21,8 @@ import FormProduct from "./FormProduct";
 import StockProduct from "./StockProduct";
 import { useAdapter } from "~/modules/auth/auth.hook";
 import { ADAPTER_KEY } from "~/modules/auth/constants";
+import POLICIES from "~/modules/policy/policy.auth";
+import { useMatchPolicy } from "~/modules/policy/policy.hook";
 import ConfigTable from "~/components/common/ConfigTable";
 export default function ListProduct({
   supplierId,
@@ -38,6 +40,8 @@ export default function ListProduct({
   const paging = useProductPaging();
   const adapter = useAdapter();
   const isAdapterIsEmployee = useMemo(() => adapter === ADAPTER_KEY.EMPLOYEE, [adapter]);
+  const canUpdate = useMatchPolicy(POLICIES.UPDATE_PRODUCT);
+  const canDelete = useMatchPolicy(POLICIES.DELETE_PRODUCT);
 
   const onOpenForm = useCallback((id?: string) => {
     if (id) {
@@ -164,21 +168,21 @@ export default function ListProduct({
         return get(value,'element')
       },
     },
-    {
+    ...(canUpdate || canDelete ?[{
       title: "Thao tác",
       dataIndex: "_id",
       key: "_id",
-      align: "center",
-      fixed : 'right',
+      align: "center" as any,
+      fixed : 'right'as any,
       width : 200,
-      render(_id, record, index) {
+      render(_id: any, record: any, index: number) {
         return <ActionColumn 
         _id={_id}
         onDetailClick={onOpenForm}
         onDelete={onDelete}
         />
       },
-    },
+    }]:[]),
   ];
 
   return (
@@ -188,8 +192,8 @@ export default function ListProduct({
       isShowButtonAdd
       showSelect={false}
       handleOnClickButton={() => onOpenForm()}
-      onSearch={(value : any) => onParamChange({keyword: value?.trim()})
-      }
+      onSearch={(value : any) => onParamChange({keyword: value?.trim()})}
+      permissionKey={[POLICIES.WRITE_PRODUCT]}
       />
           <ConfigTable>
             <TableAnt

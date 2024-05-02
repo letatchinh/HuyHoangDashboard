@@ -13,6 +13,7 @@ import CreateBillPageInDevice from "./pages/Dashboard/Bill/CreateBill_InDevice";
 import { DeviceDetector } from "./utils/helpers";
 import { useUserPolicy } from "./modules/policy/policy.hook";
 import Reflex from "./components/Layout/LayoutVertical/Reflex";
+import NotFoundPage from "./pages/Auth/NotFoundPage";
 
 function App(): React.JSX.Element {
   const width = window.innerWidth;
@@ -23,7 +24,7 @@ function App(): React.JSX.Element {
 
   const device = DeviceDetector();
   // useUserPolicy(); // Get Policies
-
+  
   return (
     <>
       <Routes>
@@ -37,6 +38,7 @@ function App(): React.JSX.Element {
             <Route key={route.path} {...route} />
           ))}
         </Route>
+        <Route path='*' element={<NotFoundPage />} />
         <Route
           key={PATH_APP.bill.create}
           path={PATH_APP.bill.create}

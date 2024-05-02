@@ -17,7 +17,6 @@ import Employee from "./Employee";
 import Breadcrumb from "~/components/common/Breadcrumb";
 import EmployeeGroup from "~/modules/employeeGroup/screens/EmployeeGroup";
 
-
 export default function User() {
   const { t }: any = useTranslate();
   const [currentTab, setCurrentTab] = useState('');
@@ -37,7 +36,7 @@ export default function User() {
         urlPush = "/employee";
       } else if (isMatchEmployeeGroup) {
         urlPush += "/group";
-      };
+      }
       const resultSubstring: string = urlPush.substring(1);
       setCurrentTab(resultSubstring);
       navigate(urlPush);
@@ -62,46 +61,49 @@ export default function User() {
   // }, [isMatchEmployeeGroup, isMatchEmployee]);
   return (
     <div>
-      {
-        (isMatchEmployeeGroup || isMatchEmployee) && (
-          <>
-            <Breadcrumb title={t("Quản lý trình dược viên")} />
-            <WhiteBox>
-              <Tabs
-                activeKey={currentTab}
-                onChange={(key) => onChange(key)}
-                defaultActiveKey={pathname}
-              >
-                {(isMatchEmployee) &&  <TabPane tab="Danh sách trình dược viên" key="employee"/>}
-                {isMatchEmployeeGroup &&  <TabPane tab="Nhóm trình dược viên" key="employee/group" />}
-              </Tabs>
-              <Routes>
-                {(isMatchEmployee) ? (
+      {(isMatchEmployeeGroup || isMatchEmployee) && (
+        <>
+          <Breadcrumb title={t("Quản lý trình dược viên")} />
+          <WhiteBox>
+            <Tabs
+              activeKey={currentTab}
+              onChange={(key) => onChange(key)}
+              defaultActiveKey={pathname}
+            >
+              {isMatchEmployee && (
+                <TabPane tab="Danh sách trình dược viên" key="employee" />
+              )}
+              {isMatchEmployeeGroup && (
+                <TabPane tab="Nhóm trình dược viên" key="employee/group" />
+              )}
+            </Tabs>
+            <Routes>
+              {isMatchEmployee ? (
+                <Route
+                  path={``}
+                  element={<Employee currentTab={currentTab} />}
+                />
+              ) : (
+                <React.Fragment />
+              )}
+              {isMatchEmployeeGroup ? (
+                <Route
+                  path={`group`}
+                  element={<EmployeeGroup currentTab={currentTab} />}
+                >
                   <Route
-                    path={``}
-                    element={<Employee currentTab={currentTab} />}
-                  />
-                ) : (
-                  <React.Fragment />
-                )}
-                {isMatchEmployeeGroup ? (
-                  <Route
-                    path={`group`}
+                    path={`:groupId`}
                     element={<EmployeeGroup currentTab={currentTab} />}
-                  >
-                    <Route
-                      path={`:groupId`}
-                      element={<EmployeeGroup currentTab={currentTab} />}
-                    />
-                  </Route>
-                ) : (
-                  <React.Fragment />
-                )}
-              </Routes>
-            </WhiteBox>
-          </>
-        )
-      }
+                  />
+                </Route>
+              ) : (
+                <React.Fragment />
+              )}
+            </Routes>
+          </WhiteBox>
+        </>
+      )
+    }
     </div>
   );
 }

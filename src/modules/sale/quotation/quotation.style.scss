@@ -1,4 +1,7 @@
 .quotation-page{
+  &__wrap{
+    margin-bottom: 10px
+  }
   &__select-pharmacy{
     width: 200px;
   }

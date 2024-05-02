@@ -3,6 +3,8 @@ import { get, omit } from "lodash";
 // import { cumulativeDiscountType } from "~/modules/cumulativeDiscount/cumulativeDiscount.modal";
 import { InstanceModuleRedux } from "~/redux/instanceModuleRedux";
 import { initStateSlice } from "~/redux/models";
+import { getValueOfPercent } from "~/utils/helpers";
+import { FeeType } from "../bill.modal";
 // import { CalculateBill, CalculateDiscountFactory } from "../bill.service";
 import { STATUS_BILL } from "../constants";
 // const CalculateBillMethod = new CalculateBill();
@@ -53,6 +55,7 @@ class BillClassExtend extends InstanceModuleRedux {
         const totalPrice : number = get(billItem, 'totalPrice',1);
         const totalAmount = Math.floor(Number(quantity * price));
         const totalDiscount : number = totalAmount - totalPrice;
+
         totalDiscountBill += totalDiscount;
         totalAmountBill += totalAmount;
         return {
@@ -61,14 +64,17 @@ class BillClassExtend extends InstanceModuleRedux {
           totalDiscount,
         }
       });
-      const remainAmount = get(payload,'remaining',)
+      const remainAmount = get(payload,'remaining',0);
+      const totalFee = (get(payload,'fee',[]))?.reduce((sum : number,cur : FeeType) => sum + (cur?.typeValue === 'PERCENT' ? getValueOfPercent(get(payload,'totalAmount',0),cur?.value) : cur?.value),0);
+
       state.byId = {
         ...payload,
         billItems,
         remainAmount,
         totalDiscountBill,
         totalAmountBill,
-        totalAfterDiscountBill : totalAmountBill - totalDiscountBill
+        totalAfterDiscountBill : totalAmountBill - totalDiscountBill,
+        totalFee
       }
       },
     getListProductSuggestRequest: (state:cloneInitState) => {

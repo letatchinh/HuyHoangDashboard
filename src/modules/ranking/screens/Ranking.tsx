@@ -25,6 +25,7 @@ export default function Ranking(props: propsType): React.JSX.Element {
   const paging = useRankingPaging();
   const { t }: any = useTranslate();
   const [form] = Form.useForm();
+  const [destroy,setDestroy] = useState(false);
   interface DataType {
     _id: string;
     name: string;
@@ -68,7 +69,10 @@ export default function Ranking(props: propsType): React.JSX.Element {
     },
   ];
   const handleOpenForm = useCallback((id?: any) => {
-    if (id) setId(id);
+    if (id) {
+      setId(id);
+      setDestroy(true);
+    }
     setShowForm(true);
   }, []);
   const handleDelete = (id: any) => {
@@ -135,11 +139,13 @@ export default function Ranking(props: propsType): React.JSX.Element {
         title={id ? 'Cập nhật xếp hạng nhà cung cấp' : 'Tạo mới xếp hạng nhà cung cấp'}
         onCancel={handleCloseForm}
         footer={null}
-        // destroyOnClose
+        destroyOnClose={destroy}
         width={800}
-
+        afterClose={() => {
+          setDestroy(false);
+        }}
       >
-        <RankingForm id={id} setId={setId} handleCloseForm={handleCloseForm} />
+        <RankingForm setDestroy={setDestroy} id={id} setId={setId} handleCloseForm={handleCloseForm} />
       </ModalAnt>
     </div>
   )

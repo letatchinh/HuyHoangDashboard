@@ -17,7 +17,7 @@ export type propsAccumulationDetail = {
   pharmacyId: string | null;
   targetType: 'GROUP' | 'PRODUCT',
   date?: any,
-}
+};
 export interface cloneInitState<T = any> extends initStateSlice {
   isLoadingGetPharmacyDebt?: boolean;
   getPharmacyDebtFailed?: any;
@@ -39,6 +39,9 @@ export interface cloneInitState<T = any> extends initStateSlice {
   accumulationDetail?: T[];
   pagingAccumulationDetail?: any;
 
+  convertSuccess?: any;
+  convertFailed?: any;
+
 };
 export type SearchByType = "date" | "month" | "quarter" | "year"
 export type FormFieldSearch = {
@@ -53,4 +56,26 @@ export type DataSourceItemType = {
   phoneNumber: string;
   address: any;
   _id: string;
+};
+
+export type PROCESS_STATUS_TYPE = {
+  APPROVED: string;
+  NEW: string;
+  CANCELED: string;
+};
+
+export const PROCESS_STATUS : PROCESS_STATUS_TYPE= {
+  APPROVED: 'APPROVED',
+  NEW: 'NEW',
+  CANCELED: 'CANCELED',
+}
+export const PROCESS_STATUS_VI : any = {
+  APPROVED: 'Đã duyệt',
+  NEW: 'Đang chờ duyệt',
+  CANCELED: 'Đã huỷ',
+};
+export const PROCESS_STATUS_VI_COLOR : any = {
+  APPROVED: '#8ce312',
+  NEW: '#B3C8CF',
+  CANCELED: '#ff4141',
 };

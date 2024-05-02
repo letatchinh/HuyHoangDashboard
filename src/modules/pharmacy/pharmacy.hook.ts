@@ -2,7 +2,6 @@ import { useSelector } from "react-redux";
 import {
   getSelectors,
   useFailed,
-  useFetch,
   useFetchByParam,
   useQueryParams,
   useResetState,
@@ -62,6 +61,9 @@ const accumulationDetailSelector = getSelector("accumulationDetail");
 const getAccumulationDetailFailedSelector = getSelector("getAccumulationDetailFailed");
 const isLoadingGetAccumulationDetailSelector = getSelector("isLoadingGetAccumulationDetail");
 const pagingAccumulationDetailSelector = getSelector("pagingAccumulationDetail");
+
+const convertSuccessSelector = getSelector("convertSuccess");
+const convertFailedSelector = getSelector("convertFailed");
 
 export const useHistoryPharmacyPaging = () => useSelector(pagingHistoryPharmacySelector);
 
@@ -131,13 +133,29 @@ export const useDeletePharmacy = (callback?: any) => {
   });
 };
 
-export const usePharmacyQueryParams = () => {
+export const useConvertPharmacy = (callback?: any) => {
+  useSuccess(
+    convertSuccessSelector,
+    `Cập nhật ${MODULE_VI} thành công`,
+    callback
+  );
+  useFailed(convertFailedSelector);
+
+  return useSubmit({
+    action: pharmacySliceAction.convertRequest,
+    loadingSelector: isSubmitLoadingSelector,
+  });
+};
+
+export const usePharmacyQueryParams = (module?: boolean) => {
   const query = useQueryParams();
   const limit = query.get("limit") || 10;
   const page = query.get("page") || 1;
   const keyword = query.get("keyword");
   const status = query.get("status");
-
+  const processStatus = query.get("processStatus");
+  const approved = module ?? query.get("approved");
+  
   const createSuccess = useSelector(createSuccessSelector);
   const updateSuccess = useSelector(updateSuccessSelector);
   const deleteSuccess = useSelector(deleteSuccessSelector);
@@ -147,6 +165,8 @@ export const usePharmacyQueryParams = () => {
       limit,
       keyword,
       status,
+      approved,
+      processStatus,
     };
     return [queryParams];
     //eslint-disable-next-line
@@ -158,6 +178,8 @@ export const usePharmacyQueryParams = () => {
     createSuccess,
     updateSuccess,
     deleteSuccess,
+    approved,
+    processStatus
   ]);
 };
 
@@ -347,7 +369,6 @@ export const useAccumulationDetailQuery = () => {
 
 export const useGetAccumulationDetail = (id: any, params: any) => {
   const memoParams = useMemo(() => ({ id, ...params }),[id, params]);
-  console.log(memoParams,'memoParams');
   
   return useFetchByParam({
     action: pharmacySliceAction.getAccumulationDetailRequest,
@@ -361,3 +382,5 @@ export const useGetAccumulationDetail = (id: any, params: any) => {
 export const useResetPharmacyAction = () => {
   useResetState(pharmacySliceAction.resetAction);
 };
+
+
