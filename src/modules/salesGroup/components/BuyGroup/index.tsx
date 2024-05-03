@@ -16,7 +16,7 @@ import LoadingTree from "~/components/Antd/LoadingTree";
 import ModalAnt from "~/components/Antd/ModalAnt";
 import AvatarShortOrName from "~/components/common/AvatarShortOrName";
 import apis from "~/modules/collaborator/collaborator.api";
-import { useCreateCollaborator, useGetCollaborator, useRemoveProductCollaborator, useUpdateCollaborator, useUpdateProductCollaborator } from "~/modules/collaborator/collaborator.hook";
+import { useAddProductCollaborator, useCreateCollaborator, useGetCollaborator, useRemoveProductCollaborator, useUpdateCollaborator, useUpdateProductCollaborator } from "~/modules/collaborator/collaborator.hook";
 import CollaboratorAddress from "~/modules/collaborator/components/CollaboratorAddress";
 import CollaboratorForm from "~/modules/collaborator/components/CollaboratorForm";
 import CollaboratorProduct from "~/modules/collaborator/components/CollaboratorProduct";
@@ -181,7 +181,7 @@ export default function BuyGroup(props: propsType): React.JSX.Element {
           {
             key: '2',
             label: "Sản phẩm đảm nhiệm",
-            children: <CollaboratorProduct id={id} useAddProduct={useAddProductEmployee} useRemoveProduct={useRemoveProductCollaborator} useUpdateProduct={useUpdateProductCollaborator} useGetUser={useGetCollaborator} apiSearchProduct={apis.searchProduct}/>,
+            children: <CollaboratorProduct id={id} useAddProduct={useAddProductCollaborator} useRemoveProduct={useRemoveProductCollaborator} useUpdateProduct={useUpdateProductCollaborator} useGetUser={useGetCollaborator} apiSearchProduct={apis.searchProduct}/>,
             disabled : !id
           },
           {
