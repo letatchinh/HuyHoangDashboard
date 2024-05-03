@@ -7,17 +7,18 @@ import { useSelector } from "react-redux";
 // import { useLocation, useNavigate } from "react-router-dom";
 import { clearQuerySearch, getExistProp } from "~/utils/helpers";
 import {
-    getSelectors,
-    useFailed, useFetchByParam,
-    useQueryParams,
-    useSubmit,
-    useSuccess
+  getSelectors,
+  useFailed,
+  useFetchByParam,
+  useQueryParams,
+  useSubmit,
+  useSuccess,
 } from "~/utils/hook";
 import { reportSalaryPartnerActions } from "./redux/reducer";
-import { createContext, useContext } from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 const MODULE = "reportSalaryPartner";
 // const MODULE_VI = "";
-
 const {
   loadingSelector,
   listSelector,
@@ -34,16 +35,59 @@ const {
   updateFailedSelector,
   pagingSelector,
 } = getSelectors(MODULE);
-
 export const useReportSalaryPartnerPaging = () => useSelector(pagingSelector);
-
-export const useGetReportSalaryPartners = (param:any) => {
+export const useReportSalaryPartnerQueryParams = () => {
+  const [reFetch,setRefetch] = useState(false);
+  const query = useQueryParams();
+  const limit = query.get("limit") || 10;
+  const page = query.get("page") || 1;
+  const keyword = query.get("keyword");
+  const startDate = query.get("startDate");
+  const endDate = query.get("endDate");
+  // const updateReceiptVoucherSuccessSelector = useSelector(
+  //   (state: any) => state.receiptVoucher.updateSuccess
+  // );
+  // const createReceiptVoucherSuccessSelector = useSelector(
+  //   (state: any) => state.receiptVoucher.createSuccess
+  // );
+  // const updatePaymentVoucherSuccessSelector = useSelector(
+  //   (state: any) => state.paymentVoucher.updateSuccess
+  // );
+  // const createPaymentVoucherSuccessSelector = useSelector(
+  //   (state: any) => state.paymentVoucher.createPayment
+  // );
+  // console.log(createPaymentVoucherSuccessSelector,'createPaymentVoucherSuccessSelector');
+  const mutate = useCallback(() => setRefetch(!reFetch),[reFetch])
+  return useMemo(() => {
+    const queryParams = {
+      page,
+      limit,
+      keyword,
+      startDate,
+      endDate,
+    };
+    return [queryParams,mutate];
+    //eslint-disable-next-line
+  }, [
+    page,
+    limit,
+    keyword,
+    reFetch,
+    startDate,
+    endDate,
+    // updateReceiptVoucherSuccessSelector,
+    // createReceiptVoucherSuccessSelector,
+    // updatePaymentVoucherSuccessSelector,
+    // createPaymentVoucherSuccessSelector,
+  ]);
+};
+export const useGetReportSalaryPartners = (param: any) => {
   return useFetchByParam({
     action: reportSalaryPartnerActions.getListRequest,
     loadingSelector: loadingSelector,
     dataSelector: listSelector,
     failedSelector: getListFailedSelector,
-    param
+    param,
   });
 };
 // export const useGetReportSalaryPartner = (id: any) => {
@@ -112,44 +156,54 @@ export const useGetReportSalaryPartners = (param:any) => {
 //   }, [page, limit, keyword, createSuccess, deleteSuccess]);
 // };
 
-// export const useUpdateReportSalaryPartnerParams = (
-//   query: any,
-//   listOptionSearch?: any[]
-// ) => {
-//   const navigate = useNavigate();
-//   const { pathname } = useLocation();
-//   const [keyword, setKeyword] = useState(get(query, "keyword"));
-//   useEffect(() => {
-//     setKeyword(get(query, "keyword"));
-//   }, [query]);
-//   const onParamChange = (param: any) => {
-//     // Clear Search Query when change Params
-//     clearQuerySearch(listOptionSearch, query, param);
+export const useUpdateReportSalaryPartnerParams = (
+  query: any,
+  listOptionSearch?: any[]
+) => {
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
+  const [keyword, setKeyword] = useState(get(query, "keyword"));
+  useEffect(() => {
+    setKeyword(get(query, "keyword"));
+  }, [query]);
+  const onParamChange = (param: any) => {
+    // Clear Search Query when change Params
+    clearQuerySearch(listOptionSearch, query, param);
 
-//     if (!param.page) {
-//       query.page = 1;
-//     };
+    if (!param.page) {
+      query.page = 1;
+    };
 
-//     // Convert Query and Params to Search Url Param
-//     const searchString = new URLSearchParams(
-//       getExistProp({
-//         ...query,
-//         ...param,
-//       })
-//     ).toString();
+    // Convert Query and Params to Search Url Param
+    const searchString = new URLSearchParams(
+      getExistProp({
+        ...query,
+        ...param,
+      })
+    ).toString();
 
-//     // Navigate
-//     navigate(`${pathname}?${searchString}`);
-//   };
+    // Navigate
+    navigate(`${pathname}?${searchString}`);
+  };
 
-//   return [keyword, { setKeyword, onParamChange }];
-// };
+  return [keyword, { setKeyword, onParamChange }];
+};
 
 export const contextReport = {
-    provider : createContext({data:[]}),
-    get useContextReportSalaryPartner (){
-        return useContext(this.provider)
-    }
-}
+  provider: createContext({
+    data: [],
+    paging : null,
+    loading :false,
+    mutate: () => {},
+    keyword: null,
+    setKeyword: () => {},
+    onParamChange: () => {},
+    query : {}
+  }),
+  get useContextReportSalaryPartner() {
+    return useContext<any>(this.provider);
+  },
+};
 
-export const fomartNumber=(value:number)=>Number(value).toLocaleString('vi').replace(/[.]/g,',')
+export const fomartNumber = (value: number) =>
+  Number(value).toLocaleString("vi").replace(/[.]/g, ",");

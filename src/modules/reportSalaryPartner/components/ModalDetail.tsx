@@ -1,6 +1,7 @@
-import React, { useMemo, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import { contextReport, fomartNumber } from "../reportSalaryPartner.hook";
 import {
+  Badge,
   Button,
   Col,
   Flex,
@@ -9,12 +10,23 @@ import {
   Popover,
   Row,
   Table,
+  Tag,
   Tooltip,
 } from "antd";
 import { ColumnsType } from "antd/es/table";
 import { get } from "lodash";
 import dayjs from "dayjs";
 import BaseBorderBox from "~/components/common/BaseBorderBox";
+import { PATH_APP } from "~/routes/allPath";
+import { formatter } from "~/utils/helpers";
+import ModalAnt from "~/components/Antd/ModalAnt";
+import PaymentVoucherForm from "~/modules/paymentVoucher/components/PaymentVoucherForm";
+import ReceiptVoucherForm from "~/modules/receiptVoucher/components/ReceiptVoucherForm";
+
+import { REF_COLLECTION_UPPER } from "~/constants/defaultValue";
+import { MenuOutlined } from "@ant-design/icons";
+import VoucherList from "./VoucherList";
+import { ItemVoucher } from "./Context";
 type propsType = {
   id?: string;
 };
@@ -50,9 +62,16 @@ const BillRender = (props: propsBillRenderType) => {
                 get(item, ["billId", "historyStatus", "COMPLETED"])
               ).format("DD/MM/YYYY")}
             </strong>
-            <Button type="link">{item.codeSequence}</Button> ~{"   "}
-            <strong>{fomartNumber(item.value)}</strong> (
-            {Math.ceil(item.discount * 100)}%)
+            <Button
+              href={PATH_APP.bill.root + "?keyword=" + item?.codeSequence}
+              target={"_blank"}
+              type="link"
+            >
+              {item?.codeSequence}
+            </Button>{" "}
+            ~{"   "}
+            <strong>{fomartNumber(item?.value)}</strong> (
+            {Math.ceil(item?.discount * 100)}%)
           </div>
         );
       })}
@@ -147,28 +166,84 @@ const columns: ColumnsType = [
       return <DetailOver total={total} record={record} getType="billTeams" />;
     },
   },
+  {
+    title: "Tổng doanh số",
+    align: "center",
+    key: "total",
+    width: 300,
+    render: (total, record) => {
+      return formatter(
+        get(record, "revenueGroup", 0) + get(record, "revenueSelf", 0)
+      );
+    },
+  },
 ];
 export default function ModalDetail(props: propsType): React.JSX.Element {
   const { data } = contextReport.useContextReportSalaryPartner;
   const [form] = Form.useForm();
+  const [open, setOpen] = useState(false);
+  const [openReceipt, setOpenReceipt] = useState(false);
+
   const infoData: any = useMemo(() => {
     return data.find((p: any) => p._id === props?.id);
   }, [data, props?.id]);
-
+  console.log(infoData, "infoData");
+  const onOpenPayment = useCallback(() => {
+    setOpen(true);
+  }, []);
+  const onClosePayment = useCallback(() => {
+    setOpen(false);
+  }, []);
+  const onOpenReceipt = useCallback(() => {
+    setOpenReceipt(true);
+  }, []);
+  const onCloseReceipt = useCallback(() => {
+    setOpenReceipt(false);
+  }, []);
+  const totalVoucher = useMemo(() => get(infoData, "vouchers", [])?.reduce((sum:number,cur:ItemVoucher) => {
+    console.log(cur);
+    
+    if(cur?.status === 'APPROVED'){
+      if(cur?.typeVoucher === 'PC') return sum - cur?.totalAmount;
+      if(cur?.typeVoucher === 'PT') return sum + cur?.totalAmount;
+      return sum
+    }
+    return sum
+  },0),[infoData]);
+  console.log(totalVoucher,'totalVoucher');
+  
+  const total = useMemo(
+    () =>
+      get(infoData, "revenue", [])?.reduce(
+        (sum: number, cur: any) =>
+          sum + get(cur, "revenueGroup", 0) + sum + get(cur, "revenueSelf", 0),
+        0
+      )
+      + totalVoucher
+      ,
+    [infoData,totalVoucher]
+    );
+    console.log(total,'total');
   return (
     <div>
       {/* <PieChart width={400} height={400} infoData={infoData}></PieChart> */}
       <BaseBorderBox title={"Thông tin chung"}>
-        <Form form={form} >
-          <Row style={{width:'100%',margin:'0 0'}} gutter={24}>
+        <Form
+          form={form}
+          initialValues={{
+            fullName: get(infoData, "salerId.fullName", ""),
+            phoneNumber: get(infoData, "salerId.phoneNumber", ""),
+          }}
+        >
+          <Row style={{ width: "100%", margin: "0 0" }} gutter={24}>
             <Col span={12}>
               <Form.Item name={"fullName"} label="Tên">
-                <Input variant="borderless" readOnly/>
+                <Input variant="borderless" readOnly />
               </Form.Item>
             </Col>
             <Col span={12}>
               <Form.Item name={"phoneNumber"} label="Số điện thoại">
-                < Input variant="borderless" readOnly />
+                <Input variant="borderless" readOnly />
               </Form.Item>
             </Col>
           </Row>
@@ -178,7 +253,94 @@ export default function ModalDetail(props: propsType): React.JSX.Element {
         size="small"
         columns={columns}
         dataSource={infoData?.revenue ?? []}
+        pagination={false}
       />
+      <Flex style={{ marginTop: 20 }} justify="end" gap={10} align='center'>
+        <Popover
+          trigger={["click"]}
+          title="Danh sách phiếu"
+          content={<VoucherList dataSource={get(infoData, "vouchers", [])} />}
+        >
+          <Badge count={get(infoData, "vouchers", []).length}>
+            <Button icon={<MenuOutlined />} type="primary" ghost>
+              Danh sách phiếu
+            </Button>
+          </Badge>
+        </Popover>
+        {total === 0 && <Tag color={'success'}>Đã hoàn tất thanh toán</Tag>}
+        {total > 0 && (
+          <Button type="primary" onClick={onOpenPayment}>
+            Tạo phiếu chi
+          </Button>
+        )}
+        {total < 0 && <Button type="primary" onClick={onOpenReceipt}>
+            Tạo phiếu thu
+          </Button>}
+      </Flex>
+
+      <ModalAnt
+        title="Phiếu chi"
+        open={open}
+        onCancel={onClosePayment}
+        width={1366}
+        footer={null}
+        destroyOnClose
+      >
+        <PaymentVoucherForm
+          initData={{
+            reason: "Chi Lương",
+            paymentMethod: "COD",
+          }}
+          partnerId={get(infoData, "salerId._id")}
+          onClose={() => onClosePayment()}
+          refCollection={REF_COLLECTION_UPPER.PARTNER}
+          debt={total}
+          method={{
+            data: infoData?._id,
+            type: "SALARY_PARTNER",
+          }}
+          dataAccountingDefault={[
+            {
+              creditAccount: 1111,
+              amountOfMoney: total || 0,
+            },
+          ]}
+        />
+      </ModalAnt>
+      <ModalAnt
+        title="Phiếu thu"
+        open={openReceipt}
+        onCancel={onCloseReceipt}
+        width={1366}
+        footer={null}
+        destroyOnClose
+      >
+        <ReceiptVoucherForm
+          initData={{
+            reason: "Chi Lương",
+            paymentMethod: "COD",
+          }}
+          onClose={() => onCloseReceipt()}
+          partnerId={get(infoData, "salerId._id")}
+          refCollection={REF_COLLECTION_UPPER.PHARMA_PROFILE}
+          debt={total}
+          from="Pharmacy"
+          dataAccountingDefault={[
+            {
+              debitAccount: 1111,
+              amountOfMoney: total || 0,
+            },
+          ]}
+        />
+      </ModalAnt>
+      <ModalAnt
+        title="Danh sách phiếu"
+        open={openReceipt}
+        onCancel={onCloseReceipt}
+        width={1366}
+        footer={null}
+        destroyOnClose
+      ></ModalAnt>
     </div>
   );
 }
