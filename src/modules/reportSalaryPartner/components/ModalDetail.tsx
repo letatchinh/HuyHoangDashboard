@@ -1,9 +1,20 @@
 import React, { useMemo, useState } from "react";
 import { contextReport, fomartNumber } from "../reportSalaryPartner.hook";
-import { Button, Flex, Popover, Table, Tooltip } from "antd";
+import {
+  Button,
+  Col,
+  Flex,
+  Form,
+  Input,
+  Popover,
+  Row,
+  Table,
+  Tooltip,
+} from "antd";
 import { ColumnsType } from "antd/es/table";
 import { get } from "lodash";
 import dayjs from "dayjs";
+import BaseBorderBox from "~/components/common/BaseBorderBox";
 type propsType = {
   id?: string;
 };
@@ -15,9 +26,9 @@ type propsBillRenderType = {
       historyStatus: {
         COMPLETED: Date;
       };
-      pharmacyId:{
-        fullName:string,
-      }
+      pharmacyId: {
+        fullName: string;
+      };
     };
   }>;
   getType: "billSales" | "billTeams";
@@ -29,8 +40,11 @@ const BillRender = (props: propsBillRenderType) => {
       {get(props.dataSource, [props.getType], []).map((item) => {
         return (
           <div style={{ borderBottom: "0.2px solid #333" }}>
-            <strong style={{display:'inline-block',minWidth:'250px'}}>{get(item, ["billId",'pharmacyId','fullName'])}</strong>
-            {" "}
+            {props.getType === "billTeams" && (
+              <strong style={{ display: "inline-block", minWidth: "250px" }}>
+                {get(item, ["billId", "pharmacyId", "fullName"])}
+              </strong>
+            )}{" "}
             <strong>
               {dayjs(
                 get(item, ["billId", "historyStatus", "COMPLETED"])
@@ -107,9 +121,13 @@ const columns: ColumnsType = [
   {
     title: "Tên mặt hàng",
     dataIndex: ["productId", "name"],
-    render: (name,record) => {
-        return <strong>{get(record,['productId','codeBySupplier']) + ' - '+ name}</strong>
-    }
+    render: (name, record) => {
+      return (
+        <strong>
+          {get(record, ["productId", "codeBySupplier"]) + " - " + name}
+        </strong>
+      );
+    },
   },
   {
     title: "Doanh số cá nhân",
@@ -132,6 +150,7 @@ const columns: ColumnsType = [
 ];
 export default function ModalDetail(props: propsType): React.JSX.Element {
   const { data } = contextReport.useContextReportSalaryPartner;
+  const [form] = Form.useForm();
   const infoData: any = useMemo(() => {
     return data.find((p: any) => p._id === props?.id);
   }, [data, props?.id]);
@@ -139,7 +158,27 @@ export default function ModalDetail(props: propsType): React.JSX.Element {
   return (
     <div>
       {/* <PieChart width={400} height={400} infoData={infoData}></PieChart> */}
-      <Table columns={columns} dataSource={infoData?.revenue ?? []}></Table>
+      <BaseBorderBox title={"Thông tin chung"}>
+        <Form form={form} >
+          <Row style={{width:'100%',margin:'0 0'}} gutter={24}>
+            <Col span={12}>
+              <Form.Item name={"fullName"} label="Tên">
+                <Input variant="borderless" readOnly/>
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item name={"phoneNumber"} label="Số điện thoại">
+                < Input variant="borderless" readOnly />
+              </Form.Item>
+            </Col>
+          </Row>
+        </Form>
+      </BaseBorderBox>
+      <Table
+        size="small"
+        columns={columns}
+        dataSource={infoData?.revenue ?? []}
+      />
     </div>
   );
 }
