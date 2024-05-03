@@ -1,7 +1,7 @@
 
 import { get } from "lodash";
 
-const firebaseJson = '{"REACT_APP_FIREBASE_API_KEY": "AIzaSyBgx_qgU4AL2k3Ar50PX50FnwO693RAnXY", "REACT_APP_FIREBASE_AUTH_DOMAIN": "test-firebase-5ffa7.firebaseapp.com", "REACT_APP_FIREBASE_DATABASE_URL": "https://test-firebase-5ffa7-default-rtdb.firebaseio.com", "REACT_APP_FIREBASE_PROJECT_ID": "test-firebase-5ffa7", "REACT_APP_FIREBASE_STORAGE_BUCKET": "test-firebase-5ffa7.appspot.com", "REACT_APP_FIREBASE_MESSAGING_SENDER_ID": "124266123025", "REACT_APP_FIREBASE_APP_ID": "1:124266123025:web:d7f140e583e303f33486b0","REACT_APP_PUBLIC_VAPID_KEY":"BKfuV2UD9ZleImtPciWyAZTPG_m4BYfxovyFvp0yW9oyL1LMeOtONBWsqeYpT14GyYztP2CKtJ2ROgYT8ageu9M"}';
+const firebaseJson = '{"REACT_APP_FIREBASE_API_KEY": "AIzaSyBgx_qgU4AL2k3Ar50PX50FnwO693RAnXY", "REACT_APP_FIREBASE_AUTH_DOMAIN": "test-firebase-5ffa7.firebaseapp.com", "REACT_APP_FIREBASE_DATABASE_URL": "https://test-firebase-5ffa7-default-rtdb.firebaseio.com", "REACT_APP_FIREBASE_PROJECT_ID": "test-firebase-5ffa7", "REACT_APP_FIREBASE_STORAGE_BUCKET": "test-firebase-5ffa7.appspot.com", "REACT_APP_FIREBASE_MESSAGING_SENDER_ID": "124266123025", "REACT_APP_FIREBASE_APP_ID": "1:124266123025:web:d7f140e583e303f33486b0","REACT_APP_PUBLIC_VAPID_KEY":"BAS2CGWgsqfdullrD-7iYrz3c6GrxLhSBHgndz4X-eEDum3lK1cmY0qLQTFyvXElc5Y8KwbECicl_48L9329Xmw"}';
 let config = {};
 // cheat the minifier
 try {
