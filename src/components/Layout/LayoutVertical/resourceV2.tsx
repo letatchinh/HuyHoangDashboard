@@ -446,6 +446,12 @@ export const resource: ItemType[] =[
         key: PATH_APP.bill.create,
         permission: [POLICIES.WRITE_QUOTATIONPARTNER],//
       },
+      {
+        label: "Báo cáo doanh số",
+        path: PATH_APP.reportSalaryPartner.root,
+        key: PATH_APP.reportSalaryPartner.root,
+        permission: [],
+      },
     ]
   },
 ];
