@@ -90,6 +90,13 @@ export default function BuyGroup(props: propsType): React.JSX.Element {
         label: "Sản phẩm đảm nhiệm",
         children: (
           <CollaboratorProduct
+          config={{
+            discount : {
+              discountType : 'PERCENT',
+              value : typeUser === "partner" ? 10  : 45
+            }
+
+          }}
             id={id}
             useAddProduct={
               typeUser === "partner"

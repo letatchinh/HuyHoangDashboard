@@ -8,7 +8,18 @@ import SelectSupplier from "~/modules/supplier/components/SelectSupplier";
 import { useFetchState } from "~/utils/helpers";
 import ControlProduct from "./ControlProduct";
 import SelectProduct from "./SelectProduct";
-
+export type ConfigType = {
+  discount? : {
+    discountType: "PERCENT" | "VALUE",
+    value: number,
+  },
+}
+const defaultConfig = {
+  discount: {
+    discountType: "PERCENT",
+    value: 10,
+  },
+} as ConfigType
 type propsType = {
   id?: any;
   useGetUser: any;
@@ -16,6 +27,7 @@ type propsType = {
   useUpdateProduct: any;
   useAddProduct: any;
   apiSearchProduct: any;
+  config? : ConfigType
 };
 export default function CollaboratorProduct({
   id,
@@ -24,6 +36,7 @@ export default function CollaboratorProduct({
   useUpdateProduct,
   useAddProduct,
   apiSearchProduct,
+  config = defaultConfig
 }: propsType): React.JSX.Element {
   const [reFetch, setReFetch] = useState(false);
   const [keyword, setKeyword] = useState("");
@@ -119,6 +132,7 @@ export default function CollaboratorProduct({
                 setKeyword={setKeyword}
                 loading={loading}
                 useAddProduct={useAddProduct}
+                config={config}
               />
             </div>
           </BaseBorderBox>
