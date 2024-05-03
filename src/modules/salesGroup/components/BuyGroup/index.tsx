@@ -11,7 +11,7 @@ import {
   Typography,
 } from "antd";
 import { get } from "lodash";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import LoadingTree from "~/components/Antd/LoadingTree";
 import ModalAnt from "~/components/Antd/ModalAnt";
 import AvatarShortOrName from "~/components/common/AvatarShortOrName";
@@ -20,27 +20,34 @@ import { useAddProductCollaborator, useCreateCollaborator, useGetCollaborator, u
 import CollaboratorAddress from "~/modules/collaborator/components/CollaboratorAddress";
 import CollaboratorForm from "~/modules/collaborator/components/CollaboratorForm";
 import CollaboratorProduct from "~/modules/collaborator/components/CollaboratorProduct";
-import { useAddProductEmployee } from "~/modules/employee/employee.hook";
+import { useAddProductEmployee, useRemoveProductEmployee, useUpdateProductEmployee,useGetEmployee, useCreateEmployee, useUpdateEmployee } from "~/modules/employee/employee.hook";
+import apisEmployee from "~/modules/employee/employee.api";
 import { useBuyGroupQueryParams, useGetBuyGroups } from "../../salesGroup.hook";
 import { BuyGroupType } from "../../salesGroup.modal";
+import EmployeeForm from "~/modules/employee/components/EmployeeForm";
 type propsType = {};
 
 export default function BuyGroup(props: propsType): React.JSX.Element {
   // const [expandedKeys,setExpandedKeys] = useState<React.Key[]>([]);
   const [id, setId] = useState<any>();
+  const [typeUser, setTypeUser] = useState<any>();
   const [query] = useBuyGroupQueryParams();
   const [data, isLoading] = useGetBuyGroups(query);
 
   const [open, setOpen] = useState(false);
-  const onOpen = useCallback((id?: any) => {
+  const onOpen = useCallback((id?: any,type?:any) => {
     if (id) {
       setId(id);
+    }
+    if(type){
+      setTypeUser(type);
     }
     setOpen(true);
   }, []);
   const onClose = useCallback(() => {
     setOpen(false);
-    setId(null)
+    setId(null);
+    setTypeUser(null)
   }, []);
   const [isSubmitLoading, handleCreate] = useCreateCollaborator(() => {
     onClose();
@@ -48,6 +55,82 @@ export default function BuyGroup(props: propsType): React.JSX.Element {
   const [, handleUpdate] = useUpdateCollaborator(() => {
     onClose();
   });
+  const [isSubmitLoadingEmployee, handleCreateEmployee] = useCreateEmployee(() => {
+    onClose();
+  });
+  const [, handleUpdateEmployee] = useUpdateEmployee(() => {
+    onClose();
+  });
+  let items = useMemo(
+    () => [
+      {
+        key: "1",
+        label: "Hồ sơ",
+        children:
+          typeUser === "partner" ? (
+            <CollaboratorForm
+              id={id}
+              handleCloseModal={onClose}
+              handleCreate={handleCreate}
+              handleUpdate={handleUpdate}
+              isSubmitLoading={isSubmitLoading}
+            />
+          ) : (
+            <EmployeeForm
+              id={id}
+              handleCloseModal={onClose}
+              handleUpdate={handleUpdateEmployee}
+              handleCreate={handleCreateEmployee}
+              isSubmitLoading={isSubmitLoadingEmployee}
+            />
+          ),
+      },
+      {
+        key: "2",
+        label: "Sản phẩm đảm nhiệm",
+        children: (
+          <CollaboratorProduct
+            id={id}
+            useAddProduct={
+              typeUser === "partner"
+                ? useAddProductCollaborator
+                : useAddProductEmployee
+            }
+            useRemoveProduct={
+              typeUser === "partner"
+                ? useRemoveProductCollaborator
+                : useRemoveProductEmployee
+            }
+            useUpdateProduct={
+              typeUser === "partner"
+                ? useUpdateProductCollaborator
+                : useUpdateProductEmployee
+            }
+            useGetUser={
+              typeUser === "partner" ? useGetCollaborator : useGetEmployee
+            }
+            apiSearchProduct={
+              typeUser === "partner"
+                ? apis.searchProduct
+                : apisEmployee.searchProduct
+            }
+          />
+        ),
+        disabled: !id,
+      },
+    ],
+    [id, typeUser, isSubmitLoading, isSubmitLoadingEmployee]
+  );
+  useEffect(() => {
+    if(typeUser === 'partner'){
+      items.push({
+        key: '3',
+        label: "Sổ địa chỉ",
+        children: <CollaboratorAddress id={id}/>,
+        disabled : !id
+      })
+    }
+  },[typeUser])
   return (
     <div className="buy_group">
       <div
@@ -84,23 +167,6 @@ export default function BuyGroup(props: propsType): React.JSX.Element {
         ) : (
           <Tree
             showLine
-            // expandedKeys={expandedKeys}
-            // onSelect={(newExpandedKeys,{node}) => {
-            //   const isIn = expandedKeys.some((key) => node.key === key);
-            //   if(isIn){
-            //     setExpandedKeys(expandedKeys.filter((key) => key !== node.key))
-            //   }else{
-            //     setExpandedKeys([...expandedKeys,...newExpandedKeys])
-            //   }
-            // }}
-            // onExpand={(newExpandedKeys,{node}) => {
-            //   const isIn = expandedKeys.some((key) => node.key === key);
-            //   if(isIn){
-            //     setExpandedKeys(expandedKeys.filter((key) => key !== node.key))
-            //   }else{
-            //     setExpandedKeys([...expandedKeys,...newExpandedKeys])
-            //   }
-            // }}
             switcherIcon={<DownOutlined />}
             treeData={data}
             blockNode
@@ -115,7 +181,7 @@ export default function BuyGroup(props: propsType): React.JSX.Element {
                     />
                     <Typography.Text
                       strong
-                      onClick={() => onOpen(get(data, "_id"))}
+                      onClick={() => onOpen(get(data, "_id"),get(data,'type'))}
                     >
                       {get(data, "code", "")} - {get(data, "fullName", "")}
                     </Typography.Text>
@@ -166,31 +232,7 @@ export default function BuyGroup(props: propsType): React.JSX.Element {
       </h4>
         <Tabs
         destroyInactiveTabPane
-        items={[
-          {
-            key: '1',
-            label: 'Hồ sơ',
-            children: <CollaboratorForm
-            id={id}
-            handleCloseModal={onClose}
-            handleCreate={handleCreate}
-            handleUpdate={handleUpdate}
-            isSubmitLoading={isSubmitLoading}
-          />
-          },
-          {
-            key: '2',
-            label: "Sản phẩm đảm nhiệm",
-            children: <CollaboratorProduct id={id} useAddProduct={useAddProductCollaborator} useRemoveProduct={useRemoveProductCollaborator} useUpdateProduct={useUpdateProductCollaborator} useGetUser={useGetCollaborator} apiSearchProduct={apis.searchProduct}/>,
-            disabled : !id
-          },
-          {
-            key: '3',
-            label: "Sổ địa chỉ",
-            children: <CollaboratorAddress id={id}/>,
-            disabled : !id
-          }
-        ]}>
+        items={items}>
         </Tabs>
       </ModalAnt>
     </div>
