@@ -26,11 +26,11 @@ import {
 } from "./reportEmployee.service";
 import { useMatchPolicy } from "~/modules/policy/policy.hook";
 import POLICIES from "~/modules/policy/policy.auth";
+import { WH_VOUCHER_STATUS } from "~/constants/defaultValue";
 type DataInitSwap = Pick<
   DataSwapType,
   "resourceSupplierId" | "targetSupplierId" | "type"
 >;
-
 export type GlobalDetailReport = {
   onOpenSwap: (p?: DataInitSwap) => void;
   dataSourceTargetsTeam: TargetsSupplierItem[];

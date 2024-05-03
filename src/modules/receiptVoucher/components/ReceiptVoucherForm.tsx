@@ -53,6 +53,7 @@ import { receiptVoucherSliceAction } from "../redux/reducer";
 import { methodType } from "~/modules/vouchers/vouchers.modal";
 import { METHOD_TYPE_OPTIONS } from "~/modules/vouchers/constants";
 import SelectBillCreateVoucherByPharmacyId from "~/modules/sale/bill/components/SelectBillCreateVoucherByPharmacyId";
+import { useGetCollaborator } from "~/modules/collaborator/collaborator.hook";
 
 const mainRowGutter = 24;
 const FormItem = Form.Item;
@@ -67,22 +68,27 @@ type DataAccounting = {
   creditAccount?:number,
   amountOfMoney?:number,
 }
-
+type InitData = {
+  reason? : string,
+  paymentMethod? : "COD" | "TRANSFER",
+}
 type propsType = {
   id?: any;
   onClose?: any;
   pharmacyId?: any
+  partnerId?: any
   refCollection?: any;
   debt?: any;
   from?: string;
   supplierId?:any,
   dataAccountingDefault?: DataAccounting[],
   billId?:any,
-  method? : methodType
+  method? : methodType,
+  initData? : InitData
 };
 
 export default function ReceiptVoucher(props: propsType): React.JSX.Element {
-  const { id , onClose, pharmacyId,supplierId,refCollection, debt, from,dataAccountingDefault,billId,method} = props;
+  const { id , onClose, pharmacyId,supplierId,refCollection, debt, from,dataAccountingDefault,billId,method,partnerId,initData} = props;
   useResetAction();
   const [form] = Form.useForm();
   const ref = useRef();
@@ -95,11 +101,11 @@ export default function ReceiptVoucher(props: propsType): React.JSX.Element {
   };
   const [isSubmitLoading, handleCreate] = useCreateReceiptVoucher(() => {
     onClose();
-    resetAction();
+    // resetAction();
   });
   const [, handleUpdate] = useUpdateReceiptVoucher(() => {
     onClose();
-    resetAction();
+    // resetAction();
   });
   const [, handleConfirm] = useConfirmReceiptVoucher(onClose);
   const [voucher, isLoading] = useGetReceiptVoucher(id);
@@ -110,7 +116,8 @@ export default function ReceiptVoucher(props: propsType): React.JSX.Element {
   const [branch] = useGetBranches(queryBranch);
   const [pharmacy] = useGetPharmacyId(memo); 
   const [supplier] = useGetSupplier(supplierId);
-  const provider = useMemo(() => pharmacy ?? supplier,[pharmacy,supplier]);
+  const [partner] = useGetCollaborator(partnerId);
+  const provider = useMemo(() => pharmacy ?? supplier ?? partner,[pharmacy,supplier,partner]);
 
   const [dataAccounting, setDataAccounting] = useState(dataAccountingDefault ?? []);
   const { bill } = useUpdateBillStore();
@@ -157,10 +164,10 @@ export default function ReceiptVoucher(props: propsType): React.JSX.Element {
       // form.resetFields();
       if (provider) {
         form.setFieldsValue({
-          name: provider?.name,
-          receiver: provider?.name,
-          provider: provider?._id,
-          code: provider?.code,
+          name: provider?.name ?? provider?.fullName,
+            receiver: provider?.name ?? provider?.fullName,
+            provider: provider?._id,
+            code: provider?.code ?? provider?.partnerNumber,
           accountingDate : dayjs(),
           dateOfIssue : dayjs(),
         });
@@ -176,7 +183,10 @@ export default function ReceiptVoucher(props: propsType): React.JSX.Element {
       );
       setDataAccounting(initReceiptVoucher?.accountingDetails);
     }
-  }, [id, initReceiptVoucher,provider]);
+    form.setFieldsValue({
+      ...initData
+    })
+  }, [id, initReceiptVoucher,provider,initData]);
   
   useEffect(() => {
     if (id && mergedInitWhPaymentVoucher ) {
@@ -505,6 +515,7 @@ export default function ReceiptVoucher(props: propsType): React.JSX.Element {
                   <FormItem label="Loại dữ liệu" name={["method","type"]} labelCol={{ lg: 8 }}>
                   {render(
                     <Select
+                      disabled={!!id}
                       allowClear
                       onClear={() => form.setFieldsValue({
                         method : null

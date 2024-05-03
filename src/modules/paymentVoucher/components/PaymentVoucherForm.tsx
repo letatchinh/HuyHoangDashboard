@@ -58,6 +58,7 @@ import useUpdateOrderSupplierStore from "~/modules/sale/orderSupplier/storeConte
 import WithOrPermission from "~/components/common/WithOrPermission";
 import { useDispatch } from "react-redux";
 import { paymentVoucherSliceAction } from "../redux/reducer";
+import { useGetCollaborator } from "~/modules/collaborator/collaborator.hook";
   const mainRowGutter = 24;
   const FormItem = Form.Item;
   const { TabPane } = Tabs;
@@ -70,24 +71,30 @@ import { paymentVoucherSliceAction } from "../redux/reducer";
     creditAccount?:number,
     amountOfMoney?:number,
   }
+  type InitData = {
+    reason? : string,
+    paymentMethod? : "COD" | "TRANSFER",
+  }
   type propsType = {
     id?: any;
     onClose?: any;
     supplierId?: any;
     pharmacyId?: any;
+    partnerId?: any;
     refCollection?: string;
     debt?: number | null;
     dataAccountingDefault? : DataAccounting[],
     method?: any,
     billId?: any,
-    mutateOrderSupplier?: any
+    mutateOrderSupplier?: any,
+    initData? : InitData
   };
   
   export default function PaymentVoucherForm(
     props: propsType
   ): React.JSX.Element {
     useResetAction();
-    const { id, supplierId, onClose, refCollection, debt, pharmacyId, dataAccountingDefault, method, billId,mutateOrderSupplier } = props;
+    const { id, supplierId, onClose, refCollection, debt, pharmacyId, dataAccountingDefault, method, billId,mutateOrderSupplier,partnerId,initData = {} } = props;
     const [form] = Form.useForm();
     const ref = useRef();
     const [accountingDetails, setAccountingDetails] = useState([]);
@@ -111,7 +118,9 @@ import { paymentVoucherSliceAction } from "../redux/reducer";
     const initPaymentVoucher = useInitWhPaymentVoucher(voucher);
     const [supplier] = useGetSupplier(supplierId);
     const [pharmacy] = useGetPharmacyId(pharmacyId);
-    const provider = useMemo(() => pharmacy ?? supplier,[pharmacy,supplier]);
+    const [partner] = useGetCollaborator(partnerId);
+    const provider = useMemo(() => pharmacy ?? supplier ?? partner,[pharmacy,supplier,partner]);
+    
     const [issueNumber, setIssueNumber] = useState(null);
     const [dataAccounting, setDataAccounting] = useState(dataAccountingDefault ?? []);
     const { orderSupplier } = useUpdateOrderSupplierStore();
@@ -156,10 +165,10 @@ import { paymentVoucherSliceAction } from "../redux/reducer";
       if (!id) {
         if (provider) {
           form.setFieldsValue({
-            name: provider?.name,
-            receiver: provider?.name,
+            name: provider?.name ?? provider?.fullName,
+            receiver: provider?.name ?? provider?.fullName,
             provider: provider?._id,
-            code: provider?.code,
+            code: provider?.code ?? provider?.partnerNumber,
             accountingDate : dayjs(),
             dateOfIssue : dayjs(),
           });
@@ -170,7 +179,10 @@ import { paymentVoucherSliceAction } from "../redux/reducer";
         form.setFieldsValue(initPaymentVoucher);
         setDataAccounting(initPaymentVoucher?.accountingDetails);
       };
-    }, [provider, supplierId, id, initPaymentVoucher]);
+      form.setFieldsValue({
+        ...initData
+      })
+    }, [provider, supplierId, id, initPaymentVoucher,initData]);
   
     useEffect(() => {
       if (id && mergedInitWhPaymentVoucher ) {

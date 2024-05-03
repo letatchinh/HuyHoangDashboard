@@ -58,6 +58,7 @@ export const REF_COLLECTION_UPPER : any= {
   // BILLITEM: 'BILLITEM',
   PHARMA_PROFILE: 'PHARMA_PROFILE',
   SUPPLIER: 'SUPPLIER',
+  PARTNER: 'PARTNER',
 };
 
 export const REF_COLLECTION: any = {
