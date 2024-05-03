@@ -1,3 +1,12 @@
+## [1.13.4](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/compare/v1.13.3...v1.13.4) (2024-05-03)
+
+
+### Bug Fixes
+
+* change config hookAdd ([2493f2c](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/2493f2c9730d702bde1754bfc8441a86d81c0b62))
+* config ProductColaborator and Shipping Cost Bill ([04fbe9f](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/04fbe9fd79490d461a40aab23b83fd45009b7b9f))
+* typeUser ([9a8e6ed](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/9a8e6edec5f70ba0b416af40e87770a1a48aa73d))
+
 ## [1.13.3](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/compare/v1.13.2...v1.13.3) (2024-05-02)
 
 
