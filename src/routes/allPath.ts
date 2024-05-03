@@ -150,6 +150,9 @@ export const PATH_APP = {
 
   collaborator: {
     root: path(ROOTS.app, "/collaborator/*"),
+  },
+  reportSalaryPartner:{
+    root: path(ROOTS.app, "/reportSalaryPartner")
   }
 
 };
