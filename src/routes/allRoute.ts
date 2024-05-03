@@ -44,6 +44,7 @@ import ConfigurationCronTime from "~/pages/Dashboard/ConfigurationCronTime";
 import TypePharmacy from "~/pages/Dashboard/TypePharmacy";
 import GroupPharmacy from "~/pages/Dashboard/GroupPharmacy";
 import CollaboratorPage from "~/pages/Dashboard/Collaborator";
+import ReportSalaryPartnerPage from "~/pages/Dashboard/ReportSalaryPartner";
 export const mainRoutes :PathRouteProps[] = [
   { path: PATH_APP.main.root, Component: Homepage },
 
@@ -143,6 +144,8 @@ export const mainRoutes :PathRouteProps[] = [
   
   // Cộng tác viên
   { path: PATH_APP.collaborator.root, Component: CollaboratorPage},
+  { path: PATH_APP.reportSalaryPartner.root, Component: ReportSalaryPartnerPage},
+  
   
   { path: '/', Component: Homepage },
 ]
