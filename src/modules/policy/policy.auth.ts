@@ -174,6 +174,7 @@ const RESOURCES = [
   partner,
   partnerGroup,
   reportSalaryPartner,
+  voucherPartner,
 ];
 
 //ACTIONS
