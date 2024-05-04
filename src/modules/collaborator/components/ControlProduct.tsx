@@ -1,4 +1,4 @@
-import { MinusOutlined } from "@ant-design/icons";
+import { DownOutlined, MinusOutlined, SmallDashOutlined } from "@ant-design/icons";
 import { Button, Dropdown, Flex, Modal, Typography } from "antd";
 import { ColumnsType } from "antd/es/table/InternalTable";
 import Search from "antd/lib/input/Search";
@@ -16,6 +16,7 @@ import {
   ItemSubmitDataProductPartner,
   SubmitDataProductPartner,
 } from "../collaborator.modal";
+import useCollaboratorProductStore from "../CollaboratorProductProvider";
 import Discount from "./Discount";
 import DiscountForm from "./DiscountForm";
 type propsType = {
@@ -32,6 +33,9 @@ export default function ControlProduct({
   useRemoveProduct,
   useUpdateProduct,
 }: propsType): React.JSX.Element {
+  const {canDelete,canUpdate} = useCollaboratorProductStore();
+  console.log(canDelete,'canDelete');
+  
   const [data,setData] = useState<any>([]);
   const [openModalUpdateDiscount, setOpenModalUpdateDiscount] = useState(false);
   const [isSubmitLoading, removeProduct]: any = useRemoveProduct();
@@ -122,23 +126,30 @@ export default function ControlProduct({
         },
       },
       {
-        title: selectedRowKeys?.length ? (
-          <Dropdown.Button
+        title: selectedRowKeys?.length  ? (
+          <Dropdown
+          trigger={['click']}
             menu={{
               items: [
                 {
                   label: "Cập nhật chiết khấu",
                   key: "1",
+                  disabled : !canUpdate,
+                  onClick : () => setOpenModalUpdateDiscount(true),
+                },
+                {
+                  label: "Gỡ",
+                  key: "2",
+                  danger: true,
+                  disabled : !canDelete,
+                  onClick : () => onRemoveMultiProduct(),
                 },
               ],
-              onClick: () => setOpenModalUpdateDiscount(true),
+              // onClick: () => setOpenModalUpdateDiscount(true),
             }}
-            onClick={onRemoveMultiProduct}
-            size="small"
-            type="primary"
           >
-            Gỡ
-          </Dropdown.Button>
+          <Button type="primary" icon={<SmallDashOutlined />}/>
+          </Dropdown>
         ) : (
           ""
         ),
@@ -147,7 +158,7 @@ export default function ControlProduct({
         align: "center",
         width: 70,
         render(productId, record: any, index) {
-          return !selectedRowKeys?.includes(productId) ? (
+          return !selectedRowKeys?.includes(productId) && canDelete ? (
             <Button
               size="small"
               loading={isSubmitLoading}
@@ -164,7 +175,7 @@ export default function ControlProduct({
         },
       },
     ],
-    [id, isSubmitLoading, selectedRowKeys]
+    [id, isSubmitLoading, selectedRowKeys,canDelete,canUpdate]
   );
   useEffect(() => {
     setSelectedRowKeys([]);

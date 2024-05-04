@@ -90,6 +90,7 @@ export default function BuyGroup(props: propsType): React.JSX.Element {
         label: "Sản phẩm đảm nhiệm",
         children: (
           <CollaboratorProduct
+          target={typeUser}
           config={{
             discount : {
               discountType : 'PERCENT',
@@ -234,9 +235,7 @@ export default function BuyGroup(props: propsType): React.JSX.Element {
         className="modalScroll"
         centered
       >
-          <h4 >
-        {`${!id ? "Tạo mới " : "Cập nhật"}`} cộng tác viên
-      </h4>
+        <h4>{`${!id ? "Tạo mới " : "Cập nhật"}`} cộng tác viên</h4>
         <Tabs
         destroyInactiveTabPane
         items={items}>

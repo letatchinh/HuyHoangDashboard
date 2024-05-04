@@ -358,6 +358,7 @@ export default function Employee({ currentTab }: Props) {
                       value : 45
                     }
                   }}
+                  target='employee'
                 />
               ),
               disabled: !id,

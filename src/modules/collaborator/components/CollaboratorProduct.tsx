@@ -8,6 +8,9 @@ import SelectSupplier from "~/modules/supplier/components/SelectSupplier";
 import { useFetchState } from "~/utils/helpers";
 import ControlProduct from "./ControlProduct";
 import SelectProduct from "./SelectProduct";
+
+import { useGetRole } from "~/modules/auth/auth.hook";
+import { CollaboratorProductProvider } from "../CollaboratorProductProvider";
 export type ConfigType = {
   discount? : {
     discountType: "PERCENT" | "VALUE",
@@ -28,6 +31,7 @@ type propsType = {
   useAddProduct: any;
   apiSearchProduct: any;
   config? : ConfigType
+  target : 'employee' | 'partner'
 };
 export default function CollaboratorProduct({
   id,
@@ -36,8 +40,10 @@ export default function CollaboratorProduct({
   useUpdateProduct,
   useAddProduct,
   apiSearchProduct,
-  config = defaultConfig
+  config = defaultConfig,
+  target,
 }: propsType): React.JSX.Element {
+  const role = useGetRole();
   const [reFetch, setReFetch] = useState(false);
   const [keyword, setKeyword] = useState("");
   const [supplierSelectId, setSupplierSelectId] = useState();
@@ -48,6 +54,9 @@ export default function CollaboratorProduct({
     api: supplierModule.api.getAllPublic,
     useDocs: false,
   });
+
+  const canUpdate = useMemo(() => role === 'staff',[role]);
+  
 
   const query = useMemo(
     () => ({
@@ -74,6 +83,10 @@ export default function CollaboratorProduct({
     [products, collaborator]
   );
   return (
+    <CollaboratorProductProvider
+    id={id}
+    target={target}
+    >
     <div className="SelectSupplier m-0" style={{ minHeight: 520 }}>
       <Row
         gutter={16}
@@ -160,5 +173,6 @@ export default function CollaboratorProduct({
         </Col>
       </Row>
     </div>
+    </CollaboratorProductProvider>
   );
 }

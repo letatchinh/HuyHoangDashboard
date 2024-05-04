@@ -2,6 +2,7 @@ import { Button, Popover, Typography } from "antd";
 import { get } from "lodash";
 import React, { useCallback, useState } from "react";
 import { DISCOUNT_TYPE_VI } from "~/constants/defaultValue";
+import useCollaboratorProductStore from "../CollaboratorProductProvider";
 import DiscountForm from "./DiscountForm";
 type propsType = {
   discount: { discountType: "PERCENT" | "VALUE"; value: number };
@@ -15,6 +16,8 @@ export default function Discount({
   onUpdateProduct,
   loading,
 }: propsType): React.JSX.Element {
+  const {canUpdate} = useCollaboratorProductStore();
+
   const [open, setOpen] = useState(false);
   const hide = useCallback(() => {
     setOpen(false);
@@ -25,7 +28,7 @@ export default function Discount({
   return (
     <Popover
       trigger={["click"]}
-      open={open}
+      open={canUpdate ? open : false}
       onOpenChange={handleOpenChange}
       content={
         <DiscountForm

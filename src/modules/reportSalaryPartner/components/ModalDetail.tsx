@@ -27,6 +27,8 @@ import { REF_COLLECTION_UPPER } from "~/constants/defaultValue";
 import { MenuOutlined } from "@ant-design/icons";
 import VoucherList from "./VoucherList";
 import { ItemVoucher } from "./Context";
+import WithPermission from "~/components/common/WithPermission";
+import POLICIES from "~/modules/policy/policy.auth";
 type propsType = {
   id?: string;
 };
@@ -135,7 +137,14 @@ const DetailOver = ({
     </Tooltip>
   );
 };
-
+const BoxMoney = ({ title, total }: { title: any; total: any }) => (
+  <Flex vertical>
+    <span style={{ fontSize: 16, color: "#525667" }}>{title}</span>
+    <span style={{ fontWeight: 700, fontSize: 16, color: "#525667" }}>
+      {formatter(total)}
+    </span>
+  </Flex>
+);
 const columns: ColumnsType = [
   {
     title: "Tên mặt hàng",
@@ -200,8 +209,20 @@ export default function ModalDetail(props: propsType): React.JSX.Element {
   const onCloseReceipt = useCallback(() => {
     setOpenReceipt(false);
   }, []);
+
+  const totalPayment = useMemo(() => get(infoData, "vouchers", [])?.reduce((sum:number,cur:ItemVoucher) => {
+    if(cur?.status === 'APPROVED' && cur?.typeVoucher === 'PC'){
+       return sum + cur?.totalAmount;
+    }
+    return sum
+  },0),[infoData]);
+  const totalReceipt = useMemo(() => get(infoData, "vouchers", [])?.reduce((sum:number,cur:ItemVoucher) => {
+    if(cur?.status === 'APPROVED' && cur?.typeVoucher === 'PT'){
+       return sum + cur?.totalAmount;
+    }
+    return sum
+  },0),[infoData]);
   const totalVoucher = useMemo(() => get(infoData, "vouchers", [])?.reduce((sum:number,cur:ItemVoucher) => {
-    console.log(cur);
     
     if(cur?.status === 'APPROVED'){
       if(cur?.typeVoucher === 'PC') return sum - cur?.totalAmount;
@@ -210,19 +231,26 @@ export default function ModalDetail(props: propsType): React.JSX.Element {
     }
     return sum
   },0),[infoData]);
-  console.log(totalVoucher,'totalVoucher');
-  
-  const total = useMemo(
+
+  const initTotal = useMemo(
     () =>
       get(infoData, "revenue", [])?.reduce(
         (sum: number, cur: any) =>
           sum + get(cur, "revenueGroup", 0) + sum + get(cur, "revenueSelf", 0),
         0
       )
-      + totalVoucher
       ,
-    [infoData,totalVoucher]
+    [infoData]
     );
+
+  const total = useMemo(
+    () =>
+      initTotal + totalVoucher
+      ,
+    [initTotal,totalVoucher]
+    );
+
+    
     console.log(total,'total');
   return (
     <div>
@@ -255,7 +283,15 @@ export default function ModalDetail(props: propsType): React.JSX.Element {
         dataSource={infoData?.revenue ?? []}
         pagination={false}
       />
+      <Flex justify={'space-between'} align='center'>
+        <Flex gap={50} justify='space-around' align='center'>
+          <BoxMoney title={'Tổng phải thu'} total={initTotal < 0 ? initTotal : 0}/>
+          <BoxMoney title={'Tổng phải chi'} total={initTotal > 0 ? initTotal : 0}/>
+          <BoxMoney title={'Tổng đã thu'} total={totalReceipt}/>
+          <BoxMoney title={'Tổng đã chi'} total={totalPayment}/>
+        </Flex>
       <Flex style={{ marginTop: 20 }} justify="end" gap={10} align='center'>
+        <WithPermission permission={POLICIES.READ_VOUCHERPARTNER}>
         <Popover
           trigger={["click"]}
           title="Danh sách phiếu"
@@ -267,8 +303,10 @@ export default function ModalDetail(props: propsType): React.JSX.Element {
             </Button>
           </Badge>
         </Popover>
+        </WithPermission>
         {total === 0 && <Tag color={'success'}>Đã hoàn tất thanh toán</Tag>}
-        {total > 0 && (
+      <WithPermission permission={POLICIES.WRITE_VOUCHERPARTNER}>
+      {total > 0 && (
           <Button type="primary" onClick={onOpenPayment}>
             Tạo phiếu chi
           </Button>
@@ -276,6 +314,8 @@ export default function ModalDetail(props: propsType): React.JSX.Element {
         {total < 0 && <Button type="primary" onClick={onOpenReceipt}>
             Tạo phiếu thu
           </Button>}
+      </WithPermission>
+      </Flex>
       </Flex>
 
       <ModalAnt

@@ -10,6 +10,7 @@ import TableAnt from "~/components/Antd/TableAnt";
 import { useAddProductCollaborator } from "../collaborator.hook";
 import { SubmitDataProductPartner } from "../collaborator.modal";
 import { ConfigType } from "./CollaboratorProduct";
+import useCollaboratorProductStore from "../CollaboratorProductProvider";
 type propsType = {
   id?: any;
   dataSource?: any[];
@@ -30,6 +31,7 @@ export default function SelectProduct({
   useAddProduct,
   config
 }: propsType): React.JSX.Element {
+  const {canAdd} = useCollaboratorProductStore();
   const [isSubmitLoading, addProduct] = useAddProduct();
 
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
@@ -86,13 +88,13 @@ export default function SelectProduct({
         },
       },
       {
-        title: selectedRowKeys?.length ? <Button size="small" onClick={onAddMultiProduct} type="primary">Thêm</Button> : "",
+        title: selectedRowKeys?.length && canAdd ? <Button size="small" onClick={onAddMultiProduct} type="primary">Thêm</Button> : "",
         dataIndex: "_id",
         key: "_id",
         align : 'end',
         width : 100,
         render(_id, record: any, index) {
-          return !selectedRowKeys?.includes(_id) ? (
+          return !selectedRowKeys?.includes(_id) && canAdd ? (
             <Button
               type="primary"
               onClick={() => onAddProduct(_id)}
