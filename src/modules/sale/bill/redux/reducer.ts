@@ -66,7 +66,14 @@ class BillClassExtend extends InstanceModuleRedux {
       });
       const remainAmount = get(payload,'remaining',0);
       const totalFee = (get(payload,'fee',[]))?.reduce((sum : number,cur : FeeType) => sum + (cur?.typeValue === 'PERCENT' ? getValueOfPercent(get(payload,'totalAmount',0),cur?.value) : cur?.value),0);
-
+      const feeDetail = (get(payload,'fee',[]))?.reduce((sum : {SUB_FEE : number,LOGISTIC : number},cur : FeeType) =>  {
+        sum[cur.typeFee] = (sum[cur.typeFee] || 0) + (cur?.typeValue === 'PERCENT' ? getValueOfPercent(get(payload,'totalAmount',0),cur?.value) : cur?.value);
+        return sum;
+      },{
+        SUB_FEE : 0,
+        LOGISTIC : 0,
+      });
+      // sum + (cur?.typeValue === 'PERCENT' ? getValueOfPercent(get(payload,'totalAmount',0),cur?.value) : cur?.value)
       state.byId = {
         ...payload,
         billItems,
@@ -74,7 +81,8 @@ class BillClassExtend extends InstanceModuleRedux {
         totalDiscountBill,
         totalAmountBill,
         totalAfterDiscountBill : totalAmountBill - totalDiscountBill,
-        totalFee
+        totalFee,
+        feeDetail,
       }
       },
     getListProductSuggestRequest: (state:cloneInitState) => {
