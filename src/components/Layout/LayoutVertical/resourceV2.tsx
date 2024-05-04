@@ -450,7 +450,7 @@ export const resource: ItemType[] =[
         label: "Báo cáo doanh số",
         path: PATH_APP.reportSalaryPartner.root,
         key: PATH_APP.reportSalaryPartner.root,
-        permission: [],
+        permission: [POLICIES.READ_REPORTSALARYPARTNER],
       },
     ]
   },
