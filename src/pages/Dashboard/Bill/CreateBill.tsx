@@ -182,8 +182,6 @@ const CreateBillPage = (): React.JSX.Element => {
   // Initialize DataSource
   useEffect(() => {
     try {
-      console.log("RUN TEST");
-      
       // Not Have DataSource  initialize new Data
       const dataFromLocalStorage : any  = localStorage.getItem(KEY_DATA_PHARMACY);
       const isInValidDataSource : boolean = BillModule.service.validateDataStorageREINS(dataFromLocalStorage);
@@ -196,8 +194,6 @@ const CreateBillPage = (): React.JSX.Element => {
 
         // Data source is Ready
         const dataReady: DataSourceType = JSON.parse(dataFromLocalStorage);
-        console.log(dataReady,'dataReady');
-
         let newTabs: TabsProps['items'] = [];
         forIn(dataReady, (value, key) => {
           switch (get(value,'typeTab')) {
@@ -272,7 +268,6 @@ const CreateBillPage = (): React.JSX.Element => {
       return;
     }
   }, [activeKey, tabs]);
-  console.log(activeKey);
   
   return (
     <div>
