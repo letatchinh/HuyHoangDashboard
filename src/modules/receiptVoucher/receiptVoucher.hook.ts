@@ -160,6 +160,9 @@ export const useReceiptVoucherQueryParams = () => {
   if(pathname === PATH_APP.vouchers.supplier ){
     refCollection = REF_COLLECTION.SUPPLIER
   }
+  if(pathname === PATH_APP.vouchers.salaryPartner ){
+    refCollection = REF_COLLECTION.SUPPLIER
+  }
   
   return useMemo(() => {
     const queryParams = {

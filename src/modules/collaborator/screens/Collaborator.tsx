@@ -207,7 +207,7 @@ export default function Collaborator({
                         okText="Duyệt"
                         cancelText="Huỷ"
                       >
-                        <Button color="green">
+                        <Button size="small" color="green">
                           {PROCESS_STATUS_VI["NEW"]}
                         </Button>
                       </Popconfirm>

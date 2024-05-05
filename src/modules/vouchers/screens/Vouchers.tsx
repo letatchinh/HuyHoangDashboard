@@ -17,6 +17,17 @@ import useCheckBoxExport from "~/modules/export/export.hook";
 import { useArrCheckBoxRedux } from "../vouchers.hook";
 import { PATH_APP } from "~/routes/allPath";
 import { useChangeDocumentTitle } from "~/utils/hook";
+const setting = {
+  [PATH_APP.vouchers.supplier] : {
+    name : 'nhà cung cấp'
+  },
+  [PATH_APP.vouchers.pharmacy]: {
+    name : 'nhà thuốc'
+  },
+  [PATH_APP.vouchers.salaryPartner] : {
+    name : 'doanh số cộng tác viên'
+  },
+}
 type propsType = {
   defaultActiveTab?: string;
 };
@@ -56,6 +67,7 @@ export default function Vouchers({
 }: propsType): React.JSX.Element {
   const navigate = useNavigate();
   const { pathname, search } = useLocation();
+  
   const activeTabMemo = useMemo(() => pathname === PATH_APP.vouchers.pharmacy ? "1" : "2", [pathname]);
   const [activeTab, setActiveTab] = useState<any>(activeTabMemo);
   const [searchBy, setSearchBy] = useState(head(optionsSearch)?.value || "");
@@ -157,11 +169,11 @@ export default function Vouchers({
     navigate(`${pathname}`);
     setKeyword("");
   };
-useChangeDocumentTitle(`Số quỹ của ${pathname === PATH_APP.vouchers.pharmacy ? 'Nhà thuốc' : 'Nhà cung cấp'}`,{dependency : [pathname]})
+useChangeDocumentTitle(`Số quỹ của ${setting[pathname].name}`,{dependency : [pathname]})
   return (
     <>
       <WhiteBox>
-        <Breadcrumb title={`Sổ quỹ của ${pathname === PATH_APP.vouchers.pharmacy ? 'Nhà thuốc' : 'Nhà cung cấp'}`} />
+        <Breadcrumb title={`Sổ quỹ của  ${setting[pathname].name}`} />
         <div className="select-search">
           <div className="select-search__left">
             <Row gutter={5}>

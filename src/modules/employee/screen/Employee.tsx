@@ -157,14 +157,18 @@ export default function Employee({ currentTab }: Props) {
       title: 'Mã trình dược viên',
       dataIndex: 'employeeNumber',
       key: 'employeeNumber',
-      render: (value: any, record: any) => (
-        <Button type="link" onClick={() => handleOpenModal(record._id)}>{value}</Button>
-      ),
+      align : 'center',
+      // render: (value: any, record: any) => (
+      //   <Button type="link" onClick={() => handleOpenModal(record._id)}>{value}</Button>
+      // ),
     },
     {
       title: 'Tên trình dược viên',
       dataIndex: 'fullName',
-      key: 'fullName'
+      key: 'fullName',
+      render: (value: any, record: any) => (
+        <Button type="link" onClick={() => handleOpenModal(record._id)}>{value}</Button>
+      ),
     },
     ...(isCanUpdate
       ? [
@@ -185,7 +189,7 @@ export default function Employee({ currentTab }: Props) {
                         okText="Duyệt"
                         cancelText="Huỷ"
                       >
-                        <Button color="green">
+                        <Button size="small" color="green">
                           {PROCESS_STATUS_VI["NEW"]}
                         </Button>
                       </Popconfirm>
@@ -203,6 +207,7 @@ export default function Employee({ currentTab }: Props) {
       title: 'Số điện thoại',
       dataIndex: 'phoneNumber',
       key: 'phoneNumber',
+      align : 'center',
     },
     {
       title: 'Email',

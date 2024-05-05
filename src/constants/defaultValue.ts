@@ -69,6 +69,7 @@ export const REF_COLLECTION: any = {
   SUPPLIER: "supplier",
   EMPLOYEE: "employee",
   PARTNER: "partner",
+  SALARY_PARTNER: "salaryPartner",
 };
 
 export const TYPE_METHOD = {
@@ -385,7 +386,7 @@ export const PROCESS_STATUS = {
 
 export const PROCESS_STATUS_VI = {
   APPROVED: 'Đã duyệt',
-  NEW: 'Mới',
+  NEW: 'Chưa duyệt',
 }
 export const DISCOUNT_TYPE = {
   PERCENT : "PERCENT",
