@@ -91,6 +91,7 @@ export const mainRoutes :PathRouteProps[] = [
   { path: PATH_APP.vouchers.root, Component: VouchersPage },
   { path: PATH_APP.vouchers.pharmacy, Component: VouchersPage },
   { path: PATH_APP.vouchers.supplier, Component: VouchersPage },
+  { path: PATH_APP.vouchers.salaryPartner, Component: VouchersPage },
   { path: PATH_APP.configDiscount.root, Component: ConfigDiscountPage },
 
   // Pharmacy

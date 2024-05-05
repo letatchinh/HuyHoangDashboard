@@ -232,8 +232,8 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
                   </Row>
               </Row>
               <Divider />
-              <h6>Địa chỉ</h6>
-              {concatAddress(get(bill, "pharmacy.address"))}
+              <h6>Địa chỉ giao</h6>
+              {get(bill, "deliveryAddress",'')}
             </WhiteBox>
           </div>
         </Col>
