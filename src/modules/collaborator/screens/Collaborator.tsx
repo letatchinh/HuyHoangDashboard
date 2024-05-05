@@ -319,9 +319,7 @@ export default function Collaborator({
     onParamChange({ ...query, processStatus: e.target.value});
   };
   return (
-    <div>
-      <Breadcrumb title={"Quản lý cộng tác viên"} />
-      <WhiteBox>
+    <>
         <Row className="mb-3" justify={"space-between"}>
           <SelectSearch
             showSelect={false}
@@ -383,7 +381,6 @@ export default function Collaborator({
             showTotal: (total) => `Tổng cộng: ${total} `,
           }}
         />
-      </WhiteBox>
       <Modal
         open={isOpenModal}
         onCancel={() => setIsOpenModal(false)}
@@ -430,6 +427,6 @@ export default function Collaborator({
         ]}>
         </Tabs>
       </Modal>
-    </div>
+    </>
   );
 }

@@ -60,11 +60,10 @@ export default function User() {
   //   navigate(urlPush);
   // }, [isMatchEmployeeGroup, isMatchEmployee]);
   return (
-    <div>
+    <>
       {(isMatchEmployeeGroup || isMatchEmployee) && (
-        <>
+          <WhiteBox className="employee-container">
           <Breadcrumb title={t("Quản lý trình dược viên")} />
-          <WhiteBox>
             <Tabs
               activeKey={currentTab}
               onChange={(key) => onChange(key)}
@@ -101,9 +100,8 @@ export default function User() {
               )}
             </Routes>
           </WhiteBox>
-        </>
       )
     }
-    </div>
+    </>
   );
 }
