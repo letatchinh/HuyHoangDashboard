@@ -1,5 +1,5 @@
 
-import { get } from "lodash";
+import { compact, get } from "lodash";
 import { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -157,6 +157,7 @@ export const usePaymentVoucherQueryParams = () => {
 
   // TODO: Default RefCollection By PathName
   let refCollection :any= null;
+  let methodType : any = null;
   if(pathname === PATH_APP.vouchers.pharmacy ){
     refCollection = REF_COLLECTION.PHARMA_PROFILE
   }
@@ -164,7 +165,8 @@ export const usePaymentVoucherQueryParams = () => {
     refCollection = REF_COLLECTION.SUPPLIER
   }
   if(pathname === PATH_APP.vouchers.salaryPartner ){
-    refCollection = METHOD_TYPE.SALARY_PARTNER
+    refCollection = compact([REF_COLLECTION.PARTNER, REF_COLLECTION.EMPLOYEE]).join(',');
+    methodType = METHOD_TYPE.VOUCHER_SALARY
   }
   if(pathname === PATH_APP.vouchers.partner ){
     refCollection = REF_COLLECTION.PARTNER
@@ -182,6 +184,7 @@ export const usePaymentVoucherQueryParams = () => {
       totalAmount,
       reason,
       ...refCollection && {refCollection},
+      ...methodType && {methodType},
     };
     return [queryParams, onTableChange];
     //eslint-disable-next-line
@@ -290,7 +293,7 @@ export const useInitWhPaymentVoucher = (whPaymentVoucher: any) => {
   }, [whPaymentVoucher]);
 };
 
-export const GetProvider = async(payload : {refCollection : 'supplier' | 'pharma_profile',providerId:string}) => {
+export const GetProvider = async(payload : {refCollection : 'supplier' | 'pharma_profile', providerId:string}) => {
   try {
     const {providerId,refCollection} = payload;
   let handle;
