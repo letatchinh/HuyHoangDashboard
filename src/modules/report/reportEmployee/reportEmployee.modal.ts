@@ -1,5 +1,6 @@
 import { EMPLOYEE_LEVEL } from '~/modules/employee/constants';
 import { EmployeeLevelType } from '~/modules/employee/employee.modal';
+import { ItemVoucher } from '~/modules/reportSalaryPartner/components/Context';
 import { BonusOtherType } from '../reportSupplier/reportSupplier.modal';
 import { STATUS_REPORT_EMPLOYEE } from './constants';
 
@@ -123,5 +124,9 @@ export type ReportEmployeeType = {
     updatedAt: string,
     targetsSelf : Targets,
     targetsTeam : Targets,
-    bonusOther : BonusOtherType[]
+    bonusOther : BonusOtherType[],
+    totalPayment : number,
+    totalPaymentCompleted : number,
+    vouchers : ItemVoucher[],
+    totalRemaining : number,
 }
