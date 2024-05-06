@@ -25,7 +25,7 @@ const setting = {
     name : 'nhà thuốc'
   },
   [PATH_APP.vouchers.salaryPartner] : {
-    name : 'doanh số cộng tác viên'
+    name : 'cộng tác viên'
   },
   [PATH_APP.vouchers.partner] : {
     name : 'đơn hàng cộng tác viên'
@@ -172,11 +172,11 @@ export default function Vouchers({
     navigate(`${pathname}`);
     setKeyword("");
   };
-useChangeDocumentTitle(`Số quỹ của ${setting[pathname].name}`,{dependency : [pathname]})
+useChangeDocumentTitle(`Lương của ${setting[pathname].name}`,{dependency : [pathname]})
   return (
     <>
       <WhiteBox>
-        <Breadcrumb title={`Sổ quỹ của  ${setting[pathname].name}`} />
+        <Breadcrumb title={`Lương của ${setting[pathname].name}`} />
         <div className="select-search">
           <div className="select-search__left">
             <Row gutter={5}>

@@ -339,7 +339,7 @@ export default function ModalDetail(props: propsType): React.JSX.Element {
           debt={total}
           method={{
             data: infoData?._id,
-            type: METHOD_TYPE.SALARY_PARTNER,
+            type: METHOD_TYPE.VOUCHER_SALARY,
           }}
           dataAccountingDefault={[
             {
@@ -364,7 +364,7 @@ export default function ModalDetail(props: propsType): React.JSX.Element {
           }}
           method={{
             data: infoData?._id,
-            type: METHOD_TYPE.SALARY_PARTNER as any,
+            type: METHOD_TYPE.VOUCHER_SALARY as any,
           }}
           onClose={() => onCloseReceipt()}
           {...infoData?.typeSaler === 'employee' && {employeeId : get(infoData, "salerId._id")}}
