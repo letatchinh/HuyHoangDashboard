@@ -29,6 +29,7 @@ import VoucherList from "./VoucherList";
 import { ItemVoucher } from "./Context";
 import WithPermission from "~/components/common/WithPermission";
 import POLICIES from "~/modules/policy/policy.auth";
+import { METHOD_TYPE } from "~/modules/vouchers/constants";
 type propsType = {
   id?: string;
 };
@@ -188,7 +189,7 @@ const columns: ColumnsType = [
   },
 ];
 export default function ModalDetail(props: propsType): React.JSX.Element {
-  const { data } = contextReport.useContextReportSalaryPartner;
+  const { data,mutate } = contextReport.useContextReportSalaryPartner;
   const [form] = Form.useForm();
   const [open, setOpen] = useState(false);
   const [openReceipt, setOpenReceipt] = useState(false);
@@ -196,18 +197,19 @@ export default function ModalDetail(props: propsType): React.JSX.Element {
   const infoData: any = useMemo(() => {
     return data.find((p: any) => p._id === props?.id);
   }, [data, props?.id]);
-  console.log(infoData, "infoData");
   const onOpenPayment = useCallback(() => {
     setOpen(true);
   }, []);
   const onClosePayment = useCallback(() => {
     setOpen(false);
+    mutate();
   }, []);
   const onOpenReceipt = useCallback(() => {
     setOpenReceipt(true);
   }, []);
   const onCloseReceipt = useCallback(() => {
     setOpenReceipt(false);
+    mutate();
   }, []);
 
   const totalPayment = useMemo(() => get(infoData, "vouchers", [])?.reduce((sum:number,cur:ItemVoucher) => {
@@ -236,7 +238,7 @@ export default function ModalDetail(props: propsType): React.JSX.Element {
     () =>
       get(infoData, "revenue", [])?.reduce(
         (sum: number, cur: any) =>
-          sum + get(cur, "revenueGroup", 0) + sum + get(cur, "revenueSelf", 0),
+          sum + get(cur, "revenueGroup", 0) + get(cur, "revenueSelf", 0),
         0
       )
       ,
@@ -251,7 +253,6 @@ export default function ModalDetail(props: propsType): React.JSX.Element {
     );
 
     
-    console.log(total,'total');
   return (
     <div>
       {/* <PieChart width={400} height={400} infoData={infoData}></PieChart> */}
@@ -311,7 +312,7 @@ export default function ModalDetail(props: propsType): React.JSX.Element {
             Tạo phiếu chi
           </Button>
         )}
-        {total < 0 && <Button type="primary" onClick={onOpenReceipt}>
+        {total > 0 && <Button type="primary" onClick={onOpenReceipt}>
             Tạo phiếu thu
           </Button>}
       </WithPermission>
@@ -331,13 +332,14 @@ export default function ModalDetail(props: propsType): React.JSX.Element {
             reason: "Chi Lương",
             paymentMethod: "COD",
           }}
-          partnerId={get(infoData, "salerId._id")}
+          {...infoData?.typeSaler === 'employee' && {employeeId : get(infoData, "salerId._id")}}
+          {...infoData?.typeSaler === 'partner' && {partnerId : get(infoData, "salerId._id")}}
           onClose={() => onClosePayment()}
-          refCollection={REF_COLLECTION_UPPER.PARTNER}
+          refCollection={REF_COLLECTION_UPPER[infoData?.typeSaler?.toUpperCase()]}
           debt={total}
           method={{
             data: infoData?._id,
-            type: "SALARY_PARTNER",
+            type: METHOD_TYPE.SALARY_PARTNER,
           }}
           dataAccountingDefault={[
             {
@@ -357,12 +359,17 @@ export default function ModalDetail(props: propsType): React.JSX.Element {
       >
         <ReceiptVoucherForm
           initData={{
-            reason: "Chi Lương",
+            reason: "Thu Lương",
             paymentMethod: "COD",
           }}
+          method={{
+            data: infoData?._id,
+            type: METHOD_TYPE.SALARY_PARTNER as any,
+          }}
           onClose={() => onCloseReceipt()}
-          partnerId={get(infoData, "salerId._id")}
-          refCollection={REF_COLLECTION_UPPER.PHARMA_PROFILE}
+          {...infoData?.typeSaler === 'employee' && {employeeId : get(infoData, "salerId._id")}}
+          {...infoData?.typeSaler === 'partner' && {partnerId : get(infoData, "salerId._id")}}
+          refCollection={REF_COLLECTION_UPPER[infoData?.typeSaler?.toUpperCase()]}
           debt={total}
           from="Pharmacy"
           dataAccountingDefault={[
@@ -373,14 +380,6 @@ export default function ModalDetail(props: propsType): React.JSX.Element {
           ]}
         />
       </ModalAnt>
-      <ModalAnt
-        title="Danh sách phiếu"
-        open={openReceipt}
-        onCancel={onCloseReceipt}
-        width={1366}
-        footer={null}
-        destroyOnClose
-      ></ModalAnt>
     </div>
   );
 }

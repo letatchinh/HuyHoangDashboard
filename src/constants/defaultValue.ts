@@ -59,6 +59,7 @@ export const REF_COLLECTION_UPPER : any= {
   PHARMA_PROFILE: 'PHARMA_PROFILE',
   SUPPLIER: 'SUPPLIER',
   PARTNER: 'PARTNER',
+  EMPLOYEE: 'EMPLOYEE',
 };
 
 export const REF_COLLECTION: any = {
@@ -69,7 +70,6 @@ export const REF_COLLECTION: any = {
   SUPPLIER: "supplier",
   EMPLOYEE: "employee",
   PARTNER: "partner",
-  SALARY_PARTNER: "salaryPartner",
 };
 
 export const TYPE_METHOD = {

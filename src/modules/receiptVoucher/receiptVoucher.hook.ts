@@ -17,6 +17,7 @@ import { REF_COLLECTION, TYPE_VOUCHER } from "~/constants/defaultValue";
 import dayjs from "dayjs";
 import { fromJSON } from "../vouchers/components/parser";
 import { PATH_APP } from "~/routes/allPath";
+import { METHOD_TYPE } from "../vouchers/constants";
 
 const MODULE = "receiptVoucher";
 const MODULE_VI = "";
@@ -153,7 +154,7 @@ export const useReceiptVoucherQueryParams = () => {
   };
 
   // TODO: Default RefCollection By PathName
-  let refCollection : 'pharma_profile' | 'supplier' | null = null;
+  let refCollection : any = null;
   if(pathname === PATH_APP.vouchers.pharmacy ){
     refCollection = REF_COLLECTION.PHARMA_PROFILE
   }
@@ -161,7 +162,7 @@ export const useReceiptVoucherQueryParams = () => {
     refCollection = REF_COLLECTION.SUPPLIER
   }
   if(pathname === PATH_APP.vouchers.salaryPartner ){
-    refCollection = REF_COLLECTION.SALARY_PARTNER
+    refCollection = METHOD_TYPE.SALARY_PARTNER
   }
   if(pathname === PATH_APP.vouchers.partner ){
     refCollection = REF_COLLECTION.PARTNER
