@@ -234,6 +234,14 @@ export const resource: ItemType[] =[
         key: PATH_APP.vouchers.supplier,
         permission: [POLICIES.READ_VOUCHERSUPPLIER],//
       },
+
+      {
+        label: "Báo cáo",
+        // icon: <MoneyCollectOutlined />,
+        path: PATH_APP.reportProductSupplier.root,
+        key: PATH_APP.reportProductSupplier.root,
+        // permission: [POLICIES.READ_VOUCHERSUPPLIER],//
+      },
     ],
   },
 
