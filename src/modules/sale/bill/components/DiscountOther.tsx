@@ -4,20 +4,22 @@ import { get } from "lodash";
 import React from "react";
 import { formatter, getValueOfMath } from "~/utils/helpers";
 import { DiscountOtherType } from "../bill.modal";
+import { CalculateDiscountFactory } from "../bill.service";
 import DiscountOtherForm from "./DiscountOtherForm";
+const CalculateDiscountFactoryMethod  = new CalculateDiscountFactory();
 type propsType = {
   onAdd: (p: any) => void;
   onUpdate: (p: any, index: number) => void;
   onRemove: (index: number) => void;
   dataSource: DiscountOtherType[];
-  price: number;
+  totalDiscountOther: number;
 };
 export default function DiscountOther({
   onAdd,
   onUpdate,
   onRemove,
   dataSource,
-  price,
+  totalDiscountOther,
 }: propsType): React.JSX.Element {
   return (
     <div>
@@ -25,7 +27,7 @@ export default function DiscountOther({
         trigger={"click"}
         content={<DiscountOtherForm onAdd={onAdd} onUpdate={onUpdate} />}
       >
-        <Button className="mb-1" icon={<PlusOutlined />} type="primary" ghost>
+        <Button size="small" className="mb-1" icon={<PlusOutlined />} type="primary" ghost>
           Thêm Chiết khấu
         </Button>
       </Popover>
@@ -44,9 +46,9 @@ export default function DiscountOther({
           <Col span={3}>
             <Typography.Text strong>
               {formatter(
-                getValueOfMath(price, item?.value, item?.discountType)
+                totalDiscountOther
               )}
-              {item?.discountType === "PERCENT" && ` (${item?.value}%)`}
+              {item?.typeDiscount === "PERCENT" && ` (${item?.value}%)`}
             </Typography.Text>
           </Col>
           <Col flex={1}>

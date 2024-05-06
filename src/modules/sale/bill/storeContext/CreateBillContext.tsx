@@ -8,12 +8,14 @@ import {
   useState
 } from "react";
 import { v4 } from "uuid";
+import { useGetCollaborator } from "~/modules/collaborator/collaborator.hook";
 import QuotationModule from '~/modules/sale/quotation';
 import { getValueOfPercent } from "~/utils/helpers";
 import { DEFAULT_DEBT_TYPE } from "../../quotation/constants";
 import { useGetDebtRule } from "../bill.hook";
 import { DebtType, FeeType, quotation } from "../bill.modal";
 import { onVerifyData, reducerDiscountQuotationItems } from "../bill.service";
+import { defaultFee } from "../constants";
 const TYPE_DISCOUNT = {
   "DISCOUNT.CORE": "DISCOUNT.CORE",
   "DISCOUNT.SOFT": "DISCOUNT.SOFT",
@@ -59,6 +61,7 @@ export type GlobalCreateBill = {
   address : any[],
   setAddress : (p:any) => void;
   setFormAndLocalStorage : (newValue : any) => void
+  partner : any,
 };
 const CreateBill = createContext<GlobalCreateBill>({
   quotationItems: [],
@@ -85,6 +88,7 @@ const CreateBill = createContext<GlobalCreateBill>({
   address : [],
   setAddress : () => {},
   setFormAndLocalStorage : () => {},
+  partner : null
 });
 
 type CreateBillProviderProps = {
@@ -110,6 +114,7 @@ export function CreateBillProvider({
   const [form] = Form.useForm();
   const [debt,isLoadingDebt] = useGetDebtRule();
   const [address,setAddress] = useState([]);
+  const [partner,loadingPartner] : any = useGetCollaborator(get(bill,'pharmacyId'));
 
   // Controller Data
   const onSave = (row: DataItem) => {
@@ -172,22 +177,16 @@ export function CreateBillProvider({
         break;
 
       case "fee":
-        const newFee = values[key]?.map((item:FeeType) => item?.typeValue === 'PERCENT' && item?.value > 100 ? {...item,value : 100} : item);
-        form.setFieldsValue({
-          fee : newFee
-        })
-        onChangeBill({
+        // const newFee = values[key]?.map((item:FeeType) => item?.typeValue === 'PERCENT' && item?.value > 100 ? {...item,value : 100} : item);
+        const newFee = values[key]
+        setFormAndLocalStorage({
           fee: newFee,
         });
+        
         break;
 
       case "deliveryAddress":
-        // Set Form
-          form.setFieldsValue({
-          [key] : values[key]
-        });
-        // Set LocalStorage
-        onChangeBill({
+        setFormAndLocalStorage({
           [key]: values[key],
         });
         break;
@@ -305,12 +304,11 @@ export function CreateBillProvider({
   // Initalize Data And Calculate Discount
   useEffect(() => {
     const initDebt = debt?.find((debt : DebtType) => get(debt, "key") === DEFAULT_DEBT_TYPE);    
-    
     form.setFieldsValue({
       debtType :  form.getFieldValue('debtType') || get(bill,'debtType') ||  get(initDebt,'key'),
       pharmacyId : get(bill,'pharmacyId'),
       pair : get(bill,'pair',0),
-      fee : get(bill,'fee'),
+      fee : get(bill,'fee',defaultFee),
       deliveryAddress : get(bill,'deliveryAddress'),
     });
     if (get(bill, "pharmacyId")) {
@@ -320,7 +318,6 @@ export function CreateBillProvider({
   }, [bill,debt,form,totalPrice]);
 
   const setFormAndLocalStorage = useCallback((newValue : any) => {
-    console.log(newValue,'newValue');
     
     form.setFieldsValue({
       ...newValue
@@ -329,7 +326,6 @@ export function CreateBillProvider({
       ...newValue
     })
   },[]);
-  console.log(form.getFieldsValue(),'Form');
   
   return (
     <CreateBill.Provider
@@ -358,6 +354,7 @@ export function CreateBillProvider({
         address,
         setAddress,
         setFormAndLocalStorage,
+        partner,
       }}
     >
       {children}

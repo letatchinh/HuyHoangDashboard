@@ -183,14 +183,14 @@ export const resource: ItemType[] =[
             permission: [POLICIES.READ_CONFIGCRONTIME],
           },
           {
-            label: "Loại nhà thuốc",
+            label: "Loại khách hàng",
             path: PATH_APP.typePharmacy.root,
             key: PATH_APP.typePharmacy.root,
             icon: <i className="fa-solid fa-truck-medical"></i>,
             permission: [POLICIES.READ_CUSTOMERGROUP],
           },
           {
-            label: "Nhóm nhà thuốc",
+            label: "Nhóm khách hàng",
             path: PATH_APP.groupPharmacy.root,
             key: PATH_APP.groupPharmacy.root,
             icon: <i className="fa-solid fa-notes-medical"></i>,

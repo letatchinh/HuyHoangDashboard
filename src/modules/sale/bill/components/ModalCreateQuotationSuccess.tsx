@@ -20,7 +20,7 @@ export default function ModalCreateQuotationSuccess({
           window.open(
             PATH_APP.bill.quotation +
               "?page=1&limit=10&keyword=" +
-              get(data, "code")
+              get(data, "codeSequence")
           );
         break;
       case "updateQuotation":
@@ -28,13 +28,13 @@ export default function ModalCreateQuotationSuccess({
           window.open(
             PATH_APP.bill.quotation +
               "?page=1&limit=10&keyword=" +
-              get(data, "code")
+              get(data, "codeSequence")
           );
         break;
       case "convertQuotation":
         handle = () =>
           window.open(
-            PATH_APP.bill.root + "?page=1&limit=10&keyword=" + get(data, "code")
+            PATH_APP.bill.root + "?page=1&limit=10&keyword=" + get(data, "codeSequence")
           );
         break;
       default:
@@ -87,7 +87,7 @@ export default function ModalCreateQuotationSuccess({
           <span>
             {subTitle}{" "}
             <Typography.Text copyable strong>
-              {get(data, "code", "")}
+              {get(data, "codeSequence", "")}
             </Typography.Text>
           </span>
         }

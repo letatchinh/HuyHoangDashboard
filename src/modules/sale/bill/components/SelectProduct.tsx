@@ -4,11 +4,12 @@ import { compact, debounce, get } from 'lodash';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { v4 } from 'uuid';
 import TableAnt from '~/components/Antd/TableAnt';
+import { useGetCollaborator } from '~/modules/collaborator/collaborator.hook';
 import ProductModule from '~/modules/product';
 import useNotificationStore from '~/store/NotificationContext';
 import { formatter } from '~/utils/helpers';
-import { ItemSearchProduct } from '../bill.modal';
-import { getCumulativeDiscount, selectProductSearch } from '../bill.service';
+import { DiscountOtherType, ItemSearchProduct } from '../bill.modal';
+import { getCumulativeDiscount, selectProductSearchBill } from '../bill.service';
 import ImageProduct from './ImageProduct';
 
 type propsType = {
@@ -16,7 +17,10 @@ type propsType = {
   onChangeBill : (newData:any) => void,
 }
 export default function SelectProduct({dataCurrent,onChangeBill}:propsType) : React.JSX.Element {
+  
   const {onNotify} = useNotificationStore();
+  const [partner] = useGetCollaborator(get(dataCurrent,'pharmacyId'));
+  
   const [dataSearch,setDataSearch] = useState([]);
   const [loading,setLoading] = useState(false);
   const inputEl : any = useRef(null);
@@ -34,7 +38,6 @@ export default function SelectProduct({dataCurrent,onChangeBill}:propsType) : Re
   
     const fetchOptions = async (keyword?: string) => {
         try {
-          console.log(dataCurrent,'dataCurrent');
 
           setLoading(true);
           const products = await ProductModule.api.search({
@@ -57,8 +60,18 @@ export default function SelectProduct({dataCurrent,onChangeBill}:propsType) : Re
       const debounceFetcher = debounce(fetchOptions, 300);
       const onSelect = async(data:any) => {
           try {
+
+            const productInPartner = get(partner,'products',[])?.find((p:any) => get(p,'productId') === get(data,'_id'))
+            const discountOther : DiscountOtherType[] = productInPartner ? [{
+              typeDiscount : get(productInPartner,'discount.discountType'),
+              value : get(productInPartner,'discount.value'),
+              name : 'Chiết khấu từ cộng tác viên'
+            }] : []
             inputEl.current.blur();
-          const quotation : any = selectProductSearch(data);
+          const quotation : any = selectProductSearchBill({
+            ...data,
+            discountOther
+          });
           const cumulativeDiscount = await getCumulativeDiscount({pharmacyId : get(dataCurrent,'pharmacyId'),quotationItems : [quotation]});
           const quotationWithCumulative = {
             ...quotation,

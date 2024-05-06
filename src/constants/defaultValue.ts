@@ -5,7 +5,7 @@ import { getOptions } from "~/utils/helpers";
 // export const BASE_URL = process.env.REACT_APP_DEV_URL?? 'config.REACT_APP_BASE_URL';  
 export const BASE_URL = 'https://pharma-dashboard.congtyso.com';
 export const DEFAULT_UPLOAD_ACTION = `${BASE_URL}/api/v1/file`;
-export const MAX_UPLOAD_FILE_SIZE_IN_MB = 2;
+export const MAX_UPLOAD_FILE_SIZE_IN_MB = 1;
 
 export const DEFAULT_BRANCH_ID = 99999;
 export const STATUS = {

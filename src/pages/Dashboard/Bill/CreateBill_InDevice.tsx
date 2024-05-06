@@ -9,6 +9,7 @@ import { FormFieldCreateBill, quotation } from "~/modules/sale/bill/bill.modal";
 import SelectProduct from "~/modules/sale/bill/components/SelectProduct";
 import logo from '~/assets/images/logo.png';
 import ModalAnt from "~/components/Antd/ModalAnt";
+import { DataResultType } from "./CreateBill";
 
 export const KEY_DATA_PHARMACY = "bill-pharmacy";
 export const KEY_PRIORITY = "key-priority"; // Tab Will Use this key and Remove then (If Have)
@@ -34,10 +35,6 @@ const initData: ItemDataSource = {
   debtType : null
 };
 
-export interface DataResultType  {
-  type : 'createQuotation' | 'convertQuotation' | 'updateQuotation',
-  code : string
-}
 
 const Label = ({ label, onRemove }: { label?: any; onRemove: () => void }) => (
   <Row justify={"space-between"} align="middle" gutter={16}>
@@ -289,12 +286,6 @@ const CreateBillPageInDevice = (): React.JSX.Element => {
                   <div className='layoutVertical--header__row__logo' onClick={() => navigate("/")}>
               <img src={logo}/>
               </div>
-                  {/* <SelectProduct
-                  dataCurrent={dataSource?.[activeKey]}
-                  onChangeBill={(newData: any) =>
-                    onChangeBill(activeKey, newData)
-                  }
-                /> */}
                 </Space>
               ),
               right: (

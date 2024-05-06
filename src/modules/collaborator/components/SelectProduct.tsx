@@ -9,13 +9,16 @@ import SearchAnt from "~/components/Antd/SearchAnt";
 import TableAnt from "~/components/Antd/TableAnt";
 import { useAddProductCollaborator } from "../collaborator.hook";
 import { SubmitDataProductPartner } from "../collaborator.modal";
+import { ConfigType } from "./CollaboratorProduct";
 type propsType = {
   id?: any;
   dataSource?: any[];
   mutate : () => void,
   setKeyword : (kw:any) => void,
   totalDocs : number,
-  loading : boolean
+  loading : boolean,
+  useAddProduct : any,
+  config? : ConfigType
 };
 export default function SelectProduct({
   id,
@@ -24,8 +27,10 @@ export default function SelectProduct({
   totalDocs,
   setKeyword,
   loading,
+  useAddProduct,
+  config
 }: propsType): React.JSX.Element {
-  const [isSubmitLoading, addProduct] = useAddProductCollaborator();
+  const [isSubmitLoading, addProduct] = useAddProduct();
 
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
 
@@ -43,9 +48,9 @@ export default function SelectProduct({
         partnerId: id,
         items: selectedRowKeys?.map((rowKey:any) => ({
             productId: rowKey,
-            discount: {
-              discountType: "PERCENT",
-              value: 10,
+            discount: config?.discount || {
+              discountType : "PERCENT",
+              value : 10,
             },
           }))
       };
@@ -57,7 +62,7 @@ export default function SelectProduct({
       items: [
         {
           productId: value,
-          discount: {
+          discount: config?.discount || {
             discountType: "PERCENT",
             value: 10,
           },

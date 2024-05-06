@@ -17,6 +17,7 @@ import { employeeSliceAction } from "./redux/reducer";
 import { useDispatch } from "react-redux";
 const MODULE  = "employee";
 const MODULE_VI  = "Trình dược viên";
+const getSelector = (key: string) => (state: any) => state[MODULE][key];
 
 const {
   loadingSelector,
@@ -34,7 +35,20 @@ const {
   updateFailedSelector,
   pagingSelector,
 } = getSelectors(MODULE);
+const convertSuccessSelector = getSelector("convertSuccess");
+const convertFailedSelector = getSelector("convertFailed");
 
+const getMyEmployeeLoadingSelector = getSelector("isGetMyEmployeeLoading");
+const getMyEmployeeSelector = getSelector("myEmployee"); 
+const getMyEmployeeFailedSelector = getSelector("getMyEmployeeFailed");
+const addProductSuccessSelector = getSelector("addProductSuccess");
+const addProductFailedSelector = getSelector("addProductFailed");
+
+const removeProductSuccessSelector = getSelector("removeProductSuccess");
+const removeProductFailedSelector = getSelector("removeProductFailed");
+
+const updateProductSuccessSelector = getSelector("updateProductSuccess");
+const updateProductFailedSelector = getSelector("updateProductFailed");
 export const useEmployeePaging = () => useSelector(pagingSelector);
 
 export const useGetEmployees = (payload: object) => {
@@ -94,6 +108,20 @@ export const useDeleteEmployee = (callback?: any) => {
   });
 };
 
+export const useConvertEmployee = (callback?: any) => {
+  useSuccess(
+    convertSuccessSelector,
+    `Cập nhật ${MODULE_VI} thành công`,
+    callback
+  );
+  useFailed(convertFailedSelector);
+
+  return useSubmit({
+    action: employeeSliceAction.convertRequest,
+    loadingSelector: isSubmitLoadingSelector,
+  });
+};
+
 export const useEmployeeQueryParams = () => {
   const query = useQueryParams();
   const [page, setPage] = useState<any>(query.get("page") || 1);
@@ -107,6 +135,7 @@ export const useEmployeeQueryParams = () => {
   
   const createSuccess = useSelector(createSuccessSelector);
   const deleteSuccess = useSelector(deleteSuccessSelector);
+  const convertSuccess = useSelector(convertSuccessSelector);
   const data = useSelector(listSelector);
 
   const newPage = useMemo(() => {
@@ -118,13 +147,13 @@ export const useEmployeeQueryParams = () => {
   }, [data, page]);
   return useMemo(() => {
     const queryParams = {
-      page,
+      page,     
       limit,
       keyword,
     };
     return [queryParams, onTableChange];
     //eslint-disable-next-line
-  }, [page, limit, keyword, createSuccess, deleteSuccess,newPage]);
+  }, [page, limit, keyword, createSuccess, deleteSuccess,newPage, convertSuccess]);
 };
 
 export const useUpdateEmployeeParams = (
@@ -177,4 +206,54 @@ export const autoCreateUsername = async ({ fullName, callApi }: any) => {
 
 export const useResetStateEmployee = () => {
   return useResetState(employeeSliceAction.resetAction);
+};
+
+export const useGetMyEmployee = (id: any) => {
+  return useFetchByParam({
+    action: employeeSliceAction.getMyEmployeeRequest,
+    loadingSelector: getMyEmployeeLoadingSelector,
+    dataSelector: getMyEmployeeSelector,
+    failedSelector: getMyEmployeeFailedSelector,
+    param: id,
+  });
+};
+export const useAddProductEmployee = (callback?: any) => {
+  useSuccess(
+    addProductSuccessSelector,
+    '',
+    callback
+  );
+  useFailed(addProductFailedSelector);
+
+  return useSubmit({
+    action: employeeSliceAction.addProductRequest,
+    loadingSelector: isSubmitLoadingSelector,
+  });
+};
+export const useRemoveProductEmployee = (callback?: any) => {
+  useSuccess(
+    removeProductSuccessSelector,
+    ``,
+    callback
+  );
+  useFailed(removeProductFailedSelector);
+
+  return useSubmit({
+    action: employeeSliceAction.removeProductRequest,
+    loadingSelector: isSubmitLoadingSelector,
+  });
+};
+
+export const useUpdateProductEmployee = (callback?: any) => {
+  useSuccess(
+    updateProductSuccessSelector,
+    '',
+    callback
+  );
+  useFailed(updateProductFailedSelector);
+
+  return useSubmit({
+    action: employeeSliceAction.updateProductRequest,
+    loadingSelector: isSubmitLoadingSelector,
+  });
 };

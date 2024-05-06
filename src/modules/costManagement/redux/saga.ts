@@ -4,7 +4,7 @@ import { costManagementActions } from './reducer';
 
 function* getListCostManagement({payload:query} : any) : any {
   try {
-    const data = yield call(api.getAll,query);
+    const data = yield call(api.getAll, query);
     yield put(costManagementActions.getListSuccess(data));
   } catch (error:any) {
     yield put(costManagementActions.getListFailed(error));

@@ -6,6 +6,8 @@ import { REF_COLLECTION, STATUS } from "~/constants/defaultValue";
 import subvn from "~/core/subvn";
 import POLICIES, { CORE_ACTION } from "~/modules/policy/policy.auth";
 import { PoliciesType, policyType } from "~/modules/policy/policy.modal";
+import { useAdapter } from "~/modules/auth/auth.hook";
+import { ADAPTER_KEY } from "~/modules/auth/constants";
 
 export const getPaging = (response: any) => ({
   current: response.page,
@@ -345,4 +347,9 @@ export const convertFiles = (files: any[]) => {
     fileName: item?.name,
     url: item?.response?.url
   }));
+};
+export const useIsAdapterSystem = () => {
+  const adapter = useAdapter();
+  const isAdapterSystem = useMemo(() => adapter === ADAPTER_KEY.STAFF, [adapter]);
+  return !!isAdapterSystem; // return true if adapter is system
 };

@@ -18,7 +18,11 @@ export const convertSubmitData = (values : any) => {
       address : {
         ...get(values,'address'),
         areaId : get(cityInfo,'area_code')
-      }
+      },
+      files: values?.files?.fileList?.map((item: any) => ({
+        url: item?.response?.url,
+        name: item.name
+      }))
       // cumulativeDiscount : CumulativeDiscountModule.service.convertSubmitDiscount(get(values,'cumulativeDiscount')),
     };
 

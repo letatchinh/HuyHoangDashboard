@@ -106,7 +106,7 @@ export const reducerDiscountOrderSupplierItems = (orderSupplierItems: any[]) => 
     return newOrderSupplierItems;
   };
 
-  export const selectProductSearch = (data: any) => {
+  export const selectProductSearchOrder = (data: any) => {
     const {
       name,
       cumulativeDiscount,
@@ -204,7 +204,7 @@ export const reducerDiscountOrderSupplierItems = (orderSupplierItems: any[]) => 
             }
           );
           let items: any = compact(concatQuantity)?.map((orderSupplier: any) => {
-            const dataSearch = selectProductSearch(orderSupplier);
+            const dataSearch = selectProductSearchOrder(orderSupplier);
   
             return {
               ...dataSearch,

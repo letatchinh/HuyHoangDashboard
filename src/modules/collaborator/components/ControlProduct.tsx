@@ -20,6 +20,8 @@ import Discount from "./Discount";
 import DiscountForm from "./DiscountForm";
 type propsType = {
   id?: any;
+  useRemoveProduct: any;
+  useUpdateProduct: any;
   isLoading?: boolean;
   dataSource?: any[];
 };
@@ -27,11 +29,13 @@ export default function ControlProduct({
   id,
   dataSource,
   isLoading,
+  useRemoveProduct,
+  useUpdateProduct,
 }: propsType): React.JSX.Element {
   const [data,setData] = useState<any>([]);
   const [openModalUpdateDiscount, setOpenModalUpdateDiscount] = useState(false);
-  const [isSubmitLoading, removeProduct]: any = useRemoveProductCollaborator();
-  const [, updateProduct]: any = useUpdateProductCollaborator();
+  const [isSubmitLoading, removeProduct]: any = useRemoveProduct();
+  const [, updateProduct]: any = useUpdateProduct();
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
     setSelectedRowKeys(newSelectedRowKeys);
@@ -41,8 +45,6 @@ export default function ControlProduct({
     selectedRowKeys,
     onChange: onSelectChange,
   };
-console.log(dataSource,'dataSource');
-console.log(data,'data');
 
   const onSearch = (keyword:any) => {
     const filterResult = dataSource?.filter((item:any) => filterSlug(keyword,get(item,'product.name')) || filterSlug(keyword,get(item,'product.codeBySupplier')));

@@ -1,5 +1,5 @@
 import { Button, Col, Divider, Form, Row } from "antd";
-import { get } from "lodash";
+import { get, head } from "lodash";
 import React, { useEffect, useMemo } from "react";
 import { FormFieldCreateBill, PayloadCreateBill } from "~/modules/sale/bill/bill.modal";
 import QuotationModule from '~/modules/sale/quotation';
@@ -7,6 +7,7 @@ import { DataResultType } from "~/pages/Dashboard/Bill/CreateBill";
 import useNotificationStore from "~/store/NotificationContext";
 import { concatAddress } from "~/utils/helpers";
 import { useChangeDocumentTitle } from "~/utils/hook";
+import { defaultFee } from "../../constants";
 import useCreateBillStore from "../../storeContext/CreateBillContext";
 import ProductSelectedTable from "../ProductSelectedTable";
 import SelectPharmacy from "../SelectPharmacy";
@@ -14,7 +15,8 @@ import TotalBill from "./TotalBill";
 type propsType = {};
 export default function SaleScreen(props: propsType): React.JSX.Element {
  const {form,onValueChange,quotationItems,totalPriceAfterDiscount,onRemoveTab,bill,onOpenModalResult,totalAmount,mutateReValidate,setAddress,setFormAndLocalStorage} = useCreateBillStore();
- 
+ const feeForm = Form.useWatch('fee',form);
+
  const {onNotify} = useNotificationStore();
  const callBackAfterSuccess = (newData : DataResultType) => {
   onRemoveTab();
@@ -99,6 +101,7 @@ try {
       onValuesChange={onValueChange}
       initialValues={{
         pair : 0,
+        fee : defaultFee
       }}
     >
       <Row gutter={16}>
@@ -108,11 +111,22 @@ try {
         <Col span={8} className="form-create-bill--payment">
           <div>
             <SelectPharmacy onChange={(value,option) => {
-              const fee = get(option,'data.fee');
+              const fee = get(option,'data.fee',[]);
+              if(fee?.length){
+                feeForm[0] = head(fee);
+              }else{
+                feeForm[0] = {
+                  typeFee : 'SUB_FEE',
+                  typeValue : 'VALUE',
+                  value : 0
+                }
+              }
+              
+              
               const deliveryAddress = concatAddress(get(option,'data.address'));
               const address = get(option,'data.addressStories',[]);
               setFormAndLocalStorage({
-                  fee,
+                  fee : feeForm,
                   pharmacyId : value,
                   deliveryAddress,
                 });

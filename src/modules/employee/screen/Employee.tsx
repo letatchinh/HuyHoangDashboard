@@ -1,19 +1,21 @@
 import { ColumnsType } from "antd/es/table/InternalTable";
-import Breadcrumb from "~/components/common/Breadcrumb";
 import WhiteBox from "~/components/common/WhiteBox";
-import useTranslate from "~/lib/translation";
-import { concatAddress } from "~/utils/helpers";
 import {
+  useConvertEmployee,
+  useAddProductEmployee,
   useCreateEmployee,
   useDeleteEmployee,
   useEmployeePaging,
   useEmployeeQueryParams,
+  useGetEmployee,
   useGetEmployees,
+  useRemoveProductEmployee,
   useResetStateEmployee,
   useUpdateEmployee,
   useUpdateEmployeeParams,
+  useUpdateProductEmployee,
 } from "../employee.hook";
-import { Button, Checkbox, Col, Modal, Popconfirm, Row, Switch } from "antd";
+import { Button, Checkbox, Col, Modal, Popconfirm, Row, Switch, Tag , Tabs } from "antd";
 import { useMemo, useState } from "react";
 import EmployeeForm from "../components/EmployeeForm";
 import TableAnt from "~/components/Antd/TableAnt";
@@ -23,11 +25,14 @@ import POLICIES from "~/modules/policy/policy.auth";
 import { useMatchPolicy } from "~/modules/policy/policy.hook";
 import { useDispatch } from "react-redux";
 import { employeeSliceAction } from "../redux/reducer";
-import WithPermission from "~/components/common/WithPermission";
 import ExportExcelButton from "~/modules/export/component";
 import useCheckBoxExport from "~/modules/export/export.hook";
 import { useChangeDocumentTitle } from "~/utils/hook";
+import { PROCESS_STATUS, PROCESS_STATUS_VI } from "~/constants/defaultValue";
+import ExpandRowEmployee from "../components/ExpandRowEmployee";
 
+import CollaboratorProduct from "~/modules/collaborator/components/CollaboratorProduct";
+import apis from '../employee.api';
 interface Props {
   currentTab: any;
 };
@@ -38,6 +43,7 @@ interface ColumnActionProps {
   shouldShowDevider?: any;
   onOpenForm?: any;
   status: string
+  processStatus?: any,
 };
 const ColumnActions = ({
   _id,
@@ -46,15 +52,30 @@ const ColumnActions = ({
   shouldShowDevider,
   onOpenForm,
   status,
+  processStatus,
 }: ColumnActionProps) => {
   return (
     <div className="custom-table__actions">
       <WithOrPermission permission={[POLICIES.UPDATE_EMPLOYEE]}>
-        <Switch
+        {processStatus === "APPROVED" ? (
+          <Switch
+            style={{ marginRight: 10 }}
+            checked={status === "ACTIVE"}
+            onChange={(e) =>
+              updateEmployee({
+                _id,
+                status: status === "ACTIVE" ? "INACTIVE" : "ACTIVE",
+              })
+            }
+          />
+        ) : (
+          <></>
+        )}
+        {/* <Switch
           style={{marginRight: 10}}
           checked={status === 'ACTIVE'}
           onChange={(e)=> updateEmployee({_id, status: status === 'ACTIVE' ? 'INACTIVE' : 'ACTIVE'})}
-        />
+        /> */}
       </WithOrPermission>
       {shouldShowDevider && <p>|</p>}
       <WithOrPermission permission={[POLICIES.DELETE_EMPLOYEE]}>
@@ -71,9 +92,8 @@ const ColumnActions = ({
   );
 };
 
-export default function Employee({currentTab}: Props) {
+export default function Employee({ currentTab }: Props) {
   useResetStateEmployee();
-  const { t }: any = useTranslate();
   const [destroy,setDestroy] = useState(false);
   //State
   const [isOpenModal, setIsOpenModal] = useState(false);
@@ -94,6 +114,7 @@ export default function Employee({currentTab}: Props) {
   const shouldShowDevider = useMemo(() => isCanDelete && isCanUpdate, [isCanDelete, isCanUpdate]);
   const canDownload = useMatchPolicy(POLICIES.DOWNLOAD_UNIT);
   const [arrCheckBox, onChangeCheckBox] = useCheckBoxExport();
+  const [itemActive, setItemActive] = useState<any>();
 
   //Handle
   const handleOpenModal = (id?: any) => {
@@ -117,6 +138,19 @@ export default function Employee({currentTab}: Props) {
     resetAction();
     setDestroy(true);
   });
+  const [, convertEmployee] = useConvertEmployee(() => {
+    handleCloseModal();
+    resetAction();
+  });
+  const onConfirmProcess = (_id: any, processStatus: any) => {
+    convertEmployee({
+      _id,
+      processStatus:
+        processStatus === PROCESS_STATUS.NEW
+          ? PROCESS_STATUS.APPROVED
+          : PROCESS_STATUS.NEW,
+    });
+  };
 
   const columns: ColumnsType = [
     {
@@ -132,6 +166,39 @@ export default function Employee({currentTab}: Props) {
       dataIndex: 'fullName',
       key: 'fullName'
     },
+    ...(isCanUpdate
+      ? [
+          {
+            title: "Xét duyệt",
+            key: "processStatus",
+            dataIndex: "processStatus",
+            width: 200,
+            render: (processStatus: any, record: any) => {             
+              return (
+                <WithOrPermission permission={[POLICIES.UPDATE_EMPLOYEE]}>
+                  {processStatus === "NEW" ? (
+                      <Popconfirm
+                        title="Bạn muốn duyệt TDV này?"
+                        onConfirm={() =>
+                          onConfirmProcess(record?._id, processStatus)
+                        }
+                        okText="Duyệt"
+                        cancelText="Huỷ"
+                      >
+                        <Button color="green">
+                          {PROCESS_STATUS_VI["NEW"]}
+                        </Button>
+                      </Popconfirm>
+                  ) : (
+                    <Tag color="blue">{PROCESS_STATUS_VI["APPROVED"]}</Tag>
+                  )}
+                </WithOrPermission>
+              );
+            },
+          },
+        ]
+      : []),
+
     {
       title: 'Số điện thoại',
       dataIndex: 'phoneNumber',
@@ -142,42 +209,55 @@ export default function Employee({currentTab}: Props) {
       dataIndex: 'email',
       key: 'email',
     },
-  ...(isCanUpdate || isCanDelete ?[{
-      title: 'Thao tác',
-      key: 'action',
-      render: (record: any) => {
-        return (
-          <ColumnActions
-            {...record}
-            // deleteUserEmployee={deleteUser}
-            shouldShowDevider={shouldShowDevider}
-            onOpenForm={() => handleOpenModal(record?._id)}
-            status={record?.status}
-            deleteEmpolyee={handleDelete}
-            updateEmployee={handleUpdate}
-          />
-        );
+    {
+      title: "Được tạo bởi",
+      dataIndex: "historyStatus",
+      key: "historyStatus",
+      render: (record) => {
+        return record.NEW ? record.NEW.createdBy : record.APPROVED.createdBy;
       },
-    }] : []),
-    ...(
-      canDownload ? [
-        {
-          title: 'Lựa chọn',
-          key: '_id',
-          width: 80,
-          align: 'center' as any,
-          render: (item: any, record: any) =>
+    },
+    ...(isCanUpdate || isCanDelete
+      ? [
           {
-            const id = record._id;
-            return (
-              <Checkbox
-                checked= {arrCheckBox.includes(id)}
-                onChange={(e)=>onChangeCheckBox(e.target.checked, id)}
-          />)}
-        },
-      ]: []
-    ) 
-    
+            title: "Thao tác",
+            key: "action",
+            render: (record: any) => {
+              return (
+                <ColumnActions
+                  {...record}
+                  // deleteUserEmployee={deleteUser}
+                  shouldShowDevider={shouldShowDevider}
+                  onOpenForm={() => handleOpenModal(record?._id)}
+                  status={record?.status}
+                  deleteEmpolyee={handleDelete}
+                  updateEmployee={handleUpdate}
+                  processStatus={record?.processStatus}
+                />
+              );
+            },
+          },
+        ]
+      : []),
+    ...(canDownload
+      ? [
+          {
+            title: "Lựa chọn",
+            key: "_id",
+            width: 80,
+            align: "center" as any,
+            render: (item: any, record: any) => {
+              const id = record._id;
+              return (
+                <Checkbox
+                  checked={arrCheckBox.includes(id)}
+                  onChange={(e) => onChangeCheckBox(e.target.checked, id)}
+                />
+              );
+            },
+          },
+        ]
+      : []),
   ];
 
   useChangeDocumentTitle("Danh sách trình dược viên");
@@ -190,31 +270,45 @@ export default function Employee({currentTab}: Props) {
           isShowButtonAdd
           handleOnClickButton={() => handleOpenModal()}
           onChange={setKeyword}
-          onSearch={(e: any)=> onParamChange({keyword: e})}
+          onSearch={(e: any) => onParamChange({ keyword: e })}
           permissionKey={[POLICIES.WRITE_EMPLOYEE]}
           addComponent={
-            canDownload ?  <Col>
+            canDownload ? (
+              <Col>
                 <ExportExcelButton
-                  api='employee'
-                  exportOption = 'employee'
+                  api="employee"
+                  exportOption="employee"
                   query={query}
-                  fileName='Danh sách trình dược viên'
+                  fileName="Danh sách trình dược viên"
                   ids={arrCheckBox}
                 />
-          </Col> : null
+              </Col>
+            ) : null
           }
         />
         <TableAnt
-          dataSource={data?.length ? data  : []}
+          dataSource={data?.length ? data : []}
           loading={isLoading}
           columns={columns}
+          rowKey={(rc) => rc._id}
           size="small"
           pagination={{
             ...paging,
             showTotal: (total) => `Tổng cộng: ${total}`,
             showSizeChanger: true,
           }}
-          onChange={({current, pageSize}) => onTableChange({current, pageSize})}
+          onChange={({ current, pageSize }) =>
+            onTableChange({ current, pageSize })
+          }
+          expandable={{
+            expandedRowRender: (record: any) => (
+              <ExpandRowEmployee _id={record._id} />
+            ),
+            expandedRowKeys: [itemActive],
+          }}
+          onExpand={(expanded, record) => {
+            expanded ? setItemActive(record._id) : setItemActive(null);
+          }}
         />
       </WhiteBox>
       <Modal
@@ -226,18 +320,50 @@ export default function Employee({currentTab}: Props) {
         width={1020}
         style={{ top: 50 }}
         afterClose={() => {
-          setDestroy(false)
+          setDestroy(false);
         }}
         destroyOnClose={destroy}
       >
-        <EmployeeForm
-          id={id}
-          handleCloseModal={handleCloseModal}
-          handleUpdate={handleUpdate}
-          resetAction={resetAction}
-          handleCreate = {handleCreate}
-          isSubmitLoading={isSubmitLoading}
-        />
+        <Tabs
+          destroyInactiveTabPane
+          items={[
+            {
+              key: "1",
+              label: "Hồ sơ",
+              children: (
+                <EmployeeForm
+                  id={id}
+                  handleCloseModal={handleCloseModal}
+                  handleUpdate={handleUpdate}
+                  resetAction={resetAction}
+                  handleCreate={handleCreate}
+                  isSubmitLoading={isSubmitLoading}
+                />
+              ),
+            },
+            {
+              key: "2",
+              label: "Sản phẩm giới thiệu",
+              children: (
+                <CollaboratorProduct
+                  id={id}
+                  useAddProduct={useAddProductEmployee}
+                  useRemoveProduct={useRemoveProductEmployee}
+                  useUpdateProduct={useUpdateProductEmployee}
+                  useGetUser={useGetEmployee}
+                  apiSearchProduct={apis.searchProduct}
+                  config={{
+                    discount : {
+                      discountType : "PERCENT",
+                      value : 45
+                    }
+                  }}
+                />
+              ),
+              disabled: !id,
+            },
+          ]}
+        ></Tabs>
       </Modal>
     </div>
   );
