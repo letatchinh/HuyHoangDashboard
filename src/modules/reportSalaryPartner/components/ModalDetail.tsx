@@ -312,7 +312,7 @@ export default function ModalDetail(props: propsType): React.JSX.Element {
             Tạo phiếu chi
           </Button>
         )}
-        {total > 0 && <Button type="primary" onClick={onOpenReceipt}>
+        {total < 0 && <Button type="primary" onClick={onOpenReceipt}>
             Tạo phiếu thu
           </Button>}
       </WithPermission>
