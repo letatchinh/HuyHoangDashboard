@@ -27,6 +27,9 @@ const setting = {
   [PATH_APP.vouchers.salaryPartner] : {
     name : 'doanh số cộng tác viên'
   },
+  [PATH_APP.vouchers.partner] : {
+    name : 'đơn hàng cộng tác viên'
+  },
 }
 type propsType = {
   defaultActiveTab?: string;

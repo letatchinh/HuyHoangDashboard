@@ -208,7 +208,7 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
                     {/* <Avatar /> */}
                     <div>
                       <p className="bill-page-update--infoPharmacy__info__name">
-                        {get(bill, "pharmacy.name", "")}
+                        {get(bill, "pharmacy.name", get(bill, "pharmacy.fullName", ""))}
                       </p>
                       <p className="bill-page-update--infoPharmacy__info__phone">
                         {get(bill, "pharmacy.phoneNumber", "")}

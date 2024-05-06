@@ -49,6 +49,8 @@ import {
 import WithOrPermission from "~/components/common/WithOrPermission";
 import useUpdateBillStore from "~/modules/sale/bill/storeContext/UpdateBillContext";
 import { methodType } from "../../vouchers.modal";
+import { useGetSupplier } from "~/modules/supplier/supplier.hook";
+import { useGetCollaborator } from "~/modules/collaborator/collaborator.hook";
   
   const mainRowGutter = 24;
   const FormItem = Form.Item;
@@ -61,6 +63,7 @@ import { methodType } from "../../vouchers.modal";
     id?: any;
     onClose?: any;
     pharmacyId?: any
+    partnerId?: any
     refCollection?: any;
     debt?: any;
     from?: string;
@@ -74,7 +77,7 @@ import { methodType } from "../../vouchers.modal";
   };
   
   export default function VoucherForm(props: propsType): React.JSX.Element {
-    const { id , onClose, pharmacyId,refCollection, debt, from,totalAmount,reason,provider,method,callback,max,billId} = props;
+    const { id , onClose, pharmacyId,partnerId,refCollection, debt, from,totalAmount,reason,provider,method,callback,max,billId} = props;
     useResetAction();
     const dispatch = useDispatch();
     const {onNotify} = useNotificationStore();
@@ -97,10 +100,15 @@ import { methodType } from "../../vouchers.modal";
     const [, handleConfirm] = useConfirmReceiptVoucher(callBackAfterHandleSuccess);
     const [voucher, isLoading] = useGetReceiptVoucher(id);
     const initReceiptVoucher = useInitWhReceiptVoucher(voucher);
-    const memo = useMemo(() => pharmacyId, [pharmacyId]);
     const queryBranch = useMemo(() => ({page: 1, limit: 10}), []);
     const [branch] = useGetBranches(queryBranch);
-    const [pharmacy] = useGetPharmacyId(memo); 
+
+    const [pharmacy] = useGetPharmacyId(pharmacyId); 
+    const [partner] = useGetCollaborator(partnerId);
+    const provider_Client = useMemo(() => {
+      if(partnerId) return partner
+      if(pharmacyId) return pharmacy
+    },[pharmacy,partner,partnerId,pharmacyId]);
     const { bill } = useUpdateBillStore();
   
     const [settingDocs, setSettingDocs] = useState({
@@ -157,16 +165,28 @@ import { methodType } from "../../vouchers.modal";
     useEffect(() => {
       if (!id) {
         // form.resetFields();
-        if (pharmacy) {
+        // if (pharmacy) {
+        //   form.setFieldsValue({
+        //     pharmacy: pharmacy?.name,
+        //     pharmacyReceive: pharmacy?.name,
+        //     provider: provider || pharmacy?._id,
+        //     code: pharmacy?.code,
+        //     reason,
+        //     accountingDate : dayjs(),
+        //     dateOfIssue : dayjs(),
+        //     paymentMethod : "COD"
+        //   });
+        // }
+        if (provider_Client) {
           form.setFieldsValue({
-            pharmacy: pharmacy?.name,
-            pharmacyReceive: pharmacy?.name,
-            provider: provider || pharmacy?._id,
-            code: pharmacy?.code,
+            pharmacy: provider_Client?.name ?? provider_Client?.fullName,
+            pharmacyReceive: provider_Client?.name ?? provider_Client?.fullName,
+            provider: provider_Client?._id || provider,
+            code: provider_Client?.code ?? provider_Client?.partnerNumber,
+            accountingDate: dayjs(),
+            dateOfIssue: dayjs(),
             reason,
-            accountingDate : dayjs(),
-            dateOfIssue : dayjs(),
-            paymentMethod : "COD"
+            paymentMethod: "COD",
           });
         }
       } else {
@@ -177,7 +197,7 @@ import { methodType } from "../../vouchers.modal";
         });
         setDataAccounting(initReceiptVoucher?.accountingDetails);
       }
-    }, [id, initReceiptVoucher,pharmacy]);
+    }, [id, initReceiptVoucher,provider_Client,provider]);
     
     useEffect(() => {
       if (id && mergedInitWhPaymentVoucher ) {
