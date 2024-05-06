@@ -19,6 +19,7 @@ import dayjs from "dayjs";
 import PharmacyModule from '~/modules/pharmacy';
 import SupplierModule from '~/modules/supplier';
 import { PATH_APP } from "~/routes/allPath";
+import { METHOD_TYPE } from "../vouchers/constants";
 const MODULE = "paymentVoucher";
 const MODULE_VI = "";
 
@@ -155,7 +156,7 @@ export const usePaymentVoucherQueryParams = () => {
   };
 
   // TODO: Default RefCollection By PathName
-  let refCollection : 'pharma_profile' | 'supplier' | null = null;
+  let refCollection :any= null;
   if(pathname === PATH_APP.vouchers.pharmacy ){
     refCollection = REF_COLLECTION.PHARMA_PROFILE
   }
@@ -163,7 +164,7 @@ export const usePaymentVoucherQueryParams = () => {
     refCollection = REF_COLLECTION.SUPPLIER
   }
   if(pathname === PATH_APP.vouchers.salaryPartner ){
-    refCollection = REF_COLLECTION.SALARY_PARTNER
+    refCollection = METHOD_TYPE.SALARY_PARTNER
   }
   if(pathname === PATH_APP.vouchers.partner ){
     refCollection = REF_COLLECTION.PARTNER
@@ -279,7 +280,7 @@ export const useInitWhPaymentVoucher = (whPaymentVoucher: any) => {
       ...rest,
       accountingDate: dayjs(accountingDetail?.accountingDate),
       dateOfIssue: dayjs(dateOfIssue),
-      name: supplier?.name,
+      name: supplier?.name ?? supplier?.fullName,
       address: compactAddress(supplier?.address),
     };
     const initValues = {

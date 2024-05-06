@@ -22,6 +22,7 @@ export default function TableReport(props:propsType) : React.JSX.Element {
     const ref= useRef<any>();
 
     const onDetailId = useCallback((id?:string) =>{
+        
         modelDetail.info(
             {
                 title:'Chi tiết lương',

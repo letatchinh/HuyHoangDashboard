@@ -59,6 +59,7 @@ import WithOrPermission from "~/components/common/WithOrPermission";
 import { useDispatch } from "react-redux";
 import { paymentVoucherSliceAction } from "../redux/reducer";
 import { useGetCollaborator } from "~/modules/collaborator/collaborator.hook";
+import { useGetEmployee } from "~/modules/employee/employee.hook";
   const mainRowGutter = 24;
   const FormItem = Form.Item;
   const { TabPane } = Tabs;
@@ -81,6 +82,7 @@ import { useGetCollaborator } from "~/modules/collaborator/collaborator.hook";
     supplierId?: any;
     pharmacyId?: any;
     partnerId?: any;
+    employeeId?: any;
     refCollection?: string;
     debt?: number | null;
     dataAccountingDefault? : DataAccounting[],
@@ -94,7 +96,9 @@ import { useGetCollaborator } from "~/modules/collaborator/collaborator.hook";
     props: propsType
   ): React.JSX.Element {
     useResetAction();
-    const { id, supplierId, onClose, refCollection, debt, pharmacyId, dataAccountingDefault, method, billId,mutateOrderSupplier,partnerId,initData = {} } = props;
+    const { id, supplierId, onClose, refCollection, debt, pharmacyId, dataAccountingDefault, method, billId,mutateOrderSupplier,partnerId,employeeId,initData = {} } = props;
+    console.log(method,'method');
+    
     const [form] = Form.useForm();
     const ref = useRef();
     const [accountingDetails, setAccountingDetails] = useState([]);
@@ -116,10 +120,16 @@ import { useGetCollaborator } from "~/modules/collaborator/collaborator.hook";
     const [, handleConfirm] = useConfirmPaymentVoucher(onClose);
     const [voucher, isLoading] = useGetPaymentVoucher(id);
     const initPaymentVoucher = useInitWhPaymentVoucher(voucher);
+    const [pharmacy] = useGetPharmacyId(pharmacyId); 
     const [supplier] = useGetSupplier(supplierId);
-    const [pharmacy] = useGetPharmacyId(pharmacyId);
     const [partner] = useGetCollaborator(partnerId);
-    const provider = useMemo(() => pharmacy ?? supplier ?? partner,[pharmacy,supplier,partner]);
+    const [employee] = useGetEmployee(employeeId);
+    const provider = useMemo(() => {
+      if(pharmacyId) return pharmacy;
+      if(supplierId) return supplier;
+      if(partnerId) return partner;
+      if(employeeId) return employee;
+    },[pharmacy,supplier,partner,employee,pharmacyId,supplierId,partnerId,employeeId]);
     
     const [issueNumber, setIssueNumber] = useState(null);
     const [dataAccounting, setDataAccounting] = useState(dataAccountingDefault ?? []);
@@ -164,11 +174,13 @@ import { useGetCollaborator } from "~/modules/collaborator/collaborator.hook";
     useEffect(() => {
       if (!id) {
         if (provider) {
+          console.log(provider,'provider');
+          
           form.setFieldsValue({
             name: provider?.name ?? provider?.fullName,
             receiver: provider?.name ?? provider?.fullName,
             provider: provider?._id,
-            code: provider?.code ?? provider?.partnerNumber,
+            code: provider?.code ?? provider?.partnerNumber ?? provider?.employeeNumber,
             accountingDate : dayjs(),
             dateOfIssue : dayjs(),
           });
