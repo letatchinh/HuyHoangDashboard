@@ -162,6 +162,12 @@ export const usePaymentVoucherQueryParams = () => {
   if(pathname === PATH_APP.vouchers.supplier ){
     refCollection = REF_COLLECTION.SUPPLIER
   }
+  if(pathname === PATH_APP.vouchers.salaryPartner ){
+    refCollection = REF_COLLECTION.SALARY_PARTNER
+  }
+  if(pathname === PATH_APP.vouchers.partner ){
+    refCollection = REF_COLLECTION.PARTNER
+  }
   return useMemo(() => {
     const queryParams = {
       page,
