@@ -53,9 +53,10 @@ function App(): React.JSX.Element {
       <div
         style={{
           position: "fixed",
-          bottom: "16px",
+          bottom: 0,
           right: 0,
           width: "max-content",
+          pointerEvents : 'none'
         }}
       >
         <p
@@ -63,6 +64,7 @@ function App(): React.JSX.Element {
             textAlign: "right",
             marginRight: "16px",
             color: "rgba(0, 0, 0, 0.1)",
+            pointerEvents : 'none'
           }}
         >
           Version: {packageJson.version}
