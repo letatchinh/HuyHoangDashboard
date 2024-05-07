@@ -133,6 +133,7 @@ export default function Pharmacy() {
         // dataIndex: "code",
         key: "code",
         width: 120,
+        fixed: activeTab==='1'? "left":false,
         render: (record) => {
           return (
             <WithPermission permission={POLICIES.READ_PHARMAPROFILE}>
@@ -150,6 +151,7 @@ export default function Pharmacy() {
       {
         title: "Tên nhà thuốc",
         dataIndex: "name",
+        fixed: activeTab==='2'?"left":false,
         key: "name",
         width: 180,
       },
@@ -322,7 +324,7 @@ export default function Pharmacy() {
               key: "_id",
               align: "center" as any,
               fixed: "right" as any,
-              width: 200,
+              width: 140,
               render: (_id: string, record: any) => {
                 return (
                   <ActionColumns
@@ -488,7 +490,7 @@ export default function Pharmacy() {
               dataSource={pharmacies}
               loading={isLoading}
               rowKey={(rc) => rc?._id}
-              scroll={{ x: "max-content" }}
+              scroll={{ x: "max-content" ,y:'calc(100vh - 383px)'}}
               columns={columns}
               size="small"
               pagination={{
@@ -506,7 +508,7 @@ export default function Pharmacy() {
               dataSource={pharmacies}
               loading={isLoading}
               rowKey={(rc) => rc?._id}
-              scroll={{ x: "max-content" }}
+              scroll={{ x: "max-content" ,y:'calc(100vh - 383px)'}}
               columns={columns}
               size="small"
               pagination={{

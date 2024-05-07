@@ -8,6 +8,7 @@ import POLICIES from "~/modules/policy/policy.auth";
 import { useMatchPolicy } from "~/modules/policy/policy.hook";
 import Collaborator from "./Collaborator";
 import CollaboratorGroup from "~/modules/collaboratorGroup/screens/CollaboratorGroup";
+import Breadcrumb from "~/components/common/Breadcrumb";
 type propsType = {};
 export default function CollaboratorScreen(props: propsType): React.JSX.Element {
   const { t }: any = useTranslate();
@@ -42,10 +43,10 @@ export default function CollaboratorScreen(props: propsType): React.JSX.Element 
   };
 
   return (
-    <div>
+    <>
       {(isCollaboratorGroup || isCollaborator) && (
-        <>
-          <WhiteBox>
+          <WhiteBox className="collaborator-group">
+          <Breadcrumb title={"Quản lý cộng tác viên"} />
             <Tabs
               activeKey={currentTab}
               onChange={(key) => onChange(key)}
@@ -84,8 +85,7 @@ export default function CollaboratorScreen(props: propsType): React.JSX.Element 
               )}
             </Routes>
           </WhiteBox>
-        </>
       )}
-    </div>
+    </>
   );
 }

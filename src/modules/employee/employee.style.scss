@@ -158,3 +158,8 @@
     box-shadow: 0 2px 4px 3px rgba(15, 34, 58, 0.12);
   };
 }
+.whiteBox.employee-container{
+  .group_permission {
+    height: calc(100% - 62px - 1.5rem - 29px);
+}
+}

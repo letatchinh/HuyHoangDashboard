@@ -60,6 +60,8 @@ export default function ListProduct({
       title: "Mã thuốc",
       dataIndex: "variant",
       key: "variant",
+      width : 130,
+      align: "center",
       render : (variant) => {
         return get(variant,'variantCode','')
       }
@@ -111,7 +113,8 @@ export default function ListProduct({
   ...(!isAdapterIsEmployee? [{
       title: "Giá bán",
       dataIndex: "variant",
-      key: "variant",
+      key: "variant.price",
+      width: 130,
       render(variant: any, record: any, index: any) {
         return formatter(get(variant,'price'))
       },
@@ -119,7 +122,8 @@ export default function ListProduct({
   ...(!isAdapterIsEmployee? [{
     title: "Giá thu về",
       dataIndex: "variant",
-      key: "variant",
+      key: "variant.cost",
+      width: 130,
       render(variant: any, record: any, index: any) {
         return formatter(get(variant,'cost',0))
       },
@@ -165,7 +169,7 @@ export default function ListProduct({
       key: "productDetail.element",
       width : 300,
       render(value, record, index) {
-        return get(value,'element')
+        return <Typography.Text ellipsis={{tooltip:true}}>{ get(value,'element')}</Typography.Text>
       },
     },
     ...(canUpdate || canDelete ?[{
@@ -174,7 +178,7 @@ export default function ListProduct({
       key: "_id",
       align: "center" as any,
       fixed : 'right'as any,
-      width : 200,
+      width : 130,
       render(_id: any, record: any, index: number) {
         return <ActionColumn 
         _id={_id}
@@ -203,7 +207,7 @@ export default function ListProduct({
             loading={isLoading}
             rowKey={(rc) => rc?._id}
             columns={columns}
-            scroll={{x : 2000}}
+            scroll={{x : 2000,y:'calc(100vh - 140px - 53px - 42px - 20px - 48px )'}}
             stickyTop
             size="small"
             pagination={{
