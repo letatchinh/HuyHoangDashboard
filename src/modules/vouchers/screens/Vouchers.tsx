@@ -19,16 +19,16 @@ import { PATH_APP } from "~/routes/allPath";
 import { useChangeDocumentTitle } from "~/utils/hook";
 const setting = {
   [PATH_APP.vouchers.supplier] : {
-    name : 'nhà cung cấp'
+    name : 'Sổ quỹ doanh thu của nhà cung cấp'
   },
   [PATH_APP.vouchers.pharmacy]: {
-    name : 'nhà thuốc'
+    name : 'Sổ quỹ doanh thu của nhà thuốc'
   },
   [PATH_APP.vouchers.salaryPartner] : {
-    name : 'cộng tác viên'
+    name : 'Lương của cộng tác viên'
   },
   [PATH_APP.vouchers.partner] : {
-    name : 'đơn hàng cộng tác viên'
+    name : 'Sổ quỹ doanh thu của đơn hàng cộng tác viên'
   },
 }
 type propsType = {
@@ -172,11 +172,11 @@ export default function Vouchers({
     navigate(`${pathname}`);
     setKeyword("");
   };
-useChangeDocumentTitle(`Lương của ${setting[pathname].name}`,{dependency : [pathname]})
+useChangeDocumentTitle(`${setting[pathname].name}`,{dependency : [pathname]})
   return (
     <>
       <WhiteBox>
-        <Breadcrumb title={`Lương của ${setting[pathname].name}`} />
+        <Breadcrumb title={`${setting[pathname].name}`} />
         <div className="select-search">
           <div className="select-search__left">
             <Row gutter={5}>
