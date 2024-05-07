@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useCallback, useMemo, useState } from "react";
 import { contextReport, fomartNumber } from "../reportSalaryPartner.hook";
 import {
@@ -12,9 +13,10 @@ import {
   Table,
   Tag,
   Tooltip,
+  Typography,
 } from "antd";
 import { ColumnsType } from "antd/es/table";
-import { get } from "lodash";
+import { get, head } from "lodash";
 import dayjs from "dayjs";
 import BaseBorderBox from "~/components/common/BaseBorderBox";
 import { PATH_APP } from "~/routes/allPath";
@@ -73,7 +75,7 @@ const BillRender = (props: propsBillRenderType) => {
               {item?.codeSequence}
             </Button>{" "}
             ~{"   "}
-            <strong>{fomartNumber(item?.value)}</strong> (
+            <strong style={{color:item?.value<0?'red':''}}>{fomartNumber(item?.value)}</strong> (
             {Math.ceil(item?.discount * 100)}%)
           </div>
         );
@@ -92,11 +94,6 @@ const DetailOver = ({
 }) => {
   const [clicked, setClicked] = useState(false);
   const [hovered, setHovered] = useState(false);
-
-  const hide = () => {
-    setClicked(false);
-    setHovered(false);
-  };
 
   const handleHoverChange = (open: boolean) => {
     setHovered(open);
@@ -156,6 +153,16 @@ const columns: ColumnsType = [
           {get(record, ["productId", "codeBySupplier"]) + " - " + name}
         </strong>
       );
+    },
+  },
+  {
+    title: "Mức CK",
+    dataIndex: "billSales",
+    align: "center",
+    width: 100,
+    render: (billSales, record) => {
+      let value:any =head(billSales);
+      return <Typography.Text>{Math.ceil(value?.discount * 100)}%</Typography.Text>;
     },
   },
   {

@@ -1,6 +1,8 @@
 import React from "react";
 import Context from "../components/Context";
 import TableReport from "../components/TableReport";
+import Breadcrumb from "~/components/common/Breadcrumb";
+import WhiteBox from "~/components/common/WhiteBox";
 
 type propsType = {};
 export default function ReportSalaryPartner(
@@ -9,9 +11,10 @@ export default function ReportSalaryPartner(
 
   return (
     <Context >
-      <div className="report-salary-container">
+      <WhiteBox className="report-salary-container">
+        <Breadcrumb title={'Báo cáo lương cộng tác viên'}/>
         <TableReport/>
-      </div>
+      </WhiteBox>
     </Context>
   );
 }

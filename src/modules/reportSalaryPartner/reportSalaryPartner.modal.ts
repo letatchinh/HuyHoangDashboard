@@ -15,4 +15,11 @@ export namespace ReportSalaryPartnerSpace {
         value:        number;
         discount:     number;
       }
+      export type vouchers= {
+          "_id": string,
+          "typeVoucher": "PT"|'PC',
+          "totalAmount": number,
+          "status": "CREATED"| 'CONFIRMED'|'APPROVED'|'REJECT'|'CUSTOMER_CANCEL',
+          "codeSequence": string,
+      }[]
 }

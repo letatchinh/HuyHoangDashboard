@@ -6,7 +6,6 @@ type propsType = {
     initData ? : any
 }
 export default function MonthForm({onParamChange,initData}:propsType) : React.JSX.Element {
-    console.log(initData,'initData');
     
     const [form] = Form.useForm();
     const onValueChange = (value:any) => {
@@ -15,7 +14,6 @@ export default function MonthForm({onParamChange,initData}:propsType) : React.JS
             startDate : dayjs(newDate).startOf('month').format("YYYY-MM-DD"),
             endDate : dayjs(newDate).endOf('month').format("YYYY-MM-DD"),
         })
-        console.log(value,'value');
         
     };
     useEffect(() => {
