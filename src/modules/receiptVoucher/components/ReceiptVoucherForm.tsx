@@ -53,6 +53,8 @@ import { receiptVoucherSliceAction } from "../redux/reducer";
 import { methodType } from "~/modules/vouchers/vouchers.modal";
 import { METHOD_TYPE_OPTIONS } from "~/modules/vouchers/constants";
 import SelectBillCreateVoucherByPharmacyId from "~/modules/sale/bill/components/SelectBillCreateVoucherByPharmacyId";
+import { useGetCollaborator } from "~/modules/collaborator/collaborator.hook";
+import { useGetEmployee } from "~/modules/employee/employee.hook";
 
 const mainRowGutter = 24;
 const FormItem = Form.Item;
@@ -67,22 +69,28 @@ type DataAccounting = {
   creditAccount?:number,
   amountOfMoney?:number,
 }
-
+type InitData = {
+  reason? : string,
+  paymentMethod? : "COD" | "TRANSFER",
+}
 type propsType = {
   id?: any;
   onClose?: any;
   pharmacyId?: any
+  partnerId?: any
+  employeeId?: any
   refCollection?: any;
   debt?: any;
   from?: string;
   supplierId?:any,
   dataAccountingDefault?: DataAccounting[],
   billId?:any,
-  method? : methodType
+  method? : methodType,
+  initData? : InitData
 };
 
 export default function ReceiptVoucher(props: propsType): React.JSX.Element {
-  const { id , onClose, pharmacyId,supplierId,refCollection, debt, from,dataAccountingDefault,billId,method} = props;
+  const { id , onClose, pharmacyId,supplierId,employeeId,refCollection, debt, from,dataAccountingDefault,billId,method,partnerId,initData} = props;
   useResetAction();
   const [form] = Form.useForm();
   const ref = useRef();
@@ -95,23 +103,30 @@ export default function ReceiptVoucher(props: propsType): React.JSX.Element {
   };
   const [isSubmitLoading, handleCreate] = useCreateReceiptVoucher(() => {
     onClose();
-    resetAction();
+    // resetAction();
   });
   const [, handleUpdate] = useUpdateReceiptVoucher(() => {
     onClose();
-    resetAction();
+    // resetAction();
   });
   const [, handleConfirm] = useConfirmReceiptVoucher(onClose);
   const [voucher, isLoading] = useGetReceiptVoucher(id);
   const initReceiptVoucher = useInitWhReceiptVoucher(voucher);
   
-  const memo = useMemo(() => pharmacyId, [pharmacyId]);
   const queryBranch = useMemo(() => ({page: 1, limit: 10}), []);
   const [branch] = useGetBranches(queryBranch);
-  const [pharmacy] = useGetPharmacyId(memo); 
+  const [pharmacy] = useGetPharmacyId(pharmacyId); 
   const [supplier] = useGetSupplier(supplierId);
-  const provider = useMemo(() => pharmacy ?? supplier,[pharmacy,supplier]);
-
+  const [partner] = useGetCollaborator(partnerId);
+  const [employee] = useGetEmployee(employeeId);
+  
+  const provider = useMemo(() => {
+    if(pharmacyId) return pharmacy;
+    if(supplierId) return supplier;
+    if(partnerId) return partner;
+    if(employeeId) return employee;
+  },[pharmacy,supplier,partner,employee,pharmacyId,supplierId,partnerId,employeeId]);
+  
   const [dataAccounting, setDataAccounting] = useState(dataAccountingDefault ?? []);
   const { bill } = useUpdateBillStore();
   // use initWhPaymentVoucher to merge with other data that should be fetched from the API
@@ -155,12 +170,12 @@ export default function ReceiptVoucher(props: propsType): React.JSX.Element {
   useEffect(() => {
     if (!id) {
       // form.resetFields();
-      if (provider) {
+      if (provider) {        
         form.setFieldsValue({
-          name: provider?.name,
-          receiver: provider?.name,
+          name: provider?.name ?? provider?.fullName,
+          receiver: provider?.name ?? provider?.fullName,
           provider: provider?._id,
-          code: provider?.code,
+          code: provider?.code ?? provider?.partnerNumber ?? provider?.employeeNumber,
           accountingDate : dayjs(),
           dateOfIssue : dayjs(),
         });
@@ -176,7 +191,10 @@ export default function ReceiptVoucher(props: propsType): React.JSX.Element {
       );
       setDataAccounting(initReceiptVoucher?.accountingDetails);
     }
-  }, [id, initReceiptVoucher,provider]);
+    form.setFieldsValue({
+      ...initData
+    })
+  }, [id, initReceiptVoucher,provider,initData,method]);
   
   useEffect(() => {
     if (id && mergedInitWhPaymentVoucher ) {
@@ -214,7 +232,8 @@ export default function ReceiptVoucher(props: propsType): React.JSX.Element {
         dateOfIssue: dayjs(dateOfIssue).format("YYYY-MM-DD"),
         refCollection: refCollection ? REF_COLLECTION[refCollection] : null,
         accountingDetails: accountingDetails,
-        totalAmount:sumBy([...accountingDetails],(item) => get(item,'amountOfMoney',0))
+        totalAmount:sumBy([...accountingDetails],(item) => get(item,'amountOfMoney',0)),
+        
       };
       if (id) {
         if (billId || voucher?.method?.data?._id) {
@@ -502,9 +521,11 @@ export default function ReceiptVoucher(props: propsType): React.JSX.Element {
           <BaseBorderBox title={"Thông tin liên quan"}>
               <Row gutter={16}> 
                 <Col span={12}>
+                  <FormItem hidden name={["method","data"]}/>
                   <FormItem label="Loại dữ liệu" name={["method","type"]} labelCol={{ lg: 8 }}>
                   {render(
                     <Select
+                      disabled={!!id}
                       allowClear
                       onClear={() => form.setFieldsValue({
                         method : null

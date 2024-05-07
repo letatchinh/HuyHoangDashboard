@@ -1,5 +1,5 @@
 
-import { get } from "lodash";
+import { compact, get } from "lodash";
 import { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -17,6 +17,7 @@ import { REF_COLLECTION, TYPE_VOUCHER } from "~/constants/defaultValue";
 import dayjs from "dayjs";
 import { fromJSON } from "../vouchers/components/parser";
 import { PATH_APP } from "~/routes/allPath";
+import { METHOD_TYPE } from "../vouchers/constants";
 
 const MODULE = "receiptVoucher";
 const MODULE_VI = "";
@@ -153,12 +154,20 @@ export const useReceiptVoucherQueryParams = () => {
   };
 
   // TODO: Default RefCollection By PathName
-  let refCollection : 'pharma_profile' | 'supplier' | null = null;
+  let refCollection: any;
+  let methodType: any = null;
   if(pathname === PATH_APP.vouchers.pharmacy ){
     refCollection = REF_COLLECTION.PHARMA_PROFILE
   }
   if(pathname === PATH_APP.vouchers.supplier ){
     refCollection = REF_COLLECTION.SUPPLIER
+  }
+  if(pathname === PATH_APP.vouchers.salaryPartner ){
+    refCollection =  query.get("refCollection")  ||compact([REF_COLLECTION.PARTNER, REF_COLLECTION.EMPLOYEE]).join(',');
+    methodType = METHOD_TYPE.VOUCHER_SALARY
+  }
+  if(pathname === PATH_APP.vouchers.partner ){
+    refCollection = REF_COLLECTION.PARTNER
   }
   
   return useMemo(() => {
@@ -173,11 +182,12 @@ export const useReceiptVoucherQueryParams = () => {
       status,
       totalAmount,
       reason,
-      ...refCollection && {refCollection}
+      refCollection ,
+      // ...methodType && {methodType},
     };
     return [queryParams,onTableChange];
     //eslint-disable-next-line
-  }, [page, limit, keyword, createSuccess, deleteSuccess,startDate, endDate,codeSequence, status, totalAmount, reason,pathname]);
+  }, [page, limit, keyword, createSuccess, deleteSuccess,startDate, endDate,codeSequence, status, totalAmount, reason,pathname,refCollection]);
 };
 
 export const useReceiptVoucherByBillIdQueryParams = (id?: any) => {
@@ -271,7 +281,7 @@ export const useInitWhReceiptVoucher = (whReceiptVoucher: any) => {
       ...rest,
       accountingDate: dayjs(accountingDetail?.accountingDate),
       dateOfIssue: dayjs(dateOfIssue),
-      name: pharmaProfile?.name,
+      name: pharmaProfile?.name ?? pharmaProfile?.fullName,
       address: compactAddress(pharmaProfile?.address),
       pharmacyId : pharmaProfile?._id
     };

@@ -7,7 +7,7 @@ import {
   useUpdateBillParams,
 } from "../bill.hook";
 
-import { Checkbox, Col, ConfigProvider, Row, Space, Typography } from "antd";
+import { Checkbox, Col, ConfigProvider, Row, Space, Tooltip, Typography } from "antd";
 import { ColumnsType } from "antd/es/table/InternalTable";
 import { get } from "lodash";
 import { Link } from "react-router-dom";
@@ -47,7 +47,7 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
   const columns: ColumnsType = useMemo(
     () => [
       {
-        title: <p style={{color: '#333', fontWeight: 'bold'}}>Mã đơn hàng</p>,
+        title: <p style={{ color: "#333", fontWeight: "bold" }}>Mã đơn hàng</p>,
         dataIndex: "codeSequence",
         key: "codeSequence",
         align: "center",
@@ -90,6 +90,7 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
         dataIndex: "status",
         key: "status",
         align: "center",
+        width: 150,
         render(status, record, index) {
           return (
             <Status status={status} statusVi={CLONE_STATUS_BILL_VI[status]} />
@@ -101,52 +102,82 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
         dataIndex: "cancelNote",
         key: "cancelNote",
         align: "left",
+        render(cancelNote?:any) {
+          return (
+            <Typography.Paragraph
+              ellipsis={{
+                tooltip: cancelNote,
+                rows : 2,
+              }}
+            >
+              {cancelNote}
+            </Typography.Paragraph>
+          );
+        },
       },
       {
         title: "Ghi chú",
         dataIndex: "note",
         key: "note",
         align: "left",
+        render(note?:any) {
+          return (
+            <Typography.Paragraph
+              ellipsis={{
+                tooltip: note,
+                rows : 2,
+              }}
+            >
+              {note}
+            </Typography.Paragraph>
+          );
+        },
       },
       {
         title: "Khách đã trả",
         dataIndex: "pair",
         key: "pair",
-        align: "left",
+        align: "center",
         render(pair, record, index) {
-          return <Typography.Text>{formatter(pair + get(record,'totalReceiptVoucherCompleted'))}</Typography.Text>;
+          return (
+            <Typography.Text>
+              {formatter(pair + get(record, "totalReceiptVoucherCompleted"))}
+            </Typography.Text>
+          );
         },
       },
       {
         title: "Khách phải trả",
         dataIndex: "totalPrice",
         key: "totalPrice",
-        align: "left",
+        align: "center",
         render(totalPrice, record, index) {
           const remainAmount = CalculateBillMethod.remainAmount(record);
 
           return <Typography.Text>{formatter(remainAmount)}</Typography.Text>;
         },
       },
-      ...(
-        canDownload ? [
-          {
-            title: 'Lựa chọn',
-            key: '_id',
-            width: 80,
-            align: 'left' as any,
-            render: (item: any, record: any) => {
-              const id = record?._id;
-              return (
-                <Checkbox
-                  checked={arrCheckBox?.includes(id)}
-                  onChange={(e) => onChangeCheckBox(e.target.checked, id)}
-                />)
-            }
-          },
-        ] : []
-      ),
-    ], [arrCheckBox,canDownload]
+      ...(canDownload
+        ? [
+            {
+              title: "Lựa chọn",
+              key: "_id",
+              width: 80,
+              align: "center" as any,
+              render: (item: any, record: any) => {
+                const id = record?._id;
+                return (
+                  <Checkbox
+                    checked={arrCheckBox?.includes(id)}
+                    onChange={(e) => onChangeCheckBox(e.target.checked, id)}
+                  />
+                );
+              },
+            },
+          ]
+        : []),
+    ],
+    [arrCheckBox, canDownload]
   );
   return (
     <div className="bill-page">
@@ -207,7 +238,7 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
         pagination={pagingTable(paging, onParamChange)}
         size="small"
         bordered
-        scroll={{ y: '60vh' }}
+        scroll={{ y: '60vh' ,x  : 800}}
       />
       </ConfigProvider>
     </div>

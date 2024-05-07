@@ -103,7 +103,7 @@ export default function ExportExcelButton({ size, stylesButton, query, fileName,
       onClick = {()=>handleOnClick( "1" )}
       trigger={['hover']}
       style={{
-        margin: '0px 10px '
+        // margin: '0px 10px ' Make Scroll
       }}
       type="primary"
       size={size ? size : "middle"}

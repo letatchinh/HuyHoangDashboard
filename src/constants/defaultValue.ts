@@ -2,8 +2,8 @@ import { get } from "lodash";
 import { devConfig } from "~/config";
 import { getOptions } from "~/utils/helpers";
 
-// export const BASE_URL = process.env.REACT_APP_DEV_URL?? 'config.REACT_APP_BASE_URL';  
-export const BASE_URL = 'https://pharma-dashboard.congtyso.com';
+export const BASE_URL = 'config.REACT_APP_BASE_URL';  
+// export const BASE_URL = 'https://pharma-dashboard.congtyso.com';
 export const DEFAULT_UPLOAD_ACTION = `${BASE_URL}/api/v1/file`;
 export const MAX_UPLOAD_FILE_SIZE_IN_MB = 1;
 
@@ -58,6 +58,8 @@ export const REF_COLLECTION_UPPER : any= {
   // BILLITEM: 'BILLITEM',
   PHARMA_PROFILE: 'PHARMA_PROFILE',
   SUPPLIER: 'SUPPLIER',
+  PARTNER: 'PARTNER',
+  EMPLOYEE: 'EMPLOYEE',
 };
 
 export const REF_COLLECTION: any = {
@@ -384,7 +386,7 @@ export const PROCESS_STATUS = {
 
 export const PROCESS_STATUS_VI = {
   APPROVED: 'Đã duyệt',
-  NEW: 'Mới',
+  NEW: 'Chưa duyệt',
 }
 export const DISCOUNT_TYPE = {
   PERCENT : "PERCENT",

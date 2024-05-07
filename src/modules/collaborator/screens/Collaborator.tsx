@@ -207,7 +207,7 @@ export default function Collaborator({
                         okText="Duyệt"
                         cancelText="Huỷ"
                       >
-                        <Button color="green">
+                        <Button size="small" color="green">
                           {PROCESS_STATUS_VI["NEW"]}
                         </Button>
                       </Popconfirm>
@@ -325,7 +325,7 @@ export default function Collaborator({
             showSelect={false}
             isShowButtonAdd
             handleOnClickButton={() => handleOpenModal()}
-            onChange={(e : any) => setKeyword(e.target.value)}
+            onChange={(e: any) => setKeyword(e.target.value)}
             keyword={keyword}
             onSearch={(e: any) => onParamChange({ keyword: e })}
             permissionKey={[POLICIES.WRITE_PARTNER]}
@@ -357,10 +357,10 @@ export default function Collaborator({
                 defaultValue={query?.processStatus || null}
               >
                 <Radio.Button value={null}>Tất cả</Radio.Button>
-                <Radio.Button value={'NEW'}>
+                <Radio.Button value={"NEW"}>
                   {PROCESS_STATUS_VI["NEW"]}
                 </Radio.Button>
-                <Radio.Button value={'APPROVED'}>
+                <Radio.Button value={"APPROVED"}>
                   {PROCESS_STATUS_VI["APPROVED"]}
                 </Radio.Button>
               </Radio.Group>
@@ -395,37 +395,47 @@ export default function Collaborator({
         }}
         destroyOnClose={destroy}
       >
-          <h4 >
-        {`${!id ? "Tạo mới " : "Cập nhật"}`} cộng tác viên
-      </h4>
+        <h4>{`${!id ? "Tạo mới " : "Cập nhật"}`} cộng tác viên</h4>
         <Tabs
-        destroyInactiveTabPane
-        items={[
-          {
-            key: '1',
-            label: 'Hồ sơ',
-            children: <CollaboratorForm
-              id={id}
-              handleCloseModal={handleCloseModal}
-              handleUpdate={handleUpdate}
-              handleCreate={handleCreate}
-              isSubmitLoading={isSubmitLoading}
-            />,
-          },
-          {
-            key: '2',
-            label: "Sản phẩm đảm nhiệm",
-            children: <CollaboratorProduct useAddProduct={useAddProductCollaborator} id={id} useRemoveProduct={useRemoveProductCollaborator} useUpdateProduct={useUpdateProductCollaborator} useGetUser={useGetCollaborator} apiSearchProduct={apis.searchProduct}/>,
-            disabled : !id
-          },
-          {
-            key: '3',
-            label: "Sổ địa chỉ",
-            children: <CollaboratorAddress id={id}/>,
-            disabled : !id
-          }
-        ]}>
-        </Tabs>
+          destroyInactiveTabPane
+          items={[
+            {
+              key: "1",
+              label: "Hồ sơ",
+              children: (
+                <CollaboratorForm
+                  id={id}
+                  handleCloseModal={handleCloseModal}
+                  handleUpdate={handleUpdate}
+                  handleCreate={handleCreate}
+                  isSubmitLoading={isSubmitLoading}
+                />
+              ),
+            },
+            {
+              key: "2",
+              label: "Sản phẩm đảm nhiệm",
+              children: (
+                <CollaboratorProduct
+                  useAddProduct={useAddProductCollaborator}
+                  id={id}
+                  useRemoveProduct={useRemoveProductCollaborator}
+                  useUpdateProduct={useUpdateProductCollaborator}
+                  useGetUser={useGetCollaborator}
+                  apiSearchProduct={apis.searchProduct}
+                  target='partner'
+                />
+              ),
+              disabled: !id,
+            },
+            {
+              key: "3",
+              label: "Sổ địa chỉ",
+              children: <CollaboratorAddress id={id} />,
+              disabled: !id,
+            },
+          ]}
+        ></Tabs>
       </Modal>
     </>
   );

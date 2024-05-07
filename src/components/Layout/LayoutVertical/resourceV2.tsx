@@ -37,8 +37,10 @@ const permissionOfSetup = [
   POLICIES.READ_CONFIGBASESALARY,
   POLICIES.READ_CONFIGBENEFIT,
   POLICIES.READ_SALESGROUP,
-  POLICIES.READ_CONFIGCRONTIME
-
+  POLICIES.READ_CONFIGCRONTIME,
+  POLICIES.READ_USER,
+  POLICIES.READ_USERGROUP,
+  POLICIES.READ_BRANCH,
 ];
 const permissionPharma = [
   POLICIES.READ_PHARMAPROFILE,
@@ -93,6 +95,19 @@ export const resource: ItemType[] =[
         key: PATH_APP.productAll.root,
         icon: <i className="fa-solid fa-capsules"></i>,
         permission: [POLICIES.READ_PRODUCT],//
+      },
+      {
+        label: "Người dùng",
+        // icon: <i className="fa-solid fa-user"></i>,
+        path: PATH_APP.user.root,
+        key: PATH_APP.user.root,
+        permission: [POLICIES.READ_USER, POLICIES.READ_USERGROUP],//
+      },
+      {
+        label: "Danh sách chi nhánh",
+        path: PATH_APP.branch.root,
+        key: PATH_APP.branch.root,
+        permission: [POLICIES.READ_BRANCH],//
       },
       {
         label: "Cài đặt",
@@ -315,31 +330,47 @@ export const resource: ItemType[] =[
   },
 
   // Chi nhánh
-  {
-    label: "Chi nhánh",
-    key: "branch",
-    permission: [POLICIES.READ_BRANCH],//
-    children: [
-      {
-        label: "Danh sách chi nhánh",
-        path: PATH_APP.branch.root,
-        key: PATH_APP.branch.root,
-        permission: [POLICIES.READ_BRANCH],//
-      },
-    ],
-    icon: <i className="fa-solid fa-code-branch"></i>,
-  },
+  // {
+  //   label: "Chi nhánh",
+  //   key: "branch",
+  //   permission: [POLICIES.READ_BRANCH],//
+  //   children: [
+  //     {
+  //       label: "Danh sách chi nhánh",
+  //       path: PATH_APP.branch.root,
+  //       key: PATH_APP.branch.root,
+  //       permission: [POLICIES.READ_BRANCH],//
+  //     },
+  //   ],
+  //   icon: <i className="fa-solid fa-code-branch"></i>,
+  // },
   // Báo cáo
   {
     label: "Báo cáo",
     key: "report",
-    permission: [POLICIES.READ_REPORTSALARY],
+    permission: [
+      POLICIES.READ_REPORTSALARY, 
+      POLICIES.READ_REPORTSALARYPARTNER,
+      POLICIES.READ_VOUCHERPARTNER
+    ],
     children: [
       {
         label: "Báo cáo lương trình dược viên",
         path: PATH_APP.report.employee,
         key: PATH_APP.report.employee,
         permission : [POLICIES.READ_REPORTSALARY]
+      },
+      {
+        label: "Báo cáo lương cộng tác viên",
+        path: PATH_APP.reportSalaryPartner.root,
+        key: PATH_APP.reportSalaryPartner.root,
+        permission: [POLICIES.READ_REPORTSALARYPARTNER],
+      },
+      {
+        label: "Phiếu lương",
+        path: PATH_APP.vouchers.salaryPartner,
+        key: PATH_APP.vouchers.salaryPartner,
+        permission: [POLICIES.READ_VOUCHERPARTNER],//
       },
     ],
     icon: <i className="fa-solid fa-code-branch"></i>,
@@ -405,13 +436,6 @@ export const resource: ItemType[] =[
   },
   //Người dùng
   {
-    label: "Người dùng",
-    icon: <i className="fa-solid fa-user"></i>,
-    path: PATH_APP.user.root,
-    key: PATH_APP.user.root,
-    permission: [POLICIES.READ_USER, POLICIES.READ_USERGROUP],//
-  },
-  {
     label: "Quản lý chi phí",
     icon: <FundProjectionScreenOutlined />,
     path: PATH_APP.costManagement.root,
@@ -447,6 +471,12 @@ export const resource: ItemType[] =[
         path: PATH_APP.bill.create,
         key: PATH_APP.bill.create,
         permission: [POLICIES.WRITE_QUOTATIONPARTNER],//
+      },
+      {
+        label: "Phiếu đơn hàng",
+        path: PATH_APP.vouchers.partner,
+        key: PATH_APP.vouchers.partner,
+        permission: [POLICIES.READ_VOUCHERPARTNER],//
       },
       {
         label: "Quản lý sản phẩm mượn",

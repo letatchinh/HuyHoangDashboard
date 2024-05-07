@@ -22,10 +22,12 @@
       box-shadow: $default-box-shadow;
   };
 };
-
-.table-striped-rows-custom tr:nth-child(2n) td{
-  background-color: rgb(243,247,254)
-}
-.table-striped-rows-custom thead{
-  height: 70px;
+.table-striped-rows-custom{
+  tr:nth-child(2n) td{
+    background-color: rgb(243,247,254)
+  };
+  thead{
+    height: 70px;
+  };
+  
 }
