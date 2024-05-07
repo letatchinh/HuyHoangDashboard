@@ -84,6 +84,15 @@ function* updateBorrowProduct({payload} : any) : any {
   };
 };
 
+function* confirmBorrowProduct({payload} : any) : any {
+  try {
+    const data = yield call(api.updateBorrow,payload);
+    yield put(productActions.confirmBorrowSuccess(data));
+  } catch (error:any) {
+    yield put(productActions.confirmBorrowFailed(error));
+  };
+};
+
 function* deleteBorrowProduct({payload : id} : any) : any {
   try {
     const data = yield call(api.deleteBorrow,id);
@@ -106,4 +115,5 @@ export default function* productSaga() {
   yield takeLatest(productActions.createBorrowRequest, createBorrowProduct);
   yield takeLatest(productActions.updateBorrowRequest, updateBorrowProduct);
   yield takeLatest(productActions.deleteBorrowRequest, deleteBorrowProduct);
+  yield takeLatest(productActions.confirmBorrowRequest, confirmBorrowProduct);
 }

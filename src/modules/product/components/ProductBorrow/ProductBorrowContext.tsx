@@ -58,13 +58,14 @@ export function ProductBorrowContextProvider({children}: propsType) {
   });
   const productOfCollaborator = useConvertDataAssignProductsCol(products, selectedRowKeys);
   useEffect(() => {
-    if (selectedRowKeys?.length) {
+    if (selectedRowKeys?.length) { // compare data when selected or idVoucher is exit
       const data = productOfCollaborator?.map((item: any) => ({
         _id: item?._id,
         variants: get(item, "variants", []),
         variantCurrent: get(item, "variants", [])[0],
         name: get(item, "name", ""),
         quantity: 1,
+        note: "",
     }));
       setDataSelected(data);
     }else{

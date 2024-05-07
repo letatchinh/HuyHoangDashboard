@@ -56,6 +56,9 @@ const updateBorrowFailedSelector = getSelector("updateBorrowFailed");
 const deleteBorrowSuccessSelector = getSelector("deleteBorrowSuccess");
 const deleteBorrowFailedSelector = getSelector("deleteBorrowFailed");
 
+const confirmBorrowSuccessSelector = getSelector("confirmSuccess");
+const confirmBorrowFailedSelector = getSelector("confirmFailed");
+
 const pagingBorrowSelector = getSelector("pagingBorrow");
 export const usePagingBorrow = ()=>  useSelector(pagingBorrowSelector);
 
@@ -123,16 +126,20 @@ export const useProductQueryParams = (supplierId?: any) => {
   const keyword = query.get("keyword");
   const createSuccess = useSelector(createSuccessSelector);
   const deleteSuccess = useSelector(deleteSuccessSelector);
+  const startDate = query.get('startDate') || dayjs().startOf('month').format("YYYY-MM-DDTHH:mm:ss");
+  const endDate = query.get('endDate') || dayjs().endOf('month').format("YYYY-MM-DDTHH:mm:ss");
   return useMemo(() => {
     const queryParams = {
       page,
       limit,
       keyword,
       supplierId,
+      startDate,
+      endDate
     };
     return [queryParams];
     //eslint-disable-next-line
-  }, [page, limit, keyword, createSuccess, deleteSuccess, supplierId]);
+  }, [page, limit, keyword, createSuccess, deleteSuccess, supplierId, endDate, startDate]);
 };
 
 export const useUpdateProductParams = (
@@ -170,6 +177,9 @@ export const useUpdateProductParams = (
 export const useResetAction = () => {
   return useResetState(productActions.resetAction);
 };
+export const useResetActionBorrow = () => {
+  return useResetState(productActions.resetActionProductBorrow);
+};
 
 // export const useChangeVariantDefault = () => {
 //   const Dispatch = useDispatch();
@@ -205,8 +215,10 @@ export const useProductBorrowQueryParams = () => {
   const createSuccess = useSelector(createBorrowSuccessSelector);
   const deleteSuccess = useSelector(deleteBorrowSuccessSelector);
   const updateSuccess = useSelector(updateBorrowSuccessSelector);
-  const startDate = query.get('startDate') || dayjs().startOf('month').format("YYYY-MM-DDTHH:mm:ss");
-  const endDate = query.get('endDate') || dayjs().endOf('month').format("YYYY-MM-DDTHH:mm:ss");
+  const confirmSuccess = useSelector(confirmBorrowSuccessSelector);
+  
+  const startDate = query.get('startDate') 
+  const endDate = query.get('endDate') 
 
   return useMemo(() => {
     const queryParams = {
@@ -215,12 +227,11 @@ export const useProductBorrowQueryParams = () => {
       keyword,
       startDate,
       endDate,
-      updateSuccess
       // supplierId,
     };
     return [queryParams];
     //eslint-disable-next-line
-  }, [page, limit, keyword, createSuccess, deleteSuccess, startDate, endDate,updateSuccess]);
+  }, [page, limit, keyword, createSuccess, deleteSuccess, startDate, endDate,updateSuccess,confirmSuccess]);
 };
 
 
@@ -271,6 +282,20 @@ export const useUpdateProductBorrow = (callback?: any) => {
   });
 };
 
+export const useConfirmBorrowVoucher = (callback?: any) => {
+  useSuccess(
+    confirmBorrowSuccessSelector,
+    `Cập nhật ${MODULE_VI} thành công `,
+    callback
+  );
+  useFailed(confirmBorrowFailedSelector);
+
+  return useSubmit({
+    action: productActions.confirmBorrowRequest,
+    loadingSelector: isSubmitLoadingSelector,
+  });
+};
+
 export const useDeleteProductBorrow = (callback?: any) => {
   useSuccess(deleteBorrowSuccessSelector, `Xoá phiếu mượn sản phẩm thành công`, callback);
   useFailed(deleteBorrowFailedSelector);
@@ -291,7 +316,7 @@ export const useConvertDataAssignProductsCol = (products: any[], selectedRowKey:
 
 export const SubmitProductsBorrow = (values: any) => {
   return {
-    ...omit(values, ["dateRefun"]),
+    ...omit(values, ["dateRefun",'createdDate']),
     items: values?.data?.map((item: any) => ({
       productId: item?._id,
       variantId: item?.variantCurrent?._id,
@@ -300,8 +325,8 @@ export const SubmitProductsBorrow = (values: any) => {
       note: item?.note || "",
       dateRefun: dayjs(item?.dateRefun).format("YYYY-MM-DD"),
     })),
-    files: convertFiles(values?.files?.fileList
-    ),
+    files: convertFiles(values?.files?.fileList) || [],
+    note: values?.note || "",
   };
 };
 

@@ -18,7 +18,10 @@ import { getPaging } from "~/utils/helpers";
   updateBorrowFailed?: any;
 
   deleteBorrowSuccess?: any;
-  deleteBorrowFailed?: any;
+   deleteBorrowFailed?: any;
+   
+   confirmSuccess?: any;
+   confirmFailed?: any;
 
 };
 
@@ -29,7 +32,7 @@ class ProductClassExtend extends InstanceModuleRedux {
     super('product');
     this.cloneReducer = {
       ...this.initReducer,
-      getListSuccess: (state:initStateSlice , { payload }: any) => {
+      getListSuccess: (state:cloneInitState , { payload }: any) => {
         state.isLoading = false;
         // Find Variant Default
         const list = get(payload, "docs", [])?.map((item:any) => {
@@ -39,7 +42,7 @@ class ProductClassExtend extends InstanceModuleRedux {
         state.list = list;
         state.paging = getPaging(payload);
       },
-      changeVariantDefault: (state:initStateSlice , { payload }: any) => {
+      changeVariantDefault: (state:cloneInitState , { payload }: any) => {
         const {productId, variantId} = payload;
         const list = state.list?.map((item:any) => {
           if(get(item,'_id') === productId){ // Find Item
@@ -55,7 +58,7 @@ class ProductClassExtend extends InstanceModuleRedux {
         ...omit(this.cloneInitState, ["list"]),
       }),
 
-      updateSuccess: (state:initStateSlice, { payload }:{payload:any}) => {
+      updateSuccess: (state:cloneInitState, { payload }:{payload:any}) => {
         state.isSubmitLoading = false;
         state.byId = payload;
         state.list = state.list?.map((item:any) => get(item,'_id') === get(payload,'data._id') ? {...item,...get(payload,'data')} : item);
@@ -136,6 +139,19 @@ class ProductClassExtend extends InstanceModuleRedux {
         ...omit(this.cloneInitState, ["listBorrow", "pagingBorrow"]),
       }),
 
+      confirmBorrowRequest: (state:cloneInitState) => {
+        state.isSubmitLoading = true;
+        state.confirmFailed = null;
+      },
+      confirmBorrowSuccess: (state:cloneInitState, { payload }:{payload:any}) => {
+        state.isSubmitLoading = false;
+        state.confirmSuccess = payload;
+      },
+      confirmBorrowFailed: (state:cloneInitState, { payload }:{payload:any}) => {
+        state.isSubmitLoading = false;
+        state.confirmFailed = payload;
+      },
+
       //-----BORROW_PRODUCT-----
 
       // Want Add more reducer Here...
@@ -155,6 +171,12 @@ class ProductClassExtend extends InstanceModuleRedux {
 
       updateBorrowSuccess: undefined,
       updateBorrowFailed: undefined,
+
+      deleteBorrowSuccess: undefined,
+      deleteBorrowFailed: undefined,
+
+      confirmSuccess: undefined,
+      confirmFailed: undefined,
 
     }
   }

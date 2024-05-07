@@ -83,6 +83,8 @@ const updateThePharmacyForEmployee = 'updateThePharmacyForEmployee';
 // Cộng tác viên
 const partner = 'partner';
 const partnerGroup = 'partnerGroup';
+const borrowProduct = 'borrowProduct';
+const statusBorrowProduct = 'statusBorrowProduct';
 
 
 //------RESOURCES --------
@@ -169,8 +171,12 @@ const RESOURCES = [
   
   updateThePharmacyForEmployee,
   configReportSalaryAuto,
+
+  //-----PARTNER------
   partner,
-  partnerGroup
+  partnerGroup,
+  borrowProduct,
+  statusBorrowProduct
 ];
 
 //ACTIONS

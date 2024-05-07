@@ -32,7 +32,47 @@ export const STATUS_VOUCHER_BORROW : any = {
   COMPLETED: 'COMPLETED',
 };
 
+export const STATUS_VOUCHER_BORROW_EN: any = {
+  NEW: 'NEW',
+  PROCESSING: 'PROCESSING',
+  CANCELLED: 'CANCELLED',
+  COMPLETED: 'COMPLETED',
+};
+export const LANGUAGE: any = {
+  VI: 'vi',
+  EN: 'en'
+};
+export const STATUS_VOUCHER_BORROW_NAME: any = {
+  [STATUS_VOUCHER_BORROW_EN.NEW]: {
+    [LANGUAGE.VI]: 'Mới'
+  },
+  [STATUS_VOUCHER_BORROW_EN.PROCESSING]: {
+    [LANGUAGE.VI]: 'Xác nhận mượn'
+  },
+  [STATUS_VOUCHER_BORROW_EN.CANCELLED]: {
+    [LANGUAGE.VI]: 'Từ chối'
+  },
+  [STATUS_VOUCHER_BORROW_EN.COMPLETED]: {
+    [LANGUAGE.VI]: 'Hoàn trả'
+  },
+};
+export const STATUS_VOUCHER_BORROW_NAME_ROOT: any = {
+  [STATUS_VOUCHER_BORROW_EN.NEW]: {
+    [LANGUAGE.VI]: 'Mới'
+  },
+  [STATUS_VOUCHER_BORROW_EN.PROCESSING]: {
+    [LANGUAGE.VI]: 'Đang mượn'
+  },
+  [STATUS_VOUCHER_BORROW_EN.CANCELLED]: {
+    [LANGUAGE.VI]: 'Từ chối'
+  },
+  [STATUS_VOUCHER_BORROW_EN.COMPLETED]: {
+    [LANGUAGE.VI]: 'Đã hoàn trả'
+  },
+};
+
 export const STATUS_VOUCHER_BORROW_VI : any = {
   PROCESSING: 'Đang mượn',
   COMPLETED: 'Đã trả',
 };
+

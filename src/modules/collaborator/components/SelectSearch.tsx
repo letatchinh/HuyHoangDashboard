@@ -1,4 +1,4 @@
-import { Select, SelectProps } from "antd";
+import { Select, SelectProps, Skeleton } from "antd";
 import { get } from "lodash";
 import React, { useMemo } from "react";
 import { filterSelectWithLabel, useFetchState } from "~/utils/helpers";
@@ -11,6 +11,7 @@ interface TypeProps extends SelectProps {
 export default function SelectCollaborator({
   defaultCollaborator,
   keywordSearchCollaborator,
+  disabled = false,
   ...props
 }: TypeProps): React.JSX.Element {
   // const query = useMemo(() => ({
@@ -31,6 +32,7 @@ export default function SelectCollaborator({
     [collaborator, defaultCollaborator]
   );
   return (
+    options?.length ?
     <Select
       options={options}
       loading={isLoading}
@@ -39,8 +41,10 @@ export default function SelectCollaborator({
       placeholder="Cộng tác viên"
       popupMatchSelectWidth={false}
       filterOption={filterSelectWithLabel}
-      showSearch
+        showSearch
+      disabled = {disabled}
       {...props}
-    />
+      />
+      : <Skeleton.Input active />
   );
 }

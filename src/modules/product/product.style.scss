@@ -58,13 +58,21 @@
     font-weight: 700;
     text-transform: uppercase;
     margin-bottom: 8px;
+  &.new{
+    background-color: #e8e3e4;
+    color: #333;
+  }
   &.processing{
-    background-color: #52c41a;
+    background-color: #007bff;
     color: #fff;
   };
   &.completed{
     color: #ffffff;
-    background-color: #007bff;
+    background-color: #52c41a; 
+  };
+  &.cancelled{
+    color: #333;
+    background-color: #f41f1f;
   }
 }
 .product-borrow-table{

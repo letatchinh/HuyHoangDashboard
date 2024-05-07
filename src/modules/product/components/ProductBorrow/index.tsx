@@ -1,20 +1,29 @@
-import { Button, Col, ConfigProvider, Modal, Row } from 'antd';
-import React, { useMemo, useState } from 'react';
-import TableAnt from '~/components/Antd/TableAnt';
-import ProductBorrowForm from './ProductBorrowForm';
-import Breadcrumb from '~/components/common/Breadcrumb';
+import { Button, Col, ConfigProvider, DatePicker, Modal, Row } from 'antd';
+import Search from 'antd/es/input/Search';
 import { ColumnsType } from 'antd/es/table';
-import {useDeleteProductBorrow, useGetProductsBorrow, usePagingBorrow, useProductBorrowQueryParams, useUpdateProductParams } from '../../product.hook';
 import dayjs from 'dayjs';
-import { REF_TYPE_OBJECT } from '../../constants';
 import { toUpper } from 'lodash';
-import StatusTag from './Status';
+import React, { useEffect, useMemo, useState } from 'react';
+import TableAnt from '~/components/Antd/TableAnt';
 import Action from '~/components/common/Action';
+import Breadcrumb from '~/components/common/Breadcrumb';
+import WithPermission from '~/components/common/WithPermission';
+import { useGetProfile } from '~/modules/auth/auth.hook';
+import POLICIES from '~/modules/policy/policy.auth';
+import { useMatchPolicy } from '~/modules/policy/policy.hook';
+import { REF_TYPE_OBJECT } from '../../constants';
+import { useDeleteProductBorrow, useGetProductsBorrow, usePagingBorrow, useProductBorrowQueryParams, useResetActionBorrow, useUpdateProductParams } from '../../product.hook';
 import { ProductBorrowContextProvider } from './ProductBorrowContext';
+import ProductBorrowForm from './ProductBorrowForm';
+import StatusTag from './Status';
 type propsType = {
 
-}
+};
+const { RangePicker } = DatePicker;
+const dateFormat = 'DD-MM-YYYY';
+
 export default function ProductBorrow(props: propsType): React.JSX.Element {
+  useResetActionBorrow();
   const [query] = useProductBorrowQueryParams();
   const [keyword, { setKeyword, onParamChange }] = useUpdateProductParams(query);
   const [list, isLoading] = useGetProductsBorrow(query);
@@ -23,7 +32,20 @@ export default function ProductBorrow(props: propsType): React.JSX.Element {
   const [id, setId] = useState<string | null>();
   const [isOpenForm, setIsOpenForm] = useState<boolean>(false);
   const [,onDelete] = useDeleteProductBorrow();
+  const [date, setDate] = useState<any>();
+  const profile = useGetProfile();
 
+  const isDelete = useMatchPolicy(POLICIES.DELETE_BORROWPRODUCT);
+  const canDelete = useMemo(()=> profile?.role === 'staff'?  isDelete: false,[profile]);
+  const canUpdate = useMatchPolicy(POLICIES.UPDATE_BORROWPRODUCT);
+  useEffect(() => {
+    if (query?.startDate && query?.endDate) {
+      setDate({
+        startDate: query?.startDate,
+        endDate: query?.endDate
+      })
+    };
+  }, [query]);
   const openFormVoucher = (id?: any) => {
     setIsOpenForm(true);
     setId(id);
@@ -37,8 +59,8 @@ export default function ProductBorrow(props: propsType): React.JSX.Element {
   const columns  : ColumnsType = useMemo(() => [
     {
       title: 'Mã phiếu',
-      dataIndex: 'code',
-      key: 'key',
+      dataIndex: 'codeSequence',
+      key: 'codeSequence',
       align: 'center',
       width: 100,
     },
@@ -95,39 +117,66 @@ export default function ProductBorrow(props: propsType): React.JSX.Element {
       width: 100,
       render: (status: any, record: any, index) => <StatusTag status= {status}/>
     },
-    {
+    ...((canDelete || canUpdate) ? [{
       title: 'Thao tác',
       key: 'key',
-      align: 'center',
+      align: 'center' as any,
       width: 100,
-      render: (_, record, index) => (
+      render: (_: any, record: any, index: number) => (
         <Action
           _id={record._id}
-          canDelete
-          canUpdate
+          canDelete = {canDelete}
+          canUpdate = {canUpdate}
           title='phiếu mượn sản phẩm'
           onDetailClick={() => openFormVoucher(record._id)}
           onDelete = {onDelete}
         />
       )
-    },
+    }]: []),
 
   ], [list]);
-
   return (
     <ProductBorrowContextProvider>
       <Breadcrumb title={'Quản lý mượn sản phẩm'}/>
       <Row justify={"space-between"} className='row__search'>
-        <Col span={12}></Col>
+        <Col span={12}>
+          <Row gutter={12}>
+            <Col span={12}>
+              <Search
+                allowClear
+              placeholder='Tìm bất kỳ'
+              onSearch={(e) => onParamChange({ keyword: e })}
+              />
+            </Col>
+            <Col span={12}>
+              <RangePicker
+                format={dateFormat}
+                allowClear = {false}
+                allowEmpty={[false, false]}
+                value={date && [dayjs(date?.startDate), dayjs(date?.endDate)]}
+                onChange={(value) => {
+                  const data = {
+                    startDate: dayjs(value?.[0]).format("YYYY-MM-DD"),
+                    endDate: dayjs(value?.[1]).format("YYYY-MM-DD"),
+                  };
+                  onParamChange({ startDate: data?.startDate, endDate: data?.endDate });
+                  setDate(data);
+                }}
+              />
+            </Col>
+          </Row>
+        </Col>
         <Col span={12}>
           <Row>
             <Col span={12}></Col>
-            <Col span={12}>
-              <Button
-                type='primary'
-                onClick={()=> openFormVoucher && openFormVoucher(null)}
-              >Tạo phiếu mượn sản phẩm</Button>
-            </Col>
+            <WithPermission permission={POLICIES.WRITE_BORROWPRODUCT}>
+              <Col span={12}>
+                <Button
+                  type='primary'
+                  onClick={()=> openFormVoucher && openFormVoucher(null)}
+                >Tạo phiếu mượn sản phẩm</Button>
+              </Col>
+            </WithPermission>
           </Row>
         </Col>
       </Row>
@@ -153,7 +202,8 @@ export default function ProductBorrow(props: propsType): React.JSX.Element {
             pagination={{
             ...paging,
               showTotal: (total) => `Tổng cộng: ${total} `,
-            showSizeChanger: true
+              showSizeChanger: true,
+              onChange: (page: any, pageSize: any) => onParamChange({ page, limit: pageSize }),
             }}
           />
         </ConfigProvider>

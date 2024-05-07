@@ -1,4 +1,15 @@
-import { Button, Col, DatePicker, Form, Modal, Row, Skeleton, Spin, Typography } from "antd";
+import {
+  Button,
+  Col,
+  DatePicker,
+  Form,
+  Input,
+  Modal,
+  Row,
+  Skeleton,
+  Spin,
+  Typography,
+} from "antd";
 import React, { useEffect, useMemo, useState } from "react";
 import BaseBorderBox from "~/components/common/BaseBorderBox";
 import SelectCollaborator from "~/modules/collaborator/components/SelectSearch";
@@ -8,15 +19,33 @@ import { get } from "lodash";
 import TableAnt from "~/components/Antd/TableAnt";
 import { formatNumberThreeComma } from "~/utils/helpers";
 import dayjs from "dayjs";
-import { SubmitProductsBorrow, convertProductsBorrowById, useCreateProductBorrow, useGetProductBorrow, useUpdateProductBorrow } from "../../product.hook";
+import {
+  SubmitProductsBorrow,
+  convertProductsBorrowById,
+  useConfirmBorrowVoucher,
+  useCreateProductBorrow,
+  useGetProductBorrow,
+  useUpdateProductBorrow,
+} from "../../product.hook";
 import UploadListFile from "~/components/common/UploadFileList";
 import { useDispatch } from "react-redux";
 import { productActions } from "../../redux/reducer";
 import useProductBorrowContext from "./ProductBorrowContext";
+import {
+  LANGUAGE,
+  STATUS_VOUCHER_BORROW_EN,
+  STATUS_VOUCHER_BORROW_NAME,
+} from "../../constants";
+import { ExclamationCircleOutlined, SaveOutlined } from "@ant-design/icons";
+import WithOrPermission from "~/components/common/WithOrPermission";
+import POLICIES from "~/modules/policy/policy.auth";
+import { useGetProfile } from "~/modules/auth/auth.hook";
+import WithPermission from "~/components/common/WithPermission";
 type propsType = {
   id?: string | null;
   onCloseVoucher?: any;
 };
+const { confirm } = Modal;
 
 const styles = {
   labelCol: {
@@ -36,9 +65,14 @@ const styles = {
     xxl: { span: 12 },
   },
 };
-export default function ProductBorrowForm({id, onCloseVoucher}: propsType): React.JSX.Element {
-  const { dataSelected, products,setDataSelected,setSelectedRowKeys } = useProductBorrowContext();
-  const [productBorrow, loading] = useGetProductBorrow(id);
+export default function ProductBorrowForm({
+  id,
+  onCloseVoucher,
+}: propsType): React.JSX.Element {
+  const { dataSelected, products, setDataSelected, setSelectedRowKeys } =
+    useProductBorrowContext();
+    const [productBorrow, loading] = useGetProductBorrow(id);
+  const profile = useGetProfile();
   const dispatch = useDispatch();
   const resetAction = () => {
     return dispatch(productActions.resetActionProductBorrow());
@@ -48,18 +82,46 @@ export default function ProductBorrowForm({id, onCloseVoucher}: propsType): Reac
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
-    if (!id) { 
+    if (!id) {
       form.resetFields();
+      form.setFieldsValue({
+        createdDate: dayjs(new Date()),
+      });
+      if (profile?.role !== 'staff') {
+        setPartnerId(profile?.profile?._id);
+        form.setFieldsValue({
+          receidverId: profile?.profile?._id
+        });
+      };
       setDataSelected([]);
       setSelectedRowKeys([]);
     } else {
       form.setFieldsValue(productBorrow);
       const dateRefun = productBorrow?.items[0]?.dateRefun;
-      form.setFieldsValue({ dateRefun: dayjs(dateRefun) });
+      form.setFieldsValue({
+        dateRefun: dayjs(dateRefun),
+        createdDate: dayjs(productBorrow?.createdAt),
+      });
       setPartnerId(productBorrow?.receidverId);
-      setSelectedRowKeys(productBorrow?.items?.map((item: any) => item?.productId));
+      setSelectedRowKeys(
+        productBorrow?.items?.map((item: any) => item?.productId)
+      );
     }
-  }, [productBorrow,id]);
+  }, [productBorrow, id]);
+  // useEffect(() => {
+  //   if (dataSelected?.length && productBorrow) {
+  //     const newData = [...dataSelected];
+  //     const newDataSelected = newData?.map((e: any) => {
+  //       const findData = productBorrow?.items?.find((item: any) => e?._id === item?.productId);
+  //       return {
+  //         ...e,
+  //         note: findData?.note
+  //       };
+  //     });
+  //     setDataSelected(newDataSelected);
+  //   };
+  // }, [productBorrow]);
+
   const openForm = () => {
     setIsOpen(true);
   };
@@ -77,16 +139,62 @@ export default function ProductBorrowForm({id, onCloseVoucher}: propsType): Reac
     resetAction();
   });
 
+  const [, handleConfirm] = useConfirmBorrowVoucher(() => {
+    onCloseVoucher();
+    resetAction();
+  });
+
+  const handleChangeValueData = (key: any, value: any, productId: string) => {
+    const data = [...dataSelected];
+    if (key === "note") {
+      const newData = data?.map((item: any) => {
+        if (item?._id === productId) {
+          return {
+            ...item,
+            note: value,
+          };
+        }
+        return item;
+      });
+      setDataSelected(newData);
+    }
+  };
+
+  const onWhVoucherStatusChange = async (status: string) => {
+    confirm({
+      title: `${STATUS_VOUCHER_BORROW_NAME[status][LANGUAGE.VI]} sản phẩm trong phiếu này?`,
+      icon: <ExclamationCircleOutlined />,
+      content: "",
+      onOk() {
+        switch (status) {
+          case STATUS_VOUCHER_BORROW_EN.PROCESSING:
+            handleConfirm({ id: id, status: STATUS_VOUCHER_BORROW_EN.PROCESSING });
+            break;
+          case STATUS_VOUCHER_BORROW_EN.COMPLETED:
+            handleConfirm({ id: id, status: STATUS_VOUCHER_BORROW_EN.COMPLETED });
+            break;
+          case STATUS_VOUCHER_BORROW_EN.CANCELLED:
+            handleConfirm({ id: id, status: STATUS_VOUCHER_BORROW_EN.CANCELLED });
+            break;
+          default:
+            break;
+        }
+      },
+      onCancel() {},
+    });
+  };
+
   const onFinish = (values: any) => {
     const submitData = SubmitProductsBorrow({ ...values, data: dataSelected });
     if (!id) {
       handleCreate(submitData);
     } else {
-      handleUpdate({ ...submitData, _id: id });
-    }
+      handleUpdate({ ...submitData, id });
+    };
   };
+
   const renderLoading = (component: React.ReactNode) => {
-    return !loading ? <>{component}</> : <Skeleton.Input active/>
+    return !loading ? <>{component}</> : <Skeleton.Input active />;
   };
 
   const columns: ColumnsType = useMemo(
@@ -131,12 +239,33 @@ export default function ProductBorrowForm({id, onCloseVoucher}: propsType): Reac
           return unit?.unit?.name;
         },
       },
+      // {
+      //   title: "Ghi chú",
+      //   dataIndex: "note",
+      //   key: "note",
+      //   width: 100,
+      //   align: "left",
+      //   render(value, record, index) {
+      //     console.log(value)
+      //     return (
+      //       <Input.TextArea
+      //         value={value?.note}
+      //         onChange={(e) =>
+      //           handleChangeValueData(
+      //             "note",
+      //             e.target.value,
+      //             get(record, "_id")
+      //           )
+      //         }
+      //       />
+      //     );
+      //   },
+      // },
     ],
     [dataSelected]
   );
-
   return (
-    <div>
+    <>
       <Form
         form={form}
         {...styles}
@@ -150,20 +279,42 @@ export default function ProductBorrowForm({id, onCloseVoucher}: propsType): Reac
           <Row gutter={36}>
             <Col span={12}>
               <Form.Item label="Người mượn" name="receidverId">
-                {renderLoading(<SelectCollaborator
-                  onChange={(value: any) => setPartnerId(value)}
-                />)}
+                {renderLoading(
+                  <SelectCollaborator
+                    disabled = {profile?.role !== 'staff' || !!id}
+                    onChange={(value: any) => setPartnerId(value)}
+                  />
+                )}
               </Form.Item>
             </Col>
             <Col span={12}>
-              <Form.Item name="dateRefun" label="Thời gian hoàn trả">
-                {renderLoading(<DatePicker
-                  disabledDate={(current) => {
-                    return current <= dayjs().endOf("day");
-                  }}
-                  style={{ width: "100%" }}
-                  placeholder="Thời gian hoàn trả"
-                />)}
+              <Form.Item name="createdDate" label="Ngày tạo phiếu mượn">
+                {renderLoading(
+                  <DatePicker disabled style={{ width: "100%" }} />
+                )}
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row gutter={36}>
+            <Col span={12}>
+              <Form.Item name="updated" label="Ngày bắt đầu mượn">
+                {renderLoading(
+                  <DatePicker disabled style={{ width: "100%" }} />
+                )}
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item name="dateRefun" label="Ngày hoàn trả">
+                {renderLoading(
+                  <DatePicker
+                    disabledDate={(current) => {
+                      return current <= dayjs().endOf("day");
+                    }}
+                    disabled = {!!id}
+                    style={{ width: "100%" }}
+                    placeholder="Ngày hoàn trả"
+                  />
+                )}
               </Form.Item>
             </Col>
           </Row>
@@ -174,15 +325,17 @@ export default function ProductBorrowForm({id, onCloseVoucher}: propsType): Reac
           title={"Danh sách sản phẩm mượn"}
         >
           <div>
-            <Button
-              className="mb-2"
-              type="primary"
-              onClick={openForm}
-              disabled={!id ? !partnerId: !id}
-              loading ={isSubmitLoading}
-            >
-              Chọn sản phẩm
-            </Button>
+            {!id && (
+              <Button
+                className="mb-2"
+                type="primary"
+                onClick={openForm}
+                disabled={!id ? !partnerId : !id}
+                loading={isSubmitLoading}
+              >
+                Chọn sản phẩm
+              </Button>
+            )}
             <Form.Item name={"data"} noStyle>
               <TableAnt
                 className="product-borrow-table"
@@ -193,29 +346,130 @@ export default function ProductBorrowForm({id, onCloseVoucher}: propsType): Reac
                 stickyTop
                 bordered
                 footer={() => (
-                  <h6
-                    style={{ textAlign: "left", marginTop: 10 }}
-                  >{`Tổng số: ${dataSelected?.length || 0}`}</h6>
+                  <h6 style={{ textAlign: "left", marginTop: 10 }}>{`Tổng số: ${
+                    dataSelected?.length || 0
+                  }`}</h6>
                 )}
               />
             </Form.Item>
           </div>
         </BaseBorderBox>
 
-        <BaseBorderBox title={"Đính kèm"}>
+        <BaseBorderBox title={"Thông tin thêm"}>
           <Row gutter={10}>
-            <Col span={12}>
-                {renderLoading(<UploadListFile />)}
+            <Col span={12}>{renderLoading(<UploadListFile />)}</Col>
+          </Row>
+          <Row>
+            <Col span={24}>
+              <Form.Item
+                labelCol={{ span: 4 }}
+                wrapperCol={{ span: 20 }}
+                name="note"
+                label="Ghi chú"
+              >
+                {renderLoading(<Input.TextArea />)}
+              </Form.Item>
             </Col>
           </Row>
         </BaseBorderBox>
-      {!id &&  <Row>
-          <Col span={24} style={{ textAlign: "center", marginTop: "20px" }}>
-            <Button loading={isSubmitLoading} type="primary" htmlType="submit" disabled = {!dataSelected?.length}>
-              {/* {`${id ? "Cập nhật" : "Tạo mới"}`} */}
-              Tạo mới
-            </Button>
-          </Col>
+        {!loading && <Row align={"middle"} justify={"center"}>
+          {!id ? (
+            <WithPermission permission={POLICIES.WRITE_BORROWPRODUCT}>
+              <Col span={24} style={{ textAlign: "center", marginTop: "20px" }}>
+                <Button
+                  loading={isSubmitLoading}
+                  type="primary"
+                  htmlType="submit"
+                  disabled={!dataSelected?.length}
+                >
+                  {/* {`${id ? "Cập nhật" : "Tạo mới"}`} */}
+                  Tạo mới
+                </Button>
+              </Col>
+            </WithPermission>
+          ) : (
+            <>
+              {(get(productBorrow, "status") !== STATUS_VOUCHER_BORROW_EN.CANCELLED  || get(productBorrow, "status") !== STATUS_VOUCHER_BORROW_EN.COMPLETED) && (
+                <>
+                    {get(productBorrow, "status") === STATUS_VOUCHER_BORROW_EN.NEW &&
+                      <WithPermission permission={POLICIES.UPDATE_BORROWPRODUCT}>
+                      <Button
+                        style={{ marginRight: "10px" }}
+                        icon={<SaveOutlined />}
+                        htmlType="submit"
+                        loading={isSubmitLoading}
+                      >
+                        Lưu
+                      </Button>
+                  </WithPermission>}
+                    {profile?.role === "staff" && (
+                      productBorrow?.status === STATUS_VOUCHER_BORROW_EN.NEW &&
+                      <>
+                        {/* ACTION CONFIRM BORROW */}
+                      <WithOrPermission
+                        permission={[POLICIES.UPDATE_STATUSBORROWPRODUCT]}
+                      >
+                        <Button
+                          loading={isSubmitLoading}
+                          style={{ marginRight: "10px" }}
+                          icon={<SaveOutlined />}
+                          type="primary"
+                          onClick={() =>
+                            onWhVoucherStatusChange(
+                              STATUS_VOUCHER_BORROW_EN.PROCESSING
+                            )
+                          }
+                        >
+                          {STATUS_VOUCHER_BORROW_NAME.PROCESSING[LANGUAGE.VI]}
+                        </Button>
+                        </WithOrPermission>
+                        
+                        {/* ACTION  CANCEL BORROW */}
+
+                      <WithOrPermission
+                        permission={[POLICIES.UPDATE_STATUSBORROWPRODUCT]}
+                      >
+                        <Button
+                          loading={isSubmitLoading}
+                          danger
+                          style={{ marginRight: "10px" }}
+                          icon={<SaveOutlined />}
+                          type="primary"
+                          onClick={() =>
+                            onWhVoucherStatusChange(
+                              STATUS_VOUCHER_BORROW_EN.CANCELLED
+                            )
+                          }
+                        >
+                          {STATUS_VOUCHER_BORROW_NAME.CANCELLED[LANGUAGE.VI]}
+                        </Button>
+                      </WithOrPermission>
+                      </>
+                    )}
+
+                  {/* ACTION RETURN PRODUCT */}
+                    { get(productBorrow, "status") === STATUS_VOUCHER_BORROW_EN.PROCESSING && <WithOrPermission
+                        permission={[POLICIES.UPDATE_STATUSBORROWPRODUCT]}
+                      >
+                        <Button
+                          loading={isSubmitLoading}
+                          style={{ marginRight: "10px" }}
+                          icon={<SaveOutlined />}
+                          type="primary"
+                          onClick={() =>
+                            onWhVoucherStatusChange(
+                              STATUS_VOUCHER_BORROW_EN.COMPLETED
+                            )
+                          }
+                        >
+                          Hoàn trả
+                        </Button>
+                      </WithOrPermission>}
+
+                </>
+              )}
+            </>
+          )}
         </Row>}
       </Form>
       <Modal
@@ -228,6 +482,6 @@ export default function ProductBorrowForm({id, onCloseVoucher}: propsType): Reac
       >
         <FormSelectProduct id={partnerId} />
       </Modal>
-    </div>
+    </>
   );
 }
