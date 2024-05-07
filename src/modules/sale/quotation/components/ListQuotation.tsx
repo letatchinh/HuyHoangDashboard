@@ -70,11 +70,10 @@ export default function ListQuotation({
   const isSystem = useIsAdapterSystem();
 
   const onPermissionCovert = useCallback(permissionConvert(query),[query])
-
+console.log(onPermissionCovert('WRITE', 'BILL'),'onPermissionCovert');
   const canDownload = useMatchPolicy(onPermissionCovert('DOWNLOAD', 'QUOTATION'));
 
-  const columns: ColumnsType = useMemo(
-    () => [
+  const columns: ColumnsType = [
       {
         title: "Mã đơn hàng tạm",
         dataIndex: "codeSequence",
@@ -315,8 +314,8 @@ export default function ListQuotation({
           );
         },
       },
-    ],
-    [arrCheckBox, canDownload]);
+    ]
+    // [arrCheckBox, canDownload,onPermissionCovert, query]);
   const { isMobile } = DeviceDetector();
   return (
     <div className="quotation-page">

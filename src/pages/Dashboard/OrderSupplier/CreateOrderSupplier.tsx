@@ -245,7 +245,6 @@ const CreateOrderSupplier = (): React.JSX.Element => {
       return;
     }
   }, [activeKey, tabs]);
-  console.log(activeKey);
   
   return (
     <div>
