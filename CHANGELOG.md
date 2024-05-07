@@ -1,3 +1,26 @@
+# [1.14.0](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/compare/v1.13.4...v1.14.0) (2024-05-07)
+
+
+### Bug Fixes
+
+* [#1563](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1563) Create ([7a62dce](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/7a62dce681e2e993e8096395d4d816b9f849cdea))
+* [#1563](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1563) style ([3b68b68](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/3b68b684a6b4a9d28e98595b3739685bcd69d353))
+* [#1570](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1570) update create  bill quotation ([19fd771](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/19fd771732f96a56ab18dc3d41afbff595cb9b29))
+* render files in information pharmacy ([a3349f3](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/a3349f31364046aaabb2741a11245be9200d37a2))
+* render message when login failed ([50ceb88](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/50ceb8842bc7cd2cec00ccde5279760894a189dc))
+* UI permission group ([5b1cb12](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/5b1cb1258bfa6f3f50e65171580a788e666f689a))
+* UI table ([08ca458](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/08ca45845eaac88de3067df8294a89d870406d55))
+
+
+### Features
+
+* [#1563](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1563) CRUD ([85ea77f](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/85ea77fd54303d8cdd2605fd75c2bf432e5141ba))
+* [#1563](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1563) handle add product ([89b2e0c](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/89b2e0cf213f0d62d33fb9024444e65e03b0751a))
+* [#1563](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1563) handle delete and search ([8a3dc0b](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/8a3dc0b169f52d448e88398c3fa01b14991551aa))
+* [#1563](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1563) Update data ([fc4ad8e](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/fc4ad8e55520eff2a70bbda141cc95dfd102dd65))
+* [#1574](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1574) update action and permission ([4de4623](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/4de462336c46853e993a37cd4a77e8e0eae9054b))
+* [#1674](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1674) update action and permission ([5ba57a7](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/5ba57a7770c67b3427b26657f9fe602d80e5b68f))
+
 ## [1.13.4](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/compare/v1.13.3...v1.13.4) (2024-05-03)
 
 
