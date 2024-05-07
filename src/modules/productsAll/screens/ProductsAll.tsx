@@ -94,6 +94,8 @@ export default function ProductsAll(props: TypeProps): React.JSX.Element {
       title: "Mã thuốc",
       dataIndex: "variant",
       key: "variant",
+      width: 120,
+      alight:'center',
       render: (variant: any) => {
         return get(variant, "variantCode", "");
       },
@@ -165,6 +167,7 @@ export default function ProductsAll(props: TypeProps): React.JSX.Element {
             title: "Giá bán",
             dataIndex: "variant",
             key: "variant",
+            width:130,
             render(variant: any, record: any, index: any) {
               return formatter(get(variant, "price"));
             },
@@ -239,7 +242,7 @@ export default function ProductsAll(props: TypeProps): React.JSX.Element {
       key: "productDetail.element",
       width: 300,
       render(value: any) {
-        return get(value, "element");
+        return <Typography.Text ellipsis={{tooltip:true,}}>{get(value, "element")}</Typography.Text>;
       },
     },
     ...(canDownload
@@ -267,6 +270,7 @@ export default function ProductsAll(props: TypeProps): React.JSX.Element {
             title: "Thao tác",
             dataIndex: "_id",
             key: "_id",
+            width: 140,
             align: "center" as any,
             fixed: "right" as any,
             render(_id: any, record: any, index: any) {
@@ -287,7 +291,7 @@ export default function ProductsAll(props: TypeProps): React.JSX.Element {
 
   useChangeDocumentTitle("Danh sách sản phẩm");
   return (
-    <div>
+    <WhiteBox>
       <Breadcrumb
         title={isLoading ? "Đang tải..." : <p>Danh sách sản phẩm</p>}
       />
@@ -313,15 +317,14 @@ export default function ProductsAll(props: TypeProps): React.JSX.Element {
           ) : null
         }
       />
-      <WhiteBox>
           <ConfigTable>
             <TableAnt
             className="table-striped-rows-custom"
             bordered
-            style={{ marginBottom: "20px" }}
+            // style={{ marginBottom: "20px" }}
             dataSource={data ?? []}
             columns={columns}
-            scroll={{ x: 2500 }}
+            scroll={{ x: 2500 ,y:'calc(100vh - 48px - 42px - 53px - 140px - 20px)'}}
             size="small"
             pagination={{
               ...paging,
@@ -333,7 +336,6 @@ export default function ProductsAll(props: TypeProps): React.JSX.Element {
             stickyTop
             />
           </ConfigTable>
-      </WhiteBox>
       <Modal
         open={isOpen}
         onCancel={onCloseModal}
@@ -363,6 +365,6 @@ export default function ProductsAll(props: TypeProps): React.JSX.Element {
           id={id as any}
         />
       </Modal>
-    </div>
+    </WhiteBox>
   );
 }
