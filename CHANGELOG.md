@@ -1,3 +1,35 @@
+# [1.15.0](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/compare/v1.14.0...v1.15.0) (2024-05-07)
+
+
+### Bug Fixes
+
+* [#1571](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1571) FE_Báo cáo lương Cộng tác viên , Phân quyên ([bd7fe4a](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/bd7fe4ac848037142fffa6b91e479212bef42ccb))
+* [#1577](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1577) - add key refCollection for employee ([114a0ad](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/114a0ad61cc57e5856adb092d10d82cd1e99c776))
+* [#1577](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1577) - add method type for salary employee and collaboration ([9e742d4](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/9e742d47589f7bd7734fca9889faaf1464432a8b))
+* [#1577](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1577) - change title name in page receipt ([df38300](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/df3830041a61a670b805fa8a85a47e4a97d706f7))
+* [#1577](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1577) - fix form receipt in collaboration ([147623a](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/147623af821a7d29106f0217ba28bee5236cd9be))
+* [#1577](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1577) change router, change navbar ([05954a4](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/05954a4fce35853faa08b23cb110ed4f90dc7e4b))
+* [#1577](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1577) check condition create reciept form ([c47d742](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/c47d74256fe1adeef6059a40c6ac393eea17b228))
+* add search by refCollection ([a15ca1c](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/a15ca1cef41d963c171b640f746ce329cd517e98))
+* defaultValue ([a6f13e7](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/a6f13e75e222ab81d1deeda23d414c3b4d817e3b))
+* defaultValue ([1ccb705](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/1ccb7059269ddbe7f697e912bf3d03875ab6b770))
+* Phan Quyen ([85a32df](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/85a32df2b785cd0159048a27eaef00c2ec0aa728))
+* Ui salary partner ([88d3a06](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/88d3a066bad6430da70ed43de0be0d9aed134371))
+* version Hide ([b6a42c9](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/b6a42c921a954748559d7b04558d535ab0234862))
+
+
+### Features
+
+* [#1571](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1571) FE_Báo cáo lương Cộng tác viên , Phân quyên ([d5cac72](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/d5cac72af72da82ddc217b02714e4d11a39140a3))
+* add detail employee in modal ([29a9a98](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/29a9a9834ba5b9fd4e1115d61845954991ab0f29))
+* init file api ([df449f1](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/df449f1ffecd69ca83f07be642068ce59502c8b1))
+* init hook ([a81d04c](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/a81d04c8422636cad99d0365f2e821405f591458))
+* init module partnerSalaryPartner ([e2fcfe9](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/e2fcfe9ceece3e622d41e3ae8e547d04145c801e))
+* init module reportSalaryPartner ([df1ff6f](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/df1ff6f7e29511cd0b1dbf1a7a64de4db7dd23af))
+* init reducer and saga ([ea0fb95](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/ea0fb95cdc33f4044444a7f1e8454d6a3e42f56c))
+* init router reportSalaryPartner ([29ebf3e](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/29ebf3e7d6e2914518b534dab5c126a8c1d23196))
+* Report Ui ([e40c681](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/e40c681d204e2fddd43be7b1f687c8f4ee47fe8a))
+
 # [1.14.0](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/compare/v1.13.4...v1.14.0) (2024-05-07)
 
 
