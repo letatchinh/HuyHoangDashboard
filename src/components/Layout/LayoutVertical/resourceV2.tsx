@@ -78,6 +78,8 @@ const permissionCollaborator = [
   POLICIES.READ_BILLPARTNER,
   POLICIES.READ_QUOTATIONPARTNER,
   POLICIES.WRITE_QUOTATIONPARTNER,
+  POLICIES.READ_BORROWPRODUCT,
+  POLICIES.READ_STATUSBORROWPRODUCT,
 ];
 
 export const resource: ItemType[] =[ 
@@ -475,6 +477,12 @@ export const resource: ItemType[] =[
         path: PATH_APP.vouchers.partner,
         key: PATH_APP.vouchers.partner,
         permission: [POLICIES.READ_VOUCHERPARTNER],//
+      },
+      {
+        label: "Quản lý sản phẩm mượn",
+        path: PATH_APP.product.borrow,
+        key: PATH_APP.product.borrow,
+        permission: [POLICIES.READ_BORROWPRODUCT, POLICIES.READ_STATUSBORROWPRODUCT],//
       },
     ]
   },

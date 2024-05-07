@@ -1,6 +1,7 @@
 import { Button, Result, Typography } from "antd";
 import { get } from "lodash";
 import React, { useCallback, useMemo } from "react";
+import { useGetProfile } from "~/modules/auth/auth.hook";
 import { DataResultType } from "~/pages/Dashboard/Bill/CreateBill";
 import { PATH_APP } from "~/routes/allPath";
 type propsType = {
@@ -12,6 +13,8 @@ export default function ModalCreateQuotationSuccess({
   onCancel,
 }: propsType): React.JSX.Element {
   const { type } = data || {};
+  const profile = useGetProfile();
+  const concatPath = useMemo(()=> profile?.role === 'staff'? '': `&refCollection=${profile?.role}` ,[profile])
   const goDetail = useCallback(() => {
     let handle;
     switch (type) {
@@ -19,8 +22,8 @@ export default function ModalCreateQuotationSuccess({
         handle = () =>
           window.open(
             PATH_APP.bill.quotation +
-              "?page=1&limit=10&keyword=" +
-              get(data, "codeSequence")
+              "?page=1&limit=10&keyword=" + 
+              get(data, "code") + concatPath
           );
         break;
       case "updateQuotation":
@@ -28,13 +31,13 @@ export default function ModalCreateQuotationSuccess({
           window.open(
             PATH_APP.bill.quotation +
               "?page=1&limit=10&keyword=" +
-              get(data, "codeSequence")
+              get(data, "code")  + concatPath
           );
         break;
       case "convertQuotation":
         handle = () =>
           window.open(
-            PATH_APP.bill.root + "?page=1&limit=10&keyword=" + get(data, "codeSequence")
+            PATH_APP.bill.root + "?page=1&limit=10&keyword=" + get(data, "code")  + concatPath
           );
         break;
       default:

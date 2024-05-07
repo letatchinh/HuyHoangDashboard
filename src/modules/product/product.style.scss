@@ -42,3 +42,41 @@
     height: 150px!important;
   }
 }
+
+.status-product-borrow{
+    height: 22px;
+    min-width: 22px;
+    line-height: 0;
+    border-radius: 8px;
+    cursor: default;
+    align-items: center;
+    white-space: nowrap;
+    display: inline-flex;
+    justify-content: center;
+    padding: 0px 8px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  &.new{
+    background-color: #e8e3e4;
+    color: #333;
+  }
+  &.processing{
+    background-color: #007bff;
+    color: #fff;
+  };
+  &.completed{
+    color: #ffffff;
+    background-color: #52c41a; 
+  };
+  &.cancelled{
+    color: #333;
+    background-color: #f41f1f;
+  }
+}
+.product-borrow-table{
+  overflow-y: scroll;
+  min-height: 100px;
+  max-height: 400px;
+}

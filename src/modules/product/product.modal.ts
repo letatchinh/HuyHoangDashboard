@@ -74,3 +74,14 @@ export type FieldTypeFormProduct = {
     form : any,
     target : string
   }
+
+  export type BorrowProducItemSchema = {
+    productId:  string,
+    variantId:  string,
+    quantity: number,
+    priceBefore: number,
+    priceAfter?: number,
+    total?: number,
+    note?: string,
+    dateRefun: Date,
+}

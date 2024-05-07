@@ -261,7 +261,6 @@ export const reducerDiscountQuotationItems = (quotationItems: any[]) => {
   const newQuotationItems: any[] = quotationItems?.map(
     (quotation: DataItem) => {
       const { variant } = quotation || {};
-      console.log(quotation, "quotation");
       const quantityActual: number = Number(
         (
           get(quotation, "quantity", 1) /
