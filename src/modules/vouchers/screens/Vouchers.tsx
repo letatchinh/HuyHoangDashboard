@@ -6,7 +6,7 @@ import PaymentVouchers from "../../paymentVoucher/screens/Payment";
 import ReceiptVouchers from "../../receiptVoucher/screens/Receipt";
 import { get, head, transform } from "lodash";
 import Search from "antd/es/input/Search";
-import { MAP_STATUS_VOUCHERS_VI } from "~/constants/defaultValue";
+import { MAP_STATUS_VOUCHERS_VI, REF_COLLECTION } from "~/constants/defaultValue";
 import dayjs from "dayjs";
 import { useLocation, useNavigate } from "react-router-dom";
 import { convertQueryString } from "~/utils/helpers";
@@ -38,6 +38,7 @@ type optionsSearch = {
   value: string;
   label: string;
 };
+
 const optionsSearch: optionsSearch[] = [
   {
     value: "codeSequence",
@@ -56,13 +57,24 @@ const optionsSearch: optionsSearch[] = [
     label: "Tổng tiền",
   },
   // {
-  //   value: "isCreated",
-  //   label: "Ngày tạo",
-  // },
-  // {
   //   value: "isDateApproved",
   //   label: "Ngày duyệt",
   // },
+];
+
+const optionsRefCollection = [
+  {
+    label: 'Trình dược viên',
+    value: REF_COLLECTION.EMPLOYEE
+  },
+  {
+    label: 'Cộng tác viên',
+    value: REF_COLLECTION.PARTNER
+  },
+  {
+    label: 'Tất cả',
+    value: null
+  },
 ];
 
 export default function Vouchers({
@@ -172,7 +184,7 @@ export default function Vouchers({
     navigate(`${pathname}`);
     setKeyword("");
   };
-useChangeDocumentTitle(`${setting[pathname].name}`,{dependency : [pathname]})
+  useChangeDocumentTitle(`${setting[pathname].name}`, { dependency: [pathname] })
   return (
     <>
       <WhiteBox>
@@ -185,7 +197,7 @@ useChangeDocumentTitle(`${setting[pathname].name}`,{dependency : [pathname]})
                   style={{
                     width: 300,
                   }}
-                  options={optionsSearch}
+                  options={pathname !== PATH_APP.vouchers.salaryPartner ? optionsSearch : optionsSearch.concat({value: "refCollection", label: "Đối tượng"}) }
                   showSearch
                   placeholder={"Tìm kiếm theo..."}
                   value={searchBy}
@@ -271,6 +283,18 @@ useChangeDocumentTitle(`${setting[pathname].name}`,{dependency : [pathname]})
                           </Select.Option>
                         ))}
                       </Select>
+                    ),
+                     refCollection: (
+                      <Select
+                        placeholder={`Tìm đối tượng`}
+                          style={{
+                            width: 300,
+                          }}
+                        allowClear
+                        onChange={handleChangeStatus}
+                        options={optionsRefCollection}
+                        // value = {}
+                      />
                     ),
                   }[searchBy]
                 }

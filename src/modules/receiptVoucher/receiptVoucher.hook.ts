@@ -154,7 +154,7 @@ export const useReceiptVoucherQueryParams = () => {
   };
 
   // TODO: Default RefCollection By PathName
-  let refCollection : any = null;
+  let refCollection: any;
   let methodType: any = null;
   if(pathname === PATH_APP.vouchers.pharmacy ){
     refCollection = REF_COLLECTION.PHARMA_PROFILE
@@ -163,7 +163,7 @@ export const useReceiptVoucherQueryParams = () => {
     refCollection = REF_COLLECTION.SUPPLIER
   }
   if(pathname === PATH_APP.vouchers.salaryPartner ){
-    refCollection = compact([REF_COLLECTION.PARTNER, REF_COLLECTION.EMPLOYEE]).join(',');
+    refCollection =  query.get("refCollection")  ||compact([REF_COLLECTION.PARTNER, REF_COLLECTION.EMPLOYEE]).join(',');
     methodType = METHOD_TYPE.VOUCHER_SALARY
   }
   if(pathname === PATH_APP.vouchers.partner ){
@@ -182,12 +182,12 @@ export const useReceiptVoucherQueryParams = () => {
       status,
       totalAmount,
       reason,
-      ...refCollection && {refCollection},
-      ...methodType && {methodType},
+      refCollection ,
+      // ...methodType && {methodType},
     };
     return [queryParams,onTableChange];
     //eslint-disable-next-line
-  }, [page, limit, keyword, createSuccess, deleteSuccess,startDate, endDate,codeSequence, status, totalAmount, reason,pathname]);
+  }, [page, limit, keyword, createSuccess, deleteSuccess,startDate, endDate,codeSequence, status, totalAmount, reason,pathname,refCollection]);
 };
 
 export const useReceiptVoucherByBillIdQueryParams = (id?: any) => {
