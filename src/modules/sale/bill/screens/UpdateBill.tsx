@@ -53,7 +53,7 @@ const CLONE_STATUS_BILL: any = STATUS_BILL;
 export default function UpdateBill(props: propsType): React.JSX.Element {
   const [form] = Form.useForm();
   useResetBillAction();
-  const { bill, isLoading,mutateBill,onOpenForm, compareMoney,onOpenFormPayment } = useUpdateBillStore();
+  const { bill, isLoading,mutateBill,onOpenForm, compareMoney,onOpenFormPayment, refCollection } = useUpdateBillStore();
   console.log(bill,'bill');
   
   const {
@@ -193,7 +193,7 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
                   <Col>
                     <h6>Thông tin khách hàng</h6>
                   </Col>
-                  <WithPermission permission={POLICIES.READ_VOUCHERPHARMACY}>
+                  <WithPermission permission={refCollection === 'partner' ? POLICIES.READ_VOUCHERBILLPARTNER : POLICIES.READ_VOUCHERPHARMACY}>
                   <Col style={{ position: 'absolute', right: 0, top: 5 }}>
                     <Button type="link" onClick={onOpenDetailVouchers}>Xem chi tiết các phiếu</Button>
                   </Col>
@@ -217,12 +217,14 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
                   </Space>
                   </Col>
                   <Row gutter={10}>
+                    <WithPermission permission={refCollection === 'partner' ? POLICIES.READ_VOUCHERBILLPARTNER : POLICIES.READ_VOUCHERPHARMACY} >
                     <Col>
                     {status !== STATUS_BILL.CANCELLED && <Button disabled={remainAmount <= 0} type="primary" size="small" onClick={onOpenForm}>
                       Tạo phiếu thu
                     </Button>}
                     </Col>
-                  {compareMoney > 0 &&  <WithPermission permission={POLICIES.READ_VOUCHERPHARMACY}>
+                    </WithPermission>
+                  {compareMoney > 0 &&  <WithPermission permission={refCollection === 'partner' ? POLICIES.READ_VOUCHERBILLPARTNER : POLICIES.READ_VOUCHERPHARMACY}>
                         <Col>
                         <Button type="primary" size="small" onClick={onOpenFormPayment}>
                           Tạo phiếu chi

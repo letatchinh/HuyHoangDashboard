@@ -292,7 +292,7 @@ export default function ModalDetail(props: propsType): React.JSX.Element {
           <BoxMoney title={'Tổng đã chi'} total={totalPayment}/>
         </Flex>
       <Flex style={{ marginTop: 20 }} justify="end" gap={10} align='center'>
-        <WithPermission permission={POLICIES.READ_VOUCHERPARTNER}>
+        <WithPermission permission={POLICIES.READ_VOUCHERSALARYPARTNER}>
         <Popover
           trigger={["click"]}
           title="Danh sách phiếu"
@@ -306,7 +306,7 @@ export default function ModalDetail(props: propsType): React.JSX.Element {
         </Popover>
         </WithPermission>
         {total === 0 && <Tag color={'success'}>Đã hoàn tất thanh toán</Tag>}
-      <WithPermission permission={POLICIES.WRITE_VOUCHERPARTNER}>
+      <WithPermission permission={POLICIES.WRITE_VOUCHERSALARYPARTNER}>
       {total > 0 && (
           <Button type="primary" onClick={onOpenPayment}>
             Tạo phiếu chi
