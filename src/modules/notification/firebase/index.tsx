@@ -5,10 +5,12 @@ import {
   // getMessaging,
   onMessage,
   isSupported,
-  getMessaging
+  getMessaging,
 } from "firebase/messaging";
 
 import { postMessageNewWhBillFirebase } from "./broadCastChanel/firebaseChanel";
+import { TYPE_NOTIFICATION } from "../constants";
+import apis from "../notification.api";
 
 export const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -44,12 +46,11 @@ export const getOrRegisterServiceWorker = () => {
       .then((serviceWorker) => {
         if (serviceWorker) return serviceWorker;
         return window.navigator.serviceWorker.register(
-          "/firebase-messaging-sw.js",
+          "/firebase-messaging-sw.js"
           // {
           //   scope: "/firebase-push-notification-scope",
           // }
         );
-        
       });
   }
   throw new Error("The browser doesn`t support service worker.");
@@ -101,9 +102,8 @@ function requestPermission() {
         .then((firebaseToken) => {
           if (firebaseToken) {
             console.log("HAVE TOKEN");
-            console.log(firebaseToken,'firebaseToken');
-            
-            // apis.subscribeToken(firebaseToken);
+            console.log(firebaseToken, "firebaseToken");
+            apis.subscribeToken(firebaseToken);
           }
         })
         .catch((err) =>
@@ -120,34 +120,34 @@ function requestPermission() {
   }
 }
 export function onMessageListener() {
-  
   if (!messaging) return;
-    onMessage(messaging, (payload: any) => {
-        console.log('reiceiver from firebase',payload);
-      // CORE
-      // Post to Broadcast
-      switch (payload?.data?.type) {
-        case "ORDER_QUOTATION_CUSTOMER":
-            postMessageNewWhBillFirebase({...get(payload, 'notification'),data: payload?.data})
-          break;
-  
-        //   case !!getDataPayload('productDelivery'):
-        //     postMessageNewWhBillFirebase({...get(payload, 'notification'),data:getDataPayload('productDelivery','')})
-        //       break;
-        //   case !!getDataPayload('taskItem'):
-        //     postMessageNewWhBillFirebase({...get(payload, 'notification'),data:getDataPayload('taskItem','')})
-        //       break;
-  
-        default:
-          break;
-      }
-      console.log('Message received. ', payload);
-      // ...
-    });
-  };
+  onMessage(messaging, (payload: any) => {
+    console.log("reiceiver from firebase", payload);
+    // CORE
+    // Post to Broadcast
+    const data = payload?.data;
+    switch (payload?.data?.type) {
+      case TYPE_NOTIFICATION.ORDER_QUOTATION_CUSTOMER:
+        postMessageNewWhBillFirebase({
+          ...get(payload, "notification"),
+          data: data,
+        });
+        break;
 
+      case TYPE_NOTIFICATION.ORDER_CONVERT_QUOTATION_CUSTOMER:
+        postMessageNewWhBillFirebase({
+          ...get(payload, "notification"),
+          data: data,
+        });
+        break;
+      //   case !!getDataPayload('taskItem'):
+      //     postMessageNewWhBillFirebase({...get(payload, 'notification'),data:getDataPayload('taskItem','')})
+      //       break;
 
-  
-
-
-
+      default:
+        break;
+    }
+    console.log("Message received. ", payload);
+    // ...
+  });
+}

@@ -27,27 +27,33 @@ const messaging = firebase.messaging();
 // if (messaging.isSupported()) {
 messaging.onBackgroundMessage(function (payload) {
   console.log("Received background message ", payload);
-
-  function getDataPayload(key, defaulted = "") {
-    return JSON.parse(
-      payload?.data?.["gcm.notification." + key] || JSON.stringify(defaulted)
-    );
-  }
+  const data = payload.data;
+  // function getDataPayload(key, defaulted = "") {
+  //   return JSON.parse(
+  //     payload?.data?.["gcm.notification." + key] || JSON.stringify(defaulted)
+  //   );
+  // }
   // Send notification Broadcast
   // Post to Broadcast
   const bc_firebase_chanel = new BroadcastChannel("bc_firebase_chanel");
-  switch (true) {
-    case !!getDataPayload("billQuotation"): {
-      bc_firebase_chanel.postMessage({
-        ...payload?.notification,
-        data: getDataPayload("billQuotation", ""),
+  switch (data?.type) {
+    case TYPE_NOTIFICATION.ORDER_QUOTATION_CUSTOMER:
+      postMessageNewWhBillFirebase({
+        ...get(payload, "notification"),
+        data: data,
       });
       break;
-    }
-    // case !!getDataPayload('taskItem'):{
-    //   bc_firebase_chanel.postMessage({ ...payload?.notification, data: getDataPayload('taskItem', '') });
-    //   break;
-    // }
+
+    case TYPE_NOTIFICATION.ORDER_CONVERT_QUOTATION_CUSTOMER:
+      postMessageNewWhBillFirebase({
+        ...get(payload, "notification"),
+        data: data,
+      });
+      break;
+    //   case !!getDataPayload('taskItem'):
+    //     postMessageNewWhBillFirebase({...get(payload, 'notification'),data:getDataPayload('taskItem','')})
+    //       break;
+
     default:
       break;
   }
