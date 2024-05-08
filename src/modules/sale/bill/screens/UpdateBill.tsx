@@ -33,6 +33,8 @@ import useUpdateBillStore from "../storeContext/UpdateBillContext";
 import VoucherInOrder from "~/modules/vouchers/components/VoucherInOrder";
 import WithPermission from "~/components/common/WithPermission";
 import POLICIES from "~/modules/policy/policy.auth";
+import { ReportSalaryPartnerProvider } from "~/modules/reportSalaryPartner/ReportSalaryPartnerProvider";
+import { METHOD_TYPE } from "~/modules/vouchers/constants";
 type propsType = {};
 const Layout = ({ label, children,strong }: { label: any; children: any,strong?:boolean }) => (
   <Row className="hover-dot-between" justify={"space-between"} align="middle">
@@ -54,7 +56,6 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
   const [form] = Form.useForm();
   useResetBillAction();
   const { bill, isLoading,mutateBill,onOpenForm, compareMoney,onOpenFormPayment, refCollection } = useUpdateBillStore();
-  console.log(bill,'bill');
   
   const {
     codeSequence,
@@ -193,10 +194,11 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
                   <Col>
                     <h6>Thông tin khách hàng</h6>
                   </Col>
+
                   <WithPermission permission={refCollection === 'partner' ? POLICIES.READ_VOUCHERBILLPARTNER : POLICIES.READ_VOUCHERPHARMACY}>
-                  <Col style={{ position: 'absolute', right: 0, top: 5 }}>
-                    <Button type="link" onClick={onOpenDetailVouchers}>Xem chi tiết các phiếu</Button>
-                  </Col>
+                    <Col style={{ position: 'absolute', right: 0, top: 5 }}>
+                      <Button type="link" onClick={onOpenDetailVouchers}>Xem chi tiết các phiếu</Button>
+                    </Col>
                   </WithPermission>
                 </Row>
               <Row justify={"space-between"}>
@@ -217,20 +219,25 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
                   </Space>
                   </Col>
                   <Row gutter={10}>
-                    <WithPermission permission={refCollection === 'partner' ? POLICIES.READ_VOUCHERBILLPARTNER : POLICIES.READ_VOUCHERPHARMACY} >
-                    <Col>
-                    {status !== STATUS_BILL.CANCELLED && <Button disabled={remainAmount <= 0} type="primary" size="small" onClick={onOpenForm}>
-                      Tạo phiếu thu
-                    </Button>}
-                    </Col>
-                    </WithPermission>
-                  {compareMoney > 0 &&  <WithPermission permission={refCollection === 'partner' ? POLICIES.READ_VOUCHERBILLPARTNER : POLICIES.READ_VOUCHERPHARMACY}>
-                        <Col>
+                    <ReportSalaryPartnerProvider refCollection={refCollection} methodType={METHOD_TYPE.BILL}>
+                    <WithPermission permission={refCollection === 'partner' ? POLICIES.WRITE_VOUCHERBILLPARTNER : POLICIES.WRITE_VOUCHERPHARMACY}>
+                      <Col>
+                      {status !== STATUS_BILL.CANCELLED && 
+                      <Button disabled={remainAmount <= 0} type="primary" size="small" onClick={onOpenForm}>
+                        Tạo phiếu thu
+                      </Button>}
+                      </Col>
+                      
+              
+                      {compareMoney > 0 &&  
+                      <Col>
                         <Button type="primary" size="small" onClick={onOpenFormPayment}>
                           Tạo phiếu chi
                         </Button>
                       </Col>
-                    </WithPermission>}
+                        }
+                      </WithPermission>
+                    </ReportSalaryPartnerProvider>
                   </Row>
               </Row>
               <Divider />

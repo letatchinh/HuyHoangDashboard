@@ -7,5 +7,6 @@ const apis = {
     create: (data?: any) => requester.post(`/api/v1/report-salary-partner`, data),
     update: (data?: any) => requester.put(`/api/v1/report-salary-partner/${get(data,'_id')}`, data),
     delete: (id?: any) => requester.delete(`/api/v1/report-salary-partner/${id}`),
+    getAccessVoucher: (query?: any) => requester.post(`/api/v1/permission-voucher`, query)
 }
 export default apis;

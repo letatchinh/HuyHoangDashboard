@@ -2,3 +2,7 @@
     min-height: calc(100vh - 68px);
     background-color: white;
 }
+
+[role-hidden=true]{
+    display: none;
+}
