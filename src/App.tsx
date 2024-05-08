@@ -26,29 +26,6 @@ function App(): React.JSX.Element {
 
   const device = DeviceDetector();
   // useUserPolicy(); // Get Policies
-  const [foregroundMessage, setForegroundMessage] = useState(null);
-  // useEffect(() => {
-  //   const handleForegroundMessage = (payload: any) => {
-  //     console.log('Received foreground message:', payload);
-  //     const { notification: { title, body } } = payload;
-  //     alert('Received foreground message:');
-  //     setForegroundMessage(payload); // Update state with new foreground message
-  //   };
-
-  //   const fetchForegroundMessage = async () => {
-  //     console.log('fetchForegroundMessage')
-  //     try {
-  //       const payload = await onForegroundMessage();
-  //       // const payload = await onMessageListener();
-  //       handleForegroundMessage(payload);
-  //     } catch (err) {
-  //       console.error('An error occurred while retrieving foreground message:', err);
-  //     }
-  //   };
-
-  //   fetchForegroundMessage();
-
-  // }, [foregroundMessage]); 
   
   return (
     <>

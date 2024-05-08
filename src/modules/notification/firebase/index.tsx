@@ -2,12 +2,13 @@ import { get } from "lodash";
 import { initializeApp } from "firebase/app";
 import {
   getToken,
-  getMessaging,
+  // getMessaging,
   onMessage,
   isSupported,
 } from "firebase/messaging";
 
-import apis from "../notification.api";
+// import apis from "../notification.api";
+import {getMessaging} from 'firebase/messaging/sw';
 
 import { postMessageNewWhBillFirebase } from "./broadCastChanel/firebaseChanel";
 
@@ -46,10 +47,11 @@ export const getOrRegisterServiceWorker = () => {
         if (serviceWorker) return serviceWorker;
         return window.navigator.serviceWorker.register(
           "/firebase-messaging-sw.js",
-          {
-            scope: "/firebase-push-notification-scope",
-          }
+          // {
+          //   scope: "/firebase-push-notification-scope",
+          // }
         );
+        
       });
   }
   throw new Error("The browser doesn`t support service worker.");
@@ -101,7 +103,9 @@ function requestPermission() {
         .then((firebaseToken) => {
           if (firebaseToken) {
             console.log("HAVE TOKEN");
-            apis.subscribeToken(firebaseToken);
+            console.log(firebaseToken,'firebaseToken');
+            
+            // apis.subscribeToken(firebaseToken);
           }
         })
         .catch((err) =>
@@ -117,8 +121,9 @@ function requestPermission() {
     console.log("Notifications not supported in this browser.");
   }
 }
-export function onMessageListener () {
-    if(!messaging) return 
+export function onMessageListener() {
+  
+  if (!messaging) return;
     onMessage(messaging, (payload: any) => {
         console.log('reiceiver from firebase');
       // CORE

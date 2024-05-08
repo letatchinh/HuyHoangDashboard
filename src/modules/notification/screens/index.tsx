@@ -42,8 +42,8 @@ const NotificationDropdown = (props: any) => {
     [status, startDate, endDate]
   );
 
-  const [MyNotifications, isLoading] = useMyNotifications(query);
-  const notifications = useMergeInitNotifications(MyNotifications)
+  // const [MyNotifications, isLoading] = useMyNotifications(query);
+  // const notifications = useMergeInitNotifications(MyNotifications)
   const countUnread = useCountUnreadMyNotification();
   // const [setNewBill] = useSetNewBill();
   const triggerRefresh = () => {
@@ -104,7 +104,7 @@ const NotificationDropdown = (props: any) => {
           </div>
           <GroupButtonNotify status={status} setStatus={setStatus}  setInputValue={setInputValue}
               inputValue={inputValue} />
-          <SimpleBar style={{ height: "400px" }}>
+          {/* <SimpleBar style={{ height: "400px" }}>
             {isLoading
               ? <SkeletonList rowCount={10} />
               : keys(notifications)?.map((date, index) => <React.Fragment key={date}>
@@ -115,7 +115,7 @@ const NotificationDropdown = (props: any) => {
                 </Divider>
                 {notifications?.[date]?.map((notification: any) => <NotificationItem updateStatus={updateStatus} onClickItem={debounce(triggerRefresh, 800)} data={notification} />)}
               </React.Fragment>)}
-          </SimpleBar>
+          </SimpleBar> */}
 
           <div className="p-2 border-top d-grid">
             <Link
