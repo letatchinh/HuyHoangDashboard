@@ -560,7 +560,7 @@ import { useGetEmployee } from "~/modules/employee/employee.hook";
             </WithPermission>
             <Row className="staff-form__submit-box">
               {!id ? 
-                 <WithOrPermission permission={[POLICIES.UPDATE_VOUCHERPHARMACY, POLICIES.UPDATE_VOUCHERSUPPLIER]}>
+                 <WithOrPermission permission={[POLICIES.WRITE_VOUCHERPHARMACY, POLICIES.WRITE_VOUCHERSUPPLIER]}>
                  <Button icon={<SaveOutlined />} type="primary" htmlType="submit">
                    Lưu
                    </Button>
