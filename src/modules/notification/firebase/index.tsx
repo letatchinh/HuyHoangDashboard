@@ -5,10 +5,8 @@ import {
   // getMessaging,
   onMessage,
   isSupported,
+  getMessaging
 } from "firebase/messaging";
-
-// import apis from "../notification.api";
-import {getMessaging} from 'firebase/messaging/sw';
 
 import { postMessageNewWhBillFirebase } from "./broadCastChanel/firebaseChanel";
 
@@ -125,13 +123,12 @@ export function onMessageListener() {
   
   if (!messaging) return;
     onMessage(messaging, (payload: any) => {
-        console.log('reiceiver from firebase');
+        console.log('reiceiver from firebase',payload);
       // CORE
-      const getDataPayload = (key: any,defaulted='') =>  JSON.parse(get(payload,[`data.gcm.notification.${key}`],JSON.stringify(defaulted)));
       // Post to Broadcast
-      switch (true) {
-          case !!getDataPayload('billQuotation'):
-            postMessageNewWhBillFirebase({...get(payload, 'notification'),data:getDataPayload('billQuotation','')})
+      switch (payload?.data?.type) {
+        case "ORDER_QUOTATION_CUSTOMER":
+            postMessageNewWhBillFirebase({...get(payload, 'notification'),data: payload?.data})
           break;
   
         //   case !!getDataPayload('productDelivery'):
