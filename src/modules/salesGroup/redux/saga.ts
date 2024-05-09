@@ -19,6 +19,15 @@ function* getListBuyGroup({payload:query} : any) : any {
     yield put(salesGroupActions.getListBuyGroupFailed(error));
   }
 }
+// eslint-disable-next-line require-yield
+function* getChildrenBuyGroup({payload:query} : any) : any {
+  try {
+    const data = yield call(api.getChildrenBuyGroup,{targetId:query});
+    yield put(salesGroupActions.getChildrenBuyGroupSuccess(data));
+  } catch (error:any) {
+    yield put(salesGroupActions.getChildrenBuyGroupFailed(error));
+  }
+}
 
 function* getListTeamLeadSalesGroup({payload:query} : any) : any {
   try {
@@ -85,4 +94,5 @@ export default function* salesGroupSaga() {
   yield takeLatest(salesGroupActions.createRequest, createSalesGroup);
   yield takeLatest(salesGroupActions.updateRequest, updateSalesGroup);
   yield takeLatest(salesGroupActions.deleteRequest, deleteSalesGroup);
+  yield takeLatest(salesGroupActions.getChildrenBuyGroupRequest, getChildrenBuyGroup);
 }
