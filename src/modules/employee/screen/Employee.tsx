@@ -352,9 +352,6 @@ export default function Employee({ currentTab }: Props) {
               children: (
                 <CollaboratorProduct
                   id={id}
-                  useAddProduct={useAddProductEmployee}
-                  useRemoveProduct={useRemoveProductEmployee}
-                  useUpdateProduct={useUpdateProductEmployee}
                   useGetUser={useGetEmployee}
                   apiSearchProduct={apis.searchProduct}
                   config={{

@@ -417,10 +417,7 @@ export default function Collaborator({
               label: "Sản phẩm đảm nhiệm",
               children: (
                 <CollaboratorProduct
-                  useAddProduct={useAddProductCollaborator}
                   id={id}
-                  useRemoveProduct={useRemoveProductCollaborator}
-                  useUpdateProduct={useUpdateProductCollaborator}
                   useGetUser={useGetCollaborator}
                   apiSearchProduct={apis.searchProduct}
                   target='partner'
