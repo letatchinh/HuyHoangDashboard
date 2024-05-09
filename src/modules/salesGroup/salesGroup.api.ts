@@ -4,6 +4,7 @@ import requester from "~/api/requester";
 const apis = {
     getAll: (query?: any) => requester.get(`/api/v1/sales-group`, query),
     getAllBuyGroup: (query?: any) => requester.get(`/api/v1/workspace/partner`, query),
+    getChildrenBuyGroup: (query?: any) => requester.post(`/api/v1/workspace/partner-children`, query),
     getBlackList: () => requester.get(`/api/v1/check/sales-group`),
     getListTeamLead: (query?: any) => requester.get(`/api/v1/employee-search-lead`, query),
     getListMember: (query?: any) => requester.get(`/api/v1/employee-search-member`, query),
