@@ -1,6 +1,6 @@
 
 import { get } from "lodash";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import { clearQuerySearch, getExistProp } from "~/utils/helpers";
@@ -14,6 +14,7 @@ import {
 } from "~/utils/hook";
 import { SalesGroupType } from "./salesGroup.modal";
 import { salesGroupActions } from "./redux/reducer";
+import { useDispatch } from "react-redux";
 const MODULE = "salesGroup";
 const MODULE_VI = "";
 const getSelector = (key : any) => (state : any) => state[MODULE][key];
@@ -46,13 +47,20 @@ const getListMemberFailedSelector = getSelector('getListMemberFailed');
 const groupHaveLeaderSelector = getSelector('groupHaveLeader');
 
 const listBuyGroupSelector = getSelector('listBuyGroup');
+const pagingBuyGroupSelector = getSelector('pagingBuyGroup');
 const getListBuyGroupFailedSelector = getSelector('getListBuyGroupFailed');
 
 const createSuccessPartnerSelector = (state : any) => state['collaborator']['createSuccess'];
 const updateSuccessPartnerSelector = (state : any) => state['collaborator']['updateSuccess'];
 const updateSuccessEmployeeSelector = (state : any) => state['employee']['updateSuccess'];
 
+const statesChildrenBuyGroup ={
+  loading: getSelector('loadingGetChildren'),
+  fail: getSelector('getChildrenFail'),
+}
+
 export const useSalesGroupPaging = () => useSelector(pagingSelector);
+export const useBuyGroupPaging = () => useSelector(pagingBuyGroupSelector) as Partial<{current:number, total:number,pageSize:number}>;
 
 export const useGetSalesGroups = (param:any) => {
   return useFetchByParam({
@@ -113,10 +121,16 @@ export const useDeleteSalesGroup = (callback?: any) => {
     loadingSelector: isSubmitLoadingSelector,
   });
 };
+type queryParam = Partial<{
+  page: number,
+  limit: number,
+  keyword:string,
+
+}>
 
 export const useSalesGroupQueryParams = () => {
   const query = useQueryParams();
-  const limit = query.get("limit") || 10;
+  const limit = query.get("limit") || 20;
   const page = query.get("page") || 1;
   const keyword = query.get("keyword");
   const createSuccess : any = useSelector(createSuccessSelector);
@@ -144,7 +158,7 @@ export const useUpdateSalesGroupParams = (
   useEffect(() => {
     setKeyword(get(query, "keyword"));
   }, [query]);
-  const onParamChange = (param: any) => {
+  const onParamChange = (param: queryParam) => {
     // Clear Search Query when change Params
     clearQuerySearch(listOptionSearch, query, param);
 
@@ -164,7 +178,7 @@ export const useUpdateSalesGroupParams = (
     navigate(`${pathname}?${searchString}`);
   };
 
-  return [keyword, { setKeyword, onParamChange }];
+  return [keyword, { setKeyword, onParamChange }] as const ;
 };
 
 
@@ -203,7 +217,7 @@ export const useResetAction = () => {
 
 export const useBuyGroupQueryParams = () => {
   const query = useQueryParams();
-  const limit = query.get("limit") || 10;
+  const limit = query.get("limit") || 20;
   const page = query.get("page") || 1;
   const keyword = query.get("keyword");
   const createPartnerSuccess = useSelector(createSuccessPartnerSelector);
@@ -227,6 +241,14 @@ export const useGetBuyGroups = (param:any) => {
     failedSelector: getListBuyGroupFailedSelector,
     param
   });
+};
+export const useGetChildrenBuyGroups = () => {
+  const dispatch = useDispatch();
+  const isLoading = useSelector(statesChildrenBuyGroup.loading);
+  const action = useCallback((param:string)=>{
+      dispatch(salesGroupActions.getChildrenBuyGroupRequest(param))
+  },[dispatch])
+  return { isLoading, action }
 };
 
 export const useGetBuyGroup = (id: any) => {
