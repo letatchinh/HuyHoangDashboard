@@ -45,6 +45,21 @@ function App(): React.JSX.Element {
           Component={() =>  device?.isMobile !== true ? <CreateBillPage/> :  <CreateBillPageInDevice />}
         />
         <Route
+          key={PATH_APP.bill.createEmployee}
+          path={PATH_APP.bill.createEmployee}
+          Component={() =>  device?.isMobile !== true ? <CreateBillPage/> :  <CreateBillPageInDevice />}
+        />
+        <Route
+          key={PATH_APP.bill.createPharmacy}
+          path={PATH_APP.bill.createPharmacy}
+          Component={() =>  device?.isMobile !== true ? <CreateBillPage/> :  <CreateBillPageInDevice />}
+        />
+        <Route
+          key={PATH_APP.bill.createCollaborator}
+          path={PATH_APP.bill.createCollaborator}
+          Component={() =>  device?.isMobile !== true ? <CreateBillPage/> :  <CreateBillPageInDevice />}
+        />
+        <Route
           key={PATH_APP.orderSupplier.create}
           path={PATH_APP.orderSupplier.create}
           Component={() =>  <CreateOrderSupplier />}

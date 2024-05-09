@@ -205,7 +205,7 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
                     <h6>Thông tin nhà cung cấp</h6>
                   </Col>
                   <WithPermission permission={POLICIES.READ_VOUCHERSUPPLIER}>
-                      <Col style={{ position: 'absolute', right: 0, top: 5 }}>
+                      <Col style={{ position: 'absolute', right: 0, top: 0 }}>
                       <Button type="link" onClick={onOpenDetailVouchers}>Xem chi tiết các phiếu</Button>
                       </Col>
                   </WithPermission>

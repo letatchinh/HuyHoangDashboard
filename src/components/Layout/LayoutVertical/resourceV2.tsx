@@ -279,6 +279,12 @@ export const resource: ItemType[] =[
         key: PATH_APP.quotation.pharmacy,
         permission: [POLICIES.READ_QUOTATIONPHARMACY],//
       },
+      // {
+      //   label: "Tạo đơn hàng tạm",
+      //   path: PATH_APP.bill.createPharmacy,
+      //   key: PATH_APP.bill.createPharmacy,
+      //   permission: [POLICIES.WRITE_QUOTATIONPHARMACY],//
+      // },
       {
         label: "Luỹ kế mặt hàng",
         path: PATH_APP.bill.lk,
@@ -428,8 +434,8 @@ export const resource: ItemType[] =[
       },
       {
         label: "Tạo đơn hàng tạm",
-        path: PATH_APP.bill.create,
-        key: PATH_APP.bill.create,
+        path: PATH_APP.bill.createEmployee,
+        key: PATH_APP.bill.createEmployee,
         permission: [POLICIES.WRITE_QUOTATIONEMPLOYEE],//
       },
     ]
@@ -468,8 +474,8 @@ export const resource: ItemType[] =[
       },
       {
         label: "Tạo đơn hàng tạm",
-        path: PATH_APP.bill.create,
-        key: PATH_APP.bill.create,
+        path: PATH_APP.bill.createCollaborator,
+        key: PATH_APP.bill.createCollaborator,
         permission: [POLICIES.WRITE_QUOTATIONPARTNER],//
       },
       {

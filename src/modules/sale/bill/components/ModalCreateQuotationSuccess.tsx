@@ -1,6 +1,8 @@
 import { Button, Result, Typography } from "antd";
 import { get } from "lodash";
 import React, { useCallback, useMemo } from "react";
+import { useLocation } from "react-router-dom";
+import { REF_COLLECTION } from "~/constants/defaultValue";
 import { useGetProfile } from "~/modules/auth/auth.hook";
 import { DataResultType } from "~/pages/Dashboard/Bill/CreateBill";
 import { PATH_APP } from "~/routes/allPath";
@@ -14,30 +16,56 @@ export default function ModalCreateQuotationSuccess({
 }: propsType): React.JSX.Element {
   const { type } = data || {};
   const profile = useGetProfile();
-  const concatPath = useMemo(()=> profile?.role === 'staff'? '': `&refCollection=${profile?.role}` ,[profile])
+  const {pathname} = useLocation();
+  const checkPathCreate = useMemo(() => {
+    if (pathname === PATH_APP.bill.createCollaborator) {
+      return PATH_APP.quotation.collaborator
+    };
+    if (pathname === PATH_APP.bill.createEmployee) {
+      return PATH_APP.quotation.employee
+    };
+    if (pathname === PATH_APP.bill.createPharmacy) { 
+      return PATH_APP.quotation.pharmacy
+    };
+    return PATH_APP.bill.quotation
+  }, [pathname]);
+
+  const checkPathConvert = useMemo(() => {
+    if (pathname === PATH_APP.bill.createCollaborator) {
+      return PATH_APP.bill.collaborator
+    };
+    if (pathname === PATH_APP.bill.createEmployee) {
+      return PATH_APP.bill.employee
+    };
+    if (pathname === PATH_APP.bill.createPharmacy) { 
+      return PATH_APP.bill.pharmacy
+    };
+    return PATH_APP.bill.root
+  }, [pathname]);
+  
   const goDetail = useCallback(() => {
     let handle;
     switch (type) {
       case "createQuotation":
         handle = () =>
           window.open(
-            PATH_APP.bill.quotation +
+            checkPathCreate +
               "?page=1&limit=10&keyword=" + 
-              get(data, "code") + concatPath
+              get(data, "codeSequence") 
           );
         break;
       case "updateQuotation":
         handle = () =>
           window.open(
-            PATH_APP.bill.quotation +
+            checkPathCreate +
               "?page=1&limit=10&keyword=" +
-              get(data, "code")  + concatPath
+              get(data, "codeSequence")  
           );
         break;
       case "convertQuotation":
         handle = () =>
           window.open(
-            PATH_APP.bill.root + "?page=1&limit=10&keyword=" + get(data, "code")  + concatPath
+            checkPathConvert + "?page=1&limit=10&keyword=" + get(data, "codeSequence")  
           );
         break;
       default:
@@ -94,14 +122,14 @@ export default function ModalCreateQuotationSuccess({
             </Typography.Text>
           </span>
         }
-        extra={[
+        extra={ data ? [
           <Button onClick={goDetail} type="primary" key="console">
             Đi đến đơn hàng
           </Button>,
           <Button onClick={onCancel} key="buy">
             Đóng
           </Button>,
-        ]}
+        ]: [] }
       />
     </div>
   );

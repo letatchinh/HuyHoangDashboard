@@ -8,6 +8,9 @@ import POLICIES, { CORE_ACTION } from "~/modules/policy/policy.auth";
 import { PoliciesType, policyType } from "~/modules/policy/policy.modal";
 import { useAdapter } from "~/modules/auth/auth.hook";
 import { ADAPTER_KEY } from "~/modules/auth/constants";
+import { useLocation } from "react-router-dom";
+import { PATH_APP } from "~/routes/allPath";
+import { useMatchPolicy } from "~/modules/policy/policy.hook";
 
 export const getPaging = (response: any) => ({
   current: response.page,
@@ -352,4 +355,36 @@ export const useIsAdapterSystem = () => {
   const adapter = useAdapter();
   const isAdapterSystem = useMemo(() => adapter === ADAPTER_KEY.STAFF, [adapter]);
   return !!isAdapterSystem; // return true if adapter is system
+};
+
+type keyRefCollection = 'quotation' | 'bill';
+export const checkRefCollection = (key: keyRefCollection,pathname: string) => {
+  let refCollection = '';
+  if (pathname === PATH_APP[key].root) {
+    return 
+  };
+  if (pathname === PATH_APP[key].employee) {
+    return refCollection = REF_COLLECTION.EMPLOYEE
+  };
+  if (pathname === PATH_APP[key].collaborator) {
+    return refCollection = REF_COLLECTION.PARTNER
+  };
+  if (pathname === PATH_APP[key].pharmacy) {
+    return refCollection = REF_COLLECTION.PHARMACY
+  };
+};
+export const CheckPermission: any = (pathname: string) => {
+   const newPathname = pathname.replace(/\/[0-9a-fA-F]+$/, '');
+  if (newPathname === PATH_APP.bill.root) {
+    return 'bill'
+  };
+  if (newPathname === PATH_APP.bill.employee) {
+    return 'billEmployee'
+  };
+  if (newPathname === PATH_APP.bill.collaborator) {
+    return 'billPartner'
+  };
+  if (newPathname === PATH_APP.bill.pharmacy) {
+    return 'billPharmacy'
+  };
 };

@@ -1,9 +1,10 @@
+import { REF_COLLECTION } from './../../../constants/defaultValue';
 import { get } from "lodash";
 import { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import { RootState } from "~/redux/store";
-import { clearQuerySearch, getExistProp } from "~/utils/helpers";
+import { checkRefCollection, clearQuerySearch, getExistProp } from "~/utils/helpers";
 import {
   getSelectors,
   useFailed,
@@ -15,6 +16,7 @@ import {
   useSuccess,
 } from "~/utils/hook";
 import { billSliceAction } from "./redux/reducer";
+import { PATH_APP } from "~/routes/allPath";
 const MODULE = "bill";
 const MODULE_VI = "";
 const getSelector = (key : string) => (state:any) => state[MODULE][key];
@@ -127,13 +129,14 @@ export const useUpdateBillItem = (callback?: any) => {
 
 export const useBillQueryParams = (status? : string) => {
   const query = useQueryParams();
+  const { pathname } = useLocation();
   const limit = query.get("limit") || 10;
   const page = query.get("page") || 1;
   const keyword = query.get("keyword");
   const supplierIds = query.get("supplierIds");
   const employeeIds = query.get("employeeIds");
   const partnerIds = query.get("partnerIds");
-  const refCollection = query.get("refCollection");
+  const refCollection = query.get("refCollection") || checkRefCollection('bill',pathname);
   const createSuccess = useSelector(createSuccessSelector);
   const deleteSuccess = useSelector(deleteSuccessSelector);
   return useMemo(() => {
@@ -203,4 +206,31 @@ export const useGetProductListSuggest = (param?: any) => {
 };
 export const useResetBillAction = () => {
   return useResetState(billSliceAction.resetAction);
+};
+
+
+export const redirectRouterBillCreate = (pathname: string) => {
+  if (pathname === PATH_APP.quotation.employee) {
+    return PATH_APP.bill.createEmployee
+  };
+  if (pathname === PATH_APP.quotation.collaborator) {
+    return PATH_APP.bill.createCollaborator
+  };
+  if (pathname === PATH_APP.quotation.pharmacy) {
+    return PATH_APP.bill.createPharmacy
+  };
+  return PATH_APP.bill.create
+};
+
+export const redirectRouterBillId = (pathname: string) => {
+  if (pathname === PATH_APP.bill.employee || pathname === PATH_APP.quotation.employee) {
+    return PATH_APP.bill.employee
+  };
+  if (pathname === PATH_APP.bill.collaborator || pathname === PATH_APP.quotation.collaborator) {
+    return PATH_APP.bill.collaborator
+  };
+  if (pathname === PATH_APP.bill.pharmacy || pathname === PATH_APP.quotation.pharmacy) {
+    return PATH_APP.bill.pharmacy
+  };
+  return PATH_APP.bill.root
 };

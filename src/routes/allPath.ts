@@ -66,22 +66,32 @@ export const PATH_APP = {
   },
   bill: {
     root: path(ROOTS.app, "/bill"),
-    update: path(ROOTS.app, "/bill/:id"),
+    update: path(ROOTS.app, `/bill/:id`),
     create: path(ROOTS.app, "/bill/create"),
     quotation: path(ROOTS.app, "/quotation"),
     lk: path(ROOTS.app, "/lk"),
-    pharmacy: path(ROOTS.app, `/bill?refCollection=${REF_COLLECTION.PHARMA_PROFILE}`),
-    employee: path(ROOTS.app, `/bill?refCollection=${REF_COLLECTION.EMPLOYEE}`),
-    collaborator: path(ROOTS.app, `/bill?refCollection=${REF_COLLECTION.PARTNER}`),
+
+    pharmacy: path(ROOTS.app, `/bill-pharmacy`),
+    employee: path(ROOTS.app, `/bill-employee`),
+    collaborator: path(ROOTS.app, `/bill-collaborator`),
+
+    createPharmacy: path(ROOTS.app, `/bill-pharmacy/create`),
+    createEmployee: path(ROOTS.app, `/bill-employee/create`),
+    createCollaborator: path(ROOTS.app, `/bill-collaborator/create`),
+
+    updatePharmacy: path(ROOTS.app, `/bill-pharmacy/:id`),
+    updateEmployee: path(ROOTS.app, `/bill-employee/:id`),
+    updateCollaborator: path(ROOTS.app, `/bill-collaborator/:id`),
   },
 
   quotation: {
     root: path(ROOTS.app, "/quotation"),
     update: path(ROOTS.app, "/quotation/:id"),
     create: path(ROOTS.app, "/quotation/create"),
-    pharmacy: path(ROOTS.app, `/quotation?refCollection=${REF_COLLECTION.PHARMA_PROFILE}`),
-    employee: path(ROOTS.app, `/quotation?refCollection=${REF_COLLECTION.EMPLOYEE}`),
-    collaborator: path(ROOTS.app, `/quotation?refCollection=${REF_COLLECTION.PARTNER}`),
+    
+    pharmacy: path(ROOTS.app, `/quotation-pharmacy`),
+    employee: path(ROOTS.app, `/quotation-employee`),
+    collaborator: path(ROOTS.app, `/quotation-collaborator`),
   },
   vouchers: {
     root: path(ROOTS.app, "/vouchers"),

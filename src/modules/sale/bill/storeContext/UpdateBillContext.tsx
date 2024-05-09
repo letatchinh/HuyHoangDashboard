@@ -43,7 +43,6 @@ export function UpdateBillProvider({
     const [isOpenForm, setIsOpenForm] = useState(false);
     const [isOpenFormPayment, setIsOpenFormPayment] = useState(false);
     // const refCo
-    console.log(refCollection?.toUpperCase(),'refCollection?.toUpperCase()');
     
   const compareMoney = useMemo(() => pair - totalPrice, [bill]);
   

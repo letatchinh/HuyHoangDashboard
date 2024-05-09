@@ -2,11 +2,13 @@ import { UserOutlined } from "@ant-design/icons";
 import { Col, Form, Row } from "antd";
 import { SelectProps } from "antd/lib/index";
 import { get } from "lodash";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import DebounceSelect from "~/components/common/DebounceSelect";
 import PharmacyModule from "~/modules/pharmacy";
 import useNotificationStore from "~/store/NotificationContext";
 import { FormFieldCreateBill } from "../bill.modal";
+import { useLocation } from "react-router-dom";
+import { PATH_APP } from "~/routes/allPath";
 interface propsType extends SelectProps {
   form?: any;
   allowClear?: boolean;
@@ -30,15 +32,46 @@ export default function SelectPharmacy({
 }: propsType): React.JSX.Element {
   const { onNotify } = useNotificationStore();
   const [loading,setLoading] = useState(false);
-  const [initOption,setInitOption] = useState([]);
+  const [initOption, setInitOption] = useState([]);
+  const { pathname } = useLocation();
+  
+  const filterOption : any= (data: any[]) => {
+    if (pathname === PATH_APP.bill.createCollaborator) {
+      return data?.filter((item) => item?.type === 'ctv')
+    };
+    if (pathname === PATH_APP.bill.createEmployee || pathname === PATH_APP.bill.createPharmacy) {
+      return data?.filter((item) => item?.type === "pharmacy")
+    };
+    return data
+  };
+
+  const typeData = useMemo(() => {
+    if (pathname === PATH_APP.bill.createCollaborator) { 
+      return "ctv"
+    };
+    if (pathname === PATH_APP.bill.createEmployee || pathname === PATH_APP.bill.createPharmacy) {
+      return "pharmacy"
+    };
+    return null;
+  }, [id, pathname]);
+  
+  const isSentOptionWith : boolean= useMemo(() => {
+    if ((pathname === PATH_APP.bill.createCollaborator || pathname === PATH_APP.bill.createEmployee
+      || pathname === PATH_APP.bill.createPharmacy || pathname === PATH_APP.bill.create ) && !id) {
+      return false
+    };
+    return true;
+  },[id,pathname]);
+
   const fetchOptions : any = async (keyword : string) => {
     try {
       const pharmacies = await PharmacyModule.api.search({
         ...id && !keyword && {id},
-        keyword : keyword || "",
-        optionWith : {id : [id]}
+        ...isSentOptionWith && {optionWith: { id: [id] }},
+        keyword: keyword || "",
+        type: typeData
       });
-      const newOptions = get(pharmacies,'docs',[])?.map((item: ItemSearch) => ({
+      const newOptions = filterOption(get(pharmacies,'docs',[]))?.map((item: ItemSearch) => ({
         label: get(item, "name"),
         value: get(item, "_id"),
         data : item
@@ -57,10 +90,11 @@ export default function SelectPharmacy({
       setLoading(true);
       const pharmacies = await PharmacyModule.api.search({
         // ...id && {id},
-        optionWith : {id : [id]}
+       ...isSentOptionWith && {optionWith: { id: [id] }},
+        type:typeData
       });
       
-      const newOptions = get(pharmacies,'docs',[])?.map((item: ItemSearch) => ({
+      const newOptions = filterOption(get(pharmacies,'docs',[]))?.map((item: ItemSearch) => ({
         label: get(item, "name"),
         value: get(item, "_id"),
         data : item
@@ -78,7 +112,7 @@ export default function SelectPharmacy({
     };
       fetchInit();
 
-  },[]);
+  },[pathname]);
   
   return (
     <Row gutter={8}  >
@@ -90,7 +124,7 @@ export default function SelectPharmacy({
           rules={[
             {
               required: true,
-              message: "Vui lòng chọn nhà thuốc",
+              message: typeData === "ctv" ? "Vui lòng chọn cộng tác viên" : "Vui lòng chọn nhà thuốc",
             },
           ]}
           colon={false}
@@ -100,7 +134,7 @@ export default function SelectPharmacy({
           <DebounceSelect
             size="large"
             loading={loading}
-            placeholder="Chọn nhà thuốc"
+            placeholder= {typeData === "ctv" ? "Chọn cộng tác viên" : "Chọn nhà thuốc"}
             fetchOptions={fetchOptions}
             style={{ width: "100%" }}
             initOptions={initOption}
