@@ -9,17 +9,12 @@ import React, {
 import ModalAnt from "~/components/Antd/ModalAnt";
 import apis from "~/modules/collaborator/collaborator.api";
 import {
-  useCreateCollaborator,
   useGetCollaborator,
-  useUpdateCollaborator,
 } from "~/modules/collaborator/collaborator.hook";
 import CollaboratorAddress from "~/modules/collaborator/components/CollaboratorAddress";
-import CollaboratorForm from "~/modules/collaborator/components/CollaboratorForm";
 import CollaboratorProduct from "~/modules/collaborator/components/CollaboratorProduct";
 import {
   useGetEmployee,
-  useCreateEmployee,
-  useUpdateEmployee,
 } from "~/modules/employee/employee.hook";
 import apisEmployee from "~/modules/employee/employee.api";
 import {
@@ -29,20 +24,22 @@ import {
   useGetChildrenBuyGroups,
   useUpdateSalesGroupParams,
 } from "../../salesGroup.hook";
-import EmployeeForm from "~/modules/employee/components/EmployeeForm";
 import { LoadTree } from "./LoadTree";
 import { RenderItemTree } from "./RenderItemTree";
 import SearchAnt from "~/components/Antd/SearchAnt";
 import Context from "./Context";
 import DrawerBuyGroup from "./DrawerBuyGroup";
+import RenderFormModel from "./RenderFormModel";
+import { BuyGroupType } from "../../salesGroup.modal";
 type propsType = {
   activeKey: "OTC" | "B2C";
 };
+type FuncType = (T?:any)=>void
 
 export default function BuyGroup(props: propsType): React.JSX.Element {
 
   const [id, setId] = useState<any>();
-  const [typeUser, setTypeUser] = useState<any>();
+  const [typeUser, setTypeUser] = useState<BuyGroupType['type']>('partner');
   const [query] = useBuyGroupQueryParams();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [keyword, { onParamChange }] = useUpdateSalesGroupParams(query);
@@ -51,28 +48,19 @@ export default function BuyGroup(props: propsType): React.JSX.Element {
   const { action } = useGetChildrenBuyGroups();
   const [open, setOpen] = useState(false);
 
-  const onOpen = useCallback((id?: any, type?: any) => {
-    if (id) {
-      setId(id);
-    }
-    if (type) {
+  const onOpen = useCallback((id?: any, type: BuyGroupType['type'] ='partner') => {
+      setId(id??null);
       setTypeUser(type);
-    }
-    setOpen(true);
+      setOpen(true);
   }, []);
   const onClose = useCallback(() => {
     setOpen(false);
     setId(null);
-    setTypeUser(null);
+    setTypeUser('partner');
   }, []);
-  const [isSubmitLoading, handleCreate] = useCreateCollaborator(onClose);
-  const [, handleUpdate] = useUpdateCollaborator(onClose);
-  const [isSubmitLoadingEmployee, handleCreateEmployee] =
-    useCreateEmployee(onClose);
-  const [, handleUpdateEmployee] = useUpdateEmployee(onClose);
 
   const returnFunc = useCallback(
-    (funcP: (T?: any) => void, funE: (T?: any) => void) =>
+    (funcP: FuncType, funE: FuncType) =>
       typeUser === "partner" ? funcP : funE,
     [typeUser]
   );
@@ -81,24 +69,8 @@ export default function BuyGroup(props: propsType): React.JSX.Element {
       {
         key: "1",
         label: "Hồ sơ",
-        children:
-          typeUser === "partner" ? (
-            <CollaboratorForm
-              id={id}
-              handleCloseModal={onClose}
-              handleCreate={handleCreate}
-              handleUpdate={handleUpdate}
-              isSubmitLoading={isSubmitLoading}
-            />
-          ) : (
-            <EmployeeForm
-              id={id}
-              handleCloseModal={onClose}
-              handleUpdate={handleUpdateEmployee}
-              handleCreate={handleCreateEmployee}
-              isSubmitLoading={isSubmitLoadingEmployee}
-            />
-          ),
+        children: <RenderFormModel typeUser={typeUser} id={id} onClose={onClose} />
+         
       },
       {
         key: "2",
@@ -133,7 +105,7 @@ export default function BuyGroup(props: propsType): React.JSX.Element {
       });
     }
     return result;
-  }, [id, typeUser, isSubmitLoading, isSubmitLoadingEmployee, returnFunc]);
+  }, [id, typeUser, returnFunc]);
   return (
     <Context.Provider activeKey={props.activeKey}>
       <div className="buy_group">
@@ -141,7 +113,7 @@ export default function BuyGroup(props: propsType): React.JSX.Element {
           <div className="header-buy-group">
             <Button
               icon={<PlusOutlined />}
-              onClick={() => onOpen()}
+              onClick={() => onOpen(null,'partner')}
               className="mb-2"
               type="primary"
             >

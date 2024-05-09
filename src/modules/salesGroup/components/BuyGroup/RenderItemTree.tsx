@@ -12,7 +12,7 @@ import AvatarShortOrName from "~/components/common/AvatarShortOrName";
 import { BuyGroupType } from "../../salesGroup.modal";
 import { contextBuyGroup } from "./Context";
 
-export  const RenderItemTree = ({node,onOpen}:{node:{data:BuyGroupType},onOpen:(T:any,P:any)=>void}) => {
+export  const RenderItemTree = ({node,onOpen}:{node:{data:BuyGroupType},onOpen:(T:any,P:BuyGroupType['type'])=>void}) => {
   const data: BuyGroupType | undefined = get(node, "data");
   const {setDrawerOpen,setSelectId,setObjSelectId}=contextBuyGroup.useContextBuyGroup
   return (
