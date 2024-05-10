@@ -9,6 +9,8 @@ import POLICIES, { CORE_ACTION } from "~/modules/policy/policy.auth";
 import { PoliciesType, policyType } from "~/modules/policy/policy.modal";
 import { useAdapter } from "~/modules/auth/auth.hook";
 import { ADAPTER_KEY } from "~/modules/auth/constants";
+import relativeTime from "dayjs/plugin/relativeTime";
+import localeEn from "dayjs/locale/vi"; // With a custom alias for the locale object
 
 export const getPaging = (response: any) => ({
   current: response.page,
@@ -365,4 +367,11 @@ export const useIsAdapterSystem = () => {
   const adapter = useAdapter();
   const isAdapterSystem = useMemo(() => adapter === ADAPTER_KEY.STAFF, [adapter]);
   return !!isAdapterSystem; // return true if adapter is system
+};
+
+
+export const daysAgo = (postDate: any) => { 
+  dayjs.extend(relativeTime).locale(localeEn) 
+  var fromNowOn = dayjs(postDate).fromNow(); 
+  return(fromNowOn)
 };

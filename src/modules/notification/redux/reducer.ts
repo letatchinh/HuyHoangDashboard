@@ -3,7 +3,7 @@ import { get } from "lodash";
 import { InstanceModuleRedux } from "~/redux/instanceModuleRedux";
 import { initStateSlice } from "~/redux/models";
 import { getPaging } from "~/utils/helpers";
-import { STATUS_READ } from "../notification.modal";
+import { STATUS_READ } from "../constants";
 interface cloneInitState extends initStateSlice {
   // Add cloneInitState Type Here
   countUnread?: any;
@@ -29,10 +29,10 @@ class NotificationClassExtend extends InstanceModuleRedux {
         state.isLoading = false;
         state.getListFailed = payload;
       },
-      changeNotificationRequest: (state: cloneInitState) => {
+      updateRequest: (state: cloneInitState) => {
         state.isLoading = true;
       },
-      changeNotificationSuccess: (state: cloneInitState, { payload }: any) => {
+      updateSuccess: (state: cloneInitState, { payload }: any) => {
         state.list = state.list?.map((notification: any) => {
           const isExist = payload?.includes(get(notification, '_id'))
           if (isExist) {
@@ -40,6 +40,14 @@ class NotificationClassExtend extends InstanceModuleRedux {
           } else {
             return notification;
           }})
+      },
+      updateFailed: (state: cloneInitState, { payload }: any) => {
+        state.isLoading = false;
+        state.updateFailed = payload; 
+      },
+      changeStatus: (state: cloneInitState) => {
+        console.log(1)
+        state.isLoading = true;
       },
       // Want Add more reducer Here...
     }

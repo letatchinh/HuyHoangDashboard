@@ -102,7 +102,6 @@ function requestPermission() {
         .then((firebaseToken) => {
           if (firebaseToken) {
             console.log("HAVE TOKEN");
-            console.log(firebaseToken, "firebaseToken");
             apis.subscribeToken(firebaseToken);
           }
         })
@@ -135,6 +134,12 @@ export function onMessageListener() {
         break;
 
       case TYPE_NOTIFICATION.ORDER_CONVERT_QUOTATION_CUSTOMER:
+        postMessageNewWhBillFirebase({
+          ...get(payload, "notification"),
+          data: data,
+        });
+        break;
+      case TYPE_NOTIFICATION.ORDER_SUPPLIER:
         postMessageNewWhBillFirebase({
           ...get(payload, "notification"),
           data: data,

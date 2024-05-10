@@ -2,7 +2,7 @@ import { get, groupBy } from "lodash";
 import { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
-import { clearQuerySearch, getExistProp } from "~/utils/helpers";
+import { clearQuerySearch, daysAgo, getExistProp } from "~/utils/helpers";
 import {
   getSelectors,
   useAction,
@@ -61,7 +61,7 @@ export const useMergeInitNotifications = (notifications: any) => {
       if (dayjs().diff(date, "d") >= 2) {
         return date.format("DD-MM-YYYY");
       } else {
-        return date.fromNow();
+        return 'Một ngày trước';
       }
     });
   }, [notifications]);
@@ -79,27 +79,25 @@ export const useGetNotification = (id: any) => {
 };
 
 export const useChangeStatusNotification = () => {
-
-  return useSubmit({
-    loadingSelector: isSubmitLoadingSelector,
-    action: notificationSliceActions.changeNotificationRequest,
-  });
+return useSubmit({
+  action: notificationSliceActions.updateRequest,
+  loadingSelector: isSubmitLoadingSelector,
+});
 };
 
+// export const useUpdateNotification = (callback?: any) => {
+//   useSuccess(
+//     updateSuccessSelector,
+//     `Cập nhật ${MODULE_VI} thành công`,
+//     callback
+//   );
+//   useFailed(updateFailedSelector);
 
-export const useUpdateNotification = (callback?: any) => {
-  useSuccess(
-    updateSuccessSelector,
-    `Cập nhật ${MODULE_VI} thành công`,
-    callback
-  );
-  useFailed(updateFailedSelector);
-
-  return useSubmit({
-    action: notificationSliceActions.updateRequest,
-    loadingSelector: isSubmitLoadingSelector,
-  });
-};
+//   return useSubmit({
+//     action: notificationSliceActions.updateRequest,
+//     loadingSelector: isSubmitLoadingSelector,
+//   });
+// };
 
 export const useDeleteNotification = (callback?: any) => {
   useSuccess(deleteSuccessSelector, `Xoá ${MODULE_VI} thành công`, callback);

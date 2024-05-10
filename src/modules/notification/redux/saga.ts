@@ -29,7 +29,8 @@ function* getListNotification({payload:query} : any) : any {
 //   }
 // }
 
-function* updateStatusNotification({payload} : any) : any {
+function* updateStatusNotification({ payload }: any): any {
+  console.log('saga')
   try {
     const data = yield call(api.updateStatus,payload);
     yield put(notificationSliceActions.updateSuccess(data));
