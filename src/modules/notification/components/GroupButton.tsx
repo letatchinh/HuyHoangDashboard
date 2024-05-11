@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Button, Typography, DatePicker } from 'antd';
 import '../notification.style.scss'
+import { zIndexHeader } from '../constants';
 
 const { RangePicker } = DatePicker;
 
@@ -18,9 +19,10 @@ interface FilterByDayProps {
 const FilterByDay: React.FC<FilterByDayProps> = ({ inputValue, setInputValue }) => {
   return (
     <RangePicker
+      popupStyle={{zIndex: zIndexHeader+1}}
       value={inputValue}
       allowEmpty={[true, true]}
-      style={{ marginTop: '8px', width: '98%' }}
+      style={{ marginTop: '8px', width: '98%'}}
       onChange={(dates) => {
         setInputValue(dates || [null, null]);
       }}

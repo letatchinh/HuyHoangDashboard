@@ -4,7 +4,7 @@
     position: sticky;
     top: 0;
     box-shadow: $default-box-shadow;
-    z-index: 2000;
+    z-index: $z-index-header;
     &__row {
       padding-right: 10px;
       padding-left: 10px;

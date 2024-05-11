@@ -25,4 +25,4 @@ export const TYPE_NOTIFICATION_ICON : any = {
   ORDER_QUOTATION_CUSTOMER:'',
   ORDER_SUPPLIER:'',
 };
-
+export const zIndexHeader = 2000;
