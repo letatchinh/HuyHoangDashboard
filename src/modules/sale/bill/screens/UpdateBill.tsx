@@ -54,6 +54,8 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
   const [form] = Form.useForm();
   useResetBillAction();
   const { bill, isLoading,mutateBill,onOpenForm, compareMoney,onOpenFormPayment } = useUpdateBillStore();
+  console.log(bill,'bill');
+  
   const {
     codeSequence,
     createdAt,
@@ -69,6 +71,7 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
     totalReceiptAmount,
     remainAmount,
     totalFee,
+    feeDetail,
   } = bill || {};
   const canUpdateBill = PolicyModule.hook.useMatchPolicy(
     PolicyModule.POLICIES.UPDATE_BILL
@@ -205,7 +208,7 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
                     {/* <Avatar /> */}
                     <div>
                       <p className="bill-page-update--infoPharmacy__info__name">
-                        {get(bill, "pharmacy.name", "")}
+                        {get(bill, "pharmacy.name", get(bill, "pharmacy.fullName", ""))}
                       </p>
                       <p className="bill-page-update--infoPharmacy__info__phone">
                         {get(bill, "pharmacy.phoneNumber", "")}
@@ -229,8 +232,8 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
                   </Row>
               </Row>
               <Divider />
-              <h6>Địa chỉ</h6>
-              {concatAddress(get(bill, "pharmacy.address"))}
+              <h6>Địa chỉ giao</h6>
+              {get(bill, "deliveryAddress",'')}
             </WhiteBox>
           </div>
         </Col>
@@ -250,10 +253,11 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
                 {get(createBy, "fullName", "")}
               </Layout>
               <Layout label={"Tổng số tiền"}>{formatter(get(bill,'totalAmountBill',0))}</Layout>
-              <Layout label={"Phụ phí"}>{formatter(get(bill,'totalFee',0))}</Layout>
               <Layout label={"Chiết khấu"}>-{formatter(get(bill,'totalDiscountBill',0))}</Layout>
               <Layout label={"Tổng số tiền sau chiết khấu"}>{formatter(get(bill,'totalAfterDiscountBill',0))}</Layout>
               {/* <Layout label={"Đã trả trước"}>-{formatter(pair)}</Layout> */}
+              <Layout label={"Phụ phí"}>{formatter(get(feeDetail,'SUB_FEE',0))}</Layout>
+              <Layout label={"Vận chuyển"}>{formatter(get(feeDetail,'LOGISTIC',0))}</Layout>
               <Layout label={"Đã thanh toán"}>-{formatter(totalReceiptAmount)}</Layout>
               <Layout label={"Đã thanh toán và xác nhận"}>-{formatter(totalReceiptVoucherCompleted + (pair || 0))}</Layout>
               <Layout strong label={"Tổng số tiền còn lại"}>

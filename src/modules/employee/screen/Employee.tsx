@@ -157,14 +157,18 @@ export default function Employee({ currentTab }: Props) {
       title: 'Mã trình dược viên',
       dataIndex: 'employeeNumber',
       key: 'employeeNumber',
-      render: (value: any, record: any) => (
-        <Button type="link" onClick={() => handleOpenModal(record._id)}>{value}</Button>
-      ),
+      align : 'center',
+      // render: (value: any, record: any) => (
+      //   <Button type="link" onClick={() => handleOpenModal(record._id)}>{value}</Button>
+      // ),
     },
     {
       title: 'Tên trình dược viên',
       dataIndex: 'fullName',
-      key: 'fullName'
+      key: 'fullName',
+      render: (value: any, record: any) => (
+        <Button type="link" onClick={() => handleOpenModal(record._id)}>{value}</Button>
+      ),
     },
     ...(isCanUpdate
       ? [
@@ -185,7 +189,7 @@ export default function Employee({ currentTab }: Props) {
                         okText="Duyệt"
                         cancelText="Huỷ"
                       >
-                        <Button color="green">
+                        <Button size="small" color="green">
                           {PROCESS_STATUS_VI["NEW"]}
                         </Button>
                       </Popconfirm>
@@ -203,6 +207,7 @@ export default function Employee({ currentTab }: Props) {
       title: 'Số điện thoại',
       dataIndex: 'phoneNumber',
       key: 'phoneNumber',
+      align : 'center',
     },
     {
       title: 'Email',
@@ -270,25 +275,27 @@ export default function Employee({ currentTab }: Props) {
           isShowButtonAdd
           handleOnClickButton={() => handleOpenModal()}
           onChange={setKeyword}
-          onSearch={(e: any)=> onParamChange({keyword: e})}
+          onSearch={(e: any) => onParamChange({ keyword: e })}
           permissionKey={[POLICIES.WRITE_EMPLOYEE]}
           addComponent={
-            canDownload ?  <Col>
+            canDownload ? (
+              <Col>
                 <ExportExcelButton
-                  api='employee'
-                  exportOption = 'employee'
+                  api="employee"
+                  exportOption="employee"
                   query={query}
-                  fileName='Danh sách trình dược viên'
+                  fileName="Danh sách trình dược viên"
                   ids={arrCheckBox}
                 />
-          </Col> : null
+              </Col>
+            ) : null
           }
         />
         <TableAnt
-          dataSource={data?.length ? data  : []}
+          dataSource={data?.length ? data : []}
           loading={isLoading}
           columns={columns}
-          rowKey={rc => rc._id}
+          rowKey={(rc) => rc._id}
           size="small"
           pagination={{
             ...paging,
@@ -318,34 +325,51 @@ export default function Employee({ currentTab }: Props) {
         width={1020}
         style={{ top: 50 }}
         afterClose={() => {
-          setDestroy(false)
+          setDestroy(false);
         }}
         destroyOnClose={destroy}
       >
         <Tabs
-        destroyInactiveTabPane
-        items={[
-          {
-            key: '1',
-            label: 'Hồ sơ',
-            children: <EmployeeForm
-            id={id}
-            handleCloseModal={handleCloseModal}
-            handleUpdate={handleUpdate}
-            resetAction={resetAction}
-            handleCreate = {handleCreate}
-            isSubmitLoading={isSubmitLoading}
-          />,
-          },
-          {
-            key: '2',
-            label: "Sản phẩm giới thiệu",
-            children: <CollaboratorProduct id={id} useAddProduct={useAddProductEmployee} useRemoveProduct={useRemoveProductEmployee} useUpdateProduct={useUpdateProductEmployee} useGetUser={useGetEmployee} apiSearchProduct={apis.searchProduct}/>,
-            disabled : !id
-          },
-        ]}>
-        </Tabs>
-        
+          destroyInactiveTabPane
+          items={[
+            {
+              key: "1",
+              label: "Hồ sơ",
+              children: (
+                <EmployeeForm
+                  id={id}
+                  handleCloseModal={handleCloseModal}
+                  handleUpdate={handleUpdate}
+                  resetAction={resetAction}
+                  handleCreate={handleCreate}
+                  isSubmitLoading={isSubmitLoading}
+                />
+              ),
+            },
+            {
+              key: "2",
+              label: "Sản phẩm giới thiệu",
+              children: (
+                <CollaboratorProduct
+                  id={id}
+                  useAddProduct={useAddProductEmployee}
+                  useRemoveProduct={useRemoveProductEmployee}
+                  useUpdateProduct={useUpdateProductEmployee}
+                  useGetUser={useGetEmployee}
+                  apiSearchProduct={apis.searchProduct}
+                  config={{
+                    discount : {
+                      discountType : "PERCENT",
+                      value : 45
+                    }
+                  }}
+                  target='employee'
+                />
+              ),
+              disabled: !id,
+            },
+          ]}
+        ></Tabs>
       </Modal>
     </div>
   );

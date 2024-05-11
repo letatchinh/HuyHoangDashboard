@@ -58,6 +58,8 @@ export const REF_COLLECTION_UPPER : any= {
   // BILLITEM: 'BILLITEM',
   PHARMA_PROFILE: 'PHARMA_PROFILE',
   SUPPLIER: 'SUPPLIER',
+  PARTNER: 'PARTNER',
+  EMPLOYEE: 'EMPLOYEE',
 };
 
 export const REF_COLLECTION: any = {
@@ -384,7 +386,7 @@ export const PROCESS_STATUS = {
 
 export const PROCESS_STATUS_VI = {
   APPROVED: 'Đã duyệt',
-  NEW: 'Mới',
+  NEW: 'Chưa duyệt',
 }
 export const DISCOUNT_TYPE = {
   PERCENT : "PERCENT",

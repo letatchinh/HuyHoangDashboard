@@ -341,6 +341,13 @@ export const permissionConvert = (query:any)=>(action: ActionPolicy, key: KeyPol
   } 
   return POLICIES[ objj[ get(query,'refCollection') as any ] ]as [string,policyType] 
 };
+
+export const convertFiles = (files: any[]) => {
+  return files?.map((item: any) => ({
+    fileName: item?.name,
+    url: item?.response?.url
+  }));
+};
 export const useIsAdapterSystem = () => {
   const adapter = useAdapter();
   const isAdapterSystem = useMemo(() => adapter === ADAPTER_KEY.STAFF, [adapter]);

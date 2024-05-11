@@ -21,18 +21,18 @@ export default function InformationDetail(props: propsType) {
       >
         <Row gutter={36}>
           <Col span={12}>
-            <div className="content-field" >
+            <div className="content-field">
               <div className="label">Mã nhà thuốc: </div>
               <div>{info?.code}</div>
             </div>
-            <hr style={{color: '#0909091a'}}/>
+            <hr style={{ color: "#0909091a" }} />
           </Col>
           <Col span={12}>
             <div className="content-field">
               <div className="label">Tên nhà thuốc: </div>
               <div>{info?.name}</div>
             </div>
-            <hr style={{color: '#0909091a'}}/>
+            <hr style={{ color: "#0909091a" }} />
           </Col>
         </Row>
         <Row gutter={36}>
@@ -41,7 +41,7 @@ export default function InformationDetail(props: propsType) {
               <div className="label">Chủ sở hữu: </div>
               <div>{info?.infoPolicy?.fullName}</div>
             </div>
-            <hr style={{color: '#0000001a'}}/>
+            <hr style={{ color: "#0000001a" }} />
           </Col>
           <Col span={12}>
             <div className="content-field">
@@ -75,14 +75,14 @@ export default function InformationDetail(props: propsType) {
                 {moment(info?.infoPolicy?.dateOfBirth).format("DD/MM/YYYY")}
               </div>
             </div>
-            <hr style={{color: '#0000001a'}}/>
+            <hr style={{ color: "#0000001a" }} />
           </Col>
           <Col span={12}>
             <div className="content-field">
               <div className="label">Số di động: </div>
               <div>{info?.cellPhone}</div>
             </div>
-            <hr style={{color: '#0000001a'}}/>
+            <hr style={{ color: "#0000001a" }} />
           </Col>
         </Row>
         <Row>
@@ -92,7 +92,7 @@ export default function InformationDetail(props: propsType) {
                 <div className="label">Địa chỉ: </div>
                 <div>{concatAddress(info?.address)}</div>
               </div>
-              <hr style={{color: '#0000001a'}}/>
+              <hr style={{ color: "#0000001a" }} />
             </div>
           </Col>
         </Row>
@@ -102,7 +102,7 @@ export default function InformationDetail(props: propsType) {
               <div className="label">Loại khách hàng: </div>
               <div>{info?.customerGroup?.title}</div>
             </div>
-            <hr style={{color: '#0000001a'}}/>
+            <hr style={{ color: "#0000001a" }} />
           </Col>
           <Col span={12}>
             <div className="content-field">
@@ -111,7 +111,7 @@ export default function InformationDetail(props: propsType) {
                 {info?.customer?.rateType} - {info?.customer?.title}
               </div>
             </div>
-            <hr style={{color: '#0000001a'}}/>
+            <hr style={{ color: "#0000001a" }} />
           </Col>
         </Row>
         <Row gutter={36}>
@@ -120,7 +120,7 @@ export default function InformationDetail(props: propsType) {
               <div className="label">Kênh bán hàng: </div>
               <div>{info?.salesChannel?.title}</div>
             </div>
-            <hr style={{color: '#0000001a'}}/>
+            <hr style={{ color: "#0000001a" }} />
           </Col>
           <Col span={12}>
             <div className="content-field">
@@ -133,7 +133,7 @@ export default function InformationDetail(props: propsType) {
                   : ""}
               </div>
             </div>
-            <hr style={{color: '#0000001a'}}/>
+            <hr style={{ color: "#0000001a" }} />
           </Col>
         </Row>
         <Row gutter={36}>
@@ -142,14 +142,14 @@ export default function InformationDetail(props: propsType) {
               <div className="label">Hạng khách hàng: </div>
               <div>{info?.customerRanking}</div>
             </div>
-            <hr style={{color: '#0000001a'}}/>
+            <hr style={{ color: "#0000001a" }} />
           </Col>
           <Col span={12}>
             <div className="content-field">
               <div className="label">Số hợp đồng: </div>
               <div>{info?.contractNumber}</div>
             </div>
-            <hr style={{color: '#0000001a'}}/>
+            <hr style={{ color: "#0000001a" }} />
           </Col>
         </Row>
         <Row gutter={36}>
@@ -158,7 +158,7 @@ export default function InformationDetail(props: propsType) {
               <div className="label">Mã số thuế: </div>
               <div>{info?.tax}</div>
             </div>
-            <hr style={{color: '#0000001a'}}/>
+            <hr style={{ color: "#0000001a" }} />
           </Col>
           <Col span={12}>
             <div className="content-field">
@@ -198,7 +198,7 @@ export default function InformationDetail(props: propsType) {
                 <div className="label">Ghi chú: </div>
                 <div>{info?.note}</div>
               </div>
-              <hr style={{color: '#0000001a'}}/>
+              <hr style={{ color: "#0000001a" }} />
             </div>
           </Col>
         </Row>
@@ -221,6 +221,24 @@ export default function InformationDetail(props: propsType) {
                 <div>{concatAddress(info?.addressInvoicing)}</div>
               </div>
               <hr style={{ color: "#0000001a" }} />
+            </div>
+          </Col>
+        </Row>
+        <Row>
+          <Col span={24}>
+            <div>
+              <div className="content-field">
+                <div className="label">File đính kèm: </div>
+                <div>
+                  {info?.files?.map((item: any) => (
+                  <div key={item?._id}>
+                    <a href={item?.url} target="_blank">
+                      {item?.name}
+                    </a>
+                  </div>
+                  ))}
+                </div>
+              </div>
             </div>
           </Col>
         </Row>

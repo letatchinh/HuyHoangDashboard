@@ -39,10 +39,12 @@ export function UpdateBillProvider({
     const [reFetch,setReFetch] = useState(false);
     const mutateBill = useCallback(() => setReFetch(!reFetch),[reFetch]);
     const [bill, isLoading] = useGetBill(id, reFetch);
-    const {pharmacyId,totalPrice,codeSequence,_id,totalReceiptVoucherCompleted,remainAmount, remaining, pair} = bill || {};
+    const {pharmacyId,totalPrice,codeSequence,_id,totalReceiptVoucherCompleted,remainAmount, remaining, pair, refCollection} = bill || {};
     const [isOpenForm, setIsOpenForm] = useState(false);
     const [isOpenFormPayment, setIsOpenFormPayment] = useState(false);
-
+    // const refCo
+    console.log(refCollection?.toUpperCase(),'refCollection?.toUpperCase()');
+    
   const compareMoney = useMemo(() => pair - totalPrice, [bill]);
   
   const onOpenForm = () => {
@@ -85,8 +87,9 @@ export function UpdateBillProvider({
           billId = {bill?._id}
           callback={mutateBill}
           onClose={() => onCloseForm()}
-          pharmacyId={pharmacyId}
-          refCollection={REF_COLLECTION_UPPER['PHARMA_PROFILE']}
+          {...refCollection === 'pharma_profile' && {pharmacyId}}
+          {...refCollection === 'partner' && {partnerId: pharmacyId}}
+          refCollection={REF_COLLECTION_UPPER[refCollection?.toUpperCase()]}
           totalAmount={remaining}
           reason={`Thu tiền đơn hàng ${codeSequence || ""} `}
           from='Pharmacy'

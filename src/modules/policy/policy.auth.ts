@@ -83,6 +83,10 @@ const updateThePharmacyForEmployee = 'updateThePharmacyForEmployee';
 // Cộng tác viên
 const partner = 'partner';
 const partnerGroup = 'partnerGroup';
+const reportSalaryPartner = 'reportSalaryPartner';
+const voucherPartner = 'voucherPartner';
+const borrowProduct = 'borrowProduct';
+const statusBorrowProduct = 'statusBorrowProduct';
 
 
 //------RESOURCES --------
@@ -169,8 +173,14 @@ const RESOURCES = [
   
   updateThePharmacyForEmployee,
   configReportSalaryAuto,
+
+  //-----PARTNER------
   partner,
-  partnerGroup
+  partnerGroup,
+  reportSalaryPartner,
+  voucherPartner,
+  borrowProduct,
+  statusBorrowProduct
 ];
 
 //ACTIONS
@@ -308,7 +318,8 @@ const RESOURCE = (): ResourceType => {
 
   const PARTNER: string[] = [
     partner,
-    partnerGroup
+    partnerGroup,
+    reportSalaryPartner,
   ];
 
   return {

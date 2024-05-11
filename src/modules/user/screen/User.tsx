@@ -57,7 +57,6 @@ export default function User() {
     navigate(urlPush);
   }, [isMatchUserGroup, isMatchUser]);
   return (
-    <div>
       <WhiteBox>
         <Tabs
           activeKey={currentTab}
@@ -96,6 +95,5 @@ export default function User() {
           )}
         </Routes>
       </WhiteBox>
-    </div>
   );
 }

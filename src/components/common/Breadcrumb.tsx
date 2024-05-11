@@ -13,7 +13,7 @@ const Breadcrumb = ({ title, linkTo }: { title: any, linkTo?: string }) => {
       ],[linkTo, title])
   return (
       <div className='pb-4'>
-        <div className="d-flex align-items-center justify-content-between">
+        <div className="d-flex align-items-center justify-content-between" style={{height:29}}>
           <h4 className="mb-0">{title}</h4>
 
           <div className="page-title-right">
