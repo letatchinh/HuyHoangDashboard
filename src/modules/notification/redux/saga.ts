@@ -1,6 +1,7 @@
 import { put, call, takeLatest } from 'redux-saga/effects';
 import api from '../notification.api'; 
 import { notificationSliceActions } from './reducer';
+import { get } from 'lodash';
 
 function* getListNotification({payload:query} : any) : any {
   try {
@@ -30,12 +31,20 @@ function* getListNotification({payload:query} : any) : any {
 // }
 
 function* updateStatusNotification({ payload }: any): any {
-  console.log('saga')
   try {
     const data = yield call(api.updateStatus,payload);
     yield put(notificationSliceActions.updateSuccess(data));
   } catch (error:any) {
     yield put(notificationSliceActions.updateFailed(error));
+  }
+};
+
+function* updateManyStatusNotification({ payload }: any): any {
+  try {
+    const data = yield call(api.updateManyStatus,payload);
+    yield put(notificationSliceActions.updateManyStatusNotificationSuccess(payload?.ids));
+  } catch (error:any) {
+    yield put(notificationSliceActions.updateManyStatusNotificationFailed(error));
   }
 }
 // function* deleteNotification({payload : id} : any) : any {
@@ -51,6 +60,7 @@ function* updateStatusNotification({ payload }: any): any {
 export default function* notificationSaga() {
   yield takeLatest(notificationSliceActions.getNotificationRequest, getListNotification);
   yield takeLatest(notificationSliceActions.updateRequest, updateStatusNotification);
+  yield takeLatest(notificationSliceActions.updateManyStatusNotificationRequest, updateManyStatusNotification);
   // yield takeLatest(notificationSliceActions.getByIdRequest, getByIdNotification);
   // yield takeLatest(notificationSliceActions.createRequest, createNotification);
   // yield takeLatest(notificationSliceActions.deleteRequest, deleteNotification);

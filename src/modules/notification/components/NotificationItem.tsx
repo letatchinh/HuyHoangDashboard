@@ -1,4 +1,4 @@
-import { CheckOutlined, CloseOutlined, ShoppingOutlined } from '@ant-design/icons';
+import { CheckOutlined, ClockCircleOutlined, CloseOutlined, ShoppingOutlined } from '@ant-design/icons';
 import { Button, Dropdown } from 'antd';
 import { MenuProps } from 'antd/lib';
 import { get } from 'lodash';
@@ -38,17 +38,17 @@ const NotificationItem: React.FC<NotificationItemProps> = ({ data, onClickItem, 
     updateStatus({ id: get(data, '_id'), status });
   };
 
-  const renderIcon = (type: string) => {
-    if (TYPE_NOTIFICATION.ORDER_CONVERT_QUOTATION_CUSTOMER === type) {
-      return <i className='uil-shopping-basket'></i>
-    };
-    if (TYPE_NOTIFICATION.ORDER_QUOTATION_CUSTOMER === type) {
-      return <i className='uil-shopping-basket'></i>
-    };
-    if (TYPE_NOTIFICATION.ORDER_SUPPLIER === type) {
-      return <i className='uil-shopping-basket'></i>
-    };
-  };
+  // const renderIcon = (type: string) => {
+  //   if (TYPE_NOTIFICATION.ORDER_CONVERT_QUOTATION_CUSTOMER === type) {
+  //     return <i className='uil-shopping-basket'></i>
+  //   };
+  //   if (TYPE_NOTIFICATION.ORDER_QUOTATION_CUSTOMER === type) {
+  //     return <i className='uil-shopping-basket'></i>
+  //   };
+  //   if (TYPE_NOTIFICATION.ORDER_SUPPLIER === type) {
+  //     return <i className='uil-shopping-basket'></i>
+  //   };
+  // };
 
   const items: MenuProps['items'] = [
     {
@@ -75,8 +75,9 @@ const NotificationItem: React.FC<NotificationItemProps> = ({ data, onClickItem, 
           <div className={`flex-1`}>
             <h6 style={{fontSize: '0.9rem'}} className={`mt-0 mb-1 ${isRead ? 'text-muted' : ''}`}>{content}</h6>
             <div className={`font-size-12 ${isRead ? 'text-muted' : 'text-primary fw-bold'}`}>
-              <p style={{fontSize: '0.8rem'}} className='mb-0'>
-                <i className='mdi mdi-clock-outline'></i> {daysAgo(createdAt)}
+              <p style={{fontSize: '0.8rem', color: '#5b73e8', fontWeight: '600'}} className='mb-0'>
+              <ClockCircleOutlined style={{marginRight: '3px', fontSize: '0.6rem'}}/>
+              {daysAgo(createdAt)}
               </p>
             </div>
           </div>

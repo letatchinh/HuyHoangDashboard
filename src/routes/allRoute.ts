@@ -44,6 +44,7 @@ import ConfigurationCronTime from "~/pages/Dashboard/ConfigurationCronTime";
 import TypePharmacy from "~/pages/Dashboard/TypePharmacy";
 import GroupPharmacy from "~/pages/Dashboard/GroupPharmacy";
 import CollaboratorPage from "~/pages/Dashboard/Collaborator";
+import NotificationPage from "~/pages/Dashboard/Notification";
 export const mainRoutes :PathRouteProps[] = [
   { path: PATH_APP.main.root, Component: Homepage },
 
@@ -142,7 +143,10 @@ export const mainRoutes :PathRouteProps[] = [
   { path: PATH_APP.groupPharmacy.root, Component:  GroupPharmacy},
   
   // Cộng tác viên
-  { path: PATH_APP.collaborator.root, Component: CollaboratorPage},
+  { path: PATH_APP.collaborator.root, Component: CollaboratorPage },
+  
+  // Thôgng báo
+  { path: PATH_APP.myNotification.root, Component: NotificationPage},
   
   { path: '/', Component: Homepage },
 ]

@@ -45,8 +45,24 @@ class NotificationClassExtend extends InstanceModuleRedux {
         state.isLoading = false;
         state.updateFailed = payload; 
       },
+
+      updateManyStatusNotificationRequest: (state: cloneInitState) => {
+        state.isSubmitLoading = false;
+      },
+      updateManyStatusNotificationSuccess: (state: cloneInitState, { payload }: any) => {
+        state.list = state.list?.map(notification => {
+          const isExist = payload?.includes(get(notification, '_id'))
+          if (isExist) {
+            return { ...notification, status: STATUS_READ.read }
+          } else {
+            return notification
+          };
+        });
+      },
+      updateManyStatusNotificationFailed: (state: cloneInitState, { payload }: any) => {
+        state.isLoading = false;
+      },
       changeStatus: (state: cloneInitState) => {
-        console.log(1)
         state.isLoading = true;
       },
       // Want Add more reducer Here...

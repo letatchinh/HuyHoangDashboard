@@ -6,7 +6,7 @@ import ProfileMenu from './ProfileMenu';
 import Reflex from './Reflex';
 import { DeviceDetector } from '~/utils/helpers';
 import NavbarVerticalDevice from './NavbarVerticalDevice';
-import NotificationDropdown from '~/modules/notification/screens';
+import NotificationDropdown from '~/modules/notification/screens/NotificationDropDown';
 
 export default function LayoutVertical({ children }: { children: React.JSX.Element }) {
   const navigate = useNavigate();

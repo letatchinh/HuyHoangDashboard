@@ -1,135 +1,135 @@
-import PropTypes from 'prop-types';
-import React, { useMemo, useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { Col, Dropdown, DropdownMenu, DropdownToggle, Row } from 'reactstrap';
-import SimpleBar from 'simplebar-react';
-import { BellFilled, BellOutlined } from '@ant-design/icons';
-import { Badge, Divider } from 'antd';
-import { debounce, keys } from 'lodash';
-import { useDispatch } from 'react-redux';
-import dayjs from 'dayjs';
-import { useChangeStatusNotification, useCountUnreadMyNotification, useDeleteNotification, useMergeInitNotifications, useMyNotifications } from '../notification.hook';
-import { useOnMessageNewWhBillFirebase } from '../firebase/broadCastChanel/firebaseChanel';
-import { PATH_APP } from '~/routes/allPath';
-import GroupButtonNotify from '../components/GroupButton';
-import SkeletonList from '~/components/common/SkeletonList';
-import NotificationItem from '../components/NotificationItem';
-import '../notification.style.scss'
-import { notificationSliceActions } from '../redux/reducer';
+import WhiteBox from "~/components/common/WhiteBox";
+import "../notification.style.scss";
+import Breadcrumb from "~/components/common/Breadcrumb";
+import { Col, Dropdown, List, Menu, Row } from "antd";
+import GroupButtonNotify from "../components/GroupButton";
+import { CheckOutlined, EllipsisOutlined } from "@ant-design/icons";
+import SkeletonList from "~/components/common/SkeletonList";
+import NotificationItem from "../components/NotificationItem";
+import { debounce, get } from "lodash";
+import { useDispatch } from "react-redux";
+import {
+  useChangeManyStatusNotification,
+  useChangeStatusNotification,
+  useMyNotifications,
+  useNotificationPaging,
+  useNotificationQueryParams,
+  useUpdateNotificationParams,
+} from "../notification.hook";
+import { notificationSliceActions } from "../redux/reducer";
+import { useOnMessageNewWhBillFirebase } from "../firebase/broadCastChanel/firebaseChanel";
+import { STATUS_READ } from "../constants";
+import { MenuProps } from "antd/lib";
+import { v4 as uuidv4 } from "uuid";
+import { useEffect, useMemo, useState } from "react";
+import dayjs from "dayjs";
 
-const NotificationDropdown = (props: any) => {
-  const [menu, setMenu] = useState(false);
-  const [status, setStatus] = useState(null);
-  const [inputValue, setInputValue] = useState([null, null]);
-  const {pathname } = useLocation();
+const NotificationScreen = (props: any) => {
   const dispatch = useDispatch();
-
-  const startDate = dayjs(inputValue[0]).isValid()
-    ? dayjs(inputValue[0]).format('YYYY-MM-DD')
-    : null;
-  const endDate = dayjs(inputValue[1]).isValid()
-    ? dayjs(inputValue[1]).format('YYYY-MM-DD')
-    : null;
-
-  const query = useMemo(
-    () => ({
-      page: 1,
-      limit: 10,
-      status,
-      startDate,
-      endDate
-    }),
-    [status, startDate, endDate]
-  );
+  const [query] = useNotificationQueryParams();
+  const [inputValue, setInputValue] = useState([null, null]);
 
   const [MyNotifications, isLoading] = useMyNotifications(query);
-  const notifications = useMergeInitNotifications(MyNotifications)
-  console.log(notifications,'notifications')
-  const countUnread = useCountUnreadMyNotification();
-  // const [setNewBill] = useSetNewBill();
+  const [, { onParamChange }] = useUpdateNotificationParams(query);
+  const paging = useNotificationPaging();
   const triggerRefresh = () => {
     dispatch(notificationSliceActions.getNotificationRequest(query as any));
-    // setNewBill(true)
   };
+
   useOnMessageNewWhBillFirebase(debounce(triggerRefresh, 800));
-  const [isSubmitLoading, updateStatus] = useChangeStatusNotification();
-  return (
-    <>
-      <Dropdown
-        isOpen={menu}
-        toggle={() => {}}
-        className="dropdown d-inline-block"
-        tag="li"
-        style={{ marginRight: 10, maxHeight: 500 }}
-      >
-        <DropdownToggle
-          onClick={() => {
-            if (pathname === PATH_APP.myNotification.root) return;
-            setMenu(!menu);
-          }}
-          className="btn header-item noti-icon waves-effect"
-          tag="button"
-          id="page-header-notifications-dropdown"
-          style={{ width: 60, zIndex: 2000, paddingTop: 15}}
+
+  const [, updateStatus] = useChangeStatusNotification();
+  const [, updateMany] = useChangeManyStatusNotification();
+
+  const onUpdateCurrentPage = () => {
+    const notificationUnread = MyNotifications?.filter(
+      (notification: any) => get(notification, "status") === STATUS_READ.unread
+    );
+    if (!!notificationUnread && notificationUnread?.length) {
+      let ids = notificationUnread?.map((i: any) => get(i, "_id"))?.join(",");
+      updateMany({ ids, status: STATUS_READ.read });
+    };
+  };
+
+  const items: MenuProps["items"] = [
+    {
+      key: uuidv4(),
+      label: (
+        // <Menu className='notification-item--actionGroup__menu'>
+        <Menu.Item
+          key="0"
+          onClick={onUpdateCurrentPage}
+          icon={<CheckOutlined />}
         >
-          {pathname === PATH_APP.myNotification.root ? (
-            <BellFilled
-              style={{
-                color: '#3D7FF3',
-                backgroundColor: '#EAF5FF',
-                fontSize: 22,
-                borderRadius: '50%',
-                cursor: 'pointer',
-              }}
-            />
-          ) : (
-            <Badge overflowCount={99} size="small" count={countUnread}>
-              <BellOutlined
-                style={{
-                    color: 'white',
-                    fontSize: 22,
-                }}
+          <span>Đánh dấu trang hiện tại là đã đọc</span>
+        </Menu.Item>
+        // </Menu>
+      ),
+    },
+  ];
+
+  return (
+    <WhiteBox>
+      <Breadcrumb title="Thông báo của tôi" />
+      <div className="notification-wrapper">
+        <div
+          className="notification-wrapper__content"
+          style={{ width: "50%", margin: "auto" }}
+        >
+          <Row justify="space-between">
+            <Col>
+              <GroupButtonNotify
+                status={get(query, "status")}
+                setInputValue={setInputValue}
+                inputValue={inputValue}
+                setStatus={(stt: any) =>{
+                  onParamChange({ ...query, status: stt })
+                  }
+                }
               />
-              </Badge>
-          )}
-        </DropdownToggle>
-
-        <DropdownMenu style={{zIndex:999,width: 360}} className="dropdown-menu-lg dropdown-menu-end p-0 z">
-          <div className="p-3">
-            <Row align='middle' justify='space-between'>
-              <Col>
-                <h6 className="m-0 font-size-16"> Thông báo </h6>
-              </Col>
-            </Row>
-          </div>
-          <GroupButtonNotify status={status} setStatus={setStatus}  setInputValue={setInputValue}
-              inputValue={inputValue} />
-          <div style={{ height: "400px",minHeight: "400px", maxHeight: "400px", overflow: 'hidden', overflowY: 'scroll' }}>
-            {isLoading
-              ? <SkeletonList rowCount={9} />
-              : keys(notifications)?.map((date, index) => <React.Fragment key={date}>
-                <Divider orientation="left" orientationMargin="10"
-                  style={{ margin: 0, position: 'sticky', zIndex: index + 1, backgroundColor: 'white', top: 0 }}
-                >
-                  {date}
-                </Divider>
-                {notifications?.[date]?.map((notification: any) => <NotificationItem updateStatus={updateStatus} onClickItem={debounce(triggerRefresh, 800)} data={notification} />)}
-              </React.Fragment>)}
-          </div>
-
-          <div className="p-2 border-top d-grid z-3">
-            <Link
-              className="btn btn-sm btn-link font-size-14 text-center"
-              to={PATH_APP.myNotification.root}
+            </Col>
+            <Col>
+              <Dropdown
+                className="mx-auto dropdown-notification-actionGroup"
+                menu={{ items }}
+                trigger={["click"]}
+              >
+                <div className="notification-item--actionGroup__btn">
+                  <EllipsisOutlined style={{ fontSize: 18 }} />
+                </div>
+              </Dropdown>
+            </Col>
+          </Row>
+          {isLoading ? (
+            <SkeletonList rowCount={10} />
+          ) : (
+            <List
+              style={{ border: "none" }}
+              className="list-custom--hover"
+              bordered
+              loading={false}
+              pagination={{
+                position: "bottom",
+                align: "center",
+                ...paging,
+                onChange: (current, pageSize) => {
+                  onParamChange({ page: current, limit: pageSize });
+                },
+              }}
             >
-              <i className="uil-arrow-circle-right me-1"></i>{' '}
-              Xem tất cả
-            </Link>
-          </div>
-        </DropdownMenu>
-      </Dropdown>
-    </>
+              {MyNotifications?.map((item: any, index: number) => (
+                <NotificationItem
+                  updateStatus={updateStatus}
+                  onClickItem={debounce(triggerRefresh, 800)}
+                  data={item}
+                  key={index}
+                />
+              ))}
+            </List>
+          )}
+        </div>
+      </div>
+    </WhiteBox>
   );
 };
-
-export default NotificationDropdown;
+export default NotificationScreen;

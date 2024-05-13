@@ -85,6 +85,13 @@ return useSubmit({
 });
 };
 
+export const useChangeManyStatusNotification = () => {
+  return useSubmit({
+    loadingSelector: isSubmitLoadingSelector,
+    action: notificationSliceActions.updateManyStatusNotificationRequest
+  });
+};
+
 // export const useUpdateNotification = (callback?: any) => {
 //   useSuccess(
 //     updateSuccessSelector,
@@ -113,7 +120,10 @@ export const useNotificationQueryParams = () => {
   const query = useQueryParams();
   const limit = query.get("limit") || 10;
   const page = query.get("page") || 1;
-  const keyword = query.get("keyword");
+  const keyword = query.get("keyword") || '';
+  const status = query.get('status');
+  const startDate = query.get('startDate');
+  const endDate = query.get('endDate');
   const createSuccess = useSelector(createSuccessSelector);
   const deleteSuccess = useSelector(deleteSuccessSelector);
   return useMemo(() => {
@@ -121,10 +131,13 @@ export const useNotificationQueryParams = () => {
       page,
       limit,
       keyword,
+      status,
+      // startDate,
+      // endDate
     };
     return [queryParams];
     //eslint-disable-next-line
-  }, [page, limit, keyword, createSuccess, deleteSuccess]);
+  }, [page, limit, keyword, createSuccess, deleteSuccess,status]);
 };
 
 export const useUpdateNotificationParams = (
