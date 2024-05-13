@@ -9,6 +9,7 @@ import { useMatchPolicy } from "~/modules/policy/policy.hook";
 import Collaborator from "./Collaborator";
 import CollaboratorGroup from "~/modules/collaboratorGroup/screens/CollaboratorGroup";
 import Breadcrumb from "~/components/common/Breadcrumb";
+import RequestGroup from "~/modules/requestGroup/screens/RequestGroup";
 type propsType = {};
 export default function CollaboratorScreen(props: propsType): React.JSX.Element {
   const { t }: any = useTranslate();
@@ -60,6 +61,7 @@ export default function CollaboratorScreen(props: propsType): React.JSX.Element 
               {isCollaboratorGroup && (
                 <TabPane tab="Nhóm cộng tác viên" key="collaborator/group" />
               )}
+              <TabPane tab="Yêu cầu nhóm" key="collaborator/request" />
             </Tabs>
             <Routes>
               {isCollaborator ? (
@@ -83,6 +85,10 @@ export default function CollaboratorScreen(props: propsType): React.JSX.Element 
             ) : (
               <React.Fragment />
               )}
+              <Route
+                  path={`request`}
+                  element={<RequestGroup />}
+                />
             </Routes>
           </WhiteBox>
       )}

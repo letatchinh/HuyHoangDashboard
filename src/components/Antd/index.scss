@@ -14,3 +14,15 @@
   width: 300px
 }
 };
+
+.ant-select-dropdown{
+  &::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 50px;
+    background-color: red;
+  }
+}

@@ -52,6 +52,7 @@ import Breadcrumb from "~/components/common/Breadcrumb";
 import CollaboratorProduct from "../components/CollaboratorProduct";
 import CollaboratorAddress from "../components/CollaboratorAddress";
 import apis from "~/modules/collaborator/collaborator.api";
+import RequestGroup from "~/modules/requestGroup/components";
 
 interface ColumnActionProps {
   _id: string;
@@ -429,6 +430,12 @@ export default function Collaborator({
               key: "3",
               label: "Sổ địa chỉ",
               children: <CollaboratorAddress id={id} />,
+              disabled: !id,
+            },
+            {
+              key: "4",
+              label: "Yêu cầu",
+              children: <RequestGroup.CreateAndView />,
               disabled: !id,
             },
           ]}
