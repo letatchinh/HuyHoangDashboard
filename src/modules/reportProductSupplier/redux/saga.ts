@@ -22,7 +22,7 @@ function* getByIdReportProductSupplier({payload:id} : any) : any {
 
 function* createReportProductSupplier({payload} : any) : any {
   try {
-    const data = yield call(api.create,payload);
+    const data = yield call(api.getListChart,payload);
     yield put(reportProductSupplierActions.createSuccess(data));
   } catch (error:any) {
     yield put(reportProductSupplierActions.createFailed(error));

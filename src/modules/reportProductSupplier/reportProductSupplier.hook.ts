@@ -1,17 +1,19 @@
 // Please UnComment To use
 
 import { get } from "lodash";
+import { useEffect, useMemo, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { clearQuerySearch, getExistProp } from "~/utils/helpers";
 // import { useEffect, useMemo, useState } from "react";
 // import { useSelector } from "react-redux";
 // import { useLocation, useNavigate } from "react-router-dom";
 // import { clearQuerySearch, getExistProp } from "~/utils/helpers";
-// import {
-//     getSelectors,
-//     useFailed, useFetchByParam,
-//     useQueryParams,
-//     useSubmit,
-//     useSuccess
-// } from "~/utils/hook";
+import {
+  
+    useQueryParams,
+    useSubmit,
+    useSuccess
+} from "~/utils/hook";
 // import { reportProductSupplierActions } from "./redux/reducer";
 // const MODULE = "reportProductSupplier";
 // const MODULE_VI = "";
@@ -92,53 +94,56 @@ import { get } from "lodash";
 //   });
 // };
 
-// export const useReportProductSupplierQueryParams = () => {
-//   const query = useQueryParams();
-//   const limit = query.get("limit") || 10;
-//   const page = query.get("page") || 1;
-//   const keyword = query.get("keyword");
-//   const createSuccess = useSelector(createSuccessSelector);
-//   const deleteSuccess = useSelector(deleteSuccessSelector);
-//   return useMemo(() => {
-//     const queryParams = {
-//       page,
-//       limit,
-//       keyword,
-//     };
-//     return [queryParams];
-//     //eslint-disable-next-line
-//   }, [page, limit, keyword, createSuccess, deleteSuccess]);
-// };
+export const useReportProductSupplierQueryParams = () => {
+  const query = useQueryParams();
 
-// export const useUpdateReportProductSupplierParams = (
-//   query: any,
-//   listOptionSearch?: any[]
-// ) => {
-//   const navigate = useNavigate();
-//   const { pathname } = useLocation();
-//   const [keyword, setKeyword] = useState(get(query, "keyword"));
-//   useEffect(() => {
-//     setKeyword(get(query, "keyword"));
-//   }, [query]);
-//   const onParamChange = (param: any) => {
-//     // Clear Search Query when change Params
-//     clearQuerySearch(listOptionSearch, query, param);
+  // spaceType?: any;
+  // dataType?: keyof typeof TYPE_REPORT;
+  // rangerTime?: any;
+  // rangerType?: any;
+  const dataType = query.get("dataType")
+  const rangerTime = query.get("rangerTime")
+  const rangerType = query.get("rangerType")
+  return useMemo(() => {
+    const queryParams = {
+    dataType,
+    rangerTime,
+    rangerType,
+    };
+    return [queryParams];
+    //eslint-disable-next-line
+  }, [dataType, rangerTime, rangerType]);
+};
 
-//     if (!param.page) {
-//       query.page = 1;
-//     };
+export const useUpdateReportProductSupplierParams = (
+  query: any,
+  listOptionSearch?: any[]
+) => {
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
+  const [keyword, setKeyword] = useState(get(query, "keyword"));
+  useEffect(() => {
+    setKeyword(get(query, "keyword"));
+  }, [query]);
+  const onParamChange = (param: any) => {
+    // Clear Search Query when change Params
+    clearQuerySearch(listOptionSearch, query, param);
 
-//     // Convert Query and Params to Search Url Param
-//     const searchString = new URLSearchParams(
-//       getExistProp({
-//         ...query,
-//         ...param,
-//       })
-//     ).toString();
+    if (!param.page) {
+      query.page = 1;
+    };
 
-//     // Navigate
-//     navigate(`${pathname}?${searchString}`);
-//   };
+    // Convert Query and Params to Search Url Param
+    const searchString = new URLSearchParams(
+      getExistProp({
+        ...query,
+        ...param,
+      })
+    ).toString();
 
-//   return [keyword, { setKeyword, onParamChange }];
-// };
+    // Navigate
+    navigate(`${pathname}?${searchString}`);
+  };
+
+  return [keyword, { setKeyword, onParamChange }];
+};
