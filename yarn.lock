@@ -2567,6 +2567,17 @@
     "@react-spring/web" "9.4.5 || ^9.7.2"
     lodash "^4.17.21"
 
+"@nivo/arcs@0.87.0":
+  version "0.87.0"
+  resolved "https://registry.npmjs.org/@nivo/arcs/-/arcs-0.87.0.tgz"
+  integrity sha512-YWmIm0el0hgVbPI3C5AX6R59WNnuKjh2GdocaVDP5zupqAMhfqyoMx+IM+A+Cg+UzE4xakrL0mSzL+rpMUK90Q==
+  dependencies:
+    "@nivo/colors" "0.87.0"
+    "@nivo/core" "0.87.0"
+    "@react-spring/web" "9.4.5 || ^9.7.2"
+    "@types/d3-shape" "^3.1.6"
+    d3-shape "^3.2.0"
+
 "@nivo/axes@0.87.0":
   version "0.87.0"
   resolved "https://registry.npmjs.org/@nivo/axes/-/axes-0.87.0.tgz"
@@ -2642,6 +2653,19 @@
     "@nivo/core" "0.87.0"
     "@types/d3-scale" "^4.0.8"
     d3-scale "^4.0.2"
+
+"@nivo/pie@^0.87.0":
+  version "0.87.0"
+  resolved "https://registry.npmjs.org/@nivo/pie/-/pie-0.87.0.tgz"
+  integrity sha512-kY6LAQhOITwg8waFoDYLPkwUj/5XavSm61c7dXXJgCtqoj6c5u9AgwOTnZqS6IhMVEc5KV7ZNxSEHlHLQinmrg==
+  dependencies:
+    "@nivo/arcs" "0.87.0"
+    "@nivo/colors" "0.87.0"
+    "@nivo/core" "0.87.0"
+    "@nivo/legends" "0.87.0"
+    "@nivo/tooltip" "0.87.0"
+    "@types/d3-shape" "^3.1.6"
+    d3-shape "^3.2.0"
 
 "@nivo/scales@0.87.0":
   version "0.87.0"

@@ -217,6 +217,14 @@ export const resource: ItemType[] =[
       },
     ],
   },
+  // Báo cáo tổng quan
+  {
+    label: "Báo cáo tổng quan",
+    icon: <i className="fa-solid fa-chart-pie"></i>,
+    path: PATH_APP.reportOverivew.root,
+    key: PATH_APP.reportOverivew.root,
+    // permission: [POLICIES.READ_SUPPLIER],//
+  },
 
   // Nhà cung cấp//
   {

@@ -47,6 +47,7 @@ import CollaboratorPage from "~/pages/Dashboard/Collaborator";
 import ReportProductSupplier from "~/pages/Dashboard/ReportProductSupplier";
 import ReportSalaryPartnerPage from "~/pages/Dashboard/ReportSalaryPartner";
 import ProductBorrow from "~/modules/product/components/ProductBorrow";
+import ReportOverview from "~/pages/Dashboard/ReportOverview";
 export const mainRoutes :PathRouteProps[] = [
   { path: PATH_APP.main.root, Component: Homepage },
 
@@ -152,6 +153,8 @@ export const mainRoutes :PathRouteProps[] = [
   // 
   { path: PATH_APP.reportProductSupplier.root, Component: ReportProductSupplier},
   { path: PATH_APP.reportSalaryPartner.root, Component: ReportSalaryPartnerPage},
+
+  { path: PATH_APP.reportOverivew.root, Component: ReportOverview},
   
   
   { path: '/', Component: Homepage },
