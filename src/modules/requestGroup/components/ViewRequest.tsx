@@ -16,13 +16,15 @@ export default function ViewRequest(props: propsType): React.JSX.Element {
           title: "Nội dung",
           dataIndex: "contentRequest",
           key: "contentRequest",
-          // render: (contentRequest) => (
-          //   <Popover content={contentRequest} trigger={"click"}>
-          //     <Button type="text">
-          //     {truncate(contentRequest,{length : 40})}
-          //     </Button>
-          //   </Popover>
-          // ),
+        },
+        {
+          title: "Người yêu cầu",
+          dataIndex: "requestOf",
+          key: "requestOf",
+          width : 150,
+          render(requestOf) {
+            return <Typography.Text strong>{get(requestOf,'fullName','')}</Typography.Text>
+          },
         },
         {
           title: "Xử lí trạng thái",
@@ -34,13 +36,13 @@ export default function ViewRequest(props: propsType): React.JSX.Element {
             const stt = get(rc,'status');
             return (
               <Dropdown.Button
-            
               menu={{
                 items : keys(STATUS_REQUEST_GROUP_VI).map((k : any) => ({
                   key : k,
                   label : get(STATUS_REQUEST_GROUP_VI,k),
                   onClick : () => onChangeStatus({_id,status : k}),
-                  icon : <Badge status={get(STATUS_REQUEST_GROUP_COLOR,k)}/>
+                  icon : <Badge status={get(STATUS_REQUEST_GROUP_COLOR,k)}/>,
+                  // disabled :
                 }))
               }}
               >
