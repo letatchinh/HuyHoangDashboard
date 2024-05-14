@@ -6,34 +6,41 @@ import {
   Col,
   Flex,
   Form,
-  Row,
-  Select,
-  Typography,
+  Row, Switch, Typography
 } from "antd";
 import { get } from "lodash";
-import React, { useState } from "react";
-import SelectAnt from "~/components/Antd/SelectAnt";
+import React, { useEffect } from "react";
 import BaseBorderBox from "~/components/common/BaseBorderBox/index";
-import SearchList from "~/components/common/SearchList";
+import { requireRules } from "~/constants/defaultValue";
+import apis from "~/modules/collaborator/collaborator.api";
+import { useGetCollaborator } from "~/modules/collaborator/collaborator.hook";
+import SelectCollaborator from "~/modules/collaborator/components/SelectSearch";
+import { useFetchState } from "~/utils/helpers";
+import { STATUS_REQUEST_GROUP } from "../constants";
+import { useResetAction } from "../requestGroup.hook";
 import { ChangeGroupSubmitType } from "../requestGroup.modal";
-import { RequestGroupProvider } from "../RequestGroupProvider";
+import useRequestGroupStore, { RequestGroupProvider } from "../RequestGroupProvider";
 import CreateRequest from "./CreateRequest";
 import ViewRequest from "./ViewRequest";
-type propsType = {};
-function CreateAndView(props: propsType): React.JSX.Element {
+type propsType = {
+  id? : any,
+  showCreate? : boolean
+};
+function CreateAndView({id,showCreate = true}: propsType): React.JSX.Element {
+  useResetAction();
   return (
-    <RequestGroupProvider>
-      <Row gutter={8} justify={"space-between"}>
-        <Col lg={{ flex: 1 }} md={24}>
+    <RequestGroupProvider id={id}>
+      <Row gutter={8} justify={"space-between"} wrap={false}>
+        <Col flex={1} md={24}>
           <BaseBorderBox title={"Lịch sử yêu cầu"}>
             <ViewRequest />
           </BaseBorderBox>
         </Col>
-        <Col lg={{ flex: 1 }} md={24}>
+        {showCreate && <Col lg={8} md={24}>
           <BaseBorderBox title={"Tạo yêu cầu"}>
             <CreateRequest />
           </BaseBorderBox>
-        </Col>
+        </Col>}
       </Row>
     </RequestGroupProvider>
   );
@@ -44,53 +51,75 @@ const optionRequest = [
     value: "group",
   },
 ];
-function ControlChangeGroup(props: propsType): React.JSX.Element {
+type propsTypeControlChangeGroup = {
+  id? : any,
+  requestId? : any,
+};
+function ControlChangeGroup({id,requestId}: propsTypeControlChangeGroup): React.JSX.Element {
   const [form] = Form.useForm();
-  const [dataSource,setDataSource] = useState();
-  const [dataTarget,setDataTarget] = useState();
-  const optionsSource : any[] = [{
-    _id : 123,
-  }];
-  const optionsTarget : any[] = [];
+  const [partner,isLoading] = useGetCollaborator(id);
+  const {onUpdateStatus} = useRequestGroupStore();
+  const partnerSelectId = Form.useWatch(['after','groupId'],form);
+  
+  const [partnerSelect,loading] = useFetchState({api : apis.getById,query : partnerSelectId,useDocs : false,shouldRun : !!partnerSelectId});
+  
   const onFinish = (values: ChangeGroupSubmitType) => {
-    console.log(values,'values');
+    onUpdateStatus({
+      ...values,
+      status : STATUS_REQUEST_GROUP.COMPLETED
+    });
     
   };
   const onValuesChange = (change: Partial<ChangeGroupSubmitType>, allValue: ChangeGroupSubmitType) => {
-    if(change?.requestId){
-      // Set Data Source
-      const requestInSource = optionsSource?.find((value: any) => get(value,'_id') === change.requestId)
-      setDataSource(requestInSource);
-    };
-    if(change?.targetGroupId){
-      // Set Data Target
-      const requestInTarget = optionsTarget?.find((value: any) => get(value,'_id') === change.targetGroupId)
-      setDataTarget(requestInTarget);
+    if(change.after?.groupId){
+      form.setFieldsValue({
+        after : {
+          group : change.after?.groupId,
+          groupId : change.after?.groupId,
+          groupRef : 'partner',
+        }
+      })
     }
   };
+  
+  useEffect(() => {
+    form.setFieldsValue({
+      _id : requestId,
+        before : {
+          group : get(partner,'parentNear'),
+          groupId : get(partner,'parentNear'),
+          groupRef : 'partner',
+        }
+    })
+  },[requestId,partner]);
   return (
     <Form
       form={form}
       onValuesChange={onValuesChange}
       onFinish={onFinish}
       className="changeGroup"
+      initialValues={{
+        isRequestTeam : true
+      }}
     >
       <Row justify={"space-between"} gutter={12}>
         <Col xs={24} lg={11}>
           <h5>Nguồn chuyển</h5>
           <Flex>
-            <Form.Item<ChangeGroupSubmitType> noStyle name={"requestId"}>
-              <SearchList dataSource={[{label : "YÊU cầu 1",value : 1}]} onChange={(value) => form.setFieldsValue({requestId : value})} onSearch={(value) => {}} />
-              {/* <SelectAnt style={{ width: "100%" }} placeholder="Chọn yêu cầu chuyển nhóm" /> */}
-            </Form.Item>
+            <Form.Item noStyle hidden name={"_id"} />
+            <Form.Item noStyle hidden name={["before","group"]} />
+            <Form.Item noStyle hidden name={["before","groupRef"]} />
+            <Form.Item noStyle hidden name={["before","groupId"]} />
+              <div style={{height : 30}}></div>
+              {/* <SearchList dataSource={[{label : "YÊU cầu 1",value : 1}]} onChange={(value) => form.setFieldsValue({requestId : value})} onSearch={(value) => {}} /> */}
           </Flex>
           <div className="changeGroup--description">
             <h6>Thông tin nguồn chuyển</h6>
             <Typography.Paragraph>
-              Người muốn chuyển: Lê Tất Chính
+              Người muốn chuyển: <Typography.Text strong>{get(partner,'fullName','')}</Typography.Text>
             </Typography.Paragraph>
             <Typography.Paragraph>
-              Nhóm hiện tại: Nguyễn văn linh
+              Nhóm hiện tại: <Typography.Text strong>{get(partner,'parent.fullName','')}</Typography.Text>
             </Typography.Paragraph>
           </div>
         </Col>
@@ -102,55 +131,24 @@ function ControlChangeGroup(props: propsType): React.JSX.Element {
         <Col xs={24} lg={11}>
           <h5>Mục tiêu chuyển</h5>
           <Flex>
-            <Form.Item<ChangeGroupSubmitType> noStyle name={"targetGroupId"}>
-              <Select
-                style={{ width: "100%" }}
-                placeholder="Nhóm muốn chuyển"
-              />
+            <Form.Item noStyle name={['after','group']}/>
+            <Form.Item noStyle name={['after','groupRef']}/>
+            <Form.Item rules={requireRules} noStyle name={['after','groupId']}>
+              <SelectCollaborator placeholder="Nhóm muốn chuyển"/>
             </Form.Item>
           </Flex>
           <div className="changeGroup--description">
             <h6>Thông tin nhóm</h6>
-            <Typography.Paragraph>
-              Thành viên:{" "}
-              <Avatar.Group shape="square">
-                <Avatar
-                  style={{
-                    backgroundColor: "#fde3cf",
-                  }}
-                >
-                  A
-                </Avatar>
-                <Avatar
-                  style={{
-                    backgroundColor: "#f56a00",
-                  }}
-                >
-                  K
-                </Avatar>
-                <Avatar
-                  style={{
-                    backgroundColor: "#87d068",
-                  }}
-                >
-                  C
-                </Avatar>
-                <Avatar
-                  style={{
-                    backgroundColor: "#1677ff",
-                  }}
-                >
-                  D
-                </Avatar>
-              </Avatar.Group>
-            </Typography.Paragraph>
+            {partnerSelectId && <Typography.Paragraph>
+              Số điện thoại:{" "} <Typography.Text strong>{get(partnerSelect,'phoneNumber','')}</Typography.Text>
+            </Typography.Paragraph>}
           </div>
         </Col>
       </Row>
       <div>
         <h6>Lựa chọn thêm</h6>
-        <Form.Item<ChangeGroupSubmitType> noStyle name={"options"}>
-          <Checkbox.Group options={optionRequest} />
+        <Form.Item<ChangeGroupSubmitType>  valuePropName="checked" noStyle name={"isRequestTeam"}>
+          <Checkbox >Chuyển tất cả thành viên trong nhóm hiện tại sang nhóm muốn chuyển</Checkbox>
         </Form.Item>
       </div>
       <Button

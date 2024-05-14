@@ -435,7 +435,7 @@ export default function Collaborator({
             {
               key: "4",
               label: "Yêu cầu",
-              children: <RequestGroup.CreateAndView />,
+              children: <RequestGroup.CreateAndView id={id}/>,
               disabled: !id,
             },
           ]}

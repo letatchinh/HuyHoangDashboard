@@ -23,7 +23,7 @@ interface resultChange {
 }
 
 export interface RequestChangeGroupModalBase {
-    requestById: string,
+    requestOfId: string,
     requestRef: keyof typeof enumRef,
     contentRequest: string,
     status: keyof typeof STATUS_REQUEST_GROUP,
@@ -40,9 +40,12 @@ export interface RequestChangeGroupModalBase {
     createdAt: Date,
     updatedAt: Date,
 }
-export type RequestGroupSubmitType = Pick<RequestChangeGroupModalBase, "status" | "contentRequest" | "requestById" >;
+export type RequestGroupSubmitType = Pick<RequestChangeGroupModalBase, "status" | "contentRequest" | "requestOfId" >;
+export type ResultChangeType = Pick<RequestChangeGroupModalBase,"resultChange">;
     export type ChangeGroupSubmitType = {
-        targetGroupId : string,
-        requestId : string,
-        options : string[],
+        _id : any,
+        isRequestTeam : boolean,
+        before:resultChange,
+        after:resultChange,
+
     }
