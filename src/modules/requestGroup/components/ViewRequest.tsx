@@ -2,7 +2,7 @@ import { SyncOutlined } from "@ant-design/icons";
 import { Badge, Button, Dropdown, Popover, Segmented, Typography } from "antd";
 import { ColumnsType } from "antd/lib/table/InternalTable";
 import { get, keys, truncate } from "lodash";
-import React from "react";
+import React, { useState } from "react";
 import TableAnt from "~/components/Antd/TableAnt";
 
 import { getOptions, pagingTable } from "~/utils/helpers";
@@ -12,11 +12,23 @@ type propsType = {};
 
 export default function ViewRequest(props: propsType): React.JSX.Element {
     const {onChangeStatus,data,paging,setQuery,loading,onSelectPartner} = useRequestGroupStore();
+    const [expanded, setExpanded] = useState(false);
+
     const columns: ColumnsType = [
         {
           title: "Nội dung",
           dataIndex: "contentRequest",
           key: "contentRequest",
+          render(value, record, index) {
+            return <Typography.Paragraph ellipsis={{
+              rows : 5,
+              expandable : 'collapsible',
+              expanded,
+          onExpand: (_, info) => setExpanded(info.expanded),
+            }}>
+              {value}
+            </Typography.Paragraph>
+          },
         },
         {
           title: "Người yêu cầu",

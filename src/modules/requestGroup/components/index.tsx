@@ -50,7 +50,7 @@ type propsTypeControlChangeGroup = {
   requestId? : any,
 };
 function ControlChangeGroup({requestId}: propsTypeControlChangeGroup): React.JSX.Element {
-  const {onUpdateStatus,id} = useRequestGroupStore();
+  const {onUpdateStatus,id,isSubmitLoading} = useRequestGroupStore();
   const [form] = Form.useForm();
   const [partner,isLoading] = useGetCollaborator(id);
   const partnerSelectId = Form.useWatch(['after','groupId'],form);
@@ -97,8 +97,8 @@ function ControlChangeGroup({requestId}: propsTypeControlChangeGroup): React.JSX
     form.setFieldsValue({
       _id : requestId,
         before : {
-          group : get(partner,'parentNear'),
-          groupId : get(partner,'parentNear'),
+          group : get(partner,'_id'),
+          groupId : get(partner,'_id'),
           groupRef : 'partner',
         }
     })
@@ -173,6 +173,7 @@ function ControlChangeGroup({requestId}: propsTypeControlChangeGroup): React.JSX
         type="primary"
         style={{ width: 200, marginTop: 10 }}
         icon={<ArrowRightOutlined />}
+        loading={isSubmitLoading}
       >
         Chuyển đổi
       </Button>
