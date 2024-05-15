@@ -261,10 +261,9 @@ export const useInitialValues = (user: any) => {
 };
 
 export const unSubscribeToken = () => {
-// const token = useToken();
-
-  let tokenFcm = get(JSON.parse(localStorage?.getItem("persist:user") as any), 'tokenFcm', JSON.stringify(''));
-  apis.unSubscribeToken(JSON.parse(tokenFcm))
+  let tokenFcm = JSON.stringify(localStorage.getItem("tokenFcm"));
+  tokenFcm && apis.unSubscribeToken(JSON.parse(tokenFcm))
+  localStorage.removeItem("tokenFcm")
 };
 
 export const subscribeToken = (tokenFcm: any) => { // NOT NEED TO ASYNC

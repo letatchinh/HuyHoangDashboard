@@ -11,7 +11,6 @@ import {
 import { postMessageNewWhBillFirebase } from "./broadCastChanel/firebaseChanel";
 import { TYPE_NOTIFICATION } from "../constants";
 import apis from "../notification.api";
-
 export const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
   authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
@@ -92,17 +91,19 @@ export async function getTokenFCM(msg = messaging) {
     .catch((err: any) => {
       console.log(err, "Erro In Get Token Firebase");
     });
-}
+};
 function requestPermission() {
   if ("Notification" in window) {
     console.log("Have Notification In Window");
     if (Notification.permission === "granted") {
       console.log("Notification permission is granted");
+      const persistAuth = JSON.parse(localStorage.getItem('persist:auth') as any);
       return getFirebaseToken()
         .then((firebaseToken) => {
           if (firebaseToken) {
             console.log("HAVE TOKEN");
-            apis.subscribeToken(firebaseToken);
+            persistAuth.token && persistAuth.token !== 'null' && apis.subscribeToken(firebaseToken);
+            persistAuth.token  && persistAuth.token !== 'null' && localStorage.setItem('tokenFcm', JSON.stringify(firebaseToken));
           }
         })
         .catch((err) =>
@@ -117,7 +118,7 @@ function requestPermission() {
   } else {
     console.log("Notifications not supported in this browser.");
   }
-}
+};
 export function onMessageListener() {
   if (!messaging) return;
   onMessage(messaging, (payload: any) => {
