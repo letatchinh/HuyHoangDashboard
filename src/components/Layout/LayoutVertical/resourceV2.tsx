@@ -82,6 +82,7 @@ const permissionCollaborator = [
   POLICIES.READ_STATUSBORROWPRODUCT,
 ];
 
+
 export const resource: ItemType[] =[ 
   {
     label: "WorldPharmaVN",
@@ -351,7 +352,9 @@ export const resource: ItemType[] =[
     permission: [
       POLICIES.READ_REPORTSALARY, 
       POLICIES.READ_REPORTSALARYPARTNER,
-      POLICIES.READ_VOUCHERPARTNER
+      POLICIES.READ_VOUCHERPARTNER,
+      POLICIES.READ_VOUCHERSALARYPARTNER,
+      POLICIES.READ_VOUCHERSALARYEMPLOYEE
     ],
     children: [
       {
@@ -368,9 +371,9 @@ export const resource: ItemType[] =[
       },
       {
         label: "Phiếu lương",
-        path: PATH_APP.vouchers.salaryPartner,
-        key: PATH_APP.vouchers.salaryPartner,
-        permission: [POLICIES.READ_VOUCHERPARTNER],//
+        path: PATH_APP.vouchers.salary,
+        key: PATH_APP.vouchers.salary,
+        permission: [POLICIES.READ_VOUCHERSALARYPARTNER, POLICIES.READ_VOUCHERSALARYEMPLOYEE],//
       },
     ],
     icon: <i className="fa-solid fa-code-branch"></i>,
