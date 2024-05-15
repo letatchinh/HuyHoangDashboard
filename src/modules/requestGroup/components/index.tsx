@@ -8,7 +8,7 @@ import {
   Form,
   Row, Switch, Typography
 } from "antd";
-import { get } from "lodash";
+import { get, omit } from "lodash";
 import React, { useEffect } from "react";
 import BaseBorderBox from "~/components/common/BaseBorderBox/index";
 import { requireRules } from "~/constants/defaultValue";
@@ -24,12 +24,13 @@ import CreateRequest from "./CreateRequest";
 import ViewRequest from "./ViewRequest";
 type propsType = {
   id? : any,
-  showCreate? : boolean
+  showCreate? : boolean,
+  mode : 'all' | 'one',
 };
-function CreateAndView({id,showCreate = true}: propsType): React.JSX.Element {
+function CreateAndView({id,showCreate = true,mode}: propsType): React.JSX.Element {
   useResetAction();
   return (
-    <RequestGroupProvider id={id}>
+    <RequestGroupProvider mode={mode} id={id}>
       <Row gutter={8} justify={"space-between"} wrap={false}>
         <Col flex={1} md={24}>
           <BaseBorderBox title={"Lịch sử yêu cầu"}>
@@ -45,40 +46,50 @@ function CreateAndView({id,showCreate = true}: propsType): React.JSX.Element {
     </RequestGroupProvider>
   );
 }
-const optionRequest = [
-  {
-    label: "Chuyển tất cả thành viên trong nhóm hiện tại sang nhóm muốn chuyển",
-    value: "group",
-  },
-];
 type propsTypeControlChangeGroup = {
-  id? : any,
   requestId? : any,
 };
-function ControlChangeGroup({id,requestId}: propsTypeControlChangeGroup): React.JSX.Element {
+function ControlChangeGroup({requestId}: propsTypeControlChangeGroup): React.JSX.Element {
+  const {onUpdateStatus,id} = useRequestGroupStore();
   const [form] = Form.useForm();
   const [partner,isLoading] = useGetCollaborator(id);
-  const {onUpdateStatus} = useRequestGroupStore();
   const partnerSelectId = Form.useWatch(['after','groupId'],form);
   
-  const [partnerSelect,loading] = useFetchState({api : apis.getById,query : partnerSelectId,useDocs : false,shouldRun : !!partnerSelectId});
+  const [partnerSelect,loading] = useFetchState({api : apis.getById,query : partnerSelectId,useDocs : false,shouldRun : !!partnerSelectId && partnerSelectId !== 'null'});
   
   const onFinish = (values: ChangeGroupSubmitType) => {
-    onUpdateStatus({
-      ...values,
-      status : STATUS_REQUEST_GROUP.COMPLETED
-    });
+    if(values.after.groupId === 'null'){
+      onUpdateStatus({
+        ...values,
+        after : undefined,
+        // ...omit(values,['after']),
+        status : STATUS_REQUEST_GROUP.COMPLETED
+      });
+    }else{
+      onUpdateStatus({
+        ...values,
+        status : STATUS_REQUEST_GROUP.COMPLETED
+      });
+    }
     
   };
   const onValuesChange = (change: Partial<ChangeGroupSubmitType>, allValue: ChangeGroupSubmitType) => {
     if(change.after?.groupId){
-      form.setFieldsValue({
-        after : {
-          group : change.after?.groupId,
-          groupId : change.after?.groupId,
-          groupRef : 'partner',
-        }
-      })
+      if(change.after?.groupId === 'null'){
+        form.setFieldsValue({
+          after : {
+            groupId : 'null'
+          }
+        })
+      }else{
+        form.setFieldsValue({
+          after : {
+            group : change.after?.groupId,
+            groupId : change.after?.groupId,
+            groupRef : 'partner',
+          }
+        })
+      }
     }
   };
   
@@ -134,12 +145,18 @@ function ControlChangeGroup({id,requestId}: propsTypeControlChangeGroup): React.
             <Form.Item noStyle name={['after','group']}/>
             <Form.Item noStyle name={['after','groupRef']}/>
             <Form.Item rules={requireRules} noStyle name={['after','groupId']}>
-              <SelectCollaborator placeholder="Nhóm muốn chuyển"/>
+              <SelectCollaborator mergeOption={[
+                {
+                  label : "Rời nhóm hiện tại",
+                  value : 'null',
+                  
+                }
+              ]} placeholder="Nhóm muốn chuyển"/>
             </Form.Item>
           </Flex>
           <div className="changeGroup--description">
             <h6>Thông tin nhóm</h6>
-            {partnerSelectId && <Typography.Paragraph>
+            {(partnerSelectId && partnerSelectId !== 'null') && <Typography.Paragraph>
               Số điện thoại:{" "} <Typography.Text strong>{get(partnerSelect,'phoneNumber','')}</Typography.Text>
             </Typography.Paragraph>}
           </div>

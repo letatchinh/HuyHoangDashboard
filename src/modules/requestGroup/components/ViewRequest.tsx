@@ -1,3 +1,4 @@
+import { SyncOutlined } from "@ant-design/icons";
 import { Badge, Button, Dropdown, Popover, Segmented, Typography } from "antd";
 import { ColumnsType } from "antd/lib/table/InternalTable";
 import { get, keys, truncate } from "lodash";
@@ -5,12 +6,12 @@ import React from "react";
 import TableAnt from "~/components/Antd/TableAnt";
 
 import { getOptions, pagingTable } from "~/utils/helpers";
-import { STATUS_REQUEST_GROUP_COLOR, STATUS_REQUEST_GROUP_VI } from "../constants";
+import { STATUS_REQUEST_GROUP_COLOR, STATUS_REQUEST_GROUP_DISABLED, STATUS_REQUEST_GROUP_VI } from "../constants";
 import useRequestGroupStore from "../RequestGroupProvider";
 type propsType = {};
 
 export default function ViewRequest(props: propsType): React.JSX.Element {
-    const {onChangeStatus,data,paging,setQuery,loading} = useRequestGroupStore();
+    const {onChangeStatus,data,paging,setQuery,loading,onSelectPartner} = useRequestGroupStore();
     const columns: ColumnsType = [
         {
           title: "Nội dung",
@@ -36,13 +37,19 @@ export default function ViewRequest(props: propsType): React.JSX.Element {
             const stt = get(rc,'status');
             return (
               <Dropdown.Button
+              trigger={['click']}
+              placement='bottomLeft'
+              icon={<SyncOutlined style={{color : '#3481FF'}}/>}
               menu={{
                 items : keys(STATUS_REQUEST_GROUP_VI).map((k : any) => ({
                   key : k,
                   label : get(STATUS_REQUEST_GROUP_VI,k),
-                  onClick : () => onChangeStatus({_id,status : k}),
+                  onClick : () => {
+                    onChangeStatus({_id,status : k});
+                    onSelectPartner(get(rc,'requestOfId'))
+                  },
                   icon : <Badge status={get(STATUS_REQUEST_GROUP_COLOR,k)}/>,
-                  // disabled :
+                  disabled : get(STATUS_REQUEST_GROUP_DISABLED,stt).includes(k)
                 }))
               }}
               >
@@ -52,22 +59,10 @@ export default function ViewRequest(props: propsType): React.JSX.Element {
                 {get(STATUS_REQUEST_GROUP_VI,stt)}
                 </Typography.Text>
               </Dropdown.Button>
-            //   <Segmented
-            //   value={get(rc,'status')}
-            //   options={getOptions(STATUS_REQUEST_GROUP_VI).map((item : {value : keyof typeof STATUS_REQUEST_GROUP_VI,label : string}) => ({
-            //       ...item,
-            //       icon : <Badge status={STATUS_REQUEST_GROUP_COLOR[item.value]}/>
-            //   }))}
-            //   onChange={(value) => {
-            //     onChangeStatus({_id,status : value}); // string
-            //   }}
-            // />
             );
           },
         },
       ];
-      console.log(data,'data');
-      
   return (
     <div>
       <TableAnt loading={loading} size="small" dataSource={data} columns={columns} pagination={pagingTable(paging,setQuery)}/>

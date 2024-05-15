@@ -5,6 +5,6 @@ type propsType = {
 }
 export default function RequestGroup(props:propsType) : React.JSX.Element {
     return (
-        <RequestGroupComponents.CreateAndView showCreate={false}/>
+        <RequestGroupComponents.CreateAndView  mode='all' showCreate={false}/>
     )
 }

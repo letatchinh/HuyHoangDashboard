@@ -7,6 +7,7 @@ import { requestGroupActions } from './reducer';
 function* getListRequestGroup({payload:query} : any) : any {
   try {
     const data = yield call(api.getAll,query);
+    yield put(requestGroupActions.clearAction());
     yield put(requestGroupActions.getListSuccess(data));
   } catch (error:any) {
     yield put(requestGroupActions.getListFailed(error));
@@ -16,6 +17,7 @@ function* getListRequestGroup({payload:query} : any) : any {
 function* getListRequestOfPartner({payload:query} : any) : any {
   try {
     const data = yield call(api.getByIdPartner,query);
+    yield put(requestGroupActions.clearAction());
     yield put(requestGroupActions.getListRequestOfPartnerSuccess(data));
   } catch (error:any) {
     yield put(requestGroupActions.getListRequestOfPartnerFailed(error));

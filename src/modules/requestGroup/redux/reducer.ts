@@ -20,9 +20,25 @@ class RequestGroupClassExtend extends InstanceModuleRedux {
     super('requestGroup');
     this.cloneReducer = {
       ...this.initReducer,
+      clearAction: (state : cloneInitState) => {
+        state.getByIdFailed = null;
+        state.getListFailed = null;
+        state.createSuccess = null;
+        state.createFailed = null;
+        state.updateSuccess = null;
+        state.updateFailed = null;
+        state.deleteSuccess = null;
+        state.deleteFailed = null;
+        state.submitSuccess = null;
+        state.submitFailed = null;
+        state.changeStatusFailed = null;
+        state.changeStatusSuccess = null;
+        state.getListRequestOfPartnerFailed = null;
+      },
       getListRequestOfPartnerRequest: (state: cloneInitState, { payload }: any) => {
         state.loadingByPartner = true;
         state.getListRequestOfPartnerFailed = null;
+        state.createFailed = null;
       },
       getListRequestOfPartnerSuccess: (state: cloneInitState, { payload }: any) => {
         state.loadingByPartner = false;

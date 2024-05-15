@@ -148,6 +148,18 @@ export class InstanceModuleRedux{
     onSearch (state:any, { payload }:any) {
       state.listSearch = payload;
     },
+    clearAction: (state : initStateSlice) => {
+      state.getByIdFailed = null;
+      state.getListFailed = null;
+      state.createSuccess = null;
+      state.createFailed = null;
+      state.updateSuccess = null;
+      state.updateFailed = null;
+      state.deleteSuccess = null;
+      state.deleteFailed = null;
+      state.submitSuccess = null;
+      state.submitFailed = null;
+    },
     // Reset the state
     reset: () => this.initialState,
     // Reset the state Action

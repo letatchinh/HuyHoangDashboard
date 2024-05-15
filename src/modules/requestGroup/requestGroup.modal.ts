@@ -46,6 +46,6 @@ export type ResultChangeType = Pick<RequestChangeGroupModalBase,"resultChange">;
         _id : any,
         isRequestTeam : boolean,
         before:resultChange,
-        after:resultChange,
+        after:resultChange & 'null',
 
     }
