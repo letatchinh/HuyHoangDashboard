@@ -12,6 +12,7 @@ export default function ContentEllipsis({children}:propsType) : React.JSX.Elemen
             expandable : 'collapsible',
             expanded,
             onExpand: (_, info) => setExpanded(info.expanded),
+            symbol : expanded ? "Rút gọn" : "Mở rộng"
           }}>
             {children}
           </Typography.Paragraph>
