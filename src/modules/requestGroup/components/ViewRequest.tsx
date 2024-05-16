@@ -8,6 +8,7 @@ import TableAnt from "~/components/Antd/TableAnt";
 import { getOptions, pagingTable } from "~/utils/helpers";
 import { STATUS_REQUEST_GROUP_COLOR, STATUS_REQUEST_GROUP_DISABLED, STATUS_REQUEST_GROUP_VI } from "../constants";
 import useRequestGroupStore from "../RequestGroupProvider";
+import ContentEllipsis from "./ContentEllipsis";
 type propsType = {};
 
 export default function ViewRequest(props: propsType): React.JSX.Element {
@@ -20,14 +21,9 @@ export default function ViewRequest(props: propsType): React.JSX.Element {
           dataIndex: "contentRequest",
           key: "contentRequest",
           render(value, record, index) {
-            return <Typography.Paragraph ellipsis={{
-              rows : 5,
-              expandable : 'collapsible',
-              expanded,
-          onExpand: (_, info) => setExpanded(info.expanded),
-            }}>
+            return <ContentEllipsis>
               {value}
-            </Typography.Paragraph>
+            </ContentEllipsis>
           },
         },
         {

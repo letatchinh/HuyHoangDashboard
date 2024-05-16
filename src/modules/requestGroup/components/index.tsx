@@ -122,7 +122,6 @@ function ControlChangeGroup({requestId}: propsTypeControlChangeGroup): React.JSX
             <Form.Item noStyle hidden name={["before","groupRef"]} />
             <Form.Item noStyle hidden name={["before","groupId"]} />
               <div style={{height : 30}}></div>
-              {/* <SearchList dataSource={[{label : "YÊU cầu 1",value : 1}]} onChange={(value) => form.setFieldsValue({requestId : value})} onSearch={(value) => {}} /> */}
           </Flex>
           <div className="changeGroup--description">
             <h6>Thông tin nguồn chuyển</h6>
