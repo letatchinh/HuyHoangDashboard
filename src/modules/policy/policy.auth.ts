@@ -84,6 +84,9 @@ const updateThePharmacyForEmployee = 'updateThePharmacyForEmployee';
 const partner = 'partner';
 const partnerGroup = 'partnerGroup';
 const reportSalaryPartner = 'reportSalaryPartner';
+const voucherSalaryPartner = 'voucherSalaryPartner';
+const voucherBillPartner = 'voucherBillPartner';
+
 const voucherPartner = 'voucherPartner';
 const borrowProduct = 'borrowProduct';
 const statusBorrowProduct = 'statusBorrowProduct';
@@ -178,6 +181,8 @@ const RESOURCES = [
   partner,
   partnerGroup,
   reportSalaryPartner,
+  voucherSalaryPartner,
+  voucherBillPartner,
   voucherPartner,
   borrowProduct,
   statusBorrowProduct
@@ -322,6 +327,14 @@ const RESOURCE = (): ResourceType => {
     reportSalaryPartner,
   ];
 
+  const VOUCHER_SALARY_PARTNER: string[] = [
+    voucherSalaryPartner
+  ];
+
+  const VOUCHER_BILL_PARTNER: string[] = [
+    voucherBillPartner,
+  ];
+
   return {
     GROUP_USER,
     GROUP_EMPLOYEE,
@@ -345,6 +358,8 @@ const RESOURCE = (): ResourceType => {
     CUSTOMER,
     PHARMA_PROFILE,
     PARTNER,
+    VOUCHER_SALARY_PARTNER,
+    VOUCHER_BILL_PARTNER,
   };
 };
 

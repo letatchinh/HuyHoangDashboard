@@ -15,7 +15,8 @@ export type GlobalUpdateBill = {
     mutateBill : () => void,
     onOpenForm: () => void,
     onOpenFormPayment: () => void
-    compareMoney: number
+    compareMoney: number,
+    refCollection: any,
 };
 const UpdateBill = createContext<GlobalUpdateBill>({
     bill : null,
@@ -23,7 +24,9 @@ const UpdateBill = createContext<GlobalUpdateBill>({
     mutateBill : () => {},
     onOpenForm: () => { },
     onOpenFormPayment: () => { },
-    compareMoney: 0
+    compareMoney: 0,
+    refCollection: null,
+
 });
 
 type UpdateBillProviderProps = {
@@ -43,7 +46,6 @@ export function UpdateBillProvider({
     const [isOpenForm, setIsOpenForm] = useState(false);
     const [isOpenFormPayment, setIsOpenFormPayment] = useState(false);
     // const refCo
-    console.log(refCollection?.toUpperCase(),'refCollection?.toUpperCase()');
     
   const compareMoney = useMemo(() => pair - totalPrice, [bill]);
   
@@ -71,7 +73,8 @@ export function UpdateBillProvider({
         mutateBill,
         onOpenForm,
         onOpenFormPayment,
-        compareMoney
+        compareMoney,
+        refCollection,
       }}
     >
       {children}

@@ -156,8 +156,7 @@ export const usePaymentVoucherQueryParams = () => {
   };
 
   // TODO: Default RefCollection By PathName
-  let refCollection: any;
-  console.log(refCollection,'refCollection')
+  let refCollection :any= null;
   let methodType : any = null;
   if(pathname === PATH_APP.vouchers.pharmacy ){
     refCollection = REF_COLLECTION.PHARMA_PROFILE
