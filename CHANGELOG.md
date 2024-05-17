@@ -1,3 +1,33 @@
+# [1.17.0](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/compare/v1.16.0...v1.17.0) (2024-05-17)
+
+
+### Bug Fixes
+
+* [#1571](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1571) FE_Báo cáo lương Cộng tác viên , Phân quyên ([bd5bdd1](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/bd5bdd17c0ccc622e2c981163265c275370cdc11))
+* [#1577](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1577) - add key refCollection for employee ([e029bf3](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/e029bf35026f86dc133e5b77f3ca8ed8555afc96))
+* [#1577](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1577) - add method type for salary employee and collaboration ([45d5280](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/45d52808540bd49afe9d22afb3951da58a80c858))
+* [#1577](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1577) - change title name in page receipt ([dc6769c](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/dc6769c66f8e52b6ffa362da164be5cefb449c28))
+* [#1577](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1577) - fix form receipt in collaboration ([a782703](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/a782703b9daadb328d832e22afa7d21fdfcae5df))
+* [#1577](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1577) change router, change navbar ([919a67c](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/919a67cba69b16ad2136cd3eb6678546d2026f15))
+* [#1577](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1577) check condition create reciept form ([16710d6](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/16710d6c799db0c0d07c256feb5655616753625d))
+* [#1580](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1580) - add permission receipt and payment ([20810b2](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/20810b2f4e86820a760205143ea3cc6c646bf8c2))
+* [#1580](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1580) - fix permission receipt and payment form ([861f9c5](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/861f9c5c1fc2ab4573f772928b1fe1551b5c2e12))
+* [#1580](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1580) - fix permission receipt and payment form for supplier ([0f556bd](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/0f556bd261e16ea7efa30ddd939441f47f6cda98))
+* Phan Quyen ([7666d02](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/7666d02b18044023816fcb85882a1ed3587234f7))
+
+
+### Features
+
+* [#1571](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1571) FE_Báo cáo lương Cộng tác viên , Phân quyên ([03adfc7](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/03adfc7f796f1d0d1f8a77f0dfe6e035881036ce))
+* add detail employee in modal ([6bd1c6e](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/6bd1c6ee36596676df0b96897f4e1ace285122d2))
+* init file api ([cc3b52b](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/cc3b52b7174d02e89a29a7560f8cbbfb38ad66a0))
+* init hook ([f5c8e87](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/f5c8e875d853cffa8fa41118bfb1f88e7370e27c))
+* init module partnerSalaryPartner ([5f2c623](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/5f2c623fa40b36a15097932a03f212c107444d08))
+* init module reportSalaryPartner ([3d4c71d](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/3d4c71ddda7ff232db424862e761ab570d0c2dce))
+* init reducer and saga ([bc9de48](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/bc9de48bda6b827d6c392590346715c1bce90b2a))
+* init router reportSalaryPartner ([5681d9c](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/5681d9c806dad98e011599c74b9d0c47c929eced))
+* Report Ui ([6a4a165](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/6a4a165eebfaa96e284b0f76f811c64c31022529))
+
 # [1.16.0](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/compare/v1.15.0...v1.16.0) (2024-05-17)
 
 
