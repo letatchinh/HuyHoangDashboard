@@ -7,15 +7,17 @@ import ModalAnt from "~/components/Antd/ModalAnt";
 import { useGetBill } from "../bill.hook";
 import VoucherModule from '~/modules/vouchers';
 import {  REF_COLLECTION, REF_COLLECTION_UPPER } from "~/constants/defaultValue";
-import { omit } from "lodash";
+import { get, omit, sumBy } from "lodash";
 import PaymentVoucherFormPharmacy from "~/modules/paymentVoucher/components/PaymentVoucherFormPharmacy";
+import { STATUS_BILL } from "../constants";
 export type GlobalUpdateBill = {
     bill : any,
     isLoading : boolean,
     mutateBill : () => void,
     onOpenForm: () => void,
     onOpenFormPayment: () => void
-    compareMoney: number
+    compareMoney: number,
+    totalRevenueInVouchers: number;
 };
 const UpdateBill = createContext<GlobalUpdateBill>({
     bill : null,
@@ -23,7 +25,8 @@ const UpdateBill = createContext<GlobalUpdateBill>({
     mutateBill : () => {},
     onOpenForm: () => { },
     onOpenFormPayment: () => { },
-    compareMoney: 0
+    compareMoney: 0,
+    totalRevenueInVouchers: 0,
 });
 
 type UpdateBillProviderProps = {
@@ -42,11 +45,20 @@ export function UpdateBillProvider({
     const {pharmacyId,totalPrice,codeSequence,_id,totalReceiptVoucherCompleted,remainAmount, remaining, pair, refCollection} = bill || {};
     const [isOpenForm, setIsOpenForm] = useState(false);
     const [isOpenFormPayment, setIsOpenFormPayment] = useState(false);
-    // const refCo
-    console.log(refCollection?.toUpperCase(),'refCollection?.toUpperCase()');
-    
-  const compareMoney = useMemo(() => pair - totalPrice, [bill]);
-  
+    const totalRevenueInVouchers = useMemo(() => {
+      if (bill?.receiptVouchers?.length > 0) {
+        const data = bill?.receiptVouchers?.filter((item: any)=> item?.status !== STATUS_BILL.CANCELLED);
+        return sumBy([...data], (item) => get(item, 'totalAmount', 0));
+      };
+      return 0;
+    }, [bill]);
+  const compareMoney = useMemo(() => (pair || 0) - (totalPrice), [bill, totalReceiptVoucherCompleted]);
+  const maxMoneyCanReceipt = useMemo(() => {
+    if (bill && totalReceiptVoucherCompleted > 0) {
+      return Number(bill?.totalAmount) - Number(totalRevenueInVouchers) > 0 ? Number(bill?.totalAmount) - Number(totalRevenueInVouchers) : 0
+    };
+    return totalPrice
+  },[bill, totalReceiptVoucherCompleted]);
   const onOpenForm = () => {
     setIsOpenForm(true);
   };
@@ -62,7 +74,6 @@ export function UpdateBillProvider({
   const onCloseFormPayment = () => {
     setIsOpenFormPayment(false);
   };
-  
   return (
     <UpdateBill.Provider
       value={{
@@ -71,7 +82,8 @@ export function UpdateBillProvider({
         mutateBill,
         onOpenForm,
         onOpenFormPayment,
-        compareMoney
+        compareMoney,
+        totalRevenueInVouchers,
       }}
     >
       {children}
@@ -90,15 +102,16 @@ export function UpdateBillProvider({
           {...refCollection === 'pharma_profile' && {pharmacyId}}
           {...refCollection === 'partner' && {partnerId: pharmacyId}}
           refCollection={REF_COLLECTION_UPPER[refCollection?.toUpperCase()]}
-          totalAmount={remaining}
+          totalAmount={totalPrice}
           reason={`Thu tiền đơn hàng ${codeSequence || ""} `}
           from='Pharmacy'
           provider={pharmacyId}
-          max={remainAmount}
+          max={maxMoneyCanReceipt}
           method={{
             data : omit(bill,['bill','billItems','historyStatus']),
             type : 'BILL'
           }}
+          totalRevenueInVouchers={totalRevenueInVouchers}
         />
       </ModalAnt>
       <ModalAnt

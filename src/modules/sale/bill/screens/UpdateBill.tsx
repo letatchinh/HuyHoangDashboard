@@ -53,8 +53,7 @@ const CLONE_STATUS_BILL: any = STATUS_BILL;
 export default function UpdateBill(props: propsType): React.JSX.Element {
   const [form] = Form.useForm();
   useResetBillAction();
-  const { bill, isLoading,mutateBill,onOpenForm, compareMoney,onOpenFormPayment } = useUpdateBillStore();
-  console.log(bill,'bill');
+  const { bill, isLoading,mutateBill,onOpenForm, compareMoney,onOpenFormPayment, totalRevenueInVouchers } = useUpdateBillStore();
   
   const {
     codeSequence,
@@ -194,7 +193,7 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
                     <h6>Thông tin khách hàng</h6>
                   </Col>
                   <WithPermission permission={POLICIES.READ_VOUCHERPHARMACY}>
-                  <Col style={{ position: 'absolute', right: 0, top: 5 }}>
+                  <Col style={{ position: 'absolute', right: 0, top: 0 }}>
                     <Button type="link" onClick={onOpenDetailVouchers}>Xem chi tiết các phiếu</Button>
                   </Col>
                   </WithPermission>
@@ -218,7 +217,7 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
                   </Col>
                   <Row gutter={10}>
                     <Col>
-                    {status !== STATUS_BILL.CANCELLED && <Button disabled={remainAmount <= 0} type="primary" size="small" onClick={onOpenForm}>
+                    {status !== STATUS_BILL.CANCELLED && <Button disabled={remainAmount <= 0 || (totalRevenueInVouchers >= totalAmount)} type="primary" size="small" onClick={onOpenForm}>
                       Tạo phiếu thu
                     </Button>}
                     </Col>

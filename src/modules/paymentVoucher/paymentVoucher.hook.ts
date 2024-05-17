@@ -195,7 +195,7 @@ export const usePaymentVoucherQueryParams = () => {
     reason,pathname,refCollection]);
 };
 
-export const usePaymentVoucherByBillIdQueryParams = (id: any) => {
+export const usePaymentVoucherByBillIdQueryParams = (id: any, isNotSentTime: boolean = false) => {
   const query = useQueryParams();
   const {pathname} = useLocation() 
   const typeVoucher = TYPE_VOUCHER.PC;
@@ -207,8 +207,8 @@ export const usePaymentVoucherByBillIdQueryParams = (id: any) => {
   // const status = query.get("status");
   // const totalAmount = query.get("totalAmount");
   // const reason = query.get("reason");
-  const startDate = query.get('startDate') || dayjs().startOf('month').format("YYYY-MM-DDTHH:mm:ss");
-  const endDate = query.get('endDate') || dayjs().endOf('month').format("YYYY-MM-DDTHH:mm:ss");
+  const startDate = !isNotSentTime ? query.get('startDate') || dayjs().startOf('month').format("YYYY-MM-DDTHH:mm:ss") : null;
+  const endDate = !isNotSentTime ? query.get('endDate') || dayjs().endOf('month').format("YYYY-MM-DDTHH:mm:ss"): null;
   // const createSuccess = useSelector(createSuccessSelector);
   // const deleteSuccess = useSelector(deleteSuccessSelector);
 
