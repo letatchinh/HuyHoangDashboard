@@ -46,7 +46,6 @@ import GroupPharmacy from "~/pages/Dashboard/GroupPharmacy";
 import CollaboratorPage from "~/pages/Dashboard/Collaborator";
 import ReportSalaryPartnerPage from "~/pages/Dashboard/ReportSalaryPartner";
 import NotificationPage from "~/pages/Dashboard/Notification";
-import ReportSalaryPartnerPage from "~/pages/Dashboard/ReportSalaryPartner";
 import ProductBorrow from "~/modules/product/components/ProductBorrow";
 import CreateBill from "~/modules/sale/bill/screens/CreateBill";
 import SaleScreen from "~/modules/sale/bill/components/createBillScreen/SaleScreen";
