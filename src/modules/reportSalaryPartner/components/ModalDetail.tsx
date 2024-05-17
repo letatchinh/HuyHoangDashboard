@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useCallback, useMemo, useState } from "react";
 import { contextReport, fomartNumber } from "../reportSalaryPartner.hook";
 import {
@@ -32,6 +31,7 @@ import { ItemVoucher } from "./Context";
 import WithPermission from "~/components/common/WithPermission";
 import POLICIES from "~/modules/policy/policy.auth";
 import { METHOD_TYPE } from "~/modules/vouchers/constants";
+import { ReportSalaryPartnerProvider } from "../ReportSalaryPartnerProvider";
 type propsType = {
   id?: string;
 };
@@ -94,6 +94,11 @@ const DetailOver = ({
 }) => {
   const [clicked, setClicked] = useState(false);
   const [hovered, setHovered] = useState(false);
+
+  const hide = () => {
+    setClicked(false);
+    setHovered(false);
+  };
 
   const handleHoverChange = (open: boolean) => {
     setHovered(open);
@@ -291,39 +296,56 @@ export default function ModalDetail(props: propsType): React.JSX.Element {
         dataSource={infoData?.revenue ?? []}
         pagination={false}
       />
-      <Flex justify={'space-between'} align='center'>
-        <Flex gap={50} justify='space-around' align='center'>
-          <BoxMoney title={'Tổng phải thu'} total={initTotal < 0 ? initTotal : 0}/>
-          <BoxMoney title={'Tổng phải chi'} total={initTotal > 0 ? initTotal : 0}/>
-          <BoxMoney title={'Tổng đã thu'} total={totalReceipt}/>
-          <BoxMoney title={'Tổng đã chi'} total={totalPayment}/>
+      <Flex justify={"space-between"} align="center">
+        <Flex gap={50} justify="space-around" align="center">
+          <BoxMoney
+            title={"Tổng phải thu"}
+            total={initTotal < 0 ? initTotal : 0}
+          />
+          <BoxMoney
+            title={"Tổng phải chi"}
+            total={initTotal > 0 ? initTotal : 0}
+          />
+          <BoxMoney title={"Tổng đã thu"} total={totalReceipt} />
+          <BoxMoney title={"Tổng đã chi"} total={totalPayment} />
         </Flex>
-      <Flex style={{ marginTop: 20 }} justify="end" gap={10} align='center'>
-        <WithPermission permission={POLICIES.READ_VOUCHERPARTNER}>
-        <Popover
-          trigger={["click"]}
-          title="Danh sách phiếu"
-          content={<VoucherList dataSource={get(infoData, "vouchers", [])} />}
-        >
-          <Badge count={get(infoData, "vouchers", []).length}>
-            <Button icon={<MenuOutlined />} type="primary" ghost>
-              Danh sách phiếu
-            </Button>
-          </Badge>
-        </Popover>
-        </WithPermission>
-        {total === 0 && <Tag color={'success'}>Đã hoàn tất thanh toán</Tag>}
-      <WithPermission permission={POLICIES.WRITE_VOUCHERPARTNER}>
-      {total > 0 && (
-          <Button type="primary" onClick={onOpenPayment}>
-            Tạo phiếu chi
-          </Button>
-        )}
-        {total < 0 && <Button type="primary" onClick={onOpenReceipt}>
-            Tạo phiếu thu
-          </Button>}
-      </WithPermission>
-      </Flex>
+        
+          <Flex style={{ marginTop: 20 }} justify="end" gap={10} align="center">
+            {/* <WithPermission permission={POLICIES.READ_VOUCHERSALARYPARTNER}> */}
+            <Popover
+              trigger={["click"]}
+              title="Danh sách phiếu"
+              content={
+                <VoucherList dataSource={get(infoData, "vouchers", [])} />
+              }
+            >
+              <Badge count={get(infoData, "vouchers", []).length}>
+                <Button icon={<MenuOutlined />} type="primary" ghost>
+                  Danh sách phiếu
+                </Button>
+              </Badge>
+            </Popover>
+            {/* </WithPermission> */}
+            <ReportSalaryPartnerProvider refCollection={infoData?.typeSaler} methodType={METHOD_TYPE.VOUCHER_SALARY}>
+              <WithPermission permission={POLICIES.WRITE_VOUCHERSALARYPARTNER}>
+            {total === 0 && <Tag color={"success"}>Đã hoàn tất thanh toán</Tag>}
+                {total > 0 && (
+                  <Button type="primary" onClick={onOpenPayment}>
+                    Tạo phiếu chi
+                  </Button>
+                )}
+          
+            {/* <WithPermission permission={POLICIES.WRITE_VOUCHERSALARYPARTNER}> */}
+            {total < 0 && (
+              <Button type="primary" onClick={onOpenReceipt}>
+                Tạo phiếu thu
+              </Button>
+            )}
+            </WithPermission>
+             </ReportSalaryPartnerProvider>
+            {/* </WithPermission> */}
+          </Flex>
+       
       </Flex>
 
       <ModalAnt
@@ -342,7 +364,7 @@ export default function ModalDetail(props: propsType): React.JSX.Element {
           {...infoData?.typeSaler === 'employee' && {employeeId : get(infoData, "salerId._id")}}
           {...infoData?.typeSaler === 'partner' && {partnerId : get(infoData, "salerId._id")}}
           onClose={() => onClosePayment()}
-          refCollection={REF_COLLECTION_UPPER[infoData?.typeSaler?.toUpperCase()]}
+          refCollection= {REF_COLLECTION_UPPER[infoData?.typeSaler?.toUpperCase()]}
           debt={total}
           method={{
             data: infoData?._id,

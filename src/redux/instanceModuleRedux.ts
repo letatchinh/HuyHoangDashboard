@@ -101,7 +101,7 @@ export class InstanceModuleRedux{
     },
 
     // Update
-    updateRequest: (state:initStateSlice) => {
+    updateRequest: (state: initStateSlice) => {
       state.isSubmitLoading = true;
       state.updateFailed = null;
     },

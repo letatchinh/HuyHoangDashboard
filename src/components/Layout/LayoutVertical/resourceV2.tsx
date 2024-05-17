@@ -78,6 +78,7 @@ const permissionCollaborator = [
   POLICIES.READ_BILLPARTNER,
   POLICIES.READ_QUOTATIONPARTNER,
   POLICIES.WRITE_QUOTATIONPARTNER,
+  POLICIES.READ_VOUCHERBILLPARTNER,
   POLICIES.READ_BORROWPRODUCT,
   POLICIES.READ_STATUSBORROWPRODUCT,
 ];
@@ -357,7 +358,8 @@ export const resource: ItemType[] =[
     permission: [
       POLICIES.READ_REPORTSALARY, 
       POLICIES.READ_REPORTSALARYPARTNER,
-      POLICIES.READ_VOUCHERPARTNER
+      POLICIES.READ_VOUCHERSALARYPARTNER,
+      POLICIES.READ_VOUCHERPARTNER,
     ],
     children: [
       {
@@ -376,7 +378,7 @@ export const resource: ItemType[] =[
         label: "Phiếu lương",
         path: PATH_APP.vouchers.salaryPartner,
         key: PATH_APP.vouchers.salaryPartner,
-        permission: [POLICIES.READ_VOUCHERPARTNER],//
+        permission: [POLICIES.READ_VOUCHERSALARYPARTNER],//
       },
     ],
     icon: <i className="fa-solid fa-code-branch"></i>,
@@ -482,7 +484,7 @@ export const resource: ItemType[] =[
         label: "Phiếu đơn hàng",
         path: PATH_APP.vouchers.partner,
         key: PATH_APP.vouchers.partner,
-        permission: [POLICIES.READ_VOUCHERPARTNER],//
+        permission: [POLICIES.READ_VOUCHERBILLPARTNER],//
       },
       {
         label: "Quản lý sản phẩm mượn",

@@ -97,7 +97,6 @@ import { useGetEmployee } from "~/modules/employee/employee.hook";
   ): React.JSX.Element {
     useResetAction();
     const { id, supplierId, onClose, refCollection, debt, pharmacyId, dataAccountingDefault, method, billId,mutateOrderSupplier,partnerId,employeeId,initData = {} } = props;
-    console.log(method,'method');
     
     const [form] = Form.useForm();
     const ref = useRef();
@@ -562,7 +561,7 @@ import { useGetEmployee } from "~/modules/employee/employee.hook";
             </WithPermission>
             <Row className="staff-form__submit-box">
               {!id ? 
-                 <WithOrPermission permission={[POLICIES.UPDATE_VOUCHERPHARMACY, POLICIES.UPDATE_VOUCHERSUPPLIER]}>
+                 <WithOrPermission permission={[POLICIES.WRITE_VOUCHERPHARMACY, POLICIES.WRITE_VOUCHERSUPPLIER]}>
                  <Button icon={<SaveOutlined />} type="primary" htmlType="submit">
                    Lưu
                    </Button>

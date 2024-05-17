@@ -160,6 +160,9 @@ export const PATH_APP = {
   groupPharmacy: {
     root: path(ROOTS.app, "/group-pharmacy")
   },
+  myNotification: {
+    root: path(ROOTS.app, '/my-notification')
+  },
 
   collaborator: {
     root: path(ROOTS.app, "/collaborator/*"),
