@@ -350,6 +350,7 @@ export const resource: ItemType[] =[
   {
     label: "Báo cáo",
     key: "report",
+    icon: <i className="fa-solid fa-code-branch"></i>,
     permission: [
       POLICIES.READ_REPORTSALARY,
       POLICIES.READ_REPORTSALARYPARTNER,
@@ -376,29 +377,29 @@ export const resource: ItemType[] =[
         key: PATH_APP.vouchers.salary,
         permission: [POLICIES.READ_VOUCHERSALARYPARTNER, POLICIES.READ_VOUCHERSALARYEMPLOYEE],//
       },
+    ],
+  },
+  {
+    label: "Quản lý công việc",
+    key: "todoList",
+    icon: <i className="fa-solid fa-clipboard-list"></i>,
+    permission: [POLICIES.READ_TODOLIST, POLICIES.READ_TODOCONFIGSTATUS],//
+    children: [
       {
         label: "Quản lý công việc",
-        key: "todoList",
-        icon: <i className="fa-solid fa-clipboard-list"></i>,
-        permission: [POLICIES.READ_TODOLIST, POLICIES.READ_TODOCONFIGSTATUS],//
-        children: [
-          {
-            label: "Quản lý công việc",
-            // key: "statusConfig",
-            icon: <ApartmentOutlined />,
-            path: PATH_APP.todoList.workBoard,
-            key: PATH_APP.todoList.workBoard,
-            permission: [POLICIES.READ_TODOLIST],//
-          },
-          {
-            label: "Cấu hình trạng thái",
-            // key: "statusConfig",
-            icon: <AppstoreFilled />,
-            path: PATH_APP.todoList.statusConfig,
-            key: PATH_APP.todoList.statusConfig,
-            permission: [POLICIES.READ_TODOCONFIGSTATUS],//
-          },
-        ],
+        // key: "statusConfig",
+        icon: <ApartmentOutlined />,
+        path: PATH_APP.todoList.workBoard,
+        key: PATH_APP.todoList.workBoard,
+        permission: [POLICIES.READ_TODOLIST],//
+      },
+      {
+        label: "Cấu hình trạng thái",
+        // key: "statusConfig",
+        icon: <AppstoreFilled />,
+        path: PATH_APP.todoList.statusConfig,
+        key: PATH_APP.todoList.statusConfig,
+        permission: [POLICIES.READ_TODOCONFIGSTATUS],//
       },
     ],
   },

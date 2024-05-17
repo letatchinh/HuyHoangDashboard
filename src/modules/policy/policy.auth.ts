@@ -50,7 +50,6 @@ const voucherPharmacy = 'voucherPharmacy';
 const voucherSupplier = 'voucherSupplier';
 const statusVoucher = 'statusVoucher';
 const historyVoucher = 'historyVoucher';
-const voucherSalaryPartner = 'voucherSalaryPartner';
 const voucherSalaryEmployee = 'voucherSalaryEmployee';
 
 const revenueSupplier = 'revenueSupplier';
