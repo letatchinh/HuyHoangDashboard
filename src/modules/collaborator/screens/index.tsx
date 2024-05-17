@@ -50,6 +50,7 @@ export default function CollaboratorScreen(props: propsType): React.JSX.Element 
           <WhiteBox className="collaborator-group">
           <Breadcrumb title={"Quản lý cộng tác viên"} />
             <Tabs
+              type="card"
               activeKey={currentTab}
               onChange={(key) => onChange(key)}
               defaultActiveKey={pathname}
@@ -62,7 +63,7 @@ export default function CollaboratorScreen(props: propsType): React.JSX.Element 
               {isCollaboratorGroup && (
                 <TabPane tab="Nhóm cộng tác viên" key="collaborator/group" />
               )}
-              {readRequestGroup && <TabPane tab="Yêu cầu nhóm" key="collaborator/request" />}
+              {readRequestGroup && <TabPane tab="Yêu cầu chuyển nhóm" key="collaborator/request" />}
             </Tabs>
             <Routes>
               {isCollaborator ? (

@@ -16,6 +16,7 @@ import RequestGroupComponent from "~/modules/requestGroup/components";
     isSubmitLoading? : any;
     onUpdateStatus : (p:any) => void; 
     onSelectPartner : (p:any) => void; 
+    mode : 'all' | 'one';
   };
   const RequestGroup = createContext<GlobalRequestGroup>({
     onChangeStatus : () => {},
@@ -28,6 +29,7 @@ import RequestGroupComponent from "~/modules/requestGroup/components";
     id : null,
     loading : false,
     isSubmitLoading : false,
+    mode : 'all'
   });
   
   type RequestGroupProviderProps = {
@@ -52,10 +54,8 @@ import RequestGroupComponent from "~/modules/requestGroup/components";
   }: RequestGroupProviderProps): JSX.Element {
     const [queryParams,setQueryParams] = useState(mode === 'all' ? {page : 1, limit : 10} : null);
     const [partnerId,setPartnerId] = useState();
-    console.log(partnerId,'partnerId');
     
     const [data,loading] = useGetData[mode](queryParams);
-    console.log(queryParams,'queryParams');
     
     const setQuery = (newQuery : any) => {
       setQueryParams({...queryParams,...newQuery});
@@ -118,6 +118,7 @@ import RequestGroupComponent from "~/modules/requestGroup/components";
             isSubmitLoading,
             onUpdateStatus,
             onSelectPartner,
+            mode,
         }}
       >
         {children}

@@ -41,6 +41,7 @@ const getListRequestOfPartnerFailedSelector = getSelector('getListRequestOfPartn
 const changeStatusFailedSelector = getSelector('changeStatusFailed');
 const changeStatusSuccessSelector = getSelector('changeStatusSuccess');
 export const useGetCreateRequestGroupSuccess = () => useSelector(createSuccessSelector);
+export const useGetUpdateRequestGroupSuccess = () => useSelector(updateSuccessSelector);
 export const useRequestGroupPaging = () => useSelector(pagingSelector);
 export const useRequestOfPartnerPaging = () => useSelector(pagingRequestOfPartnerSelector);
 
