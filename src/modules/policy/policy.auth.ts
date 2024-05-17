@@ -50,6 +50,7 @@ const voucherPharmacy = 'voucherPharmacy';
 const voucherSupplier = 'voucherSupplier';
 const statusVoucher = 'statusVoucher';
 const historyVoucher = 'historyVoucher';
+const voucherSalaryEmployee = 'voucherSalaryEmployee';
 
 const revenueSupplier = 'revenueSupplier';
 const historySupplierMineral = 'historySupplierMineral';
@@ -127,6 +128,8 @@ const RESOURCES = [
   voucherSupplier,
   statusVoucher,
   historyVoucher,
+  voucherSalaryPartner,
+  voucherSalaryEmployee,
   
   //Supplier
   cumulativeSalesSupplier,
@@ -185,7 +188,7 @@ const RESOURCES = [
   voucherBillPartner,
   voucherPartner,
   borrowProduct,
-  statusBorrowProduct
+  statusBorrowProduct,
 ];
 
 //ACTIONS
@@ -251,7 +254,9 @@ const RESOURCE = (): ResourceType => {
     voucherSupplier,
     voucherPharmacy,
     statusVoucher,
-    historyVoucher
+    historyVoucher,
+    voucherSalaryPartner,
+    voucherSalaryEmployee,
   ]
 
   const GROUP_PHARMA: string[] = [

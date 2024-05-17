@@ -60,6 +60,7 @@ import { useDispatch } from "react-redux";
 import { paymentVoucherSliceAction } from "../redux/reducer";
 import { useGetCollaborator } from "~/modules/collaborator/collaborator.hook";
 import { useGetEmployee } from "~/modules/employee/employee.hook";
+import { useGetProfile } from "~/modules/auth/auth.hook";
   const mainRowGutter = 24;
   const FormItem = Form.Item;
   const { TabPane } = Tabs;
@@ -97,6 +98,7 @@ import { useGetEmployee } from "~/modules/employee/employee.hook";
   ): React.JSX.Element {
     useResetAction();
     const { id, supplierId, onClose, refCollection, debt, pharmacyId, dataAccountingDefault, method, billId,mutateOrderSupplier,partnerId,employeeId,initData = {} } = props;
+    const profile = useGetProfile();
     
     const [form] = Form.useForm();
     const ref = useRef();
@@ -207,7 +209,15 @@ import { useGetEmployee } from "~/modules/employee/employee.hook";
           form.setFieldsValue({
             issueNumber
           });
-        });
+          });
+          if (profile) {
+            const initEmployee = {
+              label: profile?.profile?.fullName,
+              value: profile?.profile?._id
+            };
+            setInitEmployee([initEmployee]);
+            form.setFieldsValue({employeeId: profile?.profile?._id});
+          };
       };
     }, [id, mergedInitWhPaymentVoucher]);
   

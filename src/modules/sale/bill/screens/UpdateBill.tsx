@@ -55,7 +55,7 @@ const CLONE_STATUS_BILL: any = STATUS_BILL;
 export default function UpdateBill(props: propsType): React.JSX.Element {
   const [form] = Form.useForm();
   useResetBillAction();
-  const { bill, isLoading,mutateBill,onOpenForm, compareMoney,onOpenFormPayment, refCollection } = useUpdateBillStore();
+  const { bill, isLoading,mutateBill,onOpenForm, compareMoney,onOpenFormPayment, refCollection ,totalRevenueInVouchers} = useUpdateBillStore();
   
   const {
     codeSequence,
@@ -219,14 +219,13 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
                   </Space>
                   </Col>
                   <Row gutter={10}>
-                    <ReportSalaryPartnerProvider refCollection={refCollection} methodType={METHOD_TYPE.BILL}>
+                    <ReportSalaryPartnerProvider refCollection={refCollection} methodType={METHOD_TYPE.BILL as any}>
                     <WithPermission permission={refCollection === 'partner' ? POLICIES.WRITE_VOUCHERBILLPARTNER : POLICIES.WRITE_VOUCHERPHARMACY}>
-                      <Col>
-                      {status !== STATUS_BILL.CANCELLED && 
-                      <Button disabled={remainAmount <= 0} type="primary" size="small" onClick={onOpenForm}>
-                        Tạo phiếu thu
-                      </Button>}
-                      </Col>
+                    <Col>
+                    {status !== STATUS_BILL.CANCELLED && <Button disabled={remainAmount <= 0 || (totalRevenueInVouchers >= totalAmount)} type="primary" size="small" onClick={onOpenForm}>
+                      Tạo phiếu thu
+                    </Button>}
+                    </Col>
                       
               
                       {compareMoney > 0 &&  

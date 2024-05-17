@@ -1,10 +1,10 @@
 import { Col, Row, Select, Form, Tabs, DatePicker } from "antd";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import Breadcrumb from "~/components/common/Breadcrumb";
 import WhiteBox from "~/components/common/WhiteBox";
 import PaymentVouchers from "../../paymentVoucher/screens/Payment";
 import ReceiptVouchers from "../../receiptVoucher/screens/Receipt";
-import { get, head, transform } from "lodash";
+import { compact, get, head, transform } from "lodash";
 import Search from "antd/es/input/Search";
 import { MAP_STATUS_VOUCHERS_VI, REF_COLLECTION } from "~/constants/defaultValue";
 import dayjs from "dayjs";
@@ -17,6 +17,8 @@ import useCheckBoxExport from "~/modules/export/export.hook";
 import { useArrCheckBoxRedux } from "../vouchers.hook";
 import { PATH_APP } from "~/routes/allPath";
 import { useChangeDocumentTitle } from "~/utils/hook";
+import { useMatchPolicy } from "~/modules/policy/policy.hook";
+import { usePolicy } from "~/modules/user/user.hook";
 const setting = {
   [PATH_APP.vouchers.supplier] : {
     name : 'Sổ quỹ doanh thu của nhà cung cấp'
@@ -24,7 +26,7 @@ const setting = {
   [PATH_APP.vouchers.pharmacy]: {
     name : 'Sổ quỹ doanh thu của nhà thuốc'
   },
-  [PATH_APP.vouchers.salaryPartner] : {
+  [PATH_APP.vouchers.salary] : {
     name : 'Lương của cộng tác viên'
   },
   [PATH_APP.vouchers.partner] : {
@@ -98,6 +100,14 @@ export default function Vouchers({
   );
   const [date, setDate] = useState<any>(defaultDate);
   const arrCheckBoxRedux = useArrCheckBoxRedux();
+  const policy = usePolicy();
+  const canReadByPartner = useMatchPolicy(POLICIES.READ_VOUCHERSALARYPARTNER);
+  const canReadByEmployee = useMatchPolicy(POLICIES.READ_VOUCHERSALARYEMPLOYEE);
+  const isReadAll = useMemo(() => {
+    if (!!policy) {
+      return (!!canReadByEmployee && !!canReadByPartner) ? true : false
+    };
+  }, [canReadByPartner, canReadByEmployee, policy]);
 
   useEffect(() => {
     setKeyword('');
@@ -183,12 +193,27 @@ export default function Vouchers({
     setActiveTab(value);
     navigate(`${pathname}`);
     setKeyword("");
+    setSearchBy(head(optionsSearch)?.value || "codeSequence");
   };
-  useChangeDocumentTitle(`${setting[pathname].name}`, { dependency: [pathname] })
+  const checkRefCollection = useCallback(() => {
+    if (isReadAll && !!policy) {
+        return  'Lương của cộng tác viên và trình dược viên' 
+      } else {
+      if (canReadByEmployee && !canReadByPartner) { 
+          return  'Lương của trình dược viên'
+        };
+      if (!canReadByEmployee && canReadByPartner) {
+          return  'Lương của cộng tác viên'
+        };
+    };
+    return null;
+  },[policy]);
+
+  useChangeDocumentTitle(`${pathname !== PATH_APP.vouchers.salary ? setting[pathname].name : (checkRefCollection() || 'Phiếu lương') }`, { dependency: [pathname, policy] })
   return (
     <>
       <WhiteBox>
-        <Breadcrumb title={`${setting[pathname].name}`} />
+        <Breadcrumb title={`${pathname !== PATH_APP.vouchers.salary ? setting[pathname].name : (checkRefCollection() || 'Phiếu lương') }`} />
         <div className="select-search">
           <div className="select-search__left">
             <Row gutter={5}>
@@ -197,7 +222,7 @@ export default function Vouchers({
                   style={{
                     width: 300,
                   }}
-                  options={pathname !== PATH_APP.vouchers.salaryPartner ? optionsSearch : optionsSearch.concat({value: "refCollection", label: "Đối tượng"}) }
+                  options={(pathname === PATH_APP.vouchers.salary && isReadAll && !!policy)? optionsSearch.concat({value: "refCollection", label: "Đối tượng"})  : optionsSearch}
                   showSearch
                   placeholder={"Tìm kiếm theo..."}
                   value={searchBy}
