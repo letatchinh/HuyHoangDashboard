@@ -5,6 +5,7 @@ import { initStateSlice } from "~/redux/models";
 import { UserResponseOne } from "../user.modal";
 import { createSlice } from "@reduxjs/toolkit";
 import { getPaging } from "~/utils/helpers";
+import { subscribeToken } from "../user.hook";
 
 interface UserState extends initStateSlice{
   policy?: {},
@@ -18,6 +19,8 @@ interface UserState extends initStateSlice{
   isSubmitUpdateProfileLoading?: boolean,
   updateProfileSuccess?: any,
   updateProfileFailed?: any,
+
+  tokenFcm?: any
 };
 class UserClassExtend extends InstanceModuleRedux {
   clone;
@@ -70,6 +73,13 @@ class UserClassExtend extends InstanceModuleRedux {
         state.isSubmitUpdateProfileLoading = false;
         state.updateProfileFailed = payload;
       },
+      subscribeFcmFirebaseRequest: (state: UserState) => {
+        state.tokenFcm = undefined;
+      },
+      subscribeFcmFirebaseSuccess : (state: UserState, { payload }: any) => {
+        state.tokenFcm = payload;
+        subscribeToken(payload);
+      },
     };
     this.cloneInitState = {
       ...this.initialState,
@@ -83,7 +93,8 @@ class UserClassExtend extends InstanceModuleRedux {
 
       updateProfileSuccess: undefined,
       updateProfileFailed: undefined,
-      isSubmitUpdateProfileLoading: false
+      isSubmitUpdateProfileLoading: false,
+      tokenFcm: undefined,
       // Want Add more State Here...
     };
   };
