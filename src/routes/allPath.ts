@@ -44,6 +44,7 @@ export const PATH_APP = {
   product: {
     root: path(ROOTS.app, "/product"),
     edit: path(ROOTS.app, "/product/:supplierId"),
+    borrow: path(ROOTS.app, "/product-borrow"),
   },
   todoList: {
     statusConfig: path(ROOTS.app, "/statusConfig"),
@@ -86,6 +87,8 @@ export const PATH_APP = {
     root: path(ROOTS.app, "/vouchers"),
     supplier: path(ROOTS.app, "/vouchers-supplier"),
     pharmacy: path(ROOTS.app, "/vouchers-pharmacy"),
+    salaryPartner: path(ROOTS.app, "/vouchers-salaryPartner"),
+    partner: path(ROOTS.app, "/vouchers-partner"),
   },
 
      user: {
@@ -153,6 +156,10 @@ export const PATH_APP = {
 
   collaborator: {
     root: path(ROOTS.app, "/collaborator/*"),
-  }
+  },
+  reportSalaryPartner:{
+    root: path(ROOTS.app, "/reportSalaryPartner")
+  },
+
 
 };

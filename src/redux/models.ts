@@ -77,6 +77,7 @@ export type initStateSlice<T=any> = {
     notification: "notification",
     collaborator: "collaborator",
     collaboratorGroup: "collaboratorGroup",
+    reportSalaryPartner: "reportSalaryPartner",
 
     }as const
     

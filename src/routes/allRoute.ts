@@ -45,6 +45,8 @@ import TypePharmacy from "~/pages/Dashboard/TypePharmacy";
 import GroupPharmacy from "~/pages/Dashboard/GroupPharmacy";
 import CollaboratorPage from "~/pages/Dashboard/Collaborator";
 import NotificationPage from "~/pages/Dashboard/Notification";
+import ReportSalaryPartnerPage from "~/pages/Dashboard/ReportSalaryPartner";
+import ProductBorrow from "~/modules/product/components/ProductBorrow";
 export const mainRoutes :PathRouteProps[] = [
   { path: PATH_APP.main.root, Component: Homepage },
 
@@ -68,6 +70,7 @@ export const mainRoutes :PathRouteProps[] = [
 
   // Product
   { path: PATH_APP.product.edit, Component: ProductPage },
+  { path: PATH_APP.product.borrow, Component: ProductBorrow },
 
   // Bill
   { path: PATH_APP.bill.root, Component: Bill },
@@ -81,8 +84,6 @@ export const mainRoutes :PathRouteProps[] = [
   // Trình dược viên
   { path: PATH_APP.todoList.workBoard, Component: WorkBoardPage },
   { path: PATH_APP.employee.root, Component: EmployeePage },
-  { path: PATH_APP.bill.employee, Component: EmployeePage },
-  // { path: PATH_APP.employee.employeeGroup, Component: EmployeeGroupPage },
   
   // User
   { path: PATH_APP.user.root, Component: UserPage },
@@ -91,7 +92,10 @@ export const mainRoutes :PathRouteProps[] = [
   { path: PATH_APP.vouchers.root, Component: VouchersPage },
   { path: PATH_APP.vouchers.pharmacy, Component: VouchersPage },
   { path: PATH_APP.vouchers.supplier, Component: VouchersPage },
+  { path: PATH_APP.vouchers.salaryPartner, Component: VouchersPage },
+  { path: PATH_APP.vouchers.partner, Component: VouchersPage },
   { path: PATH_APP.configDiscount.root, Component: ConfigDiscountPage },
+  
 
   // Pharmacy
   { path: PATH_APP.pharmacy.root, Component: Pharmacy },
@@ -144,7 +148,7 @@ export const mainRoutes :PathRouteProps[] = [
   
   // Cộng tác viên
   { path: PATH_APP.collaborator.root, Component: CollaboratorPage },
-  
+  { path: PATH_APP.reportSalaryPartner.root, Component: ReportSalaryPartnerPage},
   // Thôgng báo
   { path: PATH_APP.myNotification.root, Component: NotificationPage},
   

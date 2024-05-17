@@ -1,10 +1,9 @@
+/* eslint-disable react/jsx-pascal-case */
 import React from 'react'
 import CollaboratorModule from '~/modules/collaborator'
 const CollaboratorPage = () => {
   return (
-    <div>
       <CollaboratorModule.page.index />
-    </div>
   )
 }
 

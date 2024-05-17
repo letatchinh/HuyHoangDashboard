@@ -1,5 +1,5 @@
 
-import { get } from "lodash";
+import { compact, get } from "lodash";
 import { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -19,6 +19,7 @@ import dayjs from "dayjs";
 import PharmacyModule from '~/modules/pharmacy';
 import SupplierModule from '~/modules/supplier';
 import { PATH_APP } from "~/routes/allPath";
+import { METHOD_TYPE } from "../vouchers/constants";
 const MODULE = "paymentVoucher";
 const MODULE_VI = "";
 
@@ -155,12 +156,21 @@ export const usePaymentVoucherQueryParams = () => {
   };
 
   // TODO: Default RefCollection By PathName
-  let refCollection : 'pharma_profile' | 'supplier' | null = null;
+  let refCollection: any;
+  console.log(refCollection,'refCollection')
+  let methodType : any = null;
   if(pathname === PATH_APP.vouchers.pharmacy ){
     refCollection = REF_COLLECTION.PHARMA_PROFILE
   }
   if(pathname === PATH_APP.vouchers.supplier ){
     refCollection = REF_COLLECTION.SUPPLIER
+  }
+  if (pathname === PATH_APP.vouchers.salaryPartner) {
+    refCollection =  query.get("refCollection")  ||compact([REF_COLLECTION.PARTNER, REF_COLLECTION.EMPLOYEE]).join(',');
+    methodType = METHOD_TYPE.VOUCHER_SALARY
+  }
+  if(pathname === PATH_APP.vouchers.partner ){
+    refCollection = REF_COLLECTION.PARTNER
   }
   return useMemo(() => {
     const queryParams = {
@@ -175,13 +185,14 @@ export const usePaymentVoucherQueryParams = () => {
       totalAmount,
       reason,
       ...refCollection && {refCollection},
+      ...methodType && {methodType},
     };
     return [queryParams, onTableChange];
     //eslint-disable-next-line
   }, [page, limit, keyword, createSuccess, deleteSuccess, startDate, endDate, codeSequence,
     status,
     totalAmount,
-    reason,pathname]);
+    reason,pathname,refCollection]);
 };
 
 export const usePaymentVoucherByBillIdQueryParams = (id: any) => {
@@ -273,7 +284,7 @@ export const useInitWhPaymentVoucher = (whPaymentVoucher: any) => {
       ...rest,
       accountingDate: dayjs(accountingDetail?.accountingDate),
       dateOfIssue: dayjs(dateOfIssue),
-      name: supplier?.name,
+      name: supplier?.name ?? supplier?.fullName,
       address: compactAddress(supplier?.address),
     };
     const initValues = {
@@ -283,7 +294,7 @@ export const useInitWhPaymentVoucher = (whPaymentVoucher: any) => {
   }, [whPaymentVoucher]);
 };
 
-export const GetProvider = async(payload : {refCollection : 'supplier' | 'pharma_profile',providerId:string}) => {
+export const GetProvider = async(payload : {refCollection : 'supplier' | 'pharma_profile', providerId:string}) => {
   try {
     const {providerId,refCollection} = payload;
   let handle;

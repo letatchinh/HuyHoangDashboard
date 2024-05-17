@@ -15,5 +15,6 @@ const apis = {
     delete: (id?: any) => requester.delete(`/api/v1/partner/${id}`),
     convert: (data?:any) => requester.put(`/api/v1/partner-convert/${get(data,'_id')}`, data),
     getALLAuthenticated: (query?: any) => requester.get(`/api/v1/partner-authenticated`, query),
+    getAccessProduct : (query?:any) => requester.post(`/api/v1/permission-assign-product`, query),
 }
 export default apis;

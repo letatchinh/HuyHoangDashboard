@@ -14,7 +14,7 @@ const getProfileFailedSelector = getSelector('getProfileFailed');
 const isGetProfileLoadingFailedSelector = getSelector('isGetProfileLoading');
 export const useLogin = (callback? : any) => {
     useSuccess(tokenSelector,'',callback);
-    useFailed(loginFailedSelector,"Sai tài khoản hoặc mật khẩu");
+    useFailed(loginFailedSelector);
     return useSubmit({
         loadingSelector : isLoadingSelector,
         action : authActions.loginRequest,

@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { DeleteOutlined, EditOutlined, PlusOutlined } from "@ant-design/icons";
 import {
   Button,
@@ -11,7 +13,7 @@ import {
   Skeleton,
   Table,
 } from "antd";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import SelectSearch from "~/components/common/SelectSearch/SelectSearch";
 import UserGroupForm from "../components/UserGroupForm";
@@ -77,6 +79,7 @@ const getNextPath = (url: string) => {
 };
 
 const UserGroup = ({ currentTab }: UserGroupProps) => {
+  const refRight = useRef<any>()
   useResetUserGroups();
   const dispatch = useDispatch();
   const resetAction = () => {
@@ -169,13 +172,12 @@ const UserGroup = ({ currentTab }: UserGroupProps) => {
   const columns = useResourceColumns(renderPermission);
   
   return (
-    <div className="employee-group">
-      <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }}>
-        <Col span={7}>
-          <div className="employee-group__list">
-            <h6 className="employee-group__list-title">Nhóm người dùng</h6>
+    <>
+      <Row gutter={10} className="group_permission" >
+        <Col span={6} className="group_permission__list">
+          <h6 className="group_permission__list-title">Nhóm người dùng</h6>
+          <div className="group_permission__list__menu">
             <Menu
-              className="employee-group__list__menu"
               defaultSelectedKeys={["1"]}
               selectedKeys={[groupId]}
               mode="inline"
@@ -197,57 +199,59 @@ const UserGroup = ({ currentTab }: UserGroupProps) => {
           </div>
         </Col>
 
-        <Col span={17}>
-          <div className="employee-group__content">
-            <div className="employee-group__header">
-              <h5 className="employee-group__list-title ">Thiết lập quyền</h5>
-            { !isLoading && <Flex
-                gap="small"
-                wrap="wrap"
-                style={{
-                  alignContent: "center",
-                }}
-              >
-                <WithOrPermission permission={[POLICIES.DELETE_USERGROUP]}>
-                <Popconfirm
-                  title="Bạn muốn xoá chi nhánh này?"
-                  onConfirm={() => deleteGroup(groupId)}
-                  okText="Xoá"
-                  cancelText="Huỷ"
+        <Col span={18} ref={refRight} className="group_permission__content">
+            <div className="group_permission__content__header">
+              <h5 className="group_permission__list-title ">Thiết lập quyền</h5>
+              {!isLoading && (
+                <Flex
+                  gap="small"
+                  wrap="wrap"
+                  style={{
+                    alignContent: "center",
+                  }}
                 >
-                  <Button
-                    size="small"
-                    type="primary"
-                    danger
-                    style={styleButton}
-                  >
-                    <DeleteOutlined /> Xoá
-                  </Button>
-                </Popconfirm>{" "}
-                </WithOrPermission>
-                <WithOrPermission permission={[POLICIES.UPDATE_USERGROUP]}>
-                <Button
-                  size="small"
-                  onClick={() => onOpenForm(groupId)}
-                  type="primary"
-                  style={styleButton}
-                >
-                  <EditOutlined /> Cập nhật
-                </Button>
-                </WithOrPermission>
-                <WithOrPermission permission={[POLICIES.WRITE_USERGROUP]}>
-                <Button
-                  style={styleButton}
-                  size="small"
-                  onClick={() => onOpenForm(null)}
-                  type="primary"
-                >
-                  <PlusOutlined /> Tạo mới
-                </Button>
-                </WithOrPermission>
-              </Flex>}
+                  <WithOrPermission permission={[POLICIES.DELETE_USERGROUP]}>
+                    <Popconfirm
+                      title="Bạn muốn xoá chi nhánh này?"
+                      onConfirm={() => deleteGroup(groupId)}
+                      okText="Xoá"
+                      cancelText="Huỷ"
+                    >
+                      <Button
+                        size="small"
+                        type="primary"
+                        danger
+                        style={styleButton}
+                      >
+                        <DeleteOutlined /> Xoá
+                      </Button>
+                    </Popconfirm>{" "}
+                  </WithOrPermission>
+                  <WithOrPermission permission={[POLICIES.UPDATE_USERGROUP]}>
+                    <Button
+                      size="small"
+                      onClick={() => onOpenForm(groupId)}
+                      type="primary"
+                      style={styleButton}
+                    >
+                      <EditOutlined /> Cập nhật
+                    </Button>
+                  </WithOrPermission>
+                  <WithOrPermission permission={[POLICIES.WRITE_USERGROUP]}>
+                    <Button
+                      style={styleButton}
+                      size="small"
+                      onClick={() => onOpenForm(null)}
+                      type="primary"
+                    >
+                      <PlusOutlined /> Tạo mới
+                    </Button>
+                  </WithOrPermission>
+                </Flex>
+              )}
             </div>
             <SelectSearch
+            style={{marginBottom:10}}
               showSelect={false}
               placeholder="tên quyền"
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
@@ -256,39 +260,46 @@ const UserGroup = ({ currentTab }: UserGroupProps) => {
               permissionKey={[POLICIES.WRITE_USER]}
             />
             <Table
+              sticky={{
+                offsetHeader:0,
+                getContainer:()=> refRight.current as any}}
               columns={columns}
               dataSource={dataShow ?? resources}
               className="employee-group__table"
               pagination={{
-                showSizeChanger : true,
+                showSizeChanger: true,
                 showTotal: (total) => `Tổng cộng: ${total} `,
-                size:"small"
+                size: "small",
+                
+              }}
+              style={{
+                marginBottom:10
               }}
             />
-          </div>
         </Col>
       </Row>
-        <Modal
-            open={isOpen}
-            footer={[]}
-            onCancel={onClose}
-            className="form-modal__user-group"
-            afterClose={() => {
-              setReFetch(!reFetch);
-              reFeatchGroup();
-              }}
+      <Modal
+        open={isOpen}
+        footer={[]}
+        onCancel={onClose}
+        className="form-modal__user-group"
+        afterClose={() => {
+          setReFetch(!reFetch);
+          reFeatchGroup();
+        }}
         // destroyOnClose
       >
         <UserGroupForm
-          isOpen={isOpen} 
-          onClose={onClose} id={id} 
-          setReFetch={setReFetch} 
+          isOpen={isOpen}
+          onClose={onClose}
+          id={id}
+          setReFetch={setReFetch}
           reFetch={reFetch}
           handleCreate={handleCreate}
           handleUpdateUser={handleUpdateUser}
         />
-        </Modal>
-    </div>
+      </Modal>
+    </>
   );
 };
 

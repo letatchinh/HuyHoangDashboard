@@ -178,7 +178,7 @@ export const useResourceColumns = (renderPermission: any) => {
     title: name,
     dataIndex: 'key',
     key: key,
-    width : '13%',
+    width : '10%',
     align: 'center',
     render: renderPermission(key)
   }));

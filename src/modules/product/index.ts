@@ -13,7 +13,7 @@ import FormProduct from "./components/FormProduct";
 const moduleExport = {
     page : {
         index : ProductScreen,
-        form : FormProduct
+        form: FormProduct,
     },
     api : productApi,
     auth : productAuth,

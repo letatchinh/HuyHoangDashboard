@@ -3,3 +3,8 @@
     overflow-x: scroll;
     height: 100%;
   }
+  .whiteBox.collaborator-group{
+    .group_permission{
+      height: calc(100% - 62px - 1.5rem - 29px);
+    }
+  }

@@ -9,6 +9,20 @@ import { useFetchState } from "~/utils/helpers";
 import ControlProduct from "./ControlProduct";
 import SelectProduct from "./SelectProduct";
 
+import { useGetRole } from "~/modules/auth/auth.hook";
+import { CollaboratorProductProvider } from "../CollaboratorProductProvider";
+export type ConfigType = {
+  discount? : {
+    discountType: "PERCENT" | "VALUE",
+    value: number,
+  },
+}
+const defaultConfig = {
+  discount: {
+    discountType: "PERCENT",
+    value: 10,
+  },
+} as ConfigType
 type propsType = {
   id?: any;
   useGetUser: any;
@@ -16,6 +30,8 @@ type propsType = {
   useUpdateProduct: any;
   useAddProduct: any;
   apiSearchProduct: any;
+  config? : ConfigType
+  target : 'employee' | 'partner'
 };
 export default function CollaboratorProduct({
   id,
@@ -24,7 +40,10 @@ export default function CollaboratorProduct({
   useUpdateProduct,
   useAddProduct,
   apiSearchProduct,
+  config = defaultConfig,
+  target,
 }: propsType): React.JSX.Element {
+  const role = useGetRole();
   const [reFetch, setReFetch] = useState(false);
   const [keyword, setKeyword] = useState("");
   const [supplierSelectId, setSupplierSelectId] = useState();
@@ -35,6 +54,9 @@ export default function CollaboratorProduct({
     api: supplierModule.api.getAllPublic,
     useDocs: false,
   });
+
+  const canUpdate = useMemo(() => role === 'staff',[role]);
+  
 
   const query = useMemo(
     () => ({
@@ -61,6 +83,10 @@ export default function CollaboratorProduct({
     [products, collaborator]
   );
   return (
+    <CollaboratorProductProvider
+    id={id}
+    target={target}
+    >
     <div className="SelectSupplier m-0" style={{ minHeight: 520 }}>
       <Row
         gutter={16}
@@ -119,6 +145,7 @@ export default function CollaboratorProduct({
                 setKeyword={setKeyword}
                 loading={loading}
                 useAddProduct={useAddProduct}
+                config={config}
               />
             </div>
           </BaseBorderBox>
@@ -146,5 +173,6 @@ export default function CollaboratorProduct({
         </Col>
       </Row>
     </div>
+    </CollaboratorProductProvider>
   );
 }

@@ -6,7 +6,7 @@ import PaymentVouchers from "../../paymentVoucher/screens/Payment";
 import ReceiptVouchers from "../../receiptVoucher/screens/Receipt";
 import { get, head, transform } from "lodash";
 import Search from "antd/es/input/Search";
-import { MAP_STATUS_VOUCHERS_VI } from "~/constants/defaultValue";
+import { MAP_STATUS_VOUCHERS_VI, REF_COLLECTION } from "~/constants/defaultValue";
 import dayjs from "dayjs";
 import { useLocation, useNavigate } from "react-router-dom";
 import { convertQueryString } from "~/utils/helpers";
@@ -17,6 +17,20 @@ import useCheckBoxExport from "~/modules/export/export.hook";
 import { useArrCheckBoxRedux } from "../vouchers.hook";
 import { PATH_APP } from "~/routes/allPath";
 import { useChangeDocumentTitle } from "~/utils/hook";
+const setting = {
+  [PATH_APP.vouchers.supplier] : {
+    name : 'Sổ quỹ doanh thu của nhà cung cấp'
+  },
+  [PATH_APP.vouchers.pharmacy]: {
+    name : 'Sổ quỹ doanh thu của nhà thuốc'
+  },
+  [PATH_APP.vouchers.salaryPartner] : {
+    name : 'Lương của cộng tác viên'
+  },
+  [PATH_APP.vouchers.partner] : {
+    name : 'Sổ quỹ doanh thu của đơn hàng cộng tác viên'
+  },
+}
 type propsType = {
   defaultActiveTab?: string;
 };
@@ -24,6 +38,7 @@ type optionsSearch = {
   value: string;
   label: string;
 };
+
 const optionsSearch: optionsSearch[] = [
   {
     value: "codeSequence",
@@ -42,13 +57,24 @@ const optionsSearch: optionsSearch[] = [
     label: "Tổng tiền",
   },
   // {
-  //   value: "isCreated",
-  //   label: "Ngày tạo",
-  // },
-  // {
   //   value: "isDateApproved",
   //   label: "Ngày duyệt",
   // },
+];
+
+const optionsRefCollection = [
+  {
+    label: 'Trình dược viên',
+    value: REF_COLLECTION.EMPLOYEE
+  },
+  {
+    label: 'Cộng tác viên',
+    value: REF_COLLECTION.PARTNER
+  },
+  {
+    label: 'Tất cả',
+    value: null
+  },
 ];
 
 export default function Vouchers({
@@ -56,6 +82,7 @@ export default function Vouchers({
 }: propsType): React.JSX.Element {
   const navigate = useNavigate();
   const { pathname, search } = useLocation();
+  
   const activeTabMemo = useMemo(() => pathname === PATH_APP.vouchers.pharmacy ? "1" : "2", [pathname]);
   const [activeTab, setActiveTab] = useState<any>(activeTabMemo);
   const [searchBy, setSearchBy] = useState(head(optionsSearch)?.value || "");
@@ -157,11 +184,11 @@ export default function Vouchers({
     navigate(`${pathname}`);
     setKeyword("");
   };
-useChangeDocumentTitle(`Số quỹ của ${pathname === PATH_APP.vouchers.pharmacy ? 'Nhà thuốc' : 'Nhà cung cấp'}`,{dependency : [pathname]})
+  useChangeDocumentTitle(`${setting[pathname].name}`, { dependency: [pathname] })
   return (
     <>
       <WhiteBox>
-        <Breadcrumb title={`Sổ quỹ của ${pathname === PATH_APP.vouchers.pharmacy ? 'Nhà thuốc' : 'Nhà cung cấp'}`} />
+        <Breadcrumb title={`${setting[pathname].name}`} />
         <div className="select-search">
           <div className="select-search__left">
             <Row gutter={5}>
@@ -170,7 +197,7 @@ useChangeDocumentTitle(`Số quỹ của ${pathname === PATH_APP.vouchers.pharma
                   style={{
                     width: 300,
                   }}
-                  options={optionsSearch}
+                  options={pathname !== PATH_APP.vouchers.salaryPartner ? optionsSearch : optionsSearch.concat({value: "refCollection", label: "Đối tượng"}) }
                   showSearch
                   placeholder={"Tìm kiếm theo..."}
                   value={searchBy}
@@ -256,6 +283,18 @@ useChangeDocumentTitle(`Số quỹ của ${pathname === PATH_APP.vouchers.pharma
                           </Select.Option>
                         ))}
                       </Select>
+                    ),
+                     refCollection: (
+                      <Select
+                        placeholder={`Tìm đối tượng`}
+                          style={{
+                            width: 300,
+                          }}
+                        allowClear
+                        onChange={handleChangeStatus}
+                        options={optionsRefCollection}
+                        // value = {}
+                      />
                     ),
                   }[searchBy]
                 }

@@ -9,6 +9,8 @@ import SearchAnt from "~/components/Antd/SearchAnt";
 import TableAnt from "~/components/Antd/TableAnt";
 import { useAddProductCollaborator } from "../collaborator.hook";
 import { SubmitDataProductPartner } from "../collaborator.modal";
+import { ConfigType } from "./CollaboratorProduct";
+import useCollaboratorProductStore from "../CollaboratorProductProvider";
 type propsType = {
   id?: any;
   dataSource?: any[];
@@ -16,7 +18,8 @@ type propsType = {
   setKeyword : (kw:any) => void,
   totalDocs : number,
   loading : boolean,
-  useAddProduct : any
+  useAddProduct : any,
+  config? : ConfigType
 };
 export default function SelectProduct({
   id,
@@ -26,7 +29,9 @@ export default function SelectProduct({
   setKeyword,
   loading,
   useAddProduct,
+  config
 }: propsType): React.JSX.Element {
+  const {canAdd} = useCollaboratorProductStore();
   const [isSubmitLoading, addProduct] = useAddProduct();
 
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
@@ -45,9 +50,9 @@ export default function SelectProduct({
         partnerId: id,
         items: selectedRowKeys?.map((rowKey:any) => ({
             productId: rowKey,
-            discount: {
-              discountType: "PERCENT",
-              value: 10,
+            discount: config?.discount || {
+              discountType : "PERCENT",
+              value : 10,
             },
           }))
       };
@@ -59,7 +64,7 @@ export default function SelectProduct({
       items: [
         {
           productId: value,
-          discount: {
+          discount: config?.discount || {
             discountType: "PERCENT",
             value: 10,
           },
@@ -83,13 +88,13 @@ export default function SelectProduct({
         },
       },
       {
-        title: selectedRowKeys?.length ? <Button size="small" onClick={onAddMultiProduct} type="primary">Thêm</Button> : "",
+        title: selectedRowKeys?.length && canAdd ? <Button size="small" onClick={onAddMultiProduct} type="primary">Thêm</Button> : "",
         dataIndex: "_id",
         key: "_id",
         align : 'end',
         width : 100,
         render(_id, record: any, index) {
-          return !selectedRowKeys?.includes(_id) ? (
+          return !selectedRowKeys?.includes(_id) && canAdd ? (
             <Button
               type="primary"
               onClick={() => onAddProduct(_id)}

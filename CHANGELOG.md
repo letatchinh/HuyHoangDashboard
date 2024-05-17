@@ -1,3 +1,67 @@
+# [1.15.0](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/compare/v1.14.0...v1.15.0) (2024-05-07)
+
+
+### Bug Fixes
+
+* [#1571](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1571) FE_Báo cáo lương Cộng tác viên , Phân quyên ([bd7fe4a](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/bd7fe4ac848037142fffa6b91e479212bef42ccb))
+* [#1577](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1577) - add key refCollection for employee ([114a0ad](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/114a0ad61cc57e5856adb092d10d82cd1e99c776))
+* [#1577](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1577) - add method type for salary employee and collaboration ([9e742d4](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/9e742d47589f7bd7734fca9889faaf1464432a8b))
+* [#1577](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1577) - change title name in page receipt ([df38300](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/df3830041a61a670b805fa8a85a47e4a97d706f7))
+* [#1577](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1577) - fix form receipt in collaboration ([147623a](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/147623af821a7d29106f0217ba28bee5236cd9be))
+* [#1577](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1577) change router, change navbar ([05954a4](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/05954a4fce35853faa08b23cb110ed4f90dc7e4b))
+* [#1577](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1577) check condition create reciept form ([c47d742](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/c47d74256fe1adeef6059a40c6ac393eea17b228))
+* add search by refCollection ([a15ca1c](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/a15ca1cef41d963c171b640f746ce329cd517e98))
+* defaultValue ([a6f13e7](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/a6f13e75e222ab81d1deeda23d414c3b4d817e3b))
+* defaultValue ([1ccb705](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/1ccb7059269ddbe7f697e912bf3d03875ab6b770))
+* Phan Quyen ([85a32df](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/85a32df2b785cd0159048a27eaef00c2ec0aa728))
+* Ui salary partner ([88d3a06](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/88d3a066bad6430da70ed43de0be0d9aed134371))
+* version Hide ([b6a42c9](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/b6a42c921a954748559d7b04558d535ab0234862))
+
+
+### Features
+
+* [#1571](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1571) FE_Báo cáo lương Cộng tác viên , Phân quyên ([d5cac72](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/d5cac72af72da82ddc217b02714e4d11a39140a3))
+* add detail employee in modal ([29a9a98](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/29a9a9834ba5b9fd4e1115d61845954991ab0f29))
+* init file api ([df449f1](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/df449f1ffecd69ca83f07be642068ce59502c8b1))
+* init hook ([a81d04c](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/a81d04c8422636cad99d0365f2e821405f591458))
+* init module partnerSalaryPartner ([e2fcfe9](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/e2fcfe9ceece3e622d41e3ae8e547d04145c801e))
+* init module reportSalaryPartner ([df1ff6f](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/df1ff6f7e29511cd0b1dbf1a7a64de4db7dd23af))
+* init reducer and saga ([ea0fb95](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/ea0fb95cdc33f4044444a7f1e8454d6a3e42f56c))
+* init router reportSalaryPartner ([29ebf3e](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/29ebf3e7d6e2914518b534dab5c126a8c1d23196))
+* Report Ui ([e40c681](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/e40c681d204e2fddd43be7b1f687c8f4ee47fe8a))
+
+# [1.14.0](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/compare/v1.13.4...v1.14.0) (2024-05-07)
+
+
+### Bug Fixes
+
+* [#1563](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1563) Create ([7a62dce](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/7a62dce681e2e993e8096395d4d816b9f849cdea))
+* [#1563](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1563) style ([3b68b68](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/3b68b684a6b4a9d28e98595b3739685bcd69d353))
+* [#1570](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1570) update create  bill quotation ([19fd771](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/19fd771732f96a56ab18dc3d41afbff595cb9b29))
+* render files in information pharmacy ([a3349f3](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/a3349f31364046aaabb2741a11245be9200d37a2))
+* render message when login failed ([50ceb88](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/50ceb8842bc7cd2cec00ccde5279760894a189dc))
+* UI permission group ([5b1cb12](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/5b1cb1258bfa6f3f50e65171580a788e666f689a))
+* UI table ([08ca458](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/08ca45845eaac88de3067df8294a89d870406d55))
+
+
+### Features
+
+* [#1563](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1563) CRUD ([85ea77f](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/85ea77fd54303d8cdd2605fd75c2bf432e5141ba))
+* [#1563](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1563) handle add product ([89b2e0c](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/89b2e0cf213f0d62d33fb9024444e65e03b0751a))
+* [#1563](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1563) handle delete and search ([8a3dc0b](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/8a3dc0b169f52d448e88398c3fa01b14991551aa))
+* [#1563](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1563) Update data ([fc4ad8e](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/fc4ad8e55520eff2a70bbda141cc95dfd102dd65))
+* [#1574](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1574) update action and permission ([4de4623](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/4de462336c46853e993a37cd4a77e8e0eae9054b))
+* [#1674](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1674) update action and permission ([5ba57a7](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/5ba57a7770c67b3427b26657f9fe602d80e5b68f))
+
+## [1.13.4](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/compare/v1.13.3...v1.13.4) (2024-05-03)
+
+
+### Bug Fixes
+
+* change config hookAdd ([2493f2c](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/2493f2c9730d702bde1754bfc8441a86d81c0b62))
+* config ProductColaborator and Shipping Cost Bill ([04fbe9f](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/04fbe9fd79490d461a40aab23b83fd45009b7b9f))
+* typeUser ([9a8e6ed](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/9a8e6edec5f70ba0b416af40e87770a1a48aa73d))
+
 ## [1.13.3](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/compare/v1.13.2...v1.13.3) (2024-05-02)
 
 
