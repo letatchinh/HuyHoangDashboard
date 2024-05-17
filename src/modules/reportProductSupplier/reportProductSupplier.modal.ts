@@ -8,7 +8,7 @@ export const TYPE_REPORT = {
   groupByRangerDateWithProduct: 'groupByRangerDateWithProduct',
   groupByRangerDateWithSupplier: 'groupByRangerDateWithSupplier',
   groupByRangerDateWithCustomer: 'groupByRangerDateWithCustomer',
-} as const;
+};
 
 export const TYPE_REPORT_VI: any = {
   groupProduct: 'Sản phẩm',
@@ -22,9 +22,9 @@ export const TYPE_REPORT_VI: any = {
 
 export const FILTER_BY: any = {
   WEEKLY: "WEEKLY",
-  MONTHLY: " MONTHLY",
-  QUARTERLY: " QUARTERLY",
-  YEARLY: "  YEARLY",
+  MONTHLY: "MONTHLY",
+  QUARTERLY: "QUARTERLY",
+  YEARLY: "YEARLY",
 };
 export const FILTER_BY_VI: any = {
   WEEKLY: "Tuần",
@@ -32,3 +32,22 @@ export const FILTER_BY_VI: any = {
   QUARTERLY: "Quý",
   YEARLY: "Năm",
 };
+
+export interface getReportProductbody {
+  dataType?: keyof typeof TYPE_REPORT,
+
+  areaId?: string,
+  cityId?: string[],
+
+  productId?: string[],
+  customerId?: string[],
+  supplierId?: string[],
+
+  rangerTime?: string[],
+  rangerType?: keyof typeof FILTER_BY,
+  targetTime?: string,
+  
+  spaceType?: 'pharma_profile'|'partner',
+  limit?: number,
+
+}
