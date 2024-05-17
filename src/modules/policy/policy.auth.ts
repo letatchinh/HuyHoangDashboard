@@ -87,6 +87,8 @@ const reportSalaryPartner = 'reportSalaryPartner';
 const voucherPartner = 'voucherPartner';
 const borrowProduct = 'borrowProduct';
 const statusBorrowProduct = 'statusBorrowProduct';
+const requestChangeGroupCTV = 'requestChangeGroupCTV';
+const requestChangeGroup = 'requestChangeGroup';
 
 
 //------RESOURCES --------
@@ -180,7 +182,9 @@ const RESOURCES = [
   reportSalaryPartner,
   voucherPartner,
   borrowProduct,
-  statusBorrowProduct
+  statusBorrowProduct,
+  requestChangeGroup,
+  requestChangeGroupCTV,
 ];
 
 //ACTIONS

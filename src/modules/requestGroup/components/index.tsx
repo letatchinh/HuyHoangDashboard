@@ -11,10 +11,12 @@ import {
 import { get, omit } from "lodash";
 import React, { useEffect } from "react";
 import BaseBorderBox from "~/components/common/BaseBorderBox/index";
+import WithOrPermission from "~/components/common/WithOrPermission";
 import { requireRules } from "~/constants/defaultValue";
 import apis from "~/modules/collaborator/collaborator.api";
 import { useGetCollaborator } from "~/modules/collaborator/collaborator.hook";
 import SelectCollaborator from "~/modules/collaborator/components/SelectSearch";
+import POLICIES from "~/modules/policy/policy.auth";
 import { useFetchState } from "~/utils/helpers";
 import { STATUS_REQUEST_GROUP } from "../constants";
 import { useResetAction } from "../requestGroup.hook";
@@ -37,11 +39,13 @@ function CreateAndView({id,showCreate = true,mode}: propsType): React.JSX.Elemen
             <ViewRequest />
           </BaseBorderBox>
         </Col>
+        <WithOrPermission permission={[POLICIES.WRITE_REQUESTCHANGEGROUP,POLICIES.WRITE_REQUESTCHANGEGROUPCTV]}>
         {showCreate && <Col lg={8} md={24}>
           <BaseBorderBox title={"Tạo yêu cầu"}>
             <CreateRequest />
           </BaseBorderBox>
         </Col>}
+        </WithOrPermission>
       </Row>
     </RequestGroupProvider>
   );

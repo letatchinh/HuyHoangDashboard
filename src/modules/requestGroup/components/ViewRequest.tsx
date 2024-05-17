@@ -1,20 +1,22 @@
 import { SyncOutlined } from "@ant-design/icons";
-import { Badge, Button, Dropdown, Popover, Segmented, Typography } from "antd";
+import { Badge, Dropdown, Typography } from "antd";
 import { ColumnsType } from "antd/lib/table/InternalTable";
-import { get, keys, truncate } from "lodash";
-import React, { useState } from "react";
+import { get, keys } from "lodash";
+import React from "react";
 import TableAnt from "~/components/Antd/TableAnt";
+import POLICIES from "~/modules/policy/policy.auth";
+import { useMatchOrPolicy, useMatchPolicy } from "~/modules/policy/policy.hook";
 
-import { getOptions, pagingTable } from "~/utils/helpers";
-import { STATUS_REQUEST_GROUP_COLOR, STATUS_REQUEST_GROUP_DISABLED, STATUS_REQUEST_GROUP_VI } from "../constants";
+import { pagingTable } from "~/utils/helpers";
+import { STATUS_REQUEST_GROUP, STATUS_REQUEST_GROUP_COLOR, STATUS_REQUEST_GROUP_DISABLED, STATUS_REQUEST_GROUP_VI } from "../constants";
 import useRequestGroupStore from "../RequestGroupProvider";
 import ContentEllipsis from "./ContentEllipsis";
 type propsType = {};
 
 export default function ViewRequest(props: propsType): React.JSX.Element {
     const {onChangeStatus,data,paging,setQuery,loading,onSelectPartner} = useRequestGroupStore();
-    const [expanded, setExpanded] = useState(false);
-
+    const canUpdateRequest = useMatchOrPolicy([POLICIES.UPDATE_REQUESTCHANGEGROUP,POLICIES.UPDATE_REQUESTCHANGEGROUPCTV]);
+    const canDeleteRequest = useMatchPolicy(POLICIES.DELETE_REQUESTCHANGEGROUP);
     const columns: ColumnsType = [
         {
           title: "Nội dung",
@@ -45,6 +47,7 @@ export default function ViewRequest(props: propsType): React.JSX.Element {
             const stt = get(rc,'status');
             return (
               <Dropdown.Button
+              disabled={!canUpdateRequest}
               trigger={['click']}
               placement='bottomLeft'
               icon={<SyncOutlined style={{color : '#3481FF'}}/>}
@@ -57,7 +60,7 @@ export default function ViewRequest(props: propsType): React.JSX.Element {
                     onSelectPartner(get(rc,'requestOfId'))
                   },
                   icon : <Badge status={get(STATUS_REQUEST_GROUP_COLOR,k)}/>,
-                  disabled : get(STATUS_REQUEST_GROUP_DISABLED,stt).includes(k)
+                  disabled : get(STATUS_REQUEST_GROUP_DISABLED,stt).includes(k) || (k === STATUS_REQUEST_GROUP.CANCELLED && !canDeleteRequest),
                 }))
               }}
               >

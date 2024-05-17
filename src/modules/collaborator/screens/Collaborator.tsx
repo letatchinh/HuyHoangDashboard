@@ -16,7 +16,7 @@ import {
   useUpdateCollaboratorParams,
   useUpdateProductCollaborator,
 } from "../collaborator.hook";
-import { useMatchPolicy } from "~/modules/policy/policy.hook";
+import { useMatchOrPolicy, useMatchPolicy } from "~/modules/policy/policy.hook";
 import useCheckBoxExport from "~/modules/export/export.hook";
 import POLICIES from "~/modules/policy/policy.auth";
 import { ColumnsType } from "antd/es/table";
@@ -113,6 +113,7 @@ export default function Collaborator({
   
   const isCanDelete = useMatchPolicy(POLICIES.DELETE_PARTNER);
   const isCanUpdate = useMatchPolicy(POLICIES.UPDATE_PARTNER);
+  const canReadRequest = useMatchOrPolicy([POLICIES.READ_REQUESTCHANGEGROUP,POLICIES.READ_REQUESTCHANGEGROUPCTV]);
   const shouldShowDevider = useMemo(
     () => isCanDelete && isCanUpdate,
     [isCanDelete, isCanUpdate]
@@ -436,7 +437,7 @@ export default function Collaborator({
               key: "4",
               label: "Yêu cầu",
               children: <RequestGroup.CreateAndView id={id} mode="one" />,
-              disabled: !id,
+              disabled: !id || !canReadRequest,
             },
           ]}
         ></Tabs>

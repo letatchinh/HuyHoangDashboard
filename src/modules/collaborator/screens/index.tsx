@@ -19,6 +19,7 @@ export default function CollaboratorScreen(props: propsType): React.JSX.Element 
   const { pathname, search } = useLocation();
   const isCollaborator = useMatchPolicy(POLICIES.READ_PARTNER);
   const isCollaboratorGroup = useMatchPolicy(POLICIES.READ_PARTNERGROUP);
+  const readRequestGroup = useMatchPolicy(POLICIES.READ_REQUESTCHANGEGROUP);
 
   useEffect(() => {
     let urlPush = '/collaborator';
@@ -61,7 +62,7 @@ export default function CollaboratorScreen(props: propsType): React.JSX.Element 
               {isCollaboratorGroup && (
                 <TabPane tab="Nhóm cộng tác viên" key="collaborator/group" />
               )}
-              <TabPane tab="Yêu cầu nhóm" key="collaborator/request" />
+              {readRequestGroup && <TabPane tab="Yêu cầu nhóm" key="collaborator/request" />}
             </Tabs>
             <Routes>
               {isCollaborator ? (
@@ -85,10 +86,10 @@ export default function CollaboratorScreen(props: propsType): React.JSX.Element 
             ) : (
               <React.Fragment />
               )}
-              <Route
+            {readRequestGroup &&  <Route
                   path={`request`}
                   element={<RequestGroup />}
-                />
+                />}
             </Routes>
           </WhiteBox>
       )}
