@@ -1,3 +1,15 @@
+## [1.17.1](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/compare/v1.17.0...v1.17.1) (2024-05-17)
+
+
+### Bug Fixes
+
+* [#1594](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1594) permission_voucher salary ([c832037](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/c8320375ad56c8efed247ab42afda8869ee3b7a5))
+* [#1596](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1596) validation button create payment and receipt ([4c7d358](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/4c7d35898795a3a2c34c404dd0eca55c3336126e))
+* change BASE url ([c22120e](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/c22120ed8b9622176dffcfd8d76c70cb8d57a2a3))
+* merge conflict ([7ae1e28](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/7ae1e28dc3f49a2f9c1aa440c886778895a3fde8))
+* merge conflict ([f3657be](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/f3657bed54d35723d617ac02d50aa7f1456da3d0))
+* update permission orderSupplier ([22cc3a8](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/22cc3a8feea990a77af9bf989dd7ad057e58f6ba))
+
 # [1.17.0](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/compare/v1.16.0...v1.17.0) (2024-05-17)
 
 
