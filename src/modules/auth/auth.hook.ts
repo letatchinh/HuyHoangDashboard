@@ -37,6 +37,10 @@ export const useToken = () => {
     const token = useSelector(tokenSelector);
     return token
 };
+// export const getToken = () => {
+//     const token = useSelector(tokenSelector);
+//     return token
+// };
 export const useAdapter = () => {
     const adapter = useSelector(adapterSelector);
     return adapter

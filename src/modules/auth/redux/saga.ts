@@ -2,6 +2,7 @@ import { put, call, takeLatest } from 'redux-saga/effects';
 import authModule from '~/modules/auth';
 import { authActions } from './reducer';
 import { ADAPTER_KEY } from '../constants';
+import { userSliceAction } from '~/modules/user/redux/reducer';
 
 function* login({ payload: user }: any) {
   try {
@@ -28,6 +29,7 @@ function* loginSuccess({ payload }: any) {
   try {
     // const profile = yield call(authModule.api.getProfile);
     yield put(authActions.getProfileRequest());
+    yield put(userSliceAction.subscribeFcmFirebaseRequest());
   } catch (error: any) {
     // yield put(authActions.loginFailed(error));
   }

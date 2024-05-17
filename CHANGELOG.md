@@ -1,3 +1,22 @@
+# [1.16.0](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/compare/v1.15.0...v1.16.0) (2024-05-17)
+
+
+### Bug Fixes
+
+* [#1526](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1526) show notification ([e43a9a8](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/e43a9a88bea8739de0f519a98ca65b9a23bc29c7))
+
+
+### Features
+
+* [#1526](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1526) CR ([db7eb24](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/db7eb24241ca6bc1ffcf8984945a53a1e402a67c))
+* [#1526](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1526) handle service wokers ([52b63f5](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/52b63f5b22a51349a3163809c18231395fad75e1))
+* [#1526](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1526) import firebase, handle firebaseKey ([4f29532](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/4f29532f71f5b5a990dcfff42849d920f60ef704))
+* [#1526](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1526) notification convert order quotation ([c89e370](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/c89e37041224c3882ce3b7218d46ec3794e01040))
+* [#1526](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1526) notification page ([e28f072](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/e28f0726836f72ea3197ba89aa9e364b0ef3da23))
+* [#1526](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1526) style date picker ([b0728e6](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/b0728e6ef2ac7cbfd3f70af2d33fe2afa69efbb6))
+* [#1526](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1526) update token FCM ([dafdf95](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/dafdf954cfe33350eece8d868945903a968d66f3))
+* check notification by order quotation ([183c382](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/183c382a419d69f237b1087c41a9983d43dc8246))
+
 # [1.15.0](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/compare/v1.14.0...v1.15.0) (2024-05-07)
 
 

@@ -78,6 +78,7 @@ const permissionCollaborator = [
   POLICIES.READ_BILLPARTNER,
   POLICIES.READ_QUOTATIONPARTNER,
   POLICIES.WRITE_QUOTATIONPARTNER,
+  POLICIES.READ_VOUCHERBILLPARTNER,
   POLICIES.READ_BORROWPRODUCT,
   POLICIES.READ_STATUSBORROWPRODUCT,
 ];
@@ -350,7 +351,7 @@ export const resource: ItemType[] =[
     label: "Báo cáo",
     key: "report",
     permission: [
-      POLICIES.READ_REPORTSALARY, 
+      POLICIES.READ_REPORTSALARY,
       POLICIES.READ_REPORTSALARYPARTNER,
       POLICIES.READ_VOUCHERPARTNER,
       POLICIES.READ_VOUCHERSALARYPARTNER,
@@ -361,7 +362,7 @@ export const resource: ItemType[] =[
         label: "Báo cáo lương trình dược viên",
         path: PATH_APP.report.employee,
         key: PATH_APP.report.employee,
-        permission : [POLICIES.READ_REPORTSALARY]
+        permission: [POLICIES.READ_REPORTSALARY]
       },
       {
         label: "Báo cáo lương cộng tác viên",
@@ -375,31 +376,29 @@ export const resource: ItemType[] =[
         key: PATH_APP.vouchers.salary,
         permission: [POLICIES.READ_VOUCHERSALARYPARTNER, POLICIES.READ_VOUCHERSALARYEMPLOYEE],//
       },
-    ],
-    icon: <i className="fa-solid fa-code-branch"></i>,
-  },
-
-  {
-    label: "Quản lý công việc",
-    key: "todoList",
-    icon: <i className="fa-solid fa-clipboard-list"></i>,
-    permission: [POLICIES.READ_TODOLIST, POLICIES.READ_TODOCONFIGSTATUS],//
-    children: [
       {
         label: "Quản lý công việc",
-        // key: "statusConfig",
-        icon: <ApartmentOutlined />,
-        path: PATH_APP.todoList.workBoard,
-        key: PATH_APP.todoList.workBoard,
-        permission: [POLICIES.READ_TODOLIST],//
-      },
-      {
-        label: "Cấu hình trạng thái",
-        // key: "statusConfig",
-        icon: <AppstoreFilled />,
-        path: PATH_APP.todoList.statusConfig,
-        key: PATH_APP.todoList.statusConfig,
-        permission: [POLICIES.READ_TODOCONFIGSTATUS],//
+        key: "todoList",
+        icon: <i className="fa-solid fa-clipboard-list"></i>,
+        permission: [POLICIES.READ_TODOLIST, POLICIES.READ_TODOCONFIGSTATUS],//
+        children: [
+          {
+            label: "Quản lý công việc",
+            // key: "statusConfig",
+            icon: <ApartmentOutlined />,
+            path: PATH_APP.todoList.workBoard,
+            key: PATH_APP.todoList.workBoard,
+            permission: [POLICIES.READ_TODOLIST],//
+          },
+          {
+            label: "Cấu hình trạng thái",
+            // key: "statusConfig",
+            icon: <AppstoreFilled />,
+            path: PATH_APP.todoList.statusConfig,
+            key: PATH_APP.todoList.statusConfig,
+            permission: [POLICIES.READ_TODOCONFIGSTATUS],//
+          },
+        ],
       },
     ],
   },
@@ -479,7 +478,7 @@ export const resource: ItemType[] =[
         label: "Phiếu đơn hàng",
         path: PATH_APP.vouchers.partner,
         key: PATH_APP.vouchers.partner,
-        permission: [POLICIES.READ_VOUCHERPARTNER],//
+        permission: [POLICIES.READ_VOUCHERBILLPARTNER],//
       },
       {
         label: "Quản lý sản phẩm mượn",
@@ -490,6 +489,7 @@ export const resource: ItemType[] =[
     ]
   },
 ];
+
 
 // //Required permission is string[][];
 // const NavbarItems = resource.map((first) => {

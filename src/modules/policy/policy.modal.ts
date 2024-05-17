@@ -28,6 +28,8 @@ const ResourceTypeRule = {
   // Nhóm nhà thuốc
   CUSTOMER:'CUSTOMER',
   PARTNER: 'PARTNER',
+  VOUCHER_SALARY_PARTNER: 'VOUCHER_SALARY_PARTNER',
+  VOUCHER_BILL_PARTNER: 'VOUCHER_BILL_PARTNER',
 };
 
 type newType =  typeof ResourceTypeRule

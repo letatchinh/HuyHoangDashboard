@@ -154,7 +154,7 @@ export const useReceiptVoucherQueryParams = () => {
   };
 
   // TODO: Default RefCollection By PathName
-  let refCollection: any;
+  let refCollection : any = null;
   let methodType: any = null;
   if(pathname === PATH_APP.vouchers.pharmacy ){
     refCollection = REF_COLLECTION.PHARMA_PROFILE
@@ -183,8 +183,7 @@ export const useReceiptVoucherQueryParams = () => {
       status,
       totalAmount,
       reason,
-      refCollection,
-      // methodType,
+      ...refCollection,
       ...methodType && {methodType},
     };
     return [queryParams,onTableChange];

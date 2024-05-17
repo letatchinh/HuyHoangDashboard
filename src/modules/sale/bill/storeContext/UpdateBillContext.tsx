@@ -18,6 +18,7 @@ export type GlobalUpdateBill = {
     onOpenFormPayment: () => void
     compareMoney: number,
     totalRevenueInVouchers: number;
+    refCollection: any,
 };
 const UpdateBill = createContext<GlobalUpdateBill>({
     bill : null,
@@ -27,6 +28,8 @@ const UpdateBill = createContext<GlobalUpdateBill>({
     onOpenFormPayment: () => { },
     compareMoney: 0,
     totalRevenueInVouchers: 0,
+    refCollection: null,
+
 });
 
 type UpdateBillProviderProps = {
@@ -84,6 +87,7 @@ export function UpdateBillProvider({
         onOpenFormPayment,
         compareMoney,
         totalRevenueInVouchers,
+        refCollection,
       }}
     >
       {children}
