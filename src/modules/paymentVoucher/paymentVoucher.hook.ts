@@ -164,8 +164,8 @@ export const usePaymentVoucherQueryParams = () => {
   if(pathname === PATH_APP.vouchers.supplier ){
     refCollection = REF_COLLECTION.SUPPLIER
   }
-  if(pathname === PATH_APP.vouchers.salaryPartner ){
-    refCollection = compact([REF_COLLECTION.PARTNER, REF_COLLECTION.EMPLOYEE]).join(',');
+  if (pathname === PATH_APP.vouchers.salaryPartner) {
+    refCollection =  query.get("refCollection")  ||compact([REF_COLLECTION.PARTNER, REF_COLLECTION.EMPLOYEE]).join(',');
     methodType = METHOD_TYPE.VOUCHER_SALARY
   }
   if(pathname === PATH_APP.vouchers.partner ){
@@ -191,7 +191,7 @@ export const usePaymentVoucherQueryParams = () => {
   }, [page, limit, keyword, createSuccess, deleteSuccess, startDate, endDate, codeSequence,
     status,
     totalAmount,
-    reason,pathname]);
+    reason,pathname,refCollection]);
 };
 
 export const usePaymentVoucherByBillIdQueryParams = (id: any) => {

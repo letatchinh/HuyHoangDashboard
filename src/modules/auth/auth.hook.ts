@@ -14,11 +14,10 @@ const getProfileFailedSelector = getSelector('getProfileFailed');
 const isGetProfileLoadingFailedSelector = getSelector('isGetProfileLoading');
 export const useLogin = (callback? : any) => {
     useSuccess(tokenSelector,'',callback);
-    useFailed(loginFailedSelector,"Sai tài khoản hoặc mật khẩu");
+    useFailed(loginFailedSelector);
     return useSubmit({
         loadingSelector : isLoadingSelector,
         action : authActions.loginRequest,
-        
     })
 };
 export function useLogout () : [boolean, () => void] {
@@ -38,6 +37,10 @@ export const useToken = () => {
     const token = useSelector(tokenSelector);
     return token
 };
+// export const getToken = () => {
+//     const token = useSelector(tokenSelector);
+//     return token
+// };
 export const useAdapter = () => {
     const adapter = useSelector(adapterSelector);
     return adapter

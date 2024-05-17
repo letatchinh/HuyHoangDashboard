@@ -5,15 +5,13 @@ import { authRoutes, mainRoutes } from "./routes/allRoute";
 import ProtectRoute from "./routes/middleware/ProtectRoute";
 import AuthModule from "~/modules/auth";
 import { PATH_APP } from "./routes/allPath";
-import BillModule from "~/modules/sale/bill";
 import CreateBillPage from "./pages/Dashboard/Bill/CreateBill";
 import packageJson from "../package.json";
 import CreateOrderSupplier from "./pages/Dashboard/OrderSupplier/CreateOrderSupplier";
 import CreateBillPageInDevice from "./pages/Dashboard/Bill/CreateBill_InDevice";
 import { DeviceDetector } from "./utils/helpers";
-import { useUserPolicy } from "./modules/policy/policy.hook";
-import Reflex from "./components/Layout/LayoutVertical/Reflex";
 import NotFoundPage from "./pages/Auth/NotFoundPage";
+import { onMessageListener } from "./modules/notification/firebase";
 
 function App(): React.JSX.Element {
   const width = window.innerWidth;
@@ -21,7 +19,6 @@ function App(): React.JSX.Element {
   const token = AuthModule.hook.useToken();
   setAxiosToken(token);
   setAxiosCompanyId("99999"); // Fix Me , Just Init Project
-
   const device = DeviceDetector();
   // useUserPolicy(); // Get Policies
   
@@ -53,9 +50,10 @@ function App(): React.JSX.Element {
       <div
         style={{
           position: "fixed",
-          bottom: "16px",
+          bottom: 0,
           right: 0,
           width: "max-content",
+          pointerEvents : 'none'
         }}
       >
         <p
@@ -63,6 +61,7 @@ function App(): React.JSX.Element {
             textAlign: "right",
             marginRight: "16px",
             color: "rgba(0, 0, 0, 0.1)",
+            pointerEvents : 'none'
           }}
         >
           Version: {packageJson.version}

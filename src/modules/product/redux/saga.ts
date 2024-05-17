@@ -46,6 +46,61 @@ function* deleteProduct({payload : id} : any) : any {
   }
 }
 
+//-------BORROW_PRODUCT------
+
+function* getListBorrowProduct({payload:query} : any) : any {
+  try {
+    const data = yield call(api.getAllBorrow,query);
+    yield put(productActions.getListBorrowSuccess(data));
+  } catch (error:any) {
+    yield put(productActions.getListBorrowFailed(error));
+  };
+};
+
+function* getByIdBorrowProduct({payload:id} : any) : any {
+  try {
+    const data = yield call(api.getByIdBorrow,id);
+    yield put(productActions.getByIdBorrowSuccess(data));
+  } catch (error:any) {
+    yield put(productActions.getByIdBorrowFailed(error));
+  };
+};
+
+function* createBorrowProduct({payload} : any) : any {
+  try {
+    const data = yield call(api.createBorrow,payload);
+    yield put(productActions.createBorrowSuccess(data));
+  } catch (error:any) {
+    yield put(productActions.createBorrowFailed(error));
+  };
+};
+
+function* updateBorrowProduct({payload} : any) : any {
+  try {
+    const data = yield call(api.updateBorrow,payload);
+    yield put(productActions.updateBorrowSuccess(data));
+  } catch (error:any) {
+    yield put(productActions.updateBorrowFailed(error));
+  };
+};
+
+function* confirmBorrowProduct({payload} : any) : any {
+  try {
+    const data = yield call(api.updateBorrow,payload);
+    yield put(productActions.confirmBorrowSuccess(data));
+  } catch (error:any) {
+    yield put(productActions.confirmBorrowFailed(error));
+  };
+};
+
+function* deleteBorrowProduct({payload : id} : any) : any {
+  try {
+    const data = yield call(api.deleteBorrow,id);
+    yield put(productActions.deleteBorrowSuccess(data));
+  } catch (error:any) {
+    yield put(productActions.deleteBorrowFailed(error));
+  };
+};
 
 export default function* productSaga() {
   yield takeLatest(productActions.getListRequest, getListProduct);
@@ -53,4 +108,12 @@ export default function* productSaga() {
   yield takeLatest(productActions.createRequest, createProduct);
   yield takeLatest(productActions.updateRequest, updateProduct);
   yield takeLatest(productActions.deleteRequest, deleteProduct);
+
+  // -------BORROW_PRODUCT------  
+  yield takeLatest(productActions.getListBorrowRequest, getListBorrowProduct);
+  yield takeLatest(productActions.getByIdBorrowRequest, getByIdBorrowProduct);
+  yield takeLatest(productActions.createBorrowRequest, createBorrowProduct);
+  yield takeLatest(productActions.updateBorrowRequest, updateBorrowProduct);
+  yield takeLatest(productActions.deleteBorrowRequest, deleteBorrowProduct);
+  yield takeLatest(productActions.confirmBorrowRequest, confirmBorrowProduct);
 }

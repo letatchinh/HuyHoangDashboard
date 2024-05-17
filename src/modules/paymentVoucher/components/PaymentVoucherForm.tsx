@@ -97,7 +97,6 @@ import { useGetEmployee } from "~/modules/employee/employee.hook";
   ): React.JSX.Element {
     useResetAction();
     const { id, supplierId, onClose, refCollection, debt, pharmacyId, dataAccountingDefault, method, billId,mutateOrderSupplier,partnerId,employeeId,initData = {} } = props;
-    // console.log(method,'method');
     
     const [form] = Form.useForm();
     const ref = useRef();
@@ -174,6 +173,8 @@ import { useGetEmployee } from "~/modules/employee/employee.hook";
     useEffect(() => {
       if (!id) {
         if (provider) {
+          console.log(provider,'provider');
+          
           form.setFieldsValue({
             name: provider?.name ?? provider?.fullName,
             receiver: provider?.name ?? provider?.fullName,

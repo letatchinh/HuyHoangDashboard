@@ -12,9 +12,10 @@ import {
   Table,
   Tag,
   Tooltip,
+  Typography,
 } from "antd";
 import { ColumnsType } from "antd/es/table";
-import { get } from "lodash";
+import { get, head } from "lodash";
 import dayjs from "dayjs";
 import BaseBorderBox from "~/components/common/BaseBorderBox";
 import { PATH_APP } from "~/routes/allPath";
@@ -74,7 +75,7 @@ const BillRender = (props: propsBillRenderType) => {
               {item?.codeSequence}
             </Button>{" "}
             ~{"   "}
-            <strong>{fomartNumber(item?.value)}</strong> (
+            <strong style={{color:item?.value<0?'red':''}}>{fomartNumber(item?.value)}</strong> (
             {Math.ceil(item?.discount * 100)}%)
           </div>
         );
@@ -157,6 +158,16 @@ const columns: ColumnsType = [
           {get(record, ["productId", "codeBySupplier"]) + " - " + name}
         </strong>
       );
+    },
+  },
+  {
+    title: "Mức CK",
+    dataIndex: "billSales",
+    align: "center",
+    width: 100,
+    render: (billSales, record) => {
+      let value:any =head(billSales);
+      return <Typography.Text>{Math.ceil(value?.discount * 100)}%</Typography.Text>;
     },
   },
   {
@@ -350,16 +361,10 @@ export default function ModalDetail(props: propsType): React.JSX.Element {
             reason: "Chi Lương",
             paymentMethod: "COD",
           }}
-          {...(infoData?.typeSaler === "employee" && {
-            employeeId: get(infoData, "salerId._id"),
-          })}
-          {...(infoData?.typeSaler === "partner" && {
-            partnerId: get(infoData, "salerId._id"),
-          })}
+          {...infoData?.typeSaler === 'employee' && {employeeId : get(infoData, "salerId._id")}}
+          {...infoData?.typeSaler === 'partner' && {partnerId : get(infoData, "salerId._id")}}
           onClose={() => onClosePayment()}
-          refCollection={
-            REF_COLLECTION_UPPER[infoData?.typeSaler?.toUpperCase()]
-          }
+          refCollection= {REF_COLLECTION_UPPER[infoData?.typeSaler?.toUpperCase()]}
           debt={total}
           method={{
             data: infoData?._id,
@@ -391,15 +396,9 @@ export default function ModalDetail(props: propsType): React.JSX.Element {
             type: METHOD_TYPE.VOUCHER_SALARY as any,
           }}
           onClose={() => onCloseReceipt()}
-          {...(infoData?.typeSaler === "employee" && {
-            employeeId: get(infoData, "salerId._id"),
-          })}
-          {...(infoData?.typeSaler === "partner" && {
-            partnerId: get(infoData, "salerId._id"),
-          })}
-          refCollection={
-            REF_COLLECTION_UPPER[infoData?.typeSaler?.toUpperCase()]
-          }
+          {...infoData?.typeSaler === 'employee' && {employeeId : get(infoData, "salerId._id")}}
+          {...infoData?.typeSaler === 'partner' && {partnerId : get(infoData, "salerId._id")}}
+          refCollection={REF_COLLECTION_UPPER[infoData?.typeSaler?.toUpperCase()]}
           debt={total}
           from="Pharmacy"
           dataAccountingDefault={[

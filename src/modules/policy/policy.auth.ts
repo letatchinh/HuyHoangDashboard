@@ -87,6 +87,9 @@ const reportSalaryPartner = 'reportSalaryPartner';
 const voucherSalaryPartner = 'voucherSalaryPartner';
 const voucherBillPartner = 'voucherBillPartner';
 
+const voucherPartner = 'voucherPartner';
+const borrowProduct = 'borrowProduct';
+const statusBorrowProduct = 'statusBorrowProduct';
 
 
 //------RESOURCES --------
@@ -173,11 +176,16 @@ const RESOURCES = [
   
   updateThePharmacyForEmployee,
   configReportSalaryAuto,
+
+  //-----PARTNER------
   partner,
   partnerGroup,
   reportSalaryPartner,
   voucherSalaryPartner,
   voucherBillPartner,
+  voucherPartner,
+  borrowProduct,
+  statusBorrowProduct
 ];
 
 //ACTIONS

@@ -1,4 +1,5 @@
 import { TablePaginationConfig } from "antd";
+import dayjs from "dayjs";
 import { forIn, get, groupBy, keys,flattenDeep,compact,uniq } from "lodash";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { REF_COLLECTION, STATUS } from "~/constants/defaultValue";
@@ -8,6 +9,8 @@ import POLICIES, { CORE_ACTION } from "~/modules/policy/policy.auth";
 import { PoliciesType, policyType } from "~/modules/policy/policy.modal";
 import { useAdapter } from "~/modules/auth/auth.hook";
 import { ADAPTER_KEY } from "~/modules/auth/constants";
+import relativeTime from "dayjs/plugin/relativeTime";
+import localeEn from "dayjs/locale/vi"; // With a custom alias for the locale object
 
 export const getPaging = (response: any) => ({
   current: response.page,
@@ -322,6 +325,25 @@ export const DeviceDetector = () => {
   return getDeviceInfo();
 };
 
+//
+var utc = require('dayjs/plugin/utc')
+dayjs.extend(utc)
+
+export const vietnamMoment = (v: any, formatTime?: any) => {
+  if (v) {
+    // const utcMoment = dayjs.utc(v);
+    const utcMoment = dayjs(v);
+    if (formatTime) {
+      return utcMoment.format(formatTime);
+    }
+    else {
+      return utcMoment
+    }
+  }
+  return null
+ 
+};
+//
 export const getValueOfMath = (valueTarget:number,valueDiscount : number,typeValue : 'PERCENT' | 'VALUE') =>  typeValue === 'PERCENT' ?  valueDiscount * valueTarget / 100 : valueDiscount;
 export const getValueOfPercent = (value: number, percent: number) => value * percent / 100;
 
@@ -341,8 +363,22 @@ export const permissionConvert = (query:any)=>(action: ActionPolicy, key: KeyPol
   } 
   return POLICIES[ objj[ get(query,'refCollection') as any ] ]as [string,policyType] 
 };
+
+export const convertFiles = (files: any[]) => {
+  return files?.map((item: any) => ({
+    fileName: item?.name,
+    url: item?.response?.url
+  }));
+};
 export const useIsAdapterSystem = () => {
   const adapter = useAdapter();
   const isAdapterSystem = useMemo(() => adapter === ADAPTER_KEY.STAFF, [adapter]);
   return !!isAdapterSystem; // return true if adapter is system
+};
+
+
+export const daysAgo = (postDate: any) => { 
+  dayjs.extend(relativeTime).locale(localeEn) 
+  var fromNowOn = dayjs(postDate).fromNow(); 
+  return(fromNowOn)
 };
