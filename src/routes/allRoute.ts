@@ -47,6 +47,8 @@ import CollaboratorPage from "~/pages/Dashboard/Collaborator";
 import NotificationPage from "~/pages/Dashboard/Notification";
 import ReportSalaryPartnerPage from "~/pages/Dashboard/ReportSalaryPartner"; 
 import ProductBorrow from "~/modules/product/components/ProductBorrow";
+import CreateBill from "~/modules/sale/bill/screens/CreateBill";
+import SaleScreen from "~/modules/sale/bill/components/createBillScreen/SaleScreen";
 export const mainRoutes :PathRouteProps[] = [
   { path: PATH_APP.main.root, Component: Homepage },
 
@@ -77,6 +79,21 @@ export const mainRoutes :PathRouteProps[] = [
   { path: PATH_APP.bill.update, Component: UpdateBill },
   { path: PATH_APP.quotation.root, Component: Quotation },
   { path: PATH_APP.bill.lk, Component: Lk },
+  
+  //Bill of pharmacy
+  { path: PATH_APP.bill.pharmacy, Component: Bill },
+  { path: PATH_APP.bill.updatePharmacy, Component: UpdateBill },
+  { path: PATH_APP.quotation.pharmacy, Component: Quotation },
+  
+  //Bill of employee
+  { path: PATH_APP.bill.employee, Component: Bill },
+  { path: PATH_APP.bill.updateEmployee, Component: UpdateBill },
+  { path: PATH_APP.quotation.employee, Component: Quotation },
+
+  //Bill of collaborator
+  { path: PATH_APP.bill.collaborator, Component: Bill },
+  { path: PATH_APP.bill.updateCollaborator, Component: UpdateBill },
+  { path: PATH_APP.quotation.collaborator, Component: Quotation },
 
   // TodoList
   { path: PATH_APP.todoList.statusConfig, Component: StatusConfig },
