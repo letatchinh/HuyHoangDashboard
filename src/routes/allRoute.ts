@@ -44,8 +44,8 @@ import ConfigurationCronTime from "~/pages/Dashboard/ConfigurationCronTime";
 import TypePharmacy from "~/pages/Dashboard/TypePharmacy";
 import GroupPharmacy from "~/pages/Dashboard/GroupPharmacy";
 import CollaboratorPage from "~/pages/Dashboard/Collaborator";
-import ReportSalaryPartnerPage from "~/pages/Dashboard/ReportSalaryPartner";
 import NotificationPage from "~/pages/Dashboard/Notification";
+import ReportSalaryPartnerPage from "~/pages/Dashboard/ReportSalaryPartner"; 
 import ProductBorrow from "~/modules/product/components/ProductBorrow";
 import CreateBill from "~/modules/sale/bill/screens/CreateBill";
 import SaleScreen from "~/modules/sale/bill/components/createBillScreen/SaleScreen";
@@ -109,7 +109,7 @@ export const mainRoutes :PathRouteProps[] = [
   { path: PATH_APP.vouchers.root, Component: VouchersPage },
   { path: PATH_APP.vouchers.pharmacy, Component: VouchersPage },
   { path: PATH_APP.vouchers.supplier, Component: VouchersPage },
-  { path: PATH_APP.vouchers.salaryPartner, Component: VouchersPage },
+  { path: PATH_APP.vouchers.salary, Component: VouchersPage },
   { path: PATH_APP.vouchers.partner, Component: VouchersPage },
   { path: PATH_APP.configDiscount.root, Component: ConfigDiscountPage },
   

@@ -23,7 +23,7 @@ const ReportSalaryPartner = createContext<GlobalReportSalaryPartner>({
 type ReportSalaryPartnerProviderProps = {
   children: ReactNode;
   refCollection: keyof typeof REF_COLLECTION;
-  methodType?: keyof typeof METHOD_TYPE | null;
+  methodType?: keyof typeof METHOD_TYPE | null | undefined;
   //   target: "employee" | "partner";
 };
 

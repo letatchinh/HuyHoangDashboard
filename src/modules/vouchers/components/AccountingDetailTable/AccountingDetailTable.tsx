@@ -15,14 +15,14 @@ interface Props{
   mode?: string;
   whAppointment?: any;
   isShowSuggest?: number | null;
-  setAccountingDetails?: any
+  setAccountingDetails?: any;
 }
 const AccountingDetails = forwardRef(({
   dataSource,
   mode,
   whAppointment,
   isShowSuggest,
-  setAccountingDetails
+  setAccountingDetails,
 }: Props, ref: any) => {
   const [clonedDataSource, setClonedDataSource] = useState<any[]>([]);
   const [count, setCount] = useState(0);

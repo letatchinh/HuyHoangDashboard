@@ -158,17 +158,18 @@ export const useReceiptVoucherQueryParams = () => {
   let methodType: any = null;
   if(pathname === PATH_APP.vouchers.pharmacy ){
     refCollection = REF_COLLECTION.PHARMA_PROFILE
+    methodType = METHOD_TYPE.BILL
   }
   if(pathname === PATH_APP.vouchers.supplier ){
     refCollection = REF_COLLECTION.SUPPLIER
   }
-  if(pathname === PATH_APP.vouchers.salaryPartner ){
-    refCollection =  query.get("refCollection")  ||compact([REF_COLLECTION.PARTNER, REF_COLLECTION.EMPLOYEE]).join(',');
+  if(pathname === PATH_APP.vouchers.salary ){
+    refCollection = query.get("refCollection");
     methodType = METHOD_TYPE.VOUCHER_SALARY
   }
   if(pathname === PATH_APP.vouchers.partner ){
     refCollection = REF_COLLECTION.PARTNER
-  }
+  };
   
   return useMemo(() => {
     const queryParams = {
@@ -182,15 +183,15 @@ export const useReceiptVoucherQueryParams = () => {
       status,
       totalAmount,
       reason,
-      ...refCollection && {refCollection},
+      ...refCollection,
       ...methodType && {methodType},
     };
     return [queryParams,onTableChange];
     //eslint-disable-next-line
-  }, [page, limit, keyword, createSuccess, deleteSuccess,startDate, endDate,codeSequence, status, totalAmount, reason,pathname,refCollection]);
+  }, [page, limit, keyword, createSuccess, deleteSuccess,startDate, endDate,codeSequence, status, totalAmount, reason,pathname,refCollection,methodType]);
 };
 
-export const useReceiptVoucherByBillIdQueryParams = (id?: any) => {
+export const useReceiptVoucherByBillIdQueryParams = (id?: any, isNotSentTime: boolean = false) => {
   const query = useQueryParams();
   const {pathname} = useLocation() 
   const typeVoucher = TYPE_VOUCHER.PT;
@@ -202,8 +203,8 @@ export const useReceiptVoucherByBillIdQueryParams = (id?: any) => {
   // const status = query.get("status");
   // const totalAmount = query.get("totalAmount");
   // const reason = query.get("reason");
-  const startDate = query.get('startDate') || dayjs().startOf('month').format("YYYY-MM-DDTHH:mm:ss");
-  const endDate = query.get('endDate') || dayjs().endOf('month').format("YYYY-MM-DDTHH:mm:ss");
+  const startDate = !isNotSentTime ? query.get('startDate') || dayjs().startOf('month').format("YYYY-MM-DDTHH:mm:ss") : null;
+  const endDate = !isNotSentTime ? query.get('endDate') || dayjs().endOf('month').format("YYYY-MM-DDTHH:mm:ss"): null;
   // const createSuccess = useSelector(createSuccessSelector);
   // const deleteSuccess = useSelector(deleteSuccessSelector);
 

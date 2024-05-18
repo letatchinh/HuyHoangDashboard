@@ -61,7 +61,7 @@ const permissionSupplier = [
   POLICIES.READ_SUPPLIER,
   POLICIES.READ_VOUCHERSUPPLIER,
   POLICIES.READ_CUMULATIVESALESSUPPLIER,
-  
+  POLICIES.READ_ORDERSUPPLIER
 ];
 
 const permissionEmployee = [
@@ -82,6 +82,7 @@ const permissionCollaborator = [
   POLICIES.READ_BORROWPRODUCT,
   POLICIES.READ_STATUSBORROWPRODUCT,
 ];
+
 
 export const resource: ItemType[] =[ 
   {
@@ -355,18 +356,20 @@ export const resource: ItemType[] =[
   {
     label: "Báo cáo",
     key: "report",
+    icon: <i className="fa-solid fa-code-branch"></i>,
     permission: [
-      POLICIES.READ_REPORTSALARY, 
+      POLICIES.READ_REPORTSALARY,
       POLICIES.READ_REPORTSALARYPARTNER,
-      POLICIES.READ_VOUCHERSALARYPARTNER,
       POLICIES.READ_VOUCHERPARTNER,
+      POLICIES.READ_VOUCHERSALARYPARTNER,
+      POLICIES.READ_VOUCHERSALARYEMPLOYEE
     ],
     children: [
       {
         label: "Báo cáo lương trình dược viên",
         path: PATH_APP.report.employee,
         key: PATH_APP.report.employee,
-        permission : [POLICIES.READ_REPORTSALARY]
+        permission: [POLICIES.READ_REPORTSALARY]
       },
       {
         label: "Báo cáo lương cộng tác viên",
@@ -376,14 +379,12 @@ export const resource: ItemType[] =[
       },
       {
         label: "Phiếu lương",
-        path: PATH_APP.vouchers.salaryPartner,
-        key: PATH_APP.vouchers.salaryPartner,
-        permission: [POLICIES.READ_VOUCHERSALARYPARTNER],//
+        path: PATH_APP.vouchers.salary,
+        key: PATH_APP.vouchers.salary,
+        permission: [POLICIES.READ_VOUCHERSALARYPARTNER, POLICIES.READ_VOUCHERSALARYEMPLOYEE],//
       },
     ],
-    icon: <i className="fa-solid fa-code-branch"></i>,
   },
-
   {
     label: "Quản lý công việc",
     key: "todoList",
@@ -495,6 +496,7 @@ export const resource: ItemType[] =[
     ]
   },
 ];
+
 
 // //Required permission is string[][];
 // const NavbarItems = resource.map((first) => {

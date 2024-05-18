@@ -52,7 +52,7 @@ const isSubmitProfileLoadingSelector = getSelector(
 );
 const updateProfileSuccessSelector = getSelector("updateProfileSuccess");
 const updateProfileFailedSelector = getSelector("updateProfileFailed");
-
+export const usePolicy = () =>  useSelector(policySelector);
 export const useGetUsers = (params: any) => {
   return useFetchByParam({
     action: userSliceAction.getListRequest,

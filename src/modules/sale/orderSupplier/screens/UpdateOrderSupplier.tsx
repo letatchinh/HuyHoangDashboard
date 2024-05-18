@@ -54,7 +54,7 @@ const CLONE_STATUS_ORDER_SUPPLIER: any = STATUS_ORDER_SUPPLIER;
 export default function UpdateBill(props: propsType): React.JSX.Element {
   const [form] = Form.useForm();
   useResetOrderSupplier();
-  const { orderSupplier, isLoading, mutateOrderSupplier, onOpenForm } = useUpdateOrderSupplierStore();
+  const { orderSupplier, isLoading, mutateOrderSupplier, onOpenForm, totalMoneyPaymentVouchers } = useUpdateOrderSupplierStore();
   const {
     codeSequence,
     createdAt,
@@ -227,12 +227,12 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
                       </div>
                     </Space>
                   </Col>
-                  <Col>
+                 <Col>
                     {/* <Typography.Text strong>Công nợ hiện tại : 0</Typography.Text> */}
                     {status !== STATUS_ORDER_SUPPLIER.CANCELLED && (
                       <WithPermission permission={POLICIES.WRITE_VOUCHERSUPPLIER}>
                         <Button
-                        disabled={paymentAmount <= 0}
+                        disabled={paymentAmount <= 0 || Number(totalMoneyPaymentVouchers) >= totalPrice}
                         type="primary"
                         size="small"
                         onClick={()=>{onOpenPayment(orderSupplier)}}
@@ -352,6 +352,7 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
         <VoucherInOrder
           billId = {id}
           defaultActiveTabKey="2"
+          isNotSentTime = {true}
         />
       </Modal>
     </div>

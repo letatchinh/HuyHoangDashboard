@@ -3,26 +3,30 @@ import {
   ReactNode,
   useCallback,
   useContext,
+  useMemo,
   useState,
 } from "react";
 import { useParams } from "react-router-dom";
 import ModalAnt from "~/components/Antd/ModalAnt";
 import VoucherModule from "~/modules/vouchers";
 import { REF_COLLECTION_UPPER } from "~/constants/defaultValue";
-import { omit } from "lodash";
+import { get, omit, sumBy } from "lodash";
 import { useGetOrderSupplier } from "../orderSupplier.hook";
+import { STATUS_BILL } from "../../bill/constants";
 
 export type GlobalUpdateOrderSupplier = {
   orderSupplier: any;
   isLoading: boolean;
   mutateOrderSupplier: () => void;
   onOpenForm: () => void;
+  totalMoneyPaymentVouchers?: number;
 };
 const UpdateOrderSupplier = createContext<GlobalUpdateOrderSupplier>({
   orderSupplier: null,
   isLoading: false,
   mutateOrderSupplier: () => {},
   onOpenForm: () => { },
+  totalMoneyPaymentVouchers: 0
 });
 
 type UpdateOrderSupplierProviderProps = {
@@ -42,8 +46,15 @@ export function UpdateOrderSupplierProvider({
     codeSequence,
     _id,
     totalReceiptVoucherCompleted,
+    listPayment,
   } = orderSupplier || {};
 
+  const totalMoneyPaymentVouchers = useMemo(() => {
+    if (listPayment?.length > 0) {
+      const data = listPayment?.filter((item: any)=> item?.status !== STATUS_BILL.CANCELLED);
+      return sumBy([...data], (item) => get(item, 'totalAmount', 0));
+    };
+  }, [orderSupplier]);
   const [isOpenForm, setIsOpenForm] = useState(false);
 
   const onOpenForm = () => {
@@ -61,6 +72,7 @@ export function UpdateOrderSupplierProvider({
         isLoading,
         mutateOrderSupplier,
         onOpenForm,
+        totalMoneyPaymentVouchers
       }}
     >
       {children}

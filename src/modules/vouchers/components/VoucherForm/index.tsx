@@ -51,6 +51,7 @@ import useUpdateBillStore from "~/modules/sale/bill/storeContext/UpdateBillConte
 import { methodType } from "../../vouchers.modal";
 import { useGetSupplier } from "~/modules/supplier/supplier.hook";
 import { useGetCollaborator } from "~/modules/collaborator/collaborator.hook";
+import { useGetProfile } from "~/modules/auth/auth.hook";
   
   const mainRowGutter = 24;
   const FormItem = Form.Item;
@@ -74,19 +75,17 @@ import { useGetCollaborator } from "~/modules/collaborator/collaborator.hook";
     callback?:any,
     max?: number,
     billId?: any,
+    totalRevenueInVouchers?: number ;
   };
   
   export default function VoucherForm(props: propsType): React.JSX.Element {
-    const { id , onClose, pharmacyId,partnerId,refCollection, debt, from,totalAmount,reason,provider,method,callback,max,billId} = props;
+    const { id , onClose, pharmacyId,partnerId,refCollection, debt, from,totalAmount,reason,provider,method,callback,max,billId,totalRevenueInVouchers} = props;
     useResetAction();
-    const dispatch = useDispatch();
     const {onNotify} = useNotificationStore();
     const [form] = Form.useForm();
     const ref = useRef();
     const [isPrinting, setIsPrinting] = useState(false);
-    const [accountingDetails, setAccountingDetails] = useState([]);
-    const [url, setUrl] = useState<string>('');
-    const [isOpenViewer, setIsOpenViewer] = useState(false);
+    const [accountingDetails, setAccountingDetails] = useState<any>([]);
     const [initEmployee, setInitEmployee] = useState<any[]>([]);
     //Hook
     const callBackAfterHandleSuccess = () => {
@@ -110,19 +109,20 @@ import { useGetCollaborator } from "~/modules/collaborator/collaborator.hook";
       if(pharmacyId) return pharmacy
     },[pharmacy,partner,partnerId,pharmacyId]);
     const { bill } = useUpdateBillStore();
-  
+    const profile = useGetProfile();
     const [settingDocs, setSettingDocs] = useState({
       name: "CÔNG TY TNHH WORLDCARE MIỀN TRUNG",
       address: "559 Lê Văn Hiến, P. Khuê Mỹ, Q. Ngũ Hành Sơn, TP Đà Nẵng",
       isVisibleSettings: false,
     });
+    const checkMoneyIsNegative = (amount: number) => amount <= 0 ? 0 : amount;
     const [dataAccounting, setDataAccounting] = useState([
       {
         content: reason || ``,
         // content: `rút tiền từ ví , mã yêu cầu ${get(requestVoucher,'requestNumber','')}`,
         debitAccount: 635,
         creditAccount: DEFAULT_ACCOUNT,
-        amountOfMoney: totalAmount || 0,
+        amountOfMoney: Number(totalRevenueInVouchers) > 0 ?  checkMoneyIsNegative(Number(totalAmount) - Number(totalRevenueInVouchers)) : totalAmount
       },
     ]);
   
@@ -153,7 +153,6 @@ import { useGetCollaborator } from "~/modules/collaborator/collaborator.hook";
       },
       [id]
     );
-  
     const fetchIssueNumber = async () => {
       const typeVoucher = TYPE_VOUCHER.PT;
       const res = await apiReceiptVoucher.postIssueNumber({ typeVoucher });
@@ -207,9 +206,17 @@ import { useGetCollaborator } from "~/modules/collaborator/collaborator.hook";
         };
         setInitEmployee([initEmployee]);
       } else {
+        if (profile) {
+          const initEmployee = {
+            label: profile?.profile?.fullName,
+            value: profile?.profile?._id
+          };
+          setInitEmployee([initEmployee]);
+          form.setFieldsValue({employeeId: profile?.profile?._id});
+        };
         fetchIssueNumber()
       }
-    }, [id, mergedInitWhPaymentVoucher]);
+    }, [id, mergedInitWhPaymentVoucher, profile]);
     
     //Set address default from branch 99999
     useEffect(() => {

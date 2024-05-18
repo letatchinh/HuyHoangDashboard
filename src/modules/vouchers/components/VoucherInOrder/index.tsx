@@ -6,16 +6,18 @@ import ReceiptInOrder from '~/modules/receiptVoucher/components/ReceiptInOrder';
 type propsType = {
   billId?: any,
   defaultActiveTabKey?: string,
+  isNotSentTime?: boolean
 };
 interface VoucherContextProps {
   billId?: any,
+  isNotSentTime?: boolean;
 };
 const VoucherContext = createContext<VoucherContextProps>({
-  billId: null
+  billId: null,
 })
 export const useVoucherInOrderStore = (): VoucherContextProps => useContext(VoucherContext);
 
-export default function VoucherInOrder({ billId,defaultActiveTabKey}: propsType): React.JSX.Element {
+export default function VoucherInOrder({ billId,defaultActiveTabKey, isNotSentTime}: propsType): React.JSX.Element {
   const [activeTab, setActiveTab] = useState('1');
   const onChange = (activeTab: any) => {
     setActiveTab(activeTab);
@@ -27,7 +29,8 @@ export default function VoucherInOrder({ billId,defaultActiveTabKey}: propsType)
   }, [defaultActiveTabKey]);
   return (
     <VoucherContext.Provider value={{
-      billId
+      billId,
+      isNotSentTime
     }}>
         <Tabs onChange={onChange} activeKey={activeTab}>
         <TabPane tab="Phiếu thu" key="1">
