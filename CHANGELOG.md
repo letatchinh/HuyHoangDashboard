@@ -1,3 +1,11 @@
+## [1.17.2](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/compare/v1.17.1...v1.17.2) (2024-05-18)
+
+
+### Bug Fixes
+
+* [#1584](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1584) handle permission ([ce08f38](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/ce08f384571e4dbf3952985db11018d782881466))
+* merge conflict ([04f372c](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/04f372c6395b72abf9b106516251996ee019ed82))
+
 ## [1.17.1](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/compare/v1.17.0...v1.17.1) (2024-05-17)
 
 
