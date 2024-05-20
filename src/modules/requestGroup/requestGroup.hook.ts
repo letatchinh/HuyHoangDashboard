@@ -103,7 +103,7 @@ export const useDeleteRequestGroup = (callback?: any) => {
 };
 
 export const useChangeStatus = (callback?: any) => {
-  useSuccess(changeStatusSuccessSelector, `thành công`, callback);
+  useSuccess(changeStatusSuccessSelector, `Chuyển nhóm thành công`, callback);
   useFailed(changeStatusFailedSelector);
 
   return useSubmit({
