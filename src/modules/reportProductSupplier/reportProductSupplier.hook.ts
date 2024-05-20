@@ -92,17 +92,21 @@ import { getReportProductbody } from "./reportProductSupplier.modal";
 
 export const useReportProductSupplierQueryParams = () => {
   const query = useQueryParams();
+  const reportSize = query.get("reportSize") || 10;
+  const page = query.get("page") || 1;
   const spaceType = query.get("spaceType");
   const dataType = query.get("dataType");
   const rangerTime = query.get("rangerTime");
   const rangerType = query.get("rangerType");
-  const supplierId = query.get("supplierId") ;
+  const supplierId = query.get("supplierId");
   const productId = query.get("productId");
   const customerId = query.get("customerId");
   const areaId = query.get("areaId");
   const cityId = query.get("cityId");
   return useMemo(() => {
     const queryParams = {
+      reportSize,
+      page,
       spaceType,
       dataType,
       rangerTime,
@@ -116,6 +120,8 @@ export const useReportProductSupplierQueryParams = () => {
     return [queryParams];
     //eslint-disable-next-line
   }, [
+    reportSize,
+    page,
     spaceType,
     dataType,
     rangerTime,

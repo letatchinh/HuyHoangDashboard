@@ -1,7 +1,7 @@
 import { Select, SelectProps } from 'antd';
 import { get } from 'lodash';
 import React, { useMemo } from 'react';
-import { useFetchState } from '~/utils/helpers';
+import { filterSelectWithLabel, useFetchState } from '~/utils/helpers';
 import apis from '../supplier.api';
 interface TypeProps extends SelectProps{
     defaultSuppliers? : any[]
@@ -20,6 +20,7 @@ export default function SelectSupplier({defaultSuppliers,...props}:TypeProps) : 
         style={{minWidth : 200}}
         placeholder="Nhà cung cấp"
         popupMatchSelectWidth={false}
+        filterOption={filterSelectWithLabel}
         {...props}
         />
     )

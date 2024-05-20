@@ -5,16 +5,18 @@ export const TYPE_REPORT = {
   groupSupplier: 'groupSupplier',
   groupCustomer: 'groupCustomer',
   groupArea: 'groupArea',
+  groupCity: 'groupCity',
   groupByRangerDateWithProduct: 'groupByRangerDateWithProduct',
   groupByRangerDateWithSupplier: 'groupByRangerDateWithSupplier',
   groupByRangerDateWithCustomer: 'groupByRangerDateWithCustomer',
-};
+} as const; 
 
-export const TYPE_REPORT_VI: any = {
+export const TYPE_REPORT_VI: {[key in keyof typeof TYPE_REPORT]:string} = {
   groupProduct: 'Sản phẩm',
   groupSupplier: 'Nhà cung cấp',
   groupCustomer: 'Khách hàng',
   groupArea: 'Khu vực',
+  groupCity: 'Tỉnh/Thành phố',
   groupByRangerDateWithProduct: 'Sản phẩm theo thời gian',
   groupByRangerDateWithSupplier: 'Nhà cung cấp theo thời gian',
   groupByRangerDateWithCustomer: 'Khách hàng theo thời gian',
@@ -36,7 +38,7 @@ export const FILTER_BY_VI: any = {
 export interface getReportProductbody {
   dataType?: keyof typeof TYPE_REPORT,
 
-  areaId?: string,
+  areaId?: string[],
   cityId?: string[],
 
   productId?: string[],
@@ -48,6 +50,7 @@ export interface getReportProductbody {
   targetTime?: string,
   
   spaceType?: 'pharma_profile'|'partner',
-  limit?: number,
+  reportSize?: number, // instead litmit
+  page?: number,
 
 }

@@ -30,14 +30,14 @@ useEffect(() => {
         style={{
           height: "calc(100% - 68px)",
         }}
-        destroyInactiveTabPane
+
       >
         {role !== "partner" && (
           <TabPane tab="OTC" key={'pharma_profile'}>
             <ReportChart query={query} spaceType={"pharma_profile"} />
           </TabPane>
         )}
-        <TabPane tab="B2C" style={{ height: "100%" }} key={'partner'} destroyInactiveTabPane>
+        <TabPane tab="B2C" style={{ height: "100%" }} key={'partner'}>
           <ReportChart query={query} spaceType={"partner"}/>
         </TabPane>
       </Tabs>

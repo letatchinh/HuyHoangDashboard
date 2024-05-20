@@ -26,8 +26,6 @@ import {
   useReportProductSupplierQueryParams,
   useUpdateReportProductSupplierParams,
 } from "../reportProductSupplier.hook";
-import apiSupplier from "~/modules/supplier/supplier.api";
-import apiPharmacy from "~/modules/pharmacy/pharmacy.api";
 import dayjs from "dayjs";
 import SelectPharmacy from "~/modules/sale/bill/components/SelectPharmacy";
 import SelectCollaborator from "~/modules/collaborator/components/SelectSearch";
@@ -38,12 +36,7 @@ import subvn from "~/core/subvn";
 
 const { RangePicker } = DatePicker;
 const dateFormat = "DD-MM-YYYY";
-// interface propsType {
-//   spaceType?: any;
-//   dataType?: keyof typeof TYPE_REPORT;
-//   rangerTime?: any[];
-//   rangerType?: any;
-// }
+
 interface propsType {
   query?: any;
   spaceType?: any;
@@ -53,14 +46,21 @@ export default function ReportChart(
   props: Partial<propsType>
 ): React.JSX.Element {
   const { query, spaceType } = props;
-  console.log(query,'query');
-  
+
+  // const defaultDate = useMemo(
+  //   () => ({
+  //     startDate: dayjs().startOf("month").format("YYYY-MM-DD"),
+  //     endDate: dayjs().endOf("month").format("YYYY-MM-DD"),
+  //   }),
+  //   []
+  // );
+
   const [keyword, { setKeyword, onParamChange }] =
     useUpdateReportProductSupplierParams(query);
+
   const [form] = Form.useForm();
   const [date, setDate] = useState<any>([]);
   const [detail, setDetail] = useState<any>(null);
-
   const cities = subvn.getProvinces();
   const areas = useMemo(() => subvn.getAreas(), []);
   const memoQuery = useMemo(
@@ -69,10 +69,13 @@ export default function ReportChart(
       query: query,
       useDocs: false,
       required: ["dataType"] as (keyof getReportProductbody)[],
+      ...date,
     }),
-    [query]
+    [query, date]
   );
+
   const [dataReport, isLoading] = useFetchState(memoQuery);
+
   useEffect(() => {
     if (query) {
       setDate({
@@ -103,64 +106,65 @@ export default function ReportChart(
     return [];
   }, [dataReport]);
 
-  const onChange = (e: any) => {
-    onParamChange({ dataType: e.target.value });
-  };
+  function checkKeyContainsGroupByRangerDate(
+    key: keyof typeof TYPE_REPORT
+  ): boolean {
+    return key.includes("groupByRangerDate");
+  }
+  const options = useMemo(
+    () =>
+      Object.entries(TYPE_REPORT_VI)?.map((item: any) => ({
+        label: item[1],
+        value: item[0],
+      })),
+    [TYPE_REPORT_VI]
+  );
+
 
   return (
     <div>
-      <Space style={{ marginBottom: 20 }}>
-        <Typography style={{ fontSize: 14, marginRight: 20 }}>
-          Phân loại:
-        </Typography>
-        <Row gutter={14}>
-          <Radio.Group
-            onChange={onChange}
-            optionType="button"
-            buttonStyle="solid"
-            defaultValue={"groupProduct"}
-          >
-            {Object.entries(TYPE_REPORT).map(([key, value]: any) => (
-              <Radio.Button key={key} value={key}>
-                {TYPE_REPORT_VI[value]}
-              </Radio.Button>
-            ))}
-          </Radio.Group>
-        </Row>
-      </Space>
-      {/* <Row>
+      <Row style={{ marginBottom: 20 }}>
         <Col span={12}>
-          <Space>
+          <Space >
+            <Typography style={{ fontSize: 14, marginRight: 20 }}>
+              Phân loại:
+            </Typography>
             <Select
-              // className="right--parent"
-              // placeholder="Kênh bán hàng"
-              defaultValue={TYPE_REPORT_VI["groupProduct"]}
+              loading={isLoading}
+              defaultValue={"groupProduct"}
               options={options}
-              style={{ width: "100%" }}
-              showSearch
+              allowClear
+              style={{ minWidth: 300 }}
+              popupMatchSelectWidth={false}
               filterOption={filterSelectWithLabel}
-            />
+              onChange={(value) => onParamChange({ dataType: value || null })}
+            ></Select>
           </Space>
         </Col>
         <Col span={12}>
-          <RangePicker
-            format={dateFormat}
-            allowEmpty={[false, false]}
-            value={[
-              date[0] ? dayjs(date[0]) : null,
-              date[1] ? dayjs(date[1]) : null,
-            ]}
-            onChange={(value) => {
-              setDate({
-                rangerTime: [
-                  dayjs(value[0]).format("YYYY-MM-DD"),
-                  dayjs(value[1]).format("YYYY-MM-DD"),
-                ],
-              });
-            }}
-          />
+          <Space>
+            <Typography style={{ fontSize: 14, marginRight: 20 }}>
+              Thời gian:
+            </Typography>
+            <RangePicker
+              format={dateFormat}
+              allowEmpty={[false, false]}
+              value={[
+                date[0] ? dayjs(date[0]) : null,
+                date[1] ? dayjs(date[1]) : null,
+              ]}
+              onChange={(value) => {
+                setDate({
+                  rangerTime: [
+                    dayjs(value[0]).format("YYYY-MM-DD"),
+                    dayjs(value[1]).format("YYYY-MM-DD"),
+                  ],
+                });
+              }}
+            />
+          </Space>
         </Col>
-      </Row> */}
+      </Row>
       <Row justify="space-around" gutter={[16, 24]}>
         <Col span={4}>
           {spaceType !== "partner" ? (
@@ -194,10 +198,7 @@ export default function ReportChart(
         <Col span={4}>
           <SelectProductBySupplier
             value={query?.productId ? query?.productId?.split(",") : []}
-            onChange={(value) => {
-              console.log(value, "value");
-              
-              return onParamChange({ productId: value || null })}}
+            onChange={(value) => onParamChange({ productId: value || null })}
             style={{ width: 200 }}
             mode="multiple"
           />
@@ -223,18 +224,6 @@ export default function ReportChart(
           />
         </Col>
       </Row>
-      {/* <Row justify={"space-around"}>
-        <Col span={12}>
-          <SelectArea
-            data={cities}
-            placeholder="Tỉnh"
-            value={query?.cityId ? query?.cityId?.split(",") : []}
-            onChange={(value) => onParamChange({ cityId: value || null })}
-            style={{ width: 250 }}
-          />
-        </Col>
-        <Col span={12}></Col>
-      </Row> */}
       <div
         style={{
           width: "100%",
@@ -315,7 +304,7 @@ export default function ReportChart(
               tickSize: 5,
               tickPadding: 5,
               tickRotation: -30,
-              legend: `Biểu đồ thống kê}`,
+              legend: `Biểu đồ thống kê`,
               legendPosition: "middle",
               legendOffset: 72,
               // truncateTickAt: 10,

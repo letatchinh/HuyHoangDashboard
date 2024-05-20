@@ -1,7 +1,7 @@
 import { Select, SelectProps } from "antd";
 import { get } from "lodash";
 import React, { useMemo } from "react";
-import { useFetchState } from "~/utils/helpers";
+import { filterSelectWithLabel, useFetchState } from "~/utils/helpers";
 
 interface TypeProps extends SelectProps {
   defaultProduct?: any[];
@@ -15,11 +15,6 @@ export default function SelectArea({
   placeholder,
   ...props
 }: TypeProps): React.JSX.Element {
-  //   const [data, isLoading] = useFetchState({
-  //     api: apis.searchBySupplierId,
-  //     useDocs: false,
-  //     shouldRun: !defaultProduct,
-  //   });
   const options = useMemo(
     () =>
       (defaultProduct ?? data)?.map((item: any) => ({
@@ -35,6 +30,7 @@ export default function SelectArea({
       style={{ minWidth: 200 }}
       placeholder={placeholder}
       popupMatchSelectWidth={false}
+      filterOption={filterSelectWithLabel}
       {...props}
     />
   );
