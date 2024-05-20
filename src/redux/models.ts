@@ -74,6 +74,7 @@ export type initStateSlice<T=any> = {
     configurationCronTime : "configurationCronTime",
     typePharmacy: "typePharmacy",
     groupPharmacy: "groupPharmacy",
+    notification: "notification",
     collaborator: "collaborator",
     collaboratorGroup: "collaboratorGroup",
     reportSalaryPartner: "reportSalaryPartner",

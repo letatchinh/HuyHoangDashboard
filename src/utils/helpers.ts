@@ -1,4 +1,5 @@
 import { TablePaginationConfig } from "antd";
+import dayjs from "dayjs";
 import { forIn, get, groupBy, keys,flattenDeep,compact,uniq } from "lodash";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { REF_COLLECTION, STATUS } from "~/constants/defaultValue";
@@ -8,6 +9,11 @@ import POLICIES, { CORE_ACTION } from "~/modules/policy/policy.auth";
 import { PoliciesType, policyType } from "~/modules/policy/policy.modal";
 import { useAdapter } from "~/modules/auth/auth.hook";
 import { ADAPTER_KEY } from "~/modules/auth/constants";
+import { useLocation } from "react-router-dom";
+import { PATH_APP } from "~/routes/allPath";
+import { useMatchPolicy } from "~/modules/policy/policy.hook";
+import relativeTime from "dayjs/plugin/relativeTime";
+import localeEn from "dayjs/locale/vi"; // With a custom alias for the locale object
 
 export const getPaging = (response: any) => ({
   current: response.page,
@@ -322,6 +328,25 @@ export const DeviceDetector = () => {
   return getDeviceInfo();
 };
 
+//
+var utc = require('dayjs/plugin/utc')
+dayjs.extend(utc)
+
+export const vietnamMoment = (v: any, formatTime?: any) => {
+  if (v) {
+    // const utcMoment = dayjs.utc(v);
+    const utcMoment = dayjs(v);
+    if (formatTime) {
+      return utcMoment.format(formatTime);
+    }
+    else {
+      return utcMoment
+    }
+  }
+  return null
+ 
+};
+//
 export const getValueOfMath = (valueTarget:number,valueDiscount : number,typeValue : 'PERCENT' | 'VALUE') =>  typeValue === 'PERCENT' ?  valueDiscount * valueTarget / 100 : valueDiscount;
 export const getValueOfPercent = (value: number, percent: number) => value * percent / 100;
 
@@ -352,4 +377,42 @@ export const useIsAdapterSystem = () => {
   const adapter = useAdapter();
   const isAdapterSystem = useMemo(() => adapter === ADAPTER_KEY.STAFF, [adapter]);
   return !!isAdapterSystem; // return true if adapter is system
+};
+
+type keyRefCollection = 'quotation' | 'bill';
+export const checkRefCollection = (key: keyRefCollection,pathname: string) => {
+  let refCollection = '';
+  if (pathname === PATH_APP[key].root) {
+    return 
+  };
+  if (pathname === PATH_APP[key].employee) {
+    return refCollection = REF_COLLECTION.EMPLOYEE
+  };
+  if (pathname === PATH_APP[key].collaborator) {
+    return refCollection = REF_COLLECTION.PARTNER
+  };
+  if (pathname === PATH_APP[key].pharmacy) {
+    return refCollection = REF_COLLECTION.PHARMACY
+  };
+};
+export const CheckPermission: any = (pathname: string) => {
+   const newPathname = pathname.replace(/\/[0-9a-fA-F]+$/, '');
+  if (newPathname === PATH_APP.bill.root) {
+    return 'bill'
+  };
+  if (newPathname === PATH_APP.bill.employee) {
+    return 'billEmployee'
+  };
+  if (newPathname === PATH_APP.bill.collaborator) {
+    return 'billPartner'
+  };
+  if (newPathname === PATH_APP.bill.pharmacy) {
+    return 'billPharmacy'
+  };
+};
+
+export const daysAgo = (postDate: any) => { 
+  dayjs.extend(relativeTime).locale(localeEn) 
+  var fromNowOn = dayjs(postDate).fromNow(); 
+  return(fromNowOn)
 };

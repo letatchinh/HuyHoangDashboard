@@ -44,8 +44,11 @@ import ConfigurationCronTime from "~/pages/Dashboard/ConfigurationCronTime";
 import TypePharmacy from "~/pages/Dashboard/TypePharmacy";
 import GroupPharmacy from "~/pages/Dashboard/GroupPharmacy";
 import CollaboratorPage from "~/pages/Dashboard/Collaborator";
-import ReportSalaryPartnerPage from "~/pages/Dashboard/ReportSalaryPartner";
+import NotificationPage from "~/pages/Dashboard/Notification";
+import ReportSalaryPartnerPage from "~/pages/Dashboard/ReportSalaryPartner"; 
 import ProductBorrow from "~/modules/product/components/ProductBorrow";
+import CreateBill from "~/modules/sale/bill/screens/CreateBill";
+import SaleScreen from "~/modules/sale/bill/components/createBillScreen/SaleScreen";
 export const mainRoutes :PathRouteProps[] = [
   { path: PATH_APP.main.root, Component: Homepage },
 
@@ -76,6 +79,21 @@ export const mainRoutes :PathRouteProps[] = [
   { path: PATH_APP.bill.update, Component: UpdateBill },
   { path: PATH_APP.quotation.root, Component: Quotation },
   { path: PATH_APP.bill.lk, Component: Lk },
+  
+  //Bill of pharmacy
+  { path: PATH_APP.bill.pharmacy, Component: Bill },
+  { path: PATH_APP.bill.updatePharmacy, Component: UpdateBill },
+  { path: PATH_APP.quotation.pharmacy, Component: Quotation },
+  
+  //Bill of employee
+  { path: PATH_APP.bill.employee, Component: Bill },
+  { path: PATH_APP.bill.updateEmployee, Component: UpdateBill },
+  { path: PATH_APP.quotation.employee, Component: Quotation },
+
+  //Bill of collaborator
+  { path: PATH_APP.bill.collaborator, Component: Bill },
+  { path: PATH_APP.bill.updateCollaborator, Component: UpdateBill },
+  { path: PATH_APP.quotation.collaborator, Component: Quotation },
 
   // TodoList
   { path: PATH_APP.todoList.statusConfig, Component: StatusConfig },
@@ -91,7 +109,7 @@ export const mainRoutes :PathRouteProps[] = [
   { path: PATH_APP.vouchers.root, Component: VouchersPage },
   { path: PATH_APP.vouchers.pharmacy, Component: VouchersPage },
   { path: PATH_APP.vouchers.supplier, Component: VouchersPage },
-  { path: PATH_APP.vouchers.salaryPartner, Component: VouchersPage },
+  { path: PATH_APP.vouchers.salary, Component: VouchersPage },
   { path: PATH_APP.vouchers.partner, Component: VouchersPage },
   { path: PATH_APP.configDiscount.root, Component: ConfigDiscountPage },
   
@@ -146,9 +164,10 @@ export const mainRoutes :PathRouteProps[] = [
   { path: PATH_APP.groupPharmacy.root, Component:  GroupPharmacy},
   
   // Cộng tác viên
-  { path: PATH_APP.collaborator.root, Component: CollaboratorPage},
+  { path: PATH_APP.collaborator.root, Component: CollaboratorPage },
   { path: PATH_APP.reportSalaryPartner.root, Component: ReportSalaryPartnerPage},
-  
+  // Thôgng báo
+  { path: PATH_APP.myNotification.root, Component: NotificationPage},
   
   { path: '/', Component: Homepage },
 ]

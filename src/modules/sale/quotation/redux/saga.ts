@@ -28,7 +28,8 @@ function* createQuotation({payload} : any) : any {
     if(callbackSubmit){
       callbackSubmit({
         type : 'createQuotation',
-        codeSequence : get(data,'codeSequence')
+        codeSequence: get(data, 'codeSequence'),
+        refCollection: get(data,'refCollection')
       })
     }
     yield put(quotationActions.createSuccess(data));
@@ -44,7 +45,8 @@ function* updateQuotation({payload} : any) : any {
     if(callbackSubmit){
       callbackSubmit({
         type : 'updateQuotation',
-        codeSequence : get(data,'codeSequence')
+        codeSequence : get(data,'codeSequence'),
+        refCollection: get(data,'refCollection')
       })
     }
     yield put(quotationActions.updateSuccess(data));
@@ -60,7 +62,8 @@ function* convertQuotation({payload} : any) : any {
     if(callbackSubmit){
       callbackSubmit({
         type : 'convertQuotation',
-        codeSequence : get(data,'codeSequence')
+        codeSequence : get(data,'codeSequence'),
+        refCollection: get(data,'refCollection')
       })
     }
     yield put(quotationActions.convertSuccess(data));

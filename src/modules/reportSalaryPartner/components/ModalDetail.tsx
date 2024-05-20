@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useCallback, useMemo, useState } from "react";
 import { contextReport, fomartNumber } from "../reportSalaryPartner.hook";
 import {
@@ -32,6 +31,8 @@ import { ItemVoucher } from "./Context";
 import WithPermission from "~/components/common/WithPermission";
 import POLICIES from "~/modules/policy/policy.auth";
 import { METHOD_TYPE } from "~/modules/vouchers/constants";
+import { useLocation } from "react-router-dom";
+import { ReportSalaryPartnerProvider } from "../ReportSalaryPartnerProvider";
 type propsType = {
   id?: string;
 };
@@ -94,6 +95,11 @@ const DetailOver = ({
 }) => {
   const [clicked, setClicked] = useState(false);
   const [hovered, setHovered] = useState(false);
+
+  const hide = () => {
+    setClicked(false);
+    setHovered(false);
+  };
 
   const handleHoverChange = (open: boolean) => {
     setHovered(open);
@@ -200,7 +206,7 @@ export default function ModalDetail(props: propsType): React.JSX.Element {
   const [form] = Form.useForm();
   const [open, setOpen] = useState(false);
   const [openReceipt, setOpenReceipt] = useState(false);
-
+  const { pathname } = useLocation();
   const infoData: any = useMemo(() => {
     return data.find((p: any) => p._id === props?.id);
   }, [data, props?.id]);
@@ -291,15 +297,21 @@ export default function ModalDetail(props: propsType): React.JSX.Element {
         dataSource={infoData?.revenue ?? []}
         pagination={false}
       />
-      <Flex justify={'space-between'} align='center'>
-        <Flex gap={50} justify='space-around' align='center'>
-          <BoxMoney title={'Tổng phải thu'} total={initTotal < 0 ? initTotal : 0}/>
-          <BoxMoney title={'Tổng phải chi'} total={initTotal > 0 ? initTotal : 0}/>
-          <BoxMoney title={'Tổng đã thu'} total={totalReceipt}/>
-          <BoxMoney title={'Tổng đã chi'} total={totalPayment}/>
+      <Flex justify={"space-between"} align="center">
+        <Flex gap={50} justify="space-around" align="center">
+          <BoxMoney
+            title={"Tổng phải thu"}
+            total={initTotal < 0 ? initTotal : 0}
+          />
+          <BoxMoney
+            title={"Tổng phải chi"}
+            total={initTotal > 0 ? initTotal : 0}
+          />
+          <BoxMoney title={"Tổng đã thu"} total={totalReceipt} />
+          <BoxMoney title={"Tổng đã chi"} total={totalPayment} />
         </Flex>
       <Flex style={{ marginTop: 20 }} justify="end" gap={10} align='center'>
-        <WithPermission permission={POLICIES.READ_VOUCHERPARTNER}>
+        <WithPermission permission={pathname === PATH_APP.reportSalaryPartner.root ? POLICIES.READ_VOUCHERSALARYPARTNER : POLICIES.READ_VOUCHERSALARYEMPLOYEE}>
         <Popover
           trigger={["click"]}
           title="Danh sách phiếu"
@@ -312,8 +324,9 @@ export default function ModalDetail(props: propsType): React.JSX.Element {
           </Badge>
         </Popover>
         </WithPermission>
+        <ReportSalaryPartnerProvider refCollection={infoData?.typeSaler} methodType={METHOD_TYPE.VOUCHER_SALARY as any}>
         {total === 0 && <Tag color={'success'}>Đã hoàn tất thanh toán</Tag>}
-      <WithPermission permission={POLICIES.WRITE_VOUCHERPARTNER}>
+      <WithPermission permission={pathname === PATH_APP.reportSalaryPartner.root ? POLICIES.WRITE_VOUCHERSALARYPARTNER : POLICIES.WRITE_VOUCHERSALARYEMPLOYEE}>
       {total > 0 && (
           <Button type="primary" onClick={onOpenPayment}>
             Tạo phiếu chi
@@ -322,7 +335,8 @@ export default function ModalDetail(props: propsType): React.JSX.Element {
         {total < 0 && <Button type="primary" onClick={onOpenReceipt}>
             Tạo phiếu thu
           </Button>}
-      </WithPermission>
+            </WithPermission>
+            </ReportSalaryPartnerProvider>
       </Flex>
       </Flex>
 
@@ -342,7 +356,7 @@ export default function ModalDetail(props: propsType): React.JSX.Element {
           {...infoData?.typeSaler === 'employee' && {employeeId : get(infoData, "salerId._id")}}
           {...infoData?.typeSaler === 'partner' && {partnerId : get(infoData, "salerId._id")}}
           onClose={() => onClosePayment()}
-          refCollection={REF_COLLECTION_UPPER[infoData?.typeSaler?.toUpperCase()]}
+          refCollection= {REF_COLLECTION_UPPER[infoData?.typeSaler?.toUpperCase()]}
           debt={total}
           method={{
             data: infoData?._id,

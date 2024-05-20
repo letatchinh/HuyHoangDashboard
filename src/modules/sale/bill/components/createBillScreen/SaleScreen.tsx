@@ -12,9 +12,12 @@ import useCreateBillStore from "../../storeContext/CreateBillContext";
 import ProductSelectedTable from "../ProductSelectedTable";
 import SelectPharmacy from "../SelectPharmacy";
 import TotalBill from "./TotalBill";
+import { useLocation } from "react-router-dom";
+import { PATH_APP } from "~/routes/allPath";
+import SelectCollaborator from "~/modules/collaborator/components/SelectSearch";
 type propsType = {};
 export default function SaleScreen(props: propsType): React.JSX.Element {
- const {form,onValueChange,quotationItems,totalPriceAfterDiscount,onRemoveTab,bill,onOpenModalResult,totalAmount,mutateReValidate,setAddress,setFormAndLocalStorage} = useCreateBillStore();
+  const {form,onValueChange,quotationItems,totalPriceAfterDiscount,onRemoveTab,bill,onOpenModalResult,totalAmount,mutateReValidate,setAddress,setFormAndLocalStorage} = useCreateBillStore();
  const feeForm = Form.useWatch('fee',form);
 
  const {onNotify} = useNotificationStore();
@@ -24,7 +27,8 @@ export default function SaleScreen(props: propsType): React.JSX.Element {
  };
  const [isSubmitLoading,onCreateQuotation] = QuotationModule.hook.useCreateQuotation(callBackAfterSuccess);
  const [,onUpdateQuotation] = QuotationModule.hook.useUpdateQuotation(callBackAfterSuccess);
- const [,onConvertQuotation] = QuotationModule.hook.useConvertQuotation(callBackAfterSuccess);
+  const [, onConvertQuotation] = QuotationModule.hook.useConvertQuotation(callBackAfterSuccess);
+  const {pathname} = useLocation();
   const onFinish = (values: FormFieldCreateBill) => {
 try {
   if(!quotationItems?.length){
@@ -110,30 +114,28 @@ try {
         </Col>
         <Col span={8} className="form-create-bill--payment">
           <div>
-            <SelectPharmacy onChange={(value,option) => {
-              const fee = get(option,'data.fee',[]);
-              if(fee?.length){
-                feeForm[0] = head(fee);
-              }else{
-                feeForm[0] = {
-                  typeFee : 'SUB_FEE',
-                  typeValue : 'VALUE',
-                  value : 0
+              <SelectPharmacy onChange={(value,option) => {
+                const fee = get(option,'data.fee',[]);
+                if(fee?.length){
+                  feeForm[0] = head(fee);
+                }else{
+                  feeForm[0] = {
+                    typeFee : 'SUB_FEE',
+                    typeValue : 'VALUE',
+                    value : 0
+                  }
                 }
-              }
-              
-              
-              const deliveryAddress = concatAddress(get(option,'data.address'));
-              const address = get(option,'data.addressStories',[]);
-              setFormAndLocalStorage({
-                  fee : feeForm,
-                  pharmacyId : value,
-                  deliveryAddress,
-                });
-
-              setAddress(address);
-              mutateReValidate();
-            }} id={get(bill,'pharmacyId')} form={form} allowClear={false}/>
+                const deliveryAddress = concatAddress(get(option,'data.address'));
+                const address = get(option,'data.addressStories',[]);
+                setFormAndLocalStorage({
+                    fee : feeForm,
+                    pharmacyId : value,
+                    deliveryAddress,
+                  });
+  
+                setAddress(address);
+                mutateReValidate();
+                }} id={get(bill, 'pharmacyId')} form={form} allowClear={false} />
             <Divider/>
             <TotalBill />
           </div>
