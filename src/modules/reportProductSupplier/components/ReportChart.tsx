@@ -1,7 +1,7 @@
 import React from "react";
 import { ResponsiveBar } from "@nivo/bar";
 import { useEffect, useMemo, useState } from "react";
-import { get, reduce, truncate } from "lodash";
+import { get, map, reduce, truncate } from "lodash";
 import apis from "../reportProductSupplier.api";
 import { useFetchState } from "~/utils/hook";
 import {
@@ -26,7 +26,7 @@ import {
   useReportProductSupplierQueryParams,
   useUpdateReportProductSupplierParams,
 } from "../reportProductSupplier.hook";
-import dayjs from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 import SelectPharmacy from "~/modules/sale/bill/components/SelectPharmacy";
 import SelectCollaborator from "~/modules/collaborator/components/SelectSearch";
 import SelectSupplier from "~/modules/supplier/components/SelectSupplier";
@@ -35,7 +35,7 @@ import SelectArea from "./SelectArea";
 import subvn from "~/core/subvn";
 
 const { RangePicker } = DatePicker;
-const dateFormat = "DD-MM-YYYY";
+const dateFormat = "YYYY-MM-DD";
 
 interface propsType {
   query?: any;
@@ -47,19 +47,11 @@ export default function ReportChart(
 ): React.JSX.Element {
   const { query, spaceType } = props;
 
-  // const defaultDate = useMemo(
-  //   () => ({
-  //     startDate: dayjs().startOf("month").format("YYYY-MM-DD"),
-  //     endDate: dayjs().endOf("month").format("YYYY-MM-DD"),
-  //   }),
-  //   []
-  // );
-
   const [keyword, { setKeyword, onParamChange }] =
     useUpdateReportProductSupplierParams(query);
 
   const [form] = Form.useForm();
-  const [date, setDate] = useState<any>([]);
+  const [date, setDate] = useState<any[]>([null,null]);
   const [detail, setDetail] = useState<any>(null);
   const cities = subvn.getProvinces();
   const areas = useMemo(() => subvn.getAreas(), []);
@@ -77,12 +69,12 @@ export default function ReportChart(
   const [dataReport, isLoading] = useFetchState(memoQuery);
 
   useEffect(() => {
-    if (query) {
-      setDate({
-        rangerTime: query?.rangerTime,
-      });
+    if (query?.rangerTime) {
+      let rangerTime: string = query?.rangerTime;
+      setDate(map(rangerTime.split(","), (e: string) => dayjs(e)));
     }
-  }, [query]);
+    else  setDate([dayjs().startOf("month"), dayjs().endOf("month")])
+  }, [query.rangerTime]);
 
   const keyInData = useMemo(() => {
     if (dataReport) {
@@ -154,12 +146,11 @@ export default function ReportChart(
                 date[1] ? dayjs(date[1]) : null,
               ]}
               onChange={(value) => {
-                setDate({
-                  rangerTime: [
-                    dayjs(value[0]).format("YYYY-MM-DD"),
-                    dayjs(value[1]).format("YYYY-MM-DD"),
-                  ],
+                const P = [dayjs(value?.[0]??dayjs().startOf("month").valueOf()), dayjs(value?.[1])]??dayjs().endOf("month").valueOf();
+                onParamChange({
+                  rangerTime:P.map((e)=>e.format('YYYY-MM-DD'))
                 });
+                // setDate(P);
               }}
             />
           </Space>
