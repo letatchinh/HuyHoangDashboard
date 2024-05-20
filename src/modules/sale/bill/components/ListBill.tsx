@@ -1,6 +1,7 @@
 import React, { useCallback, useMemo, useState } from "react";
 import TableAnt from "~/components/Antd/TableAnt";
 import {
+  redirectRouterBillId,
   useBillPaging,
   useBillQueryParams,
   useGetBills,
@@ -10,7 +11,7 @@ import {
 import { Checkbox, Col, ConfigProvider, Row, Space, Tooltip, Typography } from "antd";
 import { ColumnsType } from "antd/es/table/InternalTable";
 import { get } from "lodash";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import SearchAnt from "~/components/Antd/SearchAnt";
 import Status from "~/components/common/Status/index";
 import SelectSupplier from "~/modules/supplier/components/SelectSupplier";
@@ -42,7 +43,7 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
   //Download
   const onPermissionCovert = useCallback(permissionConvert(query),[query])
   const canDownload = useMatchPolicy(onPermissionCovert('DOWNLOAD', 'BILL'));
-
+  const { pathname } = useLocation();
   const [arrCheckBox, onChangeCheckBox] = useCheckBoxExport();
   const columns: ColumnsType = useMemo(
     () => [
@@ -55,7 +56,7 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
           return (
             <Link
               className="link_"
-              to={PATH_APP.bill.root + "/" + get(record, "_id")}
+              to={redirectRouterBillId(pathname) + "/" + get(record, "_id")}
             >
               {codeSequence}
             </Link>

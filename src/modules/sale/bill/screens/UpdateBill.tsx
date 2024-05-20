@@ -14,8 +14,8 @@ import TextArea from "antd/es/input/TextArea";
 import dayjs from "dayjs";
 import { get, omit } from "lodash";
 import PolicyModule from "policy";
-import React, { useCallback, useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { Link, useLocation, useParams } from "react-router-dom";
 import ModalAnt from "~/components/Antd/ModalAnt";
 import Status from "~/components/common/Status/index";
 import WhiteBox from "~/components/common/WhiteBox";
@@ -25,7 +25,7 @@ import {
 } from "~/modules/sale/bill/bill.hook";
 import BillItemModule from "~/modules/sale/billItem";
 import { PATH_APP } from "~/routes/allPath";
-import { concatAddress, formatter } from "~/utils/helpers";
+import { CheckPermission, concatAddress, formatter } from "~/utils/helpers";
 import { PayloadUpdateBill } from "../bill.modal";
 import StepStatus from "../components/StepStatus";
 import { STATUS_BILL, STATUS_BILL_VI } from "../constants";
@@ -33,6 +33,8 @@ import useUpdateBillStore from "../storeContext/UpdateBillContext";
 import VoucherInOrder from "~/modules/vouchers/components/VoucherInOrder";
 import WithPermission from "~/components/common/WithPermission";
 import POLICIES from "~/modules/policy/policy.auth";
+import { useMatchPolicy } from "~/modules/policy/policy.hook";
+import { REF_COLLECTION } from "~/constants/defaultValue";
 import { ReportSalaryPartnerProvider } from "~/modules/reportSalaryPartner/ReportSalaryPartnerProvider";
 import { METHOD_TYPE } from "~/modules/vouchers/constants";
 type propsType = {};
@@ -55,7 +57,7 @@ const CLONE_STATUS_BILL: any = STATUS_BILL;
 export default function UpdateBill(props: propsType): React.JSX.Element {
   const [form] = Form.useForm();
   useResetBillAction();
-  const { bill, isLoading,mutateBill,onOpenForm, compareMoney,onOpenFormPayment, refCollection ,totalRevenueInVouchers} = useUpdateBillStore();
+  const { bill, isLoading,mutateBill,onOpenForm, compareMoney,onOpenFormPayment ,totalRevenueInVouchers} = useUpdateBillStore();
   
   const {
     codeSequence,
@@ -73,11 +75,13 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
     remainAmount,
     totalFee,
     feeDetail,
+    refCollection,
   } = bill || {};
-  const canUpdateBill = PolicyModule.hook.useMatchPolicy(
-    PolicyModule.POLICIES.UPDATE_BILL
-  );
-  
+  console.log(refCollection, refCollection)
+  const { pathname } = useLocation();
+  const keyPermission = useMemo(() => CheckPermission(pathname), [pathname]);
+  const canUpdateBill = useMatchPolicy([keyPermission, 'update']);
+  const canWriteBill = useMatchPolicy([keyPermission, 'write']);
   // const queryGetDebtPharmacy = useMemo(() => ({pharmacyId : get(bill,'pharmacyId')}),[bill]);
   // const [debt,isLoadingDebt] = useFetchState({api : PharmacyModule.api.getDebt,query : queryGetDebtPharmacy});
   const { id } = useParams();
@@ -85,7 +89,6 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
   const [cancelNote, setCancelNote] = useState("");
   const onOpenCancel = useCallback(() => setOpenCancel(true), []);
   const [openDetailVoucher, setOpenDetailVoucher] = useState(false);
-
   const onOpenDetailVouchers = (item: any) => {
     setOpenDetailVoucher(true);
   };

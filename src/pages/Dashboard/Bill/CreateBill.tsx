@@ -37,7 +37,8 @@ const initData: ItemDataSource = {
 
 export interface DataResultType  {
   type : 'createQuotation' | 'convertQuotation' | 'updateQuotation',
-  code : string
+  code: string,
+  refCollection : string
 }
 
 const Label = ({ label, onRemove }: { label?: any; onRemove: () => void }) => (
@@ -61,7 +62,6 @@ const CreateBillPage = (): React.JSX.Element => {
   const [tabs, setTabs] = useState<TabsProps["items"]>();
   const [activeKey, setActiveKey]: any = useState();
   const [dataSource, setDataSource]: any = useState<DataSourceType>({});
-  console.log(dataSource,'dataSource');
   
   const [dataResult,setDataResult] = useState<DataResultType | null>();
   const [openModalResult,setOpenModalResult] = useState(false);
