@@ -9,9 +9,8 @@ export const METHOD_TYPE = {
      BILLITEM : "BILLITEM",
      ORDER : "ORDER",
      ORDERITEM : "ORDERITEM",
-     SALARY_PARTNER : "SALARY_PARTNER",
+     VOUCHER_SALARY : "VOUCHER_SALARY",
      SALARY_EMPLOYEE : "SALARY_EMPLOYEE",
-    VOUCHER_SALARY: "VOUCHER_SALARY"
 }
 export const METHOD_TYPE_VI = {
      BILL : "Đơn hàng",
@@ -19,8 +18,7 @@ export const METHOD_TYPE_VI = {
      BILLITEM : "Sản phẩm trong đơn hàng nhà thuốc",
      ORDER : "Đơn hàng nhà cung cấp",
      ORDERITEM : "Sản phẩm trong đơn hàng nhà cung cấp",
-     SALARY_PARTNER : 'Lương cộng tác viên',
      SALARY_EMPLOYEE : 'Lương trình dược viên',
      VOUCHER_SALARY: "Lương CTV/ TDV"
 }
-export const METHOD_TYPE_OPTIONS = getOptions(METHOD_TYPE_VI).filter(({value} : any) => ['BILL', 'VOUCHER_SALARY'].includes(value));
+export const METHOD_TYPE_OPTIONS = getOptions(METHOD_TYPE_VI).filter(({value} : any) => ['BILL','VOUCHER_SALARY','SALARY_EMPLOYEE'].includes(value));

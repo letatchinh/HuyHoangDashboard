@@ -5,7 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import { RootState } from "~/redux/store";
-import { clearQuerySearch, getExistProp } from "~/utils/helpers";
+import { checkRefCollection, clearQuerySearch, getExistProp } from "~/utils/helpers";
 import {
     getSelectors,
     useFailed, useFetchByParam,
@@ -132,11 +132,12 @@ export const useDeleteQuotation = (callback?: any) => {
 
 export const useQuotationQueryParams = (status?: string) => {
   const query = useQueryParams();
+  const { pathname } = useLocation();
   const limit = query.get("limit") || 10;
   const page = query.get("page") || 1;
   const keyword = query.get("keyword");
   const pharmacyId = query.get("pharmacyId");
-  const refCollection = query.get("refCollection");
+  const refCollection = query.get("refCollection") || checkRefCollection('quotation',pathname);
   const employeeIds = query.get("employeeIds");
   const partnerIds = query.get("partnerIds");
   const createSuccess = useSelector(createSuccessSelector);

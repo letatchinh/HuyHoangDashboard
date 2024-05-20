@@ -57,12 +57,13 @@ export const REF_COLLECTION_UPPER : any= {
   // BILL: 'BILL',
   // BILLITEM: 'BILLITEM',
   PHARMA_PROFILE: 'PHARMA_PROFILE',
+  PHARMACY: 'PHARMA_PROFILE',
   SUPPLIER: 'SUPPLIER',
   PARTNER: 'PARTNER',
   EMPLOYEE: 'EMPLOYEE',
 };
 
-export const REF_COLLECTION: any = {
+export const REF_COLLECTION : any = {
   // BILL: 'bill',
   // BILLITEM: 'billItem',
   PHARMA_PROFILE: "pharma_profile",

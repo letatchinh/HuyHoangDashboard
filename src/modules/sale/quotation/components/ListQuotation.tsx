@@ -23,17 +23,13 @@ import {
 import { ColumnsType } from "antd/es/table/InternalTable";
 import dayjs from "dayjs";
 import { get } from "lodash";
-import { Link } from "react-router-dom";
+import { Link, useLocation} from "react-router-dom";
 import SearchAnt from "~/components/Antd/SearchAnt";
 import Status from "~/components/common/Status/index";
 import BillModule from "~/modules/sale/bill";
 import { ItemDataSource } from "~/pages/Dashboard/Bill/CreateBill";
 import { PATH_APP } from "~/routes/allPath";
-import {
-  DeviceDetector,
-  pagingTable,
-  permissionConvert,
-} from "~/utils/helpers";
+import { DeviceDetector, pagingTable, permissionConvert} from "~/utils/helpers";
 import SelectPharmacy from "../../bill/components/SelectPharmacy";
 import { STATUS_QUOTATION, STATUS_QUOTATION_VI } from "../constants";
 import { PlusCircleTwoTone } from "@ant-design/icons";
@@ -49,6 +45,7 @@ import SelectEmployee from "~/modules/employee/components/SelectSearch";
 import SelectCollaborator from "~/modules/collaborator/components/SelectSearch";
 import { REF_COLLECTION } from "~/constants/defaultValue";
 import { useIsAdapterSystem } from "~/utils/hook";
+import { redirectRouterBillCreate, redirectRouterBillId } from "../../bill/bill.hook";
 type propsType = {
   status?: string;
 };
@@ -57,6 +54,7 @@ const CLONE_STATUS_QUOTATION_VI: any = STATUS_QUOTATION_VI;
 export default function ListQuotation({
   status,
 }: propsType): React.JSX.Element {
+  const { pathname } = useLocation(); 
   const [form] = Form.useForm();
   const [query] = useQuotationQueryParams(status);
   const [keyword, { setKeyword, onParamChange }] =
@@ -70,24 +68,21 @@ export default function ListQuotation({
       typeTab: "updateQuotation",
       ...data,
     });
-    window.open(PATH_APP.bill.create);
+    window.open(redirectRouterBillCreate(pathname));
   };
   const onConvertQuotation = (data: Omit<ItemDataSource, "typeTab">) => {
     BillModule.service.addDataToSaleScreen({
       typeTab: "convertQuotation",
       ...data,
     });
-    window.open(PATH_APP.bill.create);
+    window.open(redirectRouterBillCreate(pathname));
   };
   //Download
   const [arrCheckBox, onChangeCheckBox] = useCheckBoxExport();
   const isSystem = useIsAdapterSystem();
 
-  const onPermissionCovert = useCallback(permissionConvert(query), [query]);
-  console.log(onPermissionCovert("WRITE", "BILL"), "onPermissionCovert");
-  const canDownload = useMatchPolicy(
-    onPermissionCovert("DOWNLOAD", "QUOTATION")
-  );
+  const onPermissionCovert = useCallback(permissionConvert(query),[query])
+  const canDownload = useMatchPolicy(onPermissionCovert('DOWNLOAD', 'QUOTATION'));
 
   const columns: ColumnsType = [
     {
@@ -118,6 +113,24 @@ export default function ListQuotation({
           <Link
             className="link_"
             to={PATH_APP.bill.root + "/" + get(record, "bill._id")}
+            target="_blank"
+          >
+            {get(record, "bill.codeSequence")}
+          </Link>
+        );
+      },
+    },
+    {
+      title: "Mã đơn hàng",
+      dataIndex: "bill",
+      key: "bill",
+      align: "center",
+      width: 100,
+      render(bill, record, index) {
+        return (
+          <Link
+            className="link_"
+            to={redirectRouterBillId(pathname) + "/" + get(record, "bill._id")}
             target="_blank"
           >
             {get(record, "bill.codeSequence")}
@@ -420,17 +433,10 @@ export default function ListQuotation({
                 />
               </Col>
             </WithPermission>
-            <WithPermission
-              permission={onPermissionCovert("WRITE", "QUOTATION")}
-            >
-              <Button
-                style={{ marginLeft: "auto" }}
-                onClick={() => window.open(PATH_APP.bill.create)}
-                type="primary"
-                icon={<PlusCircleTwoTone />}
-              >
-                Tạo đơn hàng tạm
-              </Button>
+            <WithPermission permission={onPermissionCovert('WRITE', 'QUOTATION')}>
+            <Button style={{marginLeft : 'auto'}} onClick={() => window.open(redirectRouterBillCreate(pathname))} type="primary" icon={<PlusCircleTwoTone />}>
+              Tạo đơn hàng tạm
+            </Button>
             </WithPermission>
           </Space>
         </Col>

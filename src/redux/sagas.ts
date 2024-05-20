@@ -43,6 +43,7 @@ import reportSupplierModule from '~/modules/report/reportSupplier'; //
 import configurationCronTime from "~/modules/configurationCronTime";
 import typePharmacy from '~/modules/typePharmacy';
 import groupPharmacy from '~/modules/groupPharmacy';
+import notification from '~/modules/notification';
 import collaborator from '~/modules/collaborator';
 import collaboratorGroup from '~/modules/collaboratorGroup';
 import reportSalaryPartner from '~/modules/reportSalaryPartner/redux/saga';
@@ -94,6 +95,8 @@ export default function* rootSaga() {
     configurationCronTime.redux.saga(),
     typePharmacy.redux.saga(),
     groupPharmacy.redux.saga(),
+    productUnitModule.redux.saga(),
+    notification.redux.saga(),
     collaborator.redux.saga(),
     collaboratorGroup.redux.saga(),
     reportSalaryPartner(),

@@ -9,6 +9,7 @@ import { EmployeeLevelType } from "~/modules/employee/employee.modal";
 import { EMPLOYEE_LEVEL } from "~/modules/employee/constants";
 import { Popover } from "antd";
 import UpdateAndDelete from "./components/UpdateAndDelete";
+import { ItemVoucher } from "~/modules/reportSalaryPartner/components/Context";
 const styleChildren :CSSProperties= {
     fontStyle : 'italic',
 }
@@ -247,6 +248,7 @@ export class SwapStructure {
 
 export const handleCalculateReducer = (payload:ReportEmployeeType) => {
   let keyWatchChange : any = [];
+  const totalPayment = (get(payload,'vouchers') || []).reduce((sum:number,cur : ItemVoucher) => cur?.status === 'REJECT' ? sum : get(cur,'totalAmount',0),0);
   const dataReturn =  ({
     ...payload,
     salary: {
@@ -295,6 +297,8 @@ export const handleCalculateReducer = (payload:ReportEmployeeType) => {
         }
       ),
     },
+    totalPayment,
+    totalRemaining : get(payload,'salary.totalSalary',0) - totalPayment,
   });
   return {
     ...dataReturn,

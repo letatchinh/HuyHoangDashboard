@@ -51,8 +51,9 @@ export default function ProfileMenu(props: propsType): React.JSX.Element {
       type: "divider",
     },
     {
-      label: <LayoutItem icon={<LogoutOutlined onClick={onLogout} />} title="Đăng xuất" onClick={onLogout}/>,
+      label: <LayoutItem icon={<LogoutOutlined/>} title="Đăng xuất" />,
       key: "1",
+      onClick: () => onLogout(),
     },
   ],[]);
   return (

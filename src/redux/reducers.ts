@@ -46,6 +46,7 @@ import saleChannel from '~/modules/saleChannel/index';
 import configurationCronTime from "~/modules/configurationCronTime";
 import typePharmacy from '~/modules/typePharmacy';
 import groupPharmacy from '~/modules/groupPharmacy';
+import notification from '~/modules/notification';
 import collaborator from '~/modules/collaborator';
 import collaboratorGroup from '~/modules/collaboratorGroup';
 import reportSalaryPartner from '~/modules/reportSalaryPartner/redux/reducer';
@@ -108,6 +109,7 @@ const rootReducer = combineReducers({
     configurationCronTime: configurationCronTime.redux.reducer,
     typePharmacy: typePharmacy.redux.reducer,
     groupPharmacy: groupPharmacy.redux.reducer,
+    notification: notification.redux.reducer,
     collaborator: collaborator.redux.reducer,
     collaboratorGroup: collaboratorGroup.redux.reducer,
     reportSalaryPartner

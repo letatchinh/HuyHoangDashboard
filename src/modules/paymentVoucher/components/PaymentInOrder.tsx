@@ -12,8 +12,8 @@ type propsType = {
 
 };
 export default function PaymentInOrder(props: propsType): React.JSX.Element {
-  const { billId } = useVoucherInOrderStore();
-  const [query, onTableChange] = usePaymentVoucherByBillIdQueryParams(billId);
+  const { billId, isNotSentTime} = useVoucherInOrderStore();
+  const [query, onTableChange] = usePaymentVoucherByBillIdQueryParams(billId, isNotSentTime);
   const [data, isLoading] = useGetPaymentVoucherByBillId(query);
   const [refCollection, setRefCollection] = useState<string | undefined>();
   const [id, setId] = useState<string | null>();

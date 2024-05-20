@@ -15,6 +15,8 @@ import {
   useSuccess,
 } from "~/utils/hook";
 import { userSliceAction } from "./redux/reducer";
+import apis from "../notification/notification.api";
+import { useToken } from "../auth/auth.hook";
 const MODULE = "user";
 const MODULE_VI = "Người dùng";
 
@@ -50,7 +52,7 @@ const isSubmitProfileLoadingSelector = getSelector(
 );
 const updateProfileSuccessSelector = getSelector("updateProfileSuccess");
 const updateProfileFailedSelector = getSelector("updateProfileFailed");
-
+export const usePolicy = () =>  useSelector(policySelector);
 export const useGetUsers = (params: any) => {
   return useFetchByParam({
     action: userSliceAction.getListRequest,
@@ -256,4 +258,14 @@ export const useInitialValues = (user: any) => {
     address: user?.address || {},
   };
   return data;
+};
+
+export const unSubscribeToken = () => {
+  let tokenFcm = JSON.stringify(localStorage.getItem("tokenFcm"));
+  tokenFcm && apis.unSubscribeToken(JSON.parse(tokenFcm))
+  localStorage.removeItem("tokenFcm")
+};
+
+export const subscribeToken = (tokenFcm: any) => { // NOT NEED TO ASYNC
+  tokenFcm && apis.subscribeToken(tokenFcm)
 };

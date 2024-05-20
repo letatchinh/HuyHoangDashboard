@@ -60,7 +60,6 @@ export default function TotalBill(props: propsType): React.JSX.Element {
   const onCloseAddress = useCallback(() => setOpenAddress(false),[]);
   const debtType = Form.useWatch('debtType',form);
   const fee = Form.useWatch('fee',form);
-  console.log(fee,'fee');
   
   const onChangeAddress = useCallback((values : any) => {
     const addressString = concatAddress(values?.address);
