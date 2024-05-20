@@ -1,5 +1,5 @@
 import { SyncOutlined } from "@ant-design/icons";
-import { Badge, Dropdown, Typography } from "antd";
+import { Badge, Col, Dropdown, Row, Select, Typography } from "antd";
 import { ColumnsType } from "antd/lib/table/InternalTable";
 import { get, keys } from "lodash";
 import React from "react";
@@ -11,8 +11,10 @@ import { pagingTable } from "~/utils/helpers";
 import { STATUS_REQUEST_GROUP, STATUS_REQUEST_GROUP_COLOR, STATUS_REQUEST_GROUP_DISABLED, STATUS_REQUEST_GROUP_VI } from "../constants";
 import useRequestGroupStore from "../RequestGroupProvider";
 import ContentEllipsis from "./ContentEllipsis";
+import Search from "antd/es/input/Search";
 type propsType = {};
 
+type statusGroup = keyof typeof STATUS_REQUEST_GROUP
 export default function ViewRequest(props: propsType): React.JSX.Element {
     const {onChangeStatus,data,paging,setQuery,loading,onSelectPartner} = useRequestGroupStore();
     const canUpdateRequest = useMatchOrPolicy([POLICIES.UPDATE_REQUESTCHANGEGROUP,POLICIES.UPDATE_REQUESTCHANGEGROUPCTV]);
@@ -76,6 +78,39 @@ export default function ViewRequest(props: propsType): React.JSX.Element {
       ];
   return (
     <div>
+      <Row gutter={16}>
+        <Col span={12}>
+          <Select
+            allowClear
+            mode="multiple"
+            placeholder="Tìm theo trang thái"
+            style={{
+              width: "100%",
+            }}
+            onChange={(e: any) => {
+              setQuery({ status: e?.toString()});
+            }}
+          >
+            {
+              (keys(STATUS_REQUEST_GROUP_VI) as statusGroup[] ).map((k , index: number) => (
+                <Select.Option key={index} value={k}>{STATUS_REQUEST_GROUP_VI[k]}</Select.Option>
+              ))
+            }
+          </Select>
+        </Col>
+        <Col span={12}>
+          <Search
+            allowClear
+            placeholder="Tìm bất kỳ..."
+            onSearch={(e: any) => setQuery({ keyword: e })}
+            onChange={(e: any) => {
+              if (e.target.value === '') {
+                setQuery({ keyword: null });
+              };
+            }}
+          />
+        </Col>
+      </Row>
       <TableAnt loading={loading} size="small" dataSource={data} columns={columns} pagination={pagingTable(paging,setQuery)}/>
     </div>
   );
