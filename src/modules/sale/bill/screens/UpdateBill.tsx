@@ -57,7 +57,7 @@ const CLONE_STATUS_BILL: any = STATUS_BILL;
 export default function UpdateBill(props: propsType): React.JSX.Element {
   const [form] = Form.useForm();
   useResetBillAction();
-  const { bill, isLoading,mutateBill,onOpenForm, compareMoney,onOpenFormPayment ,totalRevenueInVouchers} = useUpdateBillStore();
+  const { bill, isLoading,mutateBill,onOpenForm, compareMoney,onOpenFormPayment ,totalRevenueInVouchers, onOpenFormLogistic} = useUpdateBillStore();
   
   const {
     codeSequence,
@@ -199,7 +199,7 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
                   </Col>
 
                   <WithPermission permission={refCollection === 'partner' ? POLICIES.READ_VOUCHERBILLPARTNER : POLICIES.READ_VOUCHERPHARMACY}>
-                    <Col style={{ position: 'absolute', right: 0, top: 5 }}>
+                    <Col style={{ position: 'absolute', right: 0, top: 0 }}>
                       <Button type="link" onClick={onOpenDetailVouchers}>Xem chi tiết các phiếu</Button>
                     </Col>
                   </WithPermission>
@@ -221,7 +221,7 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
                     </div>
                   </Space>
                   </Col>
-                  <Row gutter={10}>
+                  <Row gutter={10} style={{ marginRight: 5 }}>
                     <ReportSalaryPartnerProvider refCollection={refCollection} methodType={METHOD_TYPE.BILL as any}>
                     <WithPermission permission={refCollection === 'partner' ? POLICIES.WRITE_VOUCHERBILLPARTNER : POLICIES.WRITE_VOUCHERPHARMACY}>
                     <Col>
@@ -268,7 +268,8 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
               <Layout label={"Tổng số tiền sau chiết khấu"}>{formatter(get(bill,'totalAfterDiscountBill',0))}</Layout>
               {/* <Layout label={"Đã trả trước"}>-{formatter(pair)}</Layout> */}
               <Layout label={"Phụ phí"}>{formatter(get(feeDetail,'SUB_FEE',0))}</Layout>
-              <Layout label={"Vận chuyển"}>{formatter(get(feeDetail,'LOGISTIC',0))}</Layout>
+                <Layout label={<Button type="link" style={{ padding: 0 }} onClick={() => onOpenFormLogistic()}>
+                  Vận chuyển</Button>}>{formatter(get(feeDetail, 'LOGISTIC', 0))}</Layout>
               <Layout label={"Đã thanh toán"}>-{formatter(totalReceiptAmount)}</Layout>
               <Layout label={"Đã thanh toán và xác nhận"}>-{formatter(totalReceiptVoucherCompleted + (pair || 0))}</Layout>
               <Layout strong label={"Tổng số tiền còn lại"}>

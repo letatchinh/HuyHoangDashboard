@@ -10,6 +10,7 @@ import {  REF_COLLECTION, REF_COLLECTION_UPPER } from "~/constants/defaultValue"
 import { get, omit, sumBy } from "lodash";
 import PaymentVoucherFormPharmacy from "~/modules/paymentVoucher/components/PaymentVoucherFormPharmacy";
 import { STATUS_BILL } from "../constants";
+import LogisticForm from "../components/LogisticForm";
 export type GlobalUpdateBill = {
     bill : any,
     isLoading : boolean,
@@ -19,6 +20,8 @@ export type GlobalUpdateBill = {
     compareMoney: number,
     totalRevenueInVouchers: number;
     refCollection: any,
+    onOpenFormLogistic: () => void;
+    onCloseFormLogistic: () => void;
 };
 const UpdateBill = createContext<GlobalUpdateBill>({
     bill : null,
@@ -29,7 +32,8 @@ const UpdateBill = createContext<GlobalUpdateBill>({
     compareMoney: 0,
     totalRevenueInVouchers: 0,
     refCollection: null,
-
+    onOpenFormLogistic: () => { },
+    onCloseFormLogistic: () => { },
 });
 
 type UpdateBillProviderProps = {
@@ -48,6 +52,7 @@ export function UpdateBillProvider({
     const {pharmacyId,totalPrice,codeSequence,_id,totalReceiptVoucherCompleted,remainAmount, remaining, pair, refCollection} = bill || {};
     const [isOpenForm, setIsOpenForm] = useState(false);
     const [isOpenFormPayment, setIsOpenFormPayment] = useState(false);
+    const [logisticOpen, setLogisticOpen] = useState(false);
     const totalRevenueInVouchers = useMemo(() => {
       if (bill?.receiptVouchers?.length > 0) {
         const data = bill?.receiptVouchers?.filter((item: any)=> item?.status !== STATUS_BILL.CANCELLED);
@@ -77,6 +82,14 @@ export function UpdateBillProvider({
   const onCloseFormPayment = () => {
     setIsOpenFormPayment(false);
   };
+
+  const onOpenFormLogistic = () => {
+    setLogisticOpen(true);
+  };
+
+  const onCloseFormLogistic = () => {
+    setLogisticOpen(false);
+  };
   return (
     <UpdateBill.Provider
       value={{
@@ -88,6 +101,8 @@ export function UpdateBillProvider({
         compareMoney,
         totalRevenueInVouchers,
         refCollection,
+        onOpenFormLogistic,
+        onCloseFormLogistic
       }}
     >
       {children}
@@ -135,6 +150,16 @@ export function UpdateBillProvider({
             totalAmount: compareMoney,
           }}
         />
+      </ModalAnt>
+      <ModalAnt
+        title='Chi phí vận chuyển'
+        open={logisticOpen}
+        onCancel={onCloseFormLogistic}
+        width={'auto'}
+        footer={null}
+        destroyOnClose
+      >
+        <LogisticForm/>
       </ModalAnt>
     </UpdateBill.Provider>
   );

@@ -1,5 +1,5 @@
 import { REF_COLLECTION } from './../../../constants/defaultValue';
-import { get } from "lodash";
+import { get, omit } from "lodash";
 import { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -17,6 +17,7 @@ import {
 } from "~/utils/hook";
 import { billSliceAction } from "./redux/reducer";
 import { PATH_APP } from "~/routes/allPath";
+import { Select } from 'antd';
 const MODULE = "bill";
 const MODULE_VI = "";
 const getSelector = (key : string) => (state:any) => state[MODULE][key];
@@ -233,4 +234,11 @@ export const redirectRouterBillId = (pathname: string) => {
     return PATH_APP.bill.pharmacy
   };
   return PATH_APP.bill.root
+};
+
+export const SubmitCountLogisticFee = (data: any, props?: any) => {
+  return {
+    ...omit(data, ['customerAddress', 'code']),
+    ...props
+  };
 };
