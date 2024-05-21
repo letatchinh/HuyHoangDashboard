@@ -1,66 +1,23 @@
 import { DownOutlined } from '@ant-design/icons';
-import { Skeleton, Tree, TreeDataNode } from 'antd';
-import React from 'react';
+import { Skeleton, Tree } from 'antd';
+import { range } from 'lodash';
+import React, { useMemo } from 'react';
 type propsType = {
-
+  sample ?:{current?:number,pageSize?:number}
 }
-const treeData: TreeDataNode[] = [
-    {
-      title: 'parent 1',
-      key: '0-0',
-      children: [
-        {
-          title: 'parent 1-0',
-          key: '0-0-0',
-          children: [
-            {
-              title: 'leaf',
-              key: '0-0-0-0',
-            },
-            {
-              title: 'leaf',
-              key: '0-0-0-1',
-            },
-            {
-              title: 'leaf',
-              key: '0-0-0-2',
-            },
-          ],
-        },
-        {
-          title: 'parent 1-1',
-          key: '0-0-1',
-          children: [
-            {
-              title: 'leaf',
-              key: '0-0-1-0',
-            },
-          ],
-        },
-        {
-          title: 'parent 1-2',
-          key: '0-0-2',
-          children: [
-            {
-              title: 'leaf',
-              key: '0-0-2-0',
-            },
-            {
-              title: 'leaf',
-              key: '0-0-2-1',
-            },
-          ],
-        },
-      ],
-    },
-  ];
 export default function LoadingTree(props:propsType) : React.JSX.Element {
+  const createDataSample= useMemo(()=>{
+    return range(props?.sample?.pageSize??10).map((el)=>({
+      title: 'parent '+ el,
+      key: '0-'+el
+    }))
+  },[props?.sample?.pageSize])
     return (
         <Tree
         showLine
+        className='tree-custom'
         switcherIcon={<DownOutlined />}
-        defaultExpandedKeys={['0-0-0']}
-        treeData={treeData}
+        treeData={createDataSample}
         titleRender={node => <Skeleton.Input />}
       />
     )

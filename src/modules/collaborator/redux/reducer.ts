@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { omit } from "lodash";
 import { InstanceModuleRedux } from "~/redux/instanceModuleRedux";
 import { initStateSlice } from "~/redux/models";
 interface cloneInitState extends initStateSlice {
@@ -117,6 +118,10 @@ class CollaboratorClassExtend extends InstanceModuleRedux {
         state.isSubmitLoading = false;
         state.updateAddressFailed = payload;
       },
+      resetAction: (state:cloneInitState) => ({
+        ...state,
+        ...omit(this.cloneInitState, ["list",'paging']),
+      }),
 
     }
     this.cloneInitState = {

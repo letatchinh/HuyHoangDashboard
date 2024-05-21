@@ -5,20 +5,17 @@ import { ColumnsType } from "antd/lib/table/InternalTable";
 import { debounce, get } from "lodash";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import EmptyData from "~/components/Antd/EmptyData";
-import SearchAnt from "~/components/Antd/SearchAnt";
 import TableAnt from "~/components/Antd/TableAnt";
-import { useAddProductCollaborator } from "../collaborator.hook";
 import { SubmitDataProductPartner } from "../collaborator.modal";
 import { ConfigType } from "./CollaboratorProduct";
 import useCollaboratorProductStore from "../CollaboratorProductProvider";
 type propsType = {
   id?: any;
   dataSource?: any[];
-  mutate : () => void,
+  mutate ?: () => void,
   setKeyword : (kw:any) => void,
   totalDocs : number,
   loading : boolean,
-  useAddProduct : any,
   config? : ConfigType
 };
 export default function SelectProduct({
@@ -28,11 +25,10 @@ export default function SelectProduct({
   totalDocs,
   setKeyword,
   loading,
-  useAddProduct,
   config
 }: propsType): React.JSX.Element {
-  const {canAdd} = useCollaboratorProductStore();
-  const [isSubmitLoading, addProduct] = useAddProduct();
+  const {canAdd,useAdd} = useCollaboratorProductStore();
+  const [isSubmitLoading, addProduct] : any = useAdd();
 
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
 

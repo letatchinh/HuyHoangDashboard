@@ -1,9 +1,9 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, ValidateSliceCaseReducers } from "@reduxjs/toolkit";
 import { get } from "lodash";
 import { InstanceModuleRedux } from "~/redux/instanceModuleRedux";
 import { initStateSlice } from "~/redux/models";
 import { convertDataTreeBuyGroup, RulesLeader } from "../salesGroup.service";
-const RulesLeaderMethod = new RulesLeader();
+import { getPaging } from "~/utils/helpers";
 function getMember(listMember: any[]): string {
   let memberName = "";
   listMember?.forEach((mem: any) => {
@@ -41,11 +41,6 @@ function getDataFromDeeplyChild(
         nameChild + " " + get(child, "name") + " " + get(child, "alias");
       memberChild = getMember(get(child, "salesGroupPermission", [])); // Get memberChild Child
 
-      // Get Group Have Leader
-      const leader = RulesLeaderMethod.FindOne(
-        get(child, "salesGroupPermission", [])
-      );
-      // if (leader) {
       if (true) {
         groupHaveLeader.push(child);
       }
@@ -107,6 +102,14 @@ interface cloneInitState extends initStateSlice {
 
   getListBuyGroupFailed?: any;
   listBuyGroup?: any;
+  pagingBuyGroup?:Partial<{
+    current: number,
+    pageSize: number,
+    total:number
+  }>;
+
+  loadingGetChildren?:any
+  getChildrenFail?: any;
 }
 class SalesGroupClassExtend extends InstanceModuleRedux {
   cloneReducer;
@@ -126,10 +129,6 @@ class SalesGroupClassExtend extends InstanceModuleRedux {
               get(item, "salesGroupPermission", [])
             ); // Get memberChild Parent
 
-            // Get Group Have Leader
-            const leader = RulesLeaderMethod.FindOne(
-              get(item, "salesGroupPermission", [])
-            );
             if (true) {
               groupHaveLeader.push(item);
             }
@@ -208,11 +207,41 @@ class SalesGroupClassExtend extends InstanceModuleRedux {
         state.getListBuyGroupFailed = payload;
         
       },
+
+      getChildrenBuyGroupRequest: (state:cloneInitState,{payload}:{payload:any}) => {
+        state.loadingGetChildren[payload.key as string] = true;
+        state.getChildrenFail[payload.key as string] = null;
+      },
+      getChildrenBuyGroupSuccess: (state:cloneInitState , { payload }: any) => {
+        state.loadingGetChildren[payload.key as string] = false;
+
+        const loop = (item:any)=>{
+          if(payload.key===item.key){
+            item.children = convertDataTreeBuyGroup(payload.children);
+          }
+          if(payload.keyReferralChild.includes(item.key)&&payload.key!==item.key){
+            item.children = item.children.map(loop)
+          }
+          return item
+        }
+        state.listBuyGroup = state.listBuyGroup.map(loop);
+      },
+      getChildrenBuyGroupFailed: (state:cloneInitState, { payload }:{payload:any}) => {
+        state.loadingGetChildren[payload.key as string]  = false;
+        state.getChildrenFail[payload.key as string] = payload;
+        
+      },
   
       // Want Add more reducer Here...
     };
     this.cloneInitState = {
       ...this.initialState,
+      loadingGetChildren:{},
+      getChildrenFail:{},
+      pagingBuyGroup:{
+        current: 1,
+        pageSize: 20,
+      }
       // Want Add more State Here...
     };
   }

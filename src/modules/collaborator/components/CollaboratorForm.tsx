@@ -135,7 +135,7 @@ export default function CollaboratorForm(props: IProps) {
 
     if(birthDate){
       const onlyNumber = (any:any) => {
-        if(!any) return ''
+        if(!any) return 0
         return Number(String(any)?.replaceAll(/[^0-9]/g, ''));
       }
       const date = birthDate?.date;

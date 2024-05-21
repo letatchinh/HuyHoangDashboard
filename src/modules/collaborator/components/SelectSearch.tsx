@@ -1,19 +1,23 @@
 import { Select, SelectProps, Skeleton } from "antd";
+import { DefaultOptionType } from "antd/es/select/index";
 import { get } from "lodash";
 import React, { useMemo } from "react";
 import { filterSelectWithLabel, useFetchState } from "~/utils/helpers";
 import apis from "../collaborator.api";
+
 interface TypeProps extends SelectProps {
   defaultCollaborator?: any[];
   keywordSearchCollaborator?: string;
+  mergeOption : DefaultOptionType[],
 }
 
 export default function SelectCollaborator({
   defaultCollaborator,
   keywordSearchCollaborator,
   disabled = false,
+  mergeOption = [],
   ...props
-}: TypeProps): React.JSX.Element {
+}: Partial<TypeProps>): React.JSX.Element {
   // const query = useMemo(() => ({
   //   page: 1,
   //   limit: 200,
@@ -24,12 +28,14 @@ export default function SelectCollaborator({
     shouldRun: !defaultCollaborator,
   });
   const options = useMemo(
-    () =>
-      (defaultCollaborator ?? collaborator)?.map((item: any) => ({
+    () => {
+      const options_ = (defaultCollaborator ?? collaborator)?.map((item: any) => ({
         label: get(item, "fullName", "name"),
         value: get(item, "_id"),
-      })),
-    [collaborator, defaultCollaborator]
+      }));
+      return [...mergeOption,...options_]
+    },
+    [collaborator, defaultCollaborator,mergeOption]
   );
   return (
     options?.length ?

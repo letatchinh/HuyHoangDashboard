@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { SyncOutlined } from "@ant-design/icons";
 import { Button, Col, Row, Typography } from "antd";
 import { get } from "lodash";
@@ -26,9 +27,6 @@ const defaultConfig = {
 type propsType = {
   id?: any;
   useGetUser: any;
-  useRemoveProduct: any;
-  useUpdateProduct: any;
-  useAddProduct: any;
   apiSearchProduct: any;
   config? : ConfigType
   target : 'employee' | 'partner'
@@ -36,14 +34,10 @@ type propsType = {
 export default function CollaboratorProduct({
   id,
   useGetUser,
-  useRemoveProduct,
-  useUpdateProduct,
-  useAddProduct,
   apiSearchProduct,
   config = defaultConfig,
   target,
 }: propsType): React.JSX.Element {
-  const role = useGetRole();
   const [reFetch, setReFetch] = useState(false);
   const [keyword, setKeyword] = useState("");
   const [supplierSelectId, setSupplierSelectId] = useState();
@@ -55,7 +49,6 @@ export default function CollaboratorProduct({
     useDocs: false,
   });
 
-  const canUpdate = useMemo(() => role === 'staff',[role]);
   
 
   const query = useMemo(
@@ -144,7 +137,6 @@ export default function CollaboratorProduct({
                 totalDocs={totalDocs}
                 setKeyword={setKeyword}
                 loading={loading}
-                useAddProduct={useAddProduct}
                 config={config}
               />
             </div>
@@ -156,8 +148,6 @@ export default function CollaboratorProduct({
             title={"Sản phẩm đã chọn"}
           >
             <ControlProduct
-              useRemoveProduct={useRemoveProduct}
-              useUpdateProduct={useUpdateProduct}
               dataSource={
                 supplierFilterId
                   ? get(collaborator, "products", [])?.filter(
