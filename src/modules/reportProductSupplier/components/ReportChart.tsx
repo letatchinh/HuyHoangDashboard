@@ -51,7 +51,7 @@ export default function ReportChart(
     useUpdateReportProductSupplierParams(query);
 
   const [form] = Form.useForm();
-  const [date, setDate] = useState<any[]>([null,null]);
+  const [date, setDate] = useState<any[]>([null, null]);
   const [detail, setDetail] = useState<any>(null);
   const cities = subvn.getProvinces();
   const areas = useMemo(() => subvn.getAreas(), []);
@@ -65,15 +65,16 @@ export default function ReportChart(
     }),
     [query, date]
   );
+  
 
   const [dataReport, isLoading] = useFetchState(memoQuery);
+
 
   useEffect(() => {
     if (query?.rangerTime) {
       let rangerTime: string = query?.rangerTime;
       setDate(map(rangerTime.split(","), (e: string) => dayjs(e)));
-    }
-    else  setDate([dayjs().startOf("month"), dayjs().endOf("month")])
+    } else setDate([dayjs().startOf("month"), dayjs().endOf("month")]);
   }, [query.rangerTime]);
 
   const keyInData = useMemo(() => {
@@ -112,12 +113,11 @@ export default function ReportChart(
     [TYPE_REPORT_VI]
   );
 
-
   return (
     <div>
       <Row style={{ marginBottom: 20 }}>
         <Col span={12}>
-          <Space >
+          <Space>
             <Typography style={{ fontSize: 14, marginRight: 20 }}>
               Phân loại:
             </Typography>
@@ -146,9 +146,13 @@ export default function ReportChart(
                 date[1] ? dayjs(date[1]) : null,
               ]}
               onChange={(value) => {
-                const P = [dayjs(value?.[0]??dayjs().startOf("month").valueOf()), dayjs(value?.[1])]??dayjs().endOf("month").valueOf();
+                const P =
+                  [
+                    dayjs(value?.[0] ?? dayjs().startOf("month").valueOf()),
+                    dayjs(value?.[1]),
+                  ] ?? dayjs().endOf("month").valueOf();
                 onParamChange({
-                  rangerTime:P.map((e)=>e.format('YYYY-MM-DD'))
+                  rangerTime: P.map((e) => e.format("YYYY-MM-DD")),
                 });
                 // setDate(P);
               }}
@@ -156,7 +160,11 @@ export default function ReportChart(
           </Space>
         </Col>
       </Row>
-      <Row justify="space-around" gutter={[16, 24]}>
+      <Row
+        justify="space-around"
+        gutter={[16, 24]}
+        style={{ marginLeft: 2, marginRight: 2 }}
+      >
         <Col span={4}>
           {spaceType !== "partner" ? (
             <Form form={form} initialValues={{ pharmacyId: query?.customerId }}>
@@ -228,11 +236,11 @@ export default function ReportChart(
             data={dataReport?.data ?? []}
             keys={keyInData}
             indexBy="_id"
-            margin={{ top: 50, right: 200, bottom: 100, left: 100 }}
+            margin={{ top: 20, right: 200, bottom: 100, left: 100 }}
             padding={0.5}
             valueScale={{ type: "linear" }}
             indexScale={{ type: "band", round: true }}
-            colors={{ scheme: "nivo" }}
+            colors={{ scheme: "red_yellow_blue" }}
             enableTotals={true}
             valueFormat={(value?: any) => formatter(value)}
             groupMode="stacked"

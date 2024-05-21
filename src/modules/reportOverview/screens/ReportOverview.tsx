@@ -12,19 +12,17 @@ export default function ReportOverview(props: propsType): React.JSX.Element {
       <Breadcrumb title={"Báo cáo tổng quan"} />
       <Tabs>
         <TabPane tab="Tổng quan" key={1}>
-          <Row>
-            <Col span={12}>
+          <Row justify="space-around" align={'middle'} wrap={true}>
+            <Col  style={{width:'650px'}}>
               <ReportOverviewComponent typeMatch={"SUPPLIER"} />
             </Col>
-            <Col span={12}>
+            <Col  style={{width:'650px'}}>
               <ReportOverviewComponent typeMatch={"SALE_CHANNEL"} />
             </Col>
-          </Row>
-          <Row>
-            <Col span={12}>
+            <Col  style={{width:'650px'}}>
               <ReportOverviewComponent typeAreaMatch="area" typeMatch="AREA" />
             </Col>
-            <Col span={12}>
+            <Col  style={{width:'650px'}}>
               <ReportOverviewComponent typeAreaMatch="city" typeMatch="AREA" />
             </Col>
           </Row>
