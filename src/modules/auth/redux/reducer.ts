@@ -36,10 +36,9 @@ export const auth = createSlice({
             setAxiosToken(token);
             setAxiosCompanyId(branchId); // Assuming branchId is the correct property name
             state.isLoading = false;
-            // setTimeout(() => {
-            //     window.location.reload();
-            // }, 100);
-            // token && subscribeToken(token);
+            setTimeout(() => {
+                window.location.reload();
+            }, 100);
           },
         loginFailed: (state, { payload }  : any) => {
             state.loginFailed = payload;

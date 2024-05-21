@@ -7,18 +7,20 @@ import SalesGroup from "~/modules/salesGroup";
 import BuyGroup from "~/modules/salesGroup/components/BuyGroup/index";
 import { SalesGroupProvider } from "~/modules/salesGroup/salesGroupContext";
 const SalesGroupPage = () => {
-  const [activeKey,setKeyActive]=useState<'OTC'|'B2C'>('OTC')
   const role = useGetRole();
+  const [activeKey, setKeyActive] = useState<'OTC' | 'B2C'>(role === 'partner' ? 'B2C' : ("OTC" ?? "B2C"));
   return (
     <>
     <Breadcrumb title={"Nhóm bán hàng"} />
     <Tabs
       activeKey={activeKey}
       onChange={(key:any)=>setKeyActive(key)}
-    type="card"
-    style={{
-      height: "calc(100% - 68px)",
-    }}
+      type="card"
+      style={{
+        height: "calc(100% - 68px)",
+      }}
+      // defaultActiveKey= {(role === 'partner' ? 'B2C': ("OTC" ?? "B2C"))} 
+      destroyInactiveTabPane
     >
       {role !== 'partner' && <TabPane tab="Nhóm bán hàng OTC" key={'OTC'}>
         <SalesGroupProvider>
