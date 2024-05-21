@@ -1,3 +1,33 @@
+# [1.18.0](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/compare/v1.17.3...v1.18.0) (2024-05-21)
+
+
+### Bug Fixes
+
+* [#1587](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1587) ([bf68796](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/bf6879669d03d2af4fe67640aaa839c50d618e25))
+* add api getChildrenBuyGroup ([73e123a](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/73e123aa5152250704f4c4895599342eb99c64e3))
+* add Create request To View ALl ([21e0647](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/21e0647cb4b99025c38943f76245eaf0b0c496b8))
+* add new saga and reducer buy group ([edad4ee](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/edad4ee3cac9c21e0c8935bfa8e7f335ab1d478a))
+* change title success ([f85b605](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/f85b6051a61310a68725ca089313cb3f652b61c3))
+* Check Id before ([b7126e0](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/b7126e0e7b2438d483109543cdcaf92ec269dd46))
+* content ellipsis ([1421c5e](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/1421c5ee93e5f4977a1c5bbf32bf8d3093eac91e))
+* handle change tab sale group page ([fcad48e](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/fcad48eeb897b0f474c9f2691cb8862010f3cb3b))
+* loading Tree component ([3de695e](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/3de695e84e082c9e6eecd133f9e3ac8a5f1d48a9))
+* model buy group ([c63e7b2](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/c63e7b226de1bf1b18449249def539a833492463))
+* page buy group ([f26b84d](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/f26b84dce65f07608f1d0ecf5bcecad9fdaff565))
+* policy request change group ([a3ba2f4](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/a3ba2f411e09800c1b0eb7a888cf380664c296e7))
+* requestGroup ([f5a508d](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/f5a508d0c6dc2ca718dd77c5a9abbf1d9fdcaa66))
+* reset action convert collaborator ([dcb2c0e](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/dcb2c0eb0edd12af7ae480fa92c78c7834a5f8ee))
+* search b2c ([ed42ae7](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/ed42ae76740f8297664724ba0e47812f4780789a))
+* structer data tree item ([f0808d3](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/f0808d3ca84b70ab9c0c5311e9789e1f760d66dc))
+* title content ellipsis ([7020e17](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/7020e171ca74bce0ffaf1f89f7d18d6f48fcedd1))
+
+
+### Features
+
+* [#1587](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1587) FE_Yêu cầu Chuyển nhóm Cộng tác viên ([26e5b65](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/26e5b65191483a870e267a92db1026f8ab85d588))
+* add hook by buy group ([b5b13a6](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/b5b13a65aa8ce14316f1c8ebafde6bcb07432571))
+* Ui Change Group ([c14f65c](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/c14f65cf64e0be8f4342a5cde66dc1ab4ec9961c))
+
 ## [1.17.3](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/compare/v1.17.2...v1.17.3) (2024-05-21)
 
 
