@@ -1,3 +1,11 @@
+## [1.17.3](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/compare/v1.17.2...v1.17.3) (2024-05-21)
+
+
+### Bug Fixes
+
+* 1600 focus tab ([b92d037](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/b92d03760e2647c87192f13e6dec6488c6413657))
+* reload nav ([f3d22b0](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/f3d22b07ebe706818d0ec4e494297d2216ec780b))
+
 ## [1.17.2](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/compare/v1.17.1...v1.17.2) (2024-05-18)
 
 
