@@ -228,13 +228,3 @@ export const useGetBuyGroups = (param:any) => {
     param
   });
 };
-
-export const useGetBuyGroup = (id: any) => {
-  return useFetchByParam({
-    action: salesGroupActions.getByIdRequest,
-    loadingSelector: getByIdLoadingSelector,
-    dataSelector: getByIdSelector,
-    failedSelector: getByIdFailedSelector,
-    param: id,
-  });
-};

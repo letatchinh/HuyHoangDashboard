@@ -201,7 +201,7 @@ class SalesGroupClassExtend extends InstanceModuleRedux {
       },
       getListBuyGroupSuccess: (state:cloneInitState , { payload }: any) => {
         state.isLoading = false;
-        state.listBuyGroup = convertDataTreeBuyGroup(payload);
+        state.listBuyGroup = convertDataTreeBuyGroup(payload?.docs);
       },
       getListBuyGroupFailed: (state:cloneInitState, { payload }:{payload:any}) => {
         state.isLoading = false;

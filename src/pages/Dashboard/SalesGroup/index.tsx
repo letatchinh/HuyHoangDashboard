@@ -11,17 +11,19 @@ const SalesGroupPage = () => {
     <>
     <Breadcrumb title={"Nhóm bán hàng"} />
     <Tabs
-    type="card"
-    style={{
-      height: "calc(100% - 68px)",
-    }}
+      type="card"
+      style={{
+        height: "calc(100% - 68px)",
+      }}
+        defaultActiveKey= {(role === 'partner' ? '2': ("1" ?? "2"))} 
+        destroyInactiveTabPane
     >
-      {role !== 'partner' && <TabPane tab="Nhóm bán hàng OTC" key={1}>
+      {role !== 'partner' && <TabPane tab="Nhóm bán hàng OTC" key={'1'}>
         <SalesGroupProvider>
           <SalesGroup.page.index />
         </SalesGroupProvider>
       </TabPane>}
-      <TabPane tab="Nhóm bán hàng B2C" style={{height:'100%'}} key={2}>
+      <TabPane tab="Nhóm bán hàng B2C" style={{height:'100%'}} key={'2'}>
         <BuyGroup />
       </TabPane>
     </Tabs>
