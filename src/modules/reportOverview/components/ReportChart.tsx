@@ -47,9 +47,7 @@ export default function ReportChart(
   props: Partial<propsType>
 ): React.JSX.Element {
   const { query, spaceType } = props;
-
   const [keyword, { setKeyword, onParamChange }] = useUpdateReportProductSupplierParams(query);
-
   const [form] = Form.useForm();
   const [date, setDate] = useState<any[]>([
     dayjs().startOf("month"),
@@ -69,6 +67,7 @@ export default function ReportChart(
     [query, date]
   );
   const [dataReport, isLoading] = useFetchState(memoQuery);
+
   useEffect(() => {
     onParamChange({
       spaceType: spaceType,
@@ -77,6 +76,7 @@ export default function ReportChart(
       rangerType: rangerTimeDef,
     });
   }, []);
+  
   useEffect(() => {
     if (query?.rangerTime) {
       let rangerTime: string = query?.rangerTime;

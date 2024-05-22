@@ -62,5 +62,9 @@ export interface getReportProductbody {
   reportSize?: number, // instead litmit
   page?: number,
   limit?:number
-
 }
+
+export const TYPE_DISPLAY: any = {
+  PERCENT: "PERCENT",
+  VALUE: "VALUE",
+};

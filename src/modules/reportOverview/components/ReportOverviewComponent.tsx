@@ -2,21 +2,24 @@ import React, { useMemo, useState } from "react";
 import { useFetchState } from "~/utils/hook";
 import apis from "../reportOverview.api";
 import { LegendDatum, ResponsivePie } from "@nivo/pie";
-import { Table, Tag } from "antd";
+import { Tag} from "antd";
 import { formatter } from "~/utils/helpers";
+import { get, round } from "lodash";
+import Breadcrumb from "~/components/common/Breadcrumb";
 
 type typeMatch = "SUPPLIER" | "SALE_CHANNEL" | "AREA";
 type typeAreaMatch = "area" | "city" | "district";
 interface propsType {
   typeMatch?: typeMatch;
   typeAreaMatch?: typeAreaMatch;
+  titleName?: string;
 }
 export default function ReportOverviewComponent(
   props: Partial<propsType>
 ): React.JSX.Element {
-  const [customLegends, setCustomLegends] = useState<LegendDatum<any>[]>([])
+  const [customLegends, setCustomLegends] = useState<LegendDatum<any>[]>([]);
 
-  const { typeMatch, typeAreaMatch } = props;
+  const { typeMatch, typeAreaMatch, titleName } = props;
   const query = useMemo(
     () => ({ typeMatch, typeAreaMatch }),
     [typeMatch, typeAreaMatch]
@@ -26,13 +29,26 @@ export default function ReportOverviewComponent(
     query: query,
     useDocs: false,
   });
-  // console.log(customLegends)
+  const totalPrice = useMemo(
+    () =>
+      dataReport?.reduce((sum: number, cur: any) => sum + get(cur, "value"), 0),
+    [dataReport]
+  );
+
+  const percentageData = useMemo(() => {
+    return dataReport?.map((item: any) => ({
+      ...item,
+      value: round(((item.value / totalPrice) * 100), 2)
+    }));
+  }, [dataReport, totalPrice]);
+
   return (
-    <div style={{ width: "600px",aspectRatio:'3/2' ,display:'flex'}}>
+    <div style={{ width: "600px", aspectRatio: "3/2", display: "block" }}>
+      <Breadcrumb title={`Biểu đồ theo ${titleName}`} />
       <ResponsivePie
-        data={dataReport}
+        data={percentageData}
         id={"_id"}
-        margin={{ top: 20, right: 290, bottom: 50, left: 20 }}
+        margin={{ top: 0, right: 290, bottom: 50, left: 20 }}
         innerRadius={0}
         padAngle={0}
         activeOuterRadiusOffset={8}
@@ -44,7 +60,11 @@ export default function ReportOverviewComponent(
           from: "color",
           modifiers: [["darker", 0.2]],
         }}
-        tooltip={(e) => <Tag color={e.datum.color}>{e.datum.label}</Tag>}
+        tooltip={(e) => (
+          <Tag bordered={true} color="default">
+            {e.datum.label + " (" + formatter(e.datum.value) + ")"}
+          </Tag>
+        )}
         enableArcLinkLabels={false}
         arcLinkLabel="label"
         arcLinkLabelsSkipAngle={10}
@@ -56,7 +76,6 @@ export default function ReportOverviewComponent(
           from: "color",
           modifiers: [["darker", 2]],
         }}
-
         legends={[
           {
             anchor: "right",
@@ -83,10 +102,6 @@ export default function ReportOverviewComponent(
           },
         ]}
       />
-      {/* <Table columns={[{
-        title:'STT',
-        dataIndex:''
-      }]}></Table> */}
     </div>
   );
 }
