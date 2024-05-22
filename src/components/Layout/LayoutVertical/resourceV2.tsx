@@ -223,8 +223,8 @@ export const resource: ItemType[] =[
   {
     label: "Báo cáo tổng quan",
     icon: <i className="fa-solid fa-chart-pie"></i>,
-    path: PATH_APP.reportOverivew.root,
-    key: PATH_APP.reportOverivew.root,
+    path: PATH_APP.reportOverview.root,
+    key: PATH_APP.reportOverview.root,
     // permission: [POLICIES.READ_SUPPLIER],//
   },
 

@@ -2,7 +2,7 @@ import React from "react";
 import { ResponsiveBar } from "@nivo/bar";
 import { useEffect, useMemo, useState } from "react";
 import { get, map, reduce, truncate } from "lodash";
-import apis from "../reportProductSupplier.api";
+import apis from "../reportOverview.api"
 import { useFetchState } from "~/utils/hook";
 import {
   Button,
@@ -21,12 +21,9 @@ import {
   TYPE_REPORT,
   TYPE_REPORT_VI,
   getReportProductbody,
-} from "../reportProductSupplier.modal";
+} from "../reportOverview.modal";
 import { filterSelectWithLabel, formatter } from "~/utils/helpers";
-import {
-  useUpdateReportProductSupplierParams,
-} from "../reportProductSupplier.hook";
-import dayjs, { Dayjs } from "dayjs";
+import dayjs from "dayjs";
 import SelectPharmacy from "~/modules/sale/bill/components/SelectPharmacy";
 import SelectCollaborator from "~/modules/collaborator/components/SelectSearch";
 import SelectSupplier from "~/modules/supplier/components/SelectSupplier";
@@ -34,6 +31,7 @@ import SelectProductBySupplier from "~/modules/product/components/SelectProductB
 import SelectArea from "./SelectArea";
 import subvn from "~/core/subvn";
 import DetailData from "./DetailData";
+import { useUpdateReportProductSupplierParams } from "../reportOverview.hook";
 
 const { RangePicker } = DatePicker;
 const dateFormat = "YYYY-MM-DD";

@@ -173,7 +173,7 @@ export const PATH_APP = {
   reportSalaryPartner:{
     root: path(ROOTS.app, "/reportSalaryPartner")
   },
-  reportOverivew: {
+  reportOverview: {
     root: path(ROOTS.app, "/report-overview")
   },
 

@@ -11,12 +11,7 @@ export default function ReportProductSupplier() {
   const role = useGetRole();
   const [query] = useReportProductSupplierQueryParams(omitF);
   const changeParam = useChangeParam(query)
-useEffect(() => {
-  changeParam({ 
-    spaceType: 'pharma_profile',
-    dataType:'groupProduct'
-  })
-}, []);
+
   return (
     <>
       <Breadcrumb title={"Báo cáo tổng quan"} />

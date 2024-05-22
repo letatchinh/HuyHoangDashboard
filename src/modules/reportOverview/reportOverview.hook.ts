@@ -1,144 +1,122 @@
 // Please UnComment To use
 
-import { get } from "lodash";
-// import { useEffect, useMemo, useState } from "react";
-// import { useSelector } from "react-redux";
-// import { useLocation, useNavigate } from "react-router-dom";
-// import { clearQuerySearch, getExistProp } from "~/utils/helpers";
-// import {
-//     getSelectors,
-//     useFailed, useFetchByParam,
-//     useQueryParams,
-//     useSubmit,
-//     useSuccess
-// } from "~/utils/hook";
-// import { reportOverviewActions } from "./redux/reducer";
-// const MODULE = "reportOverview";
-// const MODULE_VI = "";
+import { get, omit, pick } from "lodash";
+import { useEffect, useMemo, useState } from "react";
+import { useSelector } from "react-redux";
+import { useLocation, useNavigate } from "react-router-dom";
+import { clearQuerySearch, getExistProp } from "~/utils/helpers";
+import { getSelectors, useFetchByParam, useQueryParams } from "~/utils/hook";
+import { reportOverviewActions } from "./redux/reducer";
+import { getReportProductbody } from "./reportOverview.modal";
+const MODULE = "reportOverview";
+const MODULE_VI = "";
 
-// const {
-//   loadingSelector,
-//   listSelector,
-//   getListFailedSelector,
-//   getByIdLoadingSelector,
-//   getByIdSelector,
-//   getByIdFailedSelector,
-//   deleteSuccessSelector,
-//   deleteFailedSelector,
-//   isSubmitLoadingSelector,
-//   createSuccessSelector,
-//   createFailedSelector,
-//   updateSuccessSelector,
-//   updateFailedSelector,
-//   pagingSelector,
-// } = getSelectors(MODULE);
+const { loadingSelector, listSelector, getListFailedSelector, pagingSelector } =
+  getSelectors(MODULE);
 
-// export const useReportOverviewPaging = () => useSelector(pagingSelector);
+export const useReportOverviewPaging = () => useSelector(pagingSelector);
 
-// export const useGetReportOverviews = (param:any) => {
-//   return useFetchByParam({
-//     action: reportOverviewActions.getListRequest,
-//     loadingSelector: loadingSelector,
-//     dataSelector: listSelector,
-//     failedSelector: getListFailedSelector,
-//     param
-//   });
-// };
-// export const useGetReportOverview = (id: any) => {
-//   return useFetchByParam({
-//     action: reportOverviewActions.getByIdRequest,
-//     loadingSelector: getByIdLoadingSelector,
-//     dataSelector: getByIdSelector,
-//     failedSelector: getByIdFailedSelector,
-//     param: id,
-//   });
-// };
+export const useGetReportProductSuppliers = (param: any) => {
+  return useFetchByParam({
+    action: reportOverviewActions.getListRequest,
+    loadingSelector: loadingSelector,
+    dataSelector: listSelector,
+    failedSelector: getListFailedSelector,
+    param,
+  });
+};
+export namespace hookReportType {
+  export type propsHook = {
+    pickFiled: Array<keyof getReportProductbody>;
+    omitField: Array<keyof getReportProductbody>;
+  };
+}
+export const useReportProductSupplierQueryParams = (
+  props?: Partial<hookReportType.propsHook>
+) => {
+  const query = useQueryParams();
+  const reportSize = query.get("reportSize") || 10;
+  const limit = query.get("limit") || 10;
+  const page = query.get("page") || 1;
+  const spaceType = query.get("spaceType");
+  const dataType = query.get("dataType");
+  const rangerTime = query.get("rangerTime");
+  const rangerType = query.get("rangerType");
+  const supplierId = query.get("supplierId");
+  const productId = query.get("productId");
+  const customerId = query.get("customerId");
+  const areaId = query.get("areaId");
+  const cityId = query.get("cityId");
+  return useMemo(() => {
+    let queryParams: any = {
+      reportSize,
+      page,
+      spaceType,
+      dataType,
+      rangerTime,
+      rangerType,
+      supplierId,
+      productId,
+      customerId,
+      areaId,
+      cityId,
+      limit,
+    };
+    if (props?.pickFiled?.length) {
+      queryParams = pick(queryParams, props?.pickFiled);
+    }
+    if (props?.omitField?.length) {
+      queryParams = omit(queryParams, props?.omitField);
+    }
+    return [queryParams];
+    //eslint-disable-next-line
+  }, [
+    reportSize,
+    page,
+    spaceType,
+    dataType,
+    rangerTime,
+    rangerType,
+    supplierId,
+    productId,
+    customerId,
+    areaId,
+    cityId,
+    limit,
+    props?.pickFiled,
+    props?.omitField,
+  ]);
+};
 
-// export const useCreateReportOverview = (callback?: any) => {
-//   useSuccess(
-//     createSuccessSelector,
-//     `Tạo mới ${MODULE_VI} thành công`,
-//     callback
-//   );
-//   useFailed(createFailedSelector);
+export const useChangeParam = (query?: any) => {
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
+  const onParamChange = (param: any) => {
+    // Clear Search Query when change Params
+    clearQuerySearch(query, param);
+    if (!param.page) {
+      query.page = 1;
+    }
+    // // Convert Query and Params to Search Url Param
+    const searchString = new URLSearchParams(
+      getExistProp({
+        ...query,
+        ...param,
+      })
+    ).toString();
 
-//   return useSubmit({
-//     action: reportOverviewActions.createRequest,
-//     loadingSelector: isSubmitLoadingSelector,
-//   });
-// };
+    // Navigate
+    navigate(`${pathname}?${searchString}`);
+  };
+  return onParamChange;
+};
 
-// export const useUpdateReportOverview = (callback?: any) => {
-//   useSuccess(
-//     updateSuccessSelector,
-//     `Cập nhật ${MODULE_VI} thành công`,
-//     callback
-//   );
-//   useFailed(updateFailedSelector);
+export const useUpdateReportProductSupplierParams = (query: any) => {
+  const [keyword, setKeyword] = useState(get(query, "keyword"));
+  useEffect(() => {
+    setKeyword(get(query, "keyword"));
+  }, [query]);
+  const onParamChange = useChangeParam(query);
 
-//   return useSubmit({
-//     action: reportOverviewActions.updateRequest,
-//     loadingSelector: isSubmitLoadingSelector,
-//   });
-// };
-
-// export const useDeleteReportOverview = (callback?: any) => {
-//   useSuccess(deleteSuccessSelector, `Xoá ${MODULE_VI} thành công`, callback);
-//   useFailed(deleteFailedSelector);
-
-//   return useSubmit({
-//     action: reportOverviewActions.deleteRequest,
-//     loadingSelector: isSubmitLoadingSelector,
-//   });
-// };
-
-// export const useReportOverviewQueryParams = () => {
-//   const query = useQueryParams();
-//   const limit = query.get("limit") || 10;
-//   const page = query.get("page") || 1;
-//   const keyword = query.get("keyword");
-//   const createSuccess = useSelector(createSuccessSelector);
-//   const deleteSuccess = useSelector(deleteSuccessSelector);
-//   return useMemo(() => {
-//     const queryParams = {
-//       page,
-//       limit,
-//       keyword,
-//     };
-//     return [queryParams];
-//     //eslint-disable-next-line
-//   }, [page, limit, keyword, createSuccess, deleteSuccess]);
-// };
-
-// export const useUpdateReportOverviewParams = (
-//   query: any,
-//   listOptionSearch?: any[]
-// ) => {
-//   const navigate = useNavigate();
-//   const { pathname } = useLocation();
-//   const [keyword, setKeyword] = useState(get(query, "keyword"));
-//   useEffect(() => {
-//     setKeyword(get(query, "keyword"));
-//   }, [query]);
-//   const onParamChange = (param: any) => {
-//     // Clear Search Query when change Params
-//     clearQuerySearch(listOptionSearch, query, param);
-
-//     if (!param.page) {
-//       query.page = 1;
-//     };
-
-//     // Convert Query and Params to Search Url Param
-//     const searchString = new URLSearchParams(
-//       getExistProp({
-//         ...query,
-//         ...param,
-//       })
-//     ).toString();
-
-//     // Navigate
-//     navigate(`${pathname}?${searchString}`);
-//   };
-
-//   return [keyword, { setKeyword, onParamChange }];
-// };
+  return [keyword, { setKeyword, onParamChange }];
+};

@@ -172,7 +172,7 @@ export const mainRoutes :PathRouteProps[] = [
   { path: PATH_APP.reportProductSupplier.root, Component: ReportProductSupplier},
   { path: PATH_APP.reportSalaryPartner.root, Component: ReportSalaryPartnerPage},
 
-  { path: PATH_APP.reportOverivew.root, Component: ReportOverview},
+  { path: PATH_APP.reportOverview.root, Component: ReportOverview},
     // Thôgng báo
   { path: PATH_APP.myNotification.root, Component: NotificationPage},
   
