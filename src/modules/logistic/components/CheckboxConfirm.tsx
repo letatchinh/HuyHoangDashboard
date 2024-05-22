@@ -1,5 +1,5 @@
 import { InfoCircleFilled } from "@ant-design/icons";
-import { Checkbox, Form, Radio, Tooltip } from "antd";
+import { Form, Radio, Tooltip } from "antd";
 import React from "react";
 type propsType = {
   setCheckboxPayment: (value: any) => void;
@@ -11,14 +11,13 @@ const options = [
   { label: "Khách hàng", value: "CUSTOMER", code: 'GTG071' },
 ];
 
-const CheckboxGroup = Checkbox.Group;
 export default function CheckboxConfirm({
   checkboxPayment,
   setCheckboxPayment,
 }: propsType): React.JSX.Element {
   const onChange = (e: any) => {
     if (e) {
-      setCheckboxPayment(e[0]);
+      setCheckboxPayment(e.target.value);
     } else {
       setCheckboxPayment(null);
     }

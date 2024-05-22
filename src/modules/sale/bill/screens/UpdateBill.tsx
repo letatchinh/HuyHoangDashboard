@@ -58,7 +58,6 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
   const [form] = Form.useForm();
   useResetBillAction();
   const { bill, isLoading,mutateBill,onOpenForm, compareMoney,onOpenFormPayment ,totalRevenueInVouchers, onOpenFormLogistic} = useUpdateBillStore();
-  console.log(bill,'bill')
   const {
     codeSequence,
     createdAt,
