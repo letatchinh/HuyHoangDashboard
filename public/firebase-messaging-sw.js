@@ -10,14 +10,15 @@ importScripts(
 );
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAEF70QNl7uOUOIoVpUipEv9lu9Unsi-3o",
-  authDomain: "test-firebase-5ffa7.firebaseapp.com",
-  projectId: "test-firebase-5ffa7",
-  storageBucket: "test-firebase-5ffa7.appspot.com",
-  messagingSenderId: "124266123025",
-  appId: "1:124266123025:web:d7f140e583e303f33486b0",
-  measurementId: "G-LPS0KQ235L",
+  apiKey: 'config.REACT_APP_FIREBASE_API_KEY' ?? process.env.REACT_APP_FIREBASE_API_KEY ,
+  authDomain: 'config.REACT_APP_FIREBASE_AUTH_DOMAIN' ?? process.env.REACT_APP_FIREBASE_AUTH_DOMAIN ,
+  projectId: 'config.REACT_APP_FIREBASE_PROJECT_ID' ?? process.env.REACT_APP_FIREBASE_PROJECT_ID ,
+  storageBucket: 'config.REACT_APP_FIREBASE_STORAGE_BUCKET' ?? process.env.REACT_APP_FIREBASE_STORAGE_BUCKET ,
+  messagingSenderId: 'config.REACT_APP_FIREBASE_MESSAGING_SENDER_ID' ?? process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID ,
+  appId: 'config.REACT_APP_FIREBASE_APP_ID' ?? process.env.REACT_APP_FIREBASE_APP_ID ,
+  measurementId: 'config.REACT_APP_FIREBASE_MEASUREMENT_ID' ?? process.env.REACT_APP_FIREBASE_MEASUREMENT_ID ,
 };
+
 // // eslint-disable-next-line no-undef
 firebase.initializeApp(firebaseConfig);
 
