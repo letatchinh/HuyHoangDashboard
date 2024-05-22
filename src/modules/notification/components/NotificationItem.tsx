@@ -38,17 +38,17 @@ const NotificationItem: React.FC<NotificationItemProps> = ({ data, onClickItem, 
     updateStatus({ id: get(data, '_id'), status });
   };
 
-  // const renderIcon = (type: string) => {
-  //   if (TYPE_NOTIFICATION.ORDER_CONVERT_QUOTATION_CUSTOMER === type) {
-  //     return <i className='uil-shopping-basket'></i>
-  //   };
-  //   if (TYPE_NOTIFICATION.ORDER_QUOTATION_CUSTOMER === type) {
-  //     return <i className='uil-shopping-basket'></i>
-  //   };
-  //   if (TYPE_NOTIFICATION.ORDER_SUPPLIER === type) {
-  //     return <i className='uil-shopping-basket'></i>
-  //   };
-  // };
+  const renderIcon = (type: string) => {
+    if (TYPE_NOTIFICATION.ORDER_CONVERT_QUOTATION_CUSTOMER === type) {
+      return <i className='uil-shopping-basket'></i>
+    };
+    if (TYPE_NOTIFICATION.ORDER_QUOTATION_CUSTOMER === type) {
+      return <i className='uil-shopping-basket'></i>
+    };
+    if (TYPE_NOTIFICATION.ORDER_SUPPLIER === type) {
+      return <i className='uil-shopping-basket'></i>
+    };
+  };
 
   const items: MenuProps['items'] = [
     {
@@ -69,7 +69,8 @@ const NotificationItem: React.FC<NotificationItemProps> = ({ data, onClickItem, 
         <div className='d-flex align-items-start'>
           <div className='avatar-xs me-3'>
             {/* <span className='avatar-title bg-primary rounded-circle font-size-16'> */}
-            <ShoppingOutlined/>
+            {/* <ShoppingOutlined/> */}
+            {renderIcon(type)}
             {/* </span> */}
           </div>
           <div className={`flex-1`}>

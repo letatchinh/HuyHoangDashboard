@@ -8,15 +8,14 @@ importScripts(
 importScripts(
   "https://www.gstatic.com/firebasejs/9.10.0/firebase-messaging-compat.js"
 );
-
 const firebaseConfig = {
-  apiKey: "AIzaSyAEF70QNl7uOUOIoVpUipEv9lu9Unsi-3o",
-  authDomain: "test-firebase-5ffa7.firebaseapp.com",
-  projectId: "test-firebase-5ffa7",
-  storageBucket: "test-firebase-5ffa7.appspot.com",
-  messagingSenderId: "124266123025",
-  appId: "1:124266123025:web:d7f140e583e303f33486b0",
-  measurementId: "G-LPS0KQ235L",
+  apiKey: process.env.REACT_APP_FIREBASE_API_KEY ?? 'config.REACT_APP_FIREBASE_API_KEY',
+  authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN ?? 'config.REACT_APP_FIREBASE_AUTH_DOMAIN',
+  projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID ?? 'config.REACT_APP_FIREBASE_PROJECT_ID',
+  storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET ?? 'config.REACT_APP_FIREBASE_STORAGE_BUCKET',
+  messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID ?? 'config.REACT_APP_FIREBASE_MESSAGING_SENDER_ID',
+  appId: process.env.REACT_APP_FIREBASE_APP_ID ?? 'config.REACT_APP_FIREBASE_APP_ID',
+  measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID ?? 'config.REACT_APP_FIREBASE_MEASUREMENT_ID',
 };
 // // eslint-disable-next-line no-undef
 firebase.initializeApp(firebaseConfig);
@@ -45,6 +44,12 @@ messaging.onBackgroundMessage(function (payload) {
       break;
 
     case TYPE_NOTIFICATION.ORDER_CONVERT_QUOTATION_CUSTOMER:
+      postMessageNewWhBillFirebase({
+        ...get(payload, "notification"),
+        data: data,
+      });
+      break;
+    case TYPE_NOTIFICATION.REQUEST_CHANGE_GROUP:
       postMessageNewWhBillFirebase({
         ...get(payload, "notification"),
         data: data,
