@@ -18,8 +18,8 @@ import {
 } from "antd";
 import {
   FILTER_BY_VI,
-  TYPE_REPORT,
   TYPE_REPORT_VI,
+  checkKeyContainsGroupByRangerDate,
   getReportProductbody,
 } from "../reportOverview.modal";
 import { filterSelectWithLabel, formatter } from "~/utils/helpers";
@@ -106,11 +106,7 @@ export default function ReportChart(
     return [];
   }, [dataReport]);
 
-  function checkKeyContainsGroupByRangerDate(
-    key: keyof typeof TYPE_REPORT
-  ): boolean {
-    return key.includes("groupByRangerDate");
-  }
+
   const options = useMemo(
     () =>
       Object.entries(TYPE_REPORT_VI)?.map((item: any) => ({

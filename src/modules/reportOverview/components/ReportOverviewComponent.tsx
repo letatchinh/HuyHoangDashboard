@@ -2,10 +2,12 @@ import React, { useMemo, useState } from "react";
 import { useFetchState } from "~/utils/hook";
 import apis from "../reportOverview.api";
 import { LegendDatum, ResponsivePie } from "@nivo/pie";
-import { Tag} from "antd";
+import { Button, Modal, Tag } from "antd";
 import { formatter } from "~/utils/helpers";
 import { get, round } from "lodash";
 import Breadcrumb from "~/components/common/Breadcrumb";
+import { ColumnsType } from "antd/es/table";
+import TableAnt from "~/components/Antd/TableAnt";
 
 type typeMatch = "SUPPLIER" | "SALE_CHANNEL" | "AREA";
 type typeAreaMatch = "area" | "city" | "district";
@@ -13,13 +15,16 @@ interface propsType {
   typeMatch?: typeMatch;
   typeAreaMatch?: typeAreaMatch;
   titleName?: string;
+  displayMode?: any;
 }
 export default function ReportOverviewComponent(
   props: Partial<propsType>
 ): React.JSX.Element {
-  const [customLegends, setCustomLegends] = useState<LegendDatum<any>[]>([]);
-
-  const { typeMatch, typeAreaMatch, titleName } = props;
+  const { typeMatch, typeAreaMatch, titleName, displayMode } = props;
+  const [isOpenForm, setIsOpenForm] = useState(false);
+  const [id, setId] = useState<any>(null);
+  const [pagination, setPagination] = useState({ page: 1, limit: 10 });
+  const [current, setCurrent] = useState(1);
   const query = useMemo(
     () => ({ typeMatch, typeAreaMatch }),
     [typeMatch, typeAreaMatch]
@@ -38,15 +43,58 @@ export default function ReportOverviewComponent(
   const percentageData = useMemo(() => {
     return dataReport?.map((item: any) => ({
       ...item,
-      value: round(((item.value / totalPrice) * 100), 2)
+      value: round((item.value / totalPrice) * 100, 2),
     }));
   }, [dataReport, totalPrice]);
 
+  const onOpenForm = (id?: any) => {
+    setId(id);
+    setIsOpenForm(true);
+  };
+  const onCloseForm = () => {
+    setId(null);
+    setIsOpenForm(false);
+  };
+
+  const onPagingChangeLocal = (current : any) => {
+    setCurrent(current);
+  };
+
+  const columns: ColumnsType = [
+    {
+      title: "STT",
+      key: "index",
+      width: 50,
+      render: (text, record, index) => {
+        return (+pagination.page - 1) * pagination.limit + index + 1;
+      }
+    },
+    {
+      title: "Tên",
+      dataIndex: "label",
+      key: "label",
+      width: 250,
+    },
+    {
+      title: "Giá trị",
+      dataIndex: "value",
+      key: "value",
+      render: (record) => {
+        return formatter(record);
+      },
+    },
+  ];
+
   return (
     <div style={{ width: "600px", aspectRatio: "3/2", display: "block" }}>
-      <Breadcrumb title={`Biểu đồ theo ${titleName}`} />
+      <div style={{ display: "flex", justifyContent: "space-around" }}>
+        <Breadcrumb title={`Biểu đồ theo ${titleName}`} />
+        <Button type="primary" onClick={() => onOpenForm()}>
+          Chi tiết
+        </Button>
+      </div>
       <ResponsivePie
-        data={percentageData}
+        data={displayMode === "PERCENT" ? percentageData : dataReport}
         id={"_id"}
         margin={{ top: 0, right: 290, bottom: 50, left: 20 }}
         innerRadius={0}
@@ -102,6 +150,32 @@ export default function ReportOverviewComponent(
           },
         ]}
       />
+      <Modal
+        width={500}
+        open={isOpenForm}
+        onCancel={onCloseForm}
+        footer={[]}
+        destroyOnClose
+      >
+        <TableAnt
+          dataSource={
+            (displayMode === "PERCENT" ? percentageData : dataReport) || []
+          }
+          onChange={onPagingChangeLocal}
+          loading={isLoading}
+          rowKey={(rc) => rc?._id}
+          columns={columns}
+          size="small"
+          pagination={{
+            current,
+            showTotal: (total) => `Tổng cộng: ${total} `,
+            onChange: (page) => {
+              setPagination({ ...pagination, page: page });
+            }
+          }}
+          stickyTop
+        />
+      </Modal>
     </div>
   );
 }
