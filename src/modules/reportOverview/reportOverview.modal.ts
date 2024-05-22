@@ -68,8 +68,16 @@ export const TYPE_DISPLAY: any = {
   PERCENT: "PERCENT",
   VALUE: "VALUE",
 };
+
 export function checkKeyContainsGroupByRangerDate(
   key: keyof typeof TYPE_REPORT
 ): boolean {
   return key.includes("groupByRangerDate");
+}
+
+export function checkKeyContains(
+  keyCheck: keyof typeof TYPE_REPORT,
+  textContain: string
+): boolean {
+  return keyCheck.includes(textContain);
 }

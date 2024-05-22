@@ -10,6 +10,8 @@ import {
 import { formatter } from "~/utils/helpers";
 import Breadcrumb from "~/components/common/Breadcrumb";
 import {
+  TYPE_REPORT,
+  checkKeyContains,
   checkKeyContainsGroupByRangerDate,
   getReportProductbody,
 } from "../reportOverview.modal";
@@ -41,11 +43,13 @@ export default function DetailData({
   }, [page, limit, memoQueryData]);
   const [data, isLoading] = useGetReportProductSuppliers(newMemoOfDetail);
   const resultKey = checkKeyContainsGroupByRangerDate(newMemoOfDetail.dataType);
-  // const resultCode = () =>{
-  //   return newMemoOfDetail.dataType.includes("City") || newMemoOfDetail.dataType.includes("Area");
-  // }
-  // console.log(resultCode, "resultCode");
-  
+
+  // const resultCity = checkKeyContains(newMemoOfDetail.dataType, "City")
+  // const resultArea = checkKeyContains(newMemoOfDetail.dataType, "Area")
+
+  // };
+  // console.log(resultCity , "resultCode");
+
   const columns: ColumnsType = [
     {
       title: "STT",
@@ -55,11 +59,15 @@ export default function DetailData({
         return (+newMemoOfDetail.page - 1) * newMemoOfDetail.limit + index + 1;
       },
     },
-    {
-      title: "Mã",
-      dataIndex: "code",
-      key: "code",
-    },
+    ...(checkKeyContains(newMemoOfDetail.dataType, "City") !== true && checkKeyContains(newMemoOfDetail.dataType, "Area") !== true
+      ? [
+          {
+            title: "Mã",
+            dataIndex: "code",
+            key: "code",
+          },
+        ]
+      : []),
     {
       title: "Tên",
       dataIndex: "name",
@@ -73,16 +81,18 @@ export default function DetailData({
         return formatter(record);
       },
     },
-    ...(resultKey === true ? [
-      {
-      title: "Ngày",
-      dataIndex: "timestamp",
-      key: "timestamp",
-      render: (record: any) => {
-        return dayjs(record).format("DD-MM-YYYY")
-      }
-    }
-  ] : [])
+    ...(checkKeyContainsGroupByRangerDate(newMemoOfDetail.dataType) === true
+      ? [
+          {
+            title: "Ngày",
+            dataIndex: "timestamp",
+            key: "timestamp",
+            render: (record: any) => {
+              return dayjs(record).format("DD-MM-YYYY");
+            },
+          },
+        ]
+      : []),
   ];
   return (
     <div>
