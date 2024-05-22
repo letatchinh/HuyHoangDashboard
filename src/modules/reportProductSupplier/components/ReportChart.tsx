@@ -5,10 +5,11 @@ import { get, map, reduce, truncate } from "lodash";
 import apis from "../reportProductSupplier.api";
 import { useFetchState } from "~/utils/hook";
 import {
+  Button,
   Col,
   DatePicker,
   Form,
-  Radio,
+  Modal,
   Row,
   Select,
   Space,
@@ -16,14 +17,12 @@ import {
   Typography,
 } from "antd";
 import {
-  FILTER_BY_VI,
   TYPE_REPORT,
   TYPE_REPORT_VI,
   getReportProductbody,
 } from "../reportProductSupplier.modal";
 import { filterSelectWithLabel, formatter } from "~/utils/helpers";
 import {
-  useReportProductSupplierQueryParams,
   useUpdateReportProductSupplierParams,
 } from "../reportProductSupplier.hook";
 import dayjs, { Dayjs } from "dayjs";
@@ -33,6 +32,7 @@ import SelectSupplier from "~/modules/supplier/components/SelectSupplier";
 import SelectProductBySupplier from "~/modules/product/components/SelectProductBySupplier";
 import SelectArea from "./SelectArea";
 import subvn from "~/core/subvn";
+import DetailData from "./DetailData";
 
 const { RangePicker } = DatePicker;
 const dateFormat = "YYYY-MM-DD";
@@ -47,8 +47,7 @@ export default function ReportChart(
 ): React.JSX.Element {
   const { query, spaceType } = props;
 
-  const [keyword, { setKeyword, onParamChange }] =
-    useUpdateReportProductSupplierParams(query);
+  const [keyword, { setKeyword, onParamChange }] = useUpdateReportProductSupplierParams(query);
 
   const [form] = Form.useForm();
   const [date, setDate] = useState<any[]>([null, null]);
@@ -65,8 +64,6 @@ export default function ReportChart(
     }),
     [query, date]
   );
-  
-
   const [dataReport, isLoading] = useFetchState(memoQuery);
 
 
@@ -112,11 +109,23 @@ export default function ReportChart(
       })),
     [TYPE_REPORT_VI]
   );
+  
+  const [isOpenForm, setIsOpenForm] = useState(false);
+  const [id, setId] = useState<any>(null);
+
+  const onOpenForm = (id?: any) => {
+    setId(id);
+    setIsOpenForm(true);
+  };
+  const onCloseForm = () => {
+    setId(null);
+    setIsOpenForm(false);
+  };
 
   return (
     <div>
-      <Row style={{ marginBottom: 20 }}>
-        <Col span={12}>
+      <Row style={{ marginBottom: 20 }} justify={"space-around"}>
+        <Col span={8}>
           <Space>
             <Typography style={{ fontSize: 14, marginRight: 20 }}>
               Phân loại:
@@ -126,14 +135,14 @@ export default function ReportChart(
               defaultValue={"groupProduct"}
               options={options}
               allowClear
-              style={{ minWidth: 300 }}
+              style={{ minWidth: 250 }}
               popupMatchSelectWidth={false}
               filterOption={filterSelectWithLabel}
               onChange={(value) => onParamChange({ dataType: value || null })}
             ></Select>
           </Space>
         </Col>
-        <Col span={12}>
+        <Col span={8}>
           <Space>
             <Typography style={{ fontSize: 14, marginRight: 20 }}>
               Thời gian:
@@ -159,6 +168,11 @@ export default function ReportChart(
             />
           </Space>
         </Col>
+        <Col span={8}>
+          <Button type="primary" onClick={() => onOpenForm()}>
+            Chi tiết
+          </Button>
+        </Col>
       </Row>
       <Row
         justify="space-around"
@@ -180,9 +194,10 @@ export default function ReportChart(
             </Form>
           ) : (
             <SelectCollaborator
-              value={query?.customerId ? query?.customerId?.join(",") : []}
+              value={query?.customerId ? query?.customerId?.split(",") : []}
               onChange={(value) => onParamChange({ customerId: value || null })}
               style={{ width: 200 }}
+              mode="multiple"
             />
           )}
         </Col>
@@ -336,6 +351,15 @@ export default function ReportChart(
           />
         </div>
       </div>
+      <Modal
+        width={700}
+        open={isOpenForm}
+        onCancel={onCloseForm}
+        footer={[]}
+        destroyOnClose
+      >
+        <DetailData onParamChange={onParamChange} />
+      </Modal>
     </div>
   );
 }

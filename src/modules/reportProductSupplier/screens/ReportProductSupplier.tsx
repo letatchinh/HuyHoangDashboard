@@ -1,14 +1,15 @@
 import { Tabs } from "antd";
 import TabPane from "antd/es/tabs/TabPane";
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import Breadcrumb from "~/components/common/Breadcrumb";
 import { useGetRole } from "~/modules/auth/auth.hook";
 import ReportChart from "../components/ReportChart";
-import { useChangeParam, useReportProductSupplierQueryParams } from "../reportProductSupplier.hook";
+import { hookReportType, useChangeParam, useReportProductSupplierQueryParams } from "../reportProductSupplier.hook";
+const omitF = {omitField:['page','limit']} as hookReportType.propsHook
 
 export default function ReportProductSupplier() {
   const role = useGetRole();
-  const [query] = useReportProductSupplierQueryParams();
+  const [query] = useReportProductSupplierQueryParams(omitF);
   const changeParam = useChangeParam(query)
 useEffect(() => {
   changeParam({ 

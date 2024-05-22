@@ -91,6 +91,7 @@ const voucherBillPartner = 'voucherBillPartner';
 const voucherPartner = 'voucherPartner';
 const borrowProduct = 'borrowProduct';
 const statusBorrowProduct = 'statusBorrowProduct';
+const reportProductSupplier = 'reportProductSupplier';
 
 
 //------RESOURCES --------
@@ -189,6 +190,7 @@ const RESOURCES = [
   voucherPartner,
   borrowProduct,
   statusBorrowProduct,
+  reportProductSupplier,
 ];
 
 //ACTIONS

@@ -4,7 +4,7 @@ import { reportProductSupplierActions } from './reducer';
 
 function* getListReportProductSupplier({payload:query} : any) : any {
   try {
-    const data = yield call(api.getAll,query);
+    const data = yield call(api.getListData,query);
     yield put(reportProductSupplierActions.getListSuccess(data));
   } catch (error:any) {
     yield put(reportProductSupplierActions.getListFailed(error));

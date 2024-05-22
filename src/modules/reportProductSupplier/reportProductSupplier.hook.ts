@@ -1,47 +1,37 @@
 // Please UnComment To use
 
-import { get } from "lodash";
+import { get, omit, pick } from "lodash";
 import { useEffect, useMemo, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { clearQuerySearch, getExistProp } from "~/utils/helpers";
-// import { useEffect, useMemo, useState } from "react";
-// import { useSelector } from "react-redux";
-// import { useLocation, useNavigate } from "react-router-dom";
-// import { clearQuerySearch, getExistProp } from "~/utils/helpers";
-import { useQueryParams, useSubmit, useSuccess } from "~/utils/hook";
+import { useSelector } from "react-redux";
+import {
+  getSelectors,
+  useFetchByParam,
+  useQueryParams,
+} from "~/utils/hook";
 import { getReportProductbody } from "./reportProductSupplier.modal";
-// import { reportProductSupplierActions } from "./redux/reducer";
-// const MODULE = "reportProductSupplier";
-// const MODULE_VI = "";
+import { reportProductSupplierActions } from "./redux/reducer";
+const MODULE = "reportProductSupplier";
 
-// const {
-//   loadingSelector,
-//   listSelector,
-//   getListFailedSelector,
-//   getByIdLoadingSelector,
-//   getByIdSelector,
-//   getByIdFailedSelector,
-//   deleteSuccessSelector,
-//   deleteFailedSelector,
-//   isSubmitLoadingSelector,
-//   createSuccessSelector,
-//   createFailedSelector,
-//   updateSuccessSelector,
-//   updateFailedSelector,
-//   pagingSelector,
-// } = getSelectors(MODULE);
+const {
+  loadingSelector,
+  listSelector,
+  getListFailedSelector,
+  pagingSelector,
+} = getSelectors(MODULE);
 
-// export const useReportProductSupplierPaging = () => useSelector(pagingSelector);
+export const useReportProductSupplierPaging = () => useSelector(pagingSelector);
 
-// export const useGetReportProductSuppliers = (param:any) => {
-//   return useFetchByParam({
-//     action: reportProductSupplierActions.getListRequest,
-//     loadingSelector: loadingSelector,
-//     dataSelector: listSelector,
-//     failedSelector: getListFailedSelector,
-//     param
-//   });
-// };
+export const useGetReportProductSuppliers = (param: any) => {
+  return useFetchByParam({
+    action: reportProductSupplierActions.getListRequest,
+    loadingSelector: loadingSelector,
+    dataSelector: listSelector,
+    failedSelector: getListFailedSelector,
+    param,
+  });
+};
 // export const useGetReportProductSupplier = (id: any) => {
 //   return useFetchByParam({
 //     action: reportProductSupplierActions.getByIdRequest,
@@ -89,10 +79,17 @@ import { getReportProductbody } from "./reportProductSupplier.modal";
 //     loadingSelector: isSubmitLoadingSelector,
 //   });
 // };
-
-export const useReportProductSupplierQueryParams = () => {
+export namespace hookReportType {
+  export type propsHook = {
+   pickFiled: Array<keyof getReportProductbody>,
+   omitField: Array<keyof getReportProductbody>,
+ }
+  
+}
+export const useReportProductSupplierQueryParams = ( props?:Partial<hookReportType.propsHook>) => {
   const query = useQueryParams();
   const reportSize = query.get("reportSize") || 10;
+  const limit = query.get("limit") || 10;
   const page = query.get("page") || 1;
   const spaceType = query.get("spaceType");
   const dataType = query.get("dataType");
@@ -104,7 +101,7 @@ export const useReportProductSupplierQueryParams = () => {
   const areaId = query.get("areaId");
   const cityId = query.get("cityId");
   return useMemo(() => {
-    const queryParams = {
+    let queryParams :any = {
       reportSize,
       page,
       spaceType,
@@ -116,7 +113,14 @@ export const useReportProductSupplierQueryParams = () => {
       customerId,
       areaId,
       cityId,
+      limit,
     };
+    if(props?.pickFiled?.length){
+       queryParams = pick(queryParams,props?.pickFiled)
+    }
+    if(props?.omitField?.length){
+       queryParams = omit(queryParams,props?.omitField)
+    }
     return [queryParams];
     //eslint-disable-next-line
   }, [
@@ -131,6 +135,9 @@ export const useReportProductSupplierQueryParams = () => {
     customerId,
     areaId,
     cityId,
+    limit,
+    props?.pickFiled,
+    props?.omitField
   ]);
 };
 
@@ -140,7 +147,9 @@ export const useChangeParam = (query?: any) => {
   const onParamChange = (param: any) => {
     // Clear Search Query when change Params
     clearQuerySearch(query, param);
-
+    if (!param.page) {
+      query.page = 1;
+    }
     // // Convert Query and Params to Search Url Param
     const searchString = new URLSearchParams(
       getExistProp({
