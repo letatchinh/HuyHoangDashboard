@@ -47,6 +47,7 @@ import notification from '~/modules/notification';
 import collaborator from '~/modules/collaborator';
 import collaboratorGroup from '~/modules/collaboratorGroup';
 import reportSalaryPartner from '~/modules/reportSalaryPartner/redux/saga';
+import logistic from '~/modules/logistic';
 
 export default function* rootSaga() {
   yield all([
@@ -99,6 +100,7 @@ export default function* rootSaga() {
     notification.redux.saga(),
     collaborator.redux.saga(),
     collaboratorGroup.redux.saga(),
+    logistic.redux.saga(),
     reportSalaryPartner(),
   ]);
 };

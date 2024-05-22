@@ -10,7 +10,7 @@ import {  REF_COLLECTION, REF_COLLECTION_UPPER } from "~/constants/defaultValue"
 import { get, omit, sumBy } from "lodash";
 import PaymentVoucherFormPharmacy from "~/modules/paymentVoucher/components/PaymentVoucherFormPharmacy";
 import { STATUS_BILL } from "../constants";
-import LogisticForm from "../components/LogisticForm";
+import LogisticForm from "~/modules/logistic/components/LogisticForm";
 export type GlobalUpdateBill = {
     bill : any,
     isLoading : boolean,
@@ -22,6 +22,8 @@ export type GlobalUpdateBill = {
     refCollection: any,
     onOpenFormLogistic: () => void;
     onCloseFormLogistic: () => void;
+    checkboxPayment: string | null;
+    setCheckboxPayment: (p: string | null) => void
 };
 const UpdateBill = createContext<GlobalUpdateBill>({
     bill : null,
@@ -34,6 +36,8 @@ const UpdateBill = createContext<GlobalUpdateBill>({
     refCollection: null,
     onOpenFormLogistic: () => { },
     onCloseFormLogistic: () => { },
+    checkboxPayment: null,
+    setCheckboxPayment: (p: string | null) => { },
 });
 
 type UpdateBillProviderProps = {
@@ -53,6 +57,8 @@ export function UpdateBillProvider({
     const [isOpenForm, setIsOpenForm] = useState(false);
     const [isOpenFormPayment, setIsOpenFormPayment] = useState(false);
     const [logisticOpen, setLogisticOpen] = useState(false);
+    const [checkboxPayment, setCheckboxPayment] = useState < string | null>(null);
+  
     const totalRevenueInVouchers = useMemo(() => {
       if (bill?.receiptVouchers?.length > 0) {
         const data = bill?.receiptVouchers?.filter((item: any)=> item?.status !== STATUS_BILL.CANCELLED);
@@ -102,7 +108,9 @@ export function UpdateBillProvider({
         totalRevenueInVouchers,
         refCollection,
         onOpenFormLogistic,
-        onCloseFormLogistic
+        onCloseFormLogistic,
+        checkboxPayment,
+        setCheckboxPayment
       }}
     >
       {children}

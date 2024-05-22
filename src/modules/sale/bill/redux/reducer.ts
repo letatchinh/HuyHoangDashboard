@@ -10,11 +10,14 @@ import { STATUS_BILL } from "../constants";
 // const CalculateBillMethod = new CalculateBill();
 interface cloneInitState extends initStateSlice {
  // Add cloneInitState Type Here
- isGetDebtLoading? : boolean,
- getDebtFailed? : any,
- debt? : any,
- updateBillItemFailed? : any,
- updateBillItemSuccess? : any,
+  isGetDebtLoading? : boolean,
+  getDebtFailed? : any,
+  debt? : any,
+  updateBillItemFailed? : any,
+  updateBillItemSuccess?: any,
+  
+  updateLogisticSuccess? : any,
+  updateLogisticFailed? : any,
 
   listProductSuggest?:any,
   isProductSuggestLoading?: boolean,
@@ -140,10 +143,40 @@ class BillClassExtend extends InstanceModuleRedux {
     updateBillItemFailed: (state:cloneInitState, { payload }:{payload:any}) => {
       state.isSubmitLoading = false;
       state.updateBillItemFailed = payload;
-    },
+      },
+      updateApplyLogisticRequest: (state:cloneInitState) => {
+        state.isSubmitLoading = true;
+        state.updateLogisticFailed = null;
+      },
+      updateApplyLogisticSuccess: (state: cloneInitState, { payload }: { payload: any }) => {
+        state.isSubmitLoading = false;
+        state.updateLogisticSuccess = payload;
+        const bill = {
+          ...payload?.data,
+          fee: payload?.data?.fee?.map((item: any) => item?.typeFee === 'LOGISTIC' ? { ...item, value: payload?.data?.dataTransportUnit?.totalFee } : item)
+        };
+        state.byId = {
+          ...state.byId,
+          bill,
+          fee: bill?.fee,
+          feeDetail: {
+            ...state?.byId?.feeDetail,
+            LOGISTIC: payload?.data?.dataTransportUnit?.totalFee
+          },
+        };
+      },
+      updateApplyLogisticFailed: (state:cloneInitState, { payload }:{payload:any}) => {
+        state.isSubmitLoading = false;
+        state.updateLogisticFailed = payload;
+      },
+    
     resetAction: (state:any) => ({
       ...state,
       ...omit(this.cloneInitState, ["list"]),
+    }),
+    resetActionLogistic: (state:cloneInitState) => ({
+      ...state,
+      ...omit(this.cloneInitState, ["list",'byId']),
     }),
     };
 
@@ -158,6 +191,9 @@ class BillClassExtend extends InstanceModuleRedux {
       listProductSuggest: [],
       isProductSuggestLoading: false,
       getProductSuggestFailed: null,
+
+      updateLogisticSuccess: null,
+      updateLogisticFailed: null,
       // Want Add more State Here...
     }
   }
