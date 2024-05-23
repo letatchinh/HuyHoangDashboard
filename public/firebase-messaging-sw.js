@@ -9,14 +9,15 @@ importScripts(
   "https://www.gstatic.com/firebasejs/9.10.0/firebase-messaging-compat.js"
 );
 const firebaseConfig = {
-  apiKey: process.env.REACT_APP_FIREBASE_API_KEY ?? 'config.REACT_APP_FIREBASE_API_KEY',
-  authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN ?? 'config.REACT_APP_FIREBASE_AUTH_DOMAIN',
-  projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID ?? 'config.REACT_APP_FIREBASE_PROJECT_ID',
-  storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET ?? 'config.REACT_APP_FIREBASE_STORAGE_BUCKET',
-  messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID ?? 'config.REACT_APP_FIREBASE_MESSAGING_SENDER_ID',
-  appId: process.env.REACT_APP_FIREBASE_APP_ID ?? 'config.REACT_APP_FIREBASE_APP_ID',
-  measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID ?? 'config.REACT_APP_FIREBASE_MEASUREMENT_ID',
+  apiKey: 'config.REACT_APP_FIREBASE_API_KEY' ?? process.env.REACT_APP_FIREBASE_API_KEY ,
+  authDomain: 'config.REACT_APP_FIREBASE_AUTH_DOMAIN' ?? process.env.REACT_APP_FIREBASE_AUTH_DOMAIN ,
+  projectId: 'config.REACT_APP_FIREBASE_PROJECT_ID' ?? process.env.REACT_APP_FIREBASE_PROJECT_ID ,
+  storageBucket: 'config.REACT_APP_FIREBASE_STORAGE_BUCKET' ?? process.env.REACT_APP_FIREBASE_STORAGE_BUCKET ,
+  messagingSenderId: 'config.REACT_APP_FIREBASE_MESSAGING_SENDER_ID' ?? process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID ,
+  appId: 'config.REACT_APP_FIREBASE_APP_ID' ?? process.env.REACT_APP_FIREBASE_APP_ID ,
+  measurementId: 'config.REACT_APP_FIREBASE_MEASUREMENT_ID' ?? process.env.REACT_APP_FIREBASE_MEASUREMENT_ID ,
 };
+
 // // eslint-disable-next-line no-undef
 firebase.initializeApp(firebaseConfig);
 

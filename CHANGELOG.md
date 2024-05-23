@@ -1,3 +1,10 @@
+## [1.18.1](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/compare/v1.18.0...v1.18.1) (2024-05-22)
+
+
+### Bug Fixes
+
+* config firebase notification ([abf614a](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/abf614ac0cd31e567e5123de31e17774591280b7))
+
 # [1.18.0](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/compare/v1.17.3...v1.18.0) (2024-05-21)
 
 
