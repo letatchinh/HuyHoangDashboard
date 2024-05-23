@@ -2,7 +2,7 @@ import React from "react";
 import { ResponsiveBar } from "@nivo/bar";
 import { useEffect, useMemo, useState } from "react";
 import { get, map, reduce, truncate } from "lodash";
-import apis from "../reportOverview.api"
+import apis from "../reportOverview.api";
 import { useFetchState } from "~/utils/hook";
 import {
   Button,
@@ -21,6 +21,7 @@ import {
   TYPE_REPORT_VI,
   checkKeyContainsGroupByRangerDate,
   getReportProductbody,
+  renderOptionReport,
 } from "../reportOverview.modal";
 import { filterSelectWithLabel, formatter } from "~/utils/helpers";
 import dayjs from "dayjs";
@@ -47,7 +48,8 @@ export default function ReportChart(
   props: Partial<propsType>
 ): React.JSX.Element {
   const { query, spaceType } = props;
-  const [keyword, { setKeyword, onParamChange }] = useUpdateReportProductSupplierParams(query);
+  const [keyword, { setKeyword, onParamChange }] =
+    useUpdateReportProductSupplierParams(query);
   const [form] = Form.useForm();
   const [date, setDate] = useState<any[]>([
     dayjs().startOf("month"),
@@ -76,7 +78,7 @@ export default function ReportChart(
       rangerType: rangerTimeDef,
     });
   }, []);
-  
+
   useEffect(() => {
     if (query?.rangerTime) {
       let rangerTime: string = query?.rangerTime;
@@ -106,16 +108,6 @@ export default function ReportChart(
     return [];
   }, [dataReport]);
 
-
-  const options = useMemo(
-    () =>
-      Object.entries(TYPE_REPORT_VI)?.map((item: any) => ({
-        label: item[1],
-        value: item[0],
-      })),
-    [TYPE_REPORT_VI]
-  );
-  
   const [isOpenForm, setIsOpenForm] = useState(false);
   const [id, setId] = useState<any>(null);
 
@@ -146,12 +138,11 @@ export default function ReportChart(
             <Select
               loading={isLoading}
               defaultValue={"groupProduct"}
-              options={options}
-              allowClear
-              style={{ minWidth: 250 }}
+              options={renderOptionReport}
               popupMatchSelectWidth={false}
               filterOption={filterSelectWithLabel}
               onChange={(value) => onParamChange({ dataType: value || null })}
+              style={{ minWidth: 200}}
             ></Select>
           </Space>
         </Col>
@@ -278,8 +269,12 @@ export default function ReportChart(
             data={dataReport?.data ?? []}
             keys={keyInData}
             indexBy="_id"
-            margin={{ top: 20, right: 200, bottom: 100, left: 100 }}
-            padding={0.5}
+            margin={{ top: 20, right: 20, bottom: 100, left: 100 }}
+            padding={
+              checkKeyContainsGroupByRangerDate(query?.dataType ?? "")
+                ? 0.1
+                : 0.5
+            }
             valueScale={{ type: "linear" }}
             indexScale={{ type: "band", round: true }}
             colors={{ scheme: "red_yellow_blue" }}
@@ -333,10 +328,8 @@ export default function ReportChart(
             }}
             tooltip={(e) => {
               return (
-                <Tag color={e.color}>
-                  {get(detail, [e.id], e.id) +
-                    ": " +
-                    Number(e.value).toLocaleString("vi")}
+                <Tag bordered={true} color="default">
+                  {get(detail, [e.id], e.id) + ": " + Number(e.value).toLocaleString("vi")}
                 </Tag>
               );
             }}

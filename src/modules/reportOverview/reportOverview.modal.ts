@@ -14,21 +14,34 @@ export const TYPE_REPORT = {
   groupByRangerDateWithArea: 'groupByRangerDateWithArea',
   groupByRangerDateWithCity: 'groupByRangerDateWithCity',
 } as const; 
-
-export const TYPE_REPORT_VI: {[key in keyof typeof TYPE_REPORT]:string} = {
+type type_report = keyof typeof TYPE_REPORT
+export const TYPE_REPORT_VI: {[key in type_report]:string} = {
   groupProduct: 'Sản phẩm',
-  groupSupplier: 'Nhà cung cấp',
-  groupCustomer: 'Khách hàng',
-  groupSaler: 'Trình dược viên',
-  groupArea: 'Khu vực',
-  groupCity: 'Tỉnh/ Thành phố',
   groupByRangerDateWithProduct: 'Sản phẩm theo thời gian',
+  groupSupplier: 'Nhà cung cấp',
   groupByRangerDateWithSupplier: 'Nhà cung cấp theo thời gian',
+  groupCustomer: 'Khách hàng',
   groupByRangerDateWithCustomer: 'Khách hàng theo thời gian',
+  groupSaler: 'Trình dược viên',
   groupByRangerDateWithSaler: 'Trình dược viên theo thời gian',
+  groupArea: 'Khu vực',
   groupByRangerDateWithArea: 'Khu vực theo thời gian',
+  groupCity: 'Tỉnh/ Thành phố',
   groupByRangerDateWithCity: 'Tỉnh/ Thành phố theo thời gian',
 };
+
+
+export const renderOptionReport = ["Product", "Supplier", "Customer", "Saler", "Area", "City"].map((el:any)=>{
+  const group = 'group'+el as type_report;
+  const groupW = 'groupByRangerDateWith'+el as type_report;
+  return {
+    label: TYPE_REPORT_VI[group],
+    options:[
+      { label : TYPE_REPORT_VI[TYPE_REPORT[group]],value: TYPE_REPORT[group] },
+      { label : TYPE_REPORT_VI[TYPE_REPORT[groupW]],value: TYPE_REPORT[groupW] }
+    ]
+  }
+});
 
 export const FILTER_BY: any = {
   WEEKLY: "WEEKLY",

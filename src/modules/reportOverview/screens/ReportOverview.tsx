@@ -38,6 +38,7 @@ export default function ReportOverview(props: propsType): React.JSX.Element {
           height: "calc(100% - 68px)",
         }}
         defaultValue={"overview"}
+        destroyInactiveTabPane
       >
         <TabPane tab="Tổng quan" key={"overview"}>
           <Row>
@@ -92,7 +93,7 @@ export default function ReportOverview(props: propsType): React.JSX.Element {
           </Row>
         </TabPane>
         {role !== "partner" && (
-          <TabPane tab="OTC" key={"pharma_profile"}>
+          <TabPane tab="B2B" key={"pharma_profile"}>
             <ReportChart query={query} spaceType={"pharma_profile"} />
           </TabPane>
         )}
