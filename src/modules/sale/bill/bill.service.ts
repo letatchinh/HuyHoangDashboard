@@ -126,7 +126,6 @@ export const onVerifyData = ({
             key: v4(),
           };
         });
-        console.log(items,'itemsitems');
         // Validate Discount
         const cumulativeDiscount = await getCumulativeDiscount({
           quotationItems: items,

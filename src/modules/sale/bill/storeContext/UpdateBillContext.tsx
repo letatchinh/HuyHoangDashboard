@@ -167,7 +167,16 @@ export function UpdateBillProvider({
         footer={null}
         destroyOnClose
       >
-        <LogisticForm/>
+        <LogisticForm
+          bill = {bill}
+          onCloseFormLogistic = {onCloseFormLogistic}
+          setCheckboxPayment = {(p: string | null) => setCheckboxPayment(p)}
+          checkboxPayment={checkboxPayment}
+          deliveryAddressId={bill?.deliveryAddressId}
+          dataTransportUnit={bill?.bill?.dataTransportUnit}
+          pharmacy={bill?.pharmacy}
+          id={bill?._id}
+        />
       </ModalAnt>
     </UpdateBill.Provider>
   );

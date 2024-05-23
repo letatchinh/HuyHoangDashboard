@@ -51,10 +51,10 @@ export default function TotalBill(props: propsType): React.JSX.Element {
     totalDiscountOther,
     setFormAndLocalStorage,
     partner,
+    onOpenFormLogistic,
+    bill
   } = useCreateBillStore();
-  
   const [minFee,setMinFee] = useState<any>();
-  
   const [openAddress,setOpenAddress] = useState(false);
   const onOpenAddress = useCallback(() => setOpenAddress(true),[]);
   const onCloseAddress = useCallback(() => setOpenAddress(false),[]);
@@ -77,7 +77,14 @@ export default function TotalBill(props: propsType): React.JSX.Element {
       valueExchange
     });
 
-  },[partner,totalPrice])
+  }, [partner, totalPrice])
+  useEffect(() => {
+    if (bill?.fee) {
+      form.setFieldsValue({
+        fee: bill?.fee
+      })
+    };
+  }, [bill]); // Set value logistic fee
   return (
     <Flex vertical gap={"small"}>
       <Layout label={"Số lượng mặt hàng"}>{formatter(totalQuantity)}</Layout>
@@ -205,16 +212,21 @@ export default function TotalBill(props: propsType): React.JSX.Element {
                     return <Form.Item
                     labelCol={{span : 8}}
                     labelAlign='left'
-                    label='Phí giao hàng'
+                    label={<Button type="link" style={{padding : 0}} onClick={() => onOpenFormLogistic()}>Phí giao hàng</Button>}
                     style={{marginBottom : 'unset'}}
                       name={[index, "value"]}
                     >
-                      <InputNumberAnt 
-                      min={0}
-                      style={{width : '100%'}}
-                      max={totalAmount}
-                      addonAfter={<div>VNĐ</div>}
+                      <Flex>
+                        <InputNumberAnt 
+                        min={0}
+                        style={{width : '100%'}}
+                        // max={totalAmount}
+                          addonAfter={<div>VNĐ</div>}
+                          readOnly 
+                          value={getFieldValue(['fee',index,'value'])}
                         />
+                        {/* <Button>Cập nhật</Button> */}
+                      </Flex>
                     </Form.Item> 
                   }
                 })}

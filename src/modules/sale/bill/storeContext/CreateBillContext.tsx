@@ -16,6 +16,10 @@ import { useGetDebtRule } from "../bill.hook";
 import { DebtType, FeeType, quotation } from "../bill.modal";
 import { onVerifyData, reducerDiscountQuotationItems } from "../bill.service";
 import { defaultFee } from "../constants";
+import ModalAnt from "~/components/Antd/ModalAnt";
+import LogisticFormCreateInBill from "~/modules/logistic/components/LogisticFormInCreateBill";
+import LogisticForm, { ValueApplyBill } from "~/modules/logistic/components/LogisticForm";
+import useNotificationStore from "~/store/NotificationContext";
 const TYPE_DISCOUNT = {
   "DISCOUNT.CORE": "DISCOUNT.CORE",
   "DISCOUNT.SOFT": "DISCOUNT.SOFT",
@@ -29,6 +33,8 @@ export type DataItem = quotation & {
 type Bill = {
   quotationItems: DataItem[];
   pharmacyId: string;
+  fee?: FeeType[];
+  dataTransport?: ValueApplyBill;
 };
 
 type DiscountDetail = {
@@ -61,7 +67,12 @@ export type GlobalCreateBill = {
   address : any[],
   setAddress : (p:any) => void;
   setFormAndLocalStorage : (newValue : any) => void
-  partner : any,
+  partner: any,
+  onOpenFormLogistic: () => void;
+  onCloseFormLogistic: () => void;
+  checkboxPayment: string | null;
+  setCheckboxPayment: (p: string | null) => void,
+  onAddLogisticFee : (data:any) => void
 };
 const CreateBill = createContext<GlobalCreateBill>({
   quotationItems: [],
@@ -88,7 +99,12 @@ const CreateBill = createContext<GlobalCreateBill>({
   address : [],
   setAddress : () => {},
   setFormAndLocalStorage : () => {},
-  partner : null
+  partner: null,
+  onOpenFormLogistic: () => { },
+  onCloseFormLogistic: () => { },
+  checkboxPayment: null,
+  setCheckboxPayment: (p: string | null) => { },
+  onAddLogisticFee : () => {}
 });
 
 type CreateBillProviderProps = {
@@ -115,7 +131,9 @@ export function CreateBillProvider({
   const [debt,isLoadingDebt] = useGetDebtRule();
   const [address,setAddress] = useState([]);
   const [partner,loadingPartner] : any = useGetCollaborator(get(bill,'pharmacyId'));
-
+  const [logisticOpen, setLogisticOpen] = useState(false);
+  const [checkboxPayment, setCheckboxPayment] = useState<string | null>(null);
+  const { onNotify } = useNotificationStore();
   // Controller Data
   const onSave = (row: DataItem) => {
     const newData: DataItem[] = [...quotationItems];
@@ -130,7 +148,6 @@ export function CreateBillProvider({
       };
 
     newData.splice(index, 1, newItemData);
-    
     onChangeBill({
       quotationItems: newData,
     });
@@ -325,8 +342,32 @@ export function CreateBillProvider({
     onChangeBill({
       ...newValue
     })
-  },[]);
+  }, []);
   
+  const onOpenFormLogistic = () => {
+    setLogisticOpen(true);
+  };
+
+  const onCloseFormLogistic = () => {
+    setLogisticOpen(false);
+  };
+  
+  const onAddLogisticFee = (data: any) => {
+    if (bill?.quotationItems?.length <= 0) {
+      return onNotify?.error("Đơn hàng chưa có sản phẩm nên không thể áp phí vận chuyển");
+    };
+    try {
+      const newBill = {
+        ...bill,
+        fee: (bill?.fee)?.map((item: any) => item?.typeFee === 'LOGISTIC' ? { ...item, value: data?.totalFee } : item),
+        dataTransportUnit: data
+      };
+      onChangeBill(newBill);
+      onCloseFormLogistic();
+    } catch (error) {
+      onNotify?.error("Có lỗi xảy ra khi gắn phí vận chuyển vào dơn hàng");
+    };
+  };
   return (
     <CreateBill.Provider
       value={{
@@ -355,9 +396,32 @@ export function CreateBillProvider({
         setAddress,
         setFormAndLocalStorage,
         partner,
+        onOpenFormLogistic,
+        onCloseFormLogistic,
+        checkboxPayment,
+        setCheckboxPayment,
+        onAddLogisticFee
       }}
     >
       {children}
+      <ModalAnt
+        title='Chi phí vận chuyển'
+        open={logisticOpen}
+        onCancel={onCloseFormLogistic}
+        width={'auto'}
+        footer={null}
+        destroyOnClose
+      >
+        <LogisticForm
+          onCloseFormLogistic={onCloseFormLogistic}
+          checkboxPayment={checkboxPayment}
+          setCheckboxPayment={setCheckboxPayment}
+          bill={bill}
+          deliveryAddressId={get(partner, "address")}
+          pharmacy={partner}
+          dataTransportUnit={bill?.dataTransport}
+        />
+      </ModalAnt>
     </CreateBill.Provider>
   );
 }

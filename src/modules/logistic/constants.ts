@@ -1,3 +1,5 @@
+import { TRANSPORT_NAME_TYPE, TRANSPORT_TYPE_OBJECT, transportUnitType } from "./logistic.modal";
+
 export const serviceLogistic = [
   {
     title: 'Tiết kiệm	',
@@ -109,3 +111,34 @@ export const serviceViettelPost = [
     label: "VBE Tiết kiệm theo hộp",
   }
 ];
+
+export const typeSent = [
+  {
+    label: "Thu gom tận nơi",
+    value: "TGTN",
+  },
+  {
+    label: "Gửi hàng tại bưu cục",
+    value: "GHBC",
+  },
+];
+export const transportUnit : transportUnitType[] = [
+  {
+    label: "Bưu điện Việt Nam",
+    value: "VIETNAMPOST",
+  },
+  {
+    label: "Viettel Post",
+    value: "VIETTELPOST",
+  },
+];
+
+export const TRANSPORT_NAME = {
+  VIETNAMPOST: 'VIETNAMPOST',
+  VIETTELPOST: 'VIETTELPOST'
+};
+
+export const ADDON_SERVICE = { 
+  VIETTELPOST: "SCOD",
+  VIETNAMPOST: "GTG071",
+} //Thu hộ phí ship;

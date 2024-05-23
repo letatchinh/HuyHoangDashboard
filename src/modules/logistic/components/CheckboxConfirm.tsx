@@ -7,8 +7,8 @@ type propsType = {
 };
 
 const options = [
-  { label: "Công ty", value: "SYSTEM", code: 'SYSTEM' },
-  { label: "Khách hàng", value: "CUSTOMER", code: 'GTG071' },
+  { label: "Công ty", value: "SYSTEM" },
+  { label: "Khách hàng", value: "CUSTOMER" },
 ];
 
 export default function CheckboxConfirm({
@@ -24,7 +24,7 @@ export default function CheckboxConfirm({
   };
   return (
     <Form.Item
-      name={"addonService"}
+      name={"payer"}
       label={
         <Tooltip placement="topRight" title="Nếu người thanh toán là khách hàng, cước vận chuyển sẽ cao hơn vì đơn hàng sẽ phát sinh chi phí thu hộ từ đơn vị vận chuyển">
           Người thanh toán

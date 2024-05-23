@@ -13,15 +13,10 @@ import {
 } from "antd";
 import React, { useEffect, useState } from "react";
 import BaseBorderBox from "~/components/common/BaseBorderBox";
-import {
-  ADDON_SERVICE,
-  TRANSPORT_NAME,
-  serviceLogistic,
-  serviceViettelPost,
-  transportUnit,
-} from "../constants";
+import { serviceLogistic, serviceViettelPost } from "../constants";
 import subvn from "~/core/subvn";
 import { compact } from "lodash";
+import useUpdateBillStore from "~/modules/sale/bill/storeContext/UpdateBillContext";
 import {
   SubmitCountLogisticFee,
   useCountFee,
@@ -34,176 +29,148 @@ import { useDispatch } from "react-redux";
 import { billSliceAction } from "~/modules/sale/bill/redux/reducer";
 import { logisticActions } from "../redux/reducer";
 import CheckboxConfirm from "./CheckboxConfirm";
-import { TRANSPORT_NAME_TYPE } from "../logistic.modal";
-import useCreateBillStore from "~/modules/sale/bill/storeContext/CreateBillContext";
+type propsType = {};
 
+const typeSent = [
+  {
+    label: "Thu gom tận nơi",
+    value: "TGTN",
+  },
+  {
+    label: "Gửi hàng tại bưu cục",
+    value: "GHBC",
+  },
+];
+const transportUnit = [
+  {
+    label: "Bưu điện Việt Nam",
+    value: "VIETNAMPOST",
+  },
+  {
+    label: "Viettel Post",
+    value: "VIETELPOST",
+  },
+];
 
-export interface ValueApplyBill {
-  totalFee?: number;
-  transportUnit?: TRANSPORT_NAME_TYPE;
-  VAT?: number;
-  height?: number;
-  length?: number;
-  width?: number;
-  serviceCode?: string;
-  addonService?: any;
-  payer?: string;
+interface ValueApplyBill {
+  totalFee?: number,
+  transportUnit?: "VIETTELPOST" | "VIETNAMPOST",
+  VAT?: number,
+  height?: number,
+  length?: number,
+  width?: number
 };
-type propsType = {
-  bill?: any;
-  onCloseFormLogistic: () => void;
-  setCheckboxPayment: (value: any) => void;
-  checkboxPayment: string | null;
-  id?: string | null;
-  deliveryAddressId?: any;
-  pharmacy?: any;
-  dataTransportUnit?: ValueApplyBill;
-};
 
-export default function LogisticForm({
-  bill,
-  onCloseFormLogistic,
-  setCheckboxPayment,
-  checkboxPayment,
-  id,
-  deliveryAddressId,
-  pharmacy,
-  dataTransportUnit,
-}: propsType): React.JSX.Element {
-  const { onAddLogisticFee } = useCreateBillStore();
+export default function LogisticFormCreateInBill(props: propsType): React.JSX.Element {
   const [form] = Form.useForm();
+  const { bill, onCloseFormLogistic, setCheckboxPayment, checkboxPayment } = useUpdateBillStore();
   const { onNotify } = useNotificationStore();
-  const [transportUnitValue, setTransportUnitValue] =
-    useState<TRANSPORT_NAME_TYPE>(
-      TRANSPORT_NAME.VIETNAMPOST as TRANSPORT_NAME_TYPE
-    );
+  const { pharmacy } = bill;
+  const [transportUnitValue, setTransportUnitValue] = useState("VIETNAMPOST");
   const [isLoadingSubmit, onCountFee] = useCountFee();
   const dispatch = useDispatch();
 
-  const [isLoadingUpdate, updateApplyLogistic] = useUpdateApplyLogisticUnit(
-    () => {
-      onCloseFormLogistic();
-      dispatch(billSliceAction.resetActionLogistic());
-      dispatch(logisticActions.resetAction());
-    }
-  );
+  const [isLoadingUpdate, updateApplyLogistic] = useUpdateApplyLogisticUnit(() => {
+    onCloseFormLogistic();
+    dispatch(billSliceAction.resetActionLogistic());
+    dispatch(logisticActions.resetAction());
+  });
+
   const fee = useGetFee();
-  useResetLogisticAction();
+  // useResetLogisticAction();
 
-  useEffect(() => {
-    form.setFieldsValue({
-      //Set default value
-      senderName: "WorldPharma",
-      scope: 1, // Default postage is domestic
-      receiverNational: "VN", // Default country is Vietnam
-      transportUnit: transportUnitValue,
-    });
-      setTransportUnitValue(dataTransportUnit?.transportUnit ?? "VIETNAMPOST");
-      form.setFieldsValue({
-        receiverName: pharmacy?.fullName ?? pharmacy?.name,
-        payer: dataTransportUnit?.payer,
-        ...dataTransportUnit,
-      });
-  }, [dataTransportUnit, id, pharmacy]);
+  // useEffect(() => { 
+  //     form.setFieldsValue({
+  //       senderName: "WorldPharma",
+  //       receiverName: pharmacy?.fullName ?? pharmacy?.name,
+  //       scope: 1, // Default postage is domestic
+  //       receiverNational: "VN", // Default country is Vietnam
+  //       transportUnit: transportUnitValue,
+  //     });
+  // }, [bill]);
 
-  useEffect(() => {
-    if (deliveryAddressId) {
-      const receiverCommuneName = subvn.getWardsByCode(
-        deliveryAddressId?.wardId
-      )?.name;
-      const receiverDistrictName = subvn.getDistrictByCode(
-        deliveryAddressId?.districtId
-      )?.name;
-      const receiverProvinceName = subvn.getCityByCode(
-        deliveryAddressId?.cityId
-      )?.name;
-      const receiverAddress = deliveryAddressId?.street;
-      form.setFieldsValue({
-        customerAddress: compact([
-          receiverAddress,
-          receiverCommuneName,
-          receiverDistrictName,
-          receiverProvinceName,
-        ]).join(", "),
-        receiverAddress,
-      });
-    }
-  }, [deliveryAddressId]);
-  useEffect(() => {
-    if (fee) {
-      form.setFieldsValue({
-        totalFee: fee?.totalFee,
-      });
-    } else {
-      form.setFieldsValue({
-        fee: 0,
-      });
-    }
-  }, [fee]);
+  // useEffect(() => {
+  //   if (deliveryAddressId) {
+  //     const receiverCommuneName = subvn.getWardsByCode(
+  //       deliveryAddressId?.wardId
+  //     )?.name;
+  //     const receiverDistrictName = subvn.getDistrictByCode(
+  //       deliveryAddressId?.districtId
+  //     )?.name;
+  //     const receiverProvinceName = subvn.getCityByCode(
+  //       deliveryAddressId?.cityId
+  //     )?.name;
+  //     const receiverAddress = deliveryAddressId?.street;
+  //     form.setFieldsValue({
+  //       customerAddress: compact([
+  //         receiverAddress,
+  //         receiverCommuneName,
+  //         receiverDistrictName,
+  //         receiverProvinceName,
+  //       ]).join(", "),
+  //       receiverAddress,
+  //     });
+  //   }
+  // }, [deliveryAddressId]);
+
+  // useEffect(() => {
+  //   if (fee) {
+  //     form.setFieldsValue({
+  //       totalFee: fee?.totalFee,
+  //     });
+  //   } else {
+  //     form.setFieldsValue({
+  //       fee: 0,
+  //     });
+  //   }
+  // }, [fee]);
 
   const onFinish = (values: any) => {
-    const receiverCommuneName = subvn.getWardsByCode(
-      deliveryAddressId?.wardId
-    )?.name;
-    const receiverDistrictName = subvn.getDistrictByCode(
-      deliveryAddressId?.districtId
-    )?.name;
-    const receiverProvinceName = subvn.getCityByCode(
-      deliveryAddressId?.cityId
-    )?.name;
-    const submitData = SubmitCountLogisticFee(values, {
-      receiverCommuneName,
-      receiverDistrictName,
-      receiverProvinceName,
-    });
+    // const receiverCommuneName = subvn.getWardsByCode(
+    //   deliveryAddressId?.wardId
+    // )?.name;
+    // const receiverDistrictName = subvn.getDistrictByCode(
+    //   deliveryAddressId?.districtId
+    // )?.name;
+    // const receiverProvinceName = subvn.getCityByCode(
+    //   deliveryAddressId?.cityId
+    // )?.name;
+    // const submitData = SubmitCountLogisticFee(values, {
+    //   receiverCommuneName,
+    //   receiverDistrictName,
+    //   receiverProvinceName,
+    // });
     try {
       form.validateFields();
-      const payer = form.getFieldsValue().payer;
-      const newSubmitData = {
-        ...submitData,
-        ...(payer === "CUSTOMER" && {
-          addonService: [
-            {
-              code: ADDON_SERVICE[transportUnitValue],
-              // description: 'Thu hộ phí ship' ,
-            },
-          ],
-        }),
-      };
-      onCountFee(newSubmitData);
+      // onCountFee(submitData);
     } catch (error: any) {
       onNotify?.error(error?.message ?? "Có lỗi xảy ra khi tính phí");
     }
   };
 
   const onValuesChange = (values: any) => {
-    const { transportUnit, serviceCode, weight, width, length, height } =
-      values;
-    if (transportUnit || serviceCode || weight || width || length || height) {
+    const {transportUnit,serviceCode, weight, width, length, height } = values;
+    if (transportUnit || serviceCode || weight || width || length || height ) {
       form.setFieldsValue({
         fee: 0,
-      });
-    }
+      })
+    };
     if (transportUnit) {
       form.setFieldsValue({
         serviceCode: null,
-      });
-    }
+      })
+    };
   };
   const onApplyFeeForBill = () => {
     const values: ValueApplyBill = fee;
-    if (id) {
-      try {
-        updateApplyLogistic({
-          id, //Id bill
-          dataTransportUnit: { ...values },
-        });
-      } catch (error: any) {
-        onNotify?.error(error?.message ?? "Có lỗi xảy ra khi tính phí");
-      }
-    } else {
-      onAddLogisticFee(values);
-    };
+    try {
+      updateApplyLogistic({
+        id: bill?._id,
+        dataTransportUnit: {...values}
+      });
+    } catch (error: any) {
+      onNotify?.error(error?.message ?? "Có lỗi xảy ra khi tính phí");
+    }
   };
 
   const renderLoading = (component: React.ReactNode) => {
@@ -281,18 +248,13 @@ export default function LogisticForm({
                 />
               )}
             </Form.Item>
-            <CheckboxConfirm
-              checkboxPayment={checkboxPayment}
-              setCheckboxPayment={setCheckboxPayment}
-            />
+              <CheckboxConfirm checkboxPayment={checkboxPayment} setCheckboxPayment={setCheckboxPayment}/>
           </BaseBorderBox>
         </Col>
         <Col span={12}>
           <BaseBorderBox title={"Thông tin hàng hoá"}>
             <Form.Item name={"code"} label={"Mã vận đơn"}>
-              {renderLoading(
-                <Input placeholder="Sẽ tồn tại khi đơn hàng được gửi đi" />
-              )}
+              {renderLoading(<Input placeholder="Sẽ tồn tại khi đơn hàng được gửi đi" />)}
             </Form.Item>
             <Form.Item
               rules={[{ required: true, message: "Vui lòng nhập khối lượng" }]}
@@ -385,18 +347,27 @@ export default function LogisticForm({
               ?.label
           } ?`}
           onConfirm={onApplyFeeForBill}
+          // onCancel={() => console.log(2)}
           okText="Đồng ý"
           cancelText="Huỷ"
         >
-          <Button
-            loading={isLoadingSubmit || isLoadingUpdate}
-            type="primary"
-            disabled={!fee}
-          >
+          <Button loading={isLoadingSubmit || isLoadingUpdate} type="primary" disabled = {!fee}>
             Áp dụng vào đơn hàng
           </Button>
         </Popconfirm>
       </Row>
+      {/* <Popconfirm
+          onConfirm={onFinish}
+          title={`Bạn có chắc chắn muốn tạo bưu gửi này với đơn vị vận chuyển`}
+          okText="Tạo"
+          cancelText="Huỷ"
+        >
+          <Row align={'middle'} justify={'end'}>
+            <Col span={24}>
+              <Button type="primary" htmlType="submit">Tạo bưu gửi</Button>
+            </Col>
+          </Row>
+        </Popconfirm> */}
       <div
         style={{
           width: "100%",
@@ -405,11 +376,8 @@ export default function LogisticForm({
           marginTop: 20,
         }}
       >
-        <span style={{ color: "rgba(249, 6, 6, 0.45)" }}>
-          Giá cước vận chuyển có thể bị thay đổi và cập nhật lại khi đơn hàng
-          được đóng gói vì thay đổi kích thước hoặc phát sinh dịch vụ cộng thêm
-        </span>
-      </div>
+          <span style={{color: 'rgba(249, 6, 6, 0.45)'}}>Giá cước vận chuyển có thể bị thay đổi và cập nhật lại khi đơn hàng được đóng gói vì thay đổi kích thước hoặc phát sinh dịch vụ cộng thêm</span>
+        </div>
     </Form>
   );
 }
