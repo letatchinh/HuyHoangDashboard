@@ -14,13 +14,11 @@ import { getValueOfPercent } from "~/utils/helpers";
 import { DEFAULT_DEBT_TYPE } from "../../quotation/constants";
 import { useGetDebtRule } from "../bill.hook";
 import { DebtType, FeeType, quotation } from "../bill.modal";
-import { onVerifyData, reducerDiscountQuotationItems } from "../bill.service";
+import {  reducerDiscountQuotationItems } from "../bill.service";
 import { defaultFee } from "../constants";
 import ModalAnt from "~/components/Antd/ModalAnt";
-import LogisticFormCreateInBill from "~/modules/logistic/components/LogisticFormInCreateBill";
 import LogisticForm, { ValueApplyBill } from "~/modules/logistic/components/LogisticForm";
 import useNotificationStore from "~/store/NotificationContext";
-import { useGetPharmacyId } from "~/modules/pharmacy/pharmacy.hook";
 const TYPE_DISCOUNT = {
   "DISCOUNT.CORE": "DISCOUNT.CORE",
   "DISCOUNT.SOFT": "DISCOUNT.SOFT",
