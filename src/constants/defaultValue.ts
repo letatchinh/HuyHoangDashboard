@@ -397,3 +397,17 @@ export const DISCOUNT_TYPE_VI = {
   PERCENT : "%",
   VALUE : "Giá trị",
 }
+
+export const FILTER_BY: any = {
+  WEEKLY: "WEEKLY",
+  MONTHLY: "MONTHLY",
+  QUARTERLY: "QUARTERLY",
+  YEARLY: "YEARLY",
+};
+
+export const FILTER_BY_VI: {[key in keyof typeof FILTER_BY]:string} = {
+  WEEKLY: "Ngày",
+  MONTHLY: "Tháng",
+  QUARTERLY: "Quý",
+  YEARLY: "Năm",
+};

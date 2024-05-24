@@ -49,6 +49,8 @@ import ReportSalaryPartnerPage from "~/pages/Dashboard/ReportSalaryPartner";
 import ProductBorrow from "~/modules/product/components/ProductBorrow";
 import CreateBill from "~/modules/sale/bill/screens/CreateBill";
 import SaleScreen from "~/modules/sale/bill/components/createBillScreen/SaleScreen";
+import ReportIndividualCollaborator from "~/pages/Dashboard/ReportIndividualCollaborator";
+import ReportIndividualEmployeeSeller from "~/pages/Dashboard/ReportIndividualEmployeeSeller";
 export const mainRoutes :PathRouteProps[] = [
   { path: PATH_APP.main.root, Component: Homepage },
 
@@ -168,7 +170,11 @@ export const mainRoutes :PathRouteProps[] = [
   { path: PATH_APP.reportSalaryPartner.root, Component: ReportSalaryPartnerPage},
   // Thôgng báo
   { path: PATH_APP.myNotification.root, Component: NotificationPage},
-  
+
+  // Báo cáo doanh thu cá nhân
+  { path: PATH_APP.reportIndividualCollaborator.root, Component: ReportIndividualCollaborator},
+  { path: PATH_APP.reportIndividualEmployeeSeller.root, Component: ReportIndividualEmployeeSeller},
+
   { path: '/', Component: Homepage },
 ]
 

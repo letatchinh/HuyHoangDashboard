@@ -51,6 +51,8 @@ import collaborator from '~/modules/collaborator';
 import collaboratorGroup from '~/modules/collaboratorGroup';
 import reportSalaryPartner from '~/modules/reportSalaryPartner/redux/reducer';
 import requestGroup from '~/modules/requestGroup';
+import reportIndividualCollaborator from '~/modules/reportIndividualCollaborator';
+import reportIndividualEmployeeSeller from '~/modules/reportIndividualEmployeeSeller';
 
 const authPersistConfig = {
     key: 'auth',
@@ -115,5 +117,7 @@ const rootReducer = combineReducers({
     collaboratorGroup: collaboratorGroup.redux.reducer,
     reportSalaryPartner,
     requestGroup: requestGroup.redux.reducer,
+    reportIndividualCollaborator: reportIndividualCollaborator.redux.reducer,
+    reportIndividualEmployeeSeller: reportIndividualEmployeeSeller.redux.reducer,
 });
 export default rootReducer
