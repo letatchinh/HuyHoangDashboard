@@ -2,7 +2,7 @@ import React, { useMemo, useState } from "react";
 import { useFetchState } from "~/utils/hook";
 import apis from "../reportOverview.api";
 import { LegendDatum, ResponsivePie } from "@nivo/pie";
-import { Button, Modal, Tag } from "antd";
+import { Button, Modal, Tag, Typography } from "antd";
 import { formatter } from "~/utils/helpers";
 import { get, round } from "lodash";
 import Breadcrumb from "~/components/common/Breadcrumb";
@@ -109,9 +109,19 @@ export default function ReportOverviewComponent(
           modifiers: [["darker", 0.2]],
         }}
         tooltip={(e) => (
-          <Tag bordered={true} color="default">
+          <Typography.Text
+            style={{
+              backgroundColor: "white",
+              padding: "6px 10px",
+              border: "0.2px solid #333",
+              borderRadius: 6
+            }}
+          >
+            <Tag bordered={true} color={e.datum.color}>
+              <span style={{ color: e.datum.color }}>.</span>
+            </Tag>
             {e.datum.label + " (" + formatter(e.datum.value) + ")"}
-          </Tag>
+          </Typography.Text>
         )}
         enableArcLinkLabels={false}
         arcLinkLabel="label"

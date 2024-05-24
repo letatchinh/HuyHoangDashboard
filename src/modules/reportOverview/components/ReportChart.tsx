@@ -269,7 +269,7 @@ export default function ReportChart(
             data={dataReport?.data ?? []}
             keys={keyInData}
             indexBy="_id"
-            margin={{ top: 20, right: 20, bottom: 100, left: 100 }}
+            margin={{ top: 20, right: 20, bottom: 40, left: 100 }}
             padding={
               checkKeyContainsGroupByRangerDate(query?.dataType ?? "")
                 ? 0.1
@@ -328,9 +328,19 @@ export default function ReportChart(
             }}
             tooltip={(e) => {
               return (
-                <Tag bordered={true} color="default">
-                  {get(detail, [e.id], e.id) + ": " + Number(e.value).toLocaleString("vi")}
-                </Tag>
+                <Typography.Text
+                  style={{
+                    backgroundColor: "white",
+                    padding: "6px 10px",
+                    border: "0.2px solid #333",
+                    borderRadius: 6
+                  }}
+                >
+                  <Tag bordered={true} color={e.color}>
+                    <span style={{ color: e.color }}>.</span>
+                  </Tag>
+                  {get(detail, [e.id], e.id) +": " + Number(e.value).toLocaleString("vi")}
+                </Typography.Text>
               );
             }}
             axisTop={null}
