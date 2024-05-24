@@ -153,7 +153,7 @@ export default function LogisticForm({
       });
     } else {
       form.setFieldsValue({
-        fee: 0,
+        totalFee: 0,
       });
     }
   }, [fee]);
@@ -185,7 +185,7 @@ export default function LogisticForm({
       values;
     if (transportUnit || serviceCode || weight || width || length || height) {
       form.setFieldsValue({
-        fee: 0,
+        totalFee: 0,
       });
     }
     if (transportUnit) {
