@@ -47,5 +47,6 @@ export type BuyGroupType = {
     code : string,
     _id : string,
     children : BuyGroupType[],
-    type : 'partner' | 'employee'
+    type : 'partner' | 'employee',
+    isLeaf?: boolean,
 }

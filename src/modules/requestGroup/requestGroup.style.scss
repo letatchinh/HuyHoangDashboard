@@ -1,0 +1,12 @@
+.changeGroup{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    &--description{
+        padding: 10px;
+        background-color: #ECECEF;
+        border-radius: $default-border-radius;
+        margin-top: 10px;
+        height: 100px;
+    }
+}
