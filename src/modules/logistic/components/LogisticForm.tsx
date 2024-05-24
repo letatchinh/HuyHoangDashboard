@@ -11,7 +11,7 @@ import {
   Select,
   Skeleton,
 } from "antd";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import BaseBorderBox from "~/components/common/BaseBorderBox";
 import {
   ADDON_SERVICE,
@@ -21,7 +21,7 @@ import {
   transportUnit,
 } from "../constants";
 import subvn from "~/core/subvn";
-import { compact } from "lodash";
+import { compact, omit, pick } from "lodash";
 import {
   SubmitCountLogisticFee,
   useCountFee,
@@ -70,6 +70,7 @@ export default function LogisticForm({
   pharmacy,
   dataTransportUnit,
 }: propsType): React.JSX.Element {
+  useResetLogisticAction();
   const { onAddLogisticFee } = useCreateBillStore();
   const [form] = Form.useForm();
   const { onNotify } = useNotificationStore();
@@ -88,7 +89,34 @@ export default function LogisticForm({
     }
   );
   const fee = useGetFee();
-  useResetLogisticAction();
+
+  const FindAddress = useCallback(() => {
+    type TypeItem = string | undefined;
+    if (deliveryAddressId) {
+      const receiverCommuneName = subvn.getWardsByCode(
+        deliveryAddressId?.wardId
+      )?.name;
+      const receiverDistrictName= subvn.getDistrictByCode(
+        deliveryAddressId?.districtId
+      )?.name;
+      const receiverProvinceName= subvn.getCityByCode(
+        deliveryAddressId?.cityId
+      )?.name;
+      const receiverAddress = deliveryAddressId?.street;
+      return {
+        receiverCommuneName,
+        receiverDistrictName,
+        receiverProvinceName,
+        receiverAddress,
+      };
+    };
+    return {
+      receiverCommuneName: undefined,
+      receiverDistrictName: undefined,
+      receiverProvinceName: undefined,
+      receiverAddress: undefined,
+    };
+  }, [deliveryAddressId]);
 
   useEffect(() => {
     form.setFieldsValue({
@@ -105,27 +133,16 @@ export default function LogisticForm({
         ...dataTransportUnit,
       });
   }, [dataTransportUnit, id, pharmacy]);
-
   useEffect(() => {
     if (deliveryAddressId) {
-      const receiverCommuneName = subvn.getWardsByCode(
-        deliveryAddressId?.wardId
-      )?.name;
-      const receiverDistrictName = subvn.getDistrictByCode(
-        deliveryAddressId?.districtId
-      )?.name;
-      const receiverProvinceName = subvn.getCityByCode(
-        deliveryAddressId?.cityId
-      )?.name;
-      const receiverAddress = deliveryAddressId?.street;
       form.setFieldsValue({
         customerAddress: compact([
-          receiverAddress,
-          receiverCommuneName,
-          receiverDistrictName,
-          receiverProvinceName,
+          FindAddress()?.receiverAddress,
+          FindAddress()?.receiverCommuneName,
+          FindAddress()?.receiverDistrictName,
+          FindAddress()?.receiverProvinceName,
         ]).join(", "),
-        receiverAddress,
+        receiverAddress: FindAddress()?.receiverAddress,
       });
     }
   }, [deliveryAddressId]);
@@ -142,20 +159,7 @@ export default function LogisticForm({
   }, [fee]);
 
   const onFinish = (values: any) => {
-    const receiverCommuneName = subvn.getWardsByCode(
-      deliveryAddressId?.wardId
-    )?.name;
-    const receiverDistrictName = subvn.getDistrictByCode(
-      deliveryAddressId?.districtId
-    )?.name;
-    const receiverProvinceName = subvn.getCityByCode(
-      deliveryAddressId?.cityId
-    )?.name;
-    const submitData = SubmitCountLogisticFee(values, {
-      receiverCommuneName,
-      receiverDistrictName,
-      receiverProvinceName,
-    });
+    const submitData = SubmitCountLogisticFee(values, {...omit(FindAddress(), ["receiverAddress"])});
     try {
       form.validateFields();
       const payer = form.getFieldsValue().payer;

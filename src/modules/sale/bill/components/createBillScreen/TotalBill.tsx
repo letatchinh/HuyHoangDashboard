@@ -12,6 +12,9 @@ import { FeeType, FormFieldCreateBill } from "../../bill.modal";
 import useCreateBillStore from "../../storeContext/CreateBillContext";
 import SuggestAddress from "../SuggestAddress";
 import SelectDebt from "./SelectDebt";
+import { useMatchPolicy } from "~/modules/policy/policy.hook";
+import POLICIES from "~/modules/policy/policy.auth";
+import WithPermission from "~/components/common/WithPermission";
 type propsType = {};
 export const Layout = ({
   label,
@@ -59,15 +62,25 @@ export default function TotalBill(props: propsType): React.JSX.Element {
   const onOpenAddress = useCallback(() => setOpenAddress(true),[]);
   const onCloseAddress = useCallback(() => setOpenAddress(false),[]);
   const debtType = Form.useWatch('debtType',form);
-  const fee = Form.useWatch('fee',form);
-  
-  const onChangeAddress = useCallback((values : any) => {
+  const fee = Form.useWatch('fee', form);
+  const canUpdateLogistic = useMatchPolicy(POLICIES.UPDATE_LOGISTIC);
+  const onChangeAddress = useCallback((values: any) => {
     const addressString = concatAddress(values?.address);
-    setFormAndLocalStorage({
-      deliveryAddress : addressString
-    })
+    bill?.dataTransportUnit ? setFormAndLocalStorage({
+      deliveryAddress: addressString,
+      deliveryAddressId: {
+        ...values?.address
+      },
+      fee: bill?.fee?.map((item: any) => item?.typeFee === 'LOGISTIC' ? { ...item, value: 0 } : item), // If change address when applied logistic, set value logistic fee = 0
+      dataTransportUnit: {},
+    }) : setFormAndLocalStorage({
+      deliveryAddress: addressString,
+      deliveryAddressId: {
+        ...values?.address
+      },
+    });
     onCloseAddress();
-  },[]);
+  },[bill]);
   
   useEffect(() => {
     const feePartner = get(partner,'fee',[])?.find(((i : FeeType) => i?.typeFee === 'SUB_FEE'));
@@ -212,7 +225,7 @@ export default function TotalBill(props: propsType): React.JSX.Element {
                     return <Form.Item
                     labelCol={{span : 8}}
                     labelAlign='left'
-                    label={<Button type="link" style={{padding : 0}} onClick={() => onOpenFormLogistic()}>Phí giao hàng</Button>}
+                    label={ canUpdateLogistic ?<Button type="link" style={{padding : 0}} onClick={() => onOpenFormLogistic()}>Phí vận chuyển</Button> : 'Phí vận chuyển'}
                     style={{marginBottom : 'unset'}}
                       name={[index, "value"]}
                     >
@@ -243,7 +256,12 @@ export default function TotalBill(props: propsType): React.JSX.Element {
           name={'deliveryAddress'}
           style={{marginBottom : 'unset',width : '100%'}}
           >
-        <Typography.Text>{getFieldValue('deliveryAddress')} <Button onClick={onOpenAddress} type="primary" ghost>Thay đổi</Button></Typography.Text>
+            <Typography.Text>
+              {getFieldValue('deliveryAddress')}
+              <WithPermission permission={POLICIES.UPDATE_LOGISTIC}>
+              <Button onClick={onOpenAddress} type="primary" ghost>Thay đổi</Button>
+              </WithPermission>
+            </Typography.Text>
       </Form.Item>}
     </Form.Item>
     </Layout>

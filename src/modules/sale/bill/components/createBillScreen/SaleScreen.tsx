@@ -17,7 +17,7 @@ import { PATH_APP } from "~/routes/allPath";
 import SelectCollaborator from "~/modules/collaborator/components/SelectSearch";
 type propsType = {};
 export default function SaleScreen(props: propsType): React.JSX.Element {
-  const {form,onValueChange,quotationItems,totalPriceAfterDiscount,onRemoveTab,bill,onOpenModalResult,totalAmount,mutateReValidate,setAddress,setFormAndLocalStorage} = useCreateBillStore();
+  const {form,onValueChange,quotationItems,totalPriceAfterDiscount,onRemoveTab,bill,onOpenModalResult,totalAmount,mutateReValidate,setAddress,setFormAndLocalStorage, setPharmacyInfo} = useCreateBillStore();
  const feeForm = Form.useWatch('fee',form);
 
  const {onNotify} = useNotificationStore();
@@ -44,7 +44,7 @@ try {
     totalPriceAfterDiscount,
     _id : get(bill,'dataUpdateQuotation.id'),
     totalAmount,
-    
+    dataTransportUnit: get(bill,'dataTransportUnit')
   });
     switch (get(bill,'typeTab')) {
       case 'createQuotation':
@@ -114,7 +114,7 @@ try {
         </Col>
         <Col span={8} className="form-create-bill--payment">
           <div>
-              <SelectPharmacy onChange={(value,option) => {
+            <SelectPharmacy onChange={(value, option) => {
                 const fee = get(option,'data.fee',[]);
                 if(fee?.length){
                   feeForm[0] = head(fee);
@@ -135,7 +135,9 @@ try {
   
                 setAddress(address);
                 mutateReValidate();
-                }} id={get(bill, 'pharmacyId')} form={form} allowClear={false} />
+                setPharmacyInfo(option);
+                }}
+                id={get(bill, 'pharmacyId')} form={form} allowClear={false} />
             <Divider/>
             <TotalBill />
           </div>

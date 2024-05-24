@@ -267,8 +267,10 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
               <Layout label={"Tổng số tiền sau chiết khấu"}>{formatter(get(bill,'totalAfterDiscountBill',0))}</Layout>
               {/* <Layout label={"Đã trả trước"}>-{formatter(pair)}</Layout> */}
               <Layout label={"Phụ phí"}>{formatter(get(feeDetail,'SUB_FEE',0))}</Layout>
+              <WithPermission permission={POLICIES.UPDATE_LOGISTIC}>
                 <Layout label={<Button type="link" style={{ padding: 0 }} onClick={() => onOpenFormLogistic()}>
-                  Vận chuyển</Button>}>{formatter(get(feeDetail, 'LOGISTIC', 0))}</Layout>
+                 Phí vận chuyển</Button>}>{formatter(get(feeDetail, 'LOGISTIC', 0))}</Layout>
+              </WithPermission>
               <Layout label={"Đã thanh toán"}>-{formatter(totalReceiptAmount)}</Layout>
               <Layout label={"Đã thanh toán và xác nhận"}>-{formatter(totalReceiptVoucherCompleted + (pair || 0))}</Layout>
               <Layout strong label={"Tổng số tiền còn lại"}>

@@ -1,5 +1,5 @@
 import { Form } from "antd";
-import { forIn, get } from "lodash";
+import { forIn, get, omit } from "lodash";
 import {
   createContext,
   ReactNode, useCallback, useContext,
@@ -20,6 +20,7 @@ import ModalAnt from "~/components/Antd/ModalAnt";
 import LogisticFormCreateInBill from "~/modules/logistic/components/LogisticFormInCreateBill";
 import LogisticForm, { ValueApplyBill } from "~/modules/logistic/components/LogisticForm";
 import useNotificationStore from "~/store/NotificationContext";
+import { useGetPharmacyId } from "~/modules/pharmacy/pharmacy.hook";
 const TYPE_DISCOUNT = {
   "DISCOUNT.CORE": "DISCOUNT.CORE",
   "DISCOUNT.SOFT": "DISCOUNT.SOFT",
@@ -34,7 +35,7 @@ type Bill = {
   quotationItems: DataItem[];
   pharmacyId: string;
   fee?: FeeType[];
-  dataTransport?: ValueApplyBill;
+  dataTransportUnit?: ValueApplyBill;
 };
 
 type DiscountDetail = {
@@ -72,7 +73,9 @@ export type GlobalCreateBill = {
   onCloseFormLogistic: () => void;
   checkboxPayment: string | null;
   setCheckboxPayment: (p: string | null) => void,
-  onAddLogisticFee : (data:any) => void
+  onAddLogisticFee: (data: any) => void,
+  setPharmacyInfo: (data: any) => void,
+  pharmacyInfo: any
 };
 const CreateBill = createContext<GlobalCreateBill>({
   quotationItems: [],
@@ -104,7 +107,9 @@ const CreateBill = createContext<GlobalCreateBill>({
   onCloseFormLogistic: () => { },
   checkboxPayment: null,
   setCheckboxPayment: (p: string | null) => { },
-  onAddLogisticFee : () => {}
+  onAddLogisticFee: () => { },
+  setPharmacyInfo: () => { },
+  pharmacyInfo: null,
 });
 
 type CreateBillProviderProps = {
@@ -130,10 +135,11 @@ export function CreateBillProvider({
   const [form] = Form.useForm();
   const [debt,isLoadingDebt] = useGetDebtRule();
   const [address,setAddress] = useState([]);
-  const [partner,loadingPartner] : any = useGetCollaborator(get(bill,'pharmacyId'));
+  const [partner, loadingPartner]: any = useGetCollaborator(get(bill, 'pharmacyId'));
   const [logisticOpen, setLogisticOpen] = useState(false);
   const [checkboxPayment, setCheckboxPayment] = useState<string | null>(null);
   const { onNotify } = useNotificationStore();
+  const [pharmacyInfo, setPharmacyInfo] = useState<any>();
   // Controller Data
   const onSave = (row: DataItem) => {
     const newData: DataItem[] = [...quotationItems];
@@ -180,7 +186,6 @@ export function CreateBillProvider({
     }
   },[countReValidate]);
 
-
   const onValueChange = (value: any, values: any) => {
     
     const key: any = Object.keys(value)[0];
@@ -226,7 +231,6 @@ export function CreateBillProvider({
 
   const pair = Form.useWatch('pair',form) || 0;
   const fee = Form.useWatch('fee',form) || 0;
-
   const totalPrice = useMemo(
     () =>
       quotationItems?.reduce(
@@ -316,8 +320,6 @@ export function CreateBillProvider({
       ),
     [quotationItems]
   );
-
-
   // Initalize Data And Calculate Discount
   useEffect(() => {
     const initDebt = debt?.find((debt : DebtType) => get(debt, "key") === DEFAULT_DEBT_TYPE);    
@@ -332,17 +334,16 @@ export function CreateBillProvider({
       const newQuotationItems: any[] = reducerDiscountQuotationItems(get(bill, "quotationItems", []));
       setQuotationItems(newQuotationItems);
     }
-  }, [bill,debt,form,totalPrice]);
-
-  const setFormAndLocalStorage = useCallback((newValue : any) => {
-    
+  }, [bill, debt, form, totalPrice]);
+  
+  const setFormAndLocalStorage = useCallback((newValue: any) => {
     form.setFieldsValue({
       ...newValue
-    })
+    });
     onChangeBill({
       ...newValue
-    })
-  }, []);
+    });
+  },[]);
   
   const onOpenFormLogistic = () => {
     setLogisticOpen(true);
@@ -368,6 +369,7 @@ export function CreateBillProvider({
       onNotify?.error("Có lỗi xảy ra khi gắn phí vận chuyển vào dơn hàng");
     };
   };
+  console.log(bill,'ddsasda')
   return (
     <CreateBill.Provider
       value={{
@@ -400,7 +402,9 @@ export function CreateBillProvider({
         onCloseFormLogistic,
         checkboxPayment,
         setCheckboxPayment,
-        onAddLogisticFee
+        onAddLogisticFee,
+        setPharmacyInfo,
+        pharmacyInfo,
       }}
     >
       {children}
@@ -408,7 +412,7 @@ export function CreateBillProvider({
         title='Chi phí vận chuyển'
         open={logisticOpen}
         onCancel={onCloseFormLogistic}
-        width={'auto'}
+        width={1200}
         footer={null}
         destroyOnClose
       >
@@ -417,9 +421,9 @@ export function CreateBillProvider({
           checkboxPayment={checkboxPayment}
           setCheckboxPayment={setCheckboxPayment}
           bill={bill}
-          deliveryAddressId={get(partner, "address")}
-          pharmacy={partner}
-          dataTransportUnit={bill?.dataTransport}
+          deliveryAddressId={ !get(bill, 'dataUpdateQuotation') ? (get(bill, 'deliveryAddressId') ?? get(pharmacyInfo, "data.address")) : get(bill, 'deliveryAddressId') }
+          pharmacy={ pharmacyInfo?.data }
+          dataTransportUnit={bill?.dataTransportUnit}
         />
       </ModalAnt>
     </CreateBill.Provider>

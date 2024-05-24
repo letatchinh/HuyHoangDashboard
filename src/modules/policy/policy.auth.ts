@@ -93,6 +93,7 @@ const borrowProduct = 'borrowProduct';
 const statusBorrowProduct = 'statusBorrowProduct';
 const requestChangeGroupCTV = 'requestChangeGroupCTV';
 const requestChangeGroup = 'requestChangeGroup';
+const logistic = 'logistic';
 
 
 //------RESOURCES --------
@@ -193,6 +194,7 @@ const RESOURCES = [
   statusBorrowProduct,
   requestChangeGroup,
   requestChangeGroupCTV,
+  logistic,
 ];
 
 //ACTIONS
@@ -278,7 +280,8 @@ const RESOURCE = (): ResourceType => {
     billPharmacy,
     quotationPartner,
     quotationEmployee,
-    quotationPharmacy
+    quotationPharmacy,
+    logistic
   ];
 
   const NOTIFICATION_BOT_MANAGER: string[] = [

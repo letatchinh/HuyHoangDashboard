@@ -101,7 +101,6 @@ export const onVerifyData = ({
         const response = await apis.verifyBill({ billSample,pharmacyId : get(bill, "pharmacyId") });
         const InheritItem = get(bill, "quotationItems", [])?.map(
           (item: any) => {
-            console.log(item,'ITEMM');
             const findInResponse = response?.find(
               (res: any) => get(item, "variantId") === get(res, "selectVariant")
             );

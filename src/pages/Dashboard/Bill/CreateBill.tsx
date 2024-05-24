@@ -10,6 +10,7 @@ import SelectProduct from "~/modules/sale/bill/components/SelectProduct";
 import logo from '~/assets/images/logo.png';
 import ModalAnt from "~/components/Antd/ModalAnt";
 import { useUserPolicy } from "~/modules/policy/policy.hook";
+import { ValueApplyBill } from "~/modules/logistic/components/LogisticForm";
 
 export const KEY_DATA_PHARMACY = "bill-pharmacy";
 export const KEY_PRIORITY = "key-priority"; // Tab Will Use this key and Remove then (If Have)
@@ -20,9 +21,9 @@ interface DataUpdateQuotationType {
 export interface ItemDataSource extends FormFieldCreateBill  {
   typeTab : "createQuotation" | "updateQuotation" | "convertQuotation",
   quotationItems: quotation[]; // BillItems
-  dataUpdateQuotation? : DataUpdateQuotationType; // Data When Handle With Exist Quotation
+  dataUpdateQuotation?: DataUpdateQuotationType; // Data When Handle With Exist Quotation
 };
-export const keyValidDataSource = ['typeTab','quotationItems','pharmacyId','dataUpdateQuotation','pair','debtType','fee','deliveryAddress'];
+export const keyValidDataSource = ['typeTab','quotationItems','pharmacyId','dataUpdateQuotation','pair','debtType','fee','deliveryAddress','dataTransportUnit', 'deliveryAddressId'];
 
 export interface DataSourceType  {
   [key: string]: ItemDataSource;
@@ -185,7 +186,6 @@ const CreateBillPage = (): React.JSX.Element => {
       // Not Have DataSource  initialize new Data
       const dataFromLocalStorage : any  = localStorage.getItem(KEY_DATA_PHARMACY);
       const isInValidDataSource : boolean = BillModule.service.validateDataStorageREINS(dataFromLocalStorage);
-      
       if (
         isInValidDataSource
         ) {

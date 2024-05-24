@@ -1,4 +1,4 @@
-import { Button, Form } from "antd";
+import { Button, Form, Popconfirm } from "antd";
 import React from "react";
 import AddressFormSection from "./AddressFormSection";
 type FormField = {
@@ -26,9 +26,16 @@ export default function AddressForm({
         allowPhoneNumber={false}
         allowEmail={false}
       />
-      <Button type="primary" htmlType="submit">
-        Xác nhận
-      </Button>
+      <Popconfirm
+        title='Thay đổi địa chỉ giao hàng sẽ làm thay đổi lại phí vận chuyển, bạn có chắc chắn thay đổi ?'
+        onConfirm={() => form.submit()}
+        okText="Xác nhận"
+        cancelText="Huỷ"
+      >
+        <Button type="primary">
+          Xác nhận
+        </Button>
+      </Popconfirm>
     </Form>
   );
 }
