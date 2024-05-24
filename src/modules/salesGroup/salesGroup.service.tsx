@@ -106,9 +106,10 @@ interface TreeDataNodeCustom extends TreeDataNode {
 }
 const dataItem = (item : BuyGroupType) : TreeDataNodeCustom => ({
   title : item?.fullName || "",
-  key : v4(),
+  key : item._id,
   children : deepChild(item?.children),
-  data : item
+  data : item,
+  isLeaf: Boolean(item.isLeaf)
  })
 const deepChild = (children : BuyGroupType[]) : TreeDataNodeCustom[] | undefined => {
   if(children?.length){

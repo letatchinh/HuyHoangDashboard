@@ -9,6 +9,7 @@ import { useMatchPolicy } from "~/modules/policy/policy.hook";
 import Collaborator from "./Collaborator";
 import CollaboratorGroup from "~/modules/collaboratorGroup/screens/CollaboratorGroup";
 import Breadcrumb from "~/components/common/Breadcrumb";
+import RequestGroup from "~/modules/requestGroup/screens/RequestGroup";
 type propsType = {};
 export default function CollaboratorScreen(props: propsType): React.JSX.Element {
   const { t }: any = useTranslate();
@@ -18,6 +19,7 @@ export default function CollaboratorScreen(props: propsType): React.JSX.Element 
   const { pathname, search } = useLocation();
   const isCollaborator = useMatchPolicy(POLICIES.READ_PARTNER);
   const isCollaboratorGroup = useMatchPolicy(POLICIES.READ_PARTNERGROUP);
+  const readRequestGroup = useMatchPolicy(POLICIES.READ_REQUESTCHANGEGROUP);
 
   useEffect(() => {
     let urlPush = '/collaborator';
@@ -48,6 +50,7 @@ export default function CollaboratorScreen(props: propsType): React.JSX.Element 
           <WhiteBox className="collaborator-group">
           <Breadcrumb title={"Quản lý cộng tác viên"} />
             <Tabs
+              type="card"
               activeKey={currentTab}
               onChange={(key) => onChange(key)}
               defaultActiveKey={pathname}
@@ -60,6 +63,7 @@ export default function CollaboratorScreen(props: propsType): React.JSX.Element 
               {isCollaboratorGroup && (
                 <TabPane tab="Nhóm cộng tác viên" key="collaborator/group" />
               )}
+              {readRequestGroup && <TabPane tab="Yêu cầu chuyển nhóm" key="collaborator/request" />}
             </Tabs>
             <Routes>
               {isCollaborator ? (
@@ -83,6 +87,10 @@ export default function CollaboratorScreen(props: propsType): React.JSX.Element 
             ) : (
               <React.Fragment />
               )}
+            {readRequestGroup &&  <Route
+                  path={`request`}
+                  element={<RequestGroup />}
+                />}
             </Routes>
           </WhiteBox>
       )}

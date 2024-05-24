@@ -8,10 +8,6 @@ import ModalAnt from "~/components/Antd/ModalAnt";
 import TableAnt from "~/components/Antd/TableAnt";
 import { filterSlug } from "~/utils/helpers";
 import {
-  useRemoveProductCollaborator,
-  useUpdateProductCollaborator,
-} from "../collaborator.hook";
-import {
   DiscountType,
   ItemSubmitDataProductPartner,
   SubmitDataProductPartner,
@@ -21,25 +17,20 @@ import Discount from "./Discount";
 import DiscountForm from "./DiscountForm";
 type propsType = {
   id?: any;
-  useRemoveProduct: any;
-  useUpdateProduct: any;
   isLoading?: boolean;
   dataSource?: any[];
 };
+
 export default function ControlProduct({
   id,
   dataSource,
   isLoading,
-  useRemoveProduct,
-  useUpdateProduct,
 }: propsType): React.JSX.Element {
-  const {canDelete,canUpdate} = useCollaboratorProductStore();
-  console.log(canDelete,'canDelete');
-  
+  const {canDelete,canUpdate, useRemove,useUpdate} = useCollaboratorProductStore();
   const [data,setData] = useState<any>([]);
   const [openModalUpdateDiscount, setOpenModalUpdateDiscount] = useState(false);
-  const [isSubmitLoading, removeProduct]: any = useRemoveProduct();
-  const [, updateProduct]: any = useUpdateProduct();
+  const [isSubmitLoading, removeProduct]: any = useRemove();
+  const [, updateProduct]: any = useUpdate();
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
     setSelectedRowKeys(newSelectedRowKeys);

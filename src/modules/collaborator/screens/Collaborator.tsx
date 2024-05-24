@@ -16,7 +16,7 @@ import {
   useUpdateCollaboratorParams,
   useUpdateProductCollaborator,
 } from "../collaborator.hook";
-import { useMatchPolicy } from "~/modules/policy/policy.hook";
+import { useMatchOrPolicy, useMatchPolicy } from "~/modules/policy/policy.hook";
 import useCheckBoxExport from "~/modules/export/export.hook";
 import POLICIES from "~/modules/policy/policy.auth";
 import { ColumnsType } from "antd/es/table";
@@ -52,6 +52,7 @@ import Breadcrumb from "~/components/common/Breadcrumb";
 import CollaboratorProduct from "../components/CollaboratorProduct";
 import CollaboratorAddress from "../components/CollaboratorAddress";
 import apis from "~/modules/collaborator/collaborator.api";
+import RequestGroup from "~/modules/requestGroup/components";
 
 interface ColumnActionProps {
   _id: string;
@@ -112,6 +113,7 @@ export default function Collaborator({
   
   const isCanDelete = useMatchPolicy(POLICIES.DELETE_PARTNER);
   const isCanUpdate = useMatchPolicy(POLICIES.UPDATE_PARTNER);
+  const canReadRequest = useMatchOrPolicy([POLICIES.READ_REQUESTCHANGEGROUP,POLICIES.READ_REQUESTCHANGEGROUPCTV]);
   const shouldShowDevider = useMemo(
     () => isCanDelete && isCanUpdate,
     [isCanDelete, isCanUpdate]
@@ -417,10 +419,7 @@ export default function Collaborator({
               label: "Sản phẩm đảm nhiệm",
               children: (
                 <CollaboratorProduct
-                  useAddProduct={useAddProductCollaborator}
                   id={id}
-                  useRemoveProduct={useRemoveProductCollaborator}
-                  useUpdateProduct={useUpdateProductCollaborator}
                   useGetUser={useGetCollaborator}
                   apiSearchProduct={apis.searchProduct}
                   target='partner'
@@ -433,6 +432,12 @@ export default function Collaborator({
               label: "Sổ địa chỉ",
               children: <CollaboratorAddress id={id} />,
               disabled: !id,
+            },
+            {
+              key: "4",
+              label: "Yêu cầu",
+              children: <RequestGroup.CreateAndView id={id} mode="one" />,
+              disabled: !id || !canReadRequest,
             },
           ]}
         ></Tabs>

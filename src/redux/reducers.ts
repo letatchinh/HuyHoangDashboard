@@ -52,6 +52,7 @@ import collaboratorGroup from '~/modules/collaboratorGroup';
 import reportSalaryPartner from '~/modules/reportSalaryPartner/redux/reducer';
 import reportProductSupplier from '~/modules/reportProductSupplier';
 import reportOverview from '~/modules/reportOverview';
+import requestGroup from '~/modules/requestGroup';
 
 const authPersistConfig = {
     key: 'auth',
@@ -117,5 +118,6 @@ const rootReducer = combineReducers({
     reportSalaryPartner,
     reportProductSupplier: reportProductSupplier.redux.reducer,
     reportOverview: reportOverview.redux.reducer,
+    requestGroup: requestGroup.redux.reducer,
 });
 export default rootReducer

@@ -25,10 +25,6 @@ const { Option } = Select;
 
 const FormItem = Form.Item;
 
-const verticalLayout = {
-  labelCol: { span: 24 },
-  wrapperCol: { span: 24 },
-};
 interface IProps {
   id?: string | null;
   handleCloseModal: () => void;
@@ -43,7 +39,6 @@ export default function EmployeeForm(props: IProps) {
   const { id, handleCloseModal,  handleUpdate,handleCreate, isSubmitLoading} = props;
   const [imageUrl, setImageUrl] = useState<string>();
 
-  const [loadingValidateUsername, setLoadingValidateUsername] = useState<boolean>(false);
   const [statusAccount, setStatusAccount] = useState('INACTIVE');
   useResetState(employeeSliceAction.resetAction);
   //address
@@ -55,7 +50,6 @@ export default function EmployeeForm(props: IProps) {
     () => ({ branchId: branchId ? branchId : DEFAULT_BRANCH_ID }),
     [branchId]
   );
-  // const [groups, isLoadingGroups] = useGetEmployeeGroups(branchIdParam);
   const [groups, isLoadingGroups] = useFetchState({api: apis.getListEmployeeGroup, query: branchIdParam,useDocs: false});
   // const 
   const [employee, isLoading] = useGetEmployee(id);
@@ -78,7 +72,7 @@ export default function EmployeeForm(props: IProps) {
       });
       form.resetFields();
     };
-  }, [id, employee]);
+  }, [id, employee, form]);
 
   const onFinish = (values: any) => {
     const employee = {
@@ -131,12 +125,9 @@ export default function EmployeeForm(props: IProps) {
     if (!id && fullName) {
       // Only Create
       try {
-        setLoadingValidateUsername(true);
         const username = await apis.validateUsername({ fullName: fullName?.trim()});
         form.setFieldsValue(username);
-        setLoadingValidateUsername(false);
       } catch (error) {
-        setLoadingValidateUsername(false);
         onNotify?.error("Lỗi khi lấy dữ liệu từ máy chủ");
       };
     };

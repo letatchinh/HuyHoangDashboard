@@ -1,122 +1,91 @@
-import { DownOutlined, PhoneOutlined, PlusOutlined } from "@ant-design/icons";
-import {
-  Button,
-  Col,
-  ConfigProvider,
-  Flex,
-  Row,
-  Tabs,
-  Tag,
-  Tree,
-  Typography,
-} from "antd";
-import { get } from "lodash";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
-import LoadingTree from "~/components/Antd/LoadingTree";
+/* eslint-disable react-hooks/exhaustive-deps */
+import { DownOutlined, PlusOutlined } from "@ant-design/icons";
+import { Button, Drawer, Flex, Pagination, Tabs, Tree } from "antd";
+import React, {
+  useCallback,
+  useMemo,
+  useState,
+} from "react";
 import ModalAnt from "~/components/Antd/ModalAnt";
-import AvatarShortOrName from "~/components/common/AvatarShortOrName";
 import apis from "~/modules/collaborator/collaborator.api";
-import { useAddProductCollaborator, useCreateCollaborator, useGetCollaborator, useRemoveProductCollaborator, useUpdateCollaborator, useUpdateProductCollaborator } from "~/modules/collaborator/collaborator.hook";
+import {
+  useGetCollaborator,
+} from "~/modules/collaborator/collaborator.hook";
 import CollaboratorAddress from "~/modules/collaborator/components/CollaboratorAddress";
-import CollaboratorForm from "~/modules/collaborator/components/CollaboratorForm";
 import CollaboratorProduct from "~/modules/collaborator/components/CollaboratorProduct";
-import { useAddProductEmployee, useRemoveProductEmployee, useUpdateProductEmployee,useGetEmployee, useCreateEmployee, useUpdateEmployee } from "~/modules/employee/employee.hook";
+import {
+  useGetEmployee,
+} from "~/modules/employee/employee.hook";
 import apisEmployee from "~/modules/employee/employee.api";
-import { useBuyGroupQueryParams, useGetBuyGroups } from "../../salesGroup.hook";
+import {
+  useBuyGroupPaging,
+  useBuyGroupQueryParams,
+  useGetBuyGroups,
+  useGetChildrenBuyGroups,
+  useUpdateSalesGroupParams,
+} from "../../salesGroup.hook";
+import { LoadTree } from "./LoadTree";
+import { RenderItemTree } from "./RenderItemTree";
+import SearchAnt from "~/components/Antd/SearchAnt";
+import Context from "./Context";
+import DrawerBuyGroup from "./DrawerBuyGroup";
+import RenderFormModel from "./RenderFormModel";
 import { BuyGroupType } from "../../salesGroup.modal";
-import EmployeeForm from "~/modules/employee/components/EmployeeForm";
-type propsType = {};
+type propsType = {
+  activeKey: "OTC" | "B2C";
+};
+type FuncType = (T?:any)=>void
 
 export default function BuyGroup(props: propsType): React.JSX.Element {
-  // const [expandedKeys,setExpandedKeys] = useState<React.Key[]>([]);
-  const [id, setId] = useState<any>();
-  const [typeUser, setTypeUser] = useState<any>();
-  const [query] = useBuyGroupQueryParams();
-  const [data, isLoading] = useGetBuyGroups(query);
 
+  const [id, setId] = useState<any>();
+  const [typeUser, setTypeUser] = useState<BuyGroupType['type']>('partner');
+  const [query] = useBuyGroupQueryParams();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [keyword, { onParamChange }] = useUpdateSalesGroupParams(query);
+  const [data, isLoading] = useGetBuyGroups(query);
+  const paging = useBuyGroupPaging();
+  const { action } = useGetChildrenBuyGroups();
   const [open, setOpen] = useState(false);
-  const onOpen = useCallback((id?: any,type?:any) => {
-    if (id) {
-      setId(id);
-    }
-    if(type){
+
+  const onOpen = useCallback((id?: any, type: BuyGroupType['type'] ='partner') => {
+      setId(id??null);
       setTypeUser(type);
-    }
-    setOpen(true);
+      setOpen(true);
   }, []);
   const onClose = useCallback(() => {
     setOpen(false);
     setId(null);
-    setTypeUser(null)
+    setTypeUser('partner');
   }, []);
-  const [isSubmitLoading, handleCreate] = useCreateCollaborator(() => {
-    onClose();
-  });
-  const [, handleUpdate] = useUpdateCollaborator(() => {
-    onClose();
-  });
-  const [isSubmitLoadingEmployee, handleCreateEmployee] = useCreateEmployee(() => {
-    onClose();
-  });
-  const [, handleUpdateEmployee] = useUpdateEmployee(() => {
-    onClose();
-  });
-  let items = useMemo(
-    () => [
+
+  const returnFunc = useCallback(
+    (funcP: FuncType, funE: FuncType) =>
+      typeUser === "partner" ? funcP : funE,
+    [typeUser]
+  );
+  let items = useMemo(() => {
+    let result = [
       {
         key: "1",
         label: "Hồ sơ",
-        children:
-          typeUser === "partner" ? (
-            <CollaboratorForm
-              id={id}
-              handleCloseModal={onClose}
-              handleCreate={handleCreate}
-              handleUpdate={handleUpdate}
-              isSubmitLoading={isSubmitLoading}
-            />
-          ) : (
-            <EmployeeForm
-              id={id}
-              handleCloseModal={onClose}
-              handleUpdate={handleUpdateEmployee}
-              handleCreate={handleCreateEmployee}
-              isSubmitLoading={isSubmitLoadingEmployee}
-            />
-          ),
+        children: <RenderFormModel typeUser={typeUser} id={id} onClose={onClose} />
+         
       },
       {
         key: "2",
         label: "Sản phẩm đảm nhiệm",
         children: (
           <CollaboratorProduct
-          target={typeUser}
-          config={{
-            discount : {
-              discountType : 'PERCENT',
-              value : typeUser === "partner" ? 10  : 45
-            }
-
-          }}
+            target={typeUser}
+            config={{
+              discount: {
+                discountType: "PERCENT",
+                value: typeUser === "partner" ? 10 : 45,
+              },
+            }}
             id={id}
-            useAddProduct={
-              typeUser === "partner"
-                ? useAddProductCollaborator
-                : useAddProductEmployee
-            }
-            useRemoveProduct={
-              typeUser === "partner"
-                ? useRemoveProductCollaborator
-                : useRemoveProductEmployee
-            }
-            useUpdateProduct={
-              typeUser === "partner"
-                ? useUpdateProductCollaborator
-                : useUpdateProductEmployee
-            }
-            useGetUser={
-              typeUser === "partner" ? useGetCollaborator : useGetEmployee
-            }
+            useGetUser={returnFunc(useGetCollaborator, useGetEmployee)}
             apiSearchProduct={
               typeUser === "partner"
                 ? apis.searchProduct
@@ -126,121 +95,110 @@ export default function BuyGroup(props: propsType): React.JSX.Element {
         ),
         disabled: !id,
       },
-    ],
-    [id, typeUser, isSubmitLoading, isSubmitLoadingEmployee]
-  );
-  useEffect(() => {
-    if(typeUser === 'partner'){
-      items.push({
-        key: '3',
+    ];
+    if (typeUser === "partner") {
+      result.push({
+        key: "3",
         label: "Sổ địa chỉ",
-        children: <CollaboratorAddress id={id}/>,
-        disabled : !id
-      })
+        children: <CollaboratorAddress id={id} />,
+        disabled: !id,
+      });
     }
-  },[typeUser])
+    return result;
+  }, [id, typeUser, returnFunc]);
   return (
-    <div className="buy_group">
-      <div
-        style={{
-          background: "white",
-          width: "100%",
-          position: "sticky",
-          top: 0,
-          zIndex: 999,
-          borderBottom: "1px #F0F0F0 solid",
-          marginBottom: 5,
-        }}
-      >
-        <Button
-          icon={<PlusOutlined />}
-          onClick={() => onOpen()}
-          className="mb-2"
-          type="primary"
-        >
-          Thêm mới cộng tác viên
-        </Button>
-      </div>
-      <ConfigProvider
-        theme={{
-          components: {
-            Tree: {
-              /* here is your component tokens */
-            },
-          },
-        }}
-      >
-        {isLoading ? (
-          <LoadingTree />
-        ) : (
-          <Tree
-            showLine
-            switcherIcon={<DownOutlined />}
-            treeData={data}
-            blockNode
-            titleRender={(node) => {
-              const data: BuyGroupType | undefined = get(node, "data");
+    <Context.Provider activeKey={props.activeKey}>
+      <div className="buy_group">
+        <Flex vertical style={{ position: "relative", height: "inherit" }}>
+          <div className="header-buy-group">
+            <Button
+              icon={<PlusOutlined />}
+              onClick={() => onOpen(null,'partner')}
+              className="mb-2"
+              type="primary"
+            >
+              Thêm mới cộng tác viên
+            </Button>{" "}
+            &nbsp;&nbsp;&nbsp;
+            <SearchAnt onParamChange={onParamChange} />
+          </div>
+          <LoadTree
+            loading={isLoading}
+            current={paging.current}
+            pageSize={paging.pageSize}
+          >
+            <Tree
+              showLine
+              loadData={({ key, children }) =>
+                new Promise<void>((resolve) => {
+                  if (children) {
+                    return resolve();
+                  }
+                  setTimeout(() => {
+                    action(key);
+                    return resolve();
+                  }, 300);
+                })
+              }
+              className="tree-custom"
+              switcherIcon={<DownOutlined />}
+              treeData={data}
+              blockNode
+              style={{ flexGrow: 1 }}
+              selectable={false}
+              titleRender={(node: any) => (
+                <RenderItemTree node={node} onOpen={onOpen} />
+              )}
+            />
+          </LoadTree>
+
+          <div className="pagination-buy-group">
+            <Pagination
+              style={{ textAlign: "right" }}
+              showSizeChanger
+              pageSizeOptions={[10, 20, 50, 100, 150]}
+              {...paging}
+              showTotal={(total) => `Tổng cộng ${total}`}
+              onChange={(current, pageSize) => {
+                let page = pageSize !== paging.pageSize ? 1 : current;
+                onParamChange({ limit: pageSize, page });
+              }}
+            />
+          </div>
+          <Context.Consumer>
+            {({ drawerOpen, setDrawerOpen, clearContextDrawer }) => {
               return (
-                <Flex justify={"space-between"} align={"center"} wrap="nowrap">
-                  <Flex gap={5} align="center">
-                    <AvatarShortOrName
-                      src={get(data, "avatar")}
-                      name={get(data, "fullName")}
-                    />
-                    <Typography.Text
-                      strong
-                      onClick={() => onOpen(get(data, "_id"),get(data,'type'))}
-                    >
-                      {get(data, "code", "")} - {get(data, "fullName", "")}
-                    </Typography.Text>
-                  </Flex>
-                  <div style={{ width: "40vw" }}>
-                    <Row
-                      gutter={16}
-                      style={{ width: "100%", boxSizing: "border-box" }}
-                    >
-                      <Col span={12}>
-                        <Tag
-                          color={
-                            get(data, "type") === "partner"
-                              ? "#2db7f5"
-                              : "#108ee9"
-                          }
-                        >
-                          {get(data, "type") === "partner"
-                            ? "Cộng tác viên"
-                            : "Trình dược viên"}
-                        </Tag>
-                      </Col>
-                      <Col span={12}>
-                        <PhoneOutlined style={{ color: "#3481ff" }} />:{" "}
-                        <Typography.Text copyable>
-                          {get(data, "phoneNumber")}
-                        </Typography.Text>
-                      </Col>
-                    </Row>
-                  </div>
-                </Flex>
+                <Drawer
+                  title="Thông tin chiết khấu"
+                  placement="right"
+                  width={"40vw"}
+                  onClose={(e) => {
+                    setDrawerOpen(false);
+                    clearContextDrawer();
+                  }}
+                  mask={false}
+                  maskClosable={false}
+                  open={drawerOpen}
+                >
+                  <DrawerBuyGroup />
+                </Drawer>
               );
             }}
-          />
-        )}
-      </ConfigProvider>
-      <ModalAnt
-        destroyOnClose
-        width={1050}
-        open={open}
-        onCancel={onClose}
-        footer={null}
-        className="modalScroll"
-        centered
-      >
-        <h4>{`${!id ? "Tạo mới " : "Cập nhật"}`} cộng tác viên</h4>
-        <Tabs
-        destroyInactiveTabPane
-        items={items}>
-        </Tabs>
-      </ModalAnt>
-    </div>
+          </Context.Consumer>
+        </Flex>
+
+        <ModalAnt
+          destroyOnClose
+          width={1050}
+          open={open}
+          onCancel={onClose}
+          footer={null}
+          className="modalScroll"
+          centered
+        >
+          <Tabs destroyInactiveTabPane items={items}></Tabs>
+        </ModalAnt>
+      </div>
+    </Context.Provider>
   );
 }

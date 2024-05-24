@@ -5,15 +5,27 @@ import {
 import { useFetchState } from "~/utils/helpers";
 import { useGetRole } from "../auth/auth.hook";
 import apis from "./collaborator.api";
+import { useAddProductEmployee, useGetEmployee, useRemoveProductEmployee, useUpdateProductEmployee } from "../employee/employee.hook";
+import { useAddProductCollaborator, useGetCollaborator, useRemoveProductCollaborator, useUpdateProductCollaborator } from "./collaborator.hook";
   export type GlobalCollaboratorProduct = {
     canAdd : boolean,
     canUpdate : boolean,
     canDelete : boolean,
+    target :  'employee' | 'partner',
+    useAdd:()=>void,
+    useUpdate:()=>void,
+    useRemove:()=>void,
+    useGetTarget:(param?:any)=>void,
   };
   const CollaboratorProduct = createContext<GlobalCollaboratorProduct>({
     canAdd : false,
     canUpdate : false,
     canDelete : false,
+    target :  'employee',
+    useAdd:()=>{},
+    useUpdate:()=>{},
+    useRemove:()=>{},
+    useGetTarget:(param?:any)=>{},
   });
   
   type CollaboratorProductProviderProps = {
@@ -21,6 +33,22 @@ import apis from "./collaborator.api";
     id : string;
     target : 'employee' | 'partner'
   };
+  const hookAdd = {
+    employee : useAddProductEmployee,
+    partner: useAddProductCollaborator
+  }
+  const hookUpdate = {
+    employee : useUpdateProductEmployee,
+    partner: useUpdateProductCollaborator
+  }
+  const hookRemove = {
+    employee : useRemoveProductEmployee,
+    partner: useRemoveProductCollaborator
+  }
+  const hookGetTarget = {
+    employee : useGetEmployee,
+    partner: useGetCollaborator
+  }
   
   export function CollaboratorProductProvider({
     children,
@@ -36,6 +64,11 @@ import apis from "./collaborator.api";
             canAdd,
             canUpdate,
             canDelete,
+            target,
+            useAdd : hookAdd[target],
+            useUpdate: hookUpdate[target],
+            useRemove: hookRemove[target],
+            useGetTarget: hookGetTarget[target],
         }}
       >
         {children}

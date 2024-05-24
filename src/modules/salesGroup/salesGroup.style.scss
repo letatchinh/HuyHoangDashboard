@@ -83,3 +83,38 @@
 .sale-tree__flex--container .ant-flex{
    align-items: center;
 }
+.buy_group{
+   height:calc(100vh - 1.5rem - 28px - 140px);
+   min-height: calc(100vh - 1.5rem - 28px - 140px);
+   .tree-custom{
+      flex-grow: 1;
+   }
+   .pagination-buy-group{
+      background: #f4f4f4;
+      width: 100%;
+      position: sticky;
+      bottom: 0;
+      padding: 5px 0;
+      z-index: 999;
+      border-bottom: 1px #F0F0F0 solid;
+      margin-bottom: 0;
+      padding-right: 20px;
+   }
+   .header-buy-group{
+      background: white;
+      width: 100%;
+      position: sticky;
+      top: 0;
+      z-index: 999;
+      border-bottom: 1px #F0F0F0 solid;
+      margin-bottom: 5px;
+   }
+   .active-by-hover {
+      opacity: 0;
+      display: flex;
+      align-items: center;
+   }
+   .item-tree :hover .active-by-hover {
+      opacity: 1;
+   }
+}

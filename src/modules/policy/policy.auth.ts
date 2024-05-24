@@ -93,6 +93,8 @@ const borrowProduct = 'borrowProduct';
 const statusBorrowProduct = 'statusBorrowProduct';
 const reportProductSupplier = 'reportProductSupplier';
 const reportOverview = 'reportOverview';
+const requestChangeGroupCTV = 'requestChangeGroupCTV';
+const requestChangeGroup = 'requestChangeGroup';
 
 
 //------RESOURCES --------
@@ -193,6 +195,8 @@ const RESOURCES = [
   statusBorrowProduct,
   reportProductSupplier,
   reportOverview,
+  requestChangeGroup,
+  requestChangeGroupCTV,
 ];
 
 //ACTIONS
