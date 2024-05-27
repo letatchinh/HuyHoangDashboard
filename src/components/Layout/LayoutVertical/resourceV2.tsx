@@ -219,6 +219,14 @@ export const resource: ItemType[] =[
       },
     ],
   },
+  // Báo cáo tổng quan
+  {
+    label: "Báo cáo tổng quan",
+    icon: <i className="fa-solid fa-chart-pie"></i>,
+    path: PATH_APP.reportOverview.root,
+    key: PATH_APP.reportOverview.root,
+    // permission: [POLICIES.READ_SUPPLIER],//
+  },
 
   // Nhà cung cấp//
   {
@@ -253,6 +261,14 @@ export const resource: ItemType[] =[
         key: PATH_APP.vouchers.supplier,
         permission: [POLICIES.READ_VOUCHERSUPPLIER],//
       },
+
+      // {
+      //   label: "Báo cáo",
+      //   // icon: <MoneyCollectOutlined />,
+      //   path: PATH_APP.reportProductSupplier.root,
+      //   key: PATH_APP.reportProductSupplier.root,
+      //   // permission: [POLICIES.READ_VOUCHERSUPPLIER],//
+      // },
     ],
   },
 

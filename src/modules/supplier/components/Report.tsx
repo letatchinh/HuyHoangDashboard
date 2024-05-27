@@ -108,7 +108,7 @@ export default function Report({ id }: propsType): React.JSX.Element {
 
   const Items : TabsProps['items'] = [
     {
-        label : "Thông kê doanh thu",
+        label : "Thống kê doanh thu",
         key : '0',
         children : <SaleReport query={queryGetBills} searchBy={searchBy} searchByVi={searchByVi} />,
     },

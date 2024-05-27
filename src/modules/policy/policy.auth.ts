@@ -91,6 +91,8 @@ const voucherBillPartner = 'voucherBillPartner';
 const voucherPartner = 'voucherPartner';
 const borrowProduct = 'borrowProduct';
 const statusBorrowProduct = 'statusBorrowProduct';
+const reportProductSupplier = 'reportProductSupplier';
+const reportOverview = 'reportOverview';
 const requestChangeGroupCTV = 'requestChangeGroupCTV';
 const requestChangeGroup = 'requestChangeGroup';
 
@@ -191,6 +193,8 @@ const RESOURCES = [
   voucherPartner,
   borrowProduct,
   statusBorrowProduct,
+  reportProductSupplier,
+  reportOverview,
   requestChangeGroup,
   requestChangeGroupCTV,
 ];
