@@ -79,16 +79,18 @@ export default function BillTable(props: propsType): React.JSX.Element {
     },
   ];
   return (
-    <WhiteBox>
-      <TableAnt
-        dataSource={data || []}
-        loading={isLoading}
-        rowKey={(rc) => rc?._id}
-        columns={columns}
-        size="small"
-        pagination={pagination}
-        stickyTop
-      />
-    </WhiteBox>
+    <div style={{ marginTop: 20 }}>
+      <WhiteBox>
+        <TableAnt
+          dataSource={data || []}
+          loading={isLoading}
+          rowKey={(rc) => rc?._id}
+          columns={columns}
+          size="small"
+          pagination={pagination}
+          stickyTop
+        />
+      </WhiteBox>
+    </div>
   );
 }

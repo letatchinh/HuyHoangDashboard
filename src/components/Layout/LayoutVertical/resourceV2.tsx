@@ -378,6 +378,12 @@ export const resource: ItemType[] =[
         permission: [POLICIES.READ_REPORTSALARYPARTNER],
       },
       {
+        label: "Báo cáo doanh thu cộng tác viên",
+        path: PATH_APP.reportIndividualCollaborator.root,
+        key: PATH_APP.reportIndividualCollaborator.root,
+        // permission: [POLICIES.READ_REPORTSALARYPARTNER],
+      },
+      {
         label: "Phiếu lương",
         path: PATH_APP.vouchers.salary,
         key: PATH_APP.vouchers.salary,

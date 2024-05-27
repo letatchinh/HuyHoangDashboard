@@ -3,6 +3,7 @@ import React from "react";
 import { formatter } from "~/utils/helpers";
 import WhiteBox from "../WhiteBox";
 import TableAnt from "~/components/Antd/TableAnt";
+import { v4 } from "uuid";
 type propsType = {
   data?: any;
   pagination?: any;
@@ -22,47 +23,63 @@ export default function ProductQuantityTable(
     //   },
     // },
     {
+      title: "Cộng tác viên",
+      dataIndex: "seller",
+      key: "seller",
+      // width: 280,
+      // render: (record) => {
+      //   return record?.name;
+      // },
+    },
+    {
       title: "Mã thuốc",
-      dataIndex: "variants",
-      key: "variants",
-      width: 120,
-      render: (record) => {
-        return record?.name;
-      },
+      dataIndex: "code",
+      key: "code",
+      // width: 120,
+      // render: (record) => {
+      //   return record?.name;
+      // },
     },
     {
       title: "Tên thuốc",
-      dataIndex: "product",
-      key: "product",
-      width: 280,
-      render: (record) => {
-        return record?.name;
-      },
+      dataIndex: "name",
+      key: "name",
+      // width: 280,
+      // render: (record) => {
+      //   return record?.name;
+      // },
     },
+    // {
+    //   title: "Đơn vị cơ bản",
+    //   dataIndex: "variant",
+    //   key: "variant",
+    //   // width: 150,
+    //   // render(variants, record, index) {
+    //   //   return (
+    //   //     <div>
+    //   //       {/* {variants?.map((item: any) => get(item, "unit", "") + ", ")} */}
+    //   //     </div>
+    //   //   );
+    //   // },
+    // },
     {
-      title: "Đơn vị cơ bản",
-      dataIndex: "variants",
-      key: "variants",
+      title: "Số lượng",
+      dataIndex: "quantity",
+      key: "quantity",
       width: 150,
-      render(variants, record, index) {
+      align: "center" as any,
+       render(variants, record, index) {
         return (
           <div>
-            {/* {variants?.map((item: any) => get(item, "unit", "") + ", ")} */}
+            {record?.quantity + " (" + record?.variant + ")"}
           </div>
         );
       },
     },
     {
-      title: "Số lượng",
-      dataIndex: "totalQuantity",
-      key: "totalQuantity",
-      width: 150,
-      align: "center" as any,
-    },
-    {
       title: "Thành tiền",
-      dataIndex: "totalAmount",
-      key: "totalAmount",
+      dataIndex: "totalReport",
+      key: "totalReport",
       width: 180,
       render(record) {
         return formatter(record);
@@ -72,18 +89,18 @@ export default function ProductQuantityTable(
       title: "Nhà cung cấp",
       dataIndex: "supplier",
       key: "supplier",
-      width: 250,
-      render: (record) => {
-        return record?.name;
-      },
+      // width: 250,
+      // render: (record) => {
+      //   return record?.name;
+      // },
     },
   ];
   return (
     <WhiteBox>
       <TableAnt
-        dataSource={data || []}
+        dataSource={data ?? []}
         loading={isLoading}
-        rowKey={(rc) => rc?._id}
+        rowKey={(rc) => [rc?._id,v4()].join('.')}
         columns={columns}
         size="small"
         pagination={pagination}

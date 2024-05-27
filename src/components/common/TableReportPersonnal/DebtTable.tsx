@@ -25,7 +25,7 @@ export default function DebtTable(props:propsType) : React.JSX.Element {
             dataIndex: "createdAt",
             key: "createdAt",
             width: 120,
-          },
+        },
         {
           title: "Giá trị đơn hàng",
           dataIndex: "totalPrice",

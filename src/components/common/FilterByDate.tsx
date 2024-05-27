@@ -3,6 +3,8 @@ import dayjs from "dayjs";
 import { map } from "lodash";
 import React, { useEffect, useMemo, useState } from "react";
 import { FILTER_BY_VI } from "~/constants/defaultValue";
+import SelectCollaborator from "~/modules/collaborator/components/SelectSearch";
+import { datatypeReportVi } from "~/modules/reportIndividualCollaborator/reportIndividualCollaborator.modal";
 import { filterSelectWithLabel } from "~/utils/helpers";
 const { RangePicker } = DatePicker;
 const dateFormat = "YYYY-MM-DD";
@@ -34,8 +36,18 @@ export default function FilterByDate(props: propsType): React.JSX.Element {
     [FILTER_BY_VI]
   );
 
+  const options = useMemo(
+    () =>
+      Object.entries(datatypeReportVi)?.map((item: any) => ({
+        label: item[1],
+        value: item[0],
+      })),
+    [datatypeReportVi]
+  );
+
   return (
-    <Col>
+    // <Col>
+    <>
       <Row>
         <Col span={8}>
           <Space>
@@ -75,6 +87,35 @@ export default function FilterByDate(props: propsType): React.JSX.Element {
           ></Select>
         </Col>
       </Row>
-    </Col>
+      <Row>
+        <Col>
+          <SelectCollaborator
+            value={query?.sellerId ? query?.sellerId?.split(",") : []}
+            onChange={(value) => onParamChange({ sellerId: value || null })}
+            style={{ width: 200 }}
+          />
+        </Col>
+        <Col>
+          <Select
+            loading={isLoading}
+            defaultValue={"reportProduct"}
+            options={options}
+            allowClear
+            style={{ minWidth: 200, marginRight: "10%" }}
+            popupMatchSelectWidth={false}
+            filterOption={filterSelectWithLabel}
+            onChange={(value) => onParamChange({ datatype: value || null })}
+          ></Select>
+        </Col>
+        <Col>
+          {/* <SelectProductBySupplier
+            value={query?.productId ? query?.productId?.split(",") : []}
+            onChange={(value) => onParamChange({ productId: value || null })}
+            style={{ width: 200 }}
+            mode="multiple"
+          /> */}
+        </Col>
+      </Row>
+    </>
   );
 }
