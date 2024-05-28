@@ -12,6 +12,9 @@ import {
   useUpdateReportIndividualCollaboratorParams,
 } from "../reportIndividualCollaborator.hook";
 import { datatypeReportVi } from "../reportIndividualCollaborator.modal";
+import Breadcrumb from "~/components/common/Breadcrumb";
+import DebtTable from "~/components/common/TableReportPersonnal/DebtTable";
+import BillTable from "~/components/common/TableReportPersonnal/BillTable";
 type propsType = {};
 
 const rangerTimeDef = "WEEKLY";
@@ -19,10 +22,10 @@ const rangerTimeDef = "WEEKLY";
 export default function ReportIndividualCollaborator(
   props: Partial<propsType>
 ): React.JSX.Element {
+
   const [query] = useReportIndividualCollaboratorQueryParams();
 
-  const [, {  onParamChange }] =
-    useUpdateReportIndividualCollaboratorParams(query);
+  const [, { onParamChange }] = useUpdateReportIndividualCollaboratorParams(query);
   const [date, setDate] = useState<any[]>([
     dayjs().startOf("month"),
     dayjs().endOf("month"),
@@ -30,12 +33,9 @@ export default function ReportIndividualCollaborator(
   const paging = useReportIndividualCollaboratorPaging();
 
   const [data, isLoading] = useGetReportIndividualCollaborators(query);
-  useEffect(() => {
-    console.log('data',data)
-  }, [data]);
+
   useEffect(() => {
     onParamChange({
-      // spaceType: spaceType,
       datatype: "reportProduct",
       rangerTime: date.map((time) => time.format("YYYY-MM-DD")).join(","),
       rangerType: rangerTimeDef,
@@ -49,59 +49,70 @@ export default function ReportIndividualCollaborator(
     } else setDate([dayjs().startOf("month"), dayjs().endOf("month")]);
   }, [query.rangerTime]);
 
-  const options = useMemo(
-    () =>
-      Object.entries(datatypeReportVi)?.map((item: any) => ({
-        label: item[1],
-        value: item[0],
-      })),
-    [datatypeReportVi]
-  );
+  const renderTable = () => {
+    switch (true) {
+      case query?.datatype?.includes("Product"):
+        return (
+          <ProductQuantityTable
+            query={query}
+            data={data}
+            pagination={{
+              ...paging,
+              onChange(page: number, limit: number) {
+                onParamChange({ page, limit });
+              },
+              showSizeChanger: true,
+              showTotal: (total: any) => `Tổng cộng: ${total} `,
+            }}
+            isLoading={isLoading}
+          />
+        );
+      case query?.datatype?.includes("Bill"):
+        return (
+          <BillTable
+            query={query}
+            data={data}
+            pagination={{
+              ...paging,
+              onChange({ page, pageSize }: any) {
+                onParamChange({ page, limit: pageSize });
+              },
+              showSizeChanger: true,
+              showTotal: (total: any) => `Tổng cộng: ${total} `,
+            }}
+            isLoading={isLoading}
+          />
+        );
+      default:
+        return (
+          <DebtTable
+            data={data}
+            pagination={{
+              ...paging,
+              onChange(page: number, limit: number) {
+                onParamChange({ page, limit });
+              },
+              showSizeChanger: true,
+              showTotal: (total: any) => `Tổng cộng: ${total} `,
+            }}
+            isLoading={isLoading}
+          />
+        );
+    }
+  };
 
   return (
     <div style={{ display: "block" }}>
-      {/* <Row style={{ marginBottom: 20 }}> */}
-        <FilterByDate onParamChange={onParamChange} query={query} isLoading={isLoading} />
-        
-      {/* </Row> */}
-      <Row>
-      <Col>
-          <Select
-            loading={isLoading}
-            defaultValue={"reportProduct"}
-            options={options}
-            allowClear
-            style={{ minWidth: 200, marginRight: "10%" }}
-            popupMatchSelectWidth={false}
-            filterOption={filterSelectWithLabel}
-            onChange={(value) => onParamChange({ datatype: value || null })}
-          ></Select>
-        </Col>
-      </Row>
-      {/* <BillTable
-        data={data}
-        pagination={{
-          ...paging,
-          onChange({ page, pageSize }: any) {
-            onParamChange({ page, limit: pageSize });
-          },
-          showSizeChanger: true,
-          showTotal: (total: any) => `Tổng cộng: ${total} `,
-        }}
+      <Breadcrumb title={"Báo cáo doanh thu cá nhân cộng tác viên"} />
+      <FilterByDate
+        onParamChange={onParamChange}
+        query={query}
         isLoading={isLoading}
-      /> */}
-      <ProductQuantityTable
-        data={data}
-        pagination={{
-          ...paging,
-          onChange( page:number, limit:number) {
-            onParamChange({ page, limit });
-          },
-          showSizeChanger: true,
-          showTotal: (total: any) => `Tổng cộng: ${total} `,
-        }}
-        isLoading={isLoading}
+        showSeller={false}
+        showCollaborator={true}
+        showProduct={true}
       />
+      {renderTable()}
     </div>
   );
 }
