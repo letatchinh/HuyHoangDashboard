@@ -176,7 +176,7 @@ export default function LogisticForm({
       };
       onCountFee(newSubmitData);
     } catch (error: any) {
-      onNotify?.error(error?.message ?? "Có lỗi xảy ra khi tính phí");
+      onNotify?.error("Có lỗi xảy ra khi tính phí");
     }
   };
 
