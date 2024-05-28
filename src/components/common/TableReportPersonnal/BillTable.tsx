@@ -7,62 +7,48 @@ import POLICIES from "~/modules/policy/policy.auth";
 import { useMatchPolicy } from "~/modules/policy/policy.hook";
 import { formatter } from "~/utils/helpers";
 import WhiteBox from "../WhiteBox";
+import { v4 } from "uuid";
 type propsType = {
+  query?: any;
   data?: any;
   pagination?: any;
   isLoading?: boolean;
 };
 export default function BillTable(props: propsType): React.JSX.Element {
-  const { data, pagination, isLoading } = props;
+  const { query, data, pagination, isLoading } = props;
   const canReadBill = useMatchPolicy(POLICIES.READ_BILL);
 
   const columns: ColumnsType = [
-    // {
-    //   title: "STT",
-    //   key: "index",
-    //   width: 50,
-    //   render: (text, record, index) => {
-    //     return (+newMemoOfDetail.page - 1) * newMemoOfDetail.limit + index + 1;
-    //   },
-    // },
-    {
-        title: "Chu kì",
-        dataIndex: "createdAt",
-        key: "createdAt",
-        width: 120,
-        render: (record) => {
-          return moment(record).format("DD/MM/YYYY");
-        },
-      },
+    ...(query?.datatype?.includes("reportRangerType")
+      ? [
+          {
+            title: "Chu kì",
+            dataIndex: "timeSeries",
+            key: "timeSeries",
+            width: 120,
+            render: (record: any) => {
+              return moment(record).format("DD/MM/YYYY");
+            },
+          },
+        ]
+      : []),
+
     {
       title: "Mã người thực hiện",
-      dataIndex: "codeSequence",
-      key: "codeSequence",
+      dataIndex: "sellerCode",
+      key: "sellerCode",
       width: 120,
-      render(codeSequence) {
-        return canReadBill ? (
-          <Link
-            className="link_"
-            to={`/bill?keyword=${codeSequence}`}
-            target={"_blank"}
-          >
-            {codeSequence}
-          </Link>
-        ) : (
-          codeSequence
-        );
-      },
     },
     {
-        title: "Tên người thực hiện",
-        dataIndex: "totalPrice",
-        key: "totalPrice",
-        width: 200,
-      },
+      title: "Tên người thực hiện",
+      dataIndex: "seller",
+      key: "seller",
+      width: 200,
+    },
     {
       title: "Giá trị đơn hàng",
-      dataIndex: "totalPrice",
-      key: "totalPrice",
+      dataIndex: "totalReport",
+      key: "totalReport",
       width: 200,
       render(value) {
         return formatter(value);
@@ -70,8 +56,8 @@ export default function BillTable(props: propsType): React.JSX.Element {
     },
     {
       title: "Số lượng đơn hàng",
-      dataIndex: "pair",
-      key: "pair",
+      dataIndex: "quantity",
+      key: "quantity",
       width: 120,
       render(value) {
         return formatter(value);
@@ -84,7 +70,7 @@ export default function BillTable(props: propsType): React.JSX.Element {
         <TableAnt
           dataSource={data || []}
           loading={isLoading}
-          rowKey={(rc) => rc?._id}
+          rowKey={(rc) => rc?._id+v4()}
           columns={columns}
           size="small"
           pagination={pagination}
