@@ -96,18 +96,26 @@ export const useReportIndividualEmployeeSellerQueryParams = () => {
   const query = useQueryParams();
   const limit = query.get("limit") || 10;
   const page = query.get("page") || 1;
-  const keyword = query.get("keyword");
-  const createSuccess = useSelector(createSuccessSelector);
-  const deleteSuccess = useSelector(deleteSuccessSelector);
+  // const keyword = query.get("keyword");
+  const sellerId = query.get("sellerId");
+  const rangerTime = query.get("rangerTime");
+  const rangerType = query.get("rangerType");
+  const productId = query.get("productId");
+  const datatype = query.get("datatype");
+
   return useMemo(() => {
     const queryParams = {
-      page,
-      limit,
-      keyword,
+      page:Number(page),
+      limit:Number(limit),
+      sellerId,
+      rangerTime,
+      rangerType,
+      productId,
+      datatype,
     };
     return [queryParams];
     //eslint-disable-next-line
-  }, [page, limit, keyword, createSuccess, deleteSuccess]);
+  }, [page, limit, sellerId, rangerTime, rangerType, productId, datatype]);
 };
 
 export const useUpdateReportIndividualEmployeeSellerParams = (
