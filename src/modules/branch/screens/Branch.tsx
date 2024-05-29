@@ -1,66 +1,89 @@
+import { Button, Tag } from "antd";
 import { ColumnsType } from "antd/es/table/InternalTable";
 import TableAnt from "~/components/Antd/TableAnt";
 import Breadcrumb from "~/components/common/Breadcrumb";
+import SelectSearch from "~/components/common/SelectSearch/SelectSearch";
 import WhiteBox from "~/components/common/WhiteBox";
 import useTranslate from "~/lib/translation";
 import { concatAddress } from "~/utils/helpers";
-import {
-  useBranchPaging, useBranchQueryParams, useGetBranches, useUpdateBranchParams
-} from "../branch.hook";
-import SelectSearch from "~/components/common/SelectSearch/SelectSearch";
 import { useChangeDocumentTitle } from "~/utils/hook";
-const columns : ColumnsType = [
-  {
-    title : "Tên chi nhánh",
-    dataIndex : "name",
-    key : "name",
-  },
-  // {
-  //   title : "Email",
-  //   dataIndex : "email",
-  //   key : "email",
-  // },
-  {
-    title : "Địa chỉ",
-    dataIndex : "address",
-    key : "address",
-    render(value, record, index) {
-      return concatAddress(value)
-    },
-  }
-]
-export default function Branch() {
+import StatusTagWarehouse from "../components/StatsusTagWarehouse";
+import useBranchContext, { BranchProviderContext } from "../store/BranchContext";
+
+export default function BranchScreen() {
+  useChangeDocumentTitle("Danh sách chi nhánh");
+  const {closeForm, openForm,openFormApiKey, branches, paging, id, isSubmitLoading, isLoading, onParamChange} = useBranchContext();
   const { t }: any = useTranslate();
-  const [query] = useBranchQueryParams();
-  // const [keyword, { setKeyword, onParamChange }] = useUpdateBranchParams(query);
-  const [data, isLoading] = useGetBranches(query);
-  const paging = useBranchPaging(); 
-  useChangeDocumentTitle("Danh sách chi nhánh")
+
+  const columns : ColumnsType = [
+    {
+      title : "Tên chi nhánh",
+      dataIndex : "name",
+      key: "name",
+      width: 300,
+    },
+    {
+      title : "Địa chỉ",
+      dataIndex : "address",
+      key: "address",
+      width: 300,
+      render(value, record, index) {
+        return concatAddress(value)
+      },
+    },
+    {
+      title : "Trạng thái liên kết kho",
+      dataIndex : "statusLinkWarehouse",
+      key: "statusLinkWarehouse",
+      align: "center",
+      width: 180,
+      render: (value, record) =>  <StatusTagWarehouse status={record?.statusLinkWarehouse}/>,
+    },
+    {
+      title : "Các kho đã liên kết",
+      // dataIndex : "listWarehouse",
+      key: "listWarehouse",
+      align: "center",
+      width: 180,
+      render: (value, record) =>  (record?.listWarehouse || [])?.map((item: any)=> <Tag>{item?.name?.vi}</Tag>)
+    },
+    {
+      title : "Mã liên kết",
+      key: "id",
+      align: "center",
+      width: 150,
+      render(value, record, index) {
+        return <Button type="primary" onClick={()=>  openFormApiKey({branchId: record?._id})}>Mã liên kết kho</Button>
+      },
+    },
+  ];
+
   return (
-    <div>
+      <>
       <Breadcrumb title={t("Danh sách chi nhánh")} />
       <WhiteBox>
         <SelectSearch
-        showSelect = {false}
-        isShowButtonAdd
+          showSelect = {false}
+          isShowButtonAdd
+          handleOnClickButton = {openForm}
         />
         <TableAnt
-          dataSource={data} 
+          dataSource={branches} 
           loading={isLoading}
           rowKey={rc => rc?._id}
           columns={columns}
           size='small'
-          // pagination={{
-          //   ...paging,
-          //   onChange(page, pageSize) {
-          //     // onParamChange({ page, limit: pageSize });
-          //   },
-          //   showTotal: (total) => `Tổng cộng: ${total}`,
-          // }}
-          pagination={false}
+          scroll={{ x: 300 }}
+          pagination={{
+            ...paging,
+            onChange(page, pageSize) {
+              onParamChange({ page, limit: pageSize });
+            },
+            showTotal: (total) => `Tổng cộng: ${total}`,
+          }}
           stickyTop
         />
       </WhiteBox>
-    </div>
+      </>
   );
 }

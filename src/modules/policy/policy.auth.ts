@@ -93,6 +93,7 @@ const borrowProduct = 'borrowProduct';
 const statusBorrowProduct = 'statusBorrowProduct';
 const requestChangeGroupCTV = 'requestChangeGroupCTV';
 const requestChangeGroup = 'requestChangeGroup';
+const warehouseLink = 'warehouseLink';
 
 
 //------RESOURCES --------
@@ -193,6 +194,7 @@ const RESOURCES = [
   statusBorrowProduct,
   requestChangeGroup,
   requestChangeGroupCTV,
+  warehouseLink,
 ];
 
 //ACTIONS
@@ -344,6 +346,10 @@ const RESOURCE = (): ResourceType => {
     voucherBillPartner,
   ];
 
+  const GROUP_SETTING: string[] = [
+    warehouseLink,
+  ];
+
   return {
     GROUP_USER,
     GROUP_EMPLOYEE,
@@ -369,6 +375,7 @@ const RESOURCE = (): ResourceType => {
     PARTNER,
     VOUCHER_SALARY_PARTNER,
     VOUCHER_BILL_PARTNER,
+    GROUP_SETTING,
   };
 };
 
