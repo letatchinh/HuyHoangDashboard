@@ -26,9 +26,6 @@ export default function BillTable(props: propsType): React.JSX.Element {
             dataIndex: "timeSeries",
             key: "timeSeries",
             width: 120,
-            render: (record: any) => {
-              return moment(record).format("DD/MM/YYYY");
-            },
           },
         ]
       : []),

@@ -23,9 +23,6 @@ export default function ProductQuantityTable(
           dataIndex: "timeSeries",
           key: "timeSeries",
           width: 120,
-          render: (record: any) => {
-            return moment(record).format("DD/MM/YYYY");
-          },
         },
       ]
     : []),

@@ -19,9 +19,6 @@ export default function DebtTable(props: propsType): React.JSX.Element {
       dataIndex: "timeSeries",
       key: "timeSeries",
       width: 120,
-      render: (record) => {
-        return moment(record).format("DD/MM/YYYY");
-      },
     },
     {
       title: "Mã người đảm nhiệm",
