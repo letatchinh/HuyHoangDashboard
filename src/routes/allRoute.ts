@@ -49,6 +49,8 @@ import ReportSalaryPartnerPage from "~/pages/Dashboard/ReportSalaryPartner";
 import ProductBorrow from "~/modules/product/components/ProductBorrow";
 import CreateBill from "~/modules/sale/bill/screens/CreateBill";
 import SaleScreen from "~/modules/sale/bill/components/createBillScreen/SaleScreen";
+import Warehouse from "~/modules/warehouse/index";
+import SelectDefaultWarehouse from "~/modules/warehouse/components/SelectDefaultWarehouse";
 export const mainRoutes :PathRouteProps[] = [
   { path: PATH_APP.main.root, Component: Homepage },
 
@@ -166,8 +168,10 @@ export const mainRoutes :PathRouteProps[] = [
   // Cộng tác viên
   { path: PATH_APP.collaborator.root, Component: CollaboratorPage },
   { path: PATH_APP.reportSalaryPartner.root, Component: ReportSalaryPartnerPage},
-  // Thôgng báo
+  // Thông báo
   { path: PATH_APP.myNotification.root, Component: NotificationPage},
+  // Kho 
+  { path: PATH_APP.warehouse.setting, Component: SelectDefaultWarehouse },
   
   { path: '/', Component: Homepage },
 ]

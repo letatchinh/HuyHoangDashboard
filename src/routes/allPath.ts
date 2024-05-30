@@ -171,5 +171,9 @@ export const PATH_APP = {
     root: path(ROOTS.app, "/reportSalaryPartner")
   },
 
+  warehouse:{
+    setting: path(ROOTS.app, "/warehouse-setting")
+  },
+
 
 };
