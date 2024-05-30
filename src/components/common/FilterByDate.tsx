@@ -1,4 +1,13 @@
-import { Col, DatePicker, Divider, Row, Select, Space, Typography } from "antd";
+import {
+  Col,
+  DatePicker,
+  Divider,
+  Form,
+  Row,
+  Select,
+  Space,
+  Typography,
+} from "antd";
 import dayjs from "dayjs";
 import { map } from "lodash";
 import React, { CSSProperties, useEffect, useMemo, useState } from "react";
@@ -54,7 +63,7 @@ export default function FilterByDate(props: propsType): React.JSX.Element {
       setDate(map(rangerTime.split(","), (e: string) => dayjs(e)));
     } else setDate([dayjs().startOf("month"), dayjs().endOf("month")]);
   }, [query.rangerTime]);
-
+  const [form] = Form.useForm();
   const optionsDate = useMemo(
     () =>
       Object.entries(FILTER_BY_VI)?.map((item: any) => ({
@@ -148,11 +157,17 @@ export default function FilterByDate(props: propsType): React.JSX.Element {
         )}
         {query?.datatype?.includes("Product") && showProduct && (
           <Col span={8}>
-            <SelectProductBySupplier
-              value={query?.productId ? query?.productId?.split(",") : []}
-              onChange={(value) => onParamChange({ productId: value || null })}
-              style={{ width: 200 }}
-            />
+            <Form form={form} initialValues={{ productId: query?.productId }}>
+              <SelectProductBySupplier
+                validateFirst={false}
+                form={form}
+                style={{ width: 200 }}
+                showIcon={false}
+                size={"middle"}
+                defaultValue={query?.productId || null}
+                onChange={(value) => onParamChange({ productId: value })}
+              />
+            </Form>
           </Col>
         )}
       </Row>

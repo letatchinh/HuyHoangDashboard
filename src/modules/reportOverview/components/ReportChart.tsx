@@ -228,12 +228,18 @@ export default function ReportChart(
           />
         </Col>
         <Col span={4}>
-          <SelectProductBySupplier
-            value={query?.productId ? query?.productId?.split(",") : []}
-            onChange={(value) => onParamChange({ productId: value || null })}
-            style={{ width: 200 }}
-            mode="multiple"
-          />
+        <Form form={form} initialValues={{ productId: query?.productId }}>
+              <SelectProductBySupplier
+                validateFirst={false}
+                form={form}
+                style={{ width: 200 }}
+                showIcon={false}
+                size={"middle"}
+                defaultValue={query?.productId || null}
+                onChange={(value) => onParamChange({ productId: value })}
+                mode="multiple"
+              />
+            </Form>
         </Col>
         <Col span={4}>
           <SelectArea
