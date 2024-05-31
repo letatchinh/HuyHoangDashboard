@@ -6,44 +6,34 @@ import WhiteBox from "~/components/common/WhiteBox";
 import { formatter } from "~/utils/helpers";
 import { useGetReportGroupCollaborators } from "../reportGroupCollaborator.hook";
 import { v4 } from "uuid";
+import type { TableColumnsType } from "antd";
 type propsType = {
   query?: any;
   pagination?: any;
 };
-
-// interface DataType {
-//   // key: React.ReactNode;
-//   fullName?: string;
-//   code?: string;
-//     childrens?:        DataType[];
-//     parentName:       string;
-//     productId:        string;
-//     productName:      string;
-//     supplierId:       string;
-//     productCode:      string;
-//     variant:          string;
-//     supplier:         string;
-//     productGroupName: string;
-//     supplierCode:     string;
-//     quantity:         number;
-//     total:            number;
-//     timeseries:       string;
-// }
+interface Children {
+  _id: string;
+  code: string;
+  fullName: string;
+  billTotalPrice: number;
+  count: number;
+  debt: number;
+}
+interface ReportProductType {
+  _id: string;
+  fullName: string;
+  code: string;
+  childrens: Children[];
+  billTotalPrice: number;
+  count: number;
+  debt: number;
+  timeseries: string;
+}
 export default function BillAndDebtTable(props: propsType): React.JSX.Element {
   const { query, pagination} = props;
   const [data, isLoading] = useGetReportGroupCollaborators(query);
-  // const rowSelection: TableRowSelection<DataType> = {
-  //   onChange: (selectedRowKeys, selectedRows) => {
-  //     console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
-  //   },
-  //   onSelect: (record, selected, selectedRows) => {
-  //     console.log(record, selected, selectedRows);
-  //   },
-  //   onSelectAll: (selected, selectedRows, changeRows) => {
-  //     console.log(selected, selectedRows, changeRows);
-  //   },
-  // };
-  const columns: ColumnsType = [
+
+  const columns: TableColumnsType<ReportProductType> = [
     ...(query?.getByRanger === true
       ? [
           {
@@ -95,17 +85,69 @@ export default function BillAndDebtTable(props: propsType): React.JSX.Element {
         },
       },
   ];
+  const columnsList: TableColumnsType<Children> = [
+    {
+      title: "Mã người quản lý",
+      dataIndex: "code",
+      key: "code",
+      width: 120,
+    },
+    {
+      title: "Người quản lý",
+      dataIndex: "fullName",
+      key: "fullName",
+      width: 200,
+    },
+    {
+      title: "Doanh số",
+      dataIndex: "billTotalPrice",
+      key: "billTotalPrice",
+      width: 200,
+      render(value) {
+        return formatter(value);
+      },
+    },
+    {
+      title: "Số lượng đơn hàng",
+      dataIndex: "count",
+      key: "count",
+      width: 120,
+      render(value) {
+        return formatter(value);
+      },
+    },
+    {
+        title: "Công nợ",
+        dataIndex: "debt",
+        key: "debt",
+        width: 200,
+        render(value) {
+          return formatter(value);
+        },
+      },
+  ]
+  const expandable = {
+    expandedRowRender: (record: any) => <TableAnt
+      columns={columnsList}
+      dataSource={record.childrens}
+      pagination={false}
+      rowKey={record => record._id}
+    />,
+    rowExpandable: (record: any) => record.childrens && record.childrens.length > 0,
+  };
+  const dataSource : ReportProductType[] = data ?? [];
   return (
     <div style={{ marginTop: 20 }}>
       <WhiteBox>
         <TableAnt
-          dataSource={data || []}
+          dataSource={dataSource}
           loading={isLoading}
-          rowKey={(rc) => [rc?._id,v4()].join('.')}
+          rowKey={(rc) => rc?._id}
           columns={columns}
           size="small"
           pagination={pagination}
           stickyTop
+          expandable={expandable}
         />
       </WhiteBox>
     </div>
