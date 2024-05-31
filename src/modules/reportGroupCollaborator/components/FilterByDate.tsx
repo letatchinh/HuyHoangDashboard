@@ -23,11 +23,11 @@ type propsType = {
   onParamChange?: any;
   query?: any;
   isLoading?: boolean;
-  dataOptions?: any;
-  getByRanger?: boolean;
   showSeller?: boolean;
   showCollaborator?: boolean;
   showProduct?: boolean;
+  onChange?: any;
+  options?: any;
 };
 let styleFlex = {
   display: "flex",
@@ -50,11 +50,11 @@ export default function FilterByDate(props: propsType): React.JSX.Element {
     onParamChange,
     query,
     isLoading,
-    dataOptions,
-    getByRanger = true,
     showSeller = true,
     showCollaborator = true,
     showProduct = true,
+    onChange,
+    options = [],
   } = props;
   const [date, setDate] = useState<any[]>([
     dayjs().startOf("month"),
@@ -76,15 +76,6 @@ export default function FilterByDate(props: propsType): React.JSX.Element {
     [FILTER_BY_VI]
   );
 
-  const options = useMemo(
-    () =>
-      Object.entries(dataOptions)?.map((item: any) => ({
-        label: item[1],
-        value: item[0],
-      })),
-    [dataOptions]
-  );
-
   return (
     <div style={{ marginBottom: 24, width: "inherit" }}>
       <Row style={{ width: "100%", marginBottom: 20 }} wrap>
@@ -98,11 +89,11 @@ export default function FilterByDate(props: propsType): React.JSX.Element {
             style={{ marginRight: "10%" }}
             popupMatchSelectWidth={false}
             filterOption={filterSelectWithLabel}
-            onChange={(value) => onParamChange({ datatype: value || null })}
+            onChange={onChange}
           ></Select>
         </Col>
         <Col style={styleFlex}>
-          {/* <Space>
+          <Space>
             <TitleRender title="Thời gian" />
             <RangePicker
               format={dateFormat}
@@ -122,9 +113,9 @@ export default function FilterByDate(props: propsType): React.JSX.Element {
                 });
               }}
             />
-          </Space> */}
+          </Space>
         </Col>
-        {getByRanger && <Col style={{ ...styleFlex, width: "190px" }}>
+        <Col style={{ ...styleFlex, width: "190px" }}>
           <TitleRender style={{ marginLeft: 16 }} title="Theo" />
           <Select
             loading={isLoading}
@@ -136,7 +127,7 @@ export default function FilterByDate(props: propsType): React.JSX.Element {
             filterOption={filterSelectWithLabel}
             onChange={(value) => onParamChange({ rangerType: value || null })}
           />
-        </Col>}
+        </Col>
       </Row>
       <Row>
         {showCollaborator && (

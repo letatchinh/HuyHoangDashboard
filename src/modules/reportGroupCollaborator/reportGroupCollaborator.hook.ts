@@ -42,6 +42,18 @@ export const useGetReportGroupCollaborators = (param:any) => {
     param
   });
 };
+
+
+export const useGetReportGroupCollaboratorsBill = (param:any) => {
+  return useFetchByParam({
+    action: reportGroupCollaboratorActions.getListBillRequest,
+    loadingSelector: loadingSelector,
+    dataSelector: listSelector,
+    failedSelector: getListFailedSelector,
+    param
+  });
+};
+
 export const useGetReportGroupCollaborator = (id: any) => {
   return useFetchByParam({
     action: reportGroupCollaboratorActions.getByIdRequest,
@@ -95,21 +107,21 @@ export const useReportGroupCollaboratorQueryParams = () => {
   const limit = query.get("limit") || 10;
   const page = query.get("page") || 1;
   // const keyword = query.get("keyword");
-  // const rangerTime = query.get("rangerTime");
-  // const rangerType = query.get("rangerType");
-  const getByRanger = query.get("getByRanger");
+  const rangerTime = query.get("rangerTime");
+  const rangerType = query.get("rangerType");
+  const getByRanger = query.get("getByRanger") || false;
   return useMemo(() => {
     const queryParams = {
-      page,
-      limit,
-      // rangerTime,
-      // rangerType,
+      page: Number(page),
+      limit: Number(limit),
+      rangerTime,
+      rangerType,
       // datatype,
-      getByRanger,
+      getByRanger: Boolean(getByRanger),
     };
     return [queryParams];
     //eslint-disable-next-line
-  }, [page, limit,   getByRanger]);
+  }, [page, limit, rangerTime, rangerType, getByRanger]);
 };
 
 export const useUpdateReportGroupCollaboratorParams = (
@@ -124,6 +136,8 @@ export const useUpdateReportGroupCollaboratorParams = (
   }, [query]);
   const onParamChange = (param: any) => {
     // Clear Search Query when change Params
+    console.log(param,'param');
+    
     clearQuerySearch(listOptionSearch, query, param);
 
     if (!param.page) {
