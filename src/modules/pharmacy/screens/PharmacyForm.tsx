@@ -30,13 +30,14 @@ import { get } from "lodash";
 import AddressCommonForm from "~/components/common/AddressCommonForm";
 import BaseBorderBox from "~/components/common/BaseBorderBox";
 import SelectEmployee from "~/modules/employee/components/SelectEmployee";
+import dayjs from "dayjs";
 const FormItem = Form.Item;
 const { Option } = Select;
 interface Props {
   onClose: (p?: any) => void;
   id?: any;
   handleUpdate?: any;
-  setDestroy : any
+  setDestroy? : any
 }
 
 export default function PharmacyForm({ onClose, id, handleUpdate,setDestroy }: Props) {
@@ -59,7 +60,13 @@ export default function PharmacyForm({ onClose, id, handleUpdate,setDestroy }: P
       form.resetFields();
     } else {
       const initPharmacy = convertInitPharmacy(initPharmacyProfile);
-      form.setFieldsValue(initPharmacy);
+      form.setFieldsValue({
+        ...initPharmacy,
+        infoPolicy : {
+          ...initPharmacy?.infoPolicy,
+          dateOfBirth : dayjs(initPharmacy?.infoPolicy?.dateOfBirth)
+        }
+      });
       setSelectedCustomerGroupId(get(initPharmacy, "customerGroupId"));
     }
   }, [initPharmacyProfile, id, form]);

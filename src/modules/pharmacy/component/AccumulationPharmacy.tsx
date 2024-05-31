@@ -166,10 +166,11 @@ export default function AccumulationPharmacy(props: propsAccumulation) {
             value={keyword}
           />
         </Col>
-        <Row gutter={16}>
+        <Row >
           <Col>
             <Form.Item<FormFieldSearch> name={"startDate"} label="Ngày bắt đầu">
               <DatePicker
+                style={{marginRight : 5}}
                 defaultValue={dayjs(date.startDate)}
                 onChange={(e) =>
                   setDate({
@@ -196,7 +197,7 @@ export default function AccumulationPharmacy(props: propsAccumulation) {
         </Row>
       </Row>
 
-      <WhiteBox>
+      {/* <WhiteBox> */}
         <TableAnt
           dataSource={data}
           loading={isLoading}
@@ -229,7 +230,7 @@ export default function AccumulationPharmacy(props: propsAccumulation) {
             showTotal: (total) => `Tổng cộng: ${total} `,
           }}
         />
-      </WhiteBox>
+      {/* </WhiteBox> */}
     </div>
   );
 }

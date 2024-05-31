@@ -49,6 +49,7 @@ import ReportSalaryPartnerPage from "~/pages/Dashboard/ReportSalaryPartner";
 import ProductBorrow from "~/modules/product/components/ProductBorrow";
 import CreateBill from "~/modules/sale/bill/screens/CreateBill";
 import SaleScreen from "~/modules/sale/bill/components/createBillScreen/SaleScreen";
+import PharmacyDetail_v2 from "~/modules/pharmacy/screens/PharmacyDetail_v2";
 export const mainRoutes :PathRouteProps[] = [
   { path: PATH_APP.main.root, Component: Homepage },
 
@@ -116,7 +117,7 @@ export const mainRoutes :PathRouteProps[] = [
 
   // Pharmacy
   { path: PATH_APP.pharmacy.root, Component: Pharmacy },
-  { path: PATH_APP.pharmacy.detail, Component: PharmacyDetail },
+  { path: PATH_APP.pharmacy.detail, Component: PharmacyDetail_v2 },
 
   // Bot Notification
   { path: PATH_APP.botNotification.root, Component: BotNotificationPage },

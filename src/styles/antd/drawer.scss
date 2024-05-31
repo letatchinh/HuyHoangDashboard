@@ -1,0 +1,13 @@
+.drawerMidCenter {
+    .ant-drawer-content-wrapper{
+        height: max-content!important;
+        box-shadow: none!important;
+        .ant-drawer-content{
+            width: 600px!important;
+            margin: 0px auto;
+            border-radius: 8px;
+            height: inherit;
+            padding: 20px!important;
+        }
+    }
+}
