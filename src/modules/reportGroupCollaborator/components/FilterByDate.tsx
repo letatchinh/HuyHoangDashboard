@@ -15,17 +15,16 @@ import { FILTER_BY_VI } from "~/constants/defaultValue";
 import SelectCollaborator from "~/modules/collaborator/components/SelectSearch";
 import SelectEmployee from "~/modules/employee/components/SelectSearch";
 import SelectProductBySupplier from "~/modules/product/components/SelectProductBySupplier";
-import { datatypeReportVi } from "~/modules/reportIndividualCollaborator/reportIndividualCollaborator.modal";
 import { filterSelectWithLabel } from "~/utils/helpers";
 const { RangePicker } = DatePicker;
 const dateFormat = "YYYY-MM-DD";
-const rangerTimeDef = "WEEKLY";
+
 type propsType = {
   onParamChange?: any;
   query?: any;
   isLoading?: boolean;
   dataOptions?: any;
-  showRangerType?: boolean;
+  getByRanger?: boolean;
   showSeller?: boolean;
   showCollaborator?: boolean;
   showProduct?: boolean;
@@ -52,7 +51,7 @@ export default function FilterByDate(props: propsType): React.JSX.Element {
     query,
     isLoading,
     dataOptions,
-    showRangerType = true,
+    getByRanger = true,
     showSeller = true,
     showCollaborator = true,
     showProduct = true,
@@ -103,7 +102,7 @@ export default function FilterByDate(props: propsType): React.JSX.Element {
           ></Select>
         </Col>
         <Col style={styleFlex}>
-          <Space>
+          {/* <Space>
             <TitleRender title="Thời gian" />
             <RangePicker
               format={dateFormat}
@@ -123,9 +122,9 @@ export default function FilterByDate(props: propsType): React.JSX.Element {
                 });
               }}
             />
-          </Space>
+          </Space> */}
         </Col>
-        {showRangerType && <Col style={{ ...styleFlex, width: "190px" }}>
+        {getByRanger && <Col style={{ ...styleFlex, width: "190px" }}>
           <TitleRender style={{ marginLeft: 16 }} title="Theo" />
           <Select
             loading={isLoading}

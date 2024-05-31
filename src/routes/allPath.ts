@@ -182,8 +182,8 @@ export const PATH_APP = {
   reportOverview: {
     root: path(ROOTS.app, "/report-overview")
   },
-  requestGroup: {
-    root: path(ROOTS.app, "/report-group")
+  requestGroupCollaborator: {
+    root: path(ROOTS.app, "/report-group-collaborator")
   },
 
 };

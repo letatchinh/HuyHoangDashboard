@@ -1,10 +1,10 @@
 import React from 'react';
-import ReportGroupModule from '~/modules/reportGroup';
+import ReportGroupCollaboratorModule from '~/modules/reportGroupCollaborator';
 type propsType = {
 
 }
-export default function ReportGroup(props:propsType) : React.JSX.Element {
+export default function ReportGroupCollaborator(props:propsType) : React.JSX.Element {
     return (
-        <ReportGroupModule.page.index />
+        <ReportGroupCollaboratorModule.page.index />
     )
 }

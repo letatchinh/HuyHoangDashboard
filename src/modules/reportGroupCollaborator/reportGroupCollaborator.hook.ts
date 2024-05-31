@@ -10,8 +10,8 @@ import {
     useSubmit,
     useSuccess
 } from "~/utils/hook";
-import { reportGroupActions } from "./redux/reducer";
-const MODULE = "reportGroup";
+import { reportGroupCollaboratorActions } from "./redux/reducer";
+const MODULE = "reportGroupCollaborator";
 const MODULE_VI = "";
 
 const {
@@ -31,20 +31,20 @@ const {
   pagingSelector,
 } = getSelectors(MODULE);
 
-export const useReportGroupPaging = () => useSelector(pagingSelector);
+export const useReportGroupCollaboratorPaging = () => useSelector(pagingSelector);
 
-export const useGetReportGroups = (param:any) => {
+export const useGetReportGroupCollaborators = (param:any) => {
   return useFetchByParam({
-    action: reportGroupActions.getListRequest,
+    action: reportGroupCollaboratorActions.getListRequest,
     loadingSelector: loadingSelector,
     dataSelector: listSelector,
     failedSelector: getListFailedSelector,
     param
   });
 };
-export const useGetReportGroup = (id: any) => {
+export const useGetReportGroupCollaborator = (id: any) => {
   return useFetchByParam({
-    action: reportGroupActions.getByIdRequest,
+    action: reportGroupCollaboratorActions.getByIdRequest,
     loadingSelector: getByIdLoadingSelector,
     dataSelector: getByIdSelector,
     failedSelector: getByIdFailedSelector,
@@ -52,7 +52,7 @@ export const useGetReportGroup = (id: any) => {
   });
 };
 
-export const useCreateReportGroup = (callback?: any) => {
+export const useCreateReportGroupCollaborator = (callback?: any) => {
   useSuccess(
     createSuccessSelector,
     `Tạo mới ${MODULE_VI} thành công`,
@@ -61,12 +61,12 @@ export const useCreateReportGroup = (callback?: any) => {
   useFailed(createFailedSelector);
 
   return useSubmit({
-    action: reportGroupActions.createRequest,
+    action: reportGroupCollaboratorActions.createRequest,
     loadingSelector: isSubmitLoadingSelector,
   });
 };
 
-export const useUpdateReportGroup = (callback?: any) => {
+export const useUpdateReportGroupCollaborator = (callback?: any) => {
   useSuccess(
     updateSuccessSelector,
     `Cập nhật ${MODULE_VI} thành công`,
@@ -75,40 +75,44 @@ export const useUpdateReportGroup = (callback?: any) => {
   useFailed(updateFailedSelector);
 
   return useSubmit({
-    action: reportGroupActions.updateRequest,
+    action: reportGroupCollaboratorActions.updateRequest,
     loadingSelector: isSubmitLoadingSelector,
   });
 };
 
-export const useDeleteReportGroup = (callback?: any) => {
+export const useDeleteReportGroupCollaborator = (callback?: any) => {
   useSuccess(deleteSuccessSelector, `Xoá ${MODULE_VI} thành công`, callback);
   useFailed(deleteFailedSelector);
 
   return useSubmit({
-    action: reportGroupActions.deleteRequest,
+    action: reportGroupCollaboratorActions.deleteRequest,
     loadingSelector: isSubmitLoadingSelector,
   });
 };
 
-export const useReportGroupQueryParams = () => {
+export const useReportGroupCollaboratorQueryParams = () => {
   const query = useQueryParams();
   const limit = query.get("limit") || 10;
   const page = query.get("page") || 1;
-  const keyword = query.get("keyword");
-  const createSuccess = useSelector(createSuccessSelector);
-  const deleteSuccess = useSelector(deleteSuccessSelector);
+  // const keyword = query.get("keyword");
+  // const rangerTime = query.get("rangerTime");
+  // const rangerType = query.get("rangerType");
+  const getByRanger = query.get("getByRanger");
   return useMemo(() => {
     const queryParams = {
       page,
       limit,
-      keyword,
+      // rangerTime,
+      // rangerType,
+      // datatype,
+      getByRanger,
     };
     return [queryParams];
     //eslint-disable-next-line
-  }, [page, limit, keyword, createSuccess, deleteSuccess]);
+  }, [page, limit,   getByRanger]);
 };
 
-export const useUpdateReportGroupParams = (
+export const useUpdateReportGroupCollaboratorParams = (
   query: any,
   listOptionSearch?: any[]
 ) => {

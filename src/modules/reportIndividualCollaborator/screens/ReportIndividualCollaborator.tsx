@@ -108,6 +108,8 @@ export default function ReportIndividualCollaborator(
         onParamChange={onParamChange}
         query={query}
         isLoading={isLoading}
+        dataOptions={datatypeReportVi}
+        showRangerType={true}
         showSeller={false}
         showCollaborator={true}
         showProduct={true}

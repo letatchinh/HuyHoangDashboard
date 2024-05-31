@@ -12,6 +12,7 @@ import FilterByDate from "~/components/common/FilterByDate";
 import ProductQuantityTable from "~/components/common/TableReportPersonnal/ProductQuantityTable";
 import DebtTable from "~/components/common/TableReportPersonnal/DebtTable";
 import BillTable from "~/components/common/TableReportPersonnal/BillTable";
+import { datatypeReportVi } from "../reportIndividualEmployeeSeller.modal";
 
 type propsType = {};
 const rangerTimeDef = "WEEKLY";
@@ -101,6 +102,8 @@ export default function ReportIndividualEmployeeSeller(
         onParamChange={onParamChange}
         query={query}
         isLoading={isLoading}
+        dataOptions={datatypeReportVi}
+        showRangerType={true}
         showSeller={true}
         showCollaborator={false}
         showProduct={true}
