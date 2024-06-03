@@ -28,6 +28,15 @@ interface ReportProductType {
   debt: number;
   timeseries: string;
 }
+const getKeyRow = (rc?: any) => (rd: any, idx?: number) =>
+  [
+    get(rc, "_id", ""),
+    idx,
+    get(rd, "_id"),
+    get(rd, "timeseries", ""),
+    "TYPE_BILL",
+  ].join("_");
+
 export default function BillAndDebtTable(props: propsType): React.JSX.Element {
   const { query, pagination } = props;
   const [data, isLoading] = useGetReportGroupCollaborators(query);
@@ -71,7 +80,7 @@ export default function BillAndDebtTable(props: propsType): React.JSX.Element {
       key: "count",
       width: 120,
       render(value) {
-        return formatter(value??0);
+        return formatter(value ?? 0);
       },
     },
     {
@@ -130,7 +139,7 @@ export default function BillAndDebtTable(props: propsType): React.JSX.Element {
       columns={columnsList}
       dataSource={record.childrens}
       pagination={false}
-      rowKey={record => record._id+get(record,'timeseries','')}
+      rowKey={getKeyRow(record)}
     />,
     rowExpandable: (record: any) => record.childrens && record.childrens.length > 0,
   };
@@ -141,7 +150,7 @@ export default function BillAndDebtTable(props: propsType): React.JSX.Element {
         <TableAnt
           dataSource={dataSource}
           loading={isLoading}
-          rowKey={(rc) => rc?._id+ get(rc,'timeseries','')}
+          rowKey={getKeyRow()}
           columns={columns}
           size="small"
           pagination={pagination}
