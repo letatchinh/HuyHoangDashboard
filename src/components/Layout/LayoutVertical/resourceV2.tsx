@@ -407,8 +407,8 @@ export const resource: ItemType[] =[
       },
       {
         label: "Báo cáo doanh thu nhóm cộng tác viên",
-        path: PATH_APP.requestGroupCollaborator.root,
-        key: PATH_APP.requestGroupCollaborator.root,
+        path: PATH_APP.reportGroupCollaborator.root,
+        key: PATH_APP.reportGroupCollaborator.root,
         // permission: [POLICIES.READ_REPORTSALARYPARTNER],
       },
       {
