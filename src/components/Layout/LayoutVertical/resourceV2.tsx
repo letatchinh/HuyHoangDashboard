@@ -338,20 +338,20 @@ export const resource: ItemType[] =[
   },
 
   // Chi nhánh
-  // {
-  //   label: "Chi nhánh",
-  //   key: "branch",
-  //   permission: [POLICIES.READ_BRANCH],//
-  //   children: [
-  //     {
-  //       label: "Danh sách chi nhánh",
-  //       path: PATH_APP.branch.root,
-  //       key: PATH_APP.branch.root,
-  //       permission: [POLICIES.READ_BRANCH],//
-  //     },
-  //   ],
-  //   icon: <i className="fa-solid fa-code-branch"></i>,
-  // },
+  {
+    label: "Chi nhánh",
+    key: "branch",
+    permission: [POLICIES.READ_BRANCH],//
+    children: [
+      {
+        label: "Danh sách chi nhánh",
+        path: PATH_APP.branch.root,
+        key: PATH_APP.branch.root,
+        permission: [POLICIES.READ_BRANCH],//
+      },
+    ],
+    icon: <i className="fa-solid fa-code-branch"></i>,
+  },
   // Báo cáo
   {
     label: "Báo cáo",
