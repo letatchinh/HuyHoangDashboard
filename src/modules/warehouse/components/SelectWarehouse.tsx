@@ -9,10 +9,12 @@ import { useGetProfile } from "~/modules/auth/auth.hook";
 type propsType = {
   isLoading?: boolean;
   data?: any;
+  index?: number;
 };
 export default function SelectWarehouse({
   isLoading = false,
   data,
+  index
 }: propsType): React.JSX.Element {
   const profile = useGetProfile();
   const query = useMemo(() => ({

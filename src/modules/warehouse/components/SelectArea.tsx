@@ -7,8 +7,9 @@ type propsType = {
   form: any;
   id?: any;
   data?: any;
+  index?: number;
 }
-export default function SelectArea({ form, id, data }: propsType): React.JSX.Element {
+export default function SelectArea({ form, id, data, index }: propsType): React.JSX.Element {
 const getPath = (managementArea : any[]) => managementArea?.map((area: any) =>get(area, "path"))
   
   const parentNearPath = useMemo(() => getPath(get(data, "address", [])),[data, id]);
