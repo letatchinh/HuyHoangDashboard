@@ -1,5 +1,3 @@
-import { ColumnsType } from "antd/es/table";
-import { TableRowSelection } from "antd/es/table/interface";
 import React from "react";
 import TableAnt from "~/components/Antd/TableAnt";
 import WhiteBox from "~/components/common/WhiteBox";
@@ -7,6 +5,7 @@ import { formatter } from "~/utils/helpers";
 import { useGetReportGroupCollaborators } from "../reportGroupCollaborator.hook";
 import { v4 } from "uuid";
 import type { TableColumnsType } from "antd";
+import { get } from "lodash";
 type propsType = {
   query?: any;
   pagination?: any;
@@ -30,7 +29,7 @@ interface ReportProductType {
   timeseries: string;
 }
 export default function BillAndDebtTable(props: propsType): React.JSX.Element {
-  const { query, pagination} = props;
+  const { query, pagination } = props;
   const [data, isLoading] = useGetReportGroupCollaborators(query);
 
   const columns: TableColumnsType<ReportProductType> = [
@@ -38,8 +37,8 @@ export default function BillAndDebtTable(props: propsType): React.JSX.Element {
       ? [
           {
             title: "Chu kì",
-            dataIndex: "timeSeries",
-            key: "timeSeries",
+            dataIndex: "timeseries",
+            key: "timeseries",
             width: 120,
           },
         ]
@@ -72,7 +71,7 @@ export default function BillAndDebtTable(props: propsType): React.JSX.Element {
       key: "count",
       width: 120,
       render(value) {
-        return formatter(value);
+        return formatter(value??0);
       },
     },
     {
@@ -131,7 +130,7 @@ export default function BillAndDebtTable(props: propsType): React.JSX.Element {
       columns={columnsList}
       dataSource={record.childrens}
       pagination={false}
-      rowKey={record => record._id}
+      rowKey={record => record._id+get(record,'timeseries','')}
     />,
     rowExpandable: (record: any) => record.childrens && record.childrens.length > 0,
   };
@@ -142,7 +141,7 @@ export default function BillAndDebtTable(props: propsType): React.JSX.Element {
         <TableAnt
           dataSource={dataSource}
           loading={isLoading}
-          rowKey={(rc) => rc?._id}
+          rowKey={(rc) => rc?._id+ get(rc,'timeseries','')}
           columns={columns}
           size="small"
           pagination={pagination}

@@ -146,7 +146,7 @@ export default function ProductQuantityTable(
         columns={columnsList}
         dataSource={record.childrens}
         pagination={false}
-        rowKey={(record) => record._id}
+        rowKey={(record) => record?._id}
       />
     ),
     rowExpandable: (record: any) =>
