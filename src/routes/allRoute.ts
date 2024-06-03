@@ -184,7 +184,7 @@ export const mainRoutes :PathRouteProps[] = [
   { path: PATH_APP.reportIndividualEmployeeSeller.root, Component: ReportIndividualEmployeeSeller},
 
   // Báo cáo doanh thu đội nhóm
-  { path: PATH_APP.requestGroupCollaborator.root, Component: ReportGroup},
+  { path: PATH_APP.reportGroupCollaborator.root, Component: ReportGroup},
 
   { path: '/', Component: Homepage },
 ]
