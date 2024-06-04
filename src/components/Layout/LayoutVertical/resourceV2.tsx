@@ -412,6 +412,12 @@ export const resource: ItemType[] =[
         // permission: [POLICIES.READ_REPORTSALARYPARTNER],
       },
       {
+        label: "Báo cáo doanh thu nhóm trình dược viên",
+        path: PATH_APP.reportGroupEmployeeSeller.root,
+        key: PATH_APP.reportGroupEmployeeSeller.root,
+        // permission: [POLICIES.READ_REPORTSALARYPARTNER],
+      },
+      {
         label: "Phiếu lương",
         path: PATH_APP.vouchers.salary,
         key: PATH_APP.vouchers.salary,
