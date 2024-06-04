@@ -32,7 +32,7 @@ interface ReportProductType {
   productGroupName: string;
   quantity: number;
   total: number;
-  timeseries: string;
+  timeSeries: string;
 }
 
 export default function ProductQuantityTable(
@@ -45,8 +45,8 @@ export default function ProductQuantityTable(
       ? [
           {
             title: "Chu kì",
-            dataIndex: "timeseries",
-            key: "timeseries",
+            dataIndex: "timeSeries",
+            key: "timeSeries",
             width: 120,
           },
         ]

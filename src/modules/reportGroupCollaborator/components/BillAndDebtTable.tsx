@@ -26,14 +26,14 @@ interface ReportProductType {
   billTotalPrice: number;
   count: number;
   debt: number;
-  timeseries: string;
+  timeSeries: string;
 }
 const getKeyRow = (rc?: any) => (rd: any, idx?: number) =>
   [
     get(rc, "_id", ""),
     idx,
     get(rd, "_id"),
-    get(rd, "timeseries", ""),
+    get(rd, "timeSeries", ""),
     "TYPE_BILL",
   ].join("_");
 
@@ -46,8 +46,8 @@ export default function BillAndDebtTable(props: propsType): React.JSX.Element {
       ? [
           {
             title: "Chu kì",
-            dataIndex: "timeseries",
-            key: "timeseries",
+            dataIndex: "timeSeries",
+            key: "timeSeries",
             width: 120,
           },
         ]

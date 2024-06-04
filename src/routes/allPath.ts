@@ -185,5 +185,8 @@ export const PATH_APP = {
   reportGroupCollaborator: {
     root: path(ROOTS.app, "/report-group-collaborator")
   },
+  reportGroupEmployeeSeller: {
+    root: path(ROOTS.app, "/report-group-employee-seller")
+  },
 
 };

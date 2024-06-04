@@ -53,7 +53,8 @@ import CreateBill from "~/modules/sale/bill/screens/CreateBill";
 import SaleScreen from "~/modules/sale/bill/components/createBillScreen/SaleScreen";
 import ReportIndividualCollaborator from "~/pages/Dashboard/ReportIndividualCollaborator";
 import ReportIndividualEmployeeSeller from "~/pages/Dashboard/ReportIndividualEmployeeSeller";
-import ReportGroup from "~/pages/Dashboard/ReportGroup";
+import ReportGroup from "~/pages/Dashboard/ReportGroupCollaborator";
+import ReportGroupEmployeeSeller from "~/pages/Dashboard/ReportGroupEmployeeSeller";
 export const mainRoutes :PathRouteProps[] = [
   { path: PATH_APP.main.root, Component: Homepage },
 
@@ -185,6 +186,7 @@ export const mainRoutes :PathRouteProps[] = [
 
   // Báo cáo doanh thu đội nhóm
   { path: PATH_APP.reportGroupCollaborator.root, Component: ReportGroup},
+  { path: PATH_APP.reportGroupEmployeeSeller.root, Component: ReportGroupEmployeeSeller},
 
   { path: '/', Component: Homepage },
 ]
