@@ -50,6 +50,15 @@ function* updateBill({payload} : any) : any {
     yield put(billSliceAction.updateFailed(error));
   }
 }
+function* updateApplyLogistic({payload} : any) : any {
+  try {
+    const data = yield call(api.updateApplyLogisticUnit, payload);
+    yield put(billSliceAction.updateApplyLogisticSuccess(data));
+  } catch (error:any) {
+    yield put(billSliceAction.updateApplyLogisticFailed(error));
+  }
+};
+
 function* deleteBill({payload : id} : any) : any {
   try {
     const data = yield call(api.delete,id);
@@ -87,6 +96,7 @@ export default function* billSaga() {
   yield takeLatest(billSliceAction.getByIdRequest, getByIdBill);
   yield takeLatest(billSliceAction.createRequest, createBill);
   yield takeLatest(billSliceAction.updateRequest, updateBill);
+  yield takeLatest(billSliceAction.updateApplyLogisticRequest, updateApplyLogistic);
   yield takeLatest(billSliceAction.deleteRequest, deleteBill);
   yield takeLatest(billSliceAction.updateBillItemRequest, updateBillItem);
   yield takeLatest(billSliceAction.getListProductSuggestRequest, getListProductSuggest);

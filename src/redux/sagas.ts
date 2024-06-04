@@ -47,6 +47,7 @@ import notification from '~/modules/notification';
 import collaborator from '~/modules/collaborator';
 import collaboratorGroup from '~/modules/collaboratorGroup';
 import reportSalaryPartner from '~/modules/reportSalaryPartner/redux/saga';
+import logistic from '~/modules/logistic';
 import requestGroup from '~/modules/requestGroup';
 import warehouse from '~/modules/warehouse';
 
@@ -101,6 +102,7 @@ export default function* rootSaga() {
     notification.redux.saga(),
     collaborator.redux.saga(),
     collaboratorGroup.redux.saga(),
+    logistic.redux.saga(),
     reportSalaryPartner(),
     requestGroup.redux.saga(),
     warehouse.redux.saga(),

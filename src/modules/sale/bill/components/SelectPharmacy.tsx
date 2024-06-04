@@ -9,6 +9,7 @@ import useNotificationStore from "~/store/NotificationContext";
 import { FormFieldCreateBill } from "../bill.modal";
 import { useLocation } from "react-router-dom";
 import { PATH_APP } from "~/routes/allPath";
+import useCreateBillStore from "../storeContext/CreateBillContext";
 interface propsType extends SelectProps {
   form?: any;
   allowClear?: boolean;
@@ -34,6 +35,7 @@ export default function SelectPharmacy({
   const [loading,setLoading] = useState(false);
   const [initOption, setInitOption] = useState([]);
   const { pathname } = useLocation();
+  const {setPharmacyInfo} = useCreateBillStore();
   
   const filterOption : any= (data: any[]) => {
     if (pathname === PATH_APP.bill.createCollaborator) {
@@ -76,7 +78,10 @@ export default function SelectPharmacy({
         value: get(item, "_id"),
         data : item
       }));
-      
+      if (!!id) {
+        const pharmacy = newOptions?.find((item: any) => item?.value === id);
+        setPharmacyInfo(pharmacy);
+      };
       return newOptions;
     } catch (error: any) {
       onNotify?.error(error?.response?.data?.message || "Có lỗi gì đó xảy ra");
@@ -99,12 +104,15 @@ export default function SelectPharmacy({
         value: get(item, "_id"),
         data : item
       }));
-      
       setInitOption(newOptions);
       setLoading(false);
       if(validateFirst){
         await form.validateFields(['pharmacyId']);
-      }
+      };
+      if (!!id) {
+        const pharmacy = newOptions?.find((item: any) => item?.value === id);
+        setPharmacyInfo(pharmacy);
+      };
     
     } catch (error) {
       setLoading(false);

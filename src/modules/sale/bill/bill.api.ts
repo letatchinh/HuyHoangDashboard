@@ -1,4 +1,4 @@
-import { get } from "lodash";
+import { get, omit } from "lodash";
 import requester from "~/api/requester";
 import { PayloadUpdateBill } from "./bill.modal";
 
@@ -13,5 +13,7 @@ const apis = {
     getDebtRule: () => requester.get(`/api/v1/debt-rule`),
     getListProductSuggest: (query?: any) => requester.get(`/api/v1/bill-product-suggest`, query),
     getBillToReceiptVoucher: (id?: any) => requester.get(`/api/v1/bills-of-pharmacy/${id}`),
+
+    updateApplyLogisticUnit: (data: any) => requester.put(`/api/v1/bill-transport-unit/${data?.id}`, omit(data, ["id"])),
 }
 export default apis;

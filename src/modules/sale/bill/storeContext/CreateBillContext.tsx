@@ -1,5 +1,5 @@
 import { Form } from "antd";
-import { forIn, get } from "lodash";
+import { forIn, get, omit } from "lodash";
 import {
   createContext,
   ReactNode, useCallback, useContext,
@@ -14,10 +14,12 @@ import { getValueOfPercent } from "~/utils/helpers";
 import { DEFAULT_DEBT_TYPE } from "../../quotation/constants";
 import { useGetDebtRule } from "../bill.hook";
 import { DebtType, FeeType, quotation } from "../bill.modal";
-import { onVerifyData, reducerDiscountQuotationItems } from "../bill.service";
+import {  reducerDiscountQuotationItems } from "../bill.service";
 import { defaultFee } from "../constants";
 import ModalAnt from "~/components/Antd/ModalAnt";
 import RadioButtonWarehouse from "~/modules/warehouse/components/RadioButtonWarehouse";
+import LogisticForm, { ValueApplyBill } from "~/modules/logistic/components/LogisticForm";
+import useNotificationStore from "~/store/NotificationContext";
 const TYPE_DISCOUNT = {
   "DISCOUNT.CORE": "DISCOUNT.CORE",
   "DISCOUNT.SOFT": "DISCOUNT.SOFT",
@@ -31,6 +33,8 @@ export type DataItem = quotation & {
 type Bill = {
   quotationItems: DataItem[];
   pharmacyId: string;
+  fee?: FeeType[];
+  dataTransportUnit?: ValueApplyBill;
 };
 
 type DiscountDetail = {
@@ -69,6 +73,13 @@ export type GlobalCreateBill = {
   isOpenModalSelectWarehouse: boolean,
   onOpenModalSelectWarehouse: () => void,
   onCloseModalSelectWarehouse: () => void,
+  onOpenFormLogistic: () => void;
+  onCloseFormLogistic: () => void;
+  checkboxPayment: string | null;
+  setCheckboxPayment: (p: string | null) => void,
+  onAddLogisticFee: (data: any) => void,
+  setPharmacyInfo: (data: any) => void,
+  pharmacyInfo: any
 };
 const CreateBill = createContext<GlobalCreateBill>({
   quotationItems: [],
@@ -101,6 +112,13 @@ const CreateBill = createContext<GlobalCreateBill>({
   isOpenModalSelectWarehouse: false,
   onOpenModalSelectWarehouse: () => {},
   onCloseModalSelectWarehouse: () => {},
+  onOpenFormLogistic: () => { },
+  onCloseFormLogistic: () => { },
+  checkboxPayment: null,
+  setCheckboxPayment: (p: string | null) => { },
+  onAddLogisticFee: () => { },
+  setPharmacyInfo: () => { },
+  pharmacyInfo: null,
 });
 
 type CreateBillProviderProps = {
@@ -126,8 +144,12 @@ export function CreateBillProvider({
   const [form] = Form.useForm();
   const [debt,isLoadingDebt] = useGetDebtRule();
   const [address,setAddress] = useState([]);
-  const [partner,loadingPartner] : any = useGetCollaborator(get(bill,'pharmacyId'));
   const [warehouseId, setWarehouseId] = useState <number | undefined>();
+  const [partner, loadingPartner]: any = useGetCollaborator(get(bill, 'pharmacyId'));
+  const [logisticOpen, setLogisticOpen] = useState(false);
+  const [checkboxPayment, setCheckboxPayment] = useState<string | null>(null);
+  const { onNotify } = useNotificationStore();
+  const [pharmacyInfo, setPharmacyInfo] = useState<any>();
   // Controller Data
   const onSave = (row: DataItem) => {
     const newData: DataItem[] = [...quotationItems];
@@ -142,7 +164,6 @@ export function CreateBillProvider({
       };
 
     newData.splice(index, 1, newItemData);
-    
     onChangeBill({
       quotationItems: newData,
     });
@@ -174,7 +195,6 @@ export function CreateBillProvider({
       verifyData();
     }
   },[countReValidate]);
-
 
   const onValueChange = (value: any, values: any) => {
     
@@ -221,7 +241,6 @@ export function CreateBillProvider({
 
   const pair = Form.useWatch('pair',form) || 0;
   const fee = Form.useWatch('fee',form) || 0;
-
   const totalPrice = useMemo(
     () =>
       quotationItems?.reduce(
@@ -311,8 +330,6 @@ export function CreateBillProvider({
       ),
     [quotationItems]
   );
-
-
   // Initalize Data And Calculate Discount
   useEffect(() => {
     const initDebt = debt?.find((debt : DebtType) => get(debt, "key") === DEFAULT_DEBT_TYPE);    
@@ -327,16 +344,15 @@ export function CreateBillProvider({
       const newQuotationItems: any[] = reducerDiscountQuotationItems(get(bill, "quotationItems", []));
       setQuotationItems(newQuotationItems);
     }
-  }, [bill,debt,form,totalPrice]);
-
-  const setFormAndLocalStorage = useCallback((newValue : any) => {
-    
+  }, [bill, debt, form, totalPrice]);
+  
+  const setFormAndLocalStorage = useCallback((newValue: any) => {
     form.setFieldsValue({
       ...newValue
-    })
+    });
     onChangeBill({
       ...newValue
-    })
+    });
   },[]);
   
   //Warehouse
@@ -344,7 +360,31 @@ export function CreateBillProvider({
   const onOpenModalSelectWarehouse = () => setOpenModalSelectWarehouse(true);
   const onCloseModalSelectWarehouse = () => setOpenModalSelectWarehouse(false);
 
-  console.log(bill,'dadsadasd')
+  const onOpenFormLogistic = () => {
+    setLogisticOpen(true);
+  };
+
+  const onCloseFormLogistic = () => {
+    setLogisticOpen(false);
+  };
+  
+  const onAddLogisticFee = (data: any) => {
+    if (bill?.quotationItems?.length <= 0) {
+      return onNotify?.error("Đơn hàng chưa có sản phẩm nên không thể áp phí vận chuyển");
+    };
+    try {
+      const newBill = {
+        ...bill,
+        fee: (bill?.fee)?.map((item: any) => item?.typeFee === 'LOGISTIC' ? { ...item, value: data?.totalFee } : item),
+        dataTransportUnit: data
+      };
+      onChangeBill(newBill);
+      onCloseFormLogistic();
+    } catch (error) {
+      onNotify?.error("Có lỗi xảy ra khi gắn phí vận chuyển vào dơn hàng");
+    };
+  };
+  console.log(bill,'ddsasda')
   return (
     <CreateBill.Provider
       value={{
@@ -377,7 +417,14 @@ export function CreateBillProvider({
         warehouseId,
         isOpenModalSelectWarehouse,
         onOpenModalSelectWarehouse,
-        onCloseModalSelectWarehouse
+        onCloseModalSelectWarehouse,
+        onOpenFormLogistic,
+        onCloseFormLogistic,
+        checkboxPayment,
+        setCheckboxPayment,
+        onAddLogisticFee,
+        setPharmacyInfo,
+        pharmacyInfo,
       }}
     >
       {children}
@@ -390,7 +437,25 @@ export function CreateBillProvider({
         width={600}
         footer={false}
       >
-        <RadioButtonWarehouse setValue={setWarehouseId} value={warehouseId} onCancel={onCloseModalSelectWarehouse} title="Xác nhận"/>
+        <RadioButtonWarehouse setValue={setWarehouseId} value={warehouseId} onCancel={onCloseModalSelectWarehouse} title="Xác nhận" />
+      </ModalAnt>
+      <ModalAnt
+        title='Chi phí vận chuyển'
+        open={logisticOpen}
+        onCancel={onCloseFormLogistic}
+        width={1200}
+        footer={null}
+        destroyOnClose
+      >
+        <LogisticForm
+          onCloseFormLogistic={onCloseFormLogistic}
+          checkboxPayment={checkboxPayment}
+          setCheckboxPayment={setCheckboxPayment}
+          bill={bill}
+          deliveryAddressId={ !get(bill, 'dataUpdateQuotation') ? (get(bill, 'deliveryAddressId') ?? get(pharmacyInfo, "data.address")) : get(bill, 'deliveryAddressId') }
+          pharmacy={ pharmacyInfo?.data }
+          dataTransportUnit={bill?.dataTransportUnit}
+        />
       </ModalAnt>
     </CreateBill.Provider>
   );

@@ -29,6 +29,9 @@ import { FeeType, FormFieldCreateBill } from "../../bill.modal";
 import useCreateBillStore from "../../storeContext/CreateBillContext";
 import SuggestAddress from "../SuggestAddress";
 import SelectDebt from "./SelectDebt";
+import { useMatchPolicy } from "~/modules/policy/policy.hook";
+import POLICIES from "~/modules/policy/policy.auth";
+import WithPermission from "~/components/common/WithPermission";
 type propsType = {};
 export const Layout = ({
   label,
@@ -72,26 +75,35 @@ export default function TotalBill(props: propsType): React.JSX.Element {
     totalDiscountOther,
     setFormAndLocalStorage,
     partner,
+    onOpenFormLogistic,
+    bill,
     onOpenModalSelectWarehouse,
   } = useCreateBillStore();
-
-  const [minFee, setMinFee] = useState<any>();
-
-  const [openAddress, setOpenAddress] = useState(false);
-  const onOpenAddress = useCallback(() => setOpenAddress(true), []);
-  const onCloseAddress = useCallback(() => setOpenAddress(false), []);
-  const debtType = Form.useWatch("debtType", form);
-  const fee = Form.useWatch("fee", form);
-
-
+  const [minFee,setMinFee] = useState<any>();
+  const [openAddress,setOpenAddress] = useState(false);
+  const onOpenAddress = useCallback(() => setOpenAddress(true),[]);
+  const onCloseAddress = useCallback(() => setOpenAddress(false),[]);
+  const debtType = Form.useWatch('debtType',form);
+  const fee = Form.useWatch('fee', form);
+  const canUpdateLogistic = useMatchPolicy(POLICIES.UPDATE_LOGISTIC);
   const onChangeAddress = useCallback((values: any) => {
     const addressString = concatAddress(values?.address);
-    setFormAndLocalStorage({
+    bill?.dataTransportUnit ? setFormAndLocalStorage({
       deliveryAddress: addressString,
+      deliveryAddressId: {
+        ...values?.address
+      },
+      fee: bill?.fee?.map((item: any) => item?.typeFee === 'LOGISTIC' ? { ...item, value: 0 } : item), // If change address when applied logistic, set value logistic fee = 0
+      dataTransportUnit: {},
+    }) : setFormAndLocalStorage({
+      deliveryAddress: addressString,
+      deliveryAddressId: {
+        ...values?.address
+      },
     });
     onCloseAddress();
-  }, []);
-
+  },[bill]);
+  
   useEffect(() => {
     const feePartner = get(partner, "fee", [])?.find(
       (i: FeeType) => i?.typeFee === "SUB_FEE"
@@ -105,7 +117,15 @@ export default function TotalBill(props: propsType): React.JSX.Element {
       ...feePartner,
       valueExchange,
     });
+
   }, [partner, totalPrice]);
+  useEffect(() => {
+    if (bill?.fee) {
+      form.setFieldsValue({
+        fee: bill?.fee
+      })
+    };
+  }, [bill]); // Set value logistic fee
   return (
     <Flex vertical gap={"small"}>
       <Layout label={"Số lượng mặt hàng"}>{formatter(totalQuantity)}</Layout>
@@ -207,136 +227,117 @@ export default function TotalBill(props: propsType): React.JSX.Element {
                       };
                       setFormAndLocalStorage({ fee });
                     };
-                    if (index === 0) {
-                      return (
-                        <Form.Item
-                          label="Phụ phí"
-                          labelCol={{ span: 8 }}
-                          labelAlign="left"
-                          style={{ marginBottom: 10 }}
-                          name={[index, "value"]}
-                          rules={[
-                            ({}) => ({
-                              validator(_, value) {
-                                if (typeFee === "PERCENT" && value > 100) {
-                                  return Promise.reject(
-                                    new Error("Phần trăm phải bé hơn 100%!")
-                                  );
-                                }
-                                return Promise.resolve();
-                              },
-                            }),
-                          ]}
-                        >
-                          <InputNumberAnt
-                            style={{ width: "100%" }}
-                            min={
-                              typeFee === get(minFee, "typeValue")
-                                ? get(minFee, "value", 0)
-                                : get(minFee, "valueExchange", 0)
+                if(index === 0) {
+                    return <Form.Item
+                    label='Phụ phí'
+                    labelCol={{span : 8}}
+                    labelAlign='left'
+                    style={{marginBottom : 10}}
+                      name={[index, "value"]}
+                      rules={[
+                        ({}) => ({
+                          validator(_, value) {
+                            if (typeFee === 'PERCENT' && value > 100) {
+                              return Promise.reject(new Error('Phần trăm phải bé hơn 100%!'));
                             }
-                            {...(typeFee === "PERCENT" && { max: 100 })}
-                            addonAfter={
-                              <Form.Item
-                                style={{ marginBottom: "unset" }}
-                                name={[index, "typeValue"]}
-                              >
-                                <Radio.Group
-                                  onChange={(e) => {
-                                    const newValueFee =
-                                      e.target.value ===
-                                      get(minFee, "typeValue")
-                                        ? get(minFee, "value", 0)
-                                        : get(minFee, "valueExchange", 0);
-                                    changeValueAtIndex({ value: newValueFee });
-                                  }}
-                                  size="small"
-                                  buttonStyle="solid"
-                                >
-                                  <Radio.Button value="PERCENT">%</Radio.Button>
-                                  <Radio.Button value="VALUE">
-                                    Giá trị
-                                  </Radio.Button>
-                                </Radio.Group>
-                              </Form.Item>
-                            }
-                          />
-                        </Form.Item>
-                      );
-                    }
-                    if (index === 1) {
-                      return (
-                        <Form.Item
-                          labelCol={{ span: 8 }}
-                          labelAlign="left"
-                          label="Phí giao hàng"
-                          style={{ marginBottom: "unset" }}
-                          name={[index, "value"]}
-                        >
-                          <InputNumberAnt
-                            min={0}
-                            style={{ width: "100%" }}
-                            max={totalAmount}
-                            addonAfter={<div>VNĐ</div>}
-                          />
-                        </Form.Item>
-                      );
-                    }
-                  })}
-                </Flex>
-              )}
+                            return Promise.resolve();
+                          
+                          }
+                        })
+                      ]}
+                    >
+                      <InputNumberAnt 
+                      style={{width : '100%'}}
+                      min={typeFee === get(minFee,'typeValue') ? get(minFee,'value',0) : get(minFee,'valueExchange',0)} 
+                      {...typeFee === 'PERCENT' && {max : 100}} 
+                      addonAfter={<Form.Item style={{marginBottom : 'unset'}} name={[index, "typeValue"]}>
+                        <Radio.Group onChange={(e) => {
+                          const newValueFee = e.target.value === get(minFee,'typeValue') ? get(minFee,'value',0) : get(minFee,'valueExchange',0);
+                          changeValueAtIndex({value : newValueFee})
+                        }} size="small" buttonStyle="solid">
+                            <Radio.Button value="PERCENT">%</Radio.Button>
+                            <Radio.Button value="VALUE">Giá trị</Radio.Button>
+                          </Radio.Group>
+                        </Form.Item>}
+                      />
+                    </Form.Item> 
+                  }
+                  if(index === 1) {
+                    return <Form.Item
+                    labelCol={{span : 8}}
+                    labelAlign='left'
+                      label={canUpdateLogistic ?
+                        <span>
+                          <i className="fa-solid fa-truck"></i>
+                          Phí vận chuyển
+                          <EditOutlined onClick={onOpenFormLogistic}  style={{ color: '#5AB2FF'}}/>
+                        </span>
+                      : 'Phí vận chuyển'}
+                    style={{marginBottom : 'unset'}}
+                      name={[index, "value"]}
+                    >
+                      <Flex>
+                        <InputNumberAnt 
+                        min={0}
+                        style={{width : '100%'}}
+                        // max={totalAmount}
+                          addonAfter={<div>VNĐ</div>}
+                          readOnly 
+                          value={getFieldValue(['fee',index,'value'])}
+                        />
+                        {/* <Button>Cập nhật</Button> */}
+                      </Flex>
+                    </Form.Item> 
+                  }
+                })}
+              </Flex>
+            )}
             </Form.List>
           )}
-        </Form.Item>
+    </Form.Item>
       </Layout>
 
-      <Layout
-        label={
-          <span>
-            <i className="fa-solid fa-location-dot"></i>
-            Địa chỉ giao
-            <EditOutlined onClick={onOpenAddress} style={{ color: '#5AB2FF'}}/>
-          </span>
-        }
-      >
-        <Form.Item shouldUpdate noStyle>
-          {({ getFieldValue }) => (
-            <Form.Item
-              name={"deliveryAddress"}
-              style={{ marginBottom: "unset", width: "100%" }}
-            >
-              <Typography.Text>
-                {getFieldValue("deliveryAddress")}{" "}
-                {!getFieldValue("deliveryAddress") && <Button onClick={onOpenAddress} type="primary" ghost>
-                  Thay đổi
-                </Button>}
-              </Typography.Text>
-            </Form.Item>
-          )}
-        </Form.Item>
+      <Layout label={
+        <span><i className="fa-solid fa-location-dot"></i>
+          Địa chỉ giao
+      <EditOutlined onClick={onOpenAddress} style={{ color: '#5AB2FF'}}/>
+      </span>}>
+        <Form.Item  shouldUpdate noStyle>
+          {({getFieldValue}) => <Form.Item
+          name={'deliveryAddress'}
+          style={{marginBottom : 'unset',width : '100%'}}
+          >
+            <Typography.Text>
+              {getFieldValue('deliveryAddress')}
+              { !getFieldValue("deliveryAddress") && <WithPermission permission={POLICIES.UPDATE_LOGISTIC}>
+              <Button onClick={onOpenAddress} type="primary" ghost>Thay đổi</Button>
+              </WithPermission>}
+            </Typography.Text>
+      </Form.Item>}
+    </Form.Item>
       </Layout>
       <Layout label={
-          <span>
-          <i className="fa-solid fa-location-dot"></i>
-          Kho xuất hàng
-          <EditOutlined onClick={onOpenModalSelectWarehouse} style={{ color: '#5AB2FF'}}/>
-        </span>
+        <span>
+        <i className="fa-solid fa-location-dot"></i>
+        Kho xuất hàng
+        <EditOutlined onClick={onOpenModalSelectWarehouse} style={{ color: '#5AB2FF'}}/>
+      </span>
       }>
-        <Form.Item shouldUpdate noStyle>
-          {({ getFieldValue }) => (
-            <Form.Item
-              name={"warehouseId"}
-              style={{ marginBottom: "unset", width: "100%" }}
-            >
-              <Typography.Text>
-                {!getFieldValue("warehouseId") && <Button onClick={onOpenModalSelectWarehouse} type="primary" ghost>
-                  Thay đổi
-                </Button>
-                }
-              </Typography.Text>
-            </Form.Item>
-          )}
-        </Form.Item>
+      <Form.Item shouldUpdate noStyle>
+        {({ getFieldValue }) => (
+          <Form.Item
+            name={"warehouseId"}
+            style={{ marginBottom: "unset", width: "100%" }}
+          >
+            <Typography.Text>
+              {!getFieldValue("warehouseId") && <Button onClick={onOpenModalSelectWarehouse} type="primary" ghost>
+                Thay đổi
+              </Button>
+              }
+            </Typography.Text>
+          </Form.Item>
+        )}
+      </Form.Item>
       </Layout>
       <div
         style={{

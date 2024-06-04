@@ -1,9 +1,7 @@
-import { REF_COLLECTION } from './../../../constants/defaultValue';
-import { get } from "lodash";
+import { get, omit } from "lodash";
 import { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
-import { RootState } from "~/redux/store";
 import { checkRefCollection, clearQuerySearch, getExistProp } from "~/utils/helpers";
 import {
   getSelectors,
@@ -47,6 +45,9 @@ const updateBillItemSuccessSelector = getSelector('updateBillItemSuccess');
 const getListProductSuggestSuccessSelector = getSelector('listProductSuggest');
 const getListProductSuggestFailedSelector = getSelector('getProductSuggestFailed');
 const listProductSuggestLoadingSelector = getSelector('isProductSuggestLoading');
+
+const updateApplyLogisticSuccessSelector = getSelector('updateLogisticSuccess');
+const updateApplyLogisticFailedSelector = getSelector('updateLogisticFailed');
 
 const pagingProductSuggestSelector = getSelector('pagingProductSuggest');
 export const useBillProductSuggestPaging = () => useSelector(pagingProductSuggestSelector);
@@ -208,6 +209,19 @@ export const useResetBillAction = () => {
   return useResetState(billSliceAction.resetAction);
 };
 
+export const useUpdateApplyLogisticUnit = (callback?: any) => {
+  useSuccess(
+    updateApplyLogisticSuccessSelector,
+    `Cập nhật đơn vị vận chuyển vào đơn hàng thành công`,
+    callback
+  );
+  useFailed(updateApplyLogisticFailedSelector);
+
+  return useSubmit({
+    action: billSliceAction.updateApplyLogisticRequest,
+    loadingSelector: isSubmitLoadingSelector,
+  });
+};
 
 export const redirectRouterBillCreate = (pathname: string) => {
   if (pathname === PATH_APP.quotation.employee) {

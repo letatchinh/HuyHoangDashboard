@@ -123,25 +123,25 @@ export default function ListBillItem({
         );
       },
     },
-    {
-      title: "Tình trạng",
-      dataIndex: "status",
-      key: "status",
-      align: "center",
-      render(status, record, index) {
-        return (
-          <div className="d-flex flex-column align-items-center">
-            <ToolTipBadge title={status === STATUS_BILL.CANCELLED && get(record,'note','')}>
-            <Status
-              status={status}
-              statusVi={CLONE_STATUS_BILLITEM_VI?.[status]}
-            />
-            </ToolTipBadge>
-            <ConfirmStatusBillItem askAgain={askAgain} setAskAgain={setAskAgain} billItem={record} onChangeStatusBillItem={onChangeStatusBillItem} onOpenCancel={onOpenCancel} isDisabledAll={isDisabledAll} isSubmitLoading={isSubmitLoading} key={get(record,'_id')}/>
-          </div>
-        );
-      },
-    },
+    // {
+    //   title: "Tình trạng",
+    //   dataIndex: "status",
+    //   key: "status",
+    //   align: "center",
+    //   render(status, record, index) {
+    //     return (
+    //       <div className="d-flex flex-column align-items-center">
+    //         <ToolTipBadge title={status === STATUS_BILL.CANCELLED && get(record,'note','')}>
+    //         <Status
+    //           status={status}
+    //           statusVi={CLONE_STATUS_BILLITEM_VI?.[status]}
+    //         />
+    //         </ToolTipBadge>
+    //         <ConfirmStatusBillItem askAgain={askAgain} setAskAgain={setAskAgain} billItem={record} onChangeStatusBillItem={onChangeStatusBillItem} onOpenCancel={onOpenCancel} isDisabledAll={isDisabledAll} isSubmitLoading={isSubmitLoading} key={get(record,'_id')}/>
+    //       </div>
+    //     );
+    //   },
+    // },
     {
       title: "Số lượng",
       dataIndex: "quantity",

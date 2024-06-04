@@ -10,6 +10,7 @@ import {  REF_COLLECTION, REF_COLLECTION_UPPER } from "~/constants/defaultValue"
 import { get, omit, sumBy } from "lodash";
 import PaymentVoucherFormPharmacy from "~/modules/paymentVoucher/components/PaymentVoucherFormPharmacy";
 import { STATUS_BILL } from "../constants";
+import LogisticForm from "~/modules/logistic/components/LogisticForm";
 export type GlobalUpdateBill = {
     bill : any,
     isLoading : boolean,
@@ -19,6 +20,10 @@ export type GlobalUpdateBill = {
     compareMoney: number,
     totalRevenueInVouchers: number;
     refCollection: any,
+    onOpenFormLogistic: () => void;
+    onCloseFormLogistic: () => void;
+    checkboxPayment: string | null;
+    setCheckboxPayment: (p: string | null) => void
 };
 const UpdateBill = createContext<GlobalUpdateBill>({
     bill : null,
@@ -29,7 +34,10 @@ const UpdateBill = createContext<GlobalUpdateBill>({
     compareMoney: 0,
     totalRevenueInVouchers: 0,
     refCollection: null,
-
+    onOpenFormLogistic: () => { },
+    onCloseFormLogistic: () => { },
+    checkboxPayment: null,
+    setCheckboxPayment: (p: string | null) => { },
 });
 
 type UpdateBillProviderProps = {
@@ -48,6 +56,9 @@ export function UpdateBillProvider({
     const {pharmacyId,totalPrice,codeSequence,_id,totalReceiptVoucherCompleted,remainAmount, remaining, pair, refCollection} = bill || {};
     const [isOpenForm, setIsOpenForm] = useState(false);
     const [isOpenFormPayment, setIsOpenFormPayment] = useState(false);
+    const [logisticOpen, setLogisticOpen] = useState(false);
+    const [checkboxPayment, setCheckboxPayment] = useState < string | null>(null);
+  
     const totalRevenueInVouchers = useMemo(() => {
       if (bill?.receiptVouchers?.length > 0) {
         const data = bill?.receiptVouchers?.filter((item: any)=> item?.status !== STATUS_BILL.CANCELLED);
@@ -77,6 +88,14 @@ export function UpdateBillProvider({
   const onCloseFormPayment = () => {
     setIsOpenFormPayment(false);
   };
+
+  const onOpenFormLogistic = () => {
+    setLogisticOpen(true);
+  };
+
+  const onCloseFormLogistic = () => {
+    setLogisticOpen(false);
+  };
   return (
     <UpdateBill.Provider
       value={{
@@ -88,6 +107,10 @@ export function UpdateBillProvider({
         compareMoney,
         totalRevenueInVouchers,
         refCollection,
+        onOpenFormLogistic,
+        onCloseFormLogistic,
+        checkboxPayment,
+        setCheckboxPayment
       }}
     >
       {children}
@@ -134,6 +157,25 @@ export function UpdateBillProvider({
             note: 'Chi cho nhà thuốc vì thu dư',
             totalAmount: compareMoney,
           }}
+        />
+      </ModalAnt>
+      <ModalAnt
+        title='Chi phí vận chuyển'
+        open={logisticOpen}
+        onCancel={onCloseFormLogistic}
+        width={'auto'}
+        footer={null}
+        destroyOnClose
+      >
+        <LogisticForm
+          bill = {bill}
+          onCloseFormLogistic = {onCloseFormLogistic}
+          setCheckboxPayment = {(p: string | null) => setCheckboxPayment(p)}
+          checkboxPayment={checkboxPayment}
+          deliveryAddressId={bill?.deliveryAddressId}
+          dataTransportUnit={bill?.bill?.dataTransportUnit}
+          pharmacy={bill?.pharmacy}
+          id={bill?._id}
         />
       </ModalAnt>
     </UpdateBill.Provider>

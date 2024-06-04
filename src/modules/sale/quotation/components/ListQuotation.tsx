@@ -232,6 +232,8 @@ export default function ListQuotation({
                       debtType: get(record, "debtType"),
                       fee: get(record, 'fee'),
                       deliveryAddress: get(record, 'deliveryAddress'),
+                      dataTransportUnit: get(record, 'dataTransportUnit'),
+                      deliveryAddressId: get(record, 'deliveryAddressId'),
                     });
                   }}
                   type="primary"
@@ -258,6 +260,8 @@ export default function ListQuotation({
                       debtType: get(record, "debtType"),
                       fee: get(record, 'fee'),
                       deliveryAddress: get(record, 'deliveryAddress'),
+                      dataTransportUnit: get(record, 'dataTransportUnit'),
+                      deliveryAddressId: get(record, 'deliveryAddressId'),
                     });
                   }}
                   size="small"

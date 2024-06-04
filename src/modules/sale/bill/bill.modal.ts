@@ -1,3 +1,5 @@
+import { ValueApplyBill } from "~/modules/logistic/components/LogisticForm"
+
 type supplier = {
     name : string,
     code : string,
@@ -71,13 +73,16 @@ export interface FormFieldCreateBill {
     debtType : string | null,
     pair : number,
     fee? : FeeType[],
-    deliveryAddress? : string
+    deliveryAddress?: string,
+    dataTransportUnit?: ValueApplyBill,
+    deliveryAddressId? : any
 }
 export interface PayloadCreateBill extends FormFieldCreateBill {
     quotationItems : Omit<quotation,'variant' | 'variants'>[],
     totalPrice : number,
     totalAmount : number,
-    _id? : any,
+    _id?: any,
+    dataTransportUnit? : ValueApplyBill
 }
 export interface PayloadUpdateBill  {
     cancelNote? : string,
