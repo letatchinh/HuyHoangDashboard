@@ -35,13 +35,14 @@ class WarehouseClassExtend extends InstanceModuleRedux {
       },
       checkWarehouseSuccess: (state: cloneInitState, { payload }: any) => {
         state.isLoading = false;
+        console.log(payload,'payload')
         state.checkWarehouseSuccess = payload;
       },
       checkWarehouseFailed: (state: cloneInitState, { payload }: any) => {
         state.isLoading = false;
         state.checkWarehouseFailed = payload;
       },
-      resetAction: (state:any) => ({
+      resetAction: (state: cloneInitState) => ({
         ...state,
         ...omit(this.cloneInitState, ["list"]),
       }),

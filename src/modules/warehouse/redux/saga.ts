@@ -32,7 +32,7 @@ function* createWarehouse({payload} : any) : any {
 
 function* checkWarehouse({payload} : any) : any {
   try {
-    const data = yield call(api.checkWarehouse,payload);
+    const data = yield call(api.checkWarehouse, payload);
     yield put(warehouseActions.checkWarehouseSuccess(data));
   } catch (error:any) {
     yield put(warehouseActions.checkWarehouseFailed(error));

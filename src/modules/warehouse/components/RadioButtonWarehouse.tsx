@@ -1,8 +1,8 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useGetProfile } from "~/modules/auth/auth.hook";
 import { useFetchState } from "~/utils/hook";
 import apis from "../warehouse.api";
-import { get } from "lodash";
+import { get, head } from "lodash";
 import { Button, Radio, RadioChangeEvent, Row, Space, Spin } from "antd";
 type propsType = {
   setValue: (value: number) => void;
@@ -17,6 +17,7 @@ export default function RadioButtonWarehouse({
   onClick,
   onCancel,
   title,
+  
 }: propsType): React.JSX.Element {
   const profile = useGetProfile();
   const query = useMemo(
@@ -38,7 +39,7 @@ export default function RadioButtonWarehouse({
     <>
       {isLoadingWarehouse
         ? <Spin />
-        : <Radio.Group onChange={onChange} value={value}>
+        : <Radio.Group onChange={onChange} value={value || get(head(listWarehouse), "_id")}>
           <Space direction="vertical">
             {listWarehouse?.map((item: any) => (
               <Radio value={get(item, "_id")}>

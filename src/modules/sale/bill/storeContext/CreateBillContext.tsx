@@ -35,6 +35,7 @@ type Bill = {
   pharmacyId: string;
   fee?: FeeType[];
   dataTransportUnit?: ValueApplyBill;
+  deliveryAddress?: string;
 };
 
 type DiscountDetail = {
@@ -384,7 +385,22 @@ export function CreateBillProvider({
       onNotify?.error("Có lỗi xảy ra khi gắn phí vận chuyển vào dơn hàng");
     };
   };
-  console.log(bill,'ddsasda')
+  // const findWarehouse = (warehouses: any) => {
+  //   for (const warehouse of warehouses) {
+  //     if (typeof bill?.deliveryAddress === 'string') {
+  //       if (bill?.deliveryAddress.includes(warehouse.fullAddress)) {
+  //         return warehouse;
+  //       }
+  //     };
+  //     if (typeof bill?.deliveryAddress === 'object') {
+  //       // if (address?.fullAddress?.includes(warehouse.fullAddress)) {
+  //       //   return warehouse;
+  //       // }
+  //       console.log('object')
+  //     };
+  //   }
+  //   return null;
+  // };
   return (
     <CreateBill.Provider
       value={{

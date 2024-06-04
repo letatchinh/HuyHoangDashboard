@@ -38,6 +38,9 @@ const getSelector = (key: any) => (state: any) => state.warehouse[key];
 const updateManagementWarehouseSuccessSelector = getSelector('updateManagementWarehouseSuccess');
 const updateManagementWarehouseFailedSelector = getSelector('updateManagementWarehouseFailed'); 
 
+const checkWarehouseSuccessSelector = getSelector('checkWarehouseSuccess');
+const checkWarehouseFailedSelector = getSelector('checkWarehouseFailed'); 
+
 export const useGetWarehouses = (param: any) => {
   return useFetchByParam({
     action: warehouseActions.getListRequest,
@@ -72,13 +75,13 @@ export const useCreateWarehouse = (callback?: any) => {
 };
 
 export const useCheckWarehouse = (callback?: any) => {
-  // useSuccess(
-  //   createSuccessSelector,
-  //   `Tạo mới ${MODULE_VI} thành công`,
-  //   callback
-  // );
-  // useFailed(createFailedSelector);
-
+  const mess = useSelector(checkWarehouseSuccessSelector);
+  useSuccess(
+    checkWarehouseSuccessSelector,
+    useSelector(checkWarehouseSuccessSelector)?.message,
+    callback
+  );
+  useFailed(checkWarehouseFailedSelector);
   return useSubmit({
     action: warehouseActions.checkWarehouseRequest,
     loadingSelector: loadingSelector,
