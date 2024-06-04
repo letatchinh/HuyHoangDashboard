@@ -10,44 +10,37 @@ type propsType = {
   isLoading?: boolean;
   data?: any;
   index?: number;
+  name?: any;
+  isLoadingWarehouse?: any;
+  options: any;
 };
 export default function SelectWarehouse({
   isLoading = false,
   data,
-  index
+  index,
+  name,
+  isLoadingWarehouse = false,
+  options,
 }: propsType): React.JSX.Element {
-  const profile = useGetProfile();
-  const query = useMemo(() => ({
-    branchId: profile?.profile?.branchId,
-  }), [profile]);
-  const [warehouse, isLoadingWarehouse] = useFetchState({api: apis.getAllWarehouse,query ,useDocs: false});
-  const options = useMemo(
-    () =>
-      warehouse?.map((item: any) => ({
-        label: get(item, "name.vi") || get(item, "name"),
-        value: get(item, "_id"),
-      })),
-    [warehouse]
-  );
 
   return (
     <>
       <Form.Item
         label="Kho"
-        name="warehouseId"
+        name={[name , "warehouseId"]}
         rules={[{
           required: true,
           message: "Vui lòng chọn kho",
         }]}
       >
         {RenderLoading(
-          isLoading,
+          isLoadingWarehouse,
           <Select
             placeholder="Danh sách kho"
             options={options}
             showSearch
             filterOption={filterSelectWithLabel}
-            loading={isLoadingWarehouse}
+            loading={isLoadingWarehouse || isLoading}
           />
         )}
       </Form.Item>

@@ -28,7 +28,16 @@ function* createWarehouse({payload} : any) : any {
   } catch (error:any) {
     yield put(warehouseActions.createFailed(error));
   }
-}
+};
+
+function* checkWarehouse({payload} : any) : any {
+  try {
+    const data = yield call(api.checkWarehouse,payload);
+    yield put(warehouseActions.checkWarehouseSuccess(data));
+  } catch (error:any) {
+    yield put(warehouseActions.checkWarehouseFailed(error));
+  }
+};
 
 function* updateWarehouse({payload} : any) : any {
   try {
@@ -37,7 +46,18 @@ function* updateWarehouse({payload} : any) : any {
   } catch (error:any) {
     yield put(warehouseActions.updateFailed(error));
   }
-}
+};
+
+function* updateManagementWarehouse({payload} : any) : any {
+  try {
+    const data = yield call(api.updateManagementWarehouse, payload);
+    yield put(warehouseActions.updateManagementWarehouseSuccess(data));
+    yield put(warehouseActions.getByIdRequest(data?.data?._id));
+  } catch (error:any) {
+    yield put(warehouseActions.updateManagementWarehouseFailed(error));
+  }
+};
+
 function* deleteWarehouse({payload : id} : any) : any {
   try {
     const data = yield call(api.delete,id);
@@ -45,8 +65,7 @@ function* deleteWarehouse({payload : id} : any) : any {
   } catch (error:any) {
     yield put(warehouseActions.deleteFailed(error));
   }
-}
-
+};
 
 export default function* warehouseSaga() {
   yield takeLatest(warehouseActions.getListRequest, getListWarehouse);
@@ -54,4 +73,7 @@ export default function* warehouseSaga() {
   yield takeLatest(warehouseActions.createRequest, createWarehouse);
   yield takeLatest(warehouseActions.updateRequest, updateWarehouse);
   yield takeLatest(warehouseActions.deleteRequest, deleteWarehouse);
-}
+
+  yield takeLatest(warehouseActions.updateManagementWarehouseRequest, updateManagementWarehouse);
+  yield takeLatest(warehouseActions.checkWarehouseRequest, checkWarehouse);
+};

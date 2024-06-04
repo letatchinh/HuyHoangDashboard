@@ -73,20 +73,7 @@ export default function ApiKeyForm({updateApiKey, id}: propsType): React.JSX.Ele
       labelAlign="left"
     >
       <BaseBorderBox>
-        {/* <BaseBorderBox title={"Danh sách kho đã liên kết"}>
-          <TableAnt
-            columns={columns}
-            dataSource={listWarehouse}
-          />
-        </BaseBorderBox> */}
         <BaseBorderBox title={'Thay đổi mã liên kết'}>
-          {/* <Form.Item name={'warehouseId'} label = {'Danh sách kho'}>
-            <Select
-              options={optionsWarehouse}
-              showSearch
-              filterOption={filterSelectWithLabel}
-            />
-          </Form.Item> */}
           <Form.Item name={'apiKey'} label = {'Mã liên kết'}>
             <Input onChange={(e) => setNewApiKey(e.target.value)} value={newApiKey}/>
           </Form.Item>

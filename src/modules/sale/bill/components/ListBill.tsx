@@ -8,27 +8,31 @@ import {
   useUpdateBillParams,
 } from "../bill.hook";
 
-import { Checkbox, Col, ConfigProvider, Row, Space, Tooltip, Typography } from "antd";
+import { Checkbox, Col, ConfigProvider, Row, Space, Typography } from "antd";
 import { ColumnsType } from "antd/es/table/InternalTable";
 import { get } from "lodash";
 import { Link, useLocation } from "react-router-dom";
 import SearchAnt from "~/components/Antd/SearchAnt";
-import Status from "~/components/common/Status/index";
-import SelectSupplier from "~/modules/supplier/components/SelectSupplier";
-import { PATH_APP } from "~/routes/allPath";
-import { formatter, pagingTable, permissionConvert } from "~/utils/helpers";
-import { STATUS_BILL_VI } from "../constants";
-import { useMatchPolicy } from "~/modules/policy/policy.hook";
-import POLICIES from "~/modules/policy/policy.auth";
-import useCheckBoxExport from "~/modules/export/export.hook";
-import WithPermission from "~/components/common/WithPermission";
-import ExportExcelButton from "~/modules/export/component";
-import { CalculateBill } from "../bill.service";
 import DateTimeTable from "~/components/common/DateTimeTable";
-import SelectEmployee from "~/modules/employee/components/SelectSearch";
+import Status from "~/components/common/Status/index";
+import WithPermission from "~/components/common/WithPermission";
 import { REF_COLLECTION } from "~/constants/defaultValue";
 import SelectCollaborator from "~/modules/collaborator/components/SelectSearch";
+import SelectEmployee from "~/modules/employee/components/SelectSearch";
+import ExportExcelButton from "~/modules/export/component";
+import useCheckBoxExport from "~/modules/export/export.hook";
+import { useMatchPolicy } from "~/modules/policy/policy.hook";
+import SelectSupplier from "~/modules/supplier/components/SelectSupplier";
+import { formatter, pagingTable, permissionConvert } from "~/utils/helpers";
 import { useIsAdapterSystem } from "~/utils/hook";
+import { CalculateBill } from "../bill.service";
+import { STATUS_BILL_VI } from "../constants";
+import Action from "./Action";
+import { useCheckWarehouse } from "~/modules/warehouse/warehouse.hook";
+import ModalAnt from "~/components/Antd/ModalAnt";
+import RadioButtonWarehouse from "~/modules/warehouse/components/RadioButtonWarehouse";
+import { DataCheckWarehouse } from "~/modules/warehouse/warehouse.modal";
+import useCreateBillStore from "../storeContext/CreateBillContext";
 const CalculateBillMethod = new CalculateBill();
 type propsType = {
   status?: string;
@@ -45,6 +49,23 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
   const canDownload = useMatchPolicy(onPermissionCovert('DOWNLOAD', 'BILL'));
   const { pathname } = useLocation();
   const [arrCheckBox, onChangeCheckBox] = useCheckBoxExport();
+
+  //Warehouse
+  const [warehouseSelect, setWarehouseSelect] = useState<number | undefined>();
+  const [isLoadingCheckWarehouse, onCheckWarehouse] = useCheckWarehouse();
+  const [isModalCheckWarehouse, setIsModalCheckWarehouse] = useState(false);
+  const openModalCheckWarehouse = () => {
+    setIsModalCheckWarehouse(true);
+  };
+  const closeModalCheckWarehouse = () => {
+    setIsModalCheckWarehouse(false);
+  };
+  
+  const onCheck = () => {
+    console.log('first')
+    // onCheckWarehouse(data);
+  };
+  //
   const columns: ColumnsType = useMemo(
     () => [
       {
@@ -158,6 +179,14 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
           return <Typography.Text>{formatter(remainAmount)}</Typography.Text>;
         },
       },
+      {
+        title: "Thao tác",
+        key: "action",
+        align: "center",
+        render(value, record, index) {
+          return <Action canUpdate={true} branchId={record._id} onCheckWarehouse={onCheckWarehouse} onOpenModalSelectWarehouse={openModalCheckWarehouse} />
+        },
+      },
       ...(canDownload
         ? [
             {
@@ -242,6 +271,17 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
         scroll={{ y: '60vh' ,x  : 800}}
       />
       </ConfigProvider>
+      <ModalAnt
+        destroyOnClose
+        title="Chọn kho kiểm hàng"
+        open={isModalCheckWarehouse}
+        onCancel={closeModalCheckWarehouse}
+        onOk={closeModalCheckWarehouse}
+        width={600}
+        footer={false}
+      >
+        <RadioButtonWarehouse setValue={setWarehouseSelect} value={warehouseSelect} onClick={onCheck} title="Kiểm kho"/>
+      </ModalAnt>
     </div>
   );
 }

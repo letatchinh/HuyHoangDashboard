@@ -1,13 +1,15 @@
-import { get } from "lodash";
+import { get, omit } from "lodash";
 import requester from "~/api/requester";
 
 const apis = {
     getAll: (query?: any) => requester.get(`/api/v1/warehouse`, query),
-    getById: (id?: any) => requester.get(`/api/v1/warehouse/${id}`),
+    getById: (id?: any) => requester.get(`/api/v1/branch/warehouse-address/${id}`),
     create: (data?: any) => requester.post(`/api/v1/warehouse`, data),
+    checkWarehouse: (data?: any) => requester.post(`/api/v1/pms/warehouses/check-product`, data),
     update: (data?: any) => requester.put(`/api/v1/warehouse/${get(data,'_id')}`, data),
     delete: (id?: any) => requester.delete(`/api/v1/warehouse/${id}`),
-
+    
+    updateManagementWarehouse: (data?: any) => requester.put(`/api/v1/branch/warehouse-address/${get(data,'branchId')}`, omit(data, ['branchId'])),
     getAllWarehouse: (query?: any) => requester.get(`/api/v1/branch/warehouses/${get(query,'branchId')}`, query),
 }
 export default apis;

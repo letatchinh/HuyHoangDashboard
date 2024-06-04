@@ -71,6 +71,7 @@ export function BranchProviderContext({ children }: BranchProps) {
 
   const openFormApiKey = (data?: PropsApiKeyForm) => {
     setIsOpenModalApiKey(true);
+    setId(data?.branchId);
   };
   const closeFormApiKey = () => {
     setIsOpenModalApiKey(false);
@@ -98,6 +99,7 @@ export function BranchProviderContext({ children }: BranchProps) {
         title="Mã liên kết kho"
         footer={null}
         confirmLoading={isSubmitLoading}
+        destroyOnClose
       >
         <ApiKeyForm id = {id} updateApiKey={updateApiKey}/>
       </ModalAnt>

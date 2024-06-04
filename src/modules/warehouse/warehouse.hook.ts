@@ -1,19 +1,20 @@
-
 import { get } from "lodash";
 import { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import { clearQuerySearch, getExistProp } from "~/utils/helpers";
 import {
-    getSelectors,
-    useFailed, useFetchByParam,
-    useQueryParams,
-    useSubmit,
-    useSuccess
+  getSelectors,
+  useFailed,
+  useFetchByParam,
+  useQueryParams,
+  useResetState,
+  useSubmit,
+  useSuccess,
 } from "~/utils/hook";
 import { warehouseActions } from "./redux/reducer";
 const MODULE = "warehouse";
-const MODULE_VI = "";
+const MODULE_VI = "kho";
 
 const {
   loadingSelector,
@@ -33,14 +34,17 @@ const {
 } = getSelectors(MODULE);
 
 export const useWarehousePaging = () => useSelector(pagingSelector);
+const getSelector = (key: any) => (state: any) => state.warehouse[key];
+const updateManagementWarehouseSuccessSelector = getSelector('updateManagementWarehouseSuccess');
+const updateManagementWarehouseFailedSelector = getSelector('updateManagementWarehouseFailed'); 
 
-export const useGetWarehouses = (param:any) => {
+export const useGetWarehouses = (param: any) => {
   return useFetchByParam({
     action: warehouseActions.getListRequest,
     loadingSelector: loadingSelector,
     dataSelector: listSelector,
     failedSelector: getListFailedSelector,
-    param
+    param,
   });
 };
 export const useGetWarehouse = (id: any) => {
@@ -67,6 +71,20 @@ export const useCreateWarehouse = (callback?: any) => {
   });
 };
 
+export const useCheckWarehouse = (callback?: any) => {
+  // useSuccess(
+  //   createSuccessSelector,
+  //   `Tạo mới ${MODULE_VI} thành công`,
+  //   callback
+  // );
+  // useFailed(createFailedSelector);
+
+  return useSubmit({
+    action: warehouseActions.checkWarehouseRequest,
+    loadingSelector: loadingSelector,
+  });
+};
+
 export const useUpdateWarehouse = (callback?: any) => {
   useSuccess(
     updateSuccessSelector,
@@ -77,6 +95,20 @@ export const useUpdateWarehouse = (callback?: any) => {
 
   return useSubmit({
     action: warehouseActions.updateRequest,
+    loadingSelector: isSubmitLoadingSelector,
+  });
+};
+
+export const useUpdateManagementWarehouse = (callback?: any) => {
+  useSuccess(
+    updateManagementWarehouseSuccessSelector,
+    `Cập nhật ${MODULE_VI} mặc định thành công`,
+    callback
+  );
+  useFailed(updateManagementWarehouseFailedSelector);
+
+  return useSubmit({
+    action: warehouseActions.updateManagementWarehouseRequest,
     loadingSelector: isSubmitLoadingSelector,
   });
 };
@@ -125,7 +157,7 @@ export const useUpdateWarehouseParams = (
 
     if (!param.page) {
       query.page = 1;
-    };
+    }
 
     // Convert Query and Params to Search Url Param
     const searchString = new URLSearchParams(
@@ -142,9 +174,28 @@ export const useUpdateWarehouseParams = (
   return [keyword, { setKeyword, onParamChange }];
 };
 
+export const convertDataByManagementArea = (data: any) => {
+  return data.warehouses?.map((item: any) => {
+    return {
+      ...item,
+      managementArea: item.managementArea.map((area: any) => ({
+        path: area.value,
+        fullAddress: area.label,
+      })),
+    };
+  });
+};
 
-export const useInitValue = (values: any) => {
-  return values?.map((item: any) => ({
-    ...item
-  }))
+export const useResetAction = () => {
+  return useResetState(warehouseActions.resetAction);
+};
+ 
+export const useInitWarehouse = (values: any) => {
+ return ({warehouses:values?.map((item: any) => ({
+    ...item,
+    managementArea: item.managementArea.map((area: any) => ({
+      value: area.path,
+      label: area.fullAddress,
+    })),
+  }))})
 };

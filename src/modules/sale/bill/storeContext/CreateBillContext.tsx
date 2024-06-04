@@ -16,6 +16,8 @@ import { useGetDebtRule } from "../bill.hook";
 import { DebtType, FeeType, quotation } from "../bill.modal";
 import { onVerifyData, reducerDiscountQuotationItems } from "../bill.service";
 import { defaultFee } from "../constants";
+import ModalAnt from "~/components/Antd/ModalAnt";
+import RadioButtonWarehouse from "~/modules/warehouse/components/RadioButtonWarehouse";
 const TYPE_DISCOUNT = {
   "DISCOUNT.CORE": "DISCOUNT.CORE",
   "DISCOUNT.SOFT": "DISCOUNT.SOFT",
@@ -61,7 +63,12 @@ export type GlobalCreateBill = {
   address : any[],
   setAddress : (p:any) => void;
   setFormAndLocalStorage : (newValue : any) => void
-  partner : any,
+  partner: any,
+  setWarehouseId: (p: any) => void,
+  warehouseId: number | undefined,
+  isOpenModalSelectWarehouse: boolean,
+  onOpenModalSelectWarehouse: () => void,
+  onCloseModalSelectWarehouse: () => void,
 };
 const CreateBill = createContext<GlobalCreateBill>({
   quotationItems: [],
@@ -88,7 +95,12 @@ const CreateBill = createContext<GlobalCreateBill>({
   address : [],
   setAddress : () => {},
   setFormAndLocalStorage : () => {},
-  partner : null
+  partner: null,
+  setWarehouseId: () => { },
+  warehouseId: undefined,  
+  isOpenModalSelectWarehouse: false,
+  onOpenModalSelectWarehouse: () => {},
+  onCloseModalSelectWarehouse: () => {},
 });
 
 type CreateBillProviderProps = {
@@ -115,7 +127,7 @@ export function CreateBillProvider({
   const [debt,isLoadingDebt] = useGetDebtRule();
   const [address,setAddress] = useState([]);
   const [partner,loadingPartner] : any = useGetCollaborator(get(bill,'pharmacyId'));
-
+  const [warehouseId, setWarehouseId] = useState <number | undefined>();
   // Controller Data
   const onSave = (row: DataItem) => {
     const newData: DataItem[] = [...quotationItems];
@@ -327,6 +339,12 @@ export function CreateBillProvider({
     })
   },[]);
   
+  //Warehouse
+  const [isOpenModalSelectWarehouse, setOpenModalSelectWarehouse] = useState(false);
+  const onOpenModalSelectWarehouse = () => setOpenModalSelectWarehouse(true);
+  const onCloseModalSelectWarehouse = () => setOpenModalSelectWarehouse(false);
+
+  console.log(bill,'dadsadasd')
   return (
     <CreateBill.Provider
       value={{
@@ -355,9 +373,25 @@ export function CreateBillProvider({
         setAddress,
         setFormAndLocalStorage,
         partner,
+        setWarehouseId,
+        warehouseId,
+        isOpenModalSelectWarehouse,
+        onOpenModalSelectWarehouse,
+        onCloseModalSelectWarehouse
       }}
     >
       {children}
+      <ModalAnt
+        destroyOnClose
+        title="Chọn kho xuất hàng"
+        open={isOpenModalSelectWarehouse}
+        onCancel={onCloseModalSelectWarehouse}
+        onOk={onCloseModalSelectWarehouse}
+        width={600}
+        footer={false}
+      >
+        <RadioButtonWarehouse setValue={setWarehouseId} value={warehouseId} onCancel={onCloseModalSelectWarehouse} title="Xác nhận"/>
+      </ModalAnt>
     </CreateBill.Provider>
   );
 }
