@@ -7,6 +7,7 @@ const pharmacy = {
     search: (query?: any) => requester.post(`api/v1/pharma-profile-search`, query),
     getById: (id?: any) => requester.get(`api/v1/pharma-profile/${id}`),
     getHistoryById: (id?: any) => requester.get(`api/v1/history-bill-pharma-profile/${id}`),
+    getHistoryUpdateById: (id?: any) => requester.get(`api/v1/history-pharma-profile/${id}`),
     create: (data?: any) => requester.post(`api/v1/pharma-profile`, data),
     update: (data?: any) => requester.put(`api/v1/pharma-profile/${get(data,'_id')}`, data),
     convert: (data?: any) => requester.put(`api/v1/pharmacy-convert/${get(data,'_id')}`, omit(data, ['_id'])),

@@ -9,6 +9,7 @@ import AccumulationPharmacy from "../component/AccumulationPharmacy";
 import DebtPharmacy from "../component/DebtPharmacy";
 import HistoryPharmacy from "../component/HistoryPharmacy";
 import InformationDetail from "../component/InformationDetail";
+import HistoryUpdate from "./HistoryUpdate";
 
 type propsType = {
 
@@ -36,16 +37,19 @@ export default function MainContentTab(props:propsType) : React.JSX.Element {
           <TabPane tab="Thông tin" key="1">
             <InformationDetail pharmacyId={pharmacyId} />
           </TabPane>
-        {canReadHistory &&  <TabPane tab="Lịch sử" key="2">
+        {canReadHistory &&  <TabPane tab="Lịch sử đơn hàng" key="2">
             <HistoryPharmacy pharmacyId={pharmacyId} />
           </TabPane>}
-        { canReadDebt && <TabPane tab="Công nợ" key="3">
+          <TabPane tab="Lịch sử chỉnh sửa" key="3">
+            <HistoryUpdate id={pharmacyId}/>
+          </TabPane>
+        { canReadDebt && <TabPane tab="Công nợ" key="4">
             <DebtPharmacy pharmacyId={pharmacyId} />
           </TabPane>}
-          {canReadAccumulate &&<TabPane tab="Tích luỹ sản phẩm" key="4">
+          {canReadAccumulate &&<TabPane tab="Tích luỹ sản phẩm" key="5">
             <AccumulationPharmacy pharmacyId={pharmacyId} targetType="PRODUCT"/>
           </TabPane>}
-          {canReadAccumulate &&<TabPane tab="Tích luỹ danh mục" key="5">
+          {canReadAccumulate &&<TabPane tab="Tích luỹ danh mục" key="6">
           <AccumulationPharmacy pharmacyId={pharmacyId} targetType="GROUP"/>
           </TabPane>}
         </Tabs>
