@@ -1,25 +1,27 @@
 import { Form } from "antd";
-import { forIn, get, omit } from "lodash";
+import { forIn, get } from "lodash";
 import {
+  ReactNode,
   createContext,
-  ReactNode, useCallback, useContext,
+  useCallback, useContext,
   useEffect,
   useMemo,
   useState
 } from "react";
 import { v4 } from "uuid";
+import ModalAnt from "~/components/Antd/ModalAnt";
 import { useGetCollaborator } from "~/modules/collaborator/collaborator.hook";
+import LogisticForm, { ValueApplyBill } from "~/modules/logistic/components/LogisticForm";
 import QuotationModule from '~/modules/sale/quotation';
+import RadioButtonWarehouseNotFetch from "~/modules/warehouse/components/RadioButtonWarehouseNotFetch";
+import { useGetWarehouseByBranchLinked } from "~/modules/warehouse/warehouse.hook";
+import useNotificationStore from "~/store/NotificationContext";
 import { getValueOfPercent } from "~/utils/helpers";
 import { DEFAULT_DEBT_TYPE } from "../../quotation/constants";
 import { useGetDebtRule } from "../bill.hook";
 import { DebtType, FeeType, quotation } from "../bill.modal";
-import {  reducerDiscountQuotationItems } from "../bill.service";
+import { reducerDiscountQuotationItems } from "../bill.service";
 import { defaultFee } from "../constants";
-import ModalAnt from "~/components/Antd/ModalAnt";
-import RadioButtonWarehouse from "~/modules/warehouse/components/RadioButtonWarehouse";
-import LogisticForm, { ValueApplyBill } from "~/modules/logistic/components/LogisticForm";
-import useNotificationStore from "~/store/NotificationContext";
 const TYPE_DISCOUNT = {
   "DISCOUNT.CORE": "DISCOUNT.CORE",
   "DISCOUNT.SOFT": "DISCOUNT.SOFT",
@@ -36,6 +38,7 @@ type Bill = {
   fee?: FeeType[];
   dataTransportUnit?: ValueApplyBill;
   deliveryAddress?: string;
+  warehouseId?: number;
 };
 
 type DiscountDetail = {
@@ -151,6 +154,7 @@ export function CreateBillProvider({
   const [checkboxPayment, setCheckboxPayment] = useState<string | null>(null);
   const { onNotify } = useNotificationStore();
   const [pharmacyInfo, setPharmacyInfo] = useState<any>();
+  const [listWarehouse, isLoadingWarehouse]= useGetWarehouseByBranchLinked();
   // Controller Data
   const onSave = (row: DataItem) => {
     const newData: DataItem[] = [...quotationItems];
@@ -346,7 +350,9 @@ export function CreateBillProvider({
       setQuotationItems(newQuotationItems);
     }
   }, [bill, debt, form, totalPrice]);
-  
+
+  // Init warehouse
+
   const setFormAndLocalStorage = useCallback((newValue: any) => {
     form.setFieldsValue({
       ...newValue
@@ -385,22 +391,26 @@ export function CreateBillProvider({
       onNotify?.error("Có lỗi xảy ra khi gắn phí vận chuyển vào dơn hàng");
     };
   };
-  // const findWarehouse = (warehouses: any) => {
-  //   for (const warehouse of warehouses) {
-  //     if (typeof bill?.deliveryAddress === 'string') {
-  //       if (bill?.deliveryAddress.includes(warehouse.fullAddress)) {
-  //         return warehouse;
-  //       }
-  //     };
-  //     if (typeof bill?.deliveryAddress === 'object') {
-  //       // if (address?.fullAddress?.includes(warehouse.fullAddress)) {
-  //       //   return warehouse;
-  //       // }
-  //       console.log('object')
-  //     };
-  //   }
-  //   return null;
-  // };
+
+  const onConfirmWarehouse = (data: any) => {
+    const findWarehouse = listWarehouse?.find((item: any) => item?._id === data?.warehouseId);
+    setFormAndLocalStorage({
+      warehouseId: findWarehouse?._id,
+      warehouseName: findWarehouse?.name?.vi
+    });
+    onCloseModalSelectWarehouse();
+  };
+  useEffect(() => {
+    if(bill?.warehouseId){
+    setWarehouseId(bill?.warehouseId)
+    };
+    if (!bill?.warehouseId && listWarehouse?.length > 0 && bill?.pharmacyId) {
+      setFormAndLocalStorage({
+        warehouseId: listWarehouse[0]?._id,
+        warehouseName: listWarehouse[0]?.name?.vi
+      });
+    };
+  }, [bill, listWarehouse]);
   return (
     <CreateBill.Provider
       value={{
@@ -453,7 +463,15 @@ export function CreateBillProvider({
         width={600}
         footer={false}
       >
-        <RadioButtonWarehouse setValue={setWarehouseId} value={warehouseId} onCancel={onCloseModalSelectWarehouse} title="Xác nhận" />
+        <RadioButtonWarehouseNotFetch
+          listWarehouse={listWarehouse} 
+          setValue={setWarehouseId} 
+          value={warehouseId} 
+          onCancel={onCloseModalSelectWarehouse}
+          title="Xác nhận"
+          isLoadingWarehouse={isLoadingWarehouse}
+          onClick = {onConfirmWarehouse} 
+        />
       </ModalAnt>
       <ModalAnt
         title='Chi phí vận chuyển'

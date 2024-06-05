@@ -1,12 +1,12 @@
 import { Tabs, Typography } from "antd";
-import { keys } from "lodash";
+import { keys, omit } from "lodash";
 import React, { useState } from "react";
 import WhiteBox from "~/components/common/WhiteBox";
 import { useChangeDocumentTitle } from "~/utils/hook";
 import ListBill from "../components/ListBill";
 import { STATUS_BILL, STATUS_BILL_VI } from "../constants";
 type propsType = {};
-const CLONE_STATUS_BILL_VI: any = STATUS_BILL_VI;
+const CLONE_STATUS_BILL_VI: any = omit(STATUS_BILL_VI, ['READY']);
 export default function Bill(props: propsType): React.JSX.Element {
   const [activeKey, setActiveKey] = useState<string>("ALL");
   
@@ -25,9 +25,9 @@ export default function Bill(props: propsType): React.JSX.Element {
           onChange={onChangeTab}
         >
           <Tabs.TabPane active={"ALL" === activeKey} tab={"Tất cả đơn hàng"}>
-            <ListBill />
+            <ListBill/>
           </Tabs.TabPane>
-          {keys(STATUS_BILL).map((status) => (
+          {keys(omit(STATUS_BILL, "READY")).map((status) => (
             <Tabs.TabPane
               key={status}
               active={status === activeKey}

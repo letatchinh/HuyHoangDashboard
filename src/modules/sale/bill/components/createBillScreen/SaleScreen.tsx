@@ -17,7 +17,7 @@ import { PATH_APP } from "~/routes/allPath";
 import SelectCollaborator from "~/modules/collaborator/components/SelectSearch";
 type propsType = {};
 export default function SaleScreen(props: propsType): React.JSX.Element {
-  const {form,onValueChange,quotationItems,totalPriceAfterDiscount,onRemoveTab,bill,onOpenModalResult,totalAmount,mutateReValidate,setAddress,setFormAndLocalStorage, setPharmacyInfo} = useCreateBillStore();
+  const { form, onValueChange, quotationItems, totalPriceAfterDiscount, onRemoveTab, bill, onOpenModalResult, totalAmount, mutateReValidate, setAddress, setFormAndLocalStorage, setPharmacyInfo } = useCreateBillStore();
  const feeForm = Form.useWatch('fee',form);
 
  const {onNotify} = useNotificationStore();
@@ -95,7 +95,6 @@ try {
   }, []); 
 
   useChangeDocumentTitle("Tạo đơn hàng");
-  
   
   return (
     <Form

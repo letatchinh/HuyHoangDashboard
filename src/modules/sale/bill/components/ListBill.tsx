@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import TableAnt from "~/components/Antd/TableAnt";
 import {
   redirectRouterBillId,
@@ -26,15 +26,16 @@ import ExportExcelButton from "~/modules/export/component";
 import useCheckBoxExport from "~/modules/export/export.hook";
 import { useMatchPolicy } from "~/modules/policy/policy.hook";
 import SelectSupplier from "~/modules/supplier/components/SelectSupplier";
-import RadioButtonWarehouse from "~/modules/warehouse/components/RadioButtonWarehouse";
+import RadioButtonWarehouseNotFetch from "~/modules/warehouse/components/RadioButtonWarehouseNotFetch";
 import { warehouseActions } from "~/modules/warehouse/redux/reducer";
-import { useCheckWarehouse } from "~/modules/warehouse/warehouse.hook";
-import { ItemProduct } from "~/modules/warehouse/warehouse.modal";
+import { convertProductsFromBill, useCheckWarehouse, useCreateBillToWarehouse, useGetWarehouseByBranchLinked } from "~/modules/warehouse/warehouse.hook";
+import { ItemProduct, dataBillSentToWarehouse } from "~/modules/warehouse/warehouse.modal";
 import { formatter, pagingTable, permissionConvert } from "~/utils/helpers";
 import { useIsAdapterSystem } from "~/utils/hook";
 import { CalculateBill } from "../bill.service";
-import { STATUS_BILL_VI } from "../constants";
+import { STATUS_BILL, STATUS_BILL_VI } from "../constants";
 import Action from "./Action";
+import ProductItem from "./ProductItem";
 const CalculateBillMethod = new CalculateBill();
 type propsType = {
   status?: string;
@@ -47,7 +48,6 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
   const paging = useBillPaging();
   const isSystem = useIsAdapterSystem();
   const dispatch = useDispatch();
-
   //Download
   const onPermissionCovert = useCallback(permissionConvert(query),[query])
   const canDownload = useMatchPolicy(onPermissionCovert('DOWNLOAD', 'BILL'));
@@ -57,9 +57,17 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
   //Warehouse
   const [warehouseSelect, setWarehouseSelect] = useState<number | undefined>();
   const [isModalCheckWarehouse, setIsModalCheckWarehouse] = useState(false);
+  const [listWarehouse, isLoadingWarehouse]= useGetWarehouseByBranchLinked();
   const [billItem, setBillItem] = useState<any>(null);
   const memoId = useMemo(() => get(billItem, '_id'), [billItem]);
   const [bill, loading] = useGetBill(memoId);
+  const [isSubmitLoading, onCreateBillToWarehouse] = useCreateBillToWarehouse();
+
+  useEffect(() => {
+    if (bill && bill?.warehouseId) {
+      setWarehouseSelect(bill?.warehouseId);
+    };
+  }, [bill]);
   const openModalCheckWarehouse = (item: any) => {
     setIsModalCheckWarehouse(true);
     setBillItem(item);
@@ -70,35 +78,30 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
   };
   const [isLoadingCheckWarehouse, onCheckWarehouse] = useCheckWarehouse(() => {
     dispatch(warehouseActions.resetAction());
-    closeModalCheckWarehouse();
   });
 
   const onCheck = () => {
-    const newList: ItemProduct[] = get(bill, 'billItems', [])?.map((item: any) => ({
-      name: get(item, 'product.name'),
-      manufacturer: {
-        name: get(item, 'product.manufacturer.name'),
-      },
-      unit: {
-        name:  get(item, 'variant.unit.name')
-      },
-      quantity: get(item, 'quantity'),
-      category: get(item, 'product.category.name', 'product'),
-      barcode: get(item, 'product.barcode', ''),
-      productId: get(item, 'product._id', ''),
-      variantId: get(item, 'variant._id', ''),
-    }));
+    const newList = convertProductsFromBill(get(bill, 'billItems', []))
+    
     const submitData = {
       warehouseId: warehouseSelect,
-      listProduct: newList
+      listProduct: newList,
+      billId: get(bill, '_id'),
     };
-    console.log(submitData, 'submitData')
     try {
-      onCheckWarehouse(submitData);
+       onCheckWarehouse(submitData);
     } catch (error) {
       console.log(error)
     }
   };
+  const onRequestWarehouseExport = () => {
+    try {
+      // const submitData : dataBillSentToWarehouse = 
+    } catch (error) {
+      
+    }
+  };
+  console.log(bill,'billlll')
   //
   const columns: ColumnsType = useMemo(
     () => [
@@ -146,7 +149,7 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
         dataIndex: "status",
         key: "status",
         align: "center",
-        width: 150,
+        width: 180,
         render(status, record, index) {
           return (
             <Status status={status} statusVi={CLONE_STATUS_BILL_VI[status]} />
@@ -307,14 +310,32 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
       </ConfigProvider>
       <ModalAnt
         destroyOnClose
-        title="Chọn kho kiểm hàng"
+        title=""
         open={isModalCheckWarehouse}
         onCancel={closeModalCheckWarehouse}
         onOk={closeModalCheckWarehouse}
-        width={600}
+        width={1200}
         footer={false}
       >
-      {loading ? <Spin/> :  <RadioButtonWarehouse setValue={setWarehouseSelect} value={warehouseSelect} onClick={onCheck} title="Kiểm kho"/>}
+        {loading ? <Spin />
+          : (
+            <>
+              <ProductItem data = {bill?.billItems}/>
+              <RadioButtonWarehouseNotFetch
+                setValue={setWarehouseSelect}
+                value={warehouseSelect}
+                onClick={onCheck}
+                title="Kiểm kho"
+                listWarehouse={listWarehouse}
+                isLoadingWarehouse={isLoadingWarehouse}
+                isShowButtonPackageExport
+                disabledButtonExport={bill?.status !== STATUS_BILL.READY}
+                isSubmitLoading={isSubmitLoading}
+                requestWarehouseExport={onRequestWarehouseExport}
+              />
+            </>
+
+          )}
       </ModalAnt>
     </div>
   );

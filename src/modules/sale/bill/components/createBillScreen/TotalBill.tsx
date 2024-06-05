@@ -126,6 +126,7 @@ export default function TotalBill(props: propsType): React.JSX.Element {
       })
     };
   }, [bill]); // Set value logistic fee
+  console.log(bill?.pharmacyId,'bill?.pharmacyId')
   return (
     <Flex vertical gap={"small"}>
       <Layout label={"Số lượng mặt hàng"}>{formatter(totalQuantity)}</Layout>
@@ -298,9 +299,9 @@ export default function TotalBill(props: propsType): React.JSX.Element {
       </Layout>
 
       <Layout label={
-        <span><i className="fa-solid fa-location-dot"></i>
-          Địa chỉ giao
-      <EditOutlined onClick={onOpenAddress} style={{ color: '#5AB2FF'}}/>
+        <span><i className="fa-solid fa-location-dot m"></i>
+        {' '}  Địa chỉ giao
+    {bill?.deliveryAddress &&  <EditOutlined onClick={onOpenAddress} style={{ color: '#5AB2FF'}}/>}
       </span>}>
         <Form.Item  shouldUpdate noStyle>
           {({getFieldValue}) => <Form.Item
@@ -319,8 +320,8 @@ export default function TotalBill(props: propsType): React.JSX.Element {
       <Layout label={
         <span>
         <i className="fa-solid fa-location-dot"></i>
-        Kho xuất hàng
-        <EditOutlined onClick={onOpenModalSelectWarehouse} style={{ color: '#5AB2FF'}}/>
+        {' '}  Kho xuất hàng
+        {bill?.warehouseId && <EditOutlined onClick={onOpenModalSelectWarehouse} style={{ color: '#5AB2FF'}}/>}
       </span>
       }>
       <Form.Item shouldUpdate noStyle>
@@ -329,8 +330,15 @@ export default function TotalBill(props: propsType): React.JSX.Element {
             name={"warehouseId"}
             style={{ marginBottom: "unset", width: "100%" }}
           >
-            <Typography.Text>
-              {!getFieldValue("warehouseId") && <Button onClick={onOpenModalSelectWarehouse} type="primary" ghost>
+              <Typography.Text>
+              {getFieldValue('warehouseName')}
+                {!getFieldValue("warehouseId")
+                  && <Button
+                    onClick={onOpenModalSelectWarehouse}
+                    type="primary"
+                    ghost
+                    disabled = {!getFieldValue('pharmacyId')}
+                  >
                 Thay đổi
               </Button>
               }

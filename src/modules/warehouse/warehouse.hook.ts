@@ -13,6 +13,7 @@ import {
   useSuccess,
 } from "~/utils/hook";
 import { warehouseActions } from "./redux/reducer";
+import { ItemProduct, dataBillSentToWarehouse, itemType } from "./warehouse.modal";
 const MODULE = "warehouse";
 const MODULE_VI = "kho";
 
@@ -41,6 +42,9 @@ const updateManagementWarehouseFailedSelector = getSelector('updateManagementWar
 const checkWarehouseSuccessSelector = getSelector('checkWarehouseSuccess');
 const checkWarehouseFailedSelector = getSelector('checkWarehouseFailed'); 
 
+const warehouseLinkedSuccessSelector = getSelector('warehouseLinkedSuccess');
+const warehouseLinkedFailedSelector = getSelector('warehouseLinkedFailed'); 
+
 export const useGetWarehouses = (param: any) => {
   return useFetchByParam({
     action: warehouseActions.getListRequest,
@@ -59,6 +63,16 @@ export const useGetWarehouse = (id: any) => {
     param: id,
   });
 };
+export const useGetWarehouseByBranchLinked = (id?: any) => {
+  const profile = useSelector((state: any) => state.auth.profile);
+  return useFetchByParam({
+    action: warehouseActions.getWarehouseLinkedRequest,
+    loadingSelector: loadingSelector,
+    dataSelector: warehouseLinkedSuccessSelector,
+    failedSelector: warehouseLinkedFailedSelector,
+    param: id ?? profile?.profile?.branchId,
+  });
+};
 
 export const useCreateWarehouse = (callback?: any) => {
   useSuccess(
@@ -74,6 +88,20 @@ export const useCreateWarehouse = (callback?: any) => {
   });
 };
 
+export const useCreateBillToWarehouse = (callback?: any) => {
+  useSuccess(
+    createSuccessSelector,
+    `Tạo mới yêu cầu xuất hàng đến kho thành công`,
+    callback
+  );
+  useFailed(createFailedSelector);
+
+  return useSubmit({
+    action: warehouseActions.createBillToWarehouseRequest,
+    loadingSelector: isSubmitLoadingSelector,
+  });
+};
+
 export const useCheckWarehouse = (callback?: any) => {
   const mess = useSelector(checkWarehouseSuccessSelector);
   useSuccess(
@@ -81,7 +109,7 @@ export const useCheckWarehouse = (callback?: any) => {
     useSelector(checkWarehouseSuccessSelector)?.message,
     callback
   );
-  useFailed(checkWarehouseFailedSelector);
+  useFailed(checkWarehouseFailedSelector, (useSelector(checkWarehouseFailedSelector)?.message || 'Something went wrong'), callback);
   return useSubmit({
     action: warehouseActions.checkWarehouseRequest,
     loadingSelector: loadingSelector,
@@ -201,4 +229,48 @@ export const useInitWarehouse = (values: any) => {
       label: area.fullAddress,
     })),
   }))})
+};
+
+export const convertProductsFromBill = (listBill: any) => {
+  const newList: ItemProduct[] = (listBill || [])?.map((item: any) => ({
+    name: get(item, 'product.name'),
+    manufacturer: {
+      name: get(item, 'product.manufacturer.name'),
+    },
+    unit: {
+      name: get(item, 'variant.unit.name')
+    },
+    quantity: get(item, 'quantity'),
+    category: get(item, 'product.category.name', 'product'),
+    barcode: get(item, 'product.barcode', ''),
+    productId: get(item, 'product._id', ''),
+    variantId: get(item, 'variant._id', ''),
+    codeBySupplier: get(item, 'codeBySupplier', ''),
+  }));
+  return newList
+};
+
+export const convertDataSentToWarehouse = (data: any) => {
+  const listItem: itemType[] = data?.billItems?.map((item: any) => ({
+    variantWarehouseId: item?.variantId,
+    productWarehouseId: item?.productId,
+    batchId: item?.batchId,
+    quantity: item?.quantity,
+    cost: item?.cost,
+    price: item?.price,
+    discountValue: 0, //because in billItem we don't have discount value
+    discountType: 0, //because in billItem we don't have discount type
+  }));
+  const newValue : dataBillSentToWarehouse= {
+    items: [...listItem],
+    warehouseId: data?.warehouseId,
+    discountValue: data?.totalDiscountBill,
+    discountPercent: 0,
+    payment: {
+      method: 'CASH',
+      totalPayment: data?.totalPrice,
+      amount: data?.totalAmount
+    },
+  }
+  return newValue;
 };

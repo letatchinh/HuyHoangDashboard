@@ -1,6 +1,8 @@
 import { put, call, takeLatest } from 'redux-saga/effects';
 import api from '../warehouse.api'; 
 import { warehouseActions } from './reducer';
+import { billSliceAction } from '~/modules/sale/bill/redux/reducer';
+import { STATUS_BILL } from '~/modules/sale/bill/constants';
 
 function* getListWarehouse({payload:query} : any) : any {
   try {
@@ -19,7 +21,16 @@ function* getByIdWarehouse({payload:id} : any) : any {
   } catch (error:any) {
     yield put(warehouseActions.getByIdFailed(error));
   }
-}
+};
+
+function* getByIdWarehouseLinked({payload:id} : any) : any {
+  try {
+    const data = yield call(api.getAllWarehouse,id);
+    yield put(warehouseActions.getWarehouseLinkedSuccess(data));
+  } catch (error:any) {
+    yield put(warehouseActions.getWarehouseLinkedFailed(error));
+  }
+};
 
 function* createWarehouse({payload} : any) : any {
   try {
@@ -30,10 +41,24 @@ function* createWarehouse({payload} : any) : any {
   }
 };
 
+function* createBillToWarehouse({payload} : any) : any {
+  try {
+    const data = yield call(api.create,payload);
+    yield put(warehouseActions.createBillToWarehouseSuccess(data));
+  } catch (error:any) {
+    yield put(warehouseActions.createBillToWarehouseFailed(error));
+  }
+};
+
 function* checkWarehouse({payload} : any) : any {
   try {
     const data = yield call(api.checkWarehouse, payload);
-    yield put(warehouseActions.checkWarehouseSuccess(data));
+    if (!data?.status) {
+      yield put(warehouseActions.checkWarehouseFailed(data));
+    } else {
+      yield put(warehouseActions.checkWarehouseSuccess(data));
+      yield put(billSliceAction.updateStatusAfterCheckWarehouseRequest({...data, status: STATUS_BILL.READY, _id: data?.billId}));
+    };
   } catch (error:any) {
     yield put(warehouseActions.checkWarehouseFailed(error));
   }
@@ -73,7 +98,9 @@ export default function* warehouseSaga() {
   yield takeLatest(warehouseActions.createRequest, createWarehouse);
   yield takeLatest(warehouseActions.updateRequest, updateWarehouse);
   yield takeLatest(warehouseActions.deleteRequest, deleteWarehouse);
-
+  
+  yield takeLatest(warehouseActions.createBillToWarehouseRequest, createBillToWarehouse);
   yield takeLatest(warehouseActions.updateManagementWarehouseRequest, updateManagementWarehouse);
+  yield takeLatest(warehouseActions.getWarehouseLinkedRequest, getByIdWarehouseLinked);
   yield takeLatest(warehouseActions.checkWarehouseRequest, checkWarehouse);
 };

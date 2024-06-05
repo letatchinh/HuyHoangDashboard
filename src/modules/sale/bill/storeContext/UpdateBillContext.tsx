@@ -1,16 +1,18 @@
+import { get, omit, sumBy } from "lodash";
 import {
-    createContext,
-    ReactNode, useCallback, useContext, useMemo, useState
+  createContext,
+  ReactNode, useCallback, useContext, useMemo, useState
 } from "react";
 import { useParams } from "react-router-dom";
 import ModalAnt from "~/components/Antd/ModalAnt";
-import { useGetBill } from "../bill.hook";
-import VoucherModule from '~/modules/vouchers';
-import {  REF_COLLECTION, REF_COLLECTION_UPPER } from "~/constants/defaultValue";
-import { get, omit, sumBy } from "lodash";
-import PaymentVoucherFormPharmacy from "~/modules/paymentVoucher/components/PaymentVoucherFormPharmacy";
-import { STATUS_BILL } from "../constants";
+import { REF_COLLECTION, REF_COLLECTION_UPPER } from "~/constants/defaultValue";
 import LogisticForm from "~/modules/logistic/components/LogisticForm";
+import PaymentVoucherFormPharmacy from "~/modules/paymentVoucher/components/PaymentVoucherFormPharmacy";
+import VoucherModule from '~/modules/vouchers';
+import { useGetWarehouseByBranchLinked } from "~/modules/warehouse/warehouse.hook";
+import { useGetBill } from "../bill.hook";
+import { STATUS_BILL } from "../constants";
+
 export type GlobalUpdateBill = {
     bill : any,
     isLoading : boolean,
@@ -23,7 +25,9 @@ export type GlobalUpdateBill = {
     onOpenFormLogistic: () => void;
     onCloseFormLogistic: () => void;
     checkboxPayment: string | null;
-    setCheckboxPayment: (p: string | null) => void
+    setCheckboxPayment: (p: string | null) => void;
+    listWarehouse: any[];
+    isLoadingWarehouse: boolean;
 };
 const UpdateBill = createContext<GlobalUpdateBill>({
     bill : null,
@@ -38,6 +42,8 @@ const UpdateBill = createContext<GlobalUpdateBill>({
     onCloseFormLogistic: () => { },
     checkboxPayment: null,
     setCheckboxPayment: (p: string | null) => { },
+    listWarehouse: [],
+    isLoadingWarehouse: false
 });
 
 type UpdateBillProviderProps = {
@@ -57,7 +63,8 @@ export function UpdateBillProvider({
     const [isOpenForm, setIsOpenForm] = useState(false);
     const [isOpenFormPayment, setIsOpenFormPayment] = useState(false);
     const [logisticOpen, setLogisticOpen] = useState(false);
-    const [checkboxPayment, setCheckboxPayment] = useState < string | null>(null);
+    const [checkboxPayment, setCheckboxPayment] = useState<string | null>(null);
+    const [listWarehouse, isLoadingWarehouse]= useGetWarehouseByBranchLinked();
   
     const totalRevenueInVouchers = useMemo(() => {
       if (bill?.receiptVouchers?.length > 0) {
@@ -72,7 +79,10 @@ export function UpdateBillProvider({
       return Number(bill?.totalAmount) - Number(totalRevenueInVouchers) > 0 ? Number(bill?.totalAmount) - Number(totalRevenueInVouchers) : 0
     };
     return totalPrice
-  },[bill, totalReceiptVoucherCompleted]);
+  }, [bill, totalReceiptVoucherCompleted]);
+  
+  //Warehouse
+
   const onOpenForm = () => {
     setIsOpenForm(true);
   };
@@ -110,7 +120,9 @@ export function UpdateBillProvider({
         onOpenFormLogistic,
         onCloseFormLogistic,
         checkboxPayment,
-        setCheckboxPayment
+        setCheckboxPayment,
+        listWarehouse,
+        isLoadingWarehouse
       }}
     >
       {children}

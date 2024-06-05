@@ -9,7 +9,7 @@ export const STATUS_BILL = {
 };
 export const STATUS_BILL_VI = {
   NEW: "Đã tiếp nhận",
-  READY: 'Yêu cầu xuất kho', 
+  READY: 'Sẵn sàng xuất kho', 
   PACKAGE_EXPORT: 'Đang xuất kho',
   SHIPPING: 'Đang gửi hàng',
   PROCESSING: "Đang xử lý",

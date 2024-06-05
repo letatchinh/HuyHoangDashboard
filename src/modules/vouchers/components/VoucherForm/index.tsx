@@ -572,7 +572,7 @@ import { useGetProfile } from "~/modules/auth/auth.hook";
             </WithPermission>
             <Row className="staff-form__submit-box">
               <WithOrPermission permission={refCollection === 'partner' ? [POLICIES.UPDATE_VOUCHERBILLPARTNER, POLICIES.WRITE_VOUCHERBILLPARTNER] : [POLICIES.UPDATE_VOUCHERPHARMACY, POLICIES.WRITE_VOUCHERPHARMACY]}>
-              <Button icon={<SaveOutlined/>} type="primary" htmlType="submit">
+              <Button icon={<SaveOutlined/>} type="primary" htmlType="submit" loading={isSubmitLoading}>
                 Lưu
               </Button>
               </WithOrPermission>
