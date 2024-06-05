@@ -104,16 +104,16 @@ export const useDeleteReportGroupCollaborator = (callback?: any) => {
 
 export const useReportGroupCollaboratorQueryParams = () => {
   const query = useQueryParams();
-  const limit = query.get("limit") || 10;
-  const page = query.get("page") || 1;
+  // const limit = query.get("limit") || 10;
+  // const page = query.get("page") || 1;
   // const keyword = query.get("keyword");
   const rangerTime = query.get("rangerTime");
   const rangerType = query.get("rangerType");
   const getByRanger = query.get("getByRanger") || false;
   return useMemo(() => {
     const queryParams = {
-      page: Number(page),
-      limit: Number(limit),
+      // page: Number(page),
+      // limit: Number(limit),
       rangerTime,
       rangerType,
       // datatype,
@@ -121,7 +121,7 @@ export const useReportGroupCollaboratorQueryParams = () => {
     };
     return [queryParams];
     //eslint-disable-next-line
-  }, [page, limit, rangerTime, rangerType, getByRanger]);
+  }, [ rangerTime, rangerType, getByRanger]);
 };
 
 export const useUpdateReportGroupCollaboratorParams = (

@@ -17,10 +17,10 @@ export const datatypeReport = {
   //   reportRangerTypeDebt: "reportRangerTypeDebt",
 } satisfies Record<datatypeReportType, datatypeReportType>;
 export const datatypeReportVi = {
-  reportProduct: "Số lượng danh mục tiêu thụ",
-  reportBill: "Số lượng đơn hàng phát sinh",
-  reportRangerTypeProduct: "Số lượng danh mục tiêu thụ theo kì",
-  reportRangerTypeBill: "Số lượng đơn hàng phát sinh theo kì",
+  reportProduct: "Danh mục tiêu thụ",
+  reportBill: "Đơn hàng phát sinh",
+  reportRangerTypeProduct: "Danh mục tiêu thụ theo kì",
+  reportRangerTypeBill: "Đơn hàng phát sinh theo kì",
   //   reportRangerTypeDebt: "Công nợ tồn động theo kì",
 } satisfies Record<datatypeReportType, string>;
 
