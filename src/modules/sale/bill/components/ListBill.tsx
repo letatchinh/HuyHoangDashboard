@@ -8,7 +8,7 @@ import {
   useUpdateBillParams,
 } from "../bill.hook";
 
-import { Checkbox, Col, ConfigProvider, Row, Space, Tooltip, Typography } from "antd";
+import { Checkbox, Col, ConfigProvider, Form, Row, Space, Tooltip, Typography } from "antd";
 import { ColumnsType } from "antd/es/table/InternalTable";
 import { get } from "lodash";
 import { Link, useLocation } from "react-router-dom";
@@ -29,6 +29,7 @@ import SelectEmployee from "~/modules/employee/components/SelectSearch";
 import { REF_COLLECTION } from "~/constants/defaultValue";
 import SelectCollaborator from "~/modules/collaborator/components/SelectSearch";
 import { useIsAdapterSystem } from "~/utils/hook";
+import SelectPharmacy from "./SelectPharmacy";
 const CalculateBillMethod = new CalculateBill();
 type propsType = {
   status?: string;
@@ -45,6 +46,7 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
   const canDownload = useMatchPolicy(onPermissionCovert('DOWNLOAD', 'BILL'));
   const { pathname } = useLocation();
   const [arrCheckBox, onChangeCheckBox] = useCheckBoxExport();
+  const [form] = Form.useForm();
   const columns: ColumnsType = useMemo(
     () => [
       {
@@ -183,44 +185,81 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
   return (
     <div className="bill-page">
       {/* <Space> */}
-        <Row justify={"space-between"}>
-          <Col span={12}>
-            <Space style={{alignItems: 'normal'}}>
-              <SelectSupplier
-                value={query?.supplierIds ? query?.supplierIds?.split(',') : []}
-                onChange={(value) => onParamChange({ supplierIds: value?.length ? value : null })}
-                mode="multiple"
-                style={{width : 250}}
-              />
-            {isSystem && query.refCollection !== REF_COLLECTION.PHARMA_PROFILE && query.refCollection && (query.refCollection === REF_COLLECTION.EMPLOYEE ? <SelectEmployee
-              value={query?.employeeIds ? query?.employeeIds?.split(',') : []}
-              onChange={(value) => onParamChange({ employeeIds: value?.length ? value : null })}
+      <Row justify={"space-between"}>
+        <Col span={12}>
+          <Space style={{ alignItems: "normal" }}>
+            <SelectSupplier
+              value={query?.supplierIds ? query?.supplierIds?.split(",") : []}
+              onChange={(value) =>
+                onParamChange({ supplierIds: value?.length ? value : null })
+              }
               mode="multiple"
-              style={{ width: 200 }}
+              style={{ width: 250 }}
             />
-              :
-              <SelectCollaborator
-                value={query?.partnerIds ? query?.partnerIds?.split(',') : []}
-                onChange={(value) => onParamChange({ partnerIds: value?.length ? value : null })}
-                mode="multiple"
-                style={{ width: 200 }}
-              />)
-            }
-            <SearchAnt style={{ alignSelf: 'center' }} value={keyword} onChange={(e) => setKeyword(e.target.value)} onParamChange={onParamChange} />
-            </Space>
-          </Col>
-            <WithPermission permission={onPermissionCovert('DOWNLOAD', 'BILL')}>
-              <Col>
-                <ExportExcelButton
-                  api='bill'
-                  exportOption = 'bill'
-                  query={query}
-                  fileName='Danh sách đơn hàng'
-                  ids={arrCheckBox}
+            {isSystem &&
+            query.refCollection !== REF_COLLECTION.PHARMA_PROFILE &&
+            query.refCollection ? (
+              query.refCollection === REF_COLLECTION.EMPLOYEE ? (
+                <SelectEmployee
+                  value={
+                    query?.employeeIds ? query?.employeeIds?.split(",") : []
+                  }
+                  onChange={(value) =>
+                    onParamChange({ employeeIds: value?.length ? value : null })
+                  }
+                  mode="multiple"
+                  style={{ width: 200 }}
                 />
-              </Col>
-          </WithPermission>
-        </Row>
+              ) : (
+                <SelectCollaborator
+                  value={query?.partnerIds ? query?.partnerIds?.split(",") : []}
+                  onChange={(value) =>
+                    onParamChange({ partnerIds: value?.length ? value : null })
+                  }
+                  mode="multiple"
+                  style={{ width: 200 }}
+                />
+              )
+            ) : (
+              <Form
+                form={form}
+                initialValues={{ pharmacyId: query?.pharmacyIds }}
+              >
+                <SelectPharmacy
+                  validateFirst={false}
+                  form={form}
+                  style={{ width: 200 }}
+                  showIcon={false}
+                  required={false}
+                  size={"middle"}
+                  defaultValue={query?.pharmacyIds || null}
+                  onChange={(value) =>
+                    onParamChange({ pharmacyIds: value?.length ? value : null })
+                  }
+                  mode="multiple"
+                />
+              </Form>
+            )}
+            <SearchAnt
+              style={{ alignSelf: "center" }}
+              value={keyword}
+              onChange={(e) => setKeyword(e.target.value)}
+              onParamChange={onParamChange}
+            />
+          </Space>
+        </Col>
+        <WithPermission permission={onPermissionCovert("DOWNLOAD", "BILL")}>
+          <Col>
+            <ExportExcelButton
+              api="bill"
+              exportOption="bill"
+              query={query}
+              fileName="Danh sách đơn hàng"
+              ids={arrCheckBox}
+            />
+          </Col>
+        </WithPermission>
+      </Row>
       <ConfigProvider
         theme={{
           components: {

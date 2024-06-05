@@ -373,6 +373,7 @@ export default function ListQuotation({
                   form={form}
                   style={{ width: 250 }}
                   showIcon={false}
+                  required={true}
                   size={"middle"}
                   onChange={(value) => onParamChange({ pharmacyId: value })}
                 />

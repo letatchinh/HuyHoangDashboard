@@ -136,6 +136,7 @@ export const useBillQueryParams = (status? : string) => {
   const supplierIds = query.get("supplierIds");
   const employeeIds = query.get("employeeIds");
   const partnerIds = query.get("partnerIds");
+  const pharmacyIds = query.get("pharmacyIds");
   const refCollection = query.get("refCollection") || checkRefCollection('bill',pathname);
   const createSuccess = useSelector(createSuccessSelector);
   const deleteSuccess = useSelector(deleteSuccessSelector);
@@ -148,11 +149,12 @@ export const useBillQueryParams = (status? : string) => {
       supplierIds,
       refCollection,
       employeeIds,
-      partnerIds
+      partnerIds,
+      pharmacyIds,
     };
     return [queryParams];
     //eslint-disable-next-line
-  }, [page, limit, keyword, createSuccess, deleteSuccess,status,supplierIds,refCollection,employeeIds, partnerIds]);
+  }, [page, limit, keyword, createSuccess, deleteSuccess,status,supplierIds,refCollection,employeeIds, partnerIds, pharmacyIds]);
 };
 
 export const useUpdateBillParams = (query: any, listOptionSearch?: any[]) => {
