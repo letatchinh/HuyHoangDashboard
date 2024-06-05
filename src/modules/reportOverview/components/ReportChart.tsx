@@ -33,6 +33,7 @@ import SelectArea from "./SelectArea";
 import subvn from "~/core/subvn";
 import DetailData from "./DetailData";
 import { useUpdateReportProductSupplierParams } from "../reportOverview.hook";
+import SelectEmployeeV2 from "~/modules/employee/components/SelectEmployeeV2";
 
 const { RangePicker } = DatePicker;
 const dateFormat = "YYYY-MM-DD";
@@ -142,7 +143,7 @@ export default function ReportChart(
               popupMatchSelectWidth={false}
               filterOption={filterSelectWithLabel}
               onChange={(value) => onParamChange({ dataType: value || null })}
-              style={{ minWidth: 200}}
+              style={{ minWidth: 200 }}
             ></Select>
           </Space>
         </Col>
@@ -197,7 +198,55 @@ export default function ReportChart(
         gutter={[16, 24]}
         style={{ marginLeft: 2, marginRight: 2 }}
       >
-        <Col span={4}>
+        <Col span={8}>
+          <SelectSupplier
+            value={query?.supplierId ? query?.supplierId?.split(",") : []}
+            onChange={(value) => onParamChange({ supplierId: value || null })}
+            style={{ width: 200 }}
+            mode="multiple"
+          />
+        </Col>
+        <Col span={8}>
+          <SelectArea
+            data={areas}
+            placeholder="Miền"
+            value={query?.areaId ? query?.areaId?.split(",") : []}
+            onChange={(value) => onParamChange({ areaId: value || null })}
+            style={{ width: 200 }}
+            mode="multiple"
+          />
+        </Col>
+        <Col span={8}>
+          <SelectArea
+            data={cities}
+            placeholder="Tỉnh"
+            value={query?.cityId ? query?.cityId?.split(",") : []}
+            onChange={(value) => onParamChange({ cityId: value || null })}
+            style={{ width: 200 }}
+            mode="multiple"
+          />
+        </Col>
+      </Row>
+      <Row
+        justify="space-around"
+        gutter={[16, 24]}
+        style={{ marginLeft: 2, marginRight: 2, marginTop: 20 }}
+      >
+        <Col span={8}>
+          <Form form={form} initialValues={{ employeeId: query?.salerId }}>
+            <SelectEmployeeV2
+              validateFirst={false}
+              form={form}
+              style={{ width: 200 }}
+              showIcon={false}
+              size={"middle"}
+              defaultValue={query?.salerId || null}
+              onChange={(value) => onParamChange({ salerId: value })}
+              mode="multiple"
+            />
+          </Form>
+        </Col>
+        <Col span={8}>
           {spaceType !== "partner" ? (
             <Form form={form} initialValues={{ pharmacyId: query?.customerId }}>
               <SelectPharmacy
@@ -205,9 +254,11 @@ export default function ReportChart(
                 form={form}
                 style={{ width: 200 }}
                 showIcon={false}
+                required={false}
                 size={"middle"}
                 defaultValue={query?.customerId || null}
                 onChange={(value) => onParamChange({ customerId: value })}
+                mode="multiple"
               />
             </Form>
           ) : (
@@ -219,47 +270,19 @@ export default function ReportChart(
             />
           )}
         </Col>
-        <Col span={4}>
-          <SelectSupplier
-            value={query?.supplierId ? query?.supplierId?.split(",") : []}
-            onChange={(value) => onParamChange({ supplierId: value || null })}
-            style={{ width: 200 }}
-            mode="multiple"
-          />
-        </Col>
-        <Col span={4}>
-        <Form form={form} initialValues={{ productId: query?.productId }}>
-              <SelectProductBySupplier
-                validateFirst={false}
-                form={form}
-                style={{ width: 200 }}
-                showIcon={false}
-                size={"middle"}
-                defaultValue={query?.productId || null}
-                onChange={(value) => onParamChange({ productId: value })}
-                mode="multiple"
-              />
-            </Form>
-        </Col>
-        <Col span={4}>
-          <SelectArea
-            data={areas}
-            placeholder="Miền"
-            value={query?.areaId ? query?.areaId?.split(",") : []}
-            onChange={(value) => onParamChange({ areaId: value || null })}
-            style={{ width: 200 }}
-            mode="multiple"
-          />
-        </Col>
-        <Col span={4}>
-          <SelectArea
-            data={cities}
-            placeholder="Tỉnh"
-            value={query?.cityId ? query?.cityId?.split(",") : []}
-            onChange={(value) => onParamChange({ cityId: value || null })}
-            style={{ width: 200 }}
-            mode="multiple"
-          />
+        <Col span={8}>
+          <Form form={form} initialValues={{ productId: query?.productId }}>
+            <SelectProductBySupplier
+              validateFirst={false}
+              form={form}
+              style={{ width: 200 }}
+              showIcon={false}
+              size={"middle"}
+              defaultValue={query?.productId || null}
+              onChange={(value) => onParamChange({ productId: value })}
+              mode="multiple"
+            />
+          </Form>
         </Col>
       </Row>
       <div
@@ -339,13 +362,15 @@ export default function ReportChart(
                     backgroundColor: "white",
                     padding: "6px 10px",
                     border: "0.2px solid #333",
-                    borderRadius: 6
+                    borderRadius: 6,
                   }}
                 >
                   <Tag bordered={true} color={e.color}>
                     <span style={{ color: e.color }}>.</span>
                   </Tag>
-                  {get(detail, [e.id], e.id) +": " + Number(e.value).toLocaleString("vi")}
+                  {get(detail, [e.id], e.id) +
+                    ": " +
+                    Number(e.value).toLocaleString("vi")}
                 </Typography.Text>
               );
             }}

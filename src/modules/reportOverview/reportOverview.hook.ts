@@ -45,6 +45,7 @@ export const useReportProductSupplierQueryParams = (
   const supplierId = query.get("supplierId");
   const productId = query.get("productId");
   const customerId = query.get("customerId");
+  const salerId = query.get("salerId");
   const areaId = query.get("areaId");
   const cityId = query.get("cityId");
   return useMemo(() => {
@@ -58,6 +59,7 @@ export const useReportProductSupplierQueryParams = (
       supplierId,
       productId,
       customerId,
+      salerId,
       areaId,
       cityId,
       limit,
@@ -80,6 +82,7 @@ export const useReportProductSupplierQueryParams = (
     supplierId,
     productId,
     customerId,
+    salerId,
     areaId,
     cityId,
     limit,
