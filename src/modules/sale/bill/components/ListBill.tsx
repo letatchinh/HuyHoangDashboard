@@ -29,7 +29,7 @@ import SearchAnt from "~/components/Antd/SearchAnt";
 import Status from "~/components/common/Status/index";
 import SelectSupplier from "~/modules/supplier/components/SelectSupplier";
 import { PATH_APP } from "~/routes/allPath";
-import { formatter, pagingTable, permissionConvert } from "~/utils/helpers";
+import { concatAddress, formatter, pagingTable, permissionConvert } from "~/utils/helpers";
 import { STATUS_BILL_VI } from "../constants";
 import { useMatchPolicy } from "~/modules/policy/policy.hook";
 import POLICIES from "~/modules/policy/policy.auth";
@@ -96,6 +96,7 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
         dataIndex: "codeSequence",
         key: "codeSequence",
         align: "center",
+        width: 150,
         render(codeSequence, record, index) {
           return (
             <Link
@@ -112,6 +113,7 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
         dataIndex: "createdAt",
         key: "createdAt",
         align: "left",
+        width: 150,
         render(createdAt, record, index) {
           return (
             // <Typography.Text strong>
@@ -126,6 +128,7 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
         dataIndex: "pharmacy",
         key: "pharmacy",
         align: "left",
+        width: 250,
         render(pharmacy, record, index) {
           return <Typography.Text>{get(pharmacy, "name", "")}</Typography.Text>;
         },
@@ -143,10 +146,21 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
         },
       },
       {
+        title: "Giá trị đơn hàng",
+        dataIndex: "totalPrice",
+        key: "totalPrice",
+        align: "center",
+        width: 150,
+        render(totalPrice, record, index) {
+          return <Typography.Text>{formatter(totalPrice)}</Typography.Text>;
+        },
+      },
+      {
         title: "Lý do huỷ",
         dataIndex: "cancelNote",
         key: "cancelNote",
         align: "left",
+        width: 180,
         render(cancelNote?: any) {
           return (
             <Typography.Paragraph
@@ -165,6 +179,7 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
         dataIndex: "note",
         key: "note",
         align: "left",
+        width: 180,
         render(note?: any) {
           return (
             <Typography.Paragraph
@@ -183,6 +198,7 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
         dataIndex: "pair",
         key: "pair",
         align: "center",
+        width: 180,
         render(pair, record, index) {
           return (
             <Typography.Text>
@@ -190,16 +206,25 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
             </Typography.Text>
           );
         },
-      },
+      },      
       {
         title: "Khách phải trả",
         dataIndex: "totalPrice",
         key: "totalPrice",
         align: "center",
+        width: 180,
         render(totalPrice, record, index) {
           const remainAmount = CalculateBillMethod.remainAmount(record);
-
           return <Typography.Text>{formatter(remainAmount)}</Typography.Text>;
+        },
+      },
+      {
+        title: "Địa chỉ",
+        dataIndex: "deliveryAddressId",
+        key: "deliveryAddressId",
+        width: 350,
+        render(value, record, index) {
+          return concatAddress(value);
         },
       },
       ...(canDownload
@@ -209,6 +234,7 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
               key: "_id",
               width: 80,
               align: "center" as any,
+              fixed: "right" as any,
               render: (item: any, record: any) => {
                 const id = record?._id;
                 return (
@@ -404,10 +430,11 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
           columns={columns}
           dataSource={bills}
           loading={isLoading}
+          scroll={{ x: "max-content" }}
           pagination={pagingTable(paging, onParamChange)}
           size="small"
           bordered
-          scroll={{ y: "60vh", x: 800 }}
+          // scroll={{ y: "60vh", x: 800 }}
         />
       </ConfigProvider>
     </div>
