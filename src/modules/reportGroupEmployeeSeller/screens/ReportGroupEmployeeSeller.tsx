@@ -10,6 +10,7 @@ import { datatypeReportVi } from "~/modules/reportGroupCollaborator/reportGroupC
 import FilterByDate from "~/modules/reportGroupCollaborator/components/FilterByDate";
 import ProductQuantityTable from "../components/ProductQuantityTable";
 import BillAndDebtTable from "../components/BillAndDebtTable";
+import Breadcrumb from "~/components/common/Breadcrumb";
 
 type propsType = {};
 
@@ -67,6 +68,7 @@ export default function ReportGroupEmployeeSeller(
   );
   return (
     <div>
+      <Breadcrumb title={"Báo cáo doanh thu đội nhóm trình dược viên"} />
       <FilterByDate
         onParamChange={onParamChange}
         query={query}

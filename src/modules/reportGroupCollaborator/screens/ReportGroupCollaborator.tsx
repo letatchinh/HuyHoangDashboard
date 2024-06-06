@@ -12,6 +12,7 @@ import { TableRowSelection } from "antd/es/table/interface";
 import ProductQuantityTable from "../components/ProductQuantityTable";
 import FilterByDate from "../components/FilterByDate";
 import { Select } from "antd";
+import Breadcrumb from "~/components/common/Breadcrumb";
 type propsType = {};
 const rangerTimeDef = "WEEKLY";
 export default function ReportGroupCollaborator(
@@ -88,6 +89,7 @@ export default function ReportGroupCollaborator(
   
   return (
     <div>
+      <Breadcrumb title={"Báo cáo doanh thu đội nhóm cộng tác viên"} />
       <FilterByDate
         onParamChange={onParamChange}
         query={query}
