@@ -232,7 +232,7 @@ export default function ReportChart(
         gutter={[16, 24]}
         style={{ marginLeft: 2, marginRight: 2, marginTop: 20 }}
       >
-        <Col span={8}>
+       {spaceType !== "partner" ? ( <Col span={8}>
           <Form form={form} initialValues={{ employeeId: query?.salerId }}>
             <SelectEmployeeV2
               validateFirst={false}
@@ -245,7 +245,7 @@ export default function ReportChart(
               mode="multiple"
             />
           </Form>
-        </Col>
+        </Col>) : <></> }
         <Col span={8}>
           {spaceType !== "partner" ? (
             <Form form={form} initialValues={{ pharmacyId: query?.customerId }}>

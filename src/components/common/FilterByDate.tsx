@@ -13,6 +13,7 @@ import { map } from "lodash";
 import React, { CSSProperties, useEffect, useMemo, useState } from "react";
 import { FILTER_BY_VI } from "~/constants/defaultValue";
 import SelectCollaborator from "~/modules/collaborator/components/SelectSearch";
+import SelectEmployeeV2 from "~/modules/employee/components/SelectEmployeeV2";
 import SelectEmployee from "~/modules/employee/components/SelectSearch";
 import SelectProductBySupplier from "~/modules/product/components/SelectProductBySupplier";
 import { datatypeReportVi } from "~/modules/reportIndividualCollaborator/reportIndividualCollaborator.modal";
@@ -151,11 +152,18 @@ export default function FilterByDate(props: propsType): React.JSX.Element {
         )}
         {showSeller && (
           <Col span={8}>
-            <SelectEmployee
-              value={query?.sellerId ? query?.sellerId?.split(",") : []}
-              onChange={(value) => onParamChange({ sellerId: value || null })}
-              style={{ width: 200 }}
-            />
+            <Form form={form} initialValues={{ employeeId: query?.sellerId }}>
+              <SelectEmployeeV2
+                validateFirst={false}
+                form={form}
+                style={{ width: 200 }}
+                showIcon={false}
+                size={"middle"}
+                defaultValue={query?.sellerId || null}
+                onChange={(value) => onParamChange({ sellerId: value })}
+                // mode="multiple"
+              />
+            </Form>
           </Col>
         )}
         {query?.datatype?.includes("Product") && showProduct && (

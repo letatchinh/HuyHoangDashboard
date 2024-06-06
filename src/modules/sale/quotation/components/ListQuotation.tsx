@@ -46,6 +46,7 @@ import SelectCollaborator from "~/modules/collaborator/components/SelectSearch";
 import { REF_COLLECTION } from "~/constants/defaultValue";
 import { useIsAdapterSystem } from "~/utils/hook";
 import { redirectRouterBillCreate, redirectRouterBillId } from "../../bill/bill.hook";
+import SelectEmployeeV2 from "~/modules/employee/components/SelectEmployeeV2";
 type propsType = {
   status?: string;
 };
@@ -391,16 +392,21 @@ export default function ListQuotation({
               query.refCollection !== REF_COLLECTION.PHARMA_PROFILE &&
               query.refCollection &&
               (query.refCollection === REF_COLLECTION.EMPLOYEE ? (
-                <SelectEmployee
-                  value={
-                    query?.employeeIds ? query?.employeeIds?.split(",") : []
-                  }
-                  onChange={(value) =>
-                    onParamChange({ employeeIds: value?.length ? value : null })
-                  }
-                  mode="multiple"
-                  style={{ width: 200 }}
-                />
+                <Form
+                  form={form}
+                  initialValues={{ employeeId: query?.employeeIds }}
+                >
+                  <SelectEmployeeV2
+                    validateFirst={false}
+                    form={form}
+                    style={{ width: 200 }}
+                    showIcon={false}
+                    size={"middle"}
+                    defaultValue={query?.employeeIds || null}
+                    onChange={(value) => onParamChange({ employeeIds: value })}
+                    mode="multiple"
+                  />
+                </Form>
               ) : (
                 <SelectCollaborator
                   value={query?.partnerIds ? query?.partnerIds?.split(",") : []}
