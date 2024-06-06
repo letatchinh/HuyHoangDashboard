@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import TableAnt from "~/components/Antd/TableAnt";
 import {
   redirectRouterBillId,
@@ -8,7 +8,20 @@ import {
   useUpdateBillParams,
 } from "../bill.hook";
 
-import { Checkbox, Col, ConfigProvider, Form, Row, Space, Tooltip, Typography } from "antd";
+import {
+  Button,
+  Checkbox,
+  Col,
+  ConfigProvider,
+  DatePicker,
+  Form,
+  Row,
+  Select,
+  Space,
+  Tooltip,
+  TreeSelect,
+  Typography,
+} from "antd";
 import { ColumnsType } from "antd/es/table/InternalTable";
 import { get } from "lodash";
 import { Link, useLocation } from "react-router-dom";
@@ -30,23 +43,52 @@ import { REF_COLLECTION } from "~/constants/defaultValue";
 import SelectCollaborator from "~/modules/collaborator/components/SelectSearch";
 import { useIsAdapterSystem } from "~/utils/hook";
 import SelectPharmacy from "./SelectPharmacy";
+import { FormFieldSearch } from "../bill.modal";
+import dayjs from "dayjs";
+import { FilterOutlined } from "@ant-design/icons";
+import GeoTreeSelect from "~/modules/geo/components/GeoTreeSelect";
+import { RELATIVE_POSITION } from "~/modules/geo/constants";
+import SelectEmployeeV2 from "~/modules/employee/components/SelectEmployeeV2";
 const CalculateBillMethod = new CalculateBill();
 type propsType = {
   status?: string;
 };
+const defaultDate = {
+  startDate: dayjs().startOf("month"),
+  endDate: dayjs().endOf("month"),
+};
+const { Option } = Select;
 const CLONE_STATUS_BILL_VI: any = STATUS_BILL_VI;
 export default function ListBill({ status }: propsType): React.JSX.Element {
   const [query] = useBillQueryParams(status);
+
   const [keyword, { setKeyword, onParamChange }] = useUpdateBillParams(query);
   const [bills, isLoading] = useGetBills(query);
   const paging = useBillPaging();
   const isSystem = useIsAdapterSystem();
   //Download
-  const onPermissionCovert = useCallback(permissionConvert(query),[query])
-  const canDownload = useMatchPolicy(onPermissionCovert('DOWNLOAD', 'BILL'));
+  const onPermissionCovert = useCallback(permissionConvert(query), [query]);
+  const canDownload = useMatchPolicy(onPermissionCovert("DOWNLOAD", "BILL"));
   const { pathname } = useLocation();
   const [arrCheckBox, onChangeCheckBox] = useCheckBoxExport();
   const [form] = Form.useForm();
+
+  const onFinish = (values: FormFieldSearch) => {
+    const { startDate, endDate } = values;
+
+    if (startDate) {
+      onParamChange({
+        startDate: dayjs(startDate).startOf("month").format("YYYY-MM-DD"),
+        endDate: dayjs(endDate).endOf("month").format("YYYY-MM-DD"),
+      });
+    } else {
+      onParamChange({
+        startDate: null,
+        endDate: null,
+      });
+    }
+  };
+
   const columns: ColumnsType = useMemo(
     () => [
       {
@@ -105,12 +147,12 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
         dataIndex: "cancelNote",
         key: "cancelNote",
         align: "left",
-        render(cancelNote?:any) {
+        render(cancelNote?: any) {
           return (
             <Typography.Paragraph
               ellipsis={{
                 tooltip: cancelNote,
-                rows : 2,
+                rows: 2,
               }}
             >
               {cancelNote}
@@ -123,12 +165,12 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
         dataIndex: "note",
         key: "note",
         align: "left",
-        render(note?:any) {
+        render(note?: any) {
           return (
             <Typography.Paragraph
               ellipsis={{
                 tooltip: note,
-                rows : 2,
+                rows: 2,
               }}
             >
               {note}
@@ -182,9 +224,15 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
     ],
     [arrCheckBox, canDownload]
   );
+
+  useEffect(() => {
+    form.setFieldsValue({
+      ...query,
+      managementArea: query?.managementArea?.split(","),
+    });
+  }, []);
   return (
     <div className="bill-page">
-      {/* <Space> */}
       <Row justify={"space-between"}>
         <Col span={12}>
           <Space style={{ alignItems: "normal" }}>
@@ -200,16 +248,21 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
             query.refCollection !== REF_COLLECTION.PHARMA_PROFILE &&
             query.refCollection ? (
               query.refCollection === REF_COLLECTION.EMPLOYEE ? (
-                <SelectEmployee
-                  value={
-                    query?.employeeIds ? query?.employeeIds?.split(",") : []
-                  }
-                  onChange={(value) =>
-                    onParamChange({ employeeIds: value?.length ? value : null })
-                  }
-                  mode="multiple"
-                  style={{ width: 200 }}
-                />
+                <Form
+                  form={form}
+                  initialValues={{ employeeId: query?.employeeIds }}
+                >
+                  <SelectEmployeeV2
+                    validateFirst={false}
+                    form={form}
+                    style={{ width: 200 }}
+                    showIcon={false}
+                    size={"middle"}
+                    defaultValue={query?.employeeIds || null}
+                    onChange={(value) => onParamChange({ employeeIds: value })}
+                    mode="multiple"
+                  />
+                </Form>
               ) : (
                 <SelectCollaborator
                   value={query?.partnerIds ? query?.partnerIds?.split(",") : []}
@@ -223,7 +276,11 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
             ) : (
               <Form
                 form={form}
-                initialValues={{ pharmacyId: query?.pharmacyIds }}
+                initialValues={{
+                  ...query,
+                  managementArea: query?.managementArea?.split(","),
+                  pharmacyId: query?.pharmacyIds,
+                }}
               >
                 <SelectPharmacy
                   validateFirst={false}
@@ -260,26 +317,98 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
           </Col>
         </WithPermission>
       </Row>
+      <Row justify={"space-between"}>
+        <Col span={5}>
+          <Form.Item
+            name={"sortBy"}
+            label="Trạng thái"
+            // labelCol={{ sm: 24, md: 24, lg: 24, xl: 24 }}
+          >
+            <Select
+              options={[
+                { value: "NEW", label: "Mới" },
+                { value: "COMPLETED", label: "Hoàn thành" },
+              ]}
+              popupMatchSelectWidth={false}
+              onChange={(value) => onParamChange({ sortBy: value || null })}
+              style={{ width: 150 }}
+            ></Select>
+          </Form.Item>
+        </Col>
+        <Col span={5}>
+          <Form.Item<FormFieldSearch> name={"startDate"} label="Ngày bắt đầu">
+            <DatePicker
+              format={"YYYY-MM-DD"}
+              onChange={(value) =>
+                onParamChange({
+                  startDate: dayjs(value).format("YYYY-MM-DD") || null,
+                })
+              }
+            />
+          </Form.Item>
+        </Col>
+
+        <Col span={5}>
+          <Form.Item<FormFieldSearch> name={"endDate"} label="Ngày kết thúc">
+            <DatePicker
+              format={"YYYY-MM-DD"}
+              onChange={(value) =>
+                onParamChange({
+                  endDate: dayjs(value).format("YYYY-MM-DD") || null,
+                })
+              }
+            />
+          </Form.Item>
+        </Col>
+        <Col span={8}>
+          <Form.Item label="Khu vực" name={["managementArea"]}>
+            <GeoTreeSelect
+              autoClearSearchValue
+              labelInValue={true}
+              listItemHeight={150}
+              multiple={true}
+              showCheckedStrategy={TreeSelect.SHOW_ALL}
+              showEnabledValuesOnly={true}
+              showSearch={true}
+              size="middle"
+              treeCheckStrictly={true}
+              treeCheckable={true}
+              treeDefaultExpandedKeys={["1", "2", "3"]}
+              checkablePositions={[
+                RELATIVE_POSITION.IS_CHILD,
+                RELATIVE_POSITION.IS_EQUAL,
+              ]}
+              onChange={(value: any) => {
+                onParamChange({
+                  managementArea: value
+                    ?.map((item: any) => get(item, "value"))
+                    ?.join(","),
+                });
+              }}
+            />
+          </Form.Item>
+        </Col>
+      </Row>
       <ConfigProvider
         theme={{
           components: {
             Table: {
-              headerBg: '#C4E4FF',
+              headerBg: "#C4E4FF",
             },
           },
         }}
       >
         <TableAnt
-        stickyTop
-        className="table-striped-rows-custom"
-        columns={columns}
-        dataSource={bills}
-        loading={isLoading}
-        pagination={pagingTable(paging, onParamChange)}
-        size="small"
-        bordered
-        scroll={{ y: '60vh' ,x  : 800}}
-      />
+          stickyTop
+          className="table-striped-rows-custom"
+          columns={columns}
+          dataSource={bills}
+          loading={isLoading}
+          pagination={pagingTable(paging, onParamChange)}
+          size="small"
+          bordered
+          scroll={{ y: "60vh", x: 800 }}
+        />
       </ConfigProvider>
     </div>
   );

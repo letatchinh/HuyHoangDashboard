@@ -113,3 +113,10 @@ export interface DebtType  {
     id : number,
 
 }
+
+export type FormFieldSearch = {
+    startDate?: any,
+    endDate?: any,
+    // sortBy :{COMPLETED, NEW}
+    // searchBy?: SearchByType,
+  };
