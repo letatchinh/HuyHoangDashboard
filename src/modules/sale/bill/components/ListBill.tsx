@@ -29,7 +29,13 @@ import SearchAnt from "~/components/Antd/SearchAnt";
 import Status from "~/components/common/Status/index";
 import SelectSupplier from "~/modules/supplier/components/SelectSupplier";
 import { PATH_APP } from "~/routes/allPath";
-import { concatAddress, formatter, pagingTable, permissionConvert } from "~/utils/helpers";
+import {
+  concatAddress,
+  formatter,
+  getExistProp,
+  pagingTable,
+  permissionConvert,
+} from "~/utils/helpers";
 import { STATUS_BILL_VI } from "../constants";
 import { useMatchPolicy } from "~/modules/policy/policy.hook";
 import POLICIES from "~/modules/policy/policy.auth";
@@ -72,22 +78,16 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
   const { pathname } = useLocation();
   const [arrCheckBox, onChangeCheckBox] = useCheckBoxExport();
   const [form] = Form.useForm();
-
-  const onFinish = (values: FormFieldSearch) => {
-    const { startDate, endDate } = values;
-
-    if (startDate) {
-      onParamChange({
-        startDate: dayjs(startDate).startOf("month").format("YYYY-MM-DD"),
-        endDate: dayjs(endDate).endOf("month").format("YYYY-MM-DD"),
-      });
-    } else {
-      onParamChange({
-        startDate: null,
-        endDate: null,
-      });
-    }
-  };
+  const initValue = useMemo(() => {
+    const root = {
+      ...query,
+      startDate: query?.startDate ? dayjs(query?.startDate) : null,
+      endDate: query?.endDate ? dayjs(query?.endDate) : null,
+      managementArea: query?.managementArea?.split(","),
+      pharmacyId: query?.pharmacyIds,
+    };
+    return getExistProp(root);
+  }, [query]);
 
   const columns: ColumnsType = useMemo(
     () => [
@@ -252,11 +252,39 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
   );
 
   useEffect(() => {
-    form.setFieldsValue({
+    const root = {
       ...query,
+      startDate: query?.startDate ? dayjs(query?.startDate) : null,
+      endDate: query?.endDate ? dayjs(query?.endDate) : null,
       managementArea: query?.managementArea?.split(","),
-    });
+    };
+    form.setFieldsValue(getExistProp(root));
   }, []);
+
+  const onValuesChange = (valueChange: any) => {
+    const key = Object.keys(valueChange)[0];
+
+    switch (key) {
+      case "startDate":
+        onParamChange({
+          startDate: valueChange?.startDate
+            ? dayjs(valueChange?.startDate).format("YYYY-MM-DD")
+            : null,
+        });
+        break;
+      case "endDate":
+        onParamChange({
+          endDate: valueChange?.endDate
+            ? dayjs(valueChange?.endDate).format("YYYY-MM-DD")
+            : null,
+        });
+        break;
+
+      default:
+        onParamChange({ ...valueChange });
+        break;
+    }
+  };
   return (
     <div className="bill-page">
       <Row justify={"space-between"}>
@@ -300,14 +328,7 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
                 />
               )
             ) : (
-              <Form
-                form={form}
-                initialValues={{
-                  ...query,
-                  managementArea: query?.managementArea?.split(","),
-                  pharmacyId: query?.pharmacyIds,
-                }}
-              >
+              <Form form={form} initialValues={initValue}>
                 <SelectPharmacy
                   validateFirst={false}
                   form={form}
@@ -344,76 +365,65 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
         </WithPermission>
       </Row>
       <Row justify={"space-between"}>
-        <Col span={5}>
-          <Form.Item
-            name={"sortBy"}
-            label="Trạng thái"
-            // labelCol={{ sm: 24, md: 24, lg: 24, xl: 24 }}
-          >
-            <Select
-              options={[
-                { value: "NEW", label: "Mới" },
-                { value: "COMPLETED", label: "Hoàn thành" },
-              ]}
-              popupMatchSelectWidth={false}
-              onChange={(value) => onParamChange({ sortBy: value || null })}
-              style={{ width: 150 }}
-            ></Select>
-          </Form.Item>
-        </Col>
-        <Col span={5}>
-          <Form.Item<FormFieldSearch> name={"startDate"} label="Ngày bắt đầu">
-            <DatePicker
-              format={"YYYY-MM-DD"}
-              onChange={(value) =>
-                onParamChange({
-                  startDate: dayjs(value).format("YYYY-MM-DD") || null,
-                })
-              }
-            />
-          </Form.Item>
-        </Col>
+        <Form
+          form={form}
+          style={{ width: "100%" }}
+          initialValues={{
+            ...query,
+            managementArea: query?.managementArea?.split(","),
+            startDate: dayjs.isDayjs(query?.startDate) && dayjs(query?.startDate),
+            endDate: dayjs.isDayjs(query?.endDate) && dayjs(query?.endDate),
+          }}
+          onValuesChange={onValuesChange}
+        >
+          <Row gutter={16} align="middle" justify="space-between">
+            <Col span={8}>
+              <Form.Item<FormFieldSearch>
+                name={"startDate"}
+                label="Ngày bắt đầu"
+              >
+                <DatePicker format={"YYYY-MM-DD"} />
+              </Form.Item>
+            </Col>
 
-        <Col span={5}>
-          <Form.Item<FormFieldSearch> name={"endDate"} label="Ngày kết thúc">
-            <DatePicker
-              format={"YYYY-MM-DD"}
-              onChange={(value) =>
-                onParamChange({
-                  endDate: dayjs(value).format("YYYY-MM-DD") || null,
-                })
-              }
-            />
-          </Form.Item>
-        </Col>
-        <Col span={8}>
-          <Form.Item label="Khu vực" name={["managementArea"]}>
-            <GeoTreeSelect
-              autoClearSearchValue
-              labelInValue={true}
-              listItemHeight={150}
-              multiple={true}
-              showCheckedStrategy={TreeSelect.SHOW_ALL}
-              showEnabledValuesOnly={true}
-              showSearch={true}
-              size="middle"
-              treeCheckStrictly={true}
-              treeCheckable={true}
-              treeDefaultExpandedKeys={["1", "2", "3"]}
-              checkablePositions={[
-                RELATIVE_POSITION.IS_CHILD,
-                RELATIVE_POSITION.IS_EQUAL,
-              ]}
-              onChange={(value: any) => {
-                onParamChange({
-                  managementArea: value
-                    ?.map((item: any) => get(item, "value"))
-                    ?.join(","),
-                });
-              }}
-            />
-          </Form.Item>
-        </Col>
+            <Col span={8}>
+              <Form.Item<FormFieldSearch>
+                name={"endDate"}
+                label="Ngày kết thúc"
+              >
+                <DatePicker format={"YYYY-MM-DD"} />
+              </Form.Item>
+            </Col>
+            <Col span={8}>
+              <Form.Item label="Khu vực" name={["managementArea"]}>
+                <GeoTreeSelect
+                  autoClearSearchValue
+                  labelInValue={true}
+                  listItemHeight={150}
+                  multiple={true}
+                  showCheckedStrategy={TreeSelect.SHOW_ALL}
+                  showEnabledValuesOnly={true}
+                  showSearch={true}
+                  size="middle"
+                  treeCheckStrictly={true}
+                  treeCheckable={true}
+                  treeDefaultExpandedKeys={["1", "2", "3"]}
+                  checkablePositions={[
+                    RELATIVE_POSITION.IS_CHILD,
+                    RELATIVE_POSITION.IS_EQUAL,
+                  ]}
+                  onChange={(value: any) => {
+                    onParamChange({
+                      managementArea: value
+                        ?.map((item: any) => get(item, "value"))
+                        ?.join(","),
+                    });
+                  }}
+                />
+              </Form.Item>
+            </Col>
+          </Row>
+        </Form>
       </Row>
       <ConfigProvider
         theme={{

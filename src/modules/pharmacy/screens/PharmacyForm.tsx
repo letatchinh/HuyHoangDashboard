@@ -75,7 +75,6 @@ export default function PharmacyForm({
       setSelectedCustomerGroupId(get(initPharmacy, "customerGroupId"));
     }
   }, [initPharmacyProfile, id, form]);
-  console.log(form.getFieldsValue());
 
   const onValuesChange = (value: any, values: any) => {
     const key = Object.keys(value)[0];
