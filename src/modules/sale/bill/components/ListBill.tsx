@@ -108,18 +108,24 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
           );
         },
       },
+      // {
+      //   title: "Ngày tạo đơn",
+      //   dataIndex: "createdAt",
+      //   key: "createdAt",
+      //   align: "left",
+      //   width: 150,
+      //   render(createdAt, record, index) {
+      //     return (<DateTimeTable data={createdAt} />);
+      //   },
+      // },
       {
-        title: "Ngày tạo đơn",
-        dataIndex: "createdAt",
-        key: "createdAt",
+        title: "Ngày cập nhật",
+        dataIndex: "dateToStatus",
+        key: "dateToStatus",
         align: "left",
         width: 150,
-        render(createdAt, record, index) {
-          return (
-            // <Typography.Text strong>
-            //   {dayjs(createdAt).format("DD/MM/YYYY HH:mm")}
-            // </Typography.Text>
-            <DateTimeTable data={createdAt} />
+        render(dateToStatus, record, index) {
+          return ( <DateTimeTable data={dateToStatus} />
           );
         },
       },
