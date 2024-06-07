@@ -19,6 +19,7 @@ import { defaultFee } from "../constants";
 import ModalAnt from "~/components/Antd/ModalAnt";
 import LogisticForm, { ValueApplyBill } from "~/modules/logistic/components/LogisticForm";
 import useNotificationStore from "~/store/NotificationContext";
+import { PAYER_OPTION } from "~/modules/logistic/logistic.modal";
 const TYPE_DISCOUNT = {
   "DISCOUNT.CORE": "DISCOUNT.CORE",
   "DISCOUNT.SOFT": "DISCOUNT.SOFT",
@@ -34,6 +35,7 @@ type Bill = {
   pharmacyId: string;
   fee?: FeeType[];
   dataTransportUnit?: ValueApplyBill;
+  totalPrice: number;
 };
 
 type DiscountDetail = {
@@ -228,15 +230,17 @@ export function CreateBillProvider({
   };
 
   const pair = Form.useWatch('pair',form) || 0;
-  const fee = Form.useWatch('fee',form) || 0;
+  const fee = Form.useWatch('fee', form) || 0;
+  const totalLogisticFeeByPayer: number = useMemo(() => bill?.dataTransportUnit?.payer === PAYER_OPTION.SYSTEM ? 0 : (bill?.dataTransportUnit?.totalFee ?? 0), [bill?.dataTransportUnit]);
+  const findLogisticInFee = useMemo(() => (fee || [])?.find((item: any) => item?.typeFee === 'LOGISTIC')?.value,[bill?.dataTransportUnit]);
   const totalPrice = useMemo(
     () =>
       quotationItems?.reduce(
         (sum: number, cur: any) =>
           sum + get(cur, "price") * get(cur, "quantityActual"),
         0
-      ),
-    [quotationItems]
+      ) + totalLogisticFeeByPayer,
+    [quotationItems,totalLogisticFeeByPayer]
   );
 
   const totalAmount = useMemo(
@@ -247,14 +251,15 @@ export function CreateBillProvider({
       ),
     [quotationItems]
   );
-
   const totalFee = useMemo(() => (fee || [])?.reduce((sum : number,cur : FeeType) => sum + (cur?.typeValue === 'PERCENT' ? getValueOfPercent(totalPrice,cur?.value) : cur?.value),0),[fee,totalPrice]);
   
   const totalPriceAfterDiscount = useMemo(
     () =>
-    totalAmount - pair + totalFee,
-    [quotationItems,pair,totalFee]
+      // Change from + totalFee became  + totalLogisticFeeByPayer   + (totalFee - totalLogisticFeeByPayer) because i don't want to change old value
+      totalAmount - pair + totalLogisticFeeByPayer + (totalFee - findLogisticInFee),
+    [quotationItems, pair, totalFee, totalLogisticFeeByPayer]
   );
+
   const totalDiscount = useMemo(
     () =>
       quotationItems?.reduce(
@@ -359,7 +364,7 @@ export function CreateBillProvider({
       const newBill = {
         ...bill,
         fee: (bill?.fee)?.map((item: any) => item?.typeFee === 'LOGISTIC' ? { ...item, value: data?.totalFee } : item),
-        dataTransportUnit: data
+        dataTransportUnit: data,
       };
       onChangeBill(newBill);
       onCloseFormLogistic();
@@ -367,7 +372,6 @@ export function CreateBillProvider({
       onNotify?.error("Có lỗi xảy ra khi gắn phí vận chuyển vào dơn hàng");
     };
   };
-  console.log(bill,'ddsasda')
   return (
     <CreateBill.Provider
       value={{

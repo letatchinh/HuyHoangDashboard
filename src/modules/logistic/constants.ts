@@ -1,4 +1,4 @@
-import { TRANSPORT_NAME_TYPE, TRANSPORT_TYPE_OBJECT, transportUnitType } from "./logistic.modal";
+import { TRANSPORT_NAME_TYPE, TRANSPORT_TYPE_OBJECT, payerTypeOption, transportUnitType } from "./logistic.modal";
 
 export const serviceLogistic = [
   {
@@ -142,3 +142,9 @@ export const ADDON_SERVICE = {
   VIETTELPOST: "SCOD",
   VIETNAMPOST: "GTG071",
 } //Thu hộ phí ship;
+
+
+export const PAYER_OPTIONS : payerTypeOption[] = [
+  { label: "Công ty", value: "SYSTEM" },
+  { label: "Khách hàng", value: "CUSTOMER" },
+];

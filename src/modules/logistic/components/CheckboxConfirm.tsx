@@ -1,15 +1,11 @@
 import { InfoCircleFilled } from "@ant-design/icons";
 import { Form, Radio, Tooltip } from "antd";
 import React from "react";
+import { PAYER_OPTIONS } from "../constants";
 type propsType = {
   setCheckboxPayment: (value: any) => void;
   checkboxPayment: string | null;
 };
-
-const options = [
-  { label: "Công ty", value: "SYSTEM" },
-  { label: "Khách hàng", value: "CUSTOMER" },
-];
 
 export default function CheckboxConfirm({
   checkboxPayment,
@@ -33,7 +29,7 @@ export default function CheckboxConfirm({
       }
       rules={[{ required: true, message: "Chọn người thanh toán" }]}
     >
-      <Radio.Group onChange={onChange} value={checkboxPayment} options={options}/>
+      <Radio.Group onChange={onChange} value={checkboxPayment} options={PAYER_OPTIONS}/>
     </Form.Item>
   );
 }

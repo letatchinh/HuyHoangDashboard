@@ -10,3 +10,13 @@ export type transportUnitType = {
   label: string,
   value: TRANSPORT_NAME_TYPE
 };
+
+export const PAYER_OPTION = {
+  SYSTEM: 'SYSTEM',
+  CUSTOMER: 'CUSTOMER',
+};
+export type payerType = 'SYSTEM' | 'CUSTOMER';
+export type payerTypeOption ={
+    label: string;
+    value: payerType;
+  };
