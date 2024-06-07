@@ -49,7 +49,7 @@ function* deleteLogistic({payload : id} : any) : any {
 function* countFee({payload} : any) : any {
   try {
     const data = yield call(api.countFee,payload);
-    yield put(logisticActions.countFeeSuccess(data));
+    yield put(logisticActions.countFeeSuccess({...data, note: payload?.note}));
   } catch (error:any) {
     yield put(logisticActions.countFeeFailed(error));
   }

@@ -11,8 +11,15 @@ import {
   Select,
   Skeleton,
 } from "antd";
+import { compact, omit } from "lodash";
 import React, { useCallback, useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import BaseBorderBox from "~/components/common/BaseBorderBox";
+import subvn from "~/core/subvn";
+import { useUpdateApplyLogisticUnit } from "~/modules/sale/bill/bill.hook";
+import { billSliceAction } from "~/modules/sale/bill/redux/reducer";
+import useCreateBillStore from "~/modules/sale/bill/storeContext/CreateBillContext";
+import useNotificationStore from "~/store/NotificationContext";
 import {
   ADDON_SERVICE,
   TRANSPORT_NAME,
@@ -20,22 +27,16 @@ import {
   serviceViettelPost,
   transportUnit,
 } from "../constants";
-import subvn from "~/core/subvn";
-import { compact, omit, pick } from "lodash";
 import {
   SubmitCountLogisticFee,
   useCountFee,
   useGetFee,
   useResetLogisticAction,
+  useUpdateFeeInRedux,
 } from "../logistic.hook";
-import useNotificationStore from "~/store/NotificationContext";
-import { useUpdateApplyLogisticUnit } from "~/modules/sale/bill/bill.hook";
-import { useDispatch } from "react-redux";
-import { billSliceAction } from "~/modules/sale/bill/redux/reducer";
+import { TRANSPORT_NAME_TYPE } from "../logistic.modal";
 import { logisticActions } from "../redux/reducer";
 import CheckboxConfirm from "./CheckboxConfirm";
-import { TRANSPORT_NAME_TYPE } from "../logistic.modal";
-import useCreateBillStore from "~/modules/sale/bill/storeContext/CreateBillContext";
 
 
 export interface ValueApplyBill {
@@ -90,6 +91,7 @@ export default function LogisticForm({
     }
   );
   const fee = useGetFee();
+  const [,updateFeeRedux] = useUpdateFeeInRedux();
 
   const FindAddress = useCallback(() => {
     type TypeItem = string | undefined;
@@ -183,9 +185,9 @@ export default function LogisticForm({
   };
 
   const onValuesChange = (values: any) => {
-    const { transportUnit, serviceCode, weight, width, length, height } =
+    const { transportUnit, serviceCode, weight, width, length, height, payer } =
       values;
-    if (transportUnit || serviceCode || weight || width || length || height) {
+    if (transportUnit || serviceCode || weight || width || length || height || payer) {
       form.setFieldsValue({
         totalFee: 0,
       });
@@ -195,26 +197,28 @@ export default function LogisticForm({
         serviceCode: null,
       });
     }
+    if (fee) {
+      updateFeeRedux({isCanUpdate: false})
+    };
   };
   const onApplyFeeForBill = () => {
     const values: ValueApplyBill = {
       ...fee,
       serviceName
     };
-    if (id) {
-      try {
+    try {
+      if (id) {
         updateApplyLogistic({
           id, //Id bill
           dataTransportUnit: { ...values },
         });
-      } catch (error: any) {
-        onNotify?.error(error?.message ?? "Có lỗi xảy ra khi tính phí");
-      }
-    } else {
-      onAddLogisticFee(values);
-    };
+      } else {
+        onAddLogisticFee(values);
+      };
+    }catch (error: any) {
+      onNotify?.error(error?.message ?? "Có lỗi xảy ra khi áp phí");
+    }
   };
-
   const renderLoading = (component: React.ReactNode) => {
     return isLoadingSubmit ? <Skeleton.Input active /> : component;
   };
@@ -402,7 +406,7 @@ export default function LogisticForm({
           <Button
             loading={isLoadingSubmit || isLoadingUpdate}
             type="primary"
-            disabled={!fee}
+            disabled={!fee?.isCanUpdate}
           >
             Áp dụng vào đơn hàng
           </Button>

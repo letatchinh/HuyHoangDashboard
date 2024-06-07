@@ -243,6 +243,7 @@ export const convertProductsFromBill = (listBill: any) => {
     productId: get(item, 'product._id', ''),
     variantId: get(item, 'variant._id', ''),
     codeBySupplier: get(item, 'codeBySupplier', ''),
+    notePharmacy: get(item, 'notePharmacy', ''),
   }));
   return newList
 };
@@ -267,7 +268,7 @@ export const convertDataSentToWarehouse = (data: any) => {
     dataTransportUnit: {
       ...omit(data?.dataTransportUnit, ['height', 'length', 'width', 'weight', 'totalFee']),
     },
-    note: data?.note,
+    notePharmacy: data?.notePharmacy,
   };
   return newValue;
 };

@@ -248,8 +248,8 @@ export function CreateBillProvider({
 
   const pair = Form.useWatch('pair',form) || 0;
   const fee = Form.useWatch('fee', form) || 0;
-  const totalLogisticFeeByPayer: number = useMemo(() => bill?.dataTransportUnit?.payer === PAYER_OPTION.SYSTEM ? 0 : (bill?.dataTransportUnit?.totalFee ?? 0), [bill?.dataTransportUnit]);
-  const findLogisticInFee = useMemo(() => (fee || [])?.find((item: any) => item?.typeFee === 'LOGISTIC')?.value,[bill?.dataTransportUnit]);
+  const totalLogisticFeeByPayer: number = useMemo(() => bill?.dataTransportUnit?.payer === PAYER_OPTION.SYSTEM ? 0 : (bill?.dataTransportUnit?.totalFee ?? 0), [bill?.dataTransportUnit, fee]);
+  const findLogisticInFee = useMemo(() => (fee || [])?.find((item: any) => item?.typeFee === 'LOGISTIC')?.value,[bill?.dataTransportUnit, fee]);
   const totalPrice = useMemo(
     () =>
       quotationItems?.reduce(
@@ -274,7 +274,7 @@ export function CreateBillProvider({
     () =>
       // Change from + totalFee became  + totalLogisticFeeByPayer   + (totalFee - totalLogisticFeeByPayer) because i don't want to change old value
       totalAmount - pair + totalLogisticFeeByPayer + (totalFee - findLogisticInFee),
-    [quotationItems, pair, totalFee, totalLogisticFeeByPayer]
+    [quotationItems, pair, totalFee, totalLogisticFeeByPayer,findLogisticInFee]
   );
 
   const totalDiscount = useMemo(
@@ -411,11 +411,13 @@ export function CreateBillProvider({
     };
     if (!bill?.warehouseId && listWarehouse?.length > 0 && bill?.pharmacyId) {
       setFormAndLocalStorage({
+        ...bill,
         warehouseId: listWarehouse[0]?._id,
         warehouseName: listWarehouse[0]?.name?.vi
       });
     };
   }, [bill, listWarehouse]);
+
   return (
     <CreateBill.Provider
       value={{

@@ -1,14 +1,11 @@
 export interface ItemProduct{
   name: string;
-  manufacturer: {
-    name: string;
-  };
-  unit: {
-    name: string;
-  };
+  manufacturer: string;
+  unit: string;
   category: string;
   quantity: number;
   barcode: string;
+  notePharmacy: string;
 };
 export interface DataCheckWarehouse {
   listProduct: ItemProduct[];

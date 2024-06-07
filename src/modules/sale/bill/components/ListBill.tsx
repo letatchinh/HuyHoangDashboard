@@ -106,7 +106,7 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
     }
   };
   const onRequestWarehouseExport = () => {
-    const submitData = convertDataSentToWarehouse({...bill, noteForWarehouse});
+    const submitData = convertDataSentToWarehouse({...bill, notePharmacy:noteForWarehouse});
     try {
       onCreateBillToWarehouse(submitData);
     } catch (error) {

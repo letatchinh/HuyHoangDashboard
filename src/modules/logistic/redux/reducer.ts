@@ -20,7 +20,10 @@ class LogisticClassExtend extends InstanceModuleRedux {
       },
       countFeeSuccess: (state: cloneInitState, { payload }: any) => {
         state.isSubmitLoading = false;
-        state.fee = payload;
+        state.fee = {
+          ...payload,
+          isCanUpdate: true
+        };
       },
       countFeeFailed: (state: cloneInitState, { payload }: any) => {
         state.isSubmitLoading = false;
@@ -28,7 +31,13 @@ class LogisticClassExtend extends InstanceModuleRedux {
       resetAction: (state: cloneInitState) => ({
         ...state,
         ...omit(this.cloneInitState, [])
-      })
+      }),
+      updateFeeReduxRequest: (state: cloneInitState, { payload }: any) => {
+        state.fee = {
+          ...state.fee,
+          ...payload
+        };
+      },
     }
     this.cloneInitState = {
       ...this.initialState,

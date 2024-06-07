@@ -160,3 +160,10 @@ export const SubmitCountLogisticFee = (data: any, props?: any) => {
     ...props
   };
 };
+
+export const useUpdateFeeInRedux = () => {
+  return useSubmit({
+    action: logisticActions.updateFeeReduxRequest,
+    loadingSelector: ()=> false,
+  });
+};

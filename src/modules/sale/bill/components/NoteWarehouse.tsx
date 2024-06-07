@@ -14,7 +14,7 @@ export default function NoteWarehouse({
 }:propsType) : React.JSX.Element {
   return (
     <BaseBorderBox title={"Ghi chú"}>
-      <Input.TextArea placeholder={placeholder} value={noteForWarehouse} onChange={(e: any) => setNoteForWarehouse(e)} />
+      <Input.TextArea placeholder={placeholder} value={noteForWarehouse} onChange={(e: any) => setNoteForWarehouse(e.target.value)} />
       </BaseBorderBox>
   )
 };
