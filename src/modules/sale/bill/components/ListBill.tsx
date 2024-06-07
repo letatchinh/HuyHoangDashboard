@@ -28,14 +28,15 @@ import { useMatchPolicy } from "~/modules/policy/policy.hook";
 import SelectSupplier from "~/modules/supplier/components/SelectSupplier";
 import RadioButtonWarehouseNotFetch from "~/modules/warehouse/components/RadioButtonWarehouseNotFetch";
 import { warehouseActions } from "~/modules/warehouse/redux/reducer";
-import { convertProductsFromBill, useCheckWarehouse, useCreateBillToWarehouse, useGetWarehouseByBranchLinked } from "~/modules/warehouse/warehouse.hook";
-import { ItemProduct, dataBillSentToWarehouse } from "~/modules/warehouse/warehouse.modal";
+import { convertDataSentToWarehouse, convertProductsFromBill, useCheckWarehouse, useCreateBillToWarehouse, useGetWarehouseByBranchLinked } from "~/modules/warehouse/warehouse.hook";
 import { formatter, pagingTable, permissionConvert } from "~/utils/helpers";
 import { useIsAdapterSystem } from "~/utils/hook";
 import { CalculateBill } from "../bill.service";
 import { STATUS_BILL, STATUS_BILL_VI } from "../constants";
 import Action from "./Action";
 import ProductItem from "./ProductItem";
+import { billSliceAction } from "../redux/reducer";
+import POLICIES from "~/modules/policy/policy.auth";
 const CalculateBillMethod = new CalculateBill();
 type propsType = {
   status?: string;
@@ -61,8 +62,7 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
   const [billItem, setBillItem] = useState<any>(null);
   const memoId = useMemo(() => get(billItem, '_id'), [billItem]);
   const [bill, loading] = useGetBill(memoId);
-  const [isSubmitLoading, onCreateBillToWarehouse] = useCreateBillToWarehouse();
-
+  const canCreateBillToWarehouse = useMatchPolicy(POLICIES.WRITE_WAREHOUSELINK);
   useEffect(() => {
     if (bill && bill?.warehouseId) {
       setWarehouseSelect(bill?.warehouseId);
@@ -76,6 +76,14 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
     setIsModalCheckWarehouse(false);
     setBillItem(null);
   };
+  const [isSubmitLoading, onCreateBillToWarehouse] = useCreateBillToWarehouse(
+    () => {
+      dispatch(warehouseActions.resetAction());
+      dispatch(billSliceAction.resetAction());
+      closeModalCheckWarehouse();
+    }
+  );
+
   const [isLoadingCheckWarehouse, onCheckWarehouse] = useCheckWarehouse(() => {
     dispatch(warehouseActions.resetAction());
   });
@@ -95,13 +103,13 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
     }
   };
   const onRequestWarehouseExport = () => {
+    const submitData = convertDataSentToWarehouse(bill);
     try {
-      // const submitData : dataBillSentToWarehouse = 
+      onCreateBillToWarehouse(submitData);
     } catch (error) {
-      
+      console.log(error)
     }
   };
-  console.log(bill,'billlll')
   //
   const columns: ColumnsType = useMemo(
     () => [
@@ -149,7 +157,7 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
         dataIndex: "status",
         key: "status",
         align: "center",
-        width: 180,
+        width: 200,
         render(status, record, index) {
           return (
             <Status status={status} statusVi={CLONE_STATUS_BILL_VI[status]} />
@@ -216,14 +224,20 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
           return <Typography.Text>{formatter(remainAmount)}</Typography.Text>;
         },
       },
-      {
+      ...(canCreateBillToWarehouse ? [{
         title: "Thao tác",
         key: "action",
-        align: "center",
-        render(value, record, index) {
-          return <Action canUpdate={true} branchId={record._id} onCheckWarehouse={onCheckWarehouse} onOpenModalSelectWarehouse={()=> openModalCheckWarehouse(record)} />
-        },
-      },
+        align: "center" as any,
+        render(value: any, record: any, index: number) {
+          return <Action
+            canUpdate={canCreateBillToWarehouse}
+            branchId={record._id}
+            onCheckWarehouse={onCheckWarehouse}
+            onOpenModalSelectWarehouse={() => openModalCheckWarehouse(record)}
+            statusBill={record?.status}
+          />
+        }
+      }] : []),
       ...(canDownload
         ? [
             {
@@ -244,7 +258,7 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
           ]
         : []),
     ],
-    [arrCheckBox, canDownload]
+    [arrCheckBox, canDownload, canCreateBillToWarehouse]
   );
   return (
     <div className="bill-page">

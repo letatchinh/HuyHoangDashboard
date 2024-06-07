@@ -1,11 +1,8 @@
-import {
-  InfoCircleTwoTone,
-  MoreOutlined
-} from "@ant-design/icons";
-import { Button, Dropdown, MenuProps } from "antd";
+import { InfoCircleTwoTone, MoreOutlined } from "@ant-design/icons";
+import { Button, Dropdown, MenuProps, Tooltip } from "antd";
 import React from "react";
 import { DataCheckWarehouse } from "~/modules/warehouse/warehouse.modal";
-import useCreateBillStore from "../storeContext/CreateBillContext";
+import { STATUS_BILL } from "../constants";
 
 type propsType = {
   onCheckWarehouse?: (data: DataCheckWarehouse) => void;
@@ -14,7 +11,8 @@ type propsType = {
   canDelete?: boolean;
   canUpdate: boolean;
   title?: string;
-  onOpenModalSelectWarehouse?: () => void
+  statusBill?: string;
+  onOpenModalSelectWarehouse?: () => void;
 };
 export default function Action({
   onCheckWarehouse,
@@ -22,53 +20,48 @@ export default function Action({
   isSubmitLoading,
   canDelete,
   canUpdate,
-  title = '',
-  onOpenModalSelectWarehouse
+  title = "",
+  statusBill,
+  onOpenModalSelectWarehouse,
 }: propsType): React.JSX.Element {
   const items: MenuProps["items"] = [
     ...(canUpdate
       ? [
           {
-            label: (
-              <Button
-                icon={<InfoCircleTwoTone />}
-                onClick={() => onOpenModalSelectWarehouse && onOpenModalSelectWarehouse()}
-                type="primary"
-                size="small"
-                style={{ width: "100%" }}
-              >
-                Kiểm kho
-              </Button>
-            ),
+            label:
+              statusBill !== STATUS_BILL.NEW ? (
+                <Tooltip title="Chỉ được kiểm kho ở đơn hàng đang xử lý">
+                  <Button
+                    disabled={statusBill !== STATUS_BILL.NEW}
+                    icon={<InfoCircleTwoTone />}
+                    onClick={() =>
+                      onOpenModalSelectWarehouse && onOpenModalSelectWarehouse()
+                    }
+                    type="primary"
+                    size="small"
+                    style={{ width: "100%" }}
+                  >
+                    Kiểm kho
+                  </Button>
+                </Tooltip>
+              ) : (
+                <Button
+                  disabled={statusBill !== STATUS_BILL.NEW}
+                  icon={<InfoCircleTwoTone />}
+                  onClick={() =>
+                    onOpenModalSelectWarehouse && onOpenModalSelectWarehouse()
+                  }
+                  type="primary"
+                  size="small"
+                  style={{ width: "100%" }}
+                >
+                  Kiểm kho
+                </Button>
+              ),
             key: "1",
           },
         ]
       : []),
-    // ...(canDelete
-    //   ? [
-    //       {
-    //         label: (
-    //           <Popconfirm
-    //             title={`Bạn muốn xoá ${title} này?`}
-    //             onConfirm={() => onDelete && onDelete(_id)}
-    //             okText="Xoá"
-    //             cancelText="Huỷ"
-    //           >
-    //             <Button
-    //               loading={isSubmitLoading}
-    //               danger
-    //               size="small"
-    //               icon={<DeleteOutlined />}
-    //               style={{ width: "100%" }}
-    //             >
-    //               Xoá
-    //             </Button>
-    //           </Popconfirm>
-    //         ),
-    //         key: "2",
-    //       },
-    //     ]
-    //   : []),
   ];
 
   return (

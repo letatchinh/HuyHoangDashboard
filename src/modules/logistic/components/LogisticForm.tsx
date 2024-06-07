@@ -48,6 +48,7 @@ export interface ValueApplyBill {
   serviceCode?: string;
   addonService?: any;
   payer?: string;
+  serviceName?: string;
 };
 type propsType = {
   bill?: any;
@@ -79,8 +80,8 @@ export default function LogisticForm({
       TRANSPORT_NAME.VIETNAMPOST as TRANSPORT_NAME_TYPE
     );
   const [isLoadingSubmit, onCountFee] = useCountFee();
+  const [serviceName, setServiceName] = useState<string | null>(null);
   const dispatch = useDispatch();
-
   const [isLoadingUpdate, updateApplyLogistic] = useUpdateApplyLogisticUnit(
     () => {
       onCloseFormLogistic();
@@ -126,7 +127,8 @@ export default function LogisticForm({
       receiverNational: "VN", // Default country is Vietnam
       transportUnit: transportUnitValue,
     });
-      setTransportUnitValue(dataTransportUnit?.transportUnit ?? "VIETNAMPOST");
+    setTransportUnitValue(dataTransportUnit?.transportUnit ?? "VIETNAMPOST");
+    setServiceName(dataTransportUnit?.serviceName ?? null);
       form.setFieldsValue({
         receiverName: pharmacy?.fullName ?? pharmacy?.name,
         payer: dataTransportUnit?.payer,
@@ -195,7 +197,10 @@ export default function LogisticForm({
     }
   };
   const onApplyFeeForBill = () => {
-    const values: ValueApplyBill = fee;
+    const values: ValueApplyBill = {
+      ...fee,
+      serviceName
+    };
     if (id) {
       try {
         updateApplyLogistic({
@@ -276,12 +281,14 @@ export default function LogisticForm({
                   placeholder="Chọn dịch vụ"
                   options={serviceLogistic}
                   loading={isLoadingSubmit}
+                  onChange={(value, option: any) => setServiceName(option?.label)}
                 />
               ) : (
                 <Select
                   placeholder="Chọn dịch vụ"
                   options={serviceViettelPost}
                   loading={isLoadingSubmit}
+                  onChange={(value, option: any) => setServiceName(option?.label)}
                 />
               )}
             </Form.Item>

@@ -41,10 +41,12 @@ function* createWarehouse({payload} : any) : any {
   }
 };
 
-function* createBillToWarehouse({payload} : any) : any {
+function* createBillToWarehouse({ payload }: any): any {
   try {
-    const data = yield call(api.create,payload);
-    yield put(warehouseActions.createBillToWarehouseSuccess(data));
+    const res = yield call(api.createBillToWarehouse,payload);
+    yield put(warehouseActions.createBillToWarehouseSuccess(res));
+    const data = {status: STATUS_BILL.REQUESTED, _id: payload?.billId}
+    yield put(billSliceAction.updateRequest(data));
   } catch (error:any) {
     yield put(warehouseActions.createBillToWarehouseFailed(error));
   }

@@ -87,7 +87,7 @@ export interface PayloadCreateBill extends FormFieldCreateBill {
 export interface PayloadUpdateBill  {
     cancelNote? : string,
     note? : string,
-    status? : "CANCELLED",
+    status? : "CANCELLED" | 'REQUESTED',
     _id : string
 }
 export interface DiscountOtherType {

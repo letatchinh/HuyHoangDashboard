@@ -5,7 +5,7 @@ import { InstanceModuleRedux } from "~/redux/instanceModuleRedux";
 import { initStateSlice } from "~/redux/models";
 interface cloneInitState extends initStateSlice {
   // Add cloneInitState Type Here
-  fee?: number | null ;
+  fee?: any;
 }
 class LogisticClassExtend extends InstanceModuleRedux {
   cloneReducer;

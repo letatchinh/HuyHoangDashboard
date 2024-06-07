@@ -15,24 +15,16 @@ export interface DataCheckWarehouse {
   warehouseId: number;
 };
 
-export interface itemType {
-  variantWarehouseId: string;
-  productWarehouseId: string;
-  batchId: string;
+export interface  itemType {
   quantity: number;
-  cost: number;
-  price: number;
   discountValue: number;
   discountType: number;
+  isCreateOrder: boolean;
+  totalPrice: number;
 }
 export interface dataBillSentToWarehouse {
   warehouseId: number;
   discountValue: number;
   discountPercent: number;
-  payment: {
-    method: 'CASH' | 'CARD';
-    totalPayment: number;
-    amount: number
-  };
   items: itemType[]; 
 };

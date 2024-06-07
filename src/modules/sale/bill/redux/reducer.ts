@@ -107,13 +107,10 @@ class BillClassExtend extends InstanceModuleRedux {
     },
     updateSuccess: (state:cloneInitState, { payload }:{payload:any}) => {
       state.isSubmitLoading = false;
-      state.byId = {
-        ...state.byId,
-        status : STATUS_BILL.CANCELLED
-      };
-      // state.list = state.list?.map((item:any) => get(item,'_id') === get(payload,'_id') ? payload : item);
+      state.byId = payload?.data;
+      state.list = state.list?.map((item:any) => get(item,'_id') === get(payload,'data._id') ? payload?.data : item);
       state.updateSuccess = payload;
-    },
+      },
 
     // update billItem
     updateBillItemRequest: (state:cloneInitState) => {
@@ -184,13 +181,14 @@ class BillClassExtend extends InstanceModuleRedux {
             }
           }),
         };
+      
         // state.list = state.list?.map((item: any) => get(item, '_id') === get(payload, '_id') ? {
         //   ...item,
         //   status: payload?.status
         // } : item);
       },
     
-    resetAction: (state:any) => ({
+    resetAction: (state:cloneInitState) => ({
       ...state,
       ...omit(this.cloneInitState, ["list"]),
     }),
