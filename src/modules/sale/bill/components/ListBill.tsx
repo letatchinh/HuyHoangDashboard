@@ -9,7 +9,7 @@ import {
   useUpdateBillParams,
 } from "../bill.hook";
 
-import { Checkbox, Col, ConfigProvider, Row, Space, Spin, Typography } from "antd";
+import { Checkbox, Col, ConfigProvider, Input, Row, Space, Spin, Typography } from "antd";
 import { ColumnsType } from "antd/es/table/InternalTable";
 import { get } from "lodash";
 import { useDispatch } from "react-redux";
@@ -37,6 +37,8 @@ import Action from "./Action";
 import ProductItem from "./ProductItem";
 import { billSliceAction } from "../redux/reducer";
 import POLICIES from "~/modules/policy/policy.auth";
+import BaseBorderBox from "~/components/common/BaseBorderBox";
+import NoteWarehouse from "./NoteWarehouse";
 const CalculateBillMethod = new CalculateBill();
 type propsType = {
   status?: string;
@@ -63,6 +65,7 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
   const memoId = useMemo(() => get(billItem, '_id'), [billItem]);
   const [bill, loading] = useGetBill(memoId);
   const canCreateBillToWarehouse = useMatchPolicy(POLICIES.WRITE_WAREHOUSELINK);
+  const [noteForWarehouse, setNoteForWarehouse] = useState<string>('');
   useEffect(() => {
     if (bill && bill?.warehouseId) {
       setWarehouseSelect(bill?.warehouseId);
@@ -103,7 +106,7 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
     }
   };
   const onRequestWarehouseExport = () => {
-    const submitData = convertDataSentToWarehouse(bill);
+    const submitData = convertDataSentToWarehouse({...bill, noteForWarehouse});
     try {
       onCreateBillToWarehouse(submitData);
     } catch (error) {
@@ -334,21 +337,23 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
         {loading ? <Spin />
           : (
             <>
-              <ProductItem data = {bill?.billItems}/>
-              <RadioButtonWarehouseNotFetch
-                setValue={setWarehouseSelect}
-                value={warehouseSelect}
-                onClick={onCheck}
-                title="Kiểm kho"
-                listWarehouse={listWarehouse}
-                isLoadingWarehouse={isLoadingWarehouse}
-                isShowButtonPackageExport
-                disabledButtonExport={bill?.status !== STATUS_BILL.READY}
-                isSubmitLoading={isSubmitLoading}
-                requestWarehouseExport={onRequestWarehouseExport}
-              />
-            </>
-
+              <BaseBorderBox>
+                <ProductItem data={bill?.billItems} />
+                <NoteWarehouse noteForWarehouse={noteForWarehouse} setNoteForWarehouse={setNoteForWarehouse} placeholder={'Ghi chú gửi đến kho'} />
+                <RadioButtonWarehouseNotFetch
+                  setValue={setWarehouseSelect}
+                  value={warehouseSelect}
+                  onClick={onCheck}
+                  title="Kiểm kho"
+                  listWarehouse={listWarehouse}
+                  isLoadingWarehouse={isLoadingWarehouse}
+                  isShowButtonPackageExport
+                  disabledButtonExport={bill?.status !== STATUS_BILL.READY}
+                  isSubmitLoading={isSubmitLoading}
+                  requestWarehouseExport={onRequestWarehouseExport}
+                />
+                </BaseBorderBox>
+              </>
           )}
       </ModalAnt>
     </div>

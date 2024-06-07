@@ -267,6 +267,7 @@ export const convertDataSentToWarehouse = (data: any) => {
     dataTransportUnit: {
       ...omit(data?.dataTransportUnit, ['height', 'length', 'width', 'weight', 'totalFee']),
     },
+    note: data?.note,
   };
   return newValue;
 };
