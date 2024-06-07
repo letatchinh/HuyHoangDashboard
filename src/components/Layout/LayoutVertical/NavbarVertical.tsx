@@ -1,10 +1,11 @@
 import { ConfigProvider, Menu, MenuProps, Spin } from 'antd';
 import React, {  useState , useEffect} from 'react';
-import { resource } from './resourceV2';
+// import { resource } from './resourceV2';
 import { useGetProfile } from '~/modules/auth/auth.hook';
 import { isMatchPolicy, useUserPolicy } from '~/modules/policy/policy.hook';
 import NavbarItem from './NavbarItem';
 import { keys } from 'lodash';
+import { resource } from './resourceV3';
 
 
 /**
