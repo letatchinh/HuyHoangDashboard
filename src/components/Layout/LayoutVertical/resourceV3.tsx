@@ -251,12 +251,6 @@ export const resource: ItemType[] = [
         // permission: [POLICIES.READ_SUPPLIER],//
       },
       {
-        label: "Trình dược viên",
-        path: PATH_APP.reportIndividualEmployeeSeller.root,
-        key: PATH_APP.reportIndividualEmployeeSeller.root,
-        // permission: [POLICIES.READ_REPORTSALARYPARTNER],
-      },
-      {
         label: "Báo cáo doanh thu",
         key: "revenue",
         children: [
