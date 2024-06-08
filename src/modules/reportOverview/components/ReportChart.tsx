@@ -134,7 +134,7 @@ export default function ReportChart(
         <Col span={8}>
           <Space>
             <Typography style={{ fontSize: 14, marginRight: 20 }}>
-              Phân loại:
+              Tiêu chí:
             </Typography>
             <Select
               loading={isLoading}
