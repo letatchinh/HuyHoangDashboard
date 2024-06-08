@@ -40,7 +40,7 @@ const NavbarVertical: React.FC = () => {
   const profile = useGetProfile();
   const [isLoadingPolicy, , policies] = useUserPolicy();
 
-  const [filteredResource,setFilteredResource]:any = useState([]);
+  const [filteredResource,setFilteredResource]:any = useState<any[]>([]);
   useEffect(() => {
     const checkPermission = (permission: any): boolean => {
       if (!permission || profile?.user?.isSuperAdmin) return true;
@@ -67,21 +67,16 @@ const NavbarVertical: React.FC = () => {
       setFilteredResource(filteredResource)
     };
   }, [policies, profile]);
-    const NewNavbarItems : any =  filteredResource?.map((first: any) => {
-        if (first.children?.length) {
-          const newChildFirst = first.children.map((second: any) => {
-            if (second.children?.length) {
-              const newChildSecond = second.children.map((third: any) => getItem(third));
-              return getItem({ ...second, children: newChildSecond });
-            } else {
-              return getItem(second)
-            };
-          })
-          return getItem({ ...first, children: newChildFirst })
-        } else {
-          return getItem(first)
-        };
-    });
+  
+  function loopRenderNav (element: typeof resource[number]){
+    const render = element
+    if(element.children?.length){
+        render.children = element.children.map(loopRenderNav)
+    }
+    return getItem(render)
+  }
+    const NewNavbarItems = filteredResource.map(loopRenderNav)
+    
     return (
     <div className='layoutVertical--content__navbar'>
       {isLoadingPolicy && <Spin className='layoutVertical--content__navbar__loading' tip="Đang lấy dữ liệu phân quyền"/>}

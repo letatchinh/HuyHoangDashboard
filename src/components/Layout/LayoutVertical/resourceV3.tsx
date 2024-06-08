@@ -251,6 +251,12 @@ export const resource: ItemType[] = [
         // permission: [POLICIES.READ_SUPPLIER],//
       },
       {
+        label: "Trình dược viên",
+        path: PATH_APP.reportIndividualEmployeeSeller.root,
+        key: PATH_APP.reportIndividualEmployeeSeller.root,
+        // permission: [POLICIES.READ_REPORTSALARYPARTNER],
+      },
+      {
         label: "Báo cáo doanh thu",
         key: "revenue",
         children: [
@@ -582,6 +588,32 @@ export const resource: ItemType[] = [
           POLICIES.READ_BORROWPRODUCT,
           POLICIES.READ_STATUSBORROWPRODUCT,
         ], //
+      },
+    ],
+  },
+  {
+    label: "Đơn hàng",
+    icon: <i className="fa-solid fa-boxes-packing"></i>,
+    key: "bill",
+    permission: [...permissionBill],//
+    children: [
+      {
+        label: "Đơn hàng",
+        path: PATH_APP.bill.root,
+        key: PATH_APP.bill.root,
+        permission: [POLICIES.READ_BILL],//
+      },
+      {
+        label: "Đơn hàng tạm",
+        path: PATH_APP.quotation.root,
+        key: PATH_APP.quotation.root,
+        permission: [POLICIES.READ_QUOTATION],//
+      },
+      {
+        label: "Tạo đơn hàng tạm",
+        path: PATH_APP.bill.create,
+        key: PATH_APP.bill.create,
+        permission: [POLICIES.WRITE_QUOTATION],//
       },
     ],
   },
