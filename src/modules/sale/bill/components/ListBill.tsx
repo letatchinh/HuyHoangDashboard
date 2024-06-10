@@ -264,8 +264,8 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
       endDate: query?.endDate ? dayjs(query?.endDate) : null,
       managementArea: query?.managementArea?.split(","),
     };
-    form.setFieldsValue(getExistProp(root));
-  }, []);
+    form.setFieldsValue(root);
+  }, [pathname]);
 
   const onValuesChange = (valueChange: any) => {
     const key = Object.keys(valueChange)[0];
