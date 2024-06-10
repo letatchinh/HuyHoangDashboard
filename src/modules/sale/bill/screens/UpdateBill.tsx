@@ -57,7 +57,7 @@ const CLONE_STATUS_BILL: any = STATUS_BILL;
 export default function UpdateBill(props: propsType): React.JSX.Element {
   const [form] = Form.useForm();
   useResetBillAction();
-  const { bill, isLoading,mutateBill,onOpenForm, compareMoney,onOpenFormPayment ,totalRevenueInVouchers, onOpenFormLogistic} = useUpdateBillStore();
+  const { bill, isLoading,mutateBill,onOpenForm, compareMoney,onOpenFormPayment ,totalRevenueInVouchers, onOpenFormLogistic, warehouseInfo} = useUpdateBillStore();
   const {
     codeSequence,
     createdAt,
@@ -76,13 +76,9 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
     feeDetail,
     refCollection,
   } = bill || {};
-  console.log(refCollection, refCollection)
   const { pathname } = useLocation();
   const keyPermission = useMemo(() => CheckPermission(pathname), [pathname]);
   const canUpdateBill = useMatchPolicy([keyPermission, 'update']);
-  const canWriteBill = useMatchPolicy([keyPermission, 'write']);
-  // const queryGetDebtPharmacy = useMemo(() => ({pharmacyId : get(bill,'pharmacyId')}),[bill]);
-  // const [debt,isLoadingDebt] = useFetchState({api : PharmacyModule.api.getDebt,query : queryGetDebtPharmacy});
   const { id } = useParams();
   const [openCancel, setOpenCancel] = useState(false);
   const [cancelNote, setCancelNote] = useState("");
@@ -111,6 +107,7 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
     };
     updateBill(payloadUpdate);
   };
+
   const onFinish = (values : FormFieldBillType) => {
     const payloadUpdate: PayloadUpdateBill = {
       ...values,
@@ -177,7 +174,6 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
                   ? omit(STATUS_BILL, ["CANCELLED"])
                   : omit(STATUS_BILL, [
                       STATUS_BILL.COMPLETED,
-                      STATUS_BILL.PROCESSING,
                     ])
               }
               statusesVi={STATUS_BILL_VI}
@@ -243,7 +239,10 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
               </Row>
               <Divider />
               <h6>Địa chỉ giao</h6>
-              {get(bill, "deliveryAddress",'')}
+                {get(bill, "deliveryAddress", '')}
+                <Divider />
+              <h6>Kho xuất hàng</h6>
+              {get(warehouseInfo,'name.vi','')}
             </WhiteBox>
           </div>
         </Col>

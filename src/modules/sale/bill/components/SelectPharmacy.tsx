@@ -121,7 +121,6 @@ export default function SelectPharmacy({
       fetchInit();
 
   },[pathname]);
-  
   return (
     <Row gutter={8}  >
       {showIcon && <UserOutlined />}

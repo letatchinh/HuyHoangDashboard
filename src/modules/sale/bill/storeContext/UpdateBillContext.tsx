@@ -28,6 +28,7 @@ export type GlobalUpdateBill = {
     setCheckboxPayment: (p: string | null) => void;
     listWarehouse: any[];
     isLoadingWarehouse: boolean;
+    warehouseInfo: any
 };
 const UpdateBill = createContext<GlobalUpdateBill>({
     bill : null,
@@ -43,7 +44,8 @@ const UpdateBill = createContext<GlobalUpdateBill>({
     checkboxPayment: null,
     setCheckboxPayment: (p: string | null) => { },
     listWarehouse: [],
-    isLoadingWarehouse: false
+    isLoadingWarehouse: false,
+    warehouseInfo: null
 });
 
 type UpdateBillProviderProps = {
@@ -81,6 +83,8 @@ export function UpdateBillProvider({
     return totalPrice
   }, [bill, totalReceiptVoucherCompleted]);
   
+  const warehouseInfo = useMemo(() => (listWarehouse || []).find((item: any) => item._id === bill?.warehouseId), [bill?.warehouseId, listWarehouse]);
+
   //Warehouse
 
   const onOpenForm = () => {
@@ -122,7 +126,8 @@ export function UpdateBillProvider({
         checkboxPayment,
         setCheckboxPayment,
         listWarehouse,
-        isLoadingWarehouse
+        isLoadingWarehouse,
+        warehouseInfo
       }}
     >
       {children}
@@ -188,6 +193,7 @@ export function UpdateBillProvider({
           dataTransportUnit={bill?.bill?.dataTransportUnit}
           pharmacy={bill?.pharmacy}
           id={bill?._id}
+          warehouseInfo={warehouseInfo}
         />
       </ModalAnt>
     </UpdateBill.Provider>

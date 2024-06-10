@@ -124,7 +124,7 @@ try {
                     value : 0
                   }
                 }
-                const deliveryAddress = concatAddress(get(option,'data.address'));
+                const deliveryAddress = concatAddress(get(option,'data.addressDelivery',get(option,'data.address','')));
                 const address = get(option,'data.addressStories',[]);
                 setFormAndLocalStorage({
                     fee : feeForm,

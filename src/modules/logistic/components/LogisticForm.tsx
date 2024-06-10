@@ -37,6 +37,7 @@ import {
 import { TRANSPORT_NAME_TYPE } from "../logistic.modal";
 import { logisticActions } from "../redux/reducer";
 import CheckboxConfirm from "./CheckboxConfirm";
+import { concatAddress } from "~/utils/helpers";
 
 
 export interface ValueApplyBill {
@@ -60,6 +61,7 @@ type propsType = {
   deliveryAddressId?: any;
   pharmacy?: any;
   dataTransportUnit?: ValueApplyBill;
+  warehouseInfo?: any
 };
 
 export default function LogisticForm({
@@ -71,6 +73,7 @@ export default function LogisticForm({
   deliveryAddressId,
   pharmacy,
   dataTransportUnit,
+  warehouseInfo,
 }: propsType): React.JSX.Element {
   useResetLogisticAction();
   const { onAddLogisticFee } = useCreateBillStore();
@@ -140,13 +143,8 @@ export default function LogisticForm({
   useEffect(() => {
     if (deliveryAddressId) {
       form.setFieldsValue({
-        customerAddress: compact([
-          FindAddress()?.receiverAddress,
-          FindAddress()?.receiverCommuneName,
-          FindAddress()?.receiverDistrictName,
-          FindAddress()?.receiverProvinceName,
-        ]).join(", "),
-        receiverAddress: FindAddress()?.receiverAddress,
+        customerAddress: concatAddress(deliveryAddressId),
+        receiverAddress: deliveryAddressId?.street,
       });
     }
   }, [deliveryAddressId]);
@@ -161,6 +159,14 @@ export default function LogisticForm({
       });
     }
   }, [fee]);
+  useEffect(() => { 
+    if (warehouseInfo) {
+      form.setFieldsValue({
+        warehouseName: warehouseInfo?.name?.vi ?? '',
+        warehouseAddress: concatAddress(warehouseInfo?.address)
+      });
+    }
+  },[warehouseInfo]);
 
   const onFinish = (values: any) => {
     const submitData = SubmitCountLogisticFee(values, {...omit(FindAddress(), ["receiverAddress"])});
@@ -245,7 +251,21 @@ export default function LogisticForm({
             <Row gutter={10}>
               <Col span={24}>
                 <Form.Item name={"senderName"} label={"Người gửi"}>
-                  {renderLoading(<Input />)}
+                  {renderLoading(<Input readOnly />)}
+                </Form.Item>
+              </Col>
+            </Row>
+            <Row gutter={10}>
+              <Col span={24}>
+                <Form.Item name={"warehouseName"} label={"Kho gửi"}>
+                  {renderLoading(<Input readOnly/>)}
+                </Form.Item>
+              </Col>
+            </Row>
+            <Row gutter={10}>
+              <Col span={24}>
+                <Form.Item name={"warehouseAddress"} label={"Địa chỉ kho gửi"}>
+                  {renderLoading(<Input readOnly />)}
                 </Form.Item>
               </Col>
             </Row>

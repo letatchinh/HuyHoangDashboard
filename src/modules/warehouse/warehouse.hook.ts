@@ -57,13 +57,14 @@ export const useGetWarehouses = (param: any) => {
     param,
   });
 };
-export const useGetWarehouse = (id: any) => {
+export const useGetWarehouse = (id?: any) => {
+  const profile = useSelector((state: any) => state.auth.profile);
   return useFetchByParam({
     action: warehouseActions.getByIdRequest,
     loadingSelector: getByIdLoadingSelector,
     dataSelector: getByIdSelector,
     failedSelector: getByIdFailedSelector,
-    param: id,
+    param: id ?? profile?.profile?.branchId,
   });
 };
 export const useGetWarehouseByBranchLinked = (id?: any) => {
@@ -271,4 +272,56 @@ export const convertDataSentToWarehouse = (data: any) => {
     notePharmacy: data?.notePharmacy,
   };
   return newValue;
+};
+
+
+export function convertPathToObject(path: string) {
+  const parts = path.split('/').filter(part => part); 
+  return {
+      areaId: parts[0],
+      cityId: parts[1],
+      districtId: parts[2],
+      wardId: parts[3]
+  };
+};
+
+
+interface itemManagementArea {
+  path: string;
+  fullAddress?: string;
+  _id?: string;
+};
+interface warehouseManagementAreaItem {
+  managementArea: itemManagementArea[];
+  warehouseId: number;
+  _id?: string;
+};
+export function findMatchingManagementArea(address: any, warehouseDefault: warehouseManagementAreaItem[]) {
+  const convertWarehouseDefault = warehouseDefault?.map((item: any) => ({
+    ...item,
+    managementArea: item?.managementArea?.map((area: any) => ({
+      ...area,
+      ...convertPathToObject(area?.path),
+    })),
+  }));
+  for (const warehouse of convertWarehouseDefault) {
+    for (const area of warehouse.managementArea) {
+      if (area.areaId === address.areaId) {
+        if (area.cityId === undefined || area.cityId === address.cityId) {
+          if (
+            area.districtId === undefined ||
+            area.districtId === address.districtId
+          ) {
+            if (
+              area.wardId === undefined ||
+              area.wardId === address.wardId
+            ) {
+              return warehouse;
+            }
+          }
+        }
+      }
+    }
+  }
+  return null;
 };

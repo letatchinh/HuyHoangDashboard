@@ -10,13 +10,12 @@ import "../warehouse.style.scss";
 import {
   convertDataByManagementArea,
   useGetWarehouse,
+  useGetWarehouseByBranchLinked,
   useInitWarehouse,
   useResetAction,
   useUpdateManagementWarehouse,
 } from "../warehouse.hook";
 import { useGetProfile } from "~/modules/auth/auth.hook";
-import { useFetchState } from "~/utils/hook";
-import apis from "../warehouse.api";
 import { get } from "lodash";
 type propsType = {};
 
@@ -27,13 +26,10 @@ export default function SelectDefaultWarehouse(
   const profile = useGetProfile();
   useResetAction();
   const [isLoadingSubmit, updateManagementWarehouse] = useUpdateManagementWarehouse();
-  const [warehouseDefault, isLoading] = useGetWarehouse(profile?.profile?.branchId);
+  const [warehouseDefault, isLoading] = useGetWarehouse();
   const InitValue = useInitWarehouse(warehouseDefault);
 
-  const query = useMemo(() => ({
-    branchId: profile?.profile?.branchId,
-  }), [profile]);
-  const [listWarehouse, isLoadingWarehouse] = useFetchState({api: apis.getAllWarehouse,query ,useDocs: false});
+  const [listWarehouse, isLoadingWarehouse]= useGetWarehouseByBranchLinked();
   const options = useMemo(
     () =>
       listWarehouse?.map((item: any) => ({

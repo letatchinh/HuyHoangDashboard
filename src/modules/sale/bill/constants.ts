@@ -4,7 +4,7 @@ export const STATUS_BILL = {
   REQUESTED: "REQUESTED",
   PACKAGE_EXPORT: "PACKAGE_EXPORT",
   SHIPPING: "SHIPPING",
-  PROCESSING: "PROCESSING",
+  // PROCESSING: "PROCESSING",
   COMPLETED: "COMPLETED",
   CANCELLED: "CANCELLED",
 };
@@ -14,7 +14,7 @@ export const STATUS_BILL_VI = {
   REQUESTED: 'Đã gửi yêu cầu xuất kho',
   PACKAGE_EXPORT: 'Đang xuất kho',
   SHIPPING: 'Đang gửi hàng',
-  PROCESSING: "Đang xử lý",
+  // PROCESSING: "Đang xử lý",
   COMPLETED: "Đã hoàn thành",
   CANCELLED: "Đã huỷ",
 };
