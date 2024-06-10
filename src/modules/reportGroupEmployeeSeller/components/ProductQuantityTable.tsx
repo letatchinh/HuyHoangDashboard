@@ -11,6 +11,7 @@ import type { TableColumnsType } from "antd";
 import { useGetReportGroupEmployeeSellerProduct } from "../reportGroupEmployeeSeller.hook";
 import { get } from "lodash";
 import apis from "../reportGroupEmployeeSeller.api";
+import Breadcrumb from "~/components/common/Breadcrumb";
 type propsType = {
   query?: any;
   pagination?: any;
@@ -104,6 +105,7 @@ export default function ProductQuantityTable(
                 root?.productId
               )
             }
+            style={{color: "#3481FF"}}
           >
             {" "}
             {record}
@@ -159,7 +161,7 @@ export default function ProductQuantityTable(
   const dataSource: ReportProductType[] = data ?? [];
 
   return (
-    <WhiteBox>
+    <div>
       {contextModal}
       <TableAnt
         dataSource={dataSource}
@@ -181,6 +183,6 @@ export default function ProductQuantityTable(
         }}
         // stickyTop
       />
-    </WhiteBox>
+    </div>
   );
 }
