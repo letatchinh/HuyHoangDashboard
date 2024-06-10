@@ -86,6 +86,7 @@ export default function BillAndDebtTable(props: propsType): React.JSX.Element {
                   .join(" > ")
               )
             }
+            style={{color: "#3481FF"}}
           >
             {" "}
             {record}
