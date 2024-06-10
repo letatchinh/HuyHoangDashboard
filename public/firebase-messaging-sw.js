@@ -18,7 +18,11 @@ const firebaseConfig = {
   appId: 'config.REACT_APP_FIREBASE_APP_ID' ?? process.env.REACT_APP_FIREBASE_APP_ID ,
   measurementId: 'config.REACT_APP_FIREBASE_MEASUREMENT_ID' ?? process.env.REACT_APP_FIREBASE_MEASUREMENT_ID ,
 };
-
+const TYPE_NOTIFICATION  = {
+  ORDER_CONVERT_QUOTATION_CUSTOMER: "ORDER_CONVERT_QUOTATION_CUSTOMER",
+  ORDER_QUOTATION_CUSTOMER: "ORDER_QUOTATION_CUSTOMER",
+  ORDER_SUPPLIER: "ORDER_SUPPLIER",
+};
 // // eslint-disable-next-line no-undef
 firebase.initializeApp(firebaseConfig);
 
