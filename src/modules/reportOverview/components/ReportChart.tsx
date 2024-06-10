@@ -22,6 +22,7 @@ import {
   checkKeyContainsGroupByRangerDate,
   getReportProductbody,
   renderOptionReport,
+  renderOptionReportB2C,
 } from "../reportOverview.modal";
 import { filterSelectWithLabel, formatter } from "~/utils/helpers";
 import dayjs from "dayjs";
@@ -139,7 +140,7 @@ export default function ReportChart(
             <Select
               loading={isLoading}
               defaultValue={"groupProduct"}
-              options={renderOptionReport}
+              options={spaceType !== "partner" ? renderOptionReport : renderOptionReportB2C}
               popupMatchSelectWidth={false}
               filterOption={filterSelectWithLabel}
               onChange={(value) => onParamChange({ dataType: value || null })}

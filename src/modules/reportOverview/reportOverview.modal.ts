@@ -42,6 +42,17 @@ export const renderOptionReport = ["Product", "Supplier", "Customer", "Saler", "
     ]
   }
 });
+export const renderOptionReportB2C = ["Product", "Supplier", "Customer", "Area", "City"].map((el:any)=>{
+  const group = 'group'+el as type_report;
+  const groupW = 'groupByRangerDateWith'+el as type_report;
+  return {
+    label: TYPE_REPORT_VI[group],
+    options:[
+      { label : TYPE_REPORT_VI[TYPE_REPORT[group]],value: TYPE_REPORT[group] },
+      { label : TYPE_REPORT_VI[TYPE_REPORT[groupW]],value: TYPE_REPORT[groupW] }
+    ]
+  }
+});
 
 export const FILTER_BY: any = {
   WEEKLY: "WEEKLY",
