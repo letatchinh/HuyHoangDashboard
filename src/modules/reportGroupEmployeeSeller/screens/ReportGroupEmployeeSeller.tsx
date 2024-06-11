@@ -84,7 +84,7 @@ export default function ReportGroupEmployeeSeller(
         <Col span={2}>
           <Typography>Đội nhóm: </Typography>
         </Col>
-        <Col span={8}>
+        <Col span={6}>
           <SelectGroupSeller
             query={query}
             value={query?.salesGroupId ? query?.salesGroupId?.split(",") : []}

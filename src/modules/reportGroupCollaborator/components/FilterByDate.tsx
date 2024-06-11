@@ -1,7 +1,6 @@
 import {
   Col,
   DatePicker,
-  Divider,
   Form,
   Row,
   Select,
@@ -78,7 +77,7 @@ export default function FilterByDate(props: propsType): React.JSX.Element {
 
   return (
     <div style={{ marginBottom: 24, width: "inherit" }}>
-      <Row style={{ width: "100%", marginBottom: 20 }} wrap>
+      <Row style={{ width: "100%"}} wrap>
         <Col style={{ ...styleFlex, width: "420px" }}>
           <TitleRender title="Báo cáo" />
           <Select

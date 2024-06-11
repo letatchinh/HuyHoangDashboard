@@ -77,6 +77,18 @@ const permissionCollaborator = [
   POLICIES.READ_STATUSBORROWPRODUCT,
 ];
 
+const permissionReport = [
+  POLICIES.READ_REPORTOVERVIEW,
+  POLICIES.READ_REPORTSALARY,
+  POLICIES.READ_REPORTSALARYPARTNER,
+  POLICIES.READ_REPORTOVERVIEWB2B,
+  POLICIES.READ_REPORTOVERVIEWB2C,
+  POLICIES.READ_REPORTREVENUEPERSONALEMPLOYEE,
+  POLICIES.READ_REPORTREVENUEPERSONALPARTNER,
+  POLICIES.READ_REPORTREVENUETEAMEMPLOYEE,
+  POLICIES.READ_REPORTREVENUETEAMPARTNER,
+];
+
 export const resource: ItemType[] = [
   {
     label: "WorldPharmaVN",
@@ -217,23 +229,18 @@ export const resource: ItemType[] = [
     label: "Báo cáo",
     key: "report",
     icon: <i className="fa-solid fa-code-branch"></i>,
-    permission: [
-      POLICIES.READ_REPORTSALARY,
-      POLICIES.READ_REPORTSALARYPARTNER,
-      POLICIES.READ_VOUCHERPARTNER,
-      POLICIES.READ_VOUCHERSALARYPARTNER,
-      POLICIES.READ_VOUCHERSALARYEMPLOYEE,
-    ],
+    permission: [...permissionReport],
     children: [
       {
         label: "Báo cáo tổng quan",
         path: PATH_APP.reportOverview.root,
         key: PATH_APP.reportOverview.root,
-        // permission: [POLICIES.READ_SUPPLIER],//
+        permission: [POLICIES.READ_REPORTOVERVIEW, POLICIES.READ_REPORTOVERVIEWB2B, POLICIES.READ_REPORTOVERVIEWB2C],//
       },
       {
         label: "Báo cáo lương",
         key: "salary",
+        permission: [POLICIES.READ_REPORTSALARY, POLICIES.READ_REPORTSALARYPARTNER],
         children: [
           {
             label: "Báo cáo lương trình dược viên",
@@ -248,15 +255,24 @@ export const resource: ItemType[] = [
             permission: [POLICIES.READ_REPORTSALARYPARTNER],
           },
         ],
-        // permission: [POLICIES.READ_SUPPLIER],//
       },
       {
         label: "Báo cáo doanh thu",
         key: "revenue",
+        permission: [
+          POLICIES.READ_REPORTREVENUEPERSONALEMPLOYEE,
+          POLICIES.READ_REPORTREVENUEPERSONALPARTNER,
+          POLICIES.READ_REPORTREVENUETEAMEMPLOYEE,
+          POLICIES.READ_REPORTREVENUETEAMPARTNER,
+        ],
         children: [
           {
             label: "Cá nhân",
             key: "invidual",
+            permission: [
+              POLICIES.READ_REPORTREVENUEPERSONALEMPLOYEE,
+              POLICIES.READ_REPORTREVENUEPERSONALPARTNER,
+            ],
             children: [
               // {
               //   label: "Đại lý",
@@ -268,20 +284,23 @@ export const resource: ItemType[] = [
                 label: "Trình dược viên",
                 path: PATH_APP.reportIndividualEmployeeSeller.root,
                 key: PATH_APP.reportIndividualEmployeeSeller.root,
-                // permission: [POLICIES.READ_REPORTSALARYPARTNER],
+                permission: [POLICIES.READ_REPORTREVENUEPERSONALEMPLOYEE],
               },
               {
                 label: "Cộng tác viên",
                 path: PATH_APP.reportIndividualCollaborator.root,
                 key: PATH_APP.reportIndividualCollaborator.root,
-                // permission: [POLICIES.READ_REPORTSALARYPARTNER],
+                permission: [POLICIES.READ_REPORTREVENUEPERSONALPARTNER],
               },
             ],
-            // permission: [POLICIES.READ_SUPPLIER],//
           },
           {
             label: "Đội nhóm",
             key: "group",
+            permission: [
+              POLICIES.READ_REPORTREVENUETEAMEMPLOYEE,
+              POLICIES.READ_REPORTREVENUETEAMPARTNER,
+            ],
             children: [
               // {
               //   label: "Đại lý",
@@ -293,19 +312,17 @@ export const resource: ItemType[] = [
                 label: "Trình dược viên",
                 path: PATH_APP.reportGroupEmployeeSeller.root,
                 key: PATH_APP.reportGroupEmployeeSeller.root,
-                // permission: [POLICIES.READ_REPORTSALARYPARTNER],
+                permission: [POLICIES.READ_REPORTREVENUETEAMEMPLOYEE],
               },
               {
                 label: "Cộng tác viên",
                 path: PATH_APP.reportGroupCollaborator.root,
                 key: PATH_APP.reportGroupCollaborator.root,
-                // permission: [POLICIES.READ_REPORTSALARYPARTNER],
+                permission: [POLICIES.READ_REPORTREVENUETEAMPARTNER],
               },
             ],
-            // permission: [POLICIES.READ_SUPPLIER],//
           },
         ],
-        // permission: [POLICIES.READ_SUPPLIER],//
       },
       {
         label: "Báo cáo quản trị",
@@ -427,34 +444,6 @@ export const resource: ItemType[] = [
       },
     ],
   },
-
-  // Đơn hàng
-  // {
-  //   label: "Đơn hàng",
-  //   icon: <i className="fa-solid fa-boxes-packing"></i>,
-  //   key: "bill",
-  //   permission: [...permissionBill], //
-  //   children: [
-  //     {
-  //       label: "Đơn hàng",
-  //       path: PATH_APP.bill.root,
-  //       key: PATH_APP.bill.root,
-  //       permission: [POLICIES.READ_BILL], //
-  //     },
-  //     {
-  //       label: "Đơn hàng tạm",
-  //       path: PATH_APP.quotation.root,
-  //       key: PATH_APP.quotation.root,
-  //       permission: [POLICIES.READ_QUOTATION], //
-  //     },
-  //     {
-  //       label: "Tạo đơn hàng tạm",
-  //       path: PATH_APP.bill.create,
-  //       key: PATH_APP.bill.create,
-  //       permission: [POLICIES.WRITE_QUOTATION], //
-  //     },
-  //   ],
-  // },
   
   // Đại lý
   // {
