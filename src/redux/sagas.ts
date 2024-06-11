@@ -47,7 +47,13 @@ import notification from '~/modules/notification';
 import collaborator from '~/modules/collaborator';
 import collaboratorGroup from '~/modules/collaboratorGroup';
 import reportSalaryPartner from '~/modules/reportSalaryPartner/redux/saga';
+import reportProductSupplier from '~/modules/reportProductSupplier';
+import reportOverview from '~/modules/reportOverview';
 import requestGroup from '~/modules/requestGroup';
+import reportIndividualCollaborator from '~/modules/reportIndividualCollaborator';
+import reportIndividualEmployeeSeller from '~/modules/reportIndividualEmployeeSeller';
+import reportGroupCollaborator from '~/modules/reportGroupCollaborator';
+import reportGroupEmployeeSeller from '~/modules/reportGroupEmployeeSeller';
 
 export default function* rootSaga() {
   yield all([
@@ -101,6 +107,12 @@ export default function* rootSaga() {
     collaborator.redux.saga(),
     collaboratorGroup.redux.saga(),
     reportSalaryPartner(),
+    reportProductSupplier.redux.saga(),
+    reportOverview.redux.saga(),
     requestGroup.redux.saga(),
+    reportIndividualCollaborator.redux.saga(),
+    reportIndividualEmployeeSeller.redux.saga(),
+    reportGroupCollaborator.redux.saga(),
+    reportGroupEmployeeSeller.redux.saga(),
   ]);
 };

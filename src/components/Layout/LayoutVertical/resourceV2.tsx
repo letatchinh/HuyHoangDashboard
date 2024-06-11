@@ -219,6 +219,14 @@ export const resource: ItemType[] =[
       },
     ],
   },
+  // Báo cáo tổng quan
+  {
+    label: "Báo cáo tổng quan",
+    icon: <i className="fa-solid fa-chart-pie"></i>,
+    path: PATH_APP.reportOverview.root,
+    key: PATH_APP.reportOverview.root,
+    // permission: [POLICIES.READ_SUPPLIER],//
+  },
 
   // Nhà cung cấp//
   {
@@ -253,6 +261,14 @@ export const resource: ItemType[] =[
         key: PATH_APP.vouchers.supplier,
         permission: [POLICIES.READ_VOUCHERSUPPLIER],//
       },
+
+      // {
+      //   label: "Báo cáo",
+      //   // icon: <MoneyCollectOutlined />,
+      //   path: PATH_APP.reportProductSupplier.root,
+      //   key: PATH_APP.reportProductSupplier.root,
+      //   // permission: [POLICIES.READ_VOUCHERSUPPLIER],//
+      // },
     ],
   },
 
@@ -376,6 +392,30 @@ export const resource: ItemType[] =[
         path: PATH_APP.reportSalaryPartner.root,
         key: PATH_APP.reportSalaryPartner.root,
         permission: [POLICIES.READ_REPORTSALARYPARTNER],
+      },
+      {
+        label: "Báo cáo doanh thu cộng tác viên",
+        path: PATH_APP.reportIndividualCollaborator.root,
+        key: PATH_APP.reportIndividualCollaborator.root,
+        // permission: [POLICIES.READ_REPORTSALARYPARTNER],
+      },
+      {
+        label: "Báo cáo doanh thu trình dược viên",
+        path: PATH_APP.reportIndividualEmployeeSeller.root,
+        key: PATH_APP.reportIndividualEmployeeSeller.root,
+        // permission: [POLICIES.READ_REPORTSALARYPARTNER],
+      },
+      {
+        label: "Báo cáo doanh thu nhóm cộng tác viên",
+        path: PATH_APP.reportGroupCollaborator.root,
+        key: PATH_APP.reportGroupCollaborator.root,
+        // permission: [POLICIES.READ_REPORTSALARYPARTNER],
+      },
+      {
+        label: "Báo cáo doanh thu nhóm trình dược viên",
+        path: PATH_APP.reportGroupEmployeeSeller.root,
+        key: PATH_APP.reportGroupEmployeeSeller.root,
+        // permission: [POLICIES.READ_REPORTSALARYPARTNER],
       },
       {
         label: "Phiếu lương",

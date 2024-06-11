@@ -4,11 +4,11 @@ export type initStateSlice<T=any> = {
     listSearch?: T[];
     getListFailed?: any;
 
-    paging?: {
+    paging?: Partial<{
       current: number,
       pageSize:number,
       total: number,
-    }|null;
+    }>|null;
 
     createSuccess?: any;
     createFailed?: any;
@@ -78,8 +78,13 @@ export type initStateSlice<T=any> = {
     collaborator: "collaborator",
     collaboratorGroup: "collaboratorGroup",
     reportSalaryPartner: "reportSalaryPartner",
+    reportProductSupplier: "reportProductSupplier",
+    reportOverview: "reportOverview",
     requestGroup: "requestGroup",
-
+    reportIndividualCollaborator: "reportIndividualCollaborator",
+    reportIndividualEmployeeSeller: "reportIndividualEmployeeSeller",
+    reportGroupCollaborator: "reportGroupCollaborator",
+    reportGroupEmployeeSeller: "reportGroupEmployeeSeller",
     }as const
     
     
