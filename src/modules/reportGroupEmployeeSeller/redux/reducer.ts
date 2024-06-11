@@ -26,7 +26,19 @@ class ReportGroupEmployeeSellerClassExtend extends InstanceModuleRedux {
       getListProductFailed: (state:initStateSlice, { payload }:{payload:any}) => {
         state.isLoading = false;
         state.getListFailed = payload;
-        
+      },
+      getGroupSellerRequest: (state:initStateSlice) => {
+        state.isLoading = true;
+        state.getListFailed = null;
+      },
+      getGroupSellerSuccess: (state:initStateSlice , { payload }: any) => {
+        state.isLoading = false;
+        state.list = payload;
+        state.paging = getPaging(payload);
+      },
+      getGroupSellerFailed: (state:initStateSlice, { payload }:{payload:any}) => {
+        state.isLoading = false;
+        state.getListFailed = payload;
       },
     }
     this.cloneInitState = {

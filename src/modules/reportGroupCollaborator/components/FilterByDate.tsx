@@ -14,7 +14,6 @@ import React, { CSSProperties, useEffect, useMemo, useState } from "react";
 import { FILTER_BY_VI } from "~/constants/defaultValue";
 import SelectCollaborator from "~/modules/collaborator/components/SelectSearch";
 import SelectEmployeeV2 from "~/modules/employee/components/SelectEmployeeV2";
-import SelectEmployee from "~/modules/employee/components/SelectSearch";
 import SelectProductBySupplier from "~/modules/product/components/SelectProductBySupplier";
 import { filterSelectWithLabel } from "~/utils/helpers";
 const { RangePicker } = DatePicker;
