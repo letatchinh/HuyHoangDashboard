@@ -146,6 +146,12 @@ export function onMessageListener() {
           data: data,
         });
         break;
+      case TYPE_NOTIFICATION.REQUEST_CHANGE_GROUP:
+        postMessageNewWhBillFirebase({
+          ...get(payload, "notification"),
+          data: data,
+        });
+        break;
       //   case !!getDataPayload('taskItem'):
       //     postMessageNewWhBillFirebase({...get(payload, 'notification'),data:getDataPayload('taskItem','')})
       //       break;
