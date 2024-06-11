@@ -20,10 +20,9 @@ import { PAYER_OPTION } from "~/modules/logistic/logistic.modal";
 import QuotationModule from "~/modules/sale/quotation";
 import RadioButtonWarehouseNotFetch from "~/modules/warehouse/components/RadioButtonWarehouseNotFetch";
 import {
-  convertPathToObject,
   findMatchingManagementArea,
   useGetWarehouse,
-  useGetWarehouseByBranchLinked,
+  useGetWarehouseByBranchLinked
 } from "~/modules/warehouse/warehouse.hook";
 import useNotificationStore from "~/store/NotificationContext";
 import { getValueOfPercent } from "~/utils/helpers";
@@ -173,7 +172,7 @@ export function CreateBillProvider({
   const [warehouseDefault, isLoading] = useGetWarehouse(); //Fetch warehouse default by area
   const [listWarehouse, isLoadingWarehouse] = useGetWarehouseByBranchLinked(); // Get all warehouse linked with branch
   const warehouseInfo = useMemo(() => (listWarehouse || []).find((item: any) => item._id === bill?.warehouseId), [bill?.warehouseId, listWarehouse]);
-
+  const [warehouseBranchId, setWarehouseBranchId] = useState(null);
   // Controller Data
   const onSave = (row: DataItem) => {
     const newData: DataItem[] = [...quotationItems];
@@ -458,20 +457,20 @@ export function CreateBillProvider({
   };
 
   const onConfirmWarehouse = (data: any) => {
-    const findWarehouse = listWarehouse?.find(
-      (item: any) => item?._id === data?.warehouseId
+    const findWarehouse = warehouseDefault?.find(
+      (item: any) => item?.warehouseId === data?.warehouseId
     );
     setFormAndLocalStorage({
-      warehouseId: findWarehouse?._id,
+      warehouseId: findWarehouse?.warehouseId,
       warehouseName: findWarehouse?.name?.vi,
+      warehouseBranchId
     });
     onCloseModalSelectWarehouse();
   };
   useEffect(() => {
-      if (pharmacyInfo && warehouseDefault?.length > 0 && listWarehouse?.length > 0) {
+      if (pharmacyInfo && warehouseDefault?.length > 0) {
         const address = get(pharmacyInfo,'data.addressDelivery',get(pharmacyInfo,'data.address',''))
         const findWarehouseDefault = findMatchingManagementArea(address, warehouseDefault);
-        console.log(findWarehouseDefault,'findWarehouseDefault')
         if (findWarehouseDefault) {
           console.log(
             `Địa chỉ nằm trong khu vực của kho: ${findWarehouseDefault?.name?.vi}`
@@ -481,18 +480,23 @@ export function CreateBillProvider({
             ...bill,
             warehouseId: findWarehouseDefault?.warehouseId,
             warehouseName: findWarehouseDefault?.name?.vi,
-          })
+            warehouseBranchId: findWarehouseDefault?._id
+          });
+          setWarehouseId(findWarehouseDefault?.warehouseId);
+          setWarehouseBranchId(findWarehouseDefault?._id);
         } else {
             setFormAndLocalStorage({
               ...bill,
-              warehouseId: listWarehouse[0]?._id,
-              warehouseName: listWarehouse[0]?.name?.vi,
+              warehouseId: warehouseDefault[0]?._id,
+              warehouseName: warehouseDefault[0]?.name?.vi,
+              warehouseBranchId: warehouseDefault[0]?._id
             });
+            setWarehouseBranchId(warehouseDefault[0]?._id)
           console.log("Địa chỉ không thuộc khu vực kho mặc định nào");
           // onNotify?.warning(`Địa chỉ không thuộc khu vực kho mặc định nào, kho xuất hàng đang được chọn tự động`);
         };   
     };
-  }, [listWarehouse, warehouseDefault, pharmacyInfo]);
+  }, [warehouseDefault, pharmacyInfo]);
   return (
     <CreateBill.Provider
       value={{
@@ -547,12 +551,14 @@ export function CreateBillProvider({
         footer={false}
       >
         <RadioButtonWarehouseNotFetch
-          listWarehouse={listWarehouse}
+          warehouseDefault={warehouseDefault}
+          setWarehouseBranchId={setWarehouseBranchId}
+          listWarehouse={warehouseDefault}
           setValue={setWarehouseId}
           value={warehouseId}
           onCancel={onCloseModalSelectWarehouse}
           title="Xác nhận"
-          isLoadingWarehouse={isLoadingWarehouse}
+          isLoadingWarehouse={isLoading}
           onClick={onConfirmWarehouse}
         />
       </ModalAnt>

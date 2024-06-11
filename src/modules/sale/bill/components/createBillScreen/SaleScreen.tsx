@@ -1,6 +1,7 @@
 import { Button, Col, Divider, Form, Row } from "antd";
 import { get, head } from "lodash";
 import React, { useEffect, useMemo } from "react";
+import { useLocation } from "react-router-dom";
 import { FormFieldCreateBill, PayloadCreateBill } from "~/modules/sale/bill/bill.modal";
 import QuotationModule from '~/modules/sale/quotation';
 import { DataResultType } from "~/pages/Dashboard/Bill/CreateBill";
@@ -12,9 +13,6 @@ import useCreateBillStore from "../../storeContext/CreateBillContext";
 import ProductSelectedTable from "../ProductSelectedTable";
 import SelectPharmacy from "../SelectPharmacy";
 import TotalBill from "./TotalBill";
-import { useLocation } from "react-router-dom";
-import { PATH_APP } from "~/routes/allPath";
-import SelectCollaborator from "~/modules/collaborator/components/SelectSearch";
 type propsType = {};
 export default function SaleScreen(props: propsType): React.JSX.Element {
   const { form, onValueChange, quotationItems, totalPriceAfterDiscount, onRemoveTab, bill, onOpenModalResult, totalAmount, mutateReValidate, setAddress, setFormAndLocalStorage, setPharmacyInfo } = useCreateBillStore();
@@ -25,6 +23,7 @@ export default function SaleScreen(props: propsType): React.JSX.Element {
   onRemoveTab();
   onOpenModalResult(newData);
  };
+
  const [isSubmitLoading,onCreateQuotation] = QuotationModule.hook.useCreateQuotation(callBackAfterSuccess);
  const [,onUpdateQuotation] = QuotationModule.hook.useUpdateQuotation(callBackAfterSuccess);
   const [, onConvertQuotation] = QuotationModule.hook.useConvertQuotation(callBackAfterSuccess);
@@ -44,7 +43,8 @@ try {
     totalPriceAfterDiscount,
     _id : get(bill,'dataUpdateQuotation.id'),
     totalAmount,
-    dataTransportUnit: get(bill,'dataTransportUnit')
+    dataTransportUnit: get(bill, 'dataTransportUnit'),
+    warehouseBranchId: get(bill, 'warehouseBranchId'),
   });
     switch (get(bill,'typeTab')) {
       case 'createQuotation':
@@ -59,8 +59,7 @@ try {
     
       default:
         break;
-    }
-  
+  }
 } catch (error : any) {
   onNotify?.error(error?.response?.data?.message || "Có lỗi gì đó xảy ra")
 }

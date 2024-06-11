@@ -173,7 +173,14 @@ export default function ListQuotation({
             <Typography.Text>{get(pharmacy, "name", "")}</Typography.Text>
           </>
         },
-      },
+    },
+    {
+      title: "Kho xuất hàng",
+      dataIndex: "warehouseName",
+      key: "warehouseName",
+      width: 100,
+      align: "center",
+    },
       {
         title: "Trạng thái",
         dataIndex: "status",

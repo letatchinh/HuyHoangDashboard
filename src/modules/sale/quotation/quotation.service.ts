@@ -8,9 +8,10 @@ type paramsConvertDataQuotation = {
     totalPriceAfterDiscount : number,
     totalAmount : number,
   _id?: string,
-    dataTransportUnit? : any
+  dataTransportUnit?: any,
+  warehouseBranchId?: string | null
 }
-export const convertDataQuotation = ({data,quotationItems,totalPriceAfterDiscount,_id,totalAmount,dataTransportUnit}:paramsConvertDataQuotation) : PayloadCreateBill => {
+export const convertDataQuotation = ({data,quotationItems,totalPriceAfterDiscount,_id,totalAmount,dataTransportUnit,warehouseBranchId}:paramsConvertDataQuotation) : PayloadCreateBill => {
     const quotationItemsSubmit : Omit<quotation,'variant' | 'variants'>[] = quotationItems?.map((quotation : quotation) => ({
         ...pick(quotation,[
           'cumulativeDiscount',
@@ -35,8 +36,9 @@ export const convertDataQuotation = ({data,quotationItems,totalPriceAfterDiscoun
           debtType : data?.debtType || DEFAULT_DEBT_TYPE,
           totalPrice : totalPriceAfterDiscount,
           totalAmount,
-        ..._id && { _id },
-        dataTransportUnit 
+          ..._id && { _id },
+          dataTransportUnit,
+          warehouseBranchId
         };
         return submitData;
 }

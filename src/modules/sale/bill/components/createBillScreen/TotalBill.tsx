@@ -1,37 +1,29 @@
-import { EditOutlined, InfoCircleFilled, QuestionCircleFilled } from "@ant-design/icons";
+import { EditOutlined, InfoCircleFilled } from "@ant-design/icons";
 import {
-  AutoComplete,
   Button,
-  Col,
-  Divider,
   Flex,
   Form,
-  Input,
   Radio,
-  Row,
   Tooltip,
-  Typography,
+  Typography
 } from "antd";
-import TextArea from "antd/es/input/TextArea";
 import { get } from "lodash";
 import React, { useCallback, useEffect, useState } from "react";
 import InputNumberAnt from "~/components/Antd/InputNumberAnt";
 import ModalAnt from "~/components/Antd/ModalAnt";
 import AddressForm from "~/components/common/AddressForm";
-import { useGetCollaborator } from "~/modules/collaborator/collaborator.hook";
+import WithPermission from "~/components/common/WithPermission";
+import POLICIES from "~/modules/policy/policy.auth";
+import { useMatchPolicy } from "~/modules/policy/policy.hook";
 import {
   concatAddress,
-  filterOptionSlug,
   formatter,
-  getValueOfMath,
+  getValueOfMath
 } from "~/utils/helpers";
 import { FeeType, FormFieldCreateBill } from "../../bill.modal";
 import useCreateBillStore from "../../storeContext/CreateBillContext";
 import SuggestAddress from "../SuggestAddress";
 import SelectDebt from "./SelectDebt";
-import { useMatchPolicy } from "~/modules/policy/policy.hook";
-import POLICIES from "~/modules/policy/policy.auth";
-import WithPermission from "~/components/common/WithPermission";
 type propsType = {};
 export const Layout = ({
   label,
@@ -269,8 +261,9 @@ export default function TotalBill(props: propsType): React.JSX.Element {
                       label={canUpdateLogistic ?
                         <span>
                           <i className="fa-solid fa-truck"></i>
+                          {' '}
                           Phí vận chuyển
-                          <EditOutlined onClick={onOpenFormLogistic}  style={{ color: '#5AB2FF'}}/>
+                          {getFieldValue('pharmacyId') && <EditOutlined onClick={onOpenFormLogistic}  style={{ color: '#5AB2FF'}}/>}
                         </span>
                       : 'Phí vận chuyển'}
                     style={{marginBottom : 'unset'}}
@@ -309,7 +302,7 @@ export default function TotalBill(props: propsType): React.JSX.Element {
           >
             <Typography.Text>
               {getFieldValue('deliveryAddress')}
-              { !getFieldValue("deliveryAddress") && <WithPermission permission={POLICIES.UPDATE_LOGISTIC}>
+              { !getFieldValue("deliveryAddress") && getFieldValue('pharmacyId') && <WithPermission permission={POLICIES.UPDATE_LOGISTIC}>
               <Button onClick={onOpenAddress} type="primary" ghost>Thay đổi</Button>
               </WithPermission>}
             </Typography.Text>
@@ -332,6 +325,7 @@ export default function TotalBill(props: propsType): React.JSX.Element {
               <Typography.Text>
               {getFieldValue('warehouseName')}
                 {!getFieldValue("warehouseId")
+                  &&  getFieldValue('pharmacyId')
                   && <Button
                     onClick={onOpenModalSelectWarehouse}
                     type="primary"

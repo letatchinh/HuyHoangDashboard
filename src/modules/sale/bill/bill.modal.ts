@@ -75,14 +75,16 @@ export interface FormFieldCreateBill {
     fee? : FeeType[],
     deliveryAddress?: string,
     dataTransportUnit?: ValueApplyBill,
-    deliveryAddressId? : any
+    deliveryAddressId?: any;
+    warehouseBranchId? : any
 }
 export interface PayloadCreateBill extends FormFieldCreateBill {
     quotationItems : Omit<quotation,'variant' | 'variants'>[],
     totalPrice : number,
     totalAmount : number,
     _id?: any,
-    dataTransportUnit? : ValueApplyBill
+    dataTransportUnit?: ValueApplyBill
+    warehouseBranchId? : any
 }
 export interface PayloadUpdateBill  {
     cancelNote? : string,

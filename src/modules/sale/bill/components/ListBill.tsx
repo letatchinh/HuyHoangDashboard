@@ -28,7 +28,7 @@ import { useMatchPolicy } from "~/modules/policy/policy.hook";
 import SelectSupplier from "~/modules/supplier/components/SelectSupplier";
 import RadioButtonWarehouseNotFetch from "~/modules/warehouse/components/RadioButtonWarehouseNotFetch";
 import { warehouseActions } from "~/modules/warehouse/redux/reducer";
-import { convertDataSentToWarehouse, convertProductsFromBill, useCheckWarehouse, useCreateBillToWarehouse, useGetWarehouseByBranchLinked } from "~/modules/warehouse/warehouse.hook";
+import { convertDataSentToWarehouse, convertProductsFromBill, useCheckWarehouse, useCreateBillToWarehouse, useGetWarehouse, useGetWarehouseByBranchLinked } from "~/modules/warehouse/warehouse.hook";
 import { formatter, pagingTable, permissionConvert } from "~/utils/helpers";
 import { useIsAdapterSystem } from "~/utils/hook";
 import { CalculateBill } from "../bill.service";
@@ -60,12 +60,14 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
   //Warehouse
   const [warehouseSelect, setWarehouseSelect] = useState<number | undefined>();
   const [isModalCheckWarehouse, setIsModalCheckWarehouse] = useState(false);
-  const [listWarehouse, isLoadingWarehouse]= useGetWarehouseByBranchLinked();
+  const [listWarehouse, isLoadingWarehouse] = useGetWarehouseByBranchLinked();
+  const [warehouseDefault, isLoadingWarehouseDefault] = useGetWarehouse(); //Fetch warehouse default by area
   const [billItem, setBillItem] = useState<any>(null);
   const memoId = useMemo(() => get(billItem, '_id'), [billItem]);
   const [bill, loading] = useGetBill(memoId);
   const canCreateBillToWarehouse = useMatchPolicy(POLICIES.WRITE_WAREHOUSELINK);
   const [noteForWarehouse, setNoteForWarehouse] = useState<string>('');
+
   useEffect(() => {
     if (bill && bill?.warehouseId) {
       setWarehouseSelect(bill?.warehouseId);
@@ -172,12 +174,12 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
         dataIndex: "cancelNote",
         key: "cancelNote",
         align: "left",
-        render(cancelNote?:any) {
+        render(cancelNote?: any) {
           return (
             <Typography.Paragraph
               ellipsis={{
                 tooltip: cancelNote,
-                rows : 2,
+                rows: 2,
               }}
             >
               {cancelNote}
@@ -190,12 +192,12 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
         dataIndex: "note",
         key: "note",
         align: "left",
-        render(note?:any) {
+        render(note?: any) {
           return (
             <Typography.Paragraph
               ellipsis={{
                 tooltip: note,
-                rows : 2,
+                rows: 2,
               }}
             >
               {note}
@@ -227,6 +229,12 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
           return <Typography.Text>{formatter(remainAmount)}</Typography.Text>;
         },
       },
+      {
+        title: "Kho xuất hàng",
+        dataIndex: "warehouseName",
+        key: "warehouseName",
+        align: "center",
+      },
       ...(canCreateBillToWarehouse ? [{
         title: "Thao tác",
         key: "action",
@@ -243,22 +251,22 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
       }] : []),
       ...(canDownload
         ? [
-            {
-              title: "Lựa chọn",
-              key: "_id",
-              width: 80,
-              align: "center" as any,
-              render: (item: any, record: any) => {
-                const id = record?._id;
-                return (
-                  <Checkbox
-                    checked={arrCheckBox?.includes(id)}
-                    onChange={(e) => onChangeCheckBox(e.target.checked, id)}
-                  />
-                );
-              },
+          {
+            title: "Lựa chọn",
+            key: "_id",
+            width: 80,
+            align: "center" as any,
+            render: (item: any, record: any) => {
+              const id = record?._id;
+              return (
+                <Checkbox
+                  checked={arrCheckBox?.includes(id)}
+                  onChange={(e) => onChangeCheckBox(e.target.checked, id)}
+                />
+              );
             },
-          ]
+          },
+        ]
         : []),
     ],
     [arrCheckBox, canDownload, canCreateBillToWarehouse]
@@ -345,8 +353,8 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
                   value={warehouseSelect}
                   onClick={onCheck}
                   title="Kiểm kho"
-                  listWarehouse={listWarehouse}
-                  isLoadingWarehouse={isLoadingWarehouse}
+                  listWarehouse={warehouseDefault}
+                  isLoadingWarehouse={isLoadingWarehouseDefault}
                   isShowButtonPackageExport
                   disabledButtonExport={bill?.status !== STATUS_BILL.READY}
                   isSubmitLoading={isSubmitLoading}

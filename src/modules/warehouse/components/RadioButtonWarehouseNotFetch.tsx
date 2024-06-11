@@ -1,9 +1,6 @@
-import React, { useEffect, useMemo, useState } from "react";
-import { useGetProfile } from "~/modules/auth/auth.hook";
-import { useFetchState } from "~/utils/hook";
-import apis from "../warehouse.api";
+import { Button, Form, Radio, RadioChangeEvent, Row, Space, Spin } from "antd";
 import { get, head } from "lodash";
-import { Button, Dropdown, Form, Radio, RadioChangeEvent, Row, Space, Spin } from "antd";
+import React, { useEffect } from "react";
 import useNotificationStore from "~/store/NotificationContext";
 type propsType = {
   setValue: (value: number) => void;
@@ -17,6 +14,8 @@ type propsType = {
   requestWarehouseExport?: () => void;
   disabledButtonExport?: boolean;
   isSubmitLoading?: boolean;
+  setWarehouseBranchId?: any;
+  warehouseDefault?: any
 };
 export default function RadioButtonWarehouse({
   setValue,
@@ -30,11 +29,19 @@ export default function RadioButtonWarehouse({
   disabledButtonExport = false,
   requestWarehouseExport,
   isSubmitLoading,
+  setWarehouseBranchId,
+  warehouseDefault,
 }: propsType): React.JSX.Element {
   const [form] = Form.useForm();
   const { onNotify } = useNotificationStore();
+  const findWarehouseManagementArea = (warehouseDefault: any, value: any) => {
+    return warehouseDefault?.find((item: any) => get(item, "warehouseId") === value)
+  };
   const onChange = (e: RadioChangeEvent) => {
     setValue(e.target.value);
+    if (!!warehouseDefault && !!setWarehouseBranchId) {
+      setWarehouseBranchId(findWarehouseManagementArea(warehouseDefault, e.target.value)?._id);
+    };
   };
   const onFinish = (values: any) => {
     if (!values?.warehouseId) {
@@ -44,6 +51,9 @@ export default function RadioButtonWarehouse({
   };
   useEffect(() => {
     form.setFieldsValue({ warehouseId: value });
+    if (!!warehouseDefault && !!setWarehouseBranchId) {
+      setWarehouseBranchId(findWarehouseManagementArea(warehouseDefault, value)?._id);
+    };
   }, [value]);
   return (
     <>
@@ -68,7 +78,7 @@ export default function RadioButtonWarehouse({
             >
               <Space direction="vertical">
                 {listWarehouse?.map((item: any) => (
-                  <Radio value={get(item, "_id")}>
+                  <Radio value={get(item, "warehouseId")}>
                     {get(item, "name.vi") || get(item, "name")}
                   </Radio>
                 ))}

@@ -1,6 +1,7 @@
 export const STATUS_BILL = {
   NEW: "NEW",
   READY: "READY",
+  UNREADY: "UNREADY",
   REQUESTED: "REQUESTED",
   PACKAGE_EXPORT: "PACKAGE_EXPORT",
   SHIPPING: "SHIPPING",
@@ -11,6 +12,7 @@ export const STATUS_BILL = {
 export const STATUS_BILL_VI = {
   NEW: "Đã tiếp nhận",
   READY: 'Sẵn sàng xuất kho', 
+  UNREADY: 'Không sẵn sàng xuất kho', 
   REQUESTED: 'Đã gửi yêu cầu xuất kho',
   PACKAGE_EXPORT: 'Đang xuất kho',
   SHIPPING: 'Đang gửi hàng',

@@ -1,6 +1,5 @@
 import { LeftOutlined, SendOutlined } from "@ant-design/icons";
 import {
-  Avatar,
   Button,
   Col,
   Divider, Form,
@@ -13,30 +12,29 @@ import {
 import TextArea from "antd/es/input/TextArea";
 import dayjs from "dayjs";
 import { get, omit } from "lodash";
-import PolicyModule from "policy";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { Link, useLocation, useParams } from "react-router-dom";
 import ModalAnt from "~/components/Antd/ModalAnt";
 import Status from "~/components/common/Status/index";
 import WhiteBox from "~/components/common/WhiteBox";
+import WithPermission from "~/components/common/WithPermission";
+import POLICIES from "~/modules/policy/policy.auth";
+import { useMatchPolicy } from "~/modules/policy/policy.hook";
+import { ReportSalaryPartnerProvider } from "~/modules/reportSalaryPartner/ReportSalaryPartnerProvider";
 import {
   useResetBillAction,
   useUpdateBill
 } from "~/modules/sale/bill/bill.hook";
 import BillItemModule from "~/modules/sale/billItem";
+import VoucherInOrder from "~/modules/vouchers/components/VoucherInOrder";
+import { METHOD_TYPE } from "~/modules/vouchers/constants";
 import { PATH_APP } from "~/routes/allPath";
-import { CheckPermission, concatAddress, formatter } from "~/utils/helpers";
+import { CheckPermission, formatter } from "~/utils/helpers";
 import { PayloadUpdateBill } from "../bill.modal";
+import HistoryBillInWarehouse from "../components/HistoryBillInWarehouse";
 import StepStatus from "../components/StepStatus";
 import { STATUS_BILL, STATUS_BILL_VI } from "../constants";
 import useUpdateBillStore from "../storeContext/UpdateBillContext";
-import VoucherInOrder from "~/modules/vouchers/components/VoucherInOrder";
-import WithPermission from "~/components/common/WithPermission";
-import POLICIES from "~/modules/policy/policy.auth";
-import { useMatchPolicy } from "~/modules/policy/policy.hook";
-import { REF_COLLECTION } from "~/constants/defaultValue";
-import { ReportSalaryPartnerProvider } from "~/modules/reportSalaryPartner/ReportSalaryPartnerProvider";
-import { METHOD_TYPE } from "~/modules/vouchers/constants";
 type propsType = {};
 const Layout = ({ label, children,strong }: { label: any; children: any,strong?:boolean }) => (
   <Row className="hover-dot-between" justify={"space-between"} align="middle">
@@ -171,7 +169,7 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
             <StepStatus
               statuses={
                 status !== STATUS_BILL.CANCELLED
-                  ? omit(STATUS_BILL, ["CANCELLED"])
+                  ? omit(STATUS_BILL, ["CANCELLED", 'UNREADY'])
                   : omit(STATUS_BILL, [
                       STATUS_BILL.COMPLETED,
                     ])
@@ -298,6 +296,12 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
         <WhiteBox>
           <h6>Thông tin sản phẩm</h6>
           <BillItemModule.components.ListBillItem statusBill={status} />
+        </WhiteBox>
+      </div>
+      <div className="bill-page-update--infoBillItem">
+        <WhiteBox>
+          <h6>Lịch sử trạng thái đơn hàng</h6>
+          <HistoryBillInWarehouse data = {bill?.historyProcessStatus}/>
         </WhiteBox>
       </div>
       <ModalAnt

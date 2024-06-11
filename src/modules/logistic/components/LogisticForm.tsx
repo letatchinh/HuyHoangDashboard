@@ -2,6 +2,7 @@ import {
   Button,
   Col,
   ConfigProvider,
+  Divider,
   Flex,
   Form,
   Input,
@@ -316,10 +317,6 @@ export default function LogisticForm({
                 />
               )}
             </Form.Item>
-            <CheckboxConfirm
-              checkboxPayment={checkboxPayment}
-              setCheckboxPayment={setCheckboxPayment}
-            />
           </BaseBorderBox>
         </Col>
         <Col span={12}>
@@ -378,6 +375,10 @@ export default function LogisticForm({
                 },
               }}
             >
+            <CheckboxConfirm
+              checkboxPayment={checkboxPayment}
+              setCheckboxPayment={setCheckboxPayment}
+            />
               <Form.Item
                 name={"totalFee"}
                 label={"Tổng cước tạm tính(đã bao gồm VAT)"}
@@ -399,6 +400,8 @@ export default function LogisticForm({
           </BaseBorderBox>
         </Col>
       </Row>
+      <Divider />
+      
       <Row align={"middle"} justify={"end"}>
         <Button
           loading={isLoadingSubmit}

@@ -21,8 +21,8 @@ export const firebaseConfig = {
   appId: process.env.REACT_APP_FIREBASE_APP_ID,
 };
 
-const firebaseApp = initializeApp(firebaseConfig);
-const messaging = getMessaging(firebaseApp);
+// const firebaseApp = initializeApp(firebaseConfig);
+// const messaging = getMessaging(firebaseApp);
 
 let checkSupportFirebaseBrowser = async () => {
   const isSupportedBrowser = await isSupported();
@@ -56,104 +56,104 @@ export const getOrRegisterServiceWorker = () => {
 };
 
 export const getFirebaseToken = () => {
-  return getOrRegisterServiceWorker().then((serviceWorkerRegistration) =>
-    getToken(messaging, {
-      vapidKey: process.env.REACT_APP_VAPID_KEY,
-      serviceWorkerRegistration,
-    })
-  );
+  // return getOrRegisterServiceWorker().then((serviceWorkerRegistration) =>
+  //   getToken(messaging, {
+  //     vapidKey: process.env.REACT_APP_VAPID_KEY,
+  //     serviceWorkerRegistration,
+  //   })
+  // );
 };
 
-export async function getTokenFCM(msg = messaging) {
+export async function getTokenFCM() {
   // Check support for Firebase
-  console.log("Check support for Firebase getTokenFCM");
-  if (!msg) {
-    console.log("Not Have msg", msg);
-    return;
-  }
-  // Check support for Notification
-  if ("Notification" in window && Notification.permission === "denied") {
-    console.log("Check Denied Notification GetTokenFCM");
-    return;
-  }
-  console.log("Pass Check Denied GetTokenFCM");
-  return getFirebaseToken()
-    ?.then((currentToken: any) => {
-      console.log("doing in GetToken Firebase");
-      if (currentToken) {
-        return currentToken;
-      } else {
-        console.log(
-          "Not got token, No registration token available. Request permission to generate one."
-        );
-      }
-    })
-    .catch((err: any) => {
-      console.log(err, "Erro In Get Token Firebase");
-    });
+  // console.log("Check support for Firebase getTokenFCM");
+  // if (!msg) {
+  //   console.log("Not Have msg", msg);
+  //   return;
+  // }
+  // // Check support for Notification
+  // if ("Notification" in window && Notification.permission === "denied") {
+  //   console.log("Check Denied Notification GetTokenFCM");
+  //   return;
+  // }
+  // console.log("Pass Check Denied GetTokenFCM");
+  // return getFirebaseToken()
+  //   ?.then((currentToken: any) => {
+  //     console.log("doing in GetToken Firebase");
+  //     if (currentToken) {
+  //       return currentToken;
+  //     } else {
+  //       console.log(
+  //         "Not got token, No registration token available. Request permission to generate one."
+  //       );
+  //     }
+  //   })
+  //   .catch((err: any) => {
+  //     console.log(err, "Erro In Get Token Firebase");
+  //   });
 };
 function requestPermission() {
-  if ("Notification" in window) {
-    console.log("Have Notification In Window");
-    if (Notification.permission === "granted") {
-      console.log("Notification permission is granted");
-      const persistAuth = JSON.parse(localStorage.getItem('persist:auth') as any);
-      return getFirebaseToken()
-        .then((firebaseToken) => {
-          if (firebaseToken) {
-            console.log("HAVE TOKEN");
-            persistAuth.token && persistAuth.token !== 'null' && apis.subscribeToken(firebaseToken);
-            persistAuth.token  && persistAuth.token !== 'null' && localStorage.setItem('tokenFcm', JSON.stringify(firebaseToken));
-          }
-        })
-        .catch((err) =>
-          console.error(
-            "An error occured while retrieving firebase token. ",
-            err
-          )
-        );
-    } else {
-      console.log("Notification permission is not granted.");
-    }
-  } else {
-    console.log("Notifications not supported in this browser.");
-  }
+  // if ("Notification" in window) {
+  //   console.log("Have Notification In Window");
+  //   if (Notification.permission === "granted") {
+  //     console.log("Notification permission is granted");
+  //     const persistAuth = JSON.parse(localStorage.getItem('persist:auth') as any);
+  //     return getFirebaseToken()
+  //       .then((firebaseToken) => {
+  //         if (firebaseToken) {
+  //           console.log("HAVE TOKEN");
+  //           persistAuth.token && persistAuth.token !== 'null' && apis.subscribeToken(firebaseToken);
+  //           persistAuth.token  && persistAuth.token !== 'null' && localStorage.setItem('tokenFcm', JSON.stringify(firebaseToken));
+  //         }
+  //       })
+  //       .catch((err) =>
+  //         console.error(
+  //           "An error occured while retrieving firebase token. ",
+  //           err
+  //         )
+  //       );
+  //   } else {
+  //     console.log("Notification permission is not granted.");
+  //   }
+  // } else {
+  //   console.log("Notifications not supported in this browser.");
+  // }
 };
 export function onMessageListener() {
-  if (!messaging) return;
-  onMessage(messaging, (payload: any) => {
-    console.log("reiceiver from firebase", payload);
-    // CORE
-    // Post to Broadcast
-    const data = payload?.data;
-    switch (payload?.data?.type) {
-      case TYPE_NOTIFICATION.ORDER_QUOTATION_CUSTOMER:
-        postMessageNewWhBillFirebase({
-          ...get(payload, "notification"),
-          data: data,
-        });
-        break;
+  // if (!messaging) return;
+  // onMessage(messaging, (payload: any) => {
+  //   console.log("reiceiver from firebase", payload);
+  //   // CORE
+  //   // Post to Broadcast
+  //   const data = payload?.data;
+  //   switch (payload?.data?.type) {
+  //     case TYPE_NOTIFICATION.ORDER_QUOTATION_CUSTOMER:
+  //       postMessageNewWhBillFirebase({
+  //         ...get(payload, "notification"),
+  //         data: data,
+  //       });
+  //       break;
 
-      case TYPE_NOTIFICATION.ORDER_CONVERT_QUOTATION_CUSTOMER:
-        postMessageNewWhBillFirebase({
-          ...get(payload, "notification"),
-          data: data,
-        });
-        break;
-      case TYPE_NOTIFICATION.ORDER_SUPPLIER:
-        postMessageNewWhBillFirebase({
-          ...get(payload, "notification"),
-          data: data,
-        });
-        break;
-      //   case !!getDataPayload('taskItem'):
-      //     postMessageNewWhBillFirebase({...get(payload, 'notification'),data:getDataPayload('taskItem','')})
-      //       break;
+  //     case TYPE_NOTIFICATION.ORDER_CONVERT_QUOTATION_CUSTOMER:
+  //       postMessageNewWhBillFirebase({
+  //         ...get(payload, "notification"),
+  //         data: data,
+  //       });
+  //       break;
+  //     case TYPE_NOTIFICATION.ORDER_SUPPLIER:
+  //       postMessageNewWhBillFirebase({
+  //         ...get(payload, "notification"),
+  //         data: data,
+  //       });
+  //       break;
+  //     //   case !!getDataPayload('taskItem'):
+  //     //     postMessageNewWhBillFirebase({...get(payload, 'notification'),data:getDataPayload('taskItem','')})
+  //     //       break;
 
-      default:
-        break;
-    }
-    console.log("Message received. ", payload);
-    // ...
-  });
+  //     default:
+  //       break;
+  //   }
+  //   console.log("Message received. ", payload);
+  //   // ...
+  // });
 }

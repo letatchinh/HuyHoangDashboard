@@ -57,6 +57,8 @@ function* checkWarehouse({payload} : any) : any {
     const data = yield call(api.checkWarehouse, payload);
     if (!data?.status) {
       yield put(warehouseActions.checkWarehouseFailed(data));
+      const newData = {status: 'UNREADY', _id: data?.billId}
+      yield put(billSliceAction.updateStatusAfterCheckWarehouseRequest(newData as any));
     } else {
       yield put(warehouseActions.checkWarehouseSuccess(data));
       yield put(billSliceAction.updateStatusAfterCheckWarehouseRequest({...data, status: STATUS_BILL.READY, _id: data?.billId}));

@@ -127,7 +127,6 @@ const CreateBillPage = (): React.JSX.Element => {
   };
 
   const onRemoveTab = (targetKey: any) => {
-    console.log(targetKey, "targetKey");
 
     const newPanes = tabs?.filter((item) => item.key !== targetKey);
     if (!newPanes?.length) {
