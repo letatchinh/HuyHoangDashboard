@@ -145,7 +145,7 @@ import "./form.scss";
     //Set address default from branch 99999
     useEffect(() => {
       if (branch) {
-        const findBranchWorldHealth = branch?.find(
+        const findBranchWorldHealth = branch?.docs?.find(
           (item: any) => item._id === DEFAULT_BRANCH_ID
         );
         const address = concatAddress(findBranchWorldHealth?.address);

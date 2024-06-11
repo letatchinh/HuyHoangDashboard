@@ -6,7 +6,7 @@ import { useParams } from "react-router-dom";
 import ModalAnt from "~/components/Antd/ModalAnt";
 import { useGetBill } from "../bill.hook";
 import VoucherModule from '~/modules/vouchers';
-import {  REF_COLLECTION, REF_COLLECTION_UPPER } from "~/constants/defaultValue";
+import {  REF_COLLECTION, REF_COLLECTION_UPPER, WH_VOUCHER_STATUS } from "~/constants/defaultValue";
 import { get, omit, sumBy } from "lodash";
 import PaymentVoucherFormPharmacy from "~/modules/paymentVoucher/components/PaymentVoucherFormPharmacy";
 import { STATUS_BILL } from "../constants";
@@ -50,7 +50,7 @@ export function UpdateBillProvider({
     const [isOpenFormPayment, setIsOpenFormPayment] = useState(false);
     const totalRevenueInVouchers = useMemo(() => {
       if (bill?.receiptVouchers?.length > 0) {
-        const data = bill?.receiptVouchers?.filter((item: any)=> item?.status !== STATUS_BILL.CANCELLED);
+        const data = bill?.receiptVouchers?.filter((item: any)=> (item?.status !== WH_VOUCHER_STATUS.REJECT && item?.status !== WH_VOUCHER_STATUS.CUSTOMER_CANCEL));
         return sumBy([...data], (item) => get(item, 'totalAmount', 0));
       };
       return 0;

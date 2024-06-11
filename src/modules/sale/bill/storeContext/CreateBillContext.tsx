@@ -218,7 +218,7 @@ export function CreateBillProvider({
         0
       ),
     [quotationItems]
-  );
+  ); // Tổng giá trị đơn hàng chưa chiếc khấu
 
   const totalAmount = useMemo(
     () =>
@@ -227,15 +227,16 @@ export function CreateBillProvider({
         0
       ),
     [quotationItems]
-  );
+  ); // Giá của sản phẩm * số lượng sản phẩm sau chiếc khấu
 
-  const totalFee = useMemo(() => (fee || [])?.reduce((sum : number,cur : FeeType) => sum + (cur?.typeValue === 'PERCENT' ? getValueOfPercent(totalPrice,cur?.value) : cur?.value),0),[fee,totalPrice]);
-  
+  const totalFee = useMemo(() => (fee || [])?.reduce((sum : number,cur : FeeType) => sum + (cur?.typeValue === 'PERCENT' ? getValueOfPercent(totalAmount,cur?.value) : cur?.value),0),[fee,totalPrice]); // Đã bao gồm phụ phí và phí ship
   const totalPriceAfterDiscount = useMemo(
-    () =>
-    totalAmount - pair + totalFee,
+    () => {
+      return totalAmount - pair + totalFee
+    },
     [quotationItems,pair,totalFee]
-  );
+  );// (Tổng giá trị đơn hàng chưa chiếc khấu  - số tiền đã thanh toán trước )+( phụ phí + phụ ship)
+
   const totalDiscount = useMemo(
     () =>
       quotationItems?.reduce(
