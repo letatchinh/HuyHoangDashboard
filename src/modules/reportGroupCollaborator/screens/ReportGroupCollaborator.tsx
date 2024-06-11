@@ -1,18 +1,18 @@
-import React, { useEffect, useMemo, useState } from "react";
+import { Col, Form, Row, Typography } from "antd";
 import dayjs from "dayjs";
 import { map } from "lodash";
+import React, { useEffect, useMemo, useState } from "react";
+import Breadcrumb from "~/components/common/Breadcrumb";
+import SelectCollaboratorV2 from "~/modules/collaborator/components/SelectCollaboratorV2";
+import BillAndDebtTable from "../components/BillAndDebtTable";
+import FilterByDate from "../components/FilterByDate";
+import ProductQuantityTable from "../components/ProductQuantityTable";
 import {
   useReportGroupCollaboratorPaging,
   useReportGroupCollaboratorQueryParams,
   useUpdateReportGroupCollaboratorParams,
 } from "../reportGroupCollaborator.hook";
 import { datatypeReportVi } from "../reportGroupCollaborator.modal";
-import BillAndDebtTable from "../components/BillAndDebtTable";
-import { TableRowSelection } from "antd/es/table/interface";
-import ProductQuantityTable from "../components/ProductQuantityTable";
-import FilterByDate from "../components/FilterByDate";
-import { Select } from "antd";
-import Breadcrumb from "~/components/common/Breadcrumb";
 type propsType = {};
 const rangerTimeDef = "WEEKLY";
 export default function ReportGroupCollaborator(
@@ -21,7 +21,7 @@ export default function ReportGroupCollaborator(
   const [mode, setMode] = useState("reportProduct");
   const [query] = useReportGroupCollaboratorQueryParams();
   const [, { onParamChange }] = useUpdateReportGroupCollaboratorParams(query);
-
+  const [form] = Form.useForm();
   const [date, setDate] = useState<any[]>([
     dayjs().startOf("month"),
     dayjs().endOf("month"),
@@ -86,7 +86,7 @@ export default function ReportGroupCollaborator(
       })),
     [datatypeReportVi]
   );
-  
+
   return (
     <div>
       <Breadcrumb title={"Báo cáo doanh thu đội nhóm cộng tác viên"} />
@@ -99,6 +99,23 @@ export default function ReportGroupCollaborator(
         onChange={(value: string) => setMode(value)}
         options={options}
       />
+      <Row style={{ width: "100%", marginBottom: 24 }}>
+        <Col span={8} style={{ display: "flex", alignItems: "center", width: "420px"  }}>
+        <Typography style={{ fontSize: 14, marginRight: 16 }}>Tìm kiếm theo:</Typography>
+          <Form form={form} initialValues={{ collaboratorId: query?.sellerId }}>
+            <SelectCollaboratorV2
+              validateFirst={false}
+              form={form}
+              style={{ width: 200 }}
+              showIcon={false}
+              size={"middle"}
+              defaultValue={query?.sellerId || null}
+              onChange={(value) => onParamChange({ sellerId: value })}
+              // mode="multiple"
+            />
+          </Form>
+        </Col>
+      </Row>
       {renderTable()}
     </div>
   );
