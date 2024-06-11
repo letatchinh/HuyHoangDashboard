@@ -8,7 +8,6 @@ importScripts(
 importScripts(
   "https://www.gstatic.com/firebasejs/9.10.0/firebase-messaging-compat.js"
 );
-
 const firebaseConfig = {
   apiKey: 'config.REACT_APP_FIREBASE_API_KEY' ?? process.env.REACT_APP_FIREBASE_API_KEY ,
   authDomain: 'config.REACT_APP_FIREBASE_AUTH_DOMAIN' ?? process.env.REACT_APP_FIREBASE_AUTH_DOMAIN ,
@@ -18,7 +17,11 @@ const firebaseConfig = {
   appId: 'config.REACT_APP_FIREBASE_APP_ID' ?? process.env.REACT_APP_FIREBASE_APP_ID ,
   measurementId: 'config.REACT_APP_FIREBASE_MEASUREMENT_ID' ?? process.env.REACT_APP_FIREBASE_MEASUREMENT_ID ,
 };
-
+const TYPE_NOTIFICATION  = {
+  ORDER_CONVERT_QUOTATION_CUSTOMER: "ORDER_CONVERT_QUOTATION_CUSTOMER",
+  ORDER_QUOTATION_CUSTOMER: "ORDER_QUOTATION_CUSTOMER",
+  ORDER_SUPPLIER: "ORDER_SUPPLIER",
+};
 // // eslint-disable-next-line no-undef
 firebase.initializeApp(firebaseConfig);
 
@@ -46,6 +49,12 @@ messaging.onBackgroundMessage(function (payload) {
       break;
 
     case TYPE_NOTIFICATION.ORDER_CONVERT_QUOTATION_CUSTOMER:
+      postMessageNewWhBillFirebase({
+        ...get(payload, "notification"),
+        data: data,
+      });
+      break;
+    case TYPE_NOTIFICATION.REQUEST_CHANGE_GROUP:
       postMessageNewWhBillFirebase({
         ...get(payload, "notification"),
         data: data,
