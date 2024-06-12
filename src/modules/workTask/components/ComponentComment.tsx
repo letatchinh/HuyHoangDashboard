@@ -11,7 +11,7 @@ import {
   HeartOutlined,
 } from "@ant-design/icons";
 import useTaskItemStore from "~/store/TaskItemContext";
-import { useGetProfile, useProfile } from "~/modules/auth/auth.hook";
+import { useGetProfile } from "~/modules/auth/auth.hook";
 import { getShortName } from "./constants";
 import {
   useDeleteComment,

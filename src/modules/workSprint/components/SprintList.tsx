@@ -4,7 +4,7 @@ import { PlusOutlined } from '@ant-design/icons';
 import { get } from 'lodash';
 import { useGetListManagersByIdBoard } from '~/modules/workBoard/workBoard.hook';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useGetProfile, useProfile } from '~/modules/auth/auth.hook';
+import { useGetProfile } from '~/modules/auth/auth.hook';
 import { useCreateWorkSprint, useDeleteWorkSprint, useGetWorkSprints, useUpdateWorkSprint,useResetAction } from '../workSprint.hook';
 import SprintCard from './SprintCard';
 import { useSprintContext } from '../screens/WorkSprint';
