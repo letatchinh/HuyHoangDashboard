@@ -63,6 +63,7 @@ export default function ProductBorrow(props: propsType): React.JSX.Element {
       key: 'codeSequence',
       align: 'center',
       width: 100,
+      render: (item: any, record: any, index) => <Button type='link' onClick={()=> openFormVoucher(record?._id)}>{item}</Button>
     },
     {
       title: 'Ngày tạo',

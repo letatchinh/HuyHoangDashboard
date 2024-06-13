@@ -106,6 +106,12 @@ export default function ProductBorrowForm({
       setSelectedRowKeys(
         productBorrow?.items?.map((item: any) => item?.productId)
       );
+      if (productBorrow?.status === STATUS_VOUCHER_BORROW_EN.PROCESSING) {
+        const updated = productBorrow?.historyStatus?.PROCESSING?.timestamp;
+        form.setFieldsValue({
+          updated: dayjs(updated)
+        });
+      }
     }
   }, [productBorrow, id]);
   // useEffect(() => {
@@ -186,6 +192,7 @@ export default function ProductBorrowForm({
 
   const onFinish = (values: any) => {
     const submitData = SubmitProductsBorrow({ ...values, data: dataSelected });
+    console.log(submitData,'submitData')
     if (!id) {
       handleCreate(submitData);
     } else {
@@ -239,28 +246,6 @@ export default function ProductBorrowForm({
           return unit?.unit?.name;
         },
       },
-      // {
-      //   title: "Ghi chú",
-      //   dataIndex: "note",
-      //   key: "note",
-      //   width: 100,
-      //   align: "left",
-      //   render(value, record, index) {
-      //     console.log(value)
-      //     return (
-      //       <Input.TextArea
-      //         value={value?.note}
-      //         onChange={(e) =>
-      //           handleChangeValueData(
-      //             "note",
-      //             e.target.value,
-      //             get(record, "_id")
-      //           )
-      //         }
-      //       />
-      //     );
-      //   },
-      // },
     ],
     [dataSelected]
   );
@@ -299,7 +284,7 @@ export default function ProductBorrowForm({
             <Col span={12}>
               <Form.Item name="updated" label="Ngày bắt đầu mượn">
                 {renderLoading(
-                  <DatePicker disabled style={{ width: "100%" }} />
+                  <DatePicker disabled style={{ width: "100%" }} placeholder="Ngày được phê duyệt phiếu mượn"/>
                 )}
               </Form.Item>
             </Col>

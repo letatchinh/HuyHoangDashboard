@@ -316,14 +316,14 @@ export const useConvertDataAssignProductsCol = (products: any[], selectedRowKey:
 
 export const SubmitProductsBorrow = (values: any) => {
   return {
-    ...omit(values, ["dateRefun",'createdDate']),
+    ...omit(values, ["dateRefun",'createdDate', 'updated']),
     items: values?.data?.map((item: any) => ({
       productId: item?._id,
       variantId: item?.variantCurrent?._id,
       quantity: item?.quantity,
       priceBefore: item?.variantCurrent?.price,
       note: item?.note || "",
-      dateRefun: dayjs(item?.dateRefun).format("YYYY-MM-DD"),
+      dateRefun: dayjs(values?.dateRefun).format("YYYY-MM-DD"),
     })),
     files: convertFiles(values?.files?.fileList) || [],
     note: values?.note || "",
