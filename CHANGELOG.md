@@ -1,3 +1,10 @@
+## [1.18.3](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/compare/v1.18.2...v1.18.3) (2024-06-13)
+
+
+### Bug Fixes
+
+* url api ([5385ceb](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/5385ceba850e692f6149fcd0ac2aaa54660f84da))
+
 ## [1.18.2](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/compare/v1.18.1...v1.18.2) (2024-06-11)
 
 
