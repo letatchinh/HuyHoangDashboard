@@ -19,19 +19,19 @@ const props: UploadProps = {
   action: `${BASE_URL}/api/v1/file-more/pharma`,
 };
 
-const UploadListFile = ({setGetFiles,getFiles,contract}: props) => {
+const UploadListFile = ({ setGetFiles, getFiles, contract }: props) => {
   const [fileListUrl, setFileListUrl] = useState<any[]>([]);
   const { onNotify } = useNotificationStore();
   useEffect(() => {
     if (contract?.files?.length > 0) {
-      const data = contract?.files?.map((item: any) => ({
+      const data = contract?.files?.map((item: any, index: number) => ({
         response: {
           url: item?.url
         },
-        name: item?.name,
-        uid: item?.url,
+        name: item?.name ?? item?.fileName, 
+        uid: index,
         status: "done",
-        key: item?.url
+        key: index
       }));
       setFileListUrl([...data]);
     };

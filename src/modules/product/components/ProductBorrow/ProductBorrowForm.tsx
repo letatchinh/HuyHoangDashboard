@@ -342,7 +342,7 @@ export default function ProductBorrowForm({
 
         <BaseBorderBox title={"Thông tin thêm"}>
           <Row gutter={10}>
-            <Col span={12}>{renderLoading(<UploadListFile />)}</Col>
+            <Col span={12}>{renderLoading(<UploadListFile  contract={productBorrow} />)}</Col>
           </Row>
           <Row>
             <Col span={24}>

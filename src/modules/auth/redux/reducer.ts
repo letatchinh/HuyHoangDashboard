@@ -32,16 +32,16 @@ export const auth = createSlice({
             state.loginFailed = null;
             state.adapter = null;
         },
-        loginSuccess: (state, action: { payload: { token: any; branchId: any,adapter : any } }) => {
-            const { token, branchId, adapter } = action.payload;
+        loginSuccess: (state, action: { payload: { token: any; branchId: any,adapter? : any } }) => {
+            const { token, branchId,adapter } = action.payload;
             state.token = token;
             state.adapter = adapter;
             setAxiosToken(token);
             setAxiosCompanyId(branchId); // Assuming branchId is the correct property name
             state.isLoading = false;
-            // setTimeout(() => {
-            //     window.location.reload();
-            // }, 100);
+            setTimeout(() => {
+                window.location.reload();
+            }, 100);
           },
         loginFailed: (state, { payload }  : any) => {
             state.loginFailed = payload;
