@@ -74,7 +74,7 @@ class WarehouseClassExtend extends InstanceModuleRedux {
       },
       resetAction: (state: cloneInitState) => ({
         ...state,
-        ...omit(this.cloneInitState, ["list", "warehouseLinkedSuccess"]),
+        ...omit(this.cloneInitState, ["list", "warehouseLinkedSuccess", "byId"]),
       }),
       // Want Add more reducer Here...
     }

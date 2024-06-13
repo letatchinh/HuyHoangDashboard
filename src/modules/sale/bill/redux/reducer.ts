@@ -170,7 +170,9 @@ class BillClassExtend extends InstanceModuleRedux {
       updateStatusAfterCheckWarehouseRequest: (state: cloneInitState, { payload }: { payload?: any }) => {
         state.byId = {
           ...state.byId,
-          status: payload?.status,
+          ...payload,
+          // status: payload?.status,
+          // warehouseId: payload?.warehouseId,
           billItems: state.byId?.billItems?.map((item: any) => {
             const findItem = get(payload, 'data', []).find((billItem: any) => billItem?.variantId === item?.variantId && billItem?.productId === item?.productId);
             return {

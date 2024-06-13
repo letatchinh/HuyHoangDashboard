@@ -9,13 +9,14 @@ import {
   useUpdateBillParams,
 } from "../bill.hook";
 
-import { Checkbox, Col, ConfigProvider, Input, Row, Space, Spin, Typography } from "antd";
+import { Checkbox, Col, ConfigProvider, Row, Space, Spin, Typography } from "antd";
 import { ColumnsType } from "antd/es/table/InternalTable";
 import { get } from "lodash";
 import { useDispatch } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
 import ModalAnt from "~/components/Antd/ModalAnt";
 import SearchAnt from "~/components/Antd/SearchAnt";
+import BaseBorderBox from "~/components/common/BaseBorderBox";
 import DateTimeTable from "~/components/common/DateTimeTable";
 import Status from "~/components/common/Status/index";
 import WithPermission from "~/components/common/WithPermission";
@@ -24,21 +25,20 @@ import SelectCollaborator from "~/modules/collaborator/components/SelectSearch";
 import SelectEmployee from "~/modules/employee/components/SelectSearch";
 import ExportExcelButton from "~/modules/export/component";
 import useCheckBoxExport from "~/modules/export/export.hook";
+import POLICIES from "~/modules/policy/policy.auth";
 import { useMatchPolicy } from "~/modules/policy/policy.hook";
 import SelectSupplier from "~/modules/supplier/components/SelectSupplier";
 import RadioButtonWarehouseNotFetch from "~/modules/warehouse/components/RadioButtonWarehouseNotFetch";
 import { warehouseActions } from "~/modules/warehouse/redux/reducer";
-import { convertDataSentToWarehouse, convertProductsFromBill, useCheckWarehouse, useCreateBillToWarehouse, useGetWarehouse, useGetWarehouseByBranchLinked } from "~/modules/warehouse/warehouse.hook";
+import { convertDataSentToWarehouse, convertProductsFromBill, useCheckWarehouse, useCreateBillToWarehouse, useGetWarehouse } from "~/modules/warehouse/warehouse.hook";
 import { formatter, pagingTable, permissionConvert } from "~/utils/helpers";
 import { useIsAdapterSystem } from "~/utils/hook";
 import { CalculateBill } from "../bill.service";
 import { STATUS_BILL, STATUS_BILL_VI } from "../constants";
-import Action from "./Action";
-import ProductItem from "./ProductItem";
 import { billSliceAction } from "../redux/reducer";
-import POLICIES from "~/modules/policy/policy.auth";
-import BaseBorderBox from "~/components/common/BaseBorderBox";
+import Action from "./Action";
 import NoteWarehouse from "./NoteWarehouse";
+import ProductItem from "./ProductItem";
 const CalculateBillMethod = new CalculateBill();
 type propsType = {
   status?: string;
@@ -60,14 +60,12 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
   //Warehouse
   const [warehouseSelect, setWarehouseSelect] = useState<number | undefined>();
   const [isModalCheckWarehouse, setIsModalCheckWarehouse] = useState(false);
-  const [listWarehouse, isLoadingWarehouse] = useGetWarehouseByBranchLinked();
   const [warehouseDefault, isLoadingWarehouseDefault] = useGetWarehouse(); //Fetch warehouse default by area
   const [billItem, setBillItem] = useState<any>(null);
   const memoId = useMemo(() => get(billItem, '_id'), [billItem]);
   const [bill, loading] = useGetBill(memoId);
   const canCreateBillToWarehouse = useMatchPolicy(POLICIES.WRITE_WAREHOUSELINK);
   const [noteForWarehouse, setNoteForWarehouse] = useState<string>('');
-
   useEffect(() => {
     if (bill && bill?.warehouseId) {
       setWarehouseSelect(bill?.warehouseId);

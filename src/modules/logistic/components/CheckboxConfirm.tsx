@@ -22,14 +22,21 @@ export default function CheckboxConfirm({
     <Form.Item
       name={"payer"}
       label={
-        <Tooltip placement="topRight" title="Nếu người thanh toán là khách hàng, cước vận chuyển sẽ cao hơn vì đơn hàng sẽ phát sinh chi phí thu hộ từ đơn vị vận chuyển">
+        <Tooltip
+          placement="topRight"
+          title="Nếu người thanh toán là khách hàng, cước vận chuyển có thể sẽ cao hơn vì đơn hàng sẽ phát sinh chi phí thu hộ từ đơn vị vận chuyển"
+        >
           Người thanh toán
           <InfoCircleFilled style={{ marginLeft: "5px" }} />
         </Tooltip>
       }
       rules={[{ required: true, message: "Chọn người thanh toán" }]}
     >
-      <Radio.Group onChange={onChange} value={checkboxPayment} options={PAYER_OPTIONS}/>
+      <Radio.Group
+        onChange={onChange}
+        value={checkboxPayment}
+        options={PAYER_OPTIONS}
+      />
     </Form.Item>
   );
 }

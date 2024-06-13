@@ -45,7 +45,7 @@ export const auth = createSlice({
             state.isLoading = false;
         },
         logoutRequest: async() => {
-            unSubscribeToken();
+            // unSubscribeToken();
             removeAxiosToken();
             return initialState
         },

@@ -118,17 +118,6 @@ export default function ProductSelectedTable(
       }
     },
     {
-      title: "Phí vận chuyển",
-      dataIndex: "logistic",
-      key: "logistic",
-      align : 'center',
-      render: (value: number) => (
-        <InputNumber value={value}
-          formatter={(value) => formatter(value)}
-          min={0}
-      />)
-    },
-    {
       title: "",
       dataIndex: "key",
       key: "action",

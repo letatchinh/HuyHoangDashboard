@@ -1,6 +1,9 @@
 import { Button, Form, Radio, RadioChangeEvent, Row, Space, Spin } from "antd";
 import { get, head } from "lodash";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { STATUS_BILL } from "~/modules/sale/bill/constants";
+import { billSliceAction } from "~/modules/sale/bill/redux/reducer";
 import useNotificationStore from "~/store/NotificationContext";
 type propsType = {
   setValue: (value: number) => void;
@@ -21,7 +24,6 @@ export default function RadioButtonWarehouse({
   setValue,
   value,
   onClick,
-  onCancel,
   title,
   listWarehouse,
   isLoadingWarehouse,
@@ -34,11 +36,13 @@ export default function RadioButtonWarehouse({
 }: propsType): React.JSX.Element {
   const [form] = Form.useForm();
   const { onNotify } = useNotificationStore();
+  const dispatch = useDispatch();
   const findWarehouseManagementArea = (warehouseDefault: any, value: any) => {
     return warehouseDefault?.find((item: any) => get(item, "warehouseId") === value)
   };
   const onChange = (e: RadioChangeEvent) => {
     setValue(e.target.value);
+    // dispatch(billSliceAction.updateStatusAfterCheckWarehouseRequest({status:STATUS_BILL.UNREADY} as any));
     if (!!warehouseDefault && !!setWarehouseBranchId) {
       setWarehouseBranchId(findWarehouseManagementArea(warehouseDefault, e.target.value)?._id);
     };
@@ -55,8 +59,8 @@ export default function RadioButtonWarehouse({
       setWarehouseBranchId(findWarehouseManagementArea(warehouseDefault, value)?._id);
     };
   }, [value]);
+
   return (
-    <>
       <Form
         form={form}
         labelCol={{ span: 8 }}
@@ -78,7 +82,7 @@ export default function RadioButtonWarehouse({
             >
               <Space direction="vertical">
                 {listWarehouse?.map((item: any) => (
-                  <Radio value={get(item, "warehouseId")}>
+                  <Radio value={ get(item, "warehouseId")}>
                     {get(item, "name.vi") || get(item, "name")}
                   </Radio>
                 ))}
@@ -106,6 +110,5 @@ export default function RadioButtonWarehouse({
           </Button>
         </Row>
       </Form>
-    </>
   );
 }

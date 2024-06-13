@@ -12,7 +12,7 @@ import {
   Select,
   Skeleton,
 } from "antd";
-import { compact, omit } from "lodash";
+import {omit } from "lodash";
 import React, { useCallback, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import BaseBorderBox from "~/components/common/BaseBorderBox";
@@ -62,7 +62,8 @@ type propsType = {
   deliveryAddressId?: any;
   pharmacy?: any;
   dataTransportUnit?: ValueApplyBill;
-  warehouseInfo?: any
+  warehouseInfo?: any;
+  fee?: any;
 };
 
 export default function LogisticForm({
@@ -126,40 +127,42 @@ export default function LogisticForm({
   }, [deliveryAddressId]);
 
   useEffect(() => {
-    form.setFieldsValue({
-      //Set default value
-      senderName: "WorldPharma",
-      scope: 1, // Default postage is domestic
-      receiverNational: "VN", // Default country is Vietnam
-      transportUnit: transportUnitValue,
-    });
     setTransportUnitValue(dataTransportUnit?.transportUnit ?? "VIETNAMPOST");
     setServiceName(dataTransportUnit?.serviceName ?? null);
-      form.setFieldsValue({
+    form.setFieldsValue({
+          //Set default value
+        senderName: "WorldPharma",
+        scope: 1, // Default postage is domestic
+        receiverNational: "VN", // Default country is Vietnam
         receiverName: pharmacy?.fullName ?? pharmacy?.name,
         payer: dataTransportUnit?.payer,
+        transportUnit: transportUnitValue,
         ...dataTransportUnit,
       });
   }, [dataTransportUnit, id, pharmacy]);
+
   useEffect(() => {
     if (deliveryAddressId) {
       form.setFieldsValue({
         customerAddress: concatAddress(deliveryAddressId),
         receiverAddress: deliveryAddressId?.street,
       });
-    }
+    };
   }, [deliveryAddressId]);
+
   useEffect(() => {
     if (fee) {
       form.setFieldsValue({
         totalFee: fee?.totalFee,
       });
-    } else {
+    };
+    if(!fee && !dataTransportUnit){
       form.setFieldsValue({
         totalFee: 0,
       });
-    }
+    };
   }, [fee]);
+
   useEffect(() => { 
     if (warehouseInfo) {
       form.setFieldsValue({
@@ -167,7 +170,7 @@ export default function LogisticForm({
         warehouseAddress: concatAddress(warehouseInfo?.address)
       });
     }
-  },[warehouseInfo]);
+  }, [warehouseInfo]);
 
   const onFinish = (values: any) => {
     const submitData = SubmitCountLogisticFee(values, {...omit(FindAddress(), ["receiverAddress"])});

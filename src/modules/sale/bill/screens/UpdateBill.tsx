@@ -1,4 +1,4 @@
-import { LeftOutlined, SendOutlined } from "@ant-design/icons";
+import { EditOutlined, LeftOutlined, SendOutlined } from "@ant-design/icons";
 import {
   Button,
   Col,
@@ -265,14 +265,11 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
               {/* <Layout label={"Đã trả trước"}>-{formatter(pair)}</Layout> */}
               <Layout label={"Phụ phí"}>{formatter(get(feeDetail,'SUB_FEE',0))}</Layout>
                 <WithPermission permission={POLICIES.UPDATE_LOGISTIC}>
-                  <Layout label={
-                    <Button 
-                      type="link"
-                      style={{ padding: 0 }}
-                      onClick={() => onOpenFormLogistic()}
-                      disabled = {status === STATUS_BILL.CANCELLED || status === STATUS_BILL.COMPLETED}
-                    >
-                 Phí vận chuyển</Button>}>{formatter(get(feeDetail, 'LOGISTIC', 0))}</Layout>
+                  <Layout label={<Typography.Text>
+                    Phí vận chuyển {' '}
+                    {(status === STATUS_BILL.NEW || status !== STATUS_BILL.READY || status !== STATUS_BILL.REQUESTED)
+                      && <EditOutlined onClick={onOpenFormLogistic} style={{ color: '#5AB2FF' }} />}
+                  </Typography.Text>}>{formatter(get(feeDetail, 'LOGISTIC', 0))}</Layout>
               </WithPermission>
               <Layout label={"Đã thanh toán"}>-{formatter(totalReceiptAmount)}</Layout>
               <Layout label={"Đã thanh toán và xác nhận"}>-{formatter(totalReceiptVoucherCompleted + (pair || 0))}</Layout>
@@ -286,7 +283,7 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
               <Form.Item<FormFieldBillType> name={'note'}>
               <TextArea />
               </Form.Item>
-              <Button style={{marginLeft : 'auto',display : 'block',marginTop : 5}} type="primary" onClick={() => form.submit()} icon={<SendOutlined />} size='small'/>
+              {/* <Button style={{marginLeft : 'auto',display : 'block',marginTop : 5}} type="primary" onClick={() => form.submit()} icon={<SendOutlined />} size='small'/> */}
             </WhiteBox>
           </div>
         </Col>
