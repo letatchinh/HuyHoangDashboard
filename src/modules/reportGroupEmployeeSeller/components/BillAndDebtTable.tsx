@@ -2,10 +2,8 @@ import React, { useMemo, useState } from "react";
 import TableAnt from "~/components/Antd/TableAnt";
 import WhiteBox from "~/components/common/WhiteBox";
 import { formatter, useFetchState } from "~/utils/helpers";
-
 import { Button, Modal, type TableColumnsType } from "antd";
 import { get } from "lodash";
-import { useGetReportGroupEmployeeSellers } from "../reportGroupEmployeeSeller.hook";
 import apis from "../reportGroupEmployeeSeller.api";
 type propsType = {
   query?: any;
@@ -86,6 +84,7 @@ export default function BillAndDebtTable(props: propsType): React.JSX.Element {
                   .join(" > ")
               )
             }
+            disabled={root.childLength <= 0 ? true : false}
             style={{color: "#3481FF"}}
           >
             {" "}

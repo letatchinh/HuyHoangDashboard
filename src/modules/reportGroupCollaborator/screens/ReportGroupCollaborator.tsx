@@ -47,26 +47,10 @@ export default function ReportGroupCollaborator(
     return hasProductKey ? (
       <ProductQuantityTable
         query={query}
-        pagination={{
-          ...paging,
-          onChange(page: number, limit: number) {
-            onParamChange({ page, limit });
-          },
-          showSizeChanger: true,
-          showTotal: (total: any) => `Tổng cộng: ${total} `,
-        }}
       />
     ) : (
       <BillAndDebtTable
         query={query}
-        pagination={{
-          ...paging,
-          onChange(page: number, limit: number) {
-            onParamChange({ page, limit });
-          },
-          showSizeChanger: true,
-          showTotal: (total: any) => `Tổng cộng: ${total} `,
-        }}
       />
     );
   };
