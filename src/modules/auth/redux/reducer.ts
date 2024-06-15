@@ -5,7 +5,7 @@ import { subscribeToken, unSubscribeToken } from '~/modules/user/user.hook';
 const initialState : any = {
     isLoading: false,
 
-    token: null,
+    token: undefined,
     adapter: null,
     loginFailed: null,
 
@@ -16,6 +16,9 @@ const initialState : any = {
     updateWorkingTimeFailed: null,
     updateWorkingTimeSuccess: null,
     isUpdateWorkingTimeLoading: false,
+
+    isValidationTokenSuccess: null,
+    validationTokenFailed: null,
 }
 
 export const auth = createSlice({
@@ -25,27 +28,27 @@ export const auth = createSlice({
         // LOGIN
         loginRequest: (state, { payload } : any) => {
             state.isLoading = true;
-            state.token = null;
+            state.token = undefined;
             state.loginFailed = null;
             state.adapter = null;
         },
-        loginSuccess: (state, action: { payload: { token: any; branchId: any,adapter : any } }) => {
-            const { token, branchId, adapter } = action.payload;
+        loginSuccess: (state, action: { payload: { token: any; branchId: any,adapter? : any } }) => {
+            const { token, branchId,adapter } = action.payload;
             state.token = token;
             state.adapter = adapter;
             setAxiosToken(token);
             setAxiosCompanyId(branchId); // Assuming branchId is the correct property name
             state.isLoading = false;
-            // setTimeout(() => {
-            //     window.location.reload();
-            // }, 100);
+            setTimeout(() => {
+                window.location.reload();
+            }, 100);
           },
         loginFailed: (state, { payload }  : any) => {
             state.loginFailed = payload;
             state.isLoading = false;
         },
         logoutRequest: async() => {
-            unSubscribeToken();
+            // unSubscribeToken();
             removeAxiosToken();
             return initialState
         },
@@ -63,6 +66,17 @@ export const auth = createSlice({
         getProfileFailed: (state, { payload } : any) => {
             state.isGetProfileLoading = false;
             state.getProfileFailed = payload;
+        },
+
+        validationTokenRequest: (state,{payload}) => {
+            state.validationTokenFailed = null;
+            state.validationTokenSuccess = null;
+        },
+        validationTokenSuccess: (state, { payload } : any,) => {
+            state.validationTokenSuccess = payload;
+        },
+        validationTokenFailed: (state, { payload } : any) => {
+            state.validationTokenFailed = payload;
         },
 
 

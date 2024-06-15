@@ -19,25 +19,25 @@ const props: UploadProps = {
   action: `${BASE_URL}/api/v1/file-more/pharma`,
 };
 
-const UploadListFile = ({setGetFiles,getFiles,contract}: props) => {
+const UploadListFile = ({ setGetFiles, getFiles, contract }: props) => {
   const [fileListUrl, setFileListUrl] = useState<any[]>([]);
   const { onNotify } = useNotificationStore();
   useEffect(() => {
     if (contract?.files?.length > 0) {
-      const data = contract?.files?.map((item: any) => ({
+      const data = contract?.files?.map((item: any, index: number) => ({
         response: {
           url: item?.url
         },
-        name: item?.name,
-        uid: item?.url,
+        name: item?.name ?? item?.fileName, 
+        uid: index,
         status: "done",
-        key: item?.url
+        key: index
       }));
       setFileListUrl([...data]);
     };
   }, [contract]);
   const onChange = ({ file, fileList }: any) => {
-    const isLtMaxFileSize = file.size / BYTES_PER_MB < MAX_UPLOAD_FILE_SIZE_IN_MB;
+    const isLtMaxFileSize = file.size ? file.size / BYTES_PER_MB < MAX_UPLOAD_FILE_SIZE_IN_MB : true;
     if (!isLtMaxFileSize) {
       onNotify?.error(`File đính kèm phải nhỏ hơn 1Mb`);
       return;
@@ -57,7 +57,7 @@ const UploadListFile = ({setGetFiles,getFiles,contract}: props) => {
       name="files"
       wrapperCol={{ sm: 24, md: 24, lg: 21 }}
     >
-      <Upload {...props} onChange = {onChange} fileList = {fileListUrl}  >
+      <Upload {...props} onChange = {onChange} fileList = {fileListUrl}>
         <Button icon={<UploadOutlined />}>Đính kèm</Button>
         </Upload>
       </Form.Item>
