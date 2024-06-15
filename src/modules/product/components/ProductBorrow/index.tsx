@@ -1,8 +1,8 @@
-import { Button, Col, ConfigProvider, DatePicker, Modal, Row } from 'antd';
+import { Button, Col, ConfigProvider, DatePicker, Flex, Modal, Row, Tooltip } from 'antd';
 import Search from 'antd/es/input/Search';
 import { ColumnsType } from 'antd/es/table';
 import dayjs from 'dayjs';
-import { toUpper } from 'lodash';
+import { map, toUpper, truncate } from 'lodash';
 import React, { useEffect, useMemo, useState } from 'react';
 import TableAnt from '~/components/Antd/TableAnt';
 import Action from '~/components/common/Action';
@@ -16,6 +16,7 @@ import { useDeleteProductBorrow, useGetProductsBorrow, usePagingBorrow, useProdu
 import { ProductBorrowContextProvider } from './ProductBorrowContext';
 import ProductBorrowForm from './ProductBorrowForm';
 import StatusTag from './Status';
+import { FileTextOutlined } from '@ant-design/icons';
 type propsType = {
 
 };
@@ -103,13 +104,24 @@ export default function ProductBorrow(props: propsType): React.JSX.Element {
         return fullName?.fullName
       }
     },
-    // {
-    //   title: 'Sản phẩm',
-    //   dataIndex: 'items',
-    //   key: 'name',
-    //   align: 'center',
-    //   width: 100,
-    // },
+    {
+      title: "File đính kèm",
+      dataIndex: "files",
+      key: "files",
+      width: 150,
+      align: "left",
+      render(record) {
+        const render = map(record, (item) => (
+          <Tooltip title={item?.fileName?.length > 16 ? item?.fileName : ""}>
+            <a download href={item?.url} target="_blank" style={{ cursor: "pointer"}}>
+              <FileTextOutlined style={{ marginRight: '5px'}} />
+              {truncate(item?.fileName, { 'length': 16 })}
+            </a>
+          </Tooltip>
+        ))
+        return <Flex vertical >{render}</Flex>
+      },
+    },
     {
       title: 'Trạng thái',
       dataIndex: 'status',
@@ -118,6 +130,7 @@ export default function ProductBorrow(props: propsType): React.JSX.Element {
       width: 100,
       render: (status: any, record: any, index) => <StatusTag status= {status}/>
     },
+    
     ...((canDelete || canUpdate) ? [{
       title: 'Thao tác',
       key: 'key',

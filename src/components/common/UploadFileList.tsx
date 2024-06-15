@@ -37,7 +37,7 @@ const UploadListFile = ({ setGetFiles, getFiles, contract }: props) => {
     };
   }, [contract]);
   const onChange = ({ file, fileList }: any) => {
-    const isLtMaxFileSize = file.size / BYTES_PER_MB < MAX_UPLOAD_FILE_SIZE_IN_MB;
+    const isLtMaxFileSize = file.size ? file.size / BYTES_PER_MB < MAX_UPLOAD_FILE_SIZE_IN_MB : true;
     if (!isLtMaxFileSize) {
       onNotify?.error(`File đính kèm phải nhỏ hơn 1Mb`);
       return;
@@ -57,7 +57,7 @@ const UploadListFile = ({ setGetFiles, getFiles, contract }: props) => {
       name="files"
       wrapperCol={{ sm: 24, md: 24, lg: 21 }}
     >
-      <Upload {...props} onChange = {onChange} fileList = {fileListUrl}  >
+      <Upload {...props} onChange = {onChange} fileList = {fileListUrl}>
         <Button icon={<UploadOutlined />}>Đính kèm</Button>
         </Upload>
       </Form.Item>
