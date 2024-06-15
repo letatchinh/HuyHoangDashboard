@@ -1,3 +1,15 @@
+## [1.18.4](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/compare/v1.18.3...v1.18.4) (2024-06-15)
+
+
+### Bug Fixes
+
+* change api search employee ([47c3e31](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/47c3e31014d70d5e2663f8cc4236c9a80308e6b9))
+* change url ([d03b57e](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/d03b57e05a83826b6b49c1fa7650ceedd926fe12))
+* redirect when change password ([72b93db](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/72b93dbad5faba7d0ca2e689cb937c047610c723))
+* render file in product borrow ([df26247](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/df2624718cebc2e885e607fc3e1df9589bc8a723))
+* update borrow voucher ([7a47b0b](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/7a47b0bf7b7c22b7b41a93d6ae4128815f49e084))
+* update product borrow form ([4c83053](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/4c830532b7b4e629542ad21494d214e7bf175527))
+
 ## [1.18.3](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/compare/v1.18.2...v1.18.3) (2024-06-13)
 
 
