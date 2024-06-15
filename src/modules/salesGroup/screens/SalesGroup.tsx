@@ -101,7 +101,7 @@ export default function SalesGroup() {
       }
       return itemData
     }
-    return initial(data).map(loop)
+    return initial(data || [])?.map(loop)
   }, [data]);
   const columns: ColumnsType = [
     {

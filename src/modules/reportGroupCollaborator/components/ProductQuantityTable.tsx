@@ -93,7 +93,7 @@ export default function ProductQuantityTable(
       key: "fullName",
       width: 220,
       render: (record, root: any) => {
-        return (
+        return root?.childLength > 0 ? (
           <Button
             type="text"
             onClick={() =>
@@ -112,6 +112,8 @@ export default function ProductQuantityTable(
             {" "}
             {record}
           </Button>
+        ) : (
+          <div>{record}</div>
         );
       },
     },

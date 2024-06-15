@@ -72,7 +72,7 @@ export default function BillAndDebtTable(props: propsType): React.JSX.Element {
       key: "name",
       width: 200,
       render: (record, root: any) => {
-        return (
+        return root.childLength <= 0 ? (
           <Button
             type="text"
             onClick={() =>
@@ -84,12 +84,13 @@ export default function BillAndDebtTable(props: propsType): React.JSX.Element {
                   .join(" > ")
               )
             }
-            disabled={root.childLength <= 0 ? true : false}
-            style={{color: "#3481FF"}}
+            style={{ color: "#3481FF" }}
           >
             {" "}
             {record}
           </Button>
+        ) : (
+          <div>{record}</div>
         );
       },
     },
