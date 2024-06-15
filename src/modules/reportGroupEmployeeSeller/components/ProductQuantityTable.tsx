@@ -86,7 +86,7 @@ export default function ProductQuantityTable(
       key: "name",
       width: 200,
       render: (record, root: any) => {
-        return root.childLength <= 0 ? (
+        return root.childLength > 0 ? (
           <Button
             type="text"
             onClick={() =>

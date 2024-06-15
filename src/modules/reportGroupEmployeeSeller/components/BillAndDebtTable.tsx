@@ -72,7 +72,7 @@ export default function BillAndDebtTable(props: propsType): React.JSX.Element {
       key: "name",
       width: 200,
       render: (record, root: any) => {
-        return root.childLength <= 0 ? (
+        return root.childLength > 0 ? (
           <Button
             type="text"
             onClick={() =>
