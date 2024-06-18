@@ -37,7 +37,7 @@ interface Props {
   onClose: (p?: any) => void;
   id?: any;
   handleUpdate?: any;
-  setDestroy: any;
+  setDestroy? : any
 }
 
 export default function PharmacyForm({
@@ -67,10 +67,10 @@ export default function PharmacyForm({
       const initPharmacy = convertInitPharmacy(initPharmacyProfile);
       form.setFieldsValue({
         ...initPharmacy,
-        infoPolicy: {
+        infoPolicy : {
           ...initPharmacy?.infoPolicy,
-          dateOfBirth: dayjs(initPharmacy?.infoPolicy?.dateOfBirth,'YYYY-MM-DD'),
-        },
+          dateOfBirth : dayjs(initPharmacy?.infoPolicy?.dateOfBirth)
+        }
       });
       setSelectedCustomerGroupId(get(initPharmacy, "customerGroupId"));
     }

@@ -17,6 +17,12 @@ export const STATUS_NAMES = {
   ACTIVE: "Hoạt động",
   INACTIVE: "Ngưng hoạt động",
 };
+
+export const STATUS_COLOR = {
+  ACTIVE: "success",
+  INACTIVE: "default",
+};
+
 export const ACTIONS_REDUX = ['read', 'write', 'update', 'delete', 'admin', 'download'];
 export interface OptionSelect {
   value: string | null;
@@ -411,3 +417,6 @@ export const FILTER_BY_VI: {[key in keyof typeof FILTER_BY]:string} = {
   QUARTERLY: "Quý",
   YEARLY: "Năm",
 };
+export const COLOR = {
+  primary : '#3481ff'
+}

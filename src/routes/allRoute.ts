@@ -55,6 +55,7 @@ import ReportIndividualCollaborator from "~/pages/Dashboard/ReportIndividualColl
 import ReportIndividualEmployeeSeller from "~/pages/Dashboard/ReportIndividualEmployeeSeller";
 import ReportGroup from "~/pages/Dashboard/ReportGroupCollaborator";
 import ReportGroupEmployeeSeller from "~/pages/Dashboard/ReportGroupEmployeeSeller";
+import PharmacyDetail_v2 from "~/modules/pharmacy/screens/PharmacyDetail_v2";
 export const mainRoutes :PathRouteProps[] = [
   { path: PATH_APP.main.root, Component: Homepage },
 
@@ -122,7 +123,7 @@ export const mainRoutes :PathRouteProps[] = [
 
   // Pharmacy
   { path: PATH_APP.pharmacy.root, Component: Pharmacy },
-  { path: PATH_APP.pharmacy.detail, Component: PharmacyDetail },
+  { path: PATH_APP.pharmacy.detail, Component: PharmacyDetail_v2 },
 
   // Bot Notification
   { path: PATH_APP.botNotification.root, Component: BotNotificationPage },

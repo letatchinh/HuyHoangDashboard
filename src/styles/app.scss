@@ -32,9 +32,12 @@
 @import "component/columnAction";
 @import "component/page";
 @import "component/table";
+@import "~/components/common/Layout/index.scss";
 
 //Antd
 @import 'antd/modal.scss';
 @import 'antd/input.scss';
 @import 'antd/List.scss';
+@import 'antd/tabs.scss';
+@import 'antd/drawer.scss';
 @import "component/columnAction.scss";

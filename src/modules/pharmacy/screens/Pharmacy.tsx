@@ -1,6 +1,10 @@
 import { ColumnsType } from "antd/es/table";
 import useTranslate from "~/lib/translation";
-import { concatAddress, formatNumberThreeComma, useIsAdapterSystem } from "~/utils/helpers";
+import {
+  concatAddress,
+  formatNumberThreeComma,
+  useIsAdapterSystem,
+} from "~/utils/helpers";
 import {
   useConvertPharmacy,
   useDeletePharmacy,
@@ -38,9 +42,15 @@ import {
   Tabs,
   Typography,
   message,
+  Dropdown,
 } from "antd";
 import Search from "antd/es/input/Search";
-import { FileTextOutlined,ImportOutlined, PlusCircleOutlined } from "@ant-design/icons";
+import {
+  FileTextOutlined,
+  ImportOutlined,
+  PlusCircleOutlined,
+  VerticalAlignTopOutlined,
+} from "@ant-design/icons";
 import PharmacyForm from "./PharmacyForm";
 import {
   PROCESS_STATUS,
@@ -61,10 +71,13 @@ import { FormImportFile } from "~/components/common/ImportFile/FormImportFile";
 
 import ActionColumns from "./ActionColumns";
 import StatusProcess from "./StatusProcess";
-
+import BtnAdd from "~/components/common/Layout/List/Header/BtnAdd";
+import DropdownAction from "~/components/common/Layout/List/Header/DropdownAction";
+import FIlterStatus from "~/components/common/FIlterStatus";
+const CLONE_STATUS_NAMES : any = STATUS_NAMES;
 export default function Pharmacy() {
   const { t }: any = useTranslate();
-  const [destroy,setDestroy] = useState(false);
+  const [destroy, setDestroy] = useState(false);
   const [approved, setApproved] = useState(true);
   const [query] = usePharmacyQueryParams(approved);
   const [keyword, { setKeyword, onParamChange }] =
@@ -133,14 +146,13 @@ export default function Pharmacy() {
         // dataIndex: "code",
         key: "code",
         width: 120,
-        fixed: activeTab==='1'? "left":false,
+        fixed: activeTab === "1" ? "left" : false,
         render: (record) => {
           return (
             <WithPermission permission={POLICIES.READ_PHARMAPROFILE}>
               <Link
                 className="link_"
                 to={`/pharmacy/${record?._id}`}
-                target={"_blank"}
               >
                 {record?.code}
               </Link>
@@ -151,7 +163,7 @@ export default function Pharmacy() {
       {
         title: "Tên nhà thuốc",
         dataIndex: "name",
-        fixed: activeTab==='2'?"left":false,
+        fixed: activeTab === "2" ? "left" : false,
         key: "name",
         width: 180,
       },
@@ -189,15 +201,19 @@ export default function Pharmacy() {
           return get(record, "fullName");
         },
       },
-      ...(canReadDebt ? [{
-        title: "Công nợ",
-        dataIndex: "resultDebt",
-        key: "resultDebt",
-        width: 180,
-        render(value: any) {
-          return formatNumberThreeComma(value);
-        },
-      }] : []),
+      ...(canReadDebt
+        ? [
+            {
+              title: "Công nợ",
+              dataIndex: "resultDebt",
+              key: "resultDebt",
+              width: 180,
+              render(value: any) {
+                return formatNumberThreeComma(value);
+              },
+            },
+          ]
+        : []),
       {
         title: "File đính kèm",
         dataIndex: "files",
@@ -207,13 +223,18 @@ export default function Pharmacy() {
         render(record) {
           const render = map(record, (item) => (
             <Tooltip title={item?.name?.length > 16 ? item?.name : ""}>
-              <a download href={item?.url} target="_blank" style={{ cursor: "pointer"}}>
-                <FileTextOutlined style={{ marginRight: '5px'}} />
-                {truncate(item?.name, { 'length': 16 })}
+              <a
+                download
+                href={item?.url}
+                target="_blank"
+                style={{ cursor: "pointer" }}
+              >
+                <FileTextOutlined style={{ marginRight: "5px" }} />
+                {truncate(item?.name, { length: 16 })}
               </a>
             </Tooltip>
-          ))
-          return <Flex vertical >{render}</Flex>
+          ));
+          return <Flex vertical>{render}</Flex>;
         },
       },
       {
@@ -379,7 +400,8 @@ export default function Pharmacy() {
       <Breadcrumb title={t("list-pharmacies")} />
       <WhiteBox>
         <Row className="mb-3" justify={"space-between"}>
-          <Col span={8}>
+          <Row>
+          <Col>
             <Search
               enterButton="Tìm kiếm"
               placeholder="Nhập để tìm kiếm"
@@ -388,71 +410,53 @@ export default function Pharmacy() {
               onChange={(e) => setKeyword(e.target.value)}
               value={keyword}
             />
+            
           </Col>
-          <Row>
-            <WithPermission permission={POLICIES.WRITE_PHARMAPROFILE}>
-              <Col>
-                <Button
-                  icon={<PlusCircleOutlined />}
-                  type="primary"
-                  style={{ float: "right", margin: "0px 10px" }}
-                  onClick={() => onOpenForm()}
-                >
-                  Thêm mới
-                </Button>
-              </Col>
-            </WithPermission>
-            <WithPermission permission={POLICIES.WRITE_PHARMAPROFILE}>
-              <Col>
-                <Button
-                  icon={<ImportOutlined />}
-                  type="primary"
-                  style={{ float: "right", margin: "0px 10px" }}
-                  onClick={showModal}
-                >
-                  {" "}
-                  Import
-                </Button>
-              </Col>
-            </WithPermission>
-            <WithPermission permission={POLICIES.DOWNLOAD_PHARMAPROFILE}>
-              <Col>
-                <ExportExcelButton
-                  fileName="Danh sách nhà thuốc"
-                  api="pharma-profile"
-                  exportOption="pharma"
-                  query={query}
-                  ids={arrCheckBox}
-                />
-              </Col>
-            </WithPermission>
-          </Row>
-        </Row>
-        {activeTab === "1" && (
+          <Col>
+          {activeTab === "1" && (
           <WithPermission permission={POLICIES.UPDATE_PHARMAPROFILE}>
-            <Space style={{ marginBottom: 20 }}>
-              <Typography style={{ fontSize: 14, marginRight: 20 }}>
-                Phân loại trạng thái theo :
-              </Typography>
-              <Row gutter={14}>
-                <Radio.Group
-                  onChange={onChange}
-                  optionType="button"
-                  buttonStyle="solid"
-                  defaultValue={query?.status}
-                >
-                  <Radio.Button value={null}>Tất cả</Radio.Button>
-                  <Radio.Button value={"ACTIVE"}>
-                    {STATUS_NAMES["ACTIVE"]}
-                  </Radio.Button>
-                  <Radio.Button value={"INACTIVE"}>
-                    {STATUS_NAMES["INACTIVE"]}
-                  </Radio.Button>
-                </Radio.Group>
-              </Row>
-            </Space>
+          <FIlterStatus onParamChange={onParamChange} value={query?.status} />
           </WithPermission>
         )}
+        </Col>
+          </Row>
+          <Col>
+            <Row gutter={16}>
+              <WithPermission permission={POLICIES.WRITE_PHARMAPROFILE}>
+                <Col>
+                  <BtnAdd
+                    onClick={() => onOpenForm()}
+                  />
+                </Col>
+              </WithPermission>
+              <Col>
+                <DropdownAction
+                  items={[
+                    <WithPermission permission={POLICIES.WRITE_PHARMAPROFILE}>
+                      <div onClick={showModal} className="DropdownAction--item">
+                      <i className="fa-solid fa-upload"></i>
+                        <span>Tải lên danh sách</span>
+                      </div>
+                    </WithPermission>,
+                    <WithPermission
+                      permission={POLICIES.DOWNLOAD_PHARMAPROFILE}
+                    >
+                      <ExportExcelButton
+                        fileName="Danh sách nhà thuốc"
+                        api="pharma-profile"
+                        exportOption="pharma"
+                        query={query}
+                        ids={arrCheckBox}
+                        useLayout="v2"
+                      />
+                    </WithPermission>,
+                  ]}
+                />
+              </Col>
+            </Row>
+          </Col>
+        </Row>
+        
         {activeTab === "2" && (
           <Space style={{ marginBottom: 20 }}>
             <Typography style={{ fontSize: 14, marginRight: 20 }}>
@@ -490,7 +494,7 @@ export default function Pharmacy() {
               dataSource={pharmacies}
               loading={isLoading}
               rowKey={(rc) => rc?._id}
-              scroll={{ x: "max-content" ,y:'calc(100vh - 383px)'}}
+              scroll={{ x: "max-content", y: "calc(100vh - 350px)" }}
               columns={columns}
               size="small"
               pagination={{
@@ -508,7 +512,7 @@ export default function Pharmacy() {
               dataSource={pharmacies}
               loading={isLoading}
               rowKey={(rc) => rc?._id}
-              scroll={{ x: "max-content" ,y:'calc(100vh - 383px)'}}
+              scroll={{ x: "max-content", y: "calc(100vh - 383px)" }}
               columns={columns}
               size="small"
               pagination={{
