@@ -7,38 +7,40 @@ type paramsConvertDataQuotation = {
     quotationItems : quotation[],
     totalPriceAfterDiscount : number,
     totalAmount : number,
-  _id?: string,
-  dataTransportUnit?: any,
-  warehouseBranchId?: string | null
-}
-export const convertDataQuotation = ({data,quotationItems,totalPriceAfterDiscount,_id,totalAmount,dataTransportUnit,warehouseBranchId}:paramsConvertDataQuotation) : PayloadCreateBill => {
-    const quotationItemsSubmit : Omit<quotation,'variant' | 'variants'>[] = quotationItems?.map((quotation : quotation) => ({
-        ...pick(quotation,[
-          'cumulativeDiscount',
-          'productId',
-          'variantId',
-          'price',
-          'totalPrice',
-          'supplierId',
-          'lotNumber',
-          'expirationDate',
-          'codeBySupplier',
-          'quantity',
-          'discountOther',
-        ]),
-      }));
-      // Todo : Verify Data When Send to sever (Not implemented)
-      
-      const submitData : PayloadCreateBill = {
-          ...data,
-          quotationItems : quotationItemsSubmit,
-          pair : data?.pair || 0,
-          debtType : data?.debtType || DEFAULT_DEBT_TYPE,
-          totalPrice : totalPriceAfterDiscount,
-          totalAmount,
-          ..._id && { _id },
-          dataTransportUnit,
-          warehouseBranchId
+    _id?: string,
+    dataTransportUnit?: any,
+    warehouseBranchId?: string | undefined,
+    warehouseId?: string | undefined,
+  }
+  export const convertDataQuotation = ({data,quotationItems,totalPriceAfterDiscount,_id,totalAmount,dataTransportUnit,warehouseBranchId,warehouseId}:paramsConvertDataQuotation) : PayloadCreateBill => {
+      const quotationItemsSubmit : Omit<quotation,'variant' | 'variants'>[] = quotationItems?.map((quotation : quotation) => ({
+          ...pick(quotation,[
+            'cumulativeDiscount',
+            'productId',
+            'variantId',
+            'price',
+            'totalPrice',
+            'supplierId',
+            'lotNumber',
+            'expirationDate',
+            'codeBySupplier',
+            'quantity',
+            'discountOther',
+          ]),
+        }));
+        // Todo : Verify Data When Send to sever (Not implemented)
+        
+        const submitData : PayloadCreateBill = {
+            ...data,
+            quotationItems : quotationItemsSubmit,
+            pair : data?.pair || 0,
+            debtType : data?.debtType || DEFAULT_DEBT_TYPE,
+            totalPrice : totalPriceAfterDiscount,
+            totalAmount,
+            ..._id && { _id },
+            dataTransportUnit,
+            warehouseBranchId,
+            warehouseId
         };
         return submitData;
 }

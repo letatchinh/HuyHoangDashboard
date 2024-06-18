@@ -29,7 +29,8 @@ export default function StepStatus({
       };
     });
     return statusMap;
-  }, [historyStatus,currentStatus]);
+  }, [historyStatus, currentStatus]);
+  console.log(items,'items')
   return (
     <ConfigProvider 
     theme={{

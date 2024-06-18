@@ -3,6 +3,7 @@ import api from '../warehouse.api';
 import { warehouseActions } from './reducer';
 import { billSliceAction } from '~/modules/sale/bill/redux/reducer';
 import { STATUS_BILL } from '~/modules/sale/bill/constants';
+import { omit } from 'lodash';
 
 function* getListWarehouse({payload:query} : any) : any {
   try {
@@ -52,16 +53,22 @@ function* createBillToWarehouse({ payload }: any): any {
   }
 };
 
-function* checkWarehouse({payload} : any) : any {
+function* checkWarehouse({ payload }: any): any {
   try {
     const data = yield call(api.checkWarehouse, payload);
     if (!data?.status) {
       yield put(warehouseActions.checkWarehouseFailed(data));
-      const newData = {status: 'UNREADY', _id: data?.billId, warehouseId: data?.warehouseId}
+      const newData = {status: 'UNREADY', _id: data?.billId, warehouseId: data?.warehouseId,warehouseBranchId: payload?.warehouseBranchId}
       yield put(billSliceAction.updateStatusAfterCheckWarehouseRequest(newData as any));
     } else {
       yield put(warehouseActions.checkWarehouseSuccess(data));
-      yield put(billSliceAction.updateStatusAfterCheckWarehouseRequest({...data, status: STATUS_BILL.READY, _id: data?.billId,warehouseId: data?.warehouseId}));
+      yield put(billSliceAction.updateStatusAfterCheckWarehouseRequest({
+        ...data,
+        status: STATUS_BILL.READY,
+        _id: data?.billId,
+        warehouseId: data?.warehouseId,
+        warehouseBranchId: payload?.warehouseBranchId
+      }));
     };
   } catch (error:any) {
     yield put(warehouseActions.checkWarehouseFailed(error));

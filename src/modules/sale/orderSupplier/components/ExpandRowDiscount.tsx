@@ -28,7 +28,6 @@ const color = {
 export default function ExpandRowDiscount({
   data,
 }: propsType): React.JSX.Element {
-  console.log(data,'data');
   
     return (
         <div>

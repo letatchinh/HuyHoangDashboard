@@ -76,7 +76,9 @@ export interface FormFieldCreateBill {
     deliveryAddress?: string,
     dataTransportUnit?: ValueApplyBill,
     deliveryAddressId?: any;
-    warehouseBranchId? : any
+    warehouseId?: string;
+    warehouseName?: string;
+    warehouseBranchId?: string;
 }
 export interface PayloadCreateBill extends FormFieldCreateBill {
     quotationItems : Omit<quotation,'variant' | 'variants'>[],
@@ -84,7 +86,6 @@ export interface PayloadCreateBill extends FormFieldCreateBill {
     totalAmount : number,
     _id?: any,
     dataTransportUnit?: ValueApplyBill
-    warehouseBranchId? : any
 }
 export interface PayloadUpdateBill  {
     cancelNote? : string,

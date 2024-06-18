@@ -15,8 +15,11 @@ export const KEY_PRIORITY = "key-priority-order-supplier"; // Tab Will Use this 
 export interface ItemDataSource extends FormFieldCreateOrderSupplier  {
   typeTab : "createOrderSupplier",
   orderSupplierItems: orderSupplier[]; // BillItems
+  warehouseId?: string;
+  warehouseBranchId?: string;
+  warehouseName?: string;
 };
-export const keyValidDataSource = ['typeTab','orderSupplierItems','supplierId','pair','debtType'];
+export const keyValidDataSource = ['typeTab','orderSupplierItems','supplierId','pair','debtType','warehouseId', 'warehouseName','warehouseBranchId'];
 
 export interface DataSourceType  {
   [key: string]: ItemDataSource;

@@ -241,6 +241,9 @@ export default function ListQuotation({
                       deliveryAddress: get(record, 'deliveryAddress'),
                       dataTransportUnit: get(record, 'dataTransportUnit'),
                       deliveryAddressId: get(record, 'deliveryAddressId'),
+                      warehouseBranchId: get(record, 'warehouseBranchId'),
+                      warehouseId: get(record, 'warehouseId'),
+                      warehouseName: get(record, 'warehouseName'),
                     });
                   }}
                   type="primary"
@@ -269,6 +272,9 @@ export default function ListQuotation({
                       deliveryAddress: get(record, 'deliveryAddress'),
                       dataTransportUnit: get(record, 'dataTransportUnit'),
                       deliveryAddressId: get(record, 'deliveryAddressId'),
+                      warehouseBranchId: get(record, 'warehouseBranchId'),
+                      warehouseId: get(record, 'warehouseId'),
+                      warehouseName: get(record, 'warehouseName'),
                     });
                   }}
                   size="small"

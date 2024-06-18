@@ -13,6 +13,9 @@ import BillModule from '~/modules/sale/bill';
 import { onVerifyData, reducerDiscountOrderSupplierItems } from "../orderSupplier.service";
 import { DEFAULT_DEBT_TYPE } from "../constants";
 import { orderSupplier } from "../orderSupplier.modal";
+import ModalAnt from "~/components/Antd/ModalAnt";
+import RadioButtonWarehouseInSupplier from "~/modules/warehouse/components/RadioButtonWarehouseInSupplier";
+import { useGetWarehouse } from "~/modules/warehouse/warehouse.hook";
 const TYPE_DISCOUNT = {
   "DISCOUNT.CORE": "DISCOUNT.CORE",
   "DISCOUNT.SOFT": "DISCOUNT.SOFT",
@@ -52,7 +55,9 @@ export type GlobalCreateOrderSupplier = {
   debt : any[];
   bill : any,
   onOpenModalResult : (data:any) => void
-  mutateReValidate : () => void
+  mutateReValidate: () => void
+  onOpenModalWarehouse: () => void;
+  onCloseModalWarehouse: () => void
 };
 const CreateOrderSupplier = createContext<GlobalCreateOrderSupplier>({
   orderSupplierItems: [],
@@ -73,7 +78,9 @@ const CreateOrderSupplier = createContext<GlobalCreateOrderSupplier>({
   debt : [],
   bill : null,
   onOpenModalResult: () => {},
-  mutateReValidate: () => {},
+  mutateReValidate: () => { },
+  onOpenModalWarehouse: () => { },
+  onCloseModalWarehouse: () => { }
 });
 
 type CreateBillProviderProps = {
@@ -94,12 +101,15 @@ export function CreateOrderSupplierProvider({
   onOpenModalResult,
 }: CreateBillProviderProps): JSX.Element {
   const [form] = Form.useForm();
-  
+  console.log(bill,'bill')
   OrderSupplierModule.hook.useResetOrderSupplier();
   const [countReValidate,setCountReValidate] = useState(1);
   const [orderSupplierItems, setOrderSupplierItems] = useState<DataItem[]>([]);
   
-  const [debt,isLoadingDebt] = BillModule.hook.useGetDebtRule();
+  const [debt, isLoadingDebt] = BillModule.hook.useGetDebtRule();
+  
+  const [isOpenWarehouse, setIsOpenWarehouse] = useState(false);
+  const [warehouseDefault, isLoadingWarehouseDefault] = useGetWarehouse();
 
   // Controller Data
   const onSave = (row: DataItem) => {
@@ -256,6 +266,19 @@ export function CreateOrderSupplierProvider({
     [orderSupplierItems]
   );
 
+  const onOpenModalWarehouse = () => {
+    setIsOpenWarehouse(true);
+  };
+  const onCloseModalWarehouse = () => {
+    setIsOpenWarehouse(false);
+  };
+  const onAddWarehouse = (data: any) => {
+    onChangeBill({
+      warehouseId: get(data, "warehouseId"),
+      warehouseName: get(data, "name.vi",''),
+      warehouseBranchId: get(data, "_id"),
+    });
+  };
 
   // Initalize Data And Calculate Discount
   useEffect(() => {
@@ -293,9 +316,25 @@ export function CreateOrderSupplierProvider({
         onOpenModalResult,
         mutateReValidate,
         totalAmount,
+        onOpenModalWarehouse,
+        onCloseModalWarehouse
       }}
     >
       {children}
+      <ModalAnt
+        open={isOpenWarehouse}
+        onCancel={onCloseModalWarehouse}
+        destroyOnClose
+        footer={null}
+      >
+        <RadioButtonWarehouseInSupplier
+          warehouseDefault={warehouseDefault}
+          isLoadingWarehouse={isLoadingWarehouseDefault}
+          onClick={onAddWarehouse}
+          value={get(bill, "warehouseId")}
+          onCancel = {onCloseModalWarehouse}
+        />
+      </ModalAnt>
     </CreateOrderSupplier.Provider>
   );
 }

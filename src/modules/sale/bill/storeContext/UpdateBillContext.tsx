@@ -9,7 +9,7 @@ import { REF_COLLECTION, REF_COLLECTION_UPPER } from "~/constants/defaultValue";
 import LogisticForm from "~/modules/logistic/components/LogisticForm";
 import PaymentVoucherFormPharmacy from "~/modules/paymentVoucher/components/PaymentVoucherFormPharmacy";
 import VoucherModule from '~/modules/vouchers';
-import { useGetWarehouseByBranchLinked } from "~/modules/warehouse/warehouse.hook";
+import { useGetWarehouse, useGetWarehouseByBranchLinked } from "~/modules/warehouse/warehouse.hook";
 import { useGetBill } from "../bill.hook";
 import { STATUS_BILL } from "../constants";
 
@@ -67,6 +67,7 @@ export function UpdateBillProvider({
     const [logisticOpen, setLogisticOpen] = useState(false);
     const [checkboxPayment, setCheckboxPayment] = useState<string | null>(null);
     const [listWarehouse, isLoadingWarehouse]= useGetWarehouseByBranchLinked();
+    const [warehouseDefault, isLoadingDefault] = useGetWarehouse(); //Fetch warehouse default by area
   
     const totalRevenueInVouchers = useMemo(() => {
       if (bill?.receiptVouchers?.length > 0) {
@@ -84,7 +85,14 @@ export function UpdateBillProvider({
   }, [bill, totalReceiptVoucherCompleted]);
   
   const warehouseInfo = useMemo(() => (listWarehouse || []).find((item: any) => item._id === bill?.warehouseId), [bill?.warehouseId, listWarehouse]);
-
+  const findWarehouse = (warehouseId: string) => {
+    return warehouseDefault?.find(
+      (item: any) => item?.warehouseId === warehouseId
+    );
+  };
+  const updateWarehouseInBill = (warehouseId: string) => {
+    const data = findWarehouse(warehouseId);
+  };
   //Warehouse
 
   const onOpenForm = () => {

@@ -45,6 +45,7 @@ try {
     totalAmount,
     dataTransportUnit: get(bill, 'dataTransportUnit'),
     warehouseBranchId: get(bill, 'warehouseBranchId'),
+    warehouseId: get(bill, 'warehouseId'),
   });
     switch (get(bill,'typeTab')) {
       case 'createQuotation':

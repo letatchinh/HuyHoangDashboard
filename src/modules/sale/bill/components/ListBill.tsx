@@ -93,11 +93,14 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
 
   const onCheck = () => {
     const newList = convertProductsFromBill(get(bill, 'billItems', []))
-    
+    console.log(warehouseDefault)
+    const warehouseBranchId = warehouseDefault?.find((item: any) => item?.warehouseId === warehouseSelect)?._id
+    console.log(warehouseSelect, warehouseBranchId)
     const submitData = {
       warehouseId: warehouseSelect,
       listProduct: newList,
       billId: get(bill, '_id'),
+      warehouseBranchId
     };
     try {
        onCheckWarehouse(submitData);
@@ -269,6 +272,7 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
     ],
     [arrCheckBox, canDownload, canCreateBillToWarehouse]
   );
+  console.log(bill,'bill')
   return (
     <div className="bill-page">
       {/* <Space> */}
@@ -351,12 +355,12 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
                   value={warehouseSelect}
                   onClick={onCheck}
                   title="Kiểm kho"
-                  listWarehouse={warehouseDefault}
                   isLoadingWarehouse={isLoadingWarehouseDefault}
                   isShowButtonPackageExport
                   disabledButtonExport={bill?.status !== STATUS_BILL.READY}
                   isSubmitLoading={isSubmitLoading}
                   requestWarehouseExport={onRequestWarehouseExport}
+                  warehouseDefault={warehouseDefault}
                 />
                 </BaseBorderBox>
               </>

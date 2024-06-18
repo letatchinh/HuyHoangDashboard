@@ -1,59 +1,38 @@
 import { Button, Form, Radio, RadioChangeEvent, Row, Space, Spin } from "antd";
 import { get, head } from "lodash";
-import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
-import { STATUS_BILL } from "~/modules/sale/bill/constants";
-import { billSliceAction } from "~/modules/sale/bill/redux/reducer";
+import React, { useEffect } from "react";
 import useNotificationStore from "~/store/NotificationContext";
 type propsType = {
-  setValue: (value: number) => void;
-  value: number | undefined;
+  setValue?: (value: number) => void;
+  value?: number | undefined;
   onClick?: (data?: any) => void ;
   onCancel?: () => void;
-  title: string;
   isLoadingWarehouse?: boolean;
-  isShowButtonPackageExport?: boolean;
-  requestWarehouseExport?: () => void;
-  disabledButtonExport?: boolean;
-  isSubmitLoading?: boolean;
-  setWarehouseBranchId?: any;
   warehouseDefault?: any
-  updateWarehouseInBill?: (data: any) => void;
 };
-export default function RadioButtonWarehouse({
+export default function RadioButtonWarehouseInSupplier({
   setValue,
   value,
   onClick,
-  title,
   isLoadingWarehouse,
-  isShowButtonPackageExport = false,
-  disabledButtonExport = false,
-  requestWarehouseExport,
-  isSubmitLoading,
-  setWarehouseBranchId,
   warehouseDefault,
-  updateWarehouseInBill
+  onCancel
 }: propsType): React.JSX.Element {
   const [form] = Form.useForm();
   const { onNotify } = useNotificationStore();
-  const findWarehouseManagementArea = (warehouseDefault: any, value: any) => {
-    return warehouseDefault?.find((item: any) => get(item, "warehouseId") === value)
-  };
   const onChange = (e: RadioChangeEvent) => {
-    setValue(e.target.value);
-    updateWarehouseInBill && updateWarehouseInBill(e.target.value);
+    setValue && setValue(e.target.value);
   };
   const onFinish = (values: any) => {
     if (!values?.warehouseId) {
       return onNotify?.error("Vui lòng chọn kho");
     };
-    onClick && onClick(values);
+    const findWarehouseInfo = warehouseDefault?.find((item: any) => get(item, "warehouseId") === values?.warehouseId);
+    onClick && onClick(findWarehouseInfo);
+    onCancel && onCancel();
   };
   useEffect(() => {
     form.setFieldsValue({ warehouseId: value });
-    if (!!warehouseDefault && !!setWarehouseBranchId) {
-      setWarehouseBranchId(findWarehouseManagementArea(warehouseDefault, value)?._id);
-    };
   }, [value]);
 
   return (
@@ -70,7 +49,7 @@ export default function RadioButtonWarehouse({
         ) : (
             <Form.Item
               name={"warehouseId"}
-              label={"Kho xuất hàng"}
+              label={"Kho nhập hàng"}
             >
             <Radio.Group
               onChange={onChange}
@@ -87,22 +66,13 @@ export default function RadioButtonWarehouse({
           </Form.Item>
         )}
         <Row justify={"end"}>
-        {isShowButtonPackageExport &&  <Button
-            type="primary"
-            onClick={ requestWarehouseExport && requestWarehouseExport}
-            style={{ marginRight: "10px" }}
-            disabled={disabledButtonExport}
-            loading={isSubmitLoading}
-          >
-            Yêu cầu xuất kho
-          </Button>}
           <Button
             type="primary"
             htmlType="submit"
             style={{ marginRight: "10px" }}
             loading={isLoadingWarehouse}
           >
-            {title ?? "Chọn"}
+            Xác nhận kho nhập
           </Button>
         </Row>
       </Form>

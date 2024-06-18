@@ -1,6 +1,6 @@
 import { UserOutlined } from "@ant-design/icons";
 import { Button, Col, Divider, Form, Row } from "antd";
-import { get } from "lodash";
+import { get, pick } from "lodash";
 import React, { useEffect, useMemo } from "react";
 import WithPermission from "~/components/common/WithPermission";
 import POLICIES from "~/modules/policy/policy.auth";
@@ -39,7 +39,9 @@ try {
     data : values,
     totalPriceAfterDiscount,
     totalAmount,
-    
+    warehouseId: get(bill, 'warehouseId'),
+    warehouseBranchId: get(bill, 'warehouseBranchId'),
+    warehouseName: get(bill, 'warehouseName'),
   });
   
     switch (get(bill,'typeTab')) {

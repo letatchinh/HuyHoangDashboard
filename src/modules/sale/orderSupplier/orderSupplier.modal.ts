@@ -75,7 +75,10 @@ export interface FormFieldCreateOrderSupplier {
 export interface PayloadCreateOrderSupplier extends FormFieldCreateOrderSupplier {
     orderSupplierItems : Omit<orderSupplier,'variant' | 'variants'>[],
     totalPrice : number,
-    totalAmount : number,
+    totalAmount: number,
+    warehouseId?: string,
+    warehouseName?: string,
+    warehouseBranchId?: string,
 }
 export interface PayloadUpdateOrderSupplier  {
     cancelNote? : string,
