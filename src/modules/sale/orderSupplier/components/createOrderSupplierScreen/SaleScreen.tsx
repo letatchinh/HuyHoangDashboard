@@ -1,6 +1,6 @@
 import { UserOutlined } from "@ant-design/icons";
 import { Button, Col, Divider, Form, Row } from "antd";
-import { get, pick } from "lodash";
+import { get, omit, pick } from "lodash";
 import React, { useEffect, useMemo } from "react";
 import WithPermission from "~/components/common/WithPermission";
 import POLICIES from "~/modules/policy/policy.auth";
@@ -15,14 +15,29 @@ import useCreateOrderSupplierStore from "../../storeContext/CreateOrderSupplierC
 import ProductSelectedTable from "../ProductSelectedTable";
 // import SelectPharmacy from "../SelectPharmacy";
 import TotalBill from "./TotalBill";
+import { convertDataSubmitWarehouse, useCreateOrderInWarehouse } from "../../orderSupplier.hook";
 type propsType = {};
 export default function SaleScreen(props: propsType): React.JSX.Element {
  const {form,onValueChange,orderSupplierItems,totalPriceAfterDiscount,onRemoveTab,bill,onOpenModalResult,totalAmount} = useCreateOrderSupplierStore();
  
- const {onNotify} = useNotificationStore();
+  const { onNotify } = useNotificationStore();
+  const [isSubmitCreate, onCreateOrderInWarehouse] = useCreateOrderInWarehouse();
+
+  const handleCreateOrderInWarehouse = (data: PayloadCreateOrderSupplier) => {
+    const submitData = convertDataSubmitWarehouse(data);
+    try {
+      onCreateOrderInWarehouse(submitData)
+    } catch (error) {
+      console.log(error);
+    };
+  };
+
  const callBackAfterSuccess = (newData : DataResultType) => {  
   onRemoveTab();
-  onOpenModalResult(newData);
+   onOpenModalResult(omit(newData, 'oldData'));
+   setTimeout(() => {
+    handleCreateOrderInWarehouse(get(newData, 'oldData', {}) as PayloadCreateOrderSupplier);
+   }, 1000);
  };
  const [isSubmitLoading,onCreateOrderSupplier] = OrderSupplierModule.hook.useCreateOrderSupplier(callBackAfterSuccess);
   const onFinish = (values: FormFieldCreateOrderSupplier) => {
@@ -43,15 +58,16 @@ try {
     warehouseBranchId: get(bill, 'warehouseBranchId'),
     warehouseName: get(bill, 'warehouseName'),
   });
+  console.log(orderSupplierItems,'orderSupplierItems')
   
-    switch (get(bill,'typeTab')) {
-      case 'createOrderSupplier':
-        onCreateOrderSupplier(submitData);
-        break;
+    // switch (get(bill,'typeTab')) {
+    //   case 'createOrderSupplier':
+    //     onCreateOrderSupplier(submitData);
+    //     break;
     
-      default:
-        break;
-    }
+    //   default:
+    //     break;
+    // }
   
 } catch (error : any) {
   onNotify?.error(error?.response?.data?.message || "Có lỗi gì đó xảy ra")

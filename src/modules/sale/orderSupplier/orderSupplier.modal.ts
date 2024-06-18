@@ -127,3 +127,22 @@ export interface ItemSearchProduct  {
     manufacturerId : string,
     manufacturer : manufacturerType
 }
+interface stockDataType{
+    warehouseId: number;
+    listLot: [
+        {
+            variantId: string
+            quantity: number;
+            lotNumber: string;
+            expirationDate: Date
+        }
+    ];
+    variants: [
+        {
+            variantName: string
+            exchangeValue: number
+            isDefault: boolean
+            _id: string
+        }
+    ];
+}

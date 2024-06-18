@@ -1,11 +1,17 @@
-import { Col, Modal, Row, Select, Typography } from "antd";
+import { Button, Col, Modal, Row, Select, Typography } from "antd";
 import { ColumnsType } from "antd/es/table/InternalTable";
 import { get } from "lodash";
 import React, { useCallback, useMemo, useState } from "react";
+import ModalAnt from "~/components/Antd/ModalAnt";
 import TableAnt from "~/components/Antd/TableAnt";
 import ActionColumn from "~/components/common/ActionColumn/index";
+import ConfigTable from "~/components/common/ConfigTable";
 import SelectSearch from "~/components/common/SelectSearch/SelectSearch";
 import WhiteBox from "~/components/common/WhiteBox";
+import { useAdapter } from "~/modules/auth/auth.hook";
+import { ADAPTER_KEY } from "~/modules/auth/constants";
+import POLICIES from "~/modules/policy/policy.auth";
+import { useMatchPolicy } from "~/modules/policy/policy.hook";
 import { formatter } from "~/utils/helpers";
 import {
   useChangeVariantDefault,
@@ -18,12 +24,7 @@ import {
 } from "../product.hook";
 import { TypePropsListProduct } from "../product.modal";
 import FormProduct from "./FormProduct";
-import StockProduct from "./StockProduct";
-import { useAdapter } from "~/modules/auth/auth.hook";
-import { ADAPTER_KEY } from "~/modules/auth/constants";
-import POLICIES from "~/modules/policy/policy.auth";
-import { useMatchPolicy } from "~/modules/policy/policy.hook";
-import ConfigTable from "~/components/common/ConfigTable";
+import StockModal, { itemData } from "./StockModal";
 export default function ListProduct({
   supplierId,
 }: TypePropsListProduct): React.JSX.Element {
@@ -42,6 +43,18 @@ export default function ListProduct({
   const isAdapterIsEmployee = useMemo(() => adapter === ADAPTER_KEY.EMPLOYEE, [adapter]);
   const canUpdate = useMatchPolicy(POLICIES.UPDATE_PRODUCT);
   const canDelete = useMatchPolicy(POLICIES.DELETE_PRODUCT);
+
+  const [isOpenStock, setIsOpenStock] = useState(false);
+  const [dataStock, setDataStock] = useState<itemData | null >(null);
+  const openStock = (data: itemData) => {
+    setIsOpenStock(true);
+    setDataStock(data);
+  };
+
+  const onCloseStock = () => {
+    setIsOpenStock(false);
+    setDataStock(null);
+  };
 
   const onOpenForm = useCallback((id?: string) => {
     if (id) {
@@ -132,12 +145,13 @@ export default function ListProduct({
     title: "Tồn kho",
       dataIndex: "stock",
       key: "stock",
-      render(stock: any, record: any) {
-        return <StockProduct variantDefault={get(record,'variantDefault')} stock={stock ?? 0} handleUpdate={(newStock:number) => onUpdateProduct({
-          _id : get(record,'_id'),
-          stock : newStock
-        })}/>
-      },
+      // render(stock: any, record: any) {
+      //   return <StockProduct variantDefault={get(record,'variantDefault')} stock={stock ?? 0} handleUpdate={(newStock:number) => onUpdateProduct({
+      //     _id : get(record,'_id'),
+      //     stock : newStock
+      //   })}/>
+    // },
+      render: (value: any, record: any)=> <Button type = 'link' onClick = {() => openStock({id: get(record,'_id'),supplierId : get(record,'supplierId')})}>Xem chi tiết</Button>
     }]:[]),
     {
       title: "Nhóm sản phẩm",
@@ -230,6 +244,16 @@ export default function ListProduct({
         >
           <FormProduct onUpdate={onUpdateProduct} id={id} supplierId={supplierId} onCancel={onCloseForm} />
         </Modal>
+        <ModalAnt
+          open={isOpenStock}
+          destroyOnClose
+          width={1500}
+          footer={null}
+          onCancel={onCloseStock}
+        >
+          <StockModal
+            data={dataStock} />
+        </ModalAnt>
       </WhiteBox>
     </div>
   );

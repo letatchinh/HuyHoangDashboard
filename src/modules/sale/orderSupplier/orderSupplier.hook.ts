@@ -38,6 +38,9 @@ export const useOrderSupplierPaging = () => useSelector(pagingSelector);
 const updateOrderItemFailedSelector = getSelector('updateOrderItemFailed');
 const updateOrderItemSuccessSelector = getSelector('updateOrderItemSuccess');
 
+const createBillInWarehouseSuccessSelector = getSelector('createBillInWarehouseSuccess');
+const createBillInWarehouseFailedSelector = getSelector('createBillInWarehouseFailed');
+
 export const useGetOrderSuppliers = (param:any) => {
   return useFetchByParam({
     action: orderSupplierActions.getListRequest,
@@ -66,6 +69,18 @@ export const useCreateOrderSupplier = (callback?: any) => {
 
   return useSubmit({
     action: orderSupplierActions.createRequest,
+    loadingSelector: isSubmitLoadingSelector,
+    callbackSubmit:callback
+  });
+};
+export const useCreateOrderInWarehouse = (callback?: any) => {
+  useSuccess(
+    createBillInWarehouseSuccessSelector,
+  );
+  useFailed(createBillInWarehouseFailedSelector);
+
+  return useSubmit({
+    action: orderSupplierActions.createOrderInWarehouseRequest,
     loadingSelector: isSubmitLoadingSelector,
     callbackSubmit:callback
   });
@@ -169,4 +184,14 @@ export const useUpdateOrderSupplierParams = (
 
 export const useResetOrderSupplier = () => {
   return useResetState(orderSupplierActions.reset);
+};
+
+
+export const convertDataSubmitWarehouse = (data: any) => {
+  return {
+    orderSupplierItems: data?.orderSupplierItems?.map((item: any) => ({
+      quantity: item?.quantity,
+      
+    }))
+  }
 };

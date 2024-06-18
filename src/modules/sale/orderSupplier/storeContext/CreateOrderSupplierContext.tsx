@@ -101,7 +101,6 @@ export function CreateOrderSupplierProvider({
   onOpenModalResult,
 }: CreateBillProviderProps): JSX.Element {
   const [form] = Form.useForm();
-  console.log(bill,'bill')
   OrderSupplierModule.hook.useResetOrderSupplier();
   const [countReValidate,setCountReValidate] = useState(1);
   const [orderSupplierItems, setOrderSupplierItems] = useState<DataItem[]>([]);

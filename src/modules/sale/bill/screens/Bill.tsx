@@ -27,7 +27,7 @@ export default function Bill(props: propsType): React.JSX.Element {
           <Tabs.TabPane active={"ALL" === activeKey} tab={"Tất cả đơn hàng"}>
             <ListBill/>
           </Tabs.TabPane>
-          {keys(omit(STATUS_BILL, "READY")).map((status) => (
+          {keys(omit(STATUS_BILL, ["READY", "UNREADY"])).map((status) => (
             <Tabs.TabPane
               key={status}
               active={status === activeKey}

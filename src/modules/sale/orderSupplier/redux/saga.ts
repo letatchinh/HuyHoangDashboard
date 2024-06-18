@@ -29,7 +29,8 @@ function* createOrderSupplier({payload} : any) : any {
     if(callbackSubmit){
       callbackSubmit({
         type : 'createOrderSupplier',
-        code : get(data,'code')
+        code: get(data, 'code'),
+        oldData: params,
       })
     }
     yield put(orderSupplierActions.createSuccess(data));
@@ -67,6 +68,15 @@ function* updateOrderItem({ payload }: any): any {
 //     yield put(orderSupplierActions.deleteFailed(error));
 //   }
 // }
+function* createOrderInWarehouse({payload} : any) : any {
+  try {
+    const data = yield call(api.createBillInWarehouse,payload);
+    yield put(orderSupplierActions.createSuccess(data));
+  } catch (error:any) {
+    yield put(orderSupplierActions.createFailed(error));
+  }
+}
+
 
 
 export default function* orderSupplierSaga() {

@@ -1,11 +1,14 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { get } from "lodash";
+import { get, omit } from "lodash";
 import { InstanceModuleRedux } from "~/redux/instanceModuleRedux";
 import { initStateSlice } from "~/redux/models";
 interface cloneInitState extends initStateSlice {
   // Add cloneInitState Type Here
   updateOrderItemFailed?: any;
   updateOrderItemSuccess?: any;
+
+  createBillInWarehouseSuccess?: any;
+  createBillInWarehouseFailed?: any;
 }
 class OrderSupplierClassExtend extends InstanceModuleRedux {
   cloneReducer;
@@ -58,6 +61,21 @@ class OrderSupplierClassExtend extends InstanceModuleRedux {
         state.isSubmitLoading = false;
         state.updateOrderItemFailed = payload;
       },
+      createOrderInWarehouseRequest: (state:cloneInitState) => {
+        state.isSubmitLoading = true;
+      },
+      createOrderInWarehouseSuccess: (state:cloneInitState, { payload }:{payload:any}) => {
+        state.isSubmitLoading = false;
+        state.createBillInWarehouseSuccess = payload;
+      },
+      createOrderInWarehouseFailed: (state:cloneInitState, { payload }:{payload:any}) => {
+        state.isSubmitLoading = false;
+        state.createBillInWarehouseFailed = payload;
+      },
+      resetAction: (state:cloneInitState) => ({
+        ...state,
+        ...omit(this.cloneInitState, ["list"]),
+      })
     };
 
     this.cloneInitState = {
@@ -65,6 +83,9 @@ class OrderSupplierClassExtend extends InstanceModuleRedux {
       // Want Add more State Here...
       updateOrderItemFailed: null,
       updateOrderItemSuccess: null,
+
+      createBillInWarehouseSuccess: null,
+      createBillInWarehouseFailed: null,
     };
   }
 

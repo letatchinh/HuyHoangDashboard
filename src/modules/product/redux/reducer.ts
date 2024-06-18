@@ -7,7 +7,11 @@ import { getPaging } from "~/utils/helpers";
   // Add cloneInitState Type Here
   listBorrow?: any[];
   getListBorrowFailed?: any;
-  pagingBorrow?: any;
+   pagingBorrow?: any;
+   
+   stock?: any[];
+  getStockFailed?: any;
+  pagingStock?: any;
 
   byIdBorrow?: any;
   getByIdBorrowFailed?: any;
@@ -154,6 +158,22 @@ class ProductClassExtend extends InstanceModuleRedux {
 
       //-----BORROW_PRODUCT-----
 
+      getStockRequest: (state:cloneInitState , { payload }: any) => {
+        state.isGetByIdLoading = true;
+      },
+      getStockSuccess: (state: cloneInitState, { payload }: any) => {
+        state.isGetByIdLoading = false;
+        state.stock = payload;
+      },
+      getStockFailed: (state:cloneInitState , { payload }: any) => {
+        state.isGetByIdLoading = false;
+        state.getStockFailed = payload;
+      },
+      resetAction: (state:cloneInitState) => ({
+        ...state,
+        ...omit(this.cloneInitState, [ "list", "paging","listBorrow", "pagingBorrow"]),
+      }),
+
       // Want Add more reducer Here...
     }
     this.cloneInitState = {
@@ -177,6 +197,10 @@ class ProductClassExtend extends InstanceModuleRedux {
 
       confirmSuccess: undefined,
       confirmFailed: undefined,
+
+      stock: [],
+      getStockFailed: undefined,
+      pagingStock: undefined,
 
     }
   }
