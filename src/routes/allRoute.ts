@@ -56,6 +56,7 @@ import ReportIndividualEmployeeSeller from "~/pages/Dashboard/ReportIndividualEm
 import ReportGroup from "~/pages/Dashboard/ReportGroupCollaborator";
 import ReportGroupEmployeeSeller from "~/pages/Dashboard/ReportGroupEmployeeSeller";
 import PharmacyDetail_v2 from "~/modules/pharmacy/screens/PharmacyDetail_v2";
+import EmployeeDetail from "~/modules/employee/screen/EmployeeDetail";
 export const mainRoutes :PathRouteProps[] = [
   { path: PATH_APP.main.root, Component: Homepage },
 
@@ -108,6 +109,7 @@ export const mainRoutes :PathRouteProps[] = [
   // Trình dược viên
   { path: PATH_APP.todoList.workBoard, Component: WorkBoardPage },
   { path: PATH_APP.employee.root, Component: EmployeePage },
+  // { path: PATH_APP.employee.detail, Component: EmployeeDetail },
   
   // User
   { path: PATH_APP.user.root, Component: UserPage },

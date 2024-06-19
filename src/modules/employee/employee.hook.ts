@@ -122,38 +122,42 @@ export const useConvertEmployee = (callback?: any) => {
   });
 };
 
-export const useEmployeeQueryParams = () => {
+export const useGetEmployeeId_onlyGet = () => {
+  return [useSelector(getByIdSelector), useSelector(getByIdLoadingSelector)];
+};
+
+export const useEmployeeQueryParams = (limitDefault? : number) => {
   const query = useQueryParams();
-  const [page, setPage] = useState<any>(query.get("page") || 1);
-  const [limit, setLimit] = useState(query.get("limit") || 10);
+  const limit = query.get("limit") || limitDefault || 10;
+  const page = query.get("page") || 1;
   const keyword = query.get("keyword");
 
-  const onTableChange: any = ({ current, pageSize }: any) => {
-    setPage(current);
-    setLimit(pageSize);
-  };
+  // const onTableChange: any = ({ current, pageSize }: any) => {
+  //   setPage(current);
+  //   setLimit(pageSize);
+  // };
   
   const createSuccess = useSelector(createSuccessSelector);
   const deleteSuccess = useSelector(deleteSuccessSelector);
   const convertSuccess = useSelector(convertSuccessSelector);
-  const data = useSelector(listSelector);
+  // const data = useSelector(listSelector);
 
-  const newPage = useMemo(() => {
-    if (!data?.length && page > 1) {
-      setPage(page - 1);
-      return page - 1;  
-    };
-    return page;
-  }, [data, page]);
+  // const newPage = useMemo(() => {
+  //   if (!data?.length && page > 1) {
+  //     setPage(page - 1);
+  //     return page - 1;  
+  //   };
+  //   return page;
+  // }, [data, page]);
   return useMemo(() => {
     const queryParams = {
       page,     
       limit,
       keyword,
     };
-    return [queryParams, onTableChange];
+    return [queryParams];
     //eslint-disable-next-line
-  }, [page, limit, keyword, createSuccess, deleteSuccess,newPage, convertSuccess]);
+  }, [page, limit, keyword, createSuccess, deleteSuccess, convertSuccess]);
 };
 
 export const useUpdateEmployeeParams = (

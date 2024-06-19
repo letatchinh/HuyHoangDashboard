@@ -33,6 +33,8 @@ import ExpandRowEmployee from "../components/ExpandRowEmployee";
 
 import CollaboratorProduct from "~/modules/collaborator/components/CollaboratorProduct";
 import apis from '../employee.api';
+import WithPermission from "~/components/common/WithPermission";
+import { Link } from "react-router-dom";
 interface Props {
   currentTab: any;
 };
@@ -104,7 +106,7 @@ export default function Employee({ currentTab }: Props) {
     return dispatch(employeeSliceAction.resetAction());
   };
 
-  const [query, onTableChange] = useEmployeeQueryParams();
+  const [query] = useEmployeeQueryParams();
   const [keyword, { setKeyword, onParamChange }] =
     useUpdateEmployeeParams(query);
   const [data, isLoading] = useGetEmployees(query);
@@ -158,9 +160,18 @@ export default function Employee({ currentTab }: Props) {
       dataIndex: 'employeeNumber',
       key: 'employeeNumber',
       align : 'center',
-      // render: (value: any, record: any) => (
-      //   <Button type="link" onClick={() => handleOpenModal(record._id)}>{value}</Button>
-      // ),
+      render: (employeeNumber: any, record: any) => {
+        return (
+          <WithPermission permission={POLICIES.READ_EMPLOYEE}>
+            <Link
+              className="link_"
+              to={`/employee/${record?._id}`}
+            >
+              {record?.employeeNumber}
+            </Link>
+          </WithPermission>
+        );
+      },
     },
     {
       title: 'Tên trình dược viên',
@@ -299,12 +310,12 @@ export default function Employee({ currentTab }: Props) {
           size="small"
           pagination={{
             ...paging,
-            showTotal: (total) => `Tổng cộng: ${total}`,
+            onChange(page, pageSize) {
+              onParamChange({ page, limit: pageSize });
+            },
             showSizeChanger: true,
+            showTotal: (total) => `Tổng cộng: ${total} `,
           }}
-          onChange={({ current, pageSize }) =>
-            onTableChange({ current, pageSize })
-          }
           expandable={{
             expandedRowRender: (record: any) => (
               <ExpandRowEmployee _id={record._id} />

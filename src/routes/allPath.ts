@@ -55,6 +55,7 @@ export const PATH_APP = {
   },
   employee: {
     root: path(ROOTS.app, "/employee/*"),
+    // detail: path(ROOTS.app, "/employee/:id"),
   },
 
   configDiscount: {
