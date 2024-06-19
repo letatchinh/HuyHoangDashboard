@@ -89,6 +89,14 @@ function* getListProductSuggest({payload:query} : any) : any {
   }
 };
 
+function* updateStatusBill({payload} : any) : any {
+  try {
+    const data = yield call(api.updateStatusBill,payload);
+    yield put(billSliceAction.updateStatusBillSuccess(data));
+  } catch (error:any) {
+    yield put(billSliceAction.updateStatusBillFailed(error));
+  }
+};
 
 export default function* billSaga() {
   yield takeLatest(billSliceAction.getListRequest, getListBill);
@@ -99,5 +107,6 @@ export default function* billSaga() {
   yield takeLatest(billSliceAction.updateApplyLogisticRequest, updateApplyLogistic);
   yield takeLatest(billSliceAction.deleteRequest, deleteBill);
   yield takeLatest(billSliceAction.updateBillItemRequest, updateBillItem);
+  yield takeLatest(billSliceAction.updateStatusBillRequest, updateStatusBill);
   yield takeLatest(billSliceAction.getListProductSuggestRequest, getListProductSuggest);
 }

@@ -17,7 +17,10 @@ interface cloneInitState extends initStateSlice {
   updateBillItemSuccess?: any,
   
   updateLogisticSuccess? : any,
-  updateLogisticFailed? : any,
+  updateLogisticFailed?: any,
+
+  updateStatusBillFailed? : any,
+  updateStatusBillSuccess?: any,
 
   listProductSuggest?:any,
   isProductSuggestLoading?: boolean,
@@ -192,12 +195,28 @@ class BillClassExtend extends InstanceModuleRedux {
     
     resetAction: (state:cloneInitState) => ({
       ...state,
-      ...omit(this.cloneInitState, ["list"]),
+      ...omit(this.cloneInitState, ["list", "paging"]),
     }),
     resetActionLogistic: (state:cloneInitState) => ({
       ...state,
       ...omit(this.cloneInitState, ["list",'byId']),
-    }),
+      }),
+      updateStatusBillRequest: (state:cloneInitState) => {
+        state.isSubmitLoading = true;
+        state.updateStatusBillFailed = null;
+      },
+      updateStatusBillSuccess: (state:cloneInitState, { payload }:{payload:any}) => {
+        state.isSubmitLoading = false;
+        state.updateStatusBillSuccess = payload;
+        state.list = state.list?.map((item: any) => get(item, '_id') === get(payload, 'data._id') ? ({
+          ...item,
+          status: payload?.data?.status
+        }) : item);
+      },
+      updateStatusBillFailed: (state:cloneInitState, { payload }:{payload:any}) => {
+        state.isSubmitLoading = false;
+        state.updateStatusBillFailed = payload;
+        },
     };
 
     this.cloneInitState = {
@@ -208,6 +227,9 @@ class BillClassExtend extends InstanceModuleRedux {
       updateBillItemFailed : null,
       updateBillItemSuccess : null,
       
+      updateStatusBillFailed: null, 
+      updateStatusBillSuccess: null,
+
       listProductSuggest: [],
       isProductSuggestLoading: false,
       getProductSuggestFailed: null,

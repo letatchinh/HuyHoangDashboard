@@ -121,3 +121,8 @@ export interface DebtType  {
     id : number,
 
 }
+export type ParamGetNextStatus = {
+    status: string;
+    lotNumber?: any;
+    expirationDate: any;
+  }

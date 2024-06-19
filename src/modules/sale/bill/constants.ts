@@ -21,6 +21,15 @@ export const STATUS_BILL_VI = {
   CANCELLED: "Đã huỷ",
 };
 
+export const STATUS_BILL_LEVEL = {
+  NEW: 1,
+  REQUESTED: 2,
+  PACKAGE_EXPORT: 3,
+  SHIPPING: 4,
+  COMPLETED: 5,
+  CANCELLED: 6,
+};
+
 export const defaultFee = [
   {
     typeFee: 'SUB_FEE',

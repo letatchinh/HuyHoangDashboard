@@ -7,6 +7,7 @@ import {
   useGetBill,
   useGetBills,
   useUpdateBillParams,
+  useUpdateStatusBill,
 } from "../bill.hook";
 
 import { Checkbox, Col, ConfigProvider, Row, Space, Spin, Typography } from "antd";
@@ -39,12 +40,16 @@ import { billSliceAction } from "../redux/reducer";
 import Action from "./Action";
 import NoteWarehouse from "./NoteWarehouse";
 import ProductItem from "./ProductItem";
+import ToolTipBadge from "~/components/common/ToolTipBadge";
+import ConfirmStatusBill from "./ConfirmStatusBill";
+import { useResetBillAction } from "~/modules/sale/bill/bill.hook";
 const CalculateBillMethod = new CalculateBill();
 type propsType = {
   status?: string;
 };
 const CLONE_STATUS_BILL_VI: any = STATUS_BILL_VI;
 export default function ListBill({ status }: propsType): React.JSX.Element {
+  useResetBillAction();
   const [query] = useBillQueryParams(status);
   const [keyword, { setKeyword, onParamChange }] = useUpdateBillParams(query);
   const [bills, isLoading] = useGetBills(query);
@@ -66,6 +71,24 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
   const [bill, loading] = useGetBill(memoId);
   const canCreateBillToWarehouse = useMatchPolicy(POLICIES.WRITE_WAREHOUSELINK);
   const [noteForWarehouse, setNoteForWarehouse] = useState<string>('');
+  const [billItemIdCancel,setBillItemIdCancel] = useState<any>();
+  const [openCancel, setOpenCancel] = useState(false);
+  const [askAgain,setAskAgain] = useState(true);
+  const [note, setNote] = useState(""); // CancelNote BillItem
+  const [loadingUpdateStatus, onUpdateStatus] = useUpdateStatusBill(() => {
+    dispatch(billSliceAction.resetAction());
+  });
+  const isHaveAdminBillPermission = useMatchPolicy(POLICIES.ADMIN_BILL);
+  const onOpenCancel = useCallback((id:any) => {
+    if(id){
+      setBillItemIdCancel(id);
+    }
+    setOpenCancel(true)
+  }, []);
+  const isDisabledAll = (status: keyof typeof STATUS_BILL) => {
+    return status === STATUS_BILL.CANCELLED
+  };
+  
   useEffect(() => {
     if (bill && bill?.warehouseId) {
       setWarehouseSelect(bill?.warehouseId);
@@ -92,15 +115,15 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
   });
 
   const onCheck = () => {
-    const newList = convertProductsFromBill(get(bill, 'billItems', []))
-    const warehouseBranchId = warehouseDefault?.find((item: any) => item?.warehouseId === warehouseSelect)?._id
-    const submitData = {
-      warehouseId: warehouseSelect,
-      listProduct: newList,
-      billId: get(bill, '_id'),
-      warehouseBranchId
-    };
     try {
+      const newList =  convertProductsFromBill(get(bill, 'billItems', []))
+      const warehouseBranchId = warehouseDefault?.find((item: any) => item?.warehouseId === warehouseSelect)?._id
+      const submitData = {
+        warehouseId: warehouseSelect,
+        listProduct: newList,
+        billId: get(bill, '_id'),
+        warehouseBranchId
+      };
        onCheckWarehouse(submitData);
     } catch (error) {
       console.log(error)
@@ -114,6 +137,31 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
       console.log(error)
     }
   };
+
+  const onChangeStatusBill = (status: keyof typeof STATUS_BILL, id?: string | null,billItem?: any) => {
+    //Kiểm tra hàng tồn kho
+    // const dataCheck = convertProductsFromBill(get(billItem, 'billItems', []));
+    // const submitData = {
+    //   warehouseId: billItem?.warehouseId,
+    //   listProduct: dataCheck,
+    //   billId: get(bill, '_id'),
+    //   warehouseBranchId: billItem?.warehouseBranchId
+    // };
+    // onCheckWarehouse(submitData);
+
+    // Tạo yêu cầu xuất kho
+    // const submitDataExport = convertDataSentToWarehouse({...billItem, notePharmacy:noteForWarehouse});
+    // onCreateBillToWarehouse(submitDataExport);
+    const data = {
+      billId: id,
+      status
+    };
+    try {
+        onUpdateStatus(data);
+    } catch (error) {
+      console.log(error)
+    }
+  };
   //
   const columns: ColumnsType = useMemo(
     () => [
@@ -122,6 +170,7 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
         dataIndex: "codeSequence",
         key: "codeSequence",
         align: "center",
+        width: 150,
         render(codeSequence, record, index) {
           return (
             <Link
@@ -138,11 +187,9 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
         dataIndex: "createdAt",
         key: "createdAt",
         align: "left",
+        width: 100,
         render(createdAt, record, index) {
           return (
-            // <Typography.Text strong>
-            //   {dayjs(createdAt).format("DD/MM/YYYY HH:mm")}
-            // </Typography.Text>
             <DateTimeTable data={createdAt} />
           );
         },
@@ -151,27 +198,47 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
         title: "Tên nhà thuốc",
         dataIndex: "pharmacy",
         key: "pharmacy",
+        width: 200,
         align: "left",
         render(pharmacy, record, index) {
           return <Typography.Text>{get(pharmacy, "name", "")}</Typography.Text>;
         },
       },
       {
-        title: "Trạng thái",
+        title: "Tình trạng",
         dataIndex: "status",
         key: "status",
         align: "center",
-        width: 200,
+        width: 350,
         render(status, record, index) {
           return (
-            <Status status={status} statusVi={CLONE_STATUS_BILL_VI[status]} />
-          );
-        },
+            !isHaveAdminBillPermission ? (
+              <Status status={status} statusVi={CLONE_STATUS_BILL_VI[status]} />
+            ) :
+              <div className="d-flex flex-column align-items-center">
+                <ToolTipBadge title={status === STATUS_BILL.CANCELLED && get(record, 'note', '')}>
+                  <Status
+                    status={status}
+                    statusVi={CLONE_STATUS_BILL_VI?.[status]}
+                  />
+                </ToolTipBadge>
+                <ConfirmStatusBill
+                  askAgain={askAgain}
+                  setAskAgain={setAskAgain}
+                  billItem={record}
+                  onChangeStatusBill={onChangeStatusBill}
+                  onOpenCancel={onOpenCancel} isDisabledAll={isDisabledAll(status)}
+                  isSubmitLoading={isSubmitLoading}
+                  id={get(record, '_id')} />
+              </div>
+          )
+        }
       },
       {
         title: "Lý do huỷ",
         dataIndex: "cancelNote",
         key: "cancelNote",
+        width: 150,
         align: "left",
         render(cancelNote?: any) {
           return (
@@ -190,6 +257,7 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
         title: "Ghi chú",
         dataIndex: "note",
         key: "note",
+        width: 100,
         align: "left",
         render(note?: any) {
           return (
@@ -208,6 +276,7 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
         title: "Khách đã trả",
         dataIndex: "pair",
         key: "pair",
+        width: 100,
         align: "center",
         render(pair, record, index) {
           return (
@@ -221,6 +290,7 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
         title: "Khách phải trả",
         dataIndex: "totalPrice",
         key: "totalPrice",
+        width: 100,
         align: "center",
         render(totalPrice, record, index) {
           const remainAmount = CalculateBillMethod.remainAmount(record);
@@ -232,10 +302,12 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
         title: "Kho xuất hàng",
         dataIndex: "warehouseName",
         key: "warehouseName",
+        width: 200,
         align: "center",
       },
       ...(canCreateBillToWarehouse ? [{
         title: "Thao tác",
+        width: 100,
         key: "action",
         align: "center" as any,
         render(value: any, record: any, index: number) {
@@ -329,7 +401,7 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
         pagination={pagingTable(paging, onParamChange)}
         size="small"
         bordered
-        scroll={{ y: '60vh' ,x  : 800}}
+        scroll={{ y: '60vh' ,x  : 'max-content'}}
       />
       </ConfigProvider>
       <ModalAnt

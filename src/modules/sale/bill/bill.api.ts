@@ -15,5 +15,6 @@ const apis = {
     getBillToReceiptVoucher: (id?: any) => requester.get(`/api/v1/bills-of-pharmacy/${id}`),
 
     updateApplyLogisticUnit: (data: any) => requester.put(`/api/v1/bill-transport-unit/${data?.id}`, omit(data, ["id"])),
+    updateStatusBill: (data: any) => requester.put(`/api/v1/bill-status/${data?.billId}`, omit(data, ["billId"])),
 }
 export default apis;

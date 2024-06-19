@@ -54,6 +54,10 @@
     &.shipping {
       color: #ffffff;
       background-color: #007bff; /* Màu xanh da trời */
-    }
+    };
+    &.package_export{
+      color: #ffffff;
+      background-color: #b7d222; /* Màu cam đậm */
+    };
 
 }
