@@ -333,25 +333,7 @@ export default function ListQuotation({
               >
                 <Button
                   block
-                  onClick={() => {
-                    onConvertQuotation({
-                      quotationItems: get(record, "quotationItems", []),
-                      pharmacyId: get(record, "pharmacyId"),
-                      dataUpdateQuotation: {
-                        id: _id,
-                        code: get(record, "code"),
-                      },
-                      pair: get(record, "pair", 0),
-                      debtType: get(record, "debtType"),
-                      fee: get(record, 'fee'),
-                      deliveryAddress: get(record, 'deliveryAddress'),
-                      dataTransportUnit: get(record, 'dataTransportUnit'),
-                      deliveryAddressId: get(record, 'deliveryAddressId'),
-                      warehouseBranchId: get(record, 'warehouseBranchId'),
-                      warehouseId: get(record, 'warehouseId'),
-                      warehouseName: get(record, 'warehouseName'),
-                    });
-                  }}
+                  ghost
                   type="primary"
                   size="small"
                   // disabled={get(record,'status') !== STATUS_QUOTATION.NEW}
@@ -374,26 +356,7 @@ export default function ListQuotation({
               >
                 <Button
                   block
-                  disabled={get(record, "status") !== STATUS_QUOTATION.NEW}
-                  onClick={() => {
-                    onUpdateQuotation({
-                      quotationItems: get(record, "quotationItems", []),
-                      pharmacyId: get(record, "pharmacyId"),
-                      dataUpdateQuotation: {
-                        id: _id,
-                        code: get(record, "code"),
-                      },
-                      pair: get(record, "pair", 0),
-                      debtType: get(record, "debtType"),
-                      fee: get(record, 'fee'),
-                      deliveryAddress: get(record, 'deliveryAddress'),
-                      dataTransportUnit: get(record, 'dataTransportUnit'),
-                      deliveryAddressId: get(record, 'deliveryAddressId'),
-                      warehouseBranchId: get(record, 'warehouseBranchId'),
-                      warehouseId: get(record, 'warehouseId'),
-                      warehouseName: get(record, 'warehouseName'),
-                    });
-                  }}
+                  danger
                   size="small"
                   // disabled={get(record,'status') !== STATUS_QUOTATION.NEW}
                 >
