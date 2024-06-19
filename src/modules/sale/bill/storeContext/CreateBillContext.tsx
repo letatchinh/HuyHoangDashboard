@@ -288,7 +288,7 @@ export function CreateBillProvider({
         0
       ),
     [quotationItems]
-  );
+  ); // Tổng giá trị đơn hàng chưa chiếc khấu
 
   const totalAmount = useMemo(
     () =>

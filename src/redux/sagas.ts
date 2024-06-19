@@ -48,8 +48,14 @@ import collaborator from '~/modules/collaborator';
 import collaboratorGroup from '~/modules/collaboratorGroup';
 import reportSalaryPartner from '~/modules/reportSalaryPartner/redux/saga';
 import logistic from '~/modules/logistic';
-import requestGroup from '~/modules/requestGroup';
 import warehouse from '~/modules/warehouse';
+import reportProductSupplier from '~/modules/reportProductSupplier';
+import reportOverview from '~/modules/reportOverview';
+import requestGroup from '~/modules/requestGroup';
+import reportIndividualCollaborator from '~/modules/reportIndividualCollaborator';
+import reportIndividualEmployeeSeller from '~/modules/reportIndividualEmployeeSeller';
+import reportGroupCollaborator from '~/modules/reportGroupCollaborator';
+import reportGroupEmployeeSeller from '~/modules/reportGroupEmployeeSeller';
 
 export default function* rootSaga() {
   yield all([
@@ -104,7 +110,13 @@ export default function* rootSaga() {
     collaboratorGroup.redux.saga(),
     logistic.redux.saga(),
     reportSalaryPartner(),
+    reportProductSupplier.redux.saga(),
+    reportOverview.redux.saga(),
     requestGroup.redux.saga(),
     warehouse.redux.saga(),
+    reportIndividualCollaborator.redux.saga(),
+    reportIndividualEmployeeSeller.redux.saga(),
+    reportGroupCollaborator.redux.saga(),
+    reportGroupEmployeeSeller.redux.saga(),
   ]);
 };

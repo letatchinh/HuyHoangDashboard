@@ -44,13 +44,16 @@ import ConfigurationCronTime from "~/pages/Dashboard/ConfigurationCronTime";
 import TypePharmacy from "~/pages/Dashboard/TypePharmacy";
 import GroupPharmacy from "~/pages/Dashboard/GroupPharmacy";
 import CollaboratorPage from "~/pages/Dashboard/Collaborator";
+import ReportProductSupplier from "~/pages/Dashboard/ReportProductSupplier";
+import ReportOverview from "~/pages/Dashboard/ReportOverview";
 import NotificationPage from "~/pages/Dashboard/Notification";
 import ReportSalaryPartnerPage from "~/pages/Dashboard/ReportSalaryPartner"; 
 import ProductBorrow from "~/modules/product/components/ProductBorrow";
-import CreateBill from "~/modules/sale/bill/screens/CreateBill";
-import SaleScreen from "~/modules/sale/bill/components/createBillScreen/SaleScreen";
-import Warehouse from "~/modules/warehouse/index";
 import SelectDefaultWarehouse from "~/modules/warehouse/components/SelectDefaultWarehouse";
+import ReportIndividualCollaborator from "~/pages/Dashboard/ReportIndividualCollaborator";
+import ReportIndividualEmployeeSeller from "~/pages/Dashboard/ReportIndividualEmployeeSeller";
+import ReportGroup from "~/pages/Dashboard/ReportGroupCollaborator";
+import ReportGroupEmployeeSeller from "~/pages/Dashboard/ReportGroupEmployeeSeller";
 export const mainRoutes :PathRouteProps[] = [
   { path: PATH_APP.main.root, Component: Homepage },
 
@@ -166,13 +169,27 @@ export const mainRoutes :PathRouteProps[] = [
   { path: PATH_APP.groupPharmacy.root, Component:  GroupPharmacy},
   
   // Cộng tác viên
-  { path: PATH_APP.collaborator.root, Component: CollaboratorPage },
+  { path: PATH_APP.collaborator.root, Component: CollaboratorPage},
+
+  // 
+  { path: PATH_APP.reportProductSupplier.root, Component: ReportProductSupplier},
   { path: PATH_APP.reportSalaryPartner.root, Component: ReportSalaryPartnerPage},
-  // Thông báo
+
+  { path: PATH_APP.reportOverview.root, Component: ReportOverview},
+    // Thôgng báo
   { path: PATH_APP.myNotification.root, Component: NotificationPage},
-  // Kho 
-  { path: PATH_APP.warehouse.setting, Component: SelectDefaultWarehouse },
+
+  // Báo cáo doanh thu cá nhân
+  { path: PATH_APP.reportIndividualCollaborator.root, Component: ReportIndividualCollaborator},
+  { path: PATH_APP.reportIndividualEmployeeSeller.root, Component: ReportIndividualEmployeeSeller},
+
+  // Báo cáo doanh thu đội nhóm
+  { path: PATH_APP.reportGroupCollaborator.root, Component: ReportGroup},
+  { path: PATH_APP.reportGroupEmployeeSeller.root, Component: ReportGroupEmployeeSeller },
   
+    // Kho 
+    { path: PATH_APP.warehouse.setting, Component: SelectDefaultWarehouse },
+
   { path: '/', Component: Homepage },
 ]
 

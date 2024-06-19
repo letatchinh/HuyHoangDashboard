@@ -15,6 +15,7 @@ interface propsType extends SelectProps {
   allowClear?: boolean;
   showIcon?: boolean;
   validateFirst?: boolean;
+  required?: boolean;
   label?: string;
   id? : string,
 };
@@ -27,6 +28,7 @@ export default function SelectPharmacy({
   allowClear = true,
   showIcon = true,
   validateFirst = true,
+  required = true,
   label = "",
   id,
   ...props
@@ -130,7 +132,7 @@ export default function SelectPharmacy({
           label={label}
           rules={[
             {
-              required: true,
+              required: required,
               message: typeData === "ctv" ? "Vui lòng chọn cộng tác viên" : "Vui lòng chọn nhà thuốc",
             },
           ]}

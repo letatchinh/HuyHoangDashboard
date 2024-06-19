@@ -99,7 +99,7 @@ export default function ReceiptInOrder(props: propsType): React.JSX.Element {
       />
       <Modal
         footer={null}
-        title={`Phiếu chi - ${voucher?.code}`}
+        title={`Phiếu thu - ${voucher?.code}`}
         open={isOpenForm}
         onCancel={onClose}
         width={1366}

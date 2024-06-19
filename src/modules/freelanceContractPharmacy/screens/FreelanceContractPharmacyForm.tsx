@@ -92,6 +92,7 @@ const FreelanceContractPharmacyForm = ({
             allowClear={false}
             showIcon={false}
             validateFirst={false}
+            required={false}
             label="Nhà thuốc:"
           />
           <FormItem

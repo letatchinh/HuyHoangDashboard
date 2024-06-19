@@ -51,8 +51,14 @@ import collaborator from '~/modules/collaborator';
 import collaboratorGroup from '~/modules/collaboratorGroup';
 import reportSalaryPartner from '~/modules/reportSalaryPartner/redux/reducer';
 import logistic from '~/modules/logistic';
-import requestGroup from '~/modules/requestGroup';
 import warehouse from '~/modules/warehouse';
+import reportProductSupplier from '~/modules/reportProductSupplier';
+import reportOverview from '~/modules/reportOverview';
+import requestGroup from '~/modules/requestGroup';
+import reportIndividualCollaborator from '~/modules/reportIndividualCollaborator';
+import reportIndividualEmployeeSeller from '~/modules/reportIndividualEmployeeSeller';
+import reportGroupCollaborator from '~/modules/reportGroupCollaborator';
+import reportGroupEmployeeSeller from '~/modules/reportGroupEmployeeSeller';
 
 const authPersistConfig = {
     key: 'auth',
@@ -117,7 +123,13 @@ const rootReducer = combineReducers({
     collaboratorGroup: collaboratorGroup.redux.reducer,
     reportSalaryPartner,
     logistic: logistic.redux.reducer,
-    requestGroup: requestGroup.redux.reducer,
     warehouse: warehouse.redux.reducer,
+    reportProductSupplier: reportProductSupplier.redux.reducer,
+    reportOverview: reportOverview.redux.reducer,
+    requestGroup: requestGroup.redux.reducer,
+    reportIndividualCollaborator: reportIndividualCollaborator.redux.reducer,
+    reportIndividualEmployeeSeller: reportIndividualEmployeeSeller.redux.reducer,
+    reportGroupCollaborator: reportGroupCollaborator.redux.reducer,
+    reportGroupEmployeeSeller: reportGroupEmployeeSeller.redux.reducer,
 });
 export default rootReducer

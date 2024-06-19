@@ -216,6 +216,7 @@ export const useAction = ({ action }:UseActionProps) : (v:any) => void => {
   interface FetchStateParams {
     api: (query: any) => Promise<any>;
     query?: any;
+    required?: string[];
     useDocs?: boolean;
     init?: any[];
     fieldGet?: string;
@@ -223,13 +224,17 @@ export const useAction = ({ action }:UseActionProps) : (v:any) => void => {
     nullNotFetch?: boolean;
     conditionRun?: boolean;
   }
-  export const useFetchState = ({ api, query, useDocs = true, init = [], fieldGet,reFetch,nullNotFetch = false ,conditionRun = false} : FetchStateParams) : any => {
+  export const useFetchState = ({ api,required, query, useDocs = true, init = [], fieldGet,reFetch,nullNotFetch = false ,conditionRun = false} : FetchStateParams) : any => {
     const [data, setData] = useState(init);
     const [loading, setLoading] = useState(false);
     const req = useCallback(api, [api]);
     const fetch = useCallback(async () => {
       try {
         setLoading(true);
+        if(Array.isArray(required) && !required?.every((str)=>Boolean(get(query,[str])))){
+            setLoading(false)
+           return  Promise.resolve()
+        }
         const response = await req(query);
         if (fieldGet) {
           setData(get(response, fieldGet))

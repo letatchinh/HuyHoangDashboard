@@ -17,82 +17,78 @@ type propsType = {};
 export default function SaleScreen(props: propsType): React.JSX.Element {
   const { form, onValueChange, quotationItems, totalPriceAfterDiscount, onRemoveTab, bill, onOpenModalResult, totalAmount, mutateReValidate, setAddress, setFormAndLocalStorage, setPharmacyInfo } = useCreateBillStore();
  const feeForm = Form.useWatch('fee',form);
-
- const {onNotify} = useNotificationStore();
- const callBackAfterSuccess = (newData : DataResultType) => {
-  onRemoveTab();
-  onOpenModalResult(newData);
- };
-
- const [isSubmitLoading,onCreateQuotation] = QuotationModule.hook.useCreateQuotation(callBackAfterSuccess);
- const [,onUpdateQuotation] = QuotationModule.hook.useUpdateQuotation(callBackAfterSuccess);
-  const [, onConvertQuotation] = QuotationModule.hook.useConvertQuotation(callBackAfterSuccess);
-  const {pathname} = useLocation();
+  const { onNotify } = useNotificationStore();
+  const callBackAfterSuccess = (newData: DataResultType) => {
+    onRemoveTab();
+    onOpenModalResult(newData);
+  };
+  const [isSubmitLoading, onCreateQuotation] =
+    QuotationModule.hook.useCreateQuotation(callBackAfterSuccess);
+  const [, onUpdateQuotation] =
+    QuotationModule.hook.useUpdateQuotation(callBackAfterSuccess);
+  const [, onConvertQuotation] =
+    QuotationModule.hook.useConvertQuotation(callBackAfterSuccess);
   const onFinish = (values: FormFieldCreateBill) => {
-try {
-  if(!quotationItems?.length){
-    return onNotify?.warning("Vui lòng chọn thuốc!")
-  }
-  
-  if(totalPriceAfterDiscount < 0){
-    return onNotify?.warning("Số tiền không hợp lệ")
-  }
-  const submitData : PayloadCreateBill = QuotationModule.service.convertDataQuotation({
-    quotationItems : quotationItems,
-    data : values,
-    totalPriceAfterDiscount,
-    _id : get(bill,'dataUpdateQuotation.id'),
-    totalAmount,
-    dataTransportUnit: get(bill, 'dataTransportUnit'),
-    warehouseBranchId: get(bill, 'warehouseBranchId'),
-    warehouseId: get(bill, 'warehouseId'),
-  });
-    switch (get(bill,'typeTab')) {
-      case 'createQuotation':
-        onCreateQuotation(submitData);
-        break;
-      case 'updateQuotation':
-        onUpdateQuotation(submitData);
-        break;
-      case 'convertQuotation':
-        onConvertQuotation(submitData);
-        break;
-    
-      default:
-        break;
-  }
-} catch (error : any) {
-  onNotify?.error(error?.response?.data?.message || "Có lỗi gì đó xảy ra")
-}
-    
+    try {
+      if (!quotationItems?.length) {
+        return onNotify?.warning("Vui lòng chọn thuốc!");
+      }
 
+      if (totalPriceAfterDiscount < 0) {
+        return onNotify?.warning("Số tiền không hợp lệ");
+      }
+      const submitData: PayloadCreateBill =
+        QuotationModule.service.convertDataQuotation({
+          quotationItems: quotationItems,
+          data: values,
+          totalPriceAfterDiscount,
+          _id: get(bill, "dataUpdateQuotation.id"),
+          totalAmount,
+        });
+      switch (get(bill, "typeTab")) {
+        case "createQuotation":
+          onCreateQuotation(submitData);
+          break;
+        case "updateQuotation":
+          onUpdateQuotation(submitData);
+          break;
+        case "convertQuotation":
+          onConvertQuotation(submitData);
+          break;
+
+        default:
+          break;
+      }
+    } catch (error: any) {
+      onNotify?.error(error?.response?.data?.message || "Có lỗi gì đó xảy ra");
+    }
   };
   const textSubmit = useMemo(() => {
-    switch (get(bill,'typeTab')) {
-      case 'createQuotation':
-        return "Tạo đơn hàng tạm (F1)"
-      case 'updateQuotation':
-        return "Cập nhật đơn hàng (F1)"
-      case 'convertQuotation':
-        return "Chuyển đổi đơn hàng (F1)"
-    
+    switch (get(bill, "typeTab")) {
+      case "createQuotation":
+        return "Tạo đơn hàng tạm (F1)";
+      case "updateQuotation":
+        return "Cập nhật đơn hàng (F1)";
+      case "convertQuotation":
+        return "Chuyển đổi đơn hàng (F1)";
+
       default:
         break;
     }
-  },[bill]);
+  }, [bill]);
   useEffect(() => {
-    const handleKeyPress = (event : any) => {
+    const handleKeyPress = (event: any) => {
       // Check if the pressed key is F1
-      if (event.key === 'F1') {
+      if (event.key === "F1") {
         form.submit();
       }
     };
-    window.addEventListener('keydown', handleKeyPress);
+    window.addEventListener("keydown", handleKeyPress);
     // Clean up the event listener when the component unmounts
     return () => {
-      window.removeEventListener('keydown', handleKeyPress);
+      window.removeEventListener("keydown", handleKeyPress);
     };
-  }, []); 
+  }, []);
 
   useChangeDocumentTitle("Tạo đơn hàng");
   
@@ -103,8 +99,8 @@ try {
       onFinish={onFinish}
       onValuesChange={onValueChange}
       initialValues={{
-        pair : 0,
-        fee : defaultFee
+        pair: 0,
+        fee: defaultFee,
       }}
     >
       <Row gutter={16}>
@@ -141,7 +137,7 @@ try {
             <TotalBill />
           </div>
           <div className="form-create-bill--payment__actions">
-            <Row gutter={8} justify={"center"} align='middle' wrap={false}>
+            <Row gutter={8} justify={"center"} align="middle" wrap={false}>
               {/* <Col flex={1}>
                 <Button
                 block

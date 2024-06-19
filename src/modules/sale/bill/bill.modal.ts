@@ -126,3 +126,10 @@ export type ParamGetNextStatus = {
     lotNumber?: any;
     expirationDate: any;
   }
+
+export type FormFieldSearch = {
+    startDate?: any,
+    endDate?: any,
+    // sortBy :{COMPLETED, NEW}
+    // searchBy?: SearchByType,
+  };

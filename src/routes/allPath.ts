@@ -167,6 +167,9 @@ export const PATH_APP = {
   collaborator: {
     root: path(ROOTS.app, "/collaborator/*"),
   },
+  reportProductSupplier: {
+    root: path(ROOTS.app, "/report-product-supplier")
+  },
   reportSalaryPartner:{
     root: path(ROOTS.app, "/reportSalaryPartner")
   },
@@ -175,5 +178,20 @@ export const PATH_APP = {
     setting: path(ROOTS.app, "/warehouse-setting")
   },
 
+  reportIndividualCollaborator: {
+    root: path(ROOTS.app, "/reportIndividualCollaborator"),
+  },
+  reportIndividualEmployeeSeller: {
+    root: path (ROOTS.app, "/reportIndividualEmployeeSeller"),
+  },
+  reportOverview: {
+    root: path(ROOTS.app, "/report-overview")
+  },
+  reportGroupCollaborator: {
+    root: path(ROOTS.app, "/report-group-collaborator")
+  },
+  reportGroupEmployeeSeller: {
+    root: path(ROOTS.app, "/report-group-employee-seller")
+  },
 
 };

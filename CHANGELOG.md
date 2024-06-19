@@ -1,3 +1,82 @@
+## [1.18.4](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/compare/v1.18.3...v1.18.4) (2024-06-15)
+
+
+### Bug Fixes
+
+* change api search employee ([47c3e31](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/47c3e31014d70d5e2663f8cc4236c9a80308e6b9))
+* change url ([d03b57e](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/d03b57e05a83826b6b49c1fa7650ceedd926fe12))
+* redirect when change password ([72b93db](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/72b93dbad5faba7d0ca2e689cb937c047610c723))
+* render file in product borrow ([df26247](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/df2624718cebc2e885e607fc3e1df9589bc8a723))
+* update borrow voucher ([7a47b0b](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/7a47b0bf7b7c22b7b41a93d6ae4128815f49e084))
+* update product borrow form ([4c83053](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/4c830532b7b4e629542ad21494d214e7bf175527))
+
+## [1.18.3](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/compare/v1.18.2...v1.18.3) (2024-06-13)
+
+
+### Bug Fixes
+
+* url api ([5385ceb](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/5385ceba850e692f6149fcd0ac2aaa54660f84da))
+
+## [1.18.2](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/compare/v1.18.1...v1.18.2) (2024-06-11)
+
+
+### Bug Fixes
+
+* [#1576](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1576) - add param for report chart bar ([d348d52](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/d348d5218b9a02054e70af6823869af2509d03f6))
+* [#1576](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1576) - add select option type chart report ([4d642ae](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/4d642ae3e51275b90a82e785bdfe5102983e8c05))
+* [#1576](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1576) - add UI report product by supplier ([88e1759](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/88e1759f0fd6ccd317fddf789bbeb19f96f2264a))
+* [#1576](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1576) add select for chart ([34651c2](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/34651c2f2a4a128ae256d41f43d82c244449dc07))
+* [#1578](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1578) - add ui report overview renueve ([df7c310](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/df7c31026a1b847895f225416b55cfb6978ab956))
+* [#1578](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1578) add color for legend chart report ([a0a5785](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/a0a57859b35b20304ec649c24cd33b82e71f74a3))
+* [#1578](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1578) add default ranger time ([c385257](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/c385257c9040575c574d80b3b30853e45975c2ba))
+* [#1578](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1578) add new query in modal report detail ([1acc7b7](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/1acc7b7bdea4b32c9388ec34ad6b632177b67b6c))
+* [#1578](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1578) add table detail data for chart ([530a51f](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/530a51f60a57dab7533a90213e6123635d10e25c))
+* [#1578](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1578) add title for report overview ([487eee7](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/487eee7f19f5003b39a5ebbe075985013631c72a))
+* [#1578](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1578) change color tooltip and change name tab ([5757df8](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/5757df847e43e82a0c3363d0169e8ad5db783dad))
+* [#1578](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1578) check condition display code in table detail ([2d3129b](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/2d3129bc35fc485f1a5a0ae24b804d5ec4649c60))
+* [#1578](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1578) display date in table detail by start date, end date ([d968afc](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/d968afc9efb761286cadcf20cf9010ff4a4f28f6))
+* [#1578](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1578) move report detail by sale channel to report overview ([8d53132](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/8d53132173965ee49d9f0f03c4b215afb626faaf))
+* [#1618](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1618) add change group notification ([ba3ddc7](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/ba3ddc71e6c67ca2f4da918ff9212b1bc1bef23f))
+* [#1628](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1628) - add type display ([5cfbf27](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/5cfbf274617ecf18be8477bb5966f46be96738f2))
+* [#1628](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1628) - build UI report invidual ([3de1acb](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/3de1acb2c6c1679a48ab7acd202bfe7fcf5343ea))
+* [#1628](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1628) add keyword search for select product ([2944383](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/29443836fe75f59e8173faa95c4273810cff7f62))
+* [#1628](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1628) add router report individual employee seller in navbar ([b9efc15](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/b9efc15864ee359ccd6798fdd35f5f59c889c8ea))
+* [#1628](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1628) add UI report employee seller ([5b6419c](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/5b6419ccbc7705a3061da3391766131ff9493d1c))
+* [#1628](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1628) config filter common ([8ac7c3d](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/8ac7c3d236a71b8b4c0cb4761060775a85b26b8a))
+* [#1628](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1628) delete format time series ([3f87ce9](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/3f87ce91b536486f7bb39d35ac8c7ad62656ee16))
+* [#1628](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1628) fix date of birth in pharmaform ([50cf7e8](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/50cf7e860cffe399a7fe365653bb221f722d8dbe))
+* [#1628](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1628) fix UI report collaborator, add switch when user select datatype ([12eb7aa](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/12eb7aaa7b325f6efafa9e09adabfff1e3a157bb))
+* [#1646](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1646) - add UI report group employee seller ([0ccd3c9](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/0ccd3c99fe4f8ff6eec70c9de336a90d2b6459b4))
+* [#1646](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1646) - add UI report group employee seller ([eb68f86](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/eb68f86b8e6dd724c7de40ee847bd1552bc8d6f4))
+* [#1646](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1646) add api get list product collaborator ([11cabf7](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/11cabf7f148eb453f4e05e217e0a8c2723bc3084))
+* [#1646](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1646) add expand row in table if it have children ([1bc979a](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/1bc979af2e89eb18302f2b171a250535dff086e6))
+* [#1646](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1646) add key required ([60e0953](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/60e095308be840c9b5b2c1cfb7bbe12e0e997087))
+* [#1646](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1646) add title table for report group ([8347df7](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/8347df7acd33c91ec1036d892b2eeccbed82a68d))
+* [#1646](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1646) change key row in table ([8ca49dc](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/8ca49dc9d36fabb4ab342cc5a0964dc32c5e6fa7))
+* [#1646](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1646) change name filter type ([9c2bd23](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/9c2bd23ea97d5c299387bee975cfca6e5e45572e))
+* [#1646](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1646) change name in all path ([eda4575](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/eda45750364de04e671bdaa95b6d1f1d18911d72))
+* [#1646](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1646) change name in all path ([8a4958a](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/8a4958a7af6a454a1212881721693edfa42b2394))
+* [#1646](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1646) connect api bill and debt collaborator ([5d9a013](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/5d9a013f04c93db44fb75d1b6cf6adc6c6c0a07c))
+* [#1646](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1646) fix expand row bill and debt ([fb0d960](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/fb0d960baab76c62302057e178bbf9a62ed336cb))
+* [#1646](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1646) ranger, add filter employee seller in report overview ([29c73af](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/29c73af158518d0d6f40053f58f7412fa2f2e647))
+* [#1648](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1648) - hidden filter employee seller in report overview B2C ([9cb76ad](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/9cb76ad34720eb5c56fb0c1fd0714b2b2cb8991c))
+* [#1659](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1659) - add bill common in navbar ([0ebbd39](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/0ebbd39583f2da72696e02b6c04a34e4189377a0))
+* [#1659](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1659) - add search form employee seller ([a0820fe](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/a0820fea4b276347eef99025dee1493afe059cef))
+* [#1659](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1659) - change name in report overview ([7dcf672](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/7dcf672f4d6c69c1db8d52a15377a38f6a169220))
+* [#1659](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1659) - fix filter when change tab ([9d657cb](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/9d657cb2ec21dea33e7f11201fed64f338034b91))
+* [#1659](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1659) - hidden key permission ([7e82e3c](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/7e82e3cf1dbf191347c2b02a602826c5dd392393))
+* [#1659](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1659) add address in list bill ([57fb63d](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/57fb63d8701df5a506a578b45a95ee6c3f86c79b))
+* [#1659](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1659) add column date by status ([a2d724a](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/a2d724a374376baf388749667ac3556550d72fb0))
+* [#1659](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1659) add filter pharmacy in bill ([bd15533](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/bd15533d80622faa85b8b6d33082660edca076d4))
+* [#1659](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1659) add search area, status, startDate, endDate for bill ([b5fe3f1](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/b5fe3f11bf54286bd4ecde7dc65eba83b14e4d32))
+* [#1659](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1659) change to navbar ([a4d15d1](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/a4d15d1b8f0b9e2f64fcdb868666de6e16bfbd9e))
+* [#1659](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1659) color button onclick ([9c77673](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/9c776737987645964c8e580967186f675af79fc5))
+* [#1659](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1659) color button onclick ([34ae0f0](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/34ae0f009b06d0c1d92629f96f874fd5587759a9))
+* [#1659](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1659) fix search filter date and area ([fe3e6c2](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/fe3e6c21b09295f4eb97693307b3a711d1dce7bc))
+* [#1659](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1659) hidden employee seller ([c16dfdc](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/c16dfdc9ed8f557a28c9344381acaaba51b1ac5e))
+* re-count totalPrice ([ba10078](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/ba100784e1246947ace2933bdeb86b320a95aab2))
+* update count voucher ([71b147a](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/71b147ad8b3e14cd7d4b0e872d5471b8f6ef1b89))
+
 ## [1.18.1](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/compare/v1.18.0...v1.18.1) (2024-05-22)
 
 

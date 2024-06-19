@@ -1,12 +1,12 @@
-import { Button, Drawer, Menu, MenuProps, Spin, Tooltip } from 'antd';
-import React, {  useState , useEffect} from 'react';
-import { resource } from './resourceV2';
-import { useGetPolicyCheckAllPage } from '~/modules/user/user.hook';
-import { useGetProfile, useProfile } from '~/modules/auth/auth.hook';
+import { Button, Drawer, Menu, MenuProps, Spin } from 'antd';
+import React, { useEffect, useState } from 'react';
+// import { resource } from './resourceV2';
+import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
+import { keys } from 'lodash';
+import { useGetProfile } from '~/modules/auth/auth.hook';
 import { isMatchPolicy, useUserPolicy } from '~/modules/policy/policy.hook';
 import NavbarItem from './NavbarItem';
-import { keys } from 'lodash';
-import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
+import { resource } from './resourceV3';
 
 
 /**
