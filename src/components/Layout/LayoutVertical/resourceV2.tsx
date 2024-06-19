@@ -535,20 +535,7 @@ export const resource: ItemType[] =[
       },
     ]
   },
-  {
-    label: "Quản lý kho",
-    key: 'warehouse',
-    icon: <i className ="fa-solid fa-warehouse"></i>,
-    permission: [],//
-    children: [
-      {
-        label: "Cấu hình kho mặc định",
-        path:  PATH_APP.warehouse.setting,
-        key: PATH_APP.warehouse.setting,
-        permission: [],//
-      }
-    ]
-  },
+
 ];
 
 

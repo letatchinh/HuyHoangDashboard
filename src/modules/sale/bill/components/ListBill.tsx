@@ -301,23 +301,45 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
         },
       },
       {
-        title: "Lý do huỷ",
-        dataIndex: "cancelNote",
-        key: "cancelNote",
+        title: "Khách đã trả",
+        dataIndex: "pair",
+        key: "pair",
         width: 150,
-        align: "left",
-        render(cancelNote?: any) {
+        align: "center",
+        render(pair, record, index) {
           return (
-            <Typography.Paragraph
-              ellipsis={{
-                tooltip: cancelNote,
-                rows: 2,
-              }}
-            >
-              {cancelNote}
-            </Typography.Paragraph>
+            <Typography.Text>
+              {formatter(pair + get(record, "totalReceiptVoucherCompleted"))}
+            </Typography.Text>
           );
         },
+      },      
+      {
+        title: "Khách phải trả",
+        dataIndex: "totalPrice",
+        key: "totalPrice",
+        width: 150,
+        align: "center",
+        render(totalPrice, record, index) {
+          const remainAmount = CalculateBillMethod.remainAmount(record);
+          return <Typography.Text>{formatter(remainAmount)}</Typography.Text>;
+        },
+      },
+      {
+        title: "Địa chỉ",
+        dataIndex: "deliveryAddressId",
+        key: "deliveryAddressId",
+        width: 350,
+        render(value, record, index) {
+          return concatAddress(value);
+        },
+      },
+      {
+        title: "Kho xuất hàng",
+        dataIndex: "warehouseName",
+        key: "warehouseName",
+        width: 200,
+        align: "center",
       },
       {
         title: "Ghi chú",
@@ -339,42 +361,30 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
         },
       },
       {
-        title: "Khách đã trả",
-        dataIndex: "pair",
-        key: "pair",
-        width: 100,
-        align: "center",
-        render(pair, record, index) {
+        title: "Lý do huỷ",
+        dataIndex: "cancelNote",
+        key: "cancelNote",
+        width: 150,
+        align: "left",
+        render(cancelNote?: any) {
           return (
-            <Typography.Text>
-              {formatter(pair + get(record, "totalReceiptVoucherCompleted"))}
-            </Typography.Text>
+            <Typography.Paragraph
+              ellipsis={{
+                tooltip: cancelNote,
+                rows: 2,
+              }}
+            >
+              {cancelNote}
+            </Typography.Paragraph>
           );
         },
-      },      
-      {
-        title: "Khách phải trả",
-        dataIndex: "totalPrice",
-        key: "totalPrice",
-        width: 100,
-        align: "center",
-        render(totalPrice, record, index) {
-          const remainAmount = CalculateBillMethod.remainAmount(record);
-          return <Typography.Text>{formatter(remainAmount)}</Typography.Text>;
-        },
-      },
-      {
-        title: "Kho xuất hàng",
-        dataIndex: "warehouseName",
-        key: "warehouseName",
-        width: 200,
-        align: "center",
       },
       ...(canCreateBillToWarehouse ? [{
         title: "Thao tác",
         width: 100,
         key: "action",
         align: "center" as any,
+        fixed: "right" as any,
         render(value: any, record: any, index: number) {
           return <Action
             canUpdate={canCreateBillToWarehouse}
@@ -385,15 +395,6 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
           />
         }
       }] : []),
-      {
-        title: "Địa chỉ",
-        dataIndex: "deliveryAddressId",
-        key: "deliveryAddressId",
-        width: 350,
-        render(value, record, index) {
-          return concatAddress(value);
-        },
-      },
       ...(canDownload
         ? [
             {

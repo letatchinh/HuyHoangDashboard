@@ -44,6 +44,9 @@ export default function SaleScreen(props: propsType): React.JSX.Element {
           totalPriceAfterDiscount,
           _id: get(bill, "dataUpdateQuotation.id"),
           totalAmount,
+          dataTransportUnit: get(bill, 'dataTransportUnit'),
+          warehouseBranchId: get(bill, 'warehouseBranchId'),
+          warehouseId: get(bill, 'warehouseId'),
         });
       switch (get(bill, "typeTab")) {
         case "createQuotation":
