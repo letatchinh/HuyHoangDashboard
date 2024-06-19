@@ -16,7 +16,6 @@ export default function StepStatus({
   historyStatus,
   ...props
 }: propsType): React.JSX.Element {
-  console.log(historyStatus,'historyStatus')
   
   // const [current,setCurrent] = useState(1);
   const items: StepProps[] = useMemo(() => {

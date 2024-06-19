@@ -130,7 +130,7 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
     }
   };
   const onRequestWarehouseExport = () => {
-    const submitData = convertDataSentToWarehouse({...bill, notePharmacy:noteForWarehouse});
+    const submitData = convertDataSentToWarehouse({ ...bill, notePharmacy: noteForWarehouse });
     try {
       onCreateBillToWarehouse(submitData);
     } catch (error) {
@@ -227,7 +227,8 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
                   setAskAgain={setAskAgain}
                   billItem={record}
                   onChangeStatusBill={onChangeStatusBill}
-                  onOpenCancel={onOpenCancel} isDisabledAll={isDisabledAll(status)}
+                  onOpenCancel={onOpenCancel}
+                  isDisabledAll={isDisabledAll(status)}
                   isSubmitLoading={isSubmitLoading}
                   id={get(record, '_id')} />
               </div>

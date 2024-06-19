@@ -71,7 +71,6 @@ export default function TotalBill(props: propsType): React.JSX.Element {
   const debtType = Form.useWatch("debtType", form);
   const fee = Form.useWatch("fee", form);
   const canUpdateLogistic = useMatchPolicy(POLICIES.UPDATE_LOGISTIC);
-  console.log(bill?.warehouseName, "bill");
   const onChangeAddress = useCallback(
     (values: any) => {
       const addressString = concatAddress(values?.address);
@@ -284,8 +283,8 @@ export default function TotalBill(props: propsType): React.JSX.Element {
                           label={
                             canUpdateLogistic ? (
                               <span>
-                                <i className="fa-solid fa-truck"></i> Phí vận
-                                chuyển
+                                <i className="fa-solid fa-truck"></i>
+                                Phí vận chuyển
                                 {getFieldValue("pharmacyId") && (
                                   <EditOutlined
                                     onClick={onOpenFormLogistic}

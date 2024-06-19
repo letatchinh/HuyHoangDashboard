@@ -127,15 +127,21 @@ export default function ConfirmStatusBill({
           )}
 
           {status === CLONE_STATUS_BILL.NEW && (
+            <Popconfirm
+              title={'Bạn có chắc chắn muốn huỷ đơn này?'}
+              onConfirm={() => 
+              onChangeStatusBill('CANCELLED',id,billItem)
+              }
+            >
               <Button
                 type="primary"
                 block
                 danger
                 loading={isSubmitLoading}
-                onClick={() => onOpenCancel(get(billItem, "_id", ""))}
               >
                 Huỷ đơn
               </Button>
+              </Popconfirm>
           )}
       </Flex>
   ) : (

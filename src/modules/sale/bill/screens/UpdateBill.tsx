@@ -165,9 +165,9 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
             <StepStatus
               statuses={
                 status !== STATUS_BILL.CANCELLED
-                  ? omit(STATUS_BILL, ["CANCELLED",'READY', 'UNREADY'])
+                  ? omit(STATUS_BILL, [STATUS_BILL.CANCELLED,STATUS_BILL.READY, STATUS_BILL.UNREADY])
                   : omit(STATUS_BILL, [
-                      STATUS_BILL.COMPLETED,
+                      STATUS_BILL.COMPLETED,STATUS_BILL.READY, STATUS_BILL.UNREADY
                     ])
               }
               statusesVi={STATUS_BILL_VI}
@@ -263,7 +263,7 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
                 <WithPermission permission={POLICIES.UPDATE_LOGISTIC}>
                   <Layout label={<Typography.Text>
                     Phí vận chuyển {' '}
-                    {(status === STATUS_BILL.NEW || status !== STATUS_BILL.READY || status !== STATUS_BILL.REQUESTED)
+                    {(status === STATUS_BILL.NEW)
                       && <EditOutlined onClick={onOpenFormLogistic} style={{ color: '#5AB2FF' }} />}
                   </Typography.Text>}>{formatter(get(feeDetail, 'LOGISTIC', 0))}</Layout>
               </WithPermission>
