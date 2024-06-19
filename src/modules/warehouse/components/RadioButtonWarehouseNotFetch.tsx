@@ -1,4 +1,4 @@
-import { Button, Form, Radio, RadioChangeEvent, Row, Space, Spin } from "antd";
+import { Button, Form, Popconfirm, Radio, RadioChangeEvent, Row, Space, Spin } from "antd";
 import { get, head } from "lodash";
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
@@ -19,6 +19,7 @@ type propsType = {
   setWarehouseBranchId?: any;
   warehouseDefault?: any
   updateWarehouseInBill?: (data: any) => void;
+  isConfirmChangeLogistic?: boolean;
 };
 export default function RadioButtonWarehouse({
   setValue,
@@ -32,7 +33,9 @@ export default function RadioButtonWarehouse({
   isSubmitLoading,
   setWarehouseBranchId,
   warehouseDefault,
-  updateWarehouseInBill
+  updateWarehouseInBill,
+  isConfirmChangeLogistic,
+  onCancel
 }: propsType): React.JSX.Element {
   const [form] = Form.useForm();
   const { onNotify } = useNotificationStore();
@@ -41,12 +44,13 @@ export default function RadioButtonWarehouse({
   };
   const onChange = (e: RadioChangeEvent) => {
     setValue(e.target.value);
-    updateWarehouseInBill && updateWarehouseInBill(e.target.value);
+    // updateWarehouseInBill && updateWarehouseInBill(e.target.value);
   };
   const onFinish = (values: any) => {
     if (!values?.warehouseId) {
       return onNotify?.error("Vui lòng chọn kho");
     };
+    updateWarehouseInBill && updateWarehouseInBill(values?.warehouseId);
     onClick && onClick(values);
   };
   useEffect(() => {
@@ -95,8 +99,25 @@ export default function RadioButtonWarehouse({
             loading={isSubmitLoading}
           >
             Yêu cầu xuất kho
-          </Button>}
-          <Button
+        </Button>}
+        {
+          isConfirmChangeLogistic ?
+            <Popconfirm
+              title="Nếu bạn thay đổi kho vận chuyển, phí vận chuyển sẽ phải được tính lại"
+              onConfirm={() => form.submit()}
+              onCancel={onCancel && onCancel}
+            >
+                <Button
+                type="primary"
+                // htmlType="submit"
+                style={{ marginRight: "10px" }}
+                loading={isLoadingWarehouse}
+              >
+                {title ?? "Chọn"}
+              </Button>
+            </Popconfirm>
+          :
+            <Button
             type="primary"
             htmlType="submit"
             style={{ marginRight: "10px" }}
@@ -104,6 +125,8 @@ export default function RadioButtonWarehouse({
           >
             {title ?? "Chọn"}
           </Button>
+        }
+          
         </Row>
       </Form>
   );

@@ -12,6 +12,7 @@ import VoucherModule from '~/modules/vouchers';
 import { useGetWarehouse, useGetWarehouseByBranchLinked } from "~/modules/warehouse/warehouse.hook";
 import { useGetBill } from "../bill.hook";
 import { STATUS_BILL } from "../constants";
+import useNotificationStore from "~/store/NotificationContext";
 
 export type GlobalUpdateBill = {
     bill : any,
@@ -68,7 +69,7 @@ export function UpdateBillProvider({
     const [checkboxPayment, setCheckboxPayment] = useState<string | null>(null);
     const [listWarehouse, isLoadingWarehouse]= useGetWarehouseByBranchLinked();
     const [warehouseDefault, isLoadingDefault] = useGetWarehouse(); //Fetch warehouse default by area
-  
+    const {onNotify} = useNotificationStore();
     const totalRevenueInVouchers = useMemo(() => {
       if (bill?.receiptVouchers?.length > 0) {
         const data = bill?.receiptVouchers?.filter((item: any)=> item?.status !== STATUS_BILL.CANCELLED);
@@ -93,6 +94,7 @@ export function UpdateBillProvider({
   const updateWarehouseInBill = (warehouseId: string) => {
     const data = findWarehouse(warehouseId);
   };
+ 
   //Warehouse
 
   const onOpenForm = () => {

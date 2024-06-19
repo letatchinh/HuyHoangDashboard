@@ -453,7 +453,7 @@ export function CreateBillProvider({
       onChangeBill(newBill);
       onCloseFormLogistic();
     } catch (error) {
-      onNotify?.error("Có lỗi xảy ra khi gắn phí vận chuyển vào dơn hàng");
+      onNotify?.error("Có lỗi xảy ra khi gắn phí vận chuyển vào đơn hàng");
     }
   };
 
@@ -514,21 +514,6 @@ export function CreateBillProvider({
     };
   }, [warehouseDefault, pharmacyInfo]);
 
-  // useEffect(() => {
-  //   if (bill?.warehouseId && warehouseDefault?.length > 0) {
-  //     const findWarehouse = warehouseDefault?.find(
-  //       (item: any) => item?.warehouseId === bill?.warehouseId
-  //     );
-  //     setFormAndLocalStorage({
-  //       ...bill,
-  //       warehouseName: findWarehouse?.name?.vi,
-  //       warehouseBranchId: findWarehouse?._id
-  //     });
-  //     console.log('voday')
-  //     setWarehouseId(findWarehouse?.warehouseId);
-  //     setWarehouseBranchId(findWarehouse?._id);
-  //   };
-  // }, [bill]);
   return (
     <CreateBill.Provider
       value={{
@@ -592,7 +577,8 @@ export function CreateBillProvider({
           title="Xác nhận"
           isLoadingWarehouse={isLoading}
           onClick={onConfirmWarehouse}
-          updateWarehouseInBill = {updateWarehouseInBill}
+          updateWarehouseInBill={updateWarehouseInBill}
+          // isConfirmChangeLogistic 
         />
       </ModalAnt>
       <ModalAnt

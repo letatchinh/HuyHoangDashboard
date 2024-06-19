@@ -16,14 +16,16 @@ export default function StepStatus({
   historyStatus,
   ...props
 }: propsType): React.JSX.Element {
+  console.log(historyStatus,'historyStatus')
   
   // const [current,setCurrent] = useState(1);
   const items: StepProps[] = useMemo(() => {
     const statusMap: StepProps[] = keys(statuses)?.map((status: any) => {
+      const statusHistory = historyStatus?.find((item: any)=> item?.status === status);
       return {
         title: get(statusesVi,status,''),
-        description: get(historyStatus, status)
-          ? dayjs(get(historyStatus, status)).format("DD/MM/YYYY HH:mm:ss")
+        description: statusHistory?.status
+          ? dayjs(statusHistory?.date).format("DD/MM/YYYY HH:mm:ss")
           : "",
         status: status === currentStatus ? "finish" : "wait",
       };

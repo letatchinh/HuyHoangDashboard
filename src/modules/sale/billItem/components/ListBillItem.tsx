@@ -102,7 +102,7 @@ export default function ListBillItem({
             <Typography.Text>
               {get(record, "codeBySupplier")} - {get(product, "name", "")}
             </Typography.Text>
-            {CLONE_STATUS_BILLITEM_LEVEL[status] >= 4 &&
+            {/* {CLONE_STATUS_BILLITEM_LEVEL[status] >= 4 &&
               status !== STATUS_BILL.CANCELLED && (
                 <FormLot
                   isDisabledAll={isDisabledAll}
@@ -112,7 +112,7 @@ export default function ListBillItem({
                   lotNumber={lotNumber}
                   expirationDate={expirationDate}
                 />
-              )}
+              )} */}
           </div>
         );
       },

@@ -151,19 +151,27 @@ class BillClassExtend extends InstanceModuleRedux {
       updateApplyLogisticSuccess: (state: cloneInitState, { payload }: { payload: any }) => {
         state.isSubmitLoading = false;
         state.updateLogisticSuccess = payload;
-        const bill = {
-          ...payload?.data,
-          fee: payload?.data?.fee?.map((item: any) => item?.typeFee === 'LOGISTIC' ? { ...item, value: payload?.data?.dataTransportUnit?.totalFee } : item)
-        };
-        state.byId = {
-          ...state.byId,
-          bill,
-          fee: bill?.fee,
-          feeDetail: {
-            ...state?.byId?.feeDetail,
-            LOGISTIC: payload?.data?.dataTransportUnit?.totalFee
-          },
-        };
+        const fee = payload?.data?.fee?.map((item: any) => item?.typeFee === 'LOGISTIC' ? { ...item, value: payload?.data?.dataTransportUnit?.totalFee } : item)
+        if (payload?.dataTransportUnit?.payer === 'CUSTOMER') {
+          state.byId = {
+            ...state.byId,
+            fee,
+            feeDetail: {
+              ...state?.byId?.feeDetail,
+              LOGISTIC: payload?.data?.dataTransportUnit?.totalFee
+            },
+            totalPrice: fee?.totalFee
+          };
+        } else {
+          state.byId = {
+            ...state.byId,
+            fee,
+            feeDetail: {
+              ...state?.byId?.feeDetail,
+              LOGISTIC: payload?.data?.dataTransportUnit?.totalFee
+            },
+          };
+        }
       },
       updateApplyLogisticFailed: (state:cloneInitState, { payload }:{payload:any}) => {
         state.isSubmitLoading = false;
@@ -217,6 +225,7 @@ class BillClassExtend extends InstanceModuleRedux {
         state.isSubmitLoading = false;
         state.updateStatusBillFailed = payload;
         },
+      
     };
 
     this.cloneInitState = {

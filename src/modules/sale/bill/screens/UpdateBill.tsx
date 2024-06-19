@@ -53,8 +53,8 @@ type FormFieldBillType = {
 const CLONE_STATUS_BILL_VI: any = STATUS_BILL_VI;
 const CLONE_STATUS_BILL: any = STATUS_BILL;
 export default function UpdateBill(props: propsType): React.JSX.Element {
-  const [form] = Form.useForm();
   useResetBillAction();
+  const [form] = Form.useForm();
   const { bill, isLoading,mutateBill,onOpenForm, compareMoney,onOpenFormPayment ,totalRevenueInVouchers, onOpenFormLogistic, warehouseInfo} = useUpdateBillStore();
   const {
     codeSequence,
@@ -73,6 +73,7 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
     totalFee,
     feeDetail,
     refCollection,
+    historyProcessStatus
   } = bill || {};
   const { pathname } = useLocation();
   const keyPermission = useMemo(() => CheckPermission(pathname), [pathname]);
@@ -150,11 +151,6 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
                     onClick={onOpenCancel}
                     disabled={
                       !canUpdateBill
-                      || billItems?.some(
-                        (item: any) =>
-                          get(item, "status") !==
-                          BillItemModule.constants.STATUS_BILLITEM.ORDERING
-                      )
                       || status !== STATUS_BILL.NEW
                     }
                   >
@@ -169,14 +165,14 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
             <StepStatus
               statuses={
                 status !== STATUS_BILL.CANCELLED
-                  ? omit(STATUS_BILL, ["CANCELLED", 'UNREADY'])
+                  ? omit(STATUS_BILL, ["CANCELLED",'READY', 'UNREADY'])
                   : omit(STATUS_BILL, [
                       STATUS_BILL.COMPLETED,
                     ])
               }
               statusesVi={STATUS_BILL_VI}
               currentStatus={status}
-              historyStatus={historyStatus}
+              historyStatus={historyProcessStatus}
             />
           </Col>
         </Row>
