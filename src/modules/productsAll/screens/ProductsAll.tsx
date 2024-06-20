@@ -32,6 +32,7 @@ import {
   useUpdateProductsAllParams,
 } from "../productsAll.hook";
 import { TypeProps } from "../productsAll.modal";
+import SummaryInfoProduct from "../components/SummaryInfoProduct";
 
 export default function ProductsAll(props: TypeProps): React.JSX.Element {
   const [query, onTableChange] = useProductsAllQueryParams();
@@ -63,6 +64,8 @@ export default function ProductsAll(props: TypeProps): React.JSX.Element {
   );
   const [isOpenStock, setIsOpenStock] = useState(false);
   const [dataStock, setDataStock] = useState<itemData | null>(null);
+  const [isOpenSummary, setIsOpenSummary] = useState(false);
+  const [product, setProduct] = useState <null | undefined>(null);
   const openStock = (data: itemData) => {
     setIsOpenStock(true);
     setDataStock(data);
@@ -71,6 +74,14 @@ export default function ProductsAll(props: TypeProps): React.JSX.Element {
   const onCloseStock = () => {
     setIsOpenStock(false);
     setDataStock(null);
+  };
+  const openSummary = (item: any) => {
+    setIsOpenSummary(true);
+    setProduct(item);
+  };
+  const onCloseSummary = () => {
+    setIsOpenSummary(false);
+    setProduct(null);
   };
 
   const onOpenModal = (id: string | null) => {
@@ -293,6 +304,8 @@ export default function ProductsAll(props: TypeProps): React.JSX.Element {
                     onOpenFormProduct(_id, get(record, "supplier._id", null))
                   }
                   onDelete={onDelete}
+                  openSummary={openSummary}
+                  item = {record}
                 />
               );
             },
@@ -386,6 +399,16 @@ export default function ProductsAll(props: TypeProps): React.JSX.Element {
         >
           <StockModal
             data={dataStock} />
+        </ModalAnt>
+      <ModalAnt
+          open={isOpenSummary}
+          destroyOnClose
+          width={800}
+          footer={null}
+          onCancel={onCloseSummary}
+        >
+          <SummaryInfoProduct
+            data={product} />
         </ModalAnt>
     </WhiteBox>
   );

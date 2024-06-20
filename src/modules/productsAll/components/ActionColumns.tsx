@@ -8,12 +8,16 @@ type propsType = {
   onDelete?: (_id: string) => void;
   _id: string;
   isSubmitLoading?: boolean;
+  openSummary?: (item: any) => void;
+  item?: any
 };
 export default function ActionColumn({
   onDetailClick,
   onDelete,
+  openSummary,
   _id,
   isSubmitLoading,
+  item,
 }: propsType): React.JSX.Element {
   return (
     <Flex justify={"center"} align={"middle"} vertical gap={10}>
@@ -25,6 +29,16 @@ export default function ActionColumn({
           size="small"
         >
           Xem chi tiết
+        </Button>
+      </WithPermission>
+      <WithPermission permission={POLICIES.UPDATE_PRODUCT}>
+        <Button
+          icon={<InfoCircleTwoTone />}
+          onClick={() => openSummary && openSummary(item)}
+          // type="primary"
+          size="small"
+        >
+          Xem tóm tắt
         </Button>
       </WithPermission>
       <WithPermission permission={POLICIES.DELETE_PRODUCT}>
