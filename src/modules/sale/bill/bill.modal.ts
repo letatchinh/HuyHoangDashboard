@@ -78,7 +78,6 @@ export interface FormFieldCreateBill {
     deliveryAddressId?: any;
     warehouseId?: string;
     warehouseName?: string;
-    warehouseBranchId?: string;
 }
 export interface PayloadCreateBill extends FormFieldCreateBill {
     quotationItems : Omit<quotation,'variant' | 'variants'>[],

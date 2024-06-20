@@ -55,7 +55,6 @@ try {
     totalPriceAfterDiscount,
     totalAmount,
     warehouseId: get(bill, 'warehouseId'),
-    warehouseBranchId: get(bill, 'warehouseBranchId'),
     warehouseName: get(bill, 'warehouseName'),
   });
   console.log(orderSupplierItems,'orderSupplierItems')

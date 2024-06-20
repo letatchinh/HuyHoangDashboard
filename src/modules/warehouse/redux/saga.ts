@@ -15,7 +15,7 @@ function* getListWarehouse({payload:query} : any) : any {
   }
 }
 
-function* getByIdWarehouse({payload:id} : any) : any {
+function* getWarehouseDefault({payload:id} : any) : any {
   try {
     const data = yield call(api.getById,id);
     yield put(warehouseActions.getByIdSuccess(data));
@@ -26,7 +26,7 @@ function* getByIdWarehouse({payload:id} : any) : any {
 
 function* getByIdWarehouseLinked({payload:id} : any) : any {
   try {
-    const data = yield call(api.getAllWarehouse,id);
+    const data = yield call(api.getAllWarehouse, id);
     yield put(warehouseActions.getWarehouseLinkedSuccess(data));
   } catch (error:any) {
     yield put(warehouseActions.getWarehouseLinkedFailed(error));
@@ -58,7 +58,7 @@ function* checkWarehouse({ payload }: any): any {
     const data = yield call(api.checkWarehouse, payload);
     if (!data?.status) {
       yield put(warehouseActions.checkWarehouseFailed(data));
-      const newData = {status: 'UNREADY', _id: data?.billId, warehouseId: data?.warehouseId,warehouseBranchId: payload?.warehouseBranchId}
+      const newData = {status: 'UNREADY', _id: data?.billId, warehouseId: data?.warehouseId}
       yield put(billSliceAction.updateStatusAfterCheckWarehouseRequest(newData as any));
     } else {
       yield put(warehouseActions.checkWarehouseSuccess(data));
@@ -67,7 +67,6 @@ function* checkWarehouse({ payload }: any): any {
         status: STATUS_BILL.READY,
         _id: data?.billId,
         warehouseId: data?.warehouseId,
-        warehouseBranchId: payload?.warehouseBranchId
       }));
     };
   } catch (error:any) {
@@ -105,7 +104,7 @@ function* deleteWarehouse({payload : id} : any) : any {
 
 export default function* warehouseSaga() {
   yield takeLatest(warehouseActions.getListRequest, getListWarehouse);
-  yield takeLatest(warehouseActions.getByIdRequest, getByIdWarehouse);
+  yield takeLatest(warehouseActions.getWarehouseDefaultRequest, getWarehouseDefault);
   yield takeLatest(warehouseActions.createRequest, createWarehouse);
   yield takeLatest(warehouseActions.updateRequest, updateWarehouse);
   yield takeLatest(warehouseActions.deleteRequest, deleteWarehouse);

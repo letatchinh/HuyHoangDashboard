@@ -280,7 +280,7 @@ export default function ListQuotation({
                     debtType: get(record, "debtType"),
                     fee: get(record, "fee"),
                     deliveryAddress: get(record, "deliveryAddress"),
-                    warehouseBranchId: get(record, 'warehouseBranchId'),
+                    deliveryAddressId: get(record, 'deliveryAddressId'),
                     warehouseId: get(record, 'warehouseId'),
                     warehouseName: get(record, 'warehouseName'),
                   });
@@ -309,7 +309,7 @@ export default function ListQuotation({
                     debtType: get(record, "debtType"),
                     fee: get(record, "fee"),
                     deliveryAddress: get(record, "deliveryAddress"),
-                    warehouseBranchId: get(record, 'warehouseBranchId'),
+                    deliveryAddressId: get(record, 'deliveryAddressId'),
                     warehouseId: get(record, 'warehouseId'),
                     warehouseName: get(record, 'warehouseName'),
                   });

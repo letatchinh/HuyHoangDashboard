@@ -16,10 +16,10 @@ type propsType = {
   requestWarehouseExport?: () => void;
   disabledButtonExport?: boolean;
   isSubmitLoading?: boolean;
-  setWarehouseBranchId?: any;
   warehouseDefault?: any
   updateWarehouseInBill?: (data: any) => void;
   isConfirmChangeLogistic?: boolean;
+  listWarehouseLinked: any[];
 };
 export default function RadioButtonWarehouse({
   setValue,
@@ -31,17 +31,14 @@ export default function RadioButtonWarehouse({
   disabledButtonExport = false,
   requestWarehouseExport,
   isSubmitLoading,
-  setWarehouseBranchId,
   warehouseDefault,
   updateWarehouseInBill,
   isConfirmChangeLogistic,
-  onCancel
+  onCancel,
+  listWarehouseLinked
 }: propsType): React.JSX.Element {
   const [form] = Form.useForm();
   const { onNotify } = useNotificationStore();
-  const findWarehouseManagementArea = (warehouseDefault: any, value: any) => {
-    return warehouseDefault?.find((item: any) => get(item, "warehouseId") === value)
-  };
   const onChange = (e: RadioChangeEvent) => {
     setValue(e.target.value);
     // updateWarehouseInBill && updateWarehouseInBill(e.target.value);
@@ -51,13 +48,11 @@ export default function RadioButtonWarehouse({
       return onNotify?.error("Vui lòng chọn kho");
     };
     updateWarehouseInBill && updateWarehouseInBill(values?.warehouseId);
+    console.log(values,'values')
     onClick && onClick(values);
   };
   useEffect(() => {
     form.setFieldsValue({ warehouseId: value });
-    if (!!warehouseDefault && !!setWarehouseBranchId) {
-      setWarehouseBranchId(findWarehouseManagementArea(warehouseDefault, value)?._id);
-    };
   }, [value]);
 
   return (
@@ -78,11 +73,11 @@ export default function RadioButtonWarehouse({
             >
             <Radio.Group
               onChange={onChange}
-              value={value || get(head(warehouseDefault), "_id")}
+              value={value || get(head(listWarehouseLinked), "_id")}
             >
               <Space direction="vertical">
-                {warehouseDefault?.map((item: any) => (
-                  <Radio value={ get(item, "warehouseId")}>
+                {listWarehouseLinked?.map((item: any) => (
+                  <Radio value={ get(item, "_id")}>
                     {get(item, "name.vi") || get(item, "name")}
                   </Radio>
                 ))}

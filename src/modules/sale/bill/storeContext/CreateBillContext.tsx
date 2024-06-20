@@ -172,8 +172,7 @@ export function CreateBillProvider({
   const [pharmacyInfo, setPharmacyInfo] = useState<any>();
   const [warehouseDefault, isLoading] = useGetWarehouse(); //Fetch warehouse default by area
   const [listWarehouse, isLoadingWarehouse] = useGetWarehouseByBranchLinked(); // Get all warehouse linked with branch
-  const warehouseInfo = useMemo(() => (listWarehouse || []).find((item: any) => item._id === bill?.warehouseId), [bill?.warehouseId, listWarehouse]);
-  const [warehouseBranchId, setWarehouseBranchId] = useState<string | null>(null);
+  const warehouseInfo = useMemo(() => (listWarehouse || [])?.find((item: any) => item._id === bill?.warehouseId), [bill?.warehouseId, listWarehouse]);
   // Controller Data
   const onSave = (row: DataItem) => {
     const newData: DataItem[] = [...quotationItems];
@@ -458,35 +457,33 @@ export function CreateBillProvider({
   };
 
   const onConfirmWarehouse = (data: any) => {
-    const findWarehouse = warehouseDefault?.find(
-      (item: any) => item?.warehouseId === data?.warehouseId
+    const findWarehouse = listWarehouse?.find(
+      (item: any) => item?._id === data?.warehouseId
     );
     setFormAndLocalStorage({
-      warehouseId: findWarehouse?.warehouseId,
+      warehouseId: findWarehouse?._id,
       warehouseName: findWarehouse?.name?.vi,
-      warehouseBranchId
     });
     onCloseModalSelectWarehouse();
   };
 
-  const findWarehouse = (warehouseId: string) => {
-    return warehouseDefault?.find(
-      (item: any) => item?.warehouseId === warehouseId
+  const findWarehouseDefault = (warehouseId: string) => {
+    return listWarehouse?.find(
+      (item: any) => item?._id === warehouseId
     );
   };
   const updateWarehouseInBill = (warehouseId: string) => {
-    const data = findWarehouse(warehouseId);
+    const data = findWarehouseDefault(warehouseId);
         setFormAndLocalStorage({
         ...bill,
         warehouseName: data?.name?.vi,
-        warehouseBranchId: data?._id
       });
   };
   useEffect(() => {
-    if (pharmacyInfo && warehouseDefault?.length > 0 && !bill?.warehouseId) {
-        const address = get(pharmacyInfo,'data.addressDelivery',get(pharmacyInfo,'data.address',''))
-      const findWarehouseDefault = findMatchingManagementArea(address, warehouseDefault);
-        if (findWarehouseDefault) {
+    if ((pharmacyInfo || partner) && !bill?.warehouseId) {
+      const address = get(pharmacyInfo, 'data.addressDelivery', get(pharmacyInfo, 'data.address', ''))
+      if (warehouseDefault?.length > 0) {
+          const findWarehouseDefault = findMatchingManagementArea(address, (warehouseDefault));
           console.log(
             `Địa chỉ nằm trong khu vực của kho: ${findWarehouseDefault?.name?.vi}`
           );
@@ -495,25 +492,22 @@ export function CreateBillProvider({
             ...bill,
             warehouseId: findWarehouseDefault?.warehouseId,
             warehouseName: findWarehouseDefault?.name?.vi,
-            warehouseBranchId: findWarehouseDefault?._id
           });
           setWarehouseId(findWarehouseDefault?.warehouseId);
-          setWarehouseBranchId(findWarehouseDefault?._id);
         } else {
             setFormAndLocalStorage({
               ...bill,
-              warehouseId: warehouseDefault[0]?.warehouseId,
-              warehouseName: warehouseDefault[0]?.name?.vi,
-              warehouseBranchId: warehouseDefault[0]?._id
+              warehouseId: listWarehouse[0]?._id,
+              warehouseName: listWarehouse[0]?.name?.vi,
             });
-          setWarehouseBranchId(warehouseDefault[0]?._id)
-          setWarehouseId(warehouseDefault[0]?.warehouseId);
+          setWarehouseId(warehouseDefault[0]?._id);
           console.log("Địa chỉ không thuộc khu vực kho mặc định nào");
           // onNotify?.warning(`Địa chỉ không thuộc khu vực kho mặc định nào, kho xuất hàng đang được chọn tự động`);
         };   
     };
-  }, [warehouseDefault, pharmacyInfo]);
-
+  }, [warehouseDefault, pharmacyInfo, partner, listWarehouse]);
+console.log(bill,'bill')
+console.log(pharmacyInfo,'pharmacyInfo')
   return (
     <CreateBill.Provider
       value={{
@@ -570,7 +564,6 @@ export function CreateBillProvider({
       >
         <RadioButtonWarehouseNotFetch
           warehouseDefault={warehouseDefault}
-          setWarehouseBranchId={setWarehouseBranchId}
           setValue={setWarehouseId}
           value={warehouseId ?? bill?.warehouseId}
           onCancel={onCloseModalSelectWarehouse}
@@ -579,6 +572,7 @@ export function CreateBillProvider({
           onClick={onConfirmWarehouse}
           updateWarehouseInBill={updateWarehouseInBill}
           // isConfirmChangeLogistic 
+          listWarehouseLinked={listWarehouse}
         />
       </ModalAnt>
       <ModalAnt
@@ -596,8 +590,8 @@ export function CreateBillProvider({
           bill={bill}
           deliveryAddressId={
             !get(bill, "dataUpdateQuotation")
-              ? get(bill, "deliveryAddressId") ??
-                get(pharmacyInfo, "data.address")
+              ? (get(bill, "deliveryAddressId") ??
+                get(pharmacyInfo, "data.address"))
               : get(bill, "deliveryAddressId")
           }
           pharmacy={pharmacyInfo?.data}

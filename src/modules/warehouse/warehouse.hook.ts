@@ -42,8 +42,11 @@ const updateManagementWarehouseFailedSelector = getSelector('updateManagementWar
 const checkWarehouseSuccessSelector = getSelector('checkWarehouseSuccess');
 const checkWarehouseFailedSelector = getSelector('checkWarehouseFailed'); 
 
-const warehouseLinkedSuccessSelector = getSelector('warehouseLinkedSuccess');
-const warehouseLinkedFailedSelector = getSelector('warehouseLinkedFailed'); 
+const warehouseLinkedSuccessSelector = getSelector('warehouseLinked');
+const warehouseLinkedFailedSelector = getSelector('getWarehouseLinkedFailed'); 
+
+const warehouseDefaultSuccessSelector = getSelector('warehouseDefault');
+const warehouseDefaultFailedSelector = getSelector('getWarehouseDefaultFailed'); 
 
 const createBillToWarehouseSuccessSelector = getSelector('createBillToWarehouseSuccess');
 const createBillToWarehouseFailedSelector = getSelector('createBillToWarehouseFailed'); 
@@ -60,10 +63,10 @@ export const useGetWarehouses = (param: any) => {
 export const useGetWarehouse = (id?: any) => {
   const profile = useSelector((state: any) => state.auth.profile);
   return useFetchByParam({
-    action: warehouseActions.getByIdRequest,
+    action: warehouseActions.getWarehouseDefaultRequest,
     loadingSelector: getByIdLoadingSelector,
-    dataSelector: getByIdSelector,
-    failedSelector: getByIdFailedSelector,
+    dataSelector: warehouseDefaultSuccessSelector,
+    failedSelector: warehouseDefaultFailedSelector,
     param: id ?? profile?.profile?.branchId,
   });
 };

@@ -32,10 +32,10 @@ export default function SelectDefaultWarehouse(
   const [listWarehouse, isLoadingWarehouse]= useGetWarehouseByBranchLinked();
   const options = useMemo(
     () =>
-      listWarehouse?.map((item: any) => ({
+      listWarehouse ?  (listWarehouse || [])?.map((item: any) => ({
         label: get(item, "name.vi") || get(item, "name"),
         value: get(item, "_id"),
-      })),
+      })): [],
     [listWarehouse]
   );
 
@@ -89,7 +89,7 @@ export default function SelectDefaultWarehouse(
                         </Button>
                       </Row>
                       <SelectArea form={form} index={index} name={name} isLoading={isLoading} />
-                      <SelectWarehouse options={options} index={index} name={name}  isLoading={isLoading} isLoadingWarehouse={isLoadingWarehouse}/>
+                      <SelectWarehouse options={options || []} index={index} name={name}  isLoading={isLoading} isLoadingWarehouse={isLoadingWarehouse}/>
                     </BaseBorderBox>
                   );
                 })}

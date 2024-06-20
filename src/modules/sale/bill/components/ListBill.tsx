@@ -53,7 +53,7 @@ import { useMatchPolicy } from "~/modules/policy/policy.hook";
 import SelectSupplier from "~/modules/supplier/components/SelectSupplier";
 import RadioButtonWarehouseNotFetch from "~/modules/warehouse/components/RadioButtonWarehouseNotFetch";
 import { warehouseActions } from "~/modules/warehouse/redux/reducer";
-import { convertDataSentToWarehouse, convertProductsFromBill, useCheckWarehouse, useCreateBillToWarehouse, useGetWarehouse } from "~/modules/warehouse/warehouse.hook";
+import { convertDataSentToWarehouse, convertProductsFromBill, useCheckWarehouse, useCreateBillToWarehouse, useGetWarehouse, useGetWarehouseByBranchLinked } from "~/modules/warehouse/warehouse.hook";
 import { useIsAdapterSystem } from "~/utils/hook";
 import { CalculateBill } from "../bill.service";
 import { STATUS_BILL, STATUS_BILL_VI } from "../constants";
@@ -105,11 +105,11 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
   const [bill, loading] = useGetBill(memoId);
   const canCreateBillToWarehouse = useMatchPolicy(POLICIES.WRITE_WAREHOUSELINK);
   const [noteForWarehouse, setNoteForWarehouse] = useState<string>('');
-  const [billItemIdCancel,setBillItemIdCancel] = useState<any>();
-  const [openCancel, setOpenCancel] = useState(false);
+  const [,setBillItemIdCancel] = useState<any>();
   const [askAgain,setAskAgain] = useState(true);
   const [note, setNote] = useState(""); // CancelNote BillItem
-  const [loadingUpdateStatus, onUpdateStatus] = useUpdateStatusBill(() => {
+  const [listWarehouse] = useGetWarehouseByBranchLinked(); // Get all warehouse linked with branch
+  const [, onUpdateStatus] = useUpdateStatusBill(() => {
     dispatch(billSliceAction.resetAction());
   });
   const isHaveAdminBillPermission = useMatchPolicy(POLICIES.ADMIN_BILL);
@@ -117,7 +117,6 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
     if(id){
       setBillItemIdCancel(id);
     }
-    setOpenCancel(true)
   }, []);
   const isDisabledAll = (status: keyof typeof STATUS_BILL) => {
     return status === STATUS_BILL.CANCELLED
@@ -151,12 +150,10 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
   const onCheck = () => {
     try {
       const newList =  convertProductsFromBill(get(bill, 'billItems', []))
-      const warehouseBranchId = warehouseDefault?.find((item: any) => item?.warehouseId === warehouseSelect)?._id
       const submitData = {
         warehouseId: warehouseSelect,
         listProduct: newList,
         billId: get(bill, '_id'),
-        warehouseBranchId
       };
        onCheckWarehouse(submitData);
     } catch (error) {
@@ -179,7 +176,6 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
     //   warehouseId: billItem?.warehouseId,
     //   listProduct: dataCheck,
     //   billId: get(bill, '_id'),
-    //   warehouseBranchId: billItem?.warehouseBranchId
     // };
     // onCheckWarehouse(submitData);
 
@@ -640,6 +636,7 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
                   isSubmitLoading={isSubmitLoading}
                   requestWarehouseExport={onRequestWarehouseExport}
                   warehouseDefault={warehouseDefault}
+                  listWarehouseLinked={listWarehouse}
                 />
                 </BaseBorderBox>
               </>

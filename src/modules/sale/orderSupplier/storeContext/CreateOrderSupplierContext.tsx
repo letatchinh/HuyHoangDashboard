@@ -275,7 +275,6 @@ export function CreateOrderSupplierProvider({
     onChangeBill({
       warehouseId: get(data, "warehouseId"),
       warehouseName: get(data, "name.vi",''),
-      warehouseBranchId: get(data, "_id"),
     });
   };
 

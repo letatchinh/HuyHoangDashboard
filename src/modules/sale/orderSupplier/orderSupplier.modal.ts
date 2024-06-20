@@ -78,7 +78,6 @@ export interface PayloadCreateOrderSupplier extends FormFieldCreateOrderSupplier
     totalAmount: number,
     warehouseId?: string,
     warehouseName?: string,
-    warehouseBranchId?: string,
 }
 export interface PayloadUpdateOrderSupplier  {
     cancelNote? : string,

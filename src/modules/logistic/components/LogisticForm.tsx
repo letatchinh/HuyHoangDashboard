@@ -78,6 +78,7 @@ export default function LogisticForm({
   warehouseInfo,
 }: propsType): React.JSX.Element {
   useResetLogisticAction();
+  console.log(deliveryAddressId,'sadsdsadsad')
   const { onAddLogisticFee } = useCreateBillStore();
   const [form] = Form.useForm();
   const { onNotify } = useNotificationStore();

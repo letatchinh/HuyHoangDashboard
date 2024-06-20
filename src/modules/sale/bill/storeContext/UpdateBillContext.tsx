@@ -67,7 +67,6 @@ export function UpdateBillProvider({
     const [logisticOpen, setLogisticOpen] = useState(false);
     const [checkboxPayment, setCheckboxPayment] = useState<string | null>(null);
     const [listWarehouse, isLoadingWarehouse]= useGetWarehouseByBranchLinked();
-    const [warehouseDefault, isLoadingDefault] = useGetWarehouse(); //Fetch warehouse default by area
     const {onNotify} = useNotificationStore();
     const totalRevenueInVouchers = useMemo(() => {
       if (bill?.receiptVouchers?.length > 0) {
@@ -84,15 +83,7 @@ export function UpdateBillProvider({
     return totalPrice
   }, [bill, totalReceiptVoucherCompleted]);
   
-  const warehouseInfo = useMemo(() => (listWarehouse || []).find((item: any) => item._id === bill?.warehouseId), [bill?.warehouseId, listWarehouse]);
-  const findWarehouse = (warehouseId: string) => {
-    return warehouseDefault?.find(
-      (item: any) => item?.warehouseId === warehouseId
-    );
-  };
-  const updateWarehouseInBill = (warehouseId: string) => {
-    const data = findWarehouse(warehouseId);
-  };
+  const warehouseInfo = useMemo(() => (listWarehouse || [])?.find((item: any) => item._id === bill?.warehouseId), [bill?.warehouseId, listWarehouse]);
  
   //Warehouse
 

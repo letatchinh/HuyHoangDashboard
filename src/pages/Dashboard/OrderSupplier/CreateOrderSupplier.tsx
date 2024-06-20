@@ -16,10 +16,9 @@ export interface ItemDataSource extends FormFieldCreateOrderSupplier  {
   typeTab : "createOrderSupplier",
   orderSupplierItems: orderSupplier[]; // BillItems
   warehouseId?: string;
-  warehouseBranchId?: string;
   warehouseName?: string;
 };
-export const keyValidDataSource = ['typeTab','orderSupplierItems','supplierId','pair','debtType','warehouseId', 'warehouseName','warehouseBranchId'];
+export const keyValidDataSource = ['typeTab','orderSupplierItems','supplierId','pair','debtType','warehouseId', 'warehouseName'];
 
 export interface DataSourceType  {
   [key: string]: ItemDataSource;

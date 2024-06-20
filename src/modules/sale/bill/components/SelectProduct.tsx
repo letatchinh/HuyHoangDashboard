@@ -61,7 +61,9 @@ export default function SelectProduct({dataCurrent,onChangeBill}:propsType) : Re
       const onSelect = async(data:any) => {
           try {
 
-            const productInPartner = get(partner,'products',[])?.find((p:any) => get(p,'productId') === get(data,'_id'))
+            let productInPartner = get(partner, 'products', [])?.find((p: any) => get(p, 'productId') === get(data, '_id'));
+            productInPartner = undefined;
+            // Logic pending because not using
             const discountOther : DiscountOtherType[] = productInPartner ? [{
               typeDiscount : get(productInPartner,'discount.discountType'),
               value : get(productInPartner,'discount.value'),

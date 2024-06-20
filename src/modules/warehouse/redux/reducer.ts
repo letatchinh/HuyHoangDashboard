@@ -10,8 +10,11 @@ interface cloneInitState extends initStateSlice {
   checkWarehouseSuccess?: any;
   checkWarehouseFailed?: any;
 
-  warehouseLinkedSuccess?: any;
+  warehouseLinked?: any;
   warehouseLinkedFailed?: any;
+
+  warehouseDefault?: any[];
+  warehouseDefaultFailed?: any;
 
   createBillToWarehouseSuccess?: any;
   createBillToWarehouseFailed?: any;
@@ -53,11 +56,12 @@ class WarehouseClassExtend extends InstanceModuleRedux {
       },
       getWarehouseLinkedSuccess: (state: cloneInitState, { payload }: any) => {
         state.isLoading = false;
-        state.warehouseLinkedSuccess = payload;
+        state.warehouseLinked = payload;
       },
       getWarehouseLinkedFailed: (state: cloneInitState, { payload }: any) => {
         state.isLoading = false;
         state.warehouseLinkedFailed = payload;
+        state.warehouseLinked = [];
       },
 
       //CREATE BILL TO WAREHOUSE
@@ -74,8 +78,22 @@ class WarehouseClassExtend extends InstanceModuleRedux {
       },
       resetAction: (state: cloneInitState) => ({
         ...state,
-        ...omit(this.cloneInitState, ["list", "warehouseLinkedSuccess", "byId"]),
+        ...omit(this.cloneInitState, ["list", "warehouseLinked", "byId"]),
       }),
+
+      getWarehouseDefaultRequest: (state: cloneInitState, { payload }: any) => {
+        state.isSubmitLoading = true;
+      },
+      
+      getWarehouseDefaultSuccess: (state: cloneInitState, { payload }: any) => {
+        state.isSubmitLoading = false;
+        state.warehouseDefault = payload || [];
+      },
+      getWarehouseDefaultFailed: (state: cloneInitState, { payload }: any) => {
+        state.isSubmitLoading = false;
+        state.warehouseDefaultFailed = payload;
+      },
+
       // Want Add more reducer Here...
     }
     this.cloneInitState = {
@@ -86,8 +104,11 @@ class WarehouseClassExtend extends InstanceModuleRedux {
       checkWarehouseSuccess: null,
       checkWarehouseFailed: null,
 
-      warehouseLinkedSuccess: null,
+      warehouseLinked: [],
       warehouseLinkedFailed: null,
+
+      warehouseDefault: [],
+      warehouseDefaultFailed: null,
 
       createBillToWarehouseSuccess: null,
       createBillToWarehouseFailed: null,
