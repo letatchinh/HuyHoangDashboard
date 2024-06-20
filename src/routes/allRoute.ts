@@ -55,6 +55,7 @@ import ReportIndividualCollaborator from "~/pages/Dashboard/ReportIndividualColl
 import ReportIndividualEmployeeSeller from "~/pages/Dashboard/ReportIndividualEmployeeSeller";
 import ReportGroup from "~/pages/Dashboard/ReportGroupCollaborator";
 import ReportGroupEmployeeSeller from "~/pages/Dashboard/ReportGroupEmployeeSeller";
+import CustomerSegmentation from "~/pages/Dashboard/CustomerSegmentation";
 export const mainRoutes :PathRouteProps[] = [
   { path: PATH_APP.main.root, Component: Homepage },
 
@@ -163,7 +164,7 @@ export const mainRoutes :PathRouteProps[] = [
   // Kênh bán hàng
   { path: PATH_APP.saleChannel.root, Component: SaleChannel},
   
-  // Loại khách hàng
+  // Nhánh khách hàng
   { path: PATH_APP.typePharmacy.root, Component: TypePharmacy},
   
   // Nhóm nhà thuốc
@@ -187,6 +188,9 @@ export const mainRoutes :PathRouteProps[] = [
   // Báo cáo doanh thu đội nhóm
   { path: PATH_APP.reportGroupCollaborator.root, Component: ReportGroup},
   { path: PATH_APP.reportGroupEmployeeSeller.root, Component: ReportGroupEmployeeSeller},
+
+  // Phân hệ khách hàng B2B/ B2C
+  { path: PATH_APP.customerSegmentation.root, Component: CustomerSegmentation},
 
   { path: '/', Component: Homepage },
 ]

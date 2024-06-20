@@ -181,13 +181,6 @@ export const resource: ItemType[] = [
             permission: [POLICIES.READ_CONFIGBENEFIT], //
           },
           {
-            label: "Kênh bán hàng",
-            icon: <i className="fa-solid fa-cart-shopping"></i>,
-            path: PATH_APP.saleChannel.root,
-            key: PATH_APP.saleChannel.root,
-            permission: [POLICIES.READ_SALESCHANNEL],
-          },
-          {
             label: "Cấu hình thời gian tự động",
             path: PATH_APP.configurationCronTime.root,
             key: PATH_APP.configurationCronTime.root,
@@ -195,7 +188,21 @@ export const resource: ItemType[] = [
             permission: [POLICIES.READ_CONFIGCRONTIME],
           },
           {
-            label: "Loại khách hàng",
+            label: "Hệ khách hàng",
+            path: PATH_APP.customerSegmentation.root,
+            key: PATH_APP.customerSegmentation.root,
+            icon: <i className="fa-solid fa-notes-medical"></i>,
+            // permission: [POLICIES.READ_CUSTOMER],
+          },
+          {
+            label: "Kênh bán hàng",
+            icon: <i className="fa-solid fa-cart-shopping"></i>,
+            path: PATH_APP.saleChannel.root,
+            key: PATH_APP.saleChannel.root,
+            permission: [POLICIES.READ_SALESCHANNEL],
+          },
+          {
+            label: "Nhánh khách hàng",
             path: PATH_APP.typePharmacy.root,
             key: PATH_APP.typePharmacy.root,
             icon: <i className="fa-solid fa-truck-medical"></i>,

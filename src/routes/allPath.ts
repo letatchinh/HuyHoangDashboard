@@ -189,4 +189,8 @@ export const PATH_APP = {
     root: path(ROOTS.app, "/report-group-employee-seller")
   },
 
+  customerSegmentation: {
+    root: path(ROOTS.app, "/customer-segmentation")
+  },
+
 };

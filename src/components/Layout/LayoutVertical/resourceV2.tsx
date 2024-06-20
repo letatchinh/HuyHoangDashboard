@@ -202,7 +202,7 @@ export const resource: ItemType[] =[
             permission: [POLICIES.READ_CONFIGCRONTIME],
           },
           {
-            label: "Loại khách hàng",
+            label: "Nhánh khách hàng",
             path: PATH_APP.typePharmacy.root,
             key: PATH_APP.typePharmacy.root,
             icon: <i className="fa-solid fa-truck-medical"></i>,
