@@ -33,7 +33,7 @@ export default function SelectTypePharmacy({
   return (
     <>
       <Form.Item
-        label="Loại khách hàng"
+        label="Nhánh khách hàng"
         name="customerGroupId"
         rules={[{ required: true, message: "Vui lòng chọn loại khách hàng!" }]}
       >
@@ -41,7 +41,7 @@ export default function SelectTypePharmacy({
           isLoading,
           <Select
             // className="right--parent"
-            placeholder="Loại khách hàng"
+            placeholder="Nhánh khách hàng"
             options={options}
             // style={{ width: "100%" }}
             showSearch

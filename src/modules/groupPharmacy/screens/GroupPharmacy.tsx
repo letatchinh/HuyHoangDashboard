@@ -90,7 +90,7 @@ export default function GroupPharmacy(props: propsType): React.JSX.Element {
         width: 220,
       },
       {
-        title: "Loại khách hàng",
+        title: "Nhánh khách hàng",
         dataIndex: "customerGroup",
         key: 'title',
         width: 220,

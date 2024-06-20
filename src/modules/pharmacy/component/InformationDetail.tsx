@@ -99,7 +99,7 @@ export default function InformationDetail(props: propsType) {
         <Row gutter={36}>
           <Col span={12}>
             <div className="content-field">
-              <div className="label">Loại khách hàng: </div>
+              <div className="label">Nhánh khách hàng: </div>
               <div>{info?.customerGroup?.title}</div>
             </div>
             <hr style={{ color: "#0000001a" }} />

@@ -179,7 +179,7 @@ export default function TypePharmacy(props:propsType) : React.JSX.Element {
     useChangeDocumentTitle("Danh sách loại khách hàng")
     return (
       <div>
-        <Breadcrumb title={"Loại khách hàng"} />
+        <Breadcrumb title={"Nhánh khách hàng"} />
         <Row className="mb-3" justify={"space-between"}>
           <Col span={8}>
             <Search
