@@ -213,6 +213,7 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
         key: "codeSequence",
         align: "center",
         width: 150,
+        fixed: "left",
         render(codeSequence, record, index) {
           return (
             <Link

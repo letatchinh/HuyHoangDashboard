@@ -64,7 +64,7 @@ export const useGetWarehouse = (id?: any) => {
   const profile = useSelector((state: any) => state.auth.profile);
   return useFetchByParam({
     action: warehouseActions.getWarehouseDefaultRequest,
-    loadingSelector: getByIdLoadingSelector,
+    loadingSelector: loadingSelector,
     dataSelector: warehouseDefaultSuccessSelector,
     failedSelector: warehouseDefaultFailedSelector,
     param: id ?? profile?.profile?.branchId,

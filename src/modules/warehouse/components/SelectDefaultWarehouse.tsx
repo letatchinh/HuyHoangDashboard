@@ -112,7 +112,7 @@ export default function SelectDefaultWarehouse(
             )}
           </Form.List>
           <Row justify={"end"} className="mt-3">
-            <Button loading={isLoadingSubmit} type="primary" htmlType="submit">
+            <Button loading={ isLoading || (warehouseDefault?.length > 0 && isLoadingSubmit)} type="primary" htmlType="submit">
               Cập nhật
             </Button>
           </Row>

@@ -18,9 +18,9 @@ function* getListWarehouse({payload:query} : any) : any {
 function* getWarehouseDefault({payload:id} : any) : any {
   try {
     const data = yield call(api.getById,id);
-    yield put(warehouseActions.getByIdSuccess(data));
+    yield put(warehouseActions.getWarehouseDefaultSuccess(data));
   } catch (error:any) {
-    yield put(warehouseActions.getByIdFailed(error));
+    yield put(warehouseActions.getWarehouseDefaultFailed(error));
   }
 };
 

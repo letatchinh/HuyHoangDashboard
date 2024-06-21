@@ -27,8 +27,8 @@ class WarehouseClassExtend extends InstanceModuleRedux {
     super('warehouse');
     this.cloneReducer = {
       ...this.initReducer,
-          updateManagementWarehouseRequest: (state: cloneInitState, { payload }: any) => {
-            state.isSubmitLoading = true;
+      updateManagementWarehouseRequest: (state: cloneInitState, { payload }: any) => {
+        state.isSubmitLoading = true;
       },
       updateManagementWarehouseSuccess: (state: cloneInitState, { payload }: any) => {
         state.isSubmitLoading = false;
@@ -82,15 +82,15 @@ class WarehouseClassExtend extends InstanceModuleRedux {
       }),
 
       getWarehouseDefaultRequest: (state: cloneInitState, { payload }: any) => {
-        state.isSubmitLoading = true;
+        state.isLoading = true;
       },
       
       getWarehouseDefaultSuccess: (state: cloneInitState, { payload }: any) => {
-        state.isSubmitLoading = false;
+        state.isLoading = false;
         state.warehouseDefault = payload || [];
       },
       getWarehouseDefaultFailed: (state: cloneInitState, { payload }: any) => {
-        state.isSubmitLoading = false;
+        state.isLoading = false;
         state.warehouseDefaultFailed = payload;
       },
 
@@ -103,7 +103,7 @@ class WarehouseClassExtend extends InstanceModuleRedux {
 
       checkWarehouseSuccess: null,
       checkWarehouseFailed: null,
-
+      isSubmitLoading: false,
       warehouseLinked: [],
       warehouseLinkedFailed: null,
 
