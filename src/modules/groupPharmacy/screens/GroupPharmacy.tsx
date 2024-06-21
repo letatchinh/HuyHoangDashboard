@@ -76,12 +76,12 @@ export default function GroupPharmacy(props: propsType): React.JSX.Element {
         key: "code",
         width: 120,
       },
-      {
-        title: "Hệ số",
-        dataIndex: "rateType",
-        key: "rateType",
-        width: 120,
-      },
+      // {
+      //   title: "Hệ số",
+      //   dataIndex: "rateType",
+      //   key: "rateType",
+      //   width: 120,
+      // },
       
       {
         title: "Tên nhóm khách hàng",
@@ -320,6 +320,7 @@ export default function GroupPharmacy(props: propsType): React.JSX.Element {
           onClose={onCloseForm}
           id={groupPharmacyId}
           handleUpdate={updateGroupPharmacy}
+          query={query}
         />
       </ModalAnt>
     </div>

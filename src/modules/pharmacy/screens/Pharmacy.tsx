@@ -536,6 +536,7 @@ export default function Pharmacy() {
           onClose={onCloseForm}
           id={pharmacyId}
           handleUpdate={updatePharmacy}
+          query={query}
         />
       </ModalAnt>
       <Modal

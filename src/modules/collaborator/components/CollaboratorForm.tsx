@@ -30,6 +30,7 @@ import UploadImage from "~/components/common/Upload/UploadImage";
 import { CalendarOutlined, InfoCircleTwoTone } from "@ant-design/icons";
 import apis from "~/modules/user/user.api";
 import InputNumberAnt from "~/components/Antd/InputNumberAnt";
+import SelectSaleChannel from "~/modules/saleChannel/components/SelectSaleChannel";
 
 const FormItem = Form.Item;
 const { Option } = Select;
@@ -39,12 +40,14 @@ interface IProps {
   handleUpdate?: any;
   handleCreate?: any;
   isSubmitLoading?: boolean;
+  query?: any;
 }
 export default function CollaboratorForm(props: IProps) {
   const refMonth : any = useRef();
   const refYear : any = useRef();
   const [form] = Form.useForm();
-  const { id, handleCloseModal, handleUpdate, handleCreate, isSubmitLoading } =
+  const [formSaleChannel] = Form.useForm();
+  const { id, handleCloseModal, handleUpdate, handleCreate, isSubmitLoading, query } =
     props;
   const [imageUrl, setImageUrl] = useState<string>();
 
@@ -464,6 +467,30 @@ export default function CollaboratorForm(props: IProps) {
                 </Flex>
               </FormItem>
             </Col>
+            <Col span={12}>
+                <FormItem
+                  name={"salesChannelId"}
+                  label="Kênh bán hàng"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Xin vui long chọn kênh bán hàng",
+                    },
+                  ]}
+                  initialValue={query?.salesChannelId || null}
+                >
+                  <SelectSaleChannel
+                    validateFirst={false}
+                    form={formSaleChannel}
+                    // style={{ width: 200 }}
+                    showIcon={false}
+                    size={"middle"}
+                    defaultValue={query?.salesChannelId || null}
+                    divisionText="B2C"
+                    // onChange={(value) => onParamChange({ salesChannelId: value })}
+                  />
+                </FormItem>
+              </Col>
           </Row>
         </BaseBorderBox>
 

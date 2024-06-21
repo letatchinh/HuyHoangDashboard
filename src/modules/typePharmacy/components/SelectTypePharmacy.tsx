@@ -1,55 +1,91 @@
-import { useMemo, useState } from "react";
-import TypePharmacyModule from "~/modules/typePharmacy";
+import { SelectProps } from "antd";
 import { get } from "lodash";
-import { Form, Select } from "antd";
-import { filterSelectWithLabel, useFetchState } from "~/utils/helpers";
-import RenderLoading from "~/components/common/RenderLoading";
+import { useEffect, useState } from "react";
+import DebounceSelect from "~/components/common/DebounceSelect";
+import useNotificationStore from "~/store/NotificationContext";
+import apis from "../typePharmacy.api";
 
-type propsType = {
-  isLoading: boolean;
-  typePharmacy: any;
-  onChange: (value: string) => void;
+interface TypeProps extends SelectProps {
+  form?: any;
+  onChange?: (p: any) => void;
+  allowClear?: boolean;
+  showIcon?: boolean;
+  validateFirst?: boolean;
+  label?: string;
+}
+type ItemSearch = {
+  name: string;
+  value: string;
 };
 export default function SelectTypePharmacy({
-  isLoading,
-  typePharmacy,
-  onChange
-}: propsType): React.JSX.Element {
-  const [reFetch, setReFetch] = useState(false);
-  const [typesPharmacy, loading] = useFetchState({
-    api: TypePharmacyModule.api.searchList,
-    useDocs: false,
-    reFetch,
-  });
-  const options = useMemo(
-    () =>
-      typesPharmacy?.map((item: any) => ({
-        label: get(item, "title"),
-        value: get(item, "_id"),
-      })),
-    [typesPharmacy]
-  );
+  form,
+  onChange = () => {},
+  allowClear = true,
+  showIcon = true,
+  validateFirst = true,
+  label = "",
+  ...props
+}: TypeProps): React.JSX.Element {
+  const { onNotify } = useNotificationStore();
+  const [loading, setLoading] = useState(false);
+  const [initOption, setInitOption] = useState([]);
+  const fetchOptions: any = async (keyword: string) => {
+    try {
+      const employees = await apis.searchList({
+        keyword: keyword || "",
+      });
+      const newOptions = employees?.map(
+        (item: ItemSearch) => ({
+          label: get(item, "title"),
+          value: get(item, "_id"),
+        })
+      );
+
+      return newOptions;
+    } catch (error: any) {
+      onNotify?.error(error?.response?.data?.message || "Có lỗi gì đó xảy ra");
+    }
+  };
+
+  useEffect(() => {
+    const fetchInit = async () => {
+      try {
+        setLoading(true);
+        const employees = await apis.searchList({
+          id: form.getFieldValue("customerGroupId"),
+          keyword: "",
+        });
+
+        const newOptions = employees?.map(
+          (item: ItemSearch) => ({
+            label: get(item, "title"),
+            value: get(item, "_id"),
+          })
+        );
+
+        setInitOption(newOptions);
+        setLoading(false);
+        if (validateFirst) {
+          await form.validateFields(["customerGroupId"]);
+        }
+      } catch (error) {
+        setLoading(false);
+      }
+    };
+    fetchInit();
+  }, []);
 
   return (
-    <>
-      <Form.Item
-        label="Nhánh khách hàng"
-        name="customerGroupId"
-        rules={[{ required: true, message: "Vui lòng chọn loại khách hàng!" }]}
-      >
-        {RenderLoading(
-          isLoading,
-          <Select
-            // className="right--parent"
-            placeholder="Nhánh khách hàng"
-            options={options}
-            // style={{ width: "100%" }}
-            showSearch
-            filterOption={filterSelectWithLabel}
-            onChange={onChange}
-          />
-        )}
-      </Form.Item>
-    </>
+    <DebounceSelect
+      size="large"
+      loading={loading}
+      placeholder="Nhánh khách hàng"
+      fetchOptions={fetchOptions}
+      style={{ width: "100%" }}
+      initOptions={initOption}
+      allowClear={allowClear}
+      {...(onChange && { onChange: (value: any) => onChange(value) })}
+      {...props}
+    />
   );
 }

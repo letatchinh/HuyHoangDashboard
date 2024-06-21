@@ -66,6 +66,15 @@ export default function TypePharmacy(props:propsType) : React.JSX.Element {
           key: "title",
           width: 250,
         },
+        {
+          title: "Kênh bán hàng",
+          dataIndex: "salesChannel",
+          key: "salesChannel",
+          width: 250,
+          render: (record) => {
+            return get(record, "title");
+          }
+        },
         
         {
           title: "Ngày tạo",
@@ -277,6 +286,7 @@ export default function TypePharmacy(props:propsType) : React.JSX.Element {
             onClose={onCloseForm}
             id={typePharmacyId}
             handleUpdate={updateTypePharmacy}
+            query={query}
           />
         </ModalAnt>
         

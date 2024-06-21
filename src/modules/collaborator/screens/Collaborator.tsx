@@ -411,6 +411,7 @@ export default function Collaborator({
                   handleUpdate={handleUpdate}
                   handleCreate={handleCreate}
                   isSubmitLoading={isSubmitLoading}
+                  query={query}
                 />
               ),
             },

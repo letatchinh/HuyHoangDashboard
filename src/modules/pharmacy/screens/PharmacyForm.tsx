@@ -8,29 +8,29 @@ import {
   Select,
   Skeleton,
 } from "antd";
+import TextArea from "antd/es/input/TextArea";
+import dayjs from "dayjs";
+import { get } from "lodash";
+import { useCallback, useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import AddressCommonForm from "~/components/common/AddressCommonForm";
+import AddressFormDelivery from "~/components/common/AddressFormDelivery";
+import AddressFormSection from "~/components/common/AddressFormSection";
+import BaseBorderBox from "~/components/common/BaseBorderBox";
+import RenderLoading from "~/components/common/RenderLoading";
+import SelectEmployee from "~/modules/employee/components/SelectEmployee";
+import SelectGroupPharmacy from "~/modules/groupPharmacy/components/SelectGroupPharmacy";
+import SelectSaleChannel from "~/modules/saleChannel/components/SelectSaleChannel";
+import SelectTypePharmacy from "~/modules/typePharmacy/components/SelectTypePharmacy";
+import { PATH_APP } from "~/routes/allPath";
 import {
   useCreatePharmacy,
   useGetPharmacyId,
   useInitPharmacy,
   useResetPharmacyAction,
+  useUpdatePharmacyParams,
 } from "../pharmacy.hook";
-import { useCallback, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import { PATH_APP } from "~/routes/allPath";
-import AddressFormSection from "~/components/common/AddressFormSection";
 import { convertInitPharmacy, convertSubmitData } from "../pharmacy.service";
-import SelectTypePharmacy from "~/modules/typePharmacy/components/SelectTypePharmacy";
-import SelectGroupPharmacy from "~/modules/groupPharmacy/components/SelectGroupPharmacy";
-import SelectSaleChannel from "~/modules/saleChannel/components/SelectSaleChannel";
-import RenderLoading from "~/components/common/RenderLoading";
-import TextArea from "antd/es/input/TextArea";
-import AddressFormDelivery from "~/components/common/AddressFormDelivery";
-import UploadListFile from "~/modules/freelanceContractPharmacy/component/UploadListFile";
-import { get } from "lodash";
-import AddressCommonForm from "~/components/common/AddressCommonForm";
-import BaseBorderBox from "~/components/common/BaseBorderBox";
-import SelectEmployee from "~/modules/employee/components/SelectEmployee";
-import dayjs from "dayjs";
 const FormItem = Form.Item;
 const { Option } = Select;
 interface Props {
@@ -38,6 +38,7 @@ interface Props {
   id?: any;
   handleUpdate?: any;
   setDestroy: any;
+  query?: any;
 }
 
 export default function PharmacyForm({
@@ -45,8 +46,12 @@ export default function PharmacyForm({
   id,
   handleUpdate,
   setDestroy,
+  query,
 }: Props) {
   const [form] = Form.useForm();
+  const [formSaleChannel] = Form.useForm();
+  const [formCustomerGroup] = Form.useForm();
+  const [formCustomer] = Form.useForm();
   const [isSubmitLoading, handleCreate] = useCreatePharmacy(() => {
     onClose();
     setDestroy && setDestroy(true);
@@ -59,6 +64,8 @@ export default function PharmacyForm({
   const [selectedCustomerGroupId, setSelectedCustomerGroupId] = useState<
     string | undefined
   >();
+  const [keyword, { setKeyword, onParamChange }] =
+    useUpdatePharmacyParams(query);
 
   useEffect(() => {
     if (!id) {
@@ -69,7 +76,10 @@ export default function PharmacyForm({
         ...initPharmacy,
         infoPolicy: {
           ...initPharmacy?.infoPolicy,
-          dateOfBirth: dayjs(initPharmacy?.infoPolicy?.dateOfBirth,'YYYY-MM-DD'),
+          dateOfBirth: dayjs(
+            initPharmacy?.infoPolicy?.dateOfBirth,
+            "YYYY-MM-DD"
+          ),
         },
       });
       setSelectedCustomerGroupId(get(initPharmacy, "customerGroupId"));
@@ -141,10 +151,10 @@ export default function PharmacyForm({
                 </FormItem>
               </Col>
               <Col span={12}>
-                <SelectEmployee 
-                 isLoading={isLoading}
-                 employeeSeller={pharmacy}
-                 />
+                <SelectEmployee
+                  isLoading={isLoading}
+                  employeeSeller={pharmacy}
+                />
               </Col>
             </Row>
             <Row gutter={48} align="middle" justify="space-between">
@@ -224,14 +234,48 @@ export default function PharmacyForm({
 
             <Row gutter={48} align="middle" justify="space-between">
               <Col span={12}>
-                <SelectTypePharmacy
-                  isLoading={isLoading}
-                  typePharmacy={pharmacy}
-                  onChange={onTypePharmacyChange}
-                />
+                <FormItem
+                  name={"customerGroupId"}
+                  label="Nhánh khách hàng"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Xin vui lòng chọn nhánh khách hàng",
+                    },
+                  ]}
+                  initialValue={query?.customerGroupId || null}
+                >
+                  <SelectTypePharmacy
+                    validateFirst={false}
+                    form={formCustomerGroup}
+                    // style={{ width: 200 }}
+                    showIcon={false}
+                    size={"middle"}
+                    defaultValue={query?.customerGroupId || null}
+                  />
+                </FormItem>
               </Col>
               <Col span={12}>
-                <SelectGroupPharmacy isLoading={isLoading} />
+              <FormItem
+                  name={"customerId"}
+                  label="Nhóm khách hàng"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Xin vui lòng chọn nhóm khách hàng",
+                    },
+                  ]}
+                  initialValue={query?.customerId || null}
+                >
+                  <SelectGroupPharmacy
+                    validateFirst={false}
+                    form={formCustomer}
+                    // style={{ width: 200 }}
+                    showIcon={false}
+                    size={"middle"}
+                    defaultValue={query?.customerId || null}
+                  />
+                </FormItem>
               </Col>
             </Row>
             <Row gutter={48} align="middle" justify="space-between">
@@ -255,10 +299,28 @@ export default function PharmacyForm({
                 </FormItem>
               </Col>
               <Col span={12}>
-                <SelectSaleChannel
-                  isLoading={isLoading}
-                  saleChannel={pharmacy}
-                />
+                <FormItem
+                  name={"salesChannelId"}
+                  label="Kênh bán hàng"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Xin vui long chọn kênh bán hàng",
+                    },
+                  ]}
+                  initialValue={query?.salesChannelId || null}
+                >
+                  <SelectSaleChannel
+                    validateFirst={false}
+                    form={formSaleChannel}
+                    // style={{ width: 200 }}
+                    showIcon={false}
+                    size={"middle"}
+                    defaultValue={query?.salesChannelId || null}
+                    divisionText="B2B"
+                    // onChange={(value) => onParamChange({ salesChannelId: value })}
+                  />
+                </FormItem>
               </Col>
             </Row>
             <FormItem

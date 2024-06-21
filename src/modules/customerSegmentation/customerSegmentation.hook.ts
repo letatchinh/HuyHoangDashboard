@@ -95,21 +95,17 @@ export const useDeleteCustomerSegmentation = (callback?: any) => {
 
 export const useCustomerSegmentationQueryParams = () => {
   const query = useQueryParams();
-  const limit = query.get("limit") || 10;
-  const page = query.get("page") || 1;
   const keyword = query.get("keyword");
   const createSuccess = useSelector(createSuccessSelector);
   const updateSuccess = useSelector(updateSuccessSelector);
   const deleteSuccess = useSelector(deleteSuccessSelector);
   return useMemo(() => {
     const queryParams = {
-      page,
-      limit,
       keyword,
     };
     return [queryParams];
     //eslint-disable-next-line
-  }, [page, limit, keyword, createSuccess,updateSuccess, deleteSuccess]);
+  }, [keyword, createSuccess,updateSuccess, deleteSuccess]);
 };
 
 export const useUpdateCustomerSegmentationParams = (
