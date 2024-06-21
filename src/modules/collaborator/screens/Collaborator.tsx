@@ -174,7 +174,7 @@ export default function Collaborator({
   };
   const columns: ColumnsType = [
     {
-      title: "Mã cộng tác viên",
+      title: "Mã khách hàng B2C",
       dataIndex: "partnerNumber",
       key: "partnerNumber",
       // render: (value: any, record: any) => (
@@ -184,7 +184,7 @@ export default function Collaborator({
       // ),
     },
     {
-      title: "Tên cộng tác viên",
+      title: "Tên khách hàng B2C",
       dataIndex: "fullName",
       key: "fullName",
       render : (value: any, record: any) => <Typography.Link onClick={() => handleOpenModal(get(record,'_id'))}>{value}</Typography.Link>
@@ -315,7 +315,7 @@ export default function Collaborator({
       : []),
   ];
 
-  useChangeDocumentTitle("Danh sách cộng tác viên");
+  useChangeDocumentTitle("Danh sách khách hàng B2C");
 
   const onChange = (e: any) => {
     onParamChange({ ...query, processStatus: e.target.value});
@@ -338,7 +338,7 @@ export default function Collaborator({
                     api="partner"
                     exportOption="partner"
                     query={query}
-                    fileName="Danh sách cộng tác viên"
+                    fileName="Danh sách khách hàng B2C"
                     ids={arrCheckBox}
                   />
                 </Col>
@@ -397,7 +397,7 @@ export default function Collaborator({
         }}
         destroyOnClose={destroy}
       >
-        <h4>{`${!id ? "Tạo mới " : "Cập nhật"}`} cộng tác viên</h4>
+        <h4>{`${!id ? "Tạo mới " : "Cập nhật"}`} khách hàng B2C</h4>
         <Tabs
           destroyInactiveTabPane
           items={[

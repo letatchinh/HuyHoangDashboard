@@ -17,7 +17,7 @@ import {
 import { typePharmacyActions } from "./redux/reducer";
 import { STATUS } from "~/constants/defaultValue";
 const MODULE = "typePharmacy";
-const MODULE_VI = "loại nhà thuốc";
+const MODULE_VI = "loại khách hàng B2B";
 
 const {
   loadingSelector,

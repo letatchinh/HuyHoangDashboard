@@ -187,7 +187,7 @@ export default function ListQuotation({
       },
     },
     {
-      title: "Tên nhà thuốc",
+      title: "Tên khách hàng B2B",
       dataIndex: "pharmacy",
       key: "pharmacy",
       width: 100,
@@ -200,7 +200,7 @@ export default function ListQuotation({
             <Tooltip
               className="mx-1"
               title={
-                refCollection === "partner" ? "Cộng tác viên" : "Nhà thuốc"
+                refCollection === "partner" ? "Khách hàng B2C" : "Khách hàng B2B"
               }
             >
               {refCollection === "partner" ? (

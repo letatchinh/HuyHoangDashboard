@@ -167,10 +167,10 @@ export const mainRoutes :PathRouteProps[] = [
   // Nhánh khách hàng
   { path: PATH_APP.typePharmacy.root, Component: TypePharmacy},
   
-  // Nhóm nhà thuốc
+  // Nhóm khách hàng B2B
   { path: PATH_APP.groupPharmacy.root, Component:  GroupPharmacy},
   
-  // Cộng tác viên
+  // Khách hàng B2C
   { path: PATH_APP.collaborator.root, Component: CollaboratorPage},
 
   // 

@@ -131,7 +131,7 @@ export function UpdateBillProvider({
             pharmacyId: pharmacyId,
             refCollection: REF_COLLECTION.PHARMA_PROFILE,
             debt: compareMoney,
-            note: 'Chi cho nhà thuốc vì thu dư',
+            note: 'Chi cho khách hàng B2B vì thu dư',
             totalAmount: compareMoney,
           }}
         />

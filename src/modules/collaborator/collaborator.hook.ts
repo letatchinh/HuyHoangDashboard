@@ -15,7 +15,7 @@ import {
 import { collaboratorActions } from "./redux/reducer";
 import { RootState } from "~/redux/store";
 const MODULE = "collaborator";
-const MODULE_VI = "cộng tác viên";
+const MODULE_VI = "khách hàng B2C";
 
 const getSelector = (key: string) => (state: any) => state.collaborator[key];
 const {

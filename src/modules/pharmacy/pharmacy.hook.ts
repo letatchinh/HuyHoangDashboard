@@ -21,7 +21,7 @@ const getSelector = (key: keyof cloneInitState) => (state: RootState) =>
   state[MODULE][key];
 
 const MODULE = "pharmacy";
-const MODULE_VI = "nhà thuốc";
+const MODULE_VI = "khách hàng B2B";
 
 const {
   loadingSelector,

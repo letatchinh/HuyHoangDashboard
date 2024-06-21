@@ -16,7 +16,7 @@ import {
 import { groupPharmacyActions } from "./redux/reducer";
 import { STATUS } from "~/constants/defaultValue";
 const MODULE = "groupPharmacy";
-const MODULE_VI = "nhóm nhà thuốc";
+const MODULE_VI = "nhóm khách hàng B2B";
 
 const {
   loadingSelector,

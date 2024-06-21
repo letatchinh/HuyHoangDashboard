@@ -56,7 +56,7 @@ const ProductListSuggest: React.FC = () => {
       {
         typeDiscount: get(productInPartner, "discount.discountType"),
         value: get(productInPartner, "discount.value"),
-        name: "Chiết khấu từ cộng tác viên",
+        name: "Chiết khấu từ khách hàng B2C",
       },
     ] : [];
     const billItem: any = selectProductSearchBill({

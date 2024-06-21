@@ -65,7 +65,7 @@ export default function SelectProduct({dataCurrent,onChangeBill}:propsType) : Re
             const discountOther : DiscountOtherType[] = productInPartner ? [{
               typeDiscount : get(productInPartner,'discount.discountType'),
               value : get(productInPartner,'discount.value'),
-              name : 'Chiết khấu từ cộng tác viên'
+              name : 'Chiết khấu từ khách hàng B2C'
             }] : []
             inputEl.current.blur();
           const quotation : any = selectProductSearchBill({
@@ -103,7 +103,7 @@ export default function SelectProduct({dataCurrent,onChangeBill}:propsType) : Re
         notFoundContent={<div><Empty /></div>}
         style={{width : 300}}
         popupMatchSelectWidth={600}
-        // placeholder={!get(dataCurrent,'pharmacyId') ? <Typography.Text strong style={{color : 'white'}}><StopOutlined/> Vui lòng Chọn nhà thuốc trước</Typography.Text> :<span><SearchOutlined /> Thêm sản phẩm vào đơn</span>}
+        // placeholder={!get(dataCurrent,'pharmacyId') ? <Typography.Text strong style={{color : 'white'}}><StopOutlined/> Vui lòng Chọn khách hàng B2B trước</Typography.Text> :<span><SearchOutlined /> Thêm sản phẩm vào đơn</span>}
         dropdownRender={() => {
           return (
             <TableAnt

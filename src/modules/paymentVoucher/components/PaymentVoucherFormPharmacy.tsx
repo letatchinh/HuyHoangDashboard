@@ -62,7 +62,7 @@ import "./form.scss";
 
     const { onClose, initData,callback} = props;
     const [profile] = useGetProfileUser();
-    const { debt, pharmacyId, refCollection, method, totalAmount,note = "Chi cho nhà thuốc đạt luỹ kế" } = initData;
+    const { debt, pharmacyId, refCollection, method, totalAmount,note = "Chi cho khách hàng B2B đạt luỹ kế" } = initData;
     const [form] = Form.useForm();
     const ref = useRef();
     const [accountingDetails, setAccountingDetails] = useState([]);
@@ -82,7 +82,7 @@ import "./form.scss";
   
     const [dataAccounting, setDataAccounting] = useState([
       {
-        content: `Phát thưởng luỹ kế cho nhà thuốc`,
+        content: `Phát thưởng luỹ kế cho khách hàng B2B`,
         debitAccount: 635,
         creditAccount: DEFAULT_ACCOUNT,
         amountOfMoney: totalAmount || 0,
@@ -206,13 +206,13 @@ import "./form.scss";
                   <Row gutter={36}>
                     <Col span={12}>
                       <FormItem
-                        label={`Mã nhà thuốc`}
+                        label={`Mã khách hàng B2B`}
                         labelCol={{ lg: 8 }}
                         name="code"
                         rules={[
                           {
                             required: true,
-                            message: `Vui lòng nhập mã nhà thuốc !`,
+                            message: `Vui lòng nhập mã khách hàng B2B !`,
                           },
                         ]}
                       >
@@ -222,7 +222,7 @@ import "./form.scss";
                     </Col>
                     <Col span={12}>
                       <FormItem
-                        label={'nhà thuốc'}
+                        label={'khách hàng B2B'}
                         labelCol={{ lg: 8 }}
                         name="pharmacy"
                         rules={[

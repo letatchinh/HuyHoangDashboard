@@ -164,7 +164,7 @@ const CollaboratorGroup = ({ currentTab }: CollaboratorGroupProps) => {
       />
     );
   };
-  useChangeDocumentTitle("Danh sách nhóm cộng tác viên");
+  useChangeDocumentTitle("Danh sách nhóm khách hàng B2C");
   const columns = useResourceColumns(renderPermission);
   const refRight = useRef<any>()
   return (

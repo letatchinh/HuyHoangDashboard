@@ -129,7 +129,7 @@ export default function Pharmacy() {
   const columns: ColumnsType = useMemo(
     () => [
       {
-        title: "Mã nhà thuốc",
+        title: "Mã khách hàng B2B",
         // dataIndex: "code",
         key: "code",
         width: 120,
@@ -149,7 +149,7 @@ export default function Pharmacy() {
         },
       },
       {
-        title: "Tên nhà thuốc",
+        title: "Tên khách hàng B2B",
         dataIndex: "name",
         fixed: activeTab==='2'?"left":false,
         key: "name",
@@ -361,7 +361,7 @@ export default function Pharmacy() {
   const onChange = (e: any) => {
     onParamChange({ ...query, status: e.target.value, processStatus: null });
   };
-  useChangeDocumentTitle("Danh sách nhà thuốc");
+  useChangeDocumentTitle("Danh sách khách hàng B2B");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const showModal = () => {
     setIsModalOpen(true);
@@ -418,7 +418,7 @@ export default function Pharmacy() {
             <WithPermission permission={POLICIES.DOWNLOAD_PHARMAPROFILE}>
               <Col>
                 <ExportExcelButton
-                  fileName="Danh sách nhà thuốc"
+                  fileName="Danh sách khách hàng B2B"
                   api="pharma-profile"
                   exportOption="pharma"
                   query={query}

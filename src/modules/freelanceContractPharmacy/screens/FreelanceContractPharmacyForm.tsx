@@ -74,7 +74,7 @@ const FreelanceContractPharmacyForm = ({
   return (
     <div className="freelance-contract page-wraper form-page-content">
       <h4 style={{ margin: "20px 0 40px 20px" }}>
-        {id ? " Cập nhật" : "Thêm mới"} hợp đồng khoán nhà thuốc
+        {id ? " Cập nhật" : "Thêm mới"} hợp đồng khoán khách hàng B2B
       </h4>
       <div className="container-fluid">
         <Form
@@ -93,7 +93,7 @@ const FreelanceContractPharmacyForm = ({
             showIcon={false}
             validateFirst={false}
             required={false}
-            label="Nhà thuốc:"
+            label="Khách hàng B2B:"
           />
           <FormItem
             label="Mã hợp đồng"

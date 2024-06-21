@@ -51,7 +51,7 @@ export default function ExpandRowOrderItem({
         historyStatus={historyStatus}
       />
       <Divider />
-      <h5>Lịch sử nhà thuốc đặt hàng</h5>
+      <h5>Lịch sử khách hàng B2B đặt hàng</h5>
       <Table
         dataSource={orderRef}
         columns={[
@@ -72,7 +72,7 @@ export default function ExpandRowOrderItem({
             },
           },
           {
-            title: "Tên nhà thuốc",
+            title: "Tên khách hàng B2B",
             dataIndex: "pharmacy",
             key: "pharmacy",
           },

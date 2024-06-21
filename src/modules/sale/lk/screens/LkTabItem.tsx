@@ -113,7 +113,7 @@ export default function LkTabItem({
       },
     },
     {
-      title: "Nhà thuốc",
+      title: "Khách hàng B2B",
       dataIndex: "pharmacy",
       key: "pharmacy",
       align: "center",

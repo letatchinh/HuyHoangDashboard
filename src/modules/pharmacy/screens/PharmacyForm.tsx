@@ -113,7 +113,7 @@ export default function PharmacyForm({
   return (
     <div className="pharmacy-profile page-wraper form-page-content">
       <h4 style={{ margin: "20px 0 40px 20px" }}>
-        {id ? " Cập nhật" : "Thêm mới"} nhà thuốc
+        {id ? " Cập nhật" : "Thêm mới"} khách hàng B2B
       </h4>
       <div className="container-fluid">
         <Form
@@ -129,12 +129,12 @@ export default function PharmacyForm({
         >
           <BaseBorderBox title={"Thông tin chung"}>
             <FormItem
-              label="Tên nhà thuốc"
+              label="Tên khách hàng B2B"
               name="name"
               labelCol={{ sm: 24, md: 24, lg: 3 }}
               wrapperCol={{ sm: 24, md: 24, lg: 21 }}
               rules={[
-                { required: true, message: "Xin vui lòng nhập tên nhà thuốc" },
+                { required: true, message: "Xin vui lòng nhập tên khách hàng B2B" },
               ]}
             >
               <Input />
@@ -221,7 +221,7 @@ export default function PharmacyForm({
                 </FormItem>
               </Col>
             </Row>
-            <h5 style={{ textAlign: "center" }}>Địa chỉ nhà thuốc</h5>
+            <h5 style={{ textAlign: "center" }}>Địa chỉ khách hàng B2B</h5>
             <AddressFormSection
               form={form}
               cityCode={cityCode}

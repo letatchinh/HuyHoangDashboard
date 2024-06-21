@@ -126,7 +126,7 @@ export default function SelectPharmacy({
           rules={[
             {
               required: required,
-              message: typeData === "ctv" ? "Vui lòng chọn cộng tác viên" : "Vui lòng chọn nhà thuốc",
+              message: typeData === "ctv" ? "Vui lòng chọn khách hàng B2C" : "Vui lòng chọn nhà thuốc",
             },
           ]}
           colon={false}
@@ -136,7 +136,7 @@ export default function SelectPharmacy({
           <DebounceSelect
             size="large"
             loading={loading}
-            placeholder= {typeData === "ctv" ? "Chọn cộng tác viên" : "Chọn nhà thuốc"}
+            placeholder= {typeData === "ctv" ? "Chọn khách hàng B2C" : "Chọn nhà thuốc"}
             fetchOptions={fetchOptions}
             style={{ width: "100%" }}
             initOptions={initOption}

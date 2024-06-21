@@ -22,14 +22,14 @@ export default function InformationDetail(props: propsType) {
         <Row gutter={36}>
           <Col span={12}>
             <div className="content-field">
-              <div className="label">Mã nhà thuốc: </div>
+              <div className="label">Mã khách hàng B2B: </div>
               <div>{info?.code}</div>
             </div>
             <hr style={{ color: "#0909091a" }} />
           </Col>
           <Col span={12}>
             <div className="content-field">
-              <div className="label">Tên nhà thuốc: </div>
+              <div className="label">Tên khách hàng B2B: </div>
               <div>{info?.name}</div>
             </div>
             <hr style={{ color: "#0909091a" }} />
