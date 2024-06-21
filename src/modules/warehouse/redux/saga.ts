@@ -87,7 +87,7 @@ function* updateManagementWarehouse({payload} : any) : any {
   try {
     const data = yield call(api.updateManagementWarehouse, payload);
     yield put(warehouseActions.updateManagementWarehouseSuccess(data));
-    yield put(warehouseActions.getByIdRequest(data?.data?._id));
+    yield put(warehouseActions.getWarehouseDefaultRequest(data?.data?._id));
   } catch (error:any) {
     yield put(warehouseActions.updateManagementWarehouseFailed(error));
   }
