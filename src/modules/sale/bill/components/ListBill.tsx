@@ -252,6 +252,7 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
         key: "pharmacy",
         width: 200,
         align: "left",
+        width: 150,
         render(pharmacy, record, index) {
           return <Typography.Text>{get(pharmacy, "name", "")}</Typography.Text>;
         },

@@ -479,6 +479,7 @@ export function CreateBillProvider({
         warehouseName: data?.name?.vi,
       });
   };
+  console.log(bill,'bill')
   useEffect(() => {
     if ((pharmacyInfo || partner) && !bill?.warehouseId) {
       const address = get(pharmacyInfo, 'data.addressDelivery', get(pharmacyInfo, 'data.address', ''))
@@ -496,7 +497,7 @@ export function CreateBillProvider({
           setWarehouseId(findWarehouseDefault?.warehouseId);
         } else {
             setFormAndLocalStorage({
-              ...bill,
+              ...(bill && bill),
               warehouseId: listWarehouse[0]?._id,
               warehouseName: listWarehouse[0]?.name?.vi,
             });
@@ -506,8 +507,6 @@ export function CreateBillProvider({
         };   
     };
   }, [warehouseDefault, pharmacyInfo, partner, listWarehouse]);
-console.log(bill,'bill')
-console.log(pharmacyInfo,'pharmacyInfo')
   return (
     <CreateBill.Provider
       value={{
