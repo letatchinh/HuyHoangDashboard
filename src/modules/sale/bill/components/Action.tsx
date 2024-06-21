@@ -15,12 +15,7 @@ type propsType = {
   onOpenModalSelectWarehouse?: () => void;
 };
 export default function Action({
-  onCheckWarehouse,
-  branchId,
-  isSubmitLoading,
-  canDelete,
   canUpdate,
-  title = "",
   statusBill,
   onOpenModalSelectWarehouse,
 }: propsType): React.JSX.Element {
@@ -29,10 +24,23 @@ export default function Action({
       ? [
           {
             label:
-              statusBill !== STATUS_BILL.NEW ? (
+              (statusBill === STATUS_BILL.NEW || statusBill === STATUS_BILL.REJECT) ? (
+                <Button
+                // disabled={statusBill !== STATUS_BILL.NEW || statusBill !== STATUS_BILL.REJECT}
+                icon={<InfoCircleTwoTone />}
+                onClick={() =>
+                  onOpenModalSelectWarehouse && onOpenModalSelectWarehouse()
+                }
+                type="primary"
+                size="small"
+                style={{ width: "100%" }}
+              >
+                Kiểm kho
+              </Button>
+              ) : (
                 <Tooltip title="Chỉ được kiểm kho ở đơn hàng đang xử lý">
                   <Button
-                    disabled={statusBill !== STATUS_BILL.NEW}
+                    disabled={true}
                     icon={<InfoCircleTwoTone />}
                     onClick={() =>
                       onOpenModalSelectWarehouse && onOpenModalSelectWarehouse()
@@ -44,19 +52,6 @@ export default function Action({
                     Kiểm kho
                   </Button>
                 </Tooltip>
-              ) : (
-                <Button
-                  disabled={statusBill !== STATUS_BILL.NEW}
-                  icon={<InfoCircleTwoTone />}
-                  onClick={() =>
-                    onOpenModalSelectWarehouse && onOpenModalSelectWarehouse()
-                  }
-                  type="primary"
-                  size="small"
-                  style={{ width: "100%" }}
-                >
-                  Kiểm kho
-                </Button>
               ),
             key: "1",
           },

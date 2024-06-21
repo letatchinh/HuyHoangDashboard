@@ -18,7 +18,7 @@ export default function HistoryBillInWarehouse({
         return (
           <List.Item>
             <Typography.Text mark>{STATUS_BILL_VI[status]}</Typography.Text>
-            {' '}{dayjs(item?.date).format("DD/MM/YYYY HH:mm")}
+            {' '}{dayjs(item?.date).format("DD/MM/YYYY HH:mm:ss")}
           </List.Item>
         );
       }}

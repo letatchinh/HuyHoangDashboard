@@ -19,10 +19,10 @@ type propsType = {
   setAskAgain?: (p: any) => void;
   id?: string | null | undefined;
 };
-const CLONE_STATUS_BILL_VI: any = omit(STATUS_BILL_VI, ["READY","UNREADY", "REQUESTED"]);
-const CLONE_STATUS_BILL_VI_REQUESTED: any = omit(STATUS_BILL_VI, ["READY","UNREADY"]);
-const CLONE_STATUS_BILL: any = omit(STATUS_BILL, ["READY","UNREADY","REQUESTED"]);
-const CLONE_STATUS_BILL_REQUESTED: any = omit(STATUS_BILL, ["READY","UNREADY"]);
+const CLONE_STATUS_BILL_VI: any = omit(STATUS_BILL_VI, ["READY","UNREADY", "REQUESTED","REJECT"]);
+const CLONE_STATUS_BILL_VI_REQUESTED: any = omit(STATUS_BILL_VI, ["READY","UNREADY","REJECT"]);
+const CLONE_STATUS_BILL: any = omit(STATUS_BILL, ["READY","UNREADY","REQUESTED","REJECT"]);
+const CLONE_STATUS_BILL_REQUESTED: any = omit(STATUS_BILL, ["READY","UNREADY","REJECT"]);
 export default function ConfirmStatusBill({
   onChangeStatusBill,
   billItem,
@@ -101,7 +101,10 @@ export default function ConfirmStatusBill({
                 <Button
                   icon={<ArrowUpOutlined />}
                   block
-                  type="primary"
+                  style={{
+                    backgroundColor: "#F7F9F2",
+                  }}
+                  // type="primary"
                   disabled={isDisabledAll || !!message}
                   loading={isSubmitLoading}
                 >
@@ -114,7 +117,7 @@ export default function ConfirmStatusBill({
               <Button
                 icon={<ArrowUpOutlined />}
                 block
-                type="primary"
+                // type="primary"
                 disabled={isDisabledAll || !!message}
                 loading={isSubmitLoading}
                 onClick={() =>
@@ -136,7 +139,10 @@ export default function ConfirmStatusBill({
               <Button
                 type="primary"
                 block
-                danger
+                danger  
+                style={{
+                  backgroundColor: "rgb(201, 0, 0)",
+                }}
                 loading={isSubmitLoading}
               >
                 Huỷ đơn

@@ -1,4 +1,4 @@
-import { EditOutlined, LeftOutlined, SendOutlined } from "@ant-design/icons";
+import { EditOutlined, LeftOutlined } from "@ant-design/icons";
 import {
   Button,
   Col,
@@ -52,6 +52,14 @@ type FormFieldBillType = {
 }
 const CLONE_STATUS_BILL_VI: any = STATUS_BILL_VI;
 const CLONE_STATUS_BILL: any = STATUS_BILL;
+
+// const CLONE_STATUS_BILL_VI_WITH_OMIT: any = omit(STATUS_BILL_VI, [
+//   STATUS_BILL.COMPLETED,STATUS_BILL.READY, STATUS_BILL.UNREADY
+// ]) 
+const CLONE_STATUS_BILL_WITH_OMIT: any =  omit(STATUS_BILL, [
+  STATUS_BILL.COMPLETED,STATUS_BILL.READY, STATUS_BILL.UNREADY
+]) ;
+
 export default function UpdateBill(props: propsType): React.JSX.Element {
   useResetBillAction();
   const [form] = Form.useForm();
@@ -60,17 +68,13 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
     codeSequence,
     createdAt,
     status,
-    historyStatus,
-    billItems,
     pair,
-    totalPrice,
     createBy,
     note,
     totalAmount,
     totalReceiptVoucherCompleted,
     totalReceiptAmount,
     remainAmount,
-    totalFee,
     feeDetail,
     refCollection,
     historyProcessStatus
@@ -165,10 +169,8 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
             <StepStatus
               statuses={
                 status !== STATUS_BILL.CANCELLED
-                  ? omit(STATUS_BILL, [STATUS_BILL.CANCELLED,STATUS_BILL.READY, STATUS_BILL.UNREADY])
-                  : omit(STATUS_BILL, [
-                      STATUS_BILL.COMPLETED,STATUS_BILL.READY, STATUS_BILL.UNREADY
-                    ])
+                  ? omit(CLONE_STATUS_BILL_WITH_OMIT, [STATUS_BILL.REJECT ])
+                  : (status === STATUS_BILL.REJECT ? CLONE_STATUS_BILL_WITH_OMIT :  omit(CLONE_STATUS_BILL_WITH_OMIT, [ STATUS_BILL.REJECT  ]))
               }
               statusesVi={STATUS_BILL_VI}
               currentStatus={status}

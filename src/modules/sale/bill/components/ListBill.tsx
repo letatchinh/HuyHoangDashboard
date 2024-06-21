@@ -143,7 +143,7 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
     }
   );
 
-  const [isLoadingCheckWarehouse, onCheckWarehouse] = useCheckWarehouse(() => {
+  const [, onCheckWarehouse] = useCheckWarehouse(() => {
     dispatch(warehouseActions.resetAction());
   });
 
