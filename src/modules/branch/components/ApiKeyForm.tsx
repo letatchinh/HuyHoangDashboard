@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { Button, Form, Input, Row, Select } from "antd";
+import { Button, Form, Input, Popconfirm, Row, Select } from "antd";
 import BaseBorderBox from "~/components/common/BaseBorderBox";
 import TableAnt from "~/components/Antd/TableAnt";
 import { ColumnsType } from "antd/es/table";
@@ -10,74 +10,59 @@ import StatusTagWarehouse from "./StatsusTagWarehouse";
 type propsType = {
   updateApiKey?: any;
   id: string | null | undefined;
+  onClose?: () => void;
+  onDelete?: (branchId: string | undefined |null) => void;
 };
-type WarehouseItemType = {
-  _id: string;
-  name: string;
-  createdAt: string;
-  apiKey: string;
-};
-export default function ApiKeyForm({updateApiKey, id}: propsType): React.JSX.Element {
+export default function ApiKeyForm({updateApiKey, id,onClose, onDelete}: propsType): React.JSX.Element {
   const [newApiKey, setNewApiKey] = React.useState<string>("");
-  const [branch, loading] = useGetBranch(id);
-  // const [listWarehouse, loadingWarehouse] = useGetListWarehouseInPMS();
   const [form] = Form.useForm();
-
-  // const optionsWarehouse = useMemo(() => listWarehouse?.map((item: any)=> ({value: item?._id, label: item?.name})), []);
-  const onFinish = (values: any) => {
-    console.log(values)
-    // updateApiKey({ ...values, id });
-  };
 
   const onValuesChange = (value: string) => {
   };
 
-  const columns: ColumnsType = useMemo(() => [
-    {
-      title : "Tên kho",
-      dataIndex : "warehouse",
-      key: "warehouse",
-      render: (warehouse) => <span>{warehouse?.name}</span>,
-    },
-    {
-      title : "Ngày liên kết",
-      dataIndex : "createdAt",
-      key: "createdAt",
-      render: (createdAt) => dayjs(createdAt).format("DD/MM/YYYY HH:mm:ss"),
-    },
-    {
-      title : "Trạng thái liên kết kho",
-      dataIndex : "statusLinkWarehouse",
-      key: "statusLinkWarehouse",
-      render: (value) => {
-        console.log(value)
-        return <StatusTagWarehouse status={value}/>
-      },
-    },
-    {
-      title : "Mã liên kết",
-      dataIndex : "apiKey",
-      key : "apiKey",
-    },
+  // const columns: ColumnsType = useMemo(() => [
+  //   {
+  //     title : "Tên kho",
+  //     dataIndex : "warehouse",
+  //     key: "warehouse",
+  //     render: (warehouse) => <span>{warehouse?.name}</span>,
+  //   },
+  //   {
+  //     title : "Ngày liên kết",
+  //     dataIndex : "createdAt",
+  //     key: "createdAt",
+  //     render: (createdAt) => dayjs(createdAt).format("DD/MM/YYYY HH:mm:ss"),
+  //   },
+  //   {
+  //     title : "Trạng thái liên kết kho",
+  //     dataIndex : "statusLinkWarehouse",
+  //     key: "statusLinkWarehouse",
+  //     render: (value) => {
+  //       console.log(value)
+  //       return <StatusTagWarehouse status={value}/>
+  //     },
+  //   },
+  //   {
+  //     title : "Mã liên kết",
+  //     dataIndex : "apiKey",
+  //     key : "apiKey",
+  //   },
 
-  ], []);
+  // ], []);
   return (
     <Form
       form={form}
       labelCol={{ span: 8 }}
       wrapperCol={{ span: 16 }}
       initialValues={{ remember: true }}
-      onFinish={onFinish}
       onValuesChange={onValuesChange}
       autoComplete="off"
       labelAlign="left"
     >
       <BaseBorderBox>
-        <BaseBorderBox title={'Thay đổi mã liên kết'}>
           <Form.Item name={'apiKey'} label = {'Mã liên kết'}>
             <Input onChange={(e) => setNewApiKey(e.target.value)} value={newApiKey}/>
           </Form.Item>
-        </BaseBorderBox>
       </BaseBorderBox>
       <Row justify={"end"} className="mt-3 mb-3">
         <Button
@@ -90,6 +75,13 @@ export default function ApiKeyForm({updateApiKey, id}: propsType): React.JSX.Ele
         >
           Cập nhật
         </Button>
+        <Popconfirm
+          title={'Hành động này sẽ xoá toàn bộ các liên kết kho trước đó?'}
+          onCancel={onClose}
+          onConfirm={() =>onDelete && onDelete(id)}
+        >
+        <Button style={{ marginRight: "10px" }} danger type="primary"> Xoá mã liên kết </Button>
+        </Popconfirm>
         <Button> Huỷ </Button>
       </Row>
     </Form>

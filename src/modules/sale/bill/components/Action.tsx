@@ -9,18 +9,20 @@ type propsType = {
   branchId: number;
   isSubmitLoading?: boolean;
   canDelete?: boolean;
-  canUpdate: boolean;
+  canUpdate?: boolean;
   title?: string;
   statusBill?: string;
   onOpenModalSelectWarehouse?: () => void;
+  canCreateBillToWarehouse?: boolean;
 };
 export default function Action({
   canUpdate,
   statusBill,
   onOpenModalSelectWarehouse,
+  canCreateBillToWarehouse,
 }: propsType): React.JSX.Element {
   const items: MenuProps["items"] = [
-    ...(canUpdate
+    ...(canCreateBillToWarehouse
       ? [
           {
             label:

@@ -17,6 +17,8 @@ import {
 } from "../warehouse.hook";
 import { useGetProfile } from "~/modules/auth/auth.hook";
 import { get } from "lodash";
+import WithPermission from "~/components/common/WithPermission";
+import POLICIES from "~/modules/policy/policy.auth";
 type propsType = {};
 
 export default function SelectDefaultWarehouse(
@@ -93,6 +95,7 @@ export default function SelectDefaultWarehouse(
                     </BaseBorderBox>
                   );
                 })}
+                <WithPermission permission={POLICIES.UPDATE_WAREHOUSELINK}>
                 <Form.Item>
                   <Row>
                     <Button
@@ -108,14 +111,17 @@ export default function SelectDefaultWarehouse(
                     </Button>
                   </Row>
                 </Form.Item>
+              </WithPermission>
               </div>
             )}
           </Form.List>
+          <WithPermission permission={POLICIES.UPDATE_WAREHOUSELINK}>
           <Row justify={"end"} className="mt-3">
             <Button loading={ isLoading || (warehouseDefault?.length > 0 && isLoadingSubmit)} type="primary" htmlType="submit">
               Cập nhật
             </Button>
           </Row>
+          </WithPermission>
         </WhiteBox>
       </Form>
     </>

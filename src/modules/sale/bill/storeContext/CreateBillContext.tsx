@@ -31,6 +31,8 @@ import { useGetDebtRule } from "../bill.hook";
 import { DebtType, FeeType, quotation } from "../bill.modal";
 import { reducerDiscountQuotationItems } from "../bill.service";
 import { defaultFee } from "../constants";
+import { useMatchPolicy } from "~/modules/policy/policy.hook";
+import POLICIES from "~/modules/policy/policy.auth";
 const TYPE_DISCOUNT = {
   "DISCOUNT.CORE": "DISCOUNT.CORE",
   "DISCOUNT.SOFT": "DISCOUNT.SOFT",
@@ -96,6 +98,8 @@ export type GlobalCreateBill = {
   pharmacyInfo: any;
   warehouseInfo: any;
   updateWarehouseInBill: (warehouseId: string) => any;
+  canReadLogistic: boolean;
+  canReadWarehouse: boolean;
 };
 const CreateBill = createContext<GlobalCreateBill>({
   quotationItems: [],
@@ -136,7 +140,10 @@ const CreateBill = createContext<GlobalCreateBill>({
   setPharmacyInfo: () => {},
   pharmacyInfo: null,
   warehouseInfo: null,
-  updateWarehouseInBill: () => {}
+  updateWarehouseInBill: () => { },
+
+  canReadLogistic: false,
+  canReadWarehouse: false
 });
 
 type CreateBillProviderProps = {
@@ -173,6 +180,9 @@ export function CreateBillProvider({
   const [warehouseDefault, isLoading] = useGetWarehouse(); //Fetch warehouse default by area
   const [listWarehouse, isLoadingWarehouse] = useGetWarehouseByBranchLinked(); // Get all warehouse linked with branch
   const warehouseInfo = useMemo(() => (listWarehouse || [])?.find((item: any) => item._id === bill?.warehouseId), [bill?.warehouseId, listWarehouse]);
+
+  const canReadLogistic = useMatchPolicy(POLICIES.READ_LOGISTIC);
+  const canReadWarehouse = useMatchPolicy(POLICIES.READ_WAREHOUSELINK);
   // Controller Data
   const onSave = (row: DataItem) => {
     const newData: DataItem[] = [...quotationItems];
@@ -549,6 +559,8 @@ export function CreateBillProvider({
         pharmacyInfo,
         warehouseInfo,
         updateWarehouseInBill,
+        canReadLogistic,
+        canReadWarehouse,
       }}
     >
       {children}

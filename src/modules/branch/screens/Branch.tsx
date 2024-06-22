@@ -9,12 +9,14 @@ import { concatAddress } from "~/utils/helpers";
 import { useChangeDocumentTitle } from "~/utils/hook";
 import StatusTagWarehouse from "../components/StatsusTagWarehouse";
 import useBranchContext, { BranchProviderContext } from "../store/BranchContext";
+import POLICIES from "~/modules/policy/policy.auth";
+import { useMatchPolicy } from "~/modules/policy/policy.hook";
 
 export default function BranchScreen() {
   useChangeDocumentTitle("Danh sách chi nhánh");
   const {closeForm, openForm,openFormApiKey, branches, paging, id, isSubmitLoading, isLoading, onParamChange} = useBranchContext();
   const { t }: any = useTranslate();
-
+  const canUpdateApiKey = useMatchPolicy(POLICIES.UPDATE_WAREHOUSELINK);
   const columns : ColumnsType = [
     {
       title : "Tên chi nhánh",
@@ -47,15 +49,15 @@ export default function BranchScreen() {
       width: 180,
       render: (value, record) =>  (record?.listWarehouse || [])?.map((item: any)=> <Tag>{item?.name?.vi}</Tag>)
     },
-    {
+    ...(canUpdateApiKey? [{
       title : "Mã liên kết",
       key: "id",
-      align: "center",
+      align: "center" as any,
       width: 150,
-      render(value, record, index) {
+      render(value: any, record: any, index: any) {
         return <Button type="primary" onClick={()=>  openFormApiKey({branchId: record?._id})}>Mã liên kết kho</Button>
-      },
-    },
+      }
+    }]:[]),
   ];
 
   return (
@@ -65,7 +67,9 @@ export default function BranchScreen() {
         <SelectSearch
           showSelect = {false}
           isShowButtonAdd
-          handleOnClickButton = {openForm}
+          handleOnClickButton={openForm}
+          permissionKey={[POLICIES.WRITE_BRANCH]}
+          onSearch={(e: any)=> onParamChange({keyword: e})}
         />
         <TableAnt
           dataSource={branches} 

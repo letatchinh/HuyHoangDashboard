@@ -96,7 +96,7 @@ export function BranchProviderContext({ children }: BranchProps) {
         width={700}
         onCancel={closeFormApiKey}
         open={isOpenModalApiKey}
-        title="Mã liên kết kho"
+        title="Cập nhật mã liên kết kho"
         footer={null}
         confirmLoading={isSubmitLoading}
         destroyOnClose

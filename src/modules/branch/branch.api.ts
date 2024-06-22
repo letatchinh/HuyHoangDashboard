@@ -8,6 +8,7 @@ const apis = {
     create: (data?: any) => requester.post(`/api/v1/branch`, data),
     update: (data?: any) => requester.put(`/api/v1/branch/${get(data,'_id')}`, data),
     delete: (id?: any) => requester.delete(`/api/v1/branch/${id}`),
-    updateApiKey: (data?: any) => requester.put(`/api/v1/branch-apiKey/${get(data,'id')}`, omit(data, ['id'])),
+    updateApiKey: (data?: any) => requester.put(`/api/v1/branch-apiKey/${get(data, 'id')}`, omit(data, ['id'])),
+    deleteApiKey: (id?: any) => requester.delete(`/api/v1/branch-apiKey/${id}`),
 }
 export default apis;

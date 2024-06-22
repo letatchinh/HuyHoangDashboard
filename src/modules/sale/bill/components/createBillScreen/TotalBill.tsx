@@ -63,6 +63,8 @@ export default function TotalBill(props: propsType): React.JSX.Element {
     onOpenFormLogistic,
     bill,
     onOpenModalSelectWarehouse,
+    canReadLogistic,
+    canReadWarehouse,
   } = useCreateBillStore();
   const [minFee, setMinFee] = useState<any>();
   const [openAddress, setOpenAddress] = useState(false);
@@ -70,7 +72,6 @@ export default function TotalBill(props: propsType): React.JSX.Element {
   const onCloseAddress = useCallback(() => setOpenAddress(false), []);
   const debtType = Form.useWatch("debtType", form);
   const fee = Form.useWatch("fee", form);
-  const canUpdateLogistic = useMatchPolicy(POLICIES.UPDATE_LOGISTIC);
   const onChangeAddress = useCallback(
     (values: any) => {
       const addressString = concatAddress(values?.address);
@@ -281,7 +282,7 @@ export default function TotalBill(props: propsType): React.JSX.Element {
                           labelCol={{ span: 8 }}
                           labelAlign="left"
                           label={
-                            canUpdateLogistic ? (
+                            canReadLogistic ? (
                               <span>
                                 <i className="fa-solid fa-truck"></i>
                                 Phí vận chuyển
@@ -359,12 +360,14 @@ export default function TotalBill(props: propsType): React.JSX.Element {
         label={
           <span>
             <i className="fa-solid fa-location-dot"></i> Kho xuất hàng
+            <WithPermission permission={POLICIES.UPDATE_WAREHOUSELINK}>
             {bill?.warehouseId && (
               <EditOutlined
                 onClick={onOpenModalSelectWarehouse}
                 style={{ color: "#5AB2FF" }}
               />
             )}
+            </WithPermission>
           </span>
         }
         styleFlex={{justifyContent: 'start'}}

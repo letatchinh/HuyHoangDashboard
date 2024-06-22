@@ -41,6 +41,9 @@ const getListWarehouseFailed = getSelector('getListWarehouseFailed');
 const updateApiKeySuccessSelector = getSelector('updateApiKeySuccess');
 const updateApiKeyFailedSelector = getSelector('updateApiKeyFailed');
 
+const deleteApiKeySuccessSelector = getSelector('deleteApiKeySuccess');
+const deleteApiKeyFailedSelector = getSelector('deleteApiKeyFailed');
+
 export const useBranchPaging = () => useSelector(pagingSelector);
 
 export const useGetBranches = (params: any) => {
@@ -105,6 +108,16 @@ export const useDeleteBranch = (callback?: any) => {
 
   return useSubmit({
     action: branchSliceAction.deleteRequest,
+    loadingSelector: isSubmitLoadingSelector,
+  });
+};
+
+export const useDeleteApiKey = (callback?: any) => {
+  useSuccess(deleteApiKeySuccessSelector, `Xoá toàn bộ liên kết kho thành công`, callback);
+  useFailed(deleteApiKeyFailedSelector);
+
+  return useSubmit({
+    action: branchSliceAction.deleteApiKeyRequest,
     loadingSelector: isSubmitLoadingSelector,
   });
 };

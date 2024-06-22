@@ -252,7 +252,6 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
         key: "pharmacy",
         width: 200,
         align: "left",
-        width: 150,
         render(pharmacy, record, index) {
           return <Typography.Text>{get(pharmacy, "name", "")}</Typography.Text>;
         },
@@ -275,15 +274,17 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
                     statusVi={CLONE_STATUS_BILL_VI?.[status]}
                   />
                 </ToolTipBadge>
-                <ConfirmStatusBill
-                  askAgain={askAgain}
-                  setAskAgain={setAskAgain}
-                  billItem={record}
-                  onChangeStatusBill={onChangeStatusBill}
-                  onOpenCancel={onOpenCancel}
-                  isDisabledAll={isDisabledAll(status)}
-                  isSubmitLoading={isSubmitLoading}
-                  id={get(record, '_id')} />
+                <WithPermission permission={POLICIES.UPDATE_BILLSTATUS}>
+                  <ConfirmStatusBill
+                    askAgain={askAgain}
+                    setAskAgain={setAskAgain}
+                    billItem={record}
+                    onChangeStatusBill={onChangeStatusBill}
+                    onOpenCancel={onOpenCancel}
+                    isDisabledAll={isDisabledAll(status)}
+                    isSubmitLoading={isSubmitLoading}
+                    id={get(record, '_id')} />
+                </WithPermission>
               </div>
           )
         }
@@ -385,11 +386,11 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
         fixed: "right" as any,
         render(value: any, record: any, index: number) {
           return <Action
-            canUpdate={canCreateBillToWarehouse}
             branchId={record._id}
             onCheckWarehouse={onCheckWarehouse}
             onOpenModalSelectWarehouse={() => openModalCheckWarehouse(record)}
             statusBill={record?.status}
+            canCreateBillToWarehouse={canCreateBillToWarehouse}
           />
         }
       }] : []),

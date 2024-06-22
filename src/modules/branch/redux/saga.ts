@@ -55,6 +55,15 @@ function* deleteBranch({payload : id} : any) : any {
   }
 };
 
+function* deleteApiKey({payload : id} : any) : any {
+  try {
+    const data = yield call(api.deleteApiKey,id);
+    yield put(branchSliceAction.deleteApiKeySuccess(data));
+  } catch (error:any) {
+    yield put(branchSliceAction.deleteApiKeyFailed(error));
+  }
+};
+
 function* updateApiKey({payload} : any) : any {
   try {
     const data = yield call(api.updateApiKey,payload);
@@ -72,5 +81,6 @@ export default function* branchSaga() {
   yield takeLatest(branchSliceAction.createRequest, createBranch);
   yield takeLatest(branchSliceAction.updateRequest, updateBranch);
   yield takeLatest(branchSliceAction.deleteRequest, deleteBranch);
+  yield takeLatest(branchSliceAction.deleteApiKeyRequest, deleteApiKey);
   yield takeLatest(branchSliceAction.updateApiKeyRequest, updateApiKey);
 }
