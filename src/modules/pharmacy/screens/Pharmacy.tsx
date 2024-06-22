@@ -129,7 +129,7 @@ export default function Pharmacy() {
   const columns: ColumnsType = useMemo(
     () => [
       {
-        title: "Mã khách hàng B2B",
+        title: "Mã khách hàng",
         // dataIndex: "code",
         key: "code",
         width: 120,
@@ -149,7 +149,7 @@ export default function Pharmacy() {
         },
       },
       {
-        title: "Tên khách hàng B2B",
+        title: "Tên khách hàng",
         dataIndex: "name",
         fixed: activeTab==='2'?"left":false,
         key: "name",

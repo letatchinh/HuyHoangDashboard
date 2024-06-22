@@ -174,7 +174,7 @@ export default function Collaborator({
   };
   const columns: ColumnsType = [
     {
-      title: "Mã khách hàng B2C",
+      title: "Mã khách hàng",
       dataIndex: "partnerNumber",
       key: "partnerNumber",
       // render: (value: any, record: any) => (
@@ -184,7 +184,7 @@ export default function Collaborator({
       // ),
     },
     {
-      title: "Tên khách hàng B2C",
+      title: "Tên khách hàng",
       dataIndex: "fullName",
       key: "fullName",
       render : (value: any, record: any) => <Typography.Link onClick={() => handleOpenModal(get(record,'_id'))}>{value}</Typography.Link>

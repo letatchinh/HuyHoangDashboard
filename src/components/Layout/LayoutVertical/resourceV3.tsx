@@ -397,7 +397,7 @@ export const resource: ItemType[] = [
     permission: [...permissionPharma], //
     children: [
       {
-        label: "Danh sách Khách hàng B2B",
+        label: "Quản lý khách hàng B2B",
         path: PATH_APP.pharmacy.root,
         key: PATH_APP.pharmacy.root,
         permission: [POLICIES.READ_PHARMAPROFILE], //

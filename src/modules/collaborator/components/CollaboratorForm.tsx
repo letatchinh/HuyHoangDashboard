@@ -310,7 +310,7 @@ export default function CollaboratorForm(props: IProps) {
                   <Tooltip
                     placement="topLeft"
                     // zIndex={2001}
-                    title={<p>Phải chọn nhóm Khách hàng B2C</p>}
+                    title={<p>Phải chọn nhóm khách hàng</p>}
                   >
                     <Badge
                       size="small"
@@ -326,7 +326,7 @@ export default function CollaboratorForm(props: IProps) {
                 rules={[
                   {
                     required: false,
-                    message: "Xin vui lòng chọn nhóm khách hàng B2C!",
+                    message: "Xin vui lòng chọn nhóm khách hàng!",
                   },
                 ]}
               >
