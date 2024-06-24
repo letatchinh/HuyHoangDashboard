@@ -1,4 +1,3 @@
-import { REF_COLLECTION } from "~/constants/defaultValue";
 
 function path(root: any, sublink: any) {
   return `${root}${sublink}`;

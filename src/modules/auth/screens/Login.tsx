@@ -1,7 +1,7 @@
-import { Button, Form, Input, Space } from "antd";
+import { Button, Form, Input } from "antd";
 import { omit } from "lodash";
 import { useEffect } from "react";
-import { Link, redirect, useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import logoLight from "~/assets/images/logo-light.png";
 import WhiteBox from "~/components/common/WhiteBox";
 import AuthModule from "~/modules/auth";
