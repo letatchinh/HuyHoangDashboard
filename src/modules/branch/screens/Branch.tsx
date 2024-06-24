@@ -11,6 +11,7 @@ import StatusTagWarehouse from "../components/StatsusTagWarehouse";
 import useBranchContext, { BranchProviderContext } from "../store/BranchContext";
 import POLICIES from "~/modules/policy/policy.auth";
 import { useMatchPolicy } from "~/modules/policy/policy.hook";
+import Action from "../components/Action";
 
 export default function BranchScreen() {
   useChangeDocumentTitle("Danh sách chi nhánh");
@@ -50,12 +51,12 @@ export default function BranchScreen() {
       render: (value, record) =>  (record?.listWarehouse || [])?.map((item: any)=> <Tag>{item?.name?.vi}</Tag>)
     },
     ...(canUpdateApiKey? [{
-      title : "Mã liên kết",
-      key: "id",
+      title : "Thao tác",
+      key: "action",
       align: "center" as any,
       width: 150,
       render(value: any, record: any, index: any) {
-        return <Button type="primary" onClick={()=>  openFormApiKey({branchId: record?._id})}>Mã liên kết kho</Button>
+        return  <Action id = {record?._id}/>
       }
     }]:[]),
   ];

@@ -41,9 +41,6 @@ const getListWarehouseFailed = getSelector('getListWarehouseFailed');
 const updateApiKeySuccessSelector = getSelector('updateApiKeySuccess');
 const updateApiKeyFailedSelector = getSelector('updateApiKeyFailed');
 
-const deleteApiKeySuccessSelector = getSelector('deleteApiKeySuccess');
-const deleteApiKeyFailedSelector = getSelector('deleteApiKeyFailed');
-
 export const useBranchPaging = () => useSelector(pagingSelector);
 
 export const useGetBranches = (params: any) => {
@@ -55,15 +52,6 @@ export const useGetBranches = (params: any) => {
     param: params,
   });
 };
-
-// export const useGetBranches = () => {
-//   return useFetch({
-//     action: branchSliceAction.getListRequest,
-//     loadingSelector: loadingSelector,
-//     dataSelector: listSelector,
-//     failedSelector: getListFailedSelector,
-//   });
-// };
 export const useGetBranch = (id: any) => {
   return useFetchByParam({
     action: branchSliceAction.getByIdRequest,
@@ -112,15 +100,6 @@ export const useDeleteBranch = (callback?: any) => {
   });
 };
 
-export const useDeleteApiKey = (callback?: any) => {
-  useSuccess(deleteApiKeySuccessSelector, `Xoá toàn bộ liên kết kho thành công`, callback);
-  useFailed(deleteApiKeyFailedSelector);
-
-  return useSubmit({
-    action: branchSliceAction.deleteApiKeyRequest,
-    loadingSelector: isSubmitLoadingSelector,
-  });
-};
 
 export const useBranchQueryParams = () => {
   const query = useQueryParams();

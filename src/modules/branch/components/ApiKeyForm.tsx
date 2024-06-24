@@ -75,14 +75,7 @@ export default function ApiKeyForm({updateApiKey, id,onClose, onDelete}: propsTy
         >
           Cập nhật
         </Button>
-        {/* <Popconfirm
-          title={'Hành động này sẽ xoá toàn bộ các liên kết kho trước đó?'}
-          onCancel={onClose}
-          onConfirm={() =>onDelete && onDelete(id)}
-        >
-        <Button style={{ marginRight: "10px" }} danger type="primary"> Xoá mã liên kết </Button>
-        </Popconfirm> */}
-        <Button> Huỷ </Button>
+        <Button onClick={onClose}> Huỷ </Button>
       </Row>
     </Form>
   );

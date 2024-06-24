@@ -19,6 +19,9 @@ interface cloneInitState extends initStateSlice {
   createBillToWarehouseSuccess?: any;
   createBillToWarehouseFailed?: any;
 
+  deleteWarehouseLinkedSuccess?: any;
+  deleteWarehouseLinkedFailed?: any;
+
 };
 class WarehouseClassExtend extends InstanceModuleRedux {
   cloneReducer;
@@ -94,6 +97,19 @@ class WarehouseClassExtend extends InstanceModuleRedux {
         state.warehouseDefaultFailed = payload;
       },
 
+      deleteWarehouseLinkedRequest: (state: cloneInitState) => {
+        state.isSubmitLoading = true;
+      },
+
+      deleteWarehouseLinkedSuccess: (state: cloneInitState, { payload }: any) => {
+        state.isSubmitLoading = false;
+        state.deleteWarehouseLinkedSuccess = payload;
+      },
+      deleteWarehouseLinkedFailed: (state: cloneInitState, { payload }: any) => {
+        state.isSubmitLoading = false;
+        state.deleteWarehouseLinkedFailed = payload;
+      },
+
       // Want Add more reducer Here...
     }
     this.cloneInitState = {
@@ -112,6 +128,9 @@ class WarehouseClassExtend extends InstanceModuleRedux {
 
       createBillToWarehouseSuccess: null,
       createBillToWarehouseFailed: null,
+
+      deleteWarehouseLinkedSuccess: null,
+      deleteWarehouseLinkedFailed: null,
       // Want Add more State Here...
     }
   }

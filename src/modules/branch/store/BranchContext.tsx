@@ -5,12 +5,16 @@ import { useDispatch } from "react-redux";
 import { branchSliceAction } from "../redux/reducer";
 import { useBranchPaging, useBranchQueryParams, useCreateBranch, useGetBranches, useUpdateApiKey, useUpdateBranchParams } from "../branch.hook";
 import BranchForm from "../components/BranchForm";
+import { useDeleteWarehouseLinked } from "~/modules/warehouse/warehouse.hook";
+import ListWarehouseLinked from "../components/ListWarehouseLinked";
 
 interface BranchProps {
   children: React.ReactNode;
 };
-interface PropsApiKeyForm{
-  branchId?: string | undefined;
+
+interface dataDeleteWarehouseLinked {
+  id: string | null
+  warehouseIds: string[]
 };
 
 export type BranchTypeContext = {
@@ -19,11 +23,14 @@ export type BranchTypeContext = {
   paging: any;
   branches: any[];
   onParamChange: (param: any) => void | undefined;
-  id: string | null | undefined;
+  id: string | null ;
   isSubmitLoading: boolean;
-  openFormApiKey: (data?: PropsApiKeyForm) => void;
+  openFormApiKey: (id?: string | null) => void;
   isLoading: boolean;
   onCreateBranch: (p: any) => void;
+  deleteWarehouseLink: (p: dataDeleteWarehouseLinked) => void;
+  openFormDeleteWarehouseLinked: (id?: string | null) => void;
+  closeFormDeleteWarehouseLinked: () => void;
 };
 
 const BranchContext = createContext<BranchTypeContext>({
@@ -32,17 +39,22 @@ const BranchContext = createContext<BranchTypeContext>({
   paging: {},
   branches: [],
   onParamChange: (param: any) => { },
-  openFormApiKey: (data?: PropsApiKeyForm) => { },
+  openFormApiKey: (id?: string | null ) => { },
   isSubmitLoading: false,
   isLoading: false,
   id: null,
-  onCreateBranch: (p: any) => { }
+  onCreateBranch: (p: any) => { },
+  deleteWarehouseLink: (p: dataDeleteWarehouseLinked) => { },
+  openFormDeleteWarehouseLinked: (id?: string | null) => { },
+  closeFormDeleteWarehouseLinked: () => { }
 });
 
 export function BranchProviderContext({ children }: BranchProps) {
   const [isOpenForm, setIsOpenForm] = useState(false);
   const [isOpenModalApiKey, setIsOpenModalApiKey] = useState(false);
-  const [id, setId] = useState<string | null | undefined>(null);
+  const [isOpenModalDeleteWarehouseLinked, setIsOpenModalDeleteWarehouseLinked] = useState(false);
+  const [id, setId] = useState<any>(null);
+
 
   const [query] = useBranchQueryParams();
   const [keyword, { setKeyword, onParamChange }] = useUpdateBranchParams(query);
@@ -53,7 +65,12 @@ export function BranchProviderContext({ children }: BranchProps) {
     return dispatch(branchSliceAction.resetAction());
   };
   const [, onCreateBranch] = useCreateBranch();
-
+  const [, deleteWarehouseLink] = useDeleteWarehouseLinked(
+    () => {
+      closeFormApiKey();
+      resetAction();
+    }
+  );
   const [isSubmitLoading, updateApiKey] = useUpdateApiKey(() => {
     closeFormApiKey();
     resetAction();
@@ -69,12 +86,22 @@ export function BranchProviderContext({ children }: BranchProps) {
     setId(null);
   };
 
-  const openFormApiKey = (data?: PropsApiKeyForm) => {
+  const openFormApiKey = (id?: string | null ) => {
     setIsOpenModalApiKey(true);
-    setId(data?.branchId);
+    setId(id);
   };
   const closeFormApiKey = () => {
     setIsOpenModalApiKey(false);
+    setId(null);
+  };
+  
+  const openFormDeleteWarehouseLinked = (id?: string | null ) => {
+    setIsOpenModalDeleteWarehouseLinked(true);
+    setId(id);
+  };
+  const closeFormDeleteWarehouseLinked = () => {
+    setIsOpenModalDeleteWarehouseLinked(false);
+    setId(null);
   };
   return (
     <BranchContext.Provider
@@ -88,7 +115,10 @@ export function BranchProviderContext({ children }: BranchProps) {
         isSubmitLoading,
         openFormApiKey,
         isLoading,
-        onCreateBranch
+        onCreateBranch,
+        deleteWarehouseLink,
+        closeFormDeleteWarehouseLinked,
+        openFormDeleteWarehouseLinked
       }}
     >
       {children}
@@ -112,6 +142,16 @@ export function BranchProviderContext({ children }: BranchProps) {
         confirmLoading={isSubmitLoading}
       >
         <BranchForm id={id}/>
+      </ModalAnt>
+      <ModalAnt
+        width={800}
+        onCancel={closeFormDeleteWarehouseLinked}
+        open={isOpenModalDeleteWarehouseLinked}
+        title= {'Xoá liên kết kho'}
+        footer={null}
+        confirmLoading={isSubmitLoading}
+      >
+        <ListWarehouseLinked/>
       </ModalAnt>
     </BranchContext.Provider>
   );

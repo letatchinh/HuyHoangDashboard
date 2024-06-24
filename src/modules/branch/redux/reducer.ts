@@ -14,8 +14,6 @@ interface cloneInitState extends initStateSlice {
   getListWarehouseFailed?: any;
   isLoadingWarehouse?: boolean;
 
-  deleteApiKeySuccess?: any;
-  deleteApiKeyFailed?: any;
 };
 class BranchClassExtentd extends InstanceModuleRedux {
   cloneReducer;
@@ -48,19 +46,6 @@ class BranchClassExtentd extends InstanceModuleRedux {
       getListWarehouseFailed: (state: cloneInitState, { payload }: any) => {
         state.isLoadingWarehouse = false;
         state.getListWarehouseFailed = payload;
-      },
-
-      deleteApiKeyRequest: (state: cloneInitState) => {
-        state.isLoadingWarehouse = true;
-      },
-
-      deleteApiKeySuccess: (state: cloneInitState, { payload }: any) => {
-        state.isLoadingWarehouse = false;
-        state.deleteApiKeySuccess = payload;
-      },
-      deleteApiKeyFailed: (state: cloneInitState, { payload }: any) => {
-        state.isLoadingWarehouse = false;
-        state.deleteApiKeyFailed = payload;
       },
 
       resetAction: (state: cloneInitState) => ({

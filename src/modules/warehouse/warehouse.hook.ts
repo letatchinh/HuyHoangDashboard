@@ -51,6 +51,9 @@ const warehouseDefaultFailedSelector = getSelector('getWarehouseDefaultFailed');
 const createBillToWarehouseSuccessSelector = getSelector('createBillToWarehouseSuccess');
 const createBillToWarehouseFailedSelector = getSelector('createBillToWarehouseFailed'); 
 
+const deleteWarehouseLinkedSuccessSelector = getSelector('deleteWarehouseLinkedSuccess');
+const deleteWarehouseLinkedFailedSelector = getSelector('deleteWarehouseLinkedFailed');
+
 export const useGetWarehouses = (param: any) => {
   return useFetchByParam({
     action: warehouseActions.getListRequest,
@@ -156,6 +159,16 @@ export const useDeleteWarehouse = (callback?: any) => {
 
   return useSubmit({
     action: warehouseActions.deleteRequest,
+    loadingSelector: isSubmitLoadingSelector,
+  });
+};
+
+export const useDeleteWarehouseLinked = (callback?: any) => {
+  useSuccess(deleteWarehouseLinkedSuccessSelector, `Xoá liên kết kho thành công`, callback);
+  useFailed(deleteWarehouseLinkedFailedSelector);
+
+  return useSubmit({
+    action: warehouseActions.deleteWarehouseLinkedRequest,
     loadingSelector: isSubmitLoadingSelector,
   });
 };

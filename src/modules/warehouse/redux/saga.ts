@@ -4,6 +4,7 @@ import { warehouseActions } from './reducer';
 import { billSliceAction } from '~/modules/sale/bill/redux/reducer';
 import { STATUS_BILL } from '~/modules/sale/bill/constants';
 import { omit } from 'lodash';
+import { branchSliceAction } from '~/modules/branch/redux/reducer';
 
 function* getListWarehouse({payload:query} : any) : any {
   try {
@@ -102,6 +103,16 @@ function* deleteWarehouse({payload : id} : any) : any {
   }
 };
 
+function* deleteWarehouseLinked({payload : id} : any) : any {
+  try {
+    const data = yield call(api.deleteWarehouseLink,id);
+    yield put(warehouseActions.deleteWarehouseLinkedSuccess(data));
+    yield put(branchSliceAction.getListRequest());
+  } catch (error:any) {
+    yield put(warehouseActions.deleteWarehouseLinkedFailed(error));
+  }
+};
+
 export default function* warehouseSaga() {
   yield takeLatest(warehouseActions.getListRequest, getListWarehouse);
   yield takeLatest(warehouseActions.getWarehouseDefaultRequest, getWarehouseDefault);
@@ -113,4 +124,5 @@ export default function* warehouseSaga() {
   yield takeLatest(warehouseActions.updateManagementWarehouseRequest, updateManagementWarehouse);
   yield takeLatest(warehouseActions.getWarehouseLinkedRequest, getByIdWarehouseLinked);
   yield takeLatest(warehouseActions.checkWarehouseRequest, checkWarehouse);
+  yield takeLatest(warehouseActions.deleteWarehouseLinkedRequest, deleteWarehouseLinked);
 };
