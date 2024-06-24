@@ -1,3 +1,4 @@
+import { PlusOutlined } from "@ant-design/icons";
 import {
   Button,
   Col,
@@ -13,6 +14,7 @@ import dayjs from "dayjs";
 import { get } from "lodash";
 import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import ModalAnt from "~/components/Antd/ModalAnt";
 import AddressCommonForm from "~/components/common/AddressCommonForm";
 import AddressFormDelivery from "~/components/common/AddressFormDelivery";
 import AddressFormSection from "~/components/common/AddressFormSection";
@@ -21,6 +23,7 @@ import RenderLoading from "~/components/common/RenderLoading";
 import SelectEmployee from "~/modules/employee/components/SelectEmployee";
 import SelectGroupPharmacy from "~/modules/groupPharmacy/components/SelectGroupPharmacy";
 import SelectSaleChannel from "~/modules/saleChannel/components/SelectSaleChannel";
+import SaleChannelForm from "~/modules/saleChannel/screens/SaleChannelForm";
 import SelectTypePharmacy from "~/modules/typePharmacy/components/SelectTypePharmacy";
 import { PATH_APP } from "~/routes/allPath";
 import {
@@ -28,15 +31,18 @@ import {
   useGetPharmacyId,
   useInitPharmacy,
   useResetPharmacyAction,
-  useUpdatePharmacyParams,
 } from "../pharmacy.hook";
 import { convertInitPharmacy, convertSubmitData } from "../pharmacy.service";
+import TypePharmacyForm from "~/modules/typePharmacy/screens/TypePharmacyForm";
+import { GroupPharmacyForm } from "~/modules/groupPharmacy/screens/GroupPharmacyForm";
+// import "./pharmacy.style.scss";
 const FormItem = Form.Item;
 const { Option } = Select;
 interface Props {
   onClose: (p?: any) => void;
   id?: any;
   handleUpdate?: any;
+  destroy?: any;
   setDestroy: any;
   query?: any;
 }
@@ -45,6 +51,7 @@ export default function PharmacyForm({
   onClose,
   id,
   handleUpdate,
+  destroy,
   setDestroy,
   query,
 }: Props) {
@@ -61,11 +68,12 @@ export default function PharmacyForm({
   useResetPharmacyAction();
   const [cityCode, setCityCode]: any = useState();
   const [districtCode, setDistrictCode]: any = useState();
+  const [isSaleChannelFormOpen, setSaleChannelFormOpen] = useState(false);
+  const [isGroupCustomerFormOpen, setGroupCustomerFormOpen] = useState(false);
+  const [isCustomerFormOpen, setCustomerFormOpen] = useState(false);
   const [selectedCustomerGroupId, setSelectedCustomerGroupId] = useState<
     string | undefined
   >();
-  const [keyword, { setKeyword, onParamChange }] =
-    useUpdatePharmacyParams(query);
 
   useEffect(() => {
     if (!id) {
@@ -107,13 +115,10 @@ export default function PharmacyForm({
     [handleCreate, handleUpdate, id, onClose]
   );
 
-  const onTypePharmacyChange = (value: string) => {
-    setSelectedCustomerGroupId(value);
-  };
   return (
     <div className="pharmacy-profile page-wraper form-page-content">
       <h4 style={{ margin: "20px 0 40px 20px" }}>
-        {id ? " Cập nhật" : "Thêm mới"} khách hàng
+        {id ? "Cập nhật" : "Thêm mới"} khách hàng B2B
       </h4>
       <div className="container-fluid">
         <Form
@@ -231,53 +236,6 @@ export default function PharmacyForm({
               allowPhoneNumber={false}
               allowEmail={false}
             />
-
-            <Row gutter={48} align="middle" justify="space-between">
-              <Col span={12}>
-                <FormItem
-                  name={"customerGroupId"}
-                  label="Nhánh khách hàng"
-                  rules={[
-                    {
-                      required: true,
-                      message: "Xin vui lòng chọn nhánh khách hàng",
-                    },
-                  ]}
-                  initialValue={query?.customerGroupId || null}
-                >
-                  <SelectTypePharmacy
-                    validateFirst={false}
-                    form={formCustomerGroup}
-                    // style={{ width: 200 }}
-                    showIcon={false}
-                    size={"middle"}
-                    defaultValue={query?.customerGroupId || null}
-                  />
-                </FormItem>
-              </Col>
-              <Col span={12}>
-              <FormItem
-                  name={"customerId"}
-                  label="Nhóm khách hàng"
-                  rules={[
-                    {
-                      required: true,
-                      message: "Xin vui lòng chọn nhóm khách hàng",
-                    },
-                  ]}
-                  initialValue={query?.customerId || null}
-                >
-                  <SelectGroupPharmacy
-                    validateFirst={false}
-                    form={formCustomer}
-                    // style={{ width: 200 }}
-                    showIcon={false}
-                    size={"middle"}
-                    defaultValue={query?.customerId || null}
-                  />
-                </FormItem>
-              </Col>
-            </Row>
             <Row gutter={48} align="middle" justify="space-between">
               <Col span={12}>
                 <FormItem
@@ -299,30 +257,104 @@ export default function PharmacyForm({
                 </FormItem>
               </Col>
               <Col span={12}>
-                <FormItem
-                  name={"salesChannelId"}
-                  label="Kênh bán hàng"
-                  rules={[
-                    {
-                      required: true,
-                      message: "Xin vui long chọn kênh bán hàng",
-                    },
-                  ]}
-                  initialValue={query?.salesChannelId || null}
-                >
-                  <SelectSaleChannel
-                    validateFirst={false}
-                    form={formSaleChannel}
-                    // style={{ width: 200 }}
-                    showIcon={false}
-                    size={"middle"}
-                    defaultValue={query?.salesChannelId || null}
-                    divisionText="B2B"
-                    // onChange={(value) => onParamChange({ salesChannelId: value })}
-                  />
-                </FormItem>
+                <Row justify="space-around">
+                  <FormItem
+                    name={"salesChannelId"}
+                    label="Kênh bán hàng"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Xin vui lòng chọn kênh bán hàng",
+                      },
+                    ]}
+                    initialValue={query?.salesChannelId || null}
+                    style={{ width: "90%" }}
+                    wrapperCol={{ sm: 24, md: 24, lg: 21 }}
+                  >
+                    <SelectSaleChannel
+                      validateFirst={false}
+                      form={formSaleChannel}
+                      // style={{ marginLeft: 24, padding: 0 }}
+                      showIcon={false}
+                      size={"middle"}
+                      defaultValue={query?.salesChannelId || null}
+                      divisionText="B2B"
+                    />
+                  </FormItem>
+                  <Button
+                    onClick={() => setSaleChannelFormOpen(true)}
+                    style={{ width: "10%" }}
+                  >
+                    <PlusOutlined />
+                  </Button>
+                </Row>
               </Col>
             </Row>
+            <Row gutter={48} align="middle" justify="space-between">
+              <Col span={12}>
+                <Row justify="space-around">
+                  <FormItem
+                    name={"customerGroupId"}
+                    label="Nhánh khách hàng"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Xin vui lòng chọn nhánh khách hàng",
+                      },
+                    ]}
+                    style={{ width: "90%", justifyContent: "space-between" }}
+                    initialValue={query?.customerGroupId || null}
+                  >
+                    <SelectTypePharmacy
+                      validateFirst={false}
+                      form={formCustomerGroup}
+                      // style={{ width: 300 }}
+                      showIcon={false}
+                      size={"middle"}
+                      defaultValue={query?.customerGroupId || null}
+                    />
+                  </FormItem>
+                  <Button
+                    onClick={() => setGroupCustomerFormOpen(true)}
+                    style={{ width: "10%" }}
+                  >
+                    <PlusOutlined />
+                  </Button>
+                </Row>
+              </Col>
+              <Col span={12}>
+                <Row justify={"space-around"}>
+                  <FormItem
+                    name={"customerId"}
+                    label="Nhóm khách hàng"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Xin vui lòng chọn nhóm khách hàng",
+                      },
+                    ]}
+                    style={{ width: "90%" }}
+                    initialValue={query?.customerId || null}
+                  >
+                    <SelectGroupPharmacy
+                      validateFirst={false}
+                      form={formCustomer}
+                      // style={{ width: 200 }}
+                      showIcon={false}
+                      size={"middle"}
+                      defaultValue={query?.customerId || null}
+                    />
+                  </FormItem>
+                  <Button
+                    onClick={() => setGroupCustomerFormOpen(true)}
+                    style={{ width: "10%" }}
+                  >
+                    <PlusOutlined />
+                  </Button>
+                </Row>
+              </Col>
+            </Row>
+
             <FormItem
               label="Khu vực"
               name="areaPharma"
@@ -484,6 +516,54 @@ export default function PharmacyForm({
           </Row>
         </Form>
       </div>
+      <ModalAnt
+        width={640}
+        open={isSaleChannelFormOpen}
+        onCancel={() => setSaleChannelFormOpen(false)}
+        footer={[]}
+        afterClose={() => {
+          setDestroy(false);
+        }}
+        destroyOnClose={destroy}
+      >
+        <SaleChannelForm
+          onClose={() => setSaleChannelFormOpen(false)}
+          id={query.salesChannelId}
+          setDestroy={setDestroy}
+        />
+      </ModalAnt>
+      <ModalAnt
+        width={640}
+        open={isGroupCustomerFormOpen}
+        onCancel={() => setGroupCustomerFormOpen(false)}
+        footer={[]}
+        afterClose={() => {
+          setDestroy(false);
+        }}
+        destroyOnClose={destroy}
+      >
+        <TypePharmacyForm
+          onClose={() => setGroupCustomerFormOpen(false)}
+          setDestroy={setDestroy}
+          query={query}
+        />
+      </ModalAnt>
+      <ModalAnt
+        width={640}
+        open={isCustomerFormOpen}
+        onCancel={() => setCustomerFormOpen(false)}
+        footer={[]}
+        afterClose={() => {
+          setDestroy(false);
+        }}
+        destroyOnClose={destroy}
+      >
+        <GroupPharmacyForm
+          onClose={() => setCustomerFormOpen(false)}
+          setDestroy={setDestroy}
+          query={query}
+        />
+      </ModalAnt>
     </div>
   );
 }
