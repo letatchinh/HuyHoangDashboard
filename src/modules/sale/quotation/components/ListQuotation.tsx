@@ -283,6 +283,7 @@ export default function ListQuotation({
                     deliveryAddressId: get(record, 'deliveryAddressId'),
                     warehouseId: get(record, 'warehouseId'),
                     warehouseName: get(record, 'warehouseName'),
+                    dataTransportUnit: get(record, "dataTransportUnit"),
                   });
                 }}
                 type="primary"
@@ -312,6 +313,7 @@ export default function ListQuotation({
                     deliveryAddressId: get(record, 'deliveryAddressId'),
                     warehouseId: get(record, 'warehouseId'),
                     warehouseName: get(record, 'warehouseName'),
+                    dataTransportUnit: get(record, "dataTransportUnit"),
                   });
                 }}
                 size="small"

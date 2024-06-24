@@ -283,7 +283,7 @@ export const convertDataSentToWarehouse = (data: any) => {
       email: data?.pharmacy?.email,
     },
     dataTransportUnit: {
-      ...omit(data?.dataTransportUnit, ['height', 'length', 'width', 'weight', 'totalFee']),
+      ...omit(data?.dataTransportUnit, ['height', 'length', 'width', 'weight']),
     },
     notePharmacy: data?.notePharmacy,
   };
