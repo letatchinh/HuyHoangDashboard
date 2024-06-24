@@ -1,6 +1,6 @@
 import { ColumnsType } from "antd/es/table";
 import useTranslate from "~/lib/translation";
-import { concatAddress, formatNumberThreeComma, useIsAdapterSystem } from "~/utils/helpers";
+import { concatAddress, formatNumberThreeComma } from "~/utils/helpers";
 import {
   useConvertPharmacy,
   useDeletePharmacy,
@@ -38,14 +38,13 @@ import {
   Tabs,
   Typography,
   message,
+  Form,
 } from "antd";
 import Search from "antd/es/input/Search";
 import { FileTextOutlined,ImportOutlined, PlusCircleOutlined } from "@ant-design/icons";
 import PharmacyForm from "./PharmacyForm";
 import {
-  PROCESS_STATUS,
-  PROCESS_STATUS_VI,
-  propsType,
+PROCESS_STATUS_VI,
 } from "../pharmacy.modal";
 import WithPermission from "~/components/common/WithPermission";
 import POLICIES from "~/modules/policy/policy.auth";
@@ -61,6 +60,7 @@ import { FormImportFile } from "~/components/common/ImportFile/FormImportFile";
 
 import ActionColumns from "./ActionColumns";
 import StatusProcess from "./StatusProcess";
+import SelectSaleChannel from "~/modules/saleChannel/components/SelectSaleChannel";
 
 export default function Pharmacy() {
   const { t }: any = useTranslate();
@@ -85,13 +85,13 @@ export default function Pharmacy() {
   const canDownload = useMatchPolicy(POLICIES.DOWNLOAD_PHARMAPROFILE);
 
   const canReadDebt = useMatchPolicy(POLICIES.READ_DEBTPHARMACY);
-  const canUpdatePharma = useMatchPolicy(POLICIES.UPDATE_PHARMAPROFILE);
-  const canDeletePharma = useMatchPolicy(POLICIES.DELETE_PHARMAPROFILE);
   const [arrCheckBox, onChangeCheckBox] = useCheckBoxExport();
   const [activeTab, setActiveTab] = useState("1");
   const [isLoadingSubmit, handleConvert] = useConvertPharmacy();
   const canUpdate = useMatchPolicy(POLICIES.UPDATE_PHARMAPROFILE);
   const canDelete = useMatchPolicy(POLICIES.DELETE_PHARMAPROFILE);
+  const [form] = Form.useForm();
+  
   const onChangeTab = (newActiveKey: string) => {
     setActiveTab(newActiveKey);
     setApproved(newActiveKey !== "1" ? false : true);
@@ -169,6 +169,15 @@ export default function Pharmacy() {
         width: 350,
         render(value, record, index) {
           return concatAddress(value);
+        },
+      },
+      {
+        title: "Kênh bán hàng",
+        dataIndex: "salesChannel",
+        key: "salesChannel",
+        width: 180,
+        render: (record) => {
+          return get(record, "title");
         },
       },
       {
@@ -430,27 +439,62 @@ export default function Pharmacy() {
         </Row>
         {activeTab === "1" && (
           <WithPermission permission={POLICIES.UPDATE_PHARMAPROFILE}>
-            <Space style={{ marginBottom: 20 }}>
-              <Typography style={{ fontSize: 14, marginRight: 20 }}>
-                Phân loại trạng thái theo :
-              </Typography>
-              <Row gutter={14}>
-                <Radio.Group
-                  onChange={onChange}
-                  optionType="button"
-                  buttonStyle="solid"
-                  defaultValue={query?.status}
+            <Row justify={"space-around"}>
+              <Col span={12}>
+                <Space style={{ marginBottom: 20 }}>
+                  <Typography style={{ fontSize: 14, marginRight: 20 }}>
+                    Phân loại trạng thái theo :
+                  </Typography>
+                  <Row gutter={14}>
+                    <Radio.Group
+                      onChange={onChange}
+                      optionType="button"
+                      buttonStyle="solid"
+                      defaultValue={query?.status}
+                    >
+                      <Radio.Button value={null}>Tất cả</Radio.Button>
+                      <Radio.Button value={"ACTIVE"}>
+                        {STATUS_NAMES["ACTIVE"]}
+                      </Radio.Button>
+                      <Radio.Button value={"INACTIVE"}>
+                        {STATUS_NAMES["INACTIVE"]}
+                      </Radio.Button>
+                    </Radio.Group>
+                  </Row>
+                </Space>
+              </Col>
+              <Col span={12}>
+                <Space
+                  style={{
+                    marginBottom: 20,
+                    display: "flex",
+                    justifyContent: "flex-end",
+                  }}
                 >
-                  <Radio.Button value={null}>Tất cả</Radio.Button>
-                  <Radio.Button value={"ACTIVE"}>
-                    {STATUS_NAMES["ACTIVE"]}
-                  </Radio.Button>
-                  <Radio.Button value={"INACTIVE"}>
-                    {STATUS_NAMES["INACTIVE"]}
-                  </Radio.Button>
-                </Radio.Group>
-              </Row>
-            </Space>
+                  <Typography style={{ fontSize: 14, marginRight: 20 }}>
+                    Kênh bán hàng:
+                  </Typography>
+                  <Form
+                    form={form}
+                    initialValues={{ salesChannel: query?.salesChannel }}
+                  >
+                    <SelectSaleChannel
+                      validateFirst={false}
+                      form={form}
+                      style={{ minWidth: 200 }}
+                      showIcon={false}
+                      size={"middle"}
+                      defaultValue={query?.salesChannel || null}
+                      divisionText="B2B"
+                      onChange={(value) =>
+                        onParamChange({ salesChannel: value })
+                      }
+                      mode="multiple"
+                    />
+                  </Form>
+                </Space>
+              </Col>
+            </Row>
           </WithPermission>
         )}
         {activeTab === "2" && (
@@ -508,7 +552,7 @@ export default function Pharmacy() {
               dataSource={pharmacies}
               loading={isLoading}
               rowKey={(rc) => rc?._id}
-              scroll={{ x: "max-content" ,y:'calc(100vh - 383px)'}}
+              scroll={{ x: "max-content" ,y: 'calc(100vh - 383px)'}}
               columns={columns}
               size="small"
               pagination={{

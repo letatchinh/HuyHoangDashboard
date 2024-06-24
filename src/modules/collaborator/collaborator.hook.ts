@@ -170,6 +170,7 @@ export const useCollaboratorQueryParams = () => {
   const page = query.get("page") || 1;
   const keyword = query.get("keyword");
   const status = query.get("status");
+  const salesChannel = query.get("salesChannel");
   const processStatus = query.get("processStatus");
   const createSuccess = useSelector(createSuccessSelector);
   const updateSuccess = useSelector(updateSuccessSelector)
@@ -181,11 +182,12 @@ export const useCollaboratorQueryParams = () => {
       limit,
       keyword,
       status,
+      salesChannel,
       processStatus,
     };
     return [queryParams];
     //eslint-disable-next-line
-  }, [page, limit, status, keyword, processStatus, createSuccess, updateSuccess, deleteSuccess, convertSuccess]);
+  }, [page, limit, status, salesChannel, keyword, processStatus, createSuccess, updateSuccess, deleteSuccess, convertSuccess]);
 };
 
 export const useUpdateCollaboratorParams = (

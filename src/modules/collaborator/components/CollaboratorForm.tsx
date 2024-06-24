@@ -474,7 +474,7 @@ export default function CollaboratorForm(props: IProps) {
                   rules={[
                     {
                       required: true,
-                      message: "Xin vui long chọn kênh bán hàng",
+                      message: "Xin vui lòng chọn kênh bán hàng",
                     },
                   ]}
                   initialValue={query?.salesChannelId || null}

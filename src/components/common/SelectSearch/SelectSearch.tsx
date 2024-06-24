@@ -114,6 +114,7 @@ const SelectSearch = ({
                   type="primary"
                   onClick={handleOnClickButton}
                   icon={<PlusCircleOutlined />}
+                  style={{ marginLeft: 10 }}
                 >
                 {titleButtonAdd}
                 </Button>

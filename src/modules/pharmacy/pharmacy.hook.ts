@@ -155,6 +155,7 @@ export const usePharmacyQueryParams = (module?: boolean) => {
   const status = query.get("status");
   const processStatus = query.get("processStatus");
   const approved = module ?? query.get("approved");
+  const salesChannel = query.get("salesChannel");
   
   const createSuccess = useSelector(createSuccessSelector);
   const updateSuccess = useSelector(updateSuccessSelector);
@@ -167,6 +168,7 @@ export const usePharmacyQueryParams = (module?: boolean) => {
       status,
       approved,
       processStatus,
+      salesChannel,
     };
     return [queryParams];
     //eslint-disable-next-line
@@ -179,7 +181,8 @@ export const usePharmacyQueryParams = (module?: boolean) => {
     updateSuccess,
     deleteSuccess,
     approved,
-    processStatus
+    processStatus,
+    salesChannel,
   ]);
 };
 
