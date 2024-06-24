@@ -15,7 +15,8 @@ export default function Action({id}: propsType): React.JSX.Element {
     deleteWarehouseLink,
     openFormDeleteWarehouseLinked,
     canUpdateWarehouse,
-    canDeleteWarehouse
+    canDeleteWarehouse,
+    isSubmitLoading
   } = useBranchContext();
   const items: MenuProps["items"] = [
     ...(canUpdateWarehouse ?[{
@@ -25,6 +26,7 @@ export default function Action({id}: propsType): React.JSX.Element {
           type="primary"
           size="small"
           style={{ width: "100%" }}
+          loading={isSubmitLoading}
         >
           Liên kết kho
         </Button>
@@ -39,6 +41,7 @@ export default function Action({id}: propsType): React.JSX.Element {
           type="primary"
           onClick={() => openFormDeleteWarehouseLinked(id)}
           size="small"
+          loading={isSubmitLoading}
         >
           {" "}
           Xoá mã liên kết{" "}
