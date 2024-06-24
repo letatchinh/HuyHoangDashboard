@@ -377,6 +377,7 @@ export default function ListQuotation({
                   required={true}
                   size={"middle"}
                   onChange={(value) => onParamChange({ pharmacyId: value })}
+                  showButtonAdd={false}
                 />
               ) : (
                 <SelectPharmacyInDevice

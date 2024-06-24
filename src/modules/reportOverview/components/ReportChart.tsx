@@ -260,6 +260,7 @@ export default function ReportChart(
                 defaultValue={query?.customerId || null}
                 onChange={(value) => onParamChange({ customerId: value })}
                 mode="multiple"
+                showButtonAdd={false}
               />
             </Form>
           ) : (
