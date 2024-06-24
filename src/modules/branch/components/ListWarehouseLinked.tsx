@@ -1,23 +1,22 @@
 import { Button, Divider, Popconfirm, Radio, Row, Table, TableColumnsType } from "antd";
 import { ColumnsType } from "antd/es/table";
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { useGetBranch } from "../branch.hook";
 import useBranchContext from "../store/BranchContext";
 type propsType = {};
 interface DataType {
   key: React.Key;
   name: string;
-  age: number;
-  address: string;
 };
 
 export default function ListWarehouseLinked({}: propsType): React.JSX.Element {
   const { id ,deleteWarehouseLink, isSubmitLoading} = useBranchContext();
   const [branch, loading] = useGetBranch(id);
+  const listWarehouse = useMemo(()=> branch?.listWarehouse?.map((item: any)=> ({name:item?.name?.vi, key: item?._id})) || [], [branch]);
   const [value, setValue] = useState<any[]>([]);
   const rowSelection = {
     onChange: (selectedRowKeys: React.Key[], selectedRows: DataType[]) => {
-      const newValue = selectedRows?.map((item: any) => item?._id);
+      const newValue = selectedRows.map((item) => item.key);
       setValue(newValue);
     },
   };
@@ -26,46 +25,22 @@ export default function ListWarehouseLinked({}: propsType): React.JSX.Element {
       title: "Tên kho",
       dataIndex: "name",
       key: "name",
-      render: (text: string) => <a>{text}</a>,
+      render: (text: any) => <a>{text?.vi || text}</a>,
     },
   ];
-  const data = [
-    {
-      key: '1',
-      name: 'John Brown',
-      age: 32,
-      address: 'New York No. 1 Lake Park',
-    },
-    {
-      key: '2',
-      name: 'Jim Green',
-      age: 42,
-      address: 'London No. 1 Lake Park',
-    },
-    {
-      key: '3',
-      name: 'Joe Black',
-      age: 32,
-      address: 'Sydney No. 1 Lake Park',
-    },
-    {
-      key: '4',
-      name: 'Disabled User',
-      age: 99,
-      address: 'Sydney No. 1 Lake Park',
-    },
-  ];
+  
   return (
     <>
       <Table
         size="small"
         columns={columns}
-        dataSource={data}
+        dataSource={listWarehouse || []}
         pagination={false}
         rowSelection={{
           type: "checkbox",
-          ...rowSelection
+          ...rowSelection,
         }}
+        loading={loading}
       />
       <Row justify="end" align="middle" style={{ marginTop: 10 }}>
        <Popconfirm

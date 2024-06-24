@@ -7,6 +7,9 @@ import { useBranchPaging, useBranchQueryParams, useCreateBranch, useGetBranches,
 import BranchForm from "../components/BranchForm";
 import { useDeleteWarehouseLinked } from "~/modules/warehouse/warehouse.hook";
 import ListWarehouseLinked from "../components/ListWarehouseLinked";
+import POLICIES from "~/modules/policy/policy.auth";
+import { useMatchPolicy } from "~/modules/policy/policy.hook";
+import { warehouseActions } from "~/modules/warehouse/redux/reducer";
 
 interface BranchProps {
   children: React.ReactNode;
@@ -14,7 +17,7 @@ interface BranchProps {
 
 interface dataDeleteWarehouseLinked {
   id: string | null
-  warehouseIds: string[]
+  warehouseIds: number[]
 };
 
 export type BranchTypeContext = {
@@ -31,6 +34,9 @@ export type BranchTypeContext = {
   deleteWarehouseLink: (p: dataDeleteWarehouseLinked) => void;
   openFormDeleteWarehouseLinked: (id?: string | null) => void;
   closeFormDeleteWarehouseLinked: () => void;
+  closeFormApiKey: () => void;
+  canDeleteWarehouse: boolean;
+  canUpdateWarehouse: boolean;
 };
 
 const BranchContext = createContext<BranchTypeContext>({
@@ -46,7 +52,10 @@ const BranchContext = createContext<BranchTypeContext>({
   onCreateBranch: (p: any) => { },
   deleteWarehouseLink: (p: dataDeleteWarehouseLinked) => { },
   openFormDeleteWarehouseLinked: (id?: string | null) => { },
-  closeFormDeleteWarehouseLinked: () => { }
+  closeFormDeleteWarehouseLinked: () => { },
+  closeFormApiKey: () => { },
+  canDeleteWarehouse: false,
+  canUpdateWarehouse: false
 });
 
 export function BranchProviderContext({ children }: BranchProps) {
@@ -54,8 +63,8 @@ export function BranchProviderContext({ children }: BranchProps) {
   const [isOpenModalApiKey, setIsOpenModalApiKey] = useState(false);
   const [isOpenModalDeleteWarehouseLinked, setIsOpenModalDeleteWarehouseLinked] = useState(false);
   const [id, setId] = useState<any>(null);
-
-
+  const canDeleteWarehouse = useMatchPolicy(POLICIES.DELETE_WAREHOUSELINK);
+  const canUpdateWarehouse = useMatchPolicy(POLICIES.UPDATE_WAREHOUSELINK);
   const [query] = useBranchQueryParams();
   const [keyword, { setKeyword, onParamChange }] = useUpdateBranchParams(query);
   const [branches, isLoading] = useGetBranches(query);
@@ -64,11 +73,15 @@ export function BranchProviderContext({ children }: BranchProps) {
   const resetAction = () => {
     return dispatch(branchSliceAction.resetAction());
   };
-  const [, onCreateBranch] = useCreateBranch();
+  const [, onCreateBranch] = useCreateBranch(()=> {
+    closeForm();
+    resetAction();
+  });
   const [, deleteWarehouseLink] = useDeleteWarehouseLinked(
     () => {
-      closeFormApiKey();
+      closeFormDeleteWarehouseLinked();
       resetAction();
+      dispatch(warehouseActions.resetAction());
     }
   );
   const [isSubmitLoading, updateApiKey] = useUpdateApiKey(() => {
@@ -118,7 +131,10 @@ export function BranchProviderContext({ children }: BranchProps) {
         onCreateBranch,
         deleteWarehouseLink,
         closeFormDeleteWarehouseLinked,
-        openFormDeleteWarehouseLinked
+        openFormDeleteWarehouseLinked,
+        closeFormApiKey,
+        canDeleteWarehouse,
+        canUpdateWarehouse
       }}
     >
       {children}
@@ -140,6 +156,7 @@ export function BranchProviderContext({ children }: BranchProps) {
         title= {id ? "Cập nhật chi nhánh" : "Tạo chi nhánh"}
         footer={null}
         confirmLoading={isSubmitLoading}
+        destroyOnClose
       >
         <BranchForm id={id}/>
       </ModalAnt>
@@ -147,6 +164,7 @@ export function BranchProviderContext({ children }: BranchProps) {
         width={800}
         onCancel={closeFormDeleteWarehouseLinked}
         open={isOpenModalDeleteWarehouseLinked}
+        destroyOnClose
         title= {'Xoá liên kết kho'}
         footer={null}
         confirmLoading={isSubmitLoading}

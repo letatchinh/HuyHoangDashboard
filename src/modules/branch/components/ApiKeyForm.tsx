@@ -7,48 +7,19 @@ import dayjs from "dayjs";
 import { useGetBranch, useGetListWarehouseInPMS } from "../branch.hook";
 import { filterAcrossAccents, filterSelectWithLabel } from "~/utils/helpers";
 import StatusTagWarehouse from "./StatsusTagWarehouse";
+import useBranchContext from "../store/BranchContext";
 type propsType = {
   updateApiKey?: any;
   id: string | null | undefined;
-  onClose?: () => void;
-  onDelete?: (branchId: string | undefined |null) => void;
 };
-export default function ApiKeyForm({updateApiKey, id,onClose, onDelete}: propsType): React.JSX.Element {
+export default function ApiKeyForm({updateApiKey, id}: propsType): React.JSX.Element {
   const [newApiKey, setNewApiKey] = React.useState<string>("");
   const [form] = Form.useForm();
+  const {closeFormApiKey} = useBranchContext();
 
   const onValuesChange = (value: string) => {
   };
 
-  // const columns: ColumnsType = useMemo(() => [
-  //   {
-  //     title : "Tên kho",
-  //     dataIndex : "warehouse",
-  //     key: "warehouse",
-  //     render: (warehouse) => <span>{warehouse?.name}</span>,
-  //   },
-  //   {
-  //     title : "Ngày liên kết",
-  //     dataIndex : "createdAt",
-  //     key: "createdAt",
-  //     render: (createdAt) => dayjs(createdAt).format("DD/MM/YYYY HH:mm:ss"),
-  //   },
-  //   {
-  //     title : "Trạng thái liên kết kho",
-  //     dataIndex : "statusLinkWarehouse",
-  //     key: "statusLinkWarehouse",
-  //     render: (value) => {
-  //       console.log(value)
-  //       return <StatusTagWarehouse status={value}/>
-  //     },
-  //   },
-  //   {
-  //     title : "Mã liên kết",
-  //     dataIndex : "apiKey",
-  //     key : "apiKey",
-  //   },
-
-  // ], []);
   return (
     <Form
       form={form}
@@ -75,7 +46,7 @@ export default function ApiKeyForm({updateApiKey, id,onClose, onDelete}: propsTy
         >
           Cập nhật
         </Button>
-        <Button onClick={onClose}> Huỷ </Button>
+        <Button onClick={closeFormApiKey}> Huỷ </Button>
       </Row>
     </Form>
   );

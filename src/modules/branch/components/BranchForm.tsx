@@ -10,12 +10,16 @@ type propsType = {
   id?: any
 };
 export default function BranchForm({ id }: propsType): React.JSX.Element {
-  const { onCreateBranch } = useBranchContext();
+  const { onCreateBranch} = useBranchContext();
   const [form] = Form.useForm();
   const [branch, loading] = useGetBranch(id);
   const onFinish = (values: any) => {
     try {
-      console.log(values)
+      if (id) {
+        console.log('update')
+      } else {
+        onCreateBranch(values);
+      }
     } catch (error) {
       console.log(error)
     }

@@ -33,6 +33,7 @@ function* createBranch({payload} : any) : any {
   try {
     const data = yield call(api.create,payload);
     yield put(branchSliceAction.createSuccess(data));
+    yield put(branchSliceAction.getListRequest());
   } catch (error:any) {
     yield put(branchSliceAction.createFailed(error));
   }

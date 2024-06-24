@@ -8,76 +8,98 @@ import useTranslate from "~/lib/translation";
 import { concatAddress } from "~/utils/helpers";
 import { useChangeDocumentTitle } from "~/utils/hook";
 import StatusTagWarehouse from "../components/StatsusTagWarehouse";
-import useBranchContext, { BranchProviderContext } from "../store/BranchContext";
+import useBranchContext, {
+  BranchProviderContext,
+} from "../store/BranchContext";
 import POLICIES from "~/modules/policy/policy.auth";
 import { useMatchPolicy } from "~/modules/policy/policy.hook";
 import Action from "../components/Action";
 
 export default function BranchScreen() {
   useChangeDocumentTitle("Danh sách chi nhánh");
-  const {closeForm, openForm,openFormApiKey, branches, paging, id, isSubmitLoading, isLoading, onParamChange} = useBranchContext();
+  const {
+    closeForm,
+    openForm,
+    openFormApiKey,
+    branches,
+    paging,
+    id,
+    isSubmitLoading,
+    isLoading,
+    onParamChange,
+    canDeleteWarehouse,
+    canUpdateWarehouse,
+  } = useBranchContext();
   const { t }: any = useTranslate();
-  const canUpdateApiKey = useMatchPolicy(POLICIES.UPDATE_WAREHOUSELINK);
-  const columns : ColumnsType = [
+  const columns: ColumnsType = [
     {
-      title : "Tên chi nhánh",
-      dataIndex : "name",
+      title: "Tên chi nhánh",
+      dataIndex: "name",
       key: "name",
       width: 300,
     },
     {
-      title : "Địa chỉ",
-      dataIndex : "address",
+      title: "Địa chỉ",
+      dataIndex: "address",
       key: "address",
       width: 300,
       render(value, record, index) {
-        return concatAddress(value)
+        return concatAddress(value);
       },
     },
     {
-      title : "Trạng thái liên kết kho",
-      dataIndex : "statusLinkWarehouse",
+      title: "Trạng thái liên kết kho",
+      dataIndex: "statusLinkWarehouse",
       key: "statusLinkWarehouse",
       align: "center",
       width: 180,
-      render: (value, record) =>  <StatusTagWarehouse status={record?.statusLinkWarehouse}/>,
+      render: (value, record) => (
+        <StatusTagWarehouse status={record?.statusLinkWarehouse} />
+      ),
     },
     {
-      title : "Các kho đã liên kết",
+      title: "Các kho đã liên kết",
       // dataIndex : "listWarehouse",
       key: "listWarehouse",
       align: "center",
       width: 180,
-      render: (value, record) =>  (record?.listWarehouse || [])?.map((item: any)=> <Tag>{item?.name?.vi}</Tag>)
+      render: (value, record) =>
+        (record?.listWarehouse || [])?.map((item: any) => (
+          <Tag>{item?.name?.vi}</Tag>
+        )),
     },
-    ...(canUpdateApiKey? [{
-      title : "Thao tác",
-      key: "action",
-      align: "center" as any,
-      width: 150,
-      render(value: any, record: any, index: any) {
-        return  <Action id = {record?._id}/>
-      }
-    }]:[]),
+    ...((canDeleteWarehouse || canUpdateWarehouse)
+      ? [
+          {
+            title: "Thao tác",
+            key: "action",
+            align: "center" as any,
+            width: 150,
+            render(value: any, record: any, index: any) {
+              return <Action id={record?._id} />;
+            },
+          },
+        ]
+      : []),
   ];
 
   return (
-      <>
+    <>
       <Breadcrumb title={t("Danh sách chi nhánh")} />
       <WhiteBox>
         <SelectSearch
-          showSelect = {false}
+          showSelect={false}
           isShowButtonAdd
           handleOnClickButton={openForm}
           permissionKey={[POLICIES.WRITE_BRANCH]}
-          onSearch={(e: any)=> onParamChange({keyword: e})}
+          onSearch={(e: any) => onParamChange({ keyword: e })}
         />
         <TableAnt
-          dataSource={branches} 
+          dataSource={branches}
           loading={isLoading}
-          rowKey={rc => rc?._id}
+          rowKey={(rc) => rc?._id}
           columns={columns}
-          size='small'
+          size="small"
           scroll={{ x: 300 }}
           pagination={{
             ...paging,
@@ -89,6 +111,6 @@ export default function BranchScreen() {
           stickyTop
         />
       </WhiteBox>
-      </>
+    </>
   );
 }

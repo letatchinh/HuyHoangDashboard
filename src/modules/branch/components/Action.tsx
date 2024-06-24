@@ -14,9 +14,11 @@ export default function Action({id}: propsType): React.JSX.Element {
     openFormApiKey,
     deleteWarehouseLink,
     openFormDeleteWarehouseLinked,
+    canUpdateWarehouse,
+    canDeleteWarehouse
   } = useBranchContext();
   const items: MenuProps["items"] = [
-    {
+    ...(canUpdateWarehouse ?[{
       label: (
         <Button
           onClick={() => openFormApiKey(id)}
@@ -28,8 +30,8 @@ export default function Action({id}: propsType): React.JSX.Element {
         </Button>
       ),
       key: "1",
-    },
-    {
+    }]:[]),
+    ...(canDeleteWarehouse ?[{
       label: (
         <Button
           style={{ marginRight: "10px", width: "100%" }}
@@ -43,7 +45,7 @@ export default function Action({id}: propsType): React.JSX.Element {
         </Button>
       ),
       key: "2",
-    },
+    }] : []),
   ];
 
   return (
