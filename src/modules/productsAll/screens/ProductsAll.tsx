@@ -337,6 +337,7 @@ export default function ProductsAll(props: TypeProps): React.JSX.Element {
                 query={query}
                 fileName="Danh sách sản phẩm"
                 ids={arrCheckBox}
+                stylesButton={{ marginRight: "10px" }}
               />
             </Col>
           ) : null

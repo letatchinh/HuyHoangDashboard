@@ -1,5 +1,5 @@
 import { GiftTwoTone, UndoOutlined } from "@ant-design/icons";
-import { Button, Col, Form, Input, notification, Row, Select, Tabs } from "antd";
+import { Button, Col, Form, Input, notification, Row, Select, Skeleton, Tabs } from "antd";
 import { compact, concat, debounce, get, keys } from "lodash";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import BaseBorderBox from "~/components/common/BaseBorderBox/index";
@@ -294,6 +294,24 @@ export default function FormProduct({
             <Col span={12}>
               <SelectProductGroup product={product} isLoading={isLoading} />
             </Col>
+            <Col span={12}>
+                  <Form.Item
+                    label="Mã sản phẩm"
+                    name={'codeBySupplier'}
+                    rules={[
+                      {
+                        required: true,
+                        message: 'Xin mời nhập mã sản phẩm'
+                      }
+                    ]}
+                  >
+                    {isLoading ? (
+                      <Skeleton.Input active />
+                    ) : (
+                        <Input/>
+                    )}
+                  </Form.Item>
+                </Col>
           </Row>
         </BaseBorderBox>
 
