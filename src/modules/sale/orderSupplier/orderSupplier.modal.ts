@@ -145,3 +145,11 @@ interface stockDataType{
         }
     ];
 }
+
+export interface paramsConvertDataOrderSupplier {
+    orderSupplierItems : string[]
+    totalPrice: number
+    warehouseId?: string | undefined
+    warehouseName?: string | undefined
+    billId: string
+};

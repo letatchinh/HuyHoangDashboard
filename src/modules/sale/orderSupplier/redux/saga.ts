@@ -30,7 +30,7 @@ function* createOrderSupplier({payload} : any) : any {
       callbackSubmit({
         type : 'createOrderSupplier',
         code: get(data, 'code'),
-        oldData: params,
+        oldData: {...params, billId: get(data, '_id')},
       })
     }
     yield put(orderSupplierActions.createSuccess(data));
@@ -71,9 +71,9 @@ function* updateOrderItem({ payload }: any): any {
 function* createOrderInWarehouse({payload} : any) : any {
   try {
     const data = yield call(api.createBillInWarehouse,payload);
-    yield put(orderSupplierActions.createSuccess(data));
+    yield put(orderSupplierActions.createOrderInWarehouseSuccess(data));
   } catch (error:any) {
-    yield put(orderSupplierActions.createFailed(error));
+    yield put(orderSupplierActions.createOrderInWarehouseFailed(error));
   }
 }
 
@@ -85,5 +85,5 @@ export default function* orderSupplierSaga() {
   yield takeLatest(orderSupplierActions.createRequest, createOrderSupplier);
   yield takeLatest(orderSupplierActions.updateRequest, updateOrderSupplier);
   yield takeLatest(orderSupplierActions.updateOrderItemRequest, updateOrderItem);
-  // yield takeLatest(orderSupplierActions.deleteRequest, deleteOrderSupplier);
+  yield takeLatest(orderSupplierActions.createOrderInWarehouseRequest, createOrderInWarehouse);
 }

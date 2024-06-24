@@ -76,6 +76,7 @@ export const useCreateOrderSupplier = (callback?: any) => {
 export const useCreateOrderInWarehouse = (callback?: any) => {
   useSuccess(
     createBillInWarehouseSuccessSelector,
+    `Tạo đơn nhập hàng đến kho thành công`,
   );
   useFailed(createBillInWarehouseFailedSelector);
 
@@ -189,9 +190,10 @@ export const useResetOrderSupplier = () => {
 
 export const convertDataSubmitWarehouse = (data: any) => {
   return {
-    orderSupplierItems: data?.orderSupplierItems?.map((item: any) => ({
-      quantity: item?.quantity,
-      
-    }))
+    totalPrice: data?.totalPrice,
+    warehouseId: data?.warehouseId,
+    warehouseName: data?.warehouseName,
+    orderSupplierItems: data?.orderSupplierItems?.map((item: any) => item?.codeBySupplier),
+    billId: data?.billId
   }
 };

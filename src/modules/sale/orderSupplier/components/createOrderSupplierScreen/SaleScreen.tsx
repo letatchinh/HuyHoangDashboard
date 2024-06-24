@@ -10,7 +10,7 @@ import SelectSupplier from "~/modules/supplier/components/SelectSupplier";
 import { DataResultType } from "~/pages/Dashboard/OrderSupplier/CreateOrderSupplier";
 import useNotificationStore from "~/store/NotificationContext";
 import { useChangeDocumentTitle } from "~/utils/hook";
-import { FormFieldCreateOrderSupplier, PayloadCreateOrderSupplier } from "../../orderSupplier.modal";
+import { FormFieldCreateOrderSupplier, PayloadCreateOrderSupplier, paramsConvertDataOrderSupplier } from "../../orderSupplier.modal";
 import useCreateOrderSupplierStore from "../../storeContext/CreateOrderSupplierContext";
 import ProductSelectedTable from "../ProductSelectedTable";
 // import SelectPharmacy from "../SelectPharmacy";
@@ -24,9 +24,9 @@ export default function SaleScreen(props: propsType): React.JSX.Element {
   const [isSubmitCreate, onCreateOrderInWarehouse] = useCreateOrderInWarehouse();
 
   const handleCreateOrderInWarehouse = (data: PayloadCreateOrderSupplier) => {
-    const submitData = convertDataSubmitWarehouse(data);
+    const submitData : paramsConvertDataOrderSupplier = convertDataSubmitWarehouse(data);
     try {
-      onCreateOrderInWarehouse(submitData)
+      // onCreateOrderInWarehouse(submitData)
     } catch (error) {
       console.log(error);
     };
@@ -57,16 +57,15 @@ try {
     warehouseId: get(bill, 'warehouseId'),
     warehouseName: get(bill, 'warehouseName'),
   });
-  console.log(orderSupplierItems,'orderSupplierItems')
   
-    // switch (get(bill,'typeTab')) {
-    //   case 'createOrderSupplier':
-    //     onCreateOrderSupplier(submitData);
-    //     break;
+    switch (get(bill,'typeTab')) {
+      case 'createOrderSupplier':
+        onCreateOrderSupplier(submitData);
+        break;
     
-    //   default:
-    //     break;
-    // }
+      default:
+        break;
+  }
   
 } catch (error : any) {
   onNotify?.error(error?.response?.data?.message || "Có lỗi gì đó xảy ra")
