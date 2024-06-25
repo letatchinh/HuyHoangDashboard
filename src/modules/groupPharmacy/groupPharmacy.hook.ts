@@ -46,6 +46,17 @@ export const useGetGroupsPharmacy = (param:any) => {
     param
   });
 };
+
+export const useGetSearchGroupsPharmacy = (param:any) => {
+  return useFetchByParam({
+    action: groupPharmacyActions.getListSearchRequest,
+    loadingSelector: loadingSelector,
+    dataSelector: listSelector,
+    failedSelector: getListFailedSelector,
+    param
+  });
+};
+ 
 export const useGetGroupPharmacy = (id: any) => {
   return useFetchByParam({
     action: groupPharmacyActions.getByIdRequest,

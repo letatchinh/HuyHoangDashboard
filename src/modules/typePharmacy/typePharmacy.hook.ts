@@ -47,6 +47,17 @@ export const useGetTypePharmacies = (param: any) => {
     param,
   });
 };
+
+export const useGetSearchTypePharmacies = (param: any) => {
+  return useFetchByParam({
+    action: typePharmacyActions.getListSearchRequest,
+    loadingSelector: loadingSelector,
+    dataSelector: listSelector,
+    failedSelector: getListFailedSelector,
+    param,
+  });
+};
+
 export const useGetTypePharmacy = (id: any) => {
   return useFetchByParam({
     action: typePharmacyActions.getByIdRequest,

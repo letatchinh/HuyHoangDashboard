@@ -35,6 +35,16 @@ import {
 import { convertInitPharmacy, convertSubmitData } from "../pharmacy.service";
 import TypePharmacyForm from "~/modules/typePharmacy/screens/TypePharmacyForm";
 import { GroupPharmacyForm } from "~/modules/groupPharmacy/screens/GroupPharmacyForm";
+import {
+  useGetSearchTypePharmacies,
+  useGetTypePharmacies,
+  useTypePharmacyQueryParams,
+} from "~/modules/typePharmacy/typePharmacy.hook";
+import {
+  useGetGroupsPharmacy,
+  useGetSearchGroupsPharmacy,
+  useGroupPharmacyQueryParams,
+} from "~/modules/groupPharmacy/groupPharmacy.hook";
 // import "./pharmacy.style.scss";
 const FormItem = Form.Item;
 const { Option } = Select;
@@ -47,6 +57,11 @@ interface Props {
   query?: any;
 }
 
+type ItemSearch = {
+  name: string;
+  value: string;
+};
+
 export default function PharmacyForm({
   onClose,
   id,
@@ -56,6 +71,7 @@ export default function PharmacyForm({
   query,
 }: Props) {
   const [form] = Form.useForm();
+  // const a = Form.useWatch(["name"],form);
   const [formSaleChannel] = Form.useForm();
   const [formCustomerGroup] = Form.useForm();
   const [formCustomer] = Form.useForm();
@@ -71,9 +87,17 @@ export default function PharmacyForm({
   const [isSaleChannelFormOpen, setSaleChannelFormOpen] = useState(false);
   const [isGroupCustomerFormOpen, setGroupCustomerFormOpen] = useState(false);
   const [isCustomerFormOpen, setCustomerFormOpen] = useState(false);
-  const [selectedCustomerGroupId, setSelectedCustomerGroupId] = useState<
-    string | undefined
-  >();
+  const [selectedCustomerGroupId, setSelectedCustomerGroupId] = useState<string | undefined>();
+  const [queryType] = useTypePharmacyQueryParams();
+  const [typeCustomers] = useGetSearchTypePharmacies(queryType);
+  const [queryGroup] = useGroupPharmacyQueryParams();
+  const [groupCustomers] = useGetSearchGroupsPharmacy(queryGroup);
+  const [filteredTypeCustomer, setFilteredTypeCustomer] = useState([]);
+  const [filteredGroupCustomer, setFilteredGroupCustomer] = useState([]);
+  console.log("Nhanh khach hang:", filteredTypeCustomer);
+
+  console.log("Khach hang:", filteredGroupCustomer);
+
 
   useEffect(() => {
     if (!id) {
@@ -91,15 +115,55 @@ export default function PharmacyForm({
         },
       });
       setSelectedCustomerGroupId(get(initPharmacy, "customerGroupId"));
+      setFilteredTypeCustomer(
+        typeCustomers.filter(
+          (item: any) =>
+            get(item, "salesChannel._id") ===
+            get(initPharmacyProfile, "salesChannelId")
+        )
+      );
+      setFilteredGroupCustomer(
+        groupCustomers.filter(
+          (item: any) =>
+            get(item, "customerGroup._id") ===
+            get(initPharmacyProfile, "customerGroupId")
+        )
+      );
     }
-  }, [initPharmacyProfile, id, form]);
+  }, [initPharmacyProfile, typeCustomers, groupCustomers, id, form]);
 
-  const onValuesChange = (value: any, values: any) => {
-    const key = Object.keys(value)[0];
-    switch (key) {
-      default:
-        break;
+  const onValuesChange = (changes: any) => {
+    const { salesChannelId, customerGroupId } = changes;
+    // const key = Object.keys(value)[0];
+    // switch (key) {
+    //   default:
+    //     break;
+    // }
+    if (salesChannelId) {
+      
+      form.setFieldsValue({ customerGroupId: null, });
+      setFilteredTypeCustomer(
+        typeCustomers.filter(
+          (item: any) => get(item, "salesChannel._id") === salesChannelId
+        )
+      );
+      form.setFieldsValue({ customerId: null, });
+      setFilteredGroupCustomer(
+        groupCustomers.filter(
+          (item: any) => get(item, "customerGroup._id") === customerGroupId
+        )
+      );
     }
+    // if (customerGroupId) {
+    //   form.setFieldsValue({
+    //     customerId: null,
+    //   });
+    //   setFilteredGroupCustomer(
+    //     groupCustomers.filter(
+    //       (item: any) => get(item, "customerGroup._id") === customerGroupId
+    //     )
+    //   );
+    // }
   };
 
   const onFinish = useCallback(
@@ -305,14 +369,28 @@ export default function PharmacyForm({
                     style={{ width: "90%", justifyContent: "space-between" }}
                     initialValue={query?.customerGroupId || null}
                   >
-                    <SelectTypePharmacy
+                    {/* <SelectTypePharmacy
                       validateFirst={false}
                       form={formCustomerGroup}
                       // style={{ width: 300 }}
                       showIcon={false}
                       size={"middle"}
                       defaultValue={query?.customerGroupId || null}
-                    />
+                    /> */}
+                    {isLoading ? (
+                      <Skeleton.Input active />
+                    ) : (
+                      <Select>
+                        {filteredTypeCustomer.map((item: ItemSearch) => (
+                          <Option
+                            // key={get(item, "_id")}
+                            value={get(item, "title")}
+                          >
+                            {get(item, "title")}
+                          </Option>
+                        ))}
+                      </Select>
+                    )}
                   </FormItem>
                   <Button
                     onClick={() => setGroupCustomerFormOpen(true)}
@@ -336,14 +414,21 @@ export default function PharmacyForm({
                     style={{ width: "90%" }}
                     initialValue={query?.customerId || null}
                   >
-                    <SelectGroupPharmacy
+                    {/* <SelectGroupPharmacy
                       validateFirst={false}
                       form={formCustomer}
                       // style={{ width: 200 }}
                       showIcon={false}
                       size={"middle"}
                       defaultValue={query?.customerId || null}
-                    />
+                    /> */}
+                    <Select>
+                      {filteredGroupCustomer.map((item: ItemSearch) => (
+                        <Option key={get(item, "_id")} value={get(item, "_id")}>
+                          {get(item, "title")}
+                        </Option>
+                      ))}
+                    </Select>
                   </FormItem>
                   <Button
                     onClick={() => setGroupCustomerFormOpen(true)}
