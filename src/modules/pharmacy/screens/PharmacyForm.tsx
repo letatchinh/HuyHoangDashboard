@@ -45,6 +45,7 @@ import {
   useGetSearchGroupsPharmacy,
   useGroupPharmacyQueryParams,
 } from "~/modules/groupPharmacy/groupPharmacy.hook";
+import FormSalesChannel from "../component/FormSalesChannel";
 // import "./pharmacy.style.scss";
 const FormItem = Form.Item;
 const { Option } = Select;
@@ -94,10 +95,6 @@ export default function PharmacyForm({
   const [groupCustomers] = useGetSearchGroupsPharmacy(queryGroup);
   const [filteredTypeCustomer, setFilteredTypeCustomer] = useState([]);
   const [filteredGroupCustomer, setFilteredGroupCustomer] = useState([]);
-  console.log("Nhanh khach hang:", filteredTypeCustomer);
-
-  console.log("Khach hang:", filteredGroupCustomer);
-
 
   useEffect(() => {
     if (!id) {
@@ -118,14 +115,14 @@ export default function PharmacyForm({
       setFilteredTypeCustomer(
         typeCustomers.filter(
           (item: any) =>
-            get(item, "salesChannel._id") ===
+            get(item, "salesChannelId") ===
             get(initPharmacyProfile, "salesChannelId")
         )
       );
       setFilteredGroupCustomer(
         groupCustomers.filter(
           (item: any) =>
-            get(item, "customerGroup._id") ===
+            get(item, "customerGroupId") ===
             get(initPharmacyProfile, "customerGroupId")
         )
       );
@@ -320,125 +317,9 @@ export default function PharmacyForm({
                   )}
                 </FormItem>
               </Col>
-              <Col span={12}>
-                <Row justify="space-around">
-                  <FormItem
-                    name={"salesChannelId"}
-                    label="Kênh bán hàng"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Xin vui lòng chọn kênh bán hàng",
-                      },
-                    ]}
-                    initialValue={query?.salesChannelId || null}
-                    style={{ width: "90%" }}
-                    wrapperCol={{ sm: 24, md: 24, lg: 21 }}
-                  >
-                    <SelectSaleChannel
-                      validateFirst={false}
-                      form={formSaleChannel}
-                      // style={{ marginLeft: 24, padding: 0 }}
-                      showIcon={false}
-                      size={"middle"}
-                      defaultValue={query?.salesChannelId || null}
-                      divisionText="B2B"
-                    />
-                  </FormItem>
-                  <Button
-                    onClick={() => setSaleChannelFormOpen(true)}
-                    style={{ width: "10%" }}
-                  >
-                    <PlusOutlined />
-                  </Button>
-                </Row>
-              </Col>
             </Row>
-            <Row gutter={48} align="middle" justify="space-between">
-              <Col span={12}>
-                <Row justify="space-around">
-                  <FormItem
-                    name={"customerGroupId"}
-                    label="Nhánh khách hàng"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Xin vui lòng chọn nhánh khách hàng",
-                      },
-                    ]}
-                    style={{ width: "90%", justifyContent: "space-between" }}
-                    initialValue={query?.customerGroupId || null}
-                  >
-                    {/* <SelectTypePharmacy
-                      validateFirst={false}
-                      form={formCustomerGroup}
-                      // style={{ width: 300 }}
-                      showIcon={false}
-                      size={"middle"}
-                      defaultValue={query?.customerGroupId || null}
-                    /> */}
-                    {isLoading ? (
-                      <Skeleton.Input active />
-                    ) : (
-                      <Select>
-                        {filteredTypeCustomer.map((item: ItemSearch) => (
-                          <Option
-                            // key={get(item, "_id")}
-                            value={get(item, "title")}
-                          >
-                            {get(item, "title")}
-                          </Option>
-                        ))}
-                      </Select>
-                    )}
-                  </FormItem>
-                  <Button
-                    onClick={() => setGroupCustomerFormOpen(true)}
-                    style={{ width: "10%" }}
-                  >
-                    <PlusOutlined />
-                  </Button>
-                </Row>
-              </Col>
-              <Col span={12}>
-                <Row justify={"space-around"}>
-                  <FormItem
-                    name={"customerId"}
-                    label="Nhóm khách hàng"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Xin vui lòng chọn nhóm khách hàng",
-                      },
-                    ]}
-                    style={{ width: "90%" }}
-                    initialValue={query?.customerId || null}
-                  >
-                    {/* <SelectGroupPharmacy
-                      validateFirst={false}
-                      form={formCustomer}
-                      // style={{ width: 200 }}
-                      showIcon={false}
-                      size={"middle"}
-                      defaultValue={query?.customerId || null}
-                    /> */}
-                    <Select>
-                      {filteredGroupCustomer.map((item: ItemSearch) => (
-                        <Option key={get(item, "_id")} value={get(item, "_id")}>
-                          {get(item, "title")}
-                        </Option>
-                      ))}
-                    </Select>
-                  </FormItem>
-                  <Button
-                    onClick={() => setGroupCustomerFormOpen(true)}
-                    style={{ width: "10%" }}
-                  >
-                    <PlusOutlined />
-                  </Button>
-                </Row>
-              </Col>
-            </Row>
+
+            <FormSalesChannel />
 
             <FormItem
               label="Khu vực"
