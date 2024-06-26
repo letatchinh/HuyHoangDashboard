@@ -1,8 +1,8 @@
-import { PlusOutlined } from "@ant-design/icons";
 import {
   Button,
   Col,
   DatePicker,
+  Divider,
   Form,
   Input,
   Row,
@@ -11,9 +11,7 @@ import {
 } from "antd";
 import TextArea from "antd/es/input/TextArea";
 import dayjs from "dayjs";
-import { get } from "lodash";
 import { useCallback, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import ModalAnt from "~/components/Antd/ModalAnt";
 import AddressCommonForm from "~/components/common/AddressCommonForm";
 import AddressFormDelivery from "~/components/common/AddressFormDelivery";
@@ -21,65 +19,41 @@ import AddressFormSection from "~/components/common/AddressFormSection";
 import BaseBorderBox from "~/components/common/BaseBorderBox";
 import RenderLoading from "~/components/common/RenderLoading";
 import SelectEmployee from "~/modules/employee/components/SelectEmployee";
-import SelectGroupPharmacy from "~/modules/groupPharmacy/components/SelectGroupPharmacy";
-import SelectSaleChannel from "~/modules/saleChannel/components/SelectSaleChannel";
+import { GroupPharmacyForm } from "~/modules/groupPharmacy/screens/GroupPharmacyForm";
 import SaleChannelForm from "~/modules/saleChannel/screens/SaleChannelForm";
-import SelectTypePharmacy from "~/modules/typePharmacy/components/SelectTypePharmacy";
-import { PATH_APP } from "~/routes/allPath";
+import TypePharmacyForm from "~/modules/typePharmacy/screens/TypePharmacyForm";
+import FormSalesChannel from "../component/FormSalesChannel";
 import {
-  useCreatePharmacy,
   useGetPharmacyId,
   useInitPharmacy,
   useResetPharmacyAction,
 } from "../pharmacy.hook";
 import { convertInitPharmacy, convertSubmitData } from "../pharmacy.service";
-import TypePharmacyForm from "~/modules/typePharmacy/screens/TypePharmacyForm";
-import { GroupPharmacyForm } from "~/modules/groupPharmacy/screens/GroupPharmacyForm";
-import {
-  useGetSearchTypePharmacies,
-  useGetTypePharmacies,
-  useTypePharmacyQueryParams,
-} from "~/modules/typePharmacy/typePharmacy.hook";
-import {
-  useGetGroupsPharmacy,
-  useGetSearchGroupsPharmacy,
-  useGroupPharmacyQueryParams,
-} from "~/modules/groupPharmacy/groupPharmacy.hook";
-import FormSalesChannel from "../component/FormSalesChannel";
-// import "./pharmacy.style.scss";
+
 const FormItem = Form.Item;
 const { Option } = Select;
 interface Props {
   onClose: (p?: any) => void;
   id?: any;
+  handleCreate?: any;
+  isSubmitLoading?: any;
   handleUpdate?: any;
   destroy?: any;
   setDestroy: any;
   query?: any;
 }
 
-type ItemSearch = {
-  name: string;
-  value: string;
-};
-
 export default function PharmacyForm({
   onClose,
   id,
+  handleCreate,
+  isSubmitLoading,
   handleUpdate,
   destroy,
   setDestroy,
   query,
 }: Props) {
   const [form] = Form.useForm();
-  // const a = Form.useWatch(["name"],form);
-  const [formSaleChannel] = Form.useForm();
-  const [formCustomerGroup] = Form.useForm();
-  const [formCustomer] = Form.useForm();
-  const [isSubmitLoading, handleCreate] = useCreatePharmacy(() => {
-    onClose();
-    setDestroy && setDestroy(true);
-  });
   const [pharmacy, isLoading] = useGetPharmacyId(id);
   const initPharmacyProfile = useInitPharmacy(pharmacy, id);
   useResetPharmacyAction();
@@ -88,13 +62,6 @@ export default function PharmacyForm({
   const [isSaleChannelFormOpen, setSaleChannelFormOpen] = useState(false);
   const [isGroupCustomerFormOpen, setGroupCustomerFormOpen] = useState(false);
   const [isCustomerFormOpen, setCustomerFormOpen] = useState(false);
-  const [selectedCustomerGroupId, setSelectedCustomerGroupId] = useState<string | undefined>();
-  const [queryType] = useTypePharmacyQueryParams();
-  const [typeCustomers] = useGetSearchTypePharmacies(queryType);
-  const [queryGroup] = useGroupPharmacyQueryParams();
-  const [groupCustomers] = useGetSearchGroupsPharmacy(queryGroup);
-  const [filteredTypeCustomer, setFilteredTypeCustomer] = useState([]);
-  const [filteredGroupCustomer, setFilteredGroupCustomer] = useState([]);
 
   useEffect(() => {
     if (!id) {
@@ -111,57 +78,8 @@ export default function PharmacyForm({
           ),
         },
       });
-      setSelectedCustomerGroupId(get(initPharmacy, "customerGroupId"));
-      setFilteredTypeCustomer(
-        typeCustomers.filter(
-          (item: any) =>
-            get(item, "salesChannelId") ===
-            get(initPharmacyProfile, "salesChannelId")
-        )
-      );
-      setFilteredGroupCustomer(
-        groupCustomers.filter(
-          (item: any) =>
-            get(item, "customerGroupId") ===
-            get(initPharmacyProfile, "customerGroupId")
-        )
-      );
     }
-  }, [initPharmacyProfile, typeCustomers, groupCustomers, id, form]);
-
-  const onValuesChange = (changes: any) => {
-    const { salesChannelId, customerGroupId } = changes;
-    // const key = Object.keys(value)[0];
-    // switch (key) {
-    //   default:
-    //     break;
-    // }
-    if (salesChannelId) {
-      
-      form.setFieldsValue({ customerGroupId: null, });
-      setFilteredTypeCustomer(
-        typeCustomers.filter(
-          (item: any) => get(item, "salesChannel._id") === salesChannelId
-        )
-      );
-      form.setFieldsValue({ customerId: null, });
-      setFilteredGroupCustomer(
-        groupCustomers.filter(
-          (item: any) => get(item, "customerGroup._id") === customerGroupId
-        )
-      );
-    }
-    // if (customerGroupId) {
-    //   form.setFieldsValue({
-    //     customerId: null,
-    //   });
-    //   setFilteredGroupCustomer(
-    //     groupCustomers.filter(
-    //       (item: any) => get(item, "customerGroup._id") === customerGroupId
-    //     )
-    //   );
-    // }
-  };
+  }, [initPharmacyProfile, id, form]);
 
   const onFinish = useCallback(
     (values: any) => {
@@ -188,7 +106,7 @@ export default function PharmacyForm({
           onFinish={onFinish}
           scrollToFirstError
           requiredMark={false}
-          onValuesChange={onValuesChange}
+          // onValuesChange={onValuesChange}
           labelCol={{ sm: 24, md: 24, lg: 6 }}
           wrapperCol={{ sm: 24, md: 24, lg: 18 }}
           labelAlign="left"
@@ -287,7 +205,11 @@ export default function PharmacyForm({
                 </FormItem>
               </Col>
             </Row>
+            {/* Nhập kênh, nhánh, nhóm khách hàng */}
+            {/* <Divider/> */}
+            <FormSalesChannel />
             <h5 style={{ textAlign: "center" }}>Địa chỉ khách hàng</h5>
+            {/* <BaseBorderBox title={"Địa chỉ khách hàng"}> */}
             <AddressFormSection
               form={form}
               cityCode={cityCode}
@@ -297,6 +219,7 @@ export default function PharmacyForm({
               allowPhoneNumber={false}
               allowEmail={false}
             />
+            {/* </BaseBorderBox> */}
             <Row gutter={48} align="middle" justify="space-between">
               <Col span={12}>
                 <FormItem
@@ -317,18 +240,17 @@ export default function PharmacyForm({
                   )}
                 </FormItem>
               </Col>
+              <Col span={12}>
+                <FormItem
+                  label="Khu vực"
+                  name="areaPharma"
+                  wrapperCol={{ sm: 24, md: 24, lg: 21 }}
+                >
+                  <Input />
+                </FormItem>
+              </Col>
             </Row>
 
-            <FormSalesChannel />
-
-            <FormItem
-              label="Khu vực"
-              name="areaPharma"
-              labelCol={{ sm: 24, md: 24, lg: 3 }}
-              wrapperCol={{ sm: 24, md: 24, lg: 21 }}
-            >
-              <Input />
-            </FormItem>
             <Row gutter={48} align="middle" justify="space-between">
               <Col span={12}>
                 <FormItem
@@ -466,9 +388,7 @@ export default function PharmacyForm({
             {isSubmitLoading ? (
               <Button disabled>Huỷ</Button>
             ) : (
-              <Link to={PATH_APP.pharmacy.root}>
-                <Button onClick={onClose}>Huỷ</Button>
-              </Link>
+              <Button onClick={onClose}>Huỷ</Button>
             )}
 
             <Button

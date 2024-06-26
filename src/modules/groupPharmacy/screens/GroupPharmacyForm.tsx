@@ -133,9 +133,7 @@ export const GroupPharmacyForm = ({ onClose, id, handleUpdate,setDestroy, query 
             {isSubmitLoading ? (
               <Button disabled>Huỷ</Button>
             ) : (
-              <Link to={PATH_APP.groupPharmacy.root}>
                 <Button onClick={onClose}>Huỷ</Button>
-              </Link>
             )}
 
             <Button type="primary" htmlType="submit" loading={isSubmitLoading} style={{marginLeft: 5}}>

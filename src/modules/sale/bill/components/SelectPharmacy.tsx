@@ -1,5 +1,5 @@
 import { PlusOutlined, UserOutlined } from "@ant-design/icons";
-import { Button, Col, Form, Row } from "antd";
+import { Button, Col, Form, Modal, Row, Tabs } from "antd";
 import { SelectProps } from "antd/lib/index";
 import { get } from "lodash";
 import React, { useEffect, useMemo, useState } from "react";
@@ -9,9 +9,14 @@ import useNotificationStore from "~/store/NotificationContext";
 import { FormFieldCreateBill } from "../bill.modal";
 import { useLocation } from "react-router-dom";
 import { PATH_APP } from "~/routes/allPath";
-import { usePharmacyQueryParams } from "~/modules/pharmacy/pharmacy.hook";
+import {
+  useCreatePharmacy,
+  usePharmacyQueryParams,
+} from "~/modules/pharmacy/pharmacy.hook";
 import ModalAnt from "~/components/Antd/ModalAnt";
 import PharmacyForm from "~/modules/pharmacy/screens/PharmacyForm";
+import CollaboratorForm from "~/modules/collaborator/components/CollaboratorForm";
+import { useCreateCollaborator } from "~/modules/collaborator/collaborator.hook";
 interface propsType extends SelectProps {
   form?: any;
   allowClear?: boolean;
@@ -42,8 +47,18 @@ export default function SelectPharmacy({
   const [initOption, setInitOption] = useState([]);
   const { pathname } = useLocation();
   const [isPharmacyFormOpen, setPharmacyFormOpen] = useState(false);
+  const [isOpenModal, setIsOpenModal] = useState(false);
   const [destroy, setDestroy] = useState(false);
   const [query] = usePharmacyQueryParams(true);
+  const [isSubmitLoading, handleCreateB2C] = useCreateCollaborator(() => {
+    setIsOpenModal(false);
+    setDestroy(true);
+  });
+
+  const [, handleCreateB2B] = useCreatePharmacy(() => {
+    setPharmacyFormOpen(false);
+    setDestroy && setDestroy(true);
+  });
   const filterOption: any = (data: any[]) => {
     if (pathname === PATH_APP.bill.createCollaborator) {
       return data?.filter((item) => item?.type === "ctv");
@@ -149,7 +164,7 @@ export default function SelectPharmacy({
                 message:
                   typeData === "ctv"
                     ? "Vui lòng chọn khách hàng B2C"
-                    : "Vui lòng chọn nhà thuốc",
+                    : "Vui lòng chọn khách hàng B2B",
               },
             ]}
             colon={false}
@@ -160,7 +175,9 @@ export default function SelectPharmacy({
               size="large"
               loading={loading}
               placeholder={
-                typeData === "ctv" ? "Chọn khách hàng B2C" : "Chọn nhà thuốc"
+                typeData === "ctv"
+                  ? "Chọn khách hàng B2C"
+                  : "Chọn khách hàng B2B"
               }
               fetchOptions={fetchOptions}
               style={{ width: "100%" }}
@@ -172,7 +189,11 @@ export default function SelectPharmacy({
         </Col>
         {showButtonAdd && (
           <Button
-            onClick={() => setPharmacyFormOpen(true)}
+            onClick={() =>
+              typeData === "ctv"
+                ? setIsOpenModal(true)
+                : setPharmacyFormOpen(true)
+            }
             // style={{ width: "10%" }}
           >
             <PlusOutlined />
@@ -190,9 +211,60 @@ export default function SelectPharmacy({
         <PharmacyForm
           setDestroy={setDestroy}
           onClose={() => setPharmacyFormOpen(false)}
+          handleCreate={handleCreateB2B}
+          isSubmitLoading={isSubmitLoading}
           query={query}
         />
       </ModalAnt>
+      <Modal
+        open={isOpenModal}
+        onCancel={() => setIsOpenModal(false)}
+        onOk={() => setIsOpenModal(false)}
+        className="form-modal modalScroll"
+        footer={null}
+        width={1020}
+        centered
+        // style={{ top: 50 }}
+        afterClose={() => {
+          setDestroy(false);
+        }}
+        destroyOnClose={destroy}
+      >
+        <h4>Tạo mới khách hàng B2C</h4>
+        <Tabs
+          destroyInactiveTabPane
+          items={[
+            {
+              key: "1",
+              label: "Hồ sơ",
+              children: (
+                <CollaboratorForm
+                  id={id}
+                  handleCloseModal={() => setIsOpenModal(false)}
+                  handleCreate={handleCreateB2C}
+                  isSubmitLoading={isSubmitLoading}
+                  query={query}
+                />
+              ),
+            },
+            {
+              key: "2",
+              label: "Sản phẩm đảm nhiệm",
+              disabled: !id,
+            },
+            {
+              key: "3",
+              label: "Sổ địa chỉ",
+              disabled: !id,
+            },
+            {
+              key: "4",
+              label: "Yêu cầu",
+              disabled: !id,
+            },
+          ]}
+        ></Tabs>
+      </Modal>
     </>
   );
 }
