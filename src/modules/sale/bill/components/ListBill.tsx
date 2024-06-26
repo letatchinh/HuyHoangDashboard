@@ -163,31 +163,40 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
   const onRequestWarehouseExport = () => {
     const submitData = convertDataSentToWarehouse({ ...bill, notePharmacy: noteForWarehouse });
     try {
-      onCreateBillToWarehouse(submitData);
+      onCreateBillToWarehouse({...submitData});
     } catch (error) {
       console.log(error)
     }
   };
 
-  const onChangeStatusBill = (status: keyof typeof STATUS_BILL, id?: string | null,billItem?: any) => {
-    //Kiểm tra hàng tồn kho
-    // const dataCheck = convertProductsFromBill(get(billItem, 'billItems', []));
-    // const submitData = {
-    //   warehouseId: billItem?.warehouseId,
-    //   listProduct: dataCheck,
-    //   billId: get(bill, '_id'),
-    // };
-    // onCheckWarehouse(submitData);
+  const handleCreateBillToWarehouse = (status: keyof typeof STATUS_BILL,bill: any) => {
+    try {
+      const submitData = convertDataSentToWarehouse({ ...bill, notePharmacy: noteForWarehouse });
+      setTimeout(() => {
+          onCreateBillToWarehouse({...submitData, callback: onUpdateStatus, status});
+      },700)
+    } catch (error) {
+      console.log(error)
+    }
+  };
 
-    // Tạo yêu cầu xuất kho
-    // const submitDataExport = convertDataSentToWarehouse({...billItem, notePharmacy:noteForWarehouse});
-    // onCreateBillToWarehouse(submitDataExport);
-    const data = {
-      billId: id,
-      status
+  const onChangeStatusBill = (status: keyof typeof STATUS_BILL, id?: string | null,bill?: any) => {
+    // Phải kiểm tra hàng tồn kho trước khi đổi trạng thái từ NEW qua PACKAGE_EXPORT
+    const dataCheck = convertProductsFromBill(get(bill, 'billItems', []));
+    const submitData = {
+      warehouseId: bill?.warehouseId,
+      listProduct: dataCheck,
+      billId: get(bill, '_id'),
     };
     try {
-        onUpdateStatus(data);
+      if (bill?.status === STATUS_BILL.NEW && status !== STATUS_BILL.CANCELLED) {
+        return onCheckWarehouse({...submitData, callback: handleCreateBillToWarehouse, status, bill}); //
+      };
+      const data = {
+        billId: id,
+        status
+      };
+      onUpdateStatus(data); //can update if bill have in warehouse
     } catch (error) {
       console.log(error)
     }
@@ -278,7 +287,7 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
                   <ConfirmStatusBill
                     askAgain={askAgain}
                     setAskAgain={setAskAgain}
-                    billItem={record}
+                    bill={record}
                     onChangeStatusBill={onChangeStatusBill}
                     onOpenCancel={onOpenCancel}
                     isDisabledAll={isDisabledAll(status)}

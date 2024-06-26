@@ -489,7 +489,6 @@ export function CreateBillProvider({
         warehouseName: data?.name?.vi,
       });
   };
-  console.log(bill,'bill')
   useEffect(() => {
     if ((pharmacyInfo || partner) && !bill?.warehouseId) {
       const address = get(pharmacyInfo, 'data.addressDelivery', get(pharmacyInfo, 'data.address', ''))

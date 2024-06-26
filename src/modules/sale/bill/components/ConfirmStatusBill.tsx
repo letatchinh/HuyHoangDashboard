@@ -10,8 +10,8 @@ import { STATUS_BILL, STATUS_BILL_VI } from "../../bill/constants";
 import { ParamGetNextStatus } from "../bill.modal";
 
 type propsType = {
-  onChangeStatusBill: (p: any, id: string | null| undefined,billItem?: any) => void;
-  billItem: any;
+  onChangeStatusBill: (p: any, id: string | null| undefined,bill?: any) => void;
+  bill: any;
   isDisabledAll?: boolean;
   isSubmitLoading?: boolean;
   onOpenCancel: (p: any) => void;
@@ -25,7 +25,7 @@ const CLONE_STATUS_BILL: any = omit(STATUS_BILL, ["READY","UNREADY","REQUESTED",
 const CLONE_STATUS_BILL_REQUESTED: any = omit(STATUS_BILL, ["READY","UNREADY","REJECT"]);
 export default function ConfirmStatusBill({
   onChangeStatusBill,
-  billItem,
+  bill,
   isDisabledAll,
   isSubmitLoading,
   onOpenCancel,
@@ -34,7 +34,7 @@ export default function ConfirmStatusBill({
   id,
 }: propsType): React.JSX.Element {
   const [askAgain, setAskAgain] = useState(defaultAskAgain);
-  const status = useMemo(() => get(billItem, "status"), [billItem]);
+  const status = useMemo(() => get(bill, "status"), [bill]);
   const {pathname} = useLocation();
   const canUpdateBill = useMatchPolicy([CheckPermission(pathname), 'update']);
   const getNextStatus = useCallback(
@@ -61,16 +61,16 @@ export default function ConfirmStatusBill({
         message,
       };
     },
-    [isDisabledAll, billItem, id]
+    [isDisabledAll, bill, id]
   );
   const { nextStatus, message } = useMemo(
     () =>
       getNextStatus({
         status,
-        lotNumber: get(billItem, "lotNumber"),
-        expirationDate: get(billItem, "expirationDate"),
+        lotNumber: get(bill, "lotNumber"),
+        expirationDate: get(bill, "expirationDate"),
       }),
-    [billItem, status]
+    [bill, status]
   );
   return nextStatus && canUpdateBill ? (
         <Flex gap={"small"} align="center" justify={"center"}>
@@ -91,7 +91,7 @@ export default function ConfirmStatusBill({
               okText="Ok"
               cancelText="Huỷ"
               onConfirm={() => {
-                onChangeStatusBill(nextStatus,id,billItem);
+                onChangeStatusBill(nextStatus,id,bill);
                 if (setAskAgainDefault) {
                   setAskAgainDefault(askAgain);
                 }
@@ -121,7 +121,7 @@ export default function ConfirmStatusBill({
                 disabled={isDisabledAll || !!message}
                 loading={isSubmitLoading}
                 onClick={() =>
-                  onChangeStatusBill(nextStatus,id,billItem)
+                  onChangeStatusBill(nextStatus,id,bill)
                 }
               >
                 {(status === 'REQUESTED' ? CLONE_STATUS_BILL_VI_REQUESTED: CLONE_STATUS_BILL_VI)[nextStatus]}
@@ -133,7 +133,7 @@ export default function ConfirmStatusBill({
             <Popconfirm
               title={'Bạn có chắc chắn muốn huỷ đơn này?'}
               onConfirm={() => 
-              onChangeStatusBill('CANCELLED',id,billItem)
+              onChangeStatusBill('CANCELLED',id,bill)
               }
             >
               <Button

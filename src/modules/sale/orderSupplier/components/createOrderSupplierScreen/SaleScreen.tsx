@@ -26,7 +26,7 @@ export default function SaleScreen(props: propsType): React.JSX.Element {
   const handleCreateOrderInWarehouse = (data: PayloadCreateOrderSupplier) => {
     const submitData : paramsConvertDataOrderSupplier = convertDataSubmitWarehouse(data);
     try {
-      // onCreateOrderInWarehouse(submitData)
+      onCreateOrderInWarehouse(submitData)
     } catch (error) {
       console.log(error);
     };
