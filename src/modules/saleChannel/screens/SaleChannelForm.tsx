@@ -32,10 +32,9 @@ export default function SaleChannelForm({
     onClose();
     setDestroy && setDestroy(true);
   });
-  const [saleChannel, isLoading] = useGetSaleChannel(id);
+  const [saleChannel, ] = useGetSaleChannel(id);
   const [customerSegmentation ] = useGetCustomerSegmentations(query);
   const initSalesChannel = useInitSaleChannel(saleChannel, id);
-  const [selectedCustomerSegmentation, setSelectedCustomerSegmentation] = useState<string | undefined>();
   useResetSaleChannelAction();
 
   useEffect(() => {
@@ -47,19 +46,19 @@ export default function SaleChannelForm({
     }
   }, [initSalesChannel, id, form]);
 
-  const onValuesChange = (value: any, values: any) => {
-    const key = Object.keys(value)[0];
-    switch (key) {
-      default:
-        break;
-    }
-  };
+  // const onValuesChange = (value: any, values: any) => {
+  //   const key = Object.keys(value)[0];
+  //   switch (key) {
+  //     default:
+  //       break;
+  //   }
+  // };
 
   const optionsSegmentation = useMemo(
     () =>
       customerSegmentation?.map((item: any) => ({
         label: get(item, "title"),
-        value: get(item, "_id"),
+        value: get(item, "division"),
         key: get(item, "division")
       })),
     [customerSegmentation]
@@ -87,9 +86,6 @@ export default function SaleChannelForm({
     },
   ];
 
-  const onTypeChange = (value: string) => {
-    setSelectedCustomerSegmentation(value);
-  };
 
   return (
     <div className="sale-channel page-wraper form-page-content">
@@ -103,7 +99,7 @@ export default function SaleChannelForm({
           onFinish={onFinish}
           scrollToFirstError
           requiredMark={false}
-          onValuesChange={onValuesChange}
+          // onValuesChange={onValuesChange}
           labelCol={{ sm: 24, md: 24, lg: 8, xl: 8 }}
           wrapperCol={{ sm: 24, md: 24, lg: 16, xl: 16 }}
           labelAlign="left"
@@ -119,10 +115,9 @@ export default function SaleChannelForm({
             ]}
           >
             <Select
+              defaultValue={'B2B'}
               options={optionsSegmentation}
               allowClear
-              // defaultValue={"B2B"}
-              onChange={onTypeChange}
             />
           </FormItem>
           <FormItem label="Mã kênh bán hàng" name="code">
@@ -140,22 +135,33 @@ export default function SaleChannelForm({
           >
             <Input />
           </FormItem>
-          <FormItem
-            label="Loại chiết khấu"
-            name="discount"
-            initialValue={"DIRECT_DISCOUNT"}
-            rules={[
-              {
-                required: true,
-                message: "Xin vui lòng nhập loại chiết khấu",
-              },
-            ]}
-          >
-            <Select
-              options={options}
-              defaultValue={"DIRECT_DISCOUNT"}
-              // disabled={customerSegmentation?.division === "B2B" ? true : false}
-            />
+
+          <FormItem shouldUpdate={(pre,curr)=>pre.customerDivisionId !==curr.customerDivisionId} noStyle>
+            {({getFieldValue,setFieldValue}) => {
+              const checkCustomerDivision = getFieldValue('customerDivisionId')==='B2B'
+              if(checkCustomerDivision){
+                setFieldValue('discount','DIRECT_DISCOUNT')
+              }
+              return (
+                <FormItem
+                  label="Loại chiết khấu"
+                  name="discount"
+                  initialValue={"DIRECT_DISCOUNT"}
+                  rules={[
+                    {
+                      required: true,
+                      message: "Xin vui lòng nhập loại chiết khấu",
+                    },
+                  ]}
+                >
+                  <Select
+                    options={options}
+                    defaultValue={"DIRECT_DISCOUNT"}
+                    disabled={checkCustomerDivision}
+                  />
+                </FormItem>
+              );
+            }}
           </FormItem>
           <Row
             className="form__submit-box"
@@ -167,7 +173,12 @@ export default function SaleChannelForm({
                 <Button onClick={onClose}>Huỷ</Button>
             )}
 
-            <Button type="primary" htmlType="submit" loading={isSubmitLoading} style={{marginLeft: 5}}>
+            <Button
+              type="primary"
+              htmlType="submit"
+              loading={isSubmitLoading}
+              style={{ marginLeft: 5 }}
+            >
               {id ? "Cập nhật" : "Thêm mới"}
             </Button>
           </Row>
