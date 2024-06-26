@@ -3,6 +3,7 @@ import useTranslate from "~/lib/translation";
 import { concatAddress, formatNumberThreeComma } from "~/utils/helpers";
 import {
   useConvertPharmacy,
+  useCreatePharmacy,
   useDeletePharmacy,
   useGetPharmacies,
   usePharmacyPaging,
@@ -75,9 +76,12 @@ export default function Pharmacy() {
     setPharmacyId(null);
     setIsOpenForm(false);
   }, []);
-
+  const [isSubmitLoading, handleCreate] = useCreatePharmacy(() => {
+    onCloseForm();
+    setDestroy && setDestroy(true);
+  });
   const [, updatePharmacy] = useUpdatePharmacy(onCloseForm);
-  const [isSubmitLoading, deletePharmacy] = useDeletePharmacy();
+  const [, deletePharmacy] = useDeletePharmacy();
   const [pharmacyId, setPharmacyId] = useState(null);
   const [isOpenForm, setIsOpenForm] = useState(false);
   const paging = usePharmacyPaging();
@@ -579,6 +583,8 @@ export default function Pharmacy() {
           setDestroy={setDestroy}
           onClose={onCloseForm}
           id={pharmacyId}
+          handleCreate={handleCreate}
+          isSubmitLoading={isSubmitLoading}
           handleUpdate={updatePharmacy}
           query={query}
         />

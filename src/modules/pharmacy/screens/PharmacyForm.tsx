@@ -8,6 +8,7 @@ import {
   Row,
   Select,
   Skeleton,
+  Space,
 } from "antd";
 import TextArea from "antd/es/input/TextArea";
 import dayjs from "dayjs";
@@ -51,6 +52,8 @@ const { Option } = Select;
 interface Props {
   onClose: (p?: any) => void;
   id?: any;
+  handleCreate?: any;
+  isSubmitLoading?: any;
   handleUpdate?: any;
   destroy?: any;
   setDestroy: any;
@@ -65,6 +68,8 @@ type ItemSearch = {
 export default function PharmacyForm({
   onClose,
   id,
+  handleCreate,
+  isSubmitLoading,
   handleUpdate,
   destroy,
   setDestroy,
@@ -75,10 +80,7 @@ export default function PharmacyForm({
   const [formSaleChannel] = Form.useForm();
   const [formCustomerGroup] = Form.useForm();
   const [formCustomer] = Form.useForm();
-  const [isSubmitLoading, handleCreate] = useCreatePharmacy(() => {
-    onClose();
-    setDestroy && setDestroy(true);
-  });
+
   const [pharmacy, isLoading] = useGetPharmacyId(id);
   const initPharmacyProfile = useInitPharmacy(pharmacy, id);
   useResetPharmacyAction();
@@ -115,13 +117,35 @@ export default function PharmacyForm({
         },
       });
       setSelectedCustomerGroupId(get(initPharmacy, "customerGroupId"));
+      // setFilteredTypeCustomer(
+      //   typeCustomers.filter(
+      //     (item: any) =>
+      //       get(item, "salesChannelId") ===
+      //       get(initPharmacyProfile, "salesChannelId")
+      //   )
+      // );
+      // setFilteredGroupCustomer(
+      //   groupCustomers.filter(
+      //     (item: any) =>
+      //       get(item, "customerGroupId") ===
+      //       get(initPharmacyProfile, "customerGroupId")
+      //   )
+      // );
+    }
+  }, [initPharmacyProfile, id, form]);
+  useEffect(() => {
+    if (form.getFieldValue("salesChannelId")) {
       setFilteredTypeCustomer(
         typeCustomers.filter(
           (item: any) =>
-            get(item, "salesChannel._id") ===
-            get(initPharmacyProfile, "salesChannelId")
+            item.salesChannelId === form.getFieldValue("salesChannelId")
         )
       );
+    } else {
+      setFilteredTypeCustomer(typeCustomers);
+    }
+
+    if (form.getFieldValue("customerGroupId")) {
       setFilteredGroupCustomer(
         groupCustomers.filter(
           (item: any) =>
@@ -154,16 +178,6 @@ export default function PharmacyForm({
         )
       );
     }
-    // if (customerGroupId) {
-    //   form.setFieldsValue({
-    //     customerId: null,
-    //   });
-    //   setFilteredGroupCustomer(
-    //     groupCustomers.filter(
-    //       (item: any) => get(item, "customerGroup._id") === customerGroupId
-    //     )
-    //   );
-    // }
   };
 
   const onFinish = useCallback(
@@ -414,14 +428,6 @@ export default function PharmacyForm({
                     style={{ width: "90%" }}
                     initialValue={query?.customerId || null}
                   >
-                    {/* <SelectGroupPharmacy
-                      validateFirst={false}
-                      form={formCustomer}
-                      // style={{ width: 200 }}
-                      showIcon={false}
-                      size={"middle"}
-                      defaultValue={query?.customerId || null}
-                    /> */}
                     <Select>
                       {filteredGroupCustomer.map((item: ItemSearch) => (
                         <Option key={get(item, "_id")} value={get(item, "_id")}>
@@ -585,9 +591,7 @@ export default function PharmacyForm({
             {isSubmitLoading ? (
               <Button disabled>Huỷ</Button>
             ) : (
-              <Link to={PATH_APP.pharmacy.root}>
-                <Button onClick={onClose}>Huỷ</Button>
-              </Link>
+              <Button onClick={onClose}>Huỷ</Button>
             )}
 
             <Button
