@@ -3,7 +3,7 @@ import api from '../warehouse.api';
 import { warehouseActions } from './reducer';
 import { billSliceAction } from '~/modules/sale/bill/redux/reducer';
 import { STATUS_BILL } from '~/modules/sale/bill/constants';
-import { omit } from 'lodash';
+import { get, omit } from 'lodash';
 import { branchSliceAction } from '~/modules/branch/redux/reducer';
 
 function* getListWarehouse({payload:query} : any) : any {
@@ -45,10 +45,19 @@ function* createWarehouse({payload} : any) : any {
 
 function* createBillToWarehouse({ payload }: any): any {
   try {
-    const res = yield call(api.createBillToWarehouse,payload);
+    const res = yield call(api.createBillToWarehouse,omit(payload, ['callback','status']));
     yield put(warehouseActions.createBillToWarehouseSuccess(res));
-    const data = {status: STATUS_BILL.REQUESTED, _id: payload?.billId}
-    yield put(billSliceAction.updateRequest(data));
+    if (typeof get(payload, 'callback', '') === 'function' && !res?.status) { // Thực thi khi kiểm kho có hàng bằng hình thức action trực tiếp trạng thái
+      setTimeout(() => {
+        payload.callback({
+          status: payload?.status,
+          billId: payload?.billId
+        });
+      }, 1000);
+    } else {
+      const data = {status: STATUS_BILL.REQUESTED, _id: payload?.billId}// Hành động theo thứ tự kiểm kho trong bộ thao tác
+      yield put(billSliceAction.updateRequest(data));
+    };
   } catch (error:any) {
     yield put(warehouseActions.createBillToWarehouseFailed(error));
   }
@@ -56,7 +65,7 @@ function* createBillToWarehouse({ payload }: any): any {
 
 function* checkWarehouse({ payload }: any): any {
   try {
-    const data = yield call(api.checkWarehouse, payload);
+    const data = yield call(api.checkWarehouse, omit(payload, ['callback','status', 'bill']));
     if (!data?.status) {
       yield put(warehouseActions.checkWarehouseFailed(data));
       const newData = {status: 'UNREADY', _id: data?.billId, warehouseId: data?.warehouseId}
@@ -69,6 +78,9 @@ function* checkWarehouse({ payload }: any): any {
         _id: data?.billId,
         warehouseId: data?.warehouseId,
       }));
+      if (typeof get(payload, 'callback') === 'function' && data?.historyStatus === STATUS_BILL.READY) { // Thực thi khi kiểm kho có hàng
+        payload.callback(payload?.status, payload?.bill);
+      };
     };
   } catch (error:any) {
     yield put(warehouseActions.checkWarehouseFailed(error));

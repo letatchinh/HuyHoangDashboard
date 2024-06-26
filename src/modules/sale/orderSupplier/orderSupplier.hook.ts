@@ -193,7 +193,10 @@ export const convertDataSubmitWarehouse = (data: any) => {
     totalPrice: data?.totalPrice,
     warehouseId: data?.warehouseId,
     warehouseName: data?.warehouseName,
-    orderSupplierItems: data?.orderSupplierItems?.map((item: any) => item?.codeBySupplier),
+    orderSupplierItems: data?.orderSupplierItems?.map((item: any) => ({
+      codeBySupplier: item?.codeBySupplier,
+      quantity: item?.quantity,
+    })),
     billId: data?.billId
   }
 };

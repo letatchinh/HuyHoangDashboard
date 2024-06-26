@@ -256,9 +256,9 @@ export const convertProductsFromBill = (listBill: any) => {
     manufacturer: get(item, 'product.manufacturer.name'),
     unit: get(item, 'variant.unit.name'),
     quantity: get(item, 'quantity'),
-    category: get(item, 'product.category.name', 'product'),
-    productId: get(item, 'product._id', ''),
-    variantId: get(item, 'variant._id', ''),
+    // category: get(item, 'product.category.name', 'product'),
+    // productId: get(item, 'product._id', ''),
+    // variantId: get(item, 'variant._id', ''),
     codeBySupplier: get(item, 'codeBySupplier', ''),
     notePharmacy: get(item, 'notePharmacy', ''),
   }));
@@ -267,12 +267,10 @@ export const convertProductsFromBill = (listBill: any) => {
 
 // NHỚ KHAI BÁO TYPES
 export const convertDataSentToWarehouse = (data: any) => {
-  const listProduct = convertProductsFromBill(data?.billItems)?.map((item: any) => omit(item, ['productId', 'variantId']));
-  const newValue = {
+  const listProduct = data?.billItems?.map((item: any) => ({codeBySupplier: item?.codeBySupplier, quantity: item?.quantity}));
+  const newValue = { 
     listProduct,
     warehouseId: data?.warehouseId,
-    discountValue: data?.totalDiscountBill,
-    discountPercent: 0,
     billId: data?._id,
     isCreateOrder: true,
     totalPrice: data?.totalPrice,

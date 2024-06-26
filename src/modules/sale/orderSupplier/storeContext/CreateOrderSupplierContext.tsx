@@ -15,7 +15,7 @@ import { DEFAULT_DEBT_TYPE } from "../constants";
 import { orderSupplier } from "../orderSupplier.modal";
 import ModalAnt from "~/components/Antd/ModalAnt";
 import RadioButtonWarehouseInSupplier from "~/modules/warehouse/components/RadioButtonWarehouseInSupplier";
-import { useGetWarehouse } from "~/modules/warehouse/warehouse.hook";
+import { useGetWarehouse, useGetWarehouseByBranchLinked } from "~/modules/warehouse/warehouse.hook";
 const TYPE_DISCOUNT = {
   "DISCOUNT.CORE": "DISCOUNT.CORE",
   "DISCOUNT.SOFT": "DISCOUNT.SOFT",
@@ -29,6 +29,8 @@ export type DataItem = orderSupplier & {
 type Bill = {
   orderSupplierItems: DataItem[];
   supplierId: string;
+  warehouseId: string;
+  warehouseName: string;
 };
 
 type DiscountDetail = {
@@ -109,6 +111,7 @@ export function CreateOrderSupplierProvider({
   
   const [isOpenWarehouse, setIsOpenWarehouse] = useState(false);
   const [warehouseDefault, isLoadingWarehouseDefault] = useGetWarehouse();
+  const [listWarehouse, isLoadingWarehouse] = useGetWarehouseByBranchLinked(); // Get all warehouse linked with branch
 
   // Controller Data
   const onSave = (row: DataItem) => {
@@ -272,10 +275,13 @@ export function CreateOrderSupplierProvider({
     setIsOpenWarehouse(false);
   };
   const onAddWarehouse = (data: any) => {
+    console.log(data, "data");
+    const findWarehouseInfo = listWarehouse?.find((warehouse: any) => get(warehouse, "_id") === get(data, "warehouseId"));
     onChangeBill({
-      warehouseId: get(data, "warehouseId"),
-      warehouseName: get(data, "name.vi",''),
+      warehouseId: get(findWarehouseInfo, "_id"),
+      warehouseName: get(findWarehouseInfo, "name.vi",''),
     });
+    onCloseModalWarehouse();
   };
 
   // Initalize Data And Calculate Discount
@@ -291,7 +297,14 @@ export function CreateOrderSupplierProvider({
       setOrderSupplierItems(newOrderSupplierItems);
     }
   }, [bill,debt,form,totalPrice]);
-
+  useEffect(() => {
+    if (!bill?.warehouseId) {
+      onChangeBill({
+        warehouseId:listWarehouse[0]?._id,
+        warehouseName: get(listWarehouse[0], "name.vi",''),
+      });
+    };
+  },[bill])
   return (
     <CreateOrderSupplier.Provider
       value={{
@@ -326,11 +339,12 @@ export function CreateOrderSupplierProvider({
         footer={null}
       >
         <RadioButtonWarehouseInSupplier
-          warehouseDefault={warehouseDefault}
-          isLoadingWarehouse={isLoadingWarehouseDefault}
+          listWarehouseLinked={listWarehouse}
+          isLoadingWarehouse={isLoadingWarehouse}
           onClick={onAddWarehouse}
-          value={get(bill, "warehouseId")}
-          onCancel = {onCloseModalWarehouse}
+          value={get(bill, "warehouseId") ||listWarehouse[0]?._id}
+          onCancel={onCloseModalWarehouse}
+          onAddWarehouse={onAddWarehouse}
         />
       </ModalAnt>
     </CreateOrderSupplier.Provider>

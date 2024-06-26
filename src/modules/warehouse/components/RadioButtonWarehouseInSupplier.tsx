@@ -1,22 +1,26 @@
-import { Button, Form, Radio, RadioChangeEvent, Row, Space, Spin } from "antd";
+import { Button, Form, Popconfirm, Radio, RadioChangeEvent, Row, Space, Spin } from "antd";
 import { get, head } from "lodash";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import useNotificationStore from "~/store/NotificationContext";
 type propsType = {
   setValue?: (value: number) => void;
-  value?: number | undefined;
+  value: number | undefined;
   onClick?: (data?: any) => void ;
   onCancel?: () => void;
   isLoadingWarehouse?: boolean;
+  isSubmitLoading?: boolean;
   warehouseDefault?: any
+  updateWarehouseInBill?: (data: any) => void;
+  listWarehouseLinked: any[];
+  onAddWarehouse?: (data: any) => void;
 };
-export default function RadioButtonWarehouseInSupplier({
+export default function RadioButtonWarehouse({
   setValue,
   value,
   onClick,
   isLoadingWarehouse,
-  warehouseDefault,
-  onCancel
+  listWarehouseLinked,
+  onAddWarehouse
 }: propsType): React.JSX.Element {
   const [form] = Form.useForm();
   const { onNotify } = useNotificationStore();
@@ -27,9 +31,7 @@ export default function RadioButtonWarehouseInSupplier({
     if (!values?.warehouseId) {
       return onNotify?.error("Vui lòng chọn kho");
     };
-    const findWarehouseInfo = warehouseDefault?.find((item: any) => get(item, "warehouseId") === values?.warehouseId);
-    onClick && onClick(findWarehouseInfo);
-    onCancel && onCancel();
+    onClick && onClick(values);
   };
   useEffect(() => {
     form.setFieldsValue({ warehouseId: value });
@@ -53,11 +55,11 @@ export default function RadioButtonWarehouseInSupplier({
             >
             <Radio.Group
               onChange={onChange}
-              value={value || get(head(warehouseDefault), "_id")}
+              value={value || get(head(listWarehouseLinked), "_id")}
             >
               <Space direction="vertical">
-                {warehouseDefault?.map((item: any) => (
-                  <Radio value={ get(item, "warehouseId")}>
+                {listWarehouseLinked?.map((item: any) => (
+                  <Radio value={ get(item, "_id")}>
                     {get(item, "name.vi") || get(item, "name")}
                   </Radio>
                 ))}
@@ -66,13 +68,13 @@ export default function RadioButtonWarehouseInSupplier({
           </Form.Item>
         )}
         <Row justify={"end"}>
-          <Button
+            <Button
             type="primary"
             htmlType="submit"
             style={{ marginRight: "10px" }}
             loading={isLoadingWarehouse}
           >
-            Xác nhận kho nhập
+            Xác nhận
           </Button>
         </Row>
       </Form>
