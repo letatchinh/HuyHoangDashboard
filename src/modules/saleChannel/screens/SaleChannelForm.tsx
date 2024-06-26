@@ -164,9 +164,7 @@ export default function SaleChannelForm({
             {isSubmitLoading ? (
               <Button disabled>Huỷ</Button>
             ) : (
-              <Link to={PATH_APP.saleChannel.root}>
                 <Button onClick={onClose}>Huỷ</Button>
-              </Link>
             )}
 
             <Button type="primary" htmlType="submit" loading={isSubmitLoading} style={{marginLeft: 5}}>

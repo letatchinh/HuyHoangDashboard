@@ -123,9 +123,7 @@ export default function TypePharmacyForm({
             {isSubmitLoading ? (
               <Button disabled>Huỷ</Button>
             ) : (
-              <Link to={PATH_APP.typePharmacy.root}>
                 <Button onClick={onClose}>Huỷ</Button>
-              </Link>
             )}
 
             <Button
