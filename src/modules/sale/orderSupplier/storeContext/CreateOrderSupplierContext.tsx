@@ -275,7 +275,6 @@ export function CreateOrderSupplierProvider({
     setIsOpenWarehouse(false);
   };
   const onAddWarehouse = (data: any) => {
-    console.log(data, "data");
     const findWarehouseInfo = listWarehouse?.find((warehouse: any) => get(warehouse, "_id") === get(data, "warehouseId"));
     onChangeBill({
       warehouseId: get(findWarehouseInfo, "_id"),

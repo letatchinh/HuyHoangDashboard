@@ -78,6 +78,7 @@ function* checkWarehouse({ payload }: any): any {
         _id: data?.billId,
         warehouseId: data?.warehouseId,
       }));
+      yield put(billSliceAction.updateBillAfterCheckWarehouseRequest(data)); // Đổi lại trạng thái từng sản phẩm được mang đi kiểm kho sau khi kiểm kho
       if (typeof get(payload, 'callback') === 'function' && data?.historyStatus === STATUS_BILL.READY) { // Thực thi khi kiểm kho có hàng
         payload.callback(payload?.status, payload?.bill);
       };

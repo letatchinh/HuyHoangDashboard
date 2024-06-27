@@ -1,28 +1,25 @@
 
 import { ArrowUpOutlined } from "@ant-design/icons";
 import { Button, Checkbox, Flex, Input, Popconfirm, Tooltip } from "antd";
-import { forIn, get, omit } from "lodash";
-import React, { useCallback, useMemo, useState } from "react";
+import { forIn, get, omit, pick } from "lodash";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { useMatchPolicy } from "~/modules/policy/policy.hook";
 import { CheckPermission } from "~/utils/helpers";
-import { STATUS_BILL, STATUS_BILL_VI } from "../../bill/constants";
-import { ParamGetNextStatus } from "../bill.modal";
+import {  STATUS_ORDER_SUPPLIER, STATUS_ORDER_SUPPLIER_VI } from "../constants";
 
 type propsType = {
-  onChangeStatusBill: (p: any, id: string | null| undefined,bill?: any, note?: string) => void;
+  onChangeStatusBill: (status: keyof typeof STATUS_ORDER_SUPPLIER, id: string | null | undefined , note: string) => void;
   bill: any;
   isDisabledAll?: boolean;
   isSubmitLoading?: boolean;
   onOpenCancel: (p: any) => void;
   askAgain?: boolean;
   setAskAgain?: (p: any) => void;
-  id?: string | null | undefined;
+  id?: string | null;
 };
-const CLONE_STATUS_BILL_VI: any = omit(STATUS_BILL_VI, ["READY","UNREADY", "REQUESTED","REJECT"]);
-const CLONE_STATUS_BILL_VI_REQUESTED: any = omit(STATUS_BILL_VI, ["READY","UNREADY","REJECT"]);
-const CLONE_STATUS_BILL: any = omit(STATUS_BILL, ["READY","UNREADY","REQUESTED","REJECT"]);
-const CLONE_STATUS_BILL_REQUESTED: any = omit(STATUS_BILL, ["READY","UNREADY","REJECT"]);
+const CLONE_STATUS_BILL: any = STATUS_ORDER_SUPPLIER
+const CLONE_STATUS_BILL_VI: any = STATUS_ORDER_SUPPLIER_VI
 export default function ConfirmStatusBill({
   onChangeStatusBill,
   bill,
@@ -35,16 +32,15 @@ export default function ConfirmStatusBill({
 }: propsType): React.JSX.Element {
   const [askAgain, setAskAgain] = useState(defaultAskAgain);
   const status = useMemo(() => get(bill, "status"), [bill]);
+  const [note, setNote] = useState<string>("");
   const {pathname} = useLocation();
   const canUpdateBill = useMatchPolicy([CheckPermission(pathname), 'update']);
-  const [note, setNote] = useState<string>("");
-
   const getNextStatus = useCallback(
-    ({ status, expirationDate, lotNumber }: ParamGetNextStatus) => {
+    ({ status, expirationDate, lotNumber }: any) => {
       let nextStatus: any = null;
       let message;
       let isSame = false;
-      forIn((status === 'REQUESTED' ? CLONE_STATUS_BILL_REQUESTED: CLONE_STATUS_BILL), (value, key) => {
+      forIn((CLONE_STATUS_BILL), (value, key) => {
         if (value === CLONE_STATUS_BILL.CANCELLED) return;
         if (isDisabledAll) {
           return;
@@ -74,6 +70,10 @@ export default function ConfirmStatusBill({
       }),
     [bill, status]
   );
+
+  useEffect(() => {
+    setNote('')
+  }, [id]);
   return nextStatus && canUpdateBill ? (
         <Flex gap={"small"} align="center" justify={"center"}>
           {defaultAskAgain ? (
@@ -83,12 +83,6 @@ export default function ConfirmStatusBill({
                 CLONE_STATUS_BILL_VI[nextStatus]
               }
               description={
-                // <Checkbox
-                //   onChange={(e) => setAskAgain(!e.target.checked)}
-                //   checked={!askAgain}
-                // >
-                //   Không hỏi lại!
-                // </Checkbox>  description={
                 <Input.TextArea
                   placeholder="Bắt buộc nhập ghi chú"
                   onChange={(e) => setNote(e.target.value)}
@@ -97,7 +91,7 @@ export default function ConfirmStatusBill({
               okText="Ok"
               cancelText="Huỷ"
               onConfirm={() => {
-                onChangeStatusBill(nextStatus,id,bill,note);
+                onChangeStatusBill(nextStatus,id, note);
                 if (setAskAgainDefault) {
                   setAskAgainDefault(askAgain);
                 }
@@ -114,7 +108,7 @@ export default function ConfirmStatusBill({
                   disabled={isDisabledAll || !!message}
                   loading={isSubmitLoading}
                 >
-                  {(status === 'REQUESTED' ? CLONE_STATUS_BILL_VI_REQUESTED: CLONE_STATUS_BILL_VI)[nextStatus]}
+                  {CLONE_STATUS_BILL_VI[nextStatus]}
                 </Button>
               </Tooltip>
             </Popconfirm>
@@ -127,27 +121,26 @@ export default function ConfirmStatusBill({
                 disabled={isDisabledAll || !!message}
                 loading={isSubmitLoading}
                 onClick={() =>
-                  onChangeStatusBill(nextStatus,id,bill,note)
+                  onChangeStatusBill(nextStatus,id, note)
                 }
               >
-                {(status === 'REQUESTED' ? CLONE_STATUS_BILL_VI_REQUESTED: CLONE_STATUS_BILL_VI)[nextStatus]}
+                {CLONE_STATUS_BILL_VI[nextStatus]}
               </Button>
             </Tooltip>
           )}
 
           {status === CLONE_STATUS_BILL.NEW && (
             <Popconfirm
-            title={'Bạn có chắc chắn muốn huỷ đơn này?'}
-            description={
-            <Input.TextArea
-              placeholder="Bắt buộc nhập ghi chú"
-              onChange={(e) => setNote(e.target.value)}
-              />
-              }
+              title={'Bạn có chắc chắn muốn huỷ đơn này?'}
               onConfirm={() => 
-              onChangeStatusBill('CANCELLED',id,bill,note)
+              onChangeStatusBill('CANCELLED',id, note)
               }
-          
+              description={
+                <Input.TextArea
+                  placeholder="Bắt buộc nhập ghi chú"
+                  onChange={(e) => setNote(e.target.value)}
+                  />
+              }
             >
               <Button
                 type="primary"

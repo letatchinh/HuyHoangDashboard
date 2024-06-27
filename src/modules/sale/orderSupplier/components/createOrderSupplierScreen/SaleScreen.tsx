@@ -57,7 +57,9 @@ try {
     warehouseId: get(bill, 'warehouseId'),
     warehouseName: get(bill, 'warehouseName'),
   });
-  
+  if (!get(bill, 'warehouseId')) {
+    return onNotify?.error("Vui lòng chọn kho nhập hàng!");
+  };
     switch (get(bill,'typeTab')) {
       case 'createOrderSupplier':
         onCreateOrderSupplier(submitData);

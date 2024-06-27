@@ -322,12 +322,8 @@ export function CreateBillProvider({
 
   const totalPriceAfterDiscount = useMemo(
     () =>
-      // Change from + totalFee became  + totalLogisticFeeByPayer   + (totalFee - totalLogisticFeeByPayer) because i don't want to change old value
-      totalAmount -
-      pair +
-      totalLogisticFeeByPayer +
-      (totalFee - findLogisticInFee),
-    [quotationItems, pair, totalFee, totalLogisticFeeByPayer, findLogisticInFee]
+      totalAmount -  pair + totalFee ,
+    [quotationItems, pair, totalFee]
   );
 
   const totalDiscount = useMemo(

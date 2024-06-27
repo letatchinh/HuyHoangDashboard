@@ -272,7 +272,7 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
                   </Typography.Text>
                 </Layout>
                 <Divider />
-                <Typography.Text strong>Ghi chú</Typography.Text>
+                {/* <Typography.Text strong>Ghi chú</Typography.Text>
                 <Form.Item<FormFieldBillType> name={"note"}>
                   <TextArea />
                 </Form.Item>
@@ -285,7 +285,7 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
                   icon={<SendOutlined />}
                   size="small"
                 />
-                </WithPermission>
+                </WithPermission> */}
               </WhiteBox>
             </div>
           </Col>

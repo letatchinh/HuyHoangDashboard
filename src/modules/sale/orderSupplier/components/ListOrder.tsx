@@ -3,22 +3,20 @@ import TableAnt from "~/components/Antd/TableAnt";
 
 import { Button, Checkbox, Col, Flex, Modal, Radio, Row, Space, Tag, Typography } from "antd";
 import { ColumnsType } from "antd/es/table/InternalTable";
-import dayjs from "dayjs";
-import { get } from "lodash";
-import { Link, useParams } from "react-router-dom";
+import { get, trim } from "lodash";
+import { Link } from "react-router-dom";
 import SearchAnt from "~/components/Antd/SearchAnt";
 import Status from "~/components/common/Status/index";
 import SelectSupplier from "~/modules/supplier/components/SelectSupplier";
 import { PATH_APP } from "~/routes/allPath";
 import { formatter, pagingTable } from "~/utils/helpers";
-import { STATUS_ORDER_SUPPLIER_VI } from "../constants";
+import { STATUS_ORDER_SUPPLIER, STATUS_ORDER_SUPPLIER_VI } from "../constants";
 import {
-  useGetOrderSupplier,
   useGetOrderSuppliers,
   useOrderSupplierPaging,
   useOrderSupplierQueryParams,
-  useUpdateOrderSupplier,
   useUpdateOrderSupplierParams,
+  useUpdateStatusOrderSupplier,
 } from "../orderSupplier.hook";
 import WithPermission from "~/components/common/WithPermission";
 import { PlusCircleTwoTone } from "@ant-design/icons";
@@ -27,13 +25,15 @@ import { useMatchPolicy } from "~/modules/policy/policy.hook";
 import { AlignType } from "rc-table/lib/interface";
 import PaymentVoucherForm from "~/modules/paymentVoucher/components/PaymentVoucherForm";
 import { REF_COLLECTION_UPPER } from "~/constants/defaultValue";
-import PaymentModule from "~/modules/paymentVoucher";
-import POLICIES from "~/modules/policy/policy.auth";
 import useCheckBoxExport from "~/modules/export/export.hook";
 import ExportExcelButton from "~/modules/export/component";
 import { RadioChangeEvent } from "antd/lib/index";
 import ConfigTable from "~/components/common/ConfigTable";
 import DateTimeTable from "~/components/common/DateTimeTable";
+import POLICIES from "~/modules/policy/policy.auth";
+import ToolTipBadge from "~/components/common/ToolTipBadge";
+import ConfirmStatusBill from "./ConfirmStatusBill";
+import useNotificationStore from "~/store/NotificationContext";
 
 type propsType = {
   status?: string;
@@ -54,7 +54,11 @@ export default function ListOrder({ status }: propsType): React.JSX.Element {
   const canWriteVoucher = useMatchPolicy(policyModule.POLICIES.WRITE_VOUCHERSUPPLIER);
   const canDownload = useMatchPolicy(policyModule.POLICIES.DOWNLOAD_ORDERSUPPLIER);
   const [arrCheckBox, onChangeCheckBox] = useCheckBoxExport();
-
+  const isHaveAdminBillPermission = useMatchPolicy(POLICIES.UPDATE_BILLSTATUS);
+  const [askAgain, setAskAgain] = useState(true);
+  const [, setBillItemIdCancel] = useState<any>();
+  const [isSubmitLoading, updateStatusOrder] = useUpdateStatusOrderSupplier();
+  const { onNotify } = useNotificationStore();
   const onOpenPayment = (item: any) => {
     setOpen(true);
     setSupplierId(item?.supplierId);
@@ -72,6 +76,27 @@ export default function ListOrder({ status }: propsType): React.JSX.Element {
       createBy : value,
     })
   };
+
+  const onOpenCancel = useCallback((id:any) => {
+    if(id){
+      setBillItemIdCancel(id);
+    }
+  }, []);
+  const isDisabledAll = (status: keyof typeof STATUS_ORDER_SUPPLIER) => {
+    return status === STATUS_ORDER_SUPPLIER.CANCELLED
+  };
+  
+  const onChangeStatusBill = (status: keyof typeof STATUS_ORDER_SUPPLIER, id: string | null | undefined, note: string) => {
+    try {
+      if (trim(note) === "" || null || undefined) {
+        return onNotify?.error('Vui lòng nhập ghi chú!');
+      };
+      updateStatusOrder({ id, status,note });
+    } catch (error) {
+      console.log(error)
+    }
+  };
+
   const columns: ColumnsType = [
       {
         title: "Mã đơn hàng",
@@ -121,12 +146,35 @@ export default function ListOrder({ status }: propsType): React.JSX.Element {
         dataIndex: "status",
         key: "status",
         align: "center",
-        render(status, record, index) {
+        width: 250,
+        render(status: keyof typeof STATUS_ORDER_SUPPLIER, record, index) {
           return (
+            !isHaveAdminBillPermission ? 
             <Status
               status={status}
               statusVi={CLONE_STATUS_ORDER_SUPPLIER_VI[status]}
-            />
+              />
+              :   
+              <div className="d-flex flex-column align-items-center">
+              <ToolTipBadge title={status === STATUS_ORDER_SUPPLIER.CANCELLED && get(record, 'note', '')}>
+              <Status
+                status={status}
+                statusVi={STATUS_ORDER_SUPPLIER_VI[status]}
+              />
+              </ToolTipBadge>
+              <WithPermission permission={POLICIES.UPDATE_BILLSTATUS}>
+              <ConfirmStatusBill
+                askAgain={askAgain}
+                setAskAgain={setAskAgain}
+                bill={record}
+                onChangeStatusBill={onChangeStatusBill}
+                onOpenCancel={onOpenCancel}
+                isDisabledAll={isDisabledAll(status)}
+                // isSubmitLoading={isSubmitLoading}
+                id={get(record, '_id')} />
+                </WithPermission>
+                </div>
+            
           );
         },
       },
@@ -221,7 +269,8 @@ export default function ListOrder({ status }: propsType): React.JSX.Element {
     },
   ]
   return (
-    <div className="bill-page">
+    // <div className="bill-page">
+    <>
       <Row align="middle" gutter={8}>
         <Col flex={1}>
         <Space>
@@ -261,7 +310,7 @@ export default function ListOrder({ status }: propsType): React.JSX.Element {
           </Row>
         </Col>
       </Row>
-    <Flex align={'center'} gap={10}>
+      <Flex align={'center'} gap={10}>
       <span>Hình thức tạo: </span>
       <Radio.Group
           options={options}
@@ -273,7 +322,7 @@ export default function ListOrder({ status }: propsType): React.JSX.Element {
       </Flex>
       <ConfigTable>
         <TableAnt
-          className="table-striped-rows-custom"
+          // className="table-striped-rows-custom"
           bordered
           stickyTop
           columns={columns}
@@ -281,7 +330,7 @@ export default function ListOrder({ status }: propsType): React.JSX.Element {
           loading={isLoading}
           pagination={pagingTable(paging, onParamChange)}
           size="small"
-          scroll={{ x: 1500 }}
+          scroll={{ x: 1500 }} 
         />
       </ConfigTable>
       <Modal
@@ -308,6 +357,7 @@ export default function ListOrder({ status }: propsType): React.JSX.Element {
           }]}
         />
       </Modal>
-    </div>
+    </>
+    // </div>
   );
 }

@@ -77,13 +77,25 @@ function* createOrderInWarehouse({payload} : any) : any {
   }
 }
 
-
+function* updateStatusOrder({ payload }: any): any {
+  try {
+    const { callbackSubmit, ...query } = payload;
+    const data = yield call(api.updateStatusBillWarehouse, query);
+    yield put(orderSupplierActions.updateStatusOrderSuccess(data));
+    if (callbackSubmit && typeof callbackSubmit === "function") {
+      callbackSubmit();
+    };
+  } catch (error: any) {
+    yield put(orderSupplierActions.updateStatusOrderFailed(error));
+  }
+};
 
 export default function* orderSupplierSaga() {
   yield takeLatest(orderSupplierActions.getListRequest, getListOrderSupplier);
   yield takeLatest(orderSupplierActions.getByIdRequest, getByIdOrderSupplier);
   yield takeLatest(orderSupplierActions.createRequest, createOrderSupplier);
   yield takeLatest(orderSupplierActions.updateRequest, updateOrderSupplier);
+  yield takeLatest(orderSupplierActions.updateStatusOrderRequest, updateStatusOrder);
   yield takeLatest(orderSupplierActions.updateOrderItemRequest, updateOrderItem);
   yield takeLatest(orderSupplierActions.createOrderInWarehouseRequest, createOrderInWarehouse);
 }

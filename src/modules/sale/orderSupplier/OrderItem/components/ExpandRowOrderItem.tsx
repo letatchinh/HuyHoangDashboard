@@ -32,7 +32,7 @@ export default function ExpandRowOrderItem({
 }: propsType): React.JSX.Element {
   return (
     <div>
-      <StepStatus
+      {/* <StepStatus
         size="small"
         statuses={
           status !== STATUS_ORDER_ITEM.CANCELLED
@@ -50,7 +50,7 @@ export default function ExpandRowOrderItem({
         currentStatus={status}
         historyStatus={historyStatus}
       />
-      <Divider />
+      <Divider /> */}
       <h5>Lịch sử nhà thuốc đặt hàng</h5>
       <Table
         dataSource={orderRef}

@@ -71,6 +71,7 @@ import { FilterOutlined } from "@ant-design/icons";
 import GeoTreeSelect from "~/modules/geo/components/GeoTreeSelect";
 import { RELATIVE_POSITION } from "~/modules/geo/constants";
 import SelectEmployeeV2 from "~/modules/employee/components/SelectEmployeeV2";
+import TagBillItem from "./TagBillItem";
 const CalculateBillMethod = new CalculateBill();
 type propsType = {
   status?: string;
@@ -112,7 +113,7 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
   const [, onUpdateStatus] = useUpdateStatusBill(() => {
     dispatch(billSliceAction.resetAction());
   });
-  const isHaveAdminBillPermission = useMatchPolicy(POLICIES.ADMIN_BILL);
+  const isHaveAdminBillPermission = useMatchPolicy(POLICIES.UPDATE_BILLSTATUS);
   const onOpenCancel = useCallback((id:any) => {
     if(id){
       setBillItemIdCancel(id);
@@ -180,13 +181,14 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
     }
   };
 
-  const onChangeStatusBill = (status: keyof typeof STATUS_BILL, id?: string | null,bill?: any) => {
+  const onChangeStatusBill = (status: keyof typeof STATUS_BILL, id?: string | null,bill?: any, note?: string) => {
     // Phải kiểm tra hàng tồn kho trước khi đổi trạng thái từ NEW qua PACKAGE_EXPORT
     const dataCheck = convertProductsFromBill(get(bill, 'billItems', []));
     const submitData = {
       warehouseId: bill?.warehouseId,
       listProduct: dataCheck,
       billId: get(bill, '_id'),
+      note
     };
     try {
       if (bill?.status === STATUS_BILL.NEW && status !== STATUS_BILL.CANCELLED) {
@@ -461,8 +463,20 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
         break;
     }
   };
+
+  const addColumn = {
+    title: "Trạng thái",
+    dataIndex: "statusCheckWarehouse",
+    key: "statusCheckWarehouse",
+    width: 100,
+    align: "center" as any,
+    render: (value: any, record: any, index: number) => {
+      return <TagBillItem status={record?.statusCheckWarehouse}/>
+    }
+  };
   return (
-    <div className="bill-page">
+    // <div className="bill-page">
+    <>
       <Row justify={"space-between"}>
         <Col span={12}>
           <Space style={{ alignItems: "normal" }}>
@@ -635,7 +649,7 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
           : (
             <>
               <BaseBorderBox>
-                <ProductItem data={bill?.billItems} />
+                <ProductItem data={bill?.billItems} column={addColumn} />
                 <NoteWarehouse noteForWarehouse={noteForWarehouse} setNoteForWarehouse={setNoteForWarehouse} placeholder={'Ghi chú gửi đến kho'} />
                 <RadioButtonWarehouseNotFetch
                   setValue={setWarehouseSelect}
@@ -654,6 +668,7 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
               </>
           )}
       </ModalAnt>
-    </div>
+    </>
+    // </div> 
   );
 }

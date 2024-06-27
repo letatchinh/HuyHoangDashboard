@@ -9,13 +9,15 @@ import FormLot from "../../billItem/components/FormLot";
 import { formatter } from "~/utils/helpers";
 type propsType = {
   data?: any[];
+  column?: any;
 };
 export default function ProductItem({
   data,
+  column,
   ...props
 }: propsType): React.JSX.Element {
   const CLONE_STATUS_BILLITEM_LEVEL: any = STATUS_BILLITEM_LEVEL;
-
+console.log(data,'dataatat')
   const columns: ColumnsType = [
     {
       title: "Mã sản phẩm",
@@ -88,6 +90,10 @@ export default function ProductItem({
       },
     },
   ];
+  if (column) {
+    columns.push(column);
+  };
+  
   return (
     <>
       <h6>Danh sách sản phẩm</h6>

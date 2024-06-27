@@ -182,6 +182,7 @@ class BillClassExtend extends InstanceModuleRedux {
         state.byId = {
           ...state.byId,
           ...payload,
+          partner: state.byId?.partner,
           // status: payload?.status,
           // warehouseId: payload?.warehouseId,
           billItems: state.byId?.billItems?.map((item: any) => {
@@ -218,14 +219,26 @@ class BillClassExtend extends InstanceModuleRedux {
         state.updateStatusBillSuccess = payload;
         state.list = state.list?.map((item: any) => get(item, '_id') === get(payload, 'data._id') ? ({
           ...item,
-          status: payload?.data?.status
+          status: payload?.data?.status,
+          partner: item?.partner
         }) : item);
       },
-      updateStatusBillFailed: (state:cloneInitState, { payload }:{payload:any}) => {
+        updateStatusBillFailed: (state:cloneInitState, { payload }:{payload:any}) => {
         state.isSubmitLoading = false;
         state.updateStatusBillFailed = payload;
         },
-      
+      updateBillAfterCheckWarehouseRequest: (state: cloneInitState, { payload }: { payload?: any }) => {
+          state.byId = {
+            ...state.byId,
+            billItems: state.byId?.billItems?.map((item: any) => {
+              const findBillItem = get(payload, 'data', [])?.find((billItem: any) => billItem?.productId === item?.productId && billItem?.variantId === item?.variantId);
+              return {
+                ...item,
+                statusCheckWarehouse: findBillItem?.status ?? false
+              }
+            })
+          };
+        },
     };
 
     this.cloneInitState = {

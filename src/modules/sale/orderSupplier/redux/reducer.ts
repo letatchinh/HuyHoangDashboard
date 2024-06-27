@@ -7,6 +7,9 @@ interface cloneInitState extends initStateSlice {
   updateOrderItemFailed?: any;
   updateOrderItemSuccess?: any;
 
+  updateStatusOrderFailed?: any;
+  updateStatusOrderSuccess?: any;
+
   createBillInWarehouseSuccess?: any;
   createBillInWarehouseFailed?: any;
 }
@@ -75,7 +78,43 @@ class OrderSupplierClassExtend extends InstanceModuleRedux {
       resetAction: (state:cloneInitState) => ({
         ...state,
         ...omit(this.cloneInitState, ["list"]),
-      })
+      }),
+
+      updateStatusOrderRequest: (state: cloneInitState) => {
+        state.isSubmitLoading = true;
+        state.updateStatusOrderFailed = null;
+      },
+      updateStatusOrderSuccess: (
+        state: cloneInitState,
+        { payload }: { payload: any }
+      ) => {
+        state.isSubmitLoading = false;
+        const orderSupplierId = Object.keys(payload)?.[0];
+        const payloadUpdate = get(payload, orderSupplierId, {});
+        const orderItems = get(state.byId, "orderItems", [])?.map(
+          (billItem: any) => {
+            if (orderSupplierId === get(billItem, "_id")) {
+              return {
+                ...billItem,
+                ...payloadUpdate,
+              };
+            }
+            return billItem;
+          }
+        );
+        state.byId = {
+          ...state.byId,
+          orderItems,
+        };
+        state.updateStatusOrderSuccess = payload;
+      },
+      updateStatusOrderFailed: (
+        state: cloneInitState,
+        { payload }: { payload: any }
+      ) => {
+        state.isSubmitLoading = false;
+        state.updateStatusOrderFailed = payload;
+      },
     };
 
     this.cloneInitState = {
@@ -86,6 +125,9 @@ class OrderSupplierClassExtend extends InstanceModuleRedux {
 
       createBillInWarehouseSuccess: null,
       createBillInWarehouseFailed: null,
+
+      updateStatusOrderFailed: null,
+      updateStatusOrderSuccess: null,
     };
   }
 

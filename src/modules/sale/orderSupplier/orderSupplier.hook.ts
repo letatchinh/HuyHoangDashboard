@@ -200,3 +200,17 @@ export const convertDataSubmitWarehouse = (data: any) => {
     billId: data?.billId
   }
 };
+
+export const useUpdateStatusOrderSupplier = (callback?: any) => {
+  useSuccess(
+    updateSuccessSelector,
+    `Cập nhật trạng thái đơn hàng thành công`,
+    callback
+  );
+  useFailed(updateFailedSelector);
+
+  return useSubmit({
+    action: orderSupplierActions.updateStatusOrderRequest,
+    loadingSelector: isSubmitLoadingSelector,
+  });
+};
