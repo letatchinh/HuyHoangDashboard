@@ -180,8 +180,9 @@ export default function PharmacyForm({
                   label="Ngày sinh"
                   name={["infoPolicy", "dateOfBirth"]}
                   wrapperCol={{ sm: 24, md: 24, lg: 21 }}
+        
                 >
-                  <DatePicker format={"DD/MM/YYYY"} placeholder="Ngày sinh" />
+                  <DatePicker format={"DD/MM/YYYY"} placeholder="Ngày sinh" defaultValue={dayjs("01/01/1990")} />
                 </FormItem>
               </Col>
               <Col span={12}>

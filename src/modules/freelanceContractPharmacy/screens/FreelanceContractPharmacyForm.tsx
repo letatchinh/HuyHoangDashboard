@@ -94,7 +94,7 @@ const FreelanceContractPharmacyForm = ({
             validateFirst={false}
             required={false}
             label="Khách hàng B2B:"
-            showButtonAdd={true}
+            showButtonAdd={false}
           />
           <FormItem
             label="Mã hợp đồng"

@@ -1,5 +1,5 @@
 import { PlusOutlined } from "@ant-design/icons";
-import { Button, Col, Form, Input, Modal, Row, Select } from "antd";
+import { Button, Col, Form, Input, Modal, Row, Select, Space } from "antd";
 import TextArea from "antd/es/input/TextArea";
 import { get } from "lodash";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -19,7 +19,7 @@ const api = {
 
 const ButtonAdd = ({ onClick }: { onClick: () => void }) => {
   return (
-    <Col>
+    <FormItem noStyle>
       <Button
         onClick={() => {
           onClick();
@@ -27,7 +27,7 @@ const ButtonAdd = ({ onClick }: { onClick: () => void }) => {
       >
         <PlusOutlined />
       </Button>
-    </Col>
+    </FormItem>
   );
 };
 const SelectType = ({
@@ -36,6 +36,7 @@ const SelectType = ({
   options = [],
   rulesRequiredMess = "error",
   disabled = false,
+  ...props
 }) => {
   return (
     <Col flex={1}>
@@ -56,6 +57,7 @@ const SelectType = ({
           disabled={disabled}
           options={options}
           allowClear
+          {...props}
         />
       </FormItem>
     </Col>
@@ -71,8 +73,8 @@ export default function FormSalesChannel(): React.JSX.Element {
   const [groupPharmacies, setGroupPharmacies] = useState([]);
   const [refetch, setRefetch] = useState(0);
   const func = useCallback(() => {
-    if(refModalNow.current?.destroy){
-        refModalNow.current?.destroy();
+    if (refModalNow.current?.destroy) {
+      refModalNow.current?.destroy();
     }
     form.resetFields();
     setRefetch((val) => val + 1);
@@ -219,17 +221,13 @@ export default function FormSalesChannel(): React.JSX.Element {
   };
 
   return (
-    <Row
-      align="middle"
-      justify="space-between"
-      style={{ marginLeft: 0, marginRight: 0, width: "100%" }}
-    >
+    <Row gutter={48} align="middle" justify="start">
       {contextModel}
       <Col span={12}>
         <FormItem label="Kênh bán hàng" shouldUpdate>
           {({ setFieldValue }) => {
             return (
-              <Row style={{ width: "100%" }}>
+              <Space.Compact style={{ width: "100%" }}>
                 <SelectType
                   name={"salesChannelId"}
                   options={saleChannels}
@@ -238,23 +236,25 @@ export default function FormSalesChannel(): React.JSX.Element {
                     setFieldValue("customerId", null);
                   }}
                   rulesRequiredMess={"Xin vui lòng chọn kênh bán hàng"}
+                  placeholder="Kênh bán hàng"
+                  style={{ width: "100%" }}
                 />
                 <ButtonAdd onClick={addNewSaleChannel} />
-              </Row>
+              </Space.Compact>
             );
           }}
         </FormItem>
       </Col>
       <Col span={12}>
         <FormItem
-          label="Nhánh khách hàng"
+          label="Nhánh KH"
           shouldUpdate={(pre, current) => {
             return pre.salesChannelId !== current.salesChannelId;
           }}
         >
           {({ getFieldValue, setFieldValue }) => {
             return (
-              <Row style={{ width: "100%" }}>
+              <Space.Compact style={{ width: "100%" }}>
                 <SelectType
                   name={"customerGroupId"}
                   options={typePharmacies.filter(
@@ -265,23 +265,24 @@ export default function FormSalesChannel(): React.JSX.Element {
                   }}
                   disabled={!!!getFieldValue("salesChannelId")}
                   rulesRequiredMess={"Xin vui lòng chọn nhánh khách hàng"}
+                  placeholder="Nhánh khách hàng"
                 />
                 <ButtonAdd onClick={addNewCustomerGroup} />
-              </Row>
+              </Space.Compact>
             );
           }}
         </FormItem>
       </Col>
       <Col span={12}>
         <FormItem
-          label="Nhóm khách hàng"
+          label="Nhóm KH"
           shouldUpdate={(pre, current) => {
             return pre.customerGroupId !== current.customerGroupId;
           }}
         >
           {({ getFieldValue }) => {
             return (
-              <Row style={{ width: "100%" }}>
+              <Space.Compact style={{ width: "100%" }}>
                 <SelectType
                   name={"customerId"}
                   options={groupPharmacies.filter(
@@ -289,9 +290,10 @@ export default function FormSalesChannel(): React.JSX.Element {
                   )}
                   disabled={!!!getFieldValue("customerGroupId")}
                   rulesRequiredMess={"Xin vui lòng chọn nhóm khách hàng"}
+                  placeholder="Nhóm khách hàng"
                 />
                 <ButtonAdd onClick={addNewCustomerType} />
-              </Row>
+              </Space.Compact>
             );
           }}
         </FormItem>

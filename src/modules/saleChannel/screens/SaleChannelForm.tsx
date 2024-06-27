@@ -58,7 +58,7 @@ export default function SaleChannelForm({
     () =>
       customerSegmentation?.map((item: any) => ({
         label: get(item, "title"),
-        value: get(item, "division"),
+        value: get(item, "_id"),
         key: get(item, "division")
       })),
     [customerSegmentation]
@@ -137,8 +137,8 @@ export default function SaleChannelForm({
           </FormItem>
 
           <FormItem shouldUpdate={(pre,curr)=>pre.customerDivisionId !==curr.customerDivisionId} noStyle>
-            {({getFieldValue,setFieldValue}) => {
-              const checkCustomerDivision = getFieldValue('customerDivisionId')==='B2B'
+            {({getFieldValue, setFieldValue}) => {
+              const checkCustomerDivision = getFieldValue('customerDivisionId') !== get(customerSegmentation, '[0]._id')
               if(checkCustomerDivision){
                 setFieldValue('discount','DIRECT_DISCOUNT')
               }
