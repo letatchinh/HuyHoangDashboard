@@ -130,7 +130,7 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
         },
       },
       {
-        title: "Tên khách hàng B2B",
+        title: "Tên khách hàng",
         dataIndex: "pharmacy",
         key: "pharmacy",
         align: "left",

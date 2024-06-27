@@ -1,5 +1,5 @@
 import { PlusOutlined, UserOutlined } from "@ant-design/icons";
-import { Button, Col, Form, Modal, Row, Tabs } from "antd";
+import { Button, Col, Form, Modal, Row, Space, Tabs } from "antd";
 import { SelectProps } from "antd/lib/index";
 import { get } from "lodash";
 import React, { useEffect, useMemo, useState } from "react";
@@ -152,53 +152,58 @@ export default function SelectPharmacy({
 
   return (
     <>
-      <Row gutter={8}>
-        {showIcon && <UserOutlined />}
+      <Row gutter={8} justify="space-between" align="middle">
         <Col flex={1}>
-          <Form.Item<FormFieldCreateBill>
-            name={"pharmacyId"}
-            label={label}
-            rules={[
-              {
-                required: required,
-                message:
-                  typeData === "ctv"
-                    ? "Vui lòng chọn khách hàng B2C"
-                    : "Vui lòng chọn khách hàng B2B",
-              },
-            ]}
-            colon={false}
-            style={{ marginBottom: "unset" }}
-            wrapperCol={{ sm: 24 }}
-          >
-            <DebounceSelect
-              size="large"
-              loading={loading}
-              placeholder={
-                typeData === "ctv"
-                  ? "Chọn khách hàng B2C"
-                  : "Chọn khách hàng B2B"
-              }
-              fetchOptions={fetchOptions}
-              style={{ width: "100%" }}
-              initOptions={initOption}
-              allowClear={allowClear}
-              {...props}
-            />
+          <Form.Item  shouldUpdate noStyle>
+            <Space.Compact style={{ width: "100%" }}>
+            {showIcon &&<Form.Item style={{ marginRight: "5px" }}> <UserOutlined /></Form.Item>}
+              <Form.Item<FormFieldCreateBill>
+                name={"pharmacyId"}
+                label={label}
+                rules={[
+                  {
+                    required: required,
+                    message:
+                      typeData === "ctv"
+                        ? "Vui lòng chọn khách hàng B2C"
+                        : "Vui lòng chọn khách hàng B2B",
+                  },
+                ]}
+                colon={false}
+                style={{ width: "100%",marginBottom : 'unset' }}
+                wrapperCol={{ sm: 24 }}
+              >
+                <DebounceSelect
+                  size="middle"
+                  loading={loading}
+                  placeholder={
+                    typeData === "ctv"
+                      ? "Chọn khách hàng B2C"
+                      : "Chọn khách hàng B2B"
+                  }
+                  fetchOptions={fetchOptions}
+                  style={{ width: "100%" }}
+                  initOptions={initOption}
+                  allowClear={allowClear}
+                  {...props}
+                />
+              </Form.Item>
+              {showButtonAdd && (
+                <Form.Item noStyle>
+                  <Button
+                    onClick={() =>
+                      typeData === "ctv"
+                        ? setIsOpenModal(true)
+                        : setPharmacyFormOpen(true)
+                    }
+                  >
+                    <PlusOutlined />
+                  </Button>
+                </Form.Item>
+              )}
+            </Space.Compact>
           </Form.Item>
         </Col>
-        {showButtonAdd && (
-          <Button
-            onClick={() =>
-              typeData === "ctv"
-                ? setIsOpenModal(true)
-                : setPharmacyFormOpen(true)
-            }
-            // style={{ width: "10%" }}
-          >
-            <PlusOutlined />
-          </Button>
-        )}
       </Row>
       <ModalAnt
         width={1200}
