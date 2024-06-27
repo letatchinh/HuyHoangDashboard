@@ -40,7 +40,6 @@ const FormSupplier = ({
   const onFinish = useCallback(
     (values: FieldType) => {
       const submitData = convertSubmitData(values)
-      console.log(rankingId,'rankingId')
       if (!id) {
         onCreate({...submitData, rankingId});
       } else {
@@ -74,7 +73,7 @@ const FormSupplier = ({
     }
   };
   return (
-    <div className="flex-column-center">
+    <div className="supplier-form">
       <Divider>
         <h5 className="text-center">{id ? "Cập nhật" : "Tạo mới"} nhà cung cấp</h5>
       </Divider>
