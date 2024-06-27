@@ -95,6 +95,7 @@ const reportProductSupplier = 'reportProductSupplier';
 const reportOverview = 'reportOverview';
 const requestChangeGroupCTV = 'requestChangeGroupCTV';
 const requestChangeGroup = 'requestChangeGroup';
+const customerDivision = 'customerDivision';
 
 
 //------RESOURCES --------
@@ -197,6 +198,7 @@ const RESOURCES = [
   reportOverview,
   requestChangeGroup,
   requestChangeGroupCTV,
+  customerDivision,
 ];
 
 //ACTIONS
@@ -348,6 +350,10 @@ const RESOURCE = (): ResourceType => {
     voucherBillPartner,
   ];
 
+  const CUSTOMER_DIVISION: string[] = [
+    customerDivision,
+  ];
+
   return {
     GROUP_USER,
     GROUP_EMPLOYEE,
@@ -373,6 +379,7 @@ const RESOURCE = (): ResourceType => {
     PARTNER,
     VOUCHER_SALARY_PARTNER,
     VOUCHER_BILL_PARTNER,
+    CUSTOMER_DIVISION,
   };
 };
 

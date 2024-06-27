@@ -16,6 +16,7 @@ import TableAnt from "~/components/Antd/TableAnt";
 import ModalAnt from "~/components/Antd/ModalAnt";
 import CustomerSegmentationForm from "./CustomerSegmentationForm";
 import Breadcrumb from "~/components/common/Breadcrumb";
+import POLICIES from "~/modules/policy/policy.auth";
 type propsType = {};
 export default function CustomerSegmentation(
   props: propsType
@@ -64,16 +65,16 @@ export default function CustomerSegmentation(
         align: "center",
         render: (record) => {
           return (
-            // <WithPermission permission={POLICIES.UPDATE_PHARMAPROFILE}>
-            <Button
-              block
-              icon={<InfoCircleOutlined />}
-              onClick={() => onOpenForm(record)}
-              size="small"
-            >
-              Cập nhật
-            </Button>
-            //   </WithPermission>
+            <WithPermission permission={POLICIES.UPDATE_CUSTOMERDIVISION}>
+              <Button
+                block
+                icon={<InfoCircleOutlined />}
+                onClick={() => onOpenForm(record)}
+                size="small"
+              >
+                Cập nhật
+              </Button>
+            </WithPermission>
           );
         },
       },

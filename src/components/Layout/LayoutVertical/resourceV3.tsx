@@ -36,6 +36,7 @@ const permissionOfSetup = [
   POLICIES.READ_USER,
   POLICIES.READ_USERGROUP,
   POLICIES.READ_BRANCH,
+  POLICIES.READ_CUSTOMERDIVISION,
 ];
 const permissionPharma = [
   POLICIES.READ_PHARMAPROFILE,
@@ -192,7 +193,7 @@ export const resource: ItemType[] = [
             path: PATH_APP.customerSegmentation.root,
             key: PATH_APP.customerSegmentation.root,
             icon: <i className="fa-solid fa-notes-medical"></i>,
-            // permission: [POLICIES.READ_CUSTOMER],
+            permission: [POLICIES.READ_CUSTOMERDIVISION],
           },
           {
             label: "Kênh bán hàng",
