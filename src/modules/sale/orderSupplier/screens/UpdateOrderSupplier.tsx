@@ -33,6 +33,7 @@ import { REF_COLLECTION_UPPER } from "~/constants/defaultValue";
 import WithPermission from "~/components/common/WithPermission";
 import POLICIES from "~/modules/policy/policy.auth";
 import VoucherInOrder from "~/modules/vouchers/components/VoucherInOrder";
+import HistoryBillInWarehouse from "../components/HistoryBillInWarehouse";
 
 type propsType = {};
 const Layout = ({ label, children }: { label: any; children: any }) => (
@@ -182,10 +183,11 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
               <StepStatus
                 statuses={
                   status !== STATUS_ORDER_SUPPLIER.CANCELLED
-                    ? omit(STATUS_ORDER_SUPPLIER, ["CANCELLED"])
+                    ? omit(STATUS_ORDER_SUPPLIER, ["CANCELLED", "UNCREATED"])
                     : omit(STATUS_ORDER_SUPPLIER, [
                         STATUS_ORDER_SUPPLIER.COMPLETED,
                         STATUS_ORDER_SUPPLIER.PROCESSING,
+                        STATUS_ORDER_SUPPLIER.UNCREATED,
                       ])
                 }
                 statusesVi={STATUS_ORDER_SUPPLIER_VI}
@@ -295,6 +297,10 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
         <WhiteBox>
           <h6>Thông tin sản phẩm</h6>
           <OrderItemModule.components.ListOrderItem statusBill={status} />
+        </WhiteBox>
+        <WhiteBox>
+          <h6>Lịch sử trạng thái đơn hàng</h6>
+          <HistoryBillInWarehouse data = {orderSupplier?.historyProcessStatus}/>
         </WhiteBox>
       </div>
       <ModalAnt
