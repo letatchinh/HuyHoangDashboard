@@ -156,7 +156,7 @@ export const useResetLogisticAction = () => {
 };
 export const SubmitCountLogisticFee = (data: any, props?: any) => {
   return {
-    ...omit(data, ['customerAddress', 'code', 'totalFee']),
+    ...omit(data, ['customerAddress', 'totalFee']),
     ...props
   };
 };

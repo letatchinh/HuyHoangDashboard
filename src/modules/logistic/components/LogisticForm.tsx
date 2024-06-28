@@ -78,7 +78,6 @@ export default function LogisticForm({
   warehouseInfo,
 }: propsType): React.JSX.Element {
   useResetLogisticAction();
-  console.log(deliveryAddressId,'sadsdsadsad')
   const { onAddLogisticFee } = useCreateBillStore();
   const [form] = Form.useForm();
   const { onNotify } = useNotificationStore();
@@ -141,7 +140,6 @@ export default function LogisticForm({
         ...dataTransportUnit,
       });
   }, [dataTransportUnit, id, pharmacy]);
-
   useEffect(() => {
     if (deliveryAddressId) {
       form.setFieldsValue({
@@ -279,7 +277,7 @@ export default function LogisticForm({
             <Row gutter={10}>
               <Col span={24}>
                 <Form.Item name={"receiverName"} label={"Người nhận"}>
-                  {renderLoading(<Input />)}
+                  {renderLoading(<Input readOnly />)}
                 </Form.Item>
                 <Form.Item hidden name={"receiverAddress"}>
                   <Input readOnly />
@@ -327,7 +325,7 @@ export default function LogisticForm({
           <BaseBorderBox title={"Thông tin hàng hoá"}>
             <Form.Item name={"code"} label={"Mã vận đơn"}>
               {renderLoading(
-                <Input placeholder="Sẽ tồn tại khi đơn hàng được gửi đi" />
+                <Input readOnly placeholder="Sẽ tồn tại khi đơn hàng được gửi đi" />
               )}
             </Form.Item>
             <Form.Item
@@ -406,7 +404,7 @@ export default function LogisticForm({
       </Row>
       <Divider />
       
-      <Row align={"middle"} justify={"end"}>
+    { !id && <Row align={"middle"} justify={"end"}>
         <Button
           loading={isLoadingSubmit}
           type="primary"
@@ -438,7 +436,7 @@ export default function LogisticForm({
             Áp dụng vào đơn hàng
           </Button>
         </Popconfirm>
-      </Row>
+      </Row>}
       <div
         style={{
           width: "100%",
