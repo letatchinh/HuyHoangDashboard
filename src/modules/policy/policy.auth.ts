@@ -41,6 +41,7 @@ const quotationPharmacy = 'quotationPharmacy';
 const supplier = 'supplier';
 const cumulativeSalesSupplier = 'cumulativeSalesSupplier';
 const debtSupplier = 'debtSupplier';
+const orderSupplierStatus = 'orderSupplierStatus';
 
 // Sản phẩm Nhà cung cấp
 const product = 'product';
@@ -144,6 +145,7 @@ const RESOURCES = [
   supplier,
   product,
   debtSupplier,
+  orderSupplierStatus,
 
   // Pharmacy Profile
   pharmaProfile,
@@ -305,6 +307,7 @@ const RESOURCE = (): ResourceType => {
     cumulativeSalesSupplier,
     voucherSupplier,
     debtSupplier,
+    orderSupplierStatus,
   ];
   
   const GROUP_WORK_MANAGERMENT: string[] = [
