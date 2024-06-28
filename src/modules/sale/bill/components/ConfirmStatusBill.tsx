@@ -1,7 +1,7 @@
 
 import { ArrowUpOutlined } from "@ant-design/icons";
 import { Button, Checkbox, Flex, Input, Popconfirm, Tooltip } from "antd";
-import { forIn, get, omit } from "lodash";
+import { forIn, get, omit, trim } from "lodash";
 import React, { useCallback, useMemo, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { useMatchPolicy } from "~/modules/policy/policy.hook";
@@ -15,7 +15,6 @@ type propsType = {
   isDisabledAll?: boolean;
   isSubmitLoading?: boolean;
   onOpenCancel: (p: any) => void;
-  askAgain?: boolean;
   setAskAgain?: (p: any) => void;
   id?: string | null | undefined;
 };
@@ -29,11 +28,8 @@ export default function ConfirmStatusBill({
   isDisabledAll,
   isSubmitLoading,
   onOpenCancel,
-  askAgain: defaultAskAgain = true,
-  setAskAgain: setAskAgainDefault,
   id,
 }: propsType): React.JSX.Element {
-  const [askAgain, setAskAgain] = useState(defaultAskAgain);
   const status = useMemo(() => get(bill, "status"), [bill]);
   const {pathname} = useLocation();
   const canUpdateBill = useMatchPolicy([CheckPermission(pathname), 'update']);
@@ -76,19 +72,12 @@ export default function ConfirmStatusBill({
   );
   return nextStatus && canUpdateBill ? (
         <Flex gap={"small"} align="center" justify={"center"}>
-          {defaultAskAgain ? (
             <Popconfirm
               title={
                 "Chuyển đổi sang trạng thái " +
                 CLONE_STATUS_BILL_VI[nextStatus]
               }
               description={
-                // <Checkbox
-                //   onChange={(e) => setAskAgain(!e.target.checked)}
-                //   checked={!askAgain}
-                // >
-                //   Không hỏi lại!
-                // </Checkbox>  description={
                 <Input.TextArea
                   placeholder="Bắt buộc nhập ghi chú"
                   onChange={(e) => setNote(e.target.value)}
@@ -98,9 +87,6 @@ export default function ConfirmStatusBill({
               cancelText="Huỷ"
               onConfirm={() => {
                 onChangeStatusBill(nextStatus,id,bill,note);
-                if (setAskAgainDefault) {
-                  setAskAgainDefault(askAgain);
-                }
               }}
             >
               <Tooltip title={message}>
@@ -118,23 +104,6 @@ export default function ConfirmStatusBill({
                 </Button>
               </Tooltip>
             </Popconfirm>
-          ) : (
-            <Tooltip title={message}>
-              <Button
-                icon={<ArrowUpOutlined />}
-                block
-                // type="primary"
-                disabled={isDisabledAll || !!message}
-                loading={isSubmitLoading}
-                onClick={() =>
-                  onChangeStatusBill(nextStatus,id,bill,note)
-                }
-              >
-                {(status === 'REQUESTED' ? CLONE_STATUS_BILL_VI_REQUESTED: CLONE_STATUS_BILL_VI)[nextStatus]}
-              </Button>
-            </Tooltip>
-          )}
-
           {status === CLONE_STATUS_BILL.NEW && (
             <Popconfirm
             title={'Bạn có chắc chắn muốn huỷ đơn này?'}

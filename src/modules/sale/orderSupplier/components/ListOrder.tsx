@@ -55,7 +55,6 @@ export default function ListOrder({ status }: propsType): React.JSX.Element {
   const canDownload = useMatchPolicy(policyModule.POLICIES.DOWNLOAD_ORDERSUPPLIER);
   const [arrCheckBox, onChangeCheckBox] = useCheckBoxExport();
   const isHaveAdminBillPermission = useMatchPolicy(POLICIES.UPDATE_BILLSTATUS);
-  const [askAgain, setAskAgain] = useState(true);
   const [, setBillItemIdCancel] = useState<any>();
   const [isSubmitLoading, updateStatusOrder] = useUpdateStatusOrderSupplier();
   const { onNotify } = useNotificationStore();
@@ -149,12 +148,6 @@ export default function ListOrder({ status }: propsType): React.JSX.Element {
         width: 250,
         render(status: keyof typeof STATUS_ORDER_SUPPLIER, record, index) {
           return (
-            !isHaveAdminBillPermission ? 
-            <Status
-              status={status}
-              statusVi={CLONE_STATUS_ORDER_SUPPLIER_VI[status]}
-              />
-              :   
               <div className="d-flex flex-column align-items-center">
               <ToolTipBadge title={status === STATUS_ORDER_SUPPLIER.CANCELLED && get(record, 'note', '')}>
               <Status
@@ -162,19 +155,16 @@ export default function ListOrder({ status }: propsType): React.JSX.Element {
                 statusVi={STATUS_ORDER_SUPPLIER_VI[status]}
               />
               </ToolTipBadge>
-              <WithPermission permission={POLICIES.UPDATE_BILLSTATUS}>
+              <WithPermission permission={POLICIES.UPDATE_ORDERSUPPLIERSTATUS}>
               <ConfirmStatusBill
-                askAgain={askAgain}
-                setAskAgain={setAskAgain}
                 bill={record}
                 onChangeStatusBill={onChangeStatusBill}
                 onOpenCancel={onOpenCancel}
                 isDisabledAll={isDisabledAll(status)}
-                // isSubmitLoading={isSubmitLoading}
+                isSubmitLoading={isSubmitLoading}
                 id={get(record, '_id')} />
                 </WithPermission>
                 </div>
-            
           );
         },
       },
