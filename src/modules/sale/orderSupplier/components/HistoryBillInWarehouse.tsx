@@ -9,7 +9,6 @@ type statusType = 'CREATED' | keyof typeof STATUS_ORDER_SUPPLIER  ;
 export default function HistoryBillInWarehouse({
   data,
 }: propsType): React.JSX.Element {
-  console.log(data)
   return (
     <List
       bordered

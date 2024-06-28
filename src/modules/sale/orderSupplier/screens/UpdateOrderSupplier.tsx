@@ -25,15 +25,18 @@ import { PATH_APP } from "~/routes/allPath";
 import { concatAddress, formatter } from "~/utils/helpers";
 import { STATUS_ORDER_SUPPLIER, STATUS_ORDER_SUPPLIER_VI } from "../constants";
 import StepStatus from "../components/StepStatus";
-import { PayloadUpdateOrderSupplier } from "../orderSupplier.modal";
+import { PayloadCreateOrderSupplier, PayloadUpdateOrderSupplier, paramsConvertDataOrderSupplier } from "../orderSupplier.modal";
 import useUpdateOrderSupplierStore from "../storeContext/UpdateOrderSupplierContext";
-import { useResetOrderSupplier, useUpdateOrderSupplier } from "../orderSupplier.hook";
+import { convertDataSubmitWarehouse, useCreateOrderInWarehouse, useResetOrderSupplier, useUpdateByIdRedux, useUpdateOrderSupplier } from "../orderSupplier.hook";
 import PaymentVoucherForm from "~/modules/paymentVoucher/components/PaymentVoucherForm";
 import { REF_COLLECTION_UPPER } from "~/constants/defaultValue";
 import WithPermission from "~/components/common/WithPermission";
 import POLICIES from "~/modules/policy/policy.auth";
 import VoucherInOrder from "~/modules/vouchers/components/VoucherInOrder";
 import HistoryBillInWarehouse from "../components/HistoryBillInWarehouse";
+import WithOrPermission from "~/components/common/WithOrPermission";
+import { useDispatch } from "react-redux";
+import { orderSupplierActions } from "../redux/reducer";
 
 type propsType = {};
 const Layout = ({ label, children }: { label: any; children: any }) => (
@@ -69,11 +72,11 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
     // createBy,
     note,
     totalListPayment,
+    warehouseName,
   } = orderSupplier || {};
   // const canUpdateOrderSupplier = PolicyModule.hook.useMatchPolicy(
   //   PolicyModule.POLICIES.UPDATE_BILL
   // );
-
   // const queryGetDebtPharmacy = useMemo(() => ({pharmacyId : get(orderSupplier,'pharmacyId')}),[orderSupplier]);
   // const [debt,isLoadingDebt] = useFetchState({api : PharmacyModule.api.getDebt,query : queryGetDebtPharmacy});
   const { id } = useParams();
@@ -85,6 +88,11 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
   const [orderSelect, setOrderSelect] = useState<any>();
   const [supplierId, setSupplierId] = useState<string | null>("");
   const [debt, setDebt] = useState<number | null>();
+  const [,updateByIdRedux] = useUpdateByIdRedux();
+  const dispatch = useDispatch();
+  const [isSubmitCreate, onCreateOrderInWarehouse] = useCreateOrderInWarehouse(() => {
+    dispatch(orderSupplierActions.resetActionInById());
+  });
   const onCloseCancel = useCallback(() => {
     setOpenCancel(false);
     setCancelNote("");
@@ -129,6 +137,15 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
       _id: get(orderSupplier, "_id"),
     };
     updateBill(payloadUpdate);
+  };
+
+  const handleCreateOrderInWarehouse = () => {
+    const submitData: paramsConvertDataOrderSupplier = convertDataSubmitWarehouse({...orderSupplier, billId: get(orderSupplier, "_id")});
+    try {
+      onCreateOrderInWarehouse({ ...submitData, callback: updateByIdRedux})
+    } catch (error) {
+      console.log(error);
+    };
   };
 
   // useChangeDocumentTitle(codeSequence ? "Đơn hàng - " + codeSequence : 'Loading...',{dependency : [codeSequence]})
@@ -248,6 +265,9 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
                 <Divider />
                 <h6>Địa chỉ</h6>
                 {concatAddress(get(orderSupplier, "supplier.address"))}
+                <Divider/>
+                <h6>Kho nhập hàng</h6>
+                {warehouseName}
               </WhiteBox>
             </div>
           </Col>
@@ -274,6 +294,16 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
                   </Typography.Text>
                 </Layout>
                 <Divider />
+                {
+                  orderSupplier?.status === STATUS_ORDER_SUPPLIER.NEW &&
+                  <WithOrPermission permission={[POLICIES.UPDATE_ORDERSUPPLIER, POLICIES.UPDATE_ORDERSUPPLIERSTATUS]}>
+                  <Row justify={"end"}>
+                  <Button type="primary" size="small" onClick={handleCreateOrderInWarehouse} loading = {isSubmitCreate}>
+                    Gửi yêu cầu nhập kho
+                    </Button>
+                  </Row>
+                </WithOrPermission>
+                }
                 {/* <Typography.Text strong>Ghi chú</Typography.Text>
                 <Form.Item<FormFieldBillType> name={"note"}>
                   <TextArea />

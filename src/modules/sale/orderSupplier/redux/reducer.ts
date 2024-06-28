@@ -123,6 +123,16 @@ class OrderSupplierClassExtend extends InstanceModuleRedux {
         state.isSubmitLoading = false;
         state.updateStatusOrderFailed = payload;
       },
+      resetActionInById: (state:cloneInitState) => ({
+        ...state,
+        ...omit(this.cloneInitState, ["byId"]),
+      }),
+      updateByIdRedux: (state:cloneInitState, { payload }:{payload:any}) => {
+        state.byId = {
+          ...state.byId,
+          status: payload?.status
+        };
+      }
     };
 
     this.cloneInitState = {

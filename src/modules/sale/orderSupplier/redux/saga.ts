@@ -68,9 +68,13 @@ function* updateOrderItem({ payload }: any): any {
 //     yield put(orderSupplierActions.deleteFailed(error));
 //   }
 // }
-function* createOrderInWarehouse({payload} : any) : any {
+function* createOrderInWarehouse({ payload }: any): any {
+  const { callbackSubmit, ...query } = payload;
   try {
-    const data = yield call(api.createBillInWarehouse,payload);
+    const data = yield call(api.createBillInWarehouse, query);
+    if(callbackSubmit && typeof callbackSubmit === "function"){
+      callbackSubmit(data);
+    };
     yield put(orderSupplierActions.createOrderInWarehouseSuccess(data));
   } catch (error:any) {
     yield put(orderSupplierActions.createOrderInWarehouseFailed(error));

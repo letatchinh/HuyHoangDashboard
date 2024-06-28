@@ -37,7 +37,7 @@ export default function SaleScreen(props: propsType): React.JSX.Element {
    onOpenModalResult(omit(newData, 'oldData'));
    setTimeout(() => {
     handleCreateOrderInWarehouse(get(newData, 'oldData', {}) as PayloadCreateOrderSupplier);
-   }, 1000);
+   }, 500);
  };
  const [isSubmitLoading,onCreateOrderSupplier] = OrderSupplierModule.hook.useCreateOrderSupplier(callBackAfterSuccess);
   const onFinish = (values: FormFieldCreateOrderSupplier) => {

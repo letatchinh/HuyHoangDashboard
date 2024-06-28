@@ -197,7 +197,7 @@ export const convertDataSubmitWarehouse = (data: any) => {
     warehouseId: data?.warehouseId,
     warehouseName: data?.warehouseName,
     orderSupplierItems: data?.orderSupplierItems?.map((item: any) => ({
-      codeBySupplier: item?.codeBySupplier,
+      codeBySupplier: item?.codeBySupplier || item?.product?.codeBySupplier,
       quantity: item?.quantity,
     })),
     billId: data?.billId
@@ -214,6 +214,13 @@ export const useUpdateStatusOrderSupplier = (callback?: any) => {
 
   return useSubmit({
     action: orderSupplierActions.updateStatusOrderRequest,
+    loadingSelector: isSubmitLoadingSelector,
+  });
+};
+
+export const useUpdateByIdRedux = () => {
+  return useSubmit({
+    action: orderSupplierActions.updateByIdRedux,
     loadingSelector: isSubmitLoadingSelector,
   });
 };
