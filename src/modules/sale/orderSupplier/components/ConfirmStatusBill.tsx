@@ -14,23 +14,20 @@ type propsType = {
   isDisabledAll?: boolean;
   isSubmitLoading?: boolean;
   onOpenCancel: (p: any) => void;
-  askAgain?: boolean;
-  setAskAgain?: (p: any) => void;
   id?: string | null;
 };
-const CLONE_STATUS_BILL: any = STATUS_ORDER_SUPPLIER
-const CLONE_STATUS_BILL_VI: any = STATUS_ORDER_SUPPLIER_VI
+const CLONE_STATUS_BILL: any = omit(STATUS_ORDER_SUPPLIER, ['REQUESTED', 'UNCREATED']);
+const CLONE_STATUS_BILL_REQUEST: any = omit(STATUS_ORDER_SUPPLIER, ['UNCREATED']);
+const CLONE_STATUS_BILL_VI: any = omit(STATUS_ORDER_SUPPLIER_VI, ['REQUESTED', 'UNCREATED']);
+const CLONE_STATUS_BILL_VI_REQUEST: any = omit(STATUS_ORDER_SUPPLIER_VI, ['UNCREATED']);
 export default function ConfirmStatusBill({
   onChangeStatusBill,
   bill,
   isDisabledAll,
   isSubmitLoading,
   onOpenCancel,
-  askAgain: defaultAskAgain = true,
-  setAskAgain: setAskAgainDefault,
   id,
 }: propsType): React.JSX.Element {
-  const [askAgain, setAskAgain] = useState(defaultAskAgain);
   const status = useMemo(() => get(bill, "status"), [bill]);
   const [note, setNote] = useState<string>("");
   const {pathname} = useLocation();
@@ -40,7 +37,7 @@ export default function ConfirmStatusBill({
       let nextStatus: any = null;
       let message;
       let isSame = false;
-      forIn((CLONE_STATUS_BILL), (value, key) => {
+      forIn((status === 'REQUESTED' ? CLONE_STATUS_BILL_REQUEST : CLONE_STATUS_BILL), (value, key) => {
         if (value === CLONE_STATUS_BILL.CANCELLED) return;
         if (isDisabledAll) {
           return;
@@ -76,7 +73,6 @@ export default function ConfirmStatusBill({
   }, [id]);
   return nextStatus && canUpdateBill ? (
         <Flex gap={"small"} align="center" justify={"center"}>
-          {defaultAskAgain ? (
             <Popconfirm
               title={
                 "Chuyển đổi sang trạng thái " +
@@ -92,9 +88,6 @@ export default function ConfirmStatusBill({
               cancelText="Huỷ"
               onConfirm={() => {
                 onChangeStatusBill(nextStatus,id, note);
-                if (setAskAgainDefault) {
-                  setAskAgainDefault(askAgain);
-                }
               }}
             >
               <Tooltip title={message}>
@@ -108,27 +101,10 @@ export default function ConfirmStatusBill({
                   disabled={isDisabledAll || !!message}
                   loading={isSubmitLoading}
                 >
-                  {CLONE_STATUS_BILL_VI[nextStatus]}
+                    {(status === 'REQUESTED' ? CLONE_STATUS_BILL_VI_REQUEST: CLONE_STATUS_BILL_VI)[nextStatus]}
                 </Button>
               </Tooltip>
             </Popconfirm>
-          ) : (
-            <Tooltip title={message}>
-              <Button
-                icon={<ArrowUpOutlined />}
-                block
-                // type="primary"
-                disabled={isDisabledAll || !!message}
-                loading={isSubmitLoading}
-                onClick={() =>
-                  onChangeStatusBill(nextStatus,id, note)
-                }
-              >
-                {CLONE_STATUS_BILL_VI[nextStatus]}
-              </Button>
-            </Tooltip>
-          )}
-
           {status === CLONE_STATUS_BILL.NEW && (
             <Popconfirm
               title={'Bạn có chắc chắn muốn huỷ đơn này?'}
