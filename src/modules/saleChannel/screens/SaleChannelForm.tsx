@@ -9,7 +9,10 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { convertInitSaleChannel } from "../saleChannel.service";
 import { Link } from "react-router-dom";
 import { PATH_APP } from "~/routes/allPath";
-import { useCustomerSegmentationQueryParams, useGetCustomerSegmentations } from "~/modules/customerSegmentation/customerSegmentation.hook";
+import {
+  useCustomerSegmentationQueryParams,
+  useGetCustomerSegmentations,
+} from "~/modules/customerSegmentation/customerSegmentation.hook";
 import { get } from "lodash";
 
 const FormItem = Form.Item;
@@ -32,9 +35,11 @@ export default function SaleChannelForm({
     onClose();
     setDestroy && setDestroy(true);
   });
-  const [saleChannel, ] = useGetSaleChannel(id);
-  const [customerSegmentation ] = useGetCustomerSegmentations(query);
+  const [saleChannel, isLoading] = useGetSaleChannel(id);
+  const [customerSegmentation] = useGetCustomerSegmentations(query);
   const initSalesChannel = useInitSaleChannel(saleChannel, id);
+  const [selectedCustomerSegmentation, setSelectedCustomerSegmentation] =
+    useState<string | undefined>();
   useResetSaleChannelAction();
 
   useEffect(() => {
@@ -46,20 +51,12 @@ export default function SaleChannelForm({
     }
   }, [initSalesChannel, id, form]);
 
-  // const onValuesChange = (value: any, values: any) => {
-  //   const key = Object.keys(value)[0];
-  //   switch (key) {
-  //     default:
-  //       break;
-  //   }
-  // };
-
   const optionsSegmentation = useMemo(
     () =>
       customerSegmentation?.map((item: any) => ({
         label: get(item, "title"),
         value: get(item, "_id"),
-        key: get(item, "division")
+        key: get(item, "division"),
       })),
     [customerSegmentation]
   );
@@ -86,6 +83,9 @@ export default function SaleChannelForm({
     },
   ];
 
+  const onTypeChange = (value: string) => {
+    setSelectedCustomerSegmentation(value);
+  };
 
   return (
     <div className="sale-channel page-wraper form-page-content">
@@ -115,9 +115,9 @@ export default function SaleChannelForm({
             ]}
           >
             <Select
-              defaultValue={'B2B'}
               options={optionsSegmentation}
               allowClear
+              onChange={onTypeChange}
             />
           </FormItem>
           <FormItem label="Mã kênh bán hàng" name="code">
@@ -135,12 +135,18 @@ export default function SaleChannelForm({
           >
             <Input />
           </FormItem>
-
-          <FormItem shouldUpdate={(pre,curr)=>pre.customerDivisionId !==curr.customerDivisionId} noStyle>
-            {({getFieldValue, setFieldValue}) => {
-              const checkCustomerDivision = getFieldValue('customerDivisionId') !== get(customerSegmentation, '[0]._id')
-              if(checkCustomerDivision){
-                setFieldValue('discount','DIRECT_DISCOUNT')
+          <FormItem
+            shouldUpdate={(pre, curr) =>
+              pre.customerDivisionId !== curr.customerDivisionId
+            }
+            noStyle
+          >
+            {({ getFieldValue, setFieldValue }) => {
+              const checkCustomerDivision =
+                getFieldValue("customerDivisionId") !==
+                get(customerSegmentation, "[0]._id");
+              if (checkCustomerDivision) {
+                setFieldValue("discount", "DIRECT_DISCOUNT");
               }
               return (
                 <FormItem
@@ -157,6 +163,7 @@ export default function SaleChannelForm({
                   <Select
                     options={options}
                     defaultValue={"DIRECT_DISCOUNT"}
+                    // disabled={customerSegmentation?.division === "B2B" ? true : false}
                     disabled={checkCustomerDivision}
                   />
                 </FormItem>
@@ -170,7 +177,7 @@ export default function SaleChannelForm({
             {isSubmitLoading ? (
               <Button disabled>Huỷ</Button>
             ) : (
-                <Button onClick={onClose}>Huỷ</Button>
+              <Button onClick={onClose}>Huỷ</Button>
             )}
 
             <Button
