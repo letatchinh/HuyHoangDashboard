@@ -41,6 +41,9 @@ const updateOrderItemSuccessSelector = getSelector('updateOrderItemSuccess');
 const createBillInWarehouseSuccessSelector = getSelector('createBillInWarehouseSuccess');
 const createBillInWarehouseFailedSelector = getSelector('createBillInWarehouseFailed');
 
+const updateStatusOrderSuccessSelector = getSelector('updateStatusOrderSuccess');
+const updateStatusOrderFailedSelector = getSelector('updateStatusOrderFailed');
+
 export const useGetOrderSuppliers = (param:any) => {
   return useFetchByParam({
     action: orderSupplierActions.getListRequest,
@@ -203,11 +206,11 @@ export const convertDataSubmitWarehouse = (data: any) => {
 
 export const useUpdateStatusOrderSupplier = (callback?: any) => {
   useSuccess(
-    updateSuccessSelector,
+    updateStatusOrderSuccessSelector,
     `Cập nhật trạng thái đơn hàng thành công`,
     callback
   );
-  useFailed(updateFailedSelector);
+  useFailed(updateStatusOrderFailedSelector);
 
   return useSubmit({
     action: orderSupplierActions.updateStatusOrderRequest,

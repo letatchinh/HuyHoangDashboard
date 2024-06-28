@@ -12,6 +12,7 @@ import { useGetWarehouse, useGetWarehouseByBranchLinked } from "~/modules/wareho
 import { useGetBill } from "../bill.hook";
 import LogisticForm from "~/modules/logistic/components/LogisticForm";
 import useNotificationStore from "~/store/NotificationContext";
+import SplitBillForm from "../components/SplitBill/SplitBillForm";
 
 export type GlobalUpdateBill = {
     bill : any,
@@ -28,7 +29,7 @@ export type GlobalUpdateBill = {
     setCheckboxPayment: (p: string | null) => void;
     listWarehouse: any[];
     isLoadingWarehouse: boolean;
-    warehouseInfo: any
+    warehouseInfo: any;
 };
 const UpdateBill = createContext<GlobalUpdateBill>({
     bill : null,
@@ -45,7 +46,7 @@ const UpdateBill = createContext<GlobalUpdateBill>({
     setCheckboxPayment: (p: string | null) => { },
     listWarehouse: [],
     isLoadingWarehouse: false,
-    warehouseInfo: null
+    warehouseInfo: null,
 });
 
 type UpdateBillProviderProps = {
@@ -66,8 +67,8 @@ export function UpdateBillProvider({
     const [isOpenFormPayment, setIsOpenFormPayment] = useState(false);
     const [logisticOpen, setLogisticOpen] = useState(false);
     const [checkboxPayment, setCheckboxPayment] = useState<string | null>(null);
-    const [listWarehouse, isLoadingWarehouse]= useGetWarehouseByBranchLinked();
-    const {onNotify} = useNotificationStore();
+    const [listWarehouse, isLoadingWarehouse] = useGetWarehouseByBranchLinked();
+  
     const totalRevenueInVouchers = useMemo(() => {
       if (bill?.receiptVouchers?.length > 0) {
         const data = bill?.receiptVouchers?.filter((item: any)=> (item?.status !== WH_VOUCHER_STATUS.REJECT && item?.status !== WH_VOUCHER_STATUS.CUSTOMER_CANCEL));
@@ -110,6 +111,7 @@ export function UpdateBillProvider({
   const onCloseFormLogistic = () => {
     setLogisticOpen(false);
   };
+
   return (
     <UpdateBill.Provider
       value={{
@@ -127,7 +129,7 @@ export function UpdateBillProvider({
         setCheckboxPayment,
         listWarehouse,
         isLoadingWarehouse,
-        warehouseInfo
+        warehouseInfo,
       }}
     >
       {children}

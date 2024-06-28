@@ -20,6 +20,8 @@ type propsType = {
   updateWarehouseInBill?: (data: any) => void;
   isConfirmChangeLogistic?: boolean;
   listWarehouseLinked: any[];
+  splitBill?: boolean;
+  onOpenSplitBillForm?: () => void;
 };
 export default function RadioButtonWarehouse({
   setValue,
@@ -35,7 +37,9 @@ export default function RadioButtonWarehouse({
   updateWarehouseInBill,
   isConfirmChangeLogistic,
   onCancel,
-  listWarehouseLinked
+  listWarehouseLinked,
+  splitBill,
+  onOpenSplitBillForm
 }: propsType): React.JSX.Element {
   const [form] = Form.useForm();
   const { onNotify } = useNotificationStore();
@@ -85,7 +89,7 @@ export default function RadioButtonWarehouse({
             </Radio.Group>
           </Form.Item>
         )}
-        <Row justify={"end"}>
+      <Row justify={"end"}>
         {isShowButtonPackageExport &&  <Button
             type="primary"
             onClick={ requestWarehouseExport && requestWarehouseExport}
@@ -95,6 +99,14 @@ export default function RadioButtonWarehouse({
           >
             Yêu cầu xuất kho
         </Button>}
+        {/* {
+          splitBill
+          && <Button
+            style={{ marginRight: "10px" }}
+            onClick={onOpenSplitBillForm} type="primary">
+            Tách đơn hàng
+          </Button>
+        } */}
         {
           isConfirmChangeLogistic ?
             <Popconfirm

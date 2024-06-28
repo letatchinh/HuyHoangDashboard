@@ -70,6 +70,7 @@ function* checkWarehouse({ payload }: any): any {
       yield put(warehouseActions.checkWarehouseFailed(data));
       const newData = {status: 'UNREADY', _id: data?.billId, warehouseId: data?.warehouseId}
       yield put(billSliceAction.updateStatusAfterCheckWarehouseRequest(newData as any));
+      yield put(billSliceAction.updateBillAfterCheckWarehouseRequest(data)); // Đổi lại trạng thái từng sản phẩm được mang đi kiểm kho sau khi kiểm kho
     } else {
       yield put(warehouseActions.checkWarehouseSuccess(data));
       yield put(billSliceAction.updateStatusAfterCheckWarehouseRequest({
@@ -78,10 +79,10 @@ function* checkWarehouse({ payload }: any): any {
         _id: data?.billId,
         warehouseId: data?.warehouseId,
       }));
-      yield put(billSliceAction.updateBillAfterCheckWarehouseRequest(data)); // Đổi lại trạng thái từng sản phẩm được mang đi kiểm kho sau khi kiểm kho
       if (typeof get(payload, 'callback') === 'function' && data?.historyStatus === STATUS_BILL.READY) { // Thực thi khi kiểm kho có hàng
         payload.callback(payload?.status, payload?.bill);
       };
+      yield put(billSliceAction.updateBillAfterCheckWarehouseRequest(data)); // Đổi lại trạng thái từng sản phẩm được mang đi kiểm kho sau khi kiểm kho
     };
   } catch (error:any) {
     yield put(warehouseActions.checkWarehouseFailed(error));

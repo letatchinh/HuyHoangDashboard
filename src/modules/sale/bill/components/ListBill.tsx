@@ -26,13 +26,12 @@ import {
   Typography,
 } from "antd";
 import { ColumnsType } from "antd/es/table/InternalTable";
-import { get } from "lodash";
+import { get, trim } from "lodash";
 import { useDispatch } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
 import ModalAnt from "~/components/Antd/ModalAnt";
 import SearchAnt from "~/components/Antd/SearchAnt";
 import BaseBorderBox from "~/components/common/BaseBorderBox";
-import { PATH_APP } from "~/routes/allPath";
 import {
   concatAddress,
   formatter,
@@ -45,7 +44,6 @@ import Status from "~/components/common/Status/index";
 import WithPermission from "~/components/common/WithPermission";
 import { REF_COLLECTION } from "~/constants/defaultValue";
 import SelectCollaborator from "~/modules/collaborator/components/SelectSearch";
-import SelectEmployee from "~/modules/employee/components/SelectSearch";
 import ExportExcelButton from "~/modules/export/component";
 import useCheckBoxExport from "~/modules/export/export.hook";
 import POLICIES from "~/modules/policy/policy.auth";
@@ -67,11 +65,12 @@ import { useResetBillAction } from "~/modules/sale/bill/bill.hook";
 import SelectPharmacy from "./SelectPharmacy";
 import { FormFieldSearch } from "../bill.modal";
 import dayjs from "dayjs";
-import { FilterOutlined } from "@ant-design/icons";
 import GeoTreeSelect from "~/modules/geo/components/GeoTreeSelect";
 import { RELATIVE_POSITION } from "~/modules/geo/constants";
 import SelectEmployeeV2 from "~/modules/employee/components/SelectEmployeeV2";
 import TagBillItem from "./TagBillItem";
+import useNotificationStore from "~/store/NotificationContext";
+import SplitBillForm from "./SplitBill/SplitBillForm";
 const CalculateBillMethod = new CalculateBill();
 type propsType = {
   status?: string;
@@ -107,9 +106,10 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
   const canCreateBillToWarehouse = useMatchPolicy(POLICIES.WRITE_WAREHOUSELINK);
   const [noteForWarehouse, setNoteForWarehouse] = useState<string>('');
   const [,setBillItemIdCancel] = useState<any>();
-  const [askAgain,setAskAgain] = useState(true);
-  const [note, setNote] = useState(""); // CancelNote BillItem
   const [listWarehouse] = useGetWarehouseByBranchLinked(); // Get all warehouse linked with branch
+  const { onNotify } = useNotificationStore();
+  const [isOpenSplitBill, setIsOpenSplitBill] = useState(false);
+
   const [, onUpdateStatus] = useUpdateStatusBill(() => {
     dispatch(billSliceAction.resetAction());
   });
@@ -136,6 +136,16 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
     setIsModalCheckWarehouse(false);
     setBillItem(null);
   };
+
+  const onOpenSplitBillForm = () => {
+    setIsOpenSplitBill(true);
+  };
+
+  const onCloseSplitBillForm = () => {
+    setIsOpenSplitBill(false);
+  };
+
+
   const [isSubmitLoading, onCreateBillToWarehouse] = useCreateBillToWarehouse(
     () => {
       dispatch(warehouseActions.resetAction());
@@ -181,7 +191,10 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
     }
   };
 
-  const onChangeStatusBill = (status: keyof typeof STATUS_BILL, id?: string | null,bill?: any, note?: string) => {
+  const onChangeStatusBill = (status: keyof typeof STATUS_BILL, id?: string | null, bill?: any, note?: string) => {
+    if (trim(note) === "" || null || undefined) {
+      return onNotify?.error('Vui lòng nhập ghi chú!');
+    };
     // Phải kiểm tra hàng tồn kho trước khi đổi trạng thái từ NEW qua PACKAGE_EXPORT
     const dataCheck = convertProductsFromBill(get(bill, 'billItems', []));
     const submitData = {
@@ -287,8 +300,6 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
                 </ToolTipBadge>
                 <WithPermission permission={POLICIES.UPDATE_BILLSTATUS}>
                   <ConfirmStatusBill
-                    askAgain={askAgain}
-                    setAskAgain={setAskAgain}
                     bill={record}
                     onChangeStatusBill={onChangeStatusBill}
                     onOpenCancel={onOpenCancel}
@@ -663,10 +674,22 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
                   requestWarehouseExport={onRequestWarehouseExport}
                   warehouseDefault={warehouseDefault}
                   listWarehouseLinked={listWarehouse}
+                  splitBill
+                  onOpenSplitBillForm={onOpenSplitBillForm}
                 />
                 </BaseBorderBox>
               </>
           )}
+      </ModalAnt>
+      <ModalAnt
+          title='Tách đơn hàng'
+          open={isOpenSplitBill}
+          onCancel={onCloseSplitBillForm}
+          width={'auto'}
+          footer={null}
+          destroyOnClose
+      >
+        <SplitBillForm/>
       </ModalAnt>
     </>
     // </div> 

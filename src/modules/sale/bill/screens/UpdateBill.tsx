@@ -265,8 +265,8 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
                 <WithPermission permission={POLICIES.UPDATE_LOGISTIC}>
                   <Layout label={<Typography.Text>
                     Phí vận chuyển {' '}
-                    {(status === STATUS_BILL.NEW)
-                      && <EditOutlined onClick={onOpenFormLogistic} style={{ color: '#5AB2FF' }} />}
+                    {/* {(status === STATUS_BILL.NEW) */}
+                       <EditOutlined onClick={onOpenFormLogistic} style={{ color: '#5AB2FF' }} />
                   </Typography.Text>}>{formatter(get(feeDetail, 'LOGISTIC', 0))}</Layout>
               </WithPermission>
               <Layout label={"Đã thanh toán"}>-{formatter(totalReceiptAmount)}</Layout>

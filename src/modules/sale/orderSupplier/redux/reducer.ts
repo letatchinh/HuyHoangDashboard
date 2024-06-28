@@ -82,7 +82,6 @@ class OrderSupplierClassExtend extends InstanceModuleRedux {
 
       updateStatusOrderRequest: (state: cloneInitState) => {
         state.isSubmitLoading = true;
-        state.updateStatusOrderFailed = null;
       },
       updateStatusOrderSuccess: (
         state: cloneInitState,
@@ -107,6 +106,15 @@ class OrderSupplierClassExtend extends InstanceModuleRedux {
           orderItems,
         };
         state.updateStatusOrderSuccess = payload;
+        state.list = state?.list?.map((item: any) => {
+          if (payload?.data?._id === get(item, "_id")) {
+            return {
+              ...item,
+              status: payload?.data?.status,
+            };
+          }
+          return item;
+        });
       },
       updateStatusOrderFailed: (
         state: cloneInitState,
