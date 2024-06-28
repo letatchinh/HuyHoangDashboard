@@ -122,24 +122,6 @@ export default function ListQuotation({
       },
     },
     {
-      title: "Mã đơn hàng",
-      dataIndex: "bill",
-      key: "bill",
-      align: "center",
-      width: 100,
-      render(bill, record, index) {
-        return (
-          <Link
-            className="link_"
-            to={redirectRouterBillId(pathname) + "/" + get(record, "bill._id")}
-            target="_blank"
-          >
-            {get(record, "bill.codeSequence")}
-          </Link>
-        );
-      },
-    },
-    {
       title: "Ngày tạo đơn",
       dataIndex: "createdAt",
       key: "createdAt",
