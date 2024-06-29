@@ -486,7 +486,7 @@ export function CreateBillProvider({
   };
   useEffect(() => {
     if ((pharmacyInfo || partner) && !bill?.warehouseId) {
-      const address = get(pharmacyInfo, 'data.addressDelivery', get(pharmacyInfo, 'data.address', ''))
+      const address = get(pharmacyInfo, 'data.addressDelivery', get(pharmacyInfo, 'data.address', get(partner, 'address', [])));
       if (warehouseDefault?.length > 0) {
           const findWarehouseDefault = findMatchingManagementArea(address, (warehouseDefault));
           console.log(
