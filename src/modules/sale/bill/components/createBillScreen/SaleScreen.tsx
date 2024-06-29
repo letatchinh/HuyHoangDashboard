@@ -75,6 +75,7 @@ export default function SaleScreen(props: propsType): React.JSX.Element {
         return "Chuyển đổi đơn hàng (F1)";
 
       default:
+        return "Tạo đơn hàng tạm (F1)";
         break;
     }
   }, [bill]);

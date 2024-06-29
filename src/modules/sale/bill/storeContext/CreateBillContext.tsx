@@ -485,20 +485,31 @@ export function CreateBillProvider({
       });
   };
   useEffect(() => {
+    // console.log('vo day lai')
     if ((pharmacyInfo || partner) && !bill?.warehouseId) {
       const address = get(pharmacyInfo, 'data.addressDelivery', get(pharmacyInfo, 'data.address', get(partner, 'address', [])));
       if (warehouseDefault?.length > 0) {
-          const findWarehouseDefault = findMatchingManagementArea(address, (warehouseDefault));
-          console.log(
-            `Địa chỉ nằm trong khu vực của kho: ${findWarehouseDefault?.name?.vi}`
-          );
-          // onNotify?.success(`Địa chỉ nằm trong khu vực của kho: ${findWarehouseDefault?.name?.vi}`);
-          setFormAndLocalStorage({
-            ...bill,
-            warehouseId: findWarehouseDefault?.warehouseId,
-            warehouseName: findWarehouseDefault?.name?.vi,
-          });
-          setWarehouseId(findWarehouseDefault?.warehouseId);
+        const findWarehouseDefault = findMatchingManagementArea(address, (warehouseDefault));
+          if (findWarehouseDefault) {
+            console.log(
+              `Địa chỉ nằm trong khu vực của kho: ${findWarehouseDefault?.name?.vi}`
+            );
+            // onNotify?.success(`Địa chỉ nằm trong khu vực của kho: ${findWarehouseDefault?.name?.vi}`);
+            setFormAndLocalStorage({
+              ...bill,
+              warehouseId: findWarehouseDefault?.warehouseId,
+              warehouseName: findWarehouseDefault?.name?.vi,
+            });
+            setWarehouseId(findWarehouseDefault?.warehouseId);
+          } else {
+            setFormAndLocalStorage({
+              ...(bill && bill),
+              warehouseId: listWarehouse[0]?._id,
+              warehouseName: listWarehouse[0]?.name?.vi,
+            });
+          setWarehouseId(warehouseDefault[0]?._id);
+          console.log("Địa chỉ không thuộc khu vực kho mặc định nào");
+          };
         } else {
             setFormAndLocalStorage({
               ...(bill && bill),
