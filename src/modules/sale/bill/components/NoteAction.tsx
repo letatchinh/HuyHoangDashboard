@@ -12,6 +12,7 @@ export default function NoteAction({onFinish: onHandle, onClose,form,loading}: p
   const { onNotify } = useNotificationStore();
 
   const onFinish = (values: any) => {
+    console.log(values,'values')
     if (trim(values) === "" || null || undefined) {
       return onNotify?.error('Vui lòng nhập ghi chú!');
     };
@@ -27,7 +28,7 @@ export default function NoteAction({onFinish: onHandle, onClose,form,loading}: p
       labelAlign='left'
     >
       <Form.Item label="Ghi chú" name="note" rules={[{ required: true , message: 'Vui lòng nhập ghi chú!'}]}>
-          <Input.TextArea />
+        <Input.TextArea onPressEnter={(e: any)=> onFinish({note: e.target.value})} />
       </Form.Item>
       <Row justify={"end"}>
             <Button type="primary" htmlType="submit" loading ={loading}>Cập nhật</Button>
