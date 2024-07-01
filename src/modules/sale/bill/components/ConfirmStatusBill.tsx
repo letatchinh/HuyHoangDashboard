@@ -1,16 +1,18 @@
 
 import { ArrowUpOutlined } from "@ant-design/icons";
-import { Button, Checkbox, Flex, Input, Popconfirm, Tooltip } from "antd";
+import { Button, Checkbox, Flex, Form, Input, Modal, Popconfirm, Tooltip } from "antd";
 import { forIn, get, omit, trim } from "lodash";
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useMemo, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { useMatchPolicy } from "~/modules/policy/policy.hook";
 import { CheckPermission } from "~/utils/helpers";
 import { STATUS_BILL, STATUS_BILL_VI } from "../../bill/constants";
 import { ParamGetNextStatus } from "../bill.modal";
+import useNotificationStore from "~/store/NotificationContext";
+import NoteAction from "./NoteAction";
 
 type propsType = {
-  onChangeStatusBill: (p: any, id: string | null| undefined,bill?: any, note?: string) => void;
+  onChangeStatusBill: (p: any) => void;
   bill: any;
   isDisabledAll?: boolean;
   isSubmitLoading?: boolean;
@@ -33,7 +35,10 @@ export default function ConfirmStatusBill({
   const status = useMemo(() => get(bill, "status"), [bill]);
   const {pathname} = useLocation();
   const canUpdateBill = useMatchPolicy([CheckPermission(pathname), 'update']);
-  const [note, setNote] = useState<string>("");
+  const [isOpen, setIsOpen] = useState(false);
+  const [isOpenCancel, setIsOpenCancel] = useState(false);
+  const ref = useRef<any>();
+  const [form] = Form.useForm();
 
   const getNextStatus = useCallback(
     ({ status, expirationDate, lotNumber }: ParamGetNextStatus) => {
@@ -70,25 +75,23 @@ export default function ConfirmStatusBill({
       }),
     [bill, status]
   );
+
+  const onOpen = () => {
+    setIsOpen(true);
+  };
+  const onClose = () => {
+    setIsOpen(false);
+  };
+
+  const onOpenCancelBill = () => {
+    setIsOpenCancel(true);
+  };
+  const onCloseCancelBill = () => {
+    setIsOpenCancel(false);
+  };
+
   return nextStatus && canUpdateBill ? (
-        <Flex gap={"small"} align="center" justify={"center"}>
-            <Popconfirm
-              title={
-                "Chuyển đổi sang trạng thái " +
-                CLONE_STATUS_BILL_VI[nextStatus]
-              }
-              description={
-                <Input.TextArea
-                  placeholder="Bắt buộc nhập ghi chú"
-                  onChange={(e) => setNote(e.target.value)}
-                />
-              }
-              okText="Ok"
-              cancelText="Huỷ"
-              onConfirm={() => {
-                onChangeStatusBill(nextStatus,id,bill,note);
-              }}
-            >
+        <Flex ref = {ref} gap={"small"} align="center" justify={"center"} className="confirm-status-bill">
               <Tooltip title={message}>
                 <Button
                   icon={<ArrowUpOutlined />}
@@ -96,28 +99,14 @@ export default function ConfirmStatusBill({
                   style={{
                     backgroundColor: "#F7F9F2",
                   }}
-                  // type="primary"
                   disabled={isDisabledAll || !!message}
                   loading={isSubmitLoading}
+                  onClick={onOpen}
                 >
                   {(status === 'REQUESTED' ? CLONE_STATUS_BILL_VI_REQUESTED: CLONE_STATUS_BILL_VI)[nextStatus]}
                 </Button>
               </Tooltip>
-            </Popconfirm>
           {status === CLONE_STATUS_BILL.NEW && (
-            <Popconfirm
-            title={'Bạn có chắc chắn muốn huỷ đơn này?'}
-            description={
-            <Input.TextArea
-              placeholder="Bắt buộc nhập ghi chú"
-              onChange={(e) => setNote(e.target.value)}
-              />
-              }
-              onConfirm={() => 
-              onChangeStatusBill('CANCELLED',id,bill,note)
-              }
-          
-            >
               <Button
                 type="primary"
                 block
@@ -126,11 +115,53 @@ export default function ConfirmStatusBill({
                   backgroundColor: "rgb(201, 0, 0)",
                 }}
                 loading={isSubmitLoading}
+                onClick={() => {
+                  onOpenCancelBill();
+                }}
               >
                 Huỷ đơn
               </Button>
-              </Popconfirm>
-          )}
+      )}
+      <Modal
+        title={`Chuyển đổi trạng thái đơn hàng thành ${CLONE_STATUS_BILL_VI[nextStatus]}`}
+        open={isOpen}
+        onCancel={onClose}
+        footer={null}
+        afterClose={()=> form.resetFields()}
+      >
+        <NoteAction
+          onFinish={(value: any) => {
+            onChangeStatusBill({
+              nextStatus,
+              id,
+              bill,
+              value
+            })
+          }}
+          onClose={onClose}
+          form = {form}
+        />
+      </Modal>
+        <Modal
+        title={`Huỷ đơn hàng`}
+        open={isOpenCancel}
+        onCancel={onCloseCancelBill}
+        footer={null}
+        afterClose={()=> form.resetFields()}
+        >
+          <NoteAction
+          onFinish={(value: any) => {
+            onChangeStatusBill({
+                status: CLONE_STATUS_BILL.CANCELLED,
+               id,
+               bill,
+               value,
+            })
+          }}
+          onClose={onClose}
+          form = {form}
+        />
+      </Modal>
       </Flex>
   ) : (
     <></>

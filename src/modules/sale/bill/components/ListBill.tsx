@@ -63,13 +63,12 @@ import ToolTipBadge from "~/components/common/ToolTipBadge";
 import ConfirmStatusBill from "./ConfirmStatusBill";
 import { useResetBillAction } from "~/modules/sale/bill/bill.hook";
 import SelectPharmacy from "./SelectPharmacy";
-import { FormFieldSearch } from "../bill.modal";
+import { FormFieldSearch, propsConfirmStatusBill } from "../bill.modal";
 import dayjs from "dayjs";
 import GeoTreeSelect from "~/modules/geo/components/GeoTreeSelect";
 import { RELATIVE_POSITION } from "~/modules/geo/constants";
 import SelectEmployeeV2 from "~/modules/employee/components/SelectEmployeeV2";
 import TagBillItem from "./TagBillItem";
-import useNotificationStore from "~/store/NotificationContext";
 import SplitBillForm from "./SplitBill/SplitBillForm";
 const CalculateBillMethod = new CalculateBill();
 type propsType = {
@@ -107,9 +106,8 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
   const [noteForWarehouse, setNoteForWarehouse] = useState<string>('');
   const [,setBillItemIdCancel] = useState<any>();
   const [listWarehouse] = useGetWarehouseByBranchLinked(); // Get all warehouse linked with branch
-  const { onNotify } = useNotificationStore();
   const [isOpenSplitBill, setIsOpenSplitBill] = useState(false);
-
+  
   const [, onUpdateStatus] = useUpdateStatusBill(() => {
     dispatch(billSliceAction.resetAction());
   });
@@ -191,10 +189,7 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
     }
   };
 
-  const onChangeStatusBill = (status: keyof typeof STATUS_BILL, id?: string | null, bill?: any, note?: string) => {
-    if (trim(note) === "" || null || undefined) {
-      return onNotify?.error('Vui lòng nhập ghi chú!');
-    };
+  const onChangeStatusBill = ({status, id, bill, note}: propsConfirmStatusBill) => {
     // Phải kiểm tra hàng tồn kho trước khi đổi trạng thái từ NEW qua PACKAGE_EXPORT
     const dataCheck = convertProductsFromBill(get(bill, 'billItems', []));
     const submitData = {

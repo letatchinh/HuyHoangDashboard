@@ -79,6 +79,7 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
     refCollection,
     historyProcessStatus
   } = bill || {};
+  useResetBillAction();
   const { pathname } = useLocation();
   const keyPermission = useMemo(() => CheckPermission(pathname), [pathname]);
   const canUpdateBill = useMatchPolicy([keyPermission, 'update']);

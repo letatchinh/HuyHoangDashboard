@@ -1,4 +1,5 @@
 import { ValueApplyBill } from "~/modules/logistic/components/LogisticForm"
+import { STATUS_BILL } from "./constants"
 
 type supplier = {
     name : string,
@@ -132,3 +133,11 @@ export type FormFieldSearch = {
     // sortBy :{COMPLETED, NEW}
     // searchBy?: SearchByType,
   };
+
+export type propsConfirmStatusBill = {
+    status: keyof typeof STATUS_BILL;
+    id?: string | null;
+    bill?: any;
+    note?: string;
+    statusCurrent?: string | null | undefined;
+};
