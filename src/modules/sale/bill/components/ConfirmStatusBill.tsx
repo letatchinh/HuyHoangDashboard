@@ -8,7 +8,6 @@ import { useMatchPolicy } from "~/modules/policy/policy.hook";
 import { CheckPermission } from "~/utils/helpers";
 import { STATUS_BILL, STATUS_BILL_VI } from "../../bill/constants";
 import { ParamGetNextStatus } from "../bill.modal";
-import useNotificationStore from "~/store/NotificationContext";
 import NoteAction from "./NoteAction";
 
 type propsType = {
