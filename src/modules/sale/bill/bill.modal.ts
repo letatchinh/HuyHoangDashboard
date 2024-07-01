@@ -135,9 +135,7 @@ export type FormFieldSearch = {
   };
 
 export type propsConfirmStatusBill = {
-    status: keyof typeof STATUS_BILL;
-    id?: string | null;
+    nextStatus: keyof typeof STATUS_BILL;
     bill?: any;
     note?: string;
-    statusCurrent?: string | null | undefined;
 };

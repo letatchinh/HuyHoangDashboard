@@ -65,7 +65,7 @@ function* createBillToWarehouse({ payload }: any): any {
 
 function* checkWarehouse({ payload }: any): any {
   try {
-    const data = yield call(api.checkWarehouse, omit(payload, ['callback','status', 'bill']));
+    const data = yield call(api.checkWarehouse, omit(payload, ['callback', 'status', 'bill']));
     if (!data?.status) {
       yield put(warehouseActions.checkWarehouseFailed(data));
       const newData = {status: 'UNREADY', _id: data?.billId, warehouseId: data?.warehouseId}
@@ -84,7 +84,7 @@ function* checkWarehouse({ payload }: any): any {
       };
       yield put(billSliceAction.updateBillAfterCheckWarehouseRequest(data)); // Đổi lại trạng thái từng sản phẩm được mang đi kiểm kho sau khi kiểm kho
     };
-  } catch (error:any) {
+  } catch (error: any) {
     yield put(warehouseActions.checkWarehouseFailed(error));
   }
 };

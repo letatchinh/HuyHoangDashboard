@@ -88,7 +88,6 @@ export default function ConfirmStatusBill({
   const onCloseCancelBill = () => {
     setIsOpenCancel(false);
   };
-
   return nextStatus && canUpdateBill ? (
         <Flex ref = {ref} gap={"small"} align="center" justify={"center"} className="confirm-status-bill">
               <Tooltip title={message}>
@@ -132,13 +131,13 @@ export default function ConfirmStatusBill({
           onFinish={(value: any) => {
             onChangeStatusBill({
               nextStatus,
-              id,
               bill,
-              value
+              note: value,
             })
           }}
           onClose={onClose}
-          form = {form}
+          form={form}
+          loading={isSubmitLoading}
         />
       </Modal>
         <Modal
@@ -151,14 +150,14 @@ export default function ConfirmStatusBill({
           <NoteAction
           onFinish={(value: any) => {
             onChangeStatusBill({
-                status: CLONE_STATUS_BILL.CANCELLED,
-               id,
+              nextStatus: CLONE_STATUS_BILL.CANCELLED,
                bill,
-               value,
+               note: value,
             })
           }}
           onClose={onClose}
-          form = {form}
+          form={form}
+          loading={isSubmitLoading}
         />
       </Modal>
       </Flex>

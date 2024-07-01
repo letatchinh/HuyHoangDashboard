@@ -118,7 +118,7 @@ export const useCheckWarehouse = (callback?: any) => {
     useSelector(checkWarehouseSuccessSelector)?.message,
     callback
   );
-  useFailed(checkWarehouseFailedSelector, (useSelector(checkWarehouseFailedSelector)?.message || 'Something went wrong'), callback);
+  useFailed(checkWarehouseFailedSelector, (useSelector(checkWarehouseFailedSelector)?.message), callback);
   return useSubmit({
     action: warehouseActions.checkWarehouseRequest,
     loadingSelector: loadingSelector,

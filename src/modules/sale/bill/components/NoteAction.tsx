@@ -6,8 +6,9 @@ type propsType = {
   onFinish: (value: string) => void;
   onClose: () => void;
   form: any;
+  loading?: boolean
 };
-export default function NoteAction({onFinish: onHandle, onClose,form}: propsType): React.JSX.Element {
+export default function NoteAction({onFinish: onHandle, onClose,form,loading}: propsType): React.JSX.Element {
   const { onNotify } = useNotificationStore();
 
   const onFinish = (values: any) => {
@@ -29,7 +30,7 @@ export default function NoteAction({onFinish: onHandle, onClose,form}: propsType
           <Input.TextArea />
       </Form.Item>
       <Row justify={"end"}>
-            <Button type="primary" htmlType="submit">Cập nhật</Button>
+            <Button type="primary" htmlType="submit" loading ={loading}>Cập nhật</Button>
       <Button onClick={onClose} style={{marginLeft: 10}}>Huỷ</Button>
       </Row>
     </Form>

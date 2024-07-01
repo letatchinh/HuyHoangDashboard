@@ -108,7 +108,7 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
   const [listWarehouse] = useGetWarehouseByBranchLinked(); // Get all warehouse linked with branch
   const [isOpenSplitBill, setIsOpenSplitBill] = useState(false);
   
-  const [, onUpdateStatus] = useUpdateStatusBill(() => {
+  const [isLoadingUpdate,onUpdateStatus] = useUpdateStatusBill(() => {
     dispatch(billSliceAction.resetAction());
   });
   const isHaveAdminBillPermission = useMatchPolicy(POLICIES.UPDATE_BILLSTATUS);
@@ -144,7 +144,7 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
   };
 
 
-  const [isSubmitLoading, onCreateBillToWarehouse] = useCreateBillToWarehouse(
+  const [isLoadingCreate, onCreateBillToWarehouse] = useCreateBillToWarehouse(
     () => {
       dispatch(warehouseActions.resetAction());
       dispatch(billSliceAction.resetAction());
@@ -152,10 +152,9 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
     }
   );
 
-  const [, onCheckWarehouse] = useCheckWarehouse(() => {
+  const [isLoadingCheckWarehouse, onCheckWarehouse] = useCheckWarehouse(() => {
     dispatch(warehouseActions.resetAction());
   });
-
   const onCheck = () => {
     try {
       const newList =  convertProductsFromBill(get(bill, 'billItems', []))
@@ -172,13 +171,13 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
   const onRequestWarehouseExport = () => {
     const submitData = convertDataSentToWarehouse({ ...bill, notePharmacy: noteForWarehouse });
     try {
-      onCreateBillToWarehouse({...submitData});
+      onCreateBillToWarehouse({ ...submitData });
     } catch (error) {
       console.log(error)
-    }
+    };
   };
 
-  const handleCreateBillToWarehouse = (status: keyof typeof STATUS_BILL,bill: any) => {
+  const handleCreateBillToWarehouse = (status: keyof typeof STATUS_BILL, bill: any) => {
     try {
       const submitData = convertDataSentToWarehouse({ ...bill, notePharmacy: noteForWarehouse });
       setTimeout(() => {
@@ -189,7 +188,7 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
     }
   };
 
-  const onChangeStatusBill = ({status, id, bill, note}: propsConfirmStatusBill) => {
+  const onChangeStatusBill = ({ nextStatus, bill, note }: propsConfirmStatusBill) => {
     // Phải kiểm tra hàng tồn kho trước khi đổi trạng thái từ NEW qua PACKAGE_EXPORT
     const dataCheck = convertProductsFromBill(get(bill, 'billItems', []));
     const submitData = {
@@ -199,17 +198,18 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
       note
     };
     try {
-      if (bill?.status === STATUS_BILL.NEW && status !== STATUS_BILL.CANCELLED) {
+      if (bill?.status === STATUS_BILL.NEW && nextStatus !== STATUS_BILL.CANCELLED) {
         return onCheckWarehouse({...submitData, callback: handleCreateBillToWarehouse, status, bill}); //
       };
       const data = {
-        billId: id,
-        status
+        billId: get(bill, '_id'),
+        status: nextStatus,
+        note
       };
       onUpdateStatus(data); //can update if bill have in warehouse
     } catch (error) {
       console.log(error)
-    }
+    };
   };
   //
   const [form] = Form.useForm();
@@ -223,7 +223,6 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
     };
     return getExistProp(root);
   }, [query]);
-
   const columns: ColumnsType = useMemo(
     () => [
       {
@@ -272,7 +271,7 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
         width: 200,
         align: "left",
         render(pharmacy, record, index) {
-          return <Typography.Text>{get(pharmacy, "name", "")}</Typography.Text>;
+          return <Typography.Text>{get(pharmacy, "name", get(pharmacy, 'fullName')) || get(record, 'partner.fullName')}</Typography.Text>;
         },
       },
       {
@@ -299,7 +298,7 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
                     onChangeStatusBill={onChangeStatusBill}
                     onOpenCancel={onOpenCancel}
                     isDisabledAll={isDisabledAll(status)}
-                    isSubmitLoading={isSubmitLoading}
+                    isSubmitLoading={isLoadingCreate || isLoadingUpdate}
                     id={get(record, '_id')} />
                 </WithPermission>
               </div>
@@ -665,7 +664,7 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
                   isLoadingWarehouse={isLoadingWarehouseDefault}
                   isShowButtonPackageExport
                   disabledButtonExport={bill?.status !== STATUS_BILL.READY}
-                  isSubmitLoading={isSubmitLoading}
+                  isSubmitLoading={isLoadingCheckWarehouse}
                   requestWarehouseExport={onRequestWarehouseExport}
                   warehouseDefault={warehouseDefault}
                   listWarehouseLinked={listWarehouse}
