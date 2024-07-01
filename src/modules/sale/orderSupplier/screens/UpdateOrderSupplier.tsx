@@ -74,6 +74,7 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
     totalListPayment,
     warehouseName,
   } = orderSupplier || {};
+  console.log(orderSupplier?.statusPurchaseOrder,'orderSupplier')
   // const canUpdateOrderSupplier = PolicyModule.hook.useMatchPolicy(
   //   PolicyModule.POLICIES.UPDATE_BILL
   // );
@@ -295,7 +296,6 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
                 </Layout>
                 <Divider />
                 {
-                  orderSupplier?.status === STATUS_ORDER_SUPPLIER.NEW &&
                   <WithOrPermission permission={[POLICIES.UPDATE_ORDERSUPPLIER, POLICIES.UPDATE_ORDERSUPPLIERSTATUS]}>
                   <Row justify={"end"}>
                     {orderSupplier?.statusPurchaseOrder === false
