@@ -19,7 +19,7 @@ import {
   useUpdateStatusOrderSupplier,
 } from "../orderSupplier.hook";
 import WithPermission from "~/components/common/WithPermission";
-import { PlusCircleTwoTone } from "@ant-design/icons";
+import { InfoCircleOutlined, PlusCircleTwoTone } from "@ant-design/icons";
 import policyModule from "policy";
 import { useMatchPolicy } from "~/modules/policy/policy.hook";
 import { AlignType } from "rc-table/lib/interface";
@@ -153,7 +153,11 @@ export default function ListOrder({ status }: propsType): React.JSX.Element {
               <Status
                 status={status}
                 statusVi={STATUS_ORDER_SUPPLIER_VI[status]}
-              />
+                
+                />
+              {record?.statusPurchaseOrder === false  &&  <ToolTipBadge title = "Đơn yêu cầu nhập hàng đến kho thất bại, vui lòng gửi lại yêu cầu nhập hàng tại chi tiết đơn hàng">
+                  <InfoCircleOutlined style={{ color: 'red'}}/> 
+                </ToolTipBadge>}
               </ToolTipBadge>
               <WithPermission permission={POLICIES.UPDATE_ORDERSUPPLIERSTATUS}>
               <ConfirmStatusBill

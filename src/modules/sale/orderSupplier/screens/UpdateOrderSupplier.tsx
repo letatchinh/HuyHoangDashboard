@@ -298,9 +298,10 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
                   orderSupplier?.status === STATUS_ORDER_SUPPLIER.NEW &&
                   <WithOrPermission permission={[POLICIES.UPDATE_ORDERSUPPLIER, POLICIES.UPDATE_ORDERSUPPLIERSTATUS]}>
                   <Row justify={"end"}>
-                  <Button type="primary" size="small" onClick={handleCreateOrderInWarehouse} loading = {isSubmitCreate}>
-                    Gửi yêu cầu nhập kho
-                    </Button>
+                    {orderSupplier?.statusPurchaseOrder === false
+                      && <Button type="primary" size="small" onClick={handleCreateOrderInWarehouse} loading={isSubmitCreate}>
+                      Gửi yêu cầu nhập kho
+                    </Button>}
                   </Row>
                 </WithOrPermission>
                 }
