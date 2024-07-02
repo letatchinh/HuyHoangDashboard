@@ -1,25 +1,25 @@
 
 import { ArrowUpOutlined } from "@ant-design/icons";
-import { Button, Checkbox, Flex, Input, Popconfirm, Tooltip } from "antd";
-import { forIn, get, omit, pick } from "lodash";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { Button, Checkbox, Flex, Form, Input, Modal, Popconfirm, Tooltip } from "antd";
+import { forIn, get, omit, trim } from "lodash";
+import React, { useCallback, useMemo, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { useMatchPolicy } from "~/modules/policy/policy.hook";
 import { CheckPermission } from "~/utils/helpers";
-import {  STATUS_ORDER_SUPPLIER, STATUS_ORDER_SUPPLIER_VI } from "../constants";
+import { STATUS_BILL, STATUS_BILL_VI } from "../../bill/constants";
+import { ParamGetNextStatus } from "../../billItem/billItem.modal";
+import { STATUS_ORDER_SUPPLIER, STATUS_ORDER_SUPPLIER_VI } from "../constants";
+import NoteAction from "./NoteAction";
 
 type propsType = {
-  onChangeStatusBill: (status: keyof typeof STATUS_ORDER_SUPPLIER, id: string | null | undefined , note: string) => void;
+  onChangeStatusBill: (p: any) => void;
   bill: any;
   isDisabledAll?: boolean;
   isSubmitLoading?: boolean;
   onOpenCancel: (p: any) => void;
-  id?: string | null;
+  setAskAgain?: (p: any) => void;
+  id?: string | null | undefined;
 };
-const CLONE_STATUS_BILL: any = omit(STATUS_ORDER_SUPPLIER, ['REQUESTED', 'UNCREATED']);
-const CLONE_STATUS_BILL_REQUEST: any = omit(STATUS_ORDER_SUPPLIER, ['UNCREATED']);
-const CLONE_STATUS_BILL_VI: any = omit(STATUS_ORDER_SUPPLIER_VI, ['REQUESTED', 'UNCREATED']);
-const CLONE_STATUS_BILL_VI_REQUEST: any = omit(STATUS_ORDER_SUPPLIER_VI, ['UNCREATED']);
 export default function ConfirmStatusBill({
   onChangeStatusBill,
   bill,
@@ -28,17 +28,23 @@ export default function ConfirmStatusBill({
   onOpenCancel,
   id,
 }: propsType): React.JSX.Element {
+  const CLONE_STATUS_ORDER : any =  omit(STATUS_ORDER_SUPPLIER,['REQUESTED', 'UNCREATED']);
+  const CLONE_STATUS_ORDER_VI  : any=  omit(STATUS_ORDER_SUPPLIER_VI,['REQUESTED', 'UNCREATED']);
   const status = useMemo(() => get(bill, "status"), [bill]);
-  const [note, setNote] = useState<string>("");
   const {pathname} = useLocation();
   const canUpdateBill = useMatchPolicy([CheckPermission(pathname), 'update']);
+  const [isOpen, setIsOpen] = useState(false);
+  const [isOpenCancel, setIsOpenCancel] = useState(false);
+  const ref = useRef<any>();
+  const [form] = Form.useForm();
+
   const getNextStatus = useCallback(
-    ({ status, expirationDate, lotNumber }: any) => {
+    ({ status, expirationDate, lotNumber }: ParamGetNextStatus) => {
       let nextStatus: any = null;
       let message;
       let isSame = false;
-      forIn((status === 'REQUESTED' ? CLONE_STATUS_BILL_REQUEST : CLONE_STATUS_BILL), (value, key) => {
-        if (value === CLONE_STATUS_BILL.CANCELLED) return;
+      forIn((CLONE_STATUS_ORDER), (value, key) => {
+        if (value === CLONE_STATUS_ORDER.CANCELLED) return;
         if (isDisabledAll) {
           return;
         }
@@ -68,28 +74,21 @@ export default function ConfirmStatusBill({
     [bill, status]
   );
 
-  useEffect(() => {
-    setNote('')
-  }, [id]);
+  const onOpen = () => {
+    setIsOpen(true);
+  };
+  const onClose = () => {
+    setIsOpen(false);
+  };
+
+  const onOpenCancelBill = () => {
+    setIsOpenCancel(true);
+  };
+  const onCloseCancelBill = () => {
+    setIsOpenCancel(false);
+  };
   return nextStatus && canUpdateBill ? (
-        <Flex gap={"small"} align="center" justify={"center"}>
-            <Popconfirm
-              title={
-                "Chuyển đổi sang trạng thái " +
-                CLONE_STATUS_BILL_VI[nextStatus]
-              }
-              description={
-                <Input.TextArea
-                  placeholder="Bắt buộc nhập ghi chú"
-                  onChange={(e) => setNote(e.target.value)}
-                />
-              }
-              okText="Ok"
-              cancelText="Huỷ"
-              onConfirm={() => {
-                onChangeStatusBill(nextStatus,id, note);
-              }}
-            >
+        <Flex ref = {ref} gap={"small"} align="center" justify={"center"} className="confirm-status-bill">
               <Tooltip title={message}>
                 <Button
                   icon={<ArrowUpOutlined />}
@@ -97,27 +96,14 @@ export default function ConfirmStatusBill({
                   style={{
                     backgroundColor: "#F7F9F2",
                   }}
-                  // type="primary"
                   disabled={isDisabledAll || !!message}
                   loading={isSubmitLoading}
-                >
-                    {(status === 'REQUESTED' ? CLONE_STATUS_BILL_VI_REQUEST: CLONE_STATUS_BILL_VI)[nextStatus]}
+                  onClick={onOpen}
+        >
+                  {CLONE_STATUS_ORDER_VI[nextStatus]}
                 </Button>
               </Tooltip>
-            </Popconfirm>
-          {status === CLONE_STATUS_BILL.NEW && (
-            <Popconfirm
-              title={'Bạn có chắc chắn muốn huỷ đơn này?'}
-              onConfirm={() => 
-              onChangeStatusBill('CANCELLED',id, note)
-              }
-              description={
-                <Input.TextArea
-                  placeholder="Bắt buộc nhập ghi chú"
-                  onChange={(e) => setNote(e.target.value)}
-                  />
-              }
-            >
+          {status === CLONE_STATUS_ORDER.NEW && (
               <Button
                 type="primary"
                 block
@@ -126,11 +112,53 @@ export default function ConfirmStatusBill({
                   backgroundColor: "rgb(201, 0, 0)",
                 }}
                 loading={isSubmitLoading}
+                onClick={() => {
+                  onOpenCancelBill();
+                }}
               >
                 Huỷ đơn
               </Button>
-              </Popconfirm>
-          )}
+      )}
+      <Modal
+        title={`Chuyển đổi trạng thái đơn hàng thành ${CLONE_STATUS_ORDER_VI[nextStatus]}`}
+        open={isOpen}
+        onCancel={onClose}
+        footer={null}
+        afterClose={()=> form.resetFields()}
+      >
+        <NoteAction
+          onFinish={(value: any) => {
+            onChangeStatusBill({
+              nextStatus,
+              bill,
+              note: value,
+            })
+          }}
+          onClose={onClose}
+          form={form}
+          loading={isSubmitLoading}
+        />
+      </Modal>
+        <Modal
+        title={`Huỷ đơn hàng`}
+        open={isOpenCancel}
+        onCancel={onCloseCancelBill}
+        footer={null}
+        afterClose={()=> form.resetFields()}
+        >
+          <NoteAction
+          onFinish={(value: any) => {
+            onChangeStatusBill({
+              nextStatus: CLONE_STATUS_ORDER.CANCELLED,
+               bill,
+               note: value,
+            })
+          }}
+          onClose={onClose}
+          form={form}
+          loading={isSubmitLoading}
+        />
+      </Modal>
       </Flex>
   ) : (
     <></>

@@ -12,9 +12,12 @@ import { PATH_APP } from "~/routes/allPath";
 import { formatter, pagingTable } from "~/utils/helpers";
 import { STATUS_ORDER_SUPPLIER, STATUS_ORDER_SUPPLIER_VI } from "../constants";
 import {
+  convertDataSubmitWarehouse,
+  useCreateOrderInWarehouse,
   useGetOrderSuppliers,
   useOrderSupplierPaging,
   useOrderSupplierQueryParams,
+  useResetOrderSupplierClone,
   useUpdateOrderSupplierParams,
   useUpdateStatusOrderSupplier,
 } from "../orderSupplier.hook";
@@ -34,6 +37,9 @@ import POLICIES from "~/modules/policy/policy.auth";
 import ToolTipBadge from "~/components/common/ToolTipBadge";
 import ConfirmStatusBill from "./ConfirmStatusBill";
 import useNotificationStore from "~/store/NotificationContext";
+import { PayloadCreateOrderSupplier, paramsConvertDataOrderSupplier } from "../orderSupplier.modal";
+import { useDispatch } from "react-redux";
+import { orderSupplierActions } from "../redux/reducer";
 
 type propsType = {
   status?: string;
@@ -58,6 +64,13 @@ export default function ListOrder({ status }: propsType): React.JSX.Element {
   const [, setBillItemIdCancel] = useState<any>();
   const [isSubmitLoading, updateStatusOrder] = useUpdateStatusOrderSupplier();
   const { onNotify } = useNotificationStore();
+  const dispatch = useDispatch();
+  const resetAction = () => {
+    return dispatch(orderSupplierActions.resetAction());
+  };
+  const [isSubmitCreate, onCreateOrderInWarehouse] = useCreateOrderInWarehouse(() => {
+    resetAction()
+  });
   const onOpenPayment = (item: any) => {
     setOpen(true);
     setSupplierId(item?.supplierId);
@@ -70,27 +83,54 @@ export default function ListOrder({ status }: propsType): React.JSX.Element {
     setSupplierId(null);
     setOrderSelect(null);
   };
-  const onChangeCreateBy = ({ target: { value } } : RadioChangeEvent) => {
+  const onChangeCreateBy = ({ target: { value } }: RadioChangeEvent) => {
     onParamChange({
-      createBy : value,
+      createBy: value,
     })
   };
 
-  const onOpenCancel = useCallback((id:any) => {
-    if(id){
+  const onOpenCancel = useCallback((id: any) => {
+    if (id) {
       setBillItemIdCancel(id);
     }
   }, []);
   const isDisabledAll = (status: keyof typeof STATUS_ORDER_SUPPLIER) => {
     return status === STATUS_ORDER_SUPPLIER.CANCELLED
   };
+
+  const handleCreateOrderInWarehouse = (data: PayloadCreateOrderSupplier, callbackSubmit: any) => {
+    const submitData: paramsConvertDataOrderSupplier = convertDataSubmitWarehouse(data);
+    try {
+      onCreateOrderInWarehouse({ ...submitData, callbackSubmit })
+    } catch (error) {
+      console.log(error);
+    };
+  };
   
-  const onChangeStatusBill = (status: keyof typeof STATUS_ORDER_SUPPLIER, id: string | null | undefined, note: string) => {
+  const onChangeStatusBill = ({nextStatus, note, bill}: any) => {
     try {
       if (trim(note) === "" || null || undefined) {
         return onNotify?.error('Vui lòng nhập ghi chú!');
       };
-      updateStatusOrder({ id, status,note });
+      // Regenerate the import request if the previous one failed before changing the order status
+      if ((status !== STATUS_ORDER_SUPPLIER.CANCELLED || status !== STATUS_ORDER_SUPPLIER.COMPLETED) && !bill?.statusPurchaseOrder) {
+        const data = {
+          ...bill,
+          billId: bill?._id,
+          orderSupplierItems: bill?.orderItems
+        };
+        const callbackSubmit = (data: any) => {
+          updateStatusOrder({
+            id: data?.billSupplierId,
+            status: nextStatus,
+            note,
+          });
+        };
+        handleCreateOrderInWarehouse({ ...data }, callbackSubmit);
+        //
+      } else {
+        updateStatusOrder({ id: bill?._id, status: nextStatus ,note });
+      };
     } catch (error) {
       console.log(error)
     }
