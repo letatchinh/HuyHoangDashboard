@@ -1,10 +1,10 @@
-import { GiftFilled, GiftTwoTone, SearchOutlined, StopOutlined } from '@ant-design/icons';
+import { GiftTwoTone } from '@ant-design/icons';
 import { AutoComplete, Badge, Empty, Tag, Typography } from 'antd';
-import { compact, debounce, get } from 'lodash';
+import { debounce, get } from 'lodash';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { v4 } from 'uuid';
 import TableAnt from '~/components/Antd/TableAnt';
-import { useGetCollaborator } from '~/modules/collaborator/collaborator.hook';
+import { useGetCollaborator_redux } from '~/modules/collaborator/collaborator.hook';
 import ProductModule from '~/modules/product';
 import useNotificationStore from '~/store/NotificationContext';
 import { formatter } from '~/utils/helpers';
@@ -19,7 +19,7 @@ type propsType = {
 export default function SelectProduct({dataCurrent,onChangeBill}:propsType) : React.JSX.Element {
   
   const {onNotify} = useNotificationStore();
-  const [partner] = useGetCollaborator(get(dataCurrent,'pharmacyId'));
+  const [partner] = useGetCollaborator_redux();
   
   const [dataSearch,setDataSearch] = useState([]);
   const [loading,setLoading] = useState(false);
@@ -60,9 +60,11 @@ export default function SelectProduct({dataCurrent,onChangeBill}:propsType) : Re
       const debounceFetcher = debounce(fetchOptions, 300);
       const onSelect = async(data:any) => {
           try {
-
+            const typeDiscountPartner = get(partner, ["salesChannel","discount"], "DIRECT_DISCOUNT") as "DIRECT_DISCOUNT" | "INDIRECT_DISCOUNT";
+            let isGet = typeDiscountPartner==='INDIRECT_DISCOUNT';
+            
             const productInPartner = get(partner,'products',[])?.find((p:any) => get(p,'productId') === get(data,'_id'))
-            const discountOther : DiscountOtherType[] = productInPartner ? [{
+            const discountOther : DiscountOtherType[] = ( isGet && productInPartner) ? [{
               typeDiscount : get(productInPartner,'discount.discountType'),
               value : get(productInPartner,'discount.value'),
               name : 'Chiết khấu từ khách hàng B2C'
