@@ -18,6 +18,7 @@ import TotalBill from "./TotalBill";
 import { useLocation } from "react-router-dom";
 import { PATH_APP } from "~/routes/allPath";
 import SelectCollaborator from "~/modules/collaborator/components/SelectSearch";
+import InfoCreateBy from "./InfoCreateBy";
 type propsType = {};
 export default function SaleScreen(props: propsType): React.JSX.Element {
   const {
@@ -127,6 +128,7 @@ export default function SaleScreen(props: propsType): React.JSX.Element {
         </Col>
         <Col span={8} className="form-create-bill--payment">
           <div>
+              <InfoCreateBy />
               <SelectPharmacy onChange={(value,option) => {
                 const fee = get(option,'data.fee',[]);
                 if(fee?.length){
