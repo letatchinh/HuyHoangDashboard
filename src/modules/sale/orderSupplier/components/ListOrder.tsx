@@ -173,18 +173,6 @@ export default function ListOrder({ status }: propsType): React.JSX.Element {
         },
       },
       {
-        title: "Lý do huỷ",
-        dataIndex: "cancelNote",
-        key: "cancelNote",
-        align: "center",
-      },
-      {
-        title: "Ghi chú",
-        dataIndex: "note",
-        key: "note",
-        align: "center",
-      },
-      {
         title: "Thành tiền",
         dataIndex: "totalPrice",
         key: "totalPrice",
@@ -210,7 +198,26 @@ export default function ListOrder({ status }: propsType): React.JSX.Element {
         render(paymentAmount, record, index) {
           return <Typography.Text>{formatter(paymentAmount)}</Typography.Text>;
         },
-      },
+    },
+    {
+      title: "Kho xuất hàng",
+      dataIndex: "warehouseName",
+      key: "warehouseName",
+      width: 200,
+      align: "center",
+    },
+    {
+      title: "Lý do huỷ",
+      dataIndex: "cancelNote",
+      key: "cancelNote",
+      align: "center",
+    },
+    {
+      title: "Ghi chú",
+      dataIndex: "note",
+      key: "note",
+      align: "center",
+    },
       ...(canDownload ? [
         {
           title: 'Lựa chọn',

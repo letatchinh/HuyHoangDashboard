@@ -29,7 +29,7 @@ function* createOrderSupplier({payload} : any) : any {
     if(callbackSubmit){
       callbackSubmit({
         type : 'createOrderSupplier',
-        code: get(data, 'code'),
+        codeSequence: get(data, 'codeSequence'),
         oldData: {...params, billId: get(data, '_id')},
       })
     }

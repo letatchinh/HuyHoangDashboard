@@ -11,6 +11,7 @@ export default function ModalCreateSuccess({
   data,
   onCancel,
 }: propsType): React.JSX.Element {
+  console.log(data,'data')
   const { type } = data || {};
   const goDetail = useCallback(() => {
     let handle;
@@ -61,7 +62,7 @@ export default function ModalCreateSuccess({
           <span>
             {subTitle}{" "}
             <Typography.Text copyable strong>
-              {get(data, "code", "")}
+              {get(data, "codeSequence", "")}
             </Typography.Text>
           </span>
         }
