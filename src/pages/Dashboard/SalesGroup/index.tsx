@@ -8,7 +8,7 @@ import BuyGroup from "~/modules/salesGroup/components/BuyGroup/index";
 import { SalesGroupProvider } from "~/modules/salesGroup/salesGroupContext";
 const SalesGroupPage = () => {
   const role = useGetRole();
-  const [activeKey, setKeyActive] = useState<'OTC' | 'B2C'>(role === 'partner' ? 'B2C' : ("OTC" ?? "B2C"));
+  const [activeKey, setKeyActive] = useState<'B2B' | 'B2C'>(role === 'partner' ? 'B2C' : ("B2B" ?? "B2C"));
   return (
     <>
     <Breadcrumb title={"Nhóm bán hàng"} />
@@ -19,10 +19,10 @@ const SalesGroupPage = () => {
       style={{
         height: "calc(100% - 68px)",
       }}
-      // defaultActiveKey= {(role === 'partner' ? 'B2C': ("OTC" ?? "B2C"))} 
+      // defaultActiveKey= {(role === 'partner' ? 'B2C': ("B2B" ?? "B2C"))} 
       destroyInactiveTabPane
     >
-      {role !== 'partner' && <TabPane tab="Nhóm bán hàng OTC" key={'OTC'}>
+      {role !== 'partner' && <TabPane tab="Nhóm bán hàng B2B" key={'B2B'}>
         <SalesGroupProvider>
           <SalesGroup.page.index />
         </SalesGroupProvider>
