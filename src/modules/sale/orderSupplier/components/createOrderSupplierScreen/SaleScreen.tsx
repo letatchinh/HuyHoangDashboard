@@ -80,8 +80,8 @@ try {
       case 'createOrderSupplier':
         return "Tạo đơn hàng (F1)"
     
-      default:
-        break;
+      default: 
+        return "Tạo đơn hàng (F1)"
     }
   },[bill]);
   useEffect(() => {

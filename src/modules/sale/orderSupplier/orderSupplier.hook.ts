@@ -80,13 +80,13 @@ export const useCreateOrderInWarehouse = (callback?: any) => {
   useSuccess(
     createBillInWarehouseSuccessSelector,
     `Tạo đơn nhập hàng đến kho thành công`,
+    callback
   );
-  useFailed(createBillInWarehouseFailedSelector);
+  useFailed(createBillInWarehouseFailedSelector,undefined,callback);
 
   return useSubmit({
     action: orderSupplierActions.createOrderInWarehouseRequest,
     loadingSelector: isSubmitLoadingSelector,
-    callbackSubmit:callback
   });
 };
 
@@ -188,6 +188,9 @@ export const useUpdateOrderSupplierParams = (
 
 export const useResetOrderSupplier = () => {
   return useResetState(orderSupplierActions.reset);
+};
+export const useResetOrderSupplierClone = () => {
+  return useResetState(orderSupplierActions.resetAction);
 };
 
 

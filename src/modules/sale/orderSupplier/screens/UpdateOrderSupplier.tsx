@@ -74,7 +74,6 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
     totalListPayment,
     warehouseName,
   } = orderSupplier || {};
-  console.log(orderSupplier?.statusPurchaseOrder,'orderSupplier')
   // const canUpdateOrderSupplier = PolicyModule.hook.useMatchPolicy(
   //   PolicyModule.POLICIES.UPDATE_BILL
   // );
