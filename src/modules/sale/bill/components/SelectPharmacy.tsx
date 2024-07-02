@@ -166,7 +166,9 @@ export default function SelectPharmacy({
                     message:
                       typeData === "ctv"
                         ? "Vui lòng chọn khách hàng B2C"
-                        : "Vui lòng chọn khách hàng B2B",
+                        : typeData === "pharmacy" 
+                        ? "Vui lòng chọn khách hàng B2B"
+                        : "Vui lòng chọn khách hàng",
                   },
                 ]}
                 colon={false}
@@ -179,7 +181,9 @@ export default function SelectPharmacy({
                   placeholder={
                     typeData === "ctv"
                       ? "Chọn khách hàng B2C"
-                      : "Chọn khách hàng B2B"
+                      : typeData === "pharmacy" 
+                      ? "Chọn khách hàng B2B"
+                      : "Chọn khách hàng"
                   }
                   fetchOptions={fetchOptions}
                   style={{ width: "100%" }}
@@ -189,7 +193,7 @@ export default function SelectPharmacy({
                 />
               </Form.Item>
               {showButtonAdd && (
-                <Form.Item noStyle>
+                typeData !== null && <Form.Item noStyle>
                   <Button
                     onClick={() =>
                       typeData === "ctv"

@@ -32,7 +32,7 @@ import DrawerBuyGroup from "./DrawerBuyGroup";
 import RenderFormModel from "./RenderFormModel";
 import { BuyGroupType } from "../../salesGroup.modal";
 type propsType = {
-  activeKey: "OTC" | "B2C";
+  activeKey: "B2B" | "B2C";
 };
 type FuncType = (T?:any)=>void
 
