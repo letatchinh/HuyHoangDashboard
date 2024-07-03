@@ -21,7 +21,7 @@ export default function ModalCreateSuccess({
           window.open(
             PATH_APP.orderSupplier.root +
               "?page=1&limit=10&keyword=" +
-              get(data, "code")
+              get(data, "codeSequence")
           );
         break;
       default:
