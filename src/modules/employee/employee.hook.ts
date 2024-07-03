@@ -131,6 +131,7 @@ export const useEmployeeQueryParams = (limitDefault? : number) => {
   const limit = query.get("limit") || limitDefault || 10;
   const page = query.get("page") || 1;
   const keyword = query.get("keyword");
+  const status = query.get("status");
 
   // const onTableChange: any = ({ current, pageSize }: any) => {
   //   setPage(current);
@@ -154,10 +155,11 @@ export const useEmployeeQueryParams = (limitDefault? : number) => {
       page,     
       limit,
       keyword,
+      status,
     };
     return [queryParams];
     //eslint-disable-next-line
-  }, [page, limit, keyword, createSuccess, deleteSuccess, convertSuccess]);
+  }, [page, limit, keyword,status, createSuccess, deleteSuccess, convertSuccess]);
 };
 
 export const useUpdateEmployeeParams = (

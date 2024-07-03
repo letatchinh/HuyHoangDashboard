@@ -1,14 +1,15 @@
-import { Button, Form, Input } from 'antd'
+import { Button, Flex, Form, Input } from 'antd'
 import TextArea from 'antd/es/input/TextArea'
 import React, { useEffect } from 'react'
-import { useCreateManufacturer, useGetManufacturerById, useResetAction } from '../manufacturer.hook'
+import { useCreateManufacturer, useGetManufacturerById, useGetManufacturerById_onlyGet, useResetAction } from '../manufacturer.hook'
 
 interface Props {
   id?: any
-  callBack: () => void
+  callBack?: () => void
   setId?:any
   setDestroy?:any
-  updateManufacturer: (data: any) => void,
+  updateManufacturer?: (data: any) => void,
+  readOnly?:boolean
 };
 interface FieldType {
   code: string
@@ -17,10 +18,14 @@ interface FieldType {
   description: string
   isAction: String
 };
-const ManufacturerForm: React.FC<Props> = ({ id,setId, callBack, updateManufacturer,setDestroy }) => {
-  const [manufacturer, loading] = useGetManufacturerById(id);
+const hookGetData = {
+  readOnly : useGetManufacturerById_onlyGet,
+  notReadOnly : useGetManufacturerById
+}
+const ManufacturerForm: React.FC<Props> = ({ id,setId, callBack, updateManufacturer,setDestroy,readOnly }) => {
+  const [manufacturer, isLoading] : any = readOnly ? hookGetData.readOnly() : hookGetData.notReadOnly(id)
   const [, createManufacturer] = useCreateManufacturer(() => {
-    callBack();
+    callBack && callBack();
     setDestroy && setDestroy(true)
   });
   const [form] = Form.useForm<FieldType>();
@@ -39,7 +44,7 @@ const ManufacturerForm: React.FC<Props> = ({ id,setId, callBack, updateManufactu
       ...values,
     };
     if (id) {
-      updateManufacturer({ ...data, id });
+      updateManufacturer && updateManufacturer({ ...data, id });
       setId(null)
     } else {
       createManufacturer({ ...data });
@@ -58,16 +63,16 @@ const ManufacturerForm: React.FC<Props> = ({ id,setId, callBack, updateManufactu
         onFinish={onFinish}
       >
         <Form.Item<FieldType> label="Tên hãng sản xuất" name="name">
-          <Input />
+          <Input readOnly={readOnly}/>
         </Form.Item>
         <Form.Item<FieldType> label="Mô tả" name="description">
-          <TextArea rows={4} />
+          <TextArea readOnly={readOnly} rows={4} />
         </Form.Item>
-        <Form.Item style={{ width: '550px' }} wrapperCol={{ offset: 8, span: 12 }}>
+          {!readOnly && <Flex justify={'center'}>
           <Button type="primary" htmlType="submit">
             {id ? 'Cập nhật' : 'Thêm mới'}
           </Button>
-        </Form.Item>
+          </Flex>}
       </Form>
     </>
   )

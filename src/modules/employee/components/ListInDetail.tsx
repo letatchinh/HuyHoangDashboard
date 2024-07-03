@@ -27,7 +27,7 @@ export default function ListInDetail(props: propsType): React.JSX.Element {
       {employees?.map((item: any) => (
         <div
           onClick={() =>
-            navigate(`/employee/` + get(item, "_id"))
+            navigate(`/employee-detail/` + get(item, "_id"))
           }
           className={`layoutDetail--left__list__item  ${
             id === get(item, "_id") ? "active" : ""

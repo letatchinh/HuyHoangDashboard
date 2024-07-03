@@ -57,6 +57,12 @@ import ReportGroup from "~/pages/Dashboard/ReportGroupCollaborator";
 import ReportGroupEmployeeSeller from "~/pages/Dashboard/ReportGroupEmployeeSeller";
 import PharmacyDetail_v2 from "~/modules/pharmacy/screens/PharmacyDetail_v2";
 import EmployeeDetail from "~/modules/employee/screen/EmployeeDetail";
+import CollaboratorDetail from "~/modules/collaborator/screens/CollaboratorDetail";
+import UserDetail from "~/modules/user/screen/UserDetail";
+import ProductGroupDetail from "~/modules/productGroup/components/ProductGroupDetail";
+import ManufacturerDetail from "~/modules/manufacturer/components/ManufacturerDetail";
+import RankingDetail from "~/modules/ranking/components/RankingDetail";
+import ProductUnitDetail from "~/modules/productUnit/component/ProductUnitDetail";
 export const mainRoutes :PathRouteProps[] = [
   { path: PATH_APP.main.root, Component: Homepage },
 
@@ -70,9 +76,13 @@ export const mainRoutes :PathRouteProps[] = [
 
   // worldPharma
   { path: PATH_APP.worldPharma.productGroup, Component: ProductGroupPage },
+  { path: PATH_APP.worldPharma.productGroupDetail, Component: ProductGroupDetail },
   { path: PATH_APP.worldPharma.manufacturer, Component: ManufacturerPage },
+  { path: PATH_APP.worldPharma.manufacturerDetail, Component: ManufacturerDetail },
   { path: PATH_APP.worldPharma.ranking, Component: RankingManufacturerPage },
+  { path: PATH_APP.worldPharma.rankingDetail, Component: RankingDetail },
   { path: PATH_APP.worldPharma.unit, Component:Unit  },
+  { path: PATH_APP.worldPharma.unitDetail, Component: ProductUnitDetail  },
   { path: PATH_APP.worldPharma.medicine, Component:MedicinePage  },
 
   // Branch
@@ -109,10 +119,12 @@ export const mainRoutes :PathRouteProps[] = [
   // Trình dược viên
   { path: PATH_APP.todoList.workBoard, Component: WorkBoardPage },
   { path: PATH_APP.employee.root, Component: EmployeePage },
-  // { path: PATH_APP.employee.detail, Component: EmployeeDetail },
+  { path: PATH_APP.employee.root, Component: EmployeePage },
+  { path: PATH_APP.employee.detail, Component: EmployeeDetail },
   
   // User
   { path: PATH_APP.user.root, Component: UserPage },
+  { path: PATH_APP.user.detail, Component: UserDetail },
 
   //ConfigDiscount
   { path: PATH_APP.vouchers.root, Component: VouchersPage },
@@ -174,6 +186,7 @@ export const mainRoutes :PathRouteProps[] = [
   
   // Cộng tác viên
   { path: PATH_APP.collaborator.root, Component: CollaboratorPage},
+  { path: PATH_APP.collaborator.detail, Component: CollaboratorDetail},
 
   // 
   { path: PATH_APP.reportProductSupplier.root, Component: ReportProductSupplier},

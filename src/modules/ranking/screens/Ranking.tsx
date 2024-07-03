@@ -3,6 +3,7 @@ import { Button, Col, Form, Row, Space } from 'antd';
 import Search from 'antd/es/input/Search';
 import { ColumnsType } from 'antd/es/table';
 import React, { useCallback, useState } from 'react';
+import { Link } from 'react-router-dom';
 import ModalAnt from '~/components/Antd/ModalAnt';
 import TableAnt from '~/components/Antd/TableAnt';
 import Breadcrumb from '~/components/common/Breadcrumb';
@@ -10,6 +11,7 @@ import WhiteBox from '~/components/common/WhiteBox';
 import WithPermission from '~/components/common/WithPermission';
 import useTranslate from '~/lib/translation';
 import POLICIES from '~/modules/policy/policy.auth';
+import { PATH_APP } from '~/routes/allPath';
 import { useDeleteRanking, useGetlistRanking, useRankingPaging, useRankingQueryParams, useUpdateRankingParams } from '../ranking.hook';
 import RankingForm from './RankingForm';
 type propsType = {
@@ -24,7 +26,6 @@ export default function Ranking(props: propsType): React.JSX.Element {
   const [id, setId] = useState(null);
   const paging = useRankingPaging();
   const { t }: any = useTranslate();
-  const [form] = Form.useForm();
   const [destroy,setDestroy] = useState(false);
   interface DataType {
     _id: string;
@@ -38,7 +39,7 @@ export default function Ranking(props: propsType): React.JSX.Element {
       dataIndex: 'name',
       align: 'left',
       key: 'name',
-      render: (text: string) => <a>{text}</a>,
+      render: (text: string,rc:any) => <Link className={'link_'} to={PATH_APP.worldPharma.ranking + "/" +rc?._id}>{text}</Link>,
     },
     {
       title: 'Cấp độ',

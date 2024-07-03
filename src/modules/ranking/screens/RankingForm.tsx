@@ -1,11 +1,13 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { Button, Form, Input, Select, Spin } from 'antd';
-import { useGetlistRankingById, useDeleteRanking, useUpdateRanking,useCreateRanking,useResetAction } from '../ranking.hook';
+import { Button, Flex, Form, Input, Select, Spin } from 'antd';
+import { useGetlistRankingById, useDeleteRanking, useUpdateRanking,useCreateRanking,useResetAction, useGetlistRankingById_onlyGet } from '../ranking.hook';
+import RenderLoading from '~/components/common/RenderLoading';
 interface Props {
   id?: any;
   handleCloseForm?: () => void;
   setId?:any;
   setDestroy?:any;
+  readOnly?:any;
 };
 interface FieldType {
   id: string
@@ -13,16 +15,23 @@ interface FieldType {
   note: string
   level: string
 }
-const { TextArea } = Input;
-const RankingForm: React.FC<Props> = ({ id,setId, handleCloseForm,setDestroy }) => {
+
+const hookGetData = {
+  readOnly : useGetlistRankingById_onlyGet,
+  notReadOnly : useGetlistRankingById
+}
+
+const RankingForm: React.FC<Props> = ({ id,setId, handleCloseForm,setDestroy,readOnly }) => {
   const [, createRanking] = useCreateRanking(() => {
     handleCloseForm && handleCloseForm();
     setDestroy  && setDestroy(true);
   });
-  const [rankingConfigById, isLoading] = useGetlistRankingById(id);
+  const [rankingConfigById, isLoading] : any = readOnly ? hookGetData.readOnly() : hookGetData.notReadOnly(id)
+
   const [form] = Form.useForm(); 
+
    const [, updateRanking] = useUpdateRanking(handleCloseForm);
-   useResetAction();
+  useResetAction();
   useEffect(() => {
     if (id && rankingConfigById) { 
       const { name, level }: FieldType = rankingConfigById;
@@ -34,6 +43,7 @@ const RankingForm: React.FC<Props> = ({ id,setId, handleCloseForm,setDestroy }) 
       form.resetFields();
     }
   }, [id,rankingConfigById,form]);
+
   const onFinish = useCallback((values: FieldType) => {
      const data: FieldType = {
       ...values,
@@ -46,6 +56,7 @@ const RankingForm: React.FC<Props> = ({ id,setId, handleCloseForm,setDestroy }) 
         form.resetFields()
       };
   },[updateRanking,createRanking,id]);
+
   return (
     <>
       <Form
@@ -54,20 +65,20 @@ const RankingForm: React.FC<Props> = ({ id,setId, handleCloseForm,setDestroy }) 
           wrapperCol={{ sm: 24, md: 24, lg: 16, xl: 16 }}
           labelAlign="left"
           style={{ maxWidth: 800 }}
-        form={form}
-        onFinish={onFinish}
+          form={form}
+          onFinish={onFinish}
       >
         <Form.Item<FieldType> label="Tên hạng" name="name">
-          <Input />
+        {RenderLoading(isLoading,<Input readOnly={readOnly}/>)}
         </Form.Item>
         <Form.Item<FieldType> label="Xếp hạng hãng sản xuất" name="level">
-          <Input />
+        {RenderLoading(isLoading,<Input readOnly={readOnly}/>)}
         </Form.Item>
-        <Form.Item style={{ width: '950px'}} wrapperCol={{ offset: 8, span: 12 }}>
+          {!readOnly && <Flex justify={'center'}>
           <Button type="primary" htmlType="submit">
             {id ? 'Cập nhật' : 'Thêm mới'}
           </Button>
-        </Form.Item>
+          </Flex>}
       </Form>
     </>
   );

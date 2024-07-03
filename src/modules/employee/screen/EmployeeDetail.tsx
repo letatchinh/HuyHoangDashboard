@@ -90,6 +90,7 @@ export default function EmployeeDetail(): React.JSX.Element {
                   value={keyword}
                 />
               ),
+              querySearch : ['keyword']
             }}
           />
         }

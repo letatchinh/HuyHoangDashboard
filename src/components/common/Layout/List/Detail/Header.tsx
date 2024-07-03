@@ -1,51 +1,60 @@
 import {
   CloseOutlined,
-  DeleteOutlined,
-  DownCircleFilled,
-  DownOutlined,
+  DeleteOutlined, DownOutlined,
   EditOutlined,
-  SearchOutlined,
+  SearchOutlined
 } from "@ant-design/icons";
-import { Button, Drawer, Dropdown, Flex, Modal, Popconfirm, Typography } from "antd";
-import Search from "antd/lib/input/Search";
-import { useState } from "react";
+import { Button, Drawer, Dropdown, Flex, Popconfirm, Typography } from "antd";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { v4 } from "uuid";
 import { COLOR, STATUS, STATUS_NAMES } from "~/constants/defaultValue";
+import { useQueryParams } from "~/utils/hook";
 import BtnAdd from "../Header/BtnAdd";
 
 type PropsHeaderLeft = {
   onAdd: () => void;
+  filterStatus? : boolean
   SearchProp?: {
     openSearch : () => void,
     open : boolean,
     onClose : () => void,
     onSearch : (p?:any) => void,
-    SearchComponent : any
+    SearchComponent : any,
+    querySearch? : string[]
   };
   onChangeStatus: (status: any) => void;
   allowSearch? : boolean
 };
-const HeaderLeft = ({ onAdd, onChangeStatus,allowSearch = true,SearchProp }: PropsHeaderLeft) => {
+const HeaderLeft = ({ onAdd, onChangeStatus,allowSearch = true,SearchProp,filterStatus = true }: PropsHeaderLeft) => {
+  const [isSearching,setIsSearching] = useState<any>(false);
+  const query = useQueryParams();
+  useEffect(() => {
+    const checkSearching = SearchProp?.querySearch?.some((key) => !!query.get(key));
+    setIsSearching(checkSearching);
+  },[query]);
+  
   return (
     <Flex justify={"space-between"} align="center">
-      <Dropdown
+      {filterStatus ? <Dropdown
         trigger={["click"]}
         menu={{
           items: [
             {
               label: "Tất cả",
               key: "all",
+              danger : !query.get('status'),
               onClick: () => onChangeStatus(null),
             },
             {
               label: STATUS_NAMES.ACTIVE,
               key: STATUS.ACTIVE,
+              danger : query.get('status') === STATUS.ACTIVE,
               onClick: () => onChangeStatus(STATUS.ACTIVE),
             },
             {
               label: STATUS_NAMES.INACTIVE,
               key: STATUS.INACTIVE,
+              danger : query.get('status') === STATUS.INACTIVE  ,
               onClick: () => onChangeStatus(STATUS.INACTIVE),
             },
           ],
@@ -54,10 +63,10 @@ const HeaderLeft = ({ onAdd, onChangeStatus,allowSearch = true,SearchProp }: Pro
         <Typography.Title level={5} style={{ cursor: "pointer" }}>
           Trạng thái <DownOutlined style={{ color: COLOR.primary }} />
         </Typography.Title>
-      </Dropdown>
+      </Dropdown> : <div></div>}
       <Flex gap={10}>
         <BtnAdd onClick={onAdd} />
-        {allowSearch && <SearchOutlined onClick={SearchProp && SearchProp?.openSearch} />}
+        {allowSearch && <SearchOutlined {...isSearching && {className : 'dot'}} onClick={SearchProp && SearchProp?.openSearch} />}
       </Flex>
 
       <Drawer

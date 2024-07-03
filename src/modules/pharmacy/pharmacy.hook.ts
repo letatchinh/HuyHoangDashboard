@@ -98,7 +98,7 @@ export const useGetPharmacyId = (id: any) => {
   });
 };
 
-export const useGetPharmacyId_onyGet = () => {
+export const useGetPharmacyId_onlyGet = () => {
   return [useSelector(getByIdSelector),useSelector(getByIdLoadingSelector)];
 };
 

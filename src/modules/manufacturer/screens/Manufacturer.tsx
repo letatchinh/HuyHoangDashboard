@@ -14,6 +14,9 @@ import ManufacturerForm from './ManufacturerForm';
 import WithPermission from '~/components/common/WithPermission';
 import POLICIES from '~/modules/policy/policy.auth';
 import { useMatchPolicy } from '~/modules/policy/policy.hook';
+import { Link } from 'react-router-dom';
+import { PATH_APP } from '~/routes/allPath';
+import BtnAdd from '~/components/common/Layout/List/Header/BtnAdd';
 export default function Manufacturer() {
   const [showForm, setShowForm] = useState(false);
   const [destroy, setDestroy] = useState(false);
@@ -62,12 +65,7 @@ export default function Manufacturer() {
       align: 'left',
       width: '300px',
       key: 'name',
-      render: (text: string, record: any) => {
-        return canUpdate ? <Button  type="link" onClick={() => handleOpenForm(record?._id)}>
-          {text}
-        </Button>
-          : <span>{text}</span>
-      }
+      render: (text: string, record: any) => <Link className='link_' to={PATH_APP.worldPharma.manufacturer + "/" + record?._id}>{text}</Link>
     },
     {
       title: 'Mô tả',
@@ -121,9 +119,9 @@ export default function Manufacturer() {
   return (
     <>
       <div>
-        <Breadcrumb title={t('Quản lý hãng sản xuất')} />
-        <Row gutter={16} style={{ marginBottom: '10px' }}>
-          <Col span={12}>
+        <Breadcrumb title="Quản lý hãng sản xuất"/>
+        <Row justify={'space-between'} gutter={16} style={{ marginBottom: 12 }}>
+          <Col >
             <Row gutter = {16}>
               <Col span={12}>
               <Search
@@ -152,19 +150,16 @@ export default function Manufacturer() {
               </Col>
             </Row>
           </Col>
-          <Col span={12}>
+          <Col>
             <Row justify={"end"}>
-              <Col span={8}>
                 <WithPermission permission={POLICIES.WRITE_MANUFACTURER}>
-                  <Button icon={<PlusCircleOutlined />} onClick={() => handleOpenForm()} type="primary">
+                  <BtnAdd onClick={() => handleOpenForm()}>
                     Thêm mới
-                  </Button>
+                  </BtnAdd>
                 </WithPermission>
-              </Col>
             </Row>
           </Col>
         </Row>
-        <WhiteBox>
           <TableAnt
             dataSource={listManufacturer}
             loading={isLoading}
@@ -183,7 +178,6 @@ export default function Manufacturer() {
             stickyTop
             scroll={{ x: 'max-content' }}
           />
-        </WhiteBox>
         <ModalAnt
           open={showForm}
           title={id? 'Cập nhật hãng sản xuất':'Thêm hãng sản xuất'}

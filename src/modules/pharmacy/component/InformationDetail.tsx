@@ -1,5 +1,5 @@
 import { propsType } from "../pharmacy.modal";
-import { useGetPharmacyId } from "../pharmacy.hook";
+import { useGetPharmacyId, useGetPharmacyId_onlyGet } from "../pharmacy.hook";
 import { Col, Flex, Form, Row } from "antd";
 import { concatAddress } from "~/utils/helpers";
 import moment from "moment";
@@ -7,7 +7,7 @@ import { LoadingOutlined } from "@ant-design/icons";
 
 export default function InformationDetail(props: propsType) {
   const { pharmacyId } = props;
-  const [info, isLoading] = useGetPharmacyId(pharmacyId);
+  const [info,isLoading]: any = useGetPharmacyId_onlyGet();
   const [form] = Form.useForm();
 
   if(isLoading){

@@ -39,6 +39,7 @@ import { useMatchPolicy } from "~/modules/policy/policy.hook";
 import { SelectProps } from "antd/lib";
 import ExportExcelButton from "~/modules/export/component";
 import useCheckboxExport from "~/modules/export/export.hook";
+import { Link } from "react-router-dom";
 type propsType = {};
 export default function ProductUnit(props: propsType): React.JSX.Element {
   const [query] = useProductUnitQueryParams();
@@ -84,14 +85,9 @@ export default function ProductUnit(props: propsType): React.JSX.Element {
       dataIndex: "name",
       align: "center",
       key: "name",
-      render: (text: string, record: any) => (
-        canUpdate ? (
-          <Button
-          type="link"
-          onClick={() => handleOpenForm(record?._id)}
-          >{text}</Button>
-        ): text
-      )
+      render : (value,rc) => <Link className="link_" to={`/unit/${rc?._id}`}>
+      {value}
+    </Link>
     },
     {
       title: "Ghi chú",
@@ -126,6 +122,11 @@ export default function ProductUnit(props: propsType): React.JSX.Element {
       align: "center",
       // width: '180px',
       render: (_, record) => (
+        <Space size="middle">
+          <WithPermission permission={POLICIES.UPDATE_UNIT}><Button icon={<InfoCircleTwoTone />} type="primary" onClick={() => handleOpenForm(record?._id)}>
+        Cập nhật
+      </Button>
+      </WithPermission>
           <WithPermission permission={POLICIES.DELETE_UNIT}>
             <Button
               icon={<DeleteOutlined />}
@@ -135,6 +136,7 @@ export default function ProductUnit(props: propsType): React.JSX.Element {
               Xóa
             </Button>
           </WithPermission>
+          </Space>
       ),
     },
     ...(canDownload

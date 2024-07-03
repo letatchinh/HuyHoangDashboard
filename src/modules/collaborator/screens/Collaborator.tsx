@@ -53,6 +53,11 @@ import CollaboratorProduct from "../components/CollaboratorProduct";
 import CollaboratorAddress from "../components/CollaboratorAddress";
 import apis from "~/modules/collaborator/collaborator.api";
 import RequestGroup from "~/modules/requestGroup/components";
+import { Link } from "react-router-dom";
+import BtnAdd from "~/components/common/Layout/List/Header/BtnAdd";
+import DropdownAction from "~/components/common/Layout/List/Header/DropdownAction";
+import WithPermission from "~/components/common/WithPermission";
+import Search from "antd/es/input/Search";
 
 interface ColumnActionProps {
   _id: string;
@@ -177,42 +182,42 @@ export default function Collaborator({
       title: "Mã cộng tác viên",
       dataIndex: "partnerNumber",
       key: "partnerNumber",
-      // render: (value: any, record: any) => (
-      //   <Button type="link" onClick={() => handleOpenModal(record._id)}>
-      //     {value}
-      //   </Button>
-      // ),
+      render: (value: any, record: any) => (
+        <Link className="link_" to={`/collaborator-detail/${record?._id}`}>
+          {value}
+        </Link>
+      ),
     },
     {
       title: "Tên cộng tác viên",
       dataIndex: "fullName",
       key: "fullName",
-      render : (value: any, record: any) => <Typography.Link onClick={() => handleOpenModal(get(record,'_id'))}>{value}</Typography.Link>
+      // render : (value: any, record: any) => <Typography.Link onClick={() => handleOpenModal(get(record,'_id'))}>{value}</Typography.Link>
     },
     ...(isCanUpdate
-      ? [
+      ? ([
           {
             title: "Xét duyệt",
             key: "processStatus",
             dataIndex: "processStatus",
             width: 90,
-            align : 'center',
-            render: (processStatus: any, record: any) => {             
+            align: "center",
+            render: (processStatus: any, record: any) => {
               return (
                 <WithOrPermission permission={[POLICIES.UPDATE_PARTNER]}>
                   {processStatus === "NEW" ? (
-                      <Popconfirm
-                        title="Bạn muốn duyệt CTV này?"
-                        onConfirm={() =>
-                          onConfirmProcess(record?._id, processStatus)
-                        }
-                        okText="Duyệt"
-                        cancelText="Huỷ"
-                      >
-                        <Button size="small" color="green">
-                          {PROCESS_STATUS_VI["NEW"]}
-                        </Button>
-                      </Popconfirm>
+                    <Popconfirm
+                      title="Bạn muốn duyệt CTV này?"
+                      onConfirm={() =>
+                        onConfirmProcess(record?._id, processStatus)
+                      }
+                      okText="Duyệt"
+                      cancelText="Huỷ"
+                    >
+                      <Button size="small" color="green">
+                        {PROCESS_STATUS_VI["NEW"]}
+                      </Button>
+                    </Popconfirm>
                   ) : (
                     <Tag color="blue">{PROCESS_STATUS_VI["APPROVED"]}</Tag>
                   )}
@@ -220,7 +225,7 @@ export default function Collaborator({
               );
             },
           },
-        ] as ColumnsType
+        ] as ColumnsType)
       : []),
     {
       title: "Số điện thoại",
@@ -259,7 +264,7 @@ export default function Collaborator({
                       onChange={(value) =>
                         onChangeStatus(
                           get(record, "_id"),
-                          value ? STATUS["ACTIVE"] : STATUS["INACTIVE"],
+                          value ? STATUS["ACTIVE"] : STATUS["INACTIVE"]
                           // isSubmitLoading,
                           // record
                         )
@@ -322,126 +327,75 @@ export default function Collaborator({
   };
   return (
     <>
-        <Row className="mb-3" justify={"space-between"}>
-          <SelectSearch
-            showSelect={false}
-            isShowButtonAdd
-            handleOnClickButton={() => handleOpenModal()}
-            onChange={(e: any) => setKeyword(e.target.value)}
-            keyword={keyword}
-            onSearch={(e: any) => onParamChange({ keyword: e })}
-            permissionKey={[POLICIES.WRITE_PARTNER]}
-            addComponent={
-              canDownload ? (
-                <Col>
-                  <ExportExcelButton
-                    api="partner"
-                    exportOption="partner"
-                    query={query}
-                    fileName="Danh sách cộng tác viên"
-                    ids={arrCheckBox}
-                  />
-                </Col>
-              ) : null
-            }
-          />
-        </Row>
-        <WithOrPermission permission={[POLICIES.UPDATE_PARTNER]}>
-          <Space style={{ marginBottom: 20, marginTop: 20 }}>
-            <Typography style={{ fontSize: 14, marginRight: 20 }}>
-              Phân loại trạng thái theo :
-            </Typography>
-            <Row gutter={14}>
-              <Radio.Group
-                onChange={onChange}
-                optionType="button"
-                buttonStyle="solid"
-                defaultValue={query?.processStatus || null}
-              >
-                <Radio.Button value={null}>Tất cả</Radio.Button>
-                <Radio.Button value={"NEW"}>
-                  {PROCESS_STATUS_VI["NEW"]}
-                </Radio.Button>
-                <Radio.Button value={"APPROVED"}>
-                  {PROCESS_STATUS_VI["APPROVED"]}
-                </Radio.Button>
-              </Radio.Group>
-            </Row>
-          </Space>
-        </WithOrPermission>
-        <TableAnt
-          dataSource={data?.length ? data : []}
-          loading={isLoading}
-          columns={columns}
-          size="small"
-          pagination={{
-            ...paging,
-            onChange(page, pageSize) {
-              onParamChange({ page, limit: pageSize });
-            },
-            showSizeChanger: true,
-            showTotal: (total) => `Tổng cộng: ${total} `,
+    {/* layout--ctrl */}
+      <div className="layout--ctrl">
+        <Search
+          placeholder={`Tìm kiếm`}
+          value={keyword}
+          onChange={(e) => setKeyword(e.target.value)}
+          onSearch={(value) => onParamChange({ keyword: value?.trim() })}
+          style={{
+            width: 300,
           }}
+          allowClear
+          enterButton
         />
-      <Modal
-        open={isOpenModal}
-        onCancel={() => setIsOpenModal(false)}
-        onOk={() => setIsOpenModal(false)}
-        className="form-modal modalScroll"
-        footer={null}
-        width={1020}
-        centered
-        // style={{ top: 50 }}
-        afterClose={() => {
-          setDestroy(false);
+        <div className="layout--ctrl__action">
+          <BtnAdd onClick={() => handleOpenModal()} />
+          <DropdownAction
+            items={[
+              <WithPermission permission={POLICIES.DOWNLOAD_EMPLOYEE}>
+                <ExportExcelButton
+                  api="partner"
+                  exportOption="partner"
+                  query={query}
+                  fileName="Danh sách cộng tác viên"
+                  ids={arrCheckBox}
+                  useLayout="v2"
+                />
+              </WithPermission>,
+            ]}
+          />
+        </div>
+      </div> 
+      {/* layout--ctrl */}
+      <WithOrPermission permission={[POLICIES.UPDATE_PARTNER]}>
+        <Space style={{ marginBottom: 20, marginTop: 20 }}>
+          <Typography style={{ fontSize: 14, marginRight: 20 }}>
+            Phân loại trạng thái theo :
+          </Typography>
+          <Row gutter={14}>
+            <Radio.Group
+              onChange={onChange}
+              optionType="button"
+              buttonStyle="solid"
+              defaultValue={query?.processStatus || null}
+            >
+              <Radio.Button value={null}>Tất cả</Radio.Button>
+              <Radio.Button value={"NEW"}>
+                {PROCESS_STATUS_VI["NEW"]}
+              </Radio.Button>
+              <Radio.Button value={"APPROVED"}>
+                {PROCESS_STATUS_VI["APPROVED"]}
+              </Radio.Button>
+            </Radio.Group>
+          </Row>
+        </Space>
+      </WithOrPermission>
+      <TableAnt
+        dataSource={data?.length ? data : []}
+        loading={isLoading}
+        columns={columns}
+        size="small"
+        pagination={{
+          ...paging,
+          onChange(page, pageSize) {
+            onParamChange({ page, limit: pageSize });
+          },
+          showSizeChanger: true,
+          showTotal: (total) => `Tổng cộng: ${total} `,
         }}
-        destroyOnClose={destroy}
-      >
-        <h4>{`${!id ? "Tạo mới " : "Cập nhật"}`} cộng tác viên</h4>
-        <Tabs
-          destroyInactiveTabPane
-          items={[
-            {
-              key: "1",
-              label: "Hồ sơ",
-              children: (
-                <CollaboratorForm
-                  id={id}
-                  handleCloseModal={handleCloseModal}
-                  handleUpdate={handleUpdate}
-                  handleCreate={handleCreate}
-                  isSubmitLoading={isSubmitLoading}
-                />
-              ),
-            },
-            {
-              key: "2",
-              label: "Sản phẩm đảm nhiệm",
-              children: (
-                <CollaboratorProduct
-                  id={id}
-                  useGetUser={useGetCollaborator}
-                  apiSearchProduct={apis.searchProduct}
-                  target='partner'
-                />
-              ),
-              disabled: !id,
-            },
-            {
-              key: "3",
-              label: "Sổ địa chỉ",
-              children: <CollaboratorAddress id={id} />,
-              disabled: !id,
-            },
-            {
-              key: "4",
-              label: "Yêu cầu",
-              children: <RequestGroup.CreateAndView id={id} mode="one" />,
-              disabled: !id || !canReadRequest,
-            },
-          ]}
-        ></Tabs>
-      </Modal>
+      />
     </>
   );
 }

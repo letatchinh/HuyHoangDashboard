@@ -20,9 +20,13 @@ export const PATH_APP = {
 
   worldPharma: {
     productGroup: path(ROOTS.app, "/productGroup"),
+    productGroupDetail: path(ROOTS.app, "/productGroup/:id"),
     manufacturer: path(ROOTS.app, "/manufacturer"),
+    manufacturerDetail: path(ROOTS.app, "/manufacturer/:id"),
     ranking: path(ROOTS.app, "/ranking"),
+    rankingDetail: path(ROOTS.app, "/ranking/:id"),
     unit: path(ROOTS.app, "/unit"),
+    unitDetail: path(ROOTS.app, "/unit/:id"),
     medicine: path(ROOTS.app, "/medicine"),
   },
 
@@ -55,7 +59,7 @@ export const PATH_APP = {
   },
   employee: {
     root: path(ROOTS.app, "/employee/*"),
-    // detail: path(ROOTS.app, "/employee/:id"),
+    detail: path(ROOTS.app, "/employee-detail/:id"),
   },
 
   configDiscount: {
@@ -104,6 +108,7 @@ export const PATH_APP = {
 
      user: {
       root: path(ROOTS.app, '/user/*'),
+      detail: path(ROOTS.app, '/user-detail/:id'),
    
     },
      productAll: {
@@ -167,6 +172,7 @@ export const PATH_APP = {
 
   collaborator: {
     root: path(ROOTS.app, "/collaborator/*"),
+    detail: path(ROOTS.app, "/collaborator-detail/:id"),
   },
   reportProductSupplier: {
     root: path(ROOTS.app, "/report-product-supplier")

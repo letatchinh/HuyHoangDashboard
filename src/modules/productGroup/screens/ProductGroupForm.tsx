@@ -1,12 +1,13 @@
 import React, { useEffect } from 'react';
-import { Button, Form, Input } from 'antd';
-import { useGetlistProductConfigById, useUpdateProductConfig, useCreateProductConfig, useResetAction } from '../productGroup.hook';
+import { Button, Flex, Form, Input } from 'antd';
+import { useGetlistProductConfigById, useUpdateProductConfig, useCreateProductConfig, useResetAction, useGetlistProductConfigById_onlyGet } from '../productGroup.hook';
 interface Props {
   id?: any;
   callBack?: () => void;
   setId?: any;
   updateProductConfig?: (data?: any) => void;
-  setDestroy? : (data?: any) => void
+  setDestroy? : (data?: any) => void,
+  readOnly?:boolean;
 };
 interface FieldType {
   code: string
@@ -16,12 +17,17 @@ interface FieldType {
   isAction: String
 };
 const { TextArea } = Input;
-const ProductConfigForm: React.FC<Partial<Props>> = ({ id,setId, callBack, updateProductConfig,setDestroy }) => {
+const hookGetData = {
+  readOnly : useGetlistProductConfigById_onlyGet,
+  notReadOnly : useGetlistProductConfigById
+}
+
+const ProductConfigForm: React.FC<Partial<Props>> = ({ id,setId, callBack, updateProductConfig,setDestroy,readOnly }) => {
   const [, createProductConfig] = useCreateProductConfig(() => {
     callBack && callBack();
     setDestroy && setDestroy(true)
   });
-  const [productConfigById, isLoading] = useGetlistProductConfigById(id);
+  const [productConfigById, isLoading] : any = readOnly ? hookGetData.readOnly() : hookGetData.notReadOnly(id)
   const [form] = Form.useForm();
   useResetAction();
   useEffect(() => {
@@ -64,16 +70,16 @@ const ProductConfigForm: React.FC<Partial<Props>> = ({ id,setId, callBack, updat
           <Input disabled />
         </Form.Item>
         <Form.Item<FieldType> label="Tên danh mục" name="name">
-          <Input />
+          <Input readOnly={readOnly}/>
         </Form.Item>
         <Form.Item<FieldType> label="Ghi chú" name="note">
-          <TextArea rows={4} />
+          <TextArea readOnly={readOnly} rows={4} />
         </Form.Item>
-        <Form.Item style={{ width: '950px' }} wrapperCol={{ offset: 8, span: 12 }}>
+          {!readOnly && <Flex justify={'center'}>
           <Button type="primary" htmlType="submit">
             {id ? 'Cập nhật' : 'Thêm mới'}
           </Button>
-        </Form.Item>
+          </Flex>}
       </Form>
     </>
   );

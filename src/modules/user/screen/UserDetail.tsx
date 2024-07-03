@@ -8,39 +8,38 @@ import Header from "~/components/common/Layout/List/Detail/Header";
 import Layout from "~/components/common/Layout/List/Detail/Layout";
 import { STATUS_COLOR, STATUS_NAMES } from "~/constants/defaultValue";
 import { PATH_APP } from "~/routes/allPath";
-import ListInDetail from "../component/ListInDetail";
-import MainContentTab from "../component/MainContentTab";
 import {
-  useDeletePharmacy,
-  useGetPharmacyId,
-  useGetPharmacyId_onlyGet,
-  usePharmacyQueryParams,
-  useUpdatePharmacy,
-  useUpdatePharmacyParams,
-} from "../pharmacy.hook";
-import PharmacyForm from "./PharmacyForm";
+  useDeleteUser,
+  useGetUser,
+  useGetUser_onlyGet,
+  useUserQueryParams,
+  useUpdateUser,
+  useUpdateUserParams,
+} from "../user.hook";
+import UserForm from "../components/UserForm";
+import ListInDetail from "../components/ListInDetail";
+import MainContentTab from "../components/MainContentTab";
 const CLONE_STATUS_NAMES: any = STATUS_NAMES;
 const CLONE_STATUS_COLOR: any = STATUS_COLOR;
-export default function PharmacyDetail_v2(): React.JSX.Element {
-  const { id: pharmacyId }: any = useParams();
-  useGetPharmacyId(pharmacyId);
+export default function UserDetail(): React.JSX.Element {
+  const { id: userId }: any = useParams();
+  useGetUser(userId);
   const [id, setId] = useState<any>();
-  const [query] = usePharmacyQueryParams(true);
-  const [keyword, { setKeyword, onParamChange }] =
-    useUpdatePharmacyParams(query);
-    const [open, setOpen] = useState(false);
-    const showDrawer = () => {
-      setOpen(true);
-    };
-    const onClose = () => {
-      setOpen(false);
-    };
-    const onSearch = () => {
-        onParamChange({keyword});
-        onClose();
-    }
-  const [pharmacy]: any = useGetPharmacyId_onlyGet();
-  
+  const [query] = useUserQueryParams();
+  const [keyword, { setKeyword, onParamChange }] = useUpdateUserParams(query);
+  const [open, setOpen] = useState(false);
+  const showDrawer = () => {
+    setOpen(true);
+  };
+  const onClose = () => {
+    setOpen(false);
+  };
+  const onSearch = () => {
+    onParamChange({ keyword });
+    onClose();
+  };
+  const [user]: any = useGetUser_onlyGet();
+
   const [isOpenForm, setIsOpenForm] = useState(false);
   const onCloseForm = useCallback(() => {
     setIsOpenForm(false);
@@ -50,8 +49,8 @@ export default function PharmacyDetail_v2(): React.JSX.Element {
     setIsOpenForm(true);
     idd && setId(idd);
   }, []);
-  const [, updatePharmacy] = useUpdatePharmacy(onCloseForm);
-  const [, deletePharmacy] = useDeletePharmacy();
+  const [, updateUser] = useUpdateUser(onCloseForm);
+  const [, deleteUser] = useDeleteUser();
 
   return (
     <>
@@ -61,38 +60,38 @@ export default function PharmacyDetail_v2(): React.JSX.Element {
             onChangeStatus={(status) => onParamChange({ status })}
             onAdd={() => onOpenForm()}
             SearchProp={{
-                openSearch : showDrawer,
-                open,
-                onClose,
-                onSearch,
-                SearchComponent : <Input
-                placeholder="Nhập để tìm kiếm"
-                allowClear
-                onChange={(e) => setKeyword(e.target.value)}
-                value={keyword}
-              />,
+              openSearch: showDrawer,
+              open,
+              onClose,
+              onSearch,
+              SearchComponent: (
+                <Input
+                  placeholder="Nhập để tìm kiếm"
+                  allowClear
+                  onChange={(e) => setKeyword(e.target.value)}
+                  value={keyword}
+                />
+              ),
               querySearch : ['keyword']
             }}
           />
         }
         HeaderRight={
           <Header.HeaderRight
-            path={PATH_APP.pharmacy.root}
-            onDeleteClick={() => deletePharmacy(pharmacyId)}
-            onEditClick={() => onOpenForm(pharmacyId)}
+            path={PATH_APP.user.root}
+            onDeleteClick={() => deleteUser(userId)}
+            onEditClick={() => onOpenForm(userId)}
             name={
               <Flex gap={10} align="center">
                 <h4>
-                  {get(pharmacy, "name", "") +
-                    " - " +
-                    get(pharmacy, "code", "")}
+                  {get(user, "fullName", "")}
                 </h4>
                 <Typography.Text type="secondary" style={{ fontSize: 14 }}>
                   <Badge
                     style={{ marginRight: 2 }}
-                    status={CLONE_STATUS_COLOR[get(pharmacy, "status", "")]}
+                    status={CLONE_STATUS_COLOR[get(user, "status", "")]}
                   />
-                  {CLONE_STATUS_NAMES[get(pharmacy, "status", "")]}
+                  {CLONE_STATUS_NAMES[get(user, "status", "")]}
                 </Typography.Text>
               </Flex>
             }
@@ -108,10 +107,10 @@ export default function PharmacyDetail_v2(): React.JSX.Element {
         footer={[]}
         destroyOnClose
       >
-        <PharmacyForm
-          onClose={onCloseForm}
+        <UserForm
           id={id}
-          handleUpdate={updatePharmacy}
+          handleCloseModal={onCloseForm}
+          updateUser={updateUser}
         />
       </ModalAnt>
     </>

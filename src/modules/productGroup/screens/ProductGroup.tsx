@@ -22,6 +22,7 @@ import {
 import ProductGroupForm from './ProductGroupForm';
 import useCheckBoxExport from '~/modules/export/export.hook';
 import ExportExcelButton from '~/modules/export/component';
+import { Link } from 'react-router-dom';
 
 const { Search } = Input;
 
@@ -81,13 +82,7 @@ export default function ProductConfig() {
       dataIndex: 'code',
       width: '200px',
       align: 'center',
-      render: (text: string,record: any) => (
-        canUpdate ? (
-          <Button  type="link" onClick={() => handleOpenUpdate(record?._id)}>
-        {text}
-        </Button>
-        ): text
-      )
+      render: (text: string,record: any) => <Link to={'/productGroup/'+record?._id} className='link_'>{text}</Link>
     },
     {
       title: 'Tên danh mục thuốc',
