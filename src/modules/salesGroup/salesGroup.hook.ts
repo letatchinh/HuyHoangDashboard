@@ -125,7 +125,7 @@ type queryParam = Partial<{
   page: number,
   limit: number,
   keyword:string,
-
+  salesChannelIds: string,
 }>
 
 export const useSalesGroupQueryParams = () => {
@@ -220,6 +220,7 @@ export const useBuyGroupQueryParams = () => {
   const limit = query.get("limit") || 20;
   const page = query.get("page") || 1;
   const keyword = query.get("keyword");
+  const salesChannelIds = query.get("salesChannelIds");
   const createPartnerSuccess = useSelector(createSuccessPartnerSelector);
   const createEmployeeSuccess = useSelector(updateSuccessEmployeeSelector);
   const updatePartnerSuccess = useSelector(updateSuccessPartnerSelector);
@@ -228,10 +229,11 @@ export const useBuyGroupQueryParams = () => {
       page,
       limit,
       keyword,
+      salesChannelIds,
     };
     return [queryParams];
     //eslint-disable-next-line
-  }, [page, limit, keyword,createPartnerSuccess,updatePartnerSuccess,createEmployeeSuccess]);
+  }, [page, limit, keyword, salesChannelIds, createPartnerSuccess,updatePartnerSuccess,createEmployeeSuccess]);
 };
 export const useGetBuyGroups = (param:any) => {
   return useFetchByParam({
