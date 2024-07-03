@@ -1,12 +1,9 @@
-import { useEffect, useMemo, useState } from "react";
-import GroupPharmacyModule from "~/modules/groupPharmacy";
+import { SelectProps } from "antd";
 import { get } from "lodash";
-import { Form, Select, SelectProps } from "antd";
-import { filterSelectWithLabel, useFetchState } from "~/utils/helpers";
-import RenderLoading from "~/components/common/RenderLoading";
-import apis from "../groupPharmacy.api";
+import { useEffect, useState } from "react";
 import DebounceSelect from "~/components/common/DebounceSelect";
 import useNotificationStore from "~/store/NotificationContext";
+import apis from "../groupPharmacy.api";
 
 interface TypeProps extends SelectProps {
   form?: any;
