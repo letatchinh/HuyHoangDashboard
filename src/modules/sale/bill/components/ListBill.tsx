@@ -69,7 +69,7 @@ import GeoTreeSelect from "~/modules/geo/components/GeoTreeSelect";
 import { RELATIVE_POSITION } from "~/modules/geo/constants";
 import SelectEmployeeV2 from "~/modules/employee/components/SelectEmployeeV2";
 import TagBillItem from "./TagBillItem";
-import SplitBillForm from "./SplitBill/SplitBillForm";
+import SplitBill from "./SplitBill";
 const CalculateBillMethod = new CalculateBill();
 type propsType = {
   status?: string;
@@ -678,6 +678,7 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
                   listWarehouseLinked={listWarehouse}
                   splitBill
                   onOpenSplitBillForm={onOpenSplitBillForm}
+                  disabledButtonSplit = {!bill?.isCheck}
                 />
                 </BaseBorderBox>
               </>
@@ -691,7 +692,7 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
           footer={null}
           destroyOnClose
       >
-        <SplitBillForm/>
+        <SplitBill bill={bill} />
       </ModalAnt>
     </>
     // </div> 

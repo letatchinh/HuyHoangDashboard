@@ -22,6 +22,8 @@ type propsType = {
   listWarehouseLinked: any[];
   splitBill?: boolean;
   onOpenSplitBillForm?: () => void;
+  disabledButtonSplit?: boolean;
+
 };
 export default function RadioButtonWarehouse({
   setValue,
@@ -39,7 +41,8 @@ export default function RadioButtonWarehouse({
   onCancel,
   listWarehouseLinked,
   splitBill,
-  onOpenSplitBillForm
+  onOpenSplitBillForm,
+  disabledButtonSplit
 }: propsType): React.JSX.Element {
   const [form] = Form.useForm();
   const { onNotify } = useNotificationStore();
@@ -52,13 +55,11 @@ export default function RadioButtonWarehouse({
       return onNotify?.error("Vui lòng chọn kho");
     };
     updateWarehouseInBill && updateWarehouseInBill(values?.warehouseId);
-    console.log(values,'values')
     onClick && onClick(values);
   };
   useEffect(() => {
     form.setFieldsValue({ warehouseId: value });
   }, [value]);
-
   return (
       <Form
         form={form}
@@ -99,14 +100,16 @@ export default function RadioButtonWarehouse({
           >
             Yêu cầu xuất kho
         </Button>}
-        {/* {
+        {
           splitBill
           && <Button
             style={{ marginRight: "10px" }}
-            onClick={onOpenSplitBillForm} type="primary">
+              onClick={onOpenSplitBillForm} type="primary"
+              disabled = {disabledButtonSplit}
+            >
             Tách đơn hàng
           </Button>
-        } */}
+        }
         {
           isConfirmChangeLogistic ?
             <Popconfirm

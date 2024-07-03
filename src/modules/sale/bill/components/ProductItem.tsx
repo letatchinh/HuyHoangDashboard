@@ -17,7 +17,6 @@ export default function ProductItem({
   ...props
 }: propsType): React.JSX.Element {
   const CLONE_STATUS_BILLITEM_LEVEL: any = STATUS_BILLITEM_LEVEL;
-console.log(data,'dataatat')
   const columns: ColumnsType = [
     {
       title: "Mã sản phẩm",

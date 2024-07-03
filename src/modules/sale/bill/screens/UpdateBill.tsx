@@ -136,7 +136,7 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
         <LeftOutlined /> Đơn hàng
       </Link>
       
-      <div className="bill-page-update--infoBill">
+      <div className="bill-page-update--infoBill mb-3">
         <Row justify={"space-between"} align="middle" gutter={24}>
           <Col lg={9} md={24} sm={24}>
             <Row align="middle" gutter={8} wrap={false}>
