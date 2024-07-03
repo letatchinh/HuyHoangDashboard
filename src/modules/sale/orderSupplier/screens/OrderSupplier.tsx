@@ -7,7 +7,7 @@ import ListOrder from "../components/ListOrder";
 import { useChangeDocumentTitle } from "~/utils/hook";
 type propsType = {};
 const CLONE_STATUS_ORDER_SUPPLIER_VI: any = STATUS_ORDER_SUPPLIER_VI;
-const CLONE_STATUS_ORDER_SUPPLIER: any = omit(STATUS_ORDER_SUPPLIER_VI,['UNCREATED','REQUESTED']);
+const CLONE_STATUS_ORDER_SUPPLIER: any = omit(STATUS_ORDER_SUPPLIER_VI,['UNCREATED','REQUESTED','REJECT']);
 export default function OrderSupplier(props: propsType): React.JSX.Element {
   const [activeKey, setActiveKey] = useState<string>("ALL");
 

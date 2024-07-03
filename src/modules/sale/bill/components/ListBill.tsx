@@ -243,6 +243,14 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
           );
         },
       },
+      {
+        title: "Mã đơn xuất kho",
+        dataIndex: "codeSaleOrder",
+        key: "codeSaleOrder",
+        align: "center",
+        width: 150,
+        fixed: 'left',
+      },
       // {
       //   title: "Ngày tạo đơn",
       //   dataIndex: "createdAt",
@@ -559,7 +567,7 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
           </Col>
         </WithPermission>
       </Row>
-      <Row justify={"space-between"}>
+      <Row justify={"space-between"} className="mt-2">
         <Form
           form={form}
           style={{ width: "100%" }}

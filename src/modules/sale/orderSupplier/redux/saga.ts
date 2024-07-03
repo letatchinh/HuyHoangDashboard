@@ -73,7 +73,7 @@ function* createOrderInWarehouse({ payload }: any): any {
   try {
     const data = yield call(api.createBillInWarehouse, query);
     if(callbackSubmit && typeof callbackSubmit === "function"){
-      callbackSubmit(data);
+      callbackSubmit(data?.data);
     };
     yield put(orderSupplierActions.createOrderInWarehouseSuccess(data));
   } catch (error:any) {

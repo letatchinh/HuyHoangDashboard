@@ -68,7 +68,7 @@ export default function ListOrder({ status }: propsType): React.JSX.Element {
   const resetAction = () => {
     return dispatch(orderSupplierActions.resetAction());
   };
-  const [isSubmitCreate, onCreateOrderInWarehouse] = useCreateOrderInWarehouse(() => {
+  const [, onCreateOrderInWarehouse] = useCreateOrderInWarehouse(() => {
     resetAction()
   });
   const onOpenPayment = (item: any) => {
@@ -142,6 +142,8 @@ export default function ListOrder({ status }: propsType): React.JSX.Element {
         dataIndex: "codeSequence",
         key: "codeSequence",
         align: "center",
+        width: 150,
+        fixed: 'left',
         render(codeSequence, record, index) {
           return (
             <Link
@@ -152,6 +154,20 @@ export default function ListOrder({ status }: propsType): React.JSX.Element {
             </Link>
           );
         },
+      },
+      {
+        title: "Mã nhập kho",
+        dataIndex: "codePurchaseOrderQuotation",
+        key: "codePurchaseOrderQuotation",
+        align: "center",
+        width: 150,
+        fixed: 'left',
+        render(codePurchaseOrderQuotation, record, index) { 
+          return <>
+            <p>{codePurchaseOrderQuotation}</p> 
+            {record?.codePurchaseOrder &&   <p>{record?.codePurchaseOrder}</p> }
+          </>
+        } 
       },
       {
         title: "Tên nhà cung cấp",
@@ -167,6 +183,7 @@ export default function ListOrder({ status }: propsType): React.JSX.Element {
         title: "Ngày tạo đơn",
         dataIndex: "createdAt",
         key: "createdAt",
+        width: 150,
         align: "center",
         render(createdAt, record, index) {
           return (
@@ -216,6 +233,7 @@ export default function ListOrder({ status }: propsType): React.JSX.Element {
         title: "Thành tiền",
         dataIndex: "totalPrice",
         key: "totalPrice",
+        width: 150,
         align: "center",
         render(totalPrice, record, index) {
           return <Typography.Text>{formatter(totalPrice)}</Typography.Text>;
@@ -225,6 +243,7 @@ export default function ListOrder({ status }: propsType): React.JSX.Element {
         title: "Số tiền đã trả",
         dataIndex: "totalPair",
         key: "totalPair",
+        width: 150,
         align: "center",
         render(totalPair, record, index) {
           return <Typography.Text>{formatter(totalPair)}</Typography.Text>;
@@ -234,6 +253,7 @@ export default function ListOrder({ status }: propsType): React.JSX.Element {
         title: "Số tiền phải trả",
         dataIndex: "paymentAmount",
         key: "paymentAmount",
+        width: 150,
         align: "center",
         render(paymentAmount, record, index) {
           return <Typography.Text>{formatter(paymentAmount)}</Typography.Text>;
@@ -249,13 +269,15 @@ export default function ListOrder({ status }: propsType): React.JSX.Element {
     {
       title: "Lý do huỷ",
       dataIndex: "cancelNote",
-      key: "cancelNote",
+        width: 150,
+        key: "cancelNote",
       align: "center",
     },
     {
       title: "Ghi chú",
       dataIndex: "note",
-      key: "note",
+        width: 150,
+        key: "note",
       align: "center",
     },
       ...(canDownload ? [
@@ -283,6 +305,7 @@ export default function ListOrder({ status }: propsType): React.JSX.Element {
       dataIndex: "_id",
       key: "_id",
       align: "center" as AlignType,
+      width: 100,
       render(value: any, rc: any) {
         return (
           <Space>
@@ -351,10 +374,10 @@ export default function ListOrder({ status }: propsType): React.JSX.Element {
           </Row>
         </Col>
       </Row>
-      <Flex align={'center'} gap={10}>
+      <Flex align={'center'} gap={10} style={{margin: 10}}>
       <span>Hình thức tạo: </span>
       <Radio.Group
-          options={options}
+        options={options}
         onChange={onChangeCreateBy}
         value={query?.createBy}
         optionType="button"

@@ -111,6 +111,7 @@ class OrderSupplierClassExtend extends InstanceModuleRedux {
             return {
               ...item,
               status: payload?.data?.status,
+              statusPurchaseOrder: payload?.data?.statusPurchaseOrder
             };
           }
           return item;
