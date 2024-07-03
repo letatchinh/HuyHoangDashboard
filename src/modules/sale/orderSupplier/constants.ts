@@ -5,6 +5,7 @@ export const STATUS_ORDER_SUPPLIER = {
   PROCESSING: "PROCESSING",
   COMPLETED: "COMPLETED",
   CANCELLED: "CANCELLED",
+  REJECT: "REJECT",
 };
 
 export const STATUS_ORDER_SUPPLIER_VI = {
@@ -14,6 +15,7 @@ export const STATUS_ORDER_SUPPLIER_VI = {
   PROCESSING: "Đang xử lý",
   COMPLETED: "Đã hoàn thành",
   CANCELLED: "Đã huỷ",
+  REJECT: "Kho từ chối nhập hàng",
 };
 export const STATUS_ORDER_ITEM = {
   NEW: "NEW",

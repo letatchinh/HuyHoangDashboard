@@ -28,8 +28,8 @@ export default function ConfirmStatusBill({
   onOpenCancel,
   id,
 }: propsType): React.JSX.Element {
-  const CLONE_STATUS_ORDER : any =  omit(STATUS_ORDER_SUPPLIER,['REQUESTED', 'UNCREATED']);
-  const CLONE_STATUS_ORDER_VI  : any=  omit(STATUS_ORDER_SUPPLIER_VI,['REQUESTED', 'UNCREATED']);
+  const CLONE_STATUS_ORDER : any =  omit(STATUS_ORDER_SUPPLIER,['REQUESTED', 'UNCREATED','REJECT']);
+  const CLONE_STATUS_ORDER_VI  : any=  omit(STATUS_ORDER_SUPPLIER_VI,['REQUESTED', 'UNCREATED','REJECT']);
   const status = useMemo(() => get(bill, "status"), [bill]);
   const {pathname} = useLocation();
   const canUpdateBill = useMatchPolicy([CheckPermission(pathname), 'update']);
