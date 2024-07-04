@@ -67,7 +67,7 @@ const convertFailedSelector = getSelector("convertFailed");
 
 export const useHistoryPharmacyPaging = () => useSelector(pagingHistoryPharmacySelector);
 
-export const useProductSupplierPaging = () => useSelector(pagingPharmacyDebtSelector);
+export const usePharmacyDebtPaging = () => useSelector(pagingPharmacyDebtSelector);
 
 export const usePharmacyPaging = () => useSelector(pagingSelector);
 
@@ -280,14 +280,14 @@ export const useHistoryPharmacyQuery = () => {
     ]);
 };
 
-export const useGetHistoryPharmacy = (id: any) => {
+export const useGetHistoryPharmacy = (payload : any) => {
   
   return useFetchByParam({
     action: pharmacySliceAction.getHistoryPharmacyRequest,
     loadingSelector: isLoadingGetHistoryPharmacySelector,
     dataSelector: historyPharmacySelector,
     failedSelector: getHistoryPharmacyFailedSelector,
-    param: id,
+    param : payload,
   });
 };
 
