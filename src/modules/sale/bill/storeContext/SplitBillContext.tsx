@@ -1,10 +1,17 @@
 import { get } from "lodash";
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { CreateSplitBill } from "../components/SplitBill/constant";
+import { useResetBillInSplitAction, useSplitBill } from "../bill.hook";
+import { Modal } from "antd";
+import ModalRedirectQuotation from "../components/SplitBill/ModalRedirectQuotation";
+import { useDispatch } from "react-redux";
+import { billSliceAction } from "../redux/reducer";
 
 type propsSplitBill = {
   children: React.ReactNode;
   bill: any;
+  onCloseSplitBillForm: () => void;
+  closeModalCheckWarehouse: () => void;
 };
 export type GlobalSplitBill = {
   bill?: any;
@@ -12,7 +19,9 @@ export type GlobalSplitBill = {
   productsUnReady: any[];
   listBill?: any[];
   data: any[];
-  onSubmit: () => void
+  onSubmit: () => void;
+  onCloseSplitBillForm: () => void;
+  isSubmitLoading: boolean;
 };
 const SplitBill = createContext<GlobalSplitBill>({
   bill: null,
@@ -20,27 +29,43 @@ const SplitBill = createContext<GlobalSplitBill>({
   productsUnReady: [],
   listBill: [],
   data: [],
-  onSubmit: () => {},
+  onSubmit: () => { },
+  onCloseSplitBillForm: () => { },
+  isSubmitLoading: false,
 });
 
 export function SplitBillProvider({
   children,
   bill,
+  onCloseSplitBillForm,
+  closeModalCheckWarehouse,
 }: propsSplitBill): React.JSX.Element {
   const [listBill, setListBill] = useState<any>([]);
+  const [isOpen, setIsOpen] = useState<any>(false);
+  const [dataCallback, setDataCallback] = useState<any>();
   const [data, setData] = useState<any[]>([]);
+  const dispatch = useDispatch();
+  const [isSubmitLoading, onSplitBill] = useSplitBill(() => {
+    dispatch(billSliceAction.resetActionInSplit());
+    onOpen();
+  });
+  useResetBillInSplitAction();
 
+  const onCallbackSplitBill = (data: any[]) => {
+    setDataCallback(data);
+  };
   const onSubmit = () => {
     try {
       const submitData: CreateSplitBill = {
         id: get(bill, "_id"),
-        billSplit: data
+        billSplit: data,
       };
-      console.log(submitData,'submitData')
+      onSplitBill({ ...submitData, callback: onCallbackSplitBill});
     } catch (error) {
-      
+      console.log(error, 'error in split bill')
     }
-  }
+  };
+
   const productsReady = useMemo(() => get(bill, "billItems", []).filter(
     ({ statusCheckWarehouse }: { statusCheckWarehouse: boolean }) =>
       statusCheckWarehouse
@@ -63,6 +88,16 @@ export function SplitBillProvider({
       0
     );
   
+  const onOpen = () => {
+    setIsOpen(true);
+  };
+  
+  const onClose = () => {
+    setIsOpen(false);
+    onCloseSplitBillForm();
+    closeModalCheckWarehouse();
+  };
+  
   useEffect(() => {
     if (bill) {
       setListBill([productsReady, productsUnReady]);
@@ -74,7 +109,8 @@ export function SplitBillProvider({
       billItems: item,
       totalPrice: totalPrice(item),
       totalQuantity: totalQuantity(item),
-      pair: bill?.pair
+      pair: bill?.pair || 0,
+      remaining: totalPrice(item) - bill?.pair || 0
     }));
     setData(newData);
   }, [listBill]);
@@ -86,10 +122,22 @@ export function SplitBillProvider({
         productsUnReady,
         listBill,
         data,
-        onSubmit
+        onSubmit,
+        onCloseSplitBillForm,
+        isSubmitLoading,
       }}
     >
       {children}
+      <Modal
+        open={isOpen}
+        onCancel={onClose}
+        destroyOnClose
+        afterClose={onClose}
+        footer={null}
+        width={'max-content'}
+      >
+        <ModalRedirectQuotation data={dataCallback} onCancel={onClose}/>
+      </Modal>
     </SplitBill.Provider>
   );
 }

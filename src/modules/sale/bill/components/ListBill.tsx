@@ -366,20 +366,29 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
       },
       {
         title: "Ghi chú",
-        dataIndex: "note",
         key: "note",
         width: 100,
         align: "left",
-        render(note?: any) {
+        render(note?: any, record?: any, index?: any) {
           return (
+            <>
             <Typography.Paragraph
               ellipsis={{
                 tooltip: note,
                 rows: 2,
               }}
-            >
-              {note}
+              >
+              {record?.note || ''}
             </Typography.Paragraph>
+            <Typography.Paragraph
+              ellipsis={{
+                tooltip: note,
+                rows: 2,
+              }}
+              >
+              {record?.noteBillSplit || ''}
+            </Typography.Paragraph>
+              </>
           );
         },
       },
@@ -487,6 +496,10 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
       return <TagBillItem status={record?.statusCheckWarehouse}/>
     }
   };
+
+  const findItemReadyExportWarehouse = useMemo(() => bill?.billItems?.find((item: any)=> item?.statusCheckWarehouse), [bill]);
+  const findItemUnReadyExportWarehouse = useMemo(() => bill?.billItems?.find((item: any) => !item?.statusCheckWarehouse), [bill]);
+  const splitBill = useMemo(() => !!findItemReadyExportWarehouse && !!findItemUnReadyExportWarehouse, [findItemReadyExportWarehouse, findItemUnReadyExportWarehouse])
   return (
     // <div className="bill-page">
     <>
@@ -676,7 +689,7 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
                   requestWarehouseExport={onRequestWarehouseExport}
                   warehouseDefault={warehouseDefault}
                   listWarehouseLinked={listWarehouse}
-                  splitBill
+                  splitBill = {splitBill}
                   onOpenSplitBillForm={onOpenSplitBillForm}
                   disabledButtonSplit = {!bill?.isCheck}
                 />
@@ -692,7 +705,7 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
           footer={null}
           destroyOnClose
       >
-        <SplitBill bill={bill} />
+        <SplitBill bill={bill} onCloseSplitBillForm={onCloseSplitBillForm} closeModalCheckWarehouse = {closeModalCheckWarehouse} />
       </ModalAnt>
     </>
     // </div> 

@@ -72,6 +72,7 @@ export default function ListQuotation({
     window.open(redirectRouterBillCreate(pathname));
   };
   const onConvertQuotation = (data: Omit<ItemDataSource, "typeTab">) => {
+    console.log(data,'data')
     BillModule.service.addDataToSaleScreen({
       typeTab: "convertQuotation",
       ...data,
@@ -218,6 +219,15 @@ export default function ListQuotation({
           );
       },
     },
+      {
+        title: "Ghi chú",
+        key: "note",
+        width: 100,
+        align: "center",
+        render(status, record, index) {
+          return record?.note ?? record?.noteBillSplit;
+      },
+    },
     ...(canDownload
       ? [
           {
@@ -266,6 +276,7 @@ export default function ListQuotation({
                     warehouseId: get(record, 'warehouseId'),
                     warehouseName: get(record, 'warehouseName'),
                     dataTransportUnit: get(record, "dataTransportUnit"),
+                    noteBillSplit: get(record, "noteBillSplit"),
                   });
                 }}
                 type="primary"
@@ -296,6 +307,7 @@ export default function ListQuotation({
                     warehouseId: get(record, 'warehouseId'),
                     warehouseName: get(record, 'warehouseName'),
                     dataTransportUnit: get(record, "dataTransportUnit"),
+                    noteBillSplit: get(record, "noteBillSplit"),
                   });
                 }}
                 size="small"

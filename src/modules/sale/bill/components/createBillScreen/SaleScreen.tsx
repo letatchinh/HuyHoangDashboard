@@ -46,6 +46,7 @@ export default function SaleScreen(props: propsType): React.JSX.Element {
           totalAmount,
           dataTransportUnit: get(bill, 'dataTransportUnit'),
           warehouseId: get(bill, 'warehouseId'),
+          ...(get(bill, 'noteBillSplit') &&{noteBillSplit: get(bill, 'noteBillSplit')}),
         });
       switch (get(bill, "typeTab")) {
         case "createQuotation":

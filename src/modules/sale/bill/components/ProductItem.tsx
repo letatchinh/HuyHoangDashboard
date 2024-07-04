@@ -10,10 +10,12 @@ import { formatter } from "~/utils/helpers";
 type propsType = {
   data?: any[];
   column?: any;
+  stylesTable?: any;
 };
 export default function ProductItem({
   data,
   column,
+  stylesTable,
   ...props
 }: propsType): React.JSX.Element {
   const CLONE_STATUS_BILLITEM_LEVEL: any = STATUS_BILLITEM_LEVEL;
@@ -103,6 +105,7 @@ export default function ProductItem({
         pagination={false}
         size="small"
         {...props}
+        style={stylesTable}
       />
     </>
   );
