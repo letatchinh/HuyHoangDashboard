@@ -53,6 +53,9 @@ const listProductSuggestLoadingSelector = getSelector('isProductSuggestLoading')
 const updateApplyLogisticSuccessSelector = getSelector('updateLogisticSuccess');
 const updateApplyLogisticFailedSelector = getSelector('updateLogisticFailed');
 
+const splitBillSuccessSelector = getSelector('splitBillSuccess');
+const splitBillFailedSelector = getSelector('splitBillFailed');
+
 const pagingProductSuggestSelector = getSelector('pagingProductSuggest');
 export const useBillProductSuggestPaging = () => useSelector(pagingProductSuggestSelector);
 
@@ -236,6 +239,9 @@ export const useGetProductListSuggest = (param?: any) => {
 export const useResetBillAction = () => {
   return useResetState(billSliceAction.resetAction);
 };
+export const useResetBillInSplitAction = () => {
+  return useResetState(billSliceAction.resetActionInSplit);
+};
 
 export const useUpdateApplyLogisticUnit = (callback?: any) => {
   useSuccess(
@@ -275,4 +281,18 @@ export const redirectRouterBillId = (pathname: string) => {
     return PATH_APP.bill.pharmacy
   };
   return PATH_APP.bill.root
+};
+
+export const useSplitBill = (callback?: any) => {
+  useSuccess(
+    splitBillSuccessSelector,
+    `Tách đơn hàng thành công`,
+    callback
+  );
+  useFailed(splitBillFailedSelector);
+
+  return useSubmit({
+    action: billSliceAction.splitBillRequest,
+    loadingSelector: isSubmitLoadingSelector,
+  });
 };

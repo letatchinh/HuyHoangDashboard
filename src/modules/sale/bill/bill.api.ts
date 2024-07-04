@@ -16,5 +16,6 @@ const apis = {
 
     updateApplyLogisticUnit: (data: any) => requester.put(`/api/v1/bill-transport-unit/${data?.id}`, omit(data, ["id"])),
     updateStatusBill: (data: any) => requester.put(`/api/v1/bill-status/${data?.billId}`, omit(data, ["billId"])),
+    splitBill: (data?: any) => requester.post(`/api/v1/bill-split`, data),
 }
 export default apis;

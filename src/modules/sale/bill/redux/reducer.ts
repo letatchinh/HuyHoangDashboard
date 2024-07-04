@@ -25,7 +25,10 @@ interface cloneInitState extends initStateSlice {
   listProductSuggest?:any,
   isProductSuggestLoading?: boolean,
   getProductSuggestFailed?: any,
-  pagingProductSuggest?:any ;
+  pagingProductSuggest?: any;
+  
+  splitBillFailed? : any,
+  splitBillSuccess?: any,
 }
 class BillClassExtend extends InstanceModuleRedux {
   cloneReducer;
@@ -206,6 +209,10 @@ class BillClassExtend extends InstanceModuleRedux {
       ...state,
       ...omit(this.cloneInitState, ["list", "paging"]),
     }),
+    resetActionInSplit: (state:cloneInitState) => ({
+      ...state,
+      ...omit(this.cloneInitState, ["list", "paging", "byId"]),
+    }),
     resetActionLogistic: (state:cloneInitState) => ({
       ...state,
       ...omit(this.cloneInitState, ["list",'byId']),
@@ -239,7 +246,19 @@ class BillClassExtend extends InstanceModuleRedux {
               }
             })
           };
-        },
+      },
+      splitBillRequest: (state:cloneInitState) => {
+        state.isSubmitLoading = true;
+        state.splitBillFailed = null;
+      },
+      splitBillSuccess: (state:cloneInitState, { payload }:{payload?:any}) => {
+        state.isSubmitLoading = false;
+        state.splitBillSuccess = payload;
+      },
+      splitBillFailed: (state:cloneInitState, { payload }:{payload:any}) => {
+        state.isSubmitLoading = false;
+        state.splitBillFailed = payload;
+      },
     };
 
     this.cloneInitState = {
@@ -259,6 +278,9 @@ class BillClassExtend extends InstanceModuleRedux {
 
       updateLogisticSuccess: null,
       updateLogisticFailed: null,
+
+      splitBillFailed: null,
+      splitBillSuccess: null
       // Want Add more State Here...
     }
   }

@@ -2,6 +2,7 @@ import { put, call, takeLatest } from 'redux-saga/effects';
 import api from '../bill.api'; 
 import { billSliceAction } from './reducer';
 import BillItemModule from '~/modules/sale/billItem';
+import { omit } from 'lodash';
 function* getListBill({payload:query} : any) : any {
   try {
     const data = yield call(api.getAll,query);
@@ -98,6 +99,19 @@ function* updateStatusBill({payload} : any) : any {
   }
 };
 
+function* splitBill({payload} : any) : any {
+  try {
+    const data = yield call(api.splitBill,omit(payload, ['callback']));
+    yield put(billSliceAction.splitBillSuccess(data));
+    yield put(billSliceAction.getListRequest());
+    if ( typeof payload.callback === 'function') { 
+      payload.callback(data?.data)
+    };
+  } catch (error:any) {
+    yield put(billSliceAction.splitBillFailed(error));
+  }
+};
+
 export default function* billSaga() {
   yield takeLatest(billSliceAction.getListRequest, getListBill);
   yield takeLatest(billSliceAction.getDebtRequest, getListDebt);
@@ -109,4 +123,5 @@ export default function* billSaga() {
   yield takeLatest(billSliceAction.updateBillItemRequest, updateBillItem);
   yield takeLatest(billSliceAction.updateStatusBillRequest, updateStatusBill);
   yield takeLatest(billSliceAction.getListProductSuggestRequest, getListProductSuggest);
+  yield takeLatest(billSliceAction.splitBillRequest, splitBill);
 }
