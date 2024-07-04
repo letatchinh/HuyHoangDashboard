@@ -107,7 +107,7 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
   const [,setBillItemIdCancel] = useState<any>();
   const [listWarehouse] = useGetWarehouseByBranchLinked(); // Get all warehouse linked with branch
   const [isOpenSplitBill, setIsOpenSplitBill] = useState(false);
-  
+  const canWriteSplitBill = useMatchPolicy(POLICIES.WRITE_BILLSPLIT);
   const [isLoadingUpdate,onUpdateStatus] = useUpdateStatusBill(() => {
     dispatch(billSliceAction.resetAction());
   });
@@ -499,7 +499,7 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
 
   const findItemReadyExportWarehouse = useMemo(() => bill?.billItems?.find((item: any)=> item?.statusCheckWarehouse), [bill]);
   const findItemUnReadyExportWarehouse = useMemo(() => bill?.billItems?.find((item: any) => !item?.statusCheckWarehouse), [bill]);
-  const splitBill = useMemo(() => !!findItemReadyExportWarehouse && !!findItemUnReadyExportWarehouse, [findItemReadyExportWarehouse, findItemUnReadyExportWarehouse])
+  const splitBill = useMemo(() => !!findItemReadyExportWarehouse && !!findItemUnReadyExportWarehouse && canWriteSplitBill, [findItemReadyExportWarehouse, findItemUnReadyExportWarehouse])
   return (
     // <div className="bill-page">
     <>

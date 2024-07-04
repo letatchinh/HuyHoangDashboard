@@ -16,6 +16,6 @@ const apis = {
     deleteBorrow: (_id?: any) => requester.delete(`/api/v1/borrow-products/delete/${_id}`),
     // confirmBorrow: (data?: any) => requester.post(`/api/v1/borrow-products/confirm/${data?._id}/${data?.status}`),
 
-    getStock: (data?: any) => requester.post(`/api/v1/product-stock`,data),
+    getStock: (data?: any) => requester.post(`/api/v1/pms/check-stock`,data),
 }
 export default apis;

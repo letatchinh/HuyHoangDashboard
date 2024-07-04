@@ -99,6 +99,7 @@ const requestChangeGroup = 'requestChangeGroup';
 const warehouseLink = 'warehouseLink';
 const logistic = 'logistic';
 const billStatus = 'billStatus'; // Trạng thái đơn hàng bán
+const billSpit = 'billSpit'; // Tách đơn hàng bán
 
 
 //------RESOURCES --------
@@ -205,6 +206,7 @@ const RESOURCES = [
   requestChangeGroupCTV,
   warehouseLink,
   logistic,
+  billSpit,
 ];
 
 //ACTIONS
@@ -292,7 +294,8 @@ const RESOURCE = (): ResourceType => {
     quotationEmployee,
     quotationPharmacy,
     logistic,
-    billStatus
+    billStatus,
+    billSpit
   ];
 
   const NOTIFICATION_BOT_MANAGER: string[] = [

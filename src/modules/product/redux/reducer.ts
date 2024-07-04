@@ -9,7 +9,7 @@ import { getPaging } from "~/utils/helpers";
   getListBorrowFailed?: any;
    pagingBorrow?: any;
    
-   stock?: any[];
+  stock?: any[];
   getStockFailed?: any;
   pagingStock?: any;
 

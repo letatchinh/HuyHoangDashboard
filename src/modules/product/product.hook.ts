@@ -126,8 +126,8 @@ export const useGetStock = (body: any) => {
   return useFetchByParam({
     action: productActions.getStockRequest,
     loadingSelector: getByIdLoadingSelector,
-    dataSelector: getByIdSelector,
-    failedSelector: getByIdFailedSelector,
+    dataSelector: getStockSuccessSelector,
+    failedSelector: getStockFailedSelector,
     param: body,
   });
 };

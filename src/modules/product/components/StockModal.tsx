@@ -7,6 +7,7 @@ import { useGetStock, useResetAction } from '../product.hook';
 export interface itemData {
   id: string | null;
   supplierId: string | null;
+  variantId?: string | null;
 };
 type propsType = {
   data: itemData | null | undefined;
@@ -14,7 +15,7 @@ type propsType = {
 
 export default function StockModal({ data }: propsType): React.JSX.Element {
   useResetAction();
-  const [stockInfo,isLoading] = useGetStock(data);
+  const [stockInfo, isLoading] = useGetStock(data);
   const columns: ColumnsType = useMemo(() => [
     {
       title: "Kho",
@@ -51,12 +52,12 @@ export default function StockModal({ data }: propsType): React.JSX.Element {
   return (
     <>
       {
-        stockInfo?.map((item: any) =>
+        stockInfo?.data?.map((item: any) =>
           <>
         <BaseBorderBox title={item?.unit?.name}>
             <TableAnt
               columns={columns}
-              dataSource={item?.stockInfo}
+              dataSource={item}
               size='small'
               scroll={{ y: 500 }}
               pagination={false}
