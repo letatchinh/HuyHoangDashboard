@@ -16,13 +16,14 @@ import ProductSelectedTable from "../ProductSelectedTable";
 // import SelectPharmacy from "../SelectPharmacy";
 import TotalBill from "./TotalBill";
 import { convertDataSubmitWarehouse, useCreateOrderInWarehouse } from "../../orderSupplier.hook";
+import { useMatchPolicy } from "~/modules/policy/policy.hook";
 type propsType = {};
 export default function SaleScreen(props: propsType): React.JSX.Element {
  const {form,onValueChange,orderSupplierItems,totalPriceAfterDiscount,onRemoveTab,bill,onOpenModalResult,totalAmount} = useCreateOrderSupplierStore();
  
   const { onNotify } = useNotificationStore();
-  const [isSubmitCreate, onCreateOrderInWarehouse] = useCreateOrderInWarehouse();
-
+  const [isSubmitCreate, onCreateOrderInWarehouse] = useCreateOrderInWarehouse(); 
+  const canWriteOrderInWarehouse = useMatchPolicy(POLICIES.WRITE_WAREHOUSELINK)
   const handleCreateOrderInWarehouse = (data: PayloadCreateOrderSupplier) => {
     const submitData : paramsConvertDataOrderSupplier = convertDataSubmitWarehouse(data);
     try {
@@ -35,7 +36,7 @@ export default function SaleScreen(props: propsType): React.JSX.Element {
  const callBackAfterSuccess = (newData : DataResultType) => {  
   onRemoveTab();
    onOpenModalResult(omit(newData, 'oldData'));
-   setTimeout(() => {
+   canWriteOrderInWarehouse && setTimeout(() => {
     handleCreateOrderInWarehouse(get(newData, 'oldData', {}) as PayloadCreateOrderSupplier);
    }, 500);
  };

@@ -70,6 +70,7 @@ class OrderSupplierClassExtend extends InstanceModuleRedux {
       createOrderInWarehouseSuccess: (state:cloneInitState, { payload }:{payload:any}) => {
         state.isSubmitLoading = false;
         state.createBillInWarehouseSuccess = payload;
+        state.byId = get(payload, "[0]");
       },
       createOrderInWarehouseFailed: (state:cloneInitState, { payload }:{payload:any}) => {
         state.isSubmitLoading = false;
@@ -129,10 +130,10 @@ class OrderSupplierClassExtend extends InstanceModuleRedux {
         ...omit(this.cloneInitState, ["byId"]),
       }),
       updateByIdRedux: (state:cloneInitState, { payload }:{payload:any}) => {
-        state.byId = {
-          ...state.byId,
-          status: payload?.status
-        };
+        // state.byId = {
+        //   ...state.byId,
+        //   status: payload?.status
+        // };
       }
     };
 
