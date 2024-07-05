@@ -11,7 +11,6 @@ export default function ModalCreateSuccess({
   data,
   onCancel,
 }: propsType): React.JSX.Element {
-  console.log(data,'data')
   const { type } = data || {};
   const goDetail = useCallback(() => {
     let handle;

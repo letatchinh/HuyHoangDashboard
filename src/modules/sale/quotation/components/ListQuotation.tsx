@@ -72,7 +72,6 @@ export default function ListQuotation({
     window.open(redirectRouterBillCreate(pathname));
   };
   const onConvertQuotation = (data: Omit<ItemDataSource, "typeTab">) => {
-    console.log(data,'data')
     BillModule.service.addDataToSaleScreen({
       typeTab: "convertQuotation",
       ...data,
