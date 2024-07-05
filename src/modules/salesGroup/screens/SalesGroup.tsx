@@ -104,12 +104,21 @@ export default function SalesGroup() {
     return initial(data).map(loop);
   }, [data]);
   const onValuesChange = (value:any)=>{
-    Object.assign(refQuery.current,value);
-    try {
-          onSearch('');
-    } catch (error) {
-      
+    const key = Object.keys(value)[0];
+    if(key === 'salesChannelId'){
+      formBusiness.setFieldsValue({
+        customerGroupId : null,
+        customerId: null
+      })
     }
+    if(key === 'customerGroupId'){
+      formBusiness.setFieldsValue({
+        customerId: null
+      })
+    }
+    Object.assign(refQuery.current,value);
+    onSearch('');
+   
   }
   return (
     <div>
@@ -125,7 +134,7 @@ export default function SalesGroup() {
           form={formBusiness}
           onValuesChange={onValuesChange}
         >
-          <SelectBusinessModel query={query} form={formBusiness} />
+          <SelectBusinessModel form={formBusiness} />
         </Form>
 
         <SalesGroupTree dataSource={ compact(Object.values(refQuery.current)).length ? dataSearch : data} />

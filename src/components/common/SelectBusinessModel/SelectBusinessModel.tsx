@@ -10,19 +10,19 @@ type propsType = {
 export default function SelectBusinessModel(
   props: propsType
 ): React.JSX.Element {
-  const { query, form } = props;
+  const { form } = props;
 
   return (
     <Row justify="space-between" style={{ marginTop: 20 }}>
       <Col span={6}>
-        <Form.Item shouldUpdate={(pre, current) => {
+        <Form.Item  shouldUpdate={(pre, current) => {
             return pre.salesChannelId !== current.salesChannelId;
           }} label="Kênh bán hàng">
           {({ setFieldValue }) => {
-            setFieldValue('customerGroupId',null);
-            setFieldValue('customerId',null);
+            // setFieldValue('customerGroupId',null);
+            // setFieldValue('customerId',null);
             return (
-              <Form.Item name="salesChannelId">
+              <Form.Item noStyle name="salesChannelId">
                 <SelectSaleChannel
                   validateFirst={false}
                   form={form}
@@ -39,14 +39,14 @@ export default function SelectBusinessModel(
       <Col span={6}>
         <Form.Item
           shouldUpdate={(pre, current) => {
-            return pre.salesChannelId !== current.salesChannelId;
+            return pre.customerGroupId !== current.customerGroupId;
           }}
           label="Nhánh KH"
         >
           {({ getFieldValue, setFieldValue }) => {
-            setFieldValue('customerId',null);
+            // setFieldValue('customerId',null);
             return (
-              <Form.Item name={"customerGroupId"}>
+              <Form.Item noStyle name={"customerGroupId"}>
                 <SelectTypePharmacy
                   validateFirst={false}
                   form={form}
@@ -64,12 +64,12 @@ export default function SelectBusinessModel(
         <Form.Item
           label="Nhóm KH"
           shouldUpdate={(pre, current) => {
-            return pre.customerGroupId !== current.customerGroupId;
+            return pre.customerId !== current.customerId;
           }}
         >
           {({ getFieldValue }) => {
             return (
-              <Form.Item name="customerId">
+              <Form.Item noStyle name="customerId">
                 <SelectGroupPharmacy
                   validateFirst={false}
                   form={form}
