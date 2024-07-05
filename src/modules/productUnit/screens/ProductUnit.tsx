@@ -40,6 +40,7 @@ import { SelectProps } from "antd/lib";
 import ExportExcelButton from "~/modules/export/component";
 import useCheckboxExport from "~/modules/export/export.hook";
 import { Link } from "react-router-dom";
+import ColumnAction from "~/components/common/ColumnAction";
 type propsType = {};
 export default function ProductUnit(props: propsType): React.JSX.Element {
   const [query] = useProductUnitQueryParams();
@@ -121,23 +122,17 @@ export default function ProductUnit(props: propsType): React.JSX.Element {
       key: "action",
       align: "center",
       // width: '180px',
-      render: (_, record) => (
-        <Space size="middle">
-          <WithPermission permission={POLICIES.UPDATE_UNIT}><Button icon={<InfoCircleTwoTone />} type="primary" onClick={() => handleOpenForm(record?._id)}>
-        Cập nhật
-      </Button>
-      </WithPermission>
-          <WithPermission permission={POLICIES.DELETE_UNIT}>
-            <Button
-              icon={<DeleteOutlined />}
-              style={{ color: "red" }}
-              onClick={() => handleDelete(record._id)}
-            >
-              Xóa
-            </Button>
-          </WithPermission>
-          </Space>
-      ),
+      render: (_, record) => {
+        return (
+          <ColumnAction
+            onOpenForm={handleOpenForm}
+            onDelete={handleDelete}
+            _id={record?._id}
+            textName='đơn vị tính'
+            permissionUpdate={POLICIES.UPDATE_UNIT}
+            permissionDelete={POLICIES.DELETE_UNIT}
+          />
+        )}
     },
     ...(canDownload
       ? [

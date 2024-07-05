@@ -23,6 +23,7 @@ import ProductGroupForm from './ProductGroupForm';
 import useCheckBoxExport from '~/modules/export/export.hook';
 import ExportExcelButton from '~/modules/export/component';
 import { Link } from 'react-router-dom';
+import ColumnAction from '~/components/common/ColumnAction';
 
 const { Search } = Input;
 
@@ -117,11 +118,19 @@ export default function ProductConfig() {
       key: 'action',
       align: 'center' as any,
       width: '180px',
-      render: (value: any, record: any) => (
-            <Button icon={<DeleteOutlined />} style={{ color: 'red' }} onClick={() => handleDelete(record._id)}>
-              Xóa
-            </Button>
-      ),
+      render: (value: any, record: any) =>  {
+        return (
+          <ColumnAction
+            // {...record}
+            onOpenForm={handleOpenUpdate}
+            onDelete={handleDelete}
+            _id={record?._id}
+            textName='danh mục thuốc'
+            // isSubmitLoading={isSubmitUpdateLoading}
+            permissionUpdate={canUpdate}
+            permissionDelete={canDelete}
+          />
+        )},
     }]: []),
     ...(
       canDownload ? [

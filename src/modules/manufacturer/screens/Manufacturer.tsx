@@ -17,6 +17,7 @@ import { useMatchPolicy } from '~/modules/policy/policy.hook';
 import { Link } from 'react-router-dom';
 import { PATH_APP } from '~/routes/allPath';
 import BtnAdd from '~/components/common/Layout/List/Header/BtnAdd';
+import ColumnAction from '~/components/common/ColumnAction';
 export default function Manufacturer() {
   const [showForm, setShowForm] = useState(false);
   const [destroy, setDestroy] = useState(false);
@@ -70,7 +71,7 @@ export default function Manufacturer() {
     {
       title: 'Mô tả',
       dataIndex: 'description',
-      align: 'center',
+      // align: 'center',
       key: 'description',
       width: '300px',
     },
@@ -95,11 +96,19 @@ export default function Manufacturer() {
       key: 'action',
       align: 'center' as any,
       width: '180px',
-      render: (value: any, record: any) => (
-        <Button icon={<DeleteOutlined />} style={{ color: 'red' }} onClick={() => handleDelete(record?._id)}>
-        Xóa
-      </Button>
-      ),
+      render: (value: any, record: any) => {
+        return (
+          <ColumnAction
+            // {...record}
+            onOpenForm={handleOpenForm}
+            onDelete={handleDelete}
+            _id={record?._id}
+            textName='hãng sản xuất'
+            // isSubmitLoading={isSubmitUpdateLoading}
+            permissionUpdate={canUpdate}
+            permissionDelete={canDelete}
+          />
+        )}
     }]: []),
   ];
   const onSearch = (value: string) => {

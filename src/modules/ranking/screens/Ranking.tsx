@@ -14,6 +14,7 @@ import POLICIES from '~/modules/policy/policy.auth';
 import { PATH_APP } from '~/routes/allPath';
 import { useDeleteRanking, useGetlistRanking, useRankingPaging, useRankingQueryParams, useUpdateRankingParams } from '../ranking.hook';
 import RankingForm from './RankingForm';
+import ColumnAction from '~/components/common/ColumnAction';
 type propsType = {
 
 }
@@ -53,20 +54,18 @@ export default function Ranking(props: propsType): React.JSX.Element {
       key: 'action',
       align: 'center',
       width: '180px',
-      render: (_, record) => (
-        <Space size="middle">
-          <WithPermission permission={POLICIES.UPDATE_RANKING}>
-            <Button icon={<InfoCircleTwoTone />} type="primary" onClick={() => handleOpenForm(record?._id)}>
-              Xem chi tiết
-            </Button>
-          </WithPermission>
-          <WithPermission permission={POLICIES.DELETE_RANKING}>
-            <Button icon={<DeleteOutlined />} style={{ color: 'red' }} onClick={() => handleDelete(record._id)}>
-              Xóa
-            </Button>
-          </WithPermission>
-        </Space>
-      ),
+      render: (_, record) => {
+        return (
+          <ColumnAction
+            // {...record}
+            onOpenForm={handleOpenForm}
+            onDelete={handleDelete}
+            _id={record?._id}
+            textName='xếp hạng'
+            permissionUpdate={POLICIES.UPDATE_RANKING}
+            permissionDelete={POLICIES.DELETE_RANKING}
+          />
+        )}
     },
   ];
   const handleOpenForm = useCallback((id?: any) => {
