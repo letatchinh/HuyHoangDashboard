@@ -43,7 +43,7 @@ export default function SelectProduct({dataCurrent,onChangeBill,warehouseId}:pro
           setLoading(true);
           const products = await ProductModule.api.search({
             keyword,
-            limit: 20,
+            limit: 5,
             pharmacyId,
             ...(warehouseId &&{ warehouseId})
           }); 

@@ -78,7 +78,7 @@ class OrderSupplierClassExtend extends InstanceModuleRedux {
       },
       resetAction: (state:cloneInitState) => ({
         ...state,
-        ...omit(this.cloneInitState, ["list"]),
+        ...omit(this.cloneInitState, ["list",'paging']),
       }),
 
       updateStatusOrderRequest: (state: cloneInitState) => {
