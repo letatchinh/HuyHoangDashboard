@@ -34,7 +34,13 @@ export default function SelectGroupPharmacy({
       const employees = await apis.search({
         keyword: keyword || "",
       });
-      const newOptions = employees?.map(
+      const callbackFilter = ({customerGroupId}: any) => {
+        if (form.getFieldValue("customerGroupId")) {
+          return customerGroupId === form.getFieldValue("customerGroupId");
+        }
+        return true;
+      }
+      const newOptions = employees?.filter(callbackFilter).map(
         (item: ItemSearch) => ({
           label: get(item, "title"),
           value: get(item, "_id"),
@@ -55,8 +61,13 @@ export default function SelectGroupPharmacy({
           id: form.getFieldValue("customerId"),
           keyword: "",
         });
-
-        const newOptions = employees?.map(
+        const callbackFilter = ({customerGroupId}: any) => {
+          if (form.getFieldValue("customerGroupId")) {
+            return customerGroupId === form.getFieldValue("customerGroupId");
+          }
+          return true;
+        }
+        const newOptions = employees?.filter(callbackFilter).map(
           (item: ItemSearch) => ({
             label: get(item, "title"),
             value: get(item, "_id"),
