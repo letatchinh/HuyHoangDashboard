@@ -65,9 +65,18 @@ export default function SalesGroup() {
         ? !!item?.salesGroupPermission?.filter(({ employee }) =>
             employee.pharmacies.some(
               (el: any) =>
-                el.salesChannelId === refQuery.current.salesChannelId ||
-                el.customerGroupId === refQuery.current.customerGroupId ||
-                el.customerId === refQuery.current.customerId
+                {
+                  let check = [el.salesChannelId === refQuery.current.salesChannelId]
+                  if(!!refQuery.current.customerGroupId){
+                    check.push(el.customerGroupId === refQuery.current.customerGroupId)
+                  }
+                  if(!!refQuery.current.customerId){
+                    check.push(el.customerId === refQuery.current.customerId)
+                  }
+
+                  console.log(check,name)
+                return check.every((e)=>e===true)
+              }
             )
           ).length
         : true;
@@ -86,6 +95,7 @@ export default function SalesGroup() {
       return valueReturn;
     }
     const resultSearch = compact(data.map(loopFilter));
+    console.log(refQuery.current)
     actionUpdate(resultSearch);
   },[data]);
 
@@ -109,12 +119,19 @@ export default function SalesGroup() {
       formBusiness.setFieldsValue({
         customerGroupId : null,
         customerId: null
-      })
+      });
+      Object.assign(refQuery.current,{
+        customerGroupId : '',
+        customerId: ''
+      });
     }
     if(key === 'customerGroupId'){
       formBusiness.setFieldsValue({
         customerId: null
       })
+      Object.assign(refQuery.current,{
+        customerId: ''
+      });
     }
     Object.assign(refQuery.current,value);
     onSearch('');
