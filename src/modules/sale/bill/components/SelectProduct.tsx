@@ -14,9 +14,10 @@ import ImageProduct from './ImageProduct';
 
 type propsType = {
   dataCurrent : any,
-  onChangeBill : (newData:any) => void,
+  onChangeBill: (newData: any) => void,
+  warehouseId?: any,
 }
-export default function SelectProduct({dataCurrent,onChangeBill}:propsType) : React.JSX.Element {
+export default function SelectProduct({dataCurrent,onChangeBill,warehouseId}:propsType) : React.JSX.Element {
   
   const {onNotify} = useNotificationStore();
   const [partner] = useGetCollaborator(get(dataCurrent,'pharmacyId'));
@@ -44,6 +45,7 @@ export default function SelectProduct({dataCurrent,onChangeBill}:propsType) : Re
             keyword,
             limit: 20,
             pharmacyId,
+            ...(warehouseId &&{ warehouseId})
           }); 
           const newDataSearch = products?.map((item: ItemSearchProduct) => ({
             ...item,

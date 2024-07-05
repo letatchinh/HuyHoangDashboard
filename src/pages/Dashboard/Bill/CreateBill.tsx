@@ -183,7 +183,7 @@ const CreateBillPage = (): React.JSX.Element => {
   useEffect(() => {
     try {
       // Not Have DataSource  initialize new Data
-      const dataFromLocalStorage : any  = localStorage.getItem(KEY_DATA_PHARMACY);
+      const dataFromLocalStorage: any = localStorage.getItem(KEY_DATA_PHARMACY);
       const isInValidDataSource : boolean = BillModule.service.validateDataStorageREINS(dataFromLocalStorage);
       if (
         isInValidDataSource
@@ -267,7 +267,7 @@ const CreateBillPage = (): React.JSX.Element => {
       return;
     }
   }, [activeKey, tabs]);
-  
+  console.log(get(dataSource, activeKey),'get(dataSource, activeKey)')
   return (
     <div>
       <div className="createBill">
@@ -297,6 +297,7 @@ const CreateBillPage = (): React.JSX.Element => {
                   onChangeBill={(newData: any) =>
                     onChangeBill(activeKey, newData)
                   }
+                    warehouseId =  {get(dataSource, activeKey)?.warehouseId}
                 />
                 </Space>
               ),

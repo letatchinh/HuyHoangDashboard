@@ -88,6 +88,27 @@ export function SplitBillProvider({
       0
     );
   
+  // 
+    function distributePayments(totalPaid: number, bills: any) {
+      let remainingAmount = totalPaid;
+      let updatedOrders = bills.map((bill:any )=> ({ ...bill }));
+    
+      for (let order of updatedOrders) {
+        if (remainingAmount <= 0) break;
+    
+        if (remainingAmount >= order.totalPrice) {
+          order.pair = order.totalPrice;
+          remainingAmount -= order.totalPrice;
+        } else {
+          order.pair = remainingAmount;
+          remainingAmount = 0;
+        }
+      }
+    
+      return updatedOrders;
+  };
+    
+  //HANDLE FORM
   const onOpen = () => {
     setIsOpen(true);
   };
@@ -98,6 +119,7 @@ export function SplitBillProvider({
     closeModalCheckWarehouse();
   };
   
+  //
   useEffect(() => {
     if (bill) {
       setListBill([productsReady, productsUnReady]);
@@ -110,9 +132,13 @@ export function SplitBillProvider({
       totalPrice: totalPrice(item),
       totalQuantity: totalQuantity(item),
       pair: bill?.pair || 0,
-      remaining: totalPrice(item) - bill?.pair || 0
     }));
-    setData(newData);
+    let newBills = distributePayments(bill?.totalReceiptVoucherCompleted, newData);
+    newBills = newBills.map((item: any) => ({
+      ...item,
+      remaining: (+item?.totalPrice) - (+item?.pair) || 0,
+    }));
+    setData(newBills);
   }, [listBill]);
   
   return (
