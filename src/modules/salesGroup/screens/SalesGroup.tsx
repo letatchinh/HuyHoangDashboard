@@ -74,7 +74,6 @@ export default function SalesGroup() {
                     check.push(el.customerId === refQuery.current.customerId)
                   }
 
-                  console.log(check,name)
                 return check.every((e)=>e===true)
               }
             )
@@ -95,7 +94,6 @@ export default function SalesGroup() {
       return valueReturn;
     }
     const resultSearch = compact(data.map(loopFilter));
-    console.log(refQuery.current)
     actionUpdate(resultSearch);
   },[data]);
 
