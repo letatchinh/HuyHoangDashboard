@@ -1,16 +1,11 @@
-import { Button, Form } from "antd";
-import { ColumnsType } from "antd/es/table/InternalTable";
+import { Form } from "antd";
 import { compact, get, initial } from "lodash";
-import { useMemo, useRef, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import ModalAnt from "~/components/Antd/ModalAnt";
-import Breadcrumb from "~/components/common/Breadcrumb";
 import SelectSearch from "~/components/common/SelectSearch/SelectSearch";
 import WhiteBox from "~/components/common/WhiteBox";
 import POLICIES from "~/modules/policy/policy.auth";
 import { StringToSlug } from "~/utils/helpers";
-import Action from "../components/Action";
-import Address from "../components/Address";
-import Member from "../components/Member";
 import Relationship from "../components/Relationship";
 import SalesGroupForm from "../components/SalesGroupForm";
 import SalesGroupTree from "../components/SalesGroupTree";
@@ -23,6 +18,8 @@ import {
 import { SalesGroupType } from "../salesGroup.modal";
 import useSalesGroupStore from "../salesGroupContext";
 import SelectBusinessModel from "~/components/common/SelectBusinessModel/SelectBusinessModel";
+
+
 export default function SalesGroup() {
   const {
     updateSalesGroup,
@@ -34,79 +31,64 @@ export default function SalesGroup() {
     isOpenFormRelation,
     onCloseFormRelation,
     isOpenTarget,
-    onOpenFormTarget,
     onCloseFormTarget,
-    isOpenFormExchangeRate,
-    onOpenFormExchangeRate,
-    onCloseFormExchangeRate,
-    setParentNear,
-    setGroupInfo,
-    canUpdate,
   } = useSalesGroupStore();
 
   const [formBusiness] = Form.useForm();
 
-  const rowSelect = useRef();
-  const [expandedRowKeys, setExpandedRowKeys]: any = useState([]);
   const [query] = useSalesGroupQueryParams();
+  const refQuery = useRef({
+    "salesChannelId": '',
+    "customerGroupId": '',
+    "customerId": '',
+    keyword:'',
+})
 
-  const [data, isLoading, actionUpdate] = useGetSalesGroups(query);
-  const [modeView, setModeView] = useState<"table" | "tree">("table");
-  const ref = useRef(data);
+  const [data,loading, actionUpdate] = useGetSalesGroups(query);
   const dataSearch = useGetSalesGroupsSearch();
 
-  const onSearch = (keyword: any) => {
+  const onSearch = useCallback((keyword: any) => {
     // Get Data Filter From Redux
     const keywordSlug = StringToSlug(keyword?.trim()?.toLowerCase());
+    refQuery.current.keyword = keywordSlug;
+
     function loopFilter(item?: SalesGroupType) {
       const name = get(item, "nameChild", "");
-      const member = get(item, "memberChild", "");
       const nameSlug = StringToSlug(name?.trim()?.toLowerCase());
-      const memberSlug = StringToSlug(member?.trim()?.toLowerCase());
-      const children = compact(get(item, "children", []).map(loopFilter)) as SalesGroupType[];
+
+      const children = compact(
+        get(item, "children", []).map(loopFilter)
+      ) as SalesGroupType[];
 
       const hasInChild: boolean = Boolean(children.length);
-      console.log("🚀 ~ loopFilter ~ hasInChild:", hasInChild,name)
-      const valid =
-        nameSlug?.includes(keywordSlug) ||
-        memberSlug?.includes(keywordSlug) ||
-        hasInChild;
+      let checkSalesChannel = refQuery.current.salesChannelId
+        ? !!item?.salesGroupPermission?.filter(({ employee }) =>
+            employee.pharmacies.some(
+              (el: any) =>
+                el.salesChannelId === refQuery.current.salesChannelId ||
+                el.customerGroupId === refQuery.current.customerGroupId ||
+                el.customerId === refQuery.current.customerId
+            )
+          ).length
+        : true;
 
-      if (!valid) {
+      const valid = !!keywordSlug ? nameSlug?.includes(keywordSlug) : true;
+
+      if ((!valid || !checkSalesChannel) && !hasInChild) {
         return null;
       }
-      if (!!item?.children) {
-        return { ...item, children: children };
-      } else {
-        return item;
+
+      let valueReturn = { ...item };
+
+      if (!!item?.children && hasInChild) {
+        valueReturn = { ...valueReturn, children: children };
       }
+      return valueReturn;
     }
-    const resultSearch = data.map(loopFilter);
-    console.log("🚀 ~ loopFilter ~ resultSearch:", compact(resultSearch));
+    const resultSearch = compact(data.map(loopFilter));
+    actionUpdate(resultSearch);
+  },[data]);
 
-    // actionUpdate(resultSearch);
-  };
-
-  const onExpand = (record: any) => {
-    const idSelect: any = get(record, "_id");
-    const indexRow: any = get(record, "indexRow");
-
-    if (rowSelect.current !== indexRow && indexRow) {
-      // Click on The Record Have Index Diff rowSelect current
-
-      setExpandedRowKeys([idSelect]);
-      rowSelect.current = indexRow;
-      return;
-    }
-    onSetRowKey(idSelect);
-  };
-  const onSetRowKey = (idSelect: any) => {
-    if (expandedRowKeys.includes(idSelect)) {
-      setExpandedRowKeys(expandedRowKeys?.filter((k: any) => k !== idSelect));
-    } else {
-      setExpandedRowKeys(expandedRowKeys.concat(idSelect));
-    }
-  };
 
   const filterDataSource = useMemo(() => {
     function loop(item: any) {
@@ -121,6 +103,14 @@ export default function SalesGroup() {
     }
     return initial(data).map(loop);
   }, [data]);
+  const onValuesChange = (value:any)=>{
+    Object.assign(refQuery.current,value);
+    try {
+          onSearch('');
+    } catch (error) {
+      
+    }
+  }
   return (
     <div>
       <WhiteBox>
@@ -133,16 +123,12 @@ export default function SalesGroup() {
         />
         <Form
           form={formBusiness}
-          onValuesChange={(value, values) => {
-            console.log("====================================");
-            console.log(values);
-            console.log("====================================");
-          }}
+          onValuesChange={onValuesChange}
         >
           <SelectBusinessModel query={query} form={formBusiness} />
         </Form>
 
-        <SalesGroupTree dataSource={dataSearch?.length ? dataSearch : data} />
+        <SalesGroupTree dataSource={ compact(Object.values(refQuery.current)).length ? dataSearch : data} />
       </WhiteBox>
       <ModalAnt
         onCancel={onCloseForm}

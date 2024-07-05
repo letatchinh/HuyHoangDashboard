@@ -1,5 +1,5 @@
 import { createSlice, ValidateSliceCaseReducers } from "@reduxjs/toolkit";
-import { get } from "lodash";
+import { compact, get } from "lodash";
 import { InstanceModuleRedux } from "~/redux/instanceModuleRedux";
 import { initStateSlice } from "~/redux/models";
 import { convertDataTreeBuyGroup, RulesLeader } from "../salesGroup.service";
@@ -122,39 +122,19 @@ class SalesGroupClassExtend extends InstanceModuleRedux {
         try {
           let groupHaveLeader: any[] = [];
           state.isLoading = false;
-          state.list = payload?.map((item: any, index: any) => {
-            let nameChild =
-              get(item, "name", "") + " " + get(item, "alias", ""); // Get Name And Alias Parent
-            let memberChild: string = getMember(
-              get(item, "salesGroupPermission", [])
-            ); // Get memberChild Parent
-
-            if (true) {
-              groupHaveLeader.push(item);
+          function asyncPayload (item:any){
+            let nameChild = compact([get(item, "name", "") , `(${get(item, "alias", "")})`]).join(' '); // Get Name And Alias Parent
+            if(item?.children?.length){
+              item.children = item.children.map(asyncPayload);
             }
-            getDataFromDeeplyChild(
-              get(item, "children", []),
-              nameChild, // Get Name And Alias From Child
-              memberChild, // Get Member Child
-              groupHaveLeader // Get Group haveLeader
-            ); // Call Current Children
-
-            const children = setDataForDeeplyChild(
-              get(item, "children", []),
-              2,
-              index
-            );
-
             return {
               ...item,
-              nameChild,
-              memberChild,
-              indexRow: index + 1, // 0 Falsy is False
-              children,
-              color: "orange",
-              key : index
-            };
-          });
+              nameChild
+            }
+          }
+
+         
+          state.list = payload?.map(asyncPayload)
           state.groupHaveLeader = groupHaveLeader;
         } catch (error) {
           console.log(error);
