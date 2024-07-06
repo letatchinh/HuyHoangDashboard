@@ -48,6 +48,7 @@ export const useReportProductSupplierQueryParams = (
   const salerId = query.get("salerId");
   const areaId = query.get("areaId");
   const cityId = query.get("cityId");
+  const salesChannelId = query.get("salesChannelId");
   return useMemo(() => {
     let queryParams: any = {
       reportSize,
@@ -63,6 +64,7 @@ export const useReportProductSupplierQueryParams = (
       areaId,
       cityId,
       limit,
+      salesChannelId,
     };
     if (props?.pickFiled?.length) {
       queryParams = pick(queryParams, props?.pickFiled);
@@ -88,6 +90,7 @@ export const useReportProductSupplierQueryParams = (
     limit,
     props?.pickFiled,
     props?.omitField,
+    salesChannelId,
   ]);
 };
 

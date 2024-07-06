@@ -113,7 +113,7 @@ export default function LkTabItem({
       },
     },
     {
-      title: "Nhà thuốc",
+      title: "Khách hàng",
       dataIndex: "pharmacy",
       key: "pharmacy",
       align: "center",
@@ -235,7 +235,7 @@ export default function LkTabItem({
   return (
     <div>
       <Form form={form} initialValues={query}>
-        <Row>
+        <Row justify={"space-between"}>
           <Col span={6}>
             <billModule.components.SelectPharmacy
               validateFirst={false}
@@ -244,6 +244,7 @@ export default function LkTabItem({
               showIcon={false}
               size={"middle"}
               onChange={(value) => onParamChange({ pharmacyId: value })}
+              showButtonAdd={false}
             />
           </Col>
           <Col span={6}>

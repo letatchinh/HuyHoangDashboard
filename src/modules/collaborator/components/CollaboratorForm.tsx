@@ -30,6 +30,7 @@ import UploadImage from "~/components/common/Upload/UploadImage";
 import { CalendarOutlined, InfoCircleTwoTone } from "@ant-design/icons";
 import apis from "~/modules/user/user.api";
 import InputNumberAnt from "~/components/Antd/InputNumberAnt";
+import SelectSaleChannel from "~/modules/saleChannel/components/SelectSaleChannel";
 
 const FormItem = Form.Item;
 const { Option } = Select;
@@ -39,6 +40,7 @@ interface IProps {
   handleUpdate?: any;
   handleCreate?: any;
   isSubmitLoading?: boolean;
+  query?: any;
   readOnly?:boolean
 };
 const hookGetData = {
@@ -49,7 +51,8 @@ export default function CollaboratorForm({readOnly,...props}: IProps) {
   const refMonth : any = useRef();
   const refYear : any = useRef();
   const [form] = Form.useForm();
-  const { id, handleCloseModal, handleUpdate, handleCreate, isSubmitLoading } =
+  const [formSaleChannel] = Form.useForm();
+  const { id, handleCloseModal, handleUpdate, handleCreate, isSubmitLoading, query } =
     props;
   const [imageUrl, setImageUrl] = useState<string>();
 
@@ -312,7 +315,7 @@ export default function CollaboratorForm({readOnly,...props}: IProps) {
                   <Tooltip
                     placement="topLeft"
                     // zIndex={2001}
-                    title={<p>Phải chọn nhóm Cộng tác viên</p>}
+                    title={<p>Phải chọn nhóm khách hàng</p>}
                   >
                     <Badge
                       size="small"
@@ -328,7 +331,7 @@ export default function CollaboratorForm({readOnly,...props}: IProps) {
                 rules={[
                   {
                     required: false,
-                    message: "Xin vui lòng chọn nhóm cộng tác viên!",
+                    message: "Xin vui lòng chọn nhóm khách hàng!",
                   },
                 ]}
               >
@@ -469,6 +472,30 @@ export default function CollaboratorForm({readOnly,...props}: IProps) {
                 </Flex>
               </FormItem>
             </Col>
+            <Col span={12}>
+                <FormItem
+                  name={"salesChannelId"}
+                  label="Kênh bán hàng"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Xin vui lòng chọn kênh bán hàng",
+                    },
+                  ]}
+                  initialValue={query?.salesChannelId || null}
+                >
+                  <SelectSaleChannel
+                    validateFirst={false}
+                    form={formSaleChannel}
+                    // style={{ width: 200 }}
+                    showIcon={false}
+                    size={"middle"}
+                    defaultValue={query?.salesChannelId || null}
+                    divisionText="B2C"
+                    // onChange={(value) => onParamChange({ salesChannelId: value })}
+                  />
+                </FormItem>
+              </Col>
           </Row>
         </BaseBorderBox>
 

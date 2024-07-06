@@ -88,7 +88,7 @@ export default function SelectPharmacyInDevice({
           rules={[
             {
               required: validateFirst,
-              message: "Vui lòng chọn nhà thuốc",
+              message: "Vui lòng chọn khách hàng B2B",
             },
           ]}
           colon={false}
@@ -98,7 +98,7 @@ export default function SelectPharmacyInDevice({
           <DebounceSelect
             size="large"
             loading={loading}
-            placeholder="Chọn nhà thuốc"
+            placeholder="Chọn khách hàng B2B"
             fetchOptions={fetchOptions}
             style={{ width: "100%" }}
             initOptions={initOption}

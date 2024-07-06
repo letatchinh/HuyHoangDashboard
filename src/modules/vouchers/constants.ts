@@ -15,7 +15,7 @@ export const METHOD_TYPE = {
 export const METHOD_TYPE_VI = {
      BILL : "Đơn hàng",
      LK : "Luỹ kế",
-     BILLITEM : "Sản phẩm trong đơn hàng nhà thuốc",
+     BILLITEM : "Sản phẩm trong đơn hàng khách hàng B2B",
      ORDER : "Đơn hàng nhà cung cấp",
      ORDERITEM : "Sản phẩm trong đơn hàng nhà cung cấp",
      SALARY_EMPLOYEE : 'Lương trình dược viên',

@@ -35,6 +35,7 @@ import subvn from "~/core/subvn";
 import DetailData from "./DetailData";
 import { useUpdateReportProductSupplierParams } from "../reportOverview.hook";
 import SelectEmployeeV2 from "~/modules/employee/components/SelectEmployeeV2";
+import SelectSaleChannel from "~/modules/saleChannel/components/SelectSaleChannel";
 
 const { RangePicker } = DatePicker;
 const dateFormat = "YYYY-MM-DD";
@@ -53,6 +54,7 @@ export default function ReportChart(
   const [keyword, { setKeyword, onParamChange }] =
     useUpdateReportProductSupplierParams(query);
   const [form] = Form.useForm();
+  const [formSaleChannel] = Form.useForm();
   const [date, setDate] = useState<any[]>([
     dayjs().startOf("month"),
     dayjs().endOf("month"),
@@ -140,7 +142,11 @@ export default function ReportChart(
             <Select
               loading={isLoading}
               defaultValue={"groupProduct"}
-              options={spaceType !== "partner" ? renderOptionReport : renderOptionReportB2C}
+              options={
+                spaceType !== "partner"
+                  ? renderOptionReport
+                  : renderOptionReportB2C
+              }
               popupMatchSelectWidth={false}
               filterOption={filterSelectWithLabel}
               onChange={(value) => onParamChange({ dataType: value || null })}
@@ -195,19 +201,29 @@ export default function ReportChart(
         </Col>
       </Row>
       <Row
-        justify="space-around"
+        justify="space-between"
         gutter={[16, 24]}
         style={{ marginLeft: 2, marginRight: 2 }}
       >
-        <Col span={8}>
-          <SelectSupplier
-            value={query?.supplierId ? query?.supplierId?.split(",") : []}
-            onChange={(value) => onParamChange({ supplierId: value || null })}
-            style={{ width: 200 }}
-            mode="multiple"
-          />
+        <Col span={6}>
+          <Form
+            form={formSaleChannel}
+            initialValues={{ salesChannelId: query?.salesChannelId }}
+          >
+            <SelectSaleChannel
+              validateFirst={false}
+              form={formSaleChannel}
+              style={{ width: 200 }}
+              showIcon={false}
+              size={"middle"}
+              defaultValue={query?.salesChannelId || null}
+              divisionText={spaceType !== "partner" ? "B2B" : "B2C"}
+              onChange={(value) => onParamChange({ salesChannelId: value })}
+              mode="multiple"
+            />
+          </Form>
         </Col>
-        <Col span={8}>
+        <Col span={6}>
           <SelectArea
             data={areas}
             placeholder="Miền"
@@ -217,7 +233,7 @@ export default function ReportChart(
             mode="multiple"
           />
         </Col>
-        <Col span={8}>
+        <Col span={6}>
           <SelectArea
             data={cities}
             placeholder="Tỉnh"
@@ -229,25 +245,37 @@ export default function ReportChart(
         </Col>
       </Row>
       <Row
-        justify="space-around"
+        justify="space-between"
         gutter={[16, 24]}
         style={{ marginLeft: 2, marginRight: 2, marginTop: 20 }}
       >
-       {spaceType !== "partner" ? ( <Col span={8}>
-          <Form form={form} initialValues={{ employeeId: query?.salerId }}>
-            <SelectEmployeeV2
-              validateFirst={false}
-              form={form}
-              style={{ width: 200 }}
-              showIcon={false}
-              size={"middle"}
-              defaultValue={query?.salerId || null}
-              onChange={(value) => onParamChange({ salerId: value })}
-              mode="multiple"
-            />
-          </Form>
-        </Col>) : <></> }
-        <Col span={8}>
+        <Col span={6}>
+          <SelectSupplier
+            value={query?.supplierId ? query?.supplierId?.split(",") : []}
+            onChange={(value) => onParamChange({ supplierId: value || null })}
+            style={{ width: 200 }}
+            mode="multiple"
+          />
+        </Col>
+        {spaceType !== "partner" ? (
+          <Col span={6}>
+            <Form form={form} initialValues={{ employeeId: query?.salerId }}>
+              <SelectEmployeeV2
+                validateFirst={false}
+                form={form}
+                style={{ width: 200 }}
+                showIcon={false}
+                size={"middle"}
+                defaultValue={query?.salerId || null}
+                onChange={(value) => onParamChange({ salerId: value })}
+                mode="multiple"
+              />
+            </Form>
+          </Col>
+        ) : (
+          <></>
+        )}
+        <Col span={6}>
           {spaceType !== "partner" ? (
             <Form form={form} initialValues={{ pharmacyId: query?.customerId }}>
               <SelectPharmacy
@@ -260,6 +288,7 @@ export default function ReportChart(
                 defaultValue={query?.customerId || null}
                 onChange={(value) => onParamChange({ customerId: value })}
                 mode="multiple"
+                showButtonAdd={false}
               />
             </Form>
           ) : (
@@ -271,7 +300,7 @@ export default function ReportChart(
             />
           )}
         </Col>
-        <Col span={8}>
+        <Col span={6}>
           <Form form={form} initialValues={{ productId: query?.productId }}>
             <SelectProductBySupplier
               validateFirst={false}

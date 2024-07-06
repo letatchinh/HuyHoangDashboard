@@ -21,7 +21,7 @@ const getSelector = (key: keyof cloneInitState) => (state: RootState) =>
   state[MODULE][key];
 
 const MODULE = "pharmacy";
-const MODULE_VI = "nhà thuốc";
+const MODULE_VI = "khách hàng B2B";
 
 const {
   loadingSelector,
@@ -162,6 +162,7 @@ export const usePharmacyQueryParams = (module?: boolean,limitDefault? : number) 
   const status = query.get("status");
   const processStatus = query.get("processStatus");
   const approved = module ?? query.get("approved");
+  const salesChannel = query.get("salesChannel");
   
   const createSuccess = useSelector(createSuccessSelector);
   const updateSuccess = useSelector(updateSuccessSelector);
@@ -174,6 +175,7 @@ export const usePharmacyQueryParams = (module?: boolean,limitDefault? : number) 
       status,
       approved,
       processStatus,
+      salesChannel,
     };
     return [queryParams];
     //eslint-disable-next-line
@@ -186,7 +188,8 @@ export const usePharmacyQueryParams = (module?: boolean,limitDefault? : number) 
     updateSuccess,
     deleteSuccess,
     approved,
-    processStatus
+    processStatus,
+    salesChannel,
   ]);
 };
 

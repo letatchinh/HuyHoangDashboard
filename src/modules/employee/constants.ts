@@ -12,7 +12,7 @@ export const EMPLOYEE_LEVEL_VI = {
   ASM: "ASM",
   LEADER: "TEAM LEADER",
   TDV: "Trình dược viên",
-  CTV: "Cộng tác viên",
+  CTV: "Khách hàng B2C",
 };
 
 export const EMPLOYEE_LEVEL_COLOR = {
@@ -31,5 +31,5 @@ export const TYPE_EMPLOYEE = {
 
 export const TYPE_EMPLOYEE_VI = {
   TDV: 'Trình dược viên',
-  CTV: 'Cộng tác viên',
+  CTV: 'Khách hàng B2C',
 };

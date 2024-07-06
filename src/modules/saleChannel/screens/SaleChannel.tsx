@@ -67,7 +67,15 @@ export default function SaleChannel(props:propsType) : React.JSX.Element {
         key: "title",
         width: 250,
       },
-      
+      {
+        title: "Phân hệ",
+        dataIndex: "customerDivision",
+        key: "customerDivision",
+        width: 120,
+        render: (record) => {
+          return get(record, "title");
+        },
+      },
       {
         title: "Ngày tạo",
         dataIndex: "createdAt",

@@ -148,7 +148,7 @@ export default function SaleScreen(props: propsType): React.JSX.Element {
   
                 setAddress(address);
                 mutateReValidate();
-                }} id={get(bill, 'pharmacyId')} form={form} allowClear={false} />
+                }} id={get(bill, 'pharmacyId')} form={form} allowClear={false} showButtonAdd={true}/>
             <Divider/>
             <TotalBill />
           </div>

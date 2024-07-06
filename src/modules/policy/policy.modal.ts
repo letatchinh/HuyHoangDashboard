@@ -23,13 +23,14 @@ const ResourceTypeRule = {
   GROUP_REPORT:'GROUP_REPORT',
   // Kênh bán hàng
   SALES_CHANNEL:'SALE_CHANNEL',
-  // Loại nhà thuốc
+  // Loại khách hàng B2B
   CUSTOMER_GROUP:'CUSTOMER_GROUP',
-  // Nhóm nhà thuốc
+  // Nhóm khách hàng B2B
   CUSTOMER:'CUSTOMER',
   PARTNER: 'PARTNER',
   VOUCHER_SALARY_PARTNER: 'VOUCHER_SALARY_PARTNER',
   VOUCHER_BILL_PARTNER: 'VOUCHER_BILL_PARTNER',
+  CUSTOMER_DIVISION: 'CUSTOMER_DIVISION',
 };
 
 type newType =  typeof ResourceTypeRule

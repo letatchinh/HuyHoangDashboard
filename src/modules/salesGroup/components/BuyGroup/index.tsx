@@ -117,7 +117,7 @@ export default function BuyGroup(props: propsType): React.JSX.Element {
               className="mb-2"
               type="primary"
             >
-              Thêm mới cộng tác viên
+              Thêm mới khách hàng B2C
             </Button>{" "}
             &nbsp;&nbsp;&nbsp;
             <SearchAnt onParamChange={onParamChange} />

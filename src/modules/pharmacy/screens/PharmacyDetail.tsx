@@ -34,8 +34,8 @@ export default function PharmacyDetail() {
 
   return (
     <div>
-      <BackBtn label={"Nhà thuốc"} path={PATH_APP.pharmacy.root} />
-      <h3>Chi tiết nhà thuốc</h3>
+      <BackBtn label={"Khách hàng B2B"} path={PATH_APP.pharmacy.root} />
+      <h3>Chi tiết khách hàng B2B</h3>
       <WhiteBox>
         <Tabs
           defaultActiveKey="1"

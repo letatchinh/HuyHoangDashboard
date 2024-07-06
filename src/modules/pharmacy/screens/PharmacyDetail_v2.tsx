@@ -11,6 +11,7 @@ import { PATH_APP } from "~/routes/allPath";
 import ListInDetail from "../component/ListInDetail";
 import MainContentTab from "../component/MainContentTab";
 import {
+  useCreatePharmacy,
   useDeletePharmacy,
   useGetPharmacyId,
   useGetPharmacyId_onlyGet,
@@ -29,6 +30,7 @@ export default function PharmacyDetail_v2(): React.JSX.Element {
   const [keyword, { setKeyword, onParamChange }] =
     useUpdatePharmacyParams(query);
     const [open, setOpen] = useState(false);
+    const [destroy,setDestroy] = useState(false);
     const showDrawer = () => {
       setOpen(true);
     };
@@ -44,6 +46,7 @@ export default function PharmacyDetail_v2(): React.JSX.Element {
   const [isOpenForm, setIsOpenForm] = useState(false);
   const onCloseForm = useCallback(() => {
     setIsOpenForm(false);
+    setDestroy(true);
     setId(null);
   }, []);
   const onOpenForm = useCallback((idd?: any) => {
@@ -52,7 +55,10 @@ export default function PharmacyDetail_v2(): React.JSX.Element {
   }, []);
   const [, updatePharmacy] = useUpdatePharmacy(onCloseForm);
   const [, deletePharmacy] = useDeletePharmacy();
-
+  const [isSubmitLoading, handleCreate] = useCreatePharmacy(() => {
+    onCloseForm();
+    setDestroy && setDestroy(true);
+  });
   return (
     <>
       <Layout
@@ -106,12 +112,16 @@ export default function PharmacyDetail_v2(): React.JSX.Element {
         open={isOpenForm}
         onCancel={onCloseForm}
         footer={[]}
-        destroyOnClose
+        destroyOnClose={destroy}
+        afterClose={() => setDestroy(false)}
       >
         <PharmacyForm
+          setDestroy={setDestroy}
           onClose={onCloseForm}
-          id={id}
+          id={pharmacyId}
+          handleCreate={handleCreate}
           handleUpdate={updatePharmacy}
+          query={query}
         />
       </ModalAnt>
     </>

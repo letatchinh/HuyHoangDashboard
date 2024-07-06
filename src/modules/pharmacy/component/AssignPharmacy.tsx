@@ -55,7 +55,7 @@ export default function AssignPharmacy({
   const debounceFetcher = debounce(setKeyword, 300);
 
   return (
-    <BaseBorderBox title={"Thêm nhà thuốc"}>
+    <BaseBorderBox title={"Thêm khách hàng B2B"}>
       <Search onChange={(e) => debounceFetcher(e.target.value)}/>
       <List
       size="small"

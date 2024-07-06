@@ -48,15 +48,18 @@ const ProductListSuggest: React.FC = () => {
     setCollapseActive(!collapseActive);
   };
   const onSelect = async(data:any) => {
+    const typeDiscountPartner = get(partner, ["salesChannel","discount"], "DIRECT_DISCOUNT") as "DIRECT_DISCOUNT" | "INDIRECT_DISCOUNT";
+    let isGet = typeDiscountPartner==='INDIRECT_DISCOUNT';
+
     const productInPartner = get(partner, "products", [])?.find(
       (p: any) => get(p, "productId") === get(data, "_id")
     );
     
-    const discountOther: DiscountOtherType[] = productInPartner ? [
+    const discountOther: DiscountOtherType[] = (isGet && productInPartner) ? [
       {
         typeDiscount: get(productInPartner, "discount.discountType"),
         value: get(productInPartner, "discount.value"),
-        name: "Chiết khấu từ cộng tác viên",
+        name: "Chiết khấu từ khách hàng B2C",
       },
     ] : [];
     const billItem: any = selectProductSearchBill({

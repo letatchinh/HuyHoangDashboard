@@ -1,4 +1,4 @@
-import { Tabs } from "antd";
+import { Tabs, Typography } from "antd";
 import TabPane from "antd/es/tabs/TabPane";
 import React, { useCallback, useEffect, useState } from "react";
 import WhiteBox from "~/components/common/WhiteBox";
@@ -21,7 +21,7 @@ export default function Lk(props: propsType): React.JSX.Element {
   useChangeDocumentTitle("Luỹ kế mặt hàng")
   return (
     <div>
-      <h5>Các mặt hàng luỹ kế đã tích luỹ</h5>
+      <Typography.Title level={3}>Các mặt hàng luỹ kế đã tích luỹ</Typography.Title>
       <WhiteBox>
         <Tabs
           defaultActiveKey="IN"

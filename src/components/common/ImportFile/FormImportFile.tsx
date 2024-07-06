@@ -205,7 +205,7 @@ export function FormImportFile({
           }}
         >
           <p style={{ fontSize: "22px", fontWeight: "500" }}>
-            Nhập thông tin nhà thuốc từ file dữ liệu
+            Nhập thông tin khách hàng B2B từ file dữ liệu
           </p>
           <p>
             &nbsp; (Tải về file mẫu:
@@ -235,7 +235,7 @@ export function FormImportFile({
           </Button>
           <div style={{ marginTop: "5px", marginBottom: "1rem" }}>
             <i>
-              *Hệ thống cho phép nhập tối đa <b>2000 nhà thuốc</b> mỗi lần từ
+              *Hệ thống cho phép nhập tối đa <b>2000 khách hàng B2B</b> mỗi lần từ
               file
             </i>
           </div>

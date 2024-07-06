@@ -12,6 +12,7 @@ const convertParam = (data: { [key: string]: any }) => {
     cityId: [...compactAndSplit(data.cityId)],
     areaId: [...compactAndSplit(data.areaId)],
     salerId: [...compactAndSplit(data.salerId)],
+    salesChannelId: [...compactAndSplit(data.salesChannelId)],
     rangerTime: data.rangerTime ? [...compactAndSplit(data.rangerTime)]: null,
     rangerType: data.rangerType,
     reportSize: Number(data?.reportSize ?? 10),

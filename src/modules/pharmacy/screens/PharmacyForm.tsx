@@ -2,63 +2,66 @@ import {
   Button,
   Col,
   DatePicker,
+  Divider,
   Form,
   Input,
   Row,
   Select,
   Skeleton,
 } from "antd";
+import TextArea from "antd/es/input/TextArea";
+import dayjs from "dayjs";
+import { useCallback, useEffect, useState } from "react";
+import ModalAnt from "~/components/Antd/ModalAnt";
+import AddressCommonForm from "~/components/common/AddressCommonForm";
+import AddressFormDelivery from "~/components/common/AddressFormDelivery";
+import AddressFormSection from "~/components/common/AddressFormSection";
+import BaseBorderBox from "~/components/common/BaseBorderBox";
+import RenderLoading from "~/components/common/RenderLoading";
+import SelectEmployee from "~/modules/employee/components/SelectEmployee";
+import { GroupPharmacyForm } from "~/modules/groupPharmacy/screens/GroupPharmacyForm";
+import SaleChannelForm from "~/modules/saleChannel/screens/SaleChannelForm";
+import TypePharmacyForm from "~/modules/typePharmacy/screens/TypePharmacyForm";
+import FormSalesChannel from "../component/FormSalesChannel";
 import {
-  useCreatePharmacy,
   useGetPharmacyId,
   useInitPharmacy,
   useResetPharmacyAction,
 } from "../pharmacy.hook";
-import { useCallback, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import { PATH_APP } from "~/routes/allPath";
-import AddressFormSection from "~/components/common/AddressFormSection";
 import { convertInitPharmacy, convertSubmitData } from "../pharmacy.service";
-import SelectTypePharmacy from "~/modules/typePharmacy/components/SelectTypePharmacy";
-import SelectGroupPharmacy from "~/modules/groupPharmacy/components/SelectGroupPharmacy";
-import SelectSaleChannel from "~/modules/saleChannel/components/SelectSaleChannel";
-import RenderLoading from "~/components/common/RenderLoading";
-import TextArea from "antd/es/input/TextArea";
-import AddressFormDelivery from "~/components/common/AddressFormDelivery";
-import UploadListFile from "~/modules/freelanceContractPharmacy/component/UploadListFile";
-import { get } from "lodash";
-import AddressCommonForm from "~/components/common/AddressCommonForm";
-import BaseBorderBox from "~/components/common/BaseBorderBox";
-import SelectEmployee from "~/modules/employee/components/SelectEmployee";
-import dayjs from "dayjs";
+
 const FormItem = Form.Item;
 const { Option } = Select;
 interface Props {
   onClose: (p?: any) => void;
   id?: any;
+  handleCreate?: any;
+  isSubmitLoading?: any;
   handleUpdate?: any;
-  setDestroy? : any
+  destroy?: any;
+  setDestroy: any;
+  query?: any;
 }
 
 export default function PharmacyForm({
   onClose,
   id,
+  handleCreate,
+  isSubmitLoading,
   handleUpdate,
+  destroy,
   setDestroy,
+  query,
 }: Props) {
   const [form] = Form.useForm();
-  const [isSubmitLoading, handleCreate] = useCreatePharmacy(() => {
-    onClose();
-    setDestroy && setDestroy(true);
-  });
   const [pharmacy, isLoading] = useGetPharmacyId(id);
   const initPharmacyProfile = useInitPharmacy(pharmacy, id);
   useResetPharmacyAction();
   const [cityCode, setCityCode]: any = useState();
   const [districtCode, setDistrictCode]: any = useState();
-  const [selectedCustomerGroupId, setSelectedCustomerGroupId] = useState<
-    string | undefined
-  >();
+  const [isSaleChannelFormOpen, setSaleChannelFormOpen] = useState(false);
+  const [isGroupCustomerFormOpen, setGroupCustomerFormOpen] = useState(false);
+  const [isCustomerFormOpen, setCustomerFormOpen] = useState(false);
 
   useEffect(() => {
     if (!id) {
@@ -69,20 +72,14 @@ export default function PharmacyForm({
         ...initPharmacy,
         infoPolicy : {
           ...initPharmacy?.infoPolicy,
-          dateOfBirth : dayjs(initPharmacy?.infoPolicy?.dateOfBirth)
-        }
+          dateOfBirth: dayjs(
+            initPharmacy?.infoPolicy?.dateOfBirth,
+            "YYYY-MM-DD"
+          ),
+        },
       });
-      setSelectedCustomerGroupId(get(initPharmacy, "customerGroupId"));
     }
   }, [initPharmacyProfile, id, form]);
-
-  const onValuesChange = (value: any, values: any) => {
-    const key = Object.keys(value)[0];
-    switch (key) {
-      default:
-        break;
-    }
-  };
 
   const onFinish = useCallback(
     (values: any) => {
@@ -97,13 +94,10 @@ export default function PharmacyForm({
     [handleCreate, handleUpdate, id, onClose]
   );
 
-  const onTypePharmacyChange = (value: string) => {
-    setSelectedCustomerGroupId(value);
-  };
   return (
     <div className="pharmacy-profile page-wraper form-page-content">
       <h4 style={{ margin: "20px 0 40px 20px" }}>
-        {id ? " Cập nhật" : "Thêm mới"} nhà thuốc
+        {id ? "Cập nhật" : "Thêm mới"} khách hàng B2B
       </h4>
       <div className="container-fluid">
         <Form
@@ -112,19 +106,19 @@ export default function PharmacyForm({
           onFinish={onFinish}
           scrollToFirstError
           requiredMark={false}
-          onValuesChange={onValuesChange}
+          // onValuesChange={onValuesChange}
           labelCol={{ sm: 24, md: 24, lg: 6 }}
           wrapperCol={{ sm: 24, md: 24, lg: 18 }}
           labelAlign="left"
         >
           <BaseBorderBox title={"Thông tin chung"}>
             <FormItem
-              label="Tên nhà thuốc"
+              label="Tên khách hàng"
               name="name"
               labelCol={{ sm: 24, md: 24, lg: 3 }}
               wrapperCol={{ sm: 24, md: 24, lg: 21 }}
               rules={[
-                { required: true, message: "Xin vui lòng nhập tên nhà thuốc" },
+                { required: true, message: "Xin vui lòng nhập tên khách hàng" },
               ]}
             >
               <Input />
@@ -141,10 +135,10 @@ export default function PharmacyForm({
                 </FormItem>
               </Col>
               <Col span={12}>
-                <SelectEmployee 
-                 isLoading={isLoading}
-                 employeeSeller={pharmacy}
-                 />
+                <SelectEmployee
+                  isLoading={isLoading}
+                  employeeSeller={pharmacy}
+                />
               </Col>
             </Row>
             <Row gutter={48} align="middle" justify="space-between">
@@ -186,8 +180,9 @@ export default function PharmacyForm({
                   label="Ngày sinh"
                   name={["infoPolicy", "dateOfBirth"]}
                   wrapperCol={{ sm: 24, md: 24, lg: 21 }}
+        
                 >
-                  <DatePicker format={"DD/MM/YYYY"} placeholder="Ngày sinh" />
+                  <DatePicker format={"DD/MM/YYYY"} placeholder="Ngày sinh" defaultValue={dayjs("01/01/1990")} />
                 </FormItem>
               </Col>
               <Col span={12}>
@@ -211,7 +206,11 @@ export default function PharmacyForm({
                 </FormItem>
               </Col>
             </Row>
-            <h5 style={{ textAlign: "center" }}>Địa chỉ nhà thuốc</h5>
+            {/* Nhập kênh, nhánh, nhóm khách hàng */}
+            {/* <Divider/> */}
+            <FormSalesChannel />
+            <h5 style={{ textAlign: "center" }}>Địa chỉ khách hàng</h5>
+            {/* <BaseBorderBox title={"Địa chỉ khách hàng"}> */}
             <AddressFormSection
               form={form}
               cityCode={cityCode}
@@ -221,19 +220,7 @@ export default function PharmacyForm({
               allowPhoneNumber={false}
               allowEmail={false}
             />
-
-            <Row gutter={48} align="middle" justify="space-between">
-              <Col span={12}>
-                <SelectTypePharmacy
-                  isLoading={isLoading}
-                  typePharmacy={pharmacy}
-                  onChange={onTypePharmacyChange}
-                />
-              </Col>
-              <Col span={12}>
-                <SelectGroupPharmacy isLoading={isLoading} />
-              </Col>
-            </Row>
+            {/* </BaseBorderBox> */}
             <Row gutter={48} align="middle" justify="space-between">
               <Col span={12}>
                 <FormItem
@@ -255,20 +242,16 @@ export default function PharmacyForm({
                 </FormItem>
               </Col>
               <Col span={12}>
-                <SelectSaleChannel
-                  isLoading={isLoading}
-                  saleChannel={pharmacy}
-                />
+                <FormItem
+                  label="Khu vực"
+                  name="areaPharma"
+                  wrapperCol={{ sm: 24, md: 24, lg: 21 }}
+                >
+                  <Input />
+                </FormItem>
               </Col>
             </Row>
-            <FormItem
-              label="Khu vực"
-              name="areaPharma"
-              labelCol={{ sm: 24, md: 24, lg: 3 }}
-              wrapperCol={{ sm: 24, md: 24, lg: 21 }}
-            >
-              <Input />
-            </FormItem>
+
             <Row gutter={48} align="middle" justify="space-between">
               <Col span={12}>
                 <FormItem
@@ -406,9 +389,7 @@ export default function PharmacyForm({
             {isSubmitLoading ? (
               <Button disabled>Huỷ</Button>
             ) : (
-              <Link to={PATH_APP.pharmacy.root}>
-                <Button onClick={onClose}>Huỷ</Button>
-              </Link>
+              <Button onClick={onClose}>Huỷ</Button>
             )}
 
             <Button
@@ -422,6 +403,54 @@ export default function PharmacyForm({
           </Row>
         </Form>
       </div>
+      <ModalAnt
+        width={640}
+        open={isSaleChannelFormOpen}
+        onCancel={() => setSaleChannelFormOpen(false)}
+        footer={[]}
+        afterClose={() => {
+          setDestroy(false);
+        }}
+        destroyOnClose={destroy}
+      >
+        <SaleChannelForm
+          onClose={() => setSaleChannelFormOpen(false)}
+          id={query.salesChannelId}
+          setDestroy={setDestroy}
+        />
+      </ModalAnt>
+      <ModalAnt
+        width={640}
+        open={isGroupCustomerFormOpen}
+        onCancel={() => setGroupCustomerFormOpen(false)}
+        footer={[]}
+        afterClose={() => {
+          setDestroy(false);
+        }}
+        destroyOnClose={destroy}
+      >
+        <TypePharmacyForm
+          onClose={() => setGroupCustomerFormOpen(false)}
+          setDestroy={setDestroy}
+          query={query}
+        />
+      </ModalAnt>
+      <ModalAnt
+        width={640}
+        open={isCustomerFormOpen}
+        onCancel={() => setCustomerFormOpen(false)}
+        footer={[]}
+        afterClose={() => {
+          setDestroy(false);
+        }}
+        destroyOnClose={destroy}
+      >
+        <GroupPharmacyForm
+          onClose={() => setCustomerFormOpen(false)}
+          setDestroy={setDestroy}
+          query={query}
+        />
+      </ModalAnt>
     </div>
   );
 }

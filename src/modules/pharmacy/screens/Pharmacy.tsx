@@ -1,12 +1,9 @@
 import { ColumnsType } from "antd/es/table";
 import useTranslate from "~/lib/translation";
-import {
-  concatAddress,
-  formatNumberThreeComma,
-  useIsAdapterSystem,
-} from "~/utils/helpers";
+import { concatAddress, formatNumberThreeComma } from "~/utils/helpers";
 import {
   useConvertPharmacy,
+  useCreatePharmacy,
   useDeletePharmacy,
   useGetPharmacies,
   usePharmacyPaging,
@@ -43,6 +40,7 @@ import {
   Typography,
   message,
   Dropdown,
+  Form,
 } from "antd";
 import Search from "antd/es/input/Search";
 import {
@@ -52,11 +50,7 @@ import {
   VerticalAlignTopOutlined,
 } from "@ant-design/icons";
 import PharmacyForm from "./PharmacyForm";
-import {
-  PROCESS_STATUS,
-  PROCESS_STATUS_VI,
-  propsType,
-} from "../pharmacy.modal";
+import { PROCESS_STATUS_VI } from "../pharmacy.modal";
 import WithPermission from "~/components/common/WithPermission";
 import POLICIES from "~/modules/policy/policy.auth";
 import { useMatchPolicy } from "~/modules/policy/policy.hook";
@@ -74,7 +68,8 @@ import StatusProcess from "./StatusProcess";
 import BtnAdd from "~/components/common/Layout/List/Header/BtnAdd";
 import DropdownAction from "~/components/common/Layout/List/Header/DropdownAction";
 import FIlterStatus from "~/components/common/FIlterStatus";
-const CLONE_STATUS_NAMES : any = STATUS_NAMES;
+import SelectSaleChannel from "~/modules/saleChannel/components/SelectSaleChannel";
+const CLONE_STATUS_NAMES: any = STATUS_NAMES;
 export default function Pharmacy() {
   const { t }: any = useTranslate();
   const [destroy, setDestroy] = useState(false);
@@ -88,9 +83,12 @@ export default function Pharmacy() {
     setPharmacyId(null);
     setIsOpenForm(false);
   }, []);
-
+  const [isSubmitLoading, handleCreate] = useCreatePharmacy(() => {
+    onCloseForm();
+    setDestroy && setDestroy(true);
+  });
   const [, updatePharmacy] = useUpdatePharmacy(onCloseForm);
-  const [isSubmitLoading, deletePharmacy] = useDeletePharmacy();
+  const [, deletePharmacy] = useDeletePharmacy();
   const [pharmacyId, setPharmacyId] = useState(null);
   const [isOpenForm, setIsOpenForm] = useState(false);
   const paging = usePharmacyPaging();
@@ -98,13 +96,13 @@ export default function Pharmacy() {
   const canDownload = useMatchPolicy(POLICIES.DOWNLOAD_PHARMAPROFILE);
 
   const canReadDebt = useMatchPolicy(POLICIES.READ_DEBTPHARMACY);
-  const canUpdatePharma = useMatchPolicy(POLICIES.UPDATE_PHARMAPROFILE);
-  const canDeletePharma = useMatchPolicy(POLICIES.DELETE_PHARMAPROFILE);
   const [arrCheckBox, onChangeCheckBox] = useCheckBoxExport();
   const [activeTab, setActiveTab] = useState("1");
   const [isLoadingSubmit, handleConvert] = useConvertPharmacy();
   const canUpdate = useMatchPolicy(POLICIES.UPDATE_PHARMAPROFILE);
   const canDelete = useMatchPolicy(POLICIES.DELETE_PHARMAPROFILE);
+  const [form] = Form.useForm();
+
   const onChangeTab = (newActiveKey: string) => {
     setActiveTab(newActiveKey);
     setApproved(newActiveKey !== "1" ? false : true);
@@ -142,7 +140,7 @@ export default function Pharmacy() {
   const columns: ColumnsType = useMemo(
     () => [
       {
-        title: "Mã nhà thuốc",
+        title: "Mã khách hàng",
         // dataIndex: "code",
         key: "code",
         width: 120,
@@ -150,10 +148,7 @@ export default function Pharmacy() {
         render: (record) => {
           return (
             <WithPermission permission={POLICIES.READ_PHARMAPROFILE}>
-              <Link
-                className="link_"
-                to={`/pharmacy/${record?._id}`}
-              >
+              <Link className="link_" to={`/pharmacy/${record?._id}`}>
                 {record?.code}
               </Link>
             </WithPermission>
@@ -161,7 +156,7 @@ export default function Pharmacy() {
         },
       },
       {
-        title: "Tên nhà thuốc",
+        title: "Tên khách hàng",
         dataIndex: "name",
         fixed: activeTab === "2" ? "left" : false,
         key: "name",
@@ -181,6 +176,15 @@ export default function Pharmacy() {
         width: 350,
         render(value, record, index) {
           return concatAddress(value);
+        },
+      },
+      {
+        title: "Kênh bán hàng",
+        dataIndex: "salesChannel",
+        key: "salesChannel",
+        width: 180,
+        render: (record) => {
+          return get(record, "title");
         },
       },
       {
@@ -382,7 +386,7 @@ export default function Pharmacy() {
   const onChange = (e: any) => {
     onParamChange({ ...query, status: e.target.value, processStatus: null });
   };
-  useChangeDocumentTitle("Danh sách nhà thuốc");
+  useChangeDocumentTitle("Danh sách khách hàng B2B");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const showModal = () => {
     setIsModalOpen(true);
@@ -401,32 +405,62 @@ export default function Pharmacy() {
       <WhiteBox>
         <Row className="mb-3" justify={"space-between"}>
           <Row>
-          <Col>
-            <Search
-              enterButton="Tìm kiếm"
-              placeholder="Nhập để tìm kiếm"
-              allowClear
-              onSearch={() => onParamChange({ keyword })}
-              onChange={(e) => setKeyword(e.target.value)}
-              value={keyword}
-            />
-            
-          </Col>
-          <Col>
-          {activeTab === "1" && (
-          <WithPermission permission={POLICIES.UPDATE_PHARMAPROFILE}>
-          <FIlterStatus onParamChange={onParamChange} value={query?.status} />
-          </WithPermission>
-        )}
-        </Col>
+            <Col>
+              <Search
+                enterButton="Tìm kiếm"
+                placeholder="Nhập để tìm kiếm"
+                allowClear
+                onSearch={() => onParamChange({ keyword })}
+                onChange={(e) => setKeyword(e.target.value)}
+                value={keyword}
+              />
+            </Col>
+            <Col>
+              {activeTab === "1" && (
+                <WithPermission permission={POLICIES.UPDATE_PHARMAPROFILE}>
+                  <FIlterStatus
+                    onParamChange={onParamChange}
+                    value={query?.status}
+                  />
+                </WithPermission>
+              )}
+            </Col>
+            <Col>
+              <Space
+                style={{
+                  marginBottom: 20,
+                  marginLeft: 20,
+                  display: "flex",
+                  justifyContent: "flex-end",
+                }}
+              >
+                <Typography style={{ fontSize: 14, marginRight: 20 }}>
+                  Kênh bán hàng:
+                </Typography>
+                <Form
+                  form={form}
+                  initialValues={{ salesChannel: query?.salesChannel }}
+                >
+                  <SelectSaleChannel
+                    validateFirst={false}
+                    form={form}
+                    style={{ minWidth: 200 }}
+                    showIcon={false}
+                    size={"middle"}
+                    defaultValue={query?.salesChannel || null}
+                    divisionText="B2B"
+                    onChange={(value) => onParamChange({ salesChannel: value })}
+                    mode="multiple"
+                  />
+                </Form>
+              </Space>
+            </Col>
           </Row>
           <Col>
             <Row gutter={16}>
               <WithPermission permission={POLICIES.WRITE_PHARMAPROFILE}>
                 <Col>
-                  <BtnAdd
-                    onClick={() => onOpenForm()}
-                  />
+                  <BtnAdd onClick={() => onOpenForm()} />
                 </Col>
               </WithPermission>
               <Col>
@@ -434,7 +468,7 @@ export default function Pharmacy() {
                   items={[
                     <WithPermission permission={POLICIES.WRITE_PHARMAPROFILE}>
                       <div onClick={showModal} className="DropdownAction--item">
-                      <i className="fa-solid fa-upload"></i>
+                        <i className="fa-solid fa-upload"></i>
                         <span>Tải lên danh sách</span>
                       </div>
                     </WithPermission>,
@@ -456,7 +490,7 @@ export default function Pharmacy() {
             </Row>
           </Col>
         </Row>
-        
+
         {activeTab === "2" && (
           <Space style={{ marginBottom: 20 }}>
             <Typography style={{ fontSize: 14, marginRight: 20 }}>
@@ -539,7 +573,10 @@ export default function Pharmacy() {
           setDestroy={setDestroy}
           onClose={onCloseForm}
           id={pharmacyId}
+          handleCreate={handleCreate}
+          isSubmitLoading={isSubmitLoading}
           handleUpdate={updatePharmacy}
+          query={query}
         />
       </ModalAnt>
       <Modal

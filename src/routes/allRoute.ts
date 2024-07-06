@@ -63,6 +63,7 @@ import ProductGroupDetail from "~/modules/productGroup/components/ProductGroupDe
 import ManufacturerDetail from "~/modules/manufacturer/components/ManufacturerDetail";
 import RankingDetail from "~/modules/ranking/components/RankingDetail";
 import ProductUnitDetail from "~/modules/productUnit/component/ProductUnitDetail";
+import CustomerSegmentation from "~/pages/Dashboard/CustomerSegmentation";
 export const mainRoutes :PathRouteProps[] = [
   { path: PATH_APP.main.root, Component: Homepage },
 
@@ -178,13 +179,13 @@ export const mainRoutes :PathRouteProps[] = [
   // Kênh bán hàng
   { path: PATH_APP.saleChannel.root, Component: SaleChannel},
   
-  // Loại khách hàng
+  // Nhánh khách hàng
   { path: PATH_APP.typePharmacy.root, Component: TypePharmacy},
   
-  // Nhóm nhà thuốc
+  // Nhóm khách hàng B2B
   { path: PATH_APP.groupPharmacy.root, Component:  GroupPharmacy},
   
-  // Cộng tác viên
+  // Khách hàng B2C
   { path: PATH_APP.collaborator.root, Component: CollaboratorPage},
   { path: PATH_APP.collaborator.detail, Component: CollaboratorDetail},
 
@@ -203,6 +204,9 @@ export const mainRoutes :PathRouteProps[] = [
   // Báo cáo doanh thu đội nhóm
   { path: PATH_APP.reportGroupCollaborator.root, Component: ReportGroup},
   { path: PATH_APP.reportGroupEmployeeSeller.root, Component: ReportGroupEmployeeSeller},
+
+  // Phân hệ khách hàng B2B/ B2C
+  { path: PATH_APP.customerSegmentation.root, Component: CustomerSegmentation},
 
   { path: '/', Component: Homepage },
 ]

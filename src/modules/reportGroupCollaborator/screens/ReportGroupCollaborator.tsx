@@ -89,7 +89,7 @@ export default function ReportGroupCollaborator(
   
   return (
     <div>
-      <Breadcrumb title={"Báo cáo doanh thu đội nhóm cộng tác viên"} />
+      <Breadcrumb title={"Báo cáo doanh thu đội nhóm khách hàng B2C"} />
       <FilterByDate
         onParamChange={onParamChange}
         query={query}

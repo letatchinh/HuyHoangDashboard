@@ -66,6 +66,15 @@ export default function TypePharmacy(props:propsType) : React.JSX.Element {
           key: "title",
           width: 250,
         },
+        {
+          title: "Kênh bán hàng",
+          dataIndex: "salesChannel",
+          key: "salesChannel",
+          width: 250,
+          render: (record) => {
+            return get(record, "title");
+          }
+        },
         
         {
           title: "Ngày tạo",
@@ -179,7 +188,7 @@ export default function TypePharmacy(props:propsType) : React.JSX.Element {
     useChangeDocumentTitle("Danh sách loại khách hàng")
     return (
       <div>
-        <Breadcrumb title={"Loại khách hàng"} />
+        <Breadcrumb title={"Nhánh khách hàng"} />
         <Row className="mb-3" justify={"space-between"}>
           <Col span={8}>
             <Search
@@ -277,6 +286,7 @@ export default function TypePharmacy(props:propsType) : React.JSX.Element {
             onClose={onCloseForm}
             id={typePharmacyId}
             handleUpdate={updateTypePharmacy}
+            query={query}
           />
         </ModalAnt>
         

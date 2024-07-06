@@ -16,7 +16,7 @@ import {
 import { groupPharmacyActions } from "./redux/reducer";
 import { STATUS } from "~/constants/defaultValue";
 const MODULE = "groupPharmacy";
-const MODULE_VI = "nhóm nhà thuốc";
+const MODULE_VI = "nhóm khách hàng B2B";
 
 const {
   loadingSelector,
@@ -46,6 +46,17 @@ export const useGetGroupsPharmacy = (param:any) => {
     param
   });
 };
+
+export const useGetSearchGroupsPharmacy = (param:any) => {
+  return useFetchByParam({
+    action: groupPharmacyActions.getListSearchRequest,
+    loadingSelector: loadingSelector,
+    dataSelector: listSelector,
+    failedSelector: getListFailedSelector,
+    param
+  });
+};
+ 
 export const useGetGroupPharmacy = (id: any) => {
   return useFetchByParam({
     action: groupPharmacyActions.getByIdRequest,

@@ -23,7 +23,7 @@ export const SALE_LEVEL_VI = {
 }
 
 export const REF_TYPE_OBJECT : any= {
-  PARTNER: 'Cộng tác viên',
+  PARTNER: 'Khách hàng B2C',
   EMPLOYEE: 'Trình dược viên',
 };
 

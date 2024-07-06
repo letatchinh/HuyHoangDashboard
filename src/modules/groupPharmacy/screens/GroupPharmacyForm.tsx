@@ -18,10 +18,12 @@ interface Props {
   id?: any;
   handleUpdate?: any;
   setDestroy?: any;
+  query?: any;
 }
 
-export const GroupPharmacyForm = ({ onClose, id, handleUpdate,setDestroy }: Props) => {
+export const GroupPharmacyForm = ({ onClose, id, handleUpdate,setDestroy, query }: Props) => {
   const [form] = Form.useForm();
+  const [formCustomerGroup] = Form.useForm();
   const [isSubmitLoading, handleCreate] = useCreateGroupPharmacy(() => {
     onClose();
     setDestroy  && setDestroy(true);
@@ -83,11 +85,24 @@ export const GroupPharmacyForm = ({ onClose, id, handleUpdate,setDestroy }: Prop
             <Input disabled />
           </FormItem>
 
-          <SelectTypePharmacy
-           isLoading={isLoading} typePharmacy={groupPharmacy}
-           onChange={onTypePharmacyChange}
-          />
           <FormItem
+            name={"customerGroupId"}
+            label="Nhánh khách hàng"
+            rules={[
+              { required: true, message: "Xin vui long chọn nhánh khách hàng" },
+            ]}
+            initialValue={query?.customerGroupId || null}
+          >
+            <SelectTypePharmacy
+              validateFirst={false}
+              form={formCustomerGroup}
+              // style={{ width: 200 }}
+              showIcon={false}
+              size={"middle"}
+              defaultValue={query?.customerGroupId || null}
+            />
+          </FormItem>
+          {/* <FormItem
             label="Hệ số"
             name="rateType"
             rules={[
@@ -98,7 +113,7 @@ export const GroupPharmacyForm = ({ onClose, id, handleUpdate,setDestroy }: Prop
             ]}
           >
             <Input />
-          </FormItem>
+          </FormItem> */}
           <FormItem
             label="Nhóm khách hàng"
             name="title"
@@ -118,9 +133,7 @@ export const GroupPharmacyForm = ({ onClose, id, handleUpdate,setDestroy }: Prop
             {isSubmitLoading ? (
               <Button disabled>Huỷ</Button>
             ) : (
-              <Link to={PATH_APP.groupPharmacy.root}>
                 <Button onClick={onClose}>Huỷ</Button>
-              </Link>
             )}
 
             <Button type="primary" htmlType="submit" loading={isSubmitLoading} style={{marginLeft: 5}}>
