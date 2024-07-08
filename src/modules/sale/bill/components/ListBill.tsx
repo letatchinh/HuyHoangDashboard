@@ -79,6 +79,7 @@ const defaultDate = {
   startDate: dayjs().startOf("month"),
   endDate: dayjs().endOf("month"),
 };
+const MIN_MONEY_BILL = 500000; //
 const { Option } = Select;
 const CLONE_STATUS_BILL_VI: any = STATUS_BILL_VI;
 export default function ListBill({ status }: propsType): React.JSX.Element {
@@ -521,10 +522,9 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
       return <TagBillItem status={record?.statusCheckWarehouse}/>
     }
   };
-
   const findItemReadyExportWarehouse = useMemo(() => bill?.billItems?.find((item: any)=> item?.statusCheckWarehouse), [bill]);
   const findItemUnReadyExportWarehouse = useMemo(() => bill?.billItems?.find((item: any) => !item?.statusCheckWarehouse), [bill]);
-  const splitBill = useMemo(() => !!findItemReadyExportWarehouse && !!findItemUnReadyExportWarehouse && canWriteSplitBill, [findItemReadyExportWarehouse, findItemUnReadyExportWarehouse])
+  const splitBill = useMemo(() => !!findItemReadyExportWarehouse && !!findItemUnReadyExportWarehouse && canWriteSplitBill && (bill?.totalPrice > MIN_MONEY_BILL), [findItemReadyExportWarehouse, findItemUnReadyExportWarehouse])
   return (
     // <div className="bill-page">
     <>
