@@ -75,6 +75,7 @@ export default function GroupPharmacy(props: propsType): React.JSX.Element {
         dataIndex: "code",
         key: "code",
         width: 120,
+        fixed: 'left',
       },
       // {
       //   title: "Hệ số",
@@ -137,33 +138,13 @@ export default function GroupPharmacy(props: propsType): React.JSX.Element {
           );
         },
       },
-      ...(canDownload
-        ? [
-            {
-              title: "Lựa chọn",
-              key: "_id",
-              width: 80,
-              align: "center" as any,
-              
-              render: (item: any, record: any) => {
-                const id = record._id;
-                return (
-                  <Checkbox
-                    checked={arrCheckBox.includes(id)}
-                    onChange={(e) => onChangeCheckBox(e.target.checked, id)}
-                  />
-                );
-              },
-            },
-          ]
-        : []),
       {
         title: "Thao tác",
         dataIndex: "_id",
         // key: "actions",
         width: 100,
-        align: "center",
-        fixed: 'right',
+        // align: "center",
+        // fixed: 'right',
         render: (record) => {
           return (
             <div className="custom-table__actions">
@@ -185,7 +166,26 @@ export default function GroupPharmacy(props: propsType): React.JSX.Element {
           );
         },
       },
-      
+      ...(canDownload
+        ? [
+            {
+              title: "Lựa chọn",
+              key: "_id",
+              width: 80,
+              align: "center" as any,
+              
+              render: (item: any, record: any) => {
+                const id = record._id;
+                return (
+                  <Checkbox
+                    checked={arrCheckBox.includes(id)}
+                    onChange={(e) => onChangeCheckBox(e.target.checked, id)}
+                  />
+                );
+              },
+            },
+          ]
+        : []),
     ],
     [canDownload,arrCheckBox,pharmacies]
   );

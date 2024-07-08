@@ -114,7 +114,7 @@ export default function TypePharmacy(props:propsType) : React.JSX.Element {
           dataIndex: "_id",
           // key: "actions",
           width: 100,
-          align: "center",
+          // align: "center",
           render: (record) => {
             return (
               <div className="custom-table__actions">
