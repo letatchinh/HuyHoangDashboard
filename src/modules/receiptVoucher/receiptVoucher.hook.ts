@@ -183,7 +183,7 @@ export const useReceiptVoucherQueryParams = () => {
       status,
       totalAmount,
       reason,
-      ...refCollection,
+      ...refCollection && {refCollection},
       ...methodType && {methodType},
     };
     return [queryParams,onTableChange];
