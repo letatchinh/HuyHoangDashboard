@@ -221,7 +221,7 @@ import { useGetProfile } from "~/modules/auth/auth.hook";
     //Set address default from branch 99999
     useEffect(() => {
       if (branch) {
-        const findBranchWorldHealth = branch?.docs?.find(
+        const findBranchWorldHealth = branch?.find(
           (item: any) => item._id === DEFAULT_BRANCH_ID
         );
         const address = concatAddress(findBranchWorldHealth?.address);
@@ -354,7 +354,7 @@ import { useGetProfile } from "~/modules/auth/auth.hook";
                   </Row>
                   <Row gutter={36}>
                     <Col span={24}>
-                      <FormItem label="Người nhận" name="pharmacyReceive">
+                      <FormItem label="Người nộp" name="pharmacyReceive">
                         {isLoading ? <Skeleton.Input active /> : <Input />}
                       </FormItem>
                     </Col>

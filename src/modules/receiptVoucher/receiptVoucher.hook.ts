@@ -282,6 +282,7 @@ export const useInitWhReceiptVoucher = (whReceiptVoucher: any) => {
       ...rest,
       accountingDate: dayjs(accountingDetail?.accountingDate),
       dateOfIssue: dayjs(dateOfIssue),
+      receiver: whReceiptVoucher?.receiver ?? pharmaProfile?.name ?? pharmaProfile?.fullName,
       name: pharmaProfile?.name ?? pharmaProfile?.fullName,
       address: compactAddress(pharmaProfile?.address),
       pharmacyId : pharmaProfile?._id

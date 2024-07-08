@@ -191,6 +191,7 @@ export default function ReceiptVoucher(props: propsType): React.JSX.Element {
       );
       setDataAccounting(initReceiptVoucher?.accountingDetails);
     }
+    console.log(initReceiptVoucher,'initReceiptVoucher')
     form.setFieldsValue({
       ...initData
     })
@@ -211,7 +212,7 @@ export default function ReceiptVoucher(props: propsType): React.JSX.Element {
   //Set address default from branch 99999
   useEffect(() => {
     if (branch) {
-      const findBranchWorldHealth = branch?.docs?.find(
+      const findBranchWorldHealth = branch?.find(
         (item: any) => item._id === DEFAULT_BRANCH_ID
       );
       const address = concatAddress(findBranchWorldHealth?.address);
@@ -342,7 +343,7 @@ export default function ReceiptVoucher(props: propsType): React.JSX.Element {
                 </Row>
                 <Row gutter={36}>
                   <Col span={24}>
-                    <FormItem label="Người nhận" name="receiver">
+                    <FormItem label="Người nộp" name="receiver">
                       {isLoading ? <Skeleton.Input active /> : <Input />}
                     </FormItem>
                   </Col>
