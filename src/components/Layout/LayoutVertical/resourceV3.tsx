@@ -36,6 +36,7 @@ const permissionOfSetup = [
   POLICIES.READ_USER,
   POLICIES.READ_USERGROUP,
   POLICIES.READ_BRANCH,
+  POLICIES.READ_CONFIGREPORTSALARYAUTO,
 ];
 const permissionPharma = [
   POLICIES.READ_PHARMAPROFILE,
@@ -207,6 +208,13 @@ export const resource: ItemType[] = [
             key: PATH_APP.groupPharmacy.root,
             icon: <i className="fa-solid fa-notes-medical"></i>,
             permission: [POLICIES.READ_CUSTOMER],
+          },
+          {
+            label: "Thời gian báo cáo lương",
+            icon: <i className="fa-solid fa-clock-rotate-left"></i>,
+            path: PATH_APP.cronSalary.root,
+            key: PATH_APP.cronSalary.root,
+            permission: [POLICIES.READ_CONFIGREPORTSALARYAUTO],
           },
         ],
       },
