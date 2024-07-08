@@ -207,7 +207,7 @@ export default function ListQuotation({
         title: "Trạng thái",
         dataIndex: "status",
         key: "status",
-        width: 100,
+        width: 250,
         align: "center",
         render(status, record, index) {
           return (

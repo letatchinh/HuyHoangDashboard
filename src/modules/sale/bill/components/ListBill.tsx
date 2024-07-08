@@ -86,7 +86,7 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
   const [query] = useBillQueryParams(status);
 
   const [keyword, { setKeyword, onParamChange }] = useUpdateBillParams(query);
-  const [bills] = useGetBills(query);
+  const [bills,isLoading] = useGetBills(query);
   const paging = useBillPaging();
   const isSystem = useIsAdapterSystem();
   const dispatch = useDispatch();
@@ -111,7 +111,7 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
   const canWriteSplitBill = useMatchPolicy(POLICIES.WRITE_BILLSPLIT);
   const [isLoadingFindWarehouse, setIsLoadingFindWarehouse] = useState(false);
   const [newBills, setNewBills] = useState<any[]>([]);
-  const [isLoading, InitData] = useInitialValue(listWarehouse,bills)
+  const InitData = useInitialValue(listWarehouse,bills)
   const [isLoadingUpdate,onUpdateStatus] = useUpdateStatusBill(() => {
     dispatch(billSliceAction.resetAction());
   });
@@ -680,7 +680,7 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
         className="table-striped-rows-custom"
         columns={columns}
         dataSource={InitData as any}
-          loading={isLoading as any}
+        loading={isLoading}
         pagination={pagingTable(paging, onParamChange)}
         size="small"
         bordered

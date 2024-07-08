@@ -229,11 +229,9 @@ export const useUpdateByIdRedux = () => {
 };
 
 export const useInitialValue = (listWarehouse: any[], data: any[]) => {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [newData, setNewData] = useState<any[]>([]);
   useEffect(() => {
     if (data?.length && listWarehouse?.length) {
-      setIsLoading(true);
       const newBills : any[] = data?.map((item: any) => {
         const warehouse = listWarehouse?.find((w: any) => w?._id === item?.warehouseId);
         return {
@@ -242,8 +240,7 @@ export const useInitialValue = (listWarehouse: any[], data: any[]) => {
         }
       });
       setNewData(newBills);
-      setIsLoading(false);
     };
   }, [listWarehouse, data]);
-  return [isLoading, newData];
+  return newData;
 };

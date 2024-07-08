@@ -52,8 +52,7 @@ export default function ListOrder({ status }: propsType): React.JSX.Element {
   const [query] = useOrderSupplierQueryParams(status);
   const [keyword, { setKeyword, onParamChange }] =
     useUpdateOrderSupplierParams(query);
-  const [orderSuppliers] = useGetOrderSuppliers(query);
-
+  const [orderSuppliers,isLoading] = useGetOrderSuppliers(query);
   const paging = useOrderSupplierPaging();
   const [open, setOpen] = useState(false);
   const [orderSelect, setOrderSelect] = useState<any>();
@@ -69,7 +68,7 @@ export default function ListOrder({ status }: propsType): React.JSX.Element {
   const dispatch = useDispatch();
   const [listWarehouse] = useGetWarehouseByBranchLinked(); // Get all warehouse linked with branch
 
-  const [isLoading, InitData] = useInitialValue(listWarehouse,orderSuppliers)
+  const InitData = useInitialValue(listWarehouse,orderSuppliers)
   const resetAction = () => {
     return dispatch(orderSupplierActions.resetAction());
   };
@@ -396,7 +395,7 @@ export default function ListOrder({ status }: propsType): React.JSX.Element {
           stickyTop
           columns={columns}
           dataSource={InitData as any[]}
-          loading={isLoading as boolean}
+          loading={isLoading}
           pagination={pagingTable(paging, onParamChange)}
           size="small"
           scroll={{ x: 1500 }} 
