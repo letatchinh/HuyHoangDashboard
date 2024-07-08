@@ -55,6 +55,7 @@ import ReportIndividualCollaborator from "~/pages/Dashboard/ReportIndividualColl
 import ReportIndividualEmployeeSeller from "~/pages/Dashboard/ReportIndividualEmployeeSeller";
 import ReportGroup from "~/pages/Dashboard/ReportGroupCollaborator";
 import ReportGroupEmployeeSeller from "~/pages/Dashboard/ReportGroupEmployeeSeller";
+import Discount from "~/modules/discount/screens/Discount";
 export const mainRoutes :PathRouteProps[] = [
   { path: PATH_APP.main.root, Component: Homepage },
 
@@ -187,6 +188,9 @@ export const mainRoutes :PathRouteProps[] = [
   // Báo cáo doanh thu đội nhóm
   { path: PATH_APP.reportGroupCollaborator.root, Component: ReportGroup},
   { path: PATH_APP.reportGroupEmployeeSeller.root, Component: ReportGroupEmployeeSeller},
+
+  // Mã giảm giá
+  { path: PATH_APP.discount.root, Component: Discount},
 
   { path: '/', Component: Homepage },
 ]

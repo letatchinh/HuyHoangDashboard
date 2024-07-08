@@ -292,7 +292,7 @@ export default function FormProduct({
 
           <Row {...layoutRow}>
             <Col span={12}>
-              <SelectProductGroup product={product} isLoading={isLoading} />
+              <SelectProductGroup isLoading={isLoading} />
             </Col>
           </Row>
         </BaseBorderBox>
