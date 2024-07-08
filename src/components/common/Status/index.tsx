@@ -10,7 +10,7 @@ type propsType = {
 export default function Status({status,statusVi}: propsType): React.JSX.Element {
   return (
     <>
-      <span className={`status ${status?.toLowerCase()}`}>
+      <span className={`status ${status?.toLowerCase()}`} style={{width: '180px'}}>
         {statusVi}
       </span>
     </>

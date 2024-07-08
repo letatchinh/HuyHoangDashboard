@@ -89,13 +89,14 @@ export default function ConfirmStatusBill({
     setIsOpenCancel(false);
   };
   return nextStatus && canUpdateBill ? (
-        <Flex ref = {ref} gap={"small"} align="center" justify={"center"} className="confirm-status-bill">
+        <Flex ref = {ref} gap={"small"} align="center" justify={"center"} className="confirm-status-bill" style={{width: '250px'}}>
               <Tooltip title={message}>
                 <Button
                   icon={<ArrowUpOutlined />}
                   block
                   style={{
                     backgroundColor: "#F7F9F2",
+                    width: '150px'
                   }}
                   disabled={isDisabledAll || !!message}
                   loading={isSubmitLoading}
@@ -111,6 +112,7 @@ export default function ConfirmStatusBill({
                 danger  
                 style={{
                   backgroundColor: "rgb(201, 0, 0)",
+                  width: '80px'
                 }}
                 loading={isSubmitLoading}
                 onClick={() => {
