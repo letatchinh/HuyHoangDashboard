@@ -41,6 +41,7 @@ const updateManagementWarehouseFailedSelector = getSelector('updateManagementWar
 
 const checkWarehouseSuccessSelector = getSelector('checkWarehouseSuccess');
 const checkWarehouseFailedSelector = getSelector('checkWarehouseFailed'); 
+const isCheckWarehouseSelector = getSelector('isCheckWarehouse'); 
 
 const warehouseLinkedSuccessSelector = getSelector('warehouseLinked');
 const warehouseLinkedFailedSelector = getSelector('getWarehouseLinkedFailed'); 
@@ -121,7 +122,7 @@ export const useCheckWarehouse = (callback?: any) => {
   useFailed(checkWarehouseFailedSelector, (useSelector(checkWarehouseFailedSelector)?.message), callback);
   return useSubmit({
     action: warehouseActions.checkWarehouseRequest,
-    loadingSelector: loadingSelector,
+    loadingSelector: isCheckWarehouseSelector,
   });
 };
 

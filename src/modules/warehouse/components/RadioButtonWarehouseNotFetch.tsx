@@ -30,12 +30,11 @@ export default function RadioButtonWarehouse({
   value,
   onClick,
   title,
-  isLoadingWarehouse,
+  isLoadingWarehouse = false,
   isShowButtonPackageExport = false,
   disabledButtonExport = false,
   requestWarehouseExport,
-  isSubmitLoading,
-  warehouseDefault,
+  isSubmitLoading = false,
   updateWarehouseInBill,
   isConfirmChangeLogistic,
   onCancel,
@@ -70,9 +69,6 @@ export default function RadioButtonWarehouse({
         autoComplete="off"
         onFinish={onFinish}
       >
-        {isLoadingWarehouse ? (
-          <Spin />
-        ) : (
             <Form.Item
               name={"warehouseId"}
               label={"Kho xuất hàng"}
@@ -90,7 +86,6 @@ export default function RadioButtonWarehouse({
               </Space>
             </Radio.Group>
           </Form.Item>
-        )}
       <Row justify={"end"}>
         {isShowButtonPackageExport &&  <Button
             type="primary"
@@ -120,7 +115,6 @@ export default function RadioButtonWarehouse({
             >
                 <Button
                 type="primary"
-                // htmlType="submit"
                 style={{ marginRight: "10px" }}
                 loading={isLoadingWarehouse}
               >

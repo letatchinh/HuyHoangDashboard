@@ -35,6 +35,7 @@ import SearchAnt from "~/components/Antd/SearchAnt";
 import BaseBorderBox from "~/components/common/BaseBorderBox";
 import {
   concatAddress,
+  formatNumberThreeComma,
   formatter,
   getExistProp,
   pagingTable,
@@ -71,6 +72,8 @@ import { RELATIVE_POSITION } from "~/modules/geo/constants";
 import SelectEmployeeV2 from "~/modules/employee/components/SelectEmployeeV2";
 import TagBillItem from "./TagBillItem";
 import SplitBill from "./SplitBill";
+import useNotificationStore from "~/store/NotificationContext";
+import { useResetAction } from "~/modules/warehouse/warehouse.hook";
 const CalculateBillMethod = new CalculateBill();
 type propsType = {
   status?: string;
@@ -84,6 +87,7 @@ const { Option } = Select;
 const CLONE_STATUS_BILL_VI: any = STATUS_BILL_VI;
 export default function ListBill({ status }: propsType): React.JSX.Element {
   useResetBillAction();
+  useResetAction();
   const [query] = useBillQueryParams(status);
 
   const [keyword, { setKeyword, onParamChange }] = useUpdateBillParams(query);
@@ -96,7 +100,6 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
   const canDownload = useMatchPolicy(onPermissionCovert("DOWNLOAD", "BILL"));
   const { pathname } = useLocation();
   const [arrCheckBox, onChangeCheckBox] = useCheckBoxExport();
-
   //Warehouse
   const [warehouseSelect, setWarehouseSelect] = useState<number | undefined>();
   const [isModalCheckWarehouse, setIsModalCheckWarehouse] = useState(false);
@@ -110,9 +113,8 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
   const [listWarehouse] = useGetWarehouseByBranchLinked(); // Get all warehouse linked with branch
   const [isOpenSplitBill, setIsOpenSplitBill] = useState(false);
   const canWriteSplitBill = useMatchPolicy(POLICIES.WRITE_BILLSPLIT);
-  const [isLoadingFindWarehouse, setIsLoadingFindWarehouse] = useState(false);
-  const [newBills, setNewBills] = useState<any[]>([]);
-  const InitData = useInitialValue(listWarehouse,bills)
+  const InitData = useInitialValue(listWarehouse, bills);
+  const {onNotify} = useNotificationStore();
   const [isLoadingUpdate,onUpdateStatus] = useUpdateStatusBill(() => {
     dispatch(billSliceAction.resetAction());
   });
@@ -131,20 +133,6 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
       setWarehouseSelect(bill?.warehouseId);
     };
   }, [bill]);
-  useEffect(() => {
-    if (bills?.length && listWarehouse?.length) {
-      setIsLoadingFindWarehouse(true);
-      const newBills = bills?.map((item: any) => {
-        const warehouse = listWarehouse?.find((w: any) => w?._id === item?.warehouseId);
-        return {
-          ...item,
-          warehouseName: warehouse?.name?.vi
-        }
-      });
-      setNewBills(newBills);
-      setIsLoadingFindWarehouse(false);
-    };
-  },[listWarehouse, bills]);
   const openModalCheckWarehouse = (item: any) => {
     setIsModalCheckWarehouse(true);
     setBillItem(item);
@@ -165,8 +153,8 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
 
   const [isLoadingCreate, onCreateBillToWarehouse] = useCreateBillToWarehouse(
     () => {
-      dispatch(warehouseActions.resetAction());
-      dispatch(billSliceAction.resetAction());
+      // dispatch(warehouseActions.resetAction());
+      // dispatch(billSliceAction.resetAction());
       closeModalCheckWarehouse();
     }
   );
@@ -182,7 +170,7 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
         listProduct: newList,
         billId: get(bill, '_id'),
       };
-       onCheckWarehouse(submitData);
+      onCheckWarehouse(submitData);
     } catch (error) {
       console.log(error)
     }
@@ -206,8 +194,11 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
       console.log(error)
     }
   };
-
   const onChangeStatusBill = ({ nextStatus, bill, note }: propsConfirmStatusBill) => {
+    const remainingAmount : number = bill?.totalPrice - bill?.totalReceiptVoucherCompleted;
+    if (bill?.totalPrice > bill?.totalReceiptVoucherCompleted && nextStatus === STATUS_BILL.COMPLETED) {
+       return onNotify?.error(`Không thể hoàn thành đơn hàng vì tổng số tiền phải thu còn ${formatNumberThreeComma(remainingAmount)}`);
+    };
     // Phải kiểm tra hàng tồn kho trước khi đổi trạng thái từ NEW qua PACKAGE_EXPORT
     const dataCheck = convertProductsFromBill(get(bill, 'billItems', []));
     const submitData = {
@@ -231,9 +222,6 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
     };
   };
 
-  const getWarehouseName = (id: number) => {
-    return listWarehouse?.find((item: any) => item?._id === id)?.name?.vi;
-  };
   //
   const [form] = Form.useForm();
   const initValue = useMemo(() => {
@@ -387,7 +375,7 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
         width: 200,
         align: "center",
         render(value: number) {
-          return isLoadingFindWarehouse ? <Spin/>: <Typography.Text>{value || (!listWarehouse?.length ? 'Không thể liên kết đến kho' : 'Không tồn tại kho xuất hàng' ) }</Typography.Text>;
+          return <Typography.Text>{value || (!listWarehouse?.length ? 'Không thể liên kết đến kho' : 'Không tồn tại kho xuất hàng' ) }</Typography.Text>;
         }
       },
       {
@@ -707,10 +695,10 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
                   value={warehouseSelect}
                   onClick={onCheck}
                   title="Kiểm kho"
-                  isLoadingWarehouse={isLoadingWarehouseDefault}
+                  isLoadingWarehouse={isLoadingCheckWarehouse}
+                  isSubmitLoading={isLoadingCheckWarehouse}
                   isShowButtonPackageExport
                   disabledButtonExport={bill?.status !== STATUS_BILL.READY}
-                  isSubmitLoading={isLoadingCheckWarehouse}
                   requestWarehouseExport={onRequestWarehouseExport}
                   warehouseDefault={warehouseDefault}
                   listWarehouseLinked={listWarehouse}

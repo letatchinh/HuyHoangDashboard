@@ -22,6 +22,8 @@ interface cloneInitState extends initStateSlice {
   deleteWarehouseLinkedSuccess?: any;
   deleteWarehouseLinkedFailed?: any;
 
+  isCheckWarehouse?: boolean;
+
 };
 class WarehouseClassExtend extends InstanceModuleRedux {
   cloneReducer;
@@ -43,14 +45,14 @@ class WarehouseClassExtend extends InstanceModuleRedux {
       },
 
       checkWarehouseRequest: (state: cloneInitState, { payload }: any) => { 
-        state.isLoading = true;
+        state.isCheckWarehouse = true;
       },
       checkWarehouseSuccess: (state: cloneInitState, { payload }: any) => {
-        state.isLoading = false;
+        state.isCheckWarehouse = false;
         state.checkWarehouseSuccess = payload;
       },
       checkWarehouseFailed: (state: cloneInitState, { payload }: any) => {
-        state.isLoading = false;
+        state.isCheckWarehouse = false;
         state.checkWarehouseFailed = payload;
       },
 
@@ -69,19 +71,19 @@ class WarehouseClassExtend extends InstanceModuleRedux {
 
       //CREATE BILL TO WAREHOUSE
       createBillToWarehouseRequest: (state: cloneInitState, { payload }: any) => { 
-        state.isSubmitLoading = true;
+        state.isCheckWarehouse = true;
       },
       createBillToWarehouseSuccess: (state: cloneInitState, { payload }: any) => {
-        state.isSubmitLoading = false;
+        state.isCheckWarehouse = false;
         state.createBillToWarehouseSuccess = payload;
       },
       createBillToWarehouseFailed: (state: cloneInitState, { payload }: any) => {
-        state.isSubmitLoading = false;
+        state.isCheckWarehouse = false;
         state.createBillToWarehouseFailed = payload;
       },
       resetAction: (state: cloneInitState) => ({
         ...state,
-        ...omit(this.cloneInitState, ["list", "warehouseLinked", "byId"]),
+        ...omit(this.cloneInitState, ["list", "warehouseLinked", "byId","isCheckWarehouse"]),
       }),
 
       getWarehouseDefaultRequest: (state: cloneInitState, { payload }: any) => {
@@ -131,6 +133,8 @@ class WarehouseClassExtend extends InstanceModuleRedux {
 
       deleteWarehouseLinkedSuccess: null,
       deleteWarehouseLinkedFailed: null,
+
+      isCheckWarehouse: false,
       // Want Add more State Here...
     }
   }
