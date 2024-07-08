@@ -1,6 +1,7 @@
 import React, { useCallback, useMemo } from "react";
 import TableAnt from "~/components/Antd/TableAnt";
 import {
+  useCheckBill,
   useCopyQuotation,
   useDeleteQuotation,
   useGetQuotations,
@@ -84,7 +85,14 @@ export default function ListQuotation({
 
   const onPermissionCovert = useCallback(permissionConvert(query),[query])
   const canDownload = useMatchPolicy(onPermissionCovert('DOWNLOAD', 'QUOTATION'));
-
+  const [isLoadingCheckBill,checkBill] = useCheckBill();
+  const onCheckBillBeforeAction = (id: string, action: any, data: any) => {
+    try {
+      checkBill({ id, action, data })
+    } catch (error) {
+      console.log(error)
+    };
+  };
   const columns: ColumnsType = [
     {
       title: "Mã đơn hàng tạm",
@@ -261,7 +269,7 @@ export default function ListQuotation({
                 disabled={get(record, "status") !== STATUS_QUOTATION.NEW}
                 block
                 onClick={() => {
-                  onConvertQuotation({
+                  onCheckBillBeforeAction(_id,onConvertQuotation,({
                     quotationItems: get(record, "quotationItems", []),
                     pharmacyId: get(record, "pharmacyId"),
                     dataUpdateQuotation: {
@@ -277,7 +285,7 @@ export default function ListQuotation({
                     warehouseName: get(record, 'warehouseName'),
                     dataTransportUnit: get(record, "dataTransportUnit"),
                     noteBillSplit: get(record, "noteBillSplit"),
-                  });
+                  }));
                 }}
                 type="primary"
                 size="small"
@@ -292,7 +300,7 @@ export default function ListQuotation({
                 block
                 disabled={get(record, "status") !== STATUS_QUOTATION.NEW}
                 onClick={() => {
-                  onUpdateQuotation({
+                  onCheckBillBeforeAction(_id,onUpdateQuotation,({
                     quotationItems: get(record, "quotationItems", []),
                     pharmacyId: get(record, "pharmacyId"),
                     dataUpdateQuotation: {
@@ -308,7 +316,7 @@ export default function ListQuotation({
                     warehouseName: get(record, 'warehouseName'),
                     dataTransportUnit: get(record, "dataTransportUnit"),
                     noteBillSplit: get(record, "noteBillSplit"),
-                  });
+                  }));
                 }}
                 size="small"
               >

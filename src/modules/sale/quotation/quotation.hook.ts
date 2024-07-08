@@ -41,6 +41,9 @@ const convertFailedSelector = getSelector("convertFailed");
 const copySuccessSelector = getSelector("copySuccess");
 const copyFailedSelector = getSelector("copyFailed");
 
+const checkBillSuccessSelector = getSelector("checkBillSuccess");
+const checkBillFailedSelector = getSelector("checkBillFailed");
+
 export const useQuotationPaging = () => useSelector(pagingSelector);
 
 export const useGetQuotations = (param:any) => {
@@ -125,6 +128,20 @@ export const useDeleteQuotation = (callback?: any) => {
   return useSubmit({
     action: quotationActions.deleteRequest,
     loadingSelector: isSubmitLoadingSelector,
+  });
+};
+
+export const useCheckBill = (callbackSubmit?: any) => {
+  useSuccess(
+    checkBillSuccessSelector,
+    // `Chuyển đổi ${MODULE_VI} thành công`,
+  );
+  useFailed(checkBillFailedSelector);
+
+  return useSubmit({
+    action: quotationActions.checkBillRequest,
+    loadingSelector: isSubmitLoadingSelector,
+    callbackSubmit,
   });
 };
 
