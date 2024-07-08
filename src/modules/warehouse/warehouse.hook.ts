@@ -339,3 +339,12 @@ export function findMatchingManagementArea(address: any, warehouseDefault: wareh
   }
   return null;
 };
+
+export const useGetInfoWarehouse = () => {
+  const listWarehouse = useSelector((state: any) => state?.warehouse?.warehouseLinked);
+  const getInfo = (id: string | undefined) => listWarehouse?.find((item: any) => item?._id === id);
+  return [getInfo];
+};
+
+export const useGetListWarehouseReducer = () => useSelector((state: any) => state?.warehouse?.warehouseLinked);
+    

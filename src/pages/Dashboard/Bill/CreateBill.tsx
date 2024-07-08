@@ -267,7 +267,6 @@ const CreateBillPage = (): React.JSX.Element => {
       return;
     }
   }, [activeKey, tabs]);
-  console.log(get(dataSource, activeKey),'get(dataSource, activeKey)')
   return (
     <div>
       <div className="createBill">

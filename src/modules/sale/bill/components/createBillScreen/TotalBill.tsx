@@ -13,6 +13,7 @@ import { FeeType, FormFieldCreateBill } from "../../bill.modal";
 import useCreateBillStore from "../../storeContext/CreateBillContext";
 import SuggestAddress from "../SuggestAddress";
 import SelectDebt from "./SelectDebt";
+import { useGetInfoWarehouse } from "~/modules/warehouse/warehouse.hook";
 type propsType = {};
 export const Layout = ({
   label,
@@ -96,6 +97,7 @@ export default function TotalBill(props: propsType): React.JSX.Element {
     },
     [bill]
   );
+  const [getInfo] = useGetInfoWarehouse();
 
   useEffect(() => {
     const feePartner = get(partner, "fee", [])?.find(
@@ -372,7 +374,7 @@ export default function TotalBill(props: propsType): React.JSX.Element {
         }
         styleFlex={{justifyContent: 'start'}}
       >
-        <Typography.Text>{bill?.warehouseName}</Typography.Text>
+        <Typography.Text>{getInfo(bill?.warehouseId)?.name?.vi}</Typography.Text>
       </Layout>
       <div
         style={{
