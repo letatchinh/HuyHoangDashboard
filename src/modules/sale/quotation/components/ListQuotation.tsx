@@ -91,7 +91,7 @@ export default function ListQuotation({
       dataIndex: "codeSequence",
       key: "codeSequence",
       align: "center",
-      width: 100,
+      width: 200,
       // render(code, record, index) {
       //   return (
       //     <Link
@@ -108,7 +108,7 @@ export default function ListQuotation({
       dataIndex: "bill",
       key: "bill",
       align: "center",
-      width: 100,
+      width: 150,
       render(bill, record, index) {
         return (
           <Link
@@ -125,7 +125,7 @@ export default function ListQuotation({
       title: "Ngày tạo đơn",
       dataIndex: "createdAt",
       key: "createdAt",
-      width: 100,
+      width: 130,
       align: "center",
       render(createdAt, record, index) {
         return (
@@ -147,7 +147,7 @@ export default function ListQuotation({
       title: "Ngày chuyển đổi",
       dataIndex: "historyStatus",
       key: "historyStatus",
-      width: 100,
+      width: 150,
       align: "center",
       render(historyStatus, record, index) {
         return (
@@ -172,7 +172,7 @@ export default function ListQuotation({
       title: "Tên nhà thuốc",
       dataIndex: "pharmacy",
       key: "pharmacy",
-      width: 100,
+      width: 120,
       align: "center",
       // width: "30%",
       render(pharmacy, record, index) {
@@ -200,7 +200,7 @@ export default function ListQuotation({
       title: "Kho xuất hàng",
       dataIndex: "warehouseName",
       key: "warehouseName",
-      width: 100,
+      width: 120,
       align: "center",
     },
       {
@@ -221,7 +221,7 @@ export default function ListQuotation({
       {
         title: "Ghi chú",
         key: "note",
-        width: 100,
+        width: 200,
         align: "center",
         render(status, record, index) {
           return record?.note ?? record?.noteBillSplit;
@@ -251,6 +251,7 @@ export default function ListQuotation({
       dataIndex: "_id",
       key: "action",
       width: 100,
+      fixed: "right",
       align: "center" as any,
       render(_id: any, record: any, index: number) {
         return (
@@ -466,7 +467,7 @@ export default function ListQuotation({
           loading={isLoading}
           pagination={pagingTable(paging, onParamChange)}
           size="small"
-          scroll={{ y: "60vh", x: "max-content" }}
+          scroll={{ y: "60vh", x: 1000 }}
         />
       </ConfigTable>
     </div>

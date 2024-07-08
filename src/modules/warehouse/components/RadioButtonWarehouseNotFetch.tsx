@@ -23,7 +23,7 @@ type propsType = {
   splitBill?: boolean;
   onOpenSplitBillForm?: () => void;
   disabledButtonSplit?: boolean;
-
+  disabledButtonSubmit?: boolean;
 };
 export default function RadioButtonWarehouse({
   setValue,
@@ -42,7 +42,8 @@ export default function RadioButtonWarehouse({
   listWarehouseLinked,
   splitBill,
   onOpenSplitBillForm,
-  disabledButtonSplit
+  disabledButtonSplit,
+  disabledButtonSubmit
 }: propsType): React.JSX.Element {
   const [form] = Form.useForm();
   const { onNotify } = useNotificationStore();
@@ -132,6 +133,7 @@ export default function RadioButtonWarehouse({
             htmlType="submit"
             style={{ marginRight: "10px" }}
             loading={isLoadingWarehouse}
+            disabled={disabledButtonSubmit}
           >
             {title ?? "Chọn"}
           </Button>

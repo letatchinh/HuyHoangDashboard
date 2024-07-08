@@ -56,7 +56,7 @@ try {
     totalPriceAfterDiscount,
     totalAmount,
     warehouseId: get(bill, 'warehouseId'),
-    warehouseName: get(bill, 'warehouseName'),
+    // warehouseName: get(bill, 'warehouseName'),
   });
   if (!get(bill, 'warehouseId')) {
     return onNotify?.error("Vui lòng chọn kho nhập hàng!");

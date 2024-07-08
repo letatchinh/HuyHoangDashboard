@@ -6,6 +6,7 @@ import {
   useBillQueryParams,
   useGetBill,
   useGetBills,
+  useInitialValue,
   useUpdateBillParams,
   useUpdateStatusBill,
 } from "../bill.hook";
@@ -85,7 +86,7 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
   const [query] = useBillQueryParams(status);
 
   const [keyword, { setKeyword, onParamChange }] = useUpdateBillParams(query);
-  const [bills, isLoading] = useGetBills(query);
+  const [bills] = useGetBills(query);
   const paging = useBillPaging();
   const isSystem = useIsAdapterSystem();
   const dispatch = useDispatch();
@@ -108,6 +109,9 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
   const [listWarehouse] = useGetWarehouseByBranchLinked(); // Get all warehouse linked with branch
   const [isOpenSplitBill, setIsOpenSplitBill] = useState(false);
   const canWriteSplitBill = useMatchPolicy(POLICIES.WRITE_BILLSPLIT);
+  const [isLoadingFindWarehouse, setIsLoadingFindWarehouse] = useState(false);
+  const [newBills, setNewBills] = useState<any[]>([]);
+  const [isLoading, InitData] = useInitialValue(listWarehouse,bills)
   const [isLoadingUpdate,onUpdateStatus] = useUpdateStatusBill(() => {
     dispatch(billSliceAction.resetAction());
   });
@@ -126,6 +130,20 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
       setWarehouseSelect(bill?.warehouseId);
     };
   }, [bill]);
+  useEffect(() => {
+    if (bills?.length && listWarehouse?.length) {
+      setIsLoadingFindWarehouse(true);
+      const newBills = bills?.map((item: any) => {
+        const warehouse = listWarehouse?.find((w: any) => w?._id === item?.warehouseId);
+        return {
+          ...item,
+          warehouseName: warehouse?.name?.vi
+        }
+      });
+      setNewBills(newBills);
+      setIsLoadingFindWarehouse(false);
+    };
+  },[listWarehouse, bills]);
   const openModalCheckWarehouse = (item: any) => {
     setIsModalCheckWarehouse(true);
     setBillItem(item);
@@ -211,6 +229,10 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
       console.log(error)
     };
   };
+
+  const getWarehouseName = (id: number) => {
+    return listWarehouse?.find((item: any) => item?._id === id)?.name?.vi;
+  };
   //
   const [form] = Form.useForm();
   const initValue = useMemo(() => {
@@ -287,7 +309,7 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
         dataIndex: "status",
         key: "status",
         align: "center",
-        width: 350,
+        width: 300,
         render(status, record, index) {
           return (
             !isHaveAdminBillPermission ? (
@@ -363,6 +385,9 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
         key: "warehouseName",
         width: 200,
         align: "center",
+        render(value: number) {
+          return isLoadingFindWarehouse ? <Spin/>: <Typography.Text>{value || (!listWarehouse?.length ? 'Không thể liên kết đến kho' : 'Không tồn tại kho xuất hàng' ) }</Typography.Text>;
+        }
       },
       {
         title: "Ghi chú",
@@ -654,8 +679,8 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
         stickyTop
         className="table-striped-rows-custom"
         columns={columns}
-        dataSource={bills}
-        loading={isLoading}
+        dataSource={InitData as any}
+          loading={isLoading as any}
         pagination={pagingTable(paging, onParamChange)}
         size="small"
         bordered
@@ -691,7 +716,8 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
                   listWarehouseLinked={listWarehouse}
                   splitBill = {splitBill}
                   onOpenSplitBillForm={onOpenSplitBillForm}
-                  disabledButtonSplit = {!bill?.isCheck}
+                  disabledButtonSplit={!bill?.isCheck}
+                  disabledButtonSubmit = {listWarehouse?.length <= 0}
                 />
                 </BaseBorderBox>
               </>

@@ -85,7 +85,8 @@ function* checkWarehouse({ payload }: any): any {
       yield put(billSliceAction.updateBillAfterCheckWarehouseRequest(data)); // Đổi lại trạng thái từng sản phẩm được mang đi kiểm kho sau khi kiểm kho
     };
   } catch (error: any) {
-    yield put(warehouseActions.checkWarehouseFailed(error));
+    console.log(error,'error')
+    yield put(warehouseActions.checkWarehouseFailed(error?.response?.data));
   }
 };
 

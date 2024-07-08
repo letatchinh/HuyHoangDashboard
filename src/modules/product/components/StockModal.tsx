@@ -26,8 +26,8 @@ export default function StockModal({ data }: propsType): React.JSX.Element {
     },
     {
       title: "Số lượng",
-      dataIndex: "quantity",
-      key: "quantity",
+      dataIndex: "availableQuantity",
+      key: "availableQuantity",
       width : 130,
       align: "center",
     },
@@ -51,21 +51,18 @@ export default function StockModal({ data }: propsType): React.JSX.Element {
   ], [data]);
   return (
     <>
-      {
-        stockInfo?.data?.map((item: any) =>
           <>
-        <BaseBorderBox title={item?.unit?.name}>
+        {/* <BaseBorderBox title={item?.unit?.name}> */}
             <TableAnt
               columns={columns}
-              dataSource={item}
+              dataSource={stockInfo?.data}
               size='small'
               scroll={{ y: 500 }}
               pagination={false}
           />
-          </BaseBorderBox>
+          {/* </BaseBorderBox> */}
           </>
-        )
-      }
+      <div>dadas</div>
     </>
   )
 }

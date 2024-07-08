@@ -15,6 +15,7 @@ import {
   convertDataSubmitWarehouse,
   useCreateOrderInWarehouse,
   useGetOrderSuppliers,
+  useInitialValue,
   useOrderSupplierPaging,
   useOrderSupplierQueryParams,
   useResetOrderSupplierClone,
@@ -40,6 +41,7 @@ import useNotificationStore from "~/store/NotificationContext";
 import { PayloadCreateOrderSupplier, paramsConvertDataOrderSupplier } from "../orderSupplier.modal";
 import { useDispatch } from "react-redux";
 import { orderSupplierActions } from "../redux/reducer";
+import { useGetWarehouseByBranchLinked } from "~/modules/warehouse/warehouse.hook";
 
 type propsType = {
   status?: string;
@@ -50,7 +52,7 @@ export default function ListOrder({ status }: propsType): React.JSX.Element {
   const [query] = useOrderSupplierQueryParams(status);
   const [keyword, { setKeyword, onParamChange }] =
     useUpdateOrderSupplierParams(query);
-  const [orderSuppliers, isLoading] = useGetOrderSuppliers(query);
+  const [orderSuppliers] = useGetOrderSuppliers(query);
 
   const paging = useOrderSupplierPaging();
   const [open, setOpen] = useState(false);
@@ -65,6 +67,9 @@ export default function ListOrder({ status }: propsType): React.JSX.Element {
   const [isSubmitLoading, updateStatusOrder] = useUpdateStatusOrderSupplier();
   const { onNotify } = useNotificationStore();
   const dispatch = useDispatch();
+  const [listWarehouse] = useGetWarehouseByBranchLinked(); // Get all warehouse linked with branch
+
+  const [isLoading, InitData] = useInitialValue(listWarehouse,orderSuppliers)
   const resetAction = () => {
     return dispatch(orderSupplierActions.resetAction());
   };
@@ -390,8 +395,8 @@ export default function ListOrder({ status }: propsType): React.JSX.Element {
           bordered
           stickyTop
           columns={columns}
-          dataSource={orderSuppliers}
-          loading={isLoading}
+          dataSource={InitData as any[]}
+          loading={isLoading as boolean}
           pagination={pagingTable(paging, onParamChange)}
           size="small"
           scroll={{ x: 1500 }} 
