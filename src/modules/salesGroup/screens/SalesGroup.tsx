@@ -159,6 +159,7 @@ export default function SalesGroup() {
         open={isOpenForm}
         footer={null}
         destroyOnClose
+        width={700}
       >
         <SalesGroupForm
           onCancel={onCloseForm}
