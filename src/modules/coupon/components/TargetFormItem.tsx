@@ -1,20 +1,20 @@
-import { Button, Col, Flex, Form, Row, Select } from "antd";
+import { Alert, Button, Col, Flex, Form, Row, Select } from "antd";
 import React from "react";
 import SelectIds from "./SelectIds";
-import SelectIdsCustomerApply from "./SelectIdsCustomerApply";
 type propsType = {
   form: any;
 };
-export default function CustomerApplyFormItem({ form }: propsType): React.JSX.Element {
+export default function TargetFormItem({ form }: propsType): React.JSX.Element {
   return (
   <Form.Item shouldUpdate noStyle>
-    {() =>   <Form.Item labelCol={{ span: 24 }} label="Các khách hàng được phép dùng">
-      <Form.List name={"customerApplyIds"}>
+    {({getFieldValue}) =>   <Form.Item labelCol={{ span: 24 }} label="Các mặt hàng được phép dùng">
+      <Form.List name={"targetIds"}>
         {(fields, { add, remove }) => (
           <>
+            {!getFieldValue('targetIds')?.length && <Alert showIcon style={{textAlign : 'center',marginBottom : 8}} message="Chưa có mặt hàng nào được sử dụng" type="warning" />}
             {fields.map((field, index) => {
               const refCollection = form.getFieldValue([
-                "customerApplyIds",
+                "targetIds",
                 index,
                 "refCollection",
               ]);
@@ -25,15 +25,15 @@ export default function CustomerApplyFormItem({ form }: propsType): React.JSX.El
                       <Select
                         disabled={!!refCollection}
                         allowClear
-                        placeholder="Loại khách hàng"
+                        placeholder="Loại mặt hàng"
                         options={[
                           {
-                            label: "Nhà thuốc",
-                            value: "pharma_profile",
+                            label: "Nhóm sản phẩm",
+                            value: "product_group",
                           },
                           {
-                            label: "Cộng tác viên",
-                            value: "partner",
+                            label: "mặt hàng",
+                            value: "product",
                           },
                         ]}
                       />
@@ -41,7 +41,7 @@ export default function CustomerApplyFormItem({ form }: propsType): React.JSX.El
                   </Col>
                   <Col flex={1}>
                   <Form.Item name={[index, "id"]}>
-                      <SelectIdsCustomerApply form={form} refCollection={refCollection} index={index} />
+                      <SelectIds form={form} refCollection={refCollection} index={index} />
                     </Form.Item>
                   </Col>
                   <Col span={2}>
@@ -56,16 +56,16 @@ export default function CustomerApplyFormItem({ form }: propsType): React.JSX.El
           <Button
               type="dashed"
               block
-              onClick={() => add({refCollection : 'pharma_profile'})}
+              onClick={() => add({refCollection : 'product'})}
             >
-              Thêm nhà thuốc
+              Thêm mặt hàng
             </Button>
             <Button
               type="dashed"
               block
-              onClick={() => add({refCollection : 'partner'})}
+              onClick={() => add({refCollection : 'product_group'})}
             >
-              Thêm cộng tác viên
+              Thêm Nhóm sản phẩm
             </Button>
           </Flex>
           </>

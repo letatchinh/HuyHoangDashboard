@@ -11,8 +11,10 @@ import {
     useSubmit,
     useSuccess
 } from "~/utils/hook";
-import { discountActions } from "./redux/reducer";
-const MODULE = "discount";
+import { ColumnsType } from "antd/lib/table/InternalTable"
+
+import { couponActions } from "./redux/reducer";
+const MODULE = "coupon";
 const MODULE_VI = "";
 
 const {
@@ -32,20 +34,20 @@ const {
   pagingSelector,
 } = getSelectors(MODULE);
 
-export const useDiscountPaging = () => useSelector(pagingSelector);
+export const useCouponPaging = () => useSelector(pagingSelector);
 
-export const useGetDiscounts = (param:any) => {
+export const useGetCoupons = (param:any) => {
   return useFetchByParam({
-    action: discountActions.getListRequest,
+    action: couponActions.getListRequest,
     loadingSelector: loadingSelector,
     dataSelector: listSelector,
     failedSelector: getListFailedSelector,
     param
   });
 };
-export const useGetDiscount = (id: any) => {
+export const useGetCoupon = (id: any) => {
   return useFetchByParam({
-    action: discountActions.getByIdRequest,
+    action: couponActions.getByIdRequest,
     loadingSelector: getByIdLoadingSelector,
     dataSelector: getByIdSelector,
     failedSelector: getByIdFailedSelector,
@@ -53,7 +55,7 @@ export const useGetDiscount = (id: any) => {
   });
 };
 
-export const useCreateDiscount = (callback?: any) => {
+export const useCreateCoupon = (callback?: any) => {
   useSuccess(
     createSuccessSelector,
     `Tạo mới ${MODULE_VI} thành công`,
@@ -62,12 +64,12 @@ export const useCreateDiscount = (callback?: any) => {
   useFailed(createFailedSelector);
 
   return useSubmit({
-    action: discountActions.createRequest,
+    action: couponActions.createRequest,
     loadingSelector: isSubmitLoadingSelector,
   });
 };
 
-export const useUpdateDiscount = (callback?: any) => {
+export const useUpdateCoupon = (callback?: any) => {
   useSuccess(
     updateSuccessSelector,
     `Cập nhật ${MODULE_VI} thành công`,
@@ -76,22 +78,22 @@ export const useUpdateDiscount = (callback?: any) => {
   useFailed(updateFailedSelector);
 
   return useSubmit({
-    action: discountActions.updateRequest,
+    action: couponActions.updateRequest,
     loadingSelector: isSubmitLoadingSelector,
   });
 };
 
-export const useDeleteDiscount = (callback?: any) => {
+export const useDeleteCoupon = (callback?: any) => {
   useSuccess(deleteSuccessSelector, `Xoá ${MODULE_VI} thành công`, callback);
   useFailed(deleteFailedSelector);
 
   return useSubmit({
-    action: discountActions.deleteRequest,
+    action: couponActions.deleteRequest,
     loadingSelector: isSubmitLoadingSelector,
   });
 };
 
-export const useDiscountQueryParams = () => {
+export const useCouponQueryParams = () => {
   const query = useQueryParams();
   const limit = query.get("limit") || 10;
   const page = query.get("page") || 1;
@@ -109,7 +111,7 @@ export const useDiscountQueryParams = () => {
   }, [page, limit, keyword, createSuccess, deleteSuccess]);
 };
 
-export const useUpdateDiscountParams = (
+export const useUpdateCouponParams = (
   query: any,
   listOptionSearch?: any[]
 ) => {
@@ -141,3 +143,5 @@ export const useUpdateDiscountParams = (
 
   return [keyword, { setKeyword, onParamChange }];
 };
+
+

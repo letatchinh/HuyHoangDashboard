@@ -4,11 +4,11 @@ import { initStateSlice } from "~/redux/models";
 interface cloneInitState extends initStateSlice {
  // Add cloneInitState Type Here
 }
-class DiscountClassExtend extends InstanceModuleRedux {
+class CouponClassExtend extends InstanceModuleRedux {
   cloneReducer;
   cloneInitState : cloneInitState;
   constructor() {
-    super('discount');
+    super('coupon');
     this.cloneReducer = {
       ...this.initReducer,
       // Want Add more reducer Here...
@@ -28,9 +28,9 @@ class DiscountClassExtend extends InstanceModuleRedux {
   
 }
 
-const newSlice = new DiscountClassExtend();
+const newSlice = new CouponClassExtend();
 const data = newSlice.createSlice();
 
 
-export const discountActions = data.actions;
+export const couponActions = data.actions;
 export default data.reducer;

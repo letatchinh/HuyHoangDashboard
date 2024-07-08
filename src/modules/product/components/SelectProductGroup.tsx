@@ -41,6 +41,7 @@ export default function SelectProductGroup({
         {RenderLoading(
           isLoading,
           <Select 
+          loading={loading}
             className="right--parent"
             placeholder="Nhóm thuốc"
             options={options}

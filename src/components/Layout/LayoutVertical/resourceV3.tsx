@@ -615,13 +615,13 @@ export const resource: ItemType[] = [
   {
     label: "Mã giảm giá",
     icon: <i className="fa-solid fa-boxes-packing"></i>,
-    key: "discount",
+    key: "coupon",
     // permission: [...permissionBill],//
     children: [
       {
         label: "Danh sách mã giảm giá",
-        path: PATH_APP.discount.root,
-        key: PATH_APP.discount.root,
+        path: PATH_APP.coupon.root,
+        key: PATH_APP.coupon.root,
         // permission: [POLICIES.READ_BILL],//
       },
     ],
