@@ -78,6 +78,9 @@ export type initStateSlice<T=any> = {
     collaborator: "collaborator",
     collaboratorGroup: "collaboratorGroup",
     reportSalaryPartner: "reportSalaryPartner",
+    logistic: "logistic",
+    warehouse: "warehouse",
+
     reportProductSupplier: "reportProductSupplier",
     reportOverview: "reportOverview",
     requestGroup: "requestGroup",

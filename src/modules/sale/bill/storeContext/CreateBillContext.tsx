@@ -1,21 +1,38 @@
 import { Form } from "antd";
 import { forIn, get } from "lodash";
 import {
+  ReactNode,
   createContext,
-  ReactNode, useCallback, useContext,
+  useCallback,
+  useContext,
   useEffect,
   useMemo,
-  useState
+  useRef,
+  useState,
 } from "react";
 import { v4 } from "uuid";
+import ModalAnt from "~/components/Antd/ModalAnt";
 import { useGetCollaborator } from "~/modules/collaborator/collaborator.hook";
-import QuotationModule from '~/modules/sale/quotation';
+import LogisticForm, {
+  ValueApplyBill,
+} from "~/modules/logistic/components/LogisticForm";
+import { PAYER_OPTION } from "~/modules/logistic/logistic.modal";
+import QuotationModule from "~/modules/sale/quotation";
+import RadioButtonWarehouseNotFetch from "~/modules/warehouse/components/RadioButtonWarehouseNotFetch";
+import {
+  findMatchingManagementArea,
+  useGetWarehouse,
+  useGetWarehouseByBranchLinked
+} from "~/modules/warehouse/warehouse.hook";
+import useNotificationStore from "~/store/NotificationContext";
 import { getValueOfPercent } from "~/utils/helpers";
 import { DEFAULT_DEBT_TYPE } from "../../quotation/constants";
 import { useGetDebtRule } from "../bill.hook";
 import { DebtType, FeeType, quotation } from "../bill.modal";
-import { onVerifyData, reducerDiscountQuotationItems } from "../bill.service";
+import { reducerDiscountQuotationItems } from "../bill.service";
 import { defaultFee } from "../constants";
+import { useMatchPolicy } from "~/modules/policy/policy.hook";
+import POLICIES from "~/modules/policy/policy.auth";
 const TYPE_DISCOUNT = {
   "DISCOUNT.CORE": "DISCOUNT.CORE",
   "DISCOUNT.SOFT": "DISCOUNT.SOFT",
@@ -29,6 +46,11 @@ export type DataItem = quotation & {
 type Bill = {
   quotationItems: DataItem[];
   pharmacyId: string;
+  fee?: FeeType[];
+  dataTransportUnit?: ValueApplyBill;
+  deliveryAddress?: string;
+  warehouseId?: number;
+  totalPrice: number;
 };
 
 type DiscountDetail = {
@@ -51,17 +73,33 @@ export type GlobalCreateBill = {
   totalDiscountOther: number;
   totalDiscountFromProduct: DiscountDetail | null;
   totalDiscountFromSupplier: DiscountDetail | null;
-  verifyData : (callback?:any) => void,
-  onRemoveTab : () => void,
-  debt : DebtType[];
-  bill : any,
-  onOpenModalResult : (data:any) => void
-  onChangeBill : (data:any) => void
-  mutateReValidate : () => void;
-  address : any[],
-  setAddress : (p:any) => void;
-  setFormAndLocalStorage : (newValue : any) => void
-  partner : any,
+  verifyData: (callback?: any) => void;
+  onRemoveTab: () => void;
+  debt: DebtType[];
+  bill: any;
+  onOpenModalResult: (data: any) => void;
+  onChangeBill: (data: any) => void;
+  mutateReValidate: () => void;
+  address: any[];
+  setAddress: (p: any) => void;
+  setFormAndLocalStorage: (newValue: any) => void;
+  partner: any;
+  setWarehouseId: (p: any) => void;
+  warehouseId: number | undefined;
+  isOpenModalSelectWarehouse: boolean;
+  onOpenModalSelectWarehouse: () => void;
+  onCloseModalSelectWarehouse: () => void;
+  onOpenFormLogistic: () => void;
+  onCloseFormLogistic: () => void;
+  checkboxPayment: string | null;
+  setCheckboxPayment: (p: string | null) => void;
+  onAddLogisticFee: (data: any) => void;
+  setPharmacyInfo: (data: any) => void;
+  pharmacyInfo: any;
+  warehouseInfo: any;
+  updateWarehouseInBill: (warehouseId: string) => any;
+  canReadLogistic: boolean;
+  canReadWarehouse: boolean;
 };
 const CreateBill = createContext<GlobalCreateBill>({
   quotationItems: [],
@@ -74,30 +112,47 @@ const CreateBill = createContext<GlobalCreateBill>({
   totalQuantity: 0,
   totalPriceAfterDiscount: 0,
   totalAmount: 0,
-  totalDiscount : 0,
-  totalDiscountOther : 0,
-  totalDiscountFromProduct : null,
+  totalDiscount: 0,
+  totalDiscountOther: 0,
+  totalDiscountFromProduct: null,
   totalDiscountFromSupplier: null,
   verifyData: () => {},
   onRemoveTab: () => {},
-  debt : [],
-  bill : null,
+  debt: [],
+  bill: null,
   onOpenModalResult: () => {},
   mutateReValidate: () => {},
   onChangeBill: () => {},
-  address : [],
-  setAddress : () => {},
-  setFormAndLocalStorage : () => {},
-  partner : null
+  address: [],
+  setAddress: () => {},
+  setFormAndLocalStorage: () => {},
+  partner: null,
+  setWarehouseId: () => {},
+  warehouseId: undefined,
+  isOpenModalSelectWarehouse: false,
+  onOpenModalSelectWarehouse: () => {},
+  onCloseModalSelectWarehouse: () => {},
+  onOpenFormLogistic: () => {},
+  onCloseFormLogistic: () => {},
+  checkboxPayment: null,
+  setCheckboxPayment: (p: string | null) => {},
+  onAddLogisticFee: () => {},
+  setPharmacyInfo: () => {},
+  pharmacyInfo: null,
+  warehouseInfo: null,
+  updateWarehouseInBill: () => { },
+
+  canReadLogistic: false,
+  canReadWarehouse: false
 });
 
 type CreateBillProviderProps = {
   children: ReactNode;
   bill: Bill;
   onChangeBill: (newObjData: any) => void;
-  verifyData : () => void
-  onRemoveTab : () => void
-  onOpenModalResult : (data:any) => void
+  verifyData: () => void;
+  onRemoveTab: () => void;
+  onOpenModalResult: (data: any) => void;
 };
 
 export function CreateBillProvider({
@@ -109,13 +164,25 @@ export function CreateBillProvider({
   onOpenModalResult,
 }: CreateBillProviderProps): JSX.Element {
   QuotationModule.hook.useResetQuotation();
-  const [countReValidate,setCountReValidate] = useState(1);
+  const [countReValidate, setCountReValidate] = useState(1);
   const [quotationItems, setQuotationItems] = useState<DataItem[]>([]);
   const [form] = Form.useForm();
-  const [debt,isLoadingDebt] = useGetDebtRule();
-  const [address,setAddress] = useState([]);
-  const [partner,loadingPartner] : any = useGetCollaborator(get(bill,'pharmacyId'));
+  const [debt, isLoadingDebt] = useGetDebtRule();
+  const [address, setAddress] = useState([]);
+  const [warehouseId, setWarehouseId] = useState<number | undefined>();
+  const [partner, loadingPartner]: any = useGetCollaborator(
+    get(bill, "pharmacyId")
+  );
+  const [logisticOpen, setLogisticOpen] = useState(false);
+  const [checkboxPayment, setCheckboxPayment] = useState<string | null>(null);
+  const { onNotify } = useNotificationStore();
+  const [pharmacyInfo, setPharmacyInfo] = useState<any>();
+  const [warehouseDefault, isLoading] = useGetWarehouse(); //Fetch warehouse default by area
+  const [listWarehouse, isLoadingWarehouse] = useGetWarehouseByBranchLinked(); // Get all warehouse linked with branch
+  const warehouseInfo = useMemo(() => (listWarehouse || [])?.find((item: any) => item._id === bill?.warehouseId), [bill?.warehouseId, listWarehouse]);
 
+  const canReadLogistic = useMatchPolicy(POLICIES.READ_LOGISTIC);
+  const canReadWarehouse = useMatchPolicy(POLICIES.READ_WAREHOUSELINK);
   // Controller Data
   const onSave = (row: DataItem) => {
     const newData: DataItem[] = [...quotationItems];
@@ -124,13 +191,17 @@ export function CreateBillProvider({
     const computedRow = {
       ...row,
     };
-    const newItemData = { ...item,
-       ...computedRow ,
-       quantity : Number((get(row, "quantityActual", 1) * get(row, "variant.exchangeValue", 1)).toFixed(1)),
-      };
+    const newItemData = {
+      ...item,
+      ...computedRow,
+      quantity: Number(
+        (
+          get(row, "quantityActual", 1) * get(row, "variant.exchangeValue", 1)
+        ).toFixed(1)
+      ),
+    };
 
     newData.splice(index, 1, newItemData);
-    
     onChangeBill({
       quotationItems: newData,
     });
@@ -154,18 +225,16 @@ export function CreateBillProvider({
 
   // Trigger ReValidation Bill Sample and discount
   const mutateReValidate = useCallback(() => {
-    setCountReValidate(countReValidate+1);
-  },[countReValidate]);
+    setCountReValidate(countReValidate + 1);
+  }, [countReValidate]);
 
   useEffect(() => {
-    if(countReValidate > 1){
+    if (countReValidate > 1) {
       verifyData();
     }
-  },[countReValidate]);
-
+  }, [countReValidate]);
 
   const onValueChange = (value: any, values: any) => {
-    
     const key: any = Object.keys(value)[0];
     switch (key) {
       case "pharmacyId":
@@ -178,11 +247,11 @@ export function CreateBillProvider({
 
       case "fee":
         // const newFee = values[key]?.map((item:FeeType) => item?.typeValue === 'PERCENT' && item?.value > 100 ? {...item,value : 100} : item);
-        const newFee = values[key]
+        const newFee = values[key];
         setFormAndLocalStorage({
           fee: newFee,
         });
-        
+
         break;
 
       case "deliveryAddress":
@@ -192,12 +261,12 @@ export function CreateBillProvider({
         break;
 
       case "debtType":
-        if(values[key] === 'COD'){
+        if (values[key] === "COD") {
           onChangeBill({
             pair: 0,
           });
         }
-        
+
         // Revalidate after change Pharmacy
         mutateReValidate();
         break;
@@ -207,9 +276,19 @@ export function CreateBillProvider({
     }
   };
 
-  const pair = Form.useWatch('pair',form) || 0;
-  const fee = Form.useWatch('fee',form) || 0;
-
+  const pair = Form.useWatch("pair", form) || 0;
+  const fee = Form.useWatch("fee", form) || 0;
+  const totalLogisticFeeByPayer: number = useMemo(
+    () =>
+      bill?.dataTransportUnit?.payer === PAYER_OPTION.SYSTEM
+        ? 0
+        : bill?.dataTransportUnit?.totalFee ?? 0,
+    [bill?.dataTransportUnit, fee]
+  );
+  const findLogisticInFee = useMemo(
+    () => (fee || [])?.find((item: any) => item?.typeFee === "LOGISTIC")?.value,
+    [bill?.dataTransportUnit, fee]
+  );
   const totalPrice = useMemo(
     () =>
       quotationItems?.reduce(
@@ -227,15 +306,24 @@ export function CreateBillProvider({
         0
       ),
     [quotationItems]
-  ); // Giá của sản phẩm * số lượng sản phẩm sau chiếc khấu
-
-  const totalFee = useMemo(() => (fee || [])?.reduce((sum : number,cur : FeeType) => sum + (cur?.typeValue === 'PERCENT' ? getValueOfPercent(totalAmount,cur?.value) : cur?.value),0),[fee,totalPrice]); // Đã bao gồm phụ phí và phí ship
+  );
+  const totalFee = useMemo(
+    () =>
+      (fee || [])?.reduce(
+        (sum: number, cur: FeeType) =>
+          sum +
+          (cur?.typeValue === "PERCENT"
+            ? getValueOfPercent(totalPrice, cur?.value)
+            : cur?.value),
+        0
+      ),
+    [fee, totalPrice]
+  );
   const totalPriceAfterDiscount = useMemo(
-    () => {
-      return totalAmount - pair + totalFee
-    },
-    [quotationItems,pair,totalFee]
-  );// (Tổng giá trị đơn hàng chưa chiếc khấu  - số tiền đã thanh toán trước )+( phụ phí + phụ ship)
+    () =>
+      (totalAmount -  pair + (totalFee - findLogisticInFee)) || 0, // Not count fee logistic
+    [quotationItems, pair, totalFee]
+  );
 
   const totalDiscount = useMemo(
     () =>
@@ -249,7 +337,7 @@ export function CreateBillProvider({
   const totalDiscountOther = useMemo(
     () =>
       quotationItems?.reduce(
-        (sum: number, cur: any) => sum + get(cur, "totalDiscountOther",0),
+        (sum: number, cur: any) => sum + get(cur, "totalDiscountOther", 0),
         0
       ),
     [quotationItems]
@@ -259,11 +347,12 @@ export function CreateBillProvider({
     () =>
       quotationItems?.reduce(
         (sum: any, cur: any) => {
-          const newSum : any = {};
-          forIn(TYPE_DISCOUNT,(value : any,key : any) => {
-            newSum[key] = sum[key] +  get(cur,['totalDiscountDetailFromProduct',key],0)
-          })
-          return newSum
+          const newSum: any = {};
+          forIn(TYPE_DISCOUNT, (value: any, key: any) => {
+            newSum[key] =
+              sum[key] + get(cur, ["totalDiscountDetailFromProduct", key], 0);
+          });
+          return newSum;
         },
         {
           [TYPE_DISCOUNT["DISCOUNT.CORE"]]: 0,
@@ -277,11 +366,12 @@ export function CreateBillProvider({
     () =>
       quotationItems?.reduce(
         (sum: any, cur: any) => {
-          const newSum : any = {};
-          forIn(TYPE_DISCOUNT,(value : any,key : any) => {
-            newSum[key] = sum[key] +  get(cur,['totalDiscountDetailFromSupplier',key],0)
-          })
-          return newSum
+          const newSum: any = {};
+          forIn(TYPE_DISCOUNT, (value: any, key: any) => {
+            newSum[key] =
+              sum[key] + get(cur, ["totalDiscountDetailFromSupplier", key], 0);
+          });
+          return newSum;
         },
         {
           [TYPE_DISCOUNT["DISCOUNT.CORE"]]: 0,
@@ -295,39 +385,143 @@ export function CreateBillProvider({
   const totalQuantity = useMemo(
     () =>
       quotationItems?.reduce(
-        (sum: number, cur: any) => sum + get(cur, "quantityActual",0),
+        (sum: number, cur: any) => sum + get(cur, "quantityActual", 0),
         0
       ),
     [quotationItems]
   );
-
-
   // Initalize Data And Calculate Discount
   useEffect(() => {
-    const initDebt = debt?.find((debt : DebtType) => get(debt, "key") === DEFAULT_DEBT_TYPE);    
+    const initDebt = debt?.find(
+      (debt: DebtType) => get(debt, "key") === DEFAULT_DEBT_TYPE
+    );
     form.setFieldsValue({
-      debtType :  form.getFieldValue('debtType') || get(bill,'debtType') ||  get(initDebt,'key'),
-      pharmacyId : get(bill,'pharmacyId'),
-      pair : get(bill,'pair',0),
-      fee : get(bill,'fee',defaultFee),
-      deliveryAddress : get(bill,'deliveryAddress'),
+      debtType:
+        form.getFieldValue("debtType") ||
+        get(bill, "debtType") ||
+        get(initDebt, "key"),
+      pharmacyId: get(bill, "pharmacyId"),
+      pair: get(bill, "pair", 0),
+      fee: get(bill, "fee", defaultFee),
+      deliveryAddress: get(bill, "deliveryAddress"),
     });
     if (get(bill, "pharmacyId")) {
-      const newQuotationItems: any[] = reducerDiscountQuotationItems(get(bill, "quotationItems", []));
+      const newQuotationItems: any[] = reducerDiscountQuotationItems(
+        get(bill, "quotationItems", [])
+      );
       setQuotationItems(newQuotationItems);
     }
-  }, [bill,debt,form,totalPrice]);
+  }, [bill, debt, form, totalPrice]);
 
-  const setFormAndLocalStorage = useCallback((newValue : any) => {
-    
+  // Init warehouse
+
+  const setFormAndLocalStorage = useCallback((newValue: any) => {
     form.setFieldsValue({
-      ...newValue
-    })
+      ...newValue,
+    });
     onChangeBill({
-      ...newValue
-    })
-  },[]);
-  
+      ...newValue,
+    });
+  }, []);
+
+  //Warehouse
+  const [isOpenModalSelectWarehouse, setOpenModalSelectWarehouse] =
+    useState(false);
+  const onOpenModalSelectWarehouse = () => setOpenModalSelectWarehouse(true);
+  const onCloseModalSelectWarehouse = () => setOpenModalSelectWarehouse(false);
+
+  const onOpenFormLogistic = () => {
+    setLogisticOpen(true);
+  };
+
+  const onCloseFormLogistic = () => {
+    setLogisticOpen(false);
+  };
+
+  const onAddLogisticFee = (data: any) => {
+    if (bill?.quotationItems?.length <= 0) {
+      return onNotify?.error(
+        "Đơn hàng chưa có sản phẩm nên không thể áp phí vận chuyển"
+      );
+    }
+    try {
+      const newBill = {
+        ...bill,
+        fee: bill?.fee?.map((item: any) =>
+          item?.typeFee === "LOGISTIC"
+            ? { ...item, value: data?.totalFee }
+            : item
+        ),
+        dataTransportUnit: data,
+      };
+      onChangeBill(newBill);
+      onCloseFormLogistic();
+    } catch (error) {
+      onNotify?.error("Có lỗi xảy ra khi gắn phí vận chuyển vào đơn hàng");
+    }
+  };
+
+  const onConfirmWarehouse = (data: any) => {
+    const findWarehouse = listWarehouse?.find(
+      (item: any) => item?._id === data?.warehouseId
+    );
+    setFormAndLocalStorage({
+      warehouseId: findWarehouse?._id,
+      warehouseName: findWarehouse?.name?.vi,
+    });
+    onCloseModalSelectWarehouse();
+  };
+
+  const findWarehouseDefault = (warehouseId: string) => {
+    return listWarehouse?.find(
+      (item: any) => item?._id === warehouseId
+    );
+  };
+  const updateWarehouseInBill = (warehouseId: string) => {
+    const data = findWarehouseDefault(warehouseId);
+        setFormAndLocalStorage({
+        ...bill,
+        warehouseName: data?.name?.vi,
+      });
+  };
+  useEffect(() => {
+    // console.log('vo day lai')
+    if ((pharmacyInfo || partner) && !bill?.warehouseId) {
+      const address = get(pharmacyInfo, 'data.addressDelivery', get(pharmacyInfo, 'data.address', get(partner, 'address', [])));
+      if (warehouseDefault?.length > 0) {
+        const findWarehouseDefault = findMatchingManagementArea(address, (warehouseDefault));
+          if (findWarehouseDefault) {
+            console.log(
+              `Địa chỉ nằm trong khu vực của kho: ${findWarehouseDefault?.name?.vi}`
+            );
+            // onNotify?.success(`Địa chỉ nằm trong khu vực của kho: ${findWarehouseDefault?.name?.vi}`);
+            setFormAndLocalStorage({
+              ...bill,
+              warehouseId: findWarehouseDefault?.warehouseId,
+              warehouseName: findWarehouseDefault?.name?.vi,
+            });
+            setWarehouseId(findWarehouseDefault?.warehouseId);
+          } else {
+            setFormAndLocalStorage({
+              ...(bill && bill),
+              warehouseId: listWarehouse[0]?._id,
+              warehouseName: listWarehouse[0]?.name?.vi,
+            });
+          setWarehouseId(warehouseDefault[0]?._id);
+          console.log("Địa chỉ không thuộc khu vực kho mặc định nào");
+          };
+        } else {
+            setFormAndLocalStorage({
+              ...(bill && bill),
+              warehouseId: listWarehouse[0]?._id,
+              warehouseName: listWarehouse[0]?.name?.vi,
+            });
+          setWarehouseId(warehouseDefault[0]?._id);
+          console.log("Địa chỉ không thuộc khu vực kho mặc định nào");
+          // onNotify?.warning(`Địa chỉ không thuộc khu vực kho mặc định nào, kho xuất hàng đang được chọn tự động`);
+        };   
+    };
+  }, [warehouseDefault, pharmacyInfo, partner, listWarehouse]);
   return (
     <CreateBill.Provider
       value={{
@@ -356,9 +550,71 @@ export function CreateBillProvider({
         setAddress,
         setFormAndLocalStorage,
         partner,
+        setWarehouseId,
+        warehouseId,
+        isOpenModalSelectWarehouse,
+        onOpenModalSelectWarehouse,
+        onCloseModalSelectWarehouse,
+        onOpenFormLogistic,
+        onCloseFormLogistic,
+        checkboxPayment,
+        setCheckboxPayment,
+        onAddLogisticFee,
+        setPharmacyInfo,
+        pharmacyInfo,
+        warehouseInfo,
+        updateWarehouseInBill,
+        canReadLogistic,
+        canReadWarehouse,
       }}
     >
       {children}
+      <ModalAnt
+        destroyOnClose
+        title="Chọn kho xuất hàng"
+        open={isOpenModalSelectWarehouse}
+        onCancel={onCloseModalSelectWarehouse}
+        onOk={onCloseModalSelectWarehouse}
+        width={600}
+        footer={false}
+      >
+        <RadioButtonWarehouseNotFetch
+          warehouseDefault={warehouseDefault}
+          setValue={setWarehouseId}
+          value={warehouseId ?? bill?.warehouseId}
+          onCancel={onCloseModalSelectWarehouse}
+          title="Xác nhận"
+          isLoadingWarehouse={isLoading}
+          onClick={onConfirmWarehouse}
+          updateWarehouseInBill={updateWarehouseInBill}
+          // isConfirmChangeLogistic 
+          listWarehouseLinked={listWarehouse}
+        />
+      </ModalAnt>
+      <ModalAnt
+        title="Chi phí vận chuyển"
+        open={logisticOpen}
+        onCancel={onCloseFormLogistic}
+        width={1200}
+        footer={null}
+        destroyOnClose
+      >
+        <LogisticForm
+          onCloseFormLogistic={onCloseFormLogistic}
+          checkboxPayment={checkboxPayment}
+          setCheckboxPayment={setCheckboxPayment}
+          bill={bill}
+          deliveryAddressId={
+            !get(bill, "dataUpdateQuotation")
+              ? (get(bill, "deliveryAddressId") ??
+                get(pharmacyInfo, "data.address"))
+              : get(bill, "deliveryAddressId")
+          }
+          pharmacy={pharmacyInfo?.data}
+          dataTransportUnit={bill?.dataTransportUnit}
+          warehouseInfo = {warehouseInfo}
+        />
+      </ModalAnt>
     </CreateBill.Provider>
   );
 }

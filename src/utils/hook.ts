@@ -158,7 +158,6 @@ export const useAction = ({ action }:UseActionProps) : (v:any) => void => {
     const dispatch = useDispatch();
     useEffect(() => {
       return () => {
-        console.log('reset state')
         dispatch(resetAction());
       };
     }, [dispatch, resetAction]);

@@ -1,29 +1,23 @@
-import { ArrowUpOutlined, EditTwoTone } from "@ant-design/icons";
-import { Button, Checkbox, Flex, Popconfirm, Space, Tooltip, Typography } from "antd";
+import { Typography } from "antd";
+import TextArea from "antd/es/input/TextArea";
 import { ColumnsType } from "antd/es/table/InternalTable";
-import { forIn, get } from "lodash";
+import { get } from "lodash";
 import React, { useCallback, useMemo, useState } from "react";
+import ModalAnt from "~/components/Antd/ModalAnt";
 import TableAnt from "~/components/Antd/TableAnt";
-import Status from "~/components/common/Status/index";
+import BillModule from "~/modules/sale/bill";
+import useUpdateBillStore from "~/modules/sale/bill/storeContext/UpdateBillContext";
 import { formatter } from "~/utils/helpers";
+import { STATUS_BILL } from "../../bill/constants";
+import { PayloadSubmitUpdateBillItem, UpdateBillItem } from "../billItem.modal";
 import {
   STATUS_BILLITEM,
   STATUS_BILLITEM_LEVEL,
   STATUS_BILLITEM_VI,
 } from "../constants";
-import UpdateQuantity from "./UpdateQuantity";
-import useUpdateBillStore from "~/modules/sale/bill/storeContext/UpdateBillContext";
-import BillModule from "~/modules/sale/bill";
-import { PayloadSubmitUpdateBillItem, UpdateBillItem } from "../billItem.modal";
-import FormLot from "./FormLot";
 import ExpandRowBillItem from "./ExpandRowBillItem";
-import { STATUS_BILL } from "../../bill/constants";
-import WithPermission from "~/components/common/WithPermission";
-import PolicyModule from '~/modules/policy';
-import ModalAnt from "~/components/Antd/ModalAnt";
-import TextArea from "antd/es/input/TextArea";
-import ToolTipBadge from "~/components/common/ToolTipBadge";
-import ConfirmStatusBillItem from "./ConfirmStatusBillItem";
+import FormLot from "./FormLot";
+import UpdateQuantity from "./UpdateQuantity";
 type propsType = {
   statusBill: any;
 };
@@ -108,7 +102,7 @@ export default function ListBillItem({
             <Typography.Text>
               {get(record, "codeBySupplier")} - {get(product, "name", "")}
             </Typography.Text>
-            {CLONE_STATUS_BILLITEM_LEVEL[status] >= 4 &&
+            {/* {CLONE_STATUS_BILLITEM_LEVEL[status] >= 4 &&
               status !== STATUS_BILL.CANCELLED && (
                 <FormLot
                   isDisabledAll={isDisabledAll}
@@ -118,30 +112,30 @@ export default function ListBillItem({
                   lotNumber={lotNumber}
                   expirationDate={expirationDate}
                 />
-              )}
+              )} */}
           </div>
         );
       },
     },
-    {
-      title: "Tình trạng",
-      dataIndex: "status",
-      key: "status",
-      align: "center",
-      render(status, record, index) {
-        return (
-          <div className="d-flex flex-column align-items-center">
-            <ToolTipBadge title={status === STATUS_BILL.CANCELLED && get(record,'note','')}>
-            <Status
-              status={status}
-              statusVi={CLONE_STATUS_BILLITEM_VI?.[status]}
-            />
-            </ToolTipBadge>
-            <ConfirmStatusBillItem askAgain={askAgain} setAskAgain={setAskAgain} billItem={record} onChangeStatusBillItem={onChangeStatusBillItem} onOpenCancel={onOpenCancel} isDisabledAll={isDisabledAll} isSubmitLoading={isSubmitLoading} key={get(record,'_id')}/>
-          </div>
-        );
-      },
-    },
+    // {
+    //   title: "Tình trạng",
+    //   dataIndex: "status",
+    //   key: "status",
+    //   align: "center",
+    //   render(status, record, index) {
+    //     return (
+    //       <div className="d-flex flex-column align-items-center">
+    //         <ToolTipBadge title={status === STATUS_BILL.CANCELLED && get(record,'note','')}>
+    //         <Status
+    //           status={status}
+    //           statusVi={CLONE_STATUS_BILLITEM_VI?.[status]}
+    //         />
+    //         </ToolTipBadge>
+    //         <ConfirmStatusBillItem askAgain={askAgain} setAskAgain={setAskAgain} billItem={record} onChangeStatusBillItem={onChangeStatusBillItem} onOpenCancel={onOpenCancel} isDisabledAll={isDisabledAll} isSubmitLoading={isSubmitLoading} key={get(record,'_id')}/>
+    //       </div>
+    //     );
+    //   },
+    // },
     {
       title: "Số lượng",
       dataIndex: "quantity",
@@ -191,10 +185,6 @@ export default function ListBillItem({
       pagination={false}
       columns={columns}
       rowKey={(rc) => rc?._id}
-      // onRow={(rc) => ({
-      //   onClick : () => setItemActive(itemActive?.includes(rc._id) ? null : rc._id),
-        
-      // })}
       size="small"
       expandable={{
         expandedRowRender: (record: any) => (

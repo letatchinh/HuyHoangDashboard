@@ -41,6 +41,7 @@ const quotationPharmacy = 'quotationPharmacy';
 const supplier = 'supplier';
 const cumulativeSalesSupplier = 'cumulativeSalesSupplier';
 const debtSupplier = 'debtSupplier';
+const orderSupplierStatus = 'orderSupplierStatus';
 
 // Sản phẩm Nhà cung cấp
 const product = 'product';
@@ -95,6 +96,10 @@ const reportProductSupplier = 'reportProductSupplier';
 const reportOverview = 'reportOverview';
 const requestChangeGroupCTV = 'requestChangeGroupCTV';
 const requestChangeGroup = 'requestChangeGroup';
+const warehouseLink = 'warehouseLink';
+const logistic = 'logistic';
+const billStatus = 'billStatus'; // Trạng thái đơn hàng bán
+const billSpit = 'billSpit'; // Tách đơn hàng bán
 
 
 //------RESOURCES --------
@@ -141,6 +146,7 @@ const RESOURCES = [
   supplier,
   product,
   debtSupplier,
+  orderSupplierStatus,
 
   // Pharmacy Profile
   pharmaProfile,
@@ -150,6 +156,7 @@ const RESOURCES = [
   billPartner,
   billEmployee,
   billPharmacy,
+  billStatus,
 
   //------Quotation------
   quotation,
@@ -197,6 +204,9 @@ const RESOURCES = [
   reportOverview,
   requestChangeGroup,
   requestChangeGroupCTV,
+  warehouseLink,
+  logistic,
+  billSpit,
 ];
 
 //ACTIONS
@@ -282,7 +292,10 @@ const RESOURCE = (): ResourceType => {
     billPharmacy,
     quotationPartner,
     quotationEmployee,
-    quotationPharmacy
+    quotationPharmacy,
+    logistic,
+    billStatus,
+    billSpit
   ];
 
   const NOTIFICATION_BOT_MANAGER: string[] = [
@@ -297,6 +310,7 @@ const RESOURCE = (): ResourceType => {
     cumulativeSalesSupplier,
     voucherSupplier,
     debtSupplier,
+    orderSupplierStatus,
   ];
   
   const GROUP_WORK_MANAGERMENT: string[] = [
@@ -348,6 +362,10 @@ const RESOURCE = (): ResourceType => {
     voucherBillPartner,
   ];
 
+  const GROUP_SETTING: string[] = [
+    warehouseLink,
+  ];
+
   return {
     GROUP_USER,
     GROUP_EMPLOYEE,
@@ -373,6 +391,7 @@ const RESOURCE = (): ResourceType => {
     PARTNER,
     VOUCHER_SALARY_PARTNER,
     VOUCHER_BILL_PARTNER,
+    GROUP_SETTING,
   };
 };
 

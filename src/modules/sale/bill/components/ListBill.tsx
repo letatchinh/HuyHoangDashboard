@@ -4,8 +4,11 @@ import {
   redirectRouterBillId,
   useBillPaging,
   useBillQueryParams,
+  useGetBill,
   useGetBills,
+  useInitialValue,
   useUpdateBillParams,
+  useUpdateStatusBill,
 } from "../bill.hook";
 
 import {
@@ -18,43 +21,59 @@ import {
   Row,
   Select,
   Space,
+  Spin,
   Tooltip,
   TreeSelect,
   Typography,
 } from "antd";
 import { ColumnsType } from "antd/es/table/InternalTable";
-import { get } from "lodash";
+import { get, trim } from "lodash";
+import { useDispatch } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
+import ModalAnt from "~/components/Antd/ModalAnt";
 import SearchAnt from "~/components/Antd/SearchAnt";
-import Status from "~/components/common/Status/index";
-import SelectSupplier from "~/modules/supplier/components/SelectSupplier";
-import { PATH_APP } from "~/routes/allPath";
+import BaseBorderBox from "~/components/common/BaseBorderBox";
 import {
   concatAddress,
+  formatNumberThreeComma,
   formatter,
   getExistProp,
   pagingTable,
   permissionConvert,
 } from "~/utils/helpers";
-import { STATUS_BILL_VI } from "../constants";
-import { useMatchPolicy } from "~/modules/policy/policy.hook";
-import POLICIES from "~/modules/policy/policy.auth";
-import useCheckBoxExport from "~/modules/export/export.hook";
-import WithPermission from "~/components/common/WithPermission";
-import ExportExcelButton from "~/modules/export/component";
-import { CalculateBill } from "../bill.service";
 import DateTimeTable from "~/components/common/DateTimeTable";
-import SelectEmployee from "~/modules/employee/components/SelectSearch";
+import Status from "~/components/common/Status/index";
+import WithPermission from "~/components/common/WithPermission";
 import { REF_COLLECTION } from "~/constants/defaultValue";
 import SelectCollaborator from "~/modules/collaborator/components/SelectSearch";
+import ExportExcelButton from "~/modules/export/component";
+import useCheckBoxExport from "~/modules/export/export.hook";
+import POLICIES from "~/modules/policy/policy.auth";
+import { useMatchPolicy } from "~/modules/policy/policy.hook";
+import SelectSupplier from "~/modules/supplier/components/SelectSupplier";
+import RadioButtonWarehouseNotFetch from "~/modules/warehouse/components/RadioButtonWarehouseNotFetch";
+import { warehouseActions } from "~/modules/warehouse/redux/reducer";
+import { convertDataSentToWarehouse, convertProductsFromBill, useCheckWarehouse, useCreateBillToWarehouse, useGetWarehouse, useGetWarehouseByBranchLinked } from "~/modules/warehouse/warehouse.hook";
 import { useIsAdapterSystem } from "~/utils/hook";
+import { CalculateBill } from "../bill.service";
+import { STATUS_BILL, STATUS_BILL_VI } from "../constants";
+import { billSliceAction } from "../redux/reducer";
+import Action from "./Action";
+import NoteWarehouse from "./NoteWarehouse";
+import ProductItem from "./ProductItem";
+import ToolTipBadge from "~/components/common/ToolTipBadge";
+import ConfirmStatusBill from "./ConfirmStatusBill";
+import { useResetBillAction } from "~/modules/sale/bill/bill.hook";
 import SelectPharmacy from "./SelectPharmacy";
-import { FormFieldSearch } from "../bill.modal";
+import { FormFieldSearch, propsConfirmStatusBill } from "../bill.modal";
 import dayjs from "dayjs";
-import { FilterOutlined } from "@ant-design/icons";
 import GeoTreeSelect from "~/modules/geo/components/GeoTreeSelect";
 import { RELATIVE_POSITION } from "~/modules/geo/constants";
 import SelectEmployeeV2 from "~/modules/employee/components/SelectEmployeeV2";
+import TagBillItem from "./TagBillItem";
+import SplitBill from "./SplitBill";
+import useNotificationStore from "~/store/NotificationContext";
+import { useResetAction } from "~/modules/warehouse/warehouse.hook";
 const CalculateBillMethod = new CalculateBill();
 type propsType = {
   status?: string;
@@ -63,20 +82,147 @@ const defaultDate = {
   startDate: dayjs().startOf("month"),
   endDate: dayjs().endOf("month"),
 };
+const MIN_MONEY_BILL = 500000; //
 const { Option } = Select;
 const CLONE_STATUS_BILL_VI: any = STATUS_BILL_VI;
 export default function ListBill({ status }: propsType): React.JSX.Element {
+  useResetBillAction();
+  useResetAction();
   const [query] = useBillQueryParams(status);
 
   const [keyword, { setKeyword, onParamChange }] = useUpdateBillParams(query);
-  const [bills, isLoading] = useGetBills(query);
+  const [bills,isLoading] = useGetBills(query);
   const paging = useBillPaging();
   const isSystem = useIsAdapterSystem();
+  const dispatch = useDispatch();
   //Download
   const onPermissionCovert = useCallback(permissionConvert(query), [query]);
   const canDownload = useMatchPolicy(onPermissionCovert("DOWNLOAD", "BILL"));
   const { pathname } = useLocation();
   const [arrCheckBox, onChangeCheckBox] = useCheckBoxExport();
+  //Warehouse
+  const [warehouseSelect, setWarehouseSelect] = useState<number | undefined>();
+  const [isModalCheckWarehouse, setIsModalCheckWarehouse] = useState(false);
+  const [warehouseDefault, isLoadingWarehouseDefault] = useGetWarehouse(); //Fetch warehouse default by area
+  const [billItem, setBillItem] = useState<any>(null);
+  const memoId = useMemo(() => get(billItem, '_id'), [billItem]);
+  const [bill, loading] = useGetBill(memoId);
+  const canCreateBillToWarehouse = useMatchPolicy(POLICIES.WRITE_WAREHOUSELINK);
+  const [noteForWarehouse, setNoteForWarehouse] = useState<string>('');
+  const [,setBillItemIdCancel] = useState<any>();
+  const [listWarehouse] = useGetWarehouseByBranchLinked(); // Get all warehouse linked with branch
+  const [isOpenSplitBill, setIsOpenSplitBill] = useState(false);
+  const canWriteSplitBill = useMatchPolicy(POLICIES.WRITE_BILLSPLIT);
+  const InitData = useInitialValue(listWarehouse, bills);
+  const {onNotify} = useNotificationStore();
+  const [isLoadingUpdate,onUpdateStatus] = useUpdateStatusBill(() => {
+    dispatch(billSliceAction.resetAction());
+  });
+  const isHaveAdminBillPermission = useMatchPolicy(POLICIES.UPDATE_BILLSTATUS);
+  const onOpenCancel = useCallback((id:any) => {
+    if(id){
+      setBillItemIdCancel(id);
+    }
+  }, []);
+  const isDisabledAll = (status: keyof typeof STATUS_BILL) => {
+    return status === STATUS_BILL.CANCELLED
+  };
+  
+  useEffect(() => {
+    if (bill && bill?.warehouseId) {
+      setWarehouseSelect(bill?.warehouseId);
+    };
+  }, [bill]);
+  const openModalCheckWarehouse = (item: any) => {
+    setIsModalCheckWarehouse(true);
+    setBillItem(item);
+  };
+  const closeModalCheckWarehouse = () => {
+    setIsModalCheckWarehouse(false);
+    setBillItem(null);
+  };
+
+  const onOpenSplitBillForm = () => {
+    setIsOpenSplitBill(true);
+  };
+
+  const onCloseSplitBillForm = () => {
+    setIsOpenSplitBill(false);
+  };
+
+
+  const [isLoadingCreate, onCreateBillToWarehouse] = useCreateBillToWarehouse(
+    () => {
+      // dispatch(warehouseActions.resetAction());
+      // dispatch(billSliceAction.resetAction());
+      closeModalCheckWarehouse();
+    }
+  );
+
+  const [isLoadingCheckWarehouse, onCheckWarehouse] = useCheckWarehouse(() => {
+    dispatch(warehouseActions.resetAction());
+  });
+  const onCheck = () => {
+    try {
+      const newList =  convertProductsFromBill(get(bill, 'billItems', []))
+      const submitData = {
+        warehouseId: warehouseSelect,
+        listProduct: newList,
+        billId: get(bill, '_id'),
+      };
+      onCheckWarehouse(submitData);
+    } catch (error) {
+      console.log(error)
+    }
+  };
+  const onRequestWarehouseExport = () => {
+    const submitData = convertDataSentToWarehouse({ ...bill, notePharmacy: noteForWarehouse });
+    try {
+      onCreateBillToWarehouse({ ...submitData });
+    } catch (error) {
+      console.log(error)
+    };
+  };
+
+  const handleCreateBillToWarehouse = (status: keyof typeof STATUS_BILL, bill: any) => {
+    try {
+      const submitData = convertDataSentToWarehouse({ ...bill, notePharmacy: noteForWarehouse });
+      setTimeout(() => {
+          onCreateBillToWarehouse({...submitData, callback: onUpdateStatus, status});
+      },700)
+    } catch (error) {
+      console.log(error)
+    }
+  };
+  const onChangeStatusBill = ({ nextStatus, bill, note }: propsConfirmStatusBill) => {
+    const remainingAmount : number = bill?.totalPrice - bill?.totalReceiptVoucherCompleted;
+    if (bill?.totalPrice > bill?.totalReceiptVoucherCompleted && nextStatus === STATUS_BILL.COMPLETED) {
+       return onNotify?.error(`Không thể hoàn thành đơn hàng vì tổng số tiền phải thu còn ${formatNumberThreeComma(remainingAmount)}`);
+    };
+    // Phải kiểm tra hàng tồn kho trước khi đổi trạng thái từ NEW qua PACKAGE_EXPORT
+    const dataCheck = convertProductsFromBill(get(bill, 'billItems', []));
+    const submitData = {
+      warehouseId: bill?.warehouseId,
+      listProduct: dataCheck,
+      billId: get(bill, '_id'),
+      note
+    };
+    try {
+      if (bill?.status === STATUS_BILL.NEW && nextStatus !== STATUS_BILL.CANCELLED) {
+        return onCheckWarehouse({...submitData, callback: handleCreateBillToWarehouse, status, bill}); //
+      };
+      const data = {
+        billId: get(bill, '_id'),
+        status: nextStatus,
+        note
+      };
+      onUpdateStatus(data); //can update if bill have in warehouse
+    } catch (error) {
+      console.log(error)
+    };
+  };
+
+  //
   const [form] = Form.useForm();
   const initValue = useMemo(() => {
     const root = {
@@ -88,7 +234,6 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
     };
     return getExistProp(root);
   }, [query]);
-
   const columns: ColumnsType = useMemo(
     () => [
       {
@@ -97,6 +242,7 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
         key: "codeSequence",
         align: "center",
         width: 150,
+        fixed: "left",
         render(codeSequence, record, index) {
           return (
             <Link
@@ -107,6 +253,14 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
             </Link>
           );
         },
+      },
+      {
+        title: "Mã đơn xuất kho",
+        dataIndex: "codeSaleOrder",
+        key: "codeSaleOrder",
+        align: "center",
+        width: 150,
+        fixed: 'left',
       },
       // {
       //   title: "Ngày tạo đơn",
@@ -133,23 +287,42 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
         title: "Tên nhà thuốc",
         dataIndex: "pharmacy",
         key: "pharmacy",
+        width: 200,
         align: "left",
-        width: 250,
         render(pharmacy, record, index) {
-          return <Typography.Text>{get(pharmacy, "name", "")}</Typography.Text>;
+          return <Typography.Text>{get(pharmacy, "name", get(pharmacy, 'fullName')) || get(record, 'partner.fullName')}</Typography.Text>;
         },
       },
       {
-        title: "Trạng thái",
+        title: "Tình trạng",
         dataIndex: "status",
         key: "status",
         align: "center",
-        width: 150,
+        width: 300,
         render(status, record, index) {
           return (
-            <Status status={status} statusVi={CLONE_STATUS_BILL_VI[status]} />
-          );
-        },
+            !isHaveAdminBillPermission ? (
+              <Status status={status} statusVi={CLONE_STATUS_BILL_VI[status]} />
+            ) :
+              <div className="d-flex flex-column align-items-center">
+                <ToolTipBadge title={status === STATUS_BILL.CANCELLED && get(record, 'note', '')}>
+                  <Status
+                    status={status}
+                    statusVi={CLONE_STATUS_BILL_VI?.[status]}
+                  />
+                </ToolTipBadge>
+                <WithPermission permission={POLICIES.UPDATE_BILLSTATUS}>
+                  <ConfirmStatusBill
+                    bill={record}
+                    onChangeStatusBill={onChangeStatusBill}
+                    onOpenCancel={onOpenCancel}
+                    isDisabledAll={isDisabledAll(status)}
+                    isSubmitLoading={isLoadingCreate || isLoadingUpdate}
+                    id={get(record, '_id')} />
+                </WithPermission>
+              </div>
+          )
+        }
       },
       {
         title: "Giá trị đơn hàng",
@@ -162,49 +335,11 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
         },
       },
       {
-        title: "Lý do huỷ",
-        dataIndex: "cancelNote",
-        key: "cancelNote",
-        align: "left",
-        width: 180,
-        render(cancelNote?: any) {
-          return (
-            <Typography.Paragraph
-              ellipsis={{
-                tooltip: cancelNote,
-                rows: 2,
-              }}
-            >
-              {cancelNote}
-            </Typography.Paragraph>
-          );
-        },
-      },
-      {
-        title: "Ghi chú",
-        dataIndex: "note",
-        key: "note",
-        align: "left",
-        width: 180,
-        render(note?: any) {
-          return (
-            <Typography.Paragraph
-              ellipsis={{
-                tooltip: note,
-                rows: 2,
-              }}
-            >
-              {note}
-            </Typography.Paragraph>
-          );
-        },
-      },
-      {
         title: "Khách đã trả",
         dataIndex: "pair",
         key: "pair",
+        width: 150,
         align: "center",
-        width: 180,
         render(pair, record, index) {
           return (
             <Typography.Text>
@@ -217,8 +352,8 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
         title: "Khách phải trả",
         dataIndex: "totalPrice",
         key: "totalPrice",
+        width: 150,
         align: "center",
-        width: 180,
         render(totalPrice, record, index) {
           const remainAmount = CalculateBillMethod.remainAmount(record);
           return <Typography.Text>{formatter(remainAmount)}</Typography.Text>;
@@ -233,6 +368,79 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
           return concatAddress(value);
         },
       },
+      {
+        title: "Kho xuất hàng",
+        dataIndex: "warehouseName",
+        key: "warehouseName",
+        width: 200,
+        align: "center",
+        render(value: number) {
+          return <Typography.Text>{value || (!listWarehouse?.length ? 'Không thể liên kết đến kho' : 'Không tồn tại kho xuất hàng' ) }</Typography.Text>;
+        }
+      },
+      {
+        title: "Ghi chú",
+        key: "note",
+        width: 100,
+        align: "left",
+        render(note?: any, record?: any, index?: any) {
+          return (
+            <>
+            <Typography.Paragraph
+              ellipsis={{
+                tooltip: note,
+                rows: 2,
+              }}
+              >
+              {record?.note || ''}
+            </Typography.Paragraph>
+            <Typography.Paragraph
+              ellipsis={{
+                tooltip: note,
+                rows: 2,
+              }}
+              >
+              {record?.noteBillSplit || ''}
+            </Typography.Paragraph>
+              </>
+          );
+        },
+      },
+      {
+        title: "Lý do huỷ",
+        dataIndex: "cancelNote",
+        key: "cancelNote",
+        width: 150,
+        align: "left",
+        render(cancelNote?: any) {
+          return (
+            <Typography.Paragraph
+              ellipsis={{
+                tooltip: cancelNote,
+                rows: 2,
+              }}
+            >
+              {cancelNote}
+            </Typography.Paragraph>
+          );
+        },
+      },
+      ...(canCreateBillToWarehouse ? [{
+        title: "Thao tác",
+        width: 100,
+        key: "action",
+        align: "center" as any,
+        fixed: "right" as any,
+        render(value: any, record: any, index: number) {
+          return <Action
+            branchId={record._id}
+            onCheckWarehouse={onCheckWarehouse}
+            onOpenModalSelectWarehouse={() => openModalCheckWarehouse(record)}
+            statusBill={record?.status}
+            canCreateBillToWarehouse={canCreateBillToWarehouse}
+          />
+        }
+      }] : []),
       ...(canDownload
         ? [
             {
@@ -254,7 +462,7 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
           ]
         : []),
     ],
-    [arrCheckBox, canDownload]
+    [arrCheckBox, canDownload, canCreateBillToWarehouse]
   );
 
   useEffect(() => {
@@ -291,8 +499,23 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
         break;
     }
   };
+
+  const addColumn = {
+    title: "Trạng thái",
+    dataIndex: "statusCheckWarehouse",
+    key: "statusCheckWarehouse",
+    width: 100,
+    align: "center" as any,
+    render: (value: any, record: any, index: number) => {
+      return <TagBillItem status={record?.statusCheckWarehouse}/>
+    }
+  };
+  const findItemReadyExportWarehouse = useMemo(() => bill?.billItems?.find((item: any)=> item?.statusCheckWarehouse), [bill]);
+  const findItemUnReadyExportWarehouse = useMemo(() => bill?.billItems?.find((item: any) => !item?.statusCheckWarehouse), [bill]);
+  const splitBill = useMemo(() => !!findItemReadyExportWarehouse && !!findItemUnReadyExportWarehouse && canWriteSplitBill && (bill?.totalPrice > MIN_MONEY_BILL), [findItemReadyExportWarehouse, findItemUnReadyExportWarehouse])
   return (
-    <div className="bill-page">
+    // <div className="bill-page">
+    <>
       <Row justify={"space-between"}>
         <Col span={12}>
           <Space style={{ alignItems: "normal" }}>
@@ -370,7 +593,7 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
           </Col>
         </WithPermission>
       </Row>
-      <Row justify={"space-between"}>
+      <Row justify={"space-between"} className="mt-2">
         <Form
           form={form}
           style={{ width: "100%" }}
@@ -441,18 +664,64 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
         }}
       >
         <TableAnt
-          stickyTop
-          className="table-striped-rows-custom"
-          columns={columns}
-          dataSource={bills}
-          loading={isLoading}
-          scroll={{ x: "max-content" }}
-          pagination={pagingTable(paging, onParamChange)}
-          size="small"
-          bordered
-          // scroll={{ y: "60vh", x: 800 }}
-        />
+        stickyTop
+        className="table-striped-rows-custom"
+        columns={columns}
+        dataSource={InitData as any}
+        loading={isLoading}
+        pagination={pagingTable(paging, onParamChange)}
+        size="small"
+        bordered
+        scroll={{ y: '60vh' ,x  : 'max-content'}}
+      />
       </ConfigProvider>
-    </div>
+      <ModalAnt
+        destroyOnClose
+        title=""
+        open={isModalCheckWarehouse}
+        onCancel={closeModalCheckWarehouse}
+        onOk={closeModalCheckWarehouse}
+        width={1200}
+        footer={false}
+      >
+        {loading ? <Spin />
+          : (
+            <>
+              <BaseBorderBox>
+                <ProductItem data={bill?.billItems} column={addColumn} />
+                <NoteWarehouse noteForWarehouse={noteForWarehouse} setNoteForWarehouse={setNoteForWarehouse} placeholder={'Ghi chú gửi đến kho'} />
+                <RadioButtonWarehouseNotFetch
+                  setValue={setWarehouseSelect}
+                  value={warehouseSelect}
+                  onClick={onCheck}
+                  title="Kiểm kho"
+                  isLoadingWarehouse={isLoadingCheckWarehouse}
+                  isSubmitLoading={isLoadingCheckWarehouse}
+                  isShowButtonPackageExport
+                  disabledButtonExport={bill?.status !== STATUS_BILL.READY}
+                  requestWarehouseExport={onRequestWarehouseExport}
+                  warehouseDefault={warehouseDefault}
+                  listWarehouseLinked={listWarehouse}
+                  splitBill = {splitBill}
+                  onOpenSplitBillForm={onOpenSplitBillForm}
+                  disabledButtonSplit={!bill?.isCheck}
+                  disabledButtonSubmit = {listWarehouse?.length <= 0}
+                />
+                </BaseBorderBox>
+              </>
+          )}
+      </ModalAnt>
+      <ModalAnt
+          title='Tách đơn hàng'
+          open={isOpenSplitBill}
+          onCancel={onCloseSplitBillForm}
+          width={'auto'}
+          footer={null}
+          destroyOnClose
+      >
+        <SplitBill bill={bill} onCloseSplitBillForm={onCloseSplitBillForm} closeModalCheckWarehouse = {closeModalCheckWarehouse} />
+      </ModalAnt>
+    </>
+    // </div> 
   );
 }

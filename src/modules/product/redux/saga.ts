@@ -102,6 +102,15 @@ function* deleteBorrowProduct({payload : id} : any) : any {
   };
 };
 
+function* getStock({payload} : any) : any {
+  try {
+    const data = yield call(api.getStock,payload);
+    yield put(productActions.getStockSuccess(data));
+  } catch (error:any) {
+    yield put(productActions.getStockFailed(error));
+  }
+}
+
 export default function* productSaga() {
   yield takeLatest(productActions.getListRequest, getListProduct);
   yield takeLatest(productActions.getByIdRequest, getByIdProduct);
@@ -116,4 +125,7 @@ export default function* productSaga() {
   yield takeLatest(productActions.updateBorrowRequest, updateBorrowProduct);
   yield takeLatest(productActions.deleteBorrowRequest, deleteBorrowProduct);
   yield takeLatest(productActions.confirmBorrowRequest, confirmBorrowProduct);
+
+  yield takeLatest(productActions.getStockRequest, getStock);
+
 }

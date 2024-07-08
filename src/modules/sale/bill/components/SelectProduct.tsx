@@ -14,9 +14,10 @@ import ImageProduct from './ImageProduct';
 
 type propsType = {
   dataCurrent : any,
-  onChangeBill : (newData:any) => void,
+  onChangeBill: (newData: any) => void,
+  warehouseId?: any,
 }
-export default function SelectProduct({dataCurrent,onChangeBill}:propsType) : React.JSX.Element {
+export default function SelectProduct({dataCurrent,onChangeBill,warehouseId}:propsType) : React.JSX.Element {
   
   const {onNotify} = useNotificationStore();
   const [partner] = useGetCollaborator(get(dataCurrent,'pharmacyId'));
@@ -42,8 +43,9 @@ export default function SelectProduct({dataCurrent,onChangeBill}:propsType) : Re
           setLoading(true);
           const products = await ProductModule.api.search({
             keyword,
-            limit: 20,
+            limit: 5,
             pharmacyId,
+            ...(warehouseId &&{ warehouseId})
           }); 
           const newDataSearch = products?.map((item: ItemSearchProduct) => ({
             ...item,
@@ -61,7 +63,9 @@ export default function SelectProduct({dataCurrent,onChangeBill}:propsType) : Re
       const onSelect = async(data:any) => {
           try {
 
-            const productInPartner = get(partner,'products',[])?.find((p:any) => get(p,'productId') === get(data,'_id'))
+            let productInPartner = get(partner, 'products', [])?.find((p: any) => get(p, 'productId') === get(data, '_id'));
+            productInPartner = undefined;
+            // Logic pending because not using
             const discountOther : DiscountOtherType[] = productInPartner ? [{
               typeDiscount : get(productInPartner,'discount.discountType'),
               value : get(productInPartner,'discount.value'),

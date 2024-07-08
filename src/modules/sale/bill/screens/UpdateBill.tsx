@@ -1,6 +1,5 @@
-import { LeftOutlined, SendOutlined } from "@ant-design/icons";
+import { EditOutlined, LeftOutlined } from "@ant-design/icons";
 import {
-  Avatar,
   Button,
   Col,
   Divider, Form,
@@ -13,30 +12,29 @@ import {
 import TextArea from "antd/es/input/TextArea";
 import dayjs from "dayjs";
 import { get, omit } from "lodash";
-import PolicyModule from "policy";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { Link, useLocation, useParams } from "react-router-dom";
 import ModalAnt from "~/components/Antd/ModalAnt";
 import Status from "~/components/common/Status/index";
 import WhiteBox from "~/components/common/WhiteBox";
+import WithPermission from "~/components/common/WithPermission";
+import POLICIES from "~/modules/policy/policy.auth";
+import { useMatchPolicy } from "~/modules/policy/policy.hook";
+import { ReportSalaryPartnerProvider } from "~/modules/reportSalaryPartner/ReportSalaryPartnerProvider";
 import {
   useResetBillAction,
   useUpdateBill
 } from "~/modules/sale/bill/bill.hook";
 import BillItemModule from "~/modules/sale/billItem";
+import VoucherInOrder from "~/modules/vouchers/components/VoucherInOrder";
+import { METHOD_TYPE } from "~/modules/vouchers/constants";
 import { PATH_APP } from "~/routes/allPath";
-import { CheckPermission, concatAddress, formatter } from "~/utils/helpers";
+import { CheckPermission, formatter } from "~/utils/helpers";
 import { PayloadUpdateBill } from "../bill.modal";
+import HistoryBillInWarehouse from "../components/HistoryBillInWarehouse";
 import StepStatus from "../components/StepStatus";
 import { STATUS_BILL, STATUS_BILL_VI } from "../constants";
 import useUpdateBillStore from "../storeContext/UpdateBillContext";
-import VoucherInOrder from "~/modules/vouchers/components/VoucherInOrder";
-import WithPermission from "~/components/common/WithPermission";
-import POLICIES from "~/modules/policy/policy.auth";
-import { useMatchPolicy } from "~/modules/policy/policy.hook";
-import { REF_COLLECTION } from "~/constants/defaultValue";
-import { ReportSalaryPartnerProvider } from "~/modules/reportSalaryPartner/ReportSalaryPartnerProvider";
-import { METHOD_TYPE } from "~/modules/vouchers/constants";
 type propsType = {};
 const Layout = ({ label, children,strong }: { label: any; children: any,strong?:boolean }) => (
   <Row className="hover-dot-between" justify={"space-between"} align="middle">
@@ -54,36 +52,37 @@ type FormFieldBillType = {
 }
 const CLONE_STATUS_BILL_VI: any = STATUS_BILL_VI;
 const CLONE_STATUS_BILL: any = STATUS_BILL;
+
+// const CLONE_STATUS_BILL_VI_WITH_OMIT: any = omit(STATUS_BILL_VI, [
+//   STATUS_BILL.COMPLETED,STATUS_BILL.READY, STATUS_BILL.UNREADY
+// ]) 
+const CLONE_STATUS_BILL_WITH_OMIT: any =  omit(STATUS_BILL, [
+  STATUS_BILL.COMPLETED,STATUS_BILL.READY, STATUS_BILL.UNREADY
+]) ;
+
 export default function UpdateBill(props: propsType): React.JSX.Element {
-  const [form] = Form.useForm();
   useResetBillAction();
-  const { bill, isLoading,mutateBill,onOpenForm, compareMoney,onOpenFormPayment ,totalRevenueInVouchers} = useUpdateBillStore();
-  
+  const [form] = Form.useForm();
+  const { bill, isLoading,mutateBill,onOpenForm, compareMoney,onOpenFormPayment ,totalRevenueInVouchers, onOpenFormLogistic, warehouseInfo} = useUpdateBillStore();
   const {
     codeSequence,
     createdAt,
     status,
-    historyStatus,
-    billItems,
     pair,
-    totalPrice,
     createBy,
     note,
     totalAmount,
     totalReceiptVoucherCompleted,
     totalReceiptAmount,
     remainAmount,
-    totalFee,
     feeDetail,
     refCollection,
+    historyProcessStatus
   } = bill || {};
-  console.log(refCollection, refCollection)
+  useResetBillAction();
   const { pathname } = useLocation();
   const keyPermission = useMemo(() => CheckPermission(pathname), [pathname]);
   const canUpdateBill = useMatchPolicy([keyPermission, 'update']);
-  const canWriteBill = useMatchPolicy([keyPermission, 'write']);
-  // const queryGetDebtPharmacy = useMemo(() => ({pharmacyId : get(bill,'pharmacyId')}),[bill]);
-  // const [debt,isLoadingDebt] = useFetchState({api : PharmacyModule.api.getDebt,query : queryGetDebtPharmacy});
   const { id } = useParams();
   const [openCancel, setOpenCancel] = useState(false);
   const [cancelNote, setCancelNote] = useState("");
@@ -112,6 +111,7 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
     };
     updateBill(payloadUpdate);
   };
+
   const onFinish = (values : FormFieldBillType) => {
     const payloadUpdate: PayloadUpdateBill = {
       ...values,
@@ -136,7 +136,7 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
         <LeftOutlined /> Đơn hàng
       </Link>
       
-      <div className="bill-page-update--infoBill">
+      <div className="bill-page-update--infoBill mb-3">
         <Row justify={"space-between"} align="middle" gutter={24}>
           <Col lg={9} md={24} sm={24}>
             <Row align="middle" gutter={8} wrap={false}>
@@ -156,11 +156,6 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
                     onClick={onOpenCancel}
                     disabled={
                       !canUpdateBill
-                      || billItems?.some(
-                        (item: any) =>
-                          get(item, "status") !==
-                          BillItemModule.constants.STATUS_BILLITEM.ORDERING
-                      )
                       || status !== STATUS_BILL.NEW
                     }
                   >
@@ -175,15 +170,12 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
             <StepStatus
               statuses={
                 status !== STATUS_BILL.CANCELLED
-                  ? omit(STATUS_BILL, ["CANCELLED"])
-                  : omit(STATUS_BILL, [
-                      STATUS_BILL.COMPLETED,
-                      STATUS_BILL.PROCESSING,
-                    ])
+                  ? omit(CLONE_STATUS_BILL_WITH_OMIT, [STATUS_BILL.REJECT ])
+                  : (status === STATUS_BILL.REJECT ? CLONE_STATUS_BILL_WITH_OMIT :  omit(CLONE_STATUS_BILL_WITH_OMIT, [ STATUS_BILL.REJECT  ]))
               }
               statusesVi={STATUS_BILL_VI}
               currentStatus={status}
-              historyStatus={historyStatus}
+              historyStatus={historyProcessStatus}
             />
           </Col>
         </Row>
@@ -199,7 +191,7 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
                   </Col>
 
                   <WithPermission permission={refCollection === 'partner' ? POLICIES.READ_VOUCHERBILLPARTNER : POLICIES.READ_VOUCHERPHARMACY}>
-                    <Col style={{ position: 'absolute', right: 0, top: 5 }}>
+                    <Col style={{ position: 'absolute', right: 0, top: 0 }}>
                       <Button type="link" onClick={onOpenDetailVouchers}>Xem chi tiết các phiếu</Button>
                     </Col>
                   </WithPermission>
@@ -221,7 +213,7 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
                     </div>
                   </Space>
                   </Col>
-                  <Row gutter={10}>
+                  <Row gutter={10} style={{ marginRight: 5 }}>
                     <ReportSalaryPartnerProvider refCollection={refCollection} methodType={METHOD_TYPE.BILL as any}>
                     <WithPermission permission={refCollection === 'partner' ? POLICIES.WRITE_VOUCHERBILLPARTNER : POLICIES.WRITE_VOUCHERPHARMACY}>
                     <Col>
@@ -244,7 +236,10 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
               </Row>
               <Divider />
               <h6>Địa chỉ giao</h6>
-              {get(bill, "deliveryAddress",'')}
+                {get(bill, "deliveryAddress", '')}
+                <Divider />
+              <h6>Kho xuất hàng</h6>
+              {get(warehouseInfo,'name.vi','')}
             </WhiteBox>
           </div>
         </Col>
@@ -268,7 +263,13 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
               <Layout label={"Tổng số tiền sau chiết khấu"}>{formatter(get(bill,'totalAfterDiscountBill',0))}</Layout>
               {/* <Layout label={"Đã trả trước"}>-{formatter(pair)}</Layout> */}
               <Layout label={"Phụ phí"}>{formatter(get(feeDetail,'SUB_FEE',0))}</Layout>
-              <Layout label={"Vận chuyển"}>{formatter(get(feeDetail,'LOGISTIC',0))}</Layout>
+                <WithPermission permission={POLICIES.UPDATE_LOGISTIC}>
+                  <Layout label={<Typography.Text>
+                    Phí vận chuyển {' '}
+                    {/* {(status === STATUS_BILL.NEW) */}
+                       <EditOutlined onClick={onOpenFormLogistic} style={{ color: '#5AB2FF' }} />
+                  </Typography.Text>}>{formatter(get(feeDetail, 'LOGISTIC', 0))}</Layout>
+              </WithPermission>
               <Layout label={"Đã thanh toán"}>-{formatter(totalReceiptAmount)}</Layout>
               <Layout label={"Đã thanh toán và xác nhận"}>-{formatter(totalReceiptVoucherCompleted + (pair || 0))}</Layout>
               <Layout strong label={"Tổng số tiền còn lại"}>
@@ -281,7 +282,7 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
               <Form.Item<FormFieldBillType> name={'note'}>
               <TextArea />
               </Form.Item>
-              <Button style={{marginLeft : 'auto',display : 'block',marginTop : 5}} type="primary" onClick={() => form.submit()} icon={<SendOutlined />} size='small'/>
+              {/* <Button style={{marginLeft : 'auto',display : 'block',marginTop : 5}} type="primary" onClick={() => form.submit()} icon={<SendOutlined />} size='small'/> */}
             </WhiteBox>
           </div>
         </Col>
@@ -291,6 +292,12 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
         <WhiteBox>
           <h6>Thông tin sản phẩm</h6>
           <BillItemModule.components.ListBillItem statusBill={status} />
+        </WhiteBox>
+      </div>
+      <div className="bill-page-update--infoBillItem">
+        <WhiteBox>
+          <h6>Lịch sử trạng thái đơn hàng</h6>
+          <HistoryBillInWarehouse data = {bill?.historyProcessStatus}/>
         </WhiteBox>
       </div>
       <ModalAnt

@@ -13,6 +13,7 @@ import {
   useSuccess,
 } from "~/utils/hook";
 import { branchSliceAction } from "./redux/reducer";
+import { RootState } from "~/redux/store";
 const MODULE = "branch";
 const MODULE_VI = "Chi nhánh";
 
@@ -32,6 +33,13 @@ const {
   updateFailedSelector,
   pagingSelector,
 } = getSelectors(MODULE);
+const getSelector = (key : string) => (state: any) => state.branch[key];
+const isLoadingWarehouse = getSelector('isLoadingWarehouse');
+const listWarehouse = getSelector('listWarehouse');
+const getListWarehouseFailed = getSelector('getListWarehouseFailed');
+
+const updateApiKeySuccessSelector = getSelector('updateApiKeySuccess');
+const updateApiKeyFailedSelector = getSelector('updateApiKeyFailed');
 
 export const useBranchPaging = () => useSelector(pagingSelector);
 
@@ -44,15 +52,6 @@ export const useGetBranches = (params: any) => {
     param: params,
   });
 };
-
-// export const useGetBranches = () => {
-//   return useFetch({
-//     action: branchSliceAction.getListRequest,
-//     loadingSelector: loadingSelector,
-//     dataSelector: listSelector,
-//     failedSelector: getListFailedSelector,
-//   });
-// };
 export const useGetBranch = (id: any) => {
   return useFetchByParam({
     action: branchSliceAction.getByIdRequest,
@@ -100,6 +99,7 @@ export const useDeleteBranch = (callback?: any) => {
     loadingSelector: isSubmitLoadingSelector,
   });
 };
+
 
 export const useBranchQueryParams = () => {
   const query = useQueryParams();
@@ -149,4 +149,28 @@ export const useUpdateBranchParams = (
   };
 
   return [keyword, { setKeyword, onParamChange }];
+};
+
+
+export const useUpdateApiKey = (callback?: any) => {
+  useSuccess(
+    updateApiKeySuccessSelector,
+    `Cập nhật mã liên kết kho thành công`,
+    callback
+  );
+  useFailed(updateApiKeyFailedSelector);
+  return useSubmit({
+    action: branchSliceAction.updateApiKeyRequest,
+    loadingSelector: isSubmitLoadingSelector,
+  });
+};
+
+export const useGetListWarehouseInPMS = () => {
+  console.log('hook')
+  return useFetch({
+    action: branchSliceAction.getListWarehouseRequest,
+    loadingSelector: isLoadingWarehouse,
+    dataSelector: listWarehouse,
+    failedSelector: getListWarehouseFailed,
+  });
 };

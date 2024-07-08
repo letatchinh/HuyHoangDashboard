@@ -59,6 +59,9 @@ const deleteBorrowFailedSelector = getSelector("deleteBorrowFailed");
 const confirmBorrowSuccessSelector = getSelector("confirmSuccess");
 const confirmBorrowFailedSelector = getSelector("confirmFailed");
 
+const getStockSuccessSelector = getSelector("stock");
+const getStockFailedSelector = getSelector("getStockFailed");
+
 const pagingBorrowSelector = getSelector("pagingBorrow");
 export const usePagingBorrow = ()=>  useSelector(pagingBorrowSelector);
 
@@ -119,6 +122,15 @@ export const useDeleteProduct = (callback?: any) => {
   });
 };
 
+export const useGetStock = (body: any) => {
+  return useFetchByParam({
+    action: productActions.getStockRequest,
+    loadingSelector: getByIdLoadingSelector,
+    dataSelector: getStockSuccessSelector,
+    failedSelector: getStockFailedSelector,
+    param: body,
+  });
+};
 export const useProductQueryParams = (supplierId?: any) => {
   const query = useQueryParams();
   const limit = query.get("limit") || 10;

@@ -9,9 +9,7 @@ import POLICIES, { CORE_ACTION } from "~/modules/policy/policy.auth";
 import { PoliciesType, policyType } from "~/modules/policy/policy.modal";
 import { useAdapter } from "~/modules/auth/auth.hook";
 import { ADAPTER_KEY } from "~/modules/auth/constants";
-import { useLocation } from "react-router-dom";
 import { PATH_APP } from "~/routes/allPath";
-import { useMatchPolicy } from "~/modules/policy/policy.hook";
 import relativeTime from "dayjs/plugin/relativeTime";
 import localeEn from "dayjs/locale/vi"; // With a custom alias for the locale object
 

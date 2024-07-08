@@ -1,4 +1,4 @@
-import { InfoCircleFilled, QuestionCircleFilled } from "@ant-design/icons";
+import { EditOutlined, InfoCircleFilled, QuestionCircleFilled } from "@ant-design/icons";
 import { Col, Divider, Flex, Form, Row, Tooltip, Typography } from "antd";
 import React from "react";
 import InputNumberAnt from "~/components/Antd/InputNumberAnt";
@@ -44,6 +44,8 @@ export default function TotalBill(props: propsType): React.JSX.Element {
     totalDiscountFromSupplier,
     form,
     totalAmount,
+    bill,
+    onOpenModalWarehouse,
   } = useCreateBillStore();
   const debtType = Form.useWatch("debtType", form);
 
@@ -104,6 +106,21 @@ export default function TotalBill(props: propsType): React.JSX.Element {
       >
         <Typography.Text type="warning" strong>
           {formatter(totalAmount)}
+        </Typography.Text>
+      </Layout>
+      <Layout
+        label={
+          <span>
+            <i className="fa-solid fa-location-dot"></i> Kho nhập hàng
+              <EditOutlined
+                onClick={onOpenModalWarehouse}
+                style={{ color: "#5AB2FF" }}
+              />
+          </span>
+        }
+      >
+        <Typography.Text type="warning" strong>
+          {bill?.warehouseName}
         </Typography.Text>
       </Layout>
       {/* <SelectDebt /> */}
