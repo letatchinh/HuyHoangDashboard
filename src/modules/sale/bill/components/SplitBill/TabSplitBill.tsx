@@ -10,7 +10,7 @@ type propsType = {
   data: any;
 };
 export default function TabSplitBill({ data }: propsType): React.JSX.Element {
-  const { onSubmit ,onCloseSplitBillForm} = useSplitBillStore();
+  const { onSubmit ,onCloseSplitBillForm,isSubmitLoading} = useSplitBillStore();
   const addColumn = {
     title: "Trạng thái",
     dataIndex: "statusCheckWarehouse",
@@ -37,7 +37,8 @@ export default function TabSplitBill({ data }: propsType): React.JSX.Element {
           >
           <Button
             type="primary"
-            style={{ marginRight: 10 }}
+              style={{ marginRight: 10 }}
+              loading={isSubmitLoading}
             >
             Tách đơn
           </Button>

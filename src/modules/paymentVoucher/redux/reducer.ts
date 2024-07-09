@@ -75,6 +75,15 @@ class PaymentVoucherClassExtend extends InstanceModuleRedux {
           state.isLoadingBillId = false;
           state.listByBillId = payload;
           state.pagingByBillId = getPaging(payload);
+          state.listByBillId = {
+          ...state.listByBillId,
+            docs: state.listByBillId?.docs?.map((item: any) => {
+              if (item._id === payload?.data?._id) {
+                return { ...item, ...payload?.data };
+              }
+              return item
+            })
+          };
         },
         getListByBillIdFailed: (state:cloneInitState, { payload }:{payload:any}) => {
           state.isLoadingBillId = false;

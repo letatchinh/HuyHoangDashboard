@@ -7,6 +7,7 @@ export interface cloneInitState extends initStateSlice {
   convertFailed?: any;
   convertSuccess?: any;
 
+  isLoadingCheckBill?: any;
   checkBillFailed?: any;
   checkBillSuccess?: any;
 
@@ -54,15 +55,15 @@ class QuotationClassExtend extends InstanceModuleRedux {
       },
 
       checkBillRequest: (state: cloneInitState) => {
-        state.isSubmitLoading = true;
+        state.isLoadingCheckBill = true;
         state.checkBillFailed = null;
       },
       checkBillSuccess: (state: cloneInitState,{ payload }: { payload: any }) => {
-        state.isSubmitLoading = false;
+        state.isLoadingCheckBill = false;
         state.checkBillSuccess = payload;
       },
       checkBillFailed: (state: cloneInitState, { payload }: { payload: any }) => {
-        state.isSubmitLoading = false;
+        state.isLoadingCheckBill = false;
         state.checkBillFailed = payload;
       },
 
@@ -77,6 +78,7 @@ class QuotationClassExtend extends InstanceModuleRedux {
       
       checkBillFailed: null,
       checkBillSuccess: null,
+      isLoadingCheckBill: false,
 
       // Want Add more State Here...
     };
