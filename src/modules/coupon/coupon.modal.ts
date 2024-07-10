@@ -35,9 +35,9 @@ export interface CouponBase {
     state: 'PUBLIC' | 'PRIVATE',
     limit?: number,
     applyFor?: 'SHIP' | 'BILL',
-    discount?: {
-        type?: 'PERCENT' | 'VALUE',
-        value?: number,
+    discount: {
+        type: 'PERCENT' | 'VALUE',
+        value: number,
         maxDiscount? : number
     },
     conditions?: detailCondition[],
@@ -58,10 +58,7 @@ export interface CouponInSelect extends CouponBase {
 }
 export type QuerySearchCoupon = {
   target: 'BILL' | 'BILL_ITEM',
-  targetId?: {
-      id?: string,
-      refCollection: 'product' | 'product_group'
-    },
+  targetId?: string,
     customerApplyId?: {
       id?: string,
       refCollection: 'pharma_profile' | 'partner'

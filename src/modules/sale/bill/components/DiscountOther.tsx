@@ -2,17 +2,17 @@ import { DeleteOutlined, EditOutlined, PlusOutlined } from "@ant-design/icons";
 import { Button, Col, Flex, Popconfirm, Popover, Row, Tag, Typography } from "antd";
 import { get } from "lodash";
 import React from "react";
-import { formatter, getValueOfMath } from "~/utils/helpers";
+import { formatter } from "~/utils/helpers";
 import { DiscountOtherType } from "../bill.modal";
-import { CalculateDiscountFactory } from "../bill.service";
 import DiscountOtherForm from "./DiscountOtherForm";
-const CalculateDiscountFactoryMethod  = new CalculateDiscountFactory();
+import useCreateBillStore from "../storeContext/CreateBillContext";
 type propsType = {
   onAdd: (p: any) => void;
   onUpdate: (p: any, index: number) => void;
   onRemove: (index: number) => void;
   dataSource: DiscountOtherType[];
   totalDiscountOther: number;
+  productId : string
 };
 export default function DiscountOther({
   onAdd,
@@ -20,7 +20,9 @@ export default function DiscountOther({
   onRemove,
   dataSource,
   totalDiscountOther,
+  productId,
 }: propsType): React.JSX.Element {
+  const {onOpenCouponBillItem} = useCreateBillStore();
   return (
     <div>
       <Popover
@@ -31,6 +33,9 @@ export default function DiscountOther({
           Thêm Chiết khấu
         </Button>
       </Popover>
+        <Button onClick={() => onOpenCouponBillItem(productId)} size="small" className="mb-1" icon={<PlusOutlined />} type="primary" ghost>
+          Thêm mã giảm giá
+        </Button>
       {dataSource?.map((item: DiscountOtherType, index: number) => (
         <Row align={"middle"} key={index}>
           <Col span={12}>

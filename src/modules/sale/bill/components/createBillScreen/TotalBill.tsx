@@ -67,6 +67,8 @@ export default function TotalBill(props: propsType): React.JSX.Element {
     canReadLogistic,
     canReadWarehouse,
     onOpenCoupon,
+    totalDiscountCouponBill,
+    totalDiscountCouponShip,
   } = useCreateBillStore();
   const [minFee, setMinFee] = useState<any>();
   const [openAddress, setOpenAddress] = useState(false);
@@ -125,6 +127,8 @@ export default function TotalBill(props: propsType): React.JSX.Element {
     <Flex vertical gap={"small"}>
       <Layout label={"Số lượng mặt hàng"}>{formatter(totalQuantity)}</Layout>
       <Layout label={"Tổng tiền"}>{formatter(totalPrice)}</Layout>
+      <Layout label={"Giảm giá"}>{formatter(totalDiscountCouponBill)}</Layout>
+      <Layout label={"Giảm giá phí ship"}>{formatter(totalDiscountCouponShip)}</Layout>
       {totalDiscountFromProduct?.["DISCOUNT.CORE"] ? (
         <Layout label={"Tổng chiết khấu cứng từ mặt hàng"}>
           <Typography.Text type="warning">
@@ -388,7 +392,7 @@ export default function TotalBill(props: propsType): React.JSX.Element {
       />
       <Layout isLarge={true} label={"Mã giảm giá"}>
         <Typography.Link 
-        onClick={() => onOpenCoupon({target : "BILL"})} style={{ fontSize: 18, fontWeight: 600 }}>
+        onClick={() => onOpenCoupon()} style={{ fontSize: 18, fontWeight: 600 }}>
           Chọn hoặc nhập mã
         </Typography.Link>
       </Layout>

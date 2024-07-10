@@ -25,7 +25,7 @@ import {
   useGetWarehouseByBranchLinked
 } from "~/modules/warehouse/warehouse.hook";
 import useNotificationStore from "~/store/NotificationContext";
-import { getValueOfPercent } from "~/utils/helpers";
+import { getValueOfMath, getValueOfPercent } from "~/utils/helpers";
 import { DEFAULT_DEBT_TYPE } from "../../quotation/constants";
 import { useCheckRefCollection, useGetDebtRule } from "../bill.hook";
 import { DebtType, FeeType, quotation } from "../bill.modal";
@@ -36,6 +36,7 @@ import POLICIES from "~/modules/policy/policy.auth";
 import SelectCoupon from "~/modules/coupon/components/SelectCoupon";
 import { useCouponSelect } from "~/modules/coupon/coupon.hook";
 import { CouponInSelect, QuerySearchCoupon } from "~/modules/coupon/coupon.modal";
+import SelectCouponBillItem from "~/modules/coupon/components/SelectCouponBillItem";
 const TYPE_DISCOUNT = {
   "DISCOUNT.CORE": "DISCOUNT.CORE",
   "DISCOUNT.SOFT": "DISCOUNT.SOFT",
@@ -103,12 +104,22 @@ export type GlobalCreateBill = {
   updateWarehouseInBill: (warehouseId: string) => any;
   canReadLogistic: boolean;
   canReadWarehouse: boolean;
-  onOpenCoupon: (p?: Omit<QuerySearchCoupon,'customerApplyId'>) => void;
+  onOpenCoupon: () => void;
+  onCloseCoupon: () => void;
   coupons: any[];
   loadingGetCoupon: boolean;
-  couponSelected: any;
-  onChangeCoupleSelect: (target : "bill" | "ship" | "item",newCoupon : CouponInSelect[]) => void;
-  setQueryCoupon: (cp?: any) => void;
+  onOpenCouponBillItem: (id : string) => void;
+  onCloseCouponBillItem: () => void;
+  couponsBillItem: any[];
+  loadingCouponBillItem: boolean;
+  couponSelected: {
+    bill : CouponInSelect[],
+    ship : CouponInSelect[],
+    item : CouponInSelect[],
+  };
+  onChangeCoupleSelect: (p?:any) => void;
+  totalDiscountCouponBill: number;
+  totalDiscountCouponShip: number;
 };
 const CreateBill = createContext<GlobalCreateBill>({
   quotationItems: [],
@@ -154,12 +165,22 @@ const CreateBill = createContext<GlobalCreateBill>({
   canReadLogistic: false,
   canReadWarehouse: false,
   onOpenCoupon: () => {},
-  couponSelected: [],
+  couponSelected:{
+    bill : [],
+    ship : [],
+    item : [],
+  } ,
   coupons: [],
   loadingGetCoupon: false,
   onChangeCoupleSelect: () => {},
-  setQueryCoupon: () => {},
-});
+  totalDiscountCouponBill : 0,
+  totalDiscountCouponShip : 0,
+  onCloseCoupon: () => {},
+  onOpenCouponBillItem : () => {},
+  onCloseCouponBillItem: () => {},
+  couponsBillItem : [],
+  loadingCouponBillItem : false
+ });
 
 type CreateBillProviderProps = {
   children: ReactNode;
@@ -190,16 +211,13 @@ export function CreateBillProvider({
   );
   
   const [logisticOpen, setLogisticOpen] = useState(false);
-  const [isOpenCoupon,setIsOpenCoupon] = useState(false);
   const [checkboxPayment, setCheckboxPayment] = useState<string | null>(null);
   const { onNotify } = useNotificationStore();
   const [pharmacyInfo, setPharmacyInfo] = useState<any>();
   const [warehouseDefault, isLoading] = useGetWarehouse(); //Fetch warehouse default by area
   const [listWarehouse, isLoadingWarehouse] = useGetWarehouseByBranchLinked(); // Get all warehouse linked with branch
 
-  // Coupon
-  const {couponSelected,coupons,loading : loadingGetCoupon,onChangeCoupleSelect,setQuery : setQueryCoupon,countProduct} = useCouponSelect(bill);
-  //
+
   const refCollection = useCheckRefCollection(get(pharmacyInfo,'data.type',''));
 
   const warehouseInfo = useMemo(() => (listWarehouse || [])?.find((item: any) => item._id === bill?.warehouseId), [bill?.warehouseId, listWarehouse]);
@@ -322,7 +340,7 @@ export function CreateBillProvider({
     [quotationItems]
   ); // Tổng giá trị đơn hàng chưa chiếc khấu
 
-  const totalAmount = useMemo(
+  const totalAmount = useMemo( // Tổng giá trị đơn hàng đã chiết khấu
     () =>
       quotationItems?.reduce(
         (sum: number, cur: any) => sum + get(cur, "totalPrice"),
@@ -330,6 +348,48 @@ export function CreateBillProvider({
       ),
     [quotationItems]
   );
+  
+    // Coupon
+    const {
+      couponSelected,
+      coupons,
+      loading: loadingGetCoupon,
+      onChangeCoupleSelect,
+      isOpenCoupon,
+      onCloseCoupon,
+      onOpenCoupon,
+      couponsBillItem,
+      isOpenCouponBillItem,
+      onCloseCouponBillItem,
+      onOpenCouponBillItem,
+      loadingCouponBillItem,
+    } = useCouponSelect({bill,refCollection,totalAmount});
+    //
+
+  // ------Calculate discount Coupon-------
+  const minTotalPrice = useMemo(() => totalPrice * 45 / 100,[totalPrice]);
+  const maxDiscountCoupon = useMemo(() => totalPrice - minTotalPrice,[minTotalPrice,totalPrice])
+  
+  const totalDiscountCouponBill = useMemo(() => {
+    const totalDiscount = couponSelected?.bill.reduce((sum: number, cur: CouponInSelect) => {
+      const {type,value,maxDiscount} = cur?.discount;
+      return sum + getValueOfMath(totalPrice,value,type,maxDiscount)
+    },0);
+    return Math.min(totalDiscount,maxDiscountCoupon);    
+      
+  },[couponSelected,totalPrice,maxDiscountCoupon]);
+
+  const totalDiscountCouponShip = useMemo(() => {
+    const totalDiscount = couponSelected?.ship.reduce((sum: number, cur: CouponInSelect) => {
+      const {type,value,maxDiscount} = cur?.discount;
+      return sum + getValueOfMath(findLogisticInFee,value,type,maxDiscount)
+    },0);
+    return Math.min(totalDiscount,findLogisticInFee);    
+      
+  },[couponSelected,findLogisticInFee]);
+  // ------End Calculate discount Coupon-------
+
+
   const totalFee = useMemo(
     () =>
       (fee || [])?.reduce(
@@ -344,8 +404,8 @@ export function CreateBillProvider({
   );
   const totalPriceAfterDiscount = useMemo(
     () =>
-      (totalAmount -  pair + (totalFee - findLogisticInFee)) || 0, // Not count fee logistic
-    [quotationItems, pair, totalFee]
+      (totalAmount -  pair + (totalFee - findLogisticInFee) - totalDiscountCouponBill) || 0, // Not count fee logistic
+    [quotationItems, pair, totalFee,totalDiscountCouponBill,findLogisticInFee]
   );
 
   const totalDiscount = useMemo(
@@ -461,22 +521,6 @@ export function CreateBillProvider({
     setLogisticOpen(false);
   };
 
-  const onOpenCoupon = (query? : Omit<QuerySearchCoupon,'customerApplyId'>) => {
-    setIsOpenCoupon(true);
-    query && setQueryCoupon({
-      ...query,
-      customerApplyId : {
-        refCollection,
-        id : get(bill, "pharmacyId")
-      },
-      productCount : countProduct,
-      billPrice : totalAmount
-    });
-  };
-
-  const onCloseCoupon = () => {
-    setIsOpenCoupon(false);
-  };
 
   const onAddLogisticFee = (data: any) => {
     if (bill?.quotationItems?.length <= 0) {
@@ -612,7 +656,13 @@ export function CreateBillProvider({
         coupons,
         loadingGetCoupon,
         onChangeCoupleSelect,
-        setQueryCoupon,
+        totalDiscountCouponBill,
+        totalDiscountCouponShip,
+        onCloseCoupon,
+        onOpenCouponBillItem,
+        onCloseCouponBillItem,
+        loadingCouponBillItem,
+        couponsBillItem,
       }}
     >
       {children}
@@ -671,6 +721,16 @@ export function CreateBillProvider({
         destroyOnClose
       >
         <SelectCoupon />
+      </ModalAnt>
+      <ModalAnt
+        title="Chọn giảm giá"
+        open={isOpenCouponBillItem}
+        onCancel={onCloseCouponBillItem}
+        width={1200}
+        footer={null}
+        destroyOnClose
+      >
+        <SelectCouponBillItem />
       </ModalAnt>
     </CreateBill.Provider>
   );

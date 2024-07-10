@@ -79,6 +79,13 @@ export default function CouponForm({
         });
       }
     }
+    if(keyChange === 'target'){
+      if(valueChange === 'BILL_ITEM'){
+        form.setFieldsValue({
+          applyFor: "BILL"
+        })
+      }
+    }
   };
 
   useEffect(() => {
@@ -187,15 +194,18 @@ export default function CouponForm({
               </Form.Item>
             </Col>
             <Col span={12}>
-              <Form.Item
+              <Form.Item shouldUpdate noStyle>
+                {({getFieldValue}) => <Form.Item
                 rules={requireRules}
                 name={"applyFor"}
                 label="Mã dùng để"
+                tooltip={getFieldValue("target") === "BILL_ITEM" && "Mặt hàng không có Free Ship"}
               >
-                <Radio.Group>
+                <Radio.Group disabled={getFieldValue("target") === "BILL_ITEM"}>
                   <Radio.Button value={"BILL"}>Đơn hàng</Radio.Button>
                   <Radio.Button value={"SHIP"}>Free ship</Radio.Button>
                 </Radio.Group>
+              </Form.Item>}
               </Form.Item>
             </Col>
           </Row>

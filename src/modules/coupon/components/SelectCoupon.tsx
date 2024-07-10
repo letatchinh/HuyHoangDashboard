@@ -1,20 +1,44 @@
-import { Button, Flex, Typography } from 'antd';
-import React, { useMemo, useState } from 'react';
+import { Alert, Button, Flex, Typography } from 'antd';
+import React, { useEffect, useMemo, useState } from 'react';
 import useCreateBillStore from '~/modules/sale/bill/storeContext/CreateBillContext';
 import { CouponInSelect } from '../coupon.modal';
 import Coupon from './Coupon';
+import { LoadingOutlined } from '@ant-design/icons';
+import { get } from 'lodash';
 
 type propsType = {
 
 }
 export default function SelectCoupon(props:propsType) : React.JSX.Element {
-    const {coupons,onChangeCoupleSelect} = useCreateBillStore();
+    const {coupons,onChangeCoupleSelect,loadingGetCoupon,couponSelected,onCloseCoupon} = useCreateBillStore();
+    
     const [selected,setSelected] = useState<CouponInSelect[]>([]);
     
-    const couponFreeShipSingle = useMemo(() => coupons?.filter((coupon : CouponInSelect) => coupon?.applyFor === "SHIP" && !coupon?.multiple),[coupons]);
-    const couponFreeShipMulti = useMemo(() => coupons?.filter((coupon : CouponInSelect) => coupon?.applyFor === "SHIP" && coupon?.multiple),[coupons]);
-    const couponBillMulti = useMemo(() => coupons?.filter((coupon : CouponInSelect) => coupon?.applyFor === "BILL" && coupon?.multiple),[coupons]);
-    const couponBillSingle = useMemo(() => coupons?.filter((coupon : CouponInSelect) => coupon?.applyFor === "BILL" && !coupon?.multiple),[coupons]);
+    const couponByType = useMemo(() => coupons?.reduce((sum : {
+      couponFreeShipSingle : CouponInSelect[],
+      couponFreeShipMulti : CouponInSelect[],
+      couponBillMulti : CouponInSelect[],
+      couponBillSingle : CouponInSelect[]
+    },cur : CouponInSelect) => {
+        if(cur?.applyFor === "SHIP" && !cur?.multiple){
+            sum.couponFreeShipSingle.push(cur);
+        }
+        if(cur?.applyFor === "SHIP" && cur?.multiple){
+            sum.couponFreeShipMulti.push(cur);
+        }
+        if(cur?.applyFor === "BILL" && cur?.multiple){
+            sum.couponBillMulti.push(cur);
+        }
+        if(cur?.applyFor === "BILL" && !cur?.multiple){
+            sum.couponBillSingle.push(cur);
+        }
+        return sum;
+    },{
+      couponFreeShipSingle : [],
+      couponFreeShipMulti : [],
+      couponBillMulti : [],
+      couponBillSingle : []
+    }),[coupons]);
 
     const onAdd = (newCoupon:CouponInSelect) => {
         
@@ -26,26 +50,45 @@ export default function SelectCoupon(props:propsType) : React.JSX.Element {
             setSelected([...listDiffApplyFor,newCoupon]);
         }
     };
+    
     const onRemove = (removeId:string) => {
-        setSelected(selected?.filter((item:any) => item._id === removeId))
+        setSelected(selected?.filter((item:any) => item._id !== removeId))
     };
     const onFinish = () => {
         const listApplyForBill = selected?.filter((item) => item?.applyFor === "BILL");
         const listApplyForShip = selected?.filter((item) => item?.applyFor === "SHIP");
-        onChangeCoupleSelect('bill',listApplyForBill);
-        onChangeCoupleSelect('ship',listApplyForShip);
-    }
+        onChangeCoupleSelect({
+          bill : listApplyForBill,
+          ship : listApplyForShip
+        });
+        onCloseCoupon();
+    };
+
+    useEffect(() => {
+      setSelected([...get(couponSelected,'bill',[]),...get(couponSelected,'ship',[])]);
+    },[couponSelected]);
+
+    const PropsSection = {
+      selected,
+      onRemove,
+      onAdd,
+    };
+
     return (
         <div>
+            <Alert message={<span>Bạn đã chọn {<Typography.Text type='success' strong>{selected?.length}</Typography.Text>} mã giảm giá</span>} type="success" showIcon />
             <Flex justify={'space-between'}>
-            <div>
-                <SectionListDiscount selected={selected} onRemove={onRemove} onAdd={onAdd} data={couponFreeShipSingle} title="Mã Miễn Phí Vận Chuyển không kết hợp"/>
-                <SectionListDiscount selected={selected} onRemove={onRemove} onAdd={onAdd} data={couponFreeShipMulti} title="Mã Miễn Phí Vận Chuyển kết hợp"/>
+              {loadingGetCoupon ? <LoadingOutlined /> : <>
+                <div>
+                <SectionListDiscount {...PropsSection} data={couponByType.couponFreeShipSingle} title="Mã Miễn Phí Vận Chuyển không kết hợp"/>
+                <SectionListDiscount {...PropsSection} data={couponByType.couponFreeShipMulti} title="Mã Miễn Phí Vận Chuyển kết hợp"/>
             </div>
             <div>
-                <SectionListDiscount selected={selected} onRemove={onRemove} onAdd={onAdd} data={couponBillSingle} title="Mã giảm giá đơn hàng không kết hợp"/>
-                <SectionListDiscount selected={selected} onRemove={onRemove} onAdd={onAdd} data={couponBillMulti} title="Mã giảm giá đơn hàng kết hợp"/>
+                <SectionListDiscount {...PropsSection} data={couponByType.couponBillSingle} title="Mã giảm giá đơn hàng không kết hợp"/>
+                <SectionListDiscount {...PropsSection} data={couponByType.couponBillMulti} title="Mã giảm giá đơn hàng kết hợp"/>
             </div>
+            </>}
+            
         </Flex>
         <Flex style={{marginTop : 8}} justify={'end'}>
         <Button onClick={onFinish} type='primary'>

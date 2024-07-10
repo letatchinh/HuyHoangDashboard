@@ -1,5 +1,6 @@
 import { ValueApplyBill } from "~/modules/logistic/components/LogisticForm"
 import { STATUS_BILL } from "./constants"
+import { CouponBase } from "~/modules/coupon/coupon.modal"
 
 type supplier = {
     name : string,
@@ -81,12 +82,20 @@ export interface FormFieldCreateBill {
     warehouseName?: string;
     noteBillSplit?: string;
 }
+export interface detailCoupon {
+    variantId?:string,
+    productId?:string,
+    snapCoupon: CouponBase
+}
 export interface PayloadCreateBill extends FormFieldCreateBill {
     quotationItems : Omit<quotation,'variant' | 'variants'>[],
     totalPrice : number,
     totalAmount : number,
     _id?: any,
-    dataTransportUnit?: ValueApplyBill
+    dataTransportUnit?: ValueApplyBill,
+    coupons? : detailCoupon[],
+    totalCouponForShip? : number,
+    totalCouponForBill? : number,
 }
 export interface PayloadUpdateBill  {
     cancelNote? : string,

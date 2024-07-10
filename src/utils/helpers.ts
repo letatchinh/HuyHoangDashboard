@@ -345,7 +345,7 @@ export const vietnamMoment = (v: any, formatTime?: any) => {
  
 };
 //
-export const getValueOfMath = (valueTarget:number,valueDiscount : number,typeValue : 'PERCENT' | 'VALUE') =>  typeValue === 'PERCENT' ?  valueDiscount * valueTarget / 100 : valueDiscount;
+export const getValueOfMath = (valueTarget:number,valueDiscount : number,typeValue : 'PERCENT' | 'VALUE',maxDiscount ?: number) => maxDiscount ?  Math.min((typeValue === 'PERCENT' ?  valueDiscount * valueTarget / 100 : valueDiscount),maxDiscount) : typeValue === 'PERCENT' ?  valueDiscount * valueTarget / 100 : valueDiscount;
 export const getValueOfPercent = (value: number, percent: number) => value * percent / 100;
 export const getTextOfDiscount = (value?: number, typeValue?: "PERCENT" | "VALUE") => typeValue === 'PERCENT' ? `${value}%` : formatter(value);
 

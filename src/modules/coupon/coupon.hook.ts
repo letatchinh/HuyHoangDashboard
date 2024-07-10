@@ -16,7 +16,7 @@ import { ColumnsType } from "antd/lib/table/InternalTable"
 
 import { couponActions } from "./redux/reducer";
 import apis from "./coupon.api";
-import { CouponInSelect } from "./coupon.modal";
+import { CouponInSelect, QuerySearchCoupon } from "./coupon.modal";
 const MODULE = "coupon";
 const MODULE_VI = "";
 
@@ -147,20 +147,74 @@ export const useUpdateCouponParams = (
   return [keyword, { setKeyword, onParamChange }];
 };
 
-export const useCouponSelect = (bill : any) => {
+
+export const useCouponSelect = ({bill,refCollection,totalAmount} : {bill : any,refCollection : any ,totalAmount:number}) => {
+  const [isOpenCoupon,setIsOpenCoupon] = useState(false);
+  const [isOpenCouponBillItem,setIsOpenCouponBillItem] = useState(false);
   const countProduct = get(bill,'quotationItems',[])?.reduce((sum : number,cur : any) => sum + get(cur,'quantity',0),0)
   const [couponSelected,setCouponSelected] = useState({
     bill : [],
     ship : [],
     item : [],
   });
-  const onChangeCoupleSelect = (target : "bill" | "ship" | "item",newCoupon : CouponInSelect[]) => {
+  const onChangeCoupleSelect = (newCoupon : any) => {
     setCouponSelected({
       ...couponSelected,
-      [target] : newCoupon
+      ...newCoupon
     })
   }
-  const [query,setQuery] = useState({});
+  const [query,setQuery] = useState<QuerySearchCoupon>({
+    target : "BILL"
+  });
+  const [queryBillItem,setQueryBillItem] = useState<QuerySearchCoupon>({
+    target : "BILL_ITEM"
+  });
   const [coupons,loading] = useFetchState({api : apis.search,query,useDocs : false});
-  return {couponSelected,setCouponSelected,onChangeCoupleSelect,setQuery,coupons,loading,countProduct}
+  const [couponsBillItem,loadingCouponBillItem] = useFetchState({api : apis.search,query : queryBillItem,useDocs : false});
+
+  const onOpenCoupon = () => {
+    setIsOpenCoupon(true);
+    setQuery({
+      ...query,
+      customerApplyId : {
+        refCollection,
+        id : get(bill, "pharmacyId")
+      },
+      productCount : countProduct,
+      billPrice : totalAmount
+    });
+  };
+
+  const onCloseCoupon = () => {
+    setIsOpenCoupon(false);
+  };
+  const onOpenCouponBillItem = (productId? : string) => {
+    setIsOpenCouponBillItem(true);
+    setQueryBillItem({
+      ...queryBillItem,
+      targetId : productId
+    });
+  };
+
+  const onCloseCouponBillItem = () => {
+    setIsOpenCouponBillItem(false);
+  };
+
+  return {
+    couponSelected,
+    setCouponSelected,
+    onChangeCoupleSelect,
+    setQuery,
+    coupons,
+    loading,
+    countProduct,
+    isOpenCoupon,
+    onCloseCoupon,
+    onOpenCoupon,
+    onOpenCouponBillItem,
+    onCloseCouponBillItem,
+    isOpenCouponBillItem,
+    couponsBillItem,
+    loadingCouponBillItem
+  };
 }

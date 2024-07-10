@@ -1,4 +1,4 @@
-import { Radio, Typography } from "antd";
+import { Checkbox, Typography } from "antd";
 import { get, range } from "lodash";
 import React from "react";
 import freeProduct from "~/assets/images/coupon/freeProduct.png";
@@ -15,7 +15,7 @@ type propsType = {
 };
 export default function Coupon({ coupon,onAdd,onRemove,isChecked }: propsType): React.JSX.Element {
     
-  const { applyFor, discount, startDate, endDate, conditionsTrue,conditions,name } = coupon;
+  const { applyFor, discount, startDate, endDate, conditionsTrue,name } = coupon;
 
   return (
     <div className="coupon">
@@ -43,7 +43,7 @@ export default function Coupon({ coupon,onAdd,onRemove,isChecked }: propsType): 
         <ShowDate endDate={endDate} startDate={startDate} />
       </div>
       <div className="coupon--right">
-        <Radio checked={isChecked} onChange={(e) => e.target.checked ? onAdd(coupon) : onRemove(coupon?._id)}/>
+        <Checkbox checked={isChecked} onChange={(e) => e.target.checked ? onAdd(coupon) : onRemove(coupon?._id)}/>
       </div>
     </div>
   );

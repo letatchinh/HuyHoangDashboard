@@ -15,7 +15,23 @@ import SelectPharmacy from "../SelectPharmacy";
 import TotalBill from "./TotalBill";
 type propsType = {};
 export default function SaleScreen(props: propsType): React.JSX.Element {
-  const { form, onValueChange, quotationItems, totalPriceAfterDiscount, onRemoveTab, bill, onOpenModalResult, totalAmount, mutateReValidate, setAddress, setFormAndLocalStorage, setPharmacyInfo } = useCreateBillStore();
+  const {
+    form,
+    onValueChange,
+    quotationItems,
+    totalPriceAfterDiscount,
+    onRemoveTab,
+    bill,
+    onOpenModalResult,
+    totalAmount,
+    mutateReValidate,
+    setAddress,
+    setFormAndLocalStorage,
+    setPharmacyInfo,
+    totalDiscountCouponBill,
+    totalDiscountCouponShip,
+    couponSelected,
+  } = useCreateBillStore();
  const feeForm = Form.useWatch('fee',form);
   const { onNotify } = useNotificationStore();
   const callBackAfterSuccess = (newData: DataResultType) => {
@@ -47,21 +63,26 @@ export default function SaleScreen(props: propsType): React.JSX.Element {
           dataTransportUnit: get(bill, 'dataTransportUnit'),
           warehouseId: get(bill, 'warehouseId'),
           ...(get(bill, 'noteBillSplit') &&{noteBillSplit: get(bill, 'noteBillSplit')}),
+          totalCouponForBill :totalDiscountCouponBill,
+          totalCouponForShip :totalDiscountCouponShip,
+          coupons : [...couponSelected.bill?.map((cp) => ({snapCoupon : cp})), ...couponSelected.ship?.map((cp) => ({snapCoupon : cp}))],
         });
-      switch (get(bill, "typeTab")) {
-        case "createQuotation":
-          onCreateQuotation(submitData);
-          break;
-        case "updateQuotation":
-          onUpdateQuotation(submitData);
-          break;
-        case "convertQuotation":
-          onConvertQuotation(submitData);
-          break;
+        console.log(submitData,'submitData');
+        
+      // switch (get(bill, "typeTab")) {
+      //   case "createQuotation":
+      //     onCreateQuotation(submitData);
+      //     break;
+      //   case "updateQuotation":
+      //     onUpdateQuotation(submitData);
+      //     break;
+      //   case "convertQuotation":
+      //     onConvertQuotation(submitData);
+      //     break;
 
-        default:
-          break;
-      }
+      //   default:
+      //     break;
+      // }
     } catch (error: any) {
       onNotify?.error(error?.response?.data?.message || "Có lỗi gì đó xảy ra");
     }
