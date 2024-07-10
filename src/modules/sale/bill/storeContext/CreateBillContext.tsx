@@ -297,7 +297,7 @@ export function CreateBillProvider({
         0
       ),
     [quotationItems]
-  ); // Tổng giá trị đơn hàng chưa chiếc khấu
+  ); // Tổng giá trị đơn hàng chưa chiết khấu
 
   const totalAmount = useMemo(
     () =>

@@ -5,7 +5,7 @@ import { useDispatch } from "react-redux";
 import { branchSliceAction } from "../redux/reducer";
 import { useBranchPaging, useBranchQueryParams, useCreateBranch, useGetBranches, useUpdateApiKey, useUpdateBranchParams } from "../branch.hook";
 import BranchForm from "../components/BranchForm";
-import { useDeleteWarehouseLinked } from "~/modules/warehouse/warehouse.hook";
+import { useDeleteWarehouseLinked, useGetWarehouse, useGetWarehouseByBranchLinked, useGetWarehouses } from "~/modules/warehouse/warehouse.hook";
 import ListWarehouseLinked from "../components/ListWarehouseLinked";
 import POLICIES from "~/modules/policy/policy.auth";
 import { useMatchPolicy } from "~/modules/policy/policy.hook";
@@ -37,6 +37,7 @@ export type BranchTypeContext = {
   closeFormApiKey: () => void;
   canDeleteWarehouse: boolean;
   canUpdateWarehouse: boolean;
+  getListWarehouse: any;
 };
 
 const BranchContext = createContext<BranchTypeContext>({
@@ -55,8 +56,9 @@ const BranchContext = createContext<BranchTypeContext>({
   closeFormDeleteWarehouseLinked: () => { },
   closeFormApiKey: () => { },
   canDeleteWarehouse: false,
-  canUpdateWarehouse: false
-});
+  canUpdateWarehouse: false,
+  getListWarehouse: () => [],
+}); 
 
 export function BranchProviderContext({ children }: BranchProps) {
   const [isOpenForm, setIsOpenForm] = useState(false);
@@ -66,8 +68,9 @@ export function BranchProviderContext({ children }: BranchProps) {
   const canDeleteWarehouse = useMatchPolicy(POLICIES.DELETE_WAREHOUSELINK);
   const canUpdateWarehouse = useMatchPolicy(POLICIES.UPDATE_WAREHOUSELINK);
   const [query] = useBranchQueryParams();
-  const [keyword, { setKeyword, onParamChange }] = useUpdateBranchParams(query);
+  const [,{onParamChange }] = useUpdateBranchParams(query);
   const [branches, isLoading] = useGetBranches(query);
+  const [listWarehouse, loading] = useGetWarehouses();
   const paging = useBranchPaging(); 
   const dispatch = useDispatch();
   const resetAction = () => {
@@ -116,6 +119,7 @@ export function BranchProviderContext({ children }: BranchProps) {
     setIsOpenModalDeleteWarehouseLinked(false);
     setId(null);
   };
+  const getListWarehouse = (id: string)=> listWarehouse?.find((item: any) => item?._id === id)?.listWarehouse;
   return (
     <BranchContext.Provider
       value={{
@@ -134,7 +138,8 @@ export function BranchProviderContext({ children }: BranchProps) {
         openFormDeleteWarehouseLinked,
         closeFormApiKey,
         canDeleteWarehouse,
-        canUpdateWarehouse
+        canUpdateWarehouse,
+        getListWarehouse,
       }}
     >
       {children}

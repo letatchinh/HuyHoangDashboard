@@ -6,6 +6,7 @@ import { clearQuerySearch, getExistProp } from "~/utils/helpers";
 import {
   getSelectors,
   useFailed,
+  useFetch,
   useFetchByParam,
   useQueryParams,
   useResetState,
@@ -21,9 +22,6 @@ const {
   loadingSelector,
   listSelector,
   getListFailedSelector,
-  getByIdLoadingSelector,
-  getByIdSelector,
-  getByIdFailedSelector,
   deleteSuccessSelector,
   deleteFailedSelector,
   isSubmitLoadingSelector,
@@ -55,13 +53,12 @@ const createBillToWarehouseFailedSelector = getSelector('createBillToWarehouseFa
 const deleteWarehouseLinkedSuccessSelector = getSelector('deleteWarehouseLinkedSuccess');
 const deleteWarehouseLinkedFailedSelector = getSelector('deleteWarehouseLinkedFailed');
 
-export const useGetWarehouses = (param: any) => {
-  return useFetchByParam({
+export const useGetWarehouses = () => {
+  return useFetch({
     action: warehouseActions.getListRequest,
     loadingSelector: loadingSelector,
     dataSelector: listSelector,
     failedSelector: getListFailedSelector,
-    param,
   });
 };
 export const useGetWarehouse = (id?: any) => {
