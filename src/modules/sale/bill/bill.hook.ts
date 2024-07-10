@@ -313,3 +313,16 @@ export const useInitialValue = (listWarehouse: any[], data: any[]) => {
   }, [listWarehouse, data]);
   return newData;
 };
+
+export const useCheckRefCollection = (refCollectionInput : "ctv" | "pharmacy") => {
+
+  const refCollection : "collaborator" | "pharma_profile" | undefined = useMemo(() => {
+    if (refCollectionInput === "ctv") {
+      return 'collaborator'
+    };
+    if (refCollectionInput === "pharmacy") {
+      return 'pharma_profile'
+    };
+  }, [refCollectionInput]);
+  return refCollection
+}

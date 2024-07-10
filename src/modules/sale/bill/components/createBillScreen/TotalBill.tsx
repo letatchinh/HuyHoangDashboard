@@ -66,13 +66,14 @@ export default function TotalBill(props: propsType): React.JSX.Element {
     onOpenModalSelectWarehouse,
     canReadLogistic,
     canReadWarehouse,
+    onOpenCoupon,
   } = useCreateBillStore();
   const [minFee, setMinFee] = useState<any>();
   const [openAddress, setOpenAddress] = useState(false);
   const onOpenAddress = useCallback(() => setOpenAddress(true), []);
   const onCloseAddress = useCallback(() => setOpenAddress(false), []);
   const debtType = Form.useWatch("debtType", form);
-  const fee = Form.useWatch("fee", form);
+  // const fee = Form.useWatch("fee", form);
   const onChangeAddress = useCallback(
     (values: any) => {
       const addressString = concatAddress(values?.address);
@@ -375,6 +376,21 @@ export default function TotalBill(props: propsType): React.JSX.Element {
         styleFlex={{justifyContent: 'start'}}
       >
         <Typography.Text>{getInfo(bill?.warehouseId)?.name?.vi}</Typography.Text>
+      </Layout>
+      <div
+        style={{
+          width: "100%",
+          height: 3,
+          borderTop: "2px dashed #F0F0F0",
+          marginTop: 5,
+          marginBottom: 5,
+        }}
+      />
+      <Layout isLarge={true} label={"Mã giảm giá"}>
+        <Typography.Link 
+        onClick={() => onOpenCoupon({target : "BILL"})} style={{ fontSize: 18, fontWeight: 600 }}>
+          Chọn hoặc nhập mã
+        </Typography.Link>
       </Layout>
       <div
         style={{

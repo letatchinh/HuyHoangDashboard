@@ -7,6 +7,7 @@ import { clearQuerySearch, getExistProp } from "~/utils/helpers";
 import {
     getSelectors,
     useFailed, useFetchByParam,
+    useFetchState,
     useQueryParams,
     useSubmit,
     useSuccess
@@ -14,6 +15,8 @@ import {
 import { ColumnsType } from "antd/lib/table/InternalTable"
 
 import { couponActions } from "./redux/reducer";
+import apis from "./coupon.api";
+import { CouponInSelect } from "./coupon.modal";
 const MODULE = "coupon";
 const MODULE_VI = "";
 
@@ -144,4 +147,20 @@ export const useUpdateCouponParams = (
   return [keyword, { setKeyword, onParamChange }];
 };
 
-
+export const useCouponSelect = (bill : any) => {
+  const countProduct = get(bill,'quotationItems',[])?.reduce((sum : number,cur : any) => sum + get(cur,'quantity',0),0)
+  const [couponSelected,setCouponSelected] = useState({
+    bill : [],
+    ship : [],
+    item : [],
+  });
+  const onChangeCoupleSelect = (target : "bill" | "ship" | "item",newCoupon : CouponInSelect[]) => {
+    setCouponSelected({
+      ...couponSelected,
+      [target] : newCoupon
+    })
+  }
+  const [query,setQuery] = useState({});
+  const [coupons,loading] = useFetchState({api : apis.search,query,useDocs : false});
+  return {couponSelected,setCouponSelected,onChangeCoupleSelect,setQuery,coupons,loading,countProduct}
+}

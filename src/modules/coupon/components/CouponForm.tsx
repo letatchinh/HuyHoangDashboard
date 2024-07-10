@@ -1,5 +1,7 @@
 import {
+  Alert,
   Button,
+  Checkbox,
   Col,
   DatePicker,
   Flex,
@@ -12,10 +14,19 @@ import {
 } from "antd";
 import TextArea from "antd/lib/input/TextArea";
 import dayjs from "dayjs";
-import React, { useEffect } from "react";
+import { get } from "lodash";
+import React, { useEffect, useState } from "react";
 import InputNumberAnt from "~/components/Antd/InputNumberAnt";
-import { requireRules } from "~/constants/defaultValue";
-import { defaultConditions, DEFAULT_COUPON, STATE, STATE_VI } from "../constants";
+import BaseBorderBox from "~/components/common/BaseBorderBox/index";
+import { requireRules, requireRulesCustom } from "~/constants/defaultValue";
+import { useFailedAnt } from "~/utils/hook";
+import { ErrorAntBase } from "~/utils/Modal";
+import {
+  defaultConditions,
+  DEFAULT_COUPON,
+  STATE,
+  STATE_VI,
+} from "../constants";
 import { useCreateCoupon, useGetCoupon, useUpdateCoupon } from "../coupon.hook";
 import { CouponBase } from "../coupon.modal";
 import CustomerApplyFormItem from "./CustomerApplyFormItem";
@@ -30,10 +41,13 @@ export default function CouponForm({
   id,
 }: propsType): React.JSX.Element {
   const [form] = Form.useForm();
+  const { onFinishFailed, ErrorComponent } = useFailedAnt();
   const [coupon, loading]: [CouponBase, boolean, any] = useGetCoupon(id);
   const [isSubmitLoading, create] = useCreateCoupon(onCancel);
   const [, update] = useUpdateCoupon(onCancel);
   const onFinish = (values: any) => {
+    console.log(values, "values");
+
     if (id) {
       update({
         _id: id,
@@ -44,7 +58,27 @@ export default function CouponForm({
     }
   };
   const onValuesChange = (change: any) => {
-    console.log(change, "change");
+    const keyChange = Object.keys(change)[0];
+    const valueChange = change[keyChange];
+    if (keyChange === "target") {
+      if (valueChange === "BILL") {
+        console.log(valueChange, "valueChange");
+
+        form.setFieldsValue({
+          targetIds: null,
+        });
+      }
+    };
+    if(keyChange === 'discount'){
+      if(get(valueChange,'type') === 'VALUE'){
+        form.setFieldsValue({
+          discount: {
+            ...valueChange,
+            maxDiscount : null
+          },
+        });
+      }
+    }
   };
 
   useEffect(() => {
@@ -56,6 +90,8 @@ export default function CouponForm({
       });
     }
   }, [coupon, id]);
+
+  const typeDiscount = Form.useWatch(["discount", "type"], form);
   return (
     <Form
       scrollToFirstError
@@ -66,17 +102,28 @@ export default function CouponForm({
       form={form}
       onFinish={onFinish}
       initialValues={DEFAULT_COUPON}
+      onFinishFailed={onFinishFailed}
     >
+      <ErrorComponent />
       <Tabs type="card">
         <Tabs.TabPane key={"1"} tab="Thông tin">
+          <BaseBorderBox title={'Thông tin mã'}>
           <Row gutter={8}>
             <Col span={12}>
-              <Form.Item rules={requireRules} name={"name"} label="Tên mã">
+              <Form.Item
+                rules={requireRulesCustom("Vui lòng nhập tên mã")}
+                name={"name"}
+                label="Tên mã"
+              >
                 <Input />
               </Form.Item>
             </Col>
             <Col span={12}>
-              <Form.Item rules={requireRules} name={"giftCode"} label="Mã">
+              <Form.Item
+                rules={requireRulesCustom("Vui lòng nhập mã")}
+                name={"giftCode"}
+                label="Mã"
+              >
                 <Input />
               </Form.Item>
             </Col>
@@ -85,23 +132,47 @@ export default function CouponForm({
           <Row gutter={8}>
             <Col span={12}>
               <Form.Item
-                rules={requireRules}
+                className="noWrap"
                 name={["discount", "value"]}
                 label="Giá trị giảm"
+                rules={[
+                  ({}) => ({
+                    validator(_, value) {
+                      if (typeDiscount === "PERCENT" && value > 100) {
+                        return Promise.reject(
+                          new Error("Phần trăm phải bé hơn 100%!")
+                        );
+                      }
+                      return Promise.resolve();
+                    },
+                  }),
+                ]}
               >
-                <InputNumberAnt style={{ width: "100%" }} />
+                <InputNumberAnt
+                  style={{ width: "100%" }}
+                  min={0}
+                  {...(typeDiscount === "PERCENT" && { max: 100 })}
+                  addonAfter={
+                    <Form.Item
+                      style={{ marginBottom: "unset" }}
+                      name={["discount", "type"]}
+                    >
+                      <Radio.Group size="small">
+                        <Radio.Button value={"PERCENT"}>%</Radio.Button>
+                        <Radio.Button value={"VALUE"}>Giá trị</Radio.Button>
+                      </Radio.Group>
+                    </Form.Item>
+                  }
+                />
               </Form.Item>
             </Col>
             <Col span={12}>
               <Form.Item
-                rules={requireRules}
-                name={["discount", "type"]}
-                label="Kiểu giá trị"
+                hidden={typeDiscount === 'VALUE'}
+                name={["discount", "maxDiscount"]}
+                label="Giảm tối đa"
               >
-                <Radio.Group>
-                  <Radio.Button value={"PERCENT"}>Phần trăm</Radio.Button>
-                  <Radio.Button value={"VALUE"}>Giá trị</Radio.Button>
-                </Radio.Group>
+                <InputNumberAnt />
               </Form.Item>
             </Col>
           </Row>
@@ -129,18 +200,7 @@ export default function CouponForm({
             </Col>
           </Row>
 
-          <Row gutter={8}>
-            <Col span={12}>
-              <Form.Item name={"startDate"} label="Từ">
-                <DatePicker style={{ width: "100%" }} />
-              </Form.Item>
-            </Col>
-            <Col span={12}>
-              <Form.Item name={"endDate"} label="Đến">
-                <DatePicker style={{ width: "100%" }} />
-              </Form.Item>
-            </Col>
-          </Row>
+        
 
           <Row gutter={8}>
             <Col span={12}>
@@ -169,70 +229,94 @@ export default function CouponForm({
           <Form.Item labelCol={{ span: 4 }} name={"description"} label="Mô tả">
             <TextArea />
           </Form.Item>
+          </BaseBorderBox>
 
-          <Form.Item labelCol={{ span: 4 }} label="Điều kiện">
-            <Form.List name={"conditions"}>
-              {(fields, {}) => (
-                <>
-                  {fields.map((field, index) => {
-                    const key = form.getFieldValue([
-                      "conditions",
-                      index,
-                      "key",
-                    ]);
+          <BaseBorderBox title={'Hạn dùng mã'}>
+          <Row gutter={8}>
+            <Col span={12}>
+              <Form.Item name={"startDate"} label="Từ">
+                <DatePicker showTime allowClear style={{ width: "100%" }} />
+              </Form.Item>
+            </Col>
+            <Col span={12}>
+              <Form.Item name={"endDate"} label="Đến">
+                <DatePicker showTime allowClear style={{ width: "100%" }} />
+              </Form.Item>
+            </Col>
+          </Row>
+          </BaseBorderBox>
 
-                    return (
-                      <Row gutter={16}>
-                        <Col span={8}>
-                          <span>{CLONE_defaultConditions[key].vi}</span>
-                        </Col>
-
-                        <Col flex={1}>
-                          {key === defaultConditions.BILL_FIRST.key && null}
-                          {key === defaultConditions.BILL_PRICE.key && (
-                            <Form.Item
-                              name={[
-                                index,
-                                "value",
-                                defaultConditions.BILL_PRICE.key,
-                                "value",
-                              ]}
-                            >
-                              <InputNumberAnt style={{ width: "100%" }} />
-                            </Form.Item>
-                          )}
-                          {key === defaultConditions.PRODUCT_COUNT.key && (
-                            <Form.Item
-                              name={[
-                                index,
-                                "value",
-                                defaultConditions.PRODUCT_COUNT.key,
-                                "value",
-                              ]}
-                            >
-                              <InputNumberAnt style={{ width: "100%" }} />
-                            </Form.Item>
-                          )}
-                        </Col>
-
-                        <Col span={6}>
-                          <Form.Item
-                            valuePropName="checked"
-                            name={[index, "isActive"]}
-                          >
-                            <Switch />
-                          </Form.Item>
-                        </Col>
-                        <Form.Item hidden name={[index, "key"]} />
-                      </Row>
-                    );
-                  })}
-                </>
-              )}
-            </Form.List>
+          <BaseBorderBox title={'Điều kiện'}>
+          <Form.Item label="Không áp dụng điều kiện" name={'disabledCondition'} valuePropName="checked">
+            <Checkbox />
           </Form.Item>
+          <Form.Item shouldUpdate noStyle>
+          {({getFieldValue}) =>   {
+            const isDisabled = !!getFieldValue('disabledCondition')
+            return <Form.List name={"conditions"}>
+            {(fields, {}) => (
+              <>
+                {fields.map((field, index) => {
+                  const key = form.getFieldValue([
+                    "conditions",
+                    index,
+                    "key",
+                  ]);
+
+                  return (
+                    <Row gutter={16}>
+                      <Col span={8}>
+                        <span>{CLONE_defaultConditions[key].vi}</span>
+                      </Col>
+
+                      <Col flex={1}>
+                        {key === defaultConditions.BILL_FIRST.key && null}
+                        {key === defaultConditions.BILL_PRICE.key && (
+                          <Form.Item
+                            name={[
+                              index,
+                              "value",
+                              defaultConditions.BILL_PRICE.key,
+                              "value",
+                            ]}
+                          >
+                            <InputNumberAnt disabled={isDisabled} style={{ width: "100%" }} />
+                          </Form.Item>
+                        )}
+                        {key === defaultConditions.PRODUCT_COUNT.key && (
+                          <Form.Item
+                            name={[
+                              index,
+                              "value",
+                              defaultConditions.PRODUCT_COUNT.key,
+                              "value",
+                            ]}
+                          >
+                            <InputNumberAnt disabled={isDisabled} style={{ width: "100%" }} />
+                          </Form.Item>
+                        )}
+                      </Col>
+
+                      <Col span={6}>
+                        <Form.Item
+                          valuePropName="checked"
+                          name={[index, "isActive"]}
+                        >
+                          <Switch disabled={isDisabled}/>
+                        </Form.Item>
+                      </Col>
+                      <Form.Item hidden name={[index, "key"]} />
+                    </Row>
+                  );
+                })}
+              </>
+            )}
+          </Form.List>
+          }}
+          </Form.Item>
+          </BaseBorderBox>
         </Tabs.TabPane>
-        <Tabs.TabPane key={"2"} tab="Đối tượng áp dụng mã">
+        <Tabs.TabPane forceRender key={"2"} tab="Đối tượng áp dụng mã">
           <Row gutter={8}>
             <Col span={12}>
               <Form.Item
@@ -248,15 +332,9 @@ export default function CouponForm({
             </Col>
           </Row>
 
-          <Form.Item shouldUpdate noStyle>
-            {({ getFieldValue }) =>
-              getFieldValue("target") === "BILL_ITEM" && (
-                <TargetFormItem form={form} />
-              )
-            }
-          </Form.Item>
+          <TargetFormItem form={form} />
         </Tabs.TabPane>
-        <Tabs.TabPane key={"3"} tab="Những ai được dùng mã">
+        <Tabs.TabPane forceRender key={"3"} tab="Những ai được dùng mã">
           <CustomerApplyFormItem form={form} />
         </Tabs.TabPane>
       </Tabs>

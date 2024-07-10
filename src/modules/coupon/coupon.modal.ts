@@ -25,6 +25,7 @@ export type detailTargetIds = {
     refCollection: 'product' | 'product_group'
 }
 export interface CouponBase {
+    _id ? : string,
     code: number,
     name: string,
     description?: string,
@@ -37,6 +38,7 @@ export interface CouponBase {
     discount?: {
         type?: 'PERCENT' | 'VALUE',
         value?: number,
+        maxDiscount? : number
     },
     conditions?: detailCondition[],
     status?: 'ACTIVE' | 'INACTIVE',
@@ -47,5 +49,23 @@ export interface CouponBase {
     targetIds?: detailTargetIds[],
     multiple?: boolean,
     slugName?: string,
+    disabledCondition? : boolean,
 
+
+};
+export interface CouponInSelect extends CouponBase {
+  conditionsTrue?: detailCondition[],
+}
+export type QuerySearchCoupon = {
+  target: 'BILL' | 'BILL_ITEM',
+  targetId?: {
+      id?: string,
+      refCollection: 'product' | 'product_group'
+    },
+    customerApplyId?: {
+      id?: string,
+      refCollection: 'pharma_profile' | 'partner'
+  },
+  billPrice?: number,
+  productCount?: number,
 }

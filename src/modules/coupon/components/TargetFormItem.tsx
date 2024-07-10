@@ -7,7 +7,7 @@ type propsType = {
 export default function TargetFormItem({ form }: propsType): React.JSX.Element {
   return (
   <Form.Item shouldUpdate noStyle>
-    {({getFieldValue}) =>   <Form.Item labelCol={{ span: 24 }} label="Các mặt hàng được phép dùng">
+    {({getFieldValue}) =>   <Form.Item hidden={getFieldValue("target") === "BILL"} labelCol={{ span: 24 }} label="Các mặt hàng được phép dùng">
       <Form.List name={"targetIds"}>
         {(fields, { add, remove }) => (
           <>

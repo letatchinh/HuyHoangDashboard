@@ -9,13 +9,13 @@ export const defaultConditions = {
     BILL_PRICE : {
         key : "BILL_PRICE",
         value : 0,
-        vi : 'Giá trị đơn hàng tối thiểu',
+        vi : 'Đơn tối thiểu',
         isActive : false,
     },
     PRODUCT_COUNT : {
         key : "PRODUCT_COUNT",
         value : 0,
-        vi : 'Số lượng sản phẩm mua',
+        vi : 'Số lượng mua',
         isActive : false,
     },
 };
@@ -65,4 +65,5 @@ export const DEFAULT_COUPON = {
     },
     applyFor: "BILL",
     target: "BILL",
+    disabledCondition : true
   }

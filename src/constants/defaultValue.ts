@@ -379,6 +379,12 @@ export const requireRules : any = [
       message : "Vui lòng nhập!"
   }
 ];
+export const requireRulesCustom = (mess ? : string) => [
+  {
+      required : true,
+      message : mess ?? "Vui lòng nhập!"
+  }
+]
 
 export const PROCESS_STATUS = {
   APPROVED: 'APPROVED',
