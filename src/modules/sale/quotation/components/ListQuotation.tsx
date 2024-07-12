@@ -5,6 +5,7 @@ import {
   useCopyQuotation,
   useDeleteQuotation,
   useGetQuotations,
+  useInitialValue,
   useQuotationPaging,
   useQuotationQueryParams,
   useUpdateQuotationParams,
@@ -46,8 +47,9 @@ import SelectEmployee from "~/modules/employee/components/SelectSearch";
 import SelectCollaborator from "~/modules/collaborator/components/SelectSearch";
 import { REF_COLLECTION } from "~/constants/defaultValue";
 import { useIsAdapterSystem } from "~/utils/hook";
-import { redirectRouterBillCreate, redirectRouterBillId } from "../../bill/bill.hook";
+import { redirectRouterBillCreate} from "../../bill/bill.hook";
 import SelectEmployeeV2 from "~/modules/employee/components/SelectEmployeeV2";
+import { useGetWarehouseByBranchLinked } from "~/modules/warehouse/warehouse.hook";
 type propsType = {
   status?: string;
 };
@@ -85,7 +87,10 @@ export default function ListQuotation({
 
   const onPermissionCovert = useCallback(permissionConvert(query),[query])
   const canDownload = useMatchPolicy(onPermissionCovert('DOWNLOAD', 'QUOTATION'));
-  const [isLoadingCheckBill,checkBill] = useCheckBill();
+  const [, checkBill] = useCheckBill();
+  const [listWarehouse] = useGetWarehouseByBranchLinked(); // Get all warehouse linked with branch
+  const InitData = useInitialValue(listWarehouse, quotations);
+
   const onCheckBillBeforeAction = (id: string, action: any, data: any) => {
     try {
       checkBill({ id, action, data })
@@ -206,10 +211,13 @@ export default function ListQuotation({
     },
     {
       title: "Kho xuất hàng",
-      dataIndex: "warehouseName",
       key: "warehouseName",
+      dataIndex: "warehouseName",
       width: 120,
       align: "center",
+      render(value: number, record: any) {
+        return <Typography.Text>{value || (!listWarehouse?.length ? 'Không thể liên kết đến kho' : 'Không tồn tại kho xuất hàng')}</Typography.Text>;
+        },
     },
       {
         title: "Trạng thái",
@@ -285,6 +293,7 @@ export default function ListQuotation({
                     warehouseName: get(record, 'warehouseName'),
                     dataTransportUnit: get(record, "dataTransportUnit"),
                     noteBillSplit: get(record, "noteBillSplit"),
+                    ...(get(record, "voucher") &&{voucher: get(record, "voucher")}),
                   }));
                 }}
                 type="primary"
@@ -316,6 +325,7 @@ export default function ListQuotation({
                     warehouseName: get(record, 'warehouseName'),
                     dataTransportUnit: get(record, "dataTransportUnit"),
                     noteBillSplit: get(record, "noteBillSplit"),
+                    ...(get(record, "voucher") &&{voucher: get(record, "voucher")}),
                   }));
                 }}
                 size="small"
@@ -471,7 +481,7 @@ export default function ListQuotation({
           bordered
           stickyTop
           columns={columns}
-          dataSource={quotations}
+          dataSource={InitData}
           loading={isLoading}
           pagination={pagingTable(paging, onParamChange)}
           size="small"

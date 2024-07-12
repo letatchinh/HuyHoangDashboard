@@ -212,3 +212,20 @@ export const useUpdateQuotationParams = (
 export const useResetQuotation = () => {
   return useResetState(quotationActions.reset);
 };
+
+export const useInitialValue = (listWarehouse: any[], data: any[]) => {
+  const [newData, setNewData] = useState<any[]>([]);
+  useEffect(() => {
+    if (data?.length && listWarehouse?.length) {
+      const newBills : any[] = data?.map((item: any) => {
+        const warehouse = listWarehouse?.find((w: any) => w?._id === item?.warehouseId);
+        return {
+          ...item,
+          warehouseName: warehouse?.name?.vi
+        }
+      });
+      setNewData(newBills);
+    };
+  }, [listWarehouse, data]);
+  return newData;
+};
