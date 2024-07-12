@@ -394,7 +394,7 @@ export default function ListOrder({ status }: propsType): React.JSX.Element {
           bordered
           stickyTop
           columns={columns}
-          dataSource={InitData as any[]}
+          dataSource={InitData ? InitData : orderSuppliers}
           loading={isLoading}
           pagination={pagingTable(paging, onParamChange)}
           size="small"
