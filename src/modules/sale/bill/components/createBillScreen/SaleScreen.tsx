@@ -94,8 +94,21 @@ export default function SaleScreen(props: propsType): React.JSX.Element {
     };
   }, []);
 
-  useChangeDocumentTitle("Tạo đơn hàng");
-  
+  const titleText = useMemo(() => {
+    switch (get(bill, "typeTab")) {
+      case "createQuotation":
+        return "Tạo đơn hàng tạm";
+      case "updateQuotation":
+        return "Cập nhật đơn hàng";
+      case "convertQuotation":
+        return "Chuyển đổi đơn hàng";
+
+      default:
+        return "Tạo đơn hàng tạm";
+        break;
+    }
+  }, [bill]);
+  useChangeDocumentTitle(titleText);
   return (
     <Form
       className="form-create-bill"
