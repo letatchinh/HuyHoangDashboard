@@ -111,6 +111,10 @@ class WarehouseClassExtend extends InstanceModuleRedux {
         state.isSubmitLoading = false;
         state.deleteWarehouseLinkedFailed = payload;
       },
+      getListSuccess: (state:initStateSlice , { payload }: any) => {
+        state.isLoading = false;
+        state.list = payload;
+      },
 
       // Want Add more reducer Here...
     }

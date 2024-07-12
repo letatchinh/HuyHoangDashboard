@@ -667,7 +667,7 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
         stickyTop
         className="table-striped-rows-custom"
         columns={columns}
-        dataSource={InitData as any}
+        dataSource={InitData ? InitData : bills}
         loading={isLoading}
         pagination={pagingTable(paging, onParamChange)}
         size="small"

@@ -29,6 +29,7 @@ export default function BranchScreen() {
     onParamChange,
     canDeleteWarehouse,
     canUpdateWarehouse,
+    getListWarehouse,
   } = useBranchContext();
   const { t }: any = useTranslate();
   const columns: ColumnsType = [
@@ -63,10 +64,12 @@ export default function BranchScreen() {
       key: "listWarehouse",
       align: "center",
       width: 180,
-      render: (value, record) =>
-        (record?.listWarehouse || [])?.map((item: any) => (
+      render: (value, record) => {
+        const id = record?._id;
+        return getListWarehouse(id)?.map((item: any) => (
           <Tag>{item?.name?.vi}</Tag>
-        )),
+        ))
+      },
     },
     ...((canDeleteWarehouse || canUpdateWarehouse)
       ? [
@@ -82,7 +85,6 @@ export default function BranchScreen() {
         ]
       : []),
   ];
-
   return (
     <>
       <Breadcrumb title={t("Danh sách chi nhánh")} />

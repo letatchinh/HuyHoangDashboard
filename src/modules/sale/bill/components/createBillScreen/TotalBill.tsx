@@ -125,6 +125,7 @@ export default function TotalBill(props: propsType): React.JSX.Element {
       });
     }
   }, [bill]); // Set value logistic fee
+  console.log(bill,'bill')
   return (
     <Flex vertical gap={"small"}>
       <Layout label={"Số lượng mặt hàng"}>{formatter(totalQuantity)}</Layout>
@@ -132,6 +133,7 @@ export default function TotalBill(props: propsType): React.JSX.Element {
       <Layout label={"Giảm giá"}>{formatter(totalDiscountCouponBill)}</Layout>
       <Layout label={"Giảm giá mặt hàng"}>{formatter(totalCouponForItem)}</Layout>
       <Layout label={"Giảm giá phí ship"}>{formatter(totalDiscountCouponShip)}</Layout>
+      {bill?.voucher &&<Layout label={"Đã thanh toán"}>{formatter(bill?.voucher?.totalAmount)}</Layout>}
       {totalDiscountFromProduct?.["DISCOUNT.CORE"] ? (
         <Layout label={"Tổng chiết khấu cứng từ mặt hàng"}>
           <Typography.Text type="warning">

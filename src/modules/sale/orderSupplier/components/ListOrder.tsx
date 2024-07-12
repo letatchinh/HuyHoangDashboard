@@ -350,7 +350,7 @@ export default function ListOrder({ status }: propsType): React.JSX.Element {
         </Space>
         </Col>
         <Col span={8}>
-          <Row align={"middle"} justify={"end"}>
+          <Row align={"middle"} justify={"end"} gutter={8}>
             <Col>
               <WithPermission permission={policyModule.POLICIES.DOWNLOAD_ORDERSUPPLIER}>
                   <ExportExcelButton

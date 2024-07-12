@@ -5,6 +5,7 @@ export const STATUS_QUOTATION = {
 export const STATUS_QUOTATION_VI = {
     NEW : "Mới",
     CONFIRMED : "Đã xử lý",
+    CANCELLED : "Đã huỷ",
 }
 
 export const DEFAULT_DEBT_TYPE = "COD";

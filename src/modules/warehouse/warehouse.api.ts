@@ -2,7 +2,7 @@ import { get, omit } from "lodash";
 import requester from "~/api/requester";
 
 const apis = {
-    getAll: (query?: any) => requester.get(`/api/v1/warehouse`, query),
+    getAll: (query?: any) => requester.get(`/api/v1/pms/warehouse/list`, query),
     getById: (id?: any) => requester.get(`/api/v1/branch/warehouse-address/${id}`),
     create: (data?: any) => requester.post(`/api/v1/warehouse`, data),
     checkWarehouse: (data?: any) => requester.post(`/api/v1/pms/warehouses/check-product`, data),

@@ -97,6 +97,7 @@ function* checkBill({payload} : any) : any {
     };
   } catch (error:any) {
     yield put(quotationActions.checkBillFailed(error));
+    yield put(quotationActions.getListRequest());
   };
 };
 
