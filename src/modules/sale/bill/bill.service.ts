@@ -1,4 +1,4 @@
-import { compact, forIn, get, keys, min, unset } from "lodash";
+import { compact, forIn, get, keys, max, min, unset } from "lodash";
 import { v4, validate } from "uuid";
 import {
   DataSourceType,
@@ -16,6 +16,8 @@ import { variantType } from "~/modules/product/product.modal";
 import { TYPE_REWARD } from "~/modules/cumulativeDiscount/constants";
 import { INFINITY } from "~/constants/defaultValue";
 import { getValueOfMath } from "~/utils/helpers";
+import { CouponInSelect, VerifyCoupon } from "~/modules/coupon/coupon.modal";
+import apisCoupon from "~/modules/coupon/coupon.api";
 const TYPE_DISCOUNT: any = CumulativeDiscountModule.constants.TYPE_DISCOUNT;
 const TARGET: any = CumulativeDiscountModule.constants.TARGET;
 export const selectProductSearchBill = (data: any) => {
@@ -339,8 +341,18 @@ export const reducerDiscountQuotationItems = (quotationItems: any[]) => {
           sum + CalculateDiscountMethod.totalDiscountOther(get(quotation, "variant.price", 1),cur?.value,cur?.typeDiscount,quantityActual),
         0
       );
-      const totalPrice =
-        get(quotation, "variant.price", 1) * quantityActual - totalDiscount - totalDiscountOther;
+      const totalRoot = get(quotation, "variant.price", 1) * quantityActual;
+      
+      const couponsInItem = get(quotation,'couponsInItem',[])?.map((item : CouponInSelect) => {
+        const {type,value,maxDiscount} = item?.discount;
+        
+        return ({
+          ...item,
+          totalCoupon : getValueOfMath(totalRoot,value,type,maxDiscount)
+        })
+      });
+      const totalDiscountCoupon = couponsInItem?.reduce((sum:number,cur : CouponInSelect) => sum + get(cur,'totalCoupon',0),0);
+      const totalPrice = totalRoot - totalDiscount - totalDiscountOther - totalDiscountCoupon;
       return {
         ...quotation,
         cumulativeDiscount,
@@ -352,6 +364,9 @@ export const reducerDiscountQuotationItems = (quotationItems: any[]) => {
         exchangeValue: get(quotation, "variant.exchangeValue", 1),
         price: get(quotation, "variant.price", 1),
         quantityActual,
+        totalRoot,
+        totalDiscountCoupon,
+        couponsInItem,
       };
     }
   );
@@ -425,6 +440,7 @@ const onRemoveLocalStorage = (key: any) => {
 };
 
 export const addDataToSaleScreen = (data: ItemDataSource) => {
+  console.log(data,'data');
   const newKey: string = v4();
   const newDataSource: DataSourceType = {
     [newKey]: data,
@@ -459,5 +475,26 @@ export const onConvertInitQuantity = (newDataSource: DataSourceType) => {
 export class CalculateBill {
   remainAmount (payload : any){
     return get(payload,'totalPrice',0) - get(payload,'totalReceiptVoucherCompleted',0);
+  }
+}
+
+export const setCouponToBillItem = ({quotationItems,couponSelected} : {quotationItems : DataItem[],couponSelected : CouponInSelect[]}) => {
+  const mergeCouponWithItem = quotationItems?.map((quotation : DataItem) => ({
+    ...quotation,
+    couponsInItem: couponSelected?.filter((coupon) => coupon?.couponAtVariantId === quotation?.variantId),
+    
+  }));
+  return mergeCouponWithItem;
+  
+};
+
+export const validateCoupon = async (payload : VerifyCoupon,setCoupon : (p?:any) => void) => {
+  try {
+    const validCoupon = await apisCoupon.verify(payload);
+    setCoupon(validCoupon);
+    const isDiff = ((validCoupon?.bill?.length !== payload?.coupons?.bill?.length) || (validCoupon?.ship?.length !== payload?.coupons?.ship?.length) || (validCoupon?.item?.length !== payload?.coupons?.item?.length));
+    return isDiff;
+  } catch (error) {
+    console.log(error,'error');
   }
 }

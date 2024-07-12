@@ -1,5 +1,5 @@
 import { Form } from "antd";
-import { forIn, get } from "lodash";
+import { debounce, forIn, get } from "lodash";
 import {
   ReactNode,
   createContext,
@@ -28,8 +28,8 @@ import useNotificationStore from "~/store/NotificationContext";
 import { getValueOfMath, getValueOfPercent } from "~/utils/helpers";
 import { DEFAULT_DEBT_TYPE } from "../../quotation/constants";
 import { useCheckRefCollection, useGetDebtRule } from "../bill.hook";
-import { DebtType, FeeType, quotation } from "../bill.modal";
-import { reducerDiscountQuotationItems } from "../bill.service";
+import { DebtType, DetailCoupon, FeeType, quotation } from "../bill.modal";
+import { reducerDiscountQuotationItems, setCouponToBillItem, validateCoupon } from "../bill.service";
 import { defaultFee } from "../constants";
 import { useMatchPolicy } from "~/modules/policy/policy.hook";
 import POLICIES from "~/modules/policy/policy.auth";
@@ -108,18 +108,17 @@ export type GlobalCreateBill = {
   onCloseCoupon: () => void;
   coupons: any[];
   loadingGetCoupon: boolean;
-  onOpenCouponBillItem: (id : string) => void;
+  onOpenCouponBillItem: (id : string,variantId : string) => void;
   onCloseCouponBillItem: () => void;
   couponsBillItem: any[];
   loadingCouponBillItem: boolean;
-  couponSelected: {
-    bill : CouponInSelect[],
-    ship : CouponInSelect[],
-    item : CouponInSelect[],
-  };
+  couponSelected: DetailCoupon;
   onChangeCoupleSelect: (p?:any) => void;
   totalDiscountCouponBill: number;
   totalDiscountCouponShip: number;
+  queryBillItem : QuerySearchCoupon;
+  totalCouponForItem: number;
+  onVerifyCoupon : () => void;
 };
 const CreateBill = createContext<GlobalCreateBill>({
   quotationItems: [],
@@ -179,7 +178,10 @@ const CreateBill = createContext<GlobalCreateBill>({
   onOpenCouponBillItem : () => {},
   onCloseCouponBillItem: () => {},
   couponsBillItem : [],
-  loadingCouponBillItem : false
+  loadingCouponBillItem : false,
+  queryBillItem : {target : "BILL_ITEM"},
+  totalCouponForItem : 0,
+  onVerifyCoupon: () => {},
  });
 
 type CreateBillProviderProps = {
@@ -199,6 +201,7 @@ export function CreateBillProvider({
   onRemoveTab,
   onOpenModalResult,
 }: CreateBillProviderProps): JSX.Element {
+  const isInitFirst : any = useRef(false);
   QuotationModule.hook.useResetQuotation();
   const [countReValidate, setCountReValidate] = useState(1);
   const [quotationItems, setQuotationItems] = useState<DataItem[]>([]);
@@ -363,12 +366,16 @@ export function CreateBillProvider({
       onCloseCouponBillItem,
       onOpenCouponBillItem,
       loadingCouponBillItem,
+      queryBillItem,
+      countProduct,
     } = useCouponSelect({bill,refCollection,totalAmount});
     //
 
   // ------Calculate discount Coupon-------
   const minTotalPrice = useMemo(() => totalPrice * 45 / 100,[totalPrice]);
   const maxDiscountCoupon = useMemo(() => totalPrice - minTotalPrice,[minTotalPrice,totalPrice])
+  
+  const totalCouponForItem = useMemo(() => quotationItems?.reduce((sum:number,cur : any) => sum + get(cur,'totalDiscountCoupon',0),0),[quotationItems]);
   
   const totalDiscountCouponBill = useMemo(() => {
     const totalDiscount = couponSelected?.bill.reduce((sum: number, cur: CouponInSelect) => {
@@ -478,6 +485,11 @@ export function CreateBillProvider({
     const initDebt = debt?.find(
       (debt: DebtType) => get(debt, "key") === DEFAULT_DEBT_TYPE
     );
+    if(!isInitFirst.current){
+      const couponInit = get(bill,'coupons');
+      couponInit && onChangeCoupleSelect(couponInit);
+      isInitFirst.current = true;
+    }
     form.setFieldsValue({
       debtType:
         form.getFieldValue("debtType") ||
@@ -492,9 +504,33 @@ export function CreateBillProvider({
       const newQuotationItems: any[] = reducerDiscountQuotationItems(
         get(bill, "quotationItems", [])
       );
+      
       setQuotationItems(newQuotationItems);
     }
   }, [bill, debt, form, totalPrice]);
+
+  // Verify coupon
+  const onVerifyCoupon = async() => {
+    return await validateCoupon({
+      billPrice : totalAmount,
+      coupons : couponSelected,
+      productCount : countProduct,
+      customerApplyId : {
+        refCollection : refCollection as any,
+        id : get(bill, "pharmacyId")
+      }
+    },
+    onChangeCoupleSelect
+    )
+  }
+
+  // Watch Change Coupon Select
+  useEffect(() => {
+    const newQuotationItem =  setCouponToBillItem({couponSelected : couponSelected.item,quotationItems});
+    onChangeBill({
+      quotationItems : newQuotationItem
+    })
+  },[couponSelected]);
 
   // Init warehouse
 
@@ -663,6 +699,9 @@ export function CreateBillProvider({
         onCloseCouponBillItem,
         loadingCouponBillItem,
         couponsBillItem,
+        queryBillItem,
+        totalCouponForItem,
+        onVerifyCoupon,
       }}
     >
       {children}

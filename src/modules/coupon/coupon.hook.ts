@@ -152,7 +152,11 @@ export const useCouponSelect = ({bill,refCollection,totalAmount} : {bill : any,r
   const [isOpenCoupon,setIsOpenCoupon] = useState(false);
   const [isOpenCouponBillItem,setIsOpenCouponBillItem] = useState(false);
   const countProduct = get(bill,'quotationItems',[])?.reduce((sum : number,cur : any) => sum + get(cur,'quantity',0),0)
-  const [couponSelected,setCouponSelected] = useState({
+  const [couponSelected,setCouponSelected] = useState<{
+    bill : CouponInSelect[],
+    ship : CouponInSelect[],
+    item : CouponInSelect[],
+  }>({
     bill : [],
     ship : [],
     item : [],
@@ -160,7 +164,7 @@ export const useCouponSelect = ({bill,refCollection,totalAmount} : {bill : any,r
   const onChangeCoupleSelect = (newCoupon : any) => {
     setCouponSelected({
       ...couponSelected,
-      ...newCoupon
+      ...newCoupon,
     })
   }
   const [query,setQuery] = useState<QuerySearchCoupon>({
@@ -188,11 +192,12 @@ export const useCouponSelect = ({bill,refCollection,totalAmount} : {bill : any,r
   const onCloseCoupon = () => {
     setIsOpenCoupon(false);
   };
-  const onOpenCouponBillItem = (productId? : string) => {
+  const onOpenCouponBillItem = (productId? : string,variantId ? : string) => {
     setIsOpenCouponBillItem(true);
     setQueryBillItem({
       ...queryBillItem,
-      targetId : productId
+      targetId : productId,
+      variantId,
     });
   };
 
@@ -204,7 +209,6 @@ export const useCouponSelect = ({bill,refCollection,totalAmount} : {bill : any,r
     couponSelected,
     setCouponSelected,
     onChangeCoupleSelect,
-    setQuery,
     coupons,
     loading,
     countProduct,
@@ -215,6 +219,7 @@ export const useCouponSelect = ({bill,refCollection,totalAmount} : {bill : any,r
     onCloseCouponBillItem,
     isOpenCouponBillItem,
     couponsBillItem,
-    loadingCouponBillItem
+    loadingCouponBillItem,
+    queryBillItem,
   };
 }

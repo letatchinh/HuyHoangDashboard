@@ -1,5 +1,5 @@
 import { pick } from "lodash";
-import { detailCoupon, FormFieldCreateBill, PayloadCreateBill, quotation } from "../bill/bill.modal";
+import { DetailCoupon, FormFieldCreateBill, PayloadCreateBill, quotation } from "../bill/bill.modal";
 import { DEFAULT_DEBT_TYPE } from "./constants";
 
 type paramsConvertDataQuotation = {
@@ -11,11 +11,12 @@ type paramsConvertDataQuotation = {
     dataTransportUnit?: any,
     warehouseId?: string | undefined,
     noteBillSplit?: string,
-    coupons? : detailCoupon[],
+    coupons? : DetailCoupon,
     totalCouponForShip? : number,
     totalCouponForBill? : number,
+    totalCouponForItem? : number,
   }
-  export const convertDataQuotation = ({data,quotationItems,totalPriceAfterDiscount,_id,totalAmount,dataTransportUnit,warehouseId,noteBillSplit,totalCouponForBill,totalCouponForShip,coupons}:paramsConvertDataQuotation) : PayloadCreateBill => {
+  export const convertDataQuotation = ({data,quotationItems,totalPriceAfterDiscount,_id,totalAmount,dataTransportUnit,warehouseId,noteBillSplit,totalCouponForBill,totalCouponForShip,totalCouponForItem,coupons}:paramsConvertDataQuotation) : PayloadCreateBill => {
       const quotationItemsSubmit : Omit<quotation,'variant' | 'variants'>[] = quotationItems?.map((quotation : quotation) => ({
           ...pick(quotation,[
             'cumulativeDiscount',
@@ -46,6 +47,7 @@ type paramsConvertDataQuotation = {
           noteBillSplit,
           totalCouponForBill,
           totalCouponForShip,
+          totalCouponForItem,
           coupons,
         };
         return submitData;

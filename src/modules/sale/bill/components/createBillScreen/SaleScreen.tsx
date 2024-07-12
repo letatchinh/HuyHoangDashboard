@@ -30,7 +30,9 @@ export default function SaleScreen(props: propsType): React.JSX.Element {
     setPharmacyInfo,
     totalDiscountCouponBill,
     totalDiscountCouponShip,
+    totalCouponForItem,
     couponSelected,
+    onVerifyCoupon,
   } = useCreateBillStore();
  const feeForm = Form.useWatch('fee',form);
   const { onNotify } = useNotificationStore();
@@ -44,7 +46,7 @@ export default function SaleScreen(props: propsType): React.JSX.Element {
     QuotationModule.hook.useUpdateQuotation(callBackAfterSuccess);
   const [, onConvertQuotation] =
     QuotationModule.hook.useConvertQuotation(callBackAfterSuccess);
-  const onFinish = (values: FormFieldCreateBill) => {
+  const onFinish = async(values: FormFieldCreateBill) => {
     try {
       if (!quotationItems?.length) {
         return onNotify?.warning("Vui lòng chọn thuốc!");
@@ -53,6 +55,12 @@ export default function SaleScreen(props: propsType): React.JSX.Element {
       if (totalPriceAfterDiscount < 0) {
         return onNotify?.warning("Số tiền không hợp lệ");
       }
+      
+      const isInValidCoupon : any = await onVerifyCoupon();
+      if(isInValidCoupon){
+        return onNotify?.warning("Có một số mã giảm giá không hợp lệ, Hệ thống đã tự động bỏ mã, Vui lòng kiểm tra và thử lại"); 
+      }
+      
       const submitData: PayloadCreateBill =
         QuotationModule.service.convertDataQuotation({
           quotationItems: quotationItems,
@@ -63,26 +71,26 @@ export default function SaleScreen(props: propsType): React.JSX.Element {
           dataTransportUnit: get(bill, 'dataTransportUnit'),
           warehouseId: get(bill, 'warehouseId'),
           ...(get(bill, 'noteBillSplit') &&{noteBillSplit: get(bill, 'noteBillSplit')}),
-          totalCouponForBill :totalDiscountCouponBill,
-          totalCouponForShip :totalDiscountCouponShip,
-          coupons : [...couponSelected.bill?.map((cp) => ({snapCoupon : cp})), ...couponSelected.ship?.map((cp) => ({snapCoupon : cp}))],
+          coupons: couponSelected,
+          totalCouponForBill: totalDiscountCouponBill,
+          totalCouponForShip: totalDiscountCouponShip,
+          totalCouponForItem,
         });
-        console.log(submitData,'submitData');
         
-      // switch (get(bill, "typeTab")) {
-      //   case "createQuotation":
-      //     onCreateQuotation(submitData);
-      //     break;
-      //   case "updateQuotation":
-      //     onUpdateQuotation(submitData);
-      //     break;
-      //   case "convertQuotation":
-      //     onConvertQuotation(submitData);
-      //     break;
+      switch (get(bill, "typeTab")) {
+        case "createQuotation":
+          onCreateQuotation(submitData);
+          break;
+        case "updateQuotation":
+          onUpdateQuotation(submitData);
+          break;
+        case "convertQuotation":
+          onConvertQuotation(submitData);
+          break;
 
-      //   default:
-      //     break;
-      // }
+        default:
+          break;
+      }
     } catch (error: any) {
       onNotify?.error(error?.response?.data?.message || "Có lỗi gì đó xảy ra");
     }
@@ -116,7 +124,6 @@ export default function SaleScreen(props: propsType): React.JSX.Element {
   }, []);
 
   useChangeDocumentTitle("Tạo đơn hàng");
-  
   return (
     <Form
       className="form-create-bill"
@@ -162,7 +169,7 @@ export default function SaleScreen(props: propsType): React.JSX.Element {
             <TotalBill />
           </div>
           <div className="form-create-bill--payment__actions">
-            <Row gutter={8} justify={"center"} align="middle" wrap={false}>
+            <Row style={{height : '100%'}} gutter={8} justify={"center"} align="middle" wrap={false}>
               {/* <Col flex={1}>
                 <Button
                 block
@@ -172,7 +179,7 @@ export default function SaleScreen(props: propsType): React.JSX.Element {
                   Hình thức thanh toán
                 </Button>
               </Col> */}
-              <Col span={14}>
+              <Col style={{height : '100%',display : 'flex' , alignItems : 'end'}} span={14}>
                 <Button
                   block
                   disabled={!quotationItems?.length}

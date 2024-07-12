@@ -1,8 +1,9 @@
 import { Checkbox, Typography } from "antd";
 import { get, range } from "lodash";
-import React from "react";
+import React, { useCallback } from "react";
 import freeProduct from "~/assets/images/coupon/freeProduct.png";
 import freeShip from "~/assets/images/coupon/freeShip.png";
+import useCreateBillStore from "~/modules/sale/bill/storeContext/CreateBillContext";
 import { formatter, getTextOfDiscount } from "~/utils/helpers";
 import { defaultConditions } from "../constants";
 import { CouponInSelect } from "../coupon.modal";
@@ -11,12 +12,20 @@ type propsType = {
   coupon: CouponInSelect;
   onAdd : (p?:any) => void;
   onRemove : (p?:any) => void;
-  isChecked : boolean
+  isChecked : boolean;
+  target : "BILL" | "BILL_ITEM",
 };
-export default function Coupon({ coupon,onAdd,onRemove,isChecked }: propsType): React.JSX.Element {
-    
+export default function Coupon({ coupon,onAdd,onRemove,isChecked,target }: propsType): React.JSX.Element {
+    const {queryBillItem} = useCreateBillStore();
   const { applyFor, discount, startDate, endDate, conditionsTrue,name } = coupon;
-
+  const onActionAdd = () => {
+    if(target === "BILL"){
+      onAdd(coupon);
+    }else{
+      onAdd({...coupon,couponAtVariantId : queryBillItem?.variantId})
+    }
+  }
+  
   return (
     <div className="coupon">
       <div className="coupon--left">
@@ -43,7 +52,7 @@ export default function Coupon({ coupon,onAdd,onRemove,isChecked }: propsType): 
         <ShowDate endDate={endDate} startDate={startDate} />
       </div>
       <div className="coupon--right">
-        <Checkbox checked={isChecked} onChange={(e) => e.target.checked ? onAdd(coupon) : onRemove(coupon?._id)}/>
+        <Checkbox checked={isChecked} onChange={(e) => e.target.checked ? onActionAdd() : onRemove(coupon?._id)}/>
       </div>
     </div>
   );

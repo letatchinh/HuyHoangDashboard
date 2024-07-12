@@ -1,5 +1,5 @@
 import { EditOutlined, InfoCircleFilled } from "@ant-design/icons";
-import { Button, Flex, Form, Radio, Tooltip, Typography } from "antd";
+import { Button, Flex, Form, Radio, Tag, Tooltip, Typography } from "antd";
 import { get } from "lodash";
 import React, { CSSProperties, useCallback, useEffect, useState } from "react";
 import InputNumberAnt from "~/components/Antd/InputNumberAnt";
@@ -69,6 +69,8 @@ export default function TotalBill(props: propsType): React.JSX.Element {
     onOpenCoupon,
     totalDiscountCouponBill,
     totalDiscountCouponShip,
+    totalCouponForItem,
+    couponSelected,
   } = useCreateBillStore();
   const [minFee, setMinFee] = useState<any>();
   const [openAddress, setOpenAddress] = useState(false);
@@ -128,6 +130,7 @@ export default function TotalBill(props: propsType): React.JSX.Element {
       <Layout label={"Số lượng mặt hàng"}>{formatter(totalQuantity)}</Layout>
       <Layout label={"Tổng tiền"}>{formatter(totalPrice)}</Layout>
       <Layout label={"Giảm giá"}>{formatter(totalDiscountCouponBill)}</Layout>
+      <Layout label={"Giảm giá mặt hàng"}>{formatter(totalCouponForItem)}</Layout>
       <Layout label={"Giảm giá phí ship"}>{formatter(totalDiscountCouponShip)}</Layout>
       {totalDiscountFromProduct?.["DISCOUNT.CORE"] ? (
         <Layout label={"Tổng chiết khấu cứng từ mặt hàng"}>
@@ -390,10 +393,10 @@ export default function TotalBill(props: propsType): React.JSX.Element {
           marginBottom: 5,
         }}
       />
-      <Layout isLarge={true} label={"Mã giảm giá"}>
+      <Layout label={<span>Mã giảm giá <Tag color={'blue'}>{`Đã chọn ${get(couponSelected,'bill.length',0) + get(couponSelected,'ship.length',0)} mã`}</Tag></span>}>
         <Typography.Link 
-        onClick={() => onOpenCoupon()} style={{ fontSize: 18, fontWeight: 600 }}>
-          Chọn hoặc nhập mã
+        onClick={() => onOpenCoupon()} style={{ fontSize: 16, fontWeight: 600 }}>
+          Chọn mã giảm giá
         </Typography.Link>
       </Layout>
       <div

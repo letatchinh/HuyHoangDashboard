@@ -4,13 +4,13 @@ import useCreateBillStore from '~/modules/sale/bill/storeContext/CreateBillConte
 import { CouponInSelect } from '../coupon.modal';
 import Coupon from './Coupon';
 import { LoadingOutlined } from '@ant-design/icons';
-import { get } from 'lodash';
+import { get, uniqBy } from 'lodash';
 
 type propsType = {
 
 }
 export default function SelectCouponBillItem(props:propsType) : React.JSX.Element {
-    const {couponsBillItem,onChangeCoupleSelect,loadingCouponBillItem,couponSelected,onCloseCouponBillItem} = useCreateBillStore();
+    const {couponsBillItem,onChangeCoupleSelect,loadingCouponBillItem,couponSelected,onCloseCouponBillItem,queryBillItem} = useCreateBillStore();
     
     const [selected,setSelected] = useState<CouponInSelect[]>([]);
     
@@ -18,10 +18,10 @@ export default function SelectCouponBillItem(props:propsType) : React.JSX.Elemen
       couponMulti : CouponInSelect[],
       couponSingle : CouponInSelect[]
     },cur : CouponInSelect) => {
-        if(!cur?.multiple){
+        if(cur?.multiple){
             sum.couponMulti.push(cur);
         }
-        if(cur?.multiple){
+        if(!cur?.multiple){
             sum.couponSingle.push(cur);
         }
         return sum;
@@ -31,26 +31,23 @@ export default function SelectCouponBillItem(props:propsType) : React.JSX.Elemen
     }),[couponsBillItem]);
 
     const onAdd = (newCoupon:CouponInSelect) => {
-        
-        if(newCoupon?.multiple){
-            setSelected(selected?.filter((item) => item?.multiple === newCoupon?.multiple));
-        }else{
-            setSelected([newCoupon]);
-        }
+          setSelected([...selected,{...newCoupon,couponAtVariantId : queryBillItem.variantId}]?.filter((item) => item?.multiple === newCoupon?.multiple));
     };
     
     const onRemove = (removeId:string) => {
         setSelected(selected?.filter((item:any) => item._id !== removeId))
     };
+
     const onFinish = () => {
+      const removeOldSelectedInThisSection = get(couponSelected,'item',[])?.filter((item) => item?.couponAtVariantId !== queryBillItem?.variantId)
         onChangeCoupleSelect({
-          item : selected
+          item : [...removeOldSelectedInThisSection,...selected]
         });
         onCloseCouponBillItem();
     };
-
+    
     useEffect(() => {
-      setSelected([...get(couponSelected,'item',[])]);
+      setSelected([...get(couponSelected,'item',[])]?.filter((item) => item.couponAtVariantId === queryBillItem?.variantId));
     },[couponSelected]);
 
     const PropsSection = {
@@ -59,10 +56,11 @@ export default function SelectCouponBillItem(props:propsType) : React.JSX.Elemen
       onAdd,
     };
 
+    
     return (
         <div>
             <Alert message={<span>Bạn đã chọn {<Typography.Text type='success' strong>{selected?.length}</Typography.Text>} mã giảm giá</span>} type="success" showIcon />
-            <Flex justify={'space-between'}>
+            <Flex gap={10}>
               {loadingCouponBillItem ? <LoadingOutlined /> : <>
                 <SectionListDiscount {...PropsSection} data={couponByType.couponSingle} title="Mã không kết hợp"/>
                 <SectionListDiscount {...PropsSection} data={couponByType.couponMulti} title="Mã kết hợp"/>
@@ -93,7 +91,7 @@ const SectionListDiscount = ({
 }) => {
 
   return (
-    <div style={{ marginBottom: 8 }}>
+    <div style={{ marginBottom: 8 , flex : 1 }}>
       <Typography.Text
         type="secondary"
         style={{ fontSize: 18, fontWeight: 500 }}
@@ -101,7 +99,7 @@ const SectionListDiscount = ({
         {title}
       </Typography.Text>
       {data?.map((item: CouponInSelect) => (
-        <Coupon isChecked={selected?.some((sled) => sled?._id === item?._id)} onRemove={onRemove} onAdd={onAdd} key={item._id} coupon={item} />
+        <Coupon target='BILL_ITEM' isChecked={selected?.some((sled) => sled?._id === item?._id)} onRemove={onRemove} onAdd={onAdd} key={item._id} coupon={item} />
       ))}
     </div>
   );
