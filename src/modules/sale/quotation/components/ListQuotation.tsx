@@ -481,7 +481,7 @@ export default function ListQuotation({
           bordered
           stickyTop
           columns={columns}
-          dataSource={InitData}
+          dataSource={InitData ? InitData : quotations}
           loading={isLoading}
           pagination={pagingTable(paging, onParamChange)}
           size="small"
