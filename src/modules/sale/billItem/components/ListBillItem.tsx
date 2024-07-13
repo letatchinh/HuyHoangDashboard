@@ -172,7 +172,7 @@ export default function ListBillItem({
       key: "totalDiscountCoupon",
       align: "center",
       render(totalDiscountCoupon, record, index) {
-        return <CouponShow value={totalDiscountCoupon} dataSource={get(record,'couponsInItem',[])}/>;
+        return <CouponShow value={totalDiscountCoupon || 0} dataSource={get(record,'couponsInItem',[])}/>;
       },
     },
     {
