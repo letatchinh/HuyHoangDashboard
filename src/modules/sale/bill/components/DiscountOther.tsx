@@ -104,8 +104,8 @@ export default function DiscountOther({
             {/* <Typography.Text strong>{formatter(get(item,'value',0))}</Typography.Text> */}
           </Col>
           <Col span={3}>
-            <Typography.Text strong>
-              {formatter(get(item,'totalCoupon',0))}
+            <Typography.Text>
+              -{formatter(get(item,'totalCoupon',0))}
               {item?.discount?.type === "PERCENT" && `(${item?.discount?.value}%)`}
             </Typography.Text>
           </Col>

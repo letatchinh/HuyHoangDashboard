@@ -31,6 +31,7 @@ import { METHOD_TYPE } from "~/modules/vouchers/constants";
 import { PATH_APP } from "~/routes/allPath";
 import { CheckPermission, formatter } from "~/utils/helpers";
 import { PayloadUpdateBill } from "../bill.modal";
+import CouponShow from "../components/CouponShow";
 import HistoryBillInWarehouse from "../components/HistoryBillInWarehouse";
 import StepStatus from "../components/StepStatus";
 import { STATUS_BILL, STATUS_BILL_VI } from "../constants";
@@ -64,6 +65,8 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
   useResetBillAction();
   const [form] = Form.useForm();
   const { bill, isLoading,mutateBill,onOpenForm, compareMoney,onOpenFormPayment ,totalRevenueInVouchers, onOpenFormLogistic, warehouseInfo} = useUpdateBillStore();
+  console.log(bill,'bill');
+  
   const {
     codeSequence,
     createdAt,
@@ -260,6 +263,7 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
               </Layout>
               <Layout label={"Tổng số tiền"}>{formatter(get(bill,'totalAmountBill',0))}</Layout>
               <Layout label={"Chiết khấu"}>-{formatter(get(bill,'totalDiscountBill',0))}</Layout>
+              <Layout label={"Mã giảm giá"}>-<CouponShow value={(get(bill,'totalCouponForBill',0)+ get(bill,'totalCouponForItem',0))} dataSource={[...get(bill,'coupons.bill',[]),...get(bill,'coupons.item',[])]}/></Layout>
               <Layout label={"Tổng số tiền sau chiết khấu"}>{formatter(get(bill,'totalAfterDiscountBill',0))}</Layout>
               {/* <Layout label={"Đã trả trước"}>-{formatter(pair)}</Layout> */}
               <Layout label={"Phụ phí"}>{formatter(get(feeDetail,'SUB_FEE',0))}</Layout>

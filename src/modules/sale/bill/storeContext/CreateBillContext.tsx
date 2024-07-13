@@ -205,6 +205,7 @@ export function CreateBillProvider({
   QuotationModule.hook.useResetQuotation();
   const [countReValidate, setCountReValidate] = useState(1);
   const [quotationItems, setQuotationItems] = useState<DataItem[]>([]);
+  
   const [form] = Form.useForm();
   const [debt, isLoadingDebt] = useGetDebtRule();
   const [address, setAddress] = useState([]);
@@ -501,13 +502,15 @@ export function CreateBillProvider({
       deliveryAddress: get(bill, "deliveryAddress"),
     });
     if (get(bill, "pharmacyId")) {
+      // Handle Convert Quotation Here
       const newQuotationItems: any[] = reducerDiscountQuotationItems(
-        get(bill, "quotationItems", [])
+        get(bill, "quotationItems", []),
+        couponSelected
       );
       
       setQuotationItems(newQuotationItems);
     }
-  }, [bill, debt, form, totalPrice]);
+  }, [bill, debt, form, totalPrice,couponSelected]);
 
   // Verify coupon
   const onVerifyCoupon = async() => {
@@ -524,13 +527,6 @@ export function CreateBillProvider({
     )
   }
 
-  // Watch Change Coupon Select
-  useEffect(() => {
-    const newQuotationItem =  setCouponToBillItem({couponSelected : couponSelected.item,quotationItems});
-    onChangeBill({
-      quotationItems : newQuotationItem
-    })
-  },[couponSelected]);
 
   // Init warehouse
 
@@ -565,16 +561,14 @@ export function CreateBillProvider({
       );
     }
     try {
-      const newBill = {
-        ...bill,
+      onChangeBill({
         fee: bill?.fee?.map((item: any) =>
           item?.typeFee === "LOGISTIC"
             ? { ...item, value: data?.totalFee }
             : item
         ),
         dataTransportUnit: data,
-      };
-      onChangeBill(newBill);
+      });
       onCloseFormLogistic();
     } catch (error) {
       onNotify?.error("Có lỗi xảy ra khi gắn phí vận chuyển vào đơn hàng");

@@ -63,7 +63,10 @@ export interface quotation  {
     lotNumber : string,
     expirationDate : string,
     codeBySupplier : string,
-    discountOther : DiscountOtherType[]
+    discountOther : DiscountOtherType[],
+    couponsInItem? : CouponBase[],
+    totalDiscountCoupon? : number,
+    totalDiscountSummary ? : number
 }
 export interface FeeType  {
     typeFee : 'SUB_FEE' | 'LOGISTIC',

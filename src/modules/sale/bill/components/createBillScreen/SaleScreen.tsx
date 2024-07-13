@@ -134,7 +134,6 @@ export default function SaleScreen(props: propsType): React.JSX.Element {
 
       default:
         return "Tạo đơn hàng tạm";
-        break;
     }
   }, [bill]);
   useChangeDocumentTitle(titleText);

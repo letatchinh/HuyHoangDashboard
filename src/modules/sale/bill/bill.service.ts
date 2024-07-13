@@ -9,7 +9,7 @@ import {
 } from "~/pages/Dashboard/Bill/CreateBill";
 import { cumulativeDiscountType } from "../../cumulativeDiscount/cumulativeDiscount.modal";
 import apis from "./bill.api";
-import { DiscountOtherType, quotation } from "./bill.modal";
+import { DetailCoupon, DiscountOtherType, quotation } from "./bill.modal";
 import { DataItem } from "./storeContext/CreateBillContext";
 import CumulativeDiscountModule from "~/modules/cumulativeDiscount";
 import { variantType } from "~/modules/product/product.modal";
@@ -256,7 +256,7 @@ export class CalculateDiscountFactory {
   }
 }
 
-export const reducerDiscountQuotationItems = (quotationItems: any[]) => {
+export const reducerDiscountQuotationItems = (quotationItems: any[],couponSelected : DetailCoupon) => {
   const CalculateDiscountMethod = new CalculateDiscountFactory();
   const newQuotationItems: any[] = quotationItems?.map(
     (quotation: DataItem) => {
@@ -342,8 +342,9 @@ export const reducerDiscountQuotationItems = (quotationItems: any[]) => {
         0
       );
       const totalRoot = get(quotation, "variant.price", 1) * quantityActual;
-      
-      const couponsInItem = get(quotation,'couponsInItem',[])?.map((item : CouponInSelect) => {
+      const cp = couponSelected?.item.filter((coupon) => coupon?.couponAtVariantId === quotation?.variantId);
+
+      const couponsInItem = cp?.map((item : CouponInSelect) => {
         const {type,value,maxDiscount} = item?.discount;
         
         return ({
@@ -352,7 +353,8 @@ export const reducerDiscountQuotationItems = (quotationItems: any[]) => {
         })
       });
       const totalDiscountCoupon = couponsInItem?.reduce((sum:number,cur : CouponInSelect) => sum + get(cur,'totalCoupon',0),0);
-      const totalPrice = totalRoot - totalDiscount - totalDiscountOther - totalDiscountCoupon;
+      const totalDiscountSummary = totalDiscount + totalDiscountOther;
+      const totalPrice = totalRoot - totalDiscountSummary - totalDiscountCoupon;
       return {
         ...quotation,
         cumulativeDiscount,
@@ -367,6 +369,7 @@ export const reducerDiscountQuotationItems = (quotationItems: any[]) => {
         totalRoot,
         totalDiscountCoupon,
         couponsInItem,
+        totalDiscountSummary,
       };
     }
   );

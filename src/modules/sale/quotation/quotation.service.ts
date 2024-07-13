@@ -30,6 +30,9 @@ type paramsConvertDataQuotation = {
             'codeBySupplier',
             'quantity',
             'discountOther',
+            'couponsInItem',
+            'totalDiscountCoupon',
+            'totalDiscountSummary',
           ]),
         }));
         // Todo : Verify Data When Send to sever (Not implemented)
