@@ -100,6 +100,7 @@ const warehouseLink = 'warehouseLink';
 const logistic = 'logistic';
 const billStatus = 'billStatus'; // Trạng thái đơn hàng bán
 const billSpit = 'billSpit'; // Tách đơn hàng bán
+const coupon = 'coupon'; // Tách đơn hàng bán
 
 
 //------RESOURCES --------
@@ -207,6 +208,7 @@ const RESOURCES = [
   warehouseLink,
   logistic,
   billSpit,
+  coupon,
 ];
 
 //ACTIONS

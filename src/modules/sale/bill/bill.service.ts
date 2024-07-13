@@ -14,7 +14,7 @@ import { DataItem } from "./storeContext/CreateBillContext";
 import CumulativeDiscountModule from "~/modules/cumulativeDiscount";
 import { variantType } from "~/modules/product/product.modal";
 import { TYPE_REWARD } from "~/modules/cumulativeDiscount/constants";
-import { INFINITY } from "~/constants/defaultValue";
+import { INFINITY, MIN_TOTAL_DISCOUNT_PERCENT } from "~/constants/defaultValue";
 import { getValueOfMath } from "~/utils/helpers";
 import { CouponInSelect, VerifyCoupon } from "~/modules/coupon/coupon.modal";
 import apisCoupon from "~/modules/coupon/coupon.api";
@@ -342,14 +342,20 @@ export const reducerDiscountQuotationItems = (quotationItems: any[],couponSelect
         0
       );
       const totalRoot = get(quotation, "variant.price", 1) * quantityActual;
+
+      // Filter Coupon Of Item
       const cp = couponSelected?.item.filter((coupon) => coupon?.couponAtVariantId === quotation?.variantId);
 
+      // Calculate Coupon For Item 
       const couponsInItem = cp?.map((item : CouponInSelect) => {
         const {type,value,maxDiscount} = item?.discount;
-        
+        const totalCouponItem = getValueOfMath(get(quotation, "variant.price", 1),value,type,maxDiscount) * quantityActual;
+        const minPrice = totalRoot * MIN_TOTAL_DISCOUNT_PERCENT / 100;
+        const maxDiscountCoupon = totalRoot - minPrice;
+
         return ({
           ...item,
-          totalCoupon : getValueOfMath(totalRoot,value,type,maxDiscount)
+          totalCoupon : Math.min(totalCouponItem,maxDiscountCoupon)
         })
       });
       const totalDiscountCoupon = couponsInItem?.reduce((sum:number,cur : CouponInSelect) => sum + get(cur,'totalCoupon',0),0);

@@ -9,6 +9,9 @@ import ModalAnt from "~/components/Antd/ModalAnt";
 import SearchAnt from "~/components/Antd/SearchAnt";
 import TableAnt from "~/components/Antd/TableAnt";
 import Breadcrumb from "~/components/common/Breadcrumb";
+import WithPermission from "~/components/common/WithPermission";
+import POLICIES from "~/modules/policy/policy.auth";
+import { useMatchPolicy } from "~/modules/policy/policy.hook";
 import { getTextOfDiscount, getValueOfMath } from "~/utils/helpers";
 import CouponForm from "../components/CouponForm";
 import { STATE_VI } from "../constants";
@@ -25,8 +28,7 @@ export default function Coupon(props: propsType): React.JSX.Element {
   const [query] = useCouponQueryParams();
   const [keyword, { setKeyword, onParamChange }] = useUpdateCouponParams(query);
   const [dataSource, isLoading] = useGetCoupons(query);
-  console.log(dataSource,'dataSource');
-  
+  const canUpdate = useMatchPolicy(POLICIES.UPDATE_COUPON);
   const paging = useCouponPaging();
   const [isSubmitLoading, onDelete] = useDeleteCoupon();
   const [id, setId] = useState<any>();
@@ -43,7 +45,7 @@ export default function Coupon(props: propsType): React.JSX.Element {
       title: "Mã",
       dataIndex: "giftCode",
       key: "giftCode",
-      render: (value,rc) => <Typography.Link  onClick={() => onOpen(rc?._id)}>{value}</Typography.Link>,
+      render: (value,rc) => canUpdate ? <Typography.Link  onClick={() => onOpen(rc?._id)}>{value}</Typography.Link> : <Typography.Text>{value}</Typography.Text>,
     },
     {
       title: "Tên mã",
@@ -103,7 +105,10 @@ export default function Coupon(props: propsType): React.JSX.Element {
       width: 100,
       render: (_id, rc) => (
         <Flex align={"center"} gap={5}>
-          <Typography.Link onClick={() => onOpen(_id)}>Sửa</Typography.Link>|
+          <WithPermission permission={POLICIES.UPDATE_COUPON}>
+          <Typography.Link onClick={() => onOpen(_id)}>Sửa</Typography.Link>
+            </WithPermission>|
+          <WithPermission permission={POLICIES.DELETE_COUPON}>
           <Popconfirm
             okButtonProps={{ loading: isSubmitLoading }}
             title="Xác nhận xoá"
@@ -111,6 +116,7 @@ export default function Coupon(props: propsType): React.JSX.Element {
           >
             <Typography.Link type="danger">Xoá</Typography.Link>
           </Popconfirm>
+          </WithPermission>
         </Flex>
       ),
     },
@@ -120,9 +126,11 @@ export default function Coupon(props: propsType): React.JSX.Element {
       <Breadcrumb title={"Danh sách mã giảm giá"} />
       <Flex style={{ marginBottom: 8 }} justify={"space-between"}>
         <SearchAnt onParamChange={onParamChange} />
+        <WithPermission permission={POLICIES.WRITE_COUPON}>
         <Button onClick={() => onOpen()} type="primary" icon={<PlusOutlined />}>
           Thêm mới
         </Button>
+        </WithPermission>
       </Flex>
       <TableAnt
         columns={columns}

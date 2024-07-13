@@ -27,7 +27,6 @@ export default function DiscountOther({
   variantId,
   couponsInItem,
 }: propsType): React.JSX.Element {
-  console.log(couponsInItem,'couponsInItem');
   
   const {onOpenCouponBillItem} = useCreateBillStore();
   return (

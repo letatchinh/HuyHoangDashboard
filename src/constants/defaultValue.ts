@@ -417,3 +417,5 @@ export const FILTER_BY_VI: {[key in keyof typeof FILTER_BY]:string} = {
   QUARTERLY: "Quý",
   YEARLY: "Năm",
 };
+
+export const MIN_TOTAL_DISCOUNT_PERCENT = 45;

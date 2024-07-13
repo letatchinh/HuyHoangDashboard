@@ -100,14 +100,14 @@ export default function TotalBill(props: propsType): React.JSX.Element {
           {formatter(totalDiscount)}
         </Typography.Text>
       </Layout>
-      <Layout
+      {/* <Layout
         tooltip="Tổng tiền sau chiết khấu có lúc không bằng Tổng tiền - Tổng chiết khấu"
         label={"Tổng tiền sau chiết khấu"}
       >
         <Typography.Text type="warning" strong>
           {formatter(totalAmount)}
         </Typography.Text>
-      </Layout>
+      </Layout> */}
       <Layout
         label={
           <span>

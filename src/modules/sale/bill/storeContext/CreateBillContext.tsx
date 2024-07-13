@@ -37,6 +37,7 @@ import SelectCoupon from "~/modules/coupon/components/SelectCoupon";
 import { useCouponSelect } from "~/modules/coupon/coupon.hook";
 import { CouponInSelect, QuerySearchCoupon } from "~/modules/coupon/coupon.modal";
 import SelectCouponBillItem from "~/modules/coupon/components/SelectCouponBillItem";
+import { MIN_TOTAL_DISCOUNT_PERCENT } from "~/constants/defaultValue";
 const TYPE_DISCOUNT = {
   "DISCOUNT.CORE": "DISCOUNT.CORE",
   "DISCOUNT.SOFT": "DISCOUNT.SOFT",
@@ -373,7 +374,7 @@ export function CreateBillProvider({
     //
 
   // ------Calculate discount Coupon-------
-  const minTotalPrice = useMemo(() => totalPrice * 45 / 100,[totalPrice]);
+  const minTotalPrice = useMemo(() => totalPrice * MIN_TOTAL_DISCOUNT_PERCENT / 100,[totalPrice]);
   const maxDiscountCoupon = useMemo(() => totalPrice - minTotalPrice,[minTotalPrice,totalPrice])
   
   const totalCouponForItem = useMemo(() => quotationItems?.reduce((sum:number,cur : any) => sum + get(cur,'totalDiscountCoupon',0),0),[quotationItems]);

@@ -548,13 +548,13 @@ export const resource: ItemType[] = [
     label: "Mã giảm giá",
     icon: <i className="fa-solid fa-boxes-packing"></i>,
     key: "coupon",
-    // permission: [...permissionBill],//
+    permission: [POLICIES.READ_COUPON],//
     children: [
       {
         label: "Danh sách mã giảm giá",
         path: PATH_APP.coupon.root,
         key: PATH_APP.coupon.root,
-        // permission: [POLICIES.READ_BILL],//
+        permission: [POLICIES.READ_COUPON],//
       },
     ],
   },
