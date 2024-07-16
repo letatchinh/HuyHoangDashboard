@@ -33,7 +33,7 @@ export default function EmployeeDetail(): React.JSX.Element {
   const [employee]: any = useGetEmployeeId_onlyGet();
   const [keyword, { setKeyword, onParamChange }] = useUpdateEmployeeParams(query);
   const [isOpenForm, setIsOpenForm] = useState(false);
-  const [destroy, setDestroy] = useState(false);
+  // const [destroy, setDestroy] = useState(false);
   const dispatch = useDispatch();
 
   const [open, setOpen] = useState(false);
@@ -51,13 +51,13 @@ export default function EmployeeDetail(): React.JSX.Element {
   const onCloseForm = useCallback(() => {
     setIsOpenForm(false);
     setId(null);
-    setDestroy(false);
+    // setDestroy(false);
   }, []);
 
   const onOpenForm = useCallback((idd?: any) => {
     setIsOpenForm(true);
     setId(idd);
-    idd && setDestroy(true);
+    // idd && setDestroy(true);
   }, []);
 
   const resetAction = () => {
@@ -128,10 +128,10 @@ export default function EmployeeDetail(): React.JSX.Element {
         footer={null}
         width={1020}
         style={{ top: 50 }}
-        afterClose={() => {
-          setDestroy(false);
-        }}
-        destroyOnClose={destroy}
+        // afterClose={() => {
+        //   setDestroy(false);
+        // }}
+        // destroyOnClose={destroy}
       >
         <Tabs
           destroyInactiveTabPane

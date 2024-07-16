@@ -118,7 +118,7 @@ export default function PharmacyDetail_v2(): React.JSX.Element {
         <PharmacyForm
           setDestroy={setDestroy}
           onClose={onCloseForm}
-          id={pharmacyId}
+          id={id}
           handleCreate={handleCreate}
           handleUpdate={updatePharmacy}
           query={query}
