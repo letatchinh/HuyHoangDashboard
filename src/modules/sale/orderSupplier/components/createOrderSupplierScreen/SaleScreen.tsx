@@ -67,7 +67,8 @@ try {
         break;
     
       default:
-        break;
+        onCreateOrderSupplier(submitData);
+        break
   }
   
 } catch (error : any) {
