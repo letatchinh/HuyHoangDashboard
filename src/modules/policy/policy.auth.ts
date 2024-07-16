@@ -100,6 +100,8 @@ const warehouseLink = 'warehouseLink';
 const logistic = 'logistic';
 const billStatus = 'billStatus'; // Trạng thái đơn hàng bán
 const billSpit = 'billSpit'; // Tách đơn hàng bán
+const historyBill = 'historyBill'; // Lịch sử đơn hàng bán
+const historyOrderSupplier = 'billSpit'; // Lịch sử đơn hàng mua
 
 
 //------RESOURCES --------
@@ -207,6 +209,8 @@ const RESOURCES = [
   warehouseLink,
   logistic,
   billSpit,
+  historyBill,
+  historyOrderSupplier
 ];
 
 //ACTIONS
@@ -295,7 +299,8 @@ const RESOURCE = (): ResourceType => {
     quotationPharmacy,
     logistic,
     billStatus,
-    billSpit
+    billSpit,
+    historyBill,
   ];
 
   const NOTIFICATION_BOT_MANAGER: string[] = [
@@ -311,6 +316,7 @@ const RESOURCE = (): ResourceType => {
     voucherSupplier,
     debtSupplier,
     orderSupplierStatus,
+    historyOrderSupplier
   ];
   
   const GROUP_WORK_MANAGERMENT: string[] = [
