@@ -9,12 +9,16 @@ import TableAnt from "~/components/Antd/TableAnt";
 import moment from "moment";
 import { useMemo, useState } from "react";
 import {
+  Col,
+  DatePicker,
+  Form,
   Row,
 } from "antd";
-import { propsType } from "../pharmacy.modal";
+import { FormFieldSearch, propsType } from "../pharmacy.modal";
 import { Link } from "react-router-dom";
 import { useMatchPolicy } from "~/modules/policy/policy.hook";
 import POLICIES from "~/modules/policy/policy.auth";
+import dayjs from "dayjs";
 
 interface UserProps {
   currentTab: string | undefined;
@@ -24,15 +28,23 @@ export default function DebtPharmacy(props: propsType) {
   const { pharmacyId } = props;
   const [query, onTableChange] = usePharmacyDebtQuery();
   const canReadBill = useMatchPolicy(POLICIES.READ_BILL);
+  const defaultDate = useMemo(
+    () => ({
+      startDate: dayjs().startOf("month").format("YYYY-MM-DD"),
+      endDate: dayjs().endOf("month").format("YYYY-MM-DD"),
+    }),
+    []
+  );
 
+  const [date, setDate] = useState<any>(defaultDate);
   const newQuery = useMemo(
     () => ({
       ...query,
       pharmaId: pharmacyId,
-      // ...date,
+      ...date,
       // status: searchByStatus?.toString(),
     }),
-    [pharmacyId, query]
+    [pharmacyId, query, date]
   );
   const [data, isLoading] = useGetPharmacyDebt(newQuery);
   
@@ -114,6 +126,34 @@ export default function DebtPharmacy(props: propsType) {
             value={keyword}
           />
         </Col> */}
+        <Row gutter={16}>
+          <Col>
+            <Form.Item<FormFieldSearch> name={"startDate"} label="Ngày bắt đầu">
+              <DatePicker
+                defaultValue={dayjs(date.startDate)}
+                onChange={(e) =>
+                  setDate({
+                    ...date,
+                    startDate: dayjs(e).format("YYYY-MM-DD"),
+                  })
+                }
+              />
+            </Form.Item>
+          </Col>
+          <Col>
+            <Form.Item<FormFieldSearch> name={"endDate"} label="Ngày kết thúc">
+              <DatePicker
+                defaultValue={dayjs(date.endDate)}
+                onChange={(e) =>
+                  setDate({
+                    ...date,
+                    endDate: dayjs(e).format("YYYY-MM-DD"),
+                  })
+                }
+              />
+            </Form.Item>
+          </Col>
+        </Row>
       </Row>
 
         <TableAnt
