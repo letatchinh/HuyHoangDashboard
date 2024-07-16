@@ -277,7 +277,7 @@ export default function Variants({
                             },
                           ]}
                         >
-                          {RenderLoading(loading, <InputNumberAnt min={0} style={{width: '100%'}}/>)}
+                          {RenderLoading(loading, <InputNumberAnt addonAfter="gram" min={0} style={{width: '100%'}}/>)}
                         </Form.Item>
                       </Col>
                       <Col span={6}>
@@ -293,7 +293,7 @@ export default function Variants({
                             },
                           ]}
                         >
-                          {RenderLoading(loading, <InputNumberAnt min={0} />)}
+                          {RenderLoading(loading, <InputNumberAnt min={0} addonAfter="cm"/>)}
                         </Form.Item>
                       </Col>
                       <Col span={5}>
@@ -309,7 +309,7 @@ export default function Variants({
                             },
                           ]}
                         >
-                          {RenderLoading(loading, <InputNumberAnt min={0} />)}
+                          {RenderLoading(loading, <InputNumberAnt min={0} addonAfter="cm"/>)}
                         </Form.Item>
                       </Col>
                       <Col span={6}>
@@ -325,7 +325,7 @@ export default function Variants({
                             },
                           ]}
                         >
-                          {RenderLoading(loading, <InputNumberAnt min={0} />)}
+                          {RenderLoading(loading, <InputNumberAnt min={0} addonAfter="cm"/>)}
                         </Form.Item>
                       </Col>
                     </Row>
