@@ -7,9 +7,9 @@ type propsType = {
     index : number,
     form : any
 };
-export default function SelectIdsCustomerApply({refCollection,index}:propsType) : React.JSX.Element {
+export default function SelectIdsCustomerApply({refCollection,index,form}:propsType) : React.JSX.Element {
 
-    if(refCollection === 'pharma_profile') return <SelectPharmacy_V2 fieldName={[index,'id']} />
+    if(refCollection === 'pharma_profile') return <SelectPharmacy_V2 value={form.getFieldValue(['customerApplyIds',index,'id'])} fieldName={[index,'id']} />
     if(refCollection === 'partner') return <Form.Item name={[index,'id']}>
         <SelectCollaborator />
     </Form.Item>
