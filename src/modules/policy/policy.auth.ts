@@ -101,7 +101,7 @@ const logistic = 'logistic';
 const billStatus = 'billStatus'; // Trạng thái đơn hàng bán
 const billSpit = 'billSpit'; // Tách đơn hàng bán
 const historyBill = 'historyBill'; // Lịch sử đơn hàng bán
-const historyOrderSupplier = 'billSpit'; // Lịch sử đơn hàng mua
+const historyOrderSupplier = 'historyOrderSupplier'; // Lịch sử đơn hàng mua
 
 
 //------RESOURCES --------
