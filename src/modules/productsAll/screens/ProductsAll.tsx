@@ -21,7 +21,7 @@ import {
   useUpdateProduct,
 } from "~/modules/product/product.hook";
 import { formatter } from "~/utils/helpers";
-import { useChangeDocumentTitle } from "~/utils/hook";
+import { useChangeDocumentTitle, useFetchState } from "~/utils/hook";
 import ActionColumn from "../components/ActionColumns";
 import ShowStep from "../components/ShowStep";
 import {
@@ -32,6 +32,8 @@ import { DataType, TypeProps } from "../productsAll.modal";
 import { useSelector } from "react-redux";
 import { ADAPTER_KEY } from "~/modules/auth/constants";
 import ConfigTable from "~/components/common/ConfigTable";
+// import SummaryInfoProduct from "../components/SummaryInfoProduct";
+import apis from "~/modules/productGroup/productGroup.api";
 
 export default function ProductsAll(props: TypeProps): React.JSX.Element {
   const [query, onTableChange] = useProductsAllQueryParams();
@@ -61,6 +63,33 @@ export default function ProductsAll(props: TypeProps): React.JSX.Element {
     () => adapter === ADAPTER_KEY.EMPLOYEE,
     [adapter]
   );
+  const [isOpenStock, setIsOpenStock] = useState(false);
+  // const [dataStock, setDataStock] = useState<itemData | null>(null);
+  const [isOpenSummary, setIsOpenSummary] = useState(false);
+  const [product, setProduct] = useState<null | undefined>(null);
+  
+  const [productGroups,isLoadingProductGroup] = useFetchState({api : apis.getAllPublic,useDocs : false});
+    const options = useMemo(() => (productGroups?.map((item:any) => ({
+        label : get(item,'name'),
+        value : get(item,'_id')
+    }))), [productGroups]);
+  // const openStock = (data: itemData) => {
+  //   setIsOpenStock(true);
+  //   setDataStock(data);
+  // };
+
+  // const onCloseStock = () => {
+  //   setIsOpenStock(false);
+  //   setDataStock(null);
+  // };
+  const openSummary = (item: any) => {
+    setIsOpenSummary(true);
+    setProduct(item);
+  };
+  const onCloseSummary = () => {
+    setIsOpenSummary(false);
+    setProduct(null);
+  };
 
   const onOpenModal = (id: string | null) => {
     setIsOpen(true);
@@ -300,7 +329,11 @@ export default function ProductsAll(props: TypeProps): React.JSX.Element {
         isShowButtonAdd
         handleOnClickButton={onOpenModal}
         titleButtonAdd="Thêm mới sản phẩm"
-        showSelect={false}
+        showSelect
+        onChangeSelect={(value: any) => {
+          onParamChange({ ...query, productGroup: value })
+        }}
+        options={options}
         onSearch={(value: any) => onParamChange({ keyword: value?.trim() })}
         permissionKey={[POLICIES.WRITE_PRODUCT]}
         addComponent={
