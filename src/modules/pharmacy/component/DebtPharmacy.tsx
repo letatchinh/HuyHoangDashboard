@@ -1,5 +1,5 @@
 import { ColumnsType } from "antd/es/table";
-import { formatter } from "~/utils/helpers";
+import { formatNumberThreeComma, formatter } from "~/utils/helpers";
 import {
   useGetPharmacyDebt,
   usePharmacyDebtPaging,
@@ -14,12 +14,14 @@ import {
   DatePicker,
   Form,
   Row,
+  Spin,
 } from "antd";
 import { FormFieldSearch, propsType } from "../pharmacy.modal";
 import { Link } from "react-router-dom";
 import { useMatchPolicy } from "~/modules/policy/policy.hook";
 import POLICIES from "~/modules/policy/policy.auth";
 import dayjs from "dayjs";
+import { get, sum } from "lodash";
 
 interface UserProps {
   currentTab: string | undefined;
@@ -50,7 +52,13 @@ export default function DebtPharmacy(props: propsType) {
   const [data, isLoading] = useGetPharmacyDebt(newQuery);
   
   const paging = usePharmacyDebtPaging();
-  
+  const totalPage = useMemo(() => {
+    return sum(data?.map((e: any) => get(e, "resultDebt", 0)));
+  }, [data]);
+
+  const renderLoading = (component: any) => {
+    return isLoading ? <Spin /> : component;
+  };
   const columns: ColumnsType = useMemo(
     () => [
       {
@@ -155,6 +163,37 @@ export default function DebtPharmacy(props: propsType) {
             </Form.Item>
           </Col>
         </Row>
+      </Row>
+      <Row
+        gutter={30}
+        style={{
+          // marginTop: "10px",
+          marginBottom: "10px",
+          padding: "5px",
+        }}
+      >
+        {/* {renderLoading(
+          <Col className="sumary-row__left" span={10}>
+            <h6>Tổng tiền theo thời gian: </h6>
+            <h6
+              style={{
+                marginLeft: "10px",
+              }}
+            >
+              {formatNumberThreeComma(totalPage)}đ
+            </h6>
+          </Col>
+        )} */}
+        {renderLoading(
+          <Col span={10} className="sumary-row__left">
+            <h6>Tổng tiền theo trang hiện tại:</h6>
+            <h6
+              style={{
+                marginLeft: "10px",
+              }}
+            >{`${formatNumberThreeComma(totalPage)}đ`}</h6>
+          </Col>
+        )}
       </Row>
 
         <TableAnt
