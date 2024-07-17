@@ -198,6 +198,10 @@ export const useCouponSelect = ({bill,refCollection,totalAmount} : {bill : any,r
       ...queryBillItem,
       targetId : productId,
       variantId,
+      customerApplyId : {
+        refCollection,
+        id : get(bill, "pharmacyId")
+      },
     });
   };
 
