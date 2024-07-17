@@ -331,7 +331,7 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
         align: "center",
         width: 150,
         render(totalPrice, record, index) {
-          return <Typography.Text>{formatter(totalPrice)}</Typography.Text>;
+          return <Typography.Text>{formatter(totalPrice + get(record,'pair',0))}</Typography.Text>;
         },
       },
       {

@@ -65,7 +65,6 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
   useResetBillAction();
   const [form] = Form.useForm();
   const { bill, isLoading,mutateBill,onOpenForm, compareMoney,onOpenFormPayment ,totalRevenueInVouchers, onOpenFormLogistic, warehouseInfo} = useUpdateBillStore();
-  console.log(bill,'bill');
   
   const {
     codeSequence,
@@ -274,7 +273,7 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
                        <EditOutlined onClick={onOpenFormLogistic} style={{ color: '#5AB2FF' }} />
                   </Typography.Text>}>{formatter(get(feeDetail, 'LOGISTIC', 0))}</Layout>
               </WithPermission>
-              <Layout label={"Đã thanh toán"}>-{formatter(totalReceiptAmount)}</Layout>
+              <Layout label={"Đã thanh toán"}>-{formatter(totalReceiptAmount + (pair || 0))}</Layout>
               <Layout label={"Đã thanh toán và xác nhận"}>-{formatter(totalReceiptVoucherCompleted + (pair || 0))}</Layout>
               <Layout strong label={"Tổng số tiền còn lại"}>
                 <Typography.Text strong>

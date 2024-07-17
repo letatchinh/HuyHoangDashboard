@@ -186,7 +186,7 @@ export default function TotalBill(props: propsType): React.JSX.Element {
         label={"Tổng tiền sau chiết khấu"}
       >
         <Typography.Text type="warning" strong>
-          {formatter(totalAmount)}
+          {formatter(totalAmount - totalDiscountCouponBill)}
         </Typography.Text>
       </Layout>
       <SelectDebt />
