@@ -10,6 +10,7 @@ import TableAnt from "~/components/Antd/TableAnt";
 import moment from "moment";
 import { useMemo, useState } from "react";
 import {
+  Checkbox,
   Col,
   DatePicker,
   Form,
@@ -22,6 +23,9 @@ import { useMatchPolicy } from "~/modules/policy/policy.hook";
 import POLICIES from "~/modules/policy/policy.auth";
 import dayjs from "dayjs";
 import { get, sum } from "lodash";
+import useCheckBoxExport from "~/modules/export/export.hook";
+import WithPermission from "~/components/common/WithPermission";
+import ExportExcelButton from "~/modules/export/component";
 
 interface UserProps {
   currentTab: string | undefined;
@@ -31,9 +35,10 @@ export default function DebtPharmacy(props: propsType) {
   const { pharmacyId } = props;
   const [query, onTableChange] = usePharmacyDebtQuery();
   const canReadBill = useMatchPolicy(POLICIES.READ_BILL);
+  const canDownload = useMatchPolicy(POLICIES.DOWNLOAD_DEBTPHARMACY);
   const defaultDate = useMemo(
     () => ({
-      startDate: dayjs().startOf("month").format("YYYY-MM-DD"),
+      startDate: dayjs().startOf("year").format("YYYY-MM-DD"),
       endDate: dayjs().endOf("month").format("YYYY-MM-DD"),
     }),
     []
@@ -52,6 +57,7 @@ export default function DebtPharmacy(props: propsType) {
   const [data, isLoading] = useGetPharmacyDebt(newQuery);
   
   const paging = usePharmacyDebtPaging();
+  const [arrCheckBox, onChangeCheckBox] = useCheckBoxExport();
   const totalPage = useMemo(() => {
     return sum(data?.map((e: any) => get(e, "resultDebt", 0)));
   }, [data]);
@@ -118,8 +124,27 @@ export default function DebtPharmacy(props: propsType) {
           return formatter(value);
         },
       },
+      ...(canDownload
+        ? [
+            {
+              title: "Lựa chọn",
+              key: "_id",
+              width: 80,
+              align: "center" as any,
+              render: (item: any, record: any) => {
+                const id = record._id;
+                return (
+                  <Checkbox
+                    checked={arrCheckBox.includes(id)}
+                    onChange={(e) => onChangeCheckBox(e.target.checked, id)}
+                  />
+                );
+              },
+            },
+          ]
+        : []),
     ],
-    []
+    [canDownload, arrCheckBox]
   );
 
   return (
@@ -163,6 +188,19 @@ export default function DebtPharmacy(props: propsType) {
             </Form.Item>
           </Col>
         </Row>
+        <Row>
+          <WithPermission permission={POLICIES.DOWNLOAD_PHARMAPROFILE}>
+            <Col>
+              <ExportExcelButton
+                fileName="DS công nợ "
+                api="pharma-profile-debt"
+                exportOption="pharmaDebt"
+                query={newQuery}
+                ids={arrCheckBox}
+              />
+            </Col>
+          </WithPermission>
+        </Row>
       </Row>
       <Row
         gutter={30}
@@ -186,7 +224,7 @@ export default function DebtPharmacy(props: propsType) {
         )} */}
         {renderLoading(
           <Col span={10} className="sumary-row__left">
-            <h6>Tổng tiền theo trang hiện tại:</h6>
+            <h6>Tổng tiền công nợ trang hiện tại:</h6>
             <h6
               style={{
                 marginLeft: "10px",
@@ -196,22 +234,22 @@ export default function DebtPharmacy(props: propsType) {
         )}
       </Row>
 
-        <TableAnt
-          dataSource={data}
-          loading={isLoading}
-          // rowKey={(rc) => rc?._id}
-          columns={columns}
-          size="small"
-          onChange={onTableChange}
-          pagination={{
-            ...paging,
-            onChange(page, pageSize) {
-              onTableChange({ page, limit: pageSize });
-            },
-            showSizeChanger: true,
-            showTotal: (total) => `Tổng cộng: ${total} `,
-          }}
-        />
+      <TableAnt
+        dataSource={data}
+        loading={isLoading}
+        // rowKey={(rc) => rc?._id}
+        columns={columns}
+        size="small"
+        onChange={onTableChange}
+        pagination={{
+          ...paging,
+          onChange(page, pageSize) {
+            onTableChange({ page, limit: pageSize });
+          },
+          showSizeChanger: true,
+          showTotal: (total) => `Tổng cộng: ${total} `,
+        }}
+      />
     </div>
   );
 }
