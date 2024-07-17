@@ -25,6 +25,9 @@ import {
 import { TypePropsListProduct } from "../product.modal";
 import FormProduct from "./FormProduct";
 import StockModal, { itemData } from "./StockModal";
+import StockProduct from "./StockProduct";
+import { useFetchState } from "~/utils/hook";
+import apis from "~/modules/productGroup/productGroup.api";
 export default function ListProduct({
   supplierId,
 }: TypePropsListProduct): React.JSX.Element {
@@ -45,7 +48,14 @@ export default function ListProduct({
   const canDelete = useMatchPolicy(POLICIES.DELETE_PRODUCT);
 
   const [isOpenStock, setIsOpenStock] = useState(false);
-  const [dataStock, setDataStock] = useState<itemData | null >(null);
+  const [dataStock, setDataStock] = useState<itemData | null>(null);
+  
+  const [productGroups,isLoadingProductGroup] = useFetchState({api : apis.getAllPublic,useDocs : false});
+    const options = useMemo(() => (productGroups?.map((item:any) => ({
+        label : get(item,'name'),
+        value : get(item,'_id')
+    }))), [productGroups]);
+  
   const openStock = (data: itemData) => {
     setIsOpenStock(true);
     setDataStock(data);
@@ -208,10 +218,15 @@ export default function ListProduct({
       <WhiteBox>
       <SelectSearch 
       isShowButtonAdd
-      showSelect={false}
+      showSelect
       handleOnClickButton={() => onOpenForm()}
       onSearch={(value : any) => onParamChange({keyword: value?.trim()})}
       permissionKey={[POLICIES.WRITE_PRODUCT]}
+      onChangeSelect={(value: any) => {
+        onParamChange({ ...query, productGroup: value })
+      }}
+          options={options}
+          style={{marginBottom : 10}}
       />
           <ConfigTable>
             <TableAnt

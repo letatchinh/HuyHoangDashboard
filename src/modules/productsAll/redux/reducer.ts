@@ -36,7 +36,6 @@ class ProductsAllClassExtend extends InstanceModuleRedux {
         state.list = list;
       },
       setSupplierInfo: (state: cloneInitState, { payload }: any) => {
-        console.log(payload,'payload')
         state.supplierInfo = payload;
       },
       // Want Add more reducer Here...
