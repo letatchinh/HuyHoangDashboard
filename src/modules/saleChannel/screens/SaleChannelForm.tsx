@@ -42,7 +42,7 @@ export default function SaleChannelForm({
     onClose && onClose();
     setDestroy && setDestroy(true);
   });
-  // const [saleChannel, isLoading] = useGetSaleChannel(id);
+
   const [saleChannel, isLoading] : any = readOnly ? hookGetData.readOnly() : hookGetData.notReadOnly(id)
   const [customerSegmentation] = useGetCustomerSegmentations(query);
   const initSalesChannel = useInitSaleChannel(saleChannel, id);
@@ -123,6 +123,7 @@ export default function SaleChannelForm({
               options={optionsSegmentation}
               allowClear
               onChange={onTypeChange}
+              // readOnly={readOnly}
             />
           </FormItem>
           <FormItem label="Mã kênh bán hàng" name="code">
@@ -190,6 +191,7 @@ export default function SaleChannelForm({
               htmlType="submit"
               loading={isSubmitLoading}
               style={{ marginLeft: 5 }}
+              disabled={readOnly}
             >
               {id ? "Cập nhật" : "Thêm mới"}
             </Button>

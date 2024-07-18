@@ -2,6 +2,7 @@ import { Button, Form, Input, Row } from "antd";
 import {
   useCreateTypePharmacy,
   useGetTypePharmacy,
+  useGetTypePharmacy_onlyGet,
   useInitTypePharmacy,
   useResetTypePharmacyAction,
 } from "../typePharmacy.hook";
@@ -13,11 +14,17 @@ import SelectSaleChannel from "~/modules/saleChannel/components/SelectSaleChanne
 
 const FormItem = Form.Item;
 interface Props {
-  onClose: (p?: any) => void;
+  onClose?: (p?: any) => void;
   id?: any;
   handleUpdate?: any;
   setDestroy?: any;
   query?: any;
+  readOnly?: boolean
+}
+
+const hookGetData = {
+  readOnly : useGetTypePharmacy_onlyGet,
+  notReadOnly : useGetTypePharmacy
 }
 
 export default function TypePharmacyForm({
@@ -26,14 +33,15 @@ export default function TypePharmacyForm({
   handleUpdate,
   setDestroy,
   query,
+  readOnly
 }: Props) {
   const [form] = Form.useForm();
   const [formSaleChannel] = Form.useForm();
   const [isSubmitLoading, handleCreate] = useCreateTypePharmacy(() => {
-    onClose();
+    onClose && onClose();
     setDestroy && setDestroy(true);
   });
-  const [typePharmacy, isLoading] = useGetTypePharmacy(id);
+  const [typePharmacy, isLoading] : any = readOnly ? hookGetData.readOnly() : hookGetData.notReadOnly(id);
   const initTypesPharmacy = useInitTypePharmacy(typePharmacy, id);
   useResetTypePharmacyAction();
 
@@ -61,15 +69,12 @@ export default function TypePharmacyForm({
       } else {
         handleCreate({ ...values });
       }
-      onClose();
+      form.resetFields();
     },
-    [handleCreate, handleUpdate, id, onClose]
+    [handleCreate, handleUpdate, id]
   );
   return (
     <div className="type-pharmacy page-wraper form-page-content">
-      <h4 style={{ margin: "20px 0 40px 20px" }}>
-        {id ? " Cập nhật" : "Thêm mới"} nhánh khách hàng
-      </h4>
       <div className="container-fluid">
         <Form
           form={form}
@@ -83,7 +88,7 @@ export default function TypePharmacyForm({
           labelAlign="left"
         >
           <FormItem label="Mã nhánh khách hàng" name="code">
-            <Input disabled />
+            <Input disabled readOnly={readOnly} />
           </FormItem>
           <FormItem
             name={"salesChannelId"}
@@ -114,7 +119,7 @@ export default function TypePharmacyForm({
               },
             ]}
           >
-            <Input />
+            <Input readOnly={readOnly} />
           </FormItem>
           <Row
             className="form__submit-box"
@@ -131,6 +136,7 @@ export default function TypePharmacyForm({
               htmlType="submit"
               loading={isSubmitLoading}
               style={{ marginLeft: 5 }}
+              disabled={readOnly}
             >
               {id ? "Cập nhật" : "Thêm mới"}
             </Button>

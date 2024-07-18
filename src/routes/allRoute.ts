@@ -65,6 +65,7 @@ import RankingDetail from "~/modules/ranking/components/RankingDetail";
 import ProductUnitDetail from "~/modules/productUnit/component/ProductUnitDetail";
 import CustomerSegmentation from "~/pages/Dashboard/CustomerSegmentation";
 import SaleChannelDetail from "~/modules/saleChannel/components/SaleChannelDetail";
+import TypePharmacyDetail from "~/modules/typePharmacy/components/TypePharmacyDetail";
 export const mainRoutes :PathRouteProps[] = [
   { path: PATH_APP.main.root, Component: Homepage },
 
@@ -183,9 +184,11 @@ export const mainRoutes :PathRouteProps[] = [
   
   // Nhánh khách hàng
   { path: PATH_APP.typePharmacy.root, Component: TypePharmacy},
+  { path: PATH_APP.typePharmacy.detail, Component: TypePharmacyDetail},
   
   // Nhóm khách hàng B2B
   { path: PATH_APP.groupPharmacy.root, Component:  GroupPharmacy},
+  { path: PATH_APP.groupPharmacy.detail, Component:  GroupPharmacy},
   
   // Khách hàng B2C
   { path: PATH_APP.collaborator.root, Component: CollaboratorPage},

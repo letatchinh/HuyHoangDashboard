@@ -18,6 +18,8 @@ import TableAnt from '~/components/Antd/TableAnt';
 import ModalAnt from '~/components/Antd/ModalAnt';
 import TypePharmacyForm from './TypePharmacyForm';
 import Breadcrumb from '~/components/common/Breadcrumb';
+import { Link } from 'react-router-dom';
+import { PATH_APP } from '~/routes/allPath';
 type propsType = {
 
 }
@@ -55,13 +57,15 @@ export default function TypePharmacy(props:propsType) : React.JSX.Element {
     const columns: ColumnsType = useMemo(
       () => [
         {
-          title: "Mã loại khách hàng",
+          title: "Mã nhánh khách hàng",
           dataIndex: "code",
           key: "code",
           width: 120,
+          render: (text: string, record: any) => <Link className='link_' to={PATH_APP.typePharmacy.root + "/" + record?._id}>{text}</Link>
+
         },
         {
-          title: "Tên loại khách hàng",
+          title: "Tên nhánh khách hàng",
           dataIndex: "title",
           key: "title",
           width: 250,
@@ -124,7 +128,7 @@ export default function TypePharmacy(props:propsType) : React.JSX.Element {
                 <WithPermission permission={POLICIES.DELETE_CUSTOMERGROUP}>
                   <p>|</p>
                   <Popconfirm
-                    title={`Bạn muốn xoá loại khách hàng này?`}
+                    title={`Bạn muốn xoá nhánh khách hàng này?`}
                     onConfirm={() => deleteTypePharmacy(record)}
                     okText="Xoá"
                     cancelText="Huỷ"
@@ -185,7 +189,7 @@ export default function TypePharmacy(props:propsType) : React.JSX.Element {
           break;
       }
     };
-    useChangeDocumentTitle("Danh sách loại khách hàng")
+    useChangeDocumentTitle("Danh sách nhánh khách hàng")
     return (
       <div>
         <Breadcrumb title={"Nhánh khách hàng"} />
@@ -215,7 +219,7 @@ export default function TypePharmacy(props:propsType) : React.JSX.Element {
             <WithPermission permission={POLICIES.DOWNLOAD_CUSTOMERGROUP}>
               <Col>
                   <ExportExcelButton
-                    fileName="Danh sách loại khách hàng"
+                    fileName="Danh sách nhánh khách hàng"
                     api="customer-group"
                     exportOption="customerGroup"
                     query={query}
@@ -271,6 +275,7 @@ export default function TypePharmacy(props:propsType) : React.JSX.Element {
           />
         </WhiteBox>
         <ModalAnt
+          title={typePharmacyId ? "Cập nhật nhánh khách hàng" : "Thêm mới nhánh khách hàng"}
           width={700}
           open={isOpenForm}
           onCancel={onCloseForm}
