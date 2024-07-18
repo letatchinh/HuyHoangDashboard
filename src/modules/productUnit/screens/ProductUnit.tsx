@@ -41,6 +41,8 @@ import ExportExcelButton from "~/modules/export/component";
 import useCheckboxExport from "~/modules/export/export.hook";
 import { Link } from "react-router-dom";
 import ColumnAction from "~/components/common/ColumnAction";
+import BtnAdd from "~/components/common/Layout/List/Header/BtnAdd";
+import DropdownAction from "~/components/common/Layout/List/Header/DropdownAction";
 type propsType = {};
 export default function ProductUnit(props: propsType): React.JSX.Element {
   const [query] = useProductUnitQueryParams();
@@ -70,13 +72,14 @@ export default function ProductUnit(props: propsType): React.JSX.Element {
     note: string;
     status: string;
   }
-  const handleOpenForm = useCallback((id?: any) => {
-    if (id) {
-      setId(id);
-      setDestroy(true);
-    };
+  const handleOpenUpdate = (id: any) => {
     setShowForm(true);
-  }, []);
+      setId(id);
+  };
+  const handleOpenFormCreate = () => { 
+    setId(null);
+    setShowForm(true);
+  };
   const handleDelete = (id: any) => {
     deleteProductConfig(id);
   };
@@ -125,7 +128,7 @@ export default function ProductUnit(props: propsType): React.JSX.Element {
       render: (_, record) => {
         return (
           <ColumnAction
-            onOpenForm={handleOpenForm}
+            onOpenForm={handleOpenUpdate}
             onDelete={handleDelete}
             _id={record?._id}
             textName='đơn vị tính'
@@ -203,29 +206,28 @@ export default function ProductUnit(props: propsType): React.JSX.Element {
           </Row>
         </Col>
         <Col span={12}>
-          <Row justify={"end"}>
-            <Col>
-              <WithPermission permission={POLICIES.WRITE_UNIT}>
-                <Button
-                  icon={<PlusCircleOutlined />}
-                  onClick={() => handleOpenForm()}
-                  type="primary"
-                >
-                  Thêm mới
-                </Button>
-              </WithPermission>
-            </Col>
-            <Col>
-              <WithPermission permission={POLICIES.DOWNLOAD_UNIT}>
-                <ExportExcelButton
-                  api="unit"
-                  exportOption="unit"
-                  query={query}
-                  fileName="Quản lý đơn vị tính"
-                  ids={arrCheckBox}
+          <Row justify={"end"} gutter={16}>
+            <WithPermission permission={POLICIES.WRITE_UNIT}>
+              <Col>
+                <BtnAdd onClick={handleOpenFormCreate} />
+              </Col>
+            </WithPermission>
+            <WithPermission permission={POLICIES.DOWNLOAD_UNIT}>
+              <Col>
+                <DropdownAction
+                  items={[
+                    <ExportExcelButton
+                      api="unit"
+                      exportOption="unit"
+                      query={query}
+                      fileName="Quản lý đơn vị tính"
+                      ids={arrCheckBox}
+                      useLayout="v2"
+                    />,
+                  ]}
                 />
-              </WithPermission>
-            </Col>
+              </Col>
+            </WithPermission>
           </Row>
         </Col>
       </Row>

@@ -37,6 +37,8 @@ import ModalAnt from "~/components/Antd/ModalAnt";
 import { GroupPharmacyForm } from "./GroupPharmacyForm";
 import { Link } from "react-router-dom";
 import { PATH_APP } from "~/routes/allPath";
+import BtnAdd from "~/components/common/Layout/List/Header/BtnAdd";
+import DropdownAction from "~/components/common/Layout/List/Header/DropdownAction";
 type propsType = {};
 export default function GroupPharmacy(props: propsType): React.JSX.Element {
   const [query] = useGroupPharmacyQueryParams();
@@ -235,30 +237,31 @@ export default function GroupPharmacy(props: propsType): React.JSX.Element {
             value={keyword}
           />
         </Col>
-        <Row>
-          <WithPermission permission={POLICIES.WRITE_CUSTOMER}>
-            <Col>
-              <Button
-                icon={<PlusCircleOutlined />}
-                type="primary"
-                onClick={() => onOpenForm()}
-              >
-                Thêm mới
-              </Button>
-            </Col>
-          </WithPermission>
-          <WithPermission permission={POLICIES.DOWNLOAD_CUSTOMER}>
-            <Col>
-              <ExportExcelButton
-                fileName="Danh sách nhóm khách hàng"
-                api="customer"
-                exportOption="customer"
-                query={query}
-                ids={arrCheckBox}
-              />
-            </Col>
-          </WithPermission>
-        </Row>
+        <Col span={8}>
+          <Row justify={"end"} gutter={16}>
+            <WithPermission permission={POLICIES.WRITE_CUSTOMER}>
+              <Col>
+                <BtnAdd onClick={() => onOpenForm()} />
+              </Col>
+            </WithPermission>
+            <WithPermission permission={POLICIES.DOWNLOAD_CUSTOMER}>
+              <Col>
+                <DropdownAction
+                  items={[
+                    <ExportExcelButton
+                      fileName="DS nhóm khách hàng"
+                      api="customer"
+                      exportOption="customer"
+                      query={query}
+                      ids={arrCheckBox}
+                      useLayout="v2"
+                    />,
+                  ]}
+                />
+              </Col>
+            </WithPermission>
+          </Row>
+        </Col>
       </Row>
       <WithPermission permission={POLICIES.UPDATE_CUSTOMER}>
         <Space style={{ marginBottom: 20 }}>
@@ -294,7 +297,7 @@ export default function GroupPharmacy(props: propsType): React.JSX.Element {
           loading={isLoading}
           rowKey={(rc) => rc?._id}
           columns={columns}
-          scroll={{x : 1500}}
+          scroll={{ x: 1500 }}
           size="small"
           pagination={{
             ...paging,
@@ -308,7 +311,11 @@ export default function GroupPharmacy(props: propsType): React.JSX.Element {
         />
       </WhiteBox>
       <ModalAnt
-        title={groupPharmacyId ? "Cập nhật nhóm khách hàng" : "Thêm mới nhóm bán hàng"}
+        title={
+          groupPharmacyId
+            ? "Cập nhật nhóm khách hàng"
+            : "Thêm mới nhóm bán hàng"
+        }
         width={700}
         open={isOpenForm}
         onCancel={onCloseForm}
@@ -317,7 +324,6 @@ export default function GroupPharmacy(props: propsType): React.JSX.Element {
           setDestroy(false);
         }}
         destroyOnClose={destroy}
-
       >
         <GroupPharmacyForm
           setDestroy={setDestroy}

@@ -20,6 +20,8 @@ import TypePharmacyForm from './TypePharmacyForm';
 import Breadcrumb from '~/components/common/Breadcrumb';
 import { Link } from 'react-router-dom';
 import { PATH_APP } from '~/routes/allPath';
+import BtnAdd from '~/components/common/Layout/List/Header/BtnAdd';
+import DropdownAction from '~/components/common/Layout/List/Header/DropdownAction';
 type propsType = {
 
 }
@@ -204,30 +206,31 @@ export default function TypePharmacy(props:propsType) : React.JSX.Element {
               value={keyword}
             />
           </Col>
-          <Row>
-          <WithPermission permission={POLICIES.WRITE_CUSTOMERGROUP}>
-            <Col>
-              <Button
-                icon={<PlusCircleOutlined />}
-                type="primary"
-                onClick={() => onOpenForm()}
-              >
-                Thêm mới
-              </Button>
-            </Col>
-            </WithPermission>
-            <WithPermission permission={POLICIES.DOWNLOAD_CUSTOMERGROUP}>
-              <Col>
-                  <ExportExcelButton
-                    fileName="Danh sách nhánh khách hàng"
-                    api="customer-group"
-                    exportOption="customerGroup"
-                    query={query}
-                    ids={arrCheckBox}
+          <Col span={8}>
+            <Row justify={"end"} gutter={16}>
+              <WithPermission permission={POLICIES.WRITE_CUSTOMERGROUP}>
+                <Col>
+                  <BtnAdd onClick={() => onOpenForm()} />
+                </Col>
+              </WithPermission>
+              <WithPermission permission={POLICIES.DOWNLOAD_CUSTOMERGROUP}>
+                <Col>
+                  <DropdownAction
+                    items={[
+                      <ExportExcelButton
+                        fileName="DS nhánh khách hàng"
+                        api="customer-group"
+                        exportOption="customerGroup"
+                        query={query}
+                        ids={arrCheckBox}
+                        useLayout="v2"
+                      />,
+                    ]}
                   />
-              </Col>
-            </WithPermission>
-          </Row>
+                </Col>
+              </WithPermission>
+            </Row>
+          </Col>
         </Row>
         <WithPermission permission={POLICIES.UPDATE_CUSTOMERGROUP}>
           <Space style={{ marginBottom: 20 }}>
@@ -252,7 +255,9 @@ export default function TypePharmacy(props:propsType) : React.JSX.Element {
               >
                 <Radio.Button value={1}>Tất cả</Radio.Button>
                 <Radio.Button value={2}>{STATUS_NAMES["ACTIVE"]}</Radio.Button>
-                <Radio.Button value={3}>{STATUS_NAMES["INACTIVE"]}</Radio.Button>
+                <Radio.Button value={3}>
+                  {STATUS_NAMES["INACTIVE"]}
+                </Radio.Button>
               </Radio.Group>
             </Row>
           </Space>
@@ -275,7 +280,11 @@ export default function TypePharmacy(props:propsType) : React.JSX.Element {
           />
         </WhiteBox>
         <ModalAnt
-          title={typePharmacyId ? "Cập nhật nhánh khách hàng" : "Thêm mới nhánh khách hàng"}
+          title={
+            typePharmacyId
+              ? "Cập nhật nhánh khách hàng"
+              : "Thêm mới nhánh khách hàng"
+          }
           width={700}
           open={isOpenForm}
           onCancel={onCloseForm}
@@ -284,7 +293,6 @@ export default function TypePharmacy(props:propsType) : React.JSX.Element {
             setDestroy(false);
           }}
           destroyOnClose={destroy}
-  
         >
           <TypePharmacyForm
             setDestroy={setDestroy}
@@ -294,7 +302,6 @@ export default function TypePharmacy(props:propsType) : React.JSX.Element {
             query={query}
           />
         </ModalAnt>
-        
       </div>
     );
 }

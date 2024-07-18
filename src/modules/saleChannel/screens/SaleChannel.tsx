@@ -20,6 +20,8 @@ import ModalAnt from '~/components/Antd/ModalAnt';
 import SaleChannelForm from './SaleChannelForm';
 import { Link } from 'react-router-dom';
 import { PATH_APP } from '~/routes/allPath';
+import BtnAdd from '~/components/common/Layout/List/Header/BtnAdd';
+import DropdownAction from '~/components/common/Layout/List/Header/DropdownAction';
 type propsType = {
 
 }
@@ -203,30 +205,31 @@ export default function SaleChannel(props:propsType) : React.JSX.Element {
             value={keyword}
           />
         </Col>
-        <Row>
-        <WithPermission permission={POLICIES.WRITE_SALESCHANNEL}>
-          <Col>
-            <Button
-              icon={<PlusCircleOutlined />}
-              type="primary"
-              onClick={() => onOpenForm()}
-            >
-              Thêm mới
-            </Button>
-          </Col>
-          </WithPermission>
-          <WithPermission permission={POLICIES.DOWNLOAD_SALESCHANNEL}>
-            <Col>
-                <ExportExcelButton
-                  fileName="Danh sách kênh bán hàng"
-                  api="sales-channel"
-                  exportOption="salesChannel"
-                  query={query}
-                  ids={arrCheckBox}
+        <Col span={8}>
+          <Row justify={"end"} gutter={16}>
+            <WithPermission permission={POLICIES.WRITE_SALESCHANNEL}>
+              <Col>
+                <BtnAdd onClick={() => onOpenForm()} />
+              </Col>
+            </WithPermission>
+            <WithPermission permission={POLICIES.DOWNLOAD_SALESCHANNEL}>
+              <Col>
+                <DropdownAction
+                  items={[
+                    <ExportExcelButton
+                      fileName="Danh sách kênh bán hàng"
+                      api="sales-channel"
+                      exportOption="salesChannel"
+                      query={query}
+                      ids={arrCheckBox}
+                      useLayout="v2"
+                    />,
+                  ]}
                 />
-            </Col>
-          </WithPermission>
-        </Row>
+              </Col>
+            </WithPermission>
+          </Row>
+        </Col>
       </Row>
       <WithPermission permission={POLICIES.UPDATE_SALESCHANNEL}>
         <Space style={{ marginBottom: 20 }}>

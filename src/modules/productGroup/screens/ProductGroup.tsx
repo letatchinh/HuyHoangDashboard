@@ -24,6 +24,8 @@ import useCheckBoxExport from '~/modules/export/export.hook';
 import ExportExcelButton from '~/modules/export/component';
 import { Link } from 'react-router-dom';
 import ColumnAction from '~/components/common/ColumnAction';
+import BtnAdd from "~/components/common/Layout/List/Header/BtnAdd";
+import DropdownAction from "~/components/common/Layout/List/Header/DropdownAction";
 
 const { Search } = Input;
 
@@ -56,9 +58,9 @@ export default function ProductConfig() {
     code: string;
     _id: string;
     name: string;
-    isAction: boolean,
-    note: string,
-    status: string,
+    isAction: boolean;
+    note: string;
+    status: string;
   }
   const handleOpenUpdate = (id: any) => {
     setShowForm(true);
@@ -198,23 +200,26 @@ export default function ProductConfig() {
             </Col>
           </Row>
         </Col>
-        <Col span = {12}>
-          <Row justify={'end'}>
-            <Col>
+        <Col span={12}>
+          <Row justify={"end"} gutter={16}>
             <WithPermission permission={POLICIES.WRITE_PRODUCTGROUP}>
-              <Button icon={<PlusCircleOutlined />} onClick={handleOpenFormCreate} type="primary">
-                Thêm mới
-              </Button>
+              <Col>
+                <BtnAdd onClick={handleOpenFormCreate} />
+              </Col>
             </WithPermission>
-            </Col>
             <WithPermission permission={POLICIES.DOWNLOAD_PRODUCTGROUP}>
               <Col>
-                <ExportExcelButton
-                  api='product-group'
-                  exportOption = 'productGroup'
-                  query={query}
-                  fileName='Danh mục nhóm sản phẩm'
-                  ids={arrCheckBox}
+                <DropdownAction
+                  items={[
+                    <ExportExcelButton
+                      api="product-group"
+                      exportOption="productGroup"
+                      query={query}
+                      fileName="Danh mục nhóm sản phẩm"
+                      ids={arrCheckBox}
+                      useLayout="v2"
+                    />,
+                  ]}
                 />
               </Col>
             </WithPermission>
@@ -251,7 +256,13 @@ export default function ProductConfig() {
         width={800}
         afterClose={() => setDestroy(false)}
       >
-        <ProductGroupForm setDestroy={setDestroy} id={id} setId={setId} callBack={handleCloseForm} updateProductConfig={updateProductConfig} />
+        <ProductGroupForm
+          setDestroy={setDestroy}
+          id={id}
+          setId={setId}
+          callBack={handleCloseForm}
+          updateProductConfig={updateProductConfig}
+        />
       </ModalAnt>
     </div>
   );
