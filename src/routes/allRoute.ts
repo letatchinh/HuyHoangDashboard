@@ -66,6 +66,7 @@ import ProductUnitDetail from "~/modules/productUnit/component/ProductUnitDetail
 import CustomerSegmentation from "~/pages/Dashboard/CustomerSegmentation";
 import SaleChannelDetail from "~/modules/saleChannel/components/SaleChannelDetail";
 import TypePharmacyDetail from "~/modules/typePharmacy/components/TypePharmacyDetail";
+import GroupPharmacyDetail from "~/modules/groupPharmacy/components/GroupPharmacyDetail";
 export const mainRoutes :PathRouteProps[] = [
   { path: PATH_APP.main.root, Component: Homepage },
 
@@ -188,7 +189,7 @@ export const mainRoutes :PathRouteProps[] = [
   
   // Nhóm khách hàng B2B
   { path: PATH_APP.groupPharmacy.root, Component:  GroupPharmacy},
-  { path: PATH_APP.groupPharmacy.detail, Component:  GroupPharmacy},
+  { path: PATH_APP.groupPharmacy.detail, Component:  GroupPharmacyDetail},
   
   // Khách hàng B2C
   { path: PATH_APP.collaborator.root, Component: CollaboratorPage},

@@ -3,6 +3,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import {
   useCreateGroupPharmacy,
   useGetGroupPharmacy,
+  useGetGroupPharmacy_onlyGet,
   useInitGroupPharmacy,
   useResetGroupPharmacyAction,
 } from "../groupPharmacy.hook";
@@ -14,21 +15,26 @@ import SelectTypePharmacy from "~/modules/typePharmacy/components/SelectTypePhar
 
 const FormItem = Form.Item;
 interface Props {
-  onClose: (p?: any) => void;
+  onClose?: (p?: any) => void;
   id?: any;
   handleUpdate?: any;
   setDestroy?: any;
   query?: any;
+  readOnly?: boolean;
+}
+const hookGetData = {
+  readOnly : useGetGroupPharmacy_onlyGet,
+  notReadOnly : useGetGroupPharmacy
 }
 
-export const GroupPharmacyForm = ({ onClose, id, handleUpdate,setDestroy, query }: Props) => {
+export const GroupPharmacyForm = ({ onClose, id, handleUpdate,setDestroy, query, readOnly }: Props) => {
   const [form] = Form.useForm();
   const [formCustomerGroup] = Form.useForm();
   const [isSubmitLoading, handleCreate] = useCreateGroupPharmacy(() => {
-    onClose();
+    onClose && onClose();
     setDestroy  && setDestroy(true);
   });
-  const [groupPharmacy, isLoading] = useGetGroupPharmacy(id);
+  const [groupPharmacy, isLoading] : any = readOnly ? hookGetData.readOnly() : hookGetData.notReadOnly(id);
   const initSalesChannel = useInitGroupPharmacy(groupPharmacy, id);
   const [selectedCustomerGroupId, setSelectedCustomerGroupId] = useState<string | undefined>();
   useResetGroupPharmacyAction();
@@ -57,18 +63,15 @@ export const GroupPharmacyForm = ({ onClose, id, handleUpdate,setDestroy, query 
       } else {
         handleCreate({ ...values });
       }
-      onClose();
+      form.resetFields();
     },
-    [handleCreate, handleUpdate, id, onClose]
+    [handleCreate, handleUpdate, id]
   );
   const onTypePharmacyChange = (value: string) => {
     setSelectedCustomerGroupId(value);
   };
   return (
     <div className="sale-channel page-wraper form-page-content">
-      <h4 style={{ margin: "20px 0 40px 20px" }}>
-        {id ? " Cập nhật" : "Thêm mới"} nhóm khách hàng
-      </h4>
       <div className="container-fluid">
         <Form
           form={form}
@@ -82,7 +85,7 @@ export const GroupPharmacyForm = ({ onClose, id, handleUpdate,setDestroy, query 
           labelAlign="left"
         >
           <FormItem label="Mã nhóm khách hàng" name="code">
-            <Input disabled />
+            <Input disabled readOnly={readOnly} />
           </FormItem>
 
           <FormItem
@@ -124,10 +127,10 @@ export const GroupPharmacyForm = ({ onClose, id, handleUpdate,setDestroy, query 
               },
             ]}
           >
-            <Input />
+            <Input readOnly={readOnly} />
           </FormItem>
           <FormItem label="Mô tả" name="desc">
-            <TextArea />
+            <TextArea readOnly={readOnly} />
           </FormItem>
           <Row className="form__submit-box" style={{justifyContent: 'center'}}>
             {isSubmitLoading ? (
@@ -136,7 +139,7 @@ export const GroupPharmacyForm = ({ onClose, id, handleUpdate,setDestroy, query 
                 <Button onClick={onClose}>Huỷ</Button>
             )}
 
-            <Button type="primary" htmlType="submit" loading={isSubmitLoading} style={{marginLeft: 5}}>
+            <Button type="primary" htmlType="submit" loading={isSubmitLoading} style={{marginLeft: 5}} disabled={readOnly}>
               {id ? "Cập nhật" : "Thêm mới"}
             </Button>
           </Row>

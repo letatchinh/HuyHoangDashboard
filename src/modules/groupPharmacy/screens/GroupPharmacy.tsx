@@ -35,6 +35,8 @@ import WhiteBox from "~/components/common/WhiteBox";
 import TableAnt from "~/components/Antd/TableAnt";
 import ModalAnt from "~/components/Antd/ModalAnt";
 import { GroupPharmacyForm } from "./GroupPharmacyForm";
+import { Link } from "react-router-dom";
+import { PATH_APP } from "~/routes/allPath";
 type propsType = {};
 export default function GroupPharmacy(props: propsType): React.JSX.Element {
   const [query] = useGroupPharmacyQueryParams();
@@ -75,6 +77,7 @@ export default function GroupPharmacy(props: propsType): React.JSX.Element {
         dataIndex: "code",
         key: "code",
         width: 120,
+        render: (text: string, record: any) => <Link className='link_' to={PATH_APP.groupPharmacy.root + "/" + record?._id}>{text}</Link>
       },
       // {
       //   title: "Hệ số",
@@ -305,6 +308,7 @@ export default function GroupPharmacy(props: propsType): React.JSX.Element {
         />
       </WhiteBox>
       <ModalAnt
+        title={groupPharmacyId ? "Cập nhật nhóm khách hàng" : "Thêm mới nhóm bán hàng"}
         width={700}
         open={isOpenForm}
         onCancel={onCloseForm}
