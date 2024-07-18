@@ -483,7 +483,7 @@ export const onConvertInitQuantity = (newDataSource: DataSourceType) => {
 
 export class CalculateBill {
   remainAmount (payload : any){
-    return get(payload,'totalPrice',0) - get(payload,'totalReceiptVoucherCompleted',0);
+    return get(payload,'totalPrice',0) - get(payload,'totalReceiptVoucherCompleted',0) - get(payload,'pair',0);
   }
 }
 

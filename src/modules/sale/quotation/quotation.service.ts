@@ -1,4 +1,4 @@
-import { pick } from "lodash";
+import { get, pick } from "lodash";
 import { DetailCoupon, FormFieldCreateBill, PayloadCreateBill, quotation } from "../bill/bill.modal";
 import { DEFAULT_DEBT_TYPE } from "./constants";
 
@@ -42,7 +42,7 @@ type paramsConvertDataQuotation = {
           quotationItems: quotationItemsSubmit,
           pair: data?.pair || 0,
           debtType: data?.debtType || DEFAULT_DEBT_TYPE,
-          totalPrice: totalPriceAfterDiscount,
+          totalPrice: totalPriceAfterDiscount + get(data,'pair',0),
           totalAmount,
           ...(_id && { _id }),
           dataTransportUnit,

@@ -331,7 +331,7 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
         align: "center",
         width: 150,
         render(totalPrice, record, index) {
-          return <Typography.Text>{formatter(totalPrice + get(record,'pair',0))}</Typography.Text>;
+          return <Typography.Text>{formatter(totalPrice)}</Typography.Text>;
         },
       },
       {
@@ -350,11 +350,11 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
       },      
       {
         title: "Khách phải trả",
-        dataIndex: "totalPrice",
-        key: "totalPrice",
+        dataIndex: "pair",
+        key: "pair",
         width: 150,
         align: "center",
-        render(totalPrice, record, index) {
+        render(pair, record, index) {
           const remainAmount = CalculateBillMethod.remainAmount(record);
           return <Typography.Text>{formatter(remainAmount)}</Typography.Text>;
         },
