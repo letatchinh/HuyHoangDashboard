@@ -69,6 +69,7 @@ import BtnAdd from "~/components/common/Layout/List/Header/BtnAdd";
 import DropdownAction from "~/components/common/Layout/List/Header/DropdownAction";
 import FIlterStatus from "~/components/common/FIlterStatus";
 import SelectSaleChannel from "~/modules/saleChannel/components/SelectSaleChannel";
+import StatusAndSearch from "~/components/common/StatusAndSearch";
 const CLONE_STATUS_NAMES: any = STATUS_NAMES;
 export default function Pharmacy() {
   const { t }: any = useTranslate();
@@ -406,29 +407,18 @@ export default function Pharmacy() {
         <Row className="mb-3" justify={"space-between"}>
           <Row>
             <Col>
-              <Search
-                enterButton="Tìm kiếm"
-                placeholder="Nhập để tìm kiếm"
-                allowClear
-                onSearch={() => onParamChange({ keyword })}
-                onChange={(e) => setKeyword(e.target.value)}
-                value={keyword}
+              <StatusAndSearch
+                onParamChange={onParamChange}
+                query={query}
+                keyword={keyword}
+                setKeyword={setKeyword}
+                showStatus={activeTab === "1" ? true : false}
               />
-            </Col>
-            <Col>
-              {activeTab === "1" && (
-                <WithPermission permission={POLICIES.UPDATE_PHARMAPROFILE}>
-                  <FIlterStatus
-                    onParamChange={onParamChange}
-                    value={query?.status}
-                  />
-                </WithPermission>
-              )}
             </Col>
             <Col>
               <Space
                 style={{
-                  marginBottom: 20,
+                  // marginBottom: 20,
                   marginLeft: 20,
                   display: "flex",
                   justifyContent: "flex-end",

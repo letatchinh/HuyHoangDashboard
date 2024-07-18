@@ -48,6 +48,7 @@ import { Link } from "react-router-dom";
 import DropdownAction from "~/components/common/Layout/List/Header/DropdownAction";
 import BtnAdd from "~/components/common/Layout/List/Header/BtnAdd";
 import Search from "antd/es/input/Search";
+import StatusAndSearch from "~/components/common/StatusAndSearch";
 interface Props {
   currentTab: any;
 }
@@ -295,36 +296,31 @@ export default function Employee({ currentTab }: Props) {
       {/* <Breadcrumb title={t("Quản lý trình dược viên")} /> */}
       <WhiteBox>
         <div className="layout--ctrl">
-        <Search
-          placeholder={`Tìm kiếm`}
-          value={keyword}
-          onChange={(e) => setKeyword(e.target.value)}
-          onSearch={(value) => onParamChange({ keyword: value?.trim() })}
-          style={{
-            width: 300,
-          }}
-          allowClear
-          enterButton
-        />
-        <div className="layout--ctrl__action">
-        <WithPermission permission={POLICIES.WRITE_EMPLOYEE}>
-        <BtnAdd onClick={() => handleOpenModal()} />
-        </WithPermission>
-          <DropdownAction
-            items={[
-              <WithPermission permission={POLICIES.DOWNLOAD_EMPLOYEE}>
-                <ExportExcelButton
-                  api="employee"
-                  exportOption="employee"
-                  query={query}
-                  fileName="Danh sách trình dược viên"
-                  ids={arrCheckBox}
-                  useLayout="v2"
+          <StatusAndSearch
+            onParamChange={onParamChange}
+            query={query}
+            keyword={keyword}
+            setKeyword={setKeyword}
+          />
+          <div className="layout--ctrl__action">
+            <WithPermission permission={POLICIES.WRITE_EMPLOYEE}>
+              <BtnAdd onClick={() => handleOpenModal()} />
+            </WithPermission>
+            <DropdownAction
+              items={[
+                <WithPermission permission={POLICIES.DOWNLOAD_EMPLOYEE}>
+                  <ExportExcelButton
+                    api="employee"
+                    exportOption="employee"
+                    query={query}
+                    fileName="Danh sách trình dược viên"
+                    ids={arrCheckBox}
+                    useLayout="v2"
                   />
-              </WithPermission>,
-            ]}
+                </WithPermission>,
+              ]}
             />
-        </div>
+          </div>
         </div>
         <TableAnt
           dataSource={data?.length ? data : []}

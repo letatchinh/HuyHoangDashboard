@@ -60,6 +60,7 @@ import DropdownAction from "~/components/common/Layout/List/Header/DropdownActio
 import WithPermission from "~/components/common/WithPermission";
 import Search from "antd/es/input/Search";
 import SelectSaleChannel from "~/modules/saleChannel/components/SelectSaleChannel";
+import StatusAndSearch from "~/components/common/StatusAndSearch";
 
 interface ColumnActionProps {
   _id: string;
@@ -350,66 +351,21 @@ export default function Collaborator({
   return (
     <>
       {/* layout--ctrl */}
-      <div className="layout--ctrl">
-        <Search
-          placeholder={`Tìm kiếm`}
-          value={keyword}
-          onChange={(e) => setKeyword(e.target.value)}
-          onSearch={(value) => onParamChange({ keyword: value?.trim() })}
-          style={{
-            width: 300,
-          }}
-          allowClear
-          enterButton
-        />
-        <div className="layout--ctrl__action">
-          <BtnAdd onClick={() => handleOpenModal()} />
-          <DropdownAction
-            items={[
-              <WithPermission permission={POLICIES.DOWNLOAD_EMPLOYEE}>
-                <ExportExcelButton
-                  api="partner"
-                  exportOption="partner"
-                  query={query}
-                  fileName="Danh sách cộng tác viên"
-                  ids={arrCheckBox}
-                  useLayout="v2"
-                />
-              </WithPermission>,
-            ]}
-          />
-        </div>
-      </div>
-      {/* layout--ctrl */}
-      <WithOrPermission permission={[POLICIES.UPDATE_PARTNER]}>
-        <Row justify={"space-around"}>
-          <Col span={12}>
-            <Space style={{ marginBottom: 20, marginTop: 20 }}>
-              <Typography style={{ fontSize: 14, marginRight: 20 }}>
-                Phân loại trạng thái theo :
-              </Typography>
-              <Row gutter={14}>
-                <Radio.Group
-                  onChange={onChange}
-                  optionType="button"
-                  buttonStyle="solid"
-                  defaultValue={query?.processStatus || null}
-                >
-                  <Radio.Button value={null}>Tất cả</Radio.Button>
-                  <Radio.Button value={"NEW"}>
-                    {PROCESS_STATUS_VI["NEW"]}
-                  </Radio.Button>
-                  <Radio.Button value={"APPROVED"}>
-                    {PROCESS_STATUS_VI["APPROVED"]}
-                  </Radio.Button>
-                </Radio.Group>
-              </Row>
-            </Space>
+      <Row className="mb-3" justify={"space-between"}>
+        <Row>
+          <Col>
+            <StatusAndSearch
+              onParamChange={onParamChange}
+              query={query}
+              keyword={keyword}
+              setKeyword={setKeyword}
+            />
           </Col>
-          <Col span={12}>
+          <Col>
             <Space
               style={{
-                marginBottom: 20,
+                // marginBottom: 20,
+                marginLeft:  20,
                 display: "flex",
                 justifyContent: "flex-end",
               }}
@@ -433,6 +389,59 @@ export default function Collaborator({
                   mode="multiple"
                 />
               </Form>
+            </Space>
+          </Col>
+        </Row>
+        <Col>
+          <Row gutter={16}>
+            <WithPermission permission={POLICIES.WRITE_PHARMAPROFILE}>
+              <Col>
+                <BtnAdd onClick={() => handleOpenModal()} />
+              </Col>
+            </WithPermission>
+            <Col>
+              <DropdownAction
+                items={[
+                  <WithPermission permission={POLICIES.DOWNLOAD_EMPLOYEE}>
+                    <ExportExcelButton
+                      api="partner"
+                      exportOption="partner"
+                      query={query}
+                      fileName="Danh sách cộng tác viên"
+                      ids={arrCheckBox}
+                      useLayout="v2"
+                    />
+                  </WithPermission>,
+                ]}
+              />
+            </Col>
+          </Row>
+        </Col>
+      </Row>
+      {/* layout--ctrl */}
+      <WithOrPermission permission={[POLICIES.UPDATE_PARTNER]}>
+        <Row justify={"space-between"}>
+          <Col span={12}>
+            <Space style={{ marginBottom: 20}}>
+              <Typography style={{ fontSize: 14, marginRight: 20 }}>
+                Phân loại trạng thái theo :
+              </Typography>
+              <Row gutter={14}>
+                <Radio.Group
+                  onChange={onChange}
+                  optionType="button"
+                  buttonStyle="solid"
+                  defaultValue={query?.processStatus || null}
+                >
+                  <Radio.Button value={null}>Tất cả</Radio.Button>
+                  <Radio.Button value={"NEW"}>
+                    {PROCESS_STATUS_VI["NEW"]}
+                  </Radio.Button>
+                  <Radio.Button value={"APPROVED"}>
+                    {PROCESS_STATUS_VI["APPROVED"]}
+                  </Radio.Button>
+                </Radio.Group>
+              </Row>
             </Space>
           </Col>
         </Row>
