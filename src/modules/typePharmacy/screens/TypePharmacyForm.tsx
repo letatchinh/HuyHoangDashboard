@@ -121,26 +121,27 @@ export default function TypePharmacyForm({
           >
             <Input readOnly={readOnly} />
           </FormItem>
-          <Row
-            className="form__submit-box"
-            style={{ justifyContent: "center" }}
-          >
-            {isSubmitLoading ? (
-              <Button disabled>Huỷ</Button>
-            ) : (
-                <Button onClick={onClose}>Huỷ</Button>
-            )}
-
-            <Button
-              type="primary"
-              htmlType="submit"
-              loading={isSubmitLoading}
-              style={{ marginLeft: 5 }}
-              disabled={readOnly}
+          {!readOnly && (
+            <Row
+              className="form__submit-box"
+              style={{ justifyContent: "center" }}
             >
-              {id ? "Cập nhật" : "Thêm mới"}
-            </Button>
-          </Row>
+              {isSubmitLoading ? (
+                <Button disabled>Huỷ</Button>
+              ) : (
+                <Button onClick={onClose}>Huỷ</Button>
+              )}
+
+              <Button
+                type="primary"
+                htmlType="submit"
+                loading={isSubmitLoading}
+                style={{ marginLeft: 5 }}
+              >
+                {id ? "Cập nhật" : "Thêm mới"}
+              </Button>
+            </Row>
+          )}
         </Form>
       </div>
     </div>

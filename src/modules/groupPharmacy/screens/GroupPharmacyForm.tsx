@@ -132,17 +132,27 @@ export const GroupPharmacyForm = ({ onClose, id, handleUpdate,setDestroy, query,
           <FormItem label="Mô tả" name="desc">
             <TextArea readOnly={readOnly} />
           </FormItem>
-          <Row className="form__submit-box" style={{justifyContent: 'center'}}>
-            {isSubmitLoading ? (
-              <Button disabled>Huỷ</Button>
-            ) : (
+          {!readOnly && (
+            <Row
+              className="form__submit-box"
+              style={{ justifyContent: "center" }}
+            >
+              {isSubmitLoading ? (
+                <Button disabled>Huỷ</Button>
+              ) : (
                 <Button onClick={onClose}>Huỷ</Button>
-            )}
+              )}
 
-            <Button type="primary" htmlType="submit" loading={isSubmitLoading} style={{marginLeft: 5}} disabled={readOnly}>
-              {id ? "Cập nhật" : "Thêm mới"}
-            </Button>
-          </Row>
+              <Button
+                type="primary"
+                htmlType="submit"
+                loading={isSubmitLoading}
+                style={{ marginLeft: 5 }}
+              >
+                {id ? "Cập nhật" : "Thêm mới"}
+              </Button>
+            </Row>
+          )}
         </Form>
       </div>
     </div>
