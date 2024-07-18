@@ -33,6 +33,7 @@ type paramsConvertDataQuotation = {
             'couponsInItem',
             'totalDiscountCoupon',
             'totalDiscountSummary',
+            'totalRoot',
           ]),
         }));
         // Todo : Verify Data When Send to sever (Not implemented)
@@ -42,7 +43,7 @@ type paramsConvertDataQuotation = {
           quotationItems: quotationItemsSubmit,
           pair: data?.pair || 0,
           debtType: data?.debtType || DEFAULT_DEBT_TYPE,
-          totalPrice: totalPriceAfterDiscount + get(data,'pair',0),
+          totalPrice: totalPriceAfterDiscount,
           totalAmount,
           ...(_id && { _id }),
           dataTransportUnit,

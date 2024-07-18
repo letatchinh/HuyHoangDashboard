@@ -335,6 +335,16 @@ export function CreateBillProvider({
     () => (fee || [])?.find((item: any) => item?.typeFee === "LOGISTIC")?.value,
     [bill?.dataTransportUnit, fee]
   );
+  const totalRootBill = useMemo(
+    () =>
+      quotationItems?.reduce(
+        (sum: number, cur: any) =>
+          sum + get(cur, "totalRoot",0),
+        0
+      ),
+    [quotationItems]
+  ); // Tổng giá trị gốc đơn hàng 
+
   const totalPrice = useMemo(
     () =>
       quotationItems?.reduce(
@@ -374,19 +384,19 @@ export function CreateBillProvider({
     //
 
   // ------Calculate discount Coupon-------
-  const minTotalPrice = useMemo(() => totalPrice * MIN_TOTAL_DISCOUNT_PERCENT / 100,[totalPrice]);
-  const maxDiscountCoupon = useMemo(() => totalPrice - minTotalPrice,[minTotalPrice,totalPrice])
+  const minTotalPrice = useMemo(() => totalRootBill * MIN_TOTAL_DISCOUNT_PERCENT / 100,[totalRootBill]);
+  const maxDiscountCoupon = useMemo(() => totalRootBill - minTotalPrice,[minTotalPrice,totalRootBill])
   
   const totalCouponForItem = useMemo(() => quotationItems?.reduce((sum:number,cur : any) => sum + get(cur,'totalDiscountCoupon',0),0),[quotationItems]);
   
   const totalDiscountCouponBill = useMemo(() => {
     const totalDiscount = couponSelected?.bill.reduce((sum: number, cur: CouponInSelect) => {
       const {type,value,maxDiscount} = cur?.discount;
-      return sum + getValueOfMath(totalPrice,value,type,maxDiscount)
+      return sum + getValueOfMath(totalRootBill,value,type,maxDiscount)
     },0);
     return Math.min(totalDiscount,maxDiscountCoupon);    
       
-  },[couponSelected,totalPrice,maxDiscountCoupon]);
+  },[couponSelected,totalRootBill,maxDiscountCoupon]);
 
   const totalDiscountCouponShip = useMemo(() => {
     const totalDiscount = couponSelected?.ship.reduce((sum: number, cur: CouponInSelect) => {
@@ -413,8 +423,8 @@ export function CreateBillProvider({
   );
   const totalPriceAfterDiscount = useMemo(
     () =>
-      (totalAmount -  pair + (totalFee - findLogisticInFee) - totalDiscountCouponBill) || 0, // Not count fee logistic
-    [quotationItems, pair, totalFee,totalDiscountCouponBill,findLogisticInFee]
+      (totalAmount + (totalFee - findLogisticInFee) - totalDiscountCouponBill) || 0, // Not count fee logistic
+    [quotationItems, totalFee,totalDiscountCouponBill,findLogisticInFee]
   );
 
   const totalDiscount = useMemo(
@@ -508,6 +518,7 @@ export function CreateBillProvider({
         get(bill, "quotationItems", []),
         couponSelected
       );
+      console.log(newQuotationItems,'newQuotationItems');
       
       setQuotationItems(newQuotationItems);
     }

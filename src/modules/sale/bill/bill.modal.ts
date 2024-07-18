@@ -66,7 +66,8 @@ export interface quotation  {
     discountOther : DiscountOtherType[],
     couponsInItem? : CouponBase[],
     totalDiscountCoupon? : number,
-    totalDiscountSummary ? : number
+    totalDiscountSummary ? : number,
+    totalRoot?:number,
 }
 export interface FeeType  {
     typeFee : 'SUB_FEE' | 'LOGISTIC',

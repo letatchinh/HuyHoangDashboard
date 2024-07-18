@@ -260,7 +260,7 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
               <Layout label={"Nhân viên tạo"}>
                 {get(createBy, "fullName", "")}
               </Layout>
-              <Layout label={"Tổng số tiền"}>{formatter(get(bill,'totalAmountBill',0))}</Layout>
+              <Layout label={"Tổng số tiền"}>{formatter(get(bill,'totalRoot',0))}</Layout>
               <Layout label={"Chiết khấu"}>-{formatter(get(bill,'totalDiscountBill',0))}</Layout>
               <Layout label={"Mã giảm giá"}>-<CouponShow value={(get(bill,'totalCouponForBill',0)+ get(bill,'totalCouponForItem',0))} dataSource={[...get(bill,'coupons.bill',[]),...get(bill,'coupons.item',[])]}/></Layout>
               <Layout label={"Tổng số tiền sau chiết khấu"}>{formatter(get(bill,'totalAfterDiscountBill',0))}</Layout>
