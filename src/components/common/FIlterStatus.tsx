@@ -5,12 +5,14 @@ import { COLOR, STATUS, STATUS_COLOR, STATUS_NAMES } from '~/constants/defaultVa
 type propsType = {
     onParamChange : any,
     value : any
+    style?: React.CSSProperties
 };
 const CLONE_STATUS_NAMES : any = STATUS_NAMES;
 const CLONE_STATUS_COLOR : any = STATUS_COLOR;
-export default function FIlterStatus({onParamChange,value}:propsType) : React.JSX.Element {
+export default function FIlterStatus({onParamChange,value, style}:propsType) : React.JSX.Element {
     return (
         <Dropdown 
+    
         trigger={['click']}
         menu={{items : [
             {
@@ -29,7 +31,7 @@ export default function FIlterStatus({onParamChange,value}:propsType) : React.JS
               onClick : () => onParamChange({status : null})
             },
           ]}}>
-            <Button type='text'>
+            <Button type='text' style={style}>
             <Flex gap={5} align={'center'}>
             <Badge status={CLONE_STATUS_COLOR[value]}/>
             <Typography.Text strong>{value ? CLONE_STATUS_NAMES[value] : "Tất cả"}</Typography.Text>
