@@ -2,6 +2,7 @@ import { Button, Form, Input, Row, Select } from "antd";
 import {
   useCreateSaleChannel,
   useGetSaleChannel,
+  useGetSaleChannel_onlyGet,
   useInitSaleChannel,
   useResetSaleChannelAction,
 } from "../saleChannel.hook";
@@ -17,10 +18,15 @@ import { get } from "lodash";
 
 const FormItem = Form.Item;
 interface Props {
-  onClose: (p?: any) => void;
+  onClose?: (p?: any) => void;
   id?: any;
   handleUpdate?: any;
   setDestroy?: any;
+  readOnly?: boolean
+}
+const hookGetData = {
+  readOnly : useGetSaleChannel_onlyGet,
+  notReadOnly : useGetSaleChannel
 }
 
 export default function SaleChannelForm({
@@ -28,14 +34,16 @@ export default function SaleChannelForm({
   id,
   handleUpdate,
   setDestroy,
+  readOnly
 }: Props) {
   const [form] = Form.useForm();
   const [query] = useCustomerSegmentationQueryParams();
   const [isSubmitLoading, handleCreate] = useCreateSaleChannel(() => {
-    onClose();
+    onClose && onClose();
     setDestroy && setDestroy(true);
   });
-  const [saleChannel, isLoading] = useGetSaleChannel(id);
+  // const [saleChannel, isLoading] = useGetSaleChannel(id);
+  const [saleChannel, isLoading] : any = readOnly ? hookGetData.readOnly() : hookGetData.notReadOnly(id)
   const [customerSegmentation] = useGetCustomerSegmentations(query);
   const initSalesChannel = useInitSaleChannel(saleChannel, id);
   const [selectedCustomerSegmentation, setSelectedCustomerSegmentation] =
@@ -68,9 +76,9 @@ export default function SaleChannelForm({
       } else {
         handleCreate({ ...values });
       }
-      onClose();
+      form.resetFields()
     },
-    [handleCreate, handleUpdate, id, onClose]
+    [handleCreate, handleUpdate, id]
   );
   const options = [
     {
@@ -89,9 +97,6 @@ export default function SaleChannelForm({
 
   return (
     <div className="sale-channel page-wraper form-page-content">
-      <h4 style={{ margin: "20px 0 40px 20px" }}>
-        {id ? " Cập nhật" : "Thêm mới"} kênh bán hàng
-      </h4>
       <div className="container-fluid">
         <Form
           form={form}
@@ -121,7 +126,7 @@ export default function SaleChannelForm({
             />
           </FormItem>
           <FormItem label="Mã kênh bán hàng" name="code">
-            <Input disabled />
+            <Input disabled readOnly={readOnly} />
           </FormItem>
           <FormItem
             label="Tên kênh bán hàng"
@@ -133,7 +138,7 @@ export default function SaleChannelForm({
               },
             ]}
           >
-            <Input />
+            <Input readOnly={readOnly} />
           </FormItem>
           <FormItem
             shouldUpdate={(pre, curr) =>

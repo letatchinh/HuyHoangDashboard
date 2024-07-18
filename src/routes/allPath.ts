@@ -156,15 +156,18 @@ export const PATH_APP = {
   },
   saleChannel: {
     root: path(ROOTS.app, '/sale-channel'),
+    detail: path(ROOTS.app, '/sale-channel/:id'),
   },
   configurationCronTime: {
     root: path(ROOTS.app, "/configuration-cronTime"),
   },
   typePharmacy: {
-    root: path(ROOTS.app, "/type-pharmacy")
+    root: path(ROOTS.app, "/type-pharmacy"),
+    detail: path(ROOTS.app, "/type-pharmacy/:id"),
   },
   groupPharmacy: {
-    root: path(ROOTS.app, "/group-pharmacy")
+    root: path(ROOTS.app, "/group-pharmacy"),
+    detail: path(ROOTS.app, "/group-pharmacy/:id"),
   },
   myNotification: {
     root: path(ROOTS.app, '/my-notification')

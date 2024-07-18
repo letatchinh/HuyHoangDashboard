@@ -37,6 +37,11 @@ const {
 
 export const useSaleChannelPaging = () => useSelector(pagingSelector);
 
+export const useGetSaleChannel_onlyGet = () => [
+  useSelector(getByIdSelector),
+  useSelector(getByIdLoadingSelector),
+];
+
 export const useGetSaleChannels = (param:any) => {
   return useFetchByParam({
     action: saleChannelSliceAction.getListRequest,

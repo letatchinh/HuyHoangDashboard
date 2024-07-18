@@ -18,6 +18,8 @@ import WhiteBox from '~/components/common/WhiteBox';
 import TableAnt from '~/components/Antd/TableAnt';
 import ModalAnt from '~/components/Antd/ModalAnt';
 import SaleChannelForm from './SaleChannelForm';
+import { Link } from 'react-router-dom';
+import { PATH_APP } from '~/routes/allPath';
 type propsType = {
 
 }
@@ -60,6 +62,7 @@ export default function SaleChannel(props:propsType) : React.JSX.Element {
         dataIndex: "code",
         key: "code",
         width: 120,
+        render: (text: string, record: any) => <Link className='link_' to={PATH_APP.saleChannel.root + "/" + record?._id}>{text}</Link>
       },
       {
         title: "Tên kênh bán hàng",
@@ -272,6 +275,7 @@ export default function SaleChannel(props:propsType) : React.JSX.Element {
         />
       </WhiteBox>
       <ModalAnt
+        title={saleChannelId ? " Cập nhật kênh bán hàng" : "Thêm mới kênh bán hàng" } 
         width={700}
         open={isOpenForm}
         onCancel={onCloseForm}
@@ -283,7 +287,7 @@ export default function SaleChannel(props:propsType) : React.JSX.Element {
 
       >
         <SaleChannelForm
-        setDestroy={setDestroy}
+          setDestroy={setDestroy}
           onClose={onCloseForm}
           id={saleChannelId}
           handleUpdate={updateSaleChannel}
