@@ -120,7 +120,6 @@ export default function TotalBill(props: propsType): React.JSX.Element {
       });
     }
   }, [bill]); // Set value logistic fee
-  console.log(bill,'bill')
   return (
     <Flex vertical gap={"small"}>
       <Layout label={"Số lượng mặt hàng"}>{formatter(totalQuantity)}</Layout>

@@ -64,6 +64,7 @@ type propsType = {
   dataTransportUnit?: ValueApplyBill;
   warehouseInfo?: any;
   fee?: any;
+  totalWeight?: any;
 };
 
 export default function LogisticForm({
@@ -76,6 +77,7 @@ export default function LogisticForm({
   pharmacy,
   dataTransportUnit,
   warehouseInfo,
+  totalWeight = 0,
 }: propsType): React.JSX.Element {
   useResetLogisticAction();
   const { onAddLogisticFee } = useCreateBillStore();
@@ -137,7 +139,8 @@ export default function LogisticForm({
         receiverName: pharmacy?.fullName ?? pharmacy?.name,
         payer: dataTransportUnit?.payer,
         transportUnit: transportUnitValue,
-        ...dataTransportUnit,
+      ...dataTransportUnit,
+        weight: totalWeight,
       });
   }, [dataTransportUnit, id, pharmacy]);
   useEffect(() => {

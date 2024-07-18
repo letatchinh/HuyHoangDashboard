@@ -390,6 +390,9 @@ export function CreateBillProvider({
       ),
     [quotationItems]
   );
+  const totalWeight = useMemo(() => bill?.quotationItems?.length > 1 ? bill?.quotationItems?.reduce((sum: any, cur: any) => {
+    return sum?.variant?.weight + get(cur, "variant.weight", 0)
+  }) : get(bill?.quotationItems[0]?.variant, 'weight'), [bill]);
   // Initalize Data And Calculate Discount
   useEffect(() => {
     const initDebt = debt?.find(
@@ -412,6 +415,17 @@ export function CreateBillProvider({
       setQuotationItems(newQuotationItems);
     }
   }, [bill, debt, form, totalPrice]);
+
+  // useEffect(() => {
+  //   if(bill?.quotationItems?.length > 0){
+  //     const totalWeight = bill?.quotationItems?.reduce((sum: any, cur: any) => {
+  //       return sum?.variant?.weight + get(cur, "variant.weight", 0)
+  //     });
+  //     // form.setFieldsValue({
+        
+  //     // })
+  //   };
+  // },[bill])
 
   // Init warehouse
 
@@ -612,7 +626,8 @@ export function CreateBillProvider({
           }
           pharmacy={pharmacyInfo?.data}
           dataTransportUnit={bill?.dataTransportUnit}
-          warehouseInfo = {warehouseInfo}
+          warehouseInfo={warehouseInfo}
+          totalWeight = {totalWeight}
         />
       </ModalAnt>
     </CreateBill.Provider>
