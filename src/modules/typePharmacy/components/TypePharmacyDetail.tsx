@@ -1,16 +1,16 @@
+import { Badge, Flex, Input, Typography } from "antd";
+import { get } from "lodash";
 import React, { useCallback, useState } from "react";
 import { useParams } from "react-router-dom";
-import { STATUS_COLOR, STATUS_NAMES } from "~/constants/defaultValue";
-import { useDeleteTypePharmacy, useGetTypePharmacies, useGetTypePharmacy, useGetTypePharmacy_onlyGet, useTypePharmacyPaging, useTypePharmacyQueryParams, useUpdateTypePharmacy, useUpdateTypePharmacyParams } from "../typePharmacy.hook";
-import Layout from "~/components/common/Layout/List/Detail/Layout";
-import Header from "~/components/common/Layout/List/Detail/Header";
-import { Badge, Flex, Input, Typography } from "antd";
-import { PATH_APP } from "~/routes/allPath";
-import { get } from "lodash";
-import MainContentTab from "./MainContentTab";
-import ListInDetailCommon from "~/components/common/Layout/List/Detail/ListInDetailCommon";
 import ModalAnt from "~/components/Antd/ModalAnt";
+import Header from "~/components/common/Layout/List/Detail/Header";
+import Layout from "~/components/common/Layout/List/Detail/Layout";
+import ListInDetailCommon from "~/components/common/Layout/List/Detail/ListInDetailCommon";
+import { STATUS_COLOR, STATUS_NAMES } from "~/constants/defaultValue";
+import { PATH_APP } from "~/routes/allPath";
 import TypePharmacyForm from "../screens/TypePharmacyForm";
+import { useDeleteTypePharmacy, useGetTypePharmacies, useGetTypePharmacy, useGetTypePharmacy_onlyGet, useTypePharmacyPaging, useTypePharmacyQueryParams, useUpdateTypePharmacy, useUpdateTypePharmacyParams } from "../typePharmacy.hook";
+import MainContentTab from "./MainContentTab";
 type propsType = {};
 
 const CLONE_STATUS_NAMES: any = STATUS_NAMES;
