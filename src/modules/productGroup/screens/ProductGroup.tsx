@@ -1,4 +1,3 @@
-import { DeleteOutlined, InfoCircleTwoTone, PlusCircleOutlined, SearchOutlined } from '@ant-design/icons';
 import { Button, Checkbox, Col, Form, Input, Row, Select, SelectProps, Space, Switch, Table, message } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { get } from 'lodash';
@@ -26,6 +25,7 @@ import { Link } from 'react-router-dom';
 import ColumnAction from '~/components/common/ColumnAction';
 import BtnAdd from "~/components/common/Layout/List/Header/BtnAdd";
 import DropdownAction from "~/components/common/Layout/List/Header/DropdownAction";
+import StatusAndSearch from '~/components/common/StatusAndSearch';
 
 const { Search } = Input;
 
@@ -172,33 +172,12 @@ export default function ProductConfig() {
       <Breadcrumb title={t('Quản lý danh mục nhóm sản phẩm')} />
       <Row  gutter={16} style={{ marginBottom: '10px' }}>
         <Col span={12}>
-          <Row gutter = {16}>
-            <Col span={12}>
-            <Search
-              placeholder="Nhập bất kì để tìm..."
-              value={keyword}
-              onChange={(e) => (setKeyword(e.target.value))}
-              allowClear
-              onSearch={onSearch}
-              enterButton={<SearchOutlined />}
-            />
-          </Col>
-          <Col span={12}>
-              <Select
-                placeholder="Tìm theo trạng thái"
-                style={{
-                  width: "200px",
-                }}
-                value={search}
-                allowClear
-                onChange={(e) => {
-                  setSearch(e)
-                  onParamChange({ ['status']: e });
-                }}
-                options={options}
-              />
-            </Col>
-          </Row>
+          <StatusAndSearch
+            onParamChange={onParamChange}
+            query={query}
+            keyword={keyword}
+            setKeyword={setKeyword}
+          />
         </Col>
         <Col span={12}>
           <Row justify={"end"} gutter={16}>

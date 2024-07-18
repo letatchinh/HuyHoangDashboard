@@ -18,6 +18,7 @@ import { Link } from 'react-router-dom';
 import { PATH_APP } from '~/routes/allPath';
 import BtnAdd from '~/components/common/Layout/List/Header/BtnAdd';
 import ColumnAction from '~/components/common/ColumnAction';
+import StatusAndSearch from '~/components/common/StatusAndSearch';
 export default function Manufacturer() {
   const [showForm, setShowForm] = useState(false);
   const [destroy, setDestroy] = useState(false);
@@ -128,44 +129,21 @@ export default function Manufacturer() {
   return (
     <>
       <div>
-        <Breadcrumb title="Quản lý hãng sản xuất"/>
-        <Row justify={'space-between'} gutter={16} style={{ marginBottom: 12 }}>
-          <Col >
-            <Row gutter = {16}>
-              <Col span={12}>
-              <Search
-                placeholder="Nhập bất kì để tìm..."
-                value={keyword}
-                onChange={(e) => (setKeyword(e.target.value))}
-                allowClear
-                onSearch={onSearch}
-                enterButton={<SearchOutlined />}
-              />
-            </Col>
-            <Col span={12}>
-                <Select
-                  placeholder="Tìm theo trạng thái"
-                  style={{
-                    width: "200px",
-                  }}
-                  value={search}
-                  allowClear
-                  onChange={(e) => {
-                    setSearch(e)
-                    onParamChange({ ['status']: e });
-                  }}
-                  options={options}
-                />
-              </Col>
-            </Row>
+        <Breadcrumb title="Quản lý hãng sản xuất" />
+        <Row justify={"space-between"} gutter={16} style={{ marginBottom: 12 }}>
+          <Col span={12}>
+            <StatusAndSearch
+              onParamChange={onParamChange}
+              query={query}
+              keyword={keyword}
+              setKeyword={setKeyword}
+            />
           </Col>
-          <Col>
+          <Col span={12}>
             <Row justify={"end"}>
-                <WithPermission permission={POLICIES.WRITE_MANUFACTURER}>
-                  <BtnAdd onClick={() => handleOpenForm()}>
-                    Thêm mới
-                  </BtnAdd>
-                </WithPermission>
+              <WithPermission permission={POLICIES.WRITE_MANUFACTURER}>
+                <BtnAdd onClick={() => handleOpenForm()}>Thêm mới</BtnAdd>
+              </WithPermission>
             </Row>
           </Col>
         </Row>
@@ -189,13 +167,19 @@ export default function Manufacturer() {
           />
         <ModalAnt
           open={showForm}
-          title={id? 'Cập nhật hãng sản xuất':'Thêm mới hãng sản xuất'}
+          title={id ? "Cập nhật hãng sản xuất" : "Thêm mới hãng sản xuất"}
           onCancel={handleCloseForm}
           footer={null}
           destroyOnClose={destroy}
           afterClose={() => setDestroy(false)}
         >
-          <ManufacturerForm setDestroy={setDestroy} id={id} setId={setId} callBack={handleCloseForm} updateManufacturer={updateManufacturer} />
+          <ManufacturerForm
+            setDestroy={setDestroy}
+            id={id}
+            setId={setId}
+            callBack={handleCloseForm}
+            updateManufacturer={updateManufacturer}
+          />
         </ModalAnt>
       </div>
     </>

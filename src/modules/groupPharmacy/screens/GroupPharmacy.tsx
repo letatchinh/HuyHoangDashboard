@@ -27,9 +27,7 @@ import {
 import { get, omit } from "lodash";
 import { STATUS, STATUS_NAMES } from "~/constants/defaultValue";
 import Breadcrumb from "~/components/common/Breadcrumb";
-import Search from "antd/es/input/Search";
 import { useChangeDocumentTitle } from "~/utils/hook";
-import { PlusCircleOutlined } from "@ant-design/icons";
 import ExportExcelButton from "~/modules/export/component";
 import WhiteBox from "~/components/common/WhiteBox";
 import TableAnt from "~/components/Antd/TableAnt";
@@ -39,6 +37,7 @@ import { Link } from "react-router-dom";
 import { PATH_APP } from "~/routes/allPath";
 import BtnAdd from "~/components/common/Layout/List/Header/BtnAdd";
 import DropdownAction from "~/components/common/Layout/List/Header/DropdownAction";
+import StatusAndSearch from "~/components/common/StatusAndSearch";
 type propsType = {};
 export default function GroupPharmacy(props: propsType): React.JSX.Element {
   const [query] = useGroupPharmacyQueryParams();
@@ -226,15 +225,13 @@ export default function GroupPharmacy(props: propsType): React.JSX.Element {
   return (
     <div>
       <Breadcrumb title={"Nhóm khách hàng"} />
-      <Row className="mb-3" justify={"space-between"}>
-        <Col span={8}>
-          <Search
-            enterButton="Tìm kiếm"
-            placeholder="Nhập để tìm kiếm"
-            allowClear
-            onSearch={() => onParamChange({ keyword })}
-            onChange={(e) => setKeyword(e.target.value)}
-            value={keyword}
+      <Row gutter={16} justify={"space-between"}>
+        <Col span={12}>
+          <StatusAndSearch
+            onParamChange={onParamChange}
+            query={query}
+            keyword={keyword}
+            setKeyword={setKeyword}
           />
         </Col>
         <Col span={8}>
@@ -263,34 +260,6 @@ export default function GroupPharmacy(props: propsType): React.JSX.Element {
           </Row>
         </Col>
       </Row>
-      <WithPermission permission={POLICIES.UPDATE_CUSTOMER}>
-        <Space style={{ marginBottom: 20 }}>
-          <Typography style={{ fontSize: 14, marginRight: 20 }}>
-            Phân loại trạng thái theo :
-          </Typography>
-          <Row gutter={14}>
-            <Radio.Group
-              onChange={onChange}
-              optionType="button"
-              buttonStyle="solid"
-              defaultValue={(() => {
-                switch (query?.status) {
-                  case "ACTIVE":
-                    return 2;
-                  case "INACTIVE":
-                    return 3;
-                  default:
-                    return 1;
-                }
-              })()}
-            >
-              <Radio.Button value={1}>Tất cả</Radio.Button>
-              <Radio.Button value={2}>{STATUS_NAMES["ACTIVE"]}</Radio.Button>
-              <Radio.Button value={3}>{STATUS_NAMES["INACTIVE"]}</Radio.Button>
-            </Radio.Group>
-          </Row>
-        </Space>
-      </WithPermission>
       <WhiteBox>
         <TableAnt
           dataSource={pharmacies}

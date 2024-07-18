@@ -1,4 +1,4 @@
-import { DeleteOutlined, InfoCircleTwoTone, PlusCircleOutlined, SearchOutlined } from '@ant-design/icons';
+import { PlusCircleOutlined } from '@ant-design/icons';
 import { Button, Col, Form, Row, Space } from 'antd';
 import Search from 'antd/es/input/Search';
 import { ColumnsType } from 'antd/es/table';
@@ -15,6 +15,7 @@ import { PATH_APP } from '~/routes/allPath';
 import { useDeleteRanking, useGetlistRanking, useRankingPaging, useRankingQueryParams, useUpdateRankingParams } from '../ranking.hook';
 import RankingForm from './RankingForm';
 import ColumnAction from '~/components/common/ColumnAction';
+import StatusAndSearch from '~/components/common/StatusAndSearch';
 type propsType = {
 
 }
@@ -94,16 +95,12 @@ export default function Ranking(props: propsType): React.JSX.Element {
       <div className="product-config-action" >
         <Row justify="space-between">
           <Col span={8}>
-            <Search
-              style={{ height: '50px', padding: '5px 0px' }}
-              placeholder="Nhập bất kì để tìm..."
-              value={keyword}
-              onChange={(e) => (setKeyword(e.target.value))
-
-              }
-              allowClear
-              onSearch={onSearch}
-              enterButton={<SearchOutlined />}
+            <StatusAndSearch
+              onParamChange={onParamChange}
+              query={query}
+              keyword={keyword}
+              setKeyword={setKeyword}
+              showStatus={false}
             />
           </Col>
           <Col>

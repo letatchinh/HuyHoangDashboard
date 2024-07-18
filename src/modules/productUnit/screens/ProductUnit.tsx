@@ -1,10 +1,4 @@
 import {
-  DeleteOutlined,
-  InfoCircleTwoTone,
-  PlusCircleOutlined,
-  SearchOutlined,
-} from "@ant-design/icons";
-import {
   Button,
   Checkbox,
   Select,
@@ -43,6 +37,7 @@ import { Link } from "react-router-dom";
 import ColumnAction from "~/components/common/ColumnAction";
 import BtnAdd from "~/components/common/Layout/List/Header/BtnAdd";
 import DropdownAction from "~/components/common/Layout/List/Header/DropdownAction";
+import StatusAndSearch from "~/components/common/StatusAndSearch";
 type propsType = {};
 export default function ProductUnit(props: propsType): React.JSX.Element {
   const [query] = useProductUnitQueryParams();
@@ -174,36 +169,14 @@ export default function ProductUnit(props: propsType): React.JSX.Element {
   return (
     <>
       <Breadcrumb title={t("Quản lý đơn vị tính")} />
-      <Row gutter={10} style = {{marginBottom: '10px'}}>
+      <Row gutter={16} style={{ marginBottom: "10px" }}>
         <Col span={12}>
-          <Row gutter={10}>
-            <Col span={8}>
-              <Search
-                placeholder="Nhập bất kì để tìm..."
-                value={keyword}
-                onChange={(e) => setKeyword(e.target.value)}
-                onSearch={onSearch}
-                allowClear
-                width={300}
-                enterButton={<SearchOutlined />}
-              />
-            </Col>
-            <Col span={12}>
-              <Select
-                placeholder="Tìm theo trạng thái"
-                style={{
-                  width: "200px",
-                }}
-                value={search}
-                allowClear
-                onChange={(e) => {
-                  setSearch(e);
-                  onParamChange({ ["status"]: e });
-                }}
-                options={options}
-              />
-            </Col>
-          </Row>
+          <StatusAndSearch
+            onParamChange={onParamChange}
+            query={query}
+            keyword={keyword}
+            setKeyword={setKeyword}
+          />
         </Col>
         <Col span={12}>
           <Row justify={"end"} gutter={16}>
