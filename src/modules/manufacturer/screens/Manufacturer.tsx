@@ -77,7 +77,7 @@ export default function Manufacturer() {
       width: '300px',
     },
       ...(canUpdate ?[  {
-      title: 'Thao tác',
+      title: 'Trạng thái',
       dataIndex: 'activity',
       align: 'center' as any,
       width: '120px',
@@ -93,7 +93,7 @@ export default function Manufacturer() {
       )
     }] : []),
     ...(canDelete ?[{
-      title: 'Hành động',
+      title: 'Thao tác',
       key: 'action',
       align: 'center' as any,
       width: '180px',

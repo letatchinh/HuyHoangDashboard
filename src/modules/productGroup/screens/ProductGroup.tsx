@@ -100,7 +100,7 @@ export default function ProductConfig() {
       key: 'note',
     },
     {
-      title: 'Thao tác',
+      title: 'Trạng thái',
       dataIndex: 'status',
       align: 'center',
       width: '120px',
@@ -116,7 +116,7 @@ export default function ProductConfig() {
       )
     },
     ...(canDelete ?[{
-      title: 'Hành động',
+      title: 'Thao tác',
       key: 'action',
       align: 'center' as any,
       width: '180px',

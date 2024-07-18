@@ -96,7 +96,7 @@ export default function ProductUnit(props: propsType): React.JSX.Element {
       render: (text: string) => <a>{text}</a>,
     },
     {
-      title: "Thao tác",
+      title: "Trạng thái",
       dataIndex: "status",
       align: "center",
       // width: '120px',
@@ -116,7 +116,7 @@ export default function ProductUnit(props: propsType): React.JSX.Element {
       ),
     },
     {
-      title: "Hành động",
+      title: "Thao tác",
       key: "action",
       align: "center",
       // width: '180px',

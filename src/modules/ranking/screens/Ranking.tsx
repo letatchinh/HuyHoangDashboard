@@ -51,7 +51,7 @@ export default function Ranking(props: propsType): React.JSX.Element {
       render: (text: string) => <a>{text}</a>,
     },
     {
-      title: 'Hành động',
+      title: 'Thao tác',
       key: 'action',
       align: 'center',
       width: '180px',
