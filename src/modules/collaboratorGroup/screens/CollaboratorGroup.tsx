@@ -276,7 +276,7 @@ const CollaboratorGroup = ({ currentTab }: CollaboratorGroupProps) => {
       </Row>
         <Modal
           open={isOpen}
-          width={600}
+          width={700}
           footer={[]}
           onCancel={onClose}
           className="form-modal__user-group"
