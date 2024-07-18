@@ -103,7 +103,7 @@ export default function ManufacturerDetail(): React.JSX.Element {
         List={<ListInDetailCommon fieldName="name" path="/manufacturer" useGets={useGetManufacturerList} usePaging={useManufacturerPaging} useQueryParams={useManufacturerQueryParams} useUpdateParams={useManufacturerParams}/>}
       />
       <ModalAnt
-        title="Cập nhật nhóm sản phẩm"
+        title="Thêm mới hãng sản xuất"
         open={isOpenForm}
         onCancel={onCloseForm}
         footer={[]}

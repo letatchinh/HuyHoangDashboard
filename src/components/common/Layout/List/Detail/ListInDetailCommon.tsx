@@ -44,7 +44,7 @@ export default function ListInDetailCommon({useQueryParams,useUpdateParams,useGe
       </div>
     ))}
     {data?.length ? <Flex style={{marginTop : 10}} justify={'center'}>
-    <Pagination showSizeChanger onChange={(page,pageSize) => onParamChange({page,limit : pageSize})} size="small" {...paging}/>
+    <Pagination showSizeChanger onChange={(page,pageSize) => onParamChange({page,limit : pageSize})} size="small" {...paging}  showTotal = {(total) => `Tổng cộng: ${total} `}/>
     </Flex> : <EmptyData />}
     </>
   );

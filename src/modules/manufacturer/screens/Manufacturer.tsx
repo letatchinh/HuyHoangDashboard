@@ -189,7 +189,7 @@ export default function Manufacturer() {
           />
         <ModalAnt
           open={showForm}
-          title={id? 'Cập nhật hãng sản xuất':'Thêm hãng sản xuất'}
+          title={id? 'Cập nhật hãng sản xuất':'Thêm mới hãng sản xuất'}
           onCancel={handleCloseForm}
           footer={null}
           destroyOnClose={destroy}

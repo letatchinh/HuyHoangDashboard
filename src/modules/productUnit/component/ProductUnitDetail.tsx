@@ -121,7 +121,7 @@ export default function ProductUnitDetail(props: propsType): React.JSX.Element {
         }
       />
       <ModalAnt
-        title="Cập nhật nhóm sản phẩm"
+        title="Thêm mới đơn vị tính"
         open={isOpenForm}
         onCancel={onCloseForm}
         footer={[]}

@@ -105,7 +105,7 @@ export default function ProductGroupDetail(): React.JSX.Element {
         List={<ListInDetailCommon fieldName="name" path="/productGroup" useGets={useGetlistProductConfig} usePaging={useProductConfigPaging} useQueryParams={useProductConfigQueryParams} useUpdateParams={useUpdateProductConfigParams} fieldCode='code'/>}
       />
       <ModalAnt
-        title="Cập nhật nhóm sản phẩm"
+        title="Thêm mới nhóm sản phẩm"
         open={isOpenForm}
         onCancel={onCloseForm}
         footer={[]}
@@ -113,6 +113,7 @@ export default function ProductGroupDetail(): React.JSX.Element {
       >
         <ProductConfigForm
           id={id}
+          callBack={onCloseForm}
           updateProductConfig={updateProductConfig}
         />
       </ModalAnt>

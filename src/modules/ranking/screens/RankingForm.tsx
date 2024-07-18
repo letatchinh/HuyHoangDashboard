@@ -71,7 +71,7 @@ const RankingForm: React.FC<Props> = ({ id,setId, handleCloseForm,setDestroy,rea
         <Form.Item<FieldType> label="Tên hạng" name="name">
         {RenderLoading(isLoading,<Input readOnly={readOnly}/>)}
         </Form.Item>
-        <Form.Item<FieldType> label="Xếp hạng hãng sản xuất" name="level">
+        <Form.Item<FieldType> label="Cấp độ xếp hạng" name="level">
         {RenderLoading(isLoading,<Input readOnly={readOnly}/>)}
         </Form.Item>
           {!readOnly && <Flex justify={'center'}>

@@ -97,7 +97,7 @@ export default function RankingDetail(): React.JSX.Element {
         List={<ListInDetailCommon fieldName="name" path="/ranking" useGets={useGetlistRanking} usePaging={useRankingPaging} useQueryParams={useRankingQueryParams} useUpdateParams={useUpdateRankingParams}/>}
       />
       <ModalAnt
-        title="Cập nhật nhóm sản phẩm"
+        title="Thêm mới xếp hạng nhà cung cấp"
         open={isOpenForm}
         onCancel={onCloseForm}
         footer={[]}

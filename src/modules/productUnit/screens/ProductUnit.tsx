@@ -250,7 +250,7 @@ export default function ProductUnit(props: propsType): React.JSX.Element {
       </WhiteBox>
       <ModalAnt
         open={showForm}
-        title={id ? "Cập nhật đơn vị tính" : "Tạo đơn vị tính"}
+        title={id ? "Cập nhật đơn vị tính" : "Thêm mới đơn vị tính"}
         onCancel={handleCloseForm}
         footer={null}
         afterClose={() => {
