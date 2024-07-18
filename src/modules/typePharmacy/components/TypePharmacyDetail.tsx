@@ -36,7 +36,7 @@ export default function TypePharmacyDetail(
     onParamChange({ keyword });
     onClose();
   };
-  const [saleChannel]: any = useGetTypePharmacy_onlyGet();
+  const [typePharmacy]: any = useGetTypePharmacy_onlyGet();
 
   const [isOpenForm, setIsOpenForm] = useState(false);
   const onCloseForm = useCallback(() => {
@@ -80,16 +80,16 @@ export default function TypePharmacyDetail(
             onEditClick={() => onOpenForm(typePharmacyId)}
             name={
               <Flex gap={10} align="center">
-                <h4>{get(saleChannel, "title", "")}</h4>
+                <h4>{get(typePharmacy, "title", "")}</h4>
                 <Typography.Text
                   type="secondary"
                   style={{ fontSize: 14, width: 100 }}
                 >
                   <Badge
                     style={{ marginRight: 2 }}
-                    status={CLONE_STATUS_COLOR[get(saleChannel, "status", "")]}
+                    status={CLONE_STATUS_COLOR[get(typePharmacy, "status", "")]}
                   />
-                  {CLONE_STATUS_NAMES[get(saleChannel, "status", "")]}
+                  {CLONE_STATUS_NAMES[get(typePharmacy, "status", "")]}
                 </Typography.Text>
               </Flex>
             }
