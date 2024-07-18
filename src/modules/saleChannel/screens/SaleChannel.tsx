@@ -23,6 +23,7 @@ import { PATH_APP } from '~/routes/allPath';
 import BtnAdd from '~/components/common/Layout/List/Header/BtnAdd';
 import DropdownAction from '~/components/common/Layout/List/Header/DropdownAction';
 import StatusAndSearch from "~/components/common/StatusAndSearch";
+import ColumnAction from '~/components/common/ColumnAction';
 type propsType = {
 
 }
@@ -116,28 +117,20 @@ export default function SaleChannel(props:propsType) : React.JSX.Element {
       },
       {
         title: "Thao tác",
-        dataIndex: "_id",
-        // key: "actions",
+        // dataIndex: "_id",
+        key: "actions",
         width: 100,
         align: "center",
-        render: (record) => {
+        render: (_, record) => {
           return (
-            <div className="custom-table__actions">
-              <WithPermission permission={POLICIES.UPDATE_SALESCHANNEL}>
-                <p onClick={() => onOpenForm(record)}>Sửa</p>
-              </WithPermission>
-              <WithPermission permission={POLICIES.DELETE_SALESCHANNEL}>
-                <p>|</p>
-                <Popconfirm
-                  title={`Bạn muốn xoá kênh bán hàng này?`}
-                  onConfirm={() => deleteSaleChannel(record)}
-                  okText="Xoá"
-                  cancelText="Huỷ"
-                >
-                  <p>Xóa</p>
-                </Popconfirm>{" "}
-              </WithPermission>
-            </div>
+            <ColumnAction
+              onOpenForm={onOpenForm}
+              onDelete={deleteSaleChannel}
+              _id={record?._id}
+              textName="kênh bán hàng"
+              permissionUpdate={POLICIES.UPDATE_SALESCHANNEL}
+              permissionDelete={POLICIES.DELETE_SALESCHANNEL}
+            />
           );
         },
       },

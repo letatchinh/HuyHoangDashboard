@@ -38,6 +38,7 @@ import { PATH_APP } from "~/routes/allPath";
 import BtnAdd from "~/components/common/Layout/List/Header/BtnAdd";
 import DropdownAction from "~/components/common/Layout/List/Header/DropdownAction";
 import StatusAndSearch from "~/components/common/StatusAndSearch";
+import ColumnAction from "~/components/common/ColumnAction";
 type propsType = {};
 export default function GroupPharmacy(props: propsType): React.JSX.Element {
   const [query] = useGroupPharmacyQueryParams();
@@ -163,29 +164,21 @@ export default function GroupPharmacy(props: propsType): React.JSX.Element {
         : []),
       {
         title: "Thao tác",
-        dataIndex: "_id",
-        // key: "actions",
+        // dataIndex: "_id",
+        key: "actions",
         width: 100,
         align: "center",
         fixed: 'right',
-        render: (record) => {
+        render: (_, record) => {
           return (
-            <div className="custom-table__actions">
-              <WithPermission permission={POLICIES.UPDATE_CUSTOMER}>
-                <p onClick={() => onOpenForm(record)}>Sửa</p>
-              </WithPermission>
-              <WithPermission permission={POLICIES.DELETE_CUSTOMER}>
-                <p>|</p>
-                <Popconfirm
-                  title={`Bạn muốn xoá nhóm khách hàng này?`}
-                  onConfirm={() => deleteGroupPharmacy(record)}
-                  okText="Xoá"
-                  cancelText="Huỷ"
-                >
-                  <p>Xóa</p>
-                </Popconfirm>{" "}
-              </WithPermission>
-            </div>
+            <ColumnAction
+              onOpenForm={onOpenForm}
+              onDelete={deleteGroupPharmacy}
+              _id={record?._id}
+              textName="nhóm khách hàng"
+              permissionUpdate={POLICIES.UPDATE_CUSTOMER}
+              permissionDelete={POLICIES.DELETE_CUSTOMER}
+            />
           );
         },
       },

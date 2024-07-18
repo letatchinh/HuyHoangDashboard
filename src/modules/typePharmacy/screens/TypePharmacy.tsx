@@ -21,6 +21,7 @@ import { PATH_APP } from '~/routes/allPath';
 import BtnAdd from '~/components/common/Layout/List/Header/BtnAdd';
 import DropdownAction from '~/components/common/Layout/List/Header/DropdownAction';
 import StatusAndSearch from '~/components/common/StatusAndSearch';
+import ColumnAction from '~/components/common/ColumnAction';
 type propsType = {
 
 }
@@ -116,28 +117,20 @@ export default function TypePharmacy(props:propsType) : React.JSX.Element {
         },
         {
           title: "Thao tác",
-          dataIndex: "_id",
-          // key: "actions",
+          // dataIndex: "_id",
+          key: "actions",
           width: 100,
           align: "center",
-          render: (record) => {
+          render: (_, record) => {
             return (
-              <div className="custom-table__actions">
-                <WithPermission permission={POLICIES.UPDATE_CUSTOMERGROUP}>
-                  <p onClick={() => onOpenForm(record)}>Sửa</p>
-                </WithPermission>
-                <WithPermission permission={POLICIES.DELETE_CUSTOMERGROUP}>
-                  <p>|</p>
-                  <Popconfirm
-                    title={`Bạn muốn xoá nhánh khách hàng này?`}
-                    onConfirm={() => deleteTypePharmacy(record)}
-                    okText="Xoá"
-                    cancelText="Huỷ"
-                  >
-                    <p>Xóa</p>
-                  </Popconfirm>{" "}
-                </WithPermission>
-              </div>
+              <ColumnAction
+                onOpenForm={onOpenForm}
+                onDelete={deleteTypePharmacy}
+                _id={record?._id}
+                textName="nhánh khách hàng"
+                permissionUpdate={POLICIES.UPDATE_CUSTOMERGROUP}
+                permissionDelete={POLICIES.DELETE_CUSTOMERGROUP}
+              />
             );
           },
         },
