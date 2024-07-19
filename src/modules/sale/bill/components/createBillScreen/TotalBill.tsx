@@ -77,6 +77,7 @@ export default function TotalBill(props: propsType): React.JSX.Element {
   const onOpenAddress = useCallback(() => setOpenAddress(true), []);
   const onCloseAddress = useCallback(() => setOpenAddress(false), []);
   const debtType = Form.useWatch("debtType", form);
+  const pair = Form.useWatch("pair", form) || 0;
   // const fee = Form.useWatch("fee", form);
   const onChangeAddress = useCallback(
     (values: any) => {
@@ -125,7 +126,6 @@ export default function TotalBill(props: propsType): React.JSX.Element {
       });
     }
   }, [bill]); // Set value logistic fee
-  console.log(bill,'bill')
   return (
     <Flex vertical gap={"small"}>
       <Layout label={"Số lượng mặt hàng"}>{formatter(totalQuantity)}</Layout>
@@ -412,7 +412,7 @@ export default function TotalBill(props: propsType): React.JSX.Element {
       />
       <Layout isLarge={true} label={"Tổng tiền phải trả"}>
         <Typography.Text style={{ fontSize: 18, fontWeight: 600 }}>
-          {formatter(totalPriceAfterDiscount - get(bill,'pair',0))}
+          {formatter(totalPriceAfterDiscount - pair)}
         </Typography.Text>
       </Layout>
       <ModalAnt
