@@ -202,6 +202,8 @@ export const useCouponSelect = ({bill,refCollection,totalAmount} : {bill : any,r
         refCollection,
         id : get(bill, "pharmacyId")
       },
+      productCount : countProduct,
+      billPrice : totalAmount
     });
   };
 
