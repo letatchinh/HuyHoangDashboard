@@ -102,6 +102,7 @@ const billStatus = 'billStatus'; // Trạng thái đơn hàng bán
 const billSpit = 'billSpit'; // Tách đơn hàng bán
 const historyBill = 'historyBill'; // Lịch sử đơn hàng bán
 const historyOrderSupplier = 'historyOrderSupplier'; // Lịch sử đơn hàng mua
+const outOfStock = 'outOfStock'; // Kiểm kho theo danh sách đơn hàng bán
 
 
 //------RESOURCES --------
@@ -210,7 +211,8 @@ const RESOURCES = [
   logistic,
   billSpit,
   historyBill,
-  historyOrderSupplier
+  historyOrderSupplier,
+  outOfStock
 ];
 
 //ACTIONS
@@ -372,6 +374,10 @@ const RESOURCE = (): ResourceType => {
     warehouseLink,
   ];
 
+  const WAREHOUSE: string[] = [
+    outOfStock,
+  ];
+
   return {
     GROUP_USER,
     GROUP_EMPLOYEE,
@@ -398,6 +404,7 @@ const RESOURCE = (): ResourceType => {
     VOUCHER_SALARY_PARTNER,
     VOUCHER_BILL_PARTNER,
     GROUP_SETTING,
+    WAREHOUSE
   };
 };
 
