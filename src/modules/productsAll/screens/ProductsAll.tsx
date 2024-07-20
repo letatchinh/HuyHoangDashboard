@@ -218,30 +218,16 @@ export default function ProductsAll(props: TypeProps): React.JSX.Element {
           },
         ]
       : []),
-    // ...(!isAdapterIsEmployee
-    //   ? [
-    //       {
-    //         title: "Tồn kho",
-    //         dataIndex: "stock",
-    //         key: "stock",
-    //         // render(stock: any, record: any) {
-    //         //   return (
-    //         //     <StockProduct
-    //         //       variantDefault={get(record, "variantDefault")}
-    //         //       stock={stock ?? 0}
-    //         //       handleUpdate={(newStock: number) =>
-    //         //         onUpdateProduct({
-    //         //           _id: get(record, "_id"),
-    //         //           stock: newStock,
-    //         //         })
-    //         //       }
-    //         //     />
-    //         //   );
-    //       // },
-    //       render: (value: any, record: any)=> <Button type = 'link' onClick = {() => openStock({id: get(record,'_id'),supplierId : get(record,'supplierId')})}>Xem chi tiết</Button>
-    //       },
-    //     ]
-    //   : []),
+    ...(!isAdapterIsEmployee
+      ? [
+          {
+            title: "Tồn kho",
+            dataIndex: "stock",
+            key: "stock",
+          render: (value: any, record: any)=> <Button type = 'link' onClick = {() => openStock({id: get(record,'_id'),supplierId : get(record,'supplierId')})}>Xem chi tiết</Button>
+          },
+        ]
+      : []),
     {
       title: "Nhóm sản phẩm",
       dataIndex: "productGroup",
@@ -406,7 +392,7 @@ export default function ProductsAll(props: TypeProps): React.JSX.Element {
       <ModalAnt
           open={isOpenStock}
           destroyOnClose
-          width={1500}
+          width={800}
           footer={null}
           onCancel={onCloseStock}
         >
