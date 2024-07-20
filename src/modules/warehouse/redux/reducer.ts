@@ -24,6 +24,10 @@ interface cloneInitState extends initStateSlice {
 
   isCheckWarehouse?: boolean;
 
+  isLoadingInventory?: boolean;
+  listInventory?: any[];
+  getInventoryFailed?: any;
+
 };
 class WarehouseClassExtend extends InstanceModuleRedux {
   cloneReducer;
@@ -116,6 +120,19 @@ class WarehouseClassExtend extends InstanceModuleRedux {
         state.list = payload;
       },
 
+      getInventoryRequest: (state: cloneInitState, { payload }: any) => {
+        state.isLoadingInventory = true;
+      },
+
+      getInventorySuccess: (state: cloneInitState, { payload }: any) => {
+        state.isLoadingInventory = false;
+        state.listInventory = payload;
+      },
+      getInventoryFailed: (state: cloneInitState, { payload }: any) => {
+        state.isLoadingInventory = false;
+        state.getInventoryFailed = payload;
+      },
+
       // Want Add more reducer Here...
     }
     this.cloneInitState = {
@@ -139,6 +156,10 @@ class WarehouseClassExtend extends InstanceModuleRedux {
       deleteWarehouseLinkedFailed: null,
 
       isCheckWarehouse: false,
+
+      isLoadingInventory: false,
+      listInventory: [],
+      getInventoryFailed: null,
       // Want Add more State Here...
     }
   }

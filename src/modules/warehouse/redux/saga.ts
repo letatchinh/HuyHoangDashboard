@@ -128,6 +128,15 @@ function* deleteWarehouseLinked({payload : id} : any) : any {
   }
 };
 
+function* getInventory({payload:query} : any) : any {
+  try {
+    const data = yield call(api.getInventory,query);
+    yield put(warehouseActions.getInventorySuccess(data));
+  } catch (error:any) {
+    yield put(warehouseActions.getInventoryFailed(error));
+  }
+};
+
 export default function* warehouseSaga() {
   yield takeLatest(warehouseActions.getListRequest, getListWarehouse);
   yield takeLatest(warehouseActions.getWarehouseDefaultRequest, getWarehouseDefault);
@@ -140,4 +149,5 @@ export default function* warehouseSaga() {
   yield takeLatest(warehouseActions.getWarehouseLinkedRequest, getByIdWarehouseLinked);
   yield takeLatest(warehouseActions.checkWarehouseRequest, checkWarehouse);
   yield takeLatest(warehouseActions.deleteWarehouseLinkedRequest, deleteWarehouseLinked);
+  yield takeLatest(warehouseActions.getInventoryRequest, getInventory);
 };
