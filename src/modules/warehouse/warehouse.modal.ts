@@ -25,3 +25,9 @@ export interface dataBillSentToWarehouse {
   discountPercent: number;
   items: itemType[]; 
 };
+
+export interface InventoryQuery {
+  warehouseId: number;
+  startTime?: Date;
+  endTime?: Date;
+}

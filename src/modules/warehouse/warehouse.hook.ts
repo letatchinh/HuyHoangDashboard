@@ -53,6 +53,10 @@ const createBillToWarehouseFailedSelector = getSelector('createBillToWarehouseFa
 const deleteWarehouseLinkedSuccessSelector = getSelector('deleteWarehouseLinkedSuccess');
 const deleteWarehouseLinkedFailedSelector = getSelector('deleteWarehouseLinkedFailed');
 
+const listInventorySuccessSelector = getSelector('listInventorySuccess');
+const getInventoryFailedSelector = getSelector('getInventoryFailed'); 
+const isLoadingInventorySelector = getSelector('isLoadingInventory'); 
+
 export const useGetWarehouses = () => {
   return useFetch({
     action: warehouseActions.getListRequest,
@@ -346,3 +350,65 @@ export const useGetInfoWarehouse = () => {
 
 export const useGetListWarehouseReducer = () => useSelector((state: any) => state?.warehouse?.warehouseLinked);
     
+
+export const useInventoryWarehouseQueryParams = (id?:number | null) => {
+  const query = useQueryParams();
+  const limit = query.get("limit") || 10;
+  const page = query.get("page") || 1;
+  const keyword = query.get("keyword");
+  const warehouseId = id ?? query.get("keyword");
+  return useMemo(() => {
+    const queryParams = {
+      page,
+      limit,
+      keyword,
+      warehouseId
+    };
+    return [queryParams];
+    //eslint-disable-next-line
+  }, [page, limit, keyword,warehouseId]);
+};
+
+export const useUpdateInventoryWarehouseParams = (
+  query: any,
+  listOptionSearch?: any[]
+) => {
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
+  const [keyword, setKeyword] = useState(get(query, "keyword"));
+  useEffect(() => {
+    setKeyword(get(query, "keyword"));
+  }, [query]);
+  const onParamChange = (param: any) => {
+    // Clear Search Query when change Params
+    clearQuerySearch(listOptionSearch, query, param);
+
+    if (!param.page) {
+      query.page = 1;
+    }
+
+    // Convert Query and Params to Search Url Param
+    const searchString = new URLSearchParams(
+      getExistProp({
+        ...query,
+        ...param,
+      })
+    ).toString();
+
+    // Navigate
+    navigate(`${pathname}?${searchString}`);
+  };
+
+  return [keyword, { setKeyword, onParamChange }];
+};
+
+
+export const useGetInventory = (param?: any) => {
+  return useFetchByParam({
+    action: warehouseActions.getInventoryRequest,
+    loadingSelector: isLoadingInventorySelector,
+    dataSelector: listInventorySuccessSelector,
+    failedSelector: getInventoryFailedSelector,
+    param,
+  });
+};
