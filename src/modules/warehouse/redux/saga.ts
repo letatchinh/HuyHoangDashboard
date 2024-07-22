@@ -123,6 +123,7 @@ function* deleteWarehouseLinked({payload : id} : any) : any {
     const data = yield call(api.deleteWarehouseLink,id);
     yield put(warehouseActions.deleteWarehouseLinkedSuccess(data));
     yield put(branchSliceAction.getListRequest());
+    yield put(warehouseActions.getListRequest());
   } catch (error:any) {
     yield put(warehouseActions.deleteWarehouseLinkedFailed(error));
   }
