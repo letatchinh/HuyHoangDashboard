@@ -1,4 +1,4 @@
-import { get, omit } from "lodash";
+import { get, head, omit } from "lodash";
 import { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -53,9 +53,11 @@ const createBillToWarehouseFailedSelector = getSelector('createBillToWarehouseFa
 const deleteWarehouseLinkedSuccessSelector = getSelector('deleteWarehouseLinkedSuccess');
 const deleteWarehouseLinkedFailedSelector = getSelector('deleteWarehouseLinkedFailed');
 
-const listInventorySuccessSelector = getSelector('listInventorySuccess');
+const listInventorySuccessSelector = getSelector('listInventory');
 const getInventoryFailedSelector = getSelector('getInventoryFailed'); 
 const isLoadingInventorySelector = getSelector('isLoadingInventory'); 
+const pagingInventorySelector = getSelector('listInventoryPaging');
+export const usePagingInventory = ()=> useSelector(pagingInventorySelector);
 
 export const useGetWarehouses = () => {
   return useFetch({
@@ -357,16 +359,20 @@ export const useInventoryWarehouseQueryParams = (id?:number | null) => {
   const page = query.get("page") || 1;
   const keyword = query.get("keyword");
   const warehouseId = id ?? query.get("keyword");
+  const startDate = query.get("startDate") || null;
+  const endDate = query.get("endDate") || null;
   return useMemo(() => {
     const queryParams = {
       page,
       limit,
       keyword,
-      warehouseId
+      warehouseId,
+      startDate,
+      endDate,
     };
     return [queryParams];
     //eslint-disable-next-line
-  }, [page, limit, keyword,warehouseId]);
+  }, [page, limit, keyword,warehouseId, startDate, endDate]);
 };
 
 export const useUpdateInventoryWarehouseParams = (

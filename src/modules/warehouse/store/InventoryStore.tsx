@@ -1,7 +1,7 @@
 import { get } from "lodash";
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
-import { useGetInventory, useGetWarehouseByBranchLinked, useInventoryWarehouseQueryParams } from "../warehouse.hook";
+import { useGetInventory, useGetWarehouseByBranchLinked, useInventoryWarehouseQueryParams, useUpdateInventoryWarehouseParams } from "../warehouse.hook";
 
 type propsInventoryWarehouse = {
   children: React.ReactNode;
@@ -13,6 +13,10 @@ export type GlobalInventoryWarehouse = {
   isLoading: boolean;
   loading: boolean;
   data: any[];
+  onParamChange: (param: any) => void;
+  onSearch: (param: any) => void;
+  keyword: string;
+  setKeyword: (param: any) => void;
 };
 const InventoryWarehouse = createContext<GlobalInventoryWarehouse>({
   listWarehouse: [],
@@ -21,6 +25,10 @@ const InventoryWarehouse = createContext<GlobalInventoryWarehouse>({
   isLoading: false,
   loading: false,
   data: [],
+  onParamChange: () => { },
+  onSearch: () => { },
+  keyword: '',
+  setKeyword: () => { },  
 });
 
 export function InventoryWarehouseProvider({
@@ -30,6 +38,7 @@ export function InventoryWarehouseProvider({
   const [isOpen, setIsOpen] = useState<any>(false);
   const [activeTab, setActiveTab] = useState<any>(null);
   const [query] = useInventoryWarehouseQueryParams(activeTab ? Number(activeTab) : null);
+  const [keyword, { setKeyword, onParamChange }] = useUpdateInventoryWarehouseParams(activeTab && query);
   const [data, loading] = useGetInventory(activeTab && query);
   useEffect(() => {
     if (listWarehouse?.length) {
@@ -44,6 +53,13 @@ export function InventoryWarehouseProvider({
   const onClose = () => {
     setIsOpen(false);
   };
+
+  const onSearch = (value: any) => {
+    onParamChange({
+      ...query,
+      ...value
+    });
+  };
   
   return (
     <InventoryWarehouse.Provider
@@ -53,7 +69,11 @@ export function InventoryWarehouseProvider({
         setActiveTab,
         isLoading,
         loading,
-        data
+        data,
+        onParamChange,
+        onSearch,
+        keyword,
+        setKeyword,
       }}
     >
       {children}

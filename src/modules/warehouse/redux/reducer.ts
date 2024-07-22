@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { omit } from "lodash";
 import { InstanceModuleRedux } from "~/redux/instanceModuleRedux";
 import { initStateSlice } from "~/redux/models";
+import { getPaging } from "~/utils/helpers";
 interface cloneInitState extends initStateSlice {
   // Add cloneInitState Type Here
   updateManagementWarehouseSuccess?: any;
@@ -27,6 +28,7 @@ interface cloneInitState extends initStateSlice {
   isLoadingInventory?: boolean;
   listInventory?: any[];
   getInventoryFailed?: any;
+  listInventoryPaging?: any;
 
 };
 class WarehouseClassExtend extends InstanceModuleRedux {
@@ -126,7 +128,8 @@ class WarehouseClassExtend extends InstanceModuleRedux {
 
       getInventorySuccess: (state: cloneInitState, { payload }: any) => {
         state.isLoadingInventory = false;
-        state.listInventory = payload;
+        state.listInventory = payload?.docs;
+        state.listInventoryPaging = getPaging(payload);
       },
       getInventoryFailed: (state: cloneInitState, { payload }: any) => {
         state.isLoadingInventory = false;
@@ -160,6 +163,7 @@ class WarehouseClassExtend extends InstanceModuleRedux {
       isLoadingInventory: false,
       listInventory: [],
       getInventoryFailed: null,
+      listInventoryPaging: null
       // Want Add more State Here...
     }
   }

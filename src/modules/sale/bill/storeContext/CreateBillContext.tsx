@@ -480,6 +480,7 @@ export function CreateBillProvider({
       (item: any) => item?._id === data?.warehouseId
     );
     setFormAndLocalStorage({
+      ...bill,
       warehouseId: findWarehouse?._id,
       warehouseName: findWarehouse?.name?.vi,
     });
@@ -499,7 +500,6 @@ export function CreateBillProvider({
       });
   };
   useEffect(() => {
-    // console.log('vo day lai')
     if ((pharmacyInfo || partner) && !bill?.warehouseId) {
       const address = get(pharmacyInfo, 'data.addressDelivery', get(pharmacyInfo, 'data.address', get(partner, 'address', [])));
       if (warehouseDefault?.length > 0) {

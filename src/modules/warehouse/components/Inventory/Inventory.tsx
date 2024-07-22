@@ -7,8 +7,7 @@ import useInventoryWarehouseStore, {
 } from "../../store/InventoryStore";
 type propsType = {};
 export default function InventoryScreen(props: propsType): React.JSX.Element {
-  const { listWarehouse, setActiveTab, activeTab, isLoading } =
-    useInventoryWarehouseStore();
+  const { listWarehouse, setActiveTab, activeTab, isLoading, onSearch} =useInventoryWarehouseStore();
   return isLoading ? (
     <div>Đang tải... <Spin/></div>
   ) : (
@@ -16,10 +15,15 @@ export default function InventoryScreen(props: propsType): React.JSX.Element {
       <Typography.Title level={3}>
         Danh sách sản phẩm cần nhập hàng theo kho
       </Typography.Title>
-      <WhiteBox>
+      <WhiteBox style={{height: 'unset'}}>
         <Tabs
           destroyInactiveTabPane
-          onChange={(key: any) => setActiveTab && setActiveTab(key)}
+            onChange={(key: any) => {
+              setActiveTab && setActiveTab(key);
+              onSearch &&  onSearch({
+                warehouseId: key
+              })
+          }}
           defaultActiveKey={activeTab}
         >
           {listWarehouse?.map((warehouse: any) => (
