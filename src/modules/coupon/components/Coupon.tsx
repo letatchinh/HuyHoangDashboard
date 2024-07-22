@@ -10,19 +10,21 @@ import { CouponInSelect } from "../coupon.modal";
 import ShowDate from "./ShowDate";
 type propsType = {
   coupon: CouponInSelect;
-  onAdd : (p?:any) => void;
-  onRemove : (p?:any) => void;
-  isChecked : boolean;
-  target : "BILL" | "BILL_ITEM",
+  onAdd? : (p?:any) => void;
+  onRemove? : (p?:any) => void;
+  isChecked? : boolean;
+  target? : "BILL" | "BILL_ITEM",
+  readOnly? : boolean
 };
-export default function Coupon({ coupon,onAdd,onRemove,isChecked,target }: propsType): React.JSX.Element {
+export default function Coupon({ coupon,onAdd,onRemove ,isChecked,target,readOnly = false }: propsType): React.JSX.Element {
     const {queryBillItem} = useCreateBillStore();
   const { applyFor, discount, startDate, endDate, conditionsTrue,name } = coupon;
   const onActionAdd = () => {
+    if(readOnly) return;
     if(target === "BILL"){
-      onAdd(coupon);
+      onAdd && onAdd(coupon);
     }else{
-      onAdd({...coupon,couponAtVariantId : queryBillItem?.variantId})
+      onAdd && onAdd({...coupon,couponAtVariantId : queryBillItem?.variantId})
     }
   }
   
@@ -51,9 +53,9 @@ export default function Coupon({ coupon,onAdd,onRemove,isChecked,target }: props
         
         <ShowDate endDate={endDate} startDate={startDate} />
       </div>
-      <div className="coupon--right">
-        <Checkbox checked={isChecked} onChange={(e) => e.target.checked ? onActionAdd() : onRemove(coupon?._id)}/>
-      </div>
+      {!readOnly && <div className="coupon--right">
+        <Checkbox checked={isChecked} onChange={(e) => e.target.checked ? onActionAdd() : (onRemove && onRemove(coupon?._id))}/>
+      </div>}
     </div>
   );
 }

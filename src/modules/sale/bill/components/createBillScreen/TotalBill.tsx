@@ -14,6 +14,7 @@ import useCreateBillStore from "../../storeContext/CreateBillContext";
 import SuggestAddress from "../SuggestAddress";
 import SelectDebt from "./SelectDebt";
 import { useGetInfoWarehouse } from "~/modules/warehouse/warehouse.hook";
+import CouponSelectedList from "../CouponSelectedList";
 type propsType = {};
 export const Layout = ({
   label,
@@ -74,8 +75,11 @@ export default function TotalBill(props: propsType): React.JSX.Element {
   } = useCreateBillStore();
   const [minFee, setMinFee] = useState<any>();
   const [openAddress, setOpenAddress] = useState(false);
+  const [openCouponSelected, setOpenCouponSelected] = useState(false);
   const onOpenAddress = useCallback(() => setOpenAddress(true), []);
   const onCloseAddress = useCallback(() => setOpenAddress(false), []);
+  const onOpenCouponSelected = useCallback(() => setOpenCouponSelected(true), []);
+  const onCloseCouponSelected = useCallback(() => setOpenCouponSelected(false), []);
   const debtType = Form.useWatch("debtType", form);
   const pair = Form.useWatch("pair", form) || 0;
   // const fee = Form.useWatch("fee", form);
@@ -126,6 +130,7 @@ export default function TotalBill(props: propsType): React.JSX.Element {
       });
     }
   }, [bill]); // Set value logistic fee
+  
   return (
     <Flex vertical gap={"small"}>
       <Layout label={"Số lượng mặt hàng"}>{formatter(totalQuantity)}</Layout>
@@ -395,7 +400,7 @@ export default function TotalBill(props: propsType): React.JSX.Element {
           marginBottom: 5,
         }}
       />
-      <Layout label={<span>Mã giảm giá <Tag color={'blue'}>{`Đã chọn ${get(couponSelected,'bill.length',0) + get(couponSelected,'ship.length',0)} mã`}</Tag></span>}>
+      <Layout label={<Typography.Link>Mã giảm giá <Tag onClick={onOpenCouponSelected} color={'blue'}>{`Đã chọn ${get(couponSelected,'bill.length',0) + get(couponSelected,'ship.length',0)} mã`}</Tag></Typography.Link>}>
         <Typography.Link 
         onClick={() => onOpenCoupon()} style={{ fontSize: 16, fontWeight: 600 }}>
           Chọn mã giảm giá
@@ -426,6 +431,18 @@ export default function TotalBill(props: propsType): React.JSX.Element {
       >
         <SuggestAddress onClose={onCloseAddress} />
         <AddressForm onSubmit={(values) => onChangeAddress(values)} />
+      </ModalAnt>
+
+      <ModalAnt
+        title={"Danh sách coupon đã chọn"}
+        width={'max-content'}
+        open={openCouponSelected}
+        onCancel={onCloseCouponSelected}
+        footer={null}
+        centered
+        style={{minWidth : 620}}
+      >
+        <CouponSelectedList />
       </ModalAnt>
     </Flex>
   );
