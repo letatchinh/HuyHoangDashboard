@@ -38,6 +38,7 @@ export const useOrderSupplierPaging = () => useSelector(pagingSelector);
 const updateOrderItemFailedSelector = getSelector('updateOrderItemFailed');
 const updateOrderItemSuccessSelector = getSelector('updateOrderItemSuccess');
 
+const isLoadingCreateBillInWarehouseSuccessSelector = getSelector('isLoadingCreateBillInWarehouse');
 const createBillInWarehouseSuccessSelector = getSelector('createBillInWarehouseSuccess');
 const createBillInWarehouseFailedSelector = getSelector('createBillInWarehouseFailed');
 
@@ -86,7 +87,7 @@ export const useCreateOrderInWarehouse = (callback?: any) => {
 
   return useSubmit({
     action: orderSupplierActions.createOrderInWarehouseRequest,
-    loadingSelector: isSubmitLoadingSelector,
+    loadingSelector: isLoadingCreateBillInWarehouseSuccessSelector,
   });
 };
 

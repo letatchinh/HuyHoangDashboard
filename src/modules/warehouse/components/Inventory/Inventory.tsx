@@ -30,6 +30,7 @@ export default function InventoryScreen(props: propsType): React.JSX.Element {
             <Tabs.TabPane
               tab={warehouse?.name?.vi}
               key={String(warehouse?._id)}
+              style={{width: '100%'}}
             >
               <ListProductInventory />
             </Tabs.TabPane>

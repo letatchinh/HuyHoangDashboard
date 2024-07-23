@@ -14,7 +14,9 @@ import {
   useSuccess,
 } from "~/utils/hook";
 import { warehouseActions } from "./redux/reducer";
-import { ItemProduct } from "./warehouse.modal";
+import { DataTypeSelected, ItemProduct } from "./warehouse.modal";
+import { ColumnsType } from "antd/es/table";
+import { TableColumnsType } from "antd";
 const MODULE = "warehouse";
 const MODULE_VI = "kho";
 
@@ -57,7 +59,13 @@ const listInventorySuccessSelector = getSelector('listInventory');
 const getInventoryFailedSelector = getSelector('getInventoryFailed'); 
 const isLoadingInventorySelector = getSelector('isLoadingInventory'); 
 const pagingInventorySelector = getSelector('listInventoryPaging');
+
+const listInventoryCreateSuccessSelector = getSelector('listInventoryCreate');
+const getInventoryCreateFailedSelector = getSelector('getInventoryCreateFailed'); 
+const isLoadingInventoryCreateSelector = getSelector('isLoadingInventoryCreate'); 
+const pagingInventoryCreateSelector = getSelector('listInventoryCreatePaging');
 export const usePagingInventory = ()=> useSelector(pagingInventorySelector);
+export const usePagingInventoryCreate = ()=> useSelector(pagingInventoryCreateSelector);
 
 export const useGetWarehouses = () => {
   return useFetch({
@@ -358,7 +366,8 @@ export const useInventoryWarehouseQueryParams = (id?:number | null) => {
   const limit = query.get("limit") || 10;
   const page = query.get("page") || 1;
   const keyword = query.get("keyword");
-  const warehouseId = id ?? query.get("keyword");
+  const warehouseId = id ?? query.get("warehouseId");
+  const supplierId = query.get("supplierId");
   const startDate = query.get("startDate") || null;
   const endDate = query.get("endDate") || null;
   return useMemo(() => {
@@ -369,10 +378,11 @@ export const useInventoryWarehouseQueryParams = (id?:number | null) => {
       warehouseId,
       startDate,
       endDate,
+      supplierId
     };
     return [queryParams];
     //eslint-disable-next-line
-  }, [page, limit, keyword,warehouseId, startDate, endDate]);
+  }, [page, limit, keyword,warehouseId, startDate, endDate,supplierId]);
 };
 
 export const useUpdateInventoryWarehouseParams = (
@@ -417,4 +427,56 @@ export const useGetInventory = (param?: any) => {
     failedSelector: getInventoryFailedSelector,
     param,
   });
+};
+export const useGetInventoryCreate = (param?: any) => {
+  return useFetchByParam({
+    action: warehouseActions.getInventoryInCreateRequest,
+    loadingSelector: isLoadingInventoryCreateSelector,
+    dataSelector: listInventoryCreateSuccessSelector,
+    failedSelector: getInventoryCreateFailedSelector,
+    param,
+  });
+};
+
+export const useColumns = (props: any) => {
+  const columns: ColumnsType = useMemo(
+    () => [
+      {
+        title: "Mã sản phẩm",
+        dataIndex: "codeBySupplier",
+        key: "codeBySupplier",
+        width: 50,
+        fixed: "left",
+      },
+      {
+        title: "Tên sản phẩm",
+        dataIndex: "name",
+        key: "name",
+        width: 100,
+      },
+      {
+        title: "Số lượng",
+        dataIndex: "variant",
+        key: "quantity",
+        width: 40,
+        render: (value: any) => value?.quantity,
+      },
+      {
+        title: "Đơn vị",
+        dataIndex: "variant",
+        key: "unit",
+        width: 50,
+        render: (value: any) => value?.unit?.name,
+      },
+      {
+        title: "Nhà cung cấp",
+        dataIndex: "supplierName",
+        key: "supplierName",
+        width: 50,
+        render: (value: any) => value
+      },
+    ],
+    [props]
+  );
+  return columns;
 };

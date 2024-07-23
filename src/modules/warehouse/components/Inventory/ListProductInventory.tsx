@@ -1,12 +1,15 @@
-import { Col, DatePicker, Form, Row, Table } from "antd";
+import { Button, Col, DatePicker, Form, Row, Table } from "antd";
 import React, { useMemo } from "react";
 import useInventoryWarehouseStore from "../../store/InventoryStore";
-import {usePagingInventory } from "../../warehouse.hook";
+import {useColumns, usePagingInventory } from "../../warehouse.hook";
 import TableAnt from "~/components/Antd/TableAnt";
 import { pagingTable } from "~/utils/helpers";
 import Search from "antd/es/input/Search";
 import SearchAnt from "~/components/Antd/SearchAnt";
 import dayjs from "dayjs";
+import { ColumnsType } from "antd/es/table";
+import WithPermission from "~/components/common/WithPermission";
+import POLICIES from "~/modules/policy/policy.auth";
 type propsType = {};
 export default function ListProductInventory(
   props: propsType
@@ -19,45 +22,22 @@ export default function ListProductInventory(
     keyword,
     setKeyword,
     onSearch,
+    onOpen
   } = useInventoryWarehouseStore();
   const paging = usePagingInventory();
-  const columns = useMemo(
-    () => [
-      {
-        title: "Mã sản phẩm",
-        dataIndex: "codeBySupplier",
-        key: "codeBySupplier",
-        width: 80,
-      },
-      {
-        title: "Tên sản phẩm",
-        dataIndex: "name",
-        key: "name",
-        width: 200,
-      },
-      {
-        title: "Số lượng",
-        dataIndex: "quantity",
-        key: "quantity",
-        width: 40,
-      },
-      {
-        title: "Đơn vị",
-        dataIndex: "variant",
-        key: "unit",
-        width: 100,
-        render: (value: any) => value?.unit?.name,
-      },
-    ],
-    [activeTab]
-  );
+  const columns = useColumns({ activeTab, data });
   return (
     <>
+      <WithPermission permission={POLICIES.WRITE_ORDERSUPPLIER}>
+      <Row gutter={12} justify={"end"} className="mb-1" style={{width: "100%"}}>
+          <Button type="primary" onClick={onOpen}>Tạo đơn mua</Button>
+      </Row>
+      </WithPermission>
       <Row justify={"start"} gutter={12}>
         <Col span={6}>
           <Form.Item name={"keyword"}>
             <SearchAnt
-              style={{ alignSelf: "center" }}
+              style={{ alignSelf: "center" , width: "90%"}}
               value={keyword}
               onChange={(e) => setKeyword(e.target.value)}
               onParamChange={onParamChange}
@@ -86,10 +66,12 @@ export default function ListProductInventory(
       </Row>
       <TableAnt
         columns={columns}
+        rowKey={rc => rc?._id}
         dataSource={data || []}
         pagination={pagingTable(paging, onParamChange)}
         loading={loading}
         size="small"
+        scroll={{ x: 1000, y: 500 }}
       />
     </>
   );

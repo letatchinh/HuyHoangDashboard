@@ -1,7 +1,8 @@
-import { get } from "lodash";
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
-import { useDispatch } from "react-redux";
+import { createContext, useContext, useEffect, useState } from "react";
+import ModalAnt from "~/components/Antd/ModalAnt";
+import CreateOrderSupplierForm from "../components/Inventory/CreateOrderSupplierForm";
 import { useGetInventory, useGetWarehouseByBranchLinked, useInventoryWarehouseQueryParams, useUpdateInventoryWarehouseParams } from "../warehouse.hook";
+import { DataTypeSelected } from "../warehouse.modal";
 
 type propsInventoryWarehouse = {
   children: React.ReactNode;
@@ -17,6 +18,8 @@ export type GlobalInventoryWarehouse = {
   onSearch: (param: any) => void;
   keyword: string;
   setKeyword: (param: any) => void;
+  onOpen: () => void;
+  onClose: () => void;
 };
 const InventoryWarehouse = createContext<GlobalInventoryWarehouse>({
   listWarehouse: [],
@@ -29,6 +32,8 @@ const InventoryWarehouse = createContext<GlobalInventoryWarehouse>({
   onSearch: () => { },
   keyword: '',
   setKeyword: () => { },  
+  onOpen: () => { },
+  onClose: () => { },
 });
 
 export function InventoryWarehouseProvider({
@@ -60,6 +65,7 @@ export function InventoryWarehouseProvider({
       ...value
     });
   };
+
   
   return (
     <InventoryWarehouse.Provider
@@ -74,9 +80,22 @@ export function InventoryWarehouseProvider({
         onSearch,
         keyword,
         setKeyword,
+        onOpen,
+        onClose,
       }}
     >
       {children}
+      <ModalAnt
+        title='Tạo phiếu mua hàng'
+        open={isOpen}
+        onCancel={onClose}
+        onOk={onClose}
+        footer={false}
+        width={1300}
+        destroyOnClose
+      >
+        <CreateOrderSupplierForm/>
+      </ModalAnt>
     </InventoryWarehouse.Provider>
   );
 }

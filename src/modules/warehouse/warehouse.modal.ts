@@ -31,3 +31,13 @@ export interface InventoryQuery {
   startTime?: Date;
   endTime?: Date;
 }
+
+export interface DataTypeSelected {
+  key: string;
+  title: string;
+  dataIndex: string;
+  width?: string | number;
+  align?: string;
+  render?: (value: any) => React.ReactNode;
+  fixed?: string;
+};
