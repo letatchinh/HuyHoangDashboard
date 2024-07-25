@@ -392,8 +392,9 @@ export function CreateBillProvider({
   );
   const totalWeight = useMemo(() => bill?.quotationItems?.length > 1 ? bill?.quotationItems?.reduce((sum: any, cur: any) => {
     return sum?.variant?.weight + get(cur, "variant.weight", 0)
-  }) : get(bill?.quotationItems[0]?.variant, 'weight'), [bill]);
+  }) : get(bill?.quotationItems?.[0]?.variant, 'weight'), [bill]);
   // Initalize Data And Calculate Discount
+
   useEffect(() => {
     const initDebt = debt?.find(
       (debt: DebtType) => get(debt, "key") === DEFAULT_DEBT_TYPE
@@ -415,17 +416,6 @@ export function CreateBillProvider({
       setQuotationItems(newQuotationItems);
     }
   }, [bill, debt, form, totalPrice]);
-
-  // useEffect(() => {
-  //   if(bill?.quotationItems?.length > 0){
-  //     const totalWeight = bill?.quotationItems?.reduce((sum: any, cur: any) => {
-  //       return sum?.variant?.weight + get(cur, "variant.weight", 0)
-  //     });
-  //     // form.setFieldsValue({
-        
-  //     // })
-  //   };
-  // },[bill])
 
   // Init warehouse
 
