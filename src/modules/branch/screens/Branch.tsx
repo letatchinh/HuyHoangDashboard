@@ -49,7 +49,7 @@ export default function BranchScreen() {
       width: 180,
       render: (value, record) => {
         const id = record?._id;
-        return <StatusTagWarehouse status={getListWarehouse(id) ? STATUS_LINK_WAREHOUSE_EN.LINKED : STATUS_LINK_WAREHOUSE_EN.NOT_LINKED } />
+        return <StatusTagWarehouse status={getListWarehouse(id)?.length ? STATUS_LINK_WAREHOUSE_EN.LINKED : STATUS_LINK_WAREHOUSE_EN.NOT_LINKED } />
       },
     },
     {
