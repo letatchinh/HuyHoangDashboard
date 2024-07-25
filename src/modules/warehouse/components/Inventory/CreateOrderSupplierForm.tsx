@@ -18,10 +18,9 @@ type propsType = {};
 export default function CreateOrderSupplierForm(
   props: propsType
 ): React.JSX.Element {
-  const {activeTab ,listWarehouse,onClose} =
+  const {activeTab ,listWarehouse,onClose,supplierId,setSupplierId} =
     useInventoryWarehouseStore();
     const [dataSelected, setDataSelected] = useState<any[]>([]);
-  const [supplierId, setSupplierId] = useState<string | null>(null);
   const [page, setPage] = useState<number | null>(1);
   const [limit, setLimit] = useState<number | null>(10);
   const query = useMemo(
@@ -39,12 +38,12 @@ export default function CreateOrderSupplierForm(
   const [newData, setNewData] = useState<any[]>([]);
   const [selectedRowKeys, setSelectedRowKeys] = useState<any[]>([]);
   useEffect(() => {
-    if (data?.length > 0) {
+    if (data) {
       const res = data?.map((item: any, index: number) => ({
         ...item,
         key: (item?._id)?.concat(item?.variant?.variantCode),
       }));
-      setNewData(res);
+      setNewData(res || []);
     }
   }, [data]);
 
@@ -108,7 +107,12 @@ export default function CreateOrderSupplierForm(
         <Col span={8}>
           <SelectSupplier
             style={{ width: "100%" , marginBottom : 10}}
-            onChange={(e: any) => setSupplierId(e)}
+            onChange={(e: any) => {
+              setSupplierId(e);
+              setSelectedRowKeys([]);
+              setDataSelected([]);
+            }}
+            value={supplierId}
           />
         </Col>
       </Row>

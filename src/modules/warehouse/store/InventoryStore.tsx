@@ -20,6 +20,8 @@ export type GlobalInventoryWarehouse = {
   setKeyword: (param: any) => void;
   onOpen: () => void;
   onClose: () => void;
+  setSupplierId: (param: any) => void;
+  supplierId: any;
 };
 const InventoryWarehouse = createContext<GlobalInventoryWarehouse>({
   listWarehouse: [],
@@ -34,6 +36,8 @@ const InventoryWarehouse = createContext<GlobalInventoryWarehouse>({
   setKeyword: () => { },  
   onOpen: () => { },
   onClose: () => { },
+  setSupplierId: () => { },
+  supplierId: undefined,
 });
 
 export function InventoryWarehouseProvider({
@@ -45,6 +49,8 @@ export function InventoryWarehouseProvider({
   const [query] = useInventoryWarehouseQueryParams(activeTab ? Number(activeTab) : null);
   const [keyword, { setKeyword, onParamChange }] = useUpdateInventoryWarehouseParams(activeTab && query);
   const [data, loading] = useGetInventory(activeTab && query);
+  const [supplierId, setSupplierId] = useState<string | null>(null);
+
   useEffect(() => {
     if (listWarehouse?.length) {
       setActiveTab(parseFloat(listWarehouse[0]?._id))
@@ -82,6 +88,8 @@ export function InventoryWarehouseProvider({
         setKeyword,
         onOpen,
         onClose,
+        supplierId,
+        setSupplierId
       }}
     >
       {children}

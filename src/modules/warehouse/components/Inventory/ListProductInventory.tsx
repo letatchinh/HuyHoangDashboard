@@ -22,7 +22,8 @@ export default function ListProductInventory(
     keyword,
     setKeyword,
     onSearch,
-    onOpen
+    onOpen,
+    setSupplierId,
   } = useInventoryWarehouseStore();
   const paging = usePagingInventory();
   const columns = useColumns({ activeTab, data });
@@ -30,7 +31,7 @@ export default function ListProductInventory(
     <>
       <WithPermission permission={POLICIES.WRITE_ORDERSUPPLIER}>
       <Row gutter={12} justify={"end"} className="mb-1" style={{width: "100%"}}>
-          <Button type="primary" onClick={onOpen}>Tạo đơn mua</Button>
+          <Button type="primary" onClick={onOpen} loading = {loading}>Tạo đơn mua</Button>
       </Row>
       </WithPermission>
       <Row justify={"start"} gutter={12}>
