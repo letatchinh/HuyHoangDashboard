@@ -81,13 +81,16 @@ export default function CreateOrderSupplierForm(
       let newDataSource = {
         [newKey]: {
           typeTab : "createOrderSupplier",
-          orderSupplierItems: dataSelected?.map((item: any) => ({
-            ...item,
-            quantity: item?.variant?.quantity,
-            quantityActual: get(item?.variant,'quantity',1) * get(item?.variant,'exchangeValue',1),
-            unitPrice: get(item?.variant, "cost", 0),
-            productId: item?._id,
-          })),
+          orderSupplierItems: dataSelected?.map((item: any) => {
+            const findVariantRoot = item?.variants?.find((v: any) => v?.variantIsDefault);
+            return {
+              ...item,
+              quantity: item?.variant?.quantity,
+              quantityActual: get(item?.variant, 'quantity', 1) * get(findVariantRoot, 'exchangeValue', 1),
+              unitPrice: get(item?.variant, "cost", 0),
+              productId: item?._id,
+            }
+          }),
           warehouseId: activeTab,
           warehouseName,
           supplierId: supplierId,
