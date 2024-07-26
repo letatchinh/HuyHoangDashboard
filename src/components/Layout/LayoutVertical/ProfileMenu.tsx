@@ -3,6 +3,7 @@ import { Avatar, Dropdown, Modal, Typography } from "antd";
 import { get } from "lodash";
 import React, { useEffect, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import ModalProfile from "~/components/common/TopBarDropDown/ModalProfile";
 import AuthModule from "~/modules/auth";
 import { authActions } from "~/modules/auth/redux/reducer";
@@ -21,7 +22,8 @@ const LayoutItem = ({icon,title,onClick}:LayoutItemProps) => <div className="d-f
 </div>
 
 export default function ProfileMenu(props: propsType): React.JSX.Element {
-  const [,onLogout] = AuthModule.hook.useLogout();
+  const navigator = useNavigate()
+  const [,onLogout] = AuthModule.hook.useLogout(()=>navigator('/login',{replace:true}));
   const profile = AuthModule.hook.useGetProfile();
   const dispatch = useDispatch();
   useEffect(() => {;
