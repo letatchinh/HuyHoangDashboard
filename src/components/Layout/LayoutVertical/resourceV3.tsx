@@ -546,7 +546,7 @@ export const resource: ItemType[] = [
 
   {
     label: "Mã giảm giá",
-    icon: <i className="fa-solid fa-boxes-packing"></i>,
+    icon: <i className="fa-solid fa-ticket-simple"></i>,
     key: "coupon",
     permission: [POLICIES.READ_COUPON],//
     children: [
