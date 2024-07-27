@@ -349,7 +349,7 @@ export const reducerDiscountQuotationItems = (quotationItems: any[],couponSelect
       // Calculate Coupon For Item 
       const couponsInItem = cp?.map((item : CouponInSelect) => {
         const {type,value,maxDiscount} = item?.discount;
-        const totalCouponItem = getValueOfMath(get(quotation, "variant.price", 1),value,type,maxDiscount) * quantityActual;
+        const totalCouponItem = getValueOfMath(get(quotation, "variant.price", 1),value,type,maxDiscount);
         const minPrice = totalRoot * MIN_TOTAL_DISCOUNT_PERCENT / 100;
         const maxDiscountCoupon = totalRoot - minPrice;
 
