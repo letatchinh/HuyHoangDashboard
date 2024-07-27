@@ -7,7 +7,6 @@ import {
   TrophyOutlined,
   ApartmentOutlined,
   BellFilled,
-  FieldTimeOutlined,
 } from "@ant-design/icons";
 import React from "react";
 import { PATH_APP } from "~/routes/allPath";
@@ -188,13 +187,13 @@ export const resource: ItemType[] = [
             key: PATH_APP.saleChannel.root,
             permission: [POLICIES.READ_SALESCHANNEL],
           },
-          {
-            label: "Cấu hình thời gian tự động",
-            path: PATH_APP.configurationCronTime.root,
-            key: PATH_APP.configurationCronTime.root,
-            icon: <FieldTimeOutlined />,
-            permission: [POLICIES.READ_CONFIGCRONTIME],
-          },
+          // {
+          //   label: "Cấu hình thời gian tự động",
+          //   path: PATH_APP.configurationCronTime.root,
+          //   key: PATH_APP.configurationCronTime.root,
+          //   icon: <FieldTimeOutlined />,
+          //   permission: [POLICIES.READ_CONFIGCRONTIME],
+          // },
           {
             label: "Loại khách hàng",
             path: PATH_APP.typePharmacy.root,
