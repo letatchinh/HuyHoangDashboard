@@ -45,36 +45,38 @@ export default function Coupon(props: propsType): React.JSX.Element {
       title: "Mã",
       dataIndex: "giftCode",
       key: "giftCode",
+      width : 100,
+      fixed : 'left',
       render: (value,rc) => canUpdate ? <Typography.Link  onClick={() => onOpen(rc?._id)}>{value}</Typography.Link> : <Typography.Text>{value}</Typography.Text>,
     },
     {
       title: "Tên mã",
       dataIndex: "name",
       key: "name",
+      width : 300,
     },
     {
       title: "Giá trị giảm",
       dataIndex: "discount",
       key: "discount",
       align : 'center',
+      width : 100,
       render : (discount : any) => getTextOfDiscount(get(discount,'value'),get(discount,'type'))
     },
     {
       title: "Trạng thái",
       dataIndex: "state",
       key: "state",
+      width : 100,
       render : (state : "PUBLIC" | "PRIVATE") => STATE_VI[state]
     },
-    {
-      title: "Mô tả",
-      dataIndex: "description",
-      key: "description",
-    },
+  
     {
       title: "Ngày hiệu lực",
       dataIndex: "startDate",
       key: "startDate",
       align: "center",
+      width : 200,
       render: (value, rc) =>
         !rc?.startDate && !rc?.endDate ? (
           <span>Vô thời hạn</span>
@@ -99,12 +101,34 @@ export default function Coupon(props: propsType): React.JSX.Element {
         ),
     },
     {
+      title: "Số lượng",
+      dataIndex: "limit",
+      key: "limit",
+      width : 120,
+      align : 'center',
+      render : (limit) => limit ?? "Không giới hạn"
+    },
+    {
+      title: "Đã sử dụng",
+      dataIndex: "usageCount",
+      key: "usageCount",
+      width : 100,
+      align : 'center',
+    },
+    {
+      title: "Mô tả",
+      dataIndex: "description",
+      key: "description",
+    },
+    {
       title: "Thao tác",
       key: "action",
       dataIndex: "_id",
       width: 100,
+      align : 'center',
+      fixed : 'right',
       render: (_id, rc) => (
-        <Flex align={"center"} gap={5}>
+        <Flex justify={'center'} align={"center"} gap={5}>
           <WithPermission permission={POLICIES.UPDATE_COUPON}>
           <Typography.Link onClick={() => onOpen(_id)}>Sửa</Typography.Link>
             </WithPermission>|
@@ -120,6 +144,7 @@ export default function Coupon(props: propsType): React.JSX.Element {
         </Flex>
       ),
     },
+  
   ];
   return (
     <div>
@@ -135,7 +160,8 @@ export default function Coupon(props: propsType): React.JSX.Element {
       <TableAnt
         columns={columns}
         dataSource={dataSource}
-        scroll={{ x: "auto" }}
+        scroll={{ x: 1500 }}
+        stickyTop
         pagination={{
           ...paging,
           onChange(page, pageSize) {
