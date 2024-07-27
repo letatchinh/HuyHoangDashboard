@@ -167,7 +167,7 @@ export default function SaleScreen(props: propsType): React.JSX.Element {
               <Col span={14}>
                 <Button
                   block
-                  disabled={!quotationItems?.length}
+                  disabled={!quotationItems?.length || !totalAmount  || !totalPriceAfterDiscount}
                   className="form-create-bill--payment__actions__btnPayment"
                   type="primary"
                   loading={isSubmitLoading}
