@@ -48,7 +48,7 @@ export const auth = createSlice({
             state.isLoading = false;
         },
         logoutRequest: async(_,{ payload } ) => {
-            // unSubscribeToken();
+            unSubscribeToken();
             removeAxiosToken();
             let { callbackSubmit } = payload
             callbackSubmit&& callbackSubmit()
