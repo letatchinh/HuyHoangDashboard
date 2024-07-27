@@ -41,9 +41,6 @@ export default function SelectCoupon(props:propsType) : React.JSX.Element {
     }),[coupons]);
 
     const onAdd = (newCoupon:CouponInSelect) => {
-        console.log(newCoupon,'newCoupon');
-        console.log(selected,'selected');
-        
         const listDiffApplyFor = selected?.filter((item) => item?.applyFor !== newCoupon?.applyFor);
         const listSameApplyFor = [...selected?.filter((item) => item?.applyFor === newCoupon?.applyFor),newCoupon];
         if(newCoupon?.multiple){

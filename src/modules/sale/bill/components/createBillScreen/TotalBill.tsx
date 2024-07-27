@@ -133,7 +133,8 @@ export default function TotalBill(props: propsType): React.JSX.Element {
   
   return (
     <Flex vertical gap={"small"}>
-      <Layout label={"Số lượng mặt hàng"}>{formatter(totalQuantity)}</Layout>
+    <Flex className="billValue" vertical gap={"small"}>
+    <Layout label={"Số lượng mặt hàng"}>{formatter(totalQuantity)}</Layout>
       <Layout label={"Tổng tiền"}>{formatter(totalPrice)}</Layout>
       <Layout label={"Giảm giá"}>-{formatter(totalDiscountCouponBill)}</Layout>
       <Layout label={"Giảm giá mặt hàng"}>-{formatter(totalCouponForItem)}</Layout>
@@ -194,6 +195,7 @@ export default function TotalBill(props: propsType): React.JSX.Element {
           {formatter(totalAmount - totalDiscountCouponBill)}
         </Typography.Text>
       </Layout>
+    </Flex>
       <SelectDebt />
       {debtType === "DEPOSIT" && (
         <Layout label={"Khách trả trước"}>

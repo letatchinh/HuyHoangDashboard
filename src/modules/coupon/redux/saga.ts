@@ -53,6 +53,16 @@ function* deleteCoupon({payload : id} : any) : any {
     yield put(couponActions.deleteFailed(error));
   }
 }
+function* copyCoupon({payload : id} : any) : any {
+  try {
+    const data = yield call(api.copy,id);
+    yield put(couponActions.copySuccess(data));
+    yield delay(500);
+    yield put(couponActions.clearAction());
+  } catch (error:any) {
+    yield put(couponActions.copyFailed(error));
+  }
+}
 
 
 export default function* couponSaga() {
@@ -61,4 +71,5 @@ export default function* couponSaga() {
   yield takeLatest(couponActions.createRequest, createCoupon);
   yield takeLatest(couponActions.updateRequest, updateCoupon);
   yield takeLatest(couponActions.deleteRequest, deleteCoupon);
+  yield takeLatest(couponActions.copyRequest, copyCoupon);
 }

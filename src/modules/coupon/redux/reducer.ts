@@ -2,6 +2,8 @@ import { createSlice } from "@reduxjs/toolkit";
 import { InstanceModuleRedux } from "~/redux/instanceModuleRedux";
 import { initStateSlice } from "~/redux/models";
 interface cloneInitState extends initStateSlice {
+  copySuccess? : any,
+  copyFailed? : any
  // Add cloneInitState Type Here
 }
 class CouponClassExtend extends InstanceModuleRedux {
@@ -11,10 +13,25 @@ class CouponClassExtend extends InstanceModuleRedux {
     super('coupon');
     this.cloneReducer = {
       ...this.initReducer,
+      copyRequest: (state: cloneInitState, { payload }: any) => {
+        state.isSubmitLoading = true;
+        state.copyFailed = null;
+       },
+      copySuccess: (state: cloneInitState, { payload }: any) => {
+        state.isSubmitLoading = false;
+        state.copySuccess = payload;
+       },
+      copyFailed: (state: cloneInitState, { payload }: any) => {
+        state.isSubmitLoading = false;
+        state.copyFailed = payload;
+       },
+      
       // Want Add more reducer Here...
     }
     this.cloneInitState = {
       ...this.initialState,
+      copySuccess : null,
+      copyFailed : null,
       // Want Add more State Here...
     }
   }

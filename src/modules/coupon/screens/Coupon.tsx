@@ -16,6 +16,7 @@ import { getTextOfDiscount, getValueOfMath } from "~/utils/helpers";
 import CouponForm from "../components/CouponForm";
 import { STATE_VI } from "../constants";
 import {
+  useCopyCoupon,
   useCouponPaging,
   useCouponQueryParams,
   useDeleteCoupon,
@@ -31,6 +32,7 @@ export default function Coupon(props: propsType): React.JSX.Element {
   const canUpdate = useMatchPolicy(POLICIES.UPDATE_COUPON);
   const paging = useCouponPaging();
   const [isSubmitLoading, onDelete] = useDeleteCoupon();
+  const [, onCopy] = useCopyCoupon();
   const [id, setId] = useState<any>();
   const onOpen = useCallback((i?: any) => {
     if (i) setId(i);
@@ -124,11 +126,14 @@ export default function Coupon(props: propsType): React.JSX.Element {
       title: "Thao tác",
       key: "action",
       dataIndex: "_id",
-      width: 100,
+      width: 170,
       align : 'center',
       fixed : 'right',
       render: (_id, rc) => (
         <Flex justify={'center'} align={"center"} gap={5}>
+          <WithPermission permission={POLICIES.WRITE_COUPON}>
+          <Typography.Link onClick={() => onCopy(_id)}>Sao chép</Typography.Link>
+            </WithPermission>|
           <WithPermission permission={POLICIES.UPDATE_COUPON}>
           <Typography.Link onClick={() => onOpen(_id)}>Sửa</Typography.Link>
             </WithPermission>|

@@ -19,6 +19,7 @@ import apis from "./coupon.api";
 import { CouponInSelect, QuerySearchCoupon } from "./coupon.modal";
 const MODULE = "coupon";
 const MODULE_VI = "";
+const getSelector = (key : any) => (state : any) => state[MODULE][key];
 
 const {
   loadingSelector,
@@ -37,6 +38,8 @@ const {
   pagingSelector,
 } = getSelectors(MODULE);
 
+const copySuccessSelector = getSelector('copySuccess')
+const copyFailedSelector = getSelector('copyFailed')
 export const useCouponPaging = () => useSelector(pagingSelector);
 
 export const useGetCoupons = (param:any) => {
@@ -96,6 +99,16 @@ export const useDeleteCoupon = (callback?: any) => {
   });
 };
 
+export const useCopyCoupon = (callback?: any) => {
+  useSuccess(copySuccessSelector, `Xoá ${MODULE_VI} thành công`, callback);
+  useFailed(copyFailedSelector);
+
+  return useSubmit({
+    action: couponActions.copyRequest,
+    loadingSelector: isSubmitLoadingSelector,
+  });
+};
+
 export const useCouponQueryParams = () => {
   const query = useQueryParams();
   const limit = query.get("limit") || 10;
@@ -103,6 +116,7 @@ export const useCouponQueryParams = () => {
   const keyword = query.get("keyword");
   const createSuccess = useSelector(createSuccessSelector);
   const deleteSuccess = useSelector(deleteSuccessSelector);
+  const copySuccess = useSelector(copySuccessSelector);
   return useMemo(() => {
     const queryParams = {
       page,
@@ -111,7 +125,7 @@ export const useCouponQueryParams = () => {
     };
     return [queryParams];
     //eslint-disable-next-line
-  }, [page, limit, keyword, createSuccess, deleteSuccess]);
+  }, [page, limit, keyword, createSuccess, deleteSuccess,copySuccess]);
 };
 
 export const useUpdateCouponParams = (

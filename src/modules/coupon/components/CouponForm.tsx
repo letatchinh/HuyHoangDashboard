@@ -18,6 +18,7 @@ import { get } from "lodash";
 import React, { useEffect, useState } from "react";
 import InputNumberAnt from "~/components/Antd/InputNumberAnt";
 import BaseBorderBox from "~/components/common/BaseBorderBox/index";
+import Loading from "~/components/common/Loading/index";
 import { requireRules, requireRulesCustom } from "~/constants/defaultValue";
 import { useFailedAnt } from "~/utils/hook";
 import { ErrorAntBase } from "~/utils/Modal";
@@ -62,7 +63,6 @@ export default function CouponForm({
     const valueChange = change[keyChange];
     if (keyChange === "target") {
       if (valueChange === "BILL") {
-        console.log(valueChange, "valueChange");
 
         form.setFieldsValue({
           targetIds: null,
@@ -83,6 +83,13 @@ export default function CouponForm({
       if(valueChange === 'BILL_ITEM'){
         form.setFieldsValue({
           applyFor: "BILL"
+        })
+      }
+    }
+    if(keyChange === 'applyFor'){
+      if(valueChange === 'BILL'){
+        form.setFieldsValue({
+          isFreeShip: false
         })
       }
     }
@@ -111,6 +118,7 @@ export default function CouponForm({
       initialValues={DEFAULT_COUPON}
       onFinishFailed={onFinishFailed}
     >
+      {loading && <Loading loading/>}
       <ErrorComponent />
       <Tabs type="card">
         <Tabs.TabPane key={"1"} tab="Thông tin">
@@ -135,7 +143,7 @@ export default function CouponForm({
               </Form.Item>
             </Col>
           </Row>
-
+    <Row gutter={8}></Row>
           <Row gutter={8}>
             <Col span={12}>
               <Form.Item
@@ -145,6 +153,11 @@ export default function CouponForm({
                 rules={[
                   ({}) => ({
                     validator(_, value) {
+                      if(!value) {
+                        return Promise.reject(
+                          new Error("Vui lòng nhập giá trị giảm")
+                        ); 
+                      }
                       if (typeDiscount === "PERCENT" && value > 100) {
                         return Promise.reject(
                           new Error("Phần trăm phải bé hơn 100%!")
@@ -153,6 +166,7 @@ export default function CouponForm({
                       return Promise.resolve();
                     },
                   }),
+                  ...requireRules
                 ]}
               >
                 <InputNumberAnt
@@ -183,7 +197,21 @@ export default function CouponForm({
               </Form.Item>
             </Col>
           </Row>
-
+          
+        <Form.Item shouldUpdate noStyle>
+          {({getFieldValue}) => getFieldValue('applyFor') === "SHIP" &&  <Row gutter={8}>
+            <Col span={12}>
+              <Form.Item
+                valuePropName="checked"
+                name={"isFreeShip"}
+                label="Miễn phí ship"
+              >
+                <Checkbox />
+              </Form.Item>
+            </Col>
+          </Row>}
+        </Form.Item>
+          
           <Row gutter={8}>
             <Col span={12}>
               <Form.Item name={"limit"} label="Số lượng">
@@ -335,8 +363,8 @@ export default function CouponForm({
                 label="Mã dành cho"
               >
                 <Radio.Group>
-                  <Radio.Button value={"BILL"}>Đơn hàng</Radio.Button>
-                  <Radio.Button value={"BILL_ITEM"}>Mặt hàng</Radio.Button>
+                  <Radio value={"BILL"}>Đơn hàng</Radio>
+                  <Radio value={"BILL_ITEM"}>Mặt hàng</Radio>
                 </Radio.Group>
               </Form.Item>
             </Col>

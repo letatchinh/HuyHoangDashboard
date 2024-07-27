@@ -31,7 +31,11 @@ export default function SelectCouponBillItem(props:propsType) : React.JSX.Elemen
     }),[couponsBillItem]);
 
     const onAdd = (newCoupon:CouponInSelect) => {
+        if(newCoupon?.multiple){
           setSelected([...selected,{...newCoupon,couponAtVariantId : queryBillItem.variantId}]?.filter((item) => item?.multiple === newCoupon?.multiple));
+        }else{
+          setSelected([{...newCoupon,couponAtVariantId : queryBillItem.variantId}]);
+        }
     };
     
     const onRemove = (removeId:string) => {
