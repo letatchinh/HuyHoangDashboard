@@ -45,7 +45,7 @@ export default function Coupon({ coupon,onAdd,onRemove ,isChecked,target,readOnl
             {name}
         </Typography.Text>
         <span className="coupon--middle__discountValue">
-          Giảm {getTextOfDiscount(discount?.value, discount?.type)} {discount?.maxDiscount ? `Giảm tối đa ${formatter(discount?.maxDiscount || 0)}` : ""}
+          {coupon?.isFreeShip ? "Miễn phí vận chuyển  " :`Giảm ${getTextOfDiscount(discount?.value, discount?.type)} ${discount?.maxDiscount ? `Giảm tối đa ${formatter(discount?.maxDiscount || 0)}` : ""}`}
         </span>
         <span className="coupon--middle__condition">
             {conditionsTrue?.map((item) => `${defaultConditions[item.key].vi} ${formatter(get(item,['value',item.key,'value'],''))}, `)}

@@ -52,6 +52,7 @@ export interface CouponBase {
     multiple?: boolean,
     slugName?: string,
     disabledCondition? : boolean,
+    isFreeShip?:boolean,
 
 
 };

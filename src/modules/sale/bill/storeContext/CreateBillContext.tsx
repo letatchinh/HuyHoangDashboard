@@ -25,7 +25,7 @@ import {
   useGetWarehouseByBranchLinked
 } from "~/modules/warehouse/warehouse.hook";
 import useNotificationStore from "~/store/NotificationContext";
-import { getValueOfMath, getValueOfPercent } from "~/utils/helpers";
+import { getValueOfMath, getValueOfMathShip, getValueOfPercent } from "~/utils/helpers";
 import { DEFAULT_DEBT_TYPE } from "../../quotation/constants";
 import { useCheckRefCollection, useGetDebtRule } from "../bill.hook";
 import { DebtType, DetailCoupon, FeeType, quotation } from "../bill.modal";
@@ -400,8 +400,8 @@ export function CreateBillProvider({
 
   const totalDiscountCouponShip = useMemo(() => {
     const totalDiscount = couponSelected?.ship.reduce((sum: number, cur: CouponInSelect) => {
-      const {type,value,maxDiscount} = cur?.discount;
-      return sum + getValueOfMath(findLogisticInFee,value,type,maxDiscount)
+      const {type,value,maxDiscount} = cur?.discount || {};
+      return sum + getValueOfMathShip(cur?.isFreeShip || false,findLogisticInFee,value,type,maxDiscount)
     },0);
     return Math.min(totalDiscount,findLogisticInFee);    
       

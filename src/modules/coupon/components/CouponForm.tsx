@@ -48,14 +48,18 @@ export default function CouponForm({
   const [, update] = useUpdateCoupon(onCancel);
   const onFinish = (values: any) => {
     console.log(values, "values");
-
+    const {isFreeShip} = values;
+    const submitData = {
+      ...values,
+      ...isFreeShip && {discount : null}
+    }
     if (id) {
       update({
         _id: id,
-        ...values,
+        ...submitData,
       });
     } else {
-      create(values);
+      create(submitData);
     }
   };
   const onValuesChange = (change: any) => {
@@ -90,6 +94,13 @@ export default function CouponForm({
       if(valueChange === 'BILL'){
         form.setFieldsValue({
           isFreeShip: false
+        })
+      }
+    }
+    if(keyChange === 'isFreeShip'){
+      if(valueChange){
+        form.setFieldsValue({
+          discount: null
         })
       }
     }
@@ -143,8 +154,8 @@ export default function CouponForm({
               </Form.Item>
             </Col>
           </Row>
-    <Row gutter={8}></Row>
-          <Row gutter={8}>
+        <Form.Item shouldUpdate noStyle>
+          {({getFieldValue}) => !getFieldValue('isFreeShip') && <Row gutter={8}>
             <Col span={12}>
               <Form.Item
                 className="noWrap"
@@ -166,7 +177,6 @@ export default function CouponForm({
                       return Promise.resolve();
                     },
                   }),
-                  ...requireRules
                 ]}
               >
                 <InputNumberAnt
@@ -196,7 +206,8 @@ export default function CouponForm({
                 <InputNumberAnt />
               </Form.Item>
             </Col>
-          </Row>
+          </Row>}
+        </Form.Item>
           
         <Form.Item shouldUpdate noStyle>
           {({getFieldValue}) => getFieldValue('applyFor') === "SHIP" &&  <Row gutter={8}>
@@ -227,7 +238,7 @@ export default function CouponForm({
                 rules={requireRules}
                 name={"applyFor"}
                 label="Mã dùng để"
-                tooltip={getFieldValue("target") === "BILL_ITEM" && "Mặt hàng không có Free Ship"}
+                tooltip={getFieldValue("target") === "BILL_ITEM" && "Nếu muốn đổi sang Free Ship vui lòng đổi đối tượng áp dụng mã sang Đơn hàng ở Tab đối tượng áp dụng mã"}
               >
                 <Radio.Group disabled={getFieldValue("target") === "BILL_ITEM"}>
                   <Radio.Button value={"BILL"}>Đơn hàng</Radio.Button>

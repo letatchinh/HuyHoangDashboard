@@ -12,7 +12,7 @@ import Breadcrumb from "~/components/common/Breadcrumb";
 import WithPermission from "~/components/common/WithPermission";
 import POLICIES from "~/modules/policy/policy.auth";
 import { useMatchPolicy } from "~/modules/policy/policy.hook";
-import { getTextOfDiscount, getValueOfMath } from "~/utils/helpers";
+import { getTextOfDiscount, getTextOfDiscountShip, getValueOfMath } from "~/utils/helpers";
 import CouponForm from "../components/CouponForm";
 import { STATE_VI } from "../constants";
 import {
@@ -62,8 +62,8 @@ export default function Coupon(props: propsType): React.JSX.Element {
       dataIndex: "discount",
       key: "discount",
       align : 'center',
-      width : 100,
-      render : (discount : any) => getTextOfDiscount(get(discount,'value'),get(discount,'type'))
+      width : 120,
+      render : (discount : any,rc) => getTextOfDiscountShip(rc?.isFreeShip,get(discount,'value'),get(discount,'type'))
     },
     {
       title: "Trạng thái",
