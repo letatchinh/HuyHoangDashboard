@@ -3,6 +3,9 @@ import ModalAnt from "~/components/Antd/ModalAnt";
 import CreateOrderSupplierForm from "../components/Inventory/CreateOrderSupplierForm";
 import { useGetInventory, useGetWarehouseByBranchLinked, useInventoryWarehouseQueryParams, useUpdateInventoryWarehouseParams } from "../warehouse.hook";
 import { DataTypeSelected } from "../warehouse.modal";
+import useCheckBoxExport from "~/modules/export/export.hook";
+import { useMatchPolicy } from "~/modules/policy/policy.hook";
+import POLICIES from "~/modules/policy/policy.auth";
 
 type propsInventoryWarehouse = {
   children: React.ReactNode;
@@ -22,6 +25,10 @@ export type GlobalInventoryWarehouse = {
   onClose: () => void;
   setSupplierId: (param: any) => void;
   supplierId: any;
+  arrCheckBox: any[];
+  onChangeCheckBox: (e: boolean, id: string) => void;
+  query: any;
+  canDownload: boolean
 };
 const InventoryWarehouse = createContext<GlobalInventoryWarehouse>({
   listWarehouse: [],
@@ -38,6 +45,10 @@ const InventoryWarehouse = createContext<GlobalInventoryWarehouse>({
   onClose: () => { },
   setSupplierId: () => { },
   supplierId: undefined,
+  arrCheckBox: [],
+  onChangeCheckBox: ()=>{},
+  query: {},
+  canDownload: false,
 });
 
 export function InventoryWarehouseProvider({
@@ -50,6 +61,8 @@ export function InventoryWarehouseProvider({
   const [keyword, { setKeyword, onParamChange }] = useUpdateInventoryWarehouseParams(activeTab && query);
   const [data, loading] = useGetInventory(activeTab && query);
   const [supplierId, setSupplierId] = useState<string | null>(null);
+  const [arrCheckBox, onChangeCheckBox] = useCheckBoxExport();
+  const canDownload = useMatchPolicy(POLICIES.DOWNLOAD_OUTOFSTOCK)
 
   useEffect(() => {
     if (listWarehouse?.length) {
@@ -89,7 +102,11 @@ export function InventoryWarehouseProvider({
         onOpen,
         onClose,
         supplierId,
-        setSupplierId
+        setSupplierId,
+        query,
+        arrCheckBox,
+        onChangeCheckBox,
+        canDownload
       }}
     >
       {children}

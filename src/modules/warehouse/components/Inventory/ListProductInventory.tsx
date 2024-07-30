@@ -1,7 +1,7 @@
-import { Button, Col, DatePicker, Form, Row, Table } from "antd";
+import { Button, Checkbox, Col, DatePicker, Flex, Form, Row, Space, Table } from "antd";
 import React, { useMemo } from "react";
 import useInventoryWarehouseStore from "../../store/InventoryStore";
-import {useColumns, usePagingInventory } from "../../warehouse.hook";
+import {usePagingInventory } from "../../warehouse.hook";
 import TableAnt from "~/components/Antd/TableAnt";
 import { pagingTable } from "~/utils/helpers";
 import Search from "antd/es/input/Search";
@@ -10,6 +10,7 @@ import dayjs from "dayjs";
 import { ColumnsType } from "antd/es/table";
 import WithPermission from "~/components/common/WithPermission";
 import POLICIES from "~/modules/policy/policy.auth";
+import ExportExcelButton from "~/modules/export/component";
 type propsType = {};
 export default function ListProductInventory(
   props: propsType
@@ -23,17 +24,96 @@ export default function ListProductInventory(
     setKeyword,
     onSearch,
     onOpen,
-    setSupplierId,
+    arrCheckBox,
+    query,
+    canDownload,
+    onChangeCheckBox
   } = useInventoryWarehouseStore();
   const paging = usePagingInventory();
-  const columns = useColumns({ activeTab, data });
+  const columns: ColumnsType = useMemo(
+    () => [
+      {
+        title: "Mã sản phẩm",
+        dataIndex: "codeBySupplier",
+        key: "codeBySupplier",
+        width: 50,
+        fixed: "left",
+      },
+      {
+        title: "Tên sản phẩm",
+        dataIndex: "name",
+        key: "name",
+        width: 100,
+      },
+      {
+        title: "Số lượng",
+        dataIndex: "variant",
+        key: "quantity",
+        width: 40,
+        render: (value: any) => value?.quantity,
+      },
+      {
+        title: "Đã gửi yêu cầu",
+        dataIndex: "variant",
+        key: "orderSupplierQuantity",
+        width: 60,
+        render: (value: any) => value?.orderSupplierQuantity,
+      },
+      {
+        title: "Đơn vị",
+        dataIndex: "variant",
+        key: "unit",
+        width: 50,
+        render: (value: any) => value?.unit?.name,
+      },
+      {
+        title: "Nhà cung cấp",
+        dataIndex: "supplierName",
+        key: "supplierName",
+        width: 50,
+        render: (value: any) => value
+      },
+      ...(
+        canDownload ? [
+          {
+            title: 'Lựa chọn',
+            key: '_id',
+            width: 80,
+            align: 'center' as any,
+            render: (item: any, record: any) => {
+              const id = record._id;
+              return (
+                <Checkbox
+                  checked={arrCheckBox?.includes(id)}
+                  onChange={(e) => onChangeCheckBox(e.target.checked, id)}
+                />)
+            }
+          },
+        ] : []
+      )
+    ],
+    [activeTab, data, arrCheckBox ,canDownload]
+  );
   return (
     <>
-      <WithPermission permission={POLICIES.WRITE_ORDERSUPPLIER}>
-      <Row gutter={12} justify={"end"} className="mb-1" style={{width: "100%"}}>
-          <Button type="primary" onClick={onOpen} loading = {loading}>Tạo đơn mua</Button>
+        <Row gutter={12} justify={"end"} className="mb-1" style={{ width: "100%" }}>
+          <Col>
+          <Space>
+          <WithPermission permission={POLICIES.DOWNLOAD_OUTOFSTOCK}>
+            <ExportExcelButton
+              api="product/out-of-stock"
+              exportOption="employee"
+              query={query}
+              fileName="Danh sách sản phẩm đang thiếu hàng"
+              ids={arrCheckBox}
+              />
+            </WithPermission>
+          <WithPermission permission={POLICIES.WRITE_ORDERSUPPLIER}>
+              <Button type="primary" onClick={onOpen} loading = {loading}>Tạo đơn mua</Button>
+          </WithPermission>
+            </Space>
+          </Col>
       </Row>
-      </WithPermission>
       <Row justify={"start"} gutter={12}>
         <Col span={6}>
           <Form.Item name={"keyword"}>

@@ -6,13 +6,13 @@ import { PATH_APP } from "~/routes/allPath";
 import { pagingTable } from "~/utils/helpers";
 import useInventoryWarehouseStore from "../../store/InventoryStore";
 import {
-  useColumns,
   useGetInventoryCreate,
   usePagingInventoryCreate,
 } from "../../warehouse.hook";
 import { DataSourceType } from "~/pages/Dashboard/OrderSupplier/CreateOrderSupplier";
 import { v4 } from "uuid";
 import { get, omit } from "lodash";
+import { ColumnsType } from "antd/es/table";
 type propsType = {};
 
 export default function CreateOrderSupplierForm(
@@ -33,7 +33,6 @@ export default function CreateOrderSupplierForm(
     [activeTab, supplierId]
   );
   const [data, loading] = useGetInventoryCreate(query);
-  const columns = useColumns({ activeTab, data, dataSelected });
   const paging = usePagingInventoryCreate();
   const [newData, setNewData] = useState<any[]>([]);
   const [selectedRowKeys, setSelectedRowKeys] = useState<any[]>([]);
@@ -104,6 +103,53 @@ export default function CreateOrderSupplierForm(
     } catch (error) {}
   };
   const hasSelected = dataSelected.length > 0;
+
+  const columns: ColumnsType = useMemo(
+    () => [
+      {
+        title: "Mã sản phẩm",
+        dataIndex: "codeBySupplier",
+        key: "codeBySupplier",
+        width: 50,
+        fixed: "left",
+      },
+      {
+        title: "Tên sản phẩm",
+        dataIndex: "name",
+        key: "name",
+        width: 100,
+      },
+      {
+        title: "Số lượng",
+        dataIndex: "variant",
+        key: "quantity",
+        width: 40,
+        render: (value: any) => value?.quantity,
+      },
+      {
+        title: "Đã gửi yêu cầu",
+        dataIndex: "variant",
+        key: "orderSupplierQuantity",
+        width: 60,
+        render: (value: any) => value?.orderSupplierQuantity,
+      },
+      {
+        title: "Đơn vị",
+        dataIndex: "variant",
+        key: "unit",
+        width: 50,
+        render: (value: any) => value?.unit?.name,
+      },
+      {
+        title: "Nhà cung cấp",
+        dataIndex: "supplierName",
+        key: "supplierName",
+        width: 50,
+        render: (value: any) => value
+      },
+    ],
+    [activeTab, data]
+  );
   return (
     <>
       <Row>
