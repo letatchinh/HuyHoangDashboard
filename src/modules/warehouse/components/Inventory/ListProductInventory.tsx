@@ -102,7 +102,7 @@ export default function ListProductInventory(
           <WithPermission permission={POLICIES.DOWNLOAD_OUTOFSTOCK}>
             <ExportExcelButton
               api="product/out-of-stock"
-              exportOption="employee"
+              exportOption="warehouseInventory"
               query={query}
               fileName="Danh sách sản phẩm đang thiếu hàng"
               ids={arrCheckBox}
