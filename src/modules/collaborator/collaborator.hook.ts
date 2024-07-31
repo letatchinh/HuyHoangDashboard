@@ -69,7 +69,7 @@ export const useGetCollaborator = (id: any) => {
     param: id,
   });
 };
-
+export const useGetCollaborator_redux = () => [useSelector(getByIdSelector),useSelector(getByIdLoadingSelector)];
 export const useCreateCollaborator = (callback?: any) => {
   useSuccess(
     createSuccessSelector,
