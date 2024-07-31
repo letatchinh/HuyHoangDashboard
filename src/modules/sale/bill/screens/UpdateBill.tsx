@@ -240,6 +240,10 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
                 <Divider />
               <h6>Kho xuất hàng</h6>
               {get(warehouseInfo,'name.vi','')}
+              {bill?.dataTransportUnit?.code && <>
+                  <Divider />
+                <h6>Mã vận đơn :  {get(bill?.dataTransportUnit,'code','')}</h6>
+                </>}
             </WhiteBox>
           </div>
         </Col>
