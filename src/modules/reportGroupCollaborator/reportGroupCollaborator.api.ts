@@ -8,7 +8,7 @@ const convertParam = (data: { [key: string]: any }) => {
     return {
       ...data,
       getByRanger: data.getByRanger,
-    //   sellerId: [...compactAndSplit(data.sellerId)],
+      sellerId: [...compactAndSplit(data.sellerId)],
       rangerTime: data.rangerTime ? [...compactAndSplit(data.rangerTime)]: null,
       rangerType: data.rangerType,
       productId: [...compactAndSplit(data.productId)],
