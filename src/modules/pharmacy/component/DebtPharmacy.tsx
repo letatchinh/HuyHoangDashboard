@@ -108,8 +108,8 @@ export default function DebtPharmacy(props: propsType) {
       },
       {
         title: "Đã thanh toán",
-        dataIndex: "pair",
-        key: "pair",
+        dataIndex: "customerPair",
+        key: "customerPair",
         width: 120,
         render(value) {
           return formatter(value);
@@ -117,8 +117,8 @@ export default function DebtPharmacy(props: propsType) {
       },
       {
         title: "Nợ",
-        dataIndex: "resultDebt",
-        key: "resultDebt",
+        dataIndex: "customerPay",
+        key: "customerPay",
         width: 120,
         render(value) {
           return formatter(value);
