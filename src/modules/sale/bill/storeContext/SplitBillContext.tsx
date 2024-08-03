@@ -88,26 +88,41 @@ export function SplitBillProvider({
       0
     );
   
-  // 
-    function distributePayments(totalPaid: number, bills: any) {
-      let remainingAmount = totalPaid;
-      let updatedOrders = bills.map((bill:any )=> ({ ...bill }));
-    
-      for (let order of updatedOrders) {
-        if (remainingAmount <= 0) break;
-    
-        if (remainingAmount >= order.totalPrice) {
-          order.pair = order.totalPrice;
-          remainingAmount -= order.totalPrice;
+  function processBill(bills: any, totalReceiptVoucherCompleted: number) {
+    // Nếu totalReceiptVoucherCompleted <= 0, trả về mảng bills ban đầu
+    if (totalReceiptVoucherCompleted <= 0) {
+        return bills?.map((bill: any) => {
+            bill.pair = 0;
+            bill.remaining = bill.totalPrice;
+            return bill;
+        });
+    };
+
+    // Lặp qua từng đối tượng trong mảng bills
+    for (let i = 0; i < bills.length; i++) {
+        let item = bills[i];
+
+        // Nếu totalReceiptVoucherCompleted lớn hơn hoặc bằng totalPrice của item hiện tại
+        if (totalReceiptVoucherCompleted >= item.totalPrice) {
+            item.pair = item.totalPrice || 0;
+            item.remaining = 0;
+            totalReceiptVoucherCompleted -= item.totalPrice;
         } else {
-          order.pair = remainingAmount;
-          remainingAmount = 0;
+            // Nếu totalReceiptVoucherCompleted nhỏ hơn totalPrice của item hiện tại
+            item.pair = totalReceiptVoucherCompleted || 0;
+            item.remaining = item.totalPrice - totalReceiptVoucherCompleted;
+            totalReceiptVoucherCompleted = 0;
         }
-      }
-    
-      return updatedOrders;
-  };
-    
+    }
+
+    // Nếu totalReceiptVoucherCompleted vẫn còn dư sau khi đã trừ hết các phần tử trong bills
+    if (totalReceiptVoucherCompleted > 0 && bills.length > 0) {
+        let lastItem = bills[bills.length - 1];
+        lastItem.pair = totalReceiptVoucherCompleted;
+        lastItem.remaining = 0;
+    };
+    return bills;
+}
   //HANDLE FORM
   const onOpen = () => {
     setIsOpen(true);
@@ -133,11 +148,12 @@ export function SplitBillProvider({
       totalQuantity: totalQuantity(item),
       pair: bill?.pair || 0,
     }));
-    let newBills = distributePayments(bill?.totalReceiptVoucherCompleted, newData);
-    newBills = newBills.map((item: any) => ({
-      ...item,
-      remaining: (+item?.totalPrice) - (+item?.pair) || 0,
-    }));
+    let newBills = processBill(newData,bill?.totalReceiptVoucherCompleted);
+    // console.log(newBills,'newBills')
+    // newBills = newBills.map((item: any) => ({
+    //   ...item,
+    //   remaining: (+item?.totalPrice) - (+item?.totalReceiptVoucherCompleted) || 0,
+    // }));
     setData(newBills);
   }, [listBill]);
   
