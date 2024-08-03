@@ -1,3 +1,19 @@
+## [1.18.5](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/compare/v1.18.4...v1.18.5) (2024-08-02)
+
+
+### Bug Fixes
+
+* [#1677](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1677) - add search select group employee seller ([7d0cf12](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/7d0cf12a3259f84405ca7c9a834344bea706e8c1))
+* [#1680](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1680) add key permission into UI ([309568d](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/309568d904cd185be815c655f836aa105851b6b7))
+* [#1680](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1680) add select search collaborator for report ([c03ff5a](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/c03ff5a4e625a5c99ef35fdb14f674e15f3f3180))
+* [#1688](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1688) - fix children in collaborator ([e496a19](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/e496a194b314aa62cb488347c3e6e31e77224da1))
+* [#1692](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1692) - fix button into form children in report group ([7ba31e0](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/7ba31e07c74a213d5d6fd4b724c2b5bbc253823f))
+* [#1692](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1692) condition data filter ([9d7f5c3](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/9d7f5c3f9cd609529be7833ded188a5af39c4a07))
+* [#1692](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1692) fix condition ([2716931](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/2716931e67884711ebf955774add38a864de7eda))
+* [#1699](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1699) update missing Config report salary on navbar ([378add9](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/378add93e905c1beaa629093e9bb951ca510082c))
+* structor Router ([4e79e20](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/4e79e20e625af3635a53967566470a1e1a74fc7a))
+* unSubscribeToken FCM ([0cbf064](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/0cbf064cf6414740f197bd20426da1a4b75a6c90))
+
 ## [1.18.4](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/compare/v1.18.3...v1.18.4) (2024-06-15)
 
 

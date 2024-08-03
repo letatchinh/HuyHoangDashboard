@@ -110,6 +110,7 @@ export const useReportGroupCollaboratorQueryParams = () => {
   const rangerTime = query.get("rangerTime");
   const rangerType = query.get("rangerType");
   const getByRanger = query.get("getByRanger") || false;
+  const sellerId = query.get("sellerId");
   return useMemo(() => {
     const queryParams = {
       // page: Number(page),
@@ -118,10 +119,11 @@ export const useReportGroupCollaboratorQueryParams = () => {
       rangerType,
       // datatype,
       getByRanger: Boolean(getByRanger),
+      sellerId,
     };
     return [queryParams];
     //eslint-disable-next-line
-  }, [ rangerTime, rangerType, getByRanger]);
+  }, [ rangerTime, rangerType, getByRanger, sellerId]);
 };
 
 export const useUpdateReportGroupCollaboratorParams = (

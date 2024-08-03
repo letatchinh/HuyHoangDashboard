@@ -47,15 +47,24 @@ export const useGetReportGroupEmployeeSellers = (param: any) => {
   });
 };
 export const useGetReportGroupEmployeeSellerProduct = (param: any) => {
-    return useFetchByParam({
-      action: reportGroupEmployeeSellerActions.getListProductRequest,
-      loadingSelector: loadingSelector,
-      dataSelector: listSelector,
-      failedSelector: getListFailedSelector,
-      param,
-    });
-  };
+  return useFetchByParam({
+    action: reportGroupEmployeeSellerActions.getListProductRequest,
+    loadingSelector: loadingSelector,
+    dataSelector: listSelector,
+    failedSelector: getListFailedSelector,
+    param,
+  });
+};
 
+export const useGetGroupSeller = (param: any) => {
+  return useFetchByParam({
+    action: reportGroupEmployeeSellerActions.getGroupSellerRequest,
+    loadingSelector: loadingSelector,
+    dataSelector: listSelector,
+    failedSelector: getListFailedSelector,
+    param,
+  });
+};
 export const useCreateReportGroupEmployeeSeller = (callback?: any) => {
   useSuccess(
     createSuccessSelector,
@@ -102,6 +111,7 @@ export const useReportGroupEmployeeSellerQueryParams = () => {
   const rangerTime = query.get("rangerTime");
   const rangerType = query.get("rangerType");
   const getByRanger = query.get("getByRanger") || false;
+  const salesGroupId = query.get("salesGroupId")??'';
   return useMemo(() => {
     const queryParams = {
       page: Number(page),
@@ -109,10 +119,11 @@ export const useReportGroupEmployeeSellerQueryParams = () => {
       rangerTime,
       rangerType,
       getByRanger: Boolean(getByRanger),
+      salesGroupId,
     };
     return [queryParams];
     //eslint-disable-next-line
-  }, [page, limit, rangerTime, rangerType, getByRanger]);
+  }, [page, limit, rangerTime, rangerType, getByRanger, salesGroupId]);
 };
 
 export const useUpdateReportGroupEmployeeSellerParams = (
