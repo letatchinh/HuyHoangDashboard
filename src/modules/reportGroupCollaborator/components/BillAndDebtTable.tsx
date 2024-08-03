@@ -1,14 +1,11 @@
-import React from "react";
-import TableAnt from "~/components/Antd/TableAnt";
-import WhiteBox from "~/components/common/WhiteBox";
-import { formatter } from "~/utils/helpers";
-import { useGetReportGroupCollaborators } from "../reportGroupCollaborator.hook";
-import { v4 } from "uuid";
-import type { TableColumnsType } from "antd";
+import { Button, Modal, type TableColumnsType } from "antd";
 import { get } from "lodash";
+import React, { useMemo, useState } from "react";
+import TableAnt from "~/components/Antd/TableAnt";
+import { formatter, useFetchState } from "~/utils/helpers";
+import apis from "../reportGroupCollaborator.api";
 type propsType = {
   query?: any;
-  pagination?: any;
 };
 interface Children {
   _id: string;
@@ -38,8 +35,36 @@ const getKeyRow = (rc?: any) => (rd: any, idx?: number) =>
   ].join("_");
 
 export default function BillAndDebtTable(props: propsType): React.JSX.Element {
-  const { query, pagination } = props;
-  const [data, isLoading] = useGetReportGroupCollaborators(query);
+  const { query } = props;
+
+  const [modal, contextModal] = Modal.useModal();
+  const [pagination, setPaging] = useState({
+    current: 1,
+    pageSize: 10,
+  });
+  
+  const memoQuery = useMemo(
+    () => ({ ...query, page: pagination.current, limit: pagination.pageSize }),
+    [query, pagination]
+  );
+
+ const [data, isLoading, totalDocs] = useFetchState({
+    api: apis.getAll,
+    query: memoQuery,
+    useDocs: true,
+  });
+ 
+  function onClickCell(id: string, fullName?: string) {
+    modal.info({
+      icon: <></>,
+      title: fullName,
+      content: <BillAndDebtTable query={{ ...query, focusId: id }} />,
+      maskClosable: true,
+      width: "90vw",
+      footer: <></>,
+      closable: true,
+    });
+  }
 
   const columns: TableColumnsType<ReportProductType> = [
     ...(query?.getByRanger === true
@@ -58,12 +83,35 @@ export default function BillAndDebtTable(props: propsType): React.JSX.Element {
       dataIndex: "code",
       key: "code",
       width: 120,
+      fixed: "left",
     },
     {
       title: "Người quản lý",
       dataIndex: "fullName",
       key: "fullName",
       width: 200,
+      render: (record, root: any) => {
+        return root?.childLength > 0 ? (
+          <Button
+            type="text"
+            onClick={() =>
+              onClickCell(
+                root._id,
+                root.childrens
+                  .map(({ fullName }: any) => fullName)
+                  .concat(record)
+                  .join(" > ")
+              )
+            }
+            style={{ color: "#3481FF" }}
+          >
+            {" "}
+            {record}
+          </Button>
+        ) : (
+          <div>{record}</div>
+        );
+      },
     },
     {
       title: "Doanh số",
@@ -93,71 +141,34 @@ export default function BillAndDebtTable(props: propsType): React.JSX.Element {
         },
       },
   ];
-  const columnsList: TableColumnsType<Children> = [
-    {
-      title: "Mã người quản lý",
-      dataIndex: "code",
-      key: "code",
-      width: 120,
-    },
-    {
-      title: "Người quản lý",
-      dataIndex: "fullName",
-      key: "fullName",
-      width: 200,
-    },
-    {
-      title: "Doanh số",
-      dataIndex: "billTotalPrice",
-      key: "billTotalPrice",
-      width: 200,
-      render(value) {
-        return formatter(value);
-      },
-    },
-    {
-      title: "Số lượng đơn hàng",
-      dataIndex: "count",
-      key: "count",
-      width: 120,
-      render(value) {
-        return formatter(value);
-      },
-    },
-    {
-        title: "Công nợ",
-        dataIndex: "debt",
-        key: "debt",
-        width: 200,
-        render(value) {
-          return formatter(value);
-        },
-      },
-  ]
-  const expandable = {
-    expandedRowRender: (record: any) => <TableAnt
-      columns={columnsList}
-      dataSource={record.childrens}
-      pagination={false}
-      rowKey={getKeyRow(record)}
-    />,
-    rowExpandable: (record: any) => record.childrens && record.childrens.length > 0,
-  };
+
   const dataSource : ReportProductType[] = data ?? [];
   return (
     <div style={{ marginTop: 20 }}>
-      <WhiteBox>
+      {/* <WhiteBox> */}
+      {contextModal}
         <TableAnt
           dataSource={dataSource}
           loading={isLoading}
           rowKey={getKeyRow()}
           columns={columns}
           size="small"
-          pagination={pagination}
+          pagination={{
+            ...pagination,
+            total: totalDocs,
+            onChange: (current: number, pageSize: number) => {
+              setPaging({
+                current,
+                pageSize,
+              });
+            },
+            showSizeChanger: true,
+            showTotal: () => `Tổng cộng: ${totalDocs} `,
+          }}
           stickyTop
-          expandable={expandable}
+          // expandable={expandable}
         />
-      </WhiteBox>
+      {/* </WhiteBox> */}
     </div>
   );
 }

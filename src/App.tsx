@@ -12,37 +12,15 @@ import CreateBillPageInDevice from "./pages/Dashboard/Bill/CreateBill_InDevice";
 import { DeviceDetector } from "./utils/helpers";
 import NotFoundPage from "./pages/Auth/NotFoundPage";
 // import { onMessageListener } from "./modules/notification/firebase";
-import { useCallback, useEffect, useRef } from "react";
-import apis from "./api";
-import { useDispatch } from "react-redux";
-import { authActions } from "./modules/auth/redux/reducer";
+import DashboardRouter from "./routes/middleware/DashboardRouter";
 
 function App(): React.JSX.Element {
   const width = window.innerWidth;
   const token = AuthModule.hook.useToken();
   setupAxios();
-  const dispatch = useDispatch();
   setAxiosToken(token);
-  let refLogin = useRef(false)
 
   setAxiosCompanyId("99999"); // Fix Me , Just Init Project
-  const navigate = useNavigate();
-  const redirectLogin = useCallback((path: string) =>{
-    navigate(path);
-    dispatch(authActions.logoutRequest())
-
-  }, [navigate]);
-  // useUserPolicy(); // Get Policies
-  useEffect(() => {
-    !refLogin.current && (async () => {
-      refLogin.current = true
-      try {
-        await apis.auth.validationToken();
-      } catch (error) {
-        redirectLogin(PATH_APP.auth.login)
-      }
-    })();
-  }, [token, redirectLogin]);
   
   const device = DeviceDetector();
   
@@ -53,38 +31,40 @@ function App(): React.JSX.Element {
           <Route key={route.path} {...route} />
         ))}
 
+        <Route path="/" element={<DashboardRouter />}>
+          <Route path='' element={<ProtectRoute/>} >
+            {mainRoutes.map((route: PathRouteProps) => (
+              <Route key={route.path} {...route} />
+            ))}
+          </Route>
           
-        <Route path="/" element={<ProtectRoute />}>
-          {mainRoutes.map((route: PathRouteProps) => (
-            <Route key={route.path} {...route} />
-          ))}
+          <Route
+            key={PATH_APP.bill.create}
+            path={PATH_APP.bill.create}
+            Component={() =>  device?.isMobile !== true ? <CreateBillPage/> :  <CreateBillPageInDevice />}
+          />
+          <Route
+            key={PATH_APP.bill.createEmployee}
+            path={PATH_APP.bill.createEmployee}
+            Component={() =>  device?.isMobile !== true ? <CreateBillPage/> :  <CreateBillPageInDevice />}
+          />
+          <Route
+            key={PATH_APP.bill.createPharmacy}
+            path={PATH_APP.bill.createPharmacy}
+            Component={() =>  device?.isMobile !== true ? <CreateBillPage/> :  <CreateBillPageInDevice />}
+          />
+          <Route
+            key={PATH_APP.bill.createCollaborator}
+            path={PATH_APP.bill.createCollaborator}
+            Component={() =>  device?.isMobile !== true ? <CreateBillPage/> :  <CreateBillPageInDevice />}
+          />
+          <Route
+            key={PATH_APP.orderSupplier.create}
+            path={PATH_APP.orderSupplier.create}
+            Component={() =>  <CreateOrderSupplier />}
+          />
         </Route>
         <Route path='*' element={<NotFoundPage />} />
-        <Route
-          key={PATH_APP.bill.create}
-          path={PATH_APP.bill.create}
-          Component={() =>  device?.isMobile !== true ? <CreateBillPage/> :  <CreateBillPageInDevice />}
-        />
-        <Route
-          key={PATH_APP.bill.createEmployee}
-          path={PATH_APP.bill.createEmployee}
-          Component={() =>  device?.isMobile !== true ? <CreateBillPage/> :  <CreateBillPageInDevice />}
-        />
-        <Route
-          key={PATH_APP.bill.createPharmacy}
-          path={PATH_APP.bill.createPharmacy}
-          Component={() =>  device?.isMobile !== true ? <CreateBillPage/> :  <CreateBillPageInDevice />}
-        />
-        <Route
-          key={PATH_APP.bill.createCollaborator}
-          path={PATH_APP.bill.createCollaborator}
-          Component={() =>  device?.isMobile !== true ? <CreateBillPage/> :  <CreateBillPageInDevice />}
-        />
-        <Route
-          key={PATH_APP.orderSupplier.create}
-          path={PATH_APP.orderSupplier.create}
-          Component={() =>  <CreateOrderSupplier />}
-        />
       </Routes>
       <div
         style={{
