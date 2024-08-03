@@ -73,6 +73,7 @@ export default function CreateOrderSupplierForm(
     onChange: onSelectChange,
     hideSelectAll : !supplierId
   };
+  console.log(dataSelected,'dataSelected')
   const onSubmit = () => {
     try {
       const warehouseName = listWarehouse?.find((item: any) => item?._id === activeTab)?.name?.vi;
@@ -88,6 +89,7 @@ export default function CreateOrderSupplierForm(
               quantityActual: get(item?.variant, 'quantity', 1) * get(findVariantRoot, 'exchangeValue', 1),
               unitPrice: get(item?.variant, "cost", 0),
               productId: item?._id,
+              variantId: get(item?.variant, "_id"),
             }
           }),
           warehouseId: activeTab,
