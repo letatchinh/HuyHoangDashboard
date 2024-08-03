@@ -102,6 +102,7 @@ const billStatus = 'billStatus'; // Trạng thái đơn hàng bán
 const billSpit = 'billSpit'; // Tách đơn hàng bán
 const historyBill = 'historyBill'; // Lịch sử đơn hàng bán
 const historyOrderSupplier = 'historyOrderSupplier'; // Lịch sử đơn hàng mua
+const coupon = 'coupon'; // Tách đơn hàng bán
 
 const reportOverviewB2B = 'reportOverviewB2B';
 const reportOverviewB2C = 'reportOverviewB2C';
@@ -217,6 +218,7 @@ const RESOURCES = [
   billSpit,
   historyBill,
   historyOrderSupplier,
+  coupon,
   reportOverviewB2B,
   reportOverviewB2C,
   reportRevenuePersonalEmployee,

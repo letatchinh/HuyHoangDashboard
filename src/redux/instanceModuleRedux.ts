@@ -107,10 +107,11 @@ export class InstanceModuleRedux{
     },
     updateSuccess: (state:initStateSlice, { payload }:{payload:any}) => {
       state.isSubmitLoading = false;
+      const data = get(payload,'data');
       state.byId = payload;
-      state.list = state.list?.map((item:any) => get(item,'_id') === get(payload,'_id') ? payload : item);
-      state.listSearch = state.listSearch?.map((item:any) => get(item,'_id') === get(payload,'_id') ? payload : item);
-      state.updateSuccess = payload;
+      state.list = state.list?.map((item:any) => get(item,'_id') === get(data,'_id') ? data : item);
+      state.listSearch = state.listSearch?.map((item:any) => get(item,'_id') === get(data,'_id') ? data : item);
+      state.updateSuccess = data;
     },
     updateFailed: (state:initStateSlice, { payload }:{payload:any}) => {
       state.isSubmitLoading = false;

@@ -56,15 +56,12 @@ class BillClassExtend extends InstanceModuleRedux {
       state.isGetByIdLoading = false;
       let totalDiscountBill = 0;
       let totalAmountBill = 0;
+      const {totalCouponForBill = 0,totalCouponForItem = 0 } = payload;
       const billItems = get(payload,'billItems',[])?.map((billItem : any) => {
-        // const {variant} = billItem || {};
-        // console.log(billItem,'billItem');
         const quantity:number = Number((get(billItem, "quantity", 1) / get(billItem, "variant.exchangeValue", 1)).toFixed(1));
         const price : number = get(billItem, 'variant.price',1);
-        const totalPrice : number = get(billItem, 'totalPrice',1);
         const totalAmount = Math.floor(Number(quantity * price));
-        const totalDiscount : number = totalAmount - totalPrice;
-
+        const totalDiscount : number = get(billItem,'totalDiscountSummary',0)
         totalDiscountBill += totalDiscount;
         totalAmountBill += totalAmount;
         return {
@@ -82,14 +79,13 @@ class BillClassExtend extends InstanceModuleRedux {
         SUB_FEE : 0,
         LOGISTIC : 0,
       });
-      // sum + (cur?.typeValue === 'PERCENT' ? getValueOfPercent(get(payload,'totalAmount',0),cur?.value) : cur?.value)
       state.byId = {
         ...payload,
         billItems,
         remainAmount,
         totalDiscountBill,
         totalAmountBill,
-        totalAfterDiscountBill : totalAmountBill - totalDiscountBill,
+        totalAfterDiscountBill : totalAmountBill - totalDiscountBill - totalCouponForBill - totalCouponForItem,
         totalFee,
         feeDetail,
       }

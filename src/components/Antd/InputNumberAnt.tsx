@@ -3,6 +3,6 @@ import React from 'react';
 import { formatter } from '~/utils/helpers';
 export default function InputNumberAnt(props:InputNumberProps) : React.JSX.Element {
     return (
-        <InputNumber {...props} formatter={(value:any) => formatter(value)}/>
+        <InputNumber {...props} style={{ width: "100%" }} formatter={(value:any) => formatter(value)}/>
     )
 }

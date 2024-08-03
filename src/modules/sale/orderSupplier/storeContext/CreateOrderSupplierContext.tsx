@@ -10,7 +10,7 @@ import {
 import { v4 } from "uuid";
 import OrderSupplierModule from '~/modules/sale/orderSupplier';
 import BillModule from '~/modules/sale/bill';
-import { onVerifyData, reducerDiscountOrderSupplierItems } from "../orderSupplier.service";
+import { reducerDiscountOrderSupplierItems } from "../orderSupplier.service";
 import { DEFAULT_DEBT_TYPE } from "../constants";
 import { orderSupplier } from "../orderSupplier.modal";
 import ModalAnt from "~/components/Antd/ModalAnt";

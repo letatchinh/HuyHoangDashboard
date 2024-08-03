@@ -56,6 +56,7 @@ import reportIndividualCollaborator from '~/modules/reportIndividualCollaborator
 import reportIndividualEmployeeSeller from '~/modules/reportIndividualEmployeeSeller';
 import reportGroupCollaborator from '~/modules/reportGroupCollaborator';
 import reportGroupEmployeeSeller from '~/modules/reportGroupEmployeeSeller';
+import coupon from '~/modules/coupon';
 
 export default function* rootSaga() {
   yield all([
@@ -118,5 +119,6 @@ export default function* rootSaga() {
     reportIndividualEmployeeSeller.redux.saga(),
     reportGroupCollaborator.redux.saga(),
     reportGroupEmployeeSeller.redux.saga(),
+    coupon.redux.saga(),
   ]);
 };

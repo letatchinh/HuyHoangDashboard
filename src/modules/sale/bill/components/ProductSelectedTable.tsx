@@ -199,6 +199,9 @@ export default function ProductSelectedTable(
                 ...record,
                 discountOther : get(record,'discountOther',[])?.filter((i:any,idx:number) => idx !== index)
               })}
+              productId={record?.productId}
+              variantId={record?.variantId}
+              couponsInItem={get(record,'couponsInItem',[])}
               />
               <ExpandRowDiscount data={get(record, "cumulativeDiscount")} />
             </div>
