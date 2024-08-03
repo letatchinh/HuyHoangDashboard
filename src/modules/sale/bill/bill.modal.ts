@@ -1,3 +1,7 @@
+import { ValueApplyBill } from "~/modules/logistic/components/LogisticForm"
+import { STATUS_BILL } from "./constants"
+import { CouponBase, CouponInSelect } from "~/modules/coupon/coupon.modal"
+
 type supplier = {
     name : string,
     code : string,
@@ -59,7 +63,11 @@ export interface quotation  {
     lotNumber : string,
     expirationDate : string,
     codeBySupplier : string,
-    discountOther : DiscountOtherType[]
+    discountOther : DiscountOtherType[],
+    couponsInItem? : CouponBase[],
+    totalDiscountCoupon? : number,
+    totalDiscountSummary ? : number,
+    totalRoot?:number,
 }
 export interface FeeType  {
     typeFee : 'SUB_FEE' | 'LOGISTIC',
@@ -71,18 +79,34 @@ export interface FormFieldCreateBill {
     debtType : string | null,
     pair : number,
     fee? : FeeType[],
-    deliveryAddress? : string
+    deliveryAddress?: string,
+    dataTransportUnit?: ValueApplyBill,
+    deliveryAddressId?: any;
+    warehouseId?: string;
+    warehouseName?: string;
+    noteBillSplit?: string;
 }
+export interface DetailCoupon {
+    bill : CouponInSelect[],
+    ship : CouponInSelect[],
+    item : CouponInSelect[],
+  }
+
 export interface PayloadCreateBill extends FormFieldCreateBill {
     quotationItems : Omit<quotation,'variant' | 'variants'>[],
     totalPrice : number,
     totalAmount : number,
-    _id? : any,
+    _id?: any,
+    dataTransportUnit?: ValueApplyBill,
+    coupons? : DetailCoupon,
+    totalCouponForShip? : number,
+    totalCouponForBill? : number,
+    totalCouponForItem? : number,
 }
 export interface PayloadUpdateBill  {
     cancelNote? : string,
     note? : string,
-    status? : "CANCELLED",
+    status? : "CANCELLED" | 'REQUESTED',
     _id : string
 }
 export interface DiscountOtherType {
@@ -113,6 +137,11 @@ export interface DebtType  {
     id : number,
 
 }
+export type ParamGetNextStatus = {
+    status: string;
+    lotNumber?: any;
+    expirationDate: any;
+  }
 
 export type FormFieldSearch = {
     startDate?: any,
@@ -120,3 +149,9 @@ export type FormFieldSearch = {
     // sortBy :{COMPLETED, NEW}
     // searchBy?: SearchByType,
   };
+
+export type propsConfirmStatusBill = {
+    nextStatus: keyof typeof STATUS_BILL;
+    bill?: any;
+    note?: string;
+};

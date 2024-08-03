@@ -4,3 +4,9 @@ export interface BaseData {
     updatedAt : string,
     _id : string
 }
+
+export interface ErrorAntBase {
+    errors : string[],
+    name : string[],
+    warning : string[]
+}

@@ -383,6 +383,12 @@ export const requireRules : any = [
       message : "Vui lòng nhập!"
   }
 ];
+export const requireRulesCustom = (mess ? : string) => [
+  {
+      required : true,
+      message : mess ?? "Vui lòng nhập!"
+  }
+]
 
 export const PROCESS_STATUS = {
   APPROVED: 'APPROVED',
@@ -415,3 +421,5 @@ export const FILTER_BY_VI: {[key in keyof typeof FILTER_BY]:string} = {
   QUARTERLY: "Quý",
   YEARLY: "Năm",
 };
+
+export const MIN_TOTAL_DISCOUNT_PERCENT = 45;

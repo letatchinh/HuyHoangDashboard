@@ -10,12 +10,16 @@ import { useFetchState } from "~/utils/hook";
 
 type propsType = {
   isLoading: boolean;
-  product: any;
+  allowCreate? : boolean;
+  showLabel? : boolean;
+  fieldName? : string | any[];
 };
 
 export default function SelectProductGroup({
   isLoading,
-  product,
+  allowCreate = true,
+  showLabel = true,
+  fieldName = "productGroupId",
 }: propsType): React.JSX.Element {
   const [reFetch,setReFetch] = useState(false);
   const [open, setOpen] = useState(false);
@@ -26,42 +30,18 @@ export default function SelectProductGroup({
     label : get(item,'name'),
     value : get(item,'_id'),
   })),[productGroups]);
-  const fetchOptionsProductGroup = useCallback(async (keyword?: string) => {
-    try {
-      const res = await ProductGroupModule.api.getAll({
-        keyword,
-        limit: MAX_LIMIT,
-      });
-      return getActive(get(res, "docs", []))?.map((item: any) => ({
-        label: get(item, "name"),
-        value: get(item, "_id"),
-      }));
-    } catch (error) {
-      console.log(error);
-      return [];
-    }
-  }, []);
-
-  const initProductGroup = useMemo(
-    () =>
-      product && [
-        {
-          label: get(product, "manufacturer.name"),
-          value: get(product, "manufacturerId"),
-        },
-      ],
-    [product]
-  );
   return (
     <>
       <Form.Item
-        label="Nhóm thuốc"
-        name="productGroupId"
+        style={{marginBottom : 'unset'}}
+        {...showLabel && {label : "Nhóm thuốc"}}
+        name={fieldName}
         rules={[{ required: true, message: "Vui lòng chọn Nhóm thuốc!" }]}
       >
         {RenderLoading(
           isLoading,
           <Select 
+          loading={loading}
             className="right--parent"
             placeholder="Nhóm thuốc"
             options={options}
@@ -69,15 +49,9 @@ export default function SelectProductGroup({
             showSearch
             filterOption={filterSelectWithLabel}
           />
-          //   <DebounceSelect
-          //   className="right--parent"
-          //   placeholder="Nhóm thuốc"
-          //   fetchOptions={fetchOptionsProductGroup}
-          //   style={{ width: "100%" }}
-          //   initOptions={initProductGroup}
-          // />
         )}
       </Form.Item>
+      {allowCreate && <>
       <Button className="right--child" onClick={onOpen}>
         +
       </Button>
@@ -87,10 +61,9 @@ export default function SelectProductGroup({
             onClose();
             setReFetch(!reFetch)
           }}
-          // setDestroy={()=>{}}
-          // updateProductConfig={() => {}}
-        />
+          />
       </Modal>
+          </>}
     </>
   );
 }

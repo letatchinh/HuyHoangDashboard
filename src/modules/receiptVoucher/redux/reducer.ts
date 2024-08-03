@@ -32,6 +32,15 @@ class ReceiptVoucherClassExtend extends InstanceModuleRedux {
           }
           return item
         });
+        state.listByBillId = {
+          ...state.listByBillId,
+          docs: state.listByBillId?.docs?.map((item: any) => {
+          if (item._id === payload?.data?._id) {
+            return { ...item, ...payload?.data };
+          }
+          return item
+          }),
+        }
       },
       confirmReceiptVoucherFailed: (state: cloneInitState, { payload }: any) => {
         state.isSubmitLoading = false;
@@ -47,6 +56,15 @@ class ReceiptVoucherClassExtend extends InstanceModuleRedux {
           return item
         });
         state.updateSuccess = payload?.data;
+        state.listByBillId = {
+          docs: state.listByBillId?.docs?.map((item: any) => {
+            if (item._id === payload?.data?._id) {
+              return { ...item, ...payload?.data };
+            }
+            return item
+          }),
+          ...state.listByBillId
+        };
       },
       resetAction: (state:cloneInitState) => ({
         ...state,

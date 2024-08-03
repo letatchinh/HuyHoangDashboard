@@ -1,7 +1,7 @@
-import { DeleteOutlined, GiftTwoTone, MinusCircleTwoTone, UpCircleTwoTone } from "@ant-design/icons";
-import { Badge, Button, Select, Tooltip, Typography } from "antd";
-import { compact, get } from "lodash";
-import React, { useEffect, useMemo, useState } from "react";
+import { DeleteOutlined, GiftTwoTone, UpCircleTwoTone } from "@ant-design/icons";
+import { Badge, Button, InputNumber, Select, Tooltip, Typography } from "antd";
+import { get } from "lodash";
+import React, { useState } from "react";
 import TableAnt from "~/components/Antd/TableAnt";
 import {
   EditableCell,
@@ -10,10 +10,10 @@ import {
 import { formatter } from "~/utils/helpers";
 import { DiscountOtherType, quotation, variant } from "../bill.modal";
 import useCreateBillStore from "../storeContext/CreateBillContext";
-import ExpandRowDiscount from "./ExpandRowDiscount";
-import ProductListSuggest from "./productSuggest";
-import ImageProduct from "./ImageProduct";
 import DiscountOther from "./DiscountOther";
+import ExpandRowDiscount from "./ExpandRowDiscount";
+import ImageProduct from "./ImageProduct";
+import ProductListSuggest from "./productSuggest";
 
 type propsType = {};
 export default function ProductSelectedTable(
@@ -199,6 +199,9 @@ export default function ProductSelectedTable(
                 ...record,
                 discountOther : get(record,'discountOther',[])?.filter((i:any,idx:number) => idx !== index)
               })}
+              productId={record?.productId}
+              variantId={record?.variantId}
+              couponsInItem={get(record,'couponsInItem',[])}
               />
               <ExpandRowDiscount data={get(record, "cumulativeDiscount")} />
             </div>

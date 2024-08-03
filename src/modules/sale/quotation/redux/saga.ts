@@ -1,4 +1,4 @@
-import { get } from 'lodash';
+import { get, omit } from 'lodash';
 import { put, call, takeLatest } from 'redux-saga/effects';
 import api from '../quotation.api'; 
 import { quotationActions } from './reducer';
@@ -89,6 +89,17 @@ function* deleteQuotation({payload : id} : any) : any {
     yield put(quotationActions.deleteFailed(error));
   }
 }
+function* checkBill({payload} : any) : any {
+  try {
+     yield call(api.checkBill, omit(payload, ['action', 'data']));
+    if (payload?.action) {
+      payload?.action(payload?.data)
+    };
+  } catch (error:any) {
+    yield put(quotationActions.checkBillFailed(error));
+    yield put(quotationActions.getListRequest());
+  };
+};
 
 
 export default function* quotationSaga() {
@@ -99,4 +110,5 @@ export default function* quotationSaga() {
   yield takeLatest(quotationActions.convertRequest, convertQuotation);
   yield takeLatest(quotationActions.deleteRequest, deleteQuotation);
   yield takeLatest(quotationActions.copyRequest, copyQuotation);
+  yield takeLatest(quotationActions.checkBillRequest, checkBill);
 }

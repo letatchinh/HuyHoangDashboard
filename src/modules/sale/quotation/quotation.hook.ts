@@ -41,6 +41,9 @@ const convertFailedSelector = getSelector("convertFailed");
 const copySuccessSelector = getSelector("copySuccess");
 const copyFailedSelector = getSelector("copyFailed");
 
+const checkBillSuccessSelector = getSelector("checkBillSuccess");
+const checkBillFailedSelector = getSelector("checkBillFailed");
+
 export const useQuotationPaging = () => useSelector(pagingSelector);
 
 export const useGetQuotations = (param:any) => {
@@ -128,6 +131,20 @@ export const useDeleteQuotation = (callback?: any) => {
   });
 };
 
+export const useCheckBill = (callbackSubmit?: any) => {
+  useSuccess(
+    checkBillSuccessSelector,
+    // `Chuyển đổi ${MODULE_VI} thành công`,
+  );
+  useFailed(checkBillFailedSelector);
+
+  return useSubmit({
+    action: quotationActions.checkBillRequest,
+    loadingSelector: isSubmitLoadingSelector,
+    callbackSubmit,
+  });
+};
+
 
 
 export const useQuotationQueryParams = (status?: string) => {
@@ -194,4 +211,23 @@ export const useUpdateQuotationParams = (
 
 export const useResetQuotation = () => {
   return useResetState(quotationActions.reset);
+};
+
+export const useInitialValue = (listWarehouse: any[], data: any[]) => {
+  const [newData, setNewData] = useState<any[]>([]);
+  useEffect(() => {
+    if (data?.length && listWarehouse?.length) {
+      const newBills : any[] = data?.map((item: any) => {
+        const warehouse = listWarehouse?.find((w: any) => w?._id === item?.warehouseId);
+        return {
+          ...item,
+          warehouseName: warehouse?.name?.vi
+        }
+      });
+      setNewData(newBills);
+    }else{
+      setNewData(data);
+    }
+  }, [listWarehouse, data]);
+  return newData;
 };

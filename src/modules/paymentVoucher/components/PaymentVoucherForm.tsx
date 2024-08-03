@@ -572,7 +572,7 @@ import { useGetProfile } from "~/modules/auth/auth.hook";
             <Row className="staff-form__submit-box">
               {!id ? 
                  <WithOrPermission permission={[POLICIES.WRITE_VOUCHERPHARMACY, POLICIES.WRITE_VOUCHERSUPPLIER]}>
-                 <Button icon={<SaveOutlined />} type="primary" htmlType="submit">
+                 <Button icon={<SaveOutlined />} type="primary" htmlType="submit" loading={isSubmitLoading}>
                    Lưu
                    </Button>
                 </WithOrPermission>

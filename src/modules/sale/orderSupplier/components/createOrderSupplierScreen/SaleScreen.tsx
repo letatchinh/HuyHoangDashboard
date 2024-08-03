@@ -1,6 +1,6 @@
 import { UserOutlined } from "@ant-design/icons";
 import { Button, Col, Divider, Form, Row } from "antd";
-import { get } from "lodash";
+import { get, omit, pick } from "lodash";
 import React, { useEffect, useMemo } from "react";
 import WithPermission from "~/components/common/WithPermission";
 import POLICIES from "~/modules/policy/policy.auth";
@@ -10,19 +10,35 @@ import SelectSupplier from "~/modules/supplier/components/SelectSupplier";
 import { DataResultType } from "~/pages/Dashboard/OrderSupplier/CreateOrderSupplier";
 import useNotificationStore from "~/store/NotificationContext";
 import { useChangeDocumentTitle } from "~/utils/hook";
-import { FormFieldCreateOrderSupplier, PayloadCreateOrderSupplier } from "../../orderSupplier.modal";
+import { FormFieldCreateOrderSupplier, PayloadCreateOrderSupplier, paramsConvertDataOrderSupplier } from "../../orderSupplier.modal";
 import useCreateOrderSupplierStore from "../../storeContext/CreateOrderSupplierContext";
 import ProductSelectedTable from "../ProductSelectedTable";
 // import SelectPharmacy from "../SelectPharmacy";
 import TotalBill from "./TotalBill";
+import { convertDataSubmitWarehouse, useCreateOrderInWarehouse } from "../../orderSupplier.hook";
+import { useMatchPolicy } from "~/modules/policy/policy.hook";
 type propsType = {};
 export default function SaleScreen(props: propsType): React.JSX.Element {
  const {form,onValueChange,orderSupplierItems,totalPriceAfterDiscount,onRemoveTab,bill,onOpenModalResult,totalAmount} = useCreateOrderSupplierStore();
  
- const {onNotify} = useNotificationStore();
+  const { onNotify } = useNotificationStore();
+  const [isSubmitCreate, onCreateOrderInWarehouse] = useCreateOrderInWarehouse(); 
+  const canWriteOrderInWarehouse = useMatchPolicy(POLICIES.WRITE_WAREHOUSELINK)
+  const handleCreateOrderInWarehouse = (data: PayloadCreateOrderSupplier) => {
+    const submitData : paramsConvertDataOrderSupplier = convertDataSubmitWarehouse(data);
+    try {
+      onCreateOrderInWarehouse(submitData)
+    } catch (error) {
+      console.log(error);
+    };
+  };
+
  const callBackAfterSuccess = (newData : DataResultType) => {  
   onRemoveTab();
-  onOpenModalResult(newData);
+   onOpenModalResult(omit(newData, 'oldData'));
+   canWriteOrderInWarehouse && setTimeout(() => {
+    handleCreateOrderInWarehouse(get(newData, 'oldData', {}) as PayloadCreateOrderSupplier);
+   }, 500);
  };
  const [isSubmitLoading,onCreateOrderSupplier] = OrderSupplierModule.hook.useCreateOrderSupplier(callBackAfterSuccess);
   const onFinish = (values: FormFieldCreateOrderSupplier) => {
@@ -39,9 +55,12 @@ try {
     data : values,
     totalPriceAfterDiscount,
     totalAmount,
-    
+    warehouseId: get(bill, 'warehouseId'),
+    // warehouseName: get(bill, 'warehouseName'),
   });
-  
+  if (!get(bill, 'warehouseId')) {
+    return onNotify?.error("Vui lòng chọn kho nhập hàng!");
+  };
     switch (get(bill,'typeTab')) {
       case 'createOrderSupplier':
         onCreateOrderSupplier(submitData);
@@ -49,7 +68,7 @@ try {
     
       default:
         break;
-    }
+  }
   
 } catch (error : any) {
   onNotify?.error(error?.response?.data?.message || "Có lỗi gì đó xảy ra")
@@ -62,8 +81,8 @@ try {
       case 'createOrderSupplier':
         return "Tạo đơn hàng (F1)"
     
-      default:
-        break;
+      default: 
+        return "Tạo đơn hàng (F1)"
     }
   },[bill]);
   useEffect(() => {

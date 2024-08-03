@@ -1,21 +1,25 @@
-import BranchScreen from "./screens/Branch";
 import branchApi from "./branch.api";
 import branchAuth from "./branch.auth";
 import * as branchHook from "./branch.hook";
 import branchService from "./branch.service";
-import branchModels from "./branch.modal";
 import reducer from "./redux/reducer";
 import saga from "./redux/saga";
+import * as branchModals from "./branch.modal";
+import { BranchProviderContext } from "./store/BranchContext";
+import BranchRoot from "./screens";
 
 const moduleExport = {
     page : {
-        index : BranchScreen,
+        index : BranchRoot,
     },
     api : branchApi,
     auth : branchAuth,
     hook : branchHook,
     service : branchService,
-    model : branchModels,
-    redux : {reducer,saga}
+    model : branchModals,
+    redux: { reducer, saga },
+    storeProvider: {
+        BranchProviderContext
+    }
 };
 export default moduleExport;
