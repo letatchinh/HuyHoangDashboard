@@ -8,6 +8,7 @@ import TableAnt from "~/components/Antd/TableAnt";
 import BillModule from "~/modules/sale/bill";
 import useUpdateBillStore from "~/modules/sale/bill/storeContext/UpdateBillContext";
 import { formatter } from "~/utils/helpers";
+import CouponShow from "../../bill/components/CouponShow";
 import { STATUS_BILL } from "../../bill/constants";
 import { PayloadSubmitUpdateBillItem, UpdateBillItem } from "../billItem.modal";
 import {
@@ -163,6 +164,15 @@ export default function ListBillItem({
       align: "center",
       render(totalDiscount, record, index) {
         return <Typography.Text>{formatter(totalDiscount)}</Typography.Text>;
+      },
+    },
+    {
+      title: "Mã giảm giá",
+      dataIndex: "totalDiscountCoupon",
+      key: "totalDiscountCoupon",
+      align: "center",
+      render(totalDiscountCoupon, record, index) {
+        return <CouponShow value={totalDiscountCoupon || 0} dataSource={get(record,'couponsInItem',[])}/>;
       },
     },
     {

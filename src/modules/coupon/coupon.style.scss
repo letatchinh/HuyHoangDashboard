@@ -1,0 +1,71 @@
+.coupon{
+    display: flex;
+    border-radius: 5px;
+    border: 1px solid #e8e8e8;
+    border-left: unset;
+    overflow: hidden;
+    width: 556px;
+    height: 118px;
+    align-items: center;
+    margin-bottom: 5px;
+    &--left{
+        width: 120px;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: $color-primary-low;
+        position: relative;
+        &__icon{
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            padding: 5px;
+            background-color: $color-primary;
+        }
+        &__dashed{
+            left: -3px;
+            top: 0;
+            bottom: 0;
+            position: absolute;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-evenly;
+            gap: 3px;
+            &__item{
+                width: 6px;
+                height: 6px;
+                border-radius: 50%;
+                background-color: white;
+            }
+        }
+    }
+    &--middle{
+        flex: 1;
+        padding: 20px 5px;
+        display: flex;
+        flex-direction: column;
+        &__discountValue{
+            font-size: 16px;
+            font-weight: 500;
+        }
+        &__condition{
+            font-size: 12px;
+            font-weight: 400;
+        }
+        &__time{
+            font-size: 12px;
+            font-weight: 400;
+            color: #e8e8e8;
+        }
+    }
+    &--right{
+        width: 30px;
+    }
+}
+.noWrap{
+    &>div{
+        flex-wrap: nowrap;
+    }
+}

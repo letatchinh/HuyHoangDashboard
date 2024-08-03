@@ -8,6 +8,8 @@ import useNotificationStore from '~/store/NotificationContext';
 import { StringToSlug } from './helpers';
 import { useAdapter } from '~/modules/auth/auth.hook';
 import { ADAPTER_KEY } from '~/modules/auth/constants';
+import { ErrorAntBase } from './Modal';
+import { Alert } from 'antd';
 
 type SuccessSelector = (state: RootState) => any;
 type FailedSelector = (state: RootState) => any;
@@ -315,4 +317,14 @@ export const useAction = ({ action }:UseActionProps) : (v:any) => void => {
   };
   
   
-  
+  export const useFailedAnt = () => {
+    const [errors,setErrors] = useState<ErrorAntBase[]>([]);
+
+    const onFinishFailed = (valuesFailed: any) => {
+      const {errorFields} = valuesFailed;
+      setErrors(errorFields);
+    };
+    const ErrorComponent = () => errors?.length ? <Alert showIcon type="error" description={errors?.map((item:ErrorAntBase) => <p>* {item?.errors?.[0]}</p>)}/> : null
+
+    return {errors,onFinishFailed,ErrorComponent}
+  }

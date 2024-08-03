@@ -15,7 +15,25 @@ import SelectPharmacy from "../SelectPharmacy";
 import TotalBill from "./TotalBill";
 type propsType = {};
 export default function SaleScreen(props: propsType): React.JSX.Element {
-  const { form, onValueChange, quotationItems, totalPriceAfterDiscount, onRemoveTab, bill, onOpenModalResult, totalAmount, mutateReValidate, setAddress, setFormAndLocalStorage, setPharmacyInfo } = useCreateBillStore();
+  const {
+    form,
+    onValueChange,
+    quotationItems,
+    totalPriceAfterDiscount,
+    onRemoveTab,
+    bill,
+    onOpenModalResult,
+    totalAmount,
+    mutateReValidate,
+    setAddress,
+    setFormAndLocalStorage,
+    setPharmacyInfo,
+    totalDiscountCouponBill,
+    totalDiscountCouponShip,
+    totalCouponForItem,
+    couponSelected,
+    onVerifyCoupon,
+  } = useCreateBillStore();
  const feeForm = Form.useWatch('fee',form);
   const { onNotify } = useNotificationStore();
   const callBackAfterSuccess = (newData: DataResultType) => {
@@ -28,7 +46,7 @@ export default function SaleScreen(props: propsType): React.JSX.Element {
     QuotationModule.hook.useUpdateQuotation(callBackAfterSuccess);
   const [, onConvertQuotation] =
     QuotationModule.hook.useConvertQuotation(callBackAfterSuccess);
-  const onFinish = (values: FormFieldCreateBill) => {
+  const onFinish = async(values: FormFieldCreateBill) => {
     try {
       if (!quotationItems?.length) {
         return onNotify?.warning("Vui lòng chọn thuốc!");
@@ -37,6 +55,12 @@ export default function SaleScreen(props: propsType): React.JSX.Element {
       if (totalPriceAfterDiscount < 0) {
         return onNotify?.warning("Số tiền không hợp lệ");
       }
+      
+      const isInValidCoupon : any = await onVerifyCoupon();
+      if(isInValidCoupon){
+        return onNotify?.warning("Có một số mã giảm giá không hợp lệ, Hệ thống đã tự động bỏ mã, Vui lòng kiểm tra và thử lại"); 
+      }
+      
       const submitData: PayloadCreateBill =
         QuotationModule.service.convertDataQuotation({
           quotationItems: quotationItems,
@@ -47,7 +71,12 @@ export default function SaleScreen(props: propsType): React.JSX.Element {
           dataTransportUnit: get(bill, 'dataTransportUnit'),
           warehouseId: get(bill, 'warehouseId'),
           ...(get(bill, 'noteBillSplit') &&{noteBillSplit: get(bill, 'noteBillSplit')}),
+          coupons: couponSelected,
+          totalCouponForBill: totalDiscountCouponBill,
+          totalCouponForShip: totalDiscountCouponShip,
+          totalCouponForItem,
         });
+        
       switch (get(bill, "typeTab")) {
         case "createQuotation":
           onCreateQuotation(submitData);
@@ -105,7 +134,6 @@ export default function SaleScreen(props: propsType): React.JSX.Element {
 
       default:
         return "Tạo đơn hàng tạm";
-        break;
     }
   }, [bill]);
   useChangeDocumentTitle(titleText);
@@ -154,7 +182,7 @@ export default function SaleScreen(props: propsType): React.JSX.Element {
             <TotalBill />
           </div>
           <div className="form-create-bill--payment__actions">
-            <Row gutter={8} justify={"center"} align="middle" wrap={false}>
+            <Row style={{height : '100%'}} gutter={8} justify={"center"} align="middle" wrap={false}>
               {/* <Col flex={1}>
                 <Button
                 block
@@ -164,7 +192,7 @@ export default function SaleScreen(props: propsType): React.JSX.Element {
                   Hình thức thanh toán
                 </Button>
               </Col> */}
-              <Col span={14}>
+              <Col style={{height : '100%',display : 'flex' , alignItems : 'end'}} span={14}>
                 <Button
                   block
                   disabled={!quotationItems?.length}

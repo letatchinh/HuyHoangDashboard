@@ -103,6 +103,7 @@ const billSpit = 'billSpit'; // Tách đơn hàng bán
 const historyBill = 'historyBill'; // Lịch sử đơn hàng bán
 const historyOrderSupplier = 'historyOrderSupplier'; // Lịch sử đơn hàng mua
 const outOfStock = 'outOfStock'; // Kiểm kho theo danh sách đơn hàng bán
+const coupon = 'coupon'; // Tách đơn hàng bán
 
 const reportOverviewB2B = 'reportOverviewB2B';
 const reportOverviewB2C = 'reportOverviewB2C';
@@ -219,6 +220,7 @@ const RESOURCES = [
   historyBill,
   historyOrderSupplier,
   outOfStock,
+  coupon,
   reportOverviewB2B,
   reportOverviewB2C,
   reportRevenuePersonalEmployee,
@@ -384,12 +386,14 @@ const RESOURCE = (): ResourceType => {
 
   const GROUP_SETTING: string[] = [
     warehouseLink,
-
+  ];
   const WAREHOUSE: string[] = [
     outOfStock
-  ],
+  ];
   const REPORT_OVERVIEW: string[] = [
     reportOverview,
+  ];
+
   const REPORT_OVERVIEW_B2B : string[] = [
     reportOverviewB2B
   ];
@@ -408,7 +412,7 @@ const RESOURCE = (): ResourceType => {
   const REPORT_REVENUE_TEAM_PARTNER : string [] = [
     reportRevenueTeamPartner
   ];
-
+return {
     GROUP_USER,
     GROUP_EMPLOYEE,
     GROUP_WHSETTING,

@@ -148,7 +148,7 @@ export function UpdateBillProvider({
           {...refCollection === 'pharma_profile' && {pharmacyId}}
           {...refCollection === 'partner' && {partnerId: pharmacyId}}
           refCollection={REF_COLLECTION_UPPER[refCollection?.toUpperCase()]}
-          totalAmount={totalPrice}
+          totalAmount={get(bill,'remaining',0)}
           reason={`Thu tiền đơn hàng ${codeSequence || ""} `}
           from='Pharmacy'
           provider={pharmacyId}

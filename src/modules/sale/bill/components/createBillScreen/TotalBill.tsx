@@ -1,5 +1,5 @@
 import { EditOutlined, InfoCircleFilled } from "@ant-design/icons";
-import { Button, Flex, Form, Radio, Tooltip, Typography } from "antd";
+import { Button, Flex, Form, Radio, Tag, Tooltip, Typography } from "antd";
 import { get } from "lodash";
 import React, { CSSProperties, useCallback, useEffect, useState } from "react";
 import InputNumberAnt from "~/components/Antd/InputNumberAnt";
@@ -14,6 +14,7 @@ import useCreateBillStore from "../../storeContext/CreateBillContext";
 import SuggestAddress from "../SuggestAddress";
 import SelectDebt from "./SelectDebt";
 import { useGetInfoWarehouse } from "~/modules/warehouse/warehouse.hook";
+import CouponSelectedList from "../CouponSelectedList";
 type propsType = {};
 export const Layout = ({
   label,
@@ -66,13 +67,22 @@ export default function TotalBill(props: propsType): React.JSX.Element {
     onOpenModalSelectWarehouse,
     canReadLogistic,
     canReadWarehouse,
+    onOpenCoupon,
+    totalDiscountCouponBill,
+    totalDiscountCouponShip,
+    totalCouponForItem,
+    couponSelected,
   } = useCreateBillStore();
   const [minFee, setMinFee] = useState<any>();
   const [openAddress, setOpenAddress] = useState(false);
+  const [openCouponSelected, setOpenCouponSelected] = useState(false);
   const onOpenAddress = useCallback(() => setOpenAddress(true), []);
   const onCloseAddress = useCallback(() => setOpenAddress(false), []);
+  const onOpenCouponSelected = useCallback(() => setOpenCouponSelected(true), []);
+  const onCloseCouponSelected = useCallback(() => setOpenCouponSelected(false), []);
   const debtType = Form.useWatch("debtType", form);
-  const fee = Form.useWatch("fee", form);
+  const pair = Form.useWatch("pair", form) || 0;
+  // const fee = Form.useWatch("fee", form);
   const onChangeAddress = useCallback(
     (values: any) => {
       const addressString = concatAddress(values?.address);
@@ -122,8 +132,12 @@ export default function TotalBill(props: propsType): React.JSX.Element {
   }, [bill]); // Set value logistic fee
   return (
     <Flex vertical gap={"small"}>
-      <Layout label={"Số lượng mặt hàng"}>{formatter(totalQuantity)}</Layout>
+    <Flex className="billValue" vertical gap={"small"}>
+    <Layout label={"Số lượng mặt hàng"}>{formatter(totalQuantity)}</Layout>
       <Layout label={"Tổng tiền"}>{formatter(totalPrice)}</Layout>
+      <Layout label={"Giảm giá"}>-{formatter(totalDiscountCouponBill)}</Layout>
+      <Layout label={"Giảm giá mặt hàng"}>-{formatter(totalCouponForItem)}</Layout>
+      <Layout label={"Giảm giá phí ship"}>-{formatter(totalDiscountCouponShip)}</Layout>
       {bill?.voucher &&<Layout label={"Đã thanh toán"}>{formatter(bill?.voucher?.totalAmount)}</Layout>}
       {totalDiscountFromProduct?.["DISCOUNT.CORE"] ? (
         <Layout label={"Tổng chiết khấu cứng từ mặt hàng"}>
@@ -177,9 +191,10 @@ export default function TotalBill(props: propsType): React.JSX.Element {
         label={"Tổng tiền sau chiết khấu"}
       >
         <Typography.Text type="warning" strong>
-          {formatter(totalAmount)}
+          {formatter(totalAmount - totalDiscountCouponBill)}
         </Typography.Text>
       </Layout>
+    </Flex>
       <SelectDebt />
       {debtType === "DEPOSIT" && (
         <Layout label={"Khách trả trước"}>
@@ -386,9 +401,24 @@ export default function TotalBill(props: propsType): React.JSX.Element {
           marginBottom: 5,
         }}
       />
+      <Layout label={<Typography.Link>Mã giảm giá <Tag onClick={onOpenCouponSelected} color={'blue'}>{`Đã chọn ${get(couponSelected,'bill.length',0) + get(couponSelected,'ship.length',0)} mã`}</Tag></Typography.Link>}>
+        <Typography.Link 
+        onClick={() => onOpenCoupon()} style={{ fontSize: 16, fontWeight: 600 }}>
+          Chọn mã giảm giá
+        </Typography.Link>
+      </Layout>
+      <div
+        style={{
+          width: "100%",
+          height: 3,
+          borderTop: "2px dashed #F0F0F0",
+          marginTop: 5,
+          marginBottom: 5,
+        }}
+      />
       <Layout isLarge={true} label={"Tổng tiền phải trả"}>
         <Typography.Text style={{ fontSize: 18, fontWeight: 600 }}>
-          {formatter(totalPriceAfterDiscount)}
+          {formatter(totalPriceAfterDiscount - pair)}
         </Typography.Text>
       </Layout>
       <ModalAnt
@@ -402,6 +432,18 @@ export default function TotalBill(props: propsType): React.JSX.Element {
       >
         <SuggestAddress onClose={onCloseAddress} />
         <AddressForm onSubmit={(values) => onChangeAddress(values)} />
+      </ModalAnt>
+
+      <ModalAnt
+        title={"Danh sách coupon đã chọn"}
+        width={'max-content'}
+        open={openCouponSelected}
+        onCancel={onCloseCouponSelected}
+        footer={null}
+        centered
+        style={{minWidth : 620}}
+      >
+        <CouponSelectedList />
       </ModalAnt>
     </Flex>
   );

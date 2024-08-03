@@ -16,6 +16,7 @@ export default function TableAnt({
           offsetHeader: -10, // 10 Is padding Top
         },
       })}
+      size="small"
       {...props}
     />
   );

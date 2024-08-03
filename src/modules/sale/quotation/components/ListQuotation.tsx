@@ -293,6 +293,7 @@ export default function ListQuotation({
                     warehouseName: get(record, 'warehouseName'),
                     dataTransportUnit: get(record, "dataTransportUnit"),
                     noteBillSplit: get(record, "noteBillSplit"),
+                    coupons: get(record, "coupons"),
                     ...(get(record, "voucher") &&{voucher: get(record, "voucher")}),
                   }));
                 }}
@@ -325,6 +326,7 @@ export default function ListQuotation({
                     warehouseName: get(record, 'warehouseName'),
                     dataTransportUnit: get(record, "dataTransportUnit"),
                     noteBillSplit: get(record, "noteBillSplit"),
+                    coupons: get(record, "coupons"),
                     ...(get(record, "voucher") &&{voucher: get(record, "voucher")}),
                   }));
                 }}
