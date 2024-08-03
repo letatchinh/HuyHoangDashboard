@@ -97,6 +97,12 @@ const requestChangeGroupCTV = 'requestChangeGroupCTV';
 const requestChangeGroup = 'requestChangeGroup';
 const customerDivision = 'customerDivision';
 
+const reportOverviewB2B = 'reportOverviewB2B';
+const reportOverviewB2C = 'reportOverviewB2C';
+const reportRevenuePersonalEmployee = 'reportRevenuePersonalEmployee';
+const reportRevenuePersonalPartner = 'reportRevenuePersonalPartner';
+const reportRevenueTeamEmployee = 'reportRevenueTeamEmployee';
+const reportRevenueTeamPartner = 'reportRevenueTeamPartner';
 
 //------RESOURCES --------
 const RESOURCES = [
@@ -199,6 +205,12 @@ const RESOURCES = [
   requestChangeGroup,
   requestChangeGroupCTV,
   customerDivision,
+  reportOverviewB2B,
+  reportOverviewB2C,
+  reportRevenuePersonalEmployee,
+  reportRevenuePersonalPartner,
+  reportRevenueTeamEmployee,
+  reportRevenueTeamPartner,
 ];
 
 //ACTIONS
@@ -353,6 +365,27 @@ const RESOURCE = (): ResourceType => {
   const CUSTOMER_DIVISION: string[] = [
     customerDivision,
   ];
+  const REPORT_OVERVIEW: string[] = [
+    reportOverview,
+  ];
+  const REPORT_OVERVIEW_B2B : string[] = [
+    reportOverviewB2B
+  ];
+  const REPORT_OVERVIEW_B2C : string[] = [
+    reportOverviewB2B
+  ];
+  const REPORT_REVENUE_PERSONAL_EMPLOYEE : string [] = [
+    reportRevenuePersonalEmployee
+  ];
+  const REPORT_REVENUE_PERSONAL_PARTNER : string [] = [
+    reportRevenuePersonalPartner
+  ];
+  const REPORT_REVENUE_TEAM_EMPLOYEE : string [] = [
+    reportRevenueTeamEmployee
+  ];
+  const REPORT_REVENUE_TEAM_PARTNER : string [] = [
+    reportRevenueTeamPartner
+  ];
 
   return {
     GROUP_USER,
@@ -380,6 +413,13 @@ const RESOURCE = (): ResourceType => {
     VOUCHER_SALARY_PARTNER,
     VOUCHER_BILL_PARTNER,
     CUSTOMER_DIVISION,
+    REPORT_OVERVIEW,
+    REPORT_OVERVIEW_B2B,
+    REPORT_OVERVIEW_B2C,
+    REPORT_REVENUE_PERSONAL_EMPLOYEE,
+    REPORT_REVENUE_PERSONAL_PARTNER,
+    REPORT_REVENUE_TEAM_EMPLOYEE,
+    REPORT_REVENUE_TEAM_PARTNER,
   };
 };
 

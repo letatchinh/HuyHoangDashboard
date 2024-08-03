@@ -1,7 +1,6 @@
 import {
   Col,
   DatePicker,
-  Divider,
   Form,
   Row,
   Select,
@@ -12,11 +11,9 @@ import dayjs from "dayjs";
 import { map } from "lodash";
 import React, { CSSProperties, useEffect, useMemo, useState } from "react";
 import { FILTER_BY_VI } from "~/constants/defaultValue";
-import SelectCollaborator from "~/modules/collaborator/components/SelectSearch";
+import SelectCollaboratorV2 from "~/modules/collaborator/components/SelectCollaboratorV2";
 import SelectEmployeeV2 from "~/modules/employee/components/SelectEmployeeV2";
-import SelectEmployee from "~/modules/employee/components/SelectSearch";
 import SelectProductBySupplier from "~/modules/product/components/SelectProductBySupplier";
-import { datatypeReportVi } from "~/modules/reportIndividualCollaborator/reportIndividualCollaborator.modal";
 import { filterSelectWithLabel } from "~/utils/helpers";
 const { RangePicker } = DatePicker;
 const dateFormat = "YYYY-MM-DD";
@@ -143,11 +140,18 @@ export default function FilterByDate(props: propsType): React.JSX.Element {
       <Row>
         {showCollaborator && (
           <Col span={8}>
-            <SelectCollaborator
-              value={query?.sellerId ? query?.sellerId?.split(",") : []}
-              onChange={(value) => onParamChange({ sellerId: value || null })}
-              style={{ width: 200 }}
-            />
+              <Form form={form} initialValues={{ collaboratorId: query?.sellerId }}>
+                <SelectCollaboratorV2
+                  validateFirst={false}
+                  form={form}
+                  style={{ width: 200 }}
+                  showIcon={false}
+                  size={"middle"}
+                  defaultValue={query?.sellerId || null}
+                  onChange={(value) => onParamChange({ sellerId: value })}
+                  // mode="multiple"
+                />
+              </Form>
           </Col>
         )}
         {showSeller && (
