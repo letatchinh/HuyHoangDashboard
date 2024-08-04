@@ -6,10 +6,12 @@ import * as warehouseModels from "./warehouse.modal";
 import reducer from "./redux/reducer";
 import saga from "./redux/saga";
 import components from "./components";
+import Inventory from "./components/Inventory";
 
 const moduleExport = {
     page : {
         index: WarehouseScreen,
+        inventory: Inventory
     },
     api : warehouseApi,
     hook : warehouseHook,

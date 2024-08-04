@@ -1,3 +1,41 @@
+# [1.20.0](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/compare/v1.19.0...v1.20.0) (2024-08-04)
+
+
+### Bug Fixes
+
+* [#1781](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1781) update addon after product weight ([1af3810](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/1af3810209dfc232cd4176895c16da213719a0c0))
+* [#1781](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1781) Update product weight ([f0064e8](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/f0064e8ff1cc5fee16be03e7e4e934996312071a))
+* [#1789](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1789) update search by product group ([5b04cb3](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/5b04cb3a3759c4784f25b13b965d9954d163cf40))
+* [#1792](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1792) change key permission ([da18f66](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/da18f6640967b83bc3fec9028bb6d8baa99a40f8))
+* [#1792](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1792) permission ([faf0a44](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/faf0a44d1dd2f4b4ca024ce612c75ed7d13a04b5))
+* [#1792](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1792) render name change ([3325ef9](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/3325ef9bd86a9e9b44c7a4526f93ab3199258e2c))
+* [#1820](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1820) fix weight ([67b43bb](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/67b43bbbaf7bcf022d7c340a61064c18b7bf5549))
+* [#1866](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1866) add status ([95f0e3f](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/95f0e3ffd133fffd0496d5a2fa6d5471e44f79fd))
+* 1805 screen ([a41d8fc](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/a41d8fc38cebdadb2b7064f2234509b083e032e4))
+* action create order quotation ([f59eec1](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/f59eec16b9b2c7ce5d927b08927bd9524a52ef22))
+* data init bill and order ([e5d100e](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/e5d100e54be78d8a9d3af47e78d5f44fa1a602cf))
+* displays the quantity being purchased ([57a83b8](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/57a83b8e4b546a48af2d78c83f7b50fcd2c4a8aa))
+* export ([cba1a55](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/cba1a554c846c545b655dc0044158b045c00e5ff))
+* render stock in create bill ([5eaaa16](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/5eaaa169c7471f443487465509687df86c38f314))
+* scroll create order ([293b6f5](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/293b6f55a1c247d8c4d742eed778feb0c841b430))
+* show logisticCode ([2eb2885](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/2eb2885ae807ac912fb5b958396a428d5ba2d15a))
+* update branch ([a699866](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/a69986623dd3f532adf2dbf9ff48c61a8556cdc4))
+* update create order supplier from inventory ([7463a27](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/7463a27c4662ea6420821693ba3e93b81a4c393e))
+* update totalWeight for bill ([5720705](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/57207052e9dced0467a53a9d57e1a35180f44db7))
+* update warehouse after update apiKey ([8563671](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/856367164ef238b4d580abd2772bfffd498265af))
+
+
+### Features
+
+* [#1736](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1736) check product stock ([3ea81ca](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/3ea81ca77826ad21187b2e27b6b93bea9702c57e))
+* [#1805](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1805) check inventory ([98bad0b](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/98bad0bb60d7090ec79459e5b97375e67cd223bf))
+* [#1805](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1805) permission ([b5b0ded](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/b5b0ded8cab2c46ee1db4ba00836f6b6b0c694a0))
+* [#1805](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1805) redux ([696f649](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/696f64992c6ad724fa8bbf1b0818da2bf71fe9ce))
+* [#1805](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1805) route ([717f009](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/717f0096337bae3d9469b043a21780799308b89e))
+* [#1820](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1820) create orderSupplier from page stock ([f122861](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/f1228615a6ac6c52fe00643cb536d8058479af04))
+* [#1820](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1820) update when change supplier ([5b34444](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/5b344440a0c29f1d4673eebdd548242c22dbde3b))
+* update linked branch ([517a1b4](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/517a1b4fa53aa3f62c7567dd3ee82c18c2a38403))
+
 # [1.19.0](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/compare/v1.18.5...v1.19.0) (2024-08-03)
 
 

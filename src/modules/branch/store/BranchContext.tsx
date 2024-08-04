@@ -38,6 +38,7 @@ export type BranchTypeContext = {
   canDeleteWarehouse: boolean;
   canUpdateWarehouse: boolean;
   getListWarehouse: any;
+  loading: boolean;
 };
 
 const BranchContext = createContext<BranchTypeContext>({
@@ -58,6 +59,7 @@ const BranchContext = createContext<BranchTypeContext>({
   canDeleteWarehouse: false,
   canUpdateWarehouse: false,
   getListWarehouse: () => [],
+  loading: false
 }); 
 
 export function BranchProviderContext({ children }: BranchProps) {
@@ -140,6 +142,7 @@ export function BranchProviderContext({ children }: BranchProps) {
         canDeleteWarehouse,
         canUpdateWarehouse,
         getListWarehouse,
+        loading,
       }}
     >
       {children}

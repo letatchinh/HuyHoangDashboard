@@ -13,5 +13,7 @@ const apis = {
     updateManagementWarehouse: (data?: any) => requester.put(`/api/v1/branch/warehouse-address/${get(data,'branchId')}`, omit(data, ['branchId'])),
     getAllWarehouse: (id?: any) => requester.get(`/api/v1/branch/warehouses/${id}`),
     deleteWarehouseLink: (data?: any) => requester.delete(`/api/v1/branch/warehouse/${data?.id}`, omit(data, ['id'])),
+
+    getInventory: (query?: any) => requester.get(`/api/v1/check/product/out-of-stock`, query),
 }
 export default apis;

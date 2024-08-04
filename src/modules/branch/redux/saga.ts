@@ -1,6 +1,7 @@
 import { put, call, takeLatest } from 'redux-saga/effects';
 import api from '../branch.api'; 
 import { branchSliceAction } from './reducer';
+import { warehouseActions } from '~/modules/warehouse/redux/reducer';
 
 function* getListBranch({payload:query} : any) : any {
   try {
@@ -61,6 +62,8 @@ function* updateApiKey({payload} : any) : any {
   try {
     const data = yield call(api.updateApiKey,payload);
     yield put(branchSliceAction.updateApiKeySuccess(data));
+    yield put(branchSliceAction.getListRequest());
+    yield put(warehouseActions.getListRequest());
   } catch (error:any) {
     yield put(branchSliceAction.updateApiKeyFailed(error));
   }

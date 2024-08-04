@@ -174,7 +174,8 @@ export const PATH_APP = {
   },
 
   warehouse:{
-    setting: path(ROOTS.app, "/warehouse-setting")
+    setting: path(ROOTS.app, "/warehouse-setting"),
+    inventory: path(ROOTS.app, "/warehouse-inventory"),
   },
 
   reportIndividualCollaborator: {

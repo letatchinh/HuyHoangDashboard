@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { omit } from "lodash";
 import { InstanceModuleRedux } from "~/redux/instanceModuleRedux";
 import { initStateSlice } from "~/redux/models";
+import { getPaging } from "~/utils/helpers";
 interface cloneInitState extends initStateSlice {
   // Add cloneInitState Type Here
   updateManagementWarehouseSuccess?: any;
@@ -23,6 +24,16 @@ interface cloneInitState extends initStateSlice {
   deleteWarehouseLinkedFailed?: any;
 
   isCheckWarehouse?: boolean;
+
+  isLoadingInventory?: boolean;
+  listInventory?: any[];
+  getInventoryFailed?: any;
+  listInventoryPaging?: any;
+
+  isLoadingInventoryCreate?: boolean;
+  listInventoryCreate?: any[];
+  getInventoryCreateFailed?: any;
+  listInventoryCreatePaging?: any;
 
 };
 class WarehouseClassExtend extends InstanceModuleRedux {
@@ -116,6 +127,33 @@ class WarehouseClassExtend extends InstanceModuleRedux {
         state.list = payload;
       },
 
+      getInventoryRequest: (state: cloneInitState, {payload}: any) => {
+        state.isLoadingInventory = true;
+      },
+
+      getInventorySuccess: (state: cloneInitState, { payload }: any) => {
+        state.isLoadingInventory = false;
+        state.listInventory = payload?.docs;
+        state.listInventoryPaging = getPaging(payload);
+      },
+      getInventoryFailed: (state: cloneInitState, { payload }: any) => {
+        state.isLoadingInventory = false;
+        state.getInventoryFailed = payload;
+      },
+      getInventoryInCreateRequest: (state: cloneInitState, {payload}: any) => {
+        state.isLoadingInventoryCreate = true;
+      },
+
+      getInventoryInCreateSuccess: (state: cloneInitState, { payload }: any) => {
+        state.isLoadingInventoryCreate = false;
+        state.listInventoryCreate = payload?.docs;
+        state.listInventoryCreatePaging = getPaging(payload);
+      },
+      getInventoryInCreateFailed: (state: cloneInitState, { payload }: any) => {
+        state.isLoadingInventoryCreate = false;
+        state.getInventoryCreateFailed = payload;
+      },
+
       // Want Add more reducer Here...
     }
     this.cloneInitState = {
@@ -139,6 +177,16 @@ class WarehouseClassExtend extends InstanceModuleRedux {
       deleteWarehouseLinkedFailed: null,
 
       isCheckWarehouse: false,
+
+      isLoadingInventory: false,
+      listInventory: [],
+      getInventoryFailed: null,
+      listInventoryPaging: null,
+
+      isLoadingInventoryCreate: false,
+      listInventoryCreate: [],
+      getInventoryCreateFailed: null,
+      listInventoryCreatePaging: null
       // Want Add more State Here...
     }
   }

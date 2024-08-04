@@ -566,7 +566,20 @@ export const resource: ItemType[] = [
       },
     ],
   },
-
+  {
+    label: "Quản lý kho",
+    icon: <HomeOutlined />,
+    key: 'warehouse',
+    permission: [POLICIES.READ_OUTOFSTOCK],//
+    children: [
+      {
+        label: "Quản lý tồn kho",
+        path: PATH_APP.warehouse.inventory,
+        key: PATH_APP.warehouse.inventory,
+        permission: [POLICIES.READ_OUTOFSTOCK], //
+      },
+    ]
+  },
   {
     label: "Mã giảm giá",
     icon: <i className="fa-solid fa-ticket-simple"></i>,

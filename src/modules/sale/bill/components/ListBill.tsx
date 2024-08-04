@@ -309,7 +309,7 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
                   <Status
                     status={status}
                     statusVi={CLONE_STATUS_BILL_VI?.[status]}
-                  />
+                  />  
                 </ToolTipBadge>
                 <WithPermission permission={POLICIES.UPDATE_BILLSTATUS}>
                   <ConfirmStatusBill

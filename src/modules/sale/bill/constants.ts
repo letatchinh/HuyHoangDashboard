@@ -9,6 +9,8 @@ export const STATUS_BILL = {
   // PROCESSING: "PROCESSING",
   COMPLETED: "COMPLETED",
   CANCELLED: "CANCELLED",
+  RETURN: "RETURN",
+  CUSTOMER_REJECT: "CUSTOMER_REJECT",
 };
 export const STATUS_BILL_VI = {
   NEW: "Đã tiếp nhận",
@@ -21,6 +23,8 @@ export const STATUS_BILL_VI = {
   // PROCESSING: "Đang xử lý",
   COMPLETED: "Đã hoàn thành",
   CANCELLED: "Đã huỷ",
+  RETURN: "Đơn vị vận chuyển từ chối",
+  CUSTOMER_REJECT: "Khách hàng từ chối nhận",
 };
 
 export const STATUS_BILL_LEVEL = {

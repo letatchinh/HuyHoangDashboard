@@ -227,7 +227,7 @@ export const useInitialValue = (listWarehouse: any[], data: any[]) => {
       setNewData(newBills);
     }else{
       setNewData(data);
-    }
+    };
   }, [listWarehouse, data]);
   return newData;
 };
