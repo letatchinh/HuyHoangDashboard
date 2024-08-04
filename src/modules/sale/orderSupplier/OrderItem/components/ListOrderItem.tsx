@@ -185,35 +185,35 @@ export default function ListOrderItem({
         );
       },
     },
-    {
-      title: "Tình trạng",
-      dataIndex: "status",
-      key: "status",
-      align: "center",
-      render(status, record, index) {
-        // const { nextStatus, message } = getNextStatus({
-        //   status,
-        //   lotNumber: get(record, "lotNumber"),
-        //   expirationDate: get(record, "expirationDate"),
-        // });
-        return (
-          <div className="d-flex flex-column align-items-center">
-            <ToolTipBadge
-              title={
-                status === STATUS_ORDER_SUPPLIER.CANCELLED &&
-                get(record, "note", "")
-              }
-            >
-              <Status
-                status={status}
-                statusVi={CLONE_STATUS_ORDER_ITEM_VI?.[status]}
-              />
-            </ToolTipBadge>
-            <ConfirmStatusOrderItem askAgain={askAgain} setAskAgain={setAskAgain} billItem={record} onChangeStatusBillItem={onChangeStatusOrderItem} onOpenCancel={onOpenCancel} isDisabledAll={isDisabledAll} isSubmitLoading={isSubmitLoading} key={get(record,'_id')}/>
-          </div>
-        );
-      },
-    },
+    // {
+    //   title: "Tình trạng",
+    //   dataIndex: "status",
+    //   key: "status",
+    //   align: "center",
+    //   render(status, record, index) {
+    //     // const { nextStatus, message } = getNextStatus({
+    //     //   status,
+    //     //   lotNumber: get(record, "lotNumber"),
+    //     //   expirationDate: get(record, "expirationDate"),
+    //     // });
+    //     return (
+    //       <div className="d-flex flex-column align-items-center">
+    //         <ToolTipBadge
+    //           title={
+    //             status === STATUS_ORDER_SUPPLIER.CANCELLED &&
+    //             get(record, "note", "")
+    //           }
+    //         >
+    //           <Status
+    //             status={status}
+    //             statusVi={CLONE_STATUS_ORDER_ITEM_VI?.[status]}
+    //           />
+    //         </ToolTipBadge>
+    //         <ConfirmStatusOrderItem askAgain={askAgain} setAskAgain={setAskAgain} billItem={record} onChangeStatusBillItem={onChangeStatusOrderItem} onOpenCancel={onOpenCancel} isDisabledAll={isDisabledAll} isSubmitLoading={isSubmitLoading} key={get(record,'_id')}/>
+    //       </div>
+    //     );
+    //   },
+    // },
     {
       title: "Số lượng",
       dataIndex: "quantity",
@@ -252,26 +252,26 @@ export default function ListOrderItem({
         );
       },
     },
-    {
-      title: "Thao tác",
-      key: "_id",
-      dataIndex : '_id',
-      render(_id,record:any) {
-        return (
-          <Space>
-            <WithPermission permission={PolicyModule.POLICIES.UPDATE_ORDERSUPPLIER}>
-            <Button
-              type="primary"
-              disabled={record.status !== STATUS_ORDER_ITEM.NEW}
-              onClick={() => onOpenForm(_id)}
-            >
-              Cập nhật
-            </Button>
-            </WithPermission>
-          </Space>
-        );
-      },
-    },
+    // {
+    //   title: "Thao tác",
+    //   key: "_id",
+    //   dataIndex : '_id',
+    //   render(_id,record:any) {
+    //     return (
+    //       <Space>
+    //         <WithPermission permission={PolicyModule.POLICIES.UPDATE_ORDERSUPPLIER}>
+    //         <Button
+    //           type="primary"
+    //           disabled={record.status !== STATUS_ORDER_ITEM.NEW}
+    //           onClick={() => onOpenForm(_id)}
+    //         >
+    //           Cập nhật
+    //         </Button>
+    //         </WithPermission>
+    //       </Space>
+    //     );
+    //   },
+    // },
   ];
 
   return (

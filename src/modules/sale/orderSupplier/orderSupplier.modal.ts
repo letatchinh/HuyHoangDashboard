@@ -75,7 +75,9 @@ export interface FormFieldCreateOrderSupplier {
 export interface PayloadCreateOrderSupplier extends FormFieldCreateOrderSupplier {
     orderSupplierItems : Omit<orderSupplier,'variant' | 'variants'>[],
     totalPrice : number,
-    totalAmount : number,
+    totalAmount: number,
+    warehouseId?: string,
+    warehouseName?: string,
 }
 export interface PayloadUpdateOrderSupplier  {
     cancelNote? : string,
@@ -124,3 +126,30 @@ export interface ItemSearchProduct  {
     manufacturerId : string,
     manufacturer : manufacturerType
 }
+interface stockDataType{
+    warehouseId: number;
+    listLot: [
+        {
+            variantId: string
+            quantity: number;
+            lotNumber: string;
+            expirationDate: Date
+        }
+    ];
+    variants: [
+        {
+            variantName: string
+            exchangeValue: number
+            isDefault: boolean
+            _id: string
+        }
+    ];
+}
+
+export interface paramsConvertDataOrderSupplier {
+    orderSupplierItems : string[]
+    totalPrice: number
+    warehouseId?: string | undefined
+    warehouseName?: string | undefined
+    billId: string
+};

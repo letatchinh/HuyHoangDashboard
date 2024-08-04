@@ -58,7 +58,7 @@ function* changeStatus({payload} : any) : any {
       },
     }
     const data = yield call(request[status].api,request[status].payload);
-    console.log(data,'data');
+  
     yield put(requestGroupActions.changeStatusSuccess(data));
   } catch (error:any) {
     console.log(error,'error');

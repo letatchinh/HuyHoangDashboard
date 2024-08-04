@@ -1,9 +1,7 @@
-import { REF_COLLECTION } from './../../../constants/defaultValue';
-import { get } from "lodash";
+import { get, omit } from "lodash";
 import { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
-import { RootState } from "~/redux/store";
 import { checkRefCollection, clearQuerySearch, getExistProp } from "~/utils/helpers";
 import {
   getSelectors,
@@ -44,9 +42,19 @@ const getDebtFailedSelector = getSelector('getDebtFailed');
 
 const updateBillItemFailedSelector = getSelector('updateBillItemFailed');
 const updateBillItemSuccessSelector = getSelector('updateBillItemSuccess');
+
+const updateStatusBillFailedSelector = getSelector('updateStatusBillFailed');
+const updateStatusBillSuccessSelector = getSelector('updateStatusBillSuccess');
+
 const getListProductSuggestSuccessSelector = getSelector('listProductSuggest');
 const getListProductSuggestFailedSelector = getSelector('getProductSuggestFailed');
 const listProductSuggestLoadingSelector = getSelector('isProductSuggestLoading');
+
+const updateApplyLogisticSuccessSelector = getSelector('updateLogisticSuccess');
+const updateApplyLogisticFailedSelector = getSelector('updateLogisticFailed');
+
+const splitBillSuccessSelector = getSelector('splitBillSuccess');
+const splitBillFailedSelector = getSelector('splitBillFailed');
 
 const pagingProductSuggestSelector = getSelector('pagingProductSuggest');
 export const useBillProductSuggestPaging = () => useSelector(pagingProductSuggestSelector);
@@ -115,7 +123,7 @@ export const useDeleteBill = (callback?: any) => {
 export const useUpdateBillItem = (callback?: any) => {
   useSuccess(
     updateBillItemSuccessSelector,
-    `Cập nhật Đơn hàng thành công`,
+    `Cập nhật đơn hàng thành công`,
     // callback
   );
   useFailed(updateBillItemFailedSelector);
@@ -124,6 +132,20 @@ export const useUpdateBillItem = (callback?: any) => {
     action: billSliceAction.updateBillItemRequest,
     loadingSelector: isSubmitLoadingSelector,
     callbackSubmit : callback
+  });
+};
+
+export const useUpdateStatusBill = (callback?: any) => {
+  useSuccess(
+    updateStatusBillSuccessSelector,
+    `Cập nhật trạng thái đơn hàng thành công`,
+    callback
+  );
+  useFailed(updateStatusBillFailedSelector);
+
+  return useSubmit({
+    action: billSliceAction.updateStatusBillRequest,
+    loadingSelector: isSubmitLoadingSelector,
   });
 };
 
@@ -217,7 +239,23 @@ export const useGetProductListSuggest = (param?: any) => {
 export const useResetBillAction = () => {
   return useResetState(billSliceAction.resetAction);
 };
+export const useResetBillInSplitAction = () => {
+  return useResetState(billSliceAction.resetActionInSplit);
+};
 
+export const useUpdateApplyLogisticUnit = (callback?: any) => {
+  useSuccess(
+    updateApplyLogisticSuccessSelector,
+    `Cập nhật đơn vị vận chuyển vào đơn hàng thành công`,
+    callback
+  );
+  useFailed(updateApplyLogisticFailedSelector);
+
+  return useSubmit({
+    action: billSliceAction.updateApplyLogisticRequest,
+    loadingSelector: isSubmitLoadingSelector,
+  });
+};
 
 export const redirectRouterBillCreate = (pathname: string) => {
   if (pathname === PATH_APP.quotation.employee) {
@@ -244,3 +282,49 @@ export const redirectRouterBillId = (pathname: string) => {
   };
   return PATH_APP.bill.root
 };
+
+export const useSplitBill = (callback?: any) => {
+  useSuccess(
+    splitBillSuccessSelector,
+    `Tách đơn hàng thành công`,
+    callback
+  );
+  useFailed(splitBillFailedSelector);
+
+  return useSubmit({
+    action: billSliceAction.splitBillRequest,
+    loadingSelector: isSubmitLoadingSelector,
+  });
+};
+
+export const useInitialValue = (listWarehouse: any[], data: any[]) => {
+  const [newData, setNewData] = useState<any[]>([]);
+  useEffect(() => {
+      if (data?.length && listWarehouse?.length) {
+      const newBills : any[] = data?.map((item: any) => {
+        const warehouse = listWarehouse?.find((w: any) => w?._id === item?.warehouseId);
+        return {
+          ...item,
+          warehouseName: warehouse?.name?.vi
+        }
+      });
+      setNewData(newBills);
+    }else{
+      setNewData(data);
+    };;
+  }, [listWarehouse, data]);
+  return newData;
+};
+
+export const useCheckRefCollection = (refCollectionInput : "ctv" | "pharmacy") => {
+
+  const refCollection : "collaborator" | "pharma_profile" | undefined = useMemo(() => {
+    if (refCollectionInput === "ctv") {
+      return 'collaborator'
+    };
+    if (refCollectionInput === "pharmacy") {
+      return 'pharma_profile'
+    };
+  }, [refCollectionInput]);
+  return refCollection
+}

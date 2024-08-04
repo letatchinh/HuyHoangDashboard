@@ -85,3 +85,23 @@ export type FieldTypeFormProduct = {
     note?: string,
     dateRefun: Date,
 }
+
+export interface stockDataType{
+  warehouseId: number;
+  products: [
+      {
+          variants: [
+              {
+                  variantName: string
+                  exchangeValue: number
+                  isDefault: boolean
+              }
+          ];
+          quantity: number;
+          lotNumber: string;
+          expirationDate: Date
+      }
+
+  ]
+
+}

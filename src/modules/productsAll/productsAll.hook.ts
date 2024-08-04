@@ -103,6 +103,7 @@ export const useProductsAllQueryParams = () => {
   const [limit, setLimit] = useState(get(query, "limit") || 10);
   const [page, setPage] = useState(get(query, "page") || 1);
   const isSupplierMaster = true;
+  const productGroup = query.get("productGroup")
   const keyword = query.get("keyword");
   const createSuccess = useSelector(createProductSuccessSelector);
   const deleteSuccess = useSelector(deleteProductSuccessSelector);
@@ -117,11 +118,12 @@ export const useProductsAllQueryParams = () => {
       page,
       limit,
       keyword,
-      isSupplierMaster
+      isSupplierMaster,
+      productGroup
     };
     return [queryParams, onTableChange];
     //eslint-disable-next-line
-  }, [page, limit, keyword,createSuccess, deleteSuccess]);
+  }, [page, limit, keyword,createSuccess, deleteSuccess,productGroup]);
 };
 
 export const useUpdateProductsAllParams = (

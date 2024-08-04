@@ -183,7 +183,7 @@ export const useReceiptVoucherQueryParams = () => {
       status,
       totalAmount,
       reason,
-      ...refCollection,
+      ...refCollection && {refCollection},
       ...methodType && {methodType},
     };
     return [queryParams,onTableChange];
@@ -282,6 +282,7 @@ export const useInitWhReceiptVoucher = (whReceiptVoucher: any) => {
       ...rest,
       accountingDate: dayjs(accountingDetail?.accountingDate),
       dateOfIssue: dayjs(dateOfIssue),
+      receiver: whReceiptVoucher?.receiver ?? pharmaProfile?.name ?? pharmaProfile?.fullName,
       name: pharmaProfile?.name ?? pharmaProfile?.fullName,
       address: compactAddress(pharmaProfile?.address),
       pharmacyId : pharmaProfile?._id

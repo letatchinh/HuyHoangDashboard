@@ -17,6 +17,7 @@ import ModalAnt from "~/components/Antd/ModalAnt";
 import PharmacyForm from "~/modules/pharmacy/screens/PharmacyForm";
 import CollaboratorForm from "~/modules/collaborator/components/CollaboratorForm";
 import { useCreateCollaborator } from "~/modules/collaborator/collaborator.hook";
+import useCreateBillStore from "../storeContext/CreateBillContext";
 interface propsType extends SelectProps {
   form?: any;
   allowClear?: boolean;
@@ -59,7 +60,9 @@ export default function SelectPharmacy({
     setPharmacyFormOpen(false);
     setDestroy && setDestroy(true);
   });
-  const filterOption: any = (data: any[]) => {
+  const {setPharmacyInfo} = useCreateBillStore();
+  
+  const filterOption : any= (data: any[]) => {
     if (pathname === PATH_APP.bill.createCollaborator) {
       return data?.filter((item) => item?.type === "ctv");
     }
@@ -114,6 +117,10 @@ export default function SelectPharmacy({
         })
       );
 
+      if (!!id) {
+        const pharmacy = newOptions?.find((item: any) => item?.value === id);
+        setPharmacyInfo(pharmacy);
+      };
       return newOptions;
     } catch (error: any) {
       onNotify?.error(error?.response?.data?.message || "Có lỗi gì đó xảy ra");
@@ -143,6 +150,10 @@ export default function SelectPharmacy({
         if (validateFirst) {
           await form.validateFields(["pharmacyId"]);
         }
+        if (!!id) {
+          const pharmacy = newOptions?.find((item: any) => item?.value === id);
+          setPharmacyInfo(pharmacy);
+        };
       } catch (error) {
         setLoading(false);
       }

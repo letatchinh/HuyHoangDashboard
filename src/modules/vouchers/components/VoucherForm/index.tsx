@@ -221,7 +221,7 @@ import { useGetProfile } from "~/modules/auth/auth.hook";
     //Set address default from branch 99999
     useEffect(() => {
       if (branch) {
-        const findBranchWorldHealth = branch?.docs?.find(
+        const findBranchWorldHealth = branch?.find(
           (item: any) => item._id === DEFAULT_BRANCH_ID
         );
         const address = concatAddress(findBranchWorldHealth?.address);
@@ -354,7 +354,7 @@ import { useGetProfile } from "~/modules/auth/auth.hook";
                   </Row>
                   <Row gutter={36}>
                     <Col span={24}>
-                      <FormItem label="Người nhận" name="pharmacyReceive">
+                      <FormItem label="Người nộp" name="pharmacyReceive">
                         {isLoading ? <Skeleton.Input active /> : <Input />}
                       </FormItem>
                     </Col>
@@ -572,7 +572,7 @@ import { useGetProfile } from "~/modules/auth/auth.hook";
             </WithPermission>
             <Row className="staff-form__submit-box">
               <WithOrPermission permission={refCollection === 'partner' ? [POLICIES.UPDATE_VOUCHERBILLPARTNER, POLICIES.WRITE_VOUCHERBILLPARTNER] : [POLICIES.UPDATE_VOUCHERPHARMACY, POLICIES.WRITE_VOUCHERPHARMACY]}>
-              <Button icon={<SaveOutlined/>} type="primary" htmlType="submit">
+              <Button icon={<SaveOutlined/>} type="primary" htmlType="submit" loading={isSubmitLoading}>
                 Lưu
               </Button>
               </WithOrPermission>

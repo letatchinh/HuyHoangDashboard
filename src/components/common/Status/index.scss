@@ -18,7 +18,6 @@
       background-color: #f0f0f0;
       color: darken($color: #f0f0f0, $amount: 50%);
     }
-    
     &.processing {
         background-color: #1890ff;
         color: #fff;
@@ -28,6 +27,15 @@
       color: #fff;
     }
     &.cancelled {
+      background-color: #f5222d;
+      color: #fff;
+    }
+    &.reject {
+      background-color: #f5222d;
+      color: #fff;
+    }
+
+    &.customer_reject {
       background-color: #f5222d;
       color: #fff;
     }
@@ -42,7 +50,7 @@
       background-color: #9c543a; /* Màu cam đậm */
     }
     
-    &.processing {
+    &.requested {
       color: #ffffff;
       background-color: #ffa500; /* Màu cam */
     }
@@ -55,6 +63,10 @@
     &.shipping {
       color: #ffffff;
       background-color: #007bff; /* Màu xanh da trời */
-    }
+    };
+    &.package_export{
+      color: #ffffff;
+      background-color: #b7d222; /* Màu cam đậm */
+    };
 
 }

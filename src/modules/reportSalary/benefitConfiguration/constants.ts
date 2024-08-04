@@ -63,7 +63,7 @@ export const GROUP_TYPE_BENEFIT_EMPLOYEE_LEVEL_VI = {
 }
 export const TYPE_BENEFIT_VI = {
   BENEFIT_TDV: "Hoa hồng TDV",
-  BENEFIT_BASE: "Hoa hồng CTV",
+  BENEFIT_BASE: "Hoa hồng dưới chuẩn",
   BENEFIT_TEAMLEADER: "Thưởng theo quản lý đội nhóm",
   BENEFIT_ASM: "Hoa hồng bán hàng theo tháng",
 
