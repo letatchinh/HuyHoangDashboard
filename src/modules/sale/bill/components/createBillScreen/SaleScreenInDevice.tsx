@@ -1,4 +1,4 @@
-import { Button, Col, Divider, Form, Row } from "antd";
+import { Col, Form, Row } from "antd";
 import { get } from "lodash";
 import React, { useEffect, useMemo } from "react";
 import { FormFieldCreateBill, PayloadCreateBill } from "~/modules/sale/bill/bill.modal";
@@ -7,11 +7,6 @@ import { DataResultType } from "~/pages/Dashboard/Bill/CreateBill";
 import useNotificationStore from "~/store/NotificationContext";
 import { useChangeDocumentTitle } from "~/utils/hook";
 import useCreateBillStore from "../../storeContext/CreateBillContext";
-import ProductSelectedTable from "../ProductSelectedTable";
-import SelectPharmacy from "../SelectPharmacy";
-import TotalBill from "./TotalBill";
-import ProductSelectedTableInDevice from "../ProductSelectedTableInDevice";
-import TotalBillInDevice from "./TotalBillInDevice";
 import SelectPharmacyInDevice from "../SelectPharmacyInDevice";
 type propsType = {};
 export default function SaleScreenInDevice(props: propsType): React.JSX.Element {

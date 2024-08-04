@@ -10,6 +10,7 @@ import { useGetListProductUnitAll } from "~/modules/productUnit/productUnit.hook
 import { filterSelectWithLabel } from "~/utils/helpers";
 import { TypePropVariants } from "../product.modal";
 import { validateChangeVariants } from "../product.service";
+import BaseBorderBox from "~/components/common/BaseBorderBox";
 export default function Variants({
   form,
   isLoading: loading,
@@ -36,12 +37,15 @@ export default function Variants({
         {(fields, { add, remove }) => {
           return (
             <>
-              {fields.map(({ key, name, fieldKey, ...restField }: any, index) =>
-                {
+              {fields.map(({ key, name, fieldKey, ...restField }: any, index) => {
                   
-                  const isVariantUsedInDiscount = !!get(variants,[name,'_id']) && cumulativeDiscount?.some((discount : cumulativeDiscountType) => (get(discount,'applyVariantId') === get(variants,[name,'_id'])));
+                const isVariantUsedInDiscount = !!get(variants, [name, '_id']) && cumulativeDiscount?.some((discount: cumulativeDiscountType) => (get(discount, 'applyVariantId') === get(variants, [name, '_id'])));
                   
-                  return index === 0 ? (
+                return (
+              <BaseBorderBox title="">
+                    {
+                index === 0 ?
+                  (
                     <Row className="mb-2" gutter={8} key={key} align="middle">
                       <Col span={6}>
                         <Form.Item
@@ -132,134 +136,202 @@ export default function Variants({
                       </Col>
                     </Row>
                   ) : (
-                    <Row className="mb-2" gutter={8} key={key} align="middle">
+                        <Row className="mb-2" gutter={8} key={key} align="middle">
+                        <Col span={6}>
+                          <Form.Item
+                            style={{ marginBottom: 0 }}
+                            {...restField}
+                            label={"Đơn vị"}
+                            name={[name, "productUnit"]}
+                            rules={[
+                              {
+                                required: true,
+                                message: "Xin vui lòng chọn!",
+                              },
+                            ]}
+                          >
+                            {RenderLoading(
+                              loading,
+                              <Select
+                                options={units
+                                  ?.filter(
+                                    (item: any) =>
+                                      !isUsed(
+                                        form.getFieldValue([
+                                          "variants",
+                                          name,
+                                          "productUnit",
+                                        ]),
+                                        get(item, "_id")
+                                      )
+                                  )
+                                  ?.map((item: any) => ({
+                                    label: get(item, "name"),
+                                    value: get(item, "_id"),
+                                    disabled : isVariantUsedInDiscount
+                                  }))}
+                              />
+                            )}
+                          </Form.Item>
+                        </Col>
+                        <Col span={6}>
+                          <Form.Item
+                            style={{ marginBottom: 0 }}
+                            {...restField}
+                            label={"Giá niêm yết"}
+                            name={[name, "price"]}
+                            rules={[
+                              {
+                                required: true,
+                                message: "Xin vui lòng nhập!",
+                              },
+                            ]}
+                          >
+                            {RenderLoading(loading, <InputNumberAnt min={0} />)}
+                          </Form.Item>
+                        </Col>
+                        <Col span={5}>
+                          <Form.Item shouldUpdate noStyle>
+                            {({ getFieldValue }) => (
+                              <Form.Item
+                                style={{ marginBottom: 0 }}
+                                {...restField}
+                                label={"Giá thu về"}
+                                name={[name, "cost"]}
+                                rules={[
+                                  ({ getFieldValue }) => ({
+                                    validator(_, value) {
+                                      const price = getFieldValue([
+                                        "variants",
+                                        name,
+                                        "price",
+                                      ]);
+                                      if (!value || value <= price) {
+                                        return Promise.resolve();
+                                      }
+                                      return Promise.reject(
+                                        "Giá nhập phải bé hơn giá bán"
+                                      );
+                                    },
+                                  }),
+                                ]}
+                              >
+                                {RenderLoading(
+                                  loading,
+                                  <InputNumberAnt
+                                    min={0}
+                                    // max={getFieldValue(["variants", name, "price"])}
+                                  />
+                                )}
+                              </Form.Item>
+                            )}
+                          </Form.Item>
+                        </Col>
+                        <Col span={6}>
+                          <Form.Item
+                            style={{ marginBottom: 0 }}
+                            {...restField}
+                            label={"Giá trị quy đổi"}
+                            name={[name, "exchangeValue"]}
+                            rules={[
+                              {
+                                required: true,
+                                message: "Xin vui lòng nhập!",
+                              },
+                            ]}
+                          >
+                            {RenderLoading(loading, <InputNumberAnt min={0} />)}
+                          </Form.Item>
+                        </Col>
+    
+                        <Col span={1}>
+                          <Popconfirm
+                            title="Bạn muốn xoá đơn vị này?"
+                            onConfirm={() => remove(name)}
+                            okText="Xoá"
+                            cancelText="Huỷ"
+                          >
+                          <Tooltip title={isVariantUsedInDiscount ? "Vui lòng gỡ đơn vị ra khỏi chiết khấu để xoá" : null}>
+                          <Button type="text" disabled={isVariantUsedInDiscount}>
+                          <CloseSquareOutlined
+                              style={{ fontSize: 18, color: isVariantUsedInDiscount ? 'GrayText' :"red" }}
+                            />
+                          </Button>
+                          </Tooltip>
+                          </Popconfirm>
+                        </Col>
+                          </Row>
+                      ) 
+                    }
+                    <Row gutter={8} className="mb-2">
                       <Col span={6}>
                         <Form.Item
                           style={{ marginBottom: 0 }}
                           {...restField}
-                          label={"Đơn vị"}
-                          name={[name, "productUnit"]}
+                          label={"Khối lượng"}
+                          name={[name, "weight"]}
                           rules={[
                             {
-                              required: true,
-                              message: "Xin vui lòng chọn!",
+                              required: false,
+                              message: "Xin vui lòng nhập!",
                             },
                           ]}
                         >
-                          {RenderLoading(
-                            loading,
-                            <Select
-                              options={units
-                                ?.filter(
-                                  (item: any) =>
-                                    !isUsed(
-                                      form.getFieldValue([
-                                        "variants",
-                                        name,
-                                        "productUnit",
-                                      ]),
-                                      get(item, "_id")
-                                    )
-                                )
-                                ?.map((item: any) => ({
-                                  label: get(item, "name"),
-                                  value: get(item, "_id"),
-                                  disabled : isVariantUsedInDiscount
-                                }))}
-                            />
-                          )}
+                          {RenderLoading(loading, <InputNumberAnt addonAfter="gram" min={0} style={{width: '100%'}}/>)}
                         </Form.Item>
                       </Col>
                       <Col span={6}>
                         <Form.Item
                           style={{ marginBottom: 0 }}
                           {...restField}
-                          label={"Giá niêm yết"}
-                          name={[name, "price"]}
+                          label={"Dài"}
+                          name={[name, "long"]}
                           rules={[
                             {
-                              required: true,
+                              required: false,
                               message: "Xin vui lòng nhập!",
                             },
                           ]}
                         >
-                          {RenderLoading(loading, <InputNumberAnt min={0} />)}
+                          {RenderLoading(loading, <InputNumberAnt min={0} addonAfter="cm"/>)}
                         </Form.Item>
                       </Col>
                       <Col span={5}>
-                        <Form.Item shouldUpdate noStyle>
-                          {({ getFieldValue }) => (
-                            <Form.Item
-                              style={{ marginBottom: 0 }}
-                              {...restField}
-                              label={"Giá thu về"}
-                              name={[name, "cost"]}
-                              rules={[
-                                ({ getFieldValue }) => ({
-                                  validator(_, value) {
-                                    const price = getFieldValue([
-                                      "variants",
-                                      name,
-                                      "price",
-                                    ]);
-                                    if (!value || value <= price) {
-                                      return Promise.resolve();
-                                    }
-                                    return Promise.reject(
-                                      "Giá nhập phải bé hơn giá bán"
-                                    );
-                                  },
-                                }),
-                              ]}
-                            >
-                              {RenderLoading(
-                                loading,
-                                <InputNumberAnt
-                                  min={0}
-                                  // max={getFieldValue(["variants", name, "price"])}
-                                />
-                              )}
-                            </Form.Item>
-                          )}
+                        <Form.Item
+                          style={{ marginBottom: 0 }}
+                          {...restField}
+                          label={"Rộng"}
+                          name={[name, "wide"]}
+                          rules={[
+                            {
+                              required: false,
+                              message: "Xin vui lòng nhập!",
+                            },
+                          ]}
+                        >
+                          {RenderLoading(loading, <InputNumberAnt min={0} addonAfter="cm"/>)}
                         </Form.Item>
                       </Col>
                       <Col span={6}>
                         <Form.Item
                           style={{ marginBottom: 0 }}
                           {...restField}
-                          label={"Giá trị quy đổi"}
-                          name={[name, "exchangeValue"]}
+                          label={"Cao"}
+                          name={[name, "height"]}
                           rules={[
                             {
-                              required: true,
+                              required: false,
                               message: "Xin vui lòng nhập!",
                             },
                           ]}
                         >
-                          {RenderLoading(loading, <InputNumberAnt min={0} />)}
+                          {RenderLoading(loading, <InputNumberAnt min={0} addonAfter="cm"/>)}
                         </Form.Item>
                       </Col>
-  
-                      <Col span={1}>
-                        <Popconfirm
-                          title="Bạn muốn xoá đơn vị này?"
-                          onConfirm={() => remove(name)}
-                          okText="Xoá"
-                          cancelText="Huỷ"
-                        >
-                        <Tooltip title={isVariantUsedInDiscount ? "Vui lòng gỡ đơn vị ra khỏi chiết khấu để xoá" : null}>
-                        <Button type="text" disabled={isVariantUsedInDiscount}>
-                        <CloseSquareOutlined
-                            style={{ fontSize: 18, color: isVariantUsedInDiscount ? 'GrayText' :"red" }}
-                          />
-                        </Button>
-                        </Tooltip>
-                        </Popconfirm>
-                      </Col>
                     </Row>
-                  )
-                }
-              )}
+                  </BaseBorderBox>
+                )
+              })}
               <Button
                 onClick={() =>
                   add({
@@ -281,6 +353,7 @@ export default function Variants({
           updateProductUnit={() => {}}
         />
       </Modal>
-    </>
+      </>
   );
 }
+

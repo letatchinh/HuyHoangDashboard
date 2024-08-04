@@ -1,4 +1,4 @@
-import { compact, forIn, get, keys, min, unset } from "lodash";
+import { compact, forIn, get, keys, max, min, unset } from "lodash";
 import { v4, validate } from "uuid";
 import {
   DataSourceType,
@@ -9,13 +9,15 @@ import {
 } from "~/pages/Dashboard/Bill/CreateBill";
 import { cumulativeDiscountType } from "../../cumulativeDiscount/cumulativeDiscount.modal";
 import apis from "./bill.api";
-import { DiscountOtherType, quotation } from "./bill.modal";
+import { DetailCoupon, DiscountOtherType, quotation } from "./bill.modal";
 import { DataItem } from "./storeContext/CreateBillContext";
 import CumulativeDiscountModule from "~/modules/cumulativeDiscount";
 import { variantType } from "~/modules/product/product.modal";
 import { TYPE_REWARD } from "~/modules/cumulativeDiscount/constants";
-import { INFINITY } from "~/constants/defaultValue";
+import { INFINITY, MIN_TOTAL_DISCOUNT_PERCENT } from "~/constants/defaultValue";
 import { getValueOfMath } from "~/utils/helpers";
+import { CouponInSelect, VerifyCoupon } from "~/modules/coupon/coupon.modal";
+import apisCoupon from "~/modules/coupon/coupon.api";
 const TYPE_DISCOUNT: any = CumulativeDiscountModule.constants.TYPE_DISCOUNT;
 const TARGET: any = CumulativeDiscountModule.constants.TARGET;
 export const selectProductSearchBill = (data: any) => {
@@ -101,7 +103,6 @@ export const onVerifyData = ({
         const response = await apis.verifyBill({ billSample,pharmacyId : get(bill, "pharmacyId") });
         const InheritItem = get(bill, "quotationItems", [])?.map(
           (item: any) => {
-            console.log(item,'ITEMM');
             const findInResponse = response?.find(
               (res: any) => get(item, "variantId") === get(res, "selectVariant")
             );
@@ -126,7 +127,6 @@ export const onVerifyData = ({
             key: v4(),
           };
         });
-        console.log(items,'itemsitems');
         // Validate Discount
         const cumulativeDiscount = await getCumulativeDiscount({
           quotationItems: items,
@@ -256,7 +256,7 @@ export class CalculateDiscountFactory {
   }
 }
 
-export const reducerDiscountQuotationItems = (quotationItems: any[]) => {
+export const reducerDiscountQuotationItems = (quotationItems: any[],couponSelected : DetailCoupon) => {
   const CalculateDiscountMethod = new CalculateDiscountFactory();
   const newQuotationItems: any[] = quotationItems?.map(
     (quotation: DataItem) => {
@@ -341,8 +341,26 @@ export const reducerDiscountQuotationItems = (quotationItems: any[]) => {
           sum + CalculateDiscountMethod.totalDiscountOther(get(quotation, "variant.price", 1),cur?.value,cur?.typeDiscount,quantityActual),
         0
       );
-      const totalPrice =
-        get(quotation, "variant.price", 1) * quantityActual - totalDiscount - totalDiscountOther;
+      const totalRoot = get(quotation, "variant.price", 1) * quantityActual;
+
+      // Filter Coupon Of Item
+      const cp = couponSelected?.item.filter((coupon) => coupon?.couponAtVariantId === quotation?.variantId);
+
+      // Calculate Coupon For Item 
+      const couponsInItem = cp?.map((item : CouponInSelect) => {
+        const {type,value,maxDiscount} = item?.discount;
+        const totalCouponItem = getValueOfMath(get(quotation, "variant.price", 1),value,type,maxDiscount);
+        const minPrice = totalRoot * MIN_TOTAL_DISCOUNT_PERCENT / 100;
+        const maxDiscountCoupon = totalRoot - minPrice;
+
+        return ({
+          ...item,
+          totalCoupon : Math.min(totalCouponItem,maxDiscountCoupon)
+        })
+      });
+      const totalDiscountCoupon = couponsInItem?.reduce((sum:number,cur : CouponInSelect) => sum + get(cur,'totalCoupon',0),0);
+      const totalDiscountSummary = totalDiscount + totalDiscountOther;
+      const totalPrice = totalRoot - totalDiscountSummary - totalDiscountCoupon;
       return {
         ...quotation,
         cumulativeDiscount,
@@ -354,6 +372,10 @@ export const reducerDiscountQuotationItems = (quotationItems: any[]) => {
         exchangeValue: get(quotation, "variant.exchangeValue", 1),
         price: get(quotation, "variant.price", 1),
         quantityActual,
+        totalRoot,
+        totalDiscountCoupon,
+        couponsInItem,
+        totalDiscountSummary,
       };
     }
   );
@@ -427,6 +449,7 @@ const onRemoveLocalStorage = (key: any) => {
 };
 
 export const addDataToSaleScreen = (data: ItemDataSource) => {
+  console.log(data,'data');
   const newKey: string = v4();
   const newDataSource: DataSourceType = {
     [newKey]: data,
@@ -460,6 +483,27 @@ export const onConvertInitQuantity = (newDataSource: DataSourceType) => {
 
 export class CalculateBill {
   remainAmount (payload : any){
-    return get(payload,'totalPrice',0) - get(payload,'totalReceiptVoucherCompleted',0);
+    return get(payload,'totalPrice',0) - get(payload,'totalReceiptVoucherCompleted',0) - get(payload,'pair',0);
+  }
+}
+
+export const setCouponToBillItem = ({quotationItems,couponSelected} : {quotationItems : DataItem[],couponSelected : CouponInSelect[]}) => {
+  const mergeCouponWithItem = quotationItems?.map((quotation : DataItem) => ({
+    ...quotation,
+    couponsInItem: couponSelected?.filter((coupon) => coupon?.couponAtVariantId === quotation?.variantId),
+    
+  }));
+  return mergeCouponWithItem;
+  
+};
+
+export const validateCoupon = async (payload : VerifyCoupon,setCoupon : (p?:any) => void) => {
+  try {
+    const validCoupon = await apisCoupon.verify(payload);
+    setCoupon(validCoupon);
+    const isDiff = ((validCoupon?.bill?.length !== payload?.coupons?.bill?.length) || (validCoupon?.ship?.length !== payload?.coupons?.ship?.length) || (validCoupon?.item?.length !== payload?.coupons?.item?.length));
+    return isDiff;
+  } catch (error) {
+    console.log(error,'error');
   }
 }

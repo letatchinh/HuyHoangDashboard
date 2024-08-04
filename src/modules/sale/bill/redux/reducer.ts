@@ -10,16 +10,25 @@ import { STATUS_BILL } from "../constants";
 // const CalculateBillMethod = new CalculateBill();
 interface cloneInitState extends initStateSlice {
  // Add cloneInitState Type Here
- isGetDebtLoading? : boolean,
- getDebtFailed? : any,
- debt? : any,
- updateBillItemFailed? : any,
- updateBillItemSuccess? : any,
+  isGetDebtLoading? : boolean,
+  getDebtFailed? : any,
+  debt? : any,
+  updateBillItemFailed? : any,
+  updateBillItemSuccess?: any,
+  
+  updateLogisticSuccess? : any,
+  updateLogisticFailed?: any,
+
+  updateStatusBillFailed? : any,
+  updateStatusBillSuccess?: any,
 
   listProductSuggest?:any,
   isProductSuggestLoading?: boolean,
   getProductSuggestFailed?: any,
-  pagingProductSuggest?:any ;
+  pagingProductSuggest?: any;
+  
+  splitBillFailed? : any,
+  splitBillSuccess?: any,
 }
 class BillClassExtend extends InstanceModuleRedux {
   cloneReducer;
@@ -47,15 +56,12 @@ class BillClassExtend extends InstanceModuleRedux {
       state.isGetByIdLoading = false;
       let totalDiscountBill = 0;
       let totalAmountBill = 0;
+      const {totalCouponForBill = 0,totalCouponForItem = 0 } = payload;
       const billItems = get(payload,'billItems',[])?.map((billItem : any) => {
-        // const {variant} = billItem || {};
-        // console.log(billItem,'billItem');
         const quantity:number = Number((get(billItem, "quantity", 1) / get(billItem, "variant.exchangeValue", 1)).toFixed(1));
         const price : number = get(billItem, 'variant.price',1);
-        const totalPrice : number = get(billItem, 'totalPrice',1);
         const totalAmount = Math.floor(Number(quantity * price));
-        const totalDiscount : number = totalAmount - totalPrice;
-
+        const totalDiscount : number = get(billItem,'totalDiscountSummary',0)
         totalDiscountBill += totalDiscount;
         totalAmountBill += totalAmount;
         return {
@@ -73,14 +79,13 @@ class BillClassExtend extends InstanceModuleRedux {
         SUB_FEE : 0,
         LOGISTIC : 0,
       });
-      // sum + (cur?.typeValue === 'PERCENT' ? getValueOfPercent(get(payload,'totalAmount',0),cur?.value) : cur?.value)
       state.byId = {
         ...payload,
         billItems,
         remainAmount,
         totalDiscountBill,
         totalAmountBill,
-        totalAfterDiscountBill : totalAmountBill - totalDiscountBill,
+        totalAfterDiscountBill : totalAmountBill - totalDiscountBill - totalCouponForBill - totalCouponForItem,
         totalFee,
         feeDetail,
       }
@@ -104,13 +109,10 @@ class BillClassExtend extends InstanceModuleRedux {
     },
     updateSuccess: (state:cloneInitState, { payload }:{payload:any}) => {
       state.isSubmitLoading = false;
-      state.byId = {
-        ...state.byId,
-        status : STATUS_BILL.CANCELLED
-      };
-      // state.list = state.list?.map((item:any) => get(item,'_id') === get(payload,'_id') ? payload : item);
+      state.byId = payload?.data;
+      state.list = state.list?.map((item:any) => get(item,'_id') === get(payload,'data._id') ? payload?.data : item);
       state.updateSuccess = payload;
-    },
+      },
 
     // update billItem
     updateBillItemRequest: (state:cloneInitState) => {
@@ -140,11 +142,119 @@ class BillClassExtend extends InstanceModuleRedux {
     updateBillItemFailed: (state:cloneInitState, { payload }:{payload:any}) => {
       state.isSubmitLoading = false;
       state.updateBillItemFailed = payload;
-    },
-    resetAction: (state:any) => ({
+      },
+      updateApplyLogisticRequest: (state:cloneInitState) => {
+        state.isSubmitLoading = true;
+        state.updateLogisticFailed = null;
+      },
+      updateApplyLogisticSuccess: (state: cloneInitState, { payload }: { payload: any }) => {
+        state.isSubmitLoading = false;
+        state.updateLogisticSuccess = payload;
+        const fee = payload?.data?.fee?.map((item: any) => item?.typeFee === 'LOGISTIC' ? { ...item, value: payload?.data?.dataTransportUnit?.totalFee } : item)
+        if (payload?.dataTransportUnit?.payer === 'CUSTOMER') {
+          state.byId = {
+            ...state.byId,
+            fee,
+            feeDetail: {
+              ...state?.byId?.feeDetail,
+              LOGISTIC: payload?.data?.dataTransportUnit?.totalFee
+            },
+            totalPrice: fee?.totalFee
+          };
+        } else {
+          state.byId = {
+            ...state.byId,
+            fee,
+            feeDetail: {
+              ...state?.byId?.feeDetail,
+              LOGISTIC: payload?.data?.dataTransportUnit?.totalFee
+            },
+          };
+        }
+      },
+      updateApplyLogisticFailed: (state:cloneInitState, { payload }:{payload:any}) => {
+        state.isSubmitLoading = false;
+        state.updateLogisticFailed = payload;
+      },
+
+      updateStatusAfterCheckWarehouseRequest: (state: cloneInitState, { payload }: { payload?: any }) => {
+        state.byId = {
+          ...state.byId,
+          ...payload,
+          partner: state.byId?.partner,
+          // status: payload?.status,
+          // warehouseId: payload?.warehouseId,
+          billItems: state.byId?.billItems?.map((item: any) => {
+            const findItem = get(payload, 'data', []).find((billItem: any) => billItem?.variantId === item?.variantId && billItem?.productId === item?.productId);
+            return {
+              ...item,
+              warehouseProductId: findItem?.warehouseProductId,
+              warehouseVariantId: findItem?.warehouseVariantId,
+              batchId: findItem?.batchId,
+            }
+          }),
+        };
+      
+        // state.list = state.list?.map((item: any) => get(item, '_id') === get(payload, '_id') ? {
+        //   ...item,
+        //   status: payload?.status
+        // } : item);
+      },
+    
+    resetAction: (state:cloneInitState) => ({
       ...state,
-      ...omit(this.cloneInitState, ["list"]),
+      ...omit(this.cloneInitState, ["list", "paging"]),
     }),
+    resetActionInSplit: (state:cloneInitState) => ({
+      ...state,
+      ...omit(this.cloneInitState, ["list", "paging", "byId"]),
+    }),
+    resetActionLogistic: (state:cloneInitState) => ({
+      ...state,
+      ...omit(this.cloneInitState, ["list",'byId']),
+      }),
+      updateStatusBillRequest: (state:cloneInitState) => {
+        state.isSubmitLoading = true;
+        state.updateStatusBillFailed = null;
+      },
+      updateStatusBillSuccess: (state:cloneInitState, { payload }:{payload:any}) => {
+        state.isSubmitLoading = false;
+        state.updateStatusBillSuccess = payload;
+        state.list = state.list?.map((item: any) => get(item, '_id') === get(payload, 'data._id') ? ({
+          ...item,
+          status: payload?.data?.status,
+          partner: item?.partner
+        }) : item);
+      },
+        updateStatusBillFailed: (state:cloneInitState, { payload }:{payload:any}) => {
+        state.isSubmitLoading = false;
+        state.updateStatusBillFailed = payload;
+        },
+      updateBillAfterCheckWarehouseRequest: (state: cloneInitState, { payload }: { payload?: any }) => {
+          state.byId = {
+            ...state.byId,
+            isCheck: true,
+            billItems: state.byId?.billItems?.map((item: any) => {
+              const findBillItem = get(payload, 'data', [])?.find((billItem: any) => billItem?.codeBySupplier === item?.codeBySupplier);
+              return {
+                ...item,
+                statusCheckWarehouse: findBillItem?.status ?? false
+              }
+            })
+          };
+      },
+      splitBillRequest: (state:cloneInitState) => {
+        state.isSubmitLoading = true;
+        state.splitBillFailed = null;
+      },
+      splitBillSuccess: (state:cloneInitState, { payload }:{payload?:any}) => {
+        state.isSubmitLoading = false;
+        state.splitBillSuccess = payload;
+      },
+      splitBillFailed: (state:cloneInitState, { payload }:{payload:any}) => {
+        state.isSubmitLoading = false;
+        state.splitBillFailed = payload;
+      },
     };
 
     this.cloneInitState = {
@@ -155,9 +265,18 @@ class BillClassExtend extends InstanceModuleRedux {
       updateBillItemFailed : null,
       updateBillItemSuccess : null,
       
+      updateStatusBillFailed: null, 
+      updateStatusBillSuccess: null,
+
       listProductSuggest: [],
       isProductSuggestLoading: false,
       getProductSuggestFailed: null,
+
+      updateLogisticSuccess: null,
+      updateLogisticFailed: null,
+
+      splitBillFailed: null,
+      splitBillSuccess: null
       // Want Add more State Here...
     }
   }

@@ -38,6 +38,13 @@ export const useOrderSupplierPaging = () => useSelector(pagingSelector);
 const updateOrderItemFailedSelector = getSelector('updateOrderItemFailed');
 const updateOrderItemSuccessSelector = getSelector('updateOrderItemSuccess');
 
+const isLoadingCreateBillInWarehouseSuccessSelector = getSelector('isLoadingCreateBillInWarehouse');
+const createBillInWarehouseSuccessSelector = getSelector('createBillInWarehouseSuccess');
+const createBillInWarehouseFailedSelector = getSelector('createBillInWarehouseFailed');
+
+const updateStatusOrderSuccessSelector = getSelector('updateStatusOrderSuccess');
+const updateStatusOrderFailedSelector = getSelector('updateStatusOrderFailed');
+
 export const useGetOrderSuppliers = (param:any) => {
   return useFetchByParam({
     action: orderSupplierActions.getListRequest,
@@ -68,6 +75,19 @@ export const useCreateOrderSupplier = (callback?: any) => {
     action: orderSupplierActions.createRequest,
     loadingSelector: isSubmitLoadingSelector,
     callbackSubmit:callback
+  });
+};
+export const useCreateOrderInWarehouse = (callback?: any) => {
+  useSuccess(
+    createBillInWarehouseSuccessSelector,
+    `Tạo đơn nhập hàng đến kho thành công`,
+    callback
+  );
+  useFailed(createBillInWarehouseFailedSelector,undefined,callback);
+
+  return useSubmit({
+    action: orderSupplierActions.createOrderInWarehouseRequest,
+    loadingSelector: isLoadingCreateBillInWarehouseSuccessSelector,
   });
 };
 
@@ -169,4 +189,61 @@ export const useUpdateOrderSupplierParams = (
 
 export const useResetOrderSupplier = () => {
   return useResetState(orderSupplierActions.reset);
+};
+export const useResetOrderSupplierClone = () => {
+  return useResetState(orderSupplierActions.resetAction);
+};
+
+
+export const convertDataSubmitWarehouse = (data: any) => {
+  return {
+    totalPrice: data?.totalPrice,
+    warehouseId: data?.warehouseId,
+    warehouseName: data?.warehouseName,
+    orderSupplierItems: data?.orderSupplierItems?.map((item: any) => ({
+      codeBySupplier: item?.codeBySupplier || item?.product?.codeBySupplier,
+      quantity: item?.quantity,
+    })),
+    billId: data?.billId
+  }
+};
+
+export const useUpdateStatusOrderSupplier = (callback?: any) => {
+  useSuccess(
+    updateStatusOrderSuccessSelector,
+    `Cập nhật trạng thái đơn hàng thành công`,
+    callback
+  );
+  useFailed(updateStatusOrderFailedSelector);
+
+  return useSubmit({
+    action: orderSupplierActions.updateStatusOrderRequest,
+    loadingSelector: isSubmitLoadingSelector,
+  });
+};
+
+export const useUpdateByIdRedux = () => {
+  return useSubmit({
+    action: orderSupplierActions.updateByIdRedux,
+    loadingSelector: isSubmitLoadingSelector,
+  });
+};
+
+export const useInitialValue = (listWarehouse: any[], data: any[]) => {
+  const [newData, setNewData] = useState<any[]>([]);
+  useEffect(() => {
+      if (data?.length && listWarehouse?.length) {
+      const newBills : any[] = data?.map((item: any) => {
+        const warehouse = listWarehouse?.find((w: any) => w?._id === item?.warehouseId);
+        return {
+          ...item,
+          warehouseName: warehouse?.name?.vi
+        }
+      });
+      setNewData(newBills);
+    }else{
+      setNewData(data);
+    }
+  }, [listWarehouse, data]);
+  return newData;
 };

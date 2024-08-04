@@ -7,7 +7,6 @@ import {
   TrophyOutlined,
   ApartmentOutlined,
   BellFilled,
-  FieldTimeOutlined,
 } from "@ant-design/icons";
 import React from "react";
 import { PATH_APP } from "~/routes/allPath";
@@ -37,6 +36,7 @@ const permissionOfSetup = [
   POLICIES.READ_USERGROUP,
   POLICIES.READ_BRANCH,
   POLICIES.READ_CUSTOMERDIVISION,
+  POLICIES.READ_WAREHOUSELINK,
   POLICIES.READ_CONFIGREPORTSALARYAUTO,
 ];
 const permissionPharma = [
@@ -195,12 +195,19 @@ export const resource: ItemType[] = [
             permission: [POLICIES.READ_CONFIGBENEFIT], //
           },
           {
-            label: "Cấu hình thời gian tự động",
-            path: PATH_APP.configurationCronTime.root,
-            key: PATH_APP.configurationCronTime.root,
-            icon: <FieldTimeOutlined />,
-            permission: [POLICIES.READ_CONFIGCRONTIME],
+            label: "Kênh bán hàng",
+            icon: <i className="fa-solid fa-cart-shopping"></i>,
+            path: PATH_APP.saleChannel.root,
+            key: PATH_APP.saleChannel.root,
+            permission: [POLICIES.READ_SALESCHANNEL],
           },
+          // {
+          //   label: "Cấu hình thời gian tự động",
+          //   path: PATH_APP.configurationCronTime.root,
+          //   key: PATH_APP.configurationCronTime.root,
+          //   icon: <FieldTimeOutlined />,
+          //   permission: [POLICIES.READ_CONFIGCRONTIME],
+          // },
           {
             label: "Hệ khách hàng",
             path: PATH_APP.customerSegmentation.root,
@@ -228,6 +235,13 @@ export const resource: ItemType[] = [
             key: PATH_APP.groupPharmacy.root,
             icon: <i className="fa-solid fa-notes-medical"></i>,
             permission: [POLICIES.READ_CUSTOMER],
+          },
+          {
+            label: "Cấu hình kho mặc định",
+            icon: <i className ="fa-solid fa-warehouse"></i>,
+            path:  PATH_APP.warehouse.setting,
+            key: PATH_APP.warehouse.setting,
+            permission: [POLICIES.READ_WAREHOUSELINK],//
           },
           {
             label: "Thời gian báo cáo lương",
@@ -460,55 +474,6 @@ export const resource: ItemType[] = [
       },
     ],
   },
-  
-  // Đại lý
-  // {
-  //   label: "Đại lý",
-  //   key: "agent",
-  //   icon: <i className="fa-solid fa-code-branch"></i>,
-  //   // permission: [...permissionCollaborator], //
-  //   children: [
-  //     {
-  //       label: "Quản lý đại lý",
-  //       path: PATH_APP.collaborator.root,
-  //       key: PATH_APP.collaborator.root,
-  //       permission: [POLICIES.READ_PARTNER, POLICIES.READ_PARTNERGROUP], //
-  //     },
-  //     {
-  //       label: "Đơn hàng",
-  //       path: PATH_APP.bill.collaborator,
-  //       key: PATH_APP.bill.collaborator,
-  //       permission: [POLICIES.READ_BILLPARTNER], //
-  //     },
-  //     {
-  //       label: "Đơn hàng tạm",
-  //       path: PATH_APP.quotation.collaborator,
-  //       key: PATH_APP.quotation.collaborator,
-  //       permission: [POLICIES.READ_QUOTATIONPARTNER], //
-  //     },
-  //     {
-  //       label: "Tạo đơn hàng tạm",
-  //       path: PATH_APP.bill.createCollaborator,
-  //       key: PATH_APP.bill.createCollaborator,
-  //       permission: [POLICIES.WRITE_QUOTATIONPARTNER], //
-  //     },
-  //     {
-  //       label: "Phiếu đơn hàng",
-  //       path: PATH_APP.vouchers.partner,
-  //       key: PATH_APP.vouchers.partner,
-  //       permission: [POLICIES.READ_VOUCHERBILLPARTNER], //
-  //     },
-  //     {
-  //       label: "Quản lý sản phẩm mượn",
-  //       path: PATH_APP.product.borrow,
-  //       key: PATH_APP.product.borrow,
-  //       permission: [
-  //         POLICIES.READ_BORROWPRODUCT,
-  //         POLICIES.READ_STATUSBORROWPRODUCT,
-  //       ], //
-  //     },
-  //   ],
-  // },
 
   //Trình dược viên
   {
@@ -616,4 +581,33 @@ export const resource: ItemType[] = [
       },
     ],
   },
+  {
+    label: "Quản lý kho",
+    icon: <HomeOutlined />,
+    key: 'warehouse',
+    permission: [POLICIES.READ_OUTOFSTOCK],//
+    children: [
+      {
+        label: "Quản lý tồn kho",
+        path: PATH_APP.warehouse.inventory,
+        key: PATH_APP.warehouse.inventory,
+        permission: [POLICIES.READ_OUTOFSTOCK], //
+      },
+    ]
+  },
+  {
+    label: "Mã giảm giá",
+    icon: <i className="fa-solid fa-ticket-simple"></i>,
+    key: "coupon",
+    permission: [POLICIES.READ_COUPON],//
+    children: [
+      {
+        label: "Danh sách mã giảm giá",
+        path: PATH_APP.coupon.root,
+        key: PATH_APP.coupon.root,
+        permission: [POLICIES.READ_COUPON],//
+      },
+    ],
+  },
+
 ];

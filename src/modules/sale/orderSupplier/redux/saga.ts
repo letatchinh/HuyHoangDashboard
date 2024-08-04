@@ -29,7 +29,8 @@ function* createOrderSupplier({payload} : any) : any {
     if(callbackSubmit){
       callbackSubmit({
         type : 'createOrderSupplier',
-        code : get(data,'code')
+        codeSequence: get(data, 'codeSequence'),
+        oldData: {...params, billId: get(data, '_id')},
       })
     }
     yield put(orderSupplierActions.createSuccess(data));
@@ -67,13 +68,38 @@ function* updateOrderItem({ payload }: any): any {
 //     yield put(orderSupplierActions.deleteFailed(error));
 //   }
 // }
+function* createOrderInWarehouse({ payload }: any): any {
+  const { callbackSubmit, ...query } = payload;
+  try {
+    const data = yield call(api.createBillInWarehouse, query);
+    if(callbackSubmit && typeof callbackSubmit === "function"){
+      callbackSubmit(data?.data);
+    };
+    yield put(orderSupplierActions.createOrderInWarehouseSuccess(data));
+  } catch (error:any) {
+    yield put(orderSupplierActions.createOrderInWarehouseFailed(error));
+  }
+}
 
+function* updateStatusOrder({ payload }: any): any {
+  try {
+    const { callbackSubmit, ...query } = payload;
+    const data = yield call(api.updateStatusBillWarehouse, query);
+    yield put(orderSupplierActions.updateStatusOrderSuccess(data));
+    if (callbackSubmit && typeof callbackSubmit === "function") {
+      callbackSubmit();
+    };
+  } catch (error: any) {
+    yield put(orderSupplierActions.updateStatusOrderFailed(error));
+  }
+};
 
 export default function* orderSupplierSaga() {
   yield takeLatest(orderSupplierActions.getListRequest, getListOrderSupplier);
   yield takeLatest(orderSupplierActions.getByIdRequest, getByIdOrderSupplier);
   yield takeLatest(orderSupplierActions.createRequest, createOrderSupplier);
   yield takeLatest(orderSupplierActions.updateRequest, updateOrderSupplier);
+  yield takeLatest(orderSupplierActions.updateStatusOrderRequest, updateStatusOrder);
   yield takeLatest(orderSupplierActions.updateOrderItemRequest, updateOrderItem);
-  // yield takeLatest(orderSupplierActions.deleteRequest, deleteOrderSupplier);
+  yield takeLatest(orderSupplierActions.createOrderInWarehouseRequest, createOrderInWarehouse);
 }

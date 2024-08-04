@@ -1,5 +1,5 @@
 import { Tabs, Typography } from "antd";
-import { keys } from "lodash";
+import { keys, omit } from "lodash";
 import React, { useState } from "react";
 import WhiteBox from "~/components/common/WhiteBox";
 import { STATUS_ORDER_SUPPLIER, STATUS_ORDER_SUPPLIER_VI } from "../constants";
@@ -7,6 +7,7 @@ import ListOrder from "../components/ListOrder";
 import { useChangeDocumentTitle } from "~/utils/hook";
 type propsType = {};
 const CLONE_STATUS_ORDER_SUPPLIER_VI: any = STATUS_ORDER_SUPPLIER_VI;
+const CLONE_STATUS_ORDER_SUPPLIER: any = omit(STATUS_ORDER_SUPPLIER_VI,['UNCREATED','REQUESTED','REJECT']);
 export default function OrderSupplier(props: propsType): React.JSX.Element {
   const [activeKey, setActiveKey] = useState<string>("ALL");
 
@@ -27,7 +28,7 @@ export default function OrderSupplier(props: propsType): React.JSX.Element {
           <Tabs.TabPane active={"ALL" === activeKey} tab={"Tất cả đơn hàng"}>
             <ListOrder />
           </Tabs.TabPane>
-          {keys(STATUS_ORDER_SUPPLIER).map((status) => (
+          {keys(CLONE_STATUS_ORDER_SUPPLIER).map((status) => (
             <Tabs.TabPane
               key={status}
               active={status === activeKey}

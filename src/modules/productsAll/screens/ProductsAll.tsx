@@ -1,18 +1,21 @@
-import { Checkbox, Col, Modal, Row, Select, Typography } from "antd";
-import { ColumnsType } from "antd/es/table/InternalTable";
+import { Button, Checkbox, Col, Modal, Row, Select, Typography } from "antd";
 import { get } from "lodash";
 import React, { useCallback, useMemo, useState } from "react";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import ModalAnt from "~/components/Antd/ModalAnt";
 import TableAnt from "~/components/Antd/TableAnt";
 import Breadcrumb from "~/components/common/Breadcrumb";
+import ConfigTable from "~/components/common/ConfigTable";
 import SelectSearch from "~/components/common/SelectSearch/SelectSearch";
 import WhiteBox from "~/components/common/WhiteBox";
+import { ADAPTER_KEY } from "~/modules/auth/constants";
 import ExportExcelButton from "~/modules/export/component";
 import useCheckBoxExport from "~/modules/export/export.hook";
 import POLICIES from "~/modules/policy/policy.auth";
 import { useMatchPolicy } from "~/modules/policy/policy.hook";
 import FormProduct from "~/modules/product/components/FormProduct";
-import StockProduct from "~/modules/product/components/StockProduct";
+import StockModal, { itemData } from "~/modules/product/components/StockModal";
 import {
   useChangeVariantDefault,
   useDeleteProduct,
@@ -21,17 +24,17 @@ import {
   useUpdateProduct,
 } from "~/modules/product/product.hook";
 import { formatter } from "~/utils/helpers";
-import { useChangeDocumentTitle } from "~/utils/hook";
+import { useChangeDocumentTitle, useFetchState } from "~/utils/hook";
 import ActionColumn from "../components/ActionColumns";
 import ShowStep from "../components/ShowStep";
 import {
   useProductsAllQueryParams,
   useUpdateProductsAllParams,
 } from "../productsAll.hook";
+import SummaryInfoProduct from "../components/SummaryInfoProduct";
 import { DataType, TypeProps } from "../productsAll.modal";
-import { useSelector } from "react-redux";
-import { ADAPTER_KEY } from "~/modules/auth/constants";
-import ConfigTable from "~/components/common/ConfigTable";
+// import SummaryInfoProduct from "../components/SummaryInfoProduct";
+import apis from "~/modules/productGroup/productGroup.api";
 
 export default function ProductsAll(props: TypeProps): React.JSX.Element {
   const [query, onTableChange] = useProductsAllQueryParams();
@@ -61,6 +64,33 @@ export default function ProductsAll(props: TypeProps): React.JSX.Element {
     () => adapter === ADAPTER_KEY.EMPLOYEE,
     [adapter]
   );
+  const [isOpenStock, setIsOpenStock] = useState(false);
+  const [dataStock, setDataStock] = useState<itemData | null>(null);
+  const [isOpenSummary, setIsOpenSummary] = useState(false);
+  const [product, setProduct] = useState<null | undefined>(null);
+  
+  const [productGroups,isLoadingProductGroup] = useFetchState({api : apis.getAllPublic,useDocs : false});
+    const options = useMemo(() => (productGroups?.map((item:any) => ({
+        label : get(item,'name'),
+        value : get(item,'_id')
+    }))), [productGroups]);
+  const openStock = (data: itemData) => {
+    setIsOpenStock(true);
+    setDataStock(data);
+  };
+
+  const onCloseStock = () => {
+    setIsOpenStock(false);
+    setDataStock(null);
+  };
+  const openSummary = (item: any) => {
+    setIsOpenSummary(true);
+    setProduct(item);
+  };
+  const onCloseSummary = () => {
+    setIsOpenSummary(false);
+    setProduct(null);
+  };
 
   const onOpenModal = (id: string | null) => {
     setIsOpen(true);
@@ -194,20 +224,7 @@ export default function ProductsAll(props: TypeProps): React.JSX.Element {
             title: "Tồn kho",
             dataIndex: "stock",
             key: "stock",
-            render(stock: any, record: any) {
-              return (
-                <StockProduct
-                  variantDefault={get(record, "variantDefault")}
-                  stock={stock ?? 0}
-                  handleUpdate={(newStock: number) =>
-                    onUpdateProduct({
-                      _id: get(record, "_id"),
-                      stock: newStock,
-                    })
-                  }
-                />
-              );
-            },
+          render: (value: any, record: any)=> <Button type = 'link' onClick = {() => openStock({id: get(record,'_id'),supplierId : get(record,'supplierId')})}>Xem chi tiết</Button>
           },
         ]
       : []),
@@ -281,6 +298,8 @@ export default function ProductsAll(props: TypeProps): React.JSX.Element {
                     onOpenFormProduct(_id, get(record, "supplier._id", null))
                   }
                   onDelete={onDelete}
+                  openSummary={openSummary}
+                  item = {record}
                 />
               );
             },
@@ -300,7 +319,11 @@ export default function ProductsAll(props: TypeProps): React.JSX.Element {
         isShowButtonAdd
         handleOnClickButton={onOpenModal}
         titleButtonAdd="Thêm mới sản phẩm"
-        showSelect={false}
+        showSelect
+        onChangeSelect={(value: any) => {
+          onParamChange({ ...query, productGroup: value })
+        }}
+        options={options}
         onSearch={(value: any) => onParamChange({ keyword: value?.trim() })}
         permissionKey={[POLICIES.WRITE_PRODUCT]}
         addComponent={
@@ -312,6 +335,7 @@ export default function ProductsAll(props: TypeProps): React.JSX.Element {
                 query={query}
                 fileName="Danh sách sản phẩm"
                 ids={arrCheckBox}
+                stylesButton={{ marginRight: "10px" }}
               />
             </Col>
           ) : null
@@ -365,6 +389,26 @@ export default function ProductsAll(props: TypeProps): React.JSX.Element {
           id={id as any}
         />
       </Modal>
+      <ModalAnt
+          open={isOpenStock}
+          destroyOnClose
+          width={800}
+          footer={null}
+          onCancel={onCloseStock}
+        >
+          <StockModal
+            data={dataStock} />
+        </ModalAnt>
+      <ModalAnt
+          open={isOpenSummary}
+          destroyOnClose
+          width={800}
+          footer={null}
+          onCancel={onCloseSummary}
+        >
+          <SummaryInfoProduct
+            data={product} />
+        </ModalAnt>
     </WhiteBox>
   );
 }

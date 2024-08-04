@@ -40,7 +40,6 @@ import ReportEmployeePage from "~/pages/Dashboard/ReportEmployee";
 import ReportSupplierPage from "~/pages/Dashboard/ReportSupplier";
 import CronSalaryPage from "~/pages/Dashboard/CronSalary";
 import SaleChannel from "~/pages/Dashboard/SaleChannel";
-import ConfigurationCronTime from "~/pages/Dashboard/ConfigurationCronTime";
 import TypePharmacy from "~/pages/Dashboard/TypePharmacy";
 import GroupPharmacy from "~/pages/Dashboard/GroupPharmacy";
 import CollaboratorPage from "~/pages/Dashboard/Collaborator";
@@ -49,8 +48,7 @@ import ReportOverview from "~/pages/Dashboard/ReportOverview";
 import NotificationPage from "~/pages/Dashboard/Notification";
 import ReportSalaryPartnerPage from "~/pages/Dashboard/ReportSalaryPartner"; 
 import ProductBorrow from "~/modules/product/components/ProductBorrow";
-import CreateBill from "~/modules/sale/bill/screens/CreateBill";
-import SaleScreen from "~/modules/sale/bill/components/createBillScreen/SaleScreen";
+import SelectDefaultWarehouse from "~/modules/warehouse/components/SelectDefaultWarehouse";
 import ReportIndividualCollaborator from "~/pages/Dashboard/ReportIndividualCollaborator";
 import ReportIndividualEmployeeSeller from "~/pages/Dashboard/ReportIndividualEmployeeSeller";
 import ReportGroup from "~/pages/Dashboard/ReportGroupCollaborator";
@@ -67,6 +65,8 @@ import CustomerSegmentation from "~/pages/Dashboard/CustomerSegmentation";
 import SaleChannelDetail from "~/modules/saleChannel/components/SaleChannelDetail";
 import TypePharmacyDetail from "~/modules/typePharmacy/components/TypePharmacyDetail";
 import GroupPharmacyDetail from "~/modules/groupPharmacy/components/GroupPharmacyDetail";
+import Inventory from "~/pages/Dashboard/Warehouse/Inventory";
+import Coupon from "~/modules/coupon/screens/Coupon";
 export const mainRoutes :PathRouteProps[] = [
   { path: PATH_APP.main.root, Component: Homepage },
 
@@ -174,7 +174,7 @@ export const mainRoutes :PathRouteProps[] = [
   { path: PATH_APP.report.supplier, Component: ReportSupplierPage },
   
   // Configuration Cron Time
-  { path: PATH_APP.configurationCronTime.root, Component: ConfigurationCronTime},
+  // { path: PATH_APP.configurationCronTime.root, Component: ConfigurationCronTime},
   
   // Thời gian báo cáo lương
   { path: PATH_APP.cronSalary.root, Component: CronSalaryPage },
@@ -209,7 +209,14 @@ export const mainRoutes :PathRouteProps[] = [
 
   // Báo cáo doanh thu đội nhóm
   { path: PATH_APP.reportGroupCollaborator.root, Component: ReportGroup},
-  { path: PATH_APP.reportGroupEmployeeSeller.root, Component: ReportGroupEmployeeSeller},
+  { path: PATH_APP.reportGroupEmployeeSeller.root, Component: ReportGroupEmployeeSeller },
+  
+    // Kho 
+    { path: PATH_APP.warehouse.setting, Component: SelectDefaultWarehouse },
+    { path: PATH_APP.warehouse.inventory, Component: Inventory },
+
+  // Mã giảm giá
+  { path: PATH_APP.coupon.root, Component: Coupon},
 
   // Phân hệ khách hàng B2B/ B2C
   { path: PATH_APP.customerSegmentation.root, Component: CustomerSegmentation},

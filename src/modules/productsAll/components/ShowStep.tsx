@@ -75,9 +75,10 @@ export default function ShowStep({ onChangeStep, onCloseModal, step, setStep }: 
         <div style={contentStyle}>{steps[step].content}</div>
       </div>
       <Row
-        style={{ marginTop: 20}}
+        style={{ marginTop: 20 }}
+        justify={'end'}
       >
-      {supplierInfo && ( 
+        {supplierInfo && ( 
         step === 0 ? (
           <Button type="primary" onClick={() => onChangeStep(1)}>
           Tiếp theo

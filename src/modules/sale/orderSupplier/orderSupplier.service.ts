@@ -247,9 +247,11 @@ export const reducerDiscountOrderSupplierItems = (orderSupplierItems: any[]) => 
     orderSupplierItems : orderSupplier[],
     totalPriceAfterDiscount : number,
     totalAmount : number,
-    _id? : string
+    _id?: string
+    warehouseId?: string,
+    warehouseName?: string,
 }
-export const convertDataOrderSupplier = ({data,orderSupplierItems,totalPriceAfterDiscount,_id,totalAmount}:paramsConvertDataOrderSupplier) : PayloadCreateOrderSupplier => {
+export const convertDataOrderSupplier = ({data,orderSupplierItems,totalPriceAfterDiscount,_id,totalAmount, warehouseId,warehouseName}:paramsConvertDataOrderSupplier) : PayloadCreateOrderSupplier => {
     const orderSupplierItemsSubmit : Omit<orderSupplier,'variant' | 'variants'>[] = orderSupplierItems?.map((orderSupplier : orderSupplier) => ({
         ...pick(orderSupplier,[
           'cumulativeDiscount',
@@ -273,7 +275,9 @@ export const convertDataOrderSupplier = ({data,orderSupplierItems,totalPriceAfte
           debtType : data?.debtType || DEFAULT_DEBT_TYPE,
           totalPrice : totalPriceAfterDiscount,
           totalAmount,
-          ..._id && {_id}
+        ..._id && { _id },
+        warehouseId,
+        warehouseName
         };
         return submitData;
 }

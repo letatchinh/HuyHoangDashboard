@@ -1,4 +1,3 @@
-import { REF_COLLECTION } from "~/constants/defaultValue";
 
 function path(root: any, sublink: any) {
   return `${root}${sublink}`;
@@ -183,6 +182,12 @@ export const PATH_APP = {
   reportSalaryPartner:{
     root: path(ROOTS.app, "/reportSalaryPartner")
   },
+
+  warehouse:{
+    setting: path(ROOTS.app, "/warehouse-setting"),
+    inventory: path(ROOTS.app, "/warehouse-inventory"),
+  },
+
   reportIndividualCollaborator: {
     root: path(ROOTS.app, "/reportIndividualCollaborator"),
   },
@@ -203,4 +208,7 @@ export const PATH_APP = {
     root: path(ROOTS.app, "/customer-segmentation")
   },
 
+  coupon : {
+    root: path(ROOTS.app, "/coupon")
+  },
 };

@@ -70,7 +70,7 @@ function App(): React.JSX.Element {
         style={{
           position: "fixed",
           bottom: 0,
-          right: 0,
+          left: 0,
           width: "max-content",
           pointerEvents : 'none'
         }}
@@ -78,8 +78,8 @@ function App(): React.JSX.Element {
         <p
           style={{
             textAlign: "right",
-            marginRight: "16px",
-            color: "rgba(0, 0, 0, 0.1)",
+            marginLeft: "16px",
+            color: "rgba(233, 233, 233, 0.2)",
             pointerEvents : 'none'
           }}
         >
