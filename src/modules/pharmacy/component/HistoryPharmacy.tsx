@@ -25,12 +25,16 @@ const CLONE_STATUS_BILL_VI: any = STATUS_BILL_VI;
 
 export default function HistoryPharmacy(props: propsType) {
   const { pharmacyId } = props;
-  const [history, isLoading] = useGetHistoryPharmacy(pharmacyId);
+  const [query,setQuery] = useState({page : 1 , limit : 10});
+  const queryMemo = useMemo(() => ({id : pharmacyId, ...query}), [query,pharmacyId]);
+  const [history, isLoading] = useGetHistoryPharmacy(queryMemo);
   const paging = useHistoryPharmacyPaging();
   const canReadBill = useMatchPolicy(POLICIES.READ_BILL);
 
   const [itemActive, setItemActive] = useState<any>();
-
+  const onParamChange = (newQuery : any) => {
+    setQuery({...query, ...newQuery});
+  }
   const columns: ColumnsType = useMemo(
     () => [
       {
@@ -101,9 +105,9 @@ export default function HistoryPharmacy(props: propsType) {
           }}
           pagination={{
             ...paging,
-            // onChange(page, pageSize) {
-            //   onParamChange({ page, limit: pageSize });
-            // },
+            onChange(page, pageSize) {
+              onParamChange({ page, limit: pageSize });
+            },
             showSizeChanger: true,
             showTotal: (total) => `Tổng cộng: ${total} `,
           }}

@@ -16,7 +16,7 @@ import {
 import { groupPharmacyActions } from "./redux/reducer";
 import { STATUS } from "~/constants/defaultValue";
 const MODULE = "groupPharmacy";
-const MODULE_VI = "nhóm khách hàng B2B";
+const MODULE_VI = "nhóm khách hàng";
 
 const {
   loadingSelector,
@@ -66,6 +66,11 @@ export const useGetGroupPharmacy = (id: any) => {
     param: id,
   });
 };
+
+export const useGetGroupPharmacy_onlyGet = () => [
+  useSelector(getByIdSelector),
+  useSelector(getByIdLoadingSelector),
+];
 
 export const useCreateGroupPharmacy = (callback?: any) => {
   useSuccess(

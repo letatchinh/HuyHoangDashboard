@@ -104,6 +104,7 @@ const {
       param: id,
     });
   };
+  export const useGetlistRankingById_onlyGet = () => [useSelector(getByIdSelector),useSelector(getByIdLoadingSelector)];
   export const useCreateRanking = (callBack?:any) => {
     useSuccess(createSuccessSelector, `Thêm ${MODULE_VI} thành công`, callBack);
     useFailed(createFailedSelector);

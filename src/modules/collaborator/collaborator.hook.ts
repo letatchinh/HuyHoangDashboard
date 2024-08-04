@@ -69,6 +69,7 @@ export const useGetCollaborator = (id: any) => {
     param: id,
   });
 };
+export const useGetCollaborator_onlyGet = () => [useSelector(getByIdSelector),useSelector(getByIdLoadingSelector)];
 export const useGetCollaborator_redux = () => [useSelector(getByIdSelector),useSelector(getByIdLoadingSelector)];
 export const useCreateCollaborator = (callback?: any) => {
   useSuccess(
@@ -164,9 +165,9 @@ export const useUpdateProductCollaborator = (callback?: any) => {
   });
 };
 
-export const useCollaboratorQueryParams = () => {
+export const useCollaboratorQueryParams = (limitDefault? : number) => {
   const query = useQueryParams();
-  const limit = query.get("limit") || 10;
+  const limit = query.get("limit") || limitDefault || 10;
   const page = query.get("page") || 1;
   const keyword = query.get("keyword");
   const status = query.get("status");

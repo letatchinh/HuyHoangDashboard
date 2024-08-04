@@ -10,14 +10,18 @@ import { Button, Checkbox, Col, Popconfirm, Radio, Row, Space, Switch, Typograph
 import { get, omit } from 'lodash';
 import { STATUS, STATUS_NAMES } from '~/constants/defaultValue';
 import { useChangeDocumentTitle } from '~/utils/hook';
-import Search from 'antd/es/input/Search';
-import { PlusCircleOutlined } from '@ant-design/icons';
 import ExportExcelButton from '~/modules/export/component';
 import WhiteBox from '~/components/common/WhiteBox';
 import TableAnt from '~/components/Antd/TableAnt';
 import ModalAnt from '~/components/Antd/ModalAnt';
 import TypePharmacyForm from './TypePharmacyForm';
 import Breadcrumb from '~/components/common/Breadcrumb';
+import { Link } from 'react-router-dom';
+import { PATH_APP } from '~/routes/allPath';
+import BtnAdd from '~/components/common/Layout/List/Header/BtnAdd';
+import DropdownAction from '~/components/common/Layout/List/Header/DropdownAction';
+import StatusAndSearch from '~/components/common/StatusAndSearch';
+import ColumnAction from '~/components/common/ColumnAction';
 type propsType = {
 
 }
@@ -55,13 +59,15 @@ export default function TypePharmacy(props:propsType) : React.JSX.Element {
     const columns: ColumnsType = useMemo(
       () => [
         {
-          title: "Mã loại khách hàng",
+          title: "Mã nhánh khách hàng",
           dataIndex: "code",
           key: "code",
           width: 120,
+          render: (text: string, record: any) => <Link className='link_' to={PATH_APP.typePharmacy.root + "/" + record?._id}>{text}</Link>
+
         },
         {
-          title: "Tên loại khách hàng",
+          title: "Tên nhánh khách hàng",
           dataIndex: "title",
           key: "title",
           width: 250,
@@ -111,28 +117,20 @@ export default function TypePharmacy(props:propsType) : React.JSX.Element {
         },
         {
           title: "Thao tác",
-          dataIndex: "_id",
-          // key: "actions",
+          // dataIndex: "_id",
+          key: "actions",
           width: 100,
-          // align: "center",
-          render: (record) => {
+          align: "center",
+          render: (_, record) => {
             return (
-              <div className="custom-table__actions">
-                <WithPermission permission={POLICIES.UPDATE_CUSTOMERGROUP}>
-                  <p onClick={() => onOpenForm(record)}>Sửa</p>
-                </WithPermission>
-                <WithPermission permission={POLICIES.DELETE_CUSTOMERGROUP}>
-                  <p>|</p>
-                  <Popconfirm
-                    title={`Bạn muốn xoá loại khách hàng này?`}
-                    onConfirm={() => deleteTypePharmacy(record)}
-                    okText="Xoá"
-                    cancelText="Huỷ"
-                  >
-                    <p>Xóa</p>
-                  </Popconfirm>{" "}
-                </WithPermission>
-              </div>
+              <ColumnAction
+                onOpenForm={onOpenForm}
+                onDelete={deleteTypePharmacy}
+                _id={record?._id}
+                textName="nhánh khách hàng"
+                permissionUpdate={POLICIES.UPDATE_CUSTOMERGROUP}
+                permissionDelete={POLICIES.DELETE_CUSTOMERGROUP}
+              />
             );
           },
         },
@@ -185,74 +183,45 @@ export default function TypePharmacy(props:propsType) : React.JSX.Element {
           break;
       }
     };
-    useChangeDocumentTitle("Danh sách loại khách hàng")
+    useChangeDocumentTitle("Danh sách nhánh khách hàng")
     return (
       <div>
         <Breadcrumb title={"Nhánh khách hàng"} />
-        <Row className="mb-3" justify={"space-between"}>
-          <Col span={8}>
-            <Search
-              enterButton="Tìm kiếm"
-              placeholder="Nhập để tìm kiếm"
-              allowClear
-              onSearch={() => onParamChange({ keyword })}
-              onChange={(e) => setKeyword(e.target.value)}
-              value={keyword}
+        <Row gutter={16} justify={"space-between"}>
+          <Col span={12}>
+            <StatusAndSearch
+              onParamChange={onParamChange}
+              query={query}
+              keyword={keyword}
+              setKeyword={setKeyword}
             />
           </Col>
-          <Row>
-          <WithPermission permission={POLICIES.WRITE_CUSTOMERGROUP}>
-            <Col>
-              <Button
-                icon={<PlusCircleOutlined />}
-                type="primary"
-                onClick={() => onOpenForm()}
-              >
-                Thêm mới
-              </Button>
-            </Col>
-            </WithPermission>
-            <WithPermission permission={POLICIES.DOWNLOAD_CUSTOMERGROUP}>
-              <Col>
-                  <ExportExcelButton
-                    fileName="Danh sách loại khách hàng"
-                    api="customer-group"
-                    exportOption="customerGroup"
-                    query={query}
-                    ids={arrCheckBox}
+          <Col span={12}>
+            <Row justify={"end"} gutter={16}>
+              <WithPermission permission={POLICIES.WRITE_CUSTOMERGROUP}>
+                <Col>
+                  <BtnAdd onClick={() => onOpenForm()} />
+                </Col>
+              </WithPermission>
+              <WithPermission permission={POLICIES.DOWNLOAD_CUSTOMERGROUP}>
+                <Col>
+                  <DropdownAction
+                    items={[
+                      <ExportExcelButton
+                        fileName="DS nhánh khách hàng"
+                        api="customer-group"
+                        exportOption="customerGroup"
+                        query={query}
+                        ids={arrCheckBox}
+                        useLayout="v2"
+                      />,
+                    ]}
                   />
-              </Col>
-            </WithPermission>
-          </Row>
-        </Row>
-        <WithPermission permission={POLICIES.UPDATE_CUSTOMERGROUP}>
-          <Space style={{ marginBottom: 20 }}>
-            <Typography style={{ fontSize: 14, marginRight: 20 }}>
-              Phân loại trạng thái theo :
-            </Typography>
-            <Row gutter={14}>
-              <Radio.Group
-                onChange={onChange}
-                optionType="button"
-                buttonStyle="solid"
-                defaultValue={(() => {
-                  switch (query?.status) {
-                    case "ACTIVE":
-                      return 2;
-                    case "INACTIVE":
-                      return 3;
-                    default:
-                      return 1;
-                  }
-                })()}
-              >
-                <Radio.Button value={1}>Tất cả</Radio.Button>
-                <Radio.Button value={2}>{STATUS_NAMES["ACTIVE"]}</Radio.Button>
-                <Radio.Button value={3}>{STATUS_NAMES["INACTIVE"]}</Radio.Button>
-              </Radio.Group>
+                </Col>
+              </WithPermission>
             </Row>
-          </Space>
-        </WithPermission>
+          </Col>
+        </Row>
         <WhiteBox>
           <TableAnt
             dataSource={typePharmacies}
@@ -271,6 +240,11 @@ export default function TypePharmacy(props:propsType) : React.JSX.Element {
           />
         </WhiteBox>
         <ModalAnt
+          title={
+            typePharmacyId
+              ? "Cập nhật nhánh khách hàng"
+              : "Thêm mới nhánh khách hàng"
+          }
           width={700}
           open={isOpenForm}
           onCancel={onCloseForm}
@@ -279,7 +253,6 @@ export default function TypePharmacy(props:propsType) : React.JSX.Element {
             setDestroy(false);
           }}
           destroyOnClose={destroy}
-  
         >
           <TypePharmacyForm
             setDestroy={setDestroy}
@@ -289,7 +262,6 @@ export default function TypePharmacy(props:propsType) : React.JSX.Element {
             query={query}
           />
         </ModalAnt>
-        
       </div>
     );
 }

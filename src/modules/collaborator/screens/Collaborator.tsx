@@ -54,7 +54,13 @@ import CollaboratorProduct from "../components/CollaboratorProduct";
 import CollaboratorAddress from "../components/CollaboratorAddress";
 import apis from "~/modules/collaborator/collaborator.api";
 import RequestGroup from "~/modules/requestGroup/components";
+import { Link } from "react-router-dom";
+import BtnAdd from "~/components/common/Layout/List/Header/BtnAdd";
+import DropdownAction from "~/components/common/Layout/List/Header/DropdownAction";
+import WithPermission from "~/components/common/WithPermission";
+import Search from "antd/es/input/Search";
 import SelectSaleChannel from "~/modules/saleChannel/components/SelectSaleChannel";
+import StatusAndSearch from "~/components/common/StatusAndSearch";
 
 interface ColumnActionProps {
   _id: string;
@@ -185,22 +191,17 @@ export default function Collaborator({
       key: "partnerNumber",
       width: 120,
       fixed: "left",
-      // render: (value: any, record: any) => (
-      //   <Button type="link" onClick={() => handleOpenModal(record._id)}>
-      //     {value}
-      //   </Button>
-      // ),
+      render: (value: any, record: any) => (
+        <Link className="link_" to={`/collaborator-detail/${record?._id}`}>
+          {value}
+        </Link>
+      ),
     },
     {
       title: "Tên khách hàng",
       dataIndex: "fullName",
       key: "fullName",
-      width: 180,
-      render: (value: any, record: any) => (
-        <Typography.Link onClick={() => handleOpenModal(get(record, "_id"))}>
-          {value}
-        </Typography.Link>
-      ),
+      // render : (value: any, record: any) => <Typography.Link onClick={() => handleOpenModal(get(record,'_id'))}>{value}</Typography.Link>
     },
     ...(isCanUpdate
       ? ([
@@ -349,57 +350,26 @@ export default function Collaborator({
   };
   return (
     <>
+      {/* layout--ctrl */}
       <Row className="mb-3" justify={"space-between"}>
-        <SelectSearch
-          showSelect={false}
-          isShowButtonAdd
-          handleOnClickButton={() => handleOpenModal()}
-          onChange={(e: any) => setKeyword(e.target.value)}
-          keyword={keyword}
-          onSearch={(e: any) => onParamChange({ keyword: e })}
-          permissionKey={[POLICIES.WRITE_PARTNER]}
-          addComponent={
-            canDownload ? (
-              <Col>
-                <ExportExcelButton
-                  api="partner"
-                  exportOption="partner"
-                  query={query}
-                  fileName="Danh sách khách hàng B2C"
-                  ids={arrCheckBox}
-                />
-              </Col>
-            ) : null
-          }
-        />
-      </Row>
-      <WithOrPermission permission={[POLICIES.UPDATE_PARTNER]}>
-        <Row justify={"space-around"}>
-          <Col span={12}>
-            <Space style={{ marginBottom: 20, display: "flex" }}>
-              <Typography style={{ fontSize: 14, marginRight: 20 }}>
-                Phân loại trạng thái theo :
-              </Typography>
-              <Row gutter={14}>
-                <Radio.Group
-                  onChange={onChange}
-                  optionType="button"
-                  buttonStyle="solid"
-                  defaultValue={query?.processStatus || null}
-                >
-                  <Radio.Button value={null}>Tất cả</Radio.Button>
-                  <Radio.Button value={"NEW"}>
-                    {PROCESS_STATUS_VI["NEW"]}
-                  </Radio.Button>
-                  <Radio.Button value={"APPROVED"}>
-                    {PROCESS_STATUS_VI["APPROVED"]}
-                  </Radio.Button>
-                </Radio.Group>
-              </Row>
-            </Space>
+        <Row>
+          <Col>
+            <StatusAndSearch
+              onParamChange={onParamChange}
+              query={query}
+              keyword={keyword}
+              setKeyword={setKeyword}
+            />
           </Col>
-          <Col span={12}>
-            <Space style={{ marginBottom: 20, display: "flex", justifyContent: "flex-end" }}>
+          <Col>
+            <Space
+              style={{
+                // marginBottom: 20,
+                marginLeft:  20,
+                display: "flex",
+                justifyContent: "flex-end",
+              }}
+            >
               <Typography style={{ fontSize: 14, marginRight: 20 }}>
                 Kênh bán hàng:
               </Typography>
@@ -422,13 +392,66 @@ export default function Collaborator({
             </Space>
           </Col>
         </Row>
+        <Col>
+          <Row gutter={16}>
+            <WithPermission permission={POLICIES.WRITE_PHARMAPROFILE}>
+              <Col>
+                <BtnAdd onClick={() => handleOpenModal()} />
+              </Col>
+            </WithPermission>
+            <Col>
+              <DropdownAction
+                items={[
+                  <WithPermission permission={POLICIES.DOWNLOAD_EMPLOYEE}>
+                    <ExportExcelButton
+                      api="partner"
+                      exportOption="partner"
+                      query={query}
+                      fileName="Danh sách cộng tác viên"
+                      ids={arrCheckBox}
+                      useLayout="v2"
+                    />
+                  </WithPermission>,
+                ]}
+              />
+            </Col>
+          </Row>
+        </Col>
+      </Row>
+      {/* layout--ctrl */}
+      <WithOrPermission permission={[POLICIES.UPDATE_PARTNER]}>
+        <Row justify={"space-between"}>
+          <Col span={12}>
+            <Space style={{ marginBottom: 20}}>
+              <Typography style={{ fontSize: 14, marginRight: 20 }}>
+                Phân loại trạng thái theo :
+              </Typography>
+              <Row gutter={14}>
+                <Radio.Group
+                  onChange={onChange}
+                  optionType="button"
+                  buttonStyle="solid"
+                  defaultValue={query?.processStatus || null}
+                >
+                  <Radio.Button value={null}>Tất cả</Radio.Button>
+                  <Radio.Button value={"NEW"}>
+                    {PROCESS_STATUS_VI["NEW"]}
+                  </Radio.Button>
+                  <Radio.Button value={"APPROVED"}>
+                    {PROCESS_STATUS_VI["APPROVED"]}
+                  </Radio.Button>
+                </Radio.Group>
+              </Row>
+            </Space>
+          </Col>
+        </Row>
       </WithOrPermission>
       <TableAnt
         dataSource={data?.length ? data : []}
         loading={isLoading}
         columns={columns}
         size="small"
-        scroll={{ x: "max-content" ,y: 'calc(100vh - 383px)'}}
+        scroll={{ x: "max-content", y: "calc(100vh - 383px)" }}
         pagination={{
           ...paging,
           onChange(page, pageSize) {

@@ -29,12 +29,6 @@ class ProductUnitClassExtentd extends InstanceModuleRedux {
         state.isGetAllLoading = false;
         state.getUnitAllFailed = payload;
       },
-      updateSuccess: (state: initStateSlice, { payload }: { payload: any }) => {
-        state.isSubmitLoading = false;
-        state.byId = payload;
-        state.list = state.list?.map((item: any) => get(item, '_id') === get(payload, 'data._id') ? payload?.data : item);
-        state.updateSuccess = payload?.data;
-      },
     };
     this.cloneInitState = {
       ...this.initialState,

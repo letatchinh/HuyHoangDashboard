@@ -2,7 +2,7 @@ import { Button, Col, Form, Input, Row, Select, Skeleton } from "antd";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import UploadImage from "~/components/common/Upload/UploadImage";
 import AddressFormSection from "~/components/common/AddressFormSection";
-import { useCreateUser, useGetUser, useInitialValues, useUpdateUser } from "../user.hook";
+import { useCreateUser, useGetUser, useGetUser_onlyGet, useInitialValues, useUpdateUser } from "../user.hook";
 import Account from "~/components/common/Account";
 import apis from "../user.api";
 import { DEFAULT_BRANCH_ID } from "~/constants/defaultValue";
@@ -18,15 +18,19 @@ const { Option } = Select;
 const FormItem = Form.Item;
 interface IProps {
   id?: string | null;
-  handleCloseModal: () => void;
+  handleCloseModal?: () => void;
   setDestroy?: any;
   updateUser?: any;
   resetAction?: any;
+  readOnly?: boolean;
 };
-
+const hookGetData = {
+  readOnly : useGetUser_onlyGet,
+  notReadOnly : useGetUser
+}
 export default function UserForm(props: IProps) {
   const [form] = Form.useForm();
-  const { id, handleCloseModal, updateUser: handleUpdate, resetAction,setDestroy } = props;
+  const { id, handleCloseModal, updateUser: handleUpdate, resetAction,setDestroy,readOnly } = props;
   const [imageUrl, setImageUrl] = useState<string>('');
   const [loadingValidateUsername, setLoadingValidateUsername] =
     useState<boolean>(false);
@@ -40,11 +44,12 @@ export default function UserForm(props: IProps) {
 
   //hook user
   const [, handleCreate] = useCreateUser(() => {
-    handleCloseModal();
+    handleCloseModal && handleCloseModal();
     resetAction();
     setDestroy && setDestroy(true)
   });
-  const [user, isLoading] = useGetUser(id);
+  const [user, isLoading] : any = readOnly ? hookGetData.readOnly() : hookGetData.notReadOnly(id)
+
   const initialValues = useInitialValues(user);
   const {onNotify} = useNotificationStore();
   //fetch user groups
@@ -57,11 +62,8 @@ export default function UserForm(props: IProps) {
   useResetState(userSliceAction.resetAction);
 
   useEffect(() => {
-    console.log('okla');
     
     if (user) {
-      console.log(user, 'user')
-      console.log(form.getFieldsValue(),'  form.getFieldsValue()')
       form.setFieldsValue({
         ...user,
         username: user?.adapter?.user?.username,
@@ -131,9 +133,9 @@ export default function UserForm(props: IProps) {
 
   return (
     <div className="employee-form">
-      <h4 style={{ marginRight: "auto", paddingLeft: 27 }}>
+      {!readOnly && <h4 style={{ marginRight: "auto", paddingLeft: 27 }}>
         {`${!id ? "Tạo mới " : "Cập nhật"} người dùng`}
-      </h4>
+      </h4>}
       <Form
         form={form}
         autoComplete="off"
@@ -260,12 +262,12 @@ export default function UserForm(props: IProps) {
                 </FormItem> 
           </Col>
         </Row>
-        <Account
+        {!readOnly && <Account
           isLoading={isLoading} required={id ? false : true}
           setStatusAccount={setStatusAccount}
           statusAccount={statusAccount}
-        />
-        <Row gutter={10} align="middle" justify={"center"}>
+        />}
+        {!readOnly && <Row gutter={10} align="middle" justify={"center"}>
           <Col span={2}>
             <Button onClick={handleCloseModal}>Huỷ</Button>
           </Col>
@@ -274,7 +276,7 @@ export default function UserForm(props: IProps) {
               {id ? "Cập nhật" : "Tạo mới"}
             </Button>
           </Col>
-        </Row>
+        </Row>}
       </Form>
     </div>
   );

@@ -20,7 +20,7 @@ import { DEFAULT_BRANCH_ID, requireRules } from "~/constants/defaultValue";
 import { useFetchState } from "~/utils/helpers";
 import { get, omit } from "lodash";
 import useNotificationStore from "~/store/NotificationContext";
-import { useGetCollaborator } from "../collaborator.hook";
+import { useGetCollaborator, useGetCollaborator_onlyGet } from "../collaborator.hook";
 import BaseBorderBox from "~/components/common/BaseBorderBox";
 import Account from "~/components/common/Account";
 import WithPermission from "~/components/common/WithPermission";
@@ -36,13 +36,18 @@ const FormItem = Form.Item;
 const { Option } = Select;
 interface IProps {
   id?: string | null;
-  handleCloseModal: () => void;
+  handleCloseModal?: () => void;
   handleUpdate?: any;
   handleCreate?: any;
   isSubmitLoading?: boolean;
   query?: any;
+  readOnly?:boolean
+};
+const hookGetData = {
+  readOnly : useGetCollaborator_onlyGet,
+  notReadOnly : useGetCollaborator
 }
-export default function CollaboratorForm(props: IProps) {
+export default function CollaboratorForm({readOnly,...props}: IProps) {
   const refMonth : any = useRef();
   const refYear : any = useRef();
   const [form] = Form.useForm();
@@ -54,7 +59,7 @@ export default function CollaboratorForm(props: IProps) {
   const [loadingValidateUsername, setLoadingValidateUsername] =
     useState<boolean>(false);
   const [statusAccount, setStatusAccount] = useState("INACTIVE");
-  useResetState(collaboratorActions.resetAction);
+  // useResetState(collaboratorActions.resetAction);
   //address
   const [cityCode, setCityCode] = useState(null);
   const [districtCode, setDistrictCode] = useState(null);
@@ -71,7 +76,7 @@ export default function CollaboratorForm(props: IProps) {
     useDocs: false,
   });
   // const
-  const [collaborator, isLoading] = useGetCollaborator(id);
+  const [collaborator, isLoading] : any = readOnly ? hookGetData.readOnly() : hookGetData.notReadOnly(id)
   const { onNotify } = useNotificationStore();
 
   useEffect(() => {
@@ -247,7 +252,7 @@ export default function CollaboratorForm(props: IProps) {
                     {isLoading ? (
                       <Skeleton.Input active />
                     ) : (
-                      <Input onBlur={onFocusOutFullName} />
+                      <Input readOnly={readOnly}  onBlur={onFocusOutFullName} />
                     )}
                   </FormItem>
                 </Col>
@@ -294,10 +299,10 @@ export default function CollaboratorForm(props: IProps) {
                       isLoading ? (
                         <Skeleton.Input active />
                       ) : (
-                        <Input />
+                        <Input  readOnly={readOnly} />
                       )
                     ) : (
-                      <Input disabled />
+                      <Input readOnly={readOnly}  disabled />
                     )}
                   </FormItem>
                 </Col>
@@ -382,7 +387,7 @@ export default function CollaboratorForm(props: IProps) {
                           {isLoading ? (
                             <Skeleton.Input active />
                           ) : (
-                            <InputNumberAnt addonAfter={<FormItem style={{marginBottom : 'unset'}} name={[index, "typeValue"]}>
+                            <InputNumberAnt readOnly={readOnly} addonAfter={<FormItem style={{marginBottom : 'unset'}} name={[index, "typeValue"]}>
                             <Radio.Group size="small" buttonStyle="solid">
                                 <Radio.Button value="PERCENT">%</Radio.Button>
                                 <Radio.Button value="VALUE">Giá trị</Radio.Button>
@@ -406,12 +411,12 @@ export default function CollaboratorForm(props: IProps) {
           >
             <Col span={12}>
               <FormItem label="Nghề nghiệp" name="career">
-                <Input />
+                <Input readOnly={readOnly}  />
               </FormItem>
             </Col>
             <Col span={12}>
               <FormItem label="Nơi công tác" name="workplace">
-                <Input />
+                <Input readOnly={readOnly}  />
               </FormItem>
             </Col>
           </Row>
@@ -436,7 +441,7 @@ export default function CollaboratorForm(props: IProps) {
                     }
                   })
 
-                ]} style={{marginBottom : 'unset'}} name={['birthDate','date']}><Input placeholder="Ngày"  inputMode="numeric"/></FormItem> /
+                ]} style={{marginBottom : 'unset'}} name={['birthDate','date']}><Input readOnly={readOnly}  placeholder="Ngày"  inputMode="numeric"/></FormItem> /
                 <FormItem
                 rules={[
                   () => ({
@@ -450,7 +455,7 @@ export default function CollaboratorForm(props: IProps) {
                   })
 
                 ]}
-                style={{marginBottom : 'unset'}} name={['birthDate','month']}><Input placeholder="Tháng" inputMode="numeric" ref={refMonth} /></FormItem> /
+                style={{marginBottom : 'unset'}} name={['birthDate','month']}><Input readOnly={readOnly}  placeholder="Tháng" inputMode="numeric" ref={refMonth} /></FormItem> /
                 <FormItem
                 rules={[
                   () => ({
@@ -463,7 +468,7 @@ export default function CollaboratorForm(props: IProps) {
                     }
                   })
                 ]}
-                style={{marginBottom : 'unset'}} name={['birthDate','year']}><Input placeholder="Năm" inputMode="numeric" ref={refYear}/></FormItem>
+                style={{marginBottom : 'unset'}} name={['birthDate','year']}><Input readOnly={readOnly}  placeholder="Năm" inputMode="numeric" ref={refYear}/></FormItem>
                 </Flex>
               </FormItem>
             </Col>
@@ -494,13 +499,13 @@ export default function CollaboratorForm(props: IProps) {
           </Row>
         </BaseBorderBox>
 
-        <Account
+        {!readOnly && <Account
           isLoading={isLoading}
           required={id ? false : true}
           statusAccount={statusAccount}
           setStatusAccount={setStatusAccount}
-        />
-        <Row gutter={10} align="middle" justify={"center"}>
+        />}
+      {!readOnly &&  <Row gutter={10} align="middle" justify={"center"}>
           <Col span={2}>
             <Button onClick={handleCloseModal}>Huỷ</Button>
           </Col>
@@ -517,7 +522,7 @@ export default function CollaboratorForm(props: IProps) {
               </Button>
             </Col>
           </WithPermission>
-        </Row>
+        </Row>}
       </Form>
     </div>
   );

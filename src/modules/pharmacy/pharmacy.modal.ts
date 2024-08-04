@@ -5,6 +5,7 @@ export type propsType = {
   deletePharmacy?: (p?: any) => void;
   onOpenForm?: (_id?: string) => void;
   pharmacyId: string | null
+  onParamChange?: (p?: any) => void;
 };
 
 export type propsAccumulation = {

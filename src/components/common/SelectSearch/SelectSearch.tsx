@@ -5,6 +5,7 @@ import { PlusCircleOutlined } from "@ant-design/icons";
 import { OptionSelect, OptionStatus } from "~/constants/defaultValue";
 
 import "./index.scss";
+import BtnAdd from "../Layout/List/Header/BtnAdd";
 interface Option {
   value: string;
   label: string;
@@ -110,14 +111,7 @@ const SelectSearch = ({
           {isShowButtonAdd && (
             <Col className="select-search__button">
               <WithOrPermission permission={permissionKey}>
-                <Button
-                  type="primary"
-                  onClick={handleOnClickButton}
-                  icon={<PlusCircleOutlined />}
-                  style={{ marginLeft: 10 }}
-                >
-                {titleButtonAdd}
-                </Button>
+                <BtnAdd onClick={handleOnClickButton}/>
               </WithOrPermission>
             </Col>
           )}

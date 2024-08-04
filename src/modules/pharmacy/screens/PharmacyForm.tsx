@@ -64,13 +64,11 @@ export default function PharmacyForm({
   const [isCustomerFormOpen, setCustomerFormOpen] = useState(false);
 
   useEffect(() => {
-    if (!id) {
-      form.resetFields();
-    } else {
+    if(initPharmacyProfile && id){
       const initPharmacy = convertInitPharmacy(initPharmacyProfile);
       form.setFieldsValue({
         ...initPharmacy,
-        infoPolicy: {
+        infoPolicy : {
           ...initPharmacy?.infoPolicy,
           dateOfBirth: dayjs(
             initPharmacy?.infoPolicy?.dateOfBirth,
@@ -78,6 +76,8 @@ export default function PharmacyForm({
           ),
         },
       });
+    }else{
+      form.resetFields();
     }
   }, [initPharmacyProfile, id, form]);
 

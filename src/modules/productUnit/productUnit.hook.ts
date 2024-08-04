@@ -99,6 +99,7 @@ const {
         param: query,
       })
   }
+  export const useGetProductUnit_onlyGet = () => [useSelector(getByIdSelector), useSelector(getByIdLoadingSelector)];
   export const useGetlistProductUnitById = (id: string) => {
     console.log(id)
     return useFetchByParam({

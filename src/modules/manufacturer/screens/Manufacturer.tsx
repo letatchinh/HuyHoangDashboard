@@ -14,6 +14,11 @@ import ManufacturerForm from './ManufacturerForm';
 import WithPermission from '~/components/common/WithPermission';
 import POLICIES from '~/modules/policy/policy.auth';
 import { useMatchPolicy } from '~/modules/policy/policy.hook';
+import { Link } from 'react-router-dom';
+import { PATH_APP } from '~/routes/allPath';
+import BtnAdd from '~/components/common/Layout/List/Header/BtnAdd';
+import ColumnAction from '~/components/common/ColumnAction';
+import StatusAndSearch from '~/components/common/StatusAndSearch';
 export default function Manufacturer() {
   const [showForm, setShowForm] = useState(false);
   const [destroy, setDestroy] = useState(false);
@@ -62,22 +67,17 @@ export default function Manufacturer() {
       align: 'left',
       width: '300px',
       key: 'name',
-      render: (text: string, record: any) => {
-        return canUpdate ? <Button  type="link" onClick={() => handleOpenForm(record?._id)}>
-          {text}
-        </Button>
-          : <span>{text}</span>
-      }
+      render: (text: string, record: any) => <Link className='link_' to={PATH_APP.worldPharma.manufacturer + "/" + record?._id}>{text}</Link>
     },
     {
       title: 'Mô tả',
       dataIndex: 'description',
-      align: 'center',
+      // align: 'center',
       key: 'description',
       width: '300px',
     },
       ...(canUpdate ?[  {
-      title: 'Thao tác',
+      title: 'Trạng thái',
       dataIndex: 'activity',
       align: 'center' as any,
       width: '120px',
@@ -93,15 +93,23 @@ export default function Manufacturer() {
       )
     }] : []),
     ...(canDelete ?[{
-      title: 'Hành động',
+      title: 'Thao tác',
       key: 'action',
       align: 'center' as any,
       width: '180px',
-      render: (value: any, record: any) => (
-        <Button icon={<DeleteOutlined />} style={{ color: 'red' }} onClick={() => handleDelete(record?._id)}>
-        Xóa
-      </Button>
-      ),
+      render: (value: any, record: any) => {
+        return (
+          <ColumnAction
+            // {...record}
+            onOpenForm={handleOpenForm}
+            onDelete={handleDelete}
+            _id={record?._id}
+            textName='hãng sản xuất'
+            // isSubmitLoading={isSubmitUpdateLoading}
+            permissionUpdate={canUpdate}
+            permissionDelete={canDelete}
+          />
+        )}
     }]: []),
   ];
   const onSearch = (value: string) => {
@@ -121,50 +129,24 @@ export default function Manufacturer() {
   return (
     <>
       <div>
-        <Breadcrumb title={t('Quản lý hãng sản xuất')} />
-        <Row gutter={16} style={{ marginBottom: '10px' }}>
+        <Breadcrumb title="Quản lý hãng sản xuất" />
+        <Row justify={"space-between"} gutter={16} style={{ marginBottom: 12 }}>
           <Col span={12}>
-            <Row gutter = {16}>
-              <Col span={12}>
-              <Search
-                placeholder="Nhập bất kì để tìm..."
-                value={keyword}
-                onChange={(e) => (setKeyword(e.target.value))}
-                allowClear
-                onSearch={onSearch}
-                enterButton={<SearchOutlined />}
-              />
-            </Col>
-            <Col span={12}>
-                <Select
-                  placeholder="Tìm theo trạng thái"
-                  style={{
-                    width: "200px",
-                  }}
-                  value={search}
-                  allowClear
-                  onChange={(e) => {
-                    setSearch(e)
-                    onParamChange({ ['status']: e });
-                  }}
-                  options={options}
-                />
-              </Col>
-            </Row>
+            <StatusAndSearch
+              onParamChange={onParamChange}
+              query={query}
+              keyword={keyword}
+              setKeyword={setKeyword}
+            />
           </Col>
           <Col span={12}>
             <Row justify={"end"}>
-              <Col span={8}>
-                <WithPermission permission={POLICIES.WRITE_MANUFACTURER}>
-                  <Button icon={<PlusCircleOutlined />} onClick={() => handleOpenForm()} type="primary">
-                    Thêm mới
-                  </Button>
-                </WithPermission>
-              </Col>
+              <WithPermission permission={POLICIES.WRITE_MANUFACTURER}>
+                <BtnAdd onClick={() => handleOpenForm()}>Thêm mới</BtnAdd>
+              </WithPermission>
             </Row>
           </Col>
         </Row>
-        <WhiteBox>
           <TableAnt
             dataSource={listManufacturer}
             loading={isLoading}
@@ -183,16 +165,21 @@ export default function Manufacturer() {
             stickyTop
             scroll={{ x: 'max-content' }}
           />
-        </WhiteBox>
         <ModalAnt
           open={showForm}
-          title={id? 'Cập nhật hãng sản xuất':'Thêm hãng sản xuất'}
+          title={id ? "Cập nhật hãng sản xuất" : "Thêm mới hãng sản xuất"}
           onCancel={handleCloseForm}
           footer={null}
           destroyOnClose={destroy}
           afterClose={() => setDestroy(false)}
         >
-          <ManufacturerForm setDestroy={setDestroy} id={id} setId={setId} callBack={handleCloseForm} updateManufacturer={updateManufacturer} />
+          <ManufacturerForm
+            setDestroy={setDestroy}
+            id={id}
+            setId={setId}
+            callBack={handleCloseForm}
+            updateManufacturer={updateManufacturer}
+          />
         </ModalAnt>
       </div>
     </>

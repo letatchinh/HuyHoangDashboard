@@ -17,7 +17,7 @@ import {
 import { typePharmacyActions } from "./redux/reducer";
 import { STATUS } from "~/constants/defaultValue";
 const MODULE = "typePharmacy";
-const MODULE_VI = "loại khách hàng B2B";
+const MODULE_VI = "nhánh khách hàng";
 
 const {
   loadingSelector,
@@ -67,6 +67,11 @@ export const useGetTypePharmacy = (id: any) => {
     param: id,
   });
 };
+
+export const useGetTypePharmacy_onlyGet = () => [
+  useSelector(getByIdSelector),
+  useSelector(getByIdLoadingSelector),
+];
 
 export const useCreateTypePharmacy = (callback?: any) => {
   useSuccess(
