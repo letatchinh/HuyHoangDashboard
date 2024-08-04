@@ -1,3 +1,55 @@
+# [1.21.0](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/compare/v1.20.1...v1.21.0) (2024-08-04)
+
+
+### Bug Fixes
+
+* [#1699](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1699) - add column action in table in CMS ([7007389](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/700738976a00b6cc54ebfe78c08d009fa0590334))
+* [#1699](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1699) add component search and status new UI in table employee, customer B2B, B2C ([bb62ed7](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/bb62ed7cfa93293cd0592a5d82fb37d3318e01cb))
+* [#1699](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1699) change name column in master config ([30de2ce](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/30de2cee1f1c61f969ff561d289dc12e7f6355e1))
+* [#1699](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1699) change text title form Create in master ([b617a07](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/b617a07a2dec3a4ee750dcd15f7965335a148236))
+* [#1699](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1699) create component common for Search and filter Status ([6b213aa](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/6b213aae9504b223148dcd737bd005382269c086))
+* [#1699](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1699) create form action in common ([872e638](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/872e63881f7f3b1232ab22a8a21588a74e357927))
+* [#1699](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1699) fix button add new and export some form in master ([1540f82](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/1540f82a2de5c4ef5a2f9e468efa0135761c529a))
+* [#1699](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1699) fix UI column action sale channel, type and group customer(pharmacy) ([d06cb96](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/d06cb96302d89304e2d49e4e0433ce02c3e68645))
+* [#1699](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1699) fix width modal CollaboratorGroupForm ([5280923](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/5280923578234c92232a64d3b283e6a1418ce8cf))
+* [#1699](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1699) hidden button submit form when user see detail ([f53d302](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/f53d3023b8a6020d57df82d28e5f9768d8a46cf7))
+* [#1699](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1699) update new UI for employee seller detail ([7c375c6](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/7c375c62b664e995f536ae4ac844294c4537a908))
+* [#1699](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1699) update new UI for sale channel, add page detail branch customer (type-pharmacy) ([4a67a6d](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/4a67a6d001bc63ba7f48a30c9fcba36040c6f4a2))
+* [#1699](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1699) update new UI for sale channel, add page detail branch customer (type-pharmacy) ([411e7c4](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/411e7c406c9c6d61294617a55e50f5adadb3509f))
+* [#1699](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1699) update new UI for sale channel, add page detail branch customer (type-pharmacy) ([029082e](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/029082e61b0765ee3b26c549f8d0ccde6c09fb8a))
+* [#1699](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1699) update new UI for sale channel, add page detail group customer (group pharmacy) ([0ee1e67](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/0ee1e67603b539c85e61953e2b5f6947cfc0a15c))
+* [#1699](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1699) update new UI for sale channel, add page detail sael channel ([7e4d8c0](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/7e4d8c07d0b53b6ca1b269c3968dda7b5749207d))
+* [#1699](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1699) update UI in table for search and status ([fbf8109](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/fbf8109b2357545c0b6a1a4136ba30e97f78a418))
+* [#1705](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1705) - add column sale channel in table customer B2B and B2C, fix style form ([32c2f54](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/32c2f542bbe401d28f50fa2e7a1dca65c3c35d15))
+* [#1705](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1705) - add hook for search type customer and group customer ([eaf81e1](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/eaf81e1c5044b5ff3b91ae6d02c693f67b950055))
+* [#1705](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1705) - add permission for customer segmentation ([b30bd60](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/b30bd6033cc4b7e9d68f17ac24704241f456ce08))
+* [#1705](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1705) - add UI customer segmentation ([f62d795](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/f62d795b1fb6c176b362bd64ddf035356744f5af))
+* [#1705](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1705) - change name title group customer ([9e53099](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/9e5309986123f240202e0411007635e6c622faaa))
+* [#1705](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1705) - update customer system in form profile pharmacy and collaborator ([a66dba3](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/a66dba33884dca2ef9951c8c1f77b79356ddb73e))
+* [#1705](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1705) add key sale channel in report overview ([949d865](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/949d865a9bffe2827fe7693f6bd385014657c9b5))
+* [#1705](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1705) change name title to module customer segmentation ([a46ddf7](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/a46ddf7f44a3a0be7002cc97d1c85eb77911e9db))
+* [#1705](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1705) change text manager in navbar ([fe326c1](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/fe326c18e32a464e5661c0d6ba56255665087525))
+* [#1705](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1705) check condition display search pharmacy ([8cc0ab1](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/8cc0ab14adbf859d71ca64d97ca4e40ee98a2a2b))
+* [#1705](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1705) fix form create sale channel ([f188457](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/f188457c7acb425c147a73b84e73c1d0259178ae))
+* [#1705](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1705) hidden link to root table at button cancel form ([8eea412](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/8eea4127b5cd9f8a2f6d0fa0bcd8f3d245091238))
+* [#1712](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1712) fix Form salesChannel ([8ef6bf5](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/8ef6bf5fc9f419d146e92308d2603a90c3edf68c))
+* [#1712](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1712) fix logic select customerdivisionId ([d187232](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/d187232a9ec7890773928fe639c9708595fd78e1))
+* [#1712](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1712) select type discount of profile ([c140ac3](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/c140ac37c1722232d2f1a7f2f73de6f48ff80ae5))
+* [#1720](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1720) - add button in form create pharma customer B2B ([c4fc9bd](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/c4fc9bd4e0c53847dfde9de0cf49c61b50fd64c1))
+* [#1720](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1720) - change position in supplier form ([c4e7813](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/c4e7813a1582e576b47ce4f303423f319bf97850))
+* [#1720](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1720) - fix button add new in form create ([a3920a1](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/a3920a138f7cda3d748b2fff48357db317c9b2ba))
+* [#1720](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1720) add button create profile customer B2B and B2C in form sale ([7330ddb](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/7330ddb01f230c870b0a2da3143bbe2c2506b5bc))
+* [#1720](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1720) add new form children in form customer B2B ([13d6500](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/13d65004baa0a5590150b15138d6192b9c766e9b))
+* [#1746](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1746) - fix paging history and debt pharmacy ([dd72068](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/dd720685cef3bc438c3d79b22a94f2e3e3ac81b3))
+* bug modal create pharmacy ([6ff6f64](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/6ff6f64d57973902abb0bae89dd2c0c566a3a6da))
+* history pharma ([d768013](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/d7680136efc3cfc6b18897932c35bd88c55cb021))
+
+
+### Features
+
+* [#1648](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1648) FE_Update UI Table List And Detail ([a69f485](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/a69f48562a5bfc2d6ef68b83b71002a33dafb9b6))
+* [#1648](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1648) FE_Update UI Table List And Detail ([99c5543](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/99c55433ffa2b53253538e77b700c4739bf1678b))
+
 ## [1.20.1](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/compare/v1.20.0...v1.20.1) (2024-08-04)
 
 
