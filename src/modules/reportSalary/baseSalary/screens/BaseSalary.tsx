@@ -49,7 +49,7 @@ export default function BaseSalary() {
 
   return (
     <div>
-      <Breadcrumb title={"Cấu hình vùng"} />
+      <Breadcrumb title={"Cấu hình lương vùng"} />
       <WhiteBox>
         {RenderLoading(
           isLoading,

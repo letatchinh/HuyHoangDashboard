@@ -23,6 +23,26 @@ export type FieldTypeForm = {
 export interface SalesGroupType extends BaseData {
     alias : string,
     name : string,
+    _id:                   string;
+    managementArea:        any[];
+    parents:               string[];
+    slug:                  string;
+    parentNear?:           string;
+    targetSupplier:        any[];
+    exchangeRateOverride:  any[];
+    parent?:               any;
+    salesGroupPermission?: {
+        _id:         string;
+        mapParent:   string;
+        branchId:    number;
+        employeeId:  string;
+        rule:        "LEADER"|"MEMBER";
+        saleGroupId: string;
+        __v:         number;
+        employee:    any;
+        lastSegment: string;
+    }[];
+    children?: SalesGroupType[];
 }
 
 export type EmployeeType = {

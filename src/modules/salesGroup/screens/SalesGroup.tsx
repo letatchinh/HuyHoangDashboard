@@ -1,16 +1,11 @@
-import { Button } from "antd";
-import { ColumnsType } from "antd/es/table/InternalTable";
-import { get, initial } from "lodash";
-import { useMemo, useRef, useState } from "react";
+import { Form } from "antd";
+import { compact, get, initial } from "lodash";
+import { useCallback, useMemo, useRef, useState } from "react";
 import ModalAnt from "~/components/Antd/ModalAnt";
-import Breadcrumb from "~/components/common/Breadcrumb";
 import SelectSearch from "~/components/common/SelectSearch/SelectSearch";
 import WhiteBox from "~/components/common/WhiteBox";
 import POLICIES from "~/modules/policy/policy.auth";
 import { StringToSlug } from "~/utils/helpers";
-import Action from "../components/Action";
-import Address from "../components/Address";
-import Member from "../components/Member";
 import Relationship from "../components/Relationship";
 import SalesGroupForm from "../components/SalesGroupForm";
 import SalesGroupTree from "../components/SalesGroupTree";
@@ -18,10 +13,13 @@ import TargetSalesGroup from "../components/TargetSalesGroup";
 import {
   useGetSalesGroups,
   useGetSalesGroupsSearch,
-  useSalesGroupQueryParams
+  useSalesGroupQueryParams,
 } from "../salesGroup.hook";
 import { SalesGroupType } from "../salesGroup.modal";
 import useSalesGroupStore from "../salesGroupContext";
+import SelectBusinessModel from "~/components/common/SelectBusinessModel/SelectBusinessModel";
+
+
 export default function SalesGroup() {
   const {
     updateSalesGroup,
@@ -33,167 +31,112 @@ export default function SalesGroup() {
     isOpenFormRelation,
     onCloseFormRelation,
     isOpenTarget,
-    onOpenFormTarget,
     onCloseFormTarget,
-    isOpenFormExchangeRate,
-    onOpenFormExchangeRate,
-    onCloseFormExchangeRate,
-    setParentNear,
-    setGroupInfo,
-    canUpdate
   } = useSalesGroupStore();
-  const rowSelect = useRef();
-  const [expandedRowKeys, setExpandedRowKeys]: any = useState([]);
+
+  const [formBusiness] = Form.useForm();
+
   const [query] = useSalesGroupQueryParams();
-  const [data, isLoading, actionUpdate] = useGetSalesGroups(query);
-  const [modeView,setModeView] = useState<'table' | 'tree'>('table');
-  
+  const refQuery = useRef({
+    "salesChannelId": '',
+    "customerGroupId": '',
+    "customerId": '',
+    keyword:'',
+})
+
+  const [data,loading, actionUpdate] = useGetSalesGroups(query);
   const dataSearch = useGetSalesGroupsSearch();
 
-  const onSearch = (keyword: any) => {
+  const onSearch = useCallback((keyword: any) => {
     // Get Data Filter From Redux
-    const resultSearch = data?.filter((item: SalesGroupType) => {
+    const keywordSlug = StringToSlug(keyword?.trim()?.toLowerCase());
+    refQuery.current.keyword = keywordSlug;
+
+    function loopFilter(item?: SalesGroupType) {
       const name = get(item, "nameChild", "");
-      const member = get(item, "memberChild", "");
-      const keywordSlug = StringToSlug(keyword?.trim()?.toLowerCase());
       const nameSlug = StringToSlug(name?.trim()?.toLowerCase());
-      const memberSlug = StringToSlug(member?.trim()?.toLowerCase());
 
-      return (
-        nameSlug?.includes(keywordSlug) || memberSlug?.includes(keywordSlug)
-      );
-    });
+      const children = compact(
+        get(item, "children", []).map(loopFilter)
+      ) as SalesGroupType[];
 
-    actionUpdate(resultSearch);
-  };
+      const hasInChild: boolean = Boolean(children.length);
+      let checkSalesChannel = refQuery.current.salesChannelId
+        ? !!item?.salesGroupPermission?.filter(({ employee }) =>
+            employee.pharmacies.some(
+              (el: any) =>
+                {
+                  let check = [el.salesChannelId === refQuery.current.salesChannelId]
+                  if(!!refQuery.current.customerGroupId){
+                    check.push(el.customerGroupId === refQuery.current.customerGroupId)
+                  }
+                  if(!!refQuery.current.customerId){
+                    check.push(el.customerId === refQuery.current.customerId)
+                  }
 
-  const onExpand = (record : any) => {
-    const idSelect: any = get(record, "_id");
-    const indexRow :any = get(record,'indexRow');
-    
-    
-      if(rowSelect.current !== indexRow && indexRow){ // Click on The Record Have Index Diff rowSelect current
+                return check.every((e)=>e===true)
+              }
+            )
+          ).length
+        : true;
 
-        setExpandedRowKeys([idSelect]);
-          rowSelect.current = indexRow;
-          return 
+      const valid = !!keywordSlug ? nameSlug?.includes(keywordSlug) : true;
+
+      if ((!valid || !checkSalesChannel) && !hasInChild) {
+        return null;
       }
-        onSetRowKey(idSelect);
-  }
-  const onSetRowKey = (idSelect:any) => {
-    if (expandedRowKeys.includes(idSelect)) {
-      setExpandedRowKeys(
-        expandedRowKeys?.filter((k: any) => k !== idSelect)
-      );
-    } else {
-      setExpandedRowKeys(expandedRowKeys.concat(idSelect));
+
+      let valueReturn = { ...item };
+
+      if (!!item?.children && hasInChild) {
+        valueReturn = { ...valueReturn, children: children };
+      }
+      return valueReturn;
     }
-  };
+    const resultSearch = compact(data.map(loopFilter));
+    actionUpdate(resultSearch);
+  },[data]);
+
 
   const filterDataSource = useMemo(() => {
     function loop(item: any) {
       let itemData = {
         value: item._id,
         title: item.name,
-      }
+      };
       if (item?.children?.length) {
-        Object.assign(itemData, { children: item.children.map(loop) })
+        Object.assign(itemData, { children: item.children.map(loop) });
       }
-      return itemData
+      return itemData;
     }
-    return (data || [])?.map(loop)
+    return initial(data).map(loop);
   }, [data]);
-  const columns: ColumnsType = [
-    {
-      title: "Tên",
-      dataIndex: "name",
-      key: "name",
-      onCell : (data,index) => ({
-        style : {
-          borderTop : index === 0 ? "1px solid " + get(data,'color') : "unset",
-          borderBottom : '2px solid ' + get(data,'color'),
-          borderLeft : '2px solid ' + get(data,'color'),
-          borderRight : '2px solid ' + get(data,'color'),
-          boxSizing : 'border-box' 
-        }
-      }),
-      render: (name, rc) => {
-        return (
-          <div>
-            {`${name} ${get(rc, "alias") ? `(${get(rc, "alias")})` : ""}`}
-            <Address managementArea={get(rc, "managementArea", [])} />
-          </div>
-        );
-      },
-    },
-    // {
-    //   title: "Loại nhóm",
-    //   key: "typeArea",
-    //   dataIndex: "typeArea",
-    //   width: 140,
-    //   align: "center",
-    //   render: (typeArea, rc) => (
-    //     <Tag color={CLONE_SALES_GROUP_GEOGRAPHY_COLOR[typeArea]}>
-    //       {CLONE_SALES_GROUP_GEOGRAPHY_VI?.[typeArea]}
-    //     </Tag>
-    //   ),
-    // },
-    {
-      title: "Chỉ tiêu",
-      key: "targets",
-      dataIndex: "_id",
-      width: "10%",
-      align: "center",
-      render: (_id, rc) => (
-        <Button size="small" onClick={() => onOpenFormTarget(_id)}>
-          Xem chỉ tiêu
-        </Button>
-      ),
-    },
-    {
-      title: "Thành viên",
-      key: "salesGroupPermission",
-      dataIndex: "_id",
-      width: "30%",
-      render: (_id, rc:any) => (
-        <Member
-          _id={_id}
-          data={get(rc, "salesGroupPermission", [])}
-          typeArea={get(rc, "typeArea", "")}
-          child={get(rc, "children", [])}
-        />
-      ),
-    },
-    ...(canUpdate ? [  {
-          title: "Quy đổi",
-          key: "exchangeRate",
-          dataIndex: "exchangeRate",
-          width: "10%",
-          align: "center" as any,
-          render: (_id : any, rc: any) => (
-            <Button type="link" onClick={() => {
-              onOpenFormExchangeRate(rc?._id);
-              setParentNear(rc?.parent);
-              setGroupInfo(rc);
-            }}>Nhập quy đổi</Button>
-          ),
-      }
-    ]: []),
-    {
-      title: "Thao tác",
-      dataIndex: "_id",
-      key: "_id",
-      align: "center",
-      fixed: "right",
-      width: 80,
-      render(_id, rc) {
-        return <Action _id={_id} rc={rc} />;
-      },
-    },
-  ];
+  const onValuesChange = (value:any)=>{
+    const key = Object.keys(value)[0];
+    if(key === 'salesChannelId'){
+      formBusiness.setFieldsValue({
+        customerGroupId : null,
+        customerId: null
+      });
+      Object.assign(refQuery.current,{
+        customerGroupId : '',
+        customerId: ''
+      });
+    }
+    if(key === 'customerGroupId'){
+      formBusiness.setFieldsValue({
+        customerId: null
+      })
+      Object.assign(refQuery.current,{
+        customerId: ''
+      });
+    }
+    Object.assign(refQuery.current,value);
+    onSearch('');
+   
+  }
   return (
     <div>
-      
       <WhiteBox>
         <SelectSearch
           onChange={(e: any) => onSearch(e.target.value)}
@@ -202,49 +145,21 @@ export default function SalesGroup() {
           isShowButtonAdd
           permissionKey={[POLICIES.WRITE_SALESGROUP]}
         />
-        {/* <Flex style={{marginTop : 20}}>
-          <Button.Group>
-            <Button onClick={() => setModeView('table')} type={modeView === 'table' ? 'primary' : 'default'} icon={<AppstoreOutlined />}/>
-            <Button onClick={() => setModeView('tree')} type={modeView === 'tree' ? 'primary' : 'default'} icon={<ApartmentOutlined />}/>
-          </Button.Group>
-        </Flex> */}
-        {/* {modeView === 'table' && <TableAnt
-          expandable={{
-            expandedRowKeys,
-            
-            onExpand: (open, record) => {
-              onExpand(record)
-            },
-          }}
-          onRow={(record: any) => {
-            
-            return {
-              onClick: (event: any) => {                
-                const cellIndex = event?.target?.cellIndex ?? event?.target?.offsetParent?.cellIndex;
-                
-                if ([0, 1].includes(cellIndex)) {
-                  onExpand(record)
-                }
-              }, // click row
-            };
-          }}
-          dataSource={dataSearch?.length ? dataSearch : data}
-          loading={isLoading}
-          rowKey={(rc) => rc?._id}
-          columns={columns}
-          size="small"
-          pagination={false}
-          bordered
-          style={{ marginTop: 20 }}
-        />} */}
-        {/* {modeView === 'tree' && <SalesGroupTree dataSource={dataSearch?.length ? dataSearch : data}/>} */}
-        <SalesGroupTree dataSource={dataSearch?.length ? dataSearch : data}/>
+        <Form
+          form={formBusiness}
+          onValuesChange={onValuesChange}
+        >
+          <SelectBusinessModel form={formBusiness} />
+        </Form>
+
+        <SalesGroupTree dataSource={ compact(Object.values(refQuery.current)).length ? dataSearch : data} />
       </WhiteBox>
       <ModalAnt
         onCancel={onCloseForm}
         open={isOpenForm}
         footer={null}
         destroyOnClose
+        width={700}
       >
         <SalesGroupForm
           onCancel={onCloseForm}
@@ -252,7 +167,7 @@ export default function SalesGroup() {
           id={id}
           parentNear={get(parentNear, "parentNear")}
           parentNearPath={get(parentNear, "parentNearPath")}
-          dataSourceTree = {filterDataSource}
+          dataSourceTree={filterDataSource}
         />
       </ModalAnt>
       <ModalAnt
@@ -276,8 +191,7 @@ export default function SalesGroup() {
         centered
       >
         <TargetSalesGroup _id={id} />
-        </ModalAnt>
-
+      </ModalAnt>
     </div>
   );
 }

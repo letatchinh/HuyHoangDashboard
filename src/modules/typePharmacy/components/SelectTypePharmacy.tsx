@@ -34,7 +34,13 @@ export default function SelectTypePharmacy({
       const employees = await apis.searchList({
         keyword: keyword || "",
       });
-      const newOptions = employees?.map(
+      const callbackFilter = ({salesChannelId}:any) => {
+        if (form.getFieldValue("salesChannelId")) {
+          return salesChannelId === form.getFieldValue("salesChannelId");
+        }
+        return true;
+      }
+      const newOptions = employees?.filter(callbackFilter).map(
         (item: ItemSearch) => ({
           label: get(item, "title"),
           value: get(item, "_id"),

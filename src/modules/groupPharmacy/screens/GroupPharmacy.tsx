@@ -79,6 +79,7 @@ export default function GroupPharmacy(props: propsType): React.JSX.Element {
         dataIndex: "code",
         key: "code",
         width: 120,
+        fixed: 'left',
         render: (text: string, record: any) => <Link className='link_' to={PATH_APP.groupPharmacy.root + "/" + record?._id}>{text}</Link>
       },
       // {
@@ -142,26 +143,6 @@ export default function GroupPharmacy(props: propsType): React.JSX.Element {
           );
         },
       },
-      ...(canDownload
-        ? [
-            {
-              title: "Lựa chọn",
-              key: "_id",
-              width: 80,
-              align: "center" as any,
-              
-              render: (item: any, record: any) => {
-                const id = record._id;
-                return (
-                  <Checkbox
-                    checked={arrCheckBox.includes(id)}
-                    onChange={(e) => onChangeCheckBox(e.target.checked, id)}
-                  />
-                );
-              },
-            },
-          ]
-        : []),
       {
         title: "Thao tác",
         // dataIndex: "_id",
@@ -182,7 +163,26 @@ export default function GroupPharmacy(props: propsType): React.JSX.Element {
           );
         },
       },
-      
+      ...(canDownload
+        ? [
+            {
+              title: "Lựa chọn",
+              key: "_id",
+              width: 80,
+              align: "center" as any,
+              
+              render: (item: any, record: any) => {
+                const id = record._id;
+                return (
+                  <Checkbox
+                    checked={arrCheckBox.includes(id)}
+                    onChange={(e) => onChangeCheckBox(e.target.checked, id)}
+                  />
+                );
+              },
+            },
+          ]
+        : []),
     ],
     [canDownload,arrCheckBox,pharmacies]
   );

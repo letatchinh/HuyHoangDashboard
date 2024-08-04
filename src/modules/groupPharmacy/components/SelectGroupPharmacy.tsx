@@ -1,12 +1,9 @@
-import { useEffect, useMemo, useState } from "react";
-import GroupPharmacyModule from "~/modules/groupPharmacy";
+import { SelectProps } from "antd";
 import { get } from "lodash";
-import { Form, Select, SelectProps } from "antd";
-import { filterSelectWithLabel, useFetchState } from "~/utils/helpers";
-import RenderLoading from "~/components/common/RenderLoading";
-import apis from "../groupPharmacy.api";
+import { useEffect, useState } from "react";
 import DebounceSelect from "~/components/common/DebounceSelect";
 import useNotificationStore from "~/store/NotificationContext";
+import apis from "../groupPharmacy.api";
 
 interface TypeProps extends SelectProps {
   form?: any;
@@ -37,7 +34,13 @@ export default function SelectGroupPharmacy({
       const employees = await apis.search({
         keyword: keyword || "",
       });
-      const newOptions = employees?.map(
+      const callbackFilter = ({customerGroupId}: any) => {
+        if (form.getFieldValue("customerGroupId")) {
+          return customerGroupId === form.getFieldValue("customerGroupId");
+        }
+        return true;
+      }
+      const newOptions = employees?.filter(callbackFilter).map(
         (item: ItemSearch) => ({
           label: get(item, "title"),
           value: get(item, "_id"),
@@ -58,8 +61,13 @@ export default function SelectGroupPharmacy({
           id: form.getFieldValue("customerId"),
           keyword: "",
         });
-
-        const newOptions = employees?.map(
+        const callbackFilter = ({customerGroupId}: any) => {
+          if (form.getFieldValue("customerGroupId")) {
+            return customerGroupId === form.getFieldValue("customerGroupId");
+          }
+          return true;
+        }
+        const newOptions = employees?.filter(callbackFilter).map(
           (item: ItemSearch) => ({
             label: get(item, "title"),
             value: get(item, "_id"),

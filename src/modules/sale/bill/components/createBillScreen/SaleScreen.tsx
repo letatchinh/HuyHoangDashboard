@@ -13,6 +13,7 @@ import useCreateBillStore from "../../storeContext/CreateBillContext";
 import ProductSelectedTable from "../ProductSelectedTable";
 import SelectPharmacy from "../SelectPharmacy";
 import TotalBill from "./TotalBill";
+import InfoCreateBy from "./InfoCreateBy";
 type propsType = {};
 export default function SaleScreen(props: propsType): React.JSX.Element {
   const {
@@ -154,7 +155,8 @@ export default function SaleScreen(props: propsType): React.JSX.Element {
         </Col>
         <Col span={8} className="form-create-bill--payment">
           <div>
-            <SelectPharmacy onChange={(value, option) => {
+              <InfoCreateBy />
+              <SelectPharmacy onChange={(value,option) => {
                 const fee = get(option,'data.fee',[]);
                 if(fee?.length){
                   feeForm[0] = head(fee);
@@ -175,6 +177,7 @@ export default function SaleScreen(props: propsType): React.JSX.Element {
   
                 setAddress(address);
                 mutateReValidate();
+                setPharmacyInfo(option);
                 }} id={get(bill, 'pharmacyId')} form={form} allowClear={false} showButtonAdd={true}/>
             <Divider/>
             <TotalBill />
