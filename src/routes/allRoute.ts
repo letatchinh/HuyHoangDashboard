@@ -40,7 +40,6 @@ import ReportEmployeePage from "~/pages/Dashboard/ReportEmployee";
 import ReportSupplierPage from "~/pages/Dashboard/ReportSupplier";
 import CronSalaryPage from "~/pages/Dashboard/CronSalary";
 import SaleChannel from "~/pages/Dashboard/SaleChannel";
-import ConfigurationCronTime from "~/pages/Dashboard/ConfigurationCronTime";
 import TypePharmacy from "~/pages/Dashboard/TypePharmacy";
 import GroupPharmacy from "~/pages/Dashboard/GroupPharmacy";
 import CollaboratorPage from "~/pages/Dashboard/Collaborator";
@@ -156,7 +155,7 @@ export const mainRoutes :PathRouteProps[] = [
   { path: PATH_APP.report.supplier, Component: ReportSupplierPage },
   
   // Configuration Cron Time
-  { path: PATH_APP.configurationCronTime.root, Component: ConfigurationCronTime},
+  // { path: PATH_APP.configurationCronTime.root, Component: ConfigurationCronTime},
   
   // Thời gian báo cáo lương
   { path: PATH_APP.cronSalary.root, Component: CronSalaryPage },

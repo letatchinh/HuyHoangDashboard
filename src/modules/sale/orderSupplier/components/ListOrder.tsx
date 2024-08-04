@@ -1,7 +1,7 @@
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useState } from "react";
 import TableAnt from "~/components/Antd/TableAnt";
 
-import { Button, Checkbox, Col, Flex, Modal, Radio, Row, Space, Tag, Typography } from "antd";
+import { Button, Checkbox, Col, Flex, Modal, Row, Space, Tag, Typography } from "antd";
 import { ColumnsType } from "antd/es/table/InternalTable";
 import { get, trim } from "lodash";
 import { Link } from "react-router-dom";
@@ -18,7 +18,6 @@ import {
   useInitialValue,
   useOrderSupplierPaging,
   useOrderSupplierQueryParams,
-  useResetOrderSupplierClone,
   useUpdateOrderSupplierParams,
   useUpdateStatusOrderSupplier,
 } from "../orderSupplier.hook";
@@ -192,7 +191,7 @@ export default function ListOrder({ status }: propsType): React.JSX.Element {
         render(createdAt, record, index) {
           return (
             <Flex vertical align={'center'}>
-              {get(record,'createAuto') && <Tag color={'blue'}>Hệ thống tạo</Tag>}
+              {/* {get(record,'createAuto') && <Tag color={'blue'}>Hệ thống tạo</Tag>} */}
               {/* <Typography.Text strong>
               {dayjs(createdAt).format("DD/MM/YYYY HH:mm")}
             </Typography.Text> */}
@@ -378,7 +377,7 @@ export default function ListOrder({ status }: propsType): React.JSX.Element {
           </Row>
         </Col>
       </Row>
-      <Flex align={'center'} gap={10} style={{margin: 10}}>
+      {/* <Flex align={'center'} gap={10} style={{margin: 10}}>
       <span>Hình thức tạo: </span>
       <Radio.Group
         options={options}
@@ -387,7 +386,7 @@ export default function ListOrder({ status }: propsType): React.JSX.Element {
         optionType="button"
         buttonStyle="solid"
       />
-      </Flex>
+      </Flex> */}
       <ConfigTable>
         <TableAnt
           // className="table-striped-rows-custom"

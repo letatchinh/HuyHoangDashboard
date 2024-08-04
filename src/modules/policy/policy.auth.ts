@@ -386,7 +386,7 @@ const RESOURCE = (): ResourceType => {
 
   const GROUP_SETTING: string[] = [
     warehouseLink,
-  ];
+    ];
   const WAREHOUSE: string[] = [
     outOfStock
   ];
