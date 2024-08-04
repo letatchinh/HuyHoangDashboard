@@ -1,3 +1,23 @@
+## [1.21.1](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/compare/v1.21.0...v1.21.1) (2024-08-04)
+
+
+### Bug Fixes
+
+* [#1699](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1699) - fix position column action on table sale channel, group customer, type customer ([debad12](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/debad124dd63ce6f52b553b47ce5b72906dca836))
+* [#1699](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1699) change title for Config Base Salary ([bd73709](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/bd737094a542adc7e88d87f29de8228812903d97))
+* [#1699](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1699) increase width modal sale group ([5a84508](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/5a845082f9eeed80d45b65b66699eb0bddf31f4e))
+* [#1741](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1741) - change name business model ([9c1397d](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/9c1397d9a461ee1d15dc3a66b23bfeccde5e9655))
+* [#1741](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1741) - fix logic search ([524d87c](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/524d87c22dd6e5d0364ca7fbd612cc68297bd88e))
+* [#1741](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1741) add filter in component select type and group pharmacy ([c4c7be5](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/c4c7be57e5d25f3201044789ed9e2af10ebf26cf))
+* [#1741](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1741) add information and date time create bill ([9aa798b](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/9aa798bcc131a8d03bc08ff29059eb0338f64d15))
+* [#1741](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1741) add paging in reducer ([c82b015](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/c82b015600fb2e5191a4b6693345fd8ff1bb4569))
+* [#1741](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1741) add select search in B2C sale group ([4bac818](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/4bac8183e93a7ee489acb9d6bf25139da93a33f2))
+* [#1741](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1741) change text require in sale ([cde511b](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/cde511bd7100ee6d6607550614b64384fc1c2a94))
+* [#1741](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1741) clear log ([2eb4c36](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/2eb4c36b5f691e3bf69639e1c8d4c19c6381aead))
+* [#1741](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1741) fix search sales group B2B ([0297d51](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/0297d51c71ffcd86ac1b856ce0ae6a74979864d3))
+* auto reset form salesChannel ([875a574](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/875a5741e15110dc27080692cd0a81efdaaaf37a))
+* search with salesChannel ([014a21e](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/014a21e9b07e4f37b076db4a26d234c99e5ff61f))
+
 # [1.21.0](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/compare/v1.20.1...v1.21.0) (2024-08-04)
 
 
