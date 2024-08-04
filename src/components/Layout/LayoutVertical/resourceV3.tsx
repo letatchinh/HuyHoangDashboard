@@ -35,6 +35,7 @@ const permissionOfSetup = [
   POLICIES.READ_USER,
   POLICIES.READ_USERGROUP,
   POLICIES.READ_BRANCH,
+  POLICIES.READ_CUSTOMERDIVISION,
   POLICIES.READ_WAREHOUSELINK,
   POLICIES.READ_CONFIGREPORTSALARYAUTO,
 ];
@@ -208,7 +209,21 @@ export const resource: ItemType[] = [
           //   permission: [POLICIES.READ_CONFIGCRONTIME],
           // },
           {
-            label: "Loại khách hàng",
+            label: "Hệ khách hàng",
+            path: PATH_APP.customerSegmentation.root,
+            key: PATH_APP.customerSegmentation.root,
+            icon: <i className="fa-solid fa-notes-medical"></i>,
+            permission: [POLICIES.READ_CUSTOMERDIVISION],
+          },
+          {
+            label: "Kênh bán hàng",
+            icon: <i className="fa-solid fa-cart-shopping"></i>,
+            path: PATH_APP.saleChannel.root,
+            key: PATH_APP.saleChannel.root,
+            permission: [POLICIES.READ_SALESCHANNEL],
+          },
+          {
+            label: "Nhánh khách hàng",
             path: PATH_APP.typePharmacy.root,
             key: PATH_APP.typePharmacy.root,
             icon: <i className="fa-solid fa-truck-medical"></i>,
@@ -264,7 +279,7 @@ export const resource: ItemType[] = [
             permission: [POLICIES.READ_REPORTSALARY],
           },
           {
-            label: "Báo cáo lương cộng tác viên",
+            label: "Báo cáo lương khách hàng B2C",
             path: PATH_APP.reportSalaryPartner.root,
             key: PATH_APP.reportSalaryPartner.root,
             permission: [POLICIES.READ_REPORTSALARYPARTNER],
@@ -302,7 +317,7 @@ export const resource: ItemType[] = [
                 permission: [POLICIES.READ_REPORTREVENUEPERSONALEMPLOYEE],
               },
               {
-                label: "Cộng tác viên",
+                label: "Khách hàng B2C",
                 path: PATH_APP.reportIndividualCollaborator.root,
                 key: PATH_APP.reportIndividualCollaborator.root,
                 permission: [POLICIES.READ_REPORTREVENUEPERSONALPARTNER],
@@ -330,7 +345,7 @@ export const resource: ItemType[] = [
                 permission: [POLICIES.READ_REPORTREVENUETEAMEMPLOYEE],
               },
               {
-                label: "Cộng tác viên",
+                label: "Khách hàng B2C",
                 path: PATH_APP.reportGroupCollaborator.root,
                 key: PATH_APP.reportGroupCollaborator.root,
                 permission: [POLICIES.READ_REPORTREVENUETEAMPARTNER],
@@ -414,15 +429,15 @@ export const resource: ItemType[] = [
     ],
   },
 
-  // Nhà thuốc
+  // Khách hàng B2B
   {
-    label: "Nhà thuốc",
+    label: "Khách hàng B2B",
     icon: <i className="fa-solid fa-house-chimney-medical"></i>,
     key: "pharmacy",
     permission: [...permissionPharma], //
     children: [
       {
-        label: "Danh sách nhà thuốc",
+        label: "Quản lý khách hàng B2B",
         path: PATH_APP.pharmacy.root,
         key: PATH_APP.pharmacy.root,
         permission: [POLICIES.READ_PHARMAPROFILE], //
@@ -494,13 +509,13 @@ export const resource: ItemType[] = [
     ],
   },
   {
-    label: "Cộng tác viên",
+    label: "Khách hàng B2C",
     key: "collaboratorManagement",
     icon: <i className="fa-solid fa-circle-nodes"></i>,
     permission: [...permissionCollaborator], //
     children: [
       {
-        label: "Quản lý cộng tác viên",
+        label: "Quản lý khách hàng B2C",
         path: PATH_APP.collaborator.root,
         key: PATH_APP.collaborator.root,
         permission: [POLICIES.READ_PARTNER, POLICIES.READ_PARTNERGROUP], //

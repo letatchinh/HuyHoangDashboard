@@ -311,13 +311,13 @@ export default function ReceiptVoucher(props: propsType): React.JSX.Element {
                 <Row gutter={36}>
                   <Col span={12}>
                     <FormItem
-                      label={`Mã ${from === 'Pharmacy' ? 'nhà thuốc' : ''}`}
+                      label={`Mã ${from === 'Pharmacy' ? 'khách hàng B2B' : ''}`}
                       labelCol={{ lg: 8 }}
                       name="code"
                       rules={[
                         {
                           required: true,
-                          message: `Vui lòng nhập mã ${from === 'Pharmacy' ? 'nhà thuốc' : ''} !`,
+                          message: `Vui lòng nhập mã ${from === 'Pharmacy' ? 'khách hàng B2B' : ''} !`,
                         },
                       ]}
                     >
@@ -327,13 +327,13 @@ export default function ReceiptVoucher(props: propsType): React.JSX.Element {
                   </Col>
                   <Col span={12}>
                     <FormItem
-                      label={`Tên ${from === 'Pharmacy' ? 'nhà thuốc' : ''}`}
+                      label={`Tên ${from === 'Pharmacy' ? 'khách hàng B2B' : ''}`}
                       labelCol={{ lg: 8 }}
                       name="name"
                       rules={[
                         {
                           required: true,
-                          message: `Vui lòng chọn tên ${from === 'Pharmacy' ? 'nhà thuốc' : ''}!`,
+                          message: `Vui lòng chọn tên ${from === 'Pharmacy' ? 'khách hàng B2B' : ''}!`,
                         },
                       ]}
                     >

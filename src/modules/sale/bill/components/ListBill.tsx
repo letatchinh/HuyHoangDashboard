@@ -284,7 +284,7 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
         },
       },
       {
-        title: "Tên nhà thuốc",
+        title: "Tên khách hàng",
         dataIndex: "pharmacy",
         key: "pharmacy",
         width: 200,
@@ -570,6 +570,7 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
                     onParamChange({ pharmacyIds: value?.length ? value : null })
                   }
                   mode="multiple"
+                  showButtonAdd={false}
                 />
               </Form>
             )}

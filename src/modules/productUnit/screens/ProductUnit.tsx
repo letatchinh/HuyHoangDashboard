@@ -1,10 +1,4 @@
 import {
-  DeleteOutlined,
-  InfoCircleTwoTone,
-  PlusCircleOutlined,
-  SearchOutlined,
-} from "@ant-design/icons";
-import {
   Button,
   Checkbox,
   Select,
@@ -39,6 +33,11 @@ import { useMatchPolicy } from "~/modules/policy/policy.hook";
 import { SelectProps } from "antd/lib";
 import ExportExcelButton from "~/modules/export/component";
 import useCheckboxExport from "~/modules/export/export.hook";
+import { Link } from "react-router-dom";
+import ColumnAction from "~/components/common/ColumnAction";
+import BtnAdd from "~/components/common/Layout/List/Header/BtnAdd";
+import DropdownAction from "~/components/common/Layout/List/Header/DropdownAction";
+import StatusAndSearch from "~/components/common/StatusAndSearch";
 type propsType = {};
 export default function ProductUnit(props: propsType): React.JSX.Element {
   const [query] = useProductUnitQueryParams();
@@ -68,13 +67,14 @@ export default function ProductUnit(props: propsType): React.JSX.Element {
     note: string;
     status: string;
   }
-  const handleOpenForm = useCallback((id?: any) => {
-    if (id) {
-      setId(id);
-      setDestroy(true);
-    };
+  const handleOpenUpdate = (id: any) => {
     setShowForm(true);
-  }, []);
+      setId(id);
+  };
+  const handleOpenFormCreate = () => { 
+    setId(null);
+    setShowForm(true);
+  };
   const handleDelete = (id: any) => {
     deleteProductConfig(id);
   };
@@ -84,14 +84,9 @@ export default function ProductUnit(props: propsType): React.JSX.Element {
       dataIndex: "name",
       align: "center",
       key: "name",
-      render: (text: string, record: any) => (
-        canUpdate ? (
-          <Button
-          type="link"
-          onClick={() => handleOpenForm(record?._id)}
-          >{text}</Button>
-        ): text
-      )
+      render : (value,rc) => <Link className="link_" to={`/unit/${rc?._id}`}>
+      {value}
+    </Link>
     },
     {
       title: "Ghi chú",
@@ -101,7 +96,7 @@ export default function ProductUnit(props: propsType): React.JSX.Element {
       render: (text: string) => <a>{text}</a>,
     },
     {
-      title: "Thao tác",
+      title: "Trạng thái",
       dataIndex: "status",
       align: "center",
       // width: '120px',
@@ -121,21 +116,21 @@ export default function ProductUnit(props: propsType): React.JSX.Element {
       ),
     },
     {
-      title: "Hành động",
+      title: "Thao tác",
       key: "action",
       align: "center",
       // width: '180px',
-      render: (_, record) => (
-          <WithPermission permission={POLICIES.DELETE_UNIT}>
-            <Button
-              icon={<DeleteOutlined />}
-              style={{ color: "red" }}
-              onClick={() => handleDelete(record._id)}
-            >
-              Xóa
-            </Button>
-          </WithPermission>
-      ),
+      render: (_, record) => {
+        return (
+          <ColumnAction
+            onOpenForm={handleOpenUpdate}
+            onDelete={handleDelete}
+            _id={record?._id}
+            textName='đơn vị tính'
+            permissionUpdate={POLICIES.UPDATE_UNIT}
+            permissionDelete={POLICIES.DELETE_UNIT}
+          />
+        )}
     },
     ...(canDownload
       ? [
@@ -174,61 +169,38 @@ export default function ProductUnit(props: propsType): React.JSX.Element {
   return (
     <>
       <Breadcrumb title={t("Quản lý đơn vị tính")} />
-      <Row gutter={10} style = {{marginBottom: '10px'}}>
+      <Row gutter={16} style={{ marginBottom: "10px" }}>
         <Col span={12}>
-          <Row gutter={10}>
-            <Col span={8}>
-              <Search
-                placeholder="Nhập bất kì để tìm..."
-                value={keyword}
-                onChange={(e) => setKeyword(e.target.value)}
-                onSearch={onSearch}
-                allowClear
-                width={300}
-                enterButton={<SearchOutlined />}
-              />
-            </Col>
-            <Col span={12}>
-              <Select
-                placeholder="Tìm theo trạng thái"
-                style={{
-                  width: "200px",
-                }}
-                value={search}
-                allowClear
-                onChange={(e) => {
-                  setSearch(e);
-                  onParamChange({ ["status"]: e });
-                }}
-                options={options}
-              />
-            </Col>
-          </Row>
+          <StatusAndSearch
+            onParamChange={onParamChange}
+            query={query}
+            keyword={keyword}
+            setKeyword={setKeyword}
+          />
         </Col>
         <Col span={12}>
-          <Row justify={"end"}>
-            <Col>
-              <WithPermission permission={POLICIES.WRITE_UNIT}>
-                <Button
-                  icon={<PlusCircleOutlined />}
-                  onClick={() => handleOpenForm()}
-                  type="primary"
-                >
-                  Thêm mới
-                </Button>
-              </WithPermission>
-            </Col>
-            <Col>
-              <WithPermission permission={POLICIES.DOWNLOAD_UNIT}>
-                <ExportExcelButton
-                  api="unit"
-                  exportOption="unit"
-                  query={query}
-                  fileName="Quản lý đơn vị tính"
-                  ids={arrCheckBox}
+          <Row justify={"end"} gutter={16}>
+            <WithPermission permission={POLICIES.WRITE_UNIT}>
+              <Col>
+                <BtnAdd onClick={handleOpenFormCreate} />
+              </Col>
+            </WithPermission>
+            <WithPermission permission={POLICIES.DOWNLOAD_UNIT}>
+              <Col>
+                <DropdownAction
+                  items={[
+                    <ExportExcelButton
+                      api="unit"
+                      exportOption="unit"
+                      query={query}
+                      fileName="Quản lý đơn vị tính"
+                      ids={arrCheckBox}
+                      useLayout="v2"
+                    />,
+                  ]}
                 />
-              </WithPermission>
-            </Col>
+              </Col>
+            </WithPermission>
           </Row>
         </Col>
       </Row>
@@ -253,7 +225,7 @@ export default function ProductUnit(props: propsType): React.JSX.Element {
       </WhiteBox>
       <ModalAnt
         open={showForm}
-        title={id ? "Cập nhật đơn vị tính" : "Tạo đơn vị tính"}
+        title={id ? "Cập nhật đơn vị tính" : "Thêm mới đơn vị tính"}
         onCancel={handleCloseForm}
         footer={null}
         afterClose={() => {

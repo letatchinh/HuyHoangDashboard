@@ -184,7 +184,7 @@ export default function ReceiptVouchers(props: propsType): React.JSX.Element {
   // Add info Before Bill
   if(pathname === PATH_APP.vouchers.pharmacy){
     columns.splice(5,0,{
-      title: 'Nhà thuốc',
+      title: 'Khách hàng B2B',
       dataIndex: 'pharmaProfile',
       key: 'pharmaProfile',
       render: (pharmaProfile, record, index) => get(pharmaProfile,'name',''),

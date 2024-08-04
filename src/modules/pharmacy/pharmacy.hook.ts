@@ -21,7 +21,7 @@ const getSelector = (key: keyof cloneInitState) => (state: RootState) =>
   state[MODULE][key];
 
 const MODULE = "pharmacy";
-const MODULE_VI = "nhà thuốc";
+const MODULE_VI = "khách hàng B2B";
 
 const {
   loadingSelector,
@@ -67,7 +67,7 @@ const convertFailedSelector = getSelector("convertFailed");
 
 export const useHistoryPharmacyPaging = () => useSelector(pagingHistoryPharmacySelector);
 
-export const useProductSupplierPaging = () => useSelector(pagingPharmacyDebtSelector);
+export const usePharmacyDebtPaging = () => useSelector(pagingPharmacyDebtSelector);
 
 export const usePharmacyPaging = () => useSelector(pagingSelector);
 
@@ -84,6 +84,9 @@ export const useGetPharmacies = (query?: any) => {
     param: query,
   });
 };
+export const useGetPharmacies_onlyGet = () => {
+  return useSelector(listSelector)
+};
 
 export const useGetPharmacyId = (id: any) => {
   return useFetchByParam({
@@ -93,6 +96,10 @@ export const useGetPharmacyId = (id: any) => {
     failedSelector: getByIdFailedSelector,
     param: id,
   });
+};
+
+export const useGetPharmacyId_onlyGet = () => {
+  return [useSelector(getByIdSelector),useSelector(getByIdLoadingSelector)];
 };
 
 export const useCreatePharmacy = (callback?: any) => {
@@ -147,14 +154,15 @@ export const useConvertPharmacy = (callback?: any) => {
   });
 };
 
-export const usePharmacyQueryParams = (module?: boolean) => {
+export const usePharmacyQueryParams = (module?: boolean,limitDefault? : number) => {
   const query = useQueryParams();
-  const limit = query.get("limit") || 10;
+  const limit = query.get("limit") || limitDefault || 10;
   const page = query.get("page") || 1;
   const keyword = query.get("keyword");
   const status = query.get("status");
   const processStatus = query.get("processStatus");
   const approved = module ?? query.get("approved");
+  const salesChannel = query.get("salesChannel");
   
   const createSuccess = useSelector(createSuccessSelector);
   const updateSuccess = useSelector(updateSuccessSelector);
@@ -167,6 +175,7 @@ export const usePharmacyQueryParams = (module?: boolean) => {
       status,
       approved,
       processStatus,
+      salesChannel,
     };
     return [queryParams];
     //eslint-disable-next-line
@@ -179,7 +188,8 @@ export const usePharmacyQueryParams = (module?: boolean) => {
     updateSuccess,
     deleteSuccess,
     approved,
-    processStatus
+    processStatus,
+    salesChannel,
   ]);
 };
 
@@ -273,14 +283,14 @@ export const useHistoryPharmacyQuery = () => {
     ]);
 };
 
-export const useGetHistoryPharmacy = (id: any) => {
+export const useGetHistoryPharmacy = (payload : any) => {
   
   return useFetchByParam({
     action: pharmacySliceAction.getHistoryPharmacyRequest,
     loadingSelector: isLoadingGetHistoryPharmacySelector,
     dataSelector: historyPharmacySelector,
     failedSelector: getHistoryPharmacyFailedSelector,
-    param: id,
+    param : payload,
   });
 };
 

@@ -73,16 +73,16 @@ const configReportSalaryAuto = 'configReportSalaryAuto';
 // Kênh bán hàng
 const salesChannel ='salesChannel';
 
-// Loại nhà thuốc
+// Loại khách hàng B2B
 const customerGroup = 'customerGroup';
 
-// Nhóm nhà thuốc
+// Nhóm khách hàng B2B
 const customer = 'customer';
 
 // Cập nhật Nhà thuốc đảm nhiệm cho nhân viên
 const updateThePharmacyForEmployee = 'updateThePharmacyForEmployee';
 
-// Cộng tác viên
+// Khách hàng B2C
 const partner = 'partner';
 const partnerGroup = 'partnerGroup';
 const reportSalaryPartner = 'reportSalaryPartner';
@@ -96,6 +96,7 @@ const reportProductSupplier = 'reportProductSupplier';
 const reportOverview = 'reportOverview';
 const requestChangeGroupCTV = 'requestChangeGroupCTV';
 const requestChangeGroup = 'requestChangeGroup';
+const customerDivision = 'customerDivision';
 const warehouseLink = 'warehouseLink';
 const logistic = 'logistic';
 const billStatus = 'billStatus'; // Trạng thái đơn hàng bán
@@ -214,6 +215,7 @@ const RESOURCES = [
   reportOverview,
   requestChangeGroup,
   requestChangeGroupCTV,
+  customerDivision,
   warehouseLink,
   logistic,
   billSpit,
@@ -384,6 +386,9 @@ const RESOURCE = (): ResourceType => {
     voucherBillPartner,
   ];
 
+  const CUSTOMER_DIVISION: string[] = [
+    customerDivision,
+  ];
   const GROUP_SETTING: string[] = [
     warehouseLink,
     ];
@@ -437,6 +442,7 @@ return {
     PARTNER,
     VOUCHER_SALARY_PARTNER,
     VOUCHER_BILL_PARTNER,
+    CUSTOMER_DIVISION,
     GROUP_SETTING,
     WAREHOUSE,
     REPORT_OVERVIEW,

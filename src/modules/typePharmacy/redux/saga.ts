@@ -49,9 +49,9 @@ function* deleteTypePharmacy({ payload: id }: any): any {
 function* getSearchListType({ payload: query }: any): any {
   try {
     const data = yield call(api.searchList, query);
-    yield put(typePharmacyActions.getListSuccess(data));
+    yield put(typePharmacyActions.getListSearchSuccess(data));
   } catch (error: any) {
-    yield put(typePharmacyActions.getListFailed(error));
+    yield put(typePharmacyActions.getListSearchFailed(error));
   }
 }
 
@@ -61,5 +61,5 @@ export default function* typePharmacySaga() {
   yield takeLatest(typePharmacyActions.createRequest, createTypePharmacy);
   yield takeLatest(typePharmacyActions.updateRequest, updateTypePharmacy);
   yield takeLatest(typePharmacyActions.deleteRequest, deleteTypePharmacy);
-  yield takeLatest(typePharmacyActions.onSearch, getSearchListType)
+  yield takeLatest(typePharmacyActions.getListSearchRequest, getSearchListType)
 }

@@ -83,13 +83,21 @@ class PharmacyExtendModule extends InstanceModuleRedux {
           return item;
         })
       },
+      updateSuccess: (state:initStateSlice, { payload }:{payload:any}) => {
+        state.isSubmitLoading = false;
+        const newPayload = payload?.data;
+        state.byId = newPayload;
+        state.list = state.list?.map((item:any) => get(item,'_id') === get(newPayload,'_id') ? newPayload : item);
+        state.listSearch = state.listSearch?.map((item:any) => get(item,'_id') === get(newPayload,'_id') ? newPayload : item);
+        state.updateSuccess = newPayload;
+      },
       convertFailed: (state: cloneInitState, { payload }: any) => {
         state.isSubmitLoading =  false;
         state.convertFailed = payload;
       },
       resetAction: (state:cloneInitState) => ({
         ...state,
-        ...omit(this.initialState, ["list"]),
+        ...omit(this.initialState, ["list","paging","byId"]),
       }),
     
     };

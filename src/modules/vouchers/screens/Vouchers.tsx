@@ -24,13 +24,13 @@ const setting = {
     name : 'Sổ quỹ doanh thu của nhà cung cấp'
   },
   [PATH_APP.vouchers.pharmacy]: {
-    name : 'Sổ quỹ doanh thu của nhà thuốc'
+    name : 'Sổ quỹ doanh thu của khách hàng B2B'
   },
   [PATH_APP.vouchers.salary] : {
-    name : 'Lương của cộng tác viên'
+    name : 'Lương của khách hàng B2C'
   },
   [PATH_APP.vouchers.partner] : {
-    name : 'Sổ quỹ doanh thu của đơn hàng cộng tác viên'
+    name : 'Sổ quỹ doanh thu của đơn hàng khách hàng B2C'
   },
 }
 type propsType = {
@@ -70,7 +70,7 @@ const optionsRefCollection = [
     value: REF_COLLECTION.EMPLOYEE
   },
   {
-    label: 'Cộng tác viên',
+    label: 'Khách hàng B2C',
     value: REF_COLLECTION.PARTNER
   },
   {
@@ -197,13 +197,13 @@ export default function Vouchers({
   };
   const checkRefCollection = useCallback(() => {
     if (isReadAll && !!policy) {
-        return  'Lương của cộng tác viên và trình dược viên' 
+        return  'Lương của khách hàng B2C và trình dược viên' 
       } else {
       if (canReadByEmployee && !canReadByPartner) { 
           return  'Lương của trình dược viên'
         };
       if (!canReadByEmployee && canReadByPartner) {
-          return  'Lương của cộng tác viên'
+          return  'Lương của khách hàng B2C'
         };
     };
     return null;

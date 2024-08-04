@@ -203,7 +203,7 @@ export const resource: ItemType[] =[
             permission: [POLICIES.READ_CONFIGCRONTIME],
           },
           {
-            label: "Loại khách hàng",
+            label: "Nhánh khách hàng",
             path: PATH_APP.typePharmacy.root,
             key: PATH_APP.typePharmacy.root,
             icon: <i className="fa-solid fa-truck-medical"></i>,
@@ -282,13 +282,13 @@ export const resource: ItemType[] =[
 
   // Nhà thuốc
   {
-    label: "Nhà thuốc",
+    label: "Khách hàng B2B",
     icon: <i className="fa-solid fa-house-chimney-medical"></i>,
     key: "pharmacy",
     permission: [...permissionPharma],//
     children: [
       {
-        label: "Danh sách nhà thuốc",
+        label: "Danh sách khách hàng B2B",
         path: PATH_APP.pharmacy.root,
         key: PATH_APP.pharmacy.root,
         permission: [POLICIES.READ_PHARMAPROFILE],//
@@ -396,13 +396,13 @@ export const resource: ItemType[] =[
         permission: [POLICIES.READ_REPORTSALARY]
       },
       {
-        label: "Báo cáo lương cộng tác viên",
+        label: "Báo cáo lương khách hàng B2C",
         path: PATH_APP.reportSalaryPartner.root,
         key: PATH_APP.reportSalaryPartner.root,
         permission: [POLICIES.READ_REPORTSALARYPARTNER],
       },
       {
-        label: "Báo cáo doanh thu cộng tác viên",
+        label: "Báo cáo doanh thu khách hàng B2C",
         path: PATH_APP.reportIndividualCollaborator.root,
         key: PATH_APP.reportIndividualCollaborator.root,
         // permission: [POLICIES.READ_REPORTSALARYPARTNER],
@@ -414,7 +414,7 @@ export const resource: ItemType[] =[
         // permission: [POLICIES.READ_REPORTSALARYPARTNER],
       },
       {
-        label: "Báo cáo doanh thu nhóm cộng tác viên",
+        label: "Báo cáo doanh thu nhóm khách hàng B2C",
         path: PATH_APP.reportGroupCollaborator.root,
         key: PATH_APP.reportGroupCollaborator.root,
         // permission: [POLICIES.READ_REPORTSALARYPARTNER],
@@ -500,13 +500,13 @@ export const resource: ItemType[] =[
     permission: [POLICIES.READ_SHIPPINGCOST],//
   },
   {
-    label: "Cộng tác viên",
+    label: "Khách hàng B2C",
     key: 'collaboratorManagement',
     icon: <i className="fa-solid fa-circle-nodes"></i>,
     permission: [...permissionCollaborator],//
     children: [
       {
-        label: "Quản lý cộng tác viên",
+        label: "Quản lý khách hàng B2C",
         path:  PATH_APP.collaborator.root,
         key: PATH_APP.collaborator.root,
         permission: [POLICIES.READ_PARTNER, POLICIES.READ_PARTNERGROUP],//

@@ -1,14 +1,20 @@
 import { propsType } from "../pharmacy.modal";
-import { useGetPharmacyId } from "../pharmacy.hook";
-import { Col, Form, Row } from "antd";
+import { useGetPharmacyId, useGetPharmacyId_onlyGet } from "../pharmacy.hook";
+import { Col, Flex, Form, Row } from "antd";
 import { concatAddress } from "~/utils/helpers";
 import moment from "moment";
+import { LoadingOutlined } from "@ant-design/icons";
 
 export default function InformationDetail(props: propsType) {
   const { pharmacyId } = props;
-  const [info, isLoading] = useGetPharmacyId(pharmacyId);
+  const [info,isLoading]: any = useGetPharmacyId_onlyGet();
   const [form] = Form.useForm();
 
+  if(isLoading){
+    return <Flex align={'center'} justify='center'>
+      <LoadingOutlined />
+    </Flex>
+  }
   return (
     <div>
       <Form
@@ -22,14 +28,14 @@ export default function InformationDetail(props: propsType) {
         <Row gutter={36}>
           <Col span={12}>
             <div className="content-field">
-              <div className="label">Mã nhà thuốc: </div>
+              <div className="label">Mã khách hàng B2B: </div>
               <div>{info?.code}</div>
             </div>
             <hr style={{ color: "#0909091a" }} />
           </Col>
           <Col span={12}>
             <div className="content-field">
-              <div className="label">Tên nhà thuốc: </div>
+              <div className="label">Tên khách hàng B2B: </div>
               <div>{info?.name}</div>
             </div>
             <hr style={{ color: "#0909091a" }} />
@@ -89,7 +95,7 @@ export default function InformationDetail(props: propsType) {
           <Col span={24}>
             <div>
               <div className="content-field">
-                <div className="label">Địa chỉ: </div>
+                <div className="labelFull">Địa chỉ: </div>
                 <div>{concatAddress(info?.address)}</div>
               </div>
               <hr style={{ color: "#0000001a" }} />
@@ -99,7 +105,7 @@ export default function InformationDetail(props: propsType) {
         <Row gutter={36}>
           <Col span={12}>
             <div className="content-field">
-              <div className="label">Loại khách hàng: </div>
+              <div className="label">Nhánh khách hàng: </div>
               <div>{info?.customerGroup?.title}</div>
             </div>
             <hr style={{ color: "#0000001a" }} />
@@ -206,7 +212,7 @@ export default function InformationDetail(props: propsType) {
           <Col span={24}>
             <div>
               <div className="content-field">
-                <div className="label">Địa chỉ giao hàng: </div>
+                <div className="labelFull">Địa chỉ giao hàng: </div>
                 <div>{concatAddress(info?.addressDelivery)}</div>
               </div>
               <hr style={{ color: "#0000001a" }} />
@@ -217,7 +223,7 @@ export default function InformationDetail(props: propsType) {
           <Col span={24}>
             <div>
               <div className="content-field">
-                <div className="label">Địa chỉ xuất hoá đơn: </div>
+                <div className="labelFull">Địa chỉ xuất hoá đơn: </div>
                 <div>{concatAddress(info?.addressInvoicing)}</div>
               </div>
               <hr style={{ color: "#0000001a" }} />
@@ -228,7 +234,7 @@ export default function InformationDetail(props: propsType) {
           <Col span={24}>
             <div>
               <div className="content-field">
-                <div className="label">File đính kèm: </div>
+                <div className="labelFull">File đính kèm: </div>
                 <div>
                   {info?.files?.map((item: any) => (
                   <div key={item?._id}>

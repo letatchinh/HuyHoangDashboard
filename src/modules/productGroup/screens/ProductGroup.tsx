@@ -1,4 +1,3 @@
-import { DeleteOutlined, InfoCircleTwoTone, PlusCircleOutlined, SearchOutlined } from '@ant-design/icons';
 import { Button, Checkbox, Col, Form, Input, Row, Select, SelectProps, Space, Switch, Table, message } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { get } from 'lodash';
@@ -22,6 +21,11 @@ import {
 import ProductGroupForm from './ProductGroupForm';
 import useCheckBoxExport from '~/modules/export/export.hook';
 import ExportExcelButton from '~/modules/export/component';
+import { Link } from 'react-router-dom';
+import ColumnAction from '~/components/common/ColumnAction';
+import BtnAdd from "~/components/common/Layout/List/Header/BtnAdd";
+import DropdownAction from "~/components/common/Layout/List/Header/DropdownAction";
+import StatusAndSearch from '~/components/common/StatusAndSearch';
 
 const { Search } = Input;
 
@@ -54,9 +58,9 @@ export default function ProductConfig() {
     code: string;
     _id: string;
     name: string;
-    isAction: boolean,
-    note: string,
-    status: string,
+    isAction: boolean;
+    note: string;
+    status: string;
   }
   const handleOpenUpdate = (id: any) => {
     setShowForm(true);
@@ -81,13 +85,7 @@ export default function ProductConfig() {
       dataIndex: 'code',
       width: '200px',
       align: 'center',
-      render: (text: string,record: any) => (
-        canUpdate ? (
-          <Button  type="link" onClick={() => handleOpenUpdate(record?._id)}>
-        {text}
-        </Button>
-        ): text
-      )
+      render: (text: string,record: any) => <Link to={'/productGroup/'+record?._id} className='link_'>{text}</Link>
     },
     {
       title: 'Tên danh mục thuốc',
@@ -102,7 +100,7 @@ export default function ProductConfig() {
       key: 'note',
     },
     {
-      title: 'Thao tác',
+      title: 'Trạng thái',
       dataIndex: 'status',
       align: 'center',
       width: '120px',
@@ -118,15 +116,23 @@ export default function ProductConfig() {
       )
     },
     ...(canDelete ?[{
-      title: 'Hành động',
+      title: 'Thao tác',
       key: 'action',
       align: 'center' as any,
       width: '180px',
-      render: (value: any, record: any) => (
-            <Button icon={<DeleteOutlined />} style={{ color: 'red' }} onClick={() => handleDelete(record._id)}>
-              Xóa
-            </Button>
-      ),
+      render: (value: any, record: any) =>  {
+        return (
+          <ColumnAction
+            // {...record}
+            onOpenForm={handleOpenUpdate}
+            onDelete={handleDelete}
+            _id={record?._id}
+            textName='danh mục thuốc'
+            // isSubmitLoading={isSubmitUpdateLoading}
+            permissionUpdate={canUpdate}
+            permissionDelete={canDelete}
+          />
+        )},
     }]: []),
     ...(
       canDownload ? [
@@ -166,51 +172,33 @@ export default function ProductConfig() {
       <Breadcrumb title={t('Quản lý danh mục nhóm sản phẩm')} />
       <Row  gutter={16} style={{ marginBottom: '10px' }}>
         <Col span={12}>
-          <Row gutter = {16}>
-            <Col span={12}>
-            <Search
-              placeholder="Nhập bất kì để tìm..."
-              value={keyword}
-              onChange={(e) => (setKeyword(e.target.value))}
-              allowClear
-              onSearch={onSearch}
-              enterButton={<SearchOutlined />}
-            />
-          </Col>
-          <Col span={12}>
-              <Select
-                placeholder="Tìm theo trạng thái"
-                style={{
-                  width: "200px",
-                }}
-                value={search}
-                allowClear
-                onChange={(e) => {
-                  setSearch(e)
-                  onParamChange({ ['status']: e });
-                }}
-                options={options}
-              />
-            </Col>
-          </Row>
+          <StatusAndSearch
+            onParamChange={onParamChange}
+            query={query}
+            keyword={keyword}
+            setKeyword={setKeyword}
+          />
         </Col>
-        <Col span = {12}>
-          <Row justify={'end'}>
-            <Col>
+        <Col span={12}>
+          <Row justify={"end"} gutter={16}>
             <WithPermission permission={POLICIES.WRITE_PRODUCTGROUP}>
-              <Button icon={<PlusCircleOutlined />} onClick={handleOpenFormCreate} type="primary">
-                Thêm mới
-              </Button>
+              <Col>
+                <BtnAdd onClick={handleOpenFormCreate} />
+              </Col>
             </WithPermission>
-            </Col>
             <WithPermission permission={POLICIES.DOWNLOAD_PRODUCTGROUP}>
               <Col>
-                <ExportExcelButton
-                  api='product-group'
-                  exportOption = 'productGroup'
-                  query={query}
-                  fileName='Danh mục nhóm sản phẩm'
-                  ids={arrCheckBox}
+                <DropdownAction
+                  items={[
+                    <ExportExcelButton
+                      api="product-group"
+                      exportOption="productGroup"
+                      query={query}
+                      fileName="Danh mục nhóm sản phẩm"
+                      ids={arrCheckBox}
+                      useLayout="v2"
+                    />,
+                  ]}
                 />
               </Col>
             </WithPermission>
@@ -247,7 +235,13 @@ export default function ProductConfig() {
         width={800}
         afterClose={() => setDestroy(false)}
       >
-        <ProductGroupForm setDestroy={setDestroy} id={id} setId={setId} callBack={handleCloseForm} updateProductConfig={updateProductConfig} />
+        <ProductGroupForm
+          setDestroy={setDestroy}
+          id={id}
+          setId={setId}
+          callBack={handleCloseForm}
+          updateProductConfig={updateProductConfig}
+        />
       </ModalAnt>
     </div>
   );

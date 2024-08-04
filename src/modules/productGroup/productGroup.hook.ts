@@ -105,6 +105,7 @@ const {
       param: id,
     });
   };
+  export const useGetlistProductConfigById_onlyGet = () => [useSelector(getByIdSelector),useSelector(getByIdLoadingSelector)];
   export const useCreateProductConfig = (callBack?:any) => {
     useSuccess(createSuccessSelector, `Thêm ${MODULE_VI} thành công`, callBack);
     useFailed(createFailedSelector);

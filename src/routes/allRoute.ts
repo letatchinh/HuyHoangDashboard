@@ -53,6 +53,18 @@ import ReportIndividualCollaborator from "~/pages/Dashboard/ReportIndividualColl
 import ReportIndividualEmployeeSeller from "~/pages/Dashboard/ReportIndividualEmployeeSeller";
 import ReportGroup from "~/pages/Dashboard/ReportGroupCollaborator";
 import ReportGroupEmployeeSeller from "~/pages/Dashboard/ReportGroupEmployeeSeller";
+import PharmacyDetail_v2 from "~/modules/pharmacy/screens/PharmacyDetail_v2";
+import EmployeeDetail from "~/modules/employee/screen/EmployeeDetail";
+import CollaboratorDetail from "~/modules/collaborator/screens/CollaboratorDetail";
+import UserDetail from "~/modules/user/screen/UserDetail";
+import ProductGroupDetail from "~/modules/productGroup/components/ProductGroupDetail";
+import ManufacturerDetail from "~/modules/manufacturer/components/ManufacturerDetail";
+import RankingDetail from "~/modules/ranking/components/RankingDetail";
+import ProductUnitDetail from "~/modules/productUnit/component/ProductUnitDetail";
+import CustomerSegmentation from "~/pages/Dashboard/CustomerSegmentation";
+import SaleChannelDetail from "~/modules/saleChannel/components/SaleChannelDetail";
+import TypePharmacyDetail from "~/modules/typePharmacy/components/TypePharmacyDetail";
+import GroupPharmacyDetail from "~/modules/groupPharmacy/components/GroupPharmacyDetail";
 import Inventory from "~/pages/Dashboard/Warehouse/Inventory";
 import Coupon from "~/modules/coupon/screens/Coupon";
 export const mainRoutes :PathRouteProps[] = [
@@ -68,9 +80,13 @@ export const mainRoutes :PathRouteProps[] = [
 
   // worldPharma
   { path: PATH_APP.worldPharma.productGroup, Component: ProductGroupPage },
+  { path: PATH_APP.worldPharma.productGroupDetail, Component: ProductGroupDetail },
   { path: PATH_APP.worldPharma.manufacturer, Component: ManufacturerPage },
+  { path: PATH_APP.worldPharma.manufacturerDetail, Component: ManufacturerDetail },
   { path: PATH_APP.worldPharma.ranking, Component: RankingManufacturerPage },
+  { path: PATH_APP.worldPharma.rankingDetail, Component: RankingDetail },
   { path: PATH_APP.worldPharma.unit, Component:Unit  },
+  { path: PATH_APP.worldPharma.unitDetail, Component: ProductUnitDetail  },
   { path: PATH_APP.worldPharma.medicine, Component:MedicinePage  },
 
   // Branch
@@ -107,9 +123,12 @@ export const mainRoutes :PathRouteProps[] = [
   // Trình dược viên
   { path: PATH_APP.todoList.workBoard, Component: WorkBoardPage },
   { path: PATH_APP.employee.root, Component: EmployeePage },
+  { path: PATH_APP.employee.root, Component: EmployeePage },
+  { path: PATH_APP.employee.detail, Component: EmployeeDetail },
   
   // User
   { path: PATH_APP.user.root, Component: UserPage },
+  { path: PATH_APP.user.detail, Component: UserDetail },
 
   //ConfigDiscount
   { path: PATH_APP.vouchers.root, Component: VouchersPage },
@@ -122,7 +141,7 @@ export const mainRoutes :PathRouteProps[] = [
 
   // Pharmacy
   { path: PATH_APP.pharmacy.root, Component: Pharmacy },
-  { path: PATH_APP.pharmacy.detail, Component: PharmacyDetail },
+  { path: PATH_APP.pharmacy.detail, Component: PharmacyDetail_v2 },
 
   // Bot Notification
   { path: PATH_APP.botNotification.root, Component: BotNotificationPage },
@@ -162,15 +181,19 @@ export const mainRoutes :PathRouteProps[] = [
   
   // Kênh bán hàng
   { path: PATH_APP.saleChannel.root, Component: SaleChannel},
+  { path: PATH_APP.saleChannel.detail, Component: SaleChannelDetail},
   
-  // Loại khách hàng
+  // Nhánh khách hàng
   { path: PATH_APP.typePharmacy.root, Component: TypePharmacy},
+  { path: PATH_APP.typePharmacy.detail, Component: TypePharmacyDetail},
   
-  // Nhóm nhà thuốc
+  // Nhóm khách hàng B2B
   { path: PATH_APP.groupPharmacy.root, Component:  GroupPharmacy},
+  { path: PATH_APP.groupPharmacy.detail, Component:  GroupPharmacyDetail},
   
-  // Cộng tác viên
+  // Khách hàng B2C
   { path: PATH_APP.collaborator.root, Component: CollaboratorPage},
+  { path: PATH_APP.collaborator.detail, Component: CollaboratorDetail},
 
   // 
   { path: PATH_APP.reportProductSupplier.root, Component: ReportProductSupplier},
@@ -194,6 +217,9 @@ export const mainRoutes :PathRouteProps[] = [
 
   // Mã giảm giá
   { path: PATH_APP.coupon.root, Component: Coupon},
+
+  // Phân hệ khách hàng B2B/ B2C
+  { path: PATH_APP.customerSegmentation.root, Component: CustomerSegmentation},
 
   { path: '/', Component: Homepage },
 ]

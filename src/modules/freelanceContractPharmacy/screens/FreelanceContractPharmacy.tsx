@@ -74,7 +74,7 @@ export default function FreelanceContractPharmacy(
         width: 120,
       },
       {
-        title: "Tên nhà thuốc",
+        title: "Tên khách hàng B2B",
         dataIndex: "pharmacyProfile",
         key: "pharmacyProfile",
         // align: "center",
@@ -183,7 +183,7 @@ export default function FreelanceContractPharmacy(
 
   return (
     <div>
-      <Breadcrumb title="Hợp đồng khoán nhà thuốc" />
+      <Breadcrumb title="Hợp đồng khoán khách hàng B2B" />
       <Row className="mb-3" justify={"space-between"}>
         <Col span={8}>
           <Search

@@ -61,12 +61,12 @@ export default function CollaboratorGroupForm(props: propsType): React.JSX.Eleme
         labelAlign="left"
         >
           <FormItem
-            label="Tên nhóm cộng tác viên"
+            label="Tên nhóm khách hàng B2C"
             name="name"
             rules={[
               {
                 required: true,
-                message: "Xin mời nhập tên nhóm cộng tác viên!",
+                message: "Xin mời nhập tên nhóm khách hàng B2C!",
               },
             ]}
           >

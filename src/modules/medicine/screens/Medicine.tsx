@@ -9,6 +9,7 @@ import WhiteBox from '~/components/common/WhiteBox';
 import useTranslate from '~/lib/translation';
 import { useGetListMeddicine, useMedicineQueryParams, useUpdateMedicineParams, useMedicinePaging } from '../medicine.hook';
 import { DataType } from '../medicine.modal';
+import StatusAndSearch from '~/components/common/StatusAndSearch';
 
 const { Search } = Input;
 
@@ -70,16 +71,12 @@ export default function Medicine() {
         <div className="product-config-action" >
           <Row justify="space-between">
             <Col span={8}>
-              <Search
-                style={{ height: '50px', padding: '5px 0px' }}
-                placeholder="Nhập bất kì để tìm..."
-                value={keyword}
-                onChange={(e) => (setKeyword(e.target.value))
-
-                }
-                onSearch={onSearch}
-                allowClear
-                enterButton={<SearchOutlined />}
+              <StatusAndSearch
+                onParamChange={onParamChange}
+                query={query}
+                keyword={keyword}
+                setKeyword={setKeyword}
+                showStatus={false}
               />
             </Col>
           </Row>

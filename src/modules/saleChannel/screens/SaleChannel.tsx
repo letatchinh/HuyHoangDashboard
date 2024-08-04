@@ -18,6 +18,12 @@ import WhiteBox from '~/components/common/WhiteBox';
 import TableAnt from '~/components/Antd/TableAnt';
 import ModalAnt from '~/components/Antd/ModalAnt';
 import SaleChannelForm from './SaleChannelForm';
+import { Link } from 'react-router-dom';
+import { PATH_APP } from '~/routes/allPath';
+import BtnAdd from '~/components/common/Layout/List/Header/BtnAdd';
+import DropdownAction from '~/components/common/Layout/List/Header/DropdownAction';
+import StatusAndSearch from "~/components/common/StatusAndSearch";
+import ColumnAction from '~/components/common/ColumnAction';
 type propsType = {
 
 }
@@ -41,7 +47,6 @@ export default function SaleChannel(props:propsType) : React.JSX.Element {
   const canDownload = useMatchPolicy(POLICIES.DOWNLOAD_SALESCHANNEL);
   const [arrCheckBox, onChangeCheckBox] = useCheckBoxExport();
 
-
   const onOpenForm = useCallback(
     (id?: any) => {
       if (id) {
@@ -60,6 +65,7 @@ export default function SaleChannel(props:propsType) : React.JSX.Element {
         dataIndex: "code",
         key: "code",
         width: 120,
+        render: (text: string, record: any) => <Link className='link_' to={PATH_APP.saleChannel.root + "/" + record?._id}>{text}</Link>
       },
       {
         title: "Tên kênh bán hàng",
@@ -67,7 +73,15 @@ export default function SaleChannel(props:propsType) : React.JSX.Element {
         key: "title",
         width: 250,
       },
-      
+      {
+        title: "Phân hệ",
+        dataIndex: "customerDivision",
+        key: "customerDivision",
+        width: 120,
+        render: (record) => {
+          return get(record, "title");
+        },
+      },
       {
         title: "Ngày tạo",
         dataIndex: "createdAt",
@@ -103,28 +117,20 @@ export default function SaleChannel(props:propsType) : React.JSX.Element {
       },
       {
         title: "Thao tác",
-        dataIndex: "_id",
-        // key: "actions",
+        // dataIndex: "_id",
+        key: "actions",
         width: 100,
         align: "center",
-        render: (record) => {
+        render: (_, record) => {
           return (
-            <div className="custom-table__actions">
-              <WithPermission permission={POLICIES.UPDATE_SALESCHANNEL}>
-                <p onClick={() => onOpenForm(record)}>Sửa</p>
-              </WithPermission>
-              <WithPermission permission={POLICIES.DELETE_SALESCHANNEL}>
-                <p>|</p>
-                <Popconfirm
-                  title={`Bạn muốn xoá kênh bán hàng này?`}
-                  onConfirm={() => deleteSaleChannel(record)}
-                  okText="Xoá"
-                  cancelText="Huỷ"
-                >
-                  <p>Xóa</p>
-                </Popconfirm>{" "}
-              </WithPermission>
-            </div>
+            <ColumnAction
+              onOpenForm={onOpenForm}
+              onDelete={deleteSaleChannel}
+              _id={record?._id}
+              textName="kênh bán hàng"
+              permissionUpdate={POLICIES.UPDATE_SALESCHANNEL}
+              permissionDelete={POLICIES.DELETE_SALESCHANNEL}
+            />
           );
         },
       },
@@ -181,70 +187,41 @@ export default function SaleChannel(props:propsType) : React.JSX.Element {
   return (
     <div>
       <Breadcrumb title={"Kênh bán hàng"} />
-      <Row className="mb-3" justify={"space-between"}>
-        <Col span={8}>
-          <Search
-            enterButton="Tìm kiếm"
-            placeholder="Nhập để tìm kiếm"
-            allowClear
-            onSearch={() => onParamChange({ keyword })}
-            onChange={(e) => setKeyword(e.target.value)}
-            value={keyword}
+      <Row gutter={16} justify={"space-between"}>
+        <Col span={12}>
+          <StatusAndSearch
+            onParamChange={onParamChange}
+            query={query}
+            keyword={keyword}
+            setKeyword={setKeyword}
           />
         </Col>
-        <Row>
-        <WithPermission permission={POLICIES.WRITE_SALESCHANNEL}>
-          <Col>
-            <Button
-              icon={<PlusCircleOutlined />}
-              type="primary"
-              onClick={() => onOpenForm()}
-            >
-              Thêm mới
-            </Button>
-          </Col>
-          </WithPermission>
-          <WithPermission permission={POLICIES.DOWNLOAD_SALESCHANNEL}>
-            <Col>
-                <ExportExcelButton
-                  fileName="Danh sách kênh bán hàng"
-                  api="sales-channel"
-                  exportOption="salesChannel"
-                  query={query}
-                  ids={arrCheckBox}
+        <Col span={12}>
+          <Row justify={"end"} gutter={16}>
+            <WithPermission permission={POLICIES.WRITE_SALESCHANNEL}>
+              <Col>
+                <BtnAdd onClick={() => onOpenForm()} />
+              </Col>
+            </WithPermission>
+            <WithPermission permission={POLICIES.DOWNLOAD_SALESCHANNEL}>
+              <Col>
+                <DropdownAction
+                  items={[
+                    <ExportExcelButton
+                      fileName="Danh sách kênh bán hàng"
+                      api="sales-channel"
+                      exportOption="salesChannel"
+                      query={query}
+                      ids={arrCheckBox}
+                      useLayout="v2"
+                    />,
+                  ]}
                 />
-            </Col>
-          </WithPermission>
-        </Row>
-      </Row>
-      <WithPermission permission={POLICIES.UPDATE_SALESCHANNEL}>
-        <Space style={{ marginBottom: 20 }}>
-          <Typography style={{ fontSize: 14, marginRight: 20 }}>
-            Phân loại trạng thái theo :
-          </Typography>
-          <Row gutter={14}>
-            <Radio.Group
-              onChange={onChange}
-              optionType="button"
-              buttonStyle="solid"
-              defaultValue={(() => {
-                switch (query?.status) {
-                  case "ACTIVE":
-                    return 2;
-                  case "INACTIVE":
-                    return 3;
-                  default:
-                    return 1;
-                }
-              })()}
-            >
-              <Radio.Button value={1}>Tất cả</Radio.Button>
-              <Radio.Button value={2}>{STATUS_NAMES["ACTIVE"]}</Radio.Button>
-              <Radio.Button value={3}>{STATUS_NAMES["INACTIVE"]}</Radio.Button>
-            </Radio.Group>
+              </Col>
+            </WithPermission>
           </Row>
-        </Space>
-      </WithPermission>
+        </Col>
+      </Row>
       <WhiteBox>
         <TableAnt
           dataSource={pharmacies}
@@ -264,6 +241,7 @@ export default function SaleChannel(props:propsType) : React.JSX.Element {
         />
       </WhiteBox>
       <ModalAnt
+        title={saleChannelId ? " Cập nhật kênh bán hàng" : "Thêm mới kênh bán hàng" } 
         width={700}
         open={isOpenForm}
         onCancel={onCloseForm}
@@ -272,16 +250,14 @@ export default function SaleChannel(props:propsType) : React.JSX.Element {
           setDestroy(false);
         }}
         destroyOnClose={destroy}
-
       >
         <SaleChannelForm
-        setDestroy={setDestroy}
+          setDestroy={setDestroy}
           onClose={onCloseForm}
           id={saleChannelId}
           handleUpdate={updateSaleChannel}
         />
       </ModalAnt>
-      
     </div>
   );
 }
