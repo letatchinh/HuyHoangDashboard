@@ -1,3 +1,14 @@
+## [1.20.1](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/compare/v1.20.0...v1.20.1) (2024-08-04)
+
+
+### Bug Fixes
+
+* change api ([e7cc481](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/e7cc481f8da535fc70ae7c62c2ad633919c78122))
+* disable action when count value ([3fe6aa2](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/3fe6aa2e834dd492a0b96f2ecb1d22aea71adab4))
+* show logisticCode ([0601c60](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/0601c60ec4f804857568abb1846ebe68c629ab13))
+* update cancel bill ([b675f37](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/b675f37a5325109460ce9cbd683bc5598998e57e))
+* update close modal cancel bill ([cd5f44f](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/cd5f44f95cf8a6c5adcda1a8dd5ac480b65717e0))
+
 # [1.20.0](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/compare/v1.19.0...v1.20.0) (2024-08-04)
 
 
