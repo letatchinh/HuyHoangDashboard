@@ -492,7 +492,11 @@ export function CreateBillProvider({
       ),
     [quotationItems]
   );
+  const totalWeight = useMemo(() => bill?.quotationItems?.length > 1 ? bill?.quotationItems?.reduce((sum: any, cur: any) => {
+    return sum?.variant?.weight + get(cur, "variant.weight", 0)
+  }) : get(bill?.quotationItems?.[0]?.variant, 'weight'), [bill]);
   // Initalize Data And Calculate Discount
+
   useEffect(() => {
     const initDebt = debt?.find(
       (debt: DebtType) => get(debt, "key") === DEFAULT_DEBT_TYPE
@@ -592,6 +596,7 @@ export function CreateBillProvider({
       (item: any) => item?._id === data?.warehouseId
     );
     setFormAndLocalStorage({
+      ...bill,
       warehouseId: findWarehouse?._id,
       warehouseName: findWarehouse?.name?.vi,
     });
@@ -612,7 +617,6 @@ export function CreateBillProvider({
   };
   
   useEffect(() => {
-    // console.log('vo day lai')
     if ((pharmacyInfo || partner) && !bill?.warehouseId) {
       const address = get(pharmacyInfo, 'data.addressDelivery', get(pharmacyInfo, 'data.address', get(partner, 'address', [])));
       if (warehouseDefault?.length > 0) {

@@ -10,6 +10,7 @@ interface cloneInitState extends initStateSlice {
   updateStatusOrderFailed?: any;
   updateStatusOrderSuccess?: any;
 
+  isLoadingCreateBillInWarehouse?: boolean;
   createBillInWarehouseSuccess?: any;
   createBillInWarehouseFailed?: any;
 }
@@ -65,15 +66,15 @@ class OrderSupplierClassExtend extends InstanceModuleRedux {
         state.updateOrderItemFailed = payload;
       },
       createOrderInWarehouseRequest: (state:cloneInitState) => {
-        state.isSubmitLoading = true;
+        state.isLoadingCreateBillInWarehouse = true;
       },
       createOrderInWarehouseSuccess: (state:cloneInitState, { payload }:{payload:any}) => {
-        state.isSubmitLoading = false;
+        state.isLoadingCreateBillInWarehouse = false;
         state.createBillInWarehouseSuccess = payload;
         state.byId = get(payload, "[0]");
       },
       createOrderInWarehouseFailed: (state:cloneInitState, { payload }:{payload:any}) => {
-        state.isSubmitLoading = false;
+        state.isLoadingCreateBillInWarehouse = false;
         state.createBillInWarehouseFailed = payload;
       },
       resetAction: (state:cloneInitState) => ({
@@ -143,6 +144,7 @@ class OrderSupplierClassExtend extends InstanceModuleRedux {
       updateOrderItemFailed: null,
       updateOrderItemSuccess: null,
 
+      isLoadingCreateBillInWarehouse: false,
       createBillInWarehouseSuccess: null,
       createBillInWarehouseFailed: null,
 

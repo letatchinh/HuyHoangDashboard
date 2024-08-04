@@ -110,7 +110,6 @@ export function CreateOrderSupplierProvider({
   const [debt, isLoadingDebt] = BillModule.hook.useGetDebtRule();
   
   const [isOpenWarehouse, setIsOpenWarehouse] = useState(false);
-  const [warehouseDefault, isLoadingWarehouseDefault] = useGetWarehouse();
   const [listWarehouse, isLoadingWarehouse] = useGetWarehouseByBranchLinked(); // Get all warehouse linked with branch
 
   // Controller Data
@@ -299,11 +298,14 @@ export function CreateOrderSupplierProvider({
   useEffect(() => {
     if (!bill?.warehouseId) {
       onChangeBill({
-        warehouseId:listWarehouse[0]?._id,
-        warehouseName: get(listWarehouse[0], "name.vi",''),
+        warehouseId: listWarehouse[0]?._id,
+        warehouseName: get(listWarehouse[0], "name.vi", ''),
       });
     };
-  },[bill])
+  }, [bill]);
+  useEffect(() => {
+    const getCreateOrderSupplier = JSON.parse(localStorage.getItem('createOrderSupplier') as string);
+  }, []);
   return (
     <CreateOrderSupplier.Provider
       value={{

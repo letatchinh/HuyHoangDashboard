@@ -130,7 +130,6 @@ export default function TotalBill(props: propsType): React.JSX.Element {
       });
     }
   }, [bill]); // Set value logistic fee
-  
   return (
     <Flex vertical gap={"small"}>
     <Flex className="billValue" vertical gap={"small"}>

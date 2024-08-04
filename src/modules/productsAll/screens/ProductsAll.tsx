@@ -24,15 +24,17 @@ import {
   useUpdateProduct,
 } from "~/modules/product/product.hook";
 import { formatter } from "~/utils/helpers";
-import { useChangeDocumentTitle } from "~/utils/hook";
+import { useChangeDocumentTitle, useFetchState } from "~/utils/hook";
 import ActionColumn from "../components/ActionColumns";
 import ShowStep from "../components/ShowStep";
 import {
   useProductsAllQueryParams,
   useUpdateProductsAllParams,
 } from "../productsAll.hook";
-import { TypeProps } from "../productsAll.modal";
 import SummaryInfoProduct from "../components/SummaryInfoProduct";
+import { DataType, TypeProps } from "../productsAll.modal";
+// import SummaryInfoProduct from "../components/SummaryInfoProduct";
+import apis from "~/modules/productGroup/productGroup.api";
 
 export default function ProductsAll(props: TypeProps): React.JSX.Element {
   const [query, onTableChange] = useProductsAllQueryParams();
@@ -65,7 +67,13 @@ export default function ProductsAll(props: TypeProps): React.JSX.Element {
   const [isOpenStock, setIsOpenStock] = useState(false);
   const [dataStock, setDataStock] = useState<itemData | null>(null);
   const [isOpenSummary, setIsOpenSummary] = useState(false);
-  const [product, setProduct] = useState <null | undefined>(null);
+  const [product, setProduct] = useState<null | undefined>(null);
+  
+  const [productGroups,isLoadingProductGroup] = useFetchState({api : apis.getAllPublic,useDocs : false});
+    const options = useMemo(() => (productGroups?.map((item:any) => ({
+        label : get(item,'name'),
+        value : get(item,'_id')
+    }))), [productGroups]);
   const openStock = (data: itemData) => {
     setIsOpenStock(true);
     setDataStock(data);
@@ -210,30 +218,16 @@ export default function ProductsAll(props: TypeProps): React.JSX.Element {
           },
         ]
       : []),
-    // ...(!isAdapterIsEmployee
-    //   ? [
-    //       {
-    //         title: "Tồn kho",
-    //         dataIndex: "stock",
-    //         key: "stock",
-    //         // render(stock: any, record: any) {
-    //         //   return (
-    //         //     <StockProduct
-    //         //       variantDefault={get(record, "variantDefault")}
-    //         //       stock={stock ?? 0}
-    //         //       handleUpdate={(newStock: number) =>
-    //         //         onUpdateProduct({
-    //         //           _id: get(record, "_id"),
-    //         //           stock: newStock,
-    //         //         })
-    //         //       }
-    //         //     />
-    //         //   );
-    //       // },
-    //       render: (value: any, record: any)=> <Button type = 'link' onClick = {() => openStock({id: get(record,'_id'),supplierId : get(record,'supplierId')})}>Xem chi tiết</Button>
-    //       },
-    //     ]
-    //   : []),
+    ...(!isAdapterIsEmployee
+      ? [
+          {
+            title: "Tồn kho",
+            dataIndex: "stock",
+            key: "stock",
+          render: (value: any, record: any)=> <Button type = 'link' onClick = {() => openStock({id: get(record,'_id'),supplierId : get(record,'supplierId')})}>Xem chi tiết</Button>
+          },
+        ]
+      : []),
     {
       title: "Nhóm sản phẩm",
       dataIndex: "productGroup",
@@ -325,7 +319,11 @@ export default function ProductsAll(props: TypeProps): React.JSX.Element {
         isShowButtonAdd
         handleOnClickButton={onOpenModal}
         titleButtonAdd="Thêm mới sản phẩm"
-        showSelect={false}
+        showSelect
+        onChangeSelect={(value: any) => {
+          onParamChange({ ...query, productGroup: value })
+        }}
+        options={options}
         onSearch={(value: any) => onParamChange({ keyword: value?.trim() })}
         permissionKey={[POLICIES.WRITE_PRODUCT]}
         addComponent={
@@ -394,7 +392,7 @@ export default function ProductsAll(props: TypeProps): React.JSX.Element {
       <ModalAnt
           open={isOpenStock}
           destroyOnClose
-          width={1500}
+          width={800}
           footer={null}
           onCancel={onCloseStock}
         >

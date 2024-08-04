@@ -25,3 +25,19 @@ export interface dataBillSentToWarehouse {
   discountPercent: number;
   items: itemType[]; 
 };
+
+export interface InventoryQuery {
+  warehouseId: number;
+  startTime?: Date;
+  endTime?: Date;
+}
+
+export interface DataTypeSelected {
+  key: string;
+  title: string;
+  dataIndex: string;
+  width?: string | number;
+  align?: string;
+  render?: (value: any) => React.ReactNode;
+  fixed?: string;
+};

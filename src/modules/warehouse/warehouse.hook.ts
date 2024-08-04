@@ -1,4 +1,4 @@
-import { get, omit } from "lodash";
+import { get, head, omit } from "lodash";
 import { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -14,7 +14,9 @@ import {
   useSuccess,
 } from "~/utils/hook";
 import { warehouseActions } from "./redux/reducer";
-import { ItemProduct } from "./warehouse.modal";
+import { DataTypeSelected, ItemProduct } from "./warehouse.modal";
+import { ColumnsType } from "antd/es/table";
+import { TableColumnsType } from "antd";
 const MODULE = "warehouse";
 const MODULE_VI = "kho";
 
@@ -52,6 +54,18 @@ const createBillToWarehouseFailedSelector = getSelector('createBillToWarehouseFa
 
 const deleteWarehouseLinkedSuccessSelector = getSelector('deleteWarehouseLinkedSuccess');
 const deleteWarehouseLinkedFailedSelector = getSelector('deleteWarehouseLinkedFailed');
+
+const listInventorySuccessSelector = getSelector('listInventory');
+const getInventoryFailedSelector = getSelector('getInventoryFailed'); 
+const isLoadingInventorySelector = getSelector('isLoadingInventory'); 
+const pagingInventorySelector = getSelector('listInventoryPaging');
+
+const listInventoryCreateSuccessSelector = getSelector('listInventoryCreate');
+const getInventoryCreateFailedSelector = getSelector('getInventoryCreateFailed'); 
+const isLoadingInventoryCreateSelector = getSelector('isLoadingInventoryCreate'); 
+const pagingInventoryCreateSelector = getSelector('listInventoryCreatePaging');
+export const usePagingInventory = ()=> useSelector(pagingInventorySelector);
+export const usePagingInventoryCreate = ()=> useSelector(pagingInventoryCreateSelector);
 
 export const useGetWarehouses = () => {
   return useFetch({
@@ -346,3 +360,80 @@ export const useGetInfoWarehouse = () => {
 
 export const useGetListWarehouseReducer = () => useSelector((state: any) => state?.warehouse?.warehouseLinked);
     
+
+export const useInventoryWarehouseQueryParams = (id?:number | null) => {
+  const query = useQueryParams();
+  const limit = query.get("limit") || 10;
+  const page = query.get("page") || 1;
+  const keyword = query.get("keyword");
+  const warehouseId = id ?? query.get("warehouseId");
+  const supplierId = query.get("supplierId");
+  const startDate = query.get("startDate") || null;
+  const endDate = query.get("endDate") || null;
+  return useMemo(() => {
+    const queryParams = {
+      page,
+      limit,
+      keyword,
+      warehouseId,
+      startDate,
+      endDate,
+      supplierId
+    };
+    return [queryParams];
+    //eslint-disable-next-line
+  }, [page, limit, keyword,warehouseId, startDate, endDate,supplierId]);
+};
+
+export const useUpdateInventoryWarehouseParams = (
+  query: any,
+  listOptionSearch?: any[]
+) => {
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
+  const [keyword, setKeyword] = useState(get(query, "keyword"));
+  useEffect(() => {
+    setKeyword(get(query, "keyword"));
+  }, [query]);
+  const onParamChange = (param: any) => {
+    // Clear Search Query when change Params
+    clearQuerySearch(listOptionSearch, query, param);
+
+    if (!param.page) {
+      query.page = 1;
+    }
+
+    // Convert Query and Params to Search Url Param
+    const searchString = new URLSearchParams(
+      getExistProp({
+        ...query,
+        ...param,
+      })
+    ).toString();
+
+    // Navigate
+    navigate(`${pathname}?${searchString}`);
+  };
+
+  return [keyword, { setKeyword, onParamChange }];
+};
+
+
+export const useGetInventory = (param?: any) => {
+  return useFetchByParam({
+    action: warehouseActions.getInventoryRequest,
+    loadingSelector: isLoadingInventorySelector,
+    dataSelector: listInventorySuccessSelector,
+    failedSelector: getInventoryFailedSelector,
+    param,
+  });
+};
+export const useGetInventoryCreate = (param?: any) => {
+  return useFetchByParam({
+    action: warehouseActions.getInventoryInCreateRequest,
+    loadingSelector: isLoadingInventoryCreateSelector,
+    dataSelector: listInventoryCreateSuccessSelector,
+    failedSelector: getInventoryCreateFailedSelector,
+    param,
+  });
+};

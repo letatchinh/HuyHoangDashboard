@@ -7,7 +7,7 @@ import TableAnt from '~/components/Antd/TableAnt';
 import { useGetCollaborator } from '~/modules/collaborator/collaborator.hook';
 import ProductModule from '~/modules/product';
 import useNotificationStore from '~/store/NotificationContext';
-import { formatter } from '~/utils/helpers';
+import { formatNumberThreeComma, formatter } from '~/utils/helpers';
 import { DiscountOtherType, ItemSearchProduct } from '../bill.modal';
 import { getCumulativeDiscount, selectProductSearchBill } from '../bill.service';
 import ImageProduct from './ImageProduct';
@@ -166,6 +166,15 @@ export default function SelectProduct({dataCurrent,onChangeBill,warehouseId}:pro
                       </Badge> : null}
                       </Typography.Text>
                   },
+                },
+                {
+                  title: 'Tồn kho',
+                  dataIndex: 'stock',
+                  key: 'stock',
+                  align: 'center',
+                  render(value) {
+                    return <Typography.Text>{formatNumberThreeComma(value)}</Typography.Text>;
+                  }
                 },
               ]}
               onRow={record => {

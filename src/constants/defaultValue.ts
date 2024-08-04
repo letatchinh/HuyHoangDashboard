@@ -4,8 +4,7 @@ import { getOptions } from "~/utils/helpers";
 
 
 const DEPLOY_URL = 'config.REACT_APP_BASE_URL';
-const LOCAL_URL = 'http://pharma-dashboard.localhost:8555';
-// export const LOCAL_URL = 'https://pharma-dashboard.congtyso.com';
+export const LOCAL_URL = 'https://pharma-dashboard.congtyso.com';
 
 export const BASE_URL = process.env.NODE_ENV === 'development' ? LOCAL_URL : DEPLOY_URL
 export const DEFAULT_UPLOAD_ACTION = `${BASE_URL}/api/v1/file`;

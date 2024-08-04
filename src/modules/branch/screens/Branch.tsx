@@ -1,30 +1,24 @@
-import { Button, Tag } from "antd";
+import { Tag } from "antd";
 import { ColumnsType } from "antd/es/table/InternalTable";
 import TableAnt from "~/components/Antd/TableAnt";
 import Breadcrumb from "~/components/common/Breadcrumb";
 import SelectSearch from "~/components/common/SelectSearch/SelectSearch";
 import WhiteBox from "~/components/common/WhiteBox";
 import useTranslate from "~/lib/translation";
+import POLICIES from "~/modules/policy/policy.auth";
 import { concatAddress } from "~/utils/helpers";
 import { useChangeDocumentTitle } from "~/utils/hook";
-import StatusTagWarehouse from "../components/StatsusTagWarehouse";
-import useBranchContext, {
-  BranchProviderContext,
-} from "../store/BranchContext";
-import POLICIES from "~/modules/policy/policy.auth";
-import { useMatchPolicy } from "~/modules/policy/policy.hook";
 import Action from "../components/Action";
+import StatusTagWarehouse from "../components/StatsusTagWarehouse";
+import useBranchContext from "../store/BranchContext";
+import { STATUS_LINK_WAREHOUSE_EN } from "../constants";
 
 export default function BranchScreen() {
   useChangeDocumentTitle("Danh sách chi nhánh");
   const {
-    closeForm,
     openForm,
-    openFormApiKey,
     branches,
     paging,
-    id,
-    isSubmitLoading,
     isLoading,
     onParamChange,
     canDeleteWarehouse,
@@ -50,17 +44,16 @@ export default function BranchScreen() {
     },
     {
       title: "Trạng thái liên kết kho",
-      dataIndex: "statusLinkWarehouse",
       key: "statusLinkWarehouse",
       align: "center",
       width: 180,
-      render: (value, record) => (
-        <StatusTagWarehouse status={record?.statusLinkWarehouse} />
-      ),
+      render: (value, record) => {
+        const id = record?._id;
+        return <StatusTagWarehouse status={getListWarehouse(id)?.length ? STATUS_LINK_WAREHOUSE_EN.LINKED : STATUS_LINK_WAREHOUSE_EN.NOT_LINKED } />
+      },
     },
     {
       title: "Các kho đã liên kết",
-      // dataIndex : "listWarehouse",
       key: "listWarehouse",
       align: "center",
       width: 180,

@@ -18,6 +18,9 @@ export default function HistoryBillInWarehouse({
         return (
           <List.Item>
             <Typography.Text mark>{STATUS_ORDER_SUPPLIER_VI[status === 'CREATED' ? 'NEW' : status]}</Typography.Text>
+            <Typography.Text style={{ marginLeft: "10px", fontWeight: 600 }}>
+            {' '}{item?.fullName}
+            </Typography.Text>
             {' '}{dayjs(item?.date).format("DD/MM/YYYY HH:mm:ss")}
             <Typography.Text style={{ marginLeft: "10px", backgroundColor: '#BBE9FF' }}>
             {' '}{item?.note}
