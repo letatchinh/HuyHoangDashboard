@@ -73,7 +73,6 @@ export default function CreateOrderSupplierForm(
     onChange: onSelectChange,
     hideSelectAll : !supplierId
   };
-  console.log(dataSelected,'dataSelected')
   const onSubmit = () => {
     try {
       const warehouseName = listWarehouse?.find((item: any) => item?._id === activeTab)?.name?.vi;
