@@ -48,11 +48,10 @@ export default function CouponForm({
   const [isSubmitLoading, create] = useCreateCoupon(onCancel);
   const [, update] = useUpdateCoupon(onCancel);
   const onFinish = (values: any) => {
-    const {isFreeShip,managementArea} = values;
+    const {isFreeShip} = values;
     const submitData = {
       ...values,
       ...isFreeShip && {discount : null},
-      managementArea : managementArea?.map(({value}:any) => value)
     };
     
     if (id) {
@@ -98,14 +97,21 @@ export default function CouponForm({
           isFreeShip: false
         })
       }
-    }
+    };
     if(keyChange === 'isFreeShip'){
       if(valueChange){
         form.setFieldsValue({
           discount: null
         })
       }
-    }
+    };
+    if(keyChange === 'managementArea'){
+      if(valueChange){
+        form.setFieldsValue({
+          managementArea : valueChange?.map((item:any) => item?.value ? item.value : item) // Verify that the Object Or String
+        })
+      }
+    };
   };
 
   useEffect(() => {

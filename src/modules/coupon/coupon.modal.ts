@@ -29,6 +29,7 @@ export type detailTargetIds = {
 export interface CouponBase {
     _id ? : string,
     code: number,
+    giftCode: string,
     name: string,
     description?: string,
     startDate?: Date,
