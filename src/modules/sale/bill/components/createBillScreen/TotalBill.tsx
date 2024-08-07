@@ -1,5 +1,5 @@
 import { EditOutlined, InfoCircleFilled } from "@ant-design/icons";
-import { Button, Flex, Form, Radio, Tag, Tooltip, Typography } from "antd";
+import { Button, Flex, Form, Popconfirm, Radio, Tag, Tooltip, Typography } from "antd";
 import { get } from "lodash";
 import React, { CSSProperties, useCallback, useEffect, useState } from "react";
 import InputNumberAnt from "~/components/Antd/InputNumberAnt";
@@ -379,11 +379,22 @@ export default function TotalBill(props: propsType): React.JSX.Element {
           <span>
             <i className="fa-solid fa-location-dot"></i> Kho xuất hàng
             <WithPermission permission={POLICIES.UPDATE_WAREHOUSELINK}>
-            {bill?.warehouseId && (
-              <EditOutlined
-                onClick={onOpenModalSelectWarehouse}
-                style={{ color: "#5AB2FF" }}
-              />
+              {bill?.warehouseId && (
+                bill?.quotationItems?.length > 0 ?
+                <Popconfirm
+                  title={'Hành động này sẽ yêu cầu bạn phải kiểm tra lại tồn kho của sản phẩm, bạn có chắc chắn muốn thay đổi?'}
+                  onConfirm={onOpenModalSelectWarehouse}
+                  cancelText={'Huỷ'}
+                  okText={'Xác nhận'}
+                >
+                  <EditOutlined
+                    style={{ color: "#5AB2FF" }}
+                  />
+                  </Popconfirm>
+                  :   <EditOutlined
+                  onClick={onOpenModalSelectWarehouse}
+                  style={{ color: "#5AB2FF" }}
+                />
             )}
             </WithPermission>
           </span>
