@@ -338,6 +338,7 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
         <VoucherInOrder
           billId={id}
           defaultActiveTabKey="1"
+          isNotSentTime
         />
       </Modal>
     </div>
