@@ -322,7 +322,6 @@ export function CreateBillProvider({
     }
   };
 
-  const pair = Form.useWatch("pair", form) || 0;
   const fee = Form.useWatch("fee", form) || 0;
   const totalLogisticFeeByPayer: number = useMemo(
     () =>

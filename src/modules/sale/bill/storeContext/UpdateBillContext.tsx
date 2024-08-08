@@ -76,7 +76,7 @@ export function UpdateBillProvider({
       };
       return 0;
     }, [bill]);
-  const compareMoney = useMemo(() => (pair || 0) - (totalPrice), [bill, totalReceiptVoucherCompleted]);
+  const compareMoney = useMemo(() => totalReceiptVoucherCompleted - (totalPrice), [bill, totalReceiptVoucherCompleted]);
   const maxMoneyCanReceipt = useMemo(() => {
     if (bill && totalReceiptVoucherCompleted > 0) {
       return Number(bill?.totalAmount) - Number(totalRevenueInVouchers) > 0 ? Number(bill?.totalAmount) - Number(totalRevenueInVouchers) : 0

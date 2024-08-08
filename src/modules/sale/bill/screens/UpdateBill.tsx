@@ -268,7 +268,6 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
               <Layout label={"Chiết khấu"}>-{formatter(get(bill,'totalDiscountBill',0))}</Layout>
               <Layout label={"Mã giảm giá"}>-<CouponShow value={(get(bill,'totalCouponForBill',0)+ get(bill,'totalCouponForItem',0))} dataSource={[...get(bill,'coupons.bill',[]),...get(bill,'coupons.item',[])]}/></Layout>
               <Layout label={"Tổng số tiền sau chiết khấu"}>{formatter(get(bill,'totalAfterDiscountBill',0))}</Layout>
-              {/* <Layout label={"Đã trả trước"}>-{formatter(pair)}</Layout> */}
               <Layout label={"Phụ phí"}>{formatter(get(feeDetail,'SUB_FEE',0))}</Layout>
                 <WithPermission permission={POLICIES.UPDATE_LOGISTIC}>
                   <Layout label={<Typography.Text>
@@ -277,8 +276,8 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
                        <EditOutlined onClick={onOpenFormLogistic} style={{ color: '#5AB2FF' }} />
                   </Typography.Text>}>{formatter(get(feeDetail, 'LOGISTIC', 0))}</Layout>
               </WithPermission>
-              <Layout label={"Đã thanh toán"}>-{formatter(totalReceiptAmount + (pair || 0))}</Layout>
-              <Layout label={"Đã thanh toán và xác nhận"}>-{formatter(totalReceiptVoucherCompleted + (pair || 0))}</Layout>
+              <Layout label={"Đã thanh toán"}>-{formatter(totalReceiptAmount)}</Layout>
+              <Layout label={"Đã thanh toán và xác nhận"}>-{formatter(totalReceiptVoucherCompleted)}</Layout>
               <Layout strong label={"Tổng số tiền còn lại"}>
                 <Typography.Text strong>
                   {formatter(remainAmount)}

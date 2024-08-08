@@ -418,7 +418,7 @@ export default function TotalBill(props: propsType): React.JSX.Element {
       />
       <Layout isLarge={true} label={"Tổng tiền phải trả"}>
         <Typography.Text style={{ fontSize: 18, fontWeight: 600 }}>
-          {formatter(totalPriceAfterDiscount - pair)}
+          {formatter(totalPriceAfterDiscount)}
         </Typography.Text>
       </Layout>
       <ModalAnt

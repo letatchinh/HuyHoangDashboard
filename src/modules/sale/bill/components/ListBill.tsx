@@ -343,7 +343,7 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
         render(pair, record, index) {
           return (
             <Typography.Text>
-              {formatter(pair + get(record, "totalReceiptVoucherCompleted"))}
+              {formatter(get(record, "totalReceiptVoucherCompleted"))}
             </Typography.Text>
           );
         },
