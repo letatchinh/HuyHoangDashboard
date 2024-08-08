@@ -80,4 +80,5 @@ export interface VerifyCoupon {
 billPrice?: number,
 productCount?: number,
 coupons?: DetailCoupon,
+isValidateCount?: boolean
 }

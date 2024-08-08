@@ -533,6 +533,7 @@ export function CreateBillProvider({
       billPrice : totalAmount,
       coupons : couponSelected,
       productCount : countProduct,
+      isValidateCount : get(bill, "typeTab") === "createQuotation",
       customerApplyId : {
         refCollection : refCollection as any,
         id : get(bill, "pharmacyId")
