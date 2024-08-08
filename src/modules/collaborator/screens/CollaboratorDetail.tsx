@@ -1,23 +1,19 @@
 import { Badge, Flex, Input, Typography } from "antd";
-import Search from "antd/lib/input/Search";
 import { get } from "lodash";
 import React, { useCallback, useState } from "react";
 import { useParams } from "react-router-dom";
 import ModalAnt from "~/components/Antd/ModalAnt";
 import Header from "~/components/common/Layout/List/Detail/Header";
 import Layout from "~/components/common/Layout/List/Detail/Layout";
+import ListInDetailCommon from "~/components/common/Layout/List/Detail/ListInDetailCommon";
 import { STATUS_COLOR, STATUS_NAMES } from "~/constants/defaultValue";
 import { PATH_APP } from "~/routes/allPath";
 import {
-  useDeleteCollaborator,
-  useGetCollaborator,
-  useGetCollaborator_onlyGet,
-  useCollaboratorQueryParams,
-  useUpdateCollaborator,
-  useUpdateCollaboratorParams,
+  useCollaboratorPaging, useCollaboratorQueryParams, useDeleteCollaborator,
+  useGetCollaborator, useGetCollaborators, useGetCollaborator_onlyGet, useUpdateCollaborator,
+  useUpdateCollaboratorParams
 } from "../collaborator.hook";
 import CollaboratorForm from "../components/CollaboratorForm";
-import ListInDetail from "../components/ListInDetail";
 import MainContentTab from "../components/MainContentTab";
 const CLONE_STATUS_NAMES: any = STATUS_NAMES;
 const CLONE_STATUS_COLOR: any = STATUS_COLOR;
@@ -25,7 +21,7 @@ export default function CollaboratorDetail(): React.JSX.Element {
   const { id: collaboratorId }: any = useParams();
   useGetCollaborator(collaboratorId);
   const [id, setId] = useState<any>();
-  const [query] = useCollaboratorQueryParams();
+  const [query] = useCollaboratorQueryParams(20);
   const [keyword, { setKeyword, onParamChange }] =
     useUpdateCollaboratorParams(query);
     const [open, setOpen] = useState(false);
@@ -99,7 +95,17 @@ export default function CollaboratorDetail(): React.JSX.Element {
           />
         }
         MainContent={<MainContentTab />}
-        List={<ListInDetail />}
+        List={
+          <ListInDetailCommon
+            fieldName="fullName"
+            path={PATH_APP.collaborator.root}
+            useGets={useGetCollaborators}
+            usePaging={useCollaboratorPaging}
+            query={query}
+            onParamChange={onParamChange}
+            fieldCode="partnerNumber"
+          />
+        }
       />
       <ModalAnt
         width={1100}

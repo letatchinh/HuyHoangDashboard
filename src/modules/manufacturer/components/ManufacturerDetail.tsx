@@ -74,7 +74,7 @@ export default function ManufacturerDetail(): React.JSX.Element {
                   value={keyword}
                 />
               ),
-              querySearch : ['keyword']
+              querySearch: ["keyword"],
             }}
           />
         }
@@ -85,13 +85,16 @@ export default function ManufacturerDetail(): React.JSX.Element {
             onEditClick={() => onOpenForm(productConfigId)}
             name={
               <Flex gap={10} align="center">
-                <h4>
-                  {get(productConfig, "name", "")}
-                </h4>
-                <Typography.Text type="secondary" style={{ fontSize: 14, width : 100  }}>
+                <h4>{get(productConfig, "name", "")}</h4>
+                <Typography.Text
+                  type="secondary"
+                  style={{ fontSize: 14, width: 100 }}
+                >
                   <Badge
                     style={{ marginRight: 2 }}
-                    status={CLONE_STATUS_COLOR[get(productConfig, "status", "")]}
+                    status={
+                      CLONE_STATUS_COLOR[get(productConfig, "status", "")]
+                    }
                   />
                   {CLONE_STATUS_NAMES[get(productConfig, "status", "")]}
                 </Typography.Text>
@@ -100,7 +103,16 @@ export default function ManufacturerDetail(): React.JSX.Element {
           />
         }
         MainContent={<MainContentTab />}
-        List={<ListInDetailCommon fieldName="name" path="/manufacturer" useGets={useGetManufacturerList} usePaging={useManufacturerPaging} useQueryParams={useManufacturerQueryParams} useUpdateParams={useManufacturerParams}/>}
+        List={
+          <ListInDetailCommon
+            fieldName="name"
+            path="/manufacturer"
+            useGets={useGetManufacturerList}
+            usePaging={useManufacturerPaging}
+            query={query}
+            onParamChange={onParamChange}
+          />
+        }
       />
       <ModalAnt
         title="Thêm mới hãng sản xuất"

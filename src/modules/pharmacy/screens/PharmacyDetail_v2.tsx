@@ -1,23 +1,24 @@
 import { Badge, Flex, Input, Typography } from "antd";
-import Search from "antd/lib/input/Search";
 import { get } from "lodash";
 import React, { useCallback, useState } from "react";
 import { useParams } from "react-router-dom";
 import ModalAnt from "~/components/Antd/ModalAnt";
 import Header from "~/components/common/Layout/List/Detail/Header";
 import Layout from "~/components/common/Layout/List/Detail/Layout";
+import ListInDetailCommon from "~/components/common/Layout/List/Detail/ListInDetailCommon";
 import { STATUS_COLOR, STATUS_NAMES } from "~/constants/defaultValue";
 import { PATH_APP } from "~/routes/allPath";
-import ListInDetail from "../component/ListInDetail";
 import MainContentTab from "../component/MainContentTab";
 import {
   useCreatePharmacy,
   useDeletePharmacy,
+  useGetPharmacies,
   useGetPharmacyId,
   useGetPharmacyId_onlyGet,
+  usePharmacyPaging,
   usePharmacyQueryParams,
   useUpdatePharmacy,
-  useUpdatePharmacyParams,
+  useUpdatePharmacyParams
 } from "../pharmacy.hook";
 import PharmacyForm from "./PharmacyForm";
 const CLONE_STATUS_NAMES: any = STATUS_NAMES;
@@ -26,7 +27,7 @@ export default function PharmacyDetail_v2(): React.JSX.Element {
   const { id: pharmacyId }: any = useParams();
   useGetPharmacyId(pharmacyId);
   const [id, setId] = useState<any>();
-  const [query] = usePharmacyQueryParams(true);
+  const [query] = usePharmacyQueryParams(true,20);
   const [keyword, { setKeyword, onParamChange }] =
     useUpdatePharmacyParams(query);
     const [open, setOpen] = useState(false);
@@ -67,17 +68,19 @@ export default function PharmacyDetail_v2(): React.JSX.Element {
             onChangeStatus={(status) => onParamChange({ status })}
             onAdd={() => onOpenForm()}
             SearchProp={{
-                openSearch : showDrawer,
-                open,
-                onClose,
-                onSearch,
-                SearchComponent : <Input
-                placeholder="Nhập để tìm kiếm"
-                allowClear
-                onChange={(e) => setKeyword(e.target.value)}
-                value={keyword}
-              />,
-              querySearch : ['keyword']
+              openSearch: showDrawer,
+              open,
+              onClose,
+              onSearch,
+              SearchComponent: (
+                <Input
+                  placeholder="Nhập để tìm kiếm"
+                  allowClear
+                  onChange={(e) => setKeyword(e.target.value)}
+                  value={keyword}
+                />
+              ),
+              querySearch: ["keyword"],
             }}
           />
         }
@@ -105,7 +108,17 @@ export default function PharmacyDetail_v2(): React.JSX.Element {
           />
         }
         MainContent={<MainContentTab />}
-        List={<ListInDetail />}
+        List={
+          <ListInDetailCommon
+            fieldName="name"
+            path={PATH_APP.pharmacy.root}
+            fieldCode="code"
+            useGets={useGetPharmacies}
+            usePaging={usePharmacyPaging}
+            query={query}
+            onParamChange={onParamChange}
+          />
+        }
       />
       <ModalAnt
         width={1100}
