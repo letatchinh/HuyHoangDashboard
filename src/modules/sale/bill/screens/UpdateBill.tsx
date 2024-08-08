@@ -276,8 +276,8 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
                        <EditOutlined onClick={onOpenFormLogistic} style={{ color: '#5AB2FF' }} />
                   </Typography.Text>}>{formatter(get(feeDetail, 'LOGISTIC', 0))}</Layout>
               </WithPermission>
-              <Layout label={"Đã thanh toán"}>-{formatter(totalReceiptAmount)}</Layout>
-              <Layout label={"Đã thanh toán và xác nhận"}>-{formatter(totalReceiptVoucherCompleted)}</Layout>
+              <Layout label={"Đã thanh toán"}>{formatter(totalReceiptAmount)}</Layout>
+              <Layout label={"Đã thanh toán và xác nhận"}>{formatter(totalReceiptVoucherCompleted)}</Layout>
               <Layout strong label={"Tổng số tiền còn lại"}>
                 <Typography.Text strong>
                   {formatter(remainAmount)}
