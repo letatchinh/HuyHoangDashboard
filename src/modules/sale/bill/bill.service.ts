@@ -447,7 +447,7 @@ const onAddLocalStorage = (newDataSource: DataSourceType) => {
 const onUseKeyPriority = (key: string) => {
   localStorage.setItem(KEY_PRIORITY, JSON.stringify(key));
 };
-const onRemoveLocalStorage = (key: any) => {
+export const onRemoveLocalStorage = (key: any) => {
   const dataFromLocalStorage = localStorage.getItem(KEY_DATA_PHARMACY) || "";
   const dataParse = JSON.parse(dataFromLocalStorage) || {};
   if (dataParse.hasOwnProperty(key)) {
