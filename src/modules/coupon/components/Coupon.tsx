@@ -48,7 +48,7 @@ export default function Coupon({ coupon,onAdd,onRemove ,isChecked,target,readOnl
           {coupon?.isFreeShip ? "Miễn phí vận chuyển  " :`Giảm ${getTextOfDiscount(discount?.value, discount?.type)} ${discount?.maxDiscount ? `Giảm tối đa ${formatter(discount?.maxDiscount || 0)}` : ""}`}
         </span>
         <span className="coupon--middle__condition">
-            {conditionsTrue?.map((item) => `${defaultConditions[item.key].vi} ${formatter(get(item,['value',item.key,'value'],''))}, `)}
+            {conditionsTrue?.map((item,index) => `${defaultConditions[item.key].vi}${formatter(get(item,['value',item.key,'value'],''))}${index + 1 !== get(conditionsTrue,'length',0) ? "," : ""} `)}
         </span>
         
         <ShowDate endDate={endDate} startDate={startDate} />
