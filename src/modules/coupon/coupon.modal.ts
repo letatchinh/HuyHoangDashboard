@@ -1,4 +1,4 @@
-import { DetailCoupon } from "../sale/bill/bill.modal"
+import { DetailCoupon, quotation } from "../sale/bill/bill.modal"
 
 export type detailCondition = {
     key: 'BILL_FIRST' | 'BILL_PRICE' | 'PRODUCT_COUNT',
@@ -81,5 +81,6 @@ export interface VerifyCoupon {
 billPrice?: number,
 productCount?: number,
 coupons?: DetailCoupon,
-isValidateCount?: boolean
+isValidateCount?: boolean,
+billItem : quotation[],
 }

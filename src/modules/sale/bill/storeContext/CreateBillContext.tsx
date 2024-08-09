@@ -529,6 +529,7 @@ export function CreateBillProvider({
   // Verify coupon
   const onVerifyCoupon = async() => {
     return await validateCoupon({
+      billItem : quotationItems,
       billPrice : totalAmount,
       coupons : couponSelected,
       productCount : countProduct,
