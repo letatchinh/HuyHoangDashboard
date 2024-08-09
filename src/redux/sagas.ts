@@ -58,7 +58,8 @@ import reportGroupCollaborator from '~/modules/reportGroupCollaborator';
 import reportGroupEmployeeSeller from '~/modules/reportGroupEmployeeSeller';
 import customerSegmentation from '~/modules/customerSegmentation';
 import coupon from '~/modules/coupon';
-
+import reportSubFee from '~/modules/report/reportSubFee';
+import reportShip from '~/modules/report/reportShip';
 export default function* rootSaga() {
   yield all([
     authModule.redux.saga(),
@@ -122,5 +123,7 @@ export default function* rootSaga() {
     reportGroupEmployeeSeller.redux.saga(),
     customerSegmentation.redux.saga(),
     coupon.redux.saga(),
+    reportSubFee.redux.saga(),
+    reportShip.redux.saga(),
   ]);
 };

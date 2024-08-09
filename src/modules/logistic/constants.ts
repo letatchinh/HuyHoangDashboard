@@ -132,6 +132,10 @@ export const transportUnit : transportUnitType[] = [
     value: "VIETTELPOST",
   },
 ];
+export const transportUnit_VI  = {
+  VIETNAMPOST : "Bưu điện Việt Nam",
+  VIETTELPOST : "Viettel Post",
+}
 
 export const TRANSPORT_NAME = {
   VIETNAMPOST: 'VIETNAMPOST',
@@ -148,3 +152,8 @@ export const PAYER_OPTIONS : payerTypeOption[] = [
   { label: "Công ty", value: "SYSTEM" },
   { label: "Khách hàng", value: "CUSTOMER" },
 ];
+
+export const PAYER_VI = {
+  SYSTEM : "Công ty",
+  CUSTOMER : "Khách hàng"
+}

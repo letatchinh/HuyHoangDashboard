@@ -61,6 +61,8 @@ import reportGroupCollaborator from '~/modules/reportGroupCollaborator';
 import reportGroupEmployeeSeller from '~/modules/reportGroupEmployeeSeller';
 import customerSegmentation from '~/modules/customerSegmentation';
 import coupon from '~/modules/coupon';
+import reportSubFee from '~/modules/report/reportSubFee';
+import reportShip from '~/modules/report/reportShip';
 
 const authPersistConfig = {
     key: 'auth',
@@ -135,5 +137,7 @@ const rootReducer = combineReducers({
     reportGroupEmployeeSeller: reportGroupEmployeeSeller.redux.reducer,
     customerSegmentation: customerSegmentation.redux.reducer,
     coupon: coupon.redux.reducer,
+    reportSubFee: reportSubFee.redux.reducer,
+    reportShip: reportShip.redux.reducer,
 });
 export default rootReducer
