@@ -422,8 +422,8 @@ export function CreateBillProvider({
   );
   const totalPriceAfterDiscount = useMemo(
     () =>
-      (totalAmount + (totalFee - findLogisticInFee) - totalDiscountCouponBill) || 0, // Not count fee logistic
-    [quotationItems, totalFee,totalDiscountCouponBill,findLogisticInFee]
+      (totalAmount + (totalFee - findLogisticInFee) - totalDiscountCouponBill - totalCouponForItem) || 0, // Not count fee logistic
+    [quotationItems, totalFee,totalDiscountCouponBill,findLogisticInFee , totalCouponForItem]
   );
 
   const totalDiscount = useMemo(
