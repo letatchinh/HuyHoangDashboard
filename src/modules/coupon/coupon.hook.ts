@@ -163,7 +163,7 @@ export const useUpdateCouponParams = (
 };
 
 
-export const useCouponSelect = ({bill,refCollection,totalAmount,quotationItems} : {bill : any,refCollection : any ,totalAmount:number,quotationItems : quotation[]}) => {
+export const useCouponSelect = ({bill,refCollection,totalRoot,quotationItems} : {bill : any,refCollection : any ,totalRoot:number,quotationItems : quotation[]}) => {
   const [isOpenCoupon,setIsOpenCoupon] = useState(false);
   const [isOpenCouponBillItem,setIsOpenCouponBillItem] = useState(false);
   const countProduct = get(bill,'quotationItems',[])?.reduce((sum : number,cur : any) => sum + get(cur,'quantity',0),0)
@@ -200,7 +200,7 @@ export const useCouponSelect = ({bill,refCollection,totalAmount,quotationItems} 
         id : get(bill, "pharmacyId")
       },
       productCount : countProduct,
-      billPrice : totalAmount
+      billPrice : totalRoot
     });
   };
 

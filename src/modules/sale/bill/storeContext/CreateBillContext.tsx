@@ -379,7 +379,7 @@ export function CreateBillProvider({
       loadingCouponBillItem,
       queryBillItem,
       countProduct,
-    } = useCouponSelect({bill,refCollection,totalAmount,quotationItems});
+    } = useCouponSelect({bill,refCollection,totalRoot : totalRootBill,quotationItems});
     //
 
   // ------Calculate discount Coupon-------
