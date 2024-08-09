@@ -98,7 +98,7 @@ export default function CollaboratorDetail(): React.JSX.Element {
         List={
           <ListInDetailCommon
             fieldName="fullName"
-            path={PATH_APP.collaborator.root}
+            path={"/collaborator-detail"}
             useGets={useGetCollaborators}
             usePaging={useCollaboratorPaging}
             query={query}
