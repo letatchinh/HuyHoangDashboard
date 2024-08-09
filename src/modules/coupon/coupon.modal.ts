@@ -73,6 +73,12 @@ export type QuerySearchCoupon = {
   productGroupCount?: number,
 }
 
+interface BillItemVerify {
+  productId: string;
+  quantity: number;
+  totalRoot?: number;
+  productGroupId?: string;
+}
 export interface VerifyCoupon {
   customerApplyId?: {
     id?: string,
@@ -82,5 +88,5 @@ billPrice?: number,
 productCount?: number,
 coupons?: DetailCoupon,
 isValidateCount?: boolean,
-billItem : quotation[],
+billItem : BillItemVerify[],
 }

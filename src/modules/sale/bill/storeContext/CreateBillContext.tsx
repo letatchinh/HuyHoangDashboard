@@ -1,5 +1,5 @@
 import { Form } from "antd";
-import { debounce, forIn, get } from "lodash";
+import { debounce, forIn, get, pick } from "lodash";
 import {
   ReactNode,
   createContext,
@@ -529,7 +529,7 @@ export function CreateBillProvider({
   // Verify coupon
   const onVerifyCoupon = async() => {
     return await validateCoupon({
-      billItem : quotationItems,
+      billItem : quotationItems?.map((item) => ({...pick(item,['productId','quantity','totalRoot','productGroupId'])})),
       billPrice : totalAmount,
       coupons : couponSelected,
       productCount : countProduct,
