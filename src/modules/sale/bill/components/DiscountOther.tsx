@@ -15,6 +15,7 @@ type propsType = {
   totalDiscountOther: number;
   productId : string;
   variantId : string;
+  productGroupId? : string;
   couponsInItem : CouponInSelect[]
 };
 export default function DiscountOther({
@@ -25,6 +26,7 @@ export default function DiscountOther({
   totalDiscountOther,
   productId,
   variantId,
+  productGroupId,
   couponsInItem,
 }: propsType): React.JSX.Element {
   
@@ -40,7 +42,7 @@ export default function DiscountOther({
           Thêm Chiết khấu
         </Button>
       </Popover>
-        <Button onClick={() => onOpenCouponBillItem(productId,variantId)} size="small" className="mb-1" icon={<PlusOutlined />} type="primary" ghost>
+        <Button onClick={() => onOpenCouponBillItem(productId,variantId,productGroupId)} size="small" className="mb-1" icon={<PlusOutlined />} type="primary" ghost>
           Thêm mã giảm giá
         </Button>
       </div>

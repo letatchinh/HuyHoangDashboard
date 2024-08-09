@@ -32,6 +32,7 @@ export const selectProductSearchBill = (data: any) => {
     codeBySupplier,
     images,
     discountOther,
+    productGroupId,
   } = data;
   const variant = variants?.find(
     (item: any) => get(item, "_id") === selectVariant
@@ -50,6 +51,7 @@ export const selectProductSearchBill = (data: any) => {
     variants,
     images,
     discountOther,
+    productGroupId,
   };
   return submitData;
 };
@@ -346,12 +348,18 @@ export const reducerDiscountQuotationItems = (quotationItems: any[],couponSelect
       // Filter Coupon Of Item
       const cp = couponSelected?.item.filter((coupon) => coupon?.couponAtVariantId === quotation?.variantId);
 
+      // Total Discount
+      const totalDiscountSummary = totalDiscount + totalDiscountOther;
+
+      // Total Amount
+      const billItem_totalAmount = totalRoot - totalDiscountSummary; // Root - CK
+
       // Calculate Coupon For Item 
       const couponsInItem = cp?.map((item : CouponInSelect) => {
         const {type,value,maxDiscount} = item?.discount;
         const totalCouponItem = getValueOfMath(get(quotation, "variant.price", 1),value,type,maxDiscount);
-        const minPrice = totalRoot * MIN_TOTAL_DISCOUNT_PERCENT / 100;
-        const maxDiscountCoupon = totalRoot - minPrice;
+        const minPrice = billItem_totalAmount * MIN_TOTAL_DISCOUNT_PERCENT / 100;
+        const maxDiscountCoupon = billItem_totalAmount - minPrice;
 
         return ({
           ...item,
@@ -359,8 +367,7 @@ export const reducerDiscountQuotationItems = (quotationItems: any[],couponSelect
         })
       });
       const totalDiscountCoupon = couponsInItem?.reduce((sum:number,cur : CouponInSelect) => sum + get(cur,'totalCoupon',0),0);
-      const totalDiscountSummary = totalDiscount + totalDiscountOther;
-      const totalPrice = totalRoot - totalDiscountSummary - totalDiscountCoupon;
+      const totalPrice = billItem_totalAmount - totalDiscountCoupon;
       return {
         ...quotation,
         cumulativeDiscount,
@@ -376,6 +383,7 @@ export const reducerDiscountQuotationItems = (quotationItems: any[],couponSelect
         totalDiscountCoupon,
         couponsInItem,
         totalDiscountSummary,
+        billItem_totalAmount,
       };
     }
   );

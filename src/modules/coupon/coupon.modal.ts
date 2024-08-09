@@ -62,14 +62,15 @@ export interface CouponInSelect extends CouponBase {
 }
 export type QuerySearchCoupon = {
   target: 'BILL' | 'BILL_ITEM',
-  targetId?: string,
   variantId?: string,
   customerApplyId?: {
       id?: string,
       refCollection: 'pharma_profile' | 'partner'
   },
   billPrice?: number,
+  billGroupPrice?: number,
   productCount?: number,
+  productGroupCount?: number,
 }
 
 export interface VerifyCoupon {

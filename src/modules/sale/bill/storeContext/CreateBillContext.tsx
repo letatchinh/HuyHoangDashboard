@@ -109,7 +109,7 @@ export type GlobalCreateBill = {
   onCloseCoupon: () => void;
   coupons: any[];
   loadingGetCoupon: boolean;
-  onOpenCouponBillItem: (id : string,variantId : string) => void;
+  onOpenCouponBillItem: (id : string,variantId : string,productGroupId? : string) => void;
   onCloseCouponBillItem: () => void;
   couponsBillItem: any[];
   loadingCouponBillItem: boolean;
@@ -357,7 +357,7 @@ export function CreateBillProvider({
   const totalAmount = useMemo( // Tổng giá trị đơn hàng đã chiết khấu
     () =>
       quotationItems?.reduce(
-        (sum: number, cur: any) => sum + get(cur, "totalPrice"),
+        (sum: number, cur: any) => sum + get(cur, "billItem_totalAmount"),
         0
       ),
     [quotationItems]
@@ -379,23 +379,23 @@ export function CreateBillProvider({
       loadingCouponBillItem,
       queryBillItem,
       countProduct,
-    } = useCouponSelect({bill,refCollection,totalAmount});
+    } = useCouponSelect({bill,refCollection,totalAmount,quotationItems});
     //
 
   // ------Calculate discount Coupon-------
-  const minTotalPrice = useMemo(() => totalRootBill * MIN_TOTAL_DISCOUNT_PERCENT / 100,[totalRootBill]);
-  const maxDiscountCoupon = useMemo(() => totalRootBill - minTotalPrice,[minTotalPrice,totalRootBill])
+  const minTotalPrice = useMemo(() => totalAmount * MIN_TOTAL_DISCOUNT_PERCENT / 100,[totalAmount]);
+  const maxDiscountCoupon = useMemo(() => totalAmount - minTotalPrice,[minTotalPrice,totalAmount])
   
   const totalCouponForItem = useMemo(() => quotationItems?.reduce((sum:number,cur : any) => sum + get(cur,'totalDiscountCoupon',0),0),[quotationItems]);
   
   const totalDiscountCouponBill = useMemo(() => {
     const totalDiscount = couponSelected?.bill.reduce((sum: number, cur: CouponInSelect) => {
       const {type,value,maxDiscount} = cur?.discount;
-      return sum + getValueOfMath(totalRootBill,value,type,maxDiscount)
+      return sum + getValueOfMath(totalAmount,value,type,maxDiscount)
     },0);
     return Math.min(totalDiscount,maxDiscountCoupon);    
       
-  },[couponSelected,totalRootBill,maxDiscountCoupon]);
+  },[couponSelected,totalAmount,maxDiscountCoupon]);
 
   const totalDiscountCouponShip = useMemo(() => {
     const totalDiscount = couponSelected?.ship.reduce((sum: number, cur: CouponInSelect) => {
@@ -521,7 +521,6 @@ export function CreateBillProvider({
         get(bill, "quotationItems", []),
         couponSelected
       );
-      console.log(newQuotationItems,'newQuotationItems');
       
       setQuotationItems(newQuotationItems);
     }

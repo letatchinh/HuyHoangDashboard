@@ -68,6 +68,8 @@ export interface quotation  {
     totalDiscountCoupon? : number,
     totalDiscountSummary ? : number,
     totalRoot?:number,
+    billItem_totalAmount? : number,
+    productGroupId? : string,
 }
 export interface FeeType  {
     typeFee : 'SUB_FEE' | 'LOGISTIC',
