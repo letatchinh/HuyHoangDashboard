@@ -1,6 +1,6 @@
 import { Checkbox, Typography } from "antd";
 import { get, range } from "lodash";
-import React, { useCallback } from "react";
+import React, { useCallback, useMemo } from "react";
 import freeProduct from "~/assets/images/coupon/freeProduct.png";
 import freeShip from "~/assets/images/coupon/freeShip.png";
 import useCreateBillStore from "~/modules/sale/bill/storeContext/CreateBillContext";
@@ -26,7 +26,9 @@ export default function Coupon({ coupon,onAdd,onRemove ,isChecked,target,readOnl
     }else{
       onAdd && onAdd({...coupon,couponAtVariantId : queryBillItem?.variantId})
     }
-  }
+  };
+
+  const convertName = useMemo(() => conditionsTrue?.map((item) => `${defaultConditions[item.key].vi}${item?.value ? " " : ""}${formatter(get(item,['value',item.key,'value'],''))}`),[conditionsTrue])
   
   return (
     <div className="coupon">
@@ -48,7 +50,7 @@ export default function Coupon({ coupon,onAdd,onRemove ,isChecked,target,readOnl
           {coupon?.isFreeShip ? "Miễn phí vận chuyển  " :`Giảm ${getTextOfDiscount(discount?.value, discount?.type)} ${discount?.maxDiscount ? `Giảm tối đa ${formatter(discount?.maxDiscount || 0)}` : ""}`}
         </span>
         <span className="coupon--middle__condition">
-            {conditionsTrue?.map((item,index) => `${defaultConditions[item.key].vi}${formatter(get(item,['value',item.key,'value'],''))}${index + 1 !== get(conditionsTrue,'length',0) ? "," : ""} `)}
+            {convertName?.join(', ')}
         </span>
         
         <ShowDate endDate={endDate} startDate={startDate} />
