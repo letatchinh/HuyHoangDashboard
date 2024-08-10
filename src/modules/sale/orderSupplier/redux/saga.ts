@@ -41,9 +41,12 @@ function* createOrderSupplier({payload} : any) : any {
 
 function* updateOrderSupplier({payload} : any) : any {
   try {
-    const data = yield call(api.update,payload);
+    console.log('dsaga') 
+    const data = yield call(api.update, payload);
+    console.log(data,'data')
     yield put(orderSupplierActions.updateSuccess(data));
-  } catch (error:any) {
+  } catch (error: any) {
+    console.log(error)
     yield put(orderSupplierActions.updateFailed(error));
   }
 }
