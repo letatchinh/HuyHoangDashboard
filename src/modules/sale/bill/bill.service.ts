@@ -15,7 +15,7 @@ import CumulativeDiscountModule from "~/modules/cumulativeDiscount";
 import { variantType } from "~/modules/product/product.modal";
 import { TYPE_REWARD } from "~/modules/cumulativeDiscount/constants";
 import { INFINITY, MIN_TOTAL_DISCOUNT_PERCENT } from "~/constants/defaultValue";
-import { getValueOfMath } from "~/utils/helpers";
+import { getValueOfMath, NoZero } from "~/utils/helpers";
 import { CouponInSelect, VerifyCoupon } from "~/modules/coupon/coupon.modal";
 import apisCoupon from "~/modules/coupon/coupon.api";
 const TYPE_DISCOUNT: any = CumulativeDiscountModule.constants.TYPE_DISCOUNT;
@@ -332,18 +332,18 @@ export const reducerDiscountQuotationItems = (quotationItems: any[],couponSelect
         }
       );
 
-      const totalDiscount = cumulativeDiscount?.reduce(
+      const totalRoot = get(quotation, "variant.price", 1) * quantityActual;
+      const totalDiscount = Math.min(cumulativeDiscount?.reduce(
         (sum: number, cur: cumulativeDiscountType) =>
           sum + get(cur, "discountAmount", 0),
         0
-      );
+      ),totalRoot);
 
-      const totalDiscountOther = (quotation?.discountOther || [])?.reduce(
+      const totalDiscountOther = NoZero((quotation?.discountOther || [])?.reduce(
         (sum: number, cur: DiscountOtherType) =>
           sum + CalculateDiscountMethod.totalDiscountOther(get(quotation, "variant.price", 1),cur?.value,cur?.typeDiscount,quantityActual),
         0
-      );
-      const totalRoot = get(quotation, "variant.price", 1) * quantityActual;
+      ));
 
       // Filter Coupon Of Item
       const cp = couponSelected?.item.filter((coupon) => coupon?.couponAtVariantId === quotation?.variantId);
@@ -352,7 +352,7 @@ export const reducerDiscountQuotationItems = (quotationItems: any[],couponSelect
       const totalDiscountSummary = totalDiscount + totalDiscountOther;
 
       // Total Amount
-      const billItem_totalAmount = totalRoot - totalDiscountSummary; // Root - CK
+      const billItem_totalAmount = NoZero(totalRoot - totalDiscountSummary); // Root - CK
 
       // Calculate Coupon For Item 
       const couponsInItem = cp?.map((item : CouponInSelect) => {
@@ -367,13 +367,13 @@ export const reducerDiscountQuotationItems = (quotationItems: any[],couponSelect
         })
       });
       const totalDiscountCoupon = couponsInItem?.reduce((sum:number,cur : CouponInSelect) => sum + get(cur,'totalCoupon',0),0);
-      const totalPrice = billItem_totalAmount - totalDiscountCoupon;
+      const totalPrice = NoZero(billItem_totalAmount - totalDiscountCoupon);
       return {
         ...quotation,
         cumulativeDiscount,
         totalDiscount,
         totalDiscountOther,
-        totalPrice: totalPrice > 0 ? totalPrice : 0,
+        totalPrice: NoZero(totalPrice),
         totalDiscountDetailFromProduct,
         totalDiscountDetailFromSupplier,
         exchangeValue: get(quotation, "variant.exchangeValue", 1),
