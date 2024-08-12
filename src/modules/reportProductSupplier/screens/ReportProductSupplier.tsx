@@ -29,7 +29,7 @@ export default function ReportProductSupplier() {
 
       >
         {role !== "partner" && (
-          <TabPane tab="OTC" key={'pharma_profile'}>
+          <TabPane tab="B2B" key={'pharma_profile'}>
             <ReportChart query={query} spaceType={"pharma_profile"} />
           </TabPane>
         )}

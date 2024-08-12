@@ -72,6 +72,9 @@ export const useGetUser = (id: any) => {
     param: id,
   });
 };
+export const useGetUser_onlyGet = () => {
+  return [useSelector(getByIdSelector), useSelector(getByIdLoadingSelector)];
+};
 export const useGetProfileUser = () => {
   return useFetch({
     action: userSliceAction.getProfileRequest,
@@ -147,9 +150,9 @@ export const useDeleteUser = (callback?: any) => {
   });
 };
 
-export const useUserQueryParams = () => {
+export const useUserQueryParams = (defaultLimit?:number) => {
   const query = useQueryParams();
-  const [limit, setLimit] = useState<any>(query.get("limit") || 10);
+  const [limit, setLimit] = useState<any>(query.get("limit") || defaultLimit || 10);
   const [page, setPage] = useState<any>(query.get("page") || 1);
   const keyword = query.get("keyword");
   const groupIds = query.get("groupIds") || null;

@@ -15,7 +15,7 @@ import {
 import { collaboratorActions } from "./redux/reducer";
 import { RootState } from "~/redux/store";
 const MODULE = "collaborator";
-const MODULE_VI = "cộng tác viên";
+const MODULE_VI = "khách hàng B2C";
 
 const getSelector = (key: string) => (state: any) => state.collaborator[key];
 const {
@@ -69,7 +69,8 @@ export const useGetCollaborator = (id: any) => {
     param: id,
   });
 };
-
+export const useGetCollaborator_onlyGet = () => [useSelector(getByIdSelector),useSelector(getByIdLoadingSelector)];
+export const useGetCollaborator_redux = () => [useSelector(getByIdSelector),useSelector(getByIdLoadingSelector)];
 export const useCreateCollaborator = (callback?: any) => {
   useSuccess(
     createSuccessSelector,
@@ -164,12 +165,13 @@ export const useUpdateProductCollaborator = (callback?: any) => {
   });
 };
 
-export const useCollaboratorQueryParams = () => {
+export const useCollaboratorQueryParams = (limitDefault? : number) => {
   const query = useQueryParams();
-  const limit = query.get("limit") || 10;
+  const limit = query.get("limit") || limitDefault || 10;
   const page = query.get("page") || 1;
   const keyword = query.get("keyword");
   const status = query.get("status");
+  const salesChannel = query.get("salesChannel");
   const processStatus = query.get("processStatus");
   const createSuccess = useSelector(createSuccessSelector);
   const updateSuccess = useSelector(updateSuccessSelector)
@@ -181,11 +183,12 @@ export const useCollaboratorQueryParams = () => {
       limit,
       keyword,
       status,
+      salesChannel,
       processStatus,
     };
     return [queryParams];
     //eslint-disable-next-line
-  }, [page, limit, status, keyword, processStatus, createSuccess, updateSuccess, deleteSuccess, convertSuccess]);
+  }, [page, limit, status, salesChannel, keyword, processStatus, createSuccess, updateSuccess, deleteSuccess, convertSuccess]);
 };
 
 export const useUpdateCollaboratorParams = (

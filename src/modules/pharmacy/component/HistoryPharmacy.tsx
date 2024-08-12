@@ -47,9 +47,9 @@ export default function HistoryPharmacy(props: propsType) {
   const canReadBill = useMatchPolicy(POLICIES.READ_BILL);
 
   const [itemActive, setItemActive] = useState<any>();
-  const onParamChange = (newQuery: any) => {
-    setQuery({ ...query, ...newQuery });
-  };
+  const onParamChange = (newQuery : any) => {
+    setQuery({...query, ...newQuery});
+  }
   const columns: ColumnsType = useMemo(
     () => [
       {

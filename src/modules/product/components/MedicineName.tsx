@@ -29,7 +29,6 @@ const MedicineName = ({ form } : any) => {
 
   const handleSelect = (value:any) => {
     inputEl.current.blur();
-    console.log(value,'value');
     
     form.setFieldsValue({
       medicalCode:value.code,

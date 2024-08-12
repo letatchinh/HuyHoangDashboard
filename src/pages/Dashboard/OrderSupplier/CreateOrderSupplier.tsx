@@ -15,8 +15,10 @@ export const KEY_PRIORITY = "key-priority-order-supplier"; // Tab Will Use this 
 export interface ItemDataSource extends FormFieldCreateOrderSupplier  {
   typeTab : "createOrderSupplier",
   orderSupplierItems: orderSupplier[]; // BillItems
+  warehouseId?: string;
+  warehouseName?: string;
 };
-export const keyValidDataSource = ['typeTab','orderSupplierItems','supplierId','pair','debtType'];
+export const keyValidDataSource = ['typeTab','orderSupplierItems','supplierId','pair','debtType','warehouseId', 'warehouseName'];
 
 export interface DataSourceType  {
   [key: string]: ItemDataSource;
@@ -119,7 +121,6 @@ const CreateOrderSupplier = (): React.JSX.Element => {
   };
 
   const onRemoveTab = (targetKey: any) => {
-    console.log(targetKey, "targetKey");
 
     const newPanes = tabs?.filter((item) => item.key !== targetKey);
     if (!newPanes?.length) {

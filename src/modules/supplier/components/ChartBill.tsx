@@ -18,7 +18,6 @@ type DataChartType = {
     totalPrice : number
 }
 export default function ChartBill({data,searchBy,searchByVi,loadingBills}: propsType): React.JSX.Element {
-    console.log(data,'data');
     
     const dataMap = useMemo(() => get(data,'bills',[])?.reduce((sum:DataChartType[],cur:any) => {
         const cloneSum = clone(sum);

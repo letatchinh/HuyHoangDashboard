@@ -1,17 +1,11 @@
-import { ColumnsType } from "antd/es/table";
+import { Button, Modal } from "antd";
 import React, { useMemo, useState } from "react";
-import { formatter, useFetchState } from "~/utils/helpers";
 import TableAnt from "~/components/Antd/TableAnt";
-import { v4 } from "uuid";
-import moment from "moment";
-import { Button, Modal, Table } from "antd";
-import WhiteBox from "~/components/common/WhiteBox";
+import { formatter, useFetchState } from "~/utils/helpers";
 
 import type { TableColumnsType } from "antd";
-import { useGetReportGroupEmployeeSellerProduct } from "../reportGroupEmployeeSeller.hook";
 import { get } from "lodash";
 import apis from "../reportGroupEmployeeSeller.api";
-import Breadcrumb from "~/components/common/Breadcrumb";
 type propsType = {
   query?: any;
   pagination?: any;
@@ -92,7 +86,7 @@ export default function ProductQuantityTable(
       key: "name",
       width: 200,
       render: (record, root: any) => {
-        return (
+        return root.childLength > 0 ? (
           <Button
             type="text"
             onClick={() =>
@@ -105,11 +99,13 @@ export default function ProductQuantityTable(
                 root?.productId
               )
             }
-            style={{color: "#3481FF"}}
+            style={{ color: "#3481FF" }}
           >
             {" "}
             {record}
           </Button>
+        ) : (
+          <div>{record}</div>
         );
       },
     },

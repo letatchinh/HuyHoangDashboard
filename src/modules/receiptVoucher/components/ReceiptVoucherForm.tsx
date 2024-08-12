@@ -191,6 +191,7 @@ export default function ReceiptVoucher(props: propsType): React.JSX.Element {
       );
       setDataAccounting(initReceiptVoucher?.accountingDetails);
     }
+    console.log(initReceiptVoucher,'initReceiptVoucher')
     form.setFieldsValue({
       ...initData
     })
@@ -211,7 +212,7 @@ export default function ReceiptVoucher(props: propsType): React.JSX.Element {
   //Set address default from branch 99999
   useEffect(() => {
     if (branch) {
-      const findBranchWorldHealth = branch?.docs?.find(
+      const findBranchWorldHealth = branch?.find(
         (item: any) => item._id === DEFAULT_BRANCH_ID
       );
       const address = concatAddress(findBranchWorldHealth?.address);
@@ -310,13 +311,13 @@ export default function ReceiptVoucher(props: propsType): React.JSX.Element {
                 <Row gutter={36}>
                   <Col span={12}>
                     <FormItem
-                      label={`Mã ${from === 'Pharmacy' ? 'nhà thuốc' : ''}`}
+                      label={`Mã ${from === 'Pharmacy' ? 'khách hàng B2B' : ''}`}
                       labelCol={{ lg: 8 }}
                       name="code"
                       rules={[
                         {
                           required: true,
-                          message: `Vui lòng nhập mã ${from === 'Pharmacy' ? 'nhà thuốc' : ''} !`,
+                          message: `Vui lòng nhập mã ${from === 'Pharmacy' ? 'khách hàng B2B' : ''} !`,
                         },
                       ]}
                     >
@@ -326,13 +327,13 @@ export default function ReceiptVoucher(props: propsType): React.JSX.Element {
                   </Col>
                   <Col span={12}>
                     <FormItem
-                      label={`Tên ${from === 'Pharmacy' ? 'nhà thuốc' : ''}`}
+                      label={`Tên ${from === 'Pharmacy' ? 'khách hàng B2B' : ''}`}
                       labelCol={{ lg: 8 }}
                       name="name"
                       rules={[
                         {
                           required: true,
-                          message: `Vui lòng chọn tên ${from === 'Pharmacy' ? 'nhà thuốc' : ''}!`,
+                          message: `Vui lòng chọn tên ${from === 'Pharmacy' ? 'khách hàng B2B' : ''}!`,
                         },
                       ]}
                     >
@@ -342,7 +343,7 @@ export default function ReceiptVoucher(props: propsType): React.JSX.Element {
                 </Row>
                 <Row gutter={36}>
                   <Col span={24}>
-                    <FormItem label="Người nhận" name="receiver">
+                    <FormItem label="Người nộp" name="receiver">
                       {isLoading ? <Skeleton.Input active /> : <Input />}
                     </FormItem>
                   </Col>
@@ -585,7 +586,7 @@ export default function ReceiptVoucher(props: propsType): React.JSX.Element {
           <Row className="staff-form__submit-box">
             {!id ? 
               <WithOrPermission permission={[POLICIES.WRITE_VOUCHERPHARMACY, POLICIES.WRITE_VOUCHERSUPPLIER]}>
-              <Button icon={<SaveOutlined/>} type="primary" htmlType="submit">
+              <Button icon={<SaveOutlined/>} type="primary" htmlType="submit" loading={isSubmitLoading}>
                 Lưu
               </Button>
               </WithOrPermission>

@@ -9,3 +9,35 @@
     width: 50%;
   };
 };
+
+.layout{
+  &--ctrl{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    &__filter{
+      display: flex;
+      gap: 8px;
+    }
+    &__action{
+      display: flex;
+      gap: 8px;
+      justify-content: end;
+    }
+  }
+}
+.dot{
+  position: relative;
+  &::after{
+    content: '';
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    z-index: 2;
+    background-color: red;
+  }
+}

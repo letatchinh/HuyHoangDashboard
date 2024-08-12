@@ -48,7 +48,7 @@ export default function CollaboratorScreen(props: propsType): React.JSX.Element 
     <>
       {(isCollaboratorGroup || isCollaborator) && (
           <WhiteBox className="collaborator-group">
-          <Breadcrumb title={"Quản lý cộng tác viên"} />
+          <Breadcrumb title={"Quản lý khách hàng B2C"} />
             <Tabs
               type="card"
               activeKey={currentTab}
@@ -58,10 +58,10 @@ export default function CollaboratorScreen(props: propsType): React.JSX.Element 
               
             >
               {isCollaborator && (
-                <TabPane tab="Danh sách cộng tác viên" key="collaborator" />
+                <TabPane tab="Danh sách khách hàng B2C" key="collaborator" />
               )}
               {isCollaboratorGroup && (
-                <TabPane tab="Nhóm cộng tác viên" key="collaborator/group" />
+                <TabPane tab="Nhóm khách hàng B2C" key="collaborator/group" />
               )}
               {readRequestGroup && <TabPane tab="Yêu cầu chuyển nhóm" key="collaborator/request" />}
             </Tabs>

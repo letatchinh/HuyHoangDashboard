@@ -1,4 +1,4 @@
-import { get } from "lodash";
+import { get, pick } from "lodash";
 import requester from "~/api/requester";
 
 const apis = {
@@ -9,5 +9,6 @@ const apis = {
     update: (data?: any) => requester.put(`/api/v1/billQuotation-update/${get(data,'_id')}`, data),
     convert: (data?: any) => requester.post(`/api/v1/billQuotation-convert/${get(data,'_id')}`,data),
     delete: (id?: any) => requester.delete(`/api/v1/billQuotation-delete/${id}`),
+    checkBill: (data?: any) => requester.post(`/api/v1/billQuotation-validate`, {billId: data?.id}),
 }
 export default apis;

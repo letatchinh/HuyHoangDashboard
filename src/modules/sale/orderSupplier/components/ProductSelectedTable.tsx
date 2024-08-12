@@ -17,7 +17,7 @@ type propsType = {};
 export default function ProductSelectedTable(
   props: propsType
 ): React.JSX.Element {
-  const { orderSupplierItems, onSave,onRemove } = useCreateOrderSupplierStore();  
+  const { orderSupplierItems, onSave, onRemove } = useCreateOrderSupplierStore();  
   const onSelect = (newVariantId : string,data : any) => {
     const variant = get(data,'variants',[])?.find((item : any) => get(item,'_id') === newVariantId);
     onSave({

@@ -5,7 +5,7 @@ import ChildrenTabBuyGroup from './ChildrenTabBuyGroup';
 
 type propsType = {
     children:any,
-    activeKey:'B2C'|'OTC'
+    activeKey:'B2C'|'B2B'
 }
 export const contextBuyGroup = {
     provider: createContext({

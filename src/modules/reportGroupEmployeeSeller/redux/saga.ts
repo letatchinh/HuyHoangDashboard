@@ -22,6 +22,16 @@ function* getListProductReportGroupEmployeeSeller({payload: query}: any): any {
   }
 }
 
+function* getGroupSeller({payload: query}: any): any {
+  try {
+    const data = yield call(api.getGroupSeller, query);
+    yield put(reportGroupEmployeeSellerActions.getGroupSellerSuccess(data));
+    yield put(reportGroupEmployeeSellerActions.clearAction());
+  } catch (error: any) {
+    yield put(reportGroupEmployeeSellerActions.getGroupSellerFailed(error));
+  }
+}
+
 function* createReportGroupEmployeeSeller({ payload }: any): any {
   try {
     const data = yield call(api.create, payload);
@@ -56,6 +66,10 @@ export default function* reportGroupEmployeeSellerSaga() {
   yield takeLatest(
     reportGroupEmployeeSellerActions.getListProductRequest,
     getListProductReportGroupEmployeeSeller
+  );
+  yield takeLatest(
+    reportGroupEmployeeSellerActions.getGroupSellerRequest,
+    getGroupSeller
   );
   yield takeLatest(
     reportGroupEmployeeSellerActions.createRequest,

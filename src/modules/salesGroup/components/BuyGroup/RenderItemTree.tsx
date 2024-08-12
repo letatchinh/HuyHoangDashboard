@@ -57,7 +57,7 @@ export  const RenderItemTree = ({node,onOpen}:{node:{data:BuyGroupType},onOpen:(
               }
             >
               {get(data, "type") === "partner"
-                ? "Cộng tác viên"
+                ? "Khách hàng B2C"
                 : "Trình dược viên"}
             </Tag>
           </Col>

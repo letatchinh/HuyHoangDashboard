@@ -7,3 +7,18 @@
 li{
   margin: 0 !important;
 }
+.DropdownAction{
+  & li {
+    padding: unset!important;
+  }
+  &--item{
+    padding: 6px 8px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    & i {
+      color: #408dfb;
+      font-size: 12px;
+    }
+  }
+}

@@ -1,3 +1,4 @@
+import { InfoCircleOutlined } from "@ant-design/icons";
 import "./index.scss";
 
 import React from "react";
@@ -8,8 +9,10 @@ type propsType = {
 };
 export default function Status({status,statusVi}: propsType): React.JSX.Element {
   return (
-    <span className={`status ${status?.toLowerCase()}`}>
-      {statusVi}
-    </span>
+    <>
+      <span className={`status ${status?.toLowerCase()}`} style={{width: '200px'}}>
+        {statusVi}
+      </span>
+    </>
   );
 }

@@ -44,7 +44,7 @@ export default function SelectCollaborator({
       loading={isLoading}
       allowClear
       style={{ minWidth: 200 }}
-      placeholder="Cộng tác viên"
+      placeholder="Khách hàng B2C"
       popupMatchSelectWidth={false}
       filterOption={filterSelectWithLabel}
         showSearch

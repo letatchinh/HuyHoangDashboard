@@ -31,17 +31,17 @@ class EmployeeClassExtentd extends InstanceModuleRedux {
         state.list = get(payload, 'docs', []);
         state.paging = getPaging(payload);
       },
-      updateSuccess: (state: initStateSlice, { payload }: { payload?: any }) => {
-        state.isLoading = false;
-        state.updateSuccess = get(payload, 'data', {});
-        state.list = state?.list?.map((item: any) => {
-          if (item._id === payload?.data?._id) {
-            return payload?.data;
-          } else {
-            return item;
-          };
-        });
-      },
+      // updateSuccess: (state: initStateSlice, { payload }: { payload?: any }) => {
+      //   state.isLoading = false;
+      //   state.updateSuccess = get(payload, 'data', {});
+      //   state.list = state?.list?.map((item: any) => {
+      //     if (item._id === payload?.data?._id) {
+      //       return payload?.data;
+      //     } else {
+      //       return item;
+      //     };
+      //   });
+      // },
       convertRequest: (state: cloneInitState) => {
         state.isSubmitLoading = true;
         state.convertFailed = null;

@@ -103,7 +103,7 @@ export default function ReportIndividualCollaborator(
 
   return (
     <div style={{ display: "block" }}>
-      <Breadcrumb title={"Báo cáo doanh thu cá nhân cộng tác viên"} />
+      <Breadcrumb title={"Báo cáo doanh thu cá nhân khách hàng B2C"} />
       <FilterByDate
         onParamChange={onParamChange}
         query={query}

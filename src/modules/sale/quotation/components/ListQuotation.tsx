@@ -1,9 +1,11 @@
 import React, { useCallback, useMemo } from "react";
 import TableAnt from "~/components/Antd/TableAnt";
 import {
+  useCheckBill,
   useCopyQuotation,
   useDeleteQuotation,
   useGetQuotations,
+  useInitialValue,
   useQuotationPaging,
   useQuotationQueryParams,
   useUpdateQuotationParams,
@@ -45,8 +47,9 @@ import SelectEmployee from "~/modules/employee/components/SelectSearch";
 import SelectCollaborator from "~/modules/collaborator/components/SelectSearch";
 import { REF_COLLECTION } from "~/constants/defaultValue";
 import { useIsAdapterSystem } from "~/utils/hook";
-import { redirectRouterBillCreate, redirectRouterBillId } from "../../bill/bill.hook";
+import { redirectRouterBillCreate} from "../../bill/bill.hook";
 import SelectEmployeeV2 from "~/modules/employee/components/SelectEmployeeV2";
+import { useGetWarehouseByBranchLinked } from "~/modules/warehouse/warehouse.hook";
 type propsType = {
   status?: string;
 };
@@ -84,14 +87,24 @@ export default function ListQuotation({
 
   const onPermissionCovert = useCallback(permissionConvert(query),[query])
   const canDownload = useMatchPolicy(onPermissionCovert('DOWNLOAD', 'QUOTATION'));
+  const [, checkBill] = useCheckBill();
+  const [listWarehouse] = useGetWarehouseByBranchLinked(); // Get all warehouse linked with branch
+  const InitData = useInitialValue(listWarehouse, quotations);
 
+  const onCheckBillBeforeAction = (id: string, action: any, data: any) => {
+    try {
+      checkBill({ id, action, data })
+    } catch (error) {
+      console.log(error)
+    };
+  };
   const columns: ColumnsType = [
     {
       title: "Mã đơn hàng tạm",
       dataIndex: "codeSequence",
       key: "codeSequence",
       align: "center",
-      width: 100,
+      width: 200,
       // render(code, record, index) {
       //   return (
       //     <Link
@@ -108,7 +121,7 @@ export default function ListQuotation({
       dataIndex: "bill",
       key: "bill",
       align: "center",
-      width: 100,
+      width: 150,
       render(bill, record, index) {
         return (
           <Link
@@ -122,28 +135,10 @@ export default function ListQuotation({
       },
     },
     {
-      title: "Mã đơn hàng",
-      dataIndex: "bill",
-      key: "bill",
-      align: "center",
-      width: 100,
-      render(bill, record, index) {
-        return (
-          <Link
-            className="link_"
-            to={redirectRouterBillId(pathname) + "/" + get(record, "bill._id")}
-            target="_blank"
-          >
-            {get(record, "bill.codeSequence")}
-          </Link>
-        );
-      },
-    },
-    {
       title: "Ngày tạo đơn",
       dataIndex: "createdAt",
       key: "createdAt",
-      width: 100,
+      width: 130,
       align: "center",
       render(createdAt, record, index) {
         return (
@@ -165,7 +160,7 @@ export default function ListQuotation({
       title: "Ngày chuyển đổi",
       dataIndex: "historyStatus",
       key: "historyStatus",
-      width: 100,
+      width: 150,
       align: "center",
       render(historyStatus, record, index) {
         return (
@@ -187,10 +182,10 @@ export default function ListQuotation({
       },
     },
     {
-      title: "Tên nhà thuốc",
+      title: "Tên khách hàng",
       dataIndex: "pharmacy",
       key: "pharmacy",
-      width: 100,
+      width: 120,
       align: "center",
       // width: "30%",
       render(pharmacy, record, index) {
@@ -200,7 +195,7 @@ export default function ListQuotation({
             <Tooltip
               className="mx-1"
               title={
-                refCollection === "partner" ? "Cộng tác viên" : "Nhà thuốc"
+                refCollection === "partner" ? "Khách hàng B2C" : "Khách hàng B2B"
               }
             >
               {refCollection === "partner" ? (
@@ -211,22 +206,41 @@ export default function ListQuotation({
             </Tooltip>
             <Typography.Text>{get(pharmacy, "name", "")}</Typography.Text>
           </>
-        );
+          )
       },
     },
     {
-      title: "Trạng thái",
-      dataIndex: "status",
-      key: "status",
-      width: 100,
+      title: "Kho xuất hàng",
+      key: "warehouseName",
+      dataIndex: "warehouseName",
+      width: 120,
       align: "center",
-      render(status, record, index) {
-        return (
-          <Status
-            status={status}
-            statusVi={CLONE_STATUS_QUOTATION_VI[status]}
-          />
-        );
+      render(value: number, record: any) {
+        return <Typography.Text>{value || (!listWarehouse?.length ? 'Không thể liên kết đến kho' : 'Không tồn tại kho xuất hàng')}</Typography.Text>;
+        },
+    },
+      {
+        title: "Trạng thái",
+        dataIndex: "status",
+        key: "status",
+        width: 250,
+        align: "center",
+        render(status, record, index) {
+          return (
+            <Status
+              status={status}
+              statusVi={CLONE_STATUS_QUOTATION_VI[status]}
+            />
+          );
+      },
+    },
+      {
+        title: "Ghi chú",
+        key: "note",
+        width: 200,
+        align: "center",
+        render(status, record, index) {
+          return record?.note ?? record?.noteBillSplit;
       },
     },
     ...(canDownload
@@ -253,6 +267,7 @@ export default function ListQuotation({
       dataIndex: "_id",
       key: "action",
       width: 100,
+      fixed: "right",
       align: "center" as any,
       render(_id: any, record: any, index: number) {
         return (
@@ -262,7 +277,7 @@ export default function ListQuotation({
                 disabled={get(record, "status") !== STATUS_QUOTATION.NEW}
                 block
                 onClick={() => {
-                  onConvertQuotation({
+                  onCheckBillBeforeAction(_id,onConvertQuotation,({
                     quotationItems: get(record, "quotationItems", []),
                     pharmacyId: get(record, "pharmacyId"),
                     dataUpdateQuotation: {
@@ -273,7 +288,14 @@ export default function ListQuotation({
                     debtType: get(record, "debtType"),
                     fee: get(record, "fee"),
                     deliveryAddress: get(record, "deliveryAddress"),
-                  });
+                    deliveryAddressId: get(record, 'deliveryAddressId'),
+                    warehouseId: get(record, 'warehouseId'),
+                    warehouseName: get(record, 'warehouseName'),
+                    dataTransportUnit: get(record, "dataTransportUnit"),
+                    noteBillSplit: get(record, "noteBillSplit"),
+                    coupons: get(record, "coupons"),
+                    ...(get(record, "voucher") &&{voucher: get(record, "voucher")}),
+                  }));
                 }}
                 type="primary"
                 size="small"
@@ -288,7 +310,7 @@ export default function ListQuotation({
                 block
                 disabled={get(record, "status") !== STATUS_QUOTATION.NEW}
                 onClick={() => {
-                  onUpdateQuotation({
+                  onCheckBillBeforeAction(_id,onUpdateQuotation,({
                     quotationItems: get(record, "quotationItems", []),
                     pharmacyId: get(record, "pharmacyId"),
                     dataUpdateQuotation: {
@@ -299,7 +321,14 @@ export default function ListQuotation({
                     debtType: get(record, "debtType"),
                     fee: get(record, "fee"),
                     deliveryAddress: get(record, "deliveryAddress"),
-                  });
+                    deliveryAddressId: get(record, 'deliveryAddressId'),
+                    warehouseId: get(record, 'warehouseId'),
+                    warehouseName: get(record, 'warehouseName'),
+                    dataTransportUnit: get(record, "dataTransportUnit"),
+                    noteBillSplit: get(record, "noteBillSplit"),
+                    coupons: get(record, "coupons"),
+                    ...(get(record, "voucher") &&{voucher: get(record, "voucher")}),
+                  }));
                 }}
                 size="small"
               >
@@ -368,7 +397,8 @@ export default function ListQuotation({
         <Col>
           <Space className="quotation-page__wrap--search">
             <Form form={form} initialValues={{ pharmacyId: query?.pharmacyId }}>
-              {!isMobile ? (
+              {isSystem &&
+              query.refCollection !== REF_COLLECTION.PARTNER && (!isMobile ? (
                 <SelectPharmacy
                   validateFirst={false}
                   form={form}
@@ -377,6 +407,7 @@ export default function ListQuotation({
                   required={true}
                   size={"middle"}
                   onChange={(value) => onParamChange({ pharmacyId: value })}
+                  showButtonAdd={false}
                 />
               ) : (
                 <SelectPharmacyInDevice
@@ -386,11 +417,10 @@ export default function ListQuotation({
                   size={"middle"}
                   onChange={(value) => onParamChange({ pharmacyId: value })}
                 />
-              )}
+              ))}
             </Form>
             {isSystem &&
               query.refCollection !== REF_COLLECTION.PHARMA_PROFILE &&
-              query.refCollection &&
               (query.refCollection === REF_COLLECTION.EMPLOYEE ? (
                 <Form
                   form={form}
@@ -427,6 +457,11 @@ export default function ListQuotation({
         </Col>
         <Col>
           <Space>
+            <WithPermission permission={onPermissionCovert('WRITE', 'QUOTATION')}>
+            <Button style={{marginLeft : 'auto'}} onClick={() => window.open(redirectRouterBillCreate(pathname))} type="primary" icon={<PlusCircleTwoTone />}>
+              Tạo đơn hàng tạm
+            </Button>
+            </WithPermission>
             <WithPermission
               permission={onPermissionCovert("DOWNLOAD", "QUOTATION")}
             >
@@ -440,11 +475,6 @@ export default function ListQuotation({
                 />
               </Col>
             </WithPermission>
-            <WithPermission permission={onPermissionCovert('WRITE', 'QUOTATION')}>
-            <Button style={{marginLeft : 'auto'}} onClick={() => window.open(redirectRouterBillCreate(pathname))} type="primary" icon={<PlusCircleTwoTone />}>
-              Tạo đơn hàng tạm
-            </Button>
-            </WithPermission>
           </Space>
         </Col>
       </Row>
@@ -454,11 +484,11 @@ export default function ListQuotation({
           bordered
           stickyTop
           columns={columns}
-          dataSource={quotations}
+          dataSource={InitData ? InitData : quotations}
           loading={isLoading}
           pagination={pagingTable(paging, onParamChange)}
           size="small"
-          scroll={{ y: "60vh", x: "max-content" }}
+          scroll={{ y: "60vh", x: 1000 }}
         />
       </ConfigTable>
     </div>

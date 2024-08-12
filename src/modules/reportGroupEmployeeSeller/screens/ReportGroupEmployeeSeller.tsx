@@ -11,6 +11,8 @@ import FilterByDate from "~/modules/reportGroupCollaborator/components/FilterByD
 import ProductQuantityTable from "../components/ProductQuantityTable";
 import BillAndDebtTable from "../components/BillAndDebtTable";
 import Breadcrumb from "~/components/common/Breadcrumb";
+import SelectGroupSeller from "../components/SelectGroupSeller";
+import { Col, Row, Typography } from "antd";
 
 type propsType = {};
 
@@ -78,6 +80,18 @@ export default function ReportGroupEmployeeSeller(
         onChange={(value: string) => setMode(value)}
         options={options}
       />
+      <Row style={{ width: "100%", marginBottom: 20 }} wrap>
+        <Col span={2}>
+          <Typography>Đội nhóm: </Typography>
+        </Col>
+        <Col span={6}>
+          <SelectGroupSeller
+            query={query}
+            value={query?.salesGroupId ? query?.salesGroupId?.split(",") : []}
+            onChange={(value) => onParamChange({ salesGroupId: value || null })}
+          />
+        </Col>
+      </Row>
       {renderTable()}
     </div>
   );

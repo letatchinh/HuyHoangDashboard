@@ -221,7 +221,7 @@ import { useGetProfile } from "~/modules/auth/auth.hook";
     //Set address default from branch 99999
     useEffect(() => {
       if (branch) {
-        const findBranchWorldHealth = branch?.docs?.find(
+        const findBranchWorldHealth = branch?.find(
           (item: any) => item._id === DEFAULT_BRANCH_ID
         );
         const address = concatAddress(findBranchWorldHealth?.address);
@@ -322,13 +322,13 @@ import { useGetProfile } from "~/modules/auth/auth.hook";
                   <Row gutter={36}>
                     <Col span={12}>
                       <FormItem
-                        label={`Mã ${from === 'Pharmacy' ? 'nhà thuốc' : ''}`}
+                        label={`Mã ${from === 'Pharmacy' ? 'khách hàng B2B' : ''}`}
                         labelCol={{ lg: 8 }}
                         name="code"
                         rules={[
                           {
                             required: true,
-                            message: `Vui lòng nhập mã ${from === 'Pharmacy' ? 'nhà thuốc' : ''} !`,
+                            message: `Vui lòng nhập mã ${from === 'Pharmacy' ? 'khách hàng B2B' : ''} !`,
                           },
                         ]}
                       >
@@ -338,13 +338,13 @@ import { useGetProfile } from "~/modules/auth/auth.hook";
                     </Col>
                     <Col span={12}>
                       <FormItem
-                        label={`Tên ${from === 'Pharmacy' ? 'nhà thuốc' : ''}`}
+                        label={`Tên ${from === 'Pharmacy' ? 'khách hàng B2B' : ''}`}
                         labelCol={{ lg: 8 }}
                         name="pharmacy"
                         rules={[
                           {
                             required: true,
-                            message: `Vui lòng chọn tên ${from === 'Pharmacy' ? 'nhà thuốc' : ''}!`,
+                            message: `Vui lòng chọn tên ${from === 'Pharmacy' ? 'khách hàng B2B' : ''}!`,
                           },
                         ]}
                       >
@@ -354,7 +354,7 @@ import { useGetProfile } from "~/modules/auth/auth.hook";
                   </Row>
                   <Row gutter={36}>
                     <Col span={24}>
-                      <FormItem label="Người nhận" name="pharmacyReceive">
+                      <FormItem label="Người nộp" name="pharmacyReceive">
                         {isLoading ? <Skeleton.Input active /> : <Input />}
                       </FormItem>
                     </Col>
@@ -572,7 +572,7 @@ import { useGetProfile } from "~/modules/auth/auth.hook";
             </WithPermission>
             <Row className="staff-form__submit-box">
               <WithOrPermission permission={refCollection === 'partner' ? [POLICIES.UPDATE_VOUCHERBILLPARTNER, POLICIES.WRITE_VOUCHERBILLPARTNER] : [POLICIES.UPDATE_VOUCHERPHARMACY, POLICIES.WRITE_VOUCHERPHARMACY]}>
-              <Button icon={<SaveOutlined/>} type="primary" htmlType="submit">
+              <Button icon={<SaveOutlined/>} type="primary" htmlType="submit" loading={isSubmitLoading}>
                 Lưu
               </Button>
               </WithOrPermission>

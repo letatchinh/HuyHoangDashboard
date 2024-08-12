@@ -14,7 +14,7 @@ export default function SearchAnt({
   return (
     <Search
       className="search-ant"
-      placeholder="Tìm kiếm ..."
+      placeholder="Tìm kiếm..."
       // style={{ width: 300 }}
       onSearch={(value: any) => onParamChange({ [keyPath]: value?.trim() })}
       enterButton

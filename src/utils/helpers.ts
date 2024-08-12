@@ -9,9 +9,7 @@ import POLICIES, { CORE_ACTION } from "~/modules/policy/policy.auth";
 import { PoliciesType, policyType } from "~/modules/policy/policy.modal";
 import { useAdapter } from "~/modules/auth/auth.hook";
 import { ADAPTER_KEY } from "~/modules/auth/constants";
-import { useLocation } from "react-router-dom";
 import { PATH_APP } from "~/routes/allPath";
-import { useMatchPolicy } from "~/modules/policy/policy.hook";
 import relativeTime from "dayjs/plugin/relativeTime";
 import localeEn from "dayjs/locale/vi"; // With a custom alias for the locale object
 
@@ -347,8 +345,11 @@ export const vietnamMoment = (v: any, formatTime?: any) => {
  
 };
 //
-export const getValueOfMath = (valueTarget:number,valueDiscount : number,typeValue : 'PERCENT' | 'VALUE') =>  typeValue === 'PERCENT' ?  valueDiscount * valueTarget / 100 : valueDiscount;
+export const getValueOfMath = (valueTarget:number,valueDiscount : number,typeValue : 'PERCENT' | 'VALUE',maxDiscount ?: number) => maxDiscount ?  Math.min((typeValue === 'PERCENT' ?  valueDiscount * valueTarget / 100 : valueDiscount),maxDiscount) : typeValue === 'PERCENT' ?  valueDiscount * valueTarget / 100 : valueDiscount;
+export const getValueOfMathShip = (isFreeShip:boolean,valueTarget:number,valueDiscount : number,typeValue : 'PERCENT' | 'VALUE',maxDiscount ?: number) =>isFreeShip ? 9999999999 : getValueOfMath(valueTarget,valueDiscount,typeValue,maxDiscount);
 export const getValueOfPercent = (value: number, percent: number) => value * percent / 100;
+export const getTextOfDiscount = (value?: number, typeValue?: "PERCENT" | "VALUE") => typeValue === 'PERCENT' ? `${value}%` : formatter(value);
+export const getTextOfDiscountShip = (isFreeShip?:boolean,value?: number, typeValue?: "PERCENT" | "VALUE") => isFreeShip ? "Miễn phí Ship" : getTextOfDiscount(value,typeValue);
 
 type typePoly= keyof PoliciesType;
 type ActionPolicy = keyof typeof CORE_ACTION

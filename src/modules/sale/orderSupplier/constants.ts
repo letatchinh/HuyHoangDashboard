@@ -1,14 +1,21 @@
 export const STATUS_ORDER_SUPPLIER = {
   NEW: "NEW",
+  UNCREATED: "UNCREATED",
+  REQUESTED: "REQUESTED",
   PROCESSING: "PROCESSING",
   COMPLETED: "COMPLETED",
   CANCELLED: "CANCELLED",
+  REJECT: "REJECT",
 };
+
 export const STATUS_ORDER_SUPPLIER_VI = {
   NEW: "Đã tiếp nhận",
+  UNCREATED: "Yêu cầu nhập kho thất bại",
+  REQUESTED: "Đã gửi yêu cầu nhập kho",
   PROCESSING: "Đang xử lý",
   COMPLETED: "Đã hoàn thành",
   CANCELLED: "Đã huỷ",
+  REJECT: "Kho từ chối nhập hàng",
 };
 export const STATUS_ORDER_ITEM = {
   NEW: "NEW",

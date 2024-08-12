@@ -341,6 +341,15 @@ export default function Supplier(): React.JSX.Element {
         </Col>
         <Col>
           <Space>
+            <WithPermission permission={POLICIES.WRITE_SUPPLIER}>
+            <Button
+              onClick={() => onOpenForm()}
+              icon={<PlusCircleOutlined />}
+              type="primary"
+            >
+              Thêm nhà cung cấp
+            </Button>
+            </WithPermission>
             <WithPermission permission={POLICIES.DOWNLOAD_SUPPLIER}>
                 <Col>
                   <ExportExcelButton
@@ -351,15 +360,6 @@ export default function Supplier(): React.JSX.Element {
                     ids={arrCheckBox}
                   />
                 </Col>
-            </WithPermission>
-            <WithPermission permission={POLICIES.WRITE_SUPPLIER}>
-            <Button
-              onClick={() => onOpenForm()}
-              icon={<PlusCircleOutlined />}
-              type="primary"
-            >
-              Thêm nhà cung cấp
-            </Button>
             </WithPermission>
           </Space>
         </Col>

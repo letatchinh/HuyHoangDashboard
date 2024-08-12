@@ -9,5 +9,5 @@ export const theme : ThemeConfig = {
         iconSize : 16,
         fontSize : 16,
       },
-    }
+    },
   }

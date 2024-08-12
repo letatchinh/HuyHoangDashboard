@@ -39,7 +39,7 @@ export default function ActionColumns({
           <>
             <WithPermission permission={POLICIES.UPDATE_PHARMAPROFILE}>
               <Popconfirm
-                title="Bạn muốn chuyển đổi nhà thuốc này thành chính thức?"
+                title="Bạn muốn chuyển đổi khách hàng B2B này thành chính thức?"
                 onConfirm={() =>
                   onConvert({ _id, processStatus: PROCESS_STATUS.APPROVED })
                 }
@@ -58,7 +58,7 @@ export default function ActionColumns({
             </WithPermission>
             <WithPermission permission={POLICIES.UPDATE_PHARMAPROFILE}>
               <Popconfirm
-                title="Bạn muốn huỷ chuyển đổi nhà thuốc này?"
+                title="Bạn muốn huỷ chuyển đổi khách hàng B2B này?"
                 onConfirm={() =>
                   onConvert({ _id, processStatus: PROCESS_STATUS.CANCELED })
                 }

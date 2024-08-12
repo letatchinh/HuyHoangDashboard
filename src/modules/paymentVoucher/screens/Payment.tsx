@@ -172,7 +172,7 @@ export default function PaymentVouchers(props: propsType): React.JSX.Element {
   ];
   if(pathname === PATH_APP.vouchers.pharmacy){
     columns.splice(5,0,{
-      title: 'Nhà thuốc',
+      title: 'Khách hàng B2B',
       dataIndex: 'pharma_profile',
       key: 'pharma_profile',
       render: (pharma_profile, record, index) => get(pharma_profile,'name',''),

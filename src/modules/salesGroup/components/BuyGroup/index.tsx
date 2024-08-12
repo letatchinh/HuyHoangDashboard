@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { DownOutlined, PlusOutlined } from "@ant-design/icons";
-import { Button, Drawer, Flex, Pagination, Tabs, Tree } from "antd";
+import { Button, Drawer, Flex, Form, Pagination, Tabs, Tree } from "antd";
 import React, {
   useCallback,
   useMemo,
@@ -31,8 +31,10 @@ import Context from "./Context";
 import DrawerBuyGroup from "./DrawerBuyGroup";
 import RenderFormModel from "./RenderFormModel";
 import { BuyGroupType } from "../../salesGroup.modal";
+import SelectSaleChannel from "~/modules/saleChannel/components/SelectSaleChannel";
+import { getExistProp } from "~/utils/helpers";
 type propsType = {
-  activeKey: "OTC" | "B2C";
+  activeKey: "B2B" | "B2C";
 };
 type FuncType = (T?:any)=>void
 
@@ -47,6 +49,14 @@ export default function BuyGroup(props: propsType): React.JSX.Element {
   const paging = useBuyGroupPaging();
   const { action } = useGetChildrenBuyGroups();
   const [open, setOpen] = useState(false);
+  const [form] = Form.useForm();
+  const initValue = useMemo(() => {
+    const root = {
+      ...query,
+      salesChannelIds: query?.salesChannelIds,
+    };
+    return getExistProp(root);
+  }, [query]);
 
   const onOpen = useCallback((id?: any, type: BuyGroupType['type'] ='partner') => {
       setId(id??null);
@@ -117,10 +127,26 @@ export default function BuyGroup(props: propsType): React.JSX.Element {
               className="mb-2"
               type="primary"
             >
-              Thêm mới cộng tác viên
+              Thêm mới khách hàng B2C
             </Button>{" "}
             &nbsp;&nbsp;&nbsp;
             <SearchAnt onParamChange={onParamChange} />
+            <Form
+              form={form}
+              initialValues={initValue}
+            >
+              <SelectSaleChannel
+                validateFirst={false}
+                form={form}
+                style={{ minWidth: 200, marginLeft: 10, marginBottom: 10 }}
+                showIcon={false}
+                size={"middle"}
+                defaultValue={query?.salesChannelIds || null}
+                divisionText="B2C"
+                onChange={(value) => onParamChange({ salesChannelIds: value })}
+                mode="multiple"
+              />
+            </Form>
           </div>
           <LoadTree
             loading={isLoading}

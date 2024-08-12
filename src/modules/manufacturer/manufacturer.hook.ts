@@ -106,6 +106,7 @@ const {
       param: id,
     });
   }
+  export const useGetManufacturerById_onlyGet = () => [useSelector(getByIdSelector),useSelector(getByIdLoadingSelector)];
 
   export const useCreateManufacturer = (callBack?:any) => {
     useSuccess(createSuccessSelector, `Thêm ${MODULE_VI} thành công`, callBack);
