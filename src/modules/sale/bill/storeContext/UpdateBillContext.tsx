@@ -111,7 +111,6 @@ export function UpdateBillProvider({
   const onCloseFormLogistic = () => {
     setLogisticOpen(false);
   };
-
   return (
     <UpdateBill.Provider
       value={{
@@ -157,7 +156,7 @@ export function UpdateBillProvider({
             data : omit(bill,['bill','billItems','historyStatus']),
             type : 'BILL'
           }}
-          totalRevenueInVouchers={totalRevenueInVouchers}
+          totalRevenueInVouchers={get(bill, 'totalReceiptVoucherWaiting',0)}
         />
       </ModalAnt>
       <ModalAnt

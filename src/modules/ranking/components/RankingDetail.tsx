@@ -68,7 +68,7 @@ export default function RankingDetail(): React.JSX.Element {
                   value={keyword}
                 />
               ),
-              querySearch : ['keyword']
+              querySearch: ["keyword"],
             }}
           />
         }
@@ -79,13 +79,20 @@ export default function RankingDetail(): React.JSX.Element {
             onEditClick={() => onOpenForm(productConfigId)}
             name={
               <Flex gap={10} align="center">
-                {isLoading ? <LoadingOutlined spin/> : <h4>
-                  {get(productConfig, "name", "")}
-                </h4>}
-                <Typography.Text type="secondary" style={{ fontSize: 14, width : 100  }}>
+                {isLoading ? (
+                  <LoadingOutlined spin />
+                ) : (
+                  <h4>{get(productConfig, "name", "")}</h4>
+                )}
+                <Typography.Text
+                  type="secondary"
+                  style={{ fontSize: 14, width: 100 }}
+                >
                   <Badge
                     style={{ marginRight: 2 }}
-                    status={CLONE_STATUS_COLOR[get(productConfig, "status", "")]}
+                    status={
+                      CLONE_STATUS_COLOR[get(productConfig, "status", "")]
+                    }
                   />
                   {CLONE_STATUS_NAMES[get(productConfig, "status", "")]}
                 </Typography.Text>
@@ -94,7 +101,16 @@ export default function RankingDetail(): React.JSX.Element {
           />
         }
         MainContent={<MainContentTab />}
-        List={<ListInDetailCommon fieldName="name" path="/ranking" useGets={useGetlistRanking} usePaging={useRankingPaging} useQueryParams={useRankingQueryParams} useUpdateParams={useUpdateRankingParams}/>}
+        List={
+          <ListInDetailCommon
+            fieldName="name"
+            path="/ranking"
+            useGets={useGetlistRanking}
+            usePaging={useRankingPaging}
+            query={query}
+            onParamChange={onParamChange}
+          />
+        }
       />
       <ModalAnt
         title="Thêm mới xếp hạng nhà cung cấp"
@@ -103,10 +119,7 @@ export default function RankingDetail(): React.JSX.Element {
         footer={[]}
         destroyOnClose
       >
-        <RankingForm
-          id={id}
-          handleCloseForm={onCloseForm}
-        />
+        <RankingForm id={id} handleCloseForm={onCloseForm} />
       </ModalAnt>
     </>
   );

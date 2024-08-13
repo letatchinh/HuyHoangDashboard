@@ -18,7 +18,7 @@ type propsType = {
 };
 export default function Coupon({ coupon,onAdd,onRemove ,isChecked,target,readOnly = false }: propsType): React.JSX.Element {
     const {queryBillItem} = useCreateBillStore();
-  const { applyFor, discount, startDate, endDate, conditionsTrue,name } = coupon;
+  const { applyFor, discount, startDate, endDate, conditionsTrue,name,giftCode } = coupon;
   const onActionAdd = () => {
     if(readOnly) return;
     if(target === "BILL"){
@@ -44,7 +44,7 @@ export default function Coupon({ coupon,onAdd,onRemove ,isChecked,target,readOnl
       </div>
       <div className="coupon--middle">
         <Typography.Text type="secondary">
-            {name}
+            ({giftCode}) {name}
         </Typography.Text>
         <span className="coupon--middle__discountValue">
           {coupon?.isFreeShip ? "Miễn phí vận chuyển  " :`Giảm ${getTextOfDiscount(discount?.value, discount?.type)} ${discount?.maxDiscount ? `Giảm tối đa ${formatter(discount?.maxDiscount || 0)}` : ""}`}

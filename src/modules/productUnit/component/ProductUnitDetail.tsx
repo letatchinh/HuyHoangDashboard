@@ -115,8 +115,8 @@ export default function ProductUnitDetail(props: propsType): React.JSX.Element {
             path="/unit"
             useGets={useGetlistProductUnit}
             usePaging={useProductUnitPaging}
-            useQueryParams={useProductUnitQueryParams}
-            useUpdateParams={useUpdateProductUnitParams}
+            query={query}
+            onParamChange={onParamChange}
           />
         }
       />

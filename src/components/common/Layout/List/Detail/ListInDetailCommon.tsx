@@ -3,20 +3,18 @@ import { get } from "lodash";
 import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import EmptyData from "~/components/Antd/EmptyData";
+import { convertQueryString } from "~/utils/helpers";
 type propsType = {
-  useQueryParams : (p?:any) => void,
-  useUpdateParams : (p?:any) => void,
   useGets : (p?:any) => void,
   usePaging : () => void,
   fieldName : string,
   path : string,
   fieldCode? : string,
+  query : any,
+  onParamChange : (p?: any) => void
 };
-export default function ListInDetailCommon({useQueryParams,useUpdateParams,useGets,usePaging,fieldName,fieldCode,path}: propsType): React.JSX.Element {
-  const [query] : any = useQueryParams(20);
+export default function ListInDetailCommon({useGets,usePaging,fieldName,fieldCode,path,query,onParamChange}: propsType): React.JSX.Element {
   const { id } = useParams();
-  const [keyword, { setKeyword, onParamChange }] : any =
-  useUpdateParams(query);
   const [data, isLoading] : any = useGets(query);
   const paging : any = usePaging();
   const navigate = useNavigate();
@@ -29,7 +27,10 @@ export default function ListInDetailCommon({useQueryParams,useUpdateParams,useGe
     {data?.map((item: any) => (
       <div
         onClick={() =>
-          navigate(path + "/" + get(item, "_id"))
+          navigate({
+            pathname : path + "/" + get(item, "_id"),
+            search : convertQueryString(query),
+          })
         }
         className={`layoutDetail--left__list__item  ${
           id === get(item, "_id") ? "active" : ""

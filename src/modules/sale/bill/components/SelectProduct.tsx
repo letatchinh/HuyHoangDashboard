@@ -88,7 +88,7 @@ export default function SelectProduct({dataCurrent,onChangeBill,warehouseId}:pro
       };
       useEffect(() => {
         pharmacyId && debounceFetcher('')
-      },[pharmacyId]);
+      },[pharmacyId, warehouseId]);
       const mappingProductId : { [key: string]: boolean } = useMemo(() => {
         let mapProductId : any = {};
         get(dataCurrent,'quotationItems',[])?.forEach((item:any) => {
