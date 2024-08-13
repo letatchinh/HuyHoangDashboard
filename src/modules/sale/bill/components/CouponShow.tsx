@@ -23,6 +23,13 @@ export default function CouponShow({value,dataSource}:propsType) : React.JSX.Ele
             align : 'center',
             render : (discount) => getTextOfDiscount(get(discount,'value'),get(discount,'type'))
         },
+        {
+            title : "Giảm tối đa",
+            dataIndex : 'discount',
+            key : 'maxDiscount',
+            align : 'center',
+            render : (discount) => discount?.maxDiscount ? formatter(discount?.maxDiscount || 0) : "Không giới hạn"
+        },
 
     ]
     return (

@@ -17,6 +17,7 @@ import { ColumnsType } from "antd/lib/table/InternalTable"
 import { couponActions } from "./redux/reducer";
 import apis from "./coupon.api";
 import { CouponInSelect, QuerySearchCoupon } from "./coupon.modal";
+import { quotation } from "../sale/bill/bill.modal";
 const MODULE = "coupon";
 const MODULE_VI = "";
 const getSelector = (key : any) => (state : any) => state[MODULE][key];
@@ -162,7 +163,7 @@ export const useUpdateCouponParams = (
 };
 
 
-export const useCouponSelect = ({bill,refCollection,totalAmount} : {bill : any,refCollection : any ,totalAmount:number}) => {
+export const useCouponSelect = ({bill,refCollection,totalRoot,quotationItems} : {bill : any,refCollection : any ,totalRoot:number,quotationItems : quotation[]}) => {
   const [isOpenCoupon,setIsOpenCoupon] = useState(false);
   const [isOpenCouponBillItem,setIsOpenCouponBillItem] = useState(false);
   const countProduct = get(bill,'quotationItems',[])?.reduce((sum : number,cur : any) => sum + get(cur,'quantity',0),0)
@@ -180,7 +181,7 @@ export const useCouponSelect = ({bill,refCollection,totalAmount} : {bill : any,r
       ...couponSelected,
       ...newCoupon,
     })
-  }
+  };
   const [query,setQuery] = useState<QuerySearchCoupon>({
     target : "BILL"
   });
@@ -189,7 +190,7 @@ export const useCouponSelect = ({bill,refCollection,totalAmount} : {bill : any,r
   });
   const [coupons,loading] = useFetchState({api : apis.search,query,useDocs : false});
   const [couponsBillItem,loadingCouponBillItem] = useFetchState({api : apis.search,query : queryBillItem,useDocs : false});
-
+  
   const onOpenCoupon = () => {
     setIsOpenCoupon(true);
     setQuery({
@@ -199,25 +200,30 @@ export const useCouponSelect = ({bill,refCollection,totalAmount} : {bill : any,r
         id : get(bill, "pharmacyId")
       },
       productCount : countProduct,
-      billPrice : totalAmount
+      billPrice : totalRoot
     });
   };
 
   const onCloseCoupon = () => {
     setIsOpenCoupon(false);
   };
-  const onOpenCouponBillItem = (productId? : string,variantId ? : string) => {
+  const onOpenCouponBillItem = (productId? : string,variantId ? : string,productGroupId? : string) => {
+    const productTargetCount = quotationItems?.reduce((sum : number,cur : quotation) => cur?.productId === productId ? sum + get(cur,'quantity',0) : sum,0);
+    const productTargetPrice = quotationItems?.reduce((sum : number,cur : quotation) => cur?.productId === productId ? sum + get(cur,'totalRoot',0) : sum,0);
+    const productGroupTargetCount = quotationItems?.reduce((sum : number,cur : quotation) => cur?.productGroupId === productGroupId ? sum + get(cur,'quantity',0) : sum,0);
+    const productGroupTargetPrice = quotationItems?.reduce((sum : number,cur : quotation) => cur?.productGroupId === productGroupId ? sum + get(cur,'totalRoot',0) : sum,0);
     setIsOpenCouponBillItem(true);
     setQueryBillItem({
       ...queryBillItem,
-      targetId : productId,
       variantId,
       customerApplyId : {
         refCollection,
         id : get(bill, "pharmacyId")
       },
-      productCount : countProduct,
-      billPrice : totalAmount
+      productCount : productTargetCount,
+      productGroupCount : productGroupTargetCount,
+      billPrice : productTargetPrice,
+      billGroupPrice : productGroupTargetPrice
     });
   };
 

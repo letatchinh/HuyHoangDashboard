@@ -34,6 +34,8 @@ type paramsConvertDataQuotation = {
             'totalDiscountCoupon',
             'totalDiscountSummary',
             'totalRoot',
+            'billItem_totalAmount',
+            'productGroupId',
           ]),
         }));
         // Todo : Verify Data When Send to sever (Not implemented)

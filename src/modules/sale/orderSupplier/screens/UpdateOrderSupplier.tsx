@@ -65,7 +65,6 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
     status,
     historyStatus,
     orderSupplierItems,
-    pair,
     totalPrice,
     totalPair,
     paymentAmount,

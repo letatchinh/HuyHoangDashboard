@@ -15,7 +15,7 @@ import CumulativeDiscountModule from "~/modules/cumulativeDiscount";
 import { variantType } from "~/modules/product/product.modal";
 import { TYPE_REWARD } from "~/modules/cumulativeDiscount/constants";
 import { INFINITY, MIN_TOTAL_DISCOUNT_PERCENT } from "~/constants/defaultValue";
-import { getValueOfMath } from "~/utils/helpers";
+import { getValueOfMath, NoZero } from "~/utils/helpers";
 import { CouponInSelect, VerifyCoupon } from "~/modules/coupon/coupon.modal";
 import apisCoupon from "~/modules/coupon/coupon.api";
 const TYPE_DISCOUNT: any = CumulativeDiscountModule.constants.TYPE_DISCOUNT;
@@ -32,6 +32,7 @@ export const selectProductSearchBill = (data: any) => {
     codeBySupplier,
     images,
     discountOther,
+    productGroupId,
   } = data;
   const variant = variants?.find(
     (item: any) => get(item, "_id") === selectVariant
@@ -50,6 +51,7 @@ export const selectProductSearchBill = (data: any) => {
     variants,
     images,
     discountOther,
+    productGroupId,
   };
   return submitData;
 };
@@ -330,28 +332,34 @@ export const reducerDiscountQuotationItems = (quotationItems: any[],couponSelect
         }
       );
 
-      const totalDiscount = cumulativeDiscount?.reduce(
+      const totalRoot = get(quotation, "variant.price", 1) * quantityActual;
+      const totalDiscount = Math.min(cumulativeDiscount?.reduce(
         (sum: number, cur: cumulativeDiscountType) =>
           sum + get(cur, "discountAmount", 0),
         0
-      );
+      ),totalRoot);
 
-      const totalDiscountOther = (quotation?.discountOther || [])?.reduce(
+      const totalDiscountOther = NoZero((quotation?.discountOther || [])?.reduce(
         (sum: number, cur: DiscountOtherType) =>
           sum + CalculateDiscountMethod.totalDiscountOther(get(quotation, "variant.price", 1),cur?.value,cur?.typeDiscount,quantityActual),
         0
-      );
-      const totalRoot = get(quotation, "variant.price", 1) * quantityActual;
+      ));
 
       // Filter Coupon Of Item
       const cp = couponSelected?.item.filter((coupon) => coupon?.couponAtVariantId === quotation?.variantId);
+
+      // Total Discount
+      const totalDiscountSummary = totalDiscount + totalDiscountOther;
+
+      // Total Amount
+      const billItem_totalAmount = NoZero(totalRoot - totalDiscountSummary); // Root - CK
 
       // Calculate Coupon For Item 
       const couponsInItem = cp?.map((item : CouponInSelect) => {
         const {type,value,maxDiscount} = item?.discount;
         const totalCouponItem = getValueOfMath(get(quotation, "variant.price", 1),value,type,maxDiscount);
-        const minPrice = totalRoot * MIN_TOTAL_DISCOUNT_PERCENT / 100;
-        const maxDiscountCoupon = totalRoot - minPrice;
+        const minPrice = billItem_totalAmount * MIN_TOTAL_DISCOUNT_PERCENT / 100;
+        const maxDiscountCoupon = billItem_totalAmount - minPrice;
 
         return ({
           ...item,
@@ -359,14 +367,13 @@ export const reducerDiscountQuotationItems = (quotationItems: any[],couponSelect
         })
       });
       const totalDiscountCoupon = couponsInItem?.reduce((sum:number,cur : CouponInSelect) => sum + get(cur,'totalCoupon',0),0);
-      const totalDiscountSummary = totalDiscount + totalDiscountOther;
-      const totalPrice = totalRoot - totalDiscountSummary - totalDiscountCoupon;
+      const totalPrice = NoZero(billItem_totalAmount - totalDiscountCoupon);
       return {
         ...quotation,
         cumulativeDiscount,
         totalDiscount,
         totalDiscountOther,
-        totalPrice: totalPrice > 0 ? totalPrice : 0,
+        totalPrice: NoZero(totalPrice),
         totalDiscountDetailFromProduct,
         totalDiscountDetailFromSupplier,
         exchangeValue: get(quotation, "variant.exchangeValue", 1),
@@ -376,6 +383,7 @@ export const reducerDiscountQuotationItems = (quotationItems: any[],couponSelect
         totalDiscountCoupon,
         couponsInItem,
         totalDiscountSummary,
+        billItem_totalAmount,
       };
     }
   );
@@ -439,7 +447,7 @@ const onAddLocalStorage = (newDataSource: DataSourceType) => {
 const onUseKeyPriority = (key: string) => {
   localStorage.setItem(KEY_PRIORITY, JSON.stringify(key));
 };
-const onRemoveLocalStorage = (key: any) => {
+export const onRemoveLocalStorage = (key: any) => {
   const dataFromLocalStorage = localStorage.getItem(KEY_DATA_PHARMACY) || "";
   const dataParse = JSON.parse(dataFromLocalStorage) || {};
   if (dataParse.hasOwnProperty(key)) {
@@ -483,7 +491,7 @@ export const onConvertInitQuantity = (newDataSource: DataSourceType) => {
 
 export class CalculateBill {
   remainAmount (payload : any){
-    return get(payload,'totalPrice',0) - get(payload,'totalReceiptVoucherCompleted',0) - get(payload,'pair',0);
+    return get(payload,'totalPrice',0) - get(payload,'totalReceiptVoucherCompleted',0);
   }
 }
 

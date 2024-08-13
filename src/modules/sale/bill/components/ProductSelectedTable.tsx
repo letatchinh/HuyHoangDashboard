@@ -201,6 +201,7 @@ export default function ProductSelectedTable(
               })}
               productId={record?.productId}
               variantId={record?.variantId}
+              productGroupId={record?.productGroupId}
               couponsInItem={get(record,'couponsInItem',[])}
               />
               <ExpandRowDiscount data={get(record, "cumulativeDiscount")} />

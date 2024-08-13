@@ -1,6 +1,7 @@
 import { Form, Select } from "antd";
 import { debounce, get } from "lodash";
 import React, { useEffect, useRef, useState } from "react";
+import { STATUS } from "~/constants/defaultValue";
 import PharmacyModule from "~/modules/pharmacy";
 type propsType = {
   fieldName? : string | any[],
@@ -21,7 +22,8 @@ export default function SelectPharmacy_V2({
       let query : any = {
         keyword,
         limit: 20,
-        approved : true
+        approved : true,
+        status : STATUS.ACTIVE
       }
       if(value){
         query.idsInitOptions = value;

@@ -1,4 +1,4 @@
-import { DetailCoupon } from "../sale/bill/bill.modal"
+import { DetailCoupon, quotation } from "../sale/bill/bill.modal"
 
 export type detailCondition = {
     key: 'BILL_FIRST' | 'BILL_PRICE' | 'PRODUCT_COUNT',
@@ -63,16 +63,23 @@ export interface CouponInSelect extends CouponBase {
 }
 export type QuerySearchCoupon = {
   target: 'BILL' | 'BILL_ITEM',
-  targetId?: string,
   variantId?: string,
   customerApplyId?: {
       id?: string,
       refCollection: 'pharma_profile' | 'partner'
   },
   billPrice?: number,
+  billGroupPrice?: number,
   productCount?: number,
+  productGroupCount?: number,
 }
 
+interface BillItemVerify {
+  productId: string;
+  quantity: number;
+  totalRoot?: number;
+  productGroupId?: string;
+}
 export interface VerifyCoupon {
   customerApplyId?: {
     id?: string,
@@ -81,4 +88,6 @@ export interface VerifyCoupon {
 billPrice?: number,
 productCount?: number,
 coupons?: DetailCoupon,
+isValidateCount?: boolean,
+billItem : BillItemVerify[],
 }
