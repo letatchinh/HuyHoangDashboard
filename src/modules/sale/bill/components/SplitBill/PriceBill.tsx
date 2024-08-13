@@ -7,7 +7,6 @@ type propsType = {
 };
 export default function PriceBill({ data }: propsType): React.JSX.Element {
   const [form] = Form.useForm();
-  
   return (
     <Row justify={"space-between"} align="middle" gutter={48} style={{ width: "100%" }}>
       <Col span={6}></Col>

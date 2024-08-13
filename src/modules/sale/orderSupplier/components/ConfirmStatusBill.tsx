@@ -136,7 +136,7 @@ export default function ConfirmStatusBill({
               note: value,
             })
           }}
-          onClose={onCloseCancelBill}
+          onClose={onClose}
           form={form}
           loading={isSubmitLoading}
         />

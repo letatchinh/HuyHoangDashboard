@@ -88,6 +88,7 @@ export default function CreateOrderSupplierForm(
               quantityActual: get(item?.variant, 'quantity', 1) * get(findVariantRoot, 'exchangeValue', 1),
               unitPrice: get(item?.variant, "cost", 0),
               productId: item?._id,
+              variantId: get(item?.variant, "_id"),
             }
           }),
           warehouseId: activeTab,
