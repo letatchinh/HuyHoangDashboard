@@ -26,14 +26,14 @@ export default function DebounceSelectMultipleItem({refCollection,...props}:prop
                 return;
             };
             setLoading(true);
-            const type : any =  refCollection === "pharma_profile" ? "pharma_profile" : "ctv";
-            const dataFetcher = await pharmacyModule.api.search({
-                type,
+            const dataFetcher = await pharmacyModule.api.searchV2({
+                customerType  : refCollection,
                 keyword,
             });
-            const data = DSM_getOptions(get(dataFetcher,'docs',[]));
+            const data = DSM_getOptions(dataFetcher);
             // Search Will 
-            setDataSource(unionBy(data,DSM_setting.dataSource[refCollection],'value'));
+            setDataSource(data);
+            // setDataSource(unionBy(data,DSM_setting.dataSource[refCollection],'value'));
             setLoading(false);
             
         } catch (error) {

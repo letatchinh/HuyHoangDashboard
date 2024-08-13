@@ -89,3 +89,10 @@ export interface PropSearchPharmacy {
     id : any[]
   },
 }
+export interface PropSearchPharmacyV2 {
+  customerType? : "pharma_profile" | "partner" | null,
+  keyword? : string,
+  optionWith? : {
+    id : any[]
+  },
+}

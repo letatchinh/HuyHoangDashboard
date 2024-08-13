@@ -4,7 +4,7 @@ import { useFetchState } from "~/utils/hook";
 import pharmacyModule from "~/modules/pharmacy";
 import { get } from "lodash";
 import { DSM_getOptions } from "./DebounceSelectMultiple.service";
-import { PropSearchPharmacy } from "~/modules/pharmacy/pharmacy.modal";
+import { PropSearchPharmacyV2 } from "~/modules/pharmacy/pharmacy.modal";
 // DSM = Debounce Select Multiple
 // interface Value
 export type GlobalDebounceSelectMultiple = {
@@ -49,9 +49,9 @@ export function DebounceSelectMultipleProvider({
   usePartner = true,
 }: DebounceSelectMultipleProviderProps): JSX.Element {
     
-  const queryPharmacy : PropSearchPharmacy = useMemo(
+  const queryPharmacy : PropSearchPharmacyV2 = useMemo(
     () => initValuePharmacy && ({
-      type : "pharmacy",
+      customerType : "pharma_profile",
       keyword: "",
       ...initValuePharmacy && {optionWith : {
         id : initValuePharmacy
@@ -60,9 +60,9 @@ export function DebounceSelectMultipleProvider({
     [initValuePharmacy]
   );
 
-  const queryPartner : PropSearchPharmacy = useMemo(
+  const queryPartner : PropSearchPharmacyV2 = useMemo(
     () => initValuePartner && ({
-      type : "ctv",
+      customerType : "partner",
       keyword: "",
       ...initValuePartner && {optionWith : {
         id : initValuePartner
@@ -73,14 +73,16 @@ export function DebounceSelectMultipleProvider({
 
 
   const [pharmacies, DSM_dataSourcePharmacyRootLoading] = useFetchState({
-    api: pharmacyModule.api.search,
+    api: pharmacyModule.api.searchV2,
     query : queryPharmacy,
     conditionRun : usePharmacy && !!initValuePharmacy,
+    useDocs : false
   });
   const [partners, DSM_dataSourcePartnerRootLoading] = useFetchState({
-    api: pharmacyModule.api.search,
+    api: pharmacyModule.api.searchV2,
     query : queryPartner,
     conditionRun : usePartner && !!initValuePartner,
+    useDocs : false
   });
   
   const DSM_dataSourcePharmacyRoot : OptionProps[] = useMemo(
