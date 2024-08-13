@@ -226,6 +226,8 @@ export const useAction = ({ action }:UseActionProps) : (v:any) => void => {
     conditionRun?: boolean;
   }
   export const useFetchState = ({ api,required, query, useDocs = true, init = [], fieldGet,reFetch,nullNotFetch = false ,conditionRun = true} : FetchStateParams) : any => {
+    console.log(query,'query');
+    
     const [data, setData] = useState(init);
     const [loading, setLoading] = useState(false);
     const req = useCallback(api, [api]);

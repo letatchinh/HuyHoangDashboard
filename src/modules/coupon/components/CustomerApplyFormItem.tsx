@@ -1,14 +1,16 @@
-import { Alert, Button, Col, Flex, Form, Row, Select, Typography } from "antd";
+import { Alert, Button, Col, Flex, Form, Row, Select } from "antd";
 import React from "react";
-import DebounceSelectMultipleItem from "~/components/common/DebounceSelectMultiple/DebounceSelectMultipleItem";
+import DebounceSelectMultipleItemCustomer from "~/components/common/DebounceSelectMultiple/DebounceSelectMultipleItemCustomer";
 import { DebounceSelectMultipleProvider } from "~/components/common/DebounceSelectMultiple/DebounceSelectMultipleProvider";
-import SelectIdsCustomerApply from "./SelectIdsCustomerApply";
+import { requireRulesCustom } from "~/constants/defaultValue";
 type propsType = {
   form: any;
 };
 export default function CustomerApplyFormItem({ form }: propsType): React.JSX.Element {
   return (
     <DebounceSelectMultipleProvider 
+      usePharmacy
+      usePartner
       initValuePharmacy={form.getFieldValue('customerApplyIds')?.filter((item:any) => item?.refCollection === "pharma_profile")?.map((item:any) => item?.id)}
       initValuePartner={form.getFieldValue('customerApplyIds')?.filter((item:any) => item?.refCollection === "partner")?.map((item:any) => item?.id)}
     >
@@ -48,8 +50,8 @@ export default function CustomerApplyFormItem({ form }: propsType): React.JSX.El
                   </Col>
                   <Col flex={1}>
                   <Form.Item shouldUpdate>
-                    {() => <Form.Item name={[index, "id"]}>
-                      <DebounceSelectMultipleItem refCollection={refCollection} />
+                    {() => <Form.Item rules={requireRulesCustom("Vui lòng chọn người dùng mã")} name={[index, "id"]}>
+                      <DebounceSelectMultipleItemCustomer refCollection={refCollection} />
                     </Form.Item>}
                   </Form.Item>
                   </Col>

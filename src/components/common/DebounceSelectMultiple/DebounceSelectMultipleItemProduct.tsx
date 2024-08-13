@@ -1,23 +1,23 @@
 import { Flex, Select, Spin } from 'antd';
-import { SelectProps } from 'antd/es/select/index';
-import { debounce, get, unionBy } from 'lodash';
+import { SelectProps } from 'antd/lib/index';
+import { debounce } from 'lodash';
 import React, { useEffect, useState } from 'react';
-import pharmacyModule from "~/modules/pharmacy";
-import { DSM_getOptions } from './DebounceSelectMultiple.service';
+import ProductModule from "~/modules/product";
+import { DSM_getOptionsProduct } from './DebounceSelectMultiple.service';
 import useDebounceSelectMultipleStore from './DebounceSelectMultipleProvider';
 
-interface propsType extends SelectProps {
-    refCollection : "pharma_profile" | "partner";
-}
-export default function DebounceSelectMultipleItem({refCollection,...props}:propsType) : React.JSX.Element {
+const refCollection = 'product';
+export default function DebounceSelectMultipleItemProduct(props : SelectProps) : React.JSX.Element {
     const {DSM_setting} = useDebounceSelectMultipleStore();
     const [dataSource,setDataSource] = useState<any[]>([]);
     const [loading,setLoading] = useState(false);
+
+    // Init Data Source From Store
     useEffect(() => {
         setDataSource(DSM_setting.dataSource[refCollection]);
-        
-    },[DSM_setting.dataSource.partner,DSM_setting.dataSource.pharma_profile]);
+    },[DSM_setting]);
 
+    // Handle Fetch Search
     const fetcher = async (keyword : string = "") => {
         try {
             
@@ -26,14 +26,14 @@ export default function DebounceSelectMultipleItem({refCollection,...props}:prop
                 return;
             };
             setLoading(true);
-            const dataFetcher = await pharmacyModule.api.searchV2({
-                customerType  : refCollection,
+            const dataFetcher = await ProductModule.api.getAll({
                 keyword,
+                limit: 20,
+                isSupplierMaster: true,
             });
-            const data = DSM_getOptions(dataFetcher);
-            // Search Will 
+            const data = DSM_getOptionsProduct(dataFetcher);
+            // Search Will Set DataSource Search
             setDataSource(data);
-            // setDataSource(unionBy(data,DSM_setting.dataSource[refCollection],'value'));
             setLoading(false);
             
         } catch (error) {

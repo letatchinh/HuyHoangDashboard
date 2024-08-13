@@ -1,14 +1,14 @@
 import { Form, Select } from "antd";
+import { SelectProps } from "antd/lib/index";
 import { debounce, get } from "lodash";
 import React, { useEffect, useRef, useState } from "react";
 import ProductModule from "~/modules/product";
-type propsType = {
+interface propsType extends SelectProps {
   fieldName? : string | any[],
-  value ? : any
 };
 export default function SelectDebounceProduct({
   fieldName = "productId",
-  value,
+  ...props
 }: propsType): React.JSX.Element {
   const first = useRef(true);
   const [options,setOptions] = useState([]);
@@ -23,8 +23,8 @@ export default function SelectDebounceProduct({
         limit: 20,
         isSupplierMaster: true,
       }
-      if(value){
-        query.idsInitOptions = value;
+      if(props?.value){
+        query.idsInitOptions = props?.value;
       }
       const products = await ProductModule.api.getAll(query);
       setOptions(get(products, "options", []))
@@ -49,6 +49,7 @@ export default function SelectDebounceProduct({
       popupMatchSelectWidth
       loading={loading}
       placeholder="mặt hàng"
+      {...props}
       />
     </Form.Item>
   );

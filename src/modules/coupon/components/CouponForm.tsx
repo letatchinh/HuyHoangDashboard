@@ -54,7 +54,6 @@ export default function CouponForm({
       ...values,
       ...isFreeShip && {discount : null}
     };
-    console.log(submitData,'submitData');
     
     if (id) {
       update({
@@ -212,7 +211,7 @@ export default function CouponForm({
           </Row>}
         </Form.Item>
           
-        <Form.Item shouldUpdate={(p,n) => p?.isFreeShip !== n?.isFreeShip} noStyle>
+        <Form.Item shouldUpdate noStyle>
           {({getFieldValue}) => getFieldValue('applyFor') === "SHIP" &&  <Row gutter={8}>
             <Col span={12}>
               <Form.Item
@@ -236,7 +235,7 @@ export default function CouponForm({
               </Form.Item>
             </Col>
             <Col span={12}>
-              <Form.Item shouldUpdate={(p,n) => p?.applyFor !== n?.applyFor} noStyle>
+              <Form.Item shouldUpdate noStyle>
                 {({getFieldValue}) => <Form.Item
                 rules={requireRules}
                 name={"applyFor"}
@@ -302,9 +301,9 @@ export default function CouponForm({
           <Form.Item label="Không áp dụng điều kiện" name={'disabledCondition'} valuePropName="checked">
             <Checkbox />
           </Form.Item>
-          <Form.Item shouldUpdate={(p,n) => p?.conditions !== n?.conditions} noStyle>
+          <Form.Item shouldUpdate noStyle>
           {({getFieldValue}) =>   {
-            const isDisabled = !!getFieldValue('disabledCondition')
+            const isDisabled = !!getFieldValue('disabledCondition');
             return <Form.List name={"conditions"}>
             {(fields, {}) => (
               <>
