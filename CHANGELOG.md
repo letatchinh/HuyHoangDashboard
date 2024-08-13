@@ -1,3 +1,22 @@
+## [1.22.1](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/compare/v1.22.0...v1.22.1) (2024-08-13)
+
+
+### Bug Fixes
+
+* [#1936](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1936) ([6e4af38](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/6e4af38ec2d4109c62fc73902f3b187736d634e9))
+* [#1947](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1947) ([8828f64](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/8828f64df76fffae688c886969b8a8b702d0ea1f))
+* [#1947](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1947) ([972cc33](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/972cc33923ff5e02e3243de63285266111a4271c))
+* [#1947](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1947) ([1bc0393](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/1bc03936d3ba267a42618a62fbc1aaf619566a71))
+* [#1947](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1947) ([6880a30](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/6880a3079d22393f8ba5ba0aafa5253f2b86b487))
+* [#1947](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1947) ([292d8ad](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/292d8adcb8bf31d936de935ce06716be68033ed9))
+* [#1947](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1947) ([1eacc3f](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/1eacc3f8b29bb5e35dee716e093e8e779e490a5c))
+* check NoZero ([f797812](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/f797812153d7abe763a37ced07ce1c2fc18ad5e5))
+* remove - ([19a9d5c](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/19a9d5c7b0b510d123c96548fc19251d3111f9d9))
+* remove , Show Maxdiscount In bill Detail ([f9338b2](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/f9338b2c33b96531001505d4a2158d0be108117a))
+* totalPrice BIll ([9f61c90](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/9f61c90a4a1b4b8a07c90bbdb674efd1b0382727))
+* ValidateCount Coupon ([44655eb](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/44655ebe805c11e7b4da93100c96ed208bed115e))
+* verify payload ([d257c7d](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/d257c7d68c84c78dd32e8419ae1f449c7607bf0f))
+
 # [1.22.0](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/compare/v1.21.1...v1.22.0) (2024-08-13)
 
 
