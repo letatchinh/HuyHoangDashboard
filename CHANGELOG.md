@@ -1,3 +1,31 @@
+# [1.22.0](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/compare/v1.21.1...v1.22.0) (2024-08-13)
+
+
+### Bug Fixes
+
+* [#1746](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1746) - fix paging history and debt pharmacy ([2595991](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/25959913d9c2296e06ab96aa2a79047e87151c7a))
+* [#1787](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1787) add button export debt of this customer ([3dbb1c0](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/3dbb1c02c47751935007ed50f052fc4bffcf9e5f))
+* [#1787](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1787) add filter startDate endDate in Debt customer B2B ([8327a86](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/8327a86862199727c3225ae05b9910bba3d51c0b))
+* [#1787](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1787) add startDate endDate detail of customer ([cc461b2](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/cc461b2ad49733011b362798a020f4cb28c119c5))
+* [#1787](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1787) add total debt in this page detail of customer ([773749c](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/773749cd6f70e7aa28939d252e26fb51a0344f7a))
+* [#1787](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1787) fix field debt customer in table ([859eb0d](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/859eb0d245e71d305555486dfb7ab0e167fc1a42))
+* [#1935](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1935) ([b9aebfa](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/b9aebfa5bc866db09e51eb4e5a212ffa036aee29))
+* add variantId in create orderSupplier from inventory ([9143d28](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/9143d2812b46937fc3bbe52780b59316de04b803))
+* bug manageArea , Show giftCode to Coupon Select ([2a4183f](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/2a4183f41fd77b09d3d0406dec3b2ac28e35fe0e))
+* change name field customer pay and pair in table list bill ([f7ea3bf](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/f7ea3bfd8e51cc13350b2648d0e648cd27be2186))
+* clear log ([da4f5b7](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/da4f5b7aeaf9da0880eebe9112f8cdcba328d681))
+* close form noteAction in orderSupllier ([1bf31cc](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/1bf31cc79b3acdb8488af4975e2c0657f59edd13))
+* close modal after cancel order supplier ([962cf88](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/962cf88445ffc8980cab192570f39887ce1b8b83))
+* count pair and remaining in splitBill ([075d6d2](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/075d6d2a47f33d6450e37eb3f0939a2b08d4b226))
+* not sent time when fetch voucher in order ([a2bb1f7](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/a2bb1f7f34897219ef2db132eb1bada17c0fc46f))
+* path collaborator ([39a8f2c](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/39a8f2cb4df3b404e592ec95eee8cb84112907b7))
+* reFetch stock product in sale screen ([f6ca0dc](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/f6ca0dcf07d7e0e9f47a69fa56e6873c47f7435a))
+
+
+### Features
+
+* [#1875](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1875) ([bbe6125](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/bbe6125119718da4693e44e3f3e202a03c2fe026))
+
 ## [1.21.1](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/compare/v1.21.0...v1.21.1) (2024-08-04)
 
 
