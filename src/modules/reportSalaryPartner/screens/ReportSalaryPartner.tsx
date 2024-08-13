@@ -12,7 +12,7 @@ export default function ReportSalaryPartner(
   return (
     <Context >
       <WhiteBox className="report-salary-container">
-        <Breadcrumb title={'Báo cáo lương cộng tác viên'}/>
+        <Breadcrumb title={'Báo cáo lương khách hàng B2C'}/>
         <TableReport/>
       </WhiteBox>
     </Context>

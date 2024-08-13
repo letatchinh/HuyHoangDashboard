@@ -93,6 +93,7 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
   const [isSubmitCreate, onCreateOrderInWarehouse] = useCreateOrderInWarehouse(() => {
     dispatch(orderSupplierActions.resetActionInById());
   });
+  console.log(isSubmitCreate,'isSubmitCreate')
   const onCloseCancel = useCallback(() => {
     setOpenCancel(false);
     setCancelNote("");
@@ -328,10 +329,12 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
           <h6>Thông tin sản phẩm</h6>
           <OrderItemModule.components.ListOrderItem statusBill={status} />
         </WhiteBox>
+        <WithPermission permission={POLICIES.READ_HISTORYORDERSUPPLIER}>
         <WhiteBox>
           <h6>Lịch sử trạng thái đơn hàng</h6>
           <HistoryBillInWarehouse data = {orderSupplier?.historyProcessStatus}/>
-        </WhiteBox>
+          </WhiteBox>
+          </WithPermission>
       </div>
       <ModalAnt
         destroyOnClose

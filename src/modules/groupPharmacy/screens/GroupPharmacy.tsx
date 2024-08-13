@@ -27,14 +27,18 @@ import {
 import { get, omit } from "lodash";
 import { STATUS, STATUS_NAMES } from "~/constants/defaultValue";
 import Breadcrumb from "~/components/common/Breadcrumb";
-import Search from "antd/es/input/Search";
 import { useChangeDocumentTitle } from "~/utils/hook";
-import { PlusCircleOutlined } from "@ant-design/icons";
 import ExportExcelButton from "~/modules/export/component";
 import WhiteBox from "~/components/common/WhiteBox";
 import TableAnt from "~/components/Antd/TableAnt";
 import ModalAnt from "~/components/Antd/ModalAnt";
 import { GroupPharmacyForm } from "./GroupPharmacyForm";
+import { Link } from "react-router-dom";
+import { PATH_APP } from "~/routes/allPath";
+import BtnAdd from "~/components/common/Layout/List/Header/BtnAdd";
+import DropdownAction from "~/components/common/Layout/List/Header/DropdownAction";
+import StatusAndSearch from "~/components/common/StatusAndSearch";
+import ColumnAction from "~/components/common/ColumnAction";
 type propsType = {};
 export default function GroupPharmacy(props: propsType): React.JSX.Element {
   const [query] = useGroupPharmacyQueryParams();
@@ -75,13 +79,15 @@ export default function GroupPharmacy(props: propsType): React.JSX.Element {
         dataIndex: "code",
         key: "code",
         width: 120,
+        fixed: 'left',
+        render: (text: string, record: any) => <Link className='link_' to={PATH_APP.groupPharmacy.root + "/" + record?._id}>{text}</Link>
       },
-      {
-        title: "Hệ số",
-        dataIndex: "rateType",
-        key: "rateType",
-        width: 120,
-      },
+      // {
+      //   title: "Hệ số",
+      //   dataIndex: "rateType",
+      //   key: "rateType",
+      //   width: 120,
+      // },
       
       {
         title: "Tên nhóm khách hàng",
@@ -90,7 +96,7 @@ export default function GroupPharmacy(props: propsType): React.JSX.Element {
         width: 220,
       },
       {
-        title: "Loại khách hàng",
+        title: "Nhánh khách hàng",
         dataIndex: "customerGroup",
         key: 'title',
         width: 220,
@@ -137,6 +143,26 @@ export default function GroupPharmacy(props: propsType): React.JSX.Element {
           );
         },
       },
+      {
+        title: "Thao tác",
+        // dataIndex: "_id",
+        key: "actions",
+        width: 100,
+        align: "center",
+        fixed: 'right',
+        render: (_, record) => {
+          return (
+            <ColumnAction
+              onOpenForm={onOpenForm}
+              onDelete={deleteGroupPharmacy}
+              _id={record?._id}
+              textName="nhóm khách hàng"
+              permissionUpdate={POLICIES.UPDATE_CUSTOMER}
+              permissionDelete={POLICIES.DELETE_CUSTOMER}
+            />
+          );
+        },
+      },
       ...(canDownload
         ? [
             {
@@ -157,35 +183,6 @@ export default function GroupPharmacy(props: propsType): React.JSX.Element {
             },
           ]
         : []),
-      {
-        title: "Thao tác",
-        dataIndex: "_id",
-        // key: "actions",
-        width: 100,
-        align: "center",
-        fixed: 'right',
-        render: (record) => {
-          return (
-            <div className="custom-table__actions">
-              <WithPermission permission={POLICIES.UPDATE_CUSTOMER}>
-                <p onClick={() => onOpenForm(record)}>Sửa</p>
-              </WithPermission>
-              <WithPermission permission={POLICIES.DELETE_CUSTOMER}>
-                <p>|</p>
-                <Popconfirm
-                  title={`Bạn muốn xoá nhóm khách hàng này?`}
-                  onConfirm={() => deleteGroupPharmacy(record)}
-                  okText="Xoá"
-                  cancelText="Huỷ"
-                >
-                  <p>Xóa</p>
-                </Popconfirm>{" "}
-              </WithPermission>
-            </div>
-          );
-        },
-      },
-      
     ],
     [canDownload,arrCheckBox,pharmacies]
   );
@@ -221,77 +218,48 @@ export default function GroupPharmacy(props: propsType): React.JSX.Element {
   return (
     <div>
       <Breadcrumb title={"Nhóm khách hàng"} />
-      <Row className="mb-3" justify={"space-between"}>
-        <Col span={8}>
-          <Search
-            enterButton="Tìm kiếm"
-            placeholder="Nhập để tìm kiếm"
-            allowClear
-            onSearch={() => onParamChange({ keyword })}
-            onChange={(e) => setKeyword(e.target.value)}
-            value={keyword}
+      <Row gutter={16} justify={"space-between"}>
+        <Col span={12}>
+          <StatusAndSearch
+            onParamChange={onParamChange}
+            query={query}
+            keyword={keyword}
+            setKeyword={setKeyword}
           />
         </Col>
-        <Row>
-          <WithPermission permission={POLICIES.WRITE_CUSTOMER}>
-            <Col>
-              <Button
-                icon={<PlusCircleOutlined />}
-                type="primary"
-                onClick={() => onOpenForm()}
-              >
-                Thêm mới
-              </Button>
-            </Col>
-          </WithPermission>
-          <WithPermission permission={POLICIES.DOWNLOAD_CUSTOMER}>
-            <Col>
-              <ExportExcelButton
-                fileName="Danh sách nhóm khách hàng"
-                api="customer"
-                exportOption="customer"
-                query={query}
-                ids={arrCheckBox}
-              />
-            </Col>
-          </WithPermission>
-        </Row>
-      </Row>
-      <WithPermission permission={POLICIES.UPDATE_CUSTOMER}>
-        <Space style={{ marginBottom: 20 }}>
-          <Typography style={{ fontSize: 14, marginRight: 20 }}>
-            Phân loại trạng thái theo :
-          </Typography>
-          <Row gutter={14}>
-            <Radio.Group
-              onChange={onChange}
-              optionType="button"
-              buttonStyle="solid"
-              defaultValue={(() => {
-                switch (query?.status) {
-                  case "ACTIVE":
-                    return 2;
-                  case "INACTIVE":
-                    return 3;
-                  default:
-                    return 1;
-                }
-              })()}
-            >
-              <Radio.Button value={1}>Tất cả</Radio.Button>
-              <Radio.Button value={2}>{STATUS_NAMES["ACTIVE"]}</Radio.Button>
-              <Radio.Button value={3}>{STATUS_NAMES["INACTIVE"]}</Radio.Button>
-            </Radio.Group>
+        <Col span={8}>
+          <Row justify={"end"} gutter={16}>
+            <WithPermission permission={POLICIES.WRITE_CUSTOMER}>
+              <Col>
+                <BtnAdd onClick={() => onOpenForm()} />
+              </Col>
+            </WithPermission>
+            <WithPermission permission={POLICIES.DOWNLOAD_CUSTOMER}>
+              <Col>
+                <DropdownAction
+                  items={[
+                    <ExportExcelButton
+                      fileName="DS nhóm khách hàng"
+                      api="customer"
+                      exportOption="customer"
+                      query={query}
+                      ids={arrCheckBox}
+                      useLayout="v2"
+                    />,
+                  ]}
+                />
+              </Col>
+            </WithPermission>
           </Row>
-        </Space>
-      </WithPermission>
+        </Col>
+      </Row>
       <WhiteBox>
         <TableAnt
           dataSource={pharmacies}
           loading={isLoading}
           rowKey={(rc) => rc?._id}
           columns={columns}
-          scroll={{x : 1500}}
+          scroll={{ x: 1500 }}
           size="small"
           pagination={{
             ...paging,
@@ -305,6 +273,11 @@ export default function GroupPharmacy(props: propsType): React.JSX.Element {
         />
       </WhiteBox>
       <ModalAnt
+        title={
+          groupPharmacyId
+            ? "Cập nhật nhóm khách hàng"
+            : "Thêm mới nhóm bán hàng"
+        }
         width={700}
         open={isOpenForm}
         onCancel={onCloseForm}
@@ -313,13 +286,13 @@ export default function GroupPharmacy(props: propsType): React.JSX.Element {
           setDestroy(false);
         }}
         destroyOnClose={destroy}
-
       >
         <GroupPharmacyForm
           setDestroy={setDestroy}
           onClose={onCloseForm}
           id={groupPharmacyId}
           handleUpdate={updateGroupPharmacy}
+          query={query}
         />
       </ModalAnt>
     </div>

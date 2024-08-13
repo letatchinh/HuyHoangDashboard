@@ -73,16 +73,16 @@ const configReportSalaryAuto = 'configReportSalaryAuto';
 // Kênh bán hàng
 const salesChannel ='salesChannel';
 
-// Loại nhà thuốc
+// Loại khách hàng B2B
 const customerGroup = 'customerGroup';
 
-// Nhóm nhà thuốc
+// Nhóm khách hàng B2B
 const customer = 'customer';
 
 // Cập nhật Nhà thuốc đảm nhiệm cho nhân viên
 const updateThePharmacyForEmployee = 'updateThePharmacyForEmployee';
 
-// Cộng tác viên
+// Khách hàng B2C
 const partner = 'partner';
 const partnerGroup = 'partnerGroup';
 const reportSalaryPartner = 'reportSalaryPartner';
@@ -96,12 +96,22 @@ const reportProductSupplier = 'reportProductSupplier';
 const reportOverview = 'reportOverview';
 const requestChangeGroupCTV = 'requestChangeGroupCTV';
 const requestChangeGroup = 'requestChangeGroup';
+const customerDivision = 'customerDivision';
 const warehouseLink = 'warehouseLink';
 const logistic = 'logistic';
 const billStatus = 'billStatus'; // Trạng thái đơn hàng bán
 const billSpit = 'billSpit'; // Tách đơn hàng bán
+const historyBill = 'historyBill'; // Lịch sử đơn hàng bán
+const historyOrderSupplier = 'historyOrderSupplier'; // Lịch sử đơn hàng mua
+const outOfStock = 'outOfStock'; // Kiểm kho theo danh sách đơn hàng bán
 const coupon = 'coupon'; // Tách đơn hàng bán
 
+const reportOverviewB2B = 'reportOverviewB2B';
+const reportOverviewB2C = 'reportOverviewB2C';
+const reportRevenuePersonalEmployee = 'reportRevenuePersonalEmployee';
+const reportRevenuePersonalPartner = 'reportRevenuePersonalPartner';
+const reportRevenueTeamEmployee = 'reportRevenueTeamEmployee';
+const reportRevenueTeamPartner = 'reportRevenueTeamPartner';
 
 //------RESOURCES --------
 const RESOURCES = [
@@ -205,10 +215,20 @@ const RESOURCES = [
   reportOverview,
   requestChangeGroup,
   requestChangeGroupCTV,
+  customerDivision,
   warehouseLink,
   logistic,
   billSpit,
+  historyBill,
+  historyOrderSupplier,
+  outOfStock,
   coupon,
+  reportOverviewB2B,
+  reportOverviewB2C,
+  reportRevenuePersonalEmployee,
+  reportRevenuePersonalPartner,
+  reportRevenueTeamEmployee,
+  reportRevenueTeamPartner,
 ];
 
 //ACTIONS
@@ -297,7 +317,8 @@ const RESOURCE = (): ResourceType => {
     quotationPharmacy,
     logistic,
     billStatus,
-    billSpit
+    billSpit,
+    historyBill,
   ];
 
   const NOTIFICATION_BOT_MANAGER: string[] = [
@@ -313,6 +334,7 @@ const RESOURCE = (): ResourceType => {
     voucherSupplier,
     debtSupplier,
     orderSupplierStatus,
+    historyOrderSupplier
   ];
   
   const GROUP_WORK_MANAGERMENT: string[] = [
@@ -364,11 +386,38 @@ const RESOURCE = (): ResourceType => {
     voucherBillPartner,
   ];
 
+  const CUSTOMER_DIVISION: string[] = [
+    customerDivision,
+  ];
   const GROUP_SETTING: string[] = [
     warehouseLink,
+    ];
+  const WAREHOUSE: string[] = [
+    outOfStock
+  ];
+  const REPORT_OVERVIEW: string[] = [
+    reportOverview,
   ];
 
-  return {
+  const REPORT_OVERVIEW_B2B : string[] = [
+    reportOverviewB2B
+  ];
+  const REPORT_OVERVIEW_B2C : string[] = [
+    reportOverviewB2B
+  ];
+  const REPORT_REVENUE_PERSONAL_EMPLOYEE : string [] = [
+    reportRevenuePersonalEmployee
+  ];
+  const REPORT_REVENUE_PERSONAL_PARTNER : string [] = [
+    reportRevenuePersonalPartner
+  ];
+  const REPORT_REVENUE_TEAM_EMPLOYEE : string [] = [
+    reportRevenueTeamEmployee
+  ];
+  const REPORT_REVENUE_TEAM_PARTNER : string [] = [
+    reportRevenueTeamPartner
+  ];
+return {
     GROUP_USER,
     GROUP_EMPLOYEE,
     GROUP_WHSETTING,
@@ -393,7 +442,16 @@ const RESOURCE = (): ResourceType => {
     PARTNER,
     VOUCHER_SALARY_PARTNER,
     VOUCHER_BILL_PARTNER,
+    CUSTOMER_DIVISION,
     GROUP_SETTING,
+    WAREHOUSE,
+    REPORT_OVERVIEW,
+    REPORT_OVERVIEW_B2B,
+    REPORT_OVERVIEW_B2C,
+    REPORT_REVENUE_PERSONAL_EMPLOYEE,
+    REPORT_REVENUE_PERSONAL_PARTNER,
+    REPORT_REVENUE_TEAM_EMPLOYEE,
+    REPORT_REVENUE_TEAM_PARTNER,
   };
 };
 

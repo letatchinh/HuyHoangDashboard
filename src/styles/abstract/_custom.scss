@@ -59,3 +59,10 @@
     background-color: rgba(0, 0, 0, 0.45);
     z-index: 999;
   }
+
+.flex-column-center{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}

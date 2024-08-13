@@ -17,7 +17,7 @@ import {
 import { typePharmacyActions } from "./redux/reducer";
 import { STATUS } from "~/constants/defaultValue";
 const MODULE = "typePharmacy";
-const MODULE_VI = "loại nhà thuốc";
+const MODULE_VI = "nhánh khách hàng";
 
 const {
   loadingSelector,
@@ -47,6 +47,17 @@ export const useGetTypePharmacies = (param: any) => {
     param,
   });
 };
+
+export const useGetSearchTypePharmacies = (param: any) => {
+  return useFetchByParam({
+    action: typePharmacyActions.getListSearchRequest,
+    loadingSelector: loadingSelector,
+    dataSelector: listSelector,
+    failedSelector: getListFailedSelector,
+    param,
+  });
+};
+
 export const useGetTypePharmacy = (id: any) => {
   return useFetchByParam({
     action: typePharmacyActions.getByIdRequest,
@@ -56,6 +67,11 @@ export const useGetTypePharmacy = (id: any) => {
     param: id,
   });
 };
+
+export const useGetTypePharmacy_onlyGet = () => [
+  useSelector(getByIdSelector),
+  useSelector(getByIdLoadingSelector),
+];
 
 export const useCreateTypePharmacy = (callback?: any) => {
   useSuccess(

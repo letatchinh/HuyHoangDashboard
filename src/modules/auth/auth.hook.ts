@@ -20,10 +20,11 @@ export const useLogin = (callback? : any) => {
         action : authActions.loginRequest,
     })
 };
-export function useLogout () : [boolean, () => void] {
+export function useLogout (callback:()=>void = ()=>{}) : [boolean, () => void] {
     const [isLoading,onLogout] : any =  useSubmit({
         loadingSelector : isLoadingSelector,
         action : authActions.logoutRequest,
+        callbackSubmit:callback
     });
 
     const logout = useCallback(()  => {

@@ -12,6 +12,20 @@ class GroupPharmacyClassExtend extends InstanceModuleRedux {
     this.cloneReducer = {
       ...this.initReducer,
       // Want Add more reducer Here...
+      getListSearchRequest: (state:initStateSlice) => {
+        state.isLoading = true;
+        state.getListFailed = null;
+      },
+      getListSearchSuccess: (state:initStateSlice , { payload }: any) => {
+        state.isLoading = false;
+        state.list = payload;
+        // state.paging = getPaging(payload);
+      },
+      getListSearchFailed: (state:initStateSlice, { payload }:{payload:any}) => {
+        state.isLoading = false;
+        state.getListFailed = payload;
+        
+      },
     }
     this.cloneInitState = {
       ...this.initialState,

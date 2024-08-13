@@ -72,7 +72,7 @@ export default function ExpandRowOrderItem({
             },
           },
           {
-            title: "Tên nhà thuốc",
+            title: "Tên khách hàng",
             dataIndex: "pharmacy",
             key: "pharmacy",
           },

@@ -242,6 +242,10 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
                 <Divider />
               <h6>Kho xuất hàng</h6>
               {get(warehouseInfo,'name.vi','')}
+              {bill?.dataTransportUnit?.code && <>
+                  <Divider />
+                <h6>Mã vận đơn :  {get(bill?.dataTransportUnit,'code','')}</h6>
+                </>}
             </WhiteBox>
           </div>
         </Col>
@@ -298,10 +302,12 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
         </WhiteBox>
       </div>
       <div className="bill-page-update--infoBillItem">
-        <WhiteBox>
-          <h6>Lịch sử trạng thái đơn hàng</h6>
-          <HistoryBillInWarehouse data = {bill?.historyProcessStatus}/>
+          <WithPermission permission={POLICIES.READ_HISTORYBILL}>
+            <WhiteBox>
+              <h6>Lịch sử trạng thái đơn hàng</h6>
+              <HistoryBillInWarehouse data = {bill?.historyProcessStatus}/>
         </WhiteBox>
+          </WithPermission>
       </div>
       <ModalAnt
         destroyOnClose

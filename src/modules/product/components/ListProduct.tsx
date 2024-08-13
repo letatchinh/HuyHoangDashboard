@@ -25,6 +25,9 @@ import {
 import { TypePropsListProduct } from "../product.modal";
 import FormProduct from "./FormProduct";
 import StockModal, { itemData } from "./StockModal";
+import StockProduct from "./StockProduct";
+import { useFetchState } from "~/utils/hook";
+import apis from "~/modules/productGroup/productGroup.api";
 export default function ListProduct({
   supplierId,
 }: TypePropsListProduct): React.JSX.Element {
@@ -45,7 +48,14 @@ export default function ListProduct({
   const canDelete = useMatchPolicy(POLICIES.DELETE_PRODUCT);
 
   const [isOpenStock, setIsOpenStock] = useState(false);
-  const [dataStock, setDataStock] = useState<itemData | null >(null);
+  const [dataStock, setDataStock] = useState<itemData | null>(null);
+  
+  const [productGroups,isLoadingProductGroup] = useFetchState({api : apis.getAllPublic,useDocs : false});
+    const options = useMemo(() => (productGroups?.map((item:any) => ({
+        label : get(item,'name'),
+        value : get(item,'_id')
+    }))), [productGroups]);
+  
   const openStock = (data: itemData) => {
     setIsOpenStock(true);
     setDataStock(data);
@@ -141,18 +151,12 @@ export default function ListProduct({
         return formatter(get(variant,'cost',0))
       },
     }]:[]),
-  // ...(!isAdapterIsEmployee? [{
-  //   title: "Tồn kho",
-  //     dataIndex: "stock",
-  //     key: "stock",
-  //     // render(stock: any, record: any) {
-  //     //   return <StockProduct variantDefault={get(record,'variantDefault')} stock={stock ?? 0} handleUpdate={(newStock:number) => onUpdateProduct({
-  //     //     _id : get(record,'_id'),
-  //     //     stock : newStock
-  //     //   })}/>
-  //   // },
-  //     render: (value: any, record: any)=> <Button type = 'link' onClick = {() => openStock({id: get(record,'_id'),supplierId : get(record,'supplierId')})}>Xem chi tiết</Button>
-  //   }]:[]),
+  ...(!isAdapterIsEmployee? [{
+    title: "Tồn kho",
+      dataIndex: "stock",
+      key: "stock",
+      render: (value: any, record: any)=> <Button type = 'link' onClick = {() => openStock({id: get(record,'_id'),supplierId : get(record,'supplierId')})}>Xem chi tiết</Button>
+    }]:[]),
     {
       title: "Nhóm sản phẩm",
       dataIndex: "productGroup",
@@ -208,10 +212,15 @@ export default function ListProduct({
       <WhiteBox>
       <SelectSearch 
       isShowButtonAdd
-      showSelect={false}
+      showSelect
       handleOnClickButton={() => onOpenForm()}
       onSearch={(value : any) => onParamChange({keyword: value?.trim()})}
       permissionKey={[POLICIES.WRITE_PRODUCT]}
+      onChangeSelect={(value: any) => {
+        onParamChange({ ...query, productGroup: value })
+      }}
+          options={options}
+          style={{marginBottom : 10}}
       />
           <ConfigTable>
             <TableAnt
@@ -247,7 +256,7 @@ export default function ListProduct({
         <ModalAnt
           open={isOpenStock}
           destroyOnClose
-          width={1500}
+          width={800}
           footer={null}
           onCancel={onCloseStock}
         >

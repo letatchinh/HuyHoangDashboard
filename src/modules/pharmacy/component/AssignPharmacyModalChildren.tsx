@@ -39,7 +39,7 @@ export default function AssignPharmacyModalChildren({initDataSource,setForm,id}:
         }
     return (
         <>
-        <BaseBorderBox title={"Danh sách nhà thuốc đã chọn"}>
+        <BaseBorderBox title={"Danh sách khách hàng B2B đã chọn"}>
         <AssignPharmacyList onRemove={onRemoveDataSource} dataSource={dataSource}/>
         </BaseBorderBox>
         <WithOrPermission permission={[POLICIES.UPDATE_UPDATETHEPHARMACYFOREMPLOYEE,POLICIES.WRITE_UPDATETHEPHARMACYFOREMPLOYEE]}>

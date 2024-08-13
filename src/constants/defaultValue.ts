@@ -2,8 +2,11 @@ import { get } from "lodash";
 import { devConfig } from "~/config";
 import { getOptions } from "~/utils/helpers";
 
-export const BASE_URL = process.env.REACT_APP_BASE_URL_DEV ?? 'config.REACT_APP_BASE_URL' ?? 'https://pharma-dashboard.congtyso.com';  
-// export const BASE_URL = 'https://pharma-dashboard.congtyso.com';  
+
+const DEPLOY_URL = 'config.REACT_APP_BASE_URL';
+export const LOCAL_URL = 'https://pharma-dashboard.congtyso.com';
+
+export const BASE_URL = process.env.NODE_ENV === 'development' ? LOCAL_URL : DEPLOY_URL
 export const DEFAULT_UPLOAD_ACTION = `${BASE_URL}/api/v1/file`;
 export const MAX_UPLOAD_FILE_SIZE_IN_MB = 1;
 
@@ -17,6 +20,12 @@ export const STATUS_NAMES = {
   ACTIVE: "Hoạt động",
   INACTIVE: "Ngưng hoạt động",
 };
+
+export const STATUS_COLOR = {
+  ACTIVE: "success",
+  INACTIVE: "default",
+};
+
 export const ACTIONS_REDUX = ['read', 'write', 'update', 'delete', 'admin', 'download'];
 export interface OptionSelect {
   value: string | null;
@@ -417,5 +426,8 @@ export const FILTER_BY_VI: {[key in keyof typeof FILTER_BY]:string} = {
   QUARTERLY: "Quý",
   YEARLY: "Năm",
 };
+export const COLOR = {
+  primary : '#3481ff'
+}
 
 export const MIN_TOTAL_DISCOUNT_PERCENT = 45;

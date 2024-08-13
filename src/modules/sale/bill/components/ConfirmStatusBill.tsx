@@ -19,10 +19,10 @@ type propsType = {
   setAskAgain?: (p: any) => void;
   id?: string | null | undefined;
 };
-const CLONE_STATUS_BILL_VI: any = omit(STATUS_BILL_VI, ["READY","UNREADY", "REQUESTED","REJECT"]);
-const CLONE_STATUS_BILL_VI_REQUESTED: any = omit(STATUS_BILL_VI, ["READY","UNREADY","REJECT"]);
-const CLONE_STATUS_BILL: any = omit(STATUS_BILL, ["READY","UNREADY","REQUESTED","REJECT"]);
-const CLONE_STATUS_BILL_REQUESTED: any = omit(STATUS_BILL, ["READY","UNREADY","REJECT"]);
+const CLONE_STATUS_BILL_VI: any = omit(STATUS_BILL_VI, ["READY","UNREADY", "REQUESTED","REJECT", 'RETURN', 'CUSTOMER_REJECT']);
+const CLONE_STATUS_BILL_VI_REQUESTED: any = omit(STATUS_BILL_VI, ["READY","UNREADY","REJECT", 'RETURN', 'CUSTOMER_REJECT']);
+const CLONE_STATUS_BILL: any = omit(STATUS_BILL, ["READY","UNREADY","REQUESTED","REJECT", 'RETURN', 'CUSTOMER_REJECT']);
+const CLONE_STATUS_BILL_REQUESTED: any = omit(STATUS_BILL, ["READY","UNREADY","REJECT", 'RETURN', 'CUSTOMER_REJECT']);
 export default function ConfirmStatusBill({
   onChangeStatusBill,
   bill,
@@ -157,7 +157,7 @@ export default function ConfirmStatusBill({
                note: value,
             })
           }}
-          onClose={onClose}
+          onClose={onCloseCancelBill}
           form={form}
           loading={isSubmitLoading}
         />

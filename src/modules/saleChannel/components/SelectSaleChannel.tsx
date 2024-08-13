@@ -1,52 +1,95 @@
-import { useMemo, useState } from "react";
-import SaleChannelModule from "~/modules/saleChannel";
+import { SelectProps } from "antd";
 import { get } from "lodash";
-import { Form, Select } from "antd";
-import { filterSelectWithLabel, useFetchState } from "~/utils/helpers";
-import RenderLoading from "~/components/common/RenderLoading";
+import { useEffect, useState } from "react";
+import useNotificationStore from "~/store/NotificationContext";
+import apis from "../saleChannel.api";
+import DebounceSelect from "~/components/common/DebounceSelect";
 
-type propsType = {
-  isLoading: boolean;
-  saleChannel: any;
+interface TypeProps extends SelectProps {
+  form?: any;
+  onChange?: (p: any) => void;
+  allowClear?: boolean;
+  showIcon?: boolean;
+  validateFirst?: boolean;
+  label?: string;
+  divisionText?: string;
+}
+type ItemSearch = {
+  name: string;
+  value: string;
 };
 export default function SelectSaleChannel({
-  isLoading,
-  saleChannel,
-}: propsType): React.JSX.Element {
-  const [reFetch, setReFetch] = useState(false);
-  const [salesChannel, loading] = useFetchState({
-    api: SaleChannelModule.api.search,
-    useDocs: false,
-    reFetch,
-  });
-  const options = useMemo(
-    () =>
-      salesChannel?.map((item: any) => ({
-        label: get(item, "title"),
-        value: get(item, "_id"),
-      })),
-    [salesChannel]
-  );
+  form,
+  onChange = () => {},
+  allowClear = true,
+  showIcon = true,
+  validateFirst = true,
+  label = "",
+  divisionText = "",
+  ...props
+}:  TypeProps): React.JSX.Element {
+  const { onNotify } = useNotificationStore();
+  const [loading, setLoading] = useState(false);
+  const [initOption, setInitOption] = useState([]);
+  const fetchOptions: any = async (keyword: string, division: string) => {
+    try {
+      const employees = await apis.search({
+        keyword: keyword || "",
+        division: division || divisionText,
+      });
+      const newOptions = employees?.map(
+        (item: ItemSearch) => ({
+          label: get(item, "title"),
+          value: get(item, "_id"),
+        })
+      );
+
+      return newOptions;
+    } catch (error: any) {
+      onNotify?.error(error?.response?.data?.message || "Có lỗi gì đó xảy ra");
+    }
+  };
+
+  useEffect(() => {
+    const fetchInit = async () => {
+      try {
+        setLoading(true);
+        const employees = await apis.search({
+          id: form.getFieldValue("saleChannelId"),
+          keyword: "",
+          division: divisionText,
+        });
+
+        const newOptions = employees?.map(
+          (item: ItemSearch) => ({
+            label: get(item, "title"),
+            value: get(item, "_id"),
+          })
+        );
+
+        setInitOption(newOptions);
+        setLoading(false);
+        if (validateFirst) {
+          await form.validateFields(["saleChannelId"]);
+        }
+      } catch (error) {
+        setLoading(false);
+      }
+    };
+    fetchInit();
+  }, []);
 
   return (
-    <>
-      <Form.Item
-        label="Kênh bán hàng"
-        name="salesChannelId"
-        rules={[{ required: true, message: "Vui lòng chọn kênh bán hàng!" }]}
-      >
-        {RenderLoading(
-          isLoading,
-          <Select
-            // className="right--parent"
-            placeholder="Kênh bán hàng"
-            options={options}
-            style={{ width: "100%" }}
-            showSearch
-            filterOption={filterSelectWithLabel}
-          />
-        )}
-      </Form.Item>
-    </>
+    <DebounceSelect
+      size="large"
+      loading={loading}
+      placeholder="Kênh bán hàng"
+      fetchOptions={fetchOptions}
+      style={{ width: "100%" }}
+      initOptions={initOption}
+      allowClear={allowClear}
+      {...(onChange && { onChange: (value: any) => onChange(value) })}
+      {...props}
+    />
   );
 }

@@ -7,7 +7,6 @@ import {
   TrophyOutlined,
   ApartmentOutlined,
   BellFilled,
-  FieldTimeOutlined,
 } from "@ant-design/icons";
 import React from "react";
 import { PATH_APP } from "~/routes/allPath";
@@ -36,7 +35,9 @@ const permissionOfSetup = [
   POLICIES.READ_USER,
   POLICIES.READ_USERGROUP,
   POLICIES.READ_BRANCH,
-  POLICIES.READ_WAREHOUSELINK
+  POLICIES.READ_CUSTOMERDIVISION,
+  POLICIES.READ_WAREHOUSELINK,
+  POLICIES.READ_CONFIGREPORTSALARYAUTO,
 ];
 const permissionPharma = [
   POLICIES.READ_PHARMAPROFILE,
@@ -76,6 +77,18 @@ const permissionCollaborator = [
   POLICIES.READ_VOUCHERBILLPARTNER,
   POLICIES.READ_BORROWPRODUCT,
   POLICIES.READ_STATUSBORROWPRODUCT,
+];
+
+const permissionReport = [
+  POLICIES.READ_REPORTOVERVIEW,
+  POLICIES.READ_REPORTSALARY,
+  POLICIES.READ_REPORTSALARYPARTNER,
+  POLICIES.READ_REPORTOVERVIEWB2B,
+  POLICIES.READ_REPORTOVERVIEWB2C,
+  POLICIES.READ_REPORTREVENUEPERSONALEMPLOYEE,
+  POLICIES.READ_REPORTREVENUEPERSONALPARTNER,
+  POLICIES.READ_REPORTREVENUETEAMEMPLOYEE,
+  POLICIES.READ_REPORTREVENUETEAMPARTNER,
 ];
 
 export const resource: ItemType[] = [
@@ -188,15 +201,29 @@ export const resource: ItemType[] = [
             key: PATH_APP.saleChannel.root,
             permission: [POLICIES.READ_SALESCHANNEL],
           },
+          // {
+          //   label: "Cấu hình thời gian tự động",
+          //   path: PATH_APP.configurationCronTime.root,
+          //   key: PATH_APP.configurationCronTime.root,
+          //   icon: <FieldTimeOutlined />,
+          //   permission: [POLICIES.READ_CONFIGCRONTIME],
+          // },
           {
-            label: "Cấu hình thời gian tự động",
-            path: PATH_APP.configurationCronTime.root,
-            key: PATH_APP.configurationCronTime.root,
-            icon: <FieldTimeOutlined />,
-            permission: [POLICIES.READ_CONFIGCRONTIME],
+            label: "Hệ khách hàng",
+            path: PATH_APP.customerSegmentation.root,
+            key: PATH_APP.customerSegmentation.root,
+            icon: <i className="fa-solid fa-notes-medical"></i>,
+            permission: [POLICIES.READ_CUSTOMERDIVISION],
           },
           {
-            label: "Loại khách hàng",
+            label: "Kênh bán hàng",
+            icon: <i className="fa-solid fa-cart-shopping"></i>,
+            path: PATH_APP.saleChannel.root,
+            key: PATH_APP.saleChannel.root,
+            permission: [POLICIES.READ_SALESCHANNEL],
+          },
+          {
+            label: "Nhánh khách hàng",
             path: PATH_APP.typePharmacy.root,
             key: PATH_APP.typePharmacy.root,
             icon: <i className="fa-solid fa-truck-medical"></i>,
@@ -215,7 +242,14 @@ export const resource: ItemType[] = [
             path:  PATH_APP.warehouse.setting,
             key: PATH_APP.warehouse.setting,
             permission: [POLICIES.READ_WAREHOUSELINK],//
-          }
+          },
+          {
+            label: "Thời gian báo cáo lương",
+            icon: <i className="fa-solid fa-clock-rotate-left"></i>,
+            path: PATH_APP.cronSalary.root,
+            key: PATH_APP.cronSalary.root,
+            permission: [POLICIES.READ_CONFIGREPORTSALARYAUTO],
+          },
         ],
       },
     ],
@@ -225,23 +259,18 @@ export const resource: ItemType[] = [
     label: "Báo cáo",
     key: "report",
     icon: <i className="fa-solid fa-code-branch"></i>,
-    permission: [
-      POLICIES.READ_REPORTSALARY,
-      POLICIES.READ_REPORTSALARYPARTNER,
-      POLICIES.READ_VOUCHERPARTNER,
-      POLICIES.READ_VOUCHERSALARYPARTNER,
-      POLICIES.READ_VOUCHERSALARYEMPLOYEE,
-    ],
+    permission: [...permissionReport],
     children: [
       {
         label: "Báo cáo tổng quan",
         path: PATH_APP.reportOverview.root,
         key: PATH_APP.reportOverview.root,
-        // permission: [POLICIES.READ_SUPPLIER],//
+        permission: [POLICIES.READ_REPORTOVERVIEW, POLICIES.READ_REPORTOVERVIEWB2B, POLICIES.READ_REPORTOVERVIEWB2C],//
       },
       {
         label: "Báo cáo lương",
         key: "salary",
+        permission: [POLICIES.READ_REPORTSALARY, POLICIES.READ_REPORTSALARYPARTNER],
         children: [
           {
             label: "Báo cáo lương trình dược viên",
@@ -250,21 +279,30 @@ export const resource: ItemType[] = [
             permission: [POLICIES.READ_REPORTSALARY],
           },
           {
-            label: "Báo cáo lương cộng tác viên",
+            label: "Báo cáo lương khách hàng B2C",
             path: PATH_APP.reportSalaryPartner.root,
             key: PATH_APP.reportSalaryPartner.root,
             permission: [POLICIES.READ_REPORTSALARYPARTNER],
           },
         ],
-        // permission: [POLICIES.READ_SUPPLIER],//
       },
       {
         label: "Báo cáo doanh thu",
         key: "revenue",
+        permission: [
+          POLICIES.READ_REPORTREVENUEPERSONALEMPLOYEE,
+          POLICIES.READ_REPORTREVENUEPERSONALPARTNER,
+          POLICIES.READ_REPORTREVENUETEAMEMPLOYEE,
+          POLICIES.READ_REPORTREVENUETEAMPARTNER,
+        ],
         children: [
           {
             label: "Cá nhân",
             key: "invidual",
+            permission: [
+              POLICIES.READ_REPORTREVENUEPERSONALEMPLOYEE,
+              POLICIES.READ_REPORTREVENUEPERSONALPARTNER,
+            ],
             children: [
               // {
               //   label: "Đại lý",
@@ -276,20 +314,23 @@ export const resource: ItemType[] = [
                 label: "Trình dược viên",
                 path: PATH_APP.reportIndividualEmployeeSeller.root,
                 key: PATH_APP.reportIndividualEmployeeSeller.root,
-                // permission: [POLICIES.READ_REPORTSALARYPARTNER],
+                permission: [POLICIES.READ_REPORTREVENUEPERSONALEMPLOYEE],
               },
               {
-                label: "Cộng tác viên",
+                label: "Khách hàng B2C",
                 path: PATH_APP.reportIndividualCollaborator.root,
                 key: PATH_APP.reportIndividualCollaborator.root,
-                // permission: [POLICIES.READ_REPORTSALARYPARTNER],
+                permission: [POLICIES.READ_REPORTREVENUEPERSONALPARTNER],
               },
             ],
-            // permission: [POLICIES.READ_SUPPLIER],//
           },
           {
             label: "Đội nhóm",
             key: "group",
+            permission: [
+              POLICIES.READ_REPORTREVENUETEAMEMPLOYEE,
+              POLICIES.READ_REPORTREVENUETEAMPARTNER,
+            ],
             children: [
               // {
               //   label: "Đại lý",
@@ -301,19 +342,17 @@ export const resource: ItemType[] = [
                 label: "Trình dược viên",
                 path: PATH_APP.reportGroupEmployeeSeller.root,
                 key: PATH_APP.reportGroupEmployeeSeller.root,
-                // permission: [POLICIES.READ_REPORTSALARYPARTNER],
+                permission: [POLICIES.READ_REPORTREVENUETEAMEMPLOYEE],
               },
               {
-                label: "Cộng tác viên",
+                label: "Khách hàng B2C",
                 path: PATH_APP.reportGroupCollaborator.root,
                 key: PATH_APP.reportGroupCollaborator.root,
-                // permission: [POLICIES.READ_REPORTSALARYPARTNER],
+                permission: [POLICIES.READ_REPORTREVENUETEAMPARTNER],
               },
             ],
-            // permission: [POLICIES.READ_SUPPLIER],//
           },
         ],
-        // permission: [POLICIES.READ_SUPPLIER],//
       },
       {
         label: "Báo cáo quản trị",
@@ -390,15 +429,15 @@ export const resource: ItemType[] = [
     ],
   },
 
-  // Nhà thuốc
+  // Khách hàng B2B
   {
-    label: "Nhà thuốc",
+    label: "Khách hàng B2B",
     icon: <i className="fa-solid fa-house-chimney-medical"></i>,
     key: "pharmacy",
     permission: [...permissionPharma], //
     children: [
       {
-        label: "Danh sách nhà thuốc",
+        label: "Quản lý khách hàng B2B",
         path: PATH_APP.pharmacy.root,
         key: PATH_APP.pharmacy.root,
         permission: [POLICIES.READ_PHARMAPROFILE], //
@@ -436,7 +475,6 @@ export const resource: ItemType[] = [
     ],
   },
 
-
   //Trình dược viên
   {
     label: "Trình dược viên",
@@ -471,13 +509,13 @@ export const resource: ItemType[] = [
     ],
   },
   {
-    label: "Cộng tác viên",
+    label: "Khách hàng B2C",
     key: "collaboratorManagement",
     icon: <i className="fa-solid fa-circle-nodes"></i>,
     permission: [...permissionCollaborator], //
     children: [
       {
-        label: "Quản lý cộng tác viên",
+        label: "Quản lý khách hàng B2C",
         path: PATH_APP.collaborator.root,
         key: PATH_APP.collaborator.root,
         permission: [POLICIES.READ_PARTNER, POLICIES.READ_PARTNERGROUP], //
@@ -543,7 +581,20 @@ export const resource: ItemType[] = [
       },
     ],
   },
-
+  {
+    label: "Quản lý kho",
+    icon: <HomeOutlined />,
+    key: 'warehouse',
+    permission: [POLICIES.READ_OUTOFSTOCK],//
+    children: [
+      {
+        label: "Quản lý tồn kho",
+        path: PATH_APP.warehouse.inventory,
+        key: PATH_APP.warehouse.inventory,
+        permission: [POLICIES.READ_OUTOFSTOCK], //
+      },
+    ]
+  },
   {
     label: "Mã giảm giá",
     icon: <i className="fa-solid fa-ticket-simple"></i>,

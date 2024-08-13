@@ -13,6 +13,7 @@ import useCreateBillStore from "../../storeContext/CreateBillContext";
 import ProductSelectedTable from "../ProductSelectedTable";
 import SelectPharmacy from "../SelectPharmacy";
 import TotalBill from "./TotalBill";
+import InfoCreateBy from "./InfoCreateBy";
 type propsType = {};
 export default function SaleScreen(props: propsType): React.JSX.Element {
   const {
@@ -148,13 +149,14 @@ export default function SaleScreen(props: propsType): React.JSX.Element {
         fee: defaultFee,
       }}
     >
-      <Row gutter={16}>
+      <Row gutter={8}>
         <Col span={16}>
           <ProductSelectedTable />
         </Col>
         <Col span={8} className="form-create-bill--payment">
           <div>
-            <SelectPharmacy onChange={(value, option) => {
+              <InfoCreateBy />
+              <SelectPharmacy onChange={(value,option) => {
                 const fee = get(option,'data.fee',[]);
                 if(fee?.length){
                   feeForm[0] = head(fee);
@@ -176,8 +178,7 @@ export default function SaleScreen(props: propsType): React.JSX.Element {
                 setAddress(address);
                 mutateReValidate();
                 setPharmacyInfo(option);
-                }}
-                id={get(bill, 'pharmacyId')} form={form} allowClear={false} />
+                }} id={get(bill, 'pharmacyId')} form={form} allowClear={false} showButtonAdd={true}/>
             <Divider/>
             <TotalBill />
           </div>
@@ -195,7 +196,7 @@ export default function SaleScreen(props: propsType): React.JSX.Element {
               <Col style={{height : '100%',display : 'flex' , alignItems : 'end'}} span={14}>
                 <Button
                   block
-                  disabled={!quotationItems?.length}
+                  disabled={!quotationItems?.length || !totalAmount  || !totalPriceAfterDiscount}
                   className="form-create-bill--payment__actions__btnPayment"
                   type="primary"
                   loading={isSubmitLoading}

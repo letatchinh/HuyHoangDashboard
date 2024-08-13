@@ -182,7 +182,7 @@ export default function ListQuotation({
       },
     },
     {
-      title: "Tên nhà thuốc",
+      title: "Tên khách hàng",
       dataIndex: "pharmacy",
       key: "pharmacy",
       width: 120,
@@ -195,7 +195,7 @@ export default function ListQuotation({
             <Tooltip
               className="mx-1"
               title={
-                refCollection === "partner" ? "Cộng tác viên" : "Nhà thuốc"
+                refCollection === "partner" ? "Khách hàng B2C" : "Khách hàng B2B"
               }
             >
               {refCollection === "partner" ? (
@@ -397,7 +397,8 @@ export default function ListQuotation({
         <Col>
           <Space className="quotation-page__wrap--search">
             <Form form={form} initialValues={{ pharmacyId: query?.pharmacyId }}>
-              {!isMobile ? (
+              {isSystem &&
+              query.refCollection !== REF_COLLECTION.PARTNER && (!isMobile ? (
                 <SelectPharmacy
                   validateFirst={false}
                   form={form}
@@ -406,6 +407,7 @@ export default function ListQuotation({
                   required={true}
                   size={"middle"}
                   onChange={(value) => onParamChange({ pharmacyId: value })}
+                  showButtonAdd={false}
                 />
               ) : (
                 <SelectPharmacyInDevice
@@ -415,11 +417,10 @@ export default function ListQuotation({
                   size={"middle"}
                   onChange={(value) => onParamChange({ pharmacyId: value })}
                 />
-              )}
+              ))}
             </Form>
             {isSystem &&
               query.refCollection !== REF_COLLECTION.PHARMA_PROFILE &&
-              query.refCollection &&
               (query.refCollection === REF_COLLECTION.EMPLOYEE ? (
                 <Form
                   form={form}
@@ -456,6 +457,11 @@ export default function ListQuotation({
         </Col>
         <Col>
           <Space>
+            <WithPermission permission={onPermissionCovert('WRITE', 'QUOTATION')}>
+            <Button style={{marginLeft : 'auto'}} onClick={() => window.open(redirectRouterBillCreate(pathname))} type="primary" icon={<PlusCircleTwoTone />}>
+              Tạo đơn hàng tạm
+            </Button>
+            </WithPermission>
             <WithPermission
               permission={onPermissionCovert("DOWNLOAD", "QUOTATION")}
             >
@@ -468,11 +474,6 @@ export default function ListQuotation({
                   ids={arrCheckBox}
                 />
               </Col>
-            </WithPermission>
-            <WithPermission permission={onPermissionCovert('WRITE', 'QUOTATION')}>
-            <Button style={{marginLeft : 'auto'}} onClick={() => window.open(redirectRouterBillCreate(pathname))} type="primary" icon={<PlusCircleTwoTone />}>
-              Tạo đơn hàng tạm
-            </Button>
             </WithPermission>
           </Space>
         </Col>

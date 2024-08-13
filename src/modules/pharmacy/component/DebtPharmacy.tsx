@@ -2,6 +2,7 @@ import { ColumnsType } from "antd/es/table";
 import { formatter } from "~/utils/helpers";
 import {
   useGetPharmacyDebt,
+  usePharmacyDebtPaging,
   usePharmacyDebtQuery,
   usePharmacyPaging,
 } from "../pharmacy.hook";
@@ -36,7 +37,7 @@ export default function DebtPharmacy(props: propsType) {
   );
   const [data, isLoading] = useGetPharmacyDebt(newQuery);
   
-  const paging = usePharmacyPaging();
+  const paging = usePharmacyDebtPaging();
   
   const columns: ColumnsType = useMemo(
     () => [
@@ -125,9 +126,9 @@ export default function DebtPharmacy(props: propsType) {
           onChange={onTableChange}
           pagination={{
             ...paging,
-            // onChange(page, pageSize) {
-            //   onParamChange({ page, limit: pageSize });
-            // },
+            onChange(page, pageSize) {
+              onTableChange({ page, limit: pageSize });
+            },
             showSizeChanger: true,
             showTotal: (total) => `Tổng cộng: ${total} `,
           }}

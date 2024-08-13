@@ -11,6 +11,15 @@ function* getListGroupPharmacy({ payload: query }: any): any {
   }
 }
 
+function* getListSearchGroupPharmacy({ payload: query }: any): any {
+  try {
+    const data = yield call(api.search, query);
+    yield put(groupPharmacyActions.getListSearchSuccess(data));
+  } catch (error: any) {
+    yield put(groupPharmacyActions.getListSearchFailed(error));
+  }
+}
+
 function* getByIdGroupPharmacy({ payload: id }: any): any {
   try {
     const data = yield call(api.getById, id);
@@ -52,4 +61,5 @@ export default function* groupPharmacySaga() {
   yield takeLatest(groupPharmacyActions.createRequest, createGroupPharmacy);
   yield takeLatest(groupPharmacyActions.updateRequest, updateGroupPharmacy);
   yield takeLatest(groupPharmacyActions.deleteRequest, deleteGroupPharmacy);
+  yield takeLatest(groupPharmacyActions.getListSearchRequest, getListSearchGroupPharmacy);
 }

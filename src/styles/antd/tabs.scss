@@ -1,0 +1,13 @@
+.ant-tabs-nav-list{
+    .ant-tabs-tab {
+        padding-inline: 10px;
+    }
+}
+.ant-tabs-nav-wrap{
+    border-bottom: 1px solid $color-bg-grey!important;
+    .ant-tabs-tab-active{
+        .ant-tabs-tab-btn{
+            font-weight: 600;
+        }
+    }
+}

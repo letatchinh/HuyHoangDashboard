@@ -7,12 +7,14 @@ export const TYPE_REPORT = {
   groupSaler: 'groupSaler',
   groupArea: 'groupArea',
   groupCity: 'groupCity',
+  groupSalesChannel: 'groupSalesChannel',
   groupByRangerDateWithProduct: 'groupByRangerDateWithProduct',
   groupByRangerDateWithSupplier: 'groupByRangerDateWithSupplier',
   groupByRangerDateWithCustomer: 'groupByRangerDateWithCustomer',
   groupByRangerDateWithSaler: 'groupByRangerDateWithSaler',
   groupByRangerDateWithArea: 'groupByRangerDateWithArea',
   groupByRangerDateWithCity: 'groupByRangerDateWithCity',
+  groupByRangerDateWithSalesChannel: 'groupByRangerDateWithSalesChannel',
 } as const; 
 type type_report = keyof typeof TYPE_REPORT
 export const TYPE_REPORT_VI: {[key in type_report]:string} = {
@@ -28,10 +30,12 @@ export const TYPE_REPORT_VI: {[key in type_report]:string} = {
   groupByRangerDateWithArea: 'Khu vực theo thời gian',
   groupCity: 'Tỉnh/ Thành phố',
   groupByRangerDateWithCity: 'Tỉnh/ Thành phố theo thời gian',
+  groupSalesChannel: 'Kênh bán hàng',
+  groupByRangerDateWithSalesChannel: 'Kênh bán hàng theo thời gian',
 };
 
 
-export const renderOptionReport = ["Product", "Supplier", "Customer", "Saler", "Area", "City"].map((el:any)=>{
+export const renderOptionReport = ["Product", "Supplier", "Customer", "Saler", "Area", "City", "SalesChannel"].map((el:any)=>{
   const group = 'group'+el as type_report;
   const groupW = 'groupByRangerDateWith'+el as type_report;
   return {
@@ -42,7 +46,7 @@ export const renderOptionReport = ["Product", "Supplier", "Customer", "Saler", "
     ]
   }
 });
-export const renderOptionReportB2C = ["Product", "Supplier", "Customer", "Area", "City"].map((el:any)=>{
+export const renderOptionReportB2C = ["Product", "Supplier", "Customer", "Area", "City", "SalesChannel"].map((el:any)=>{
   const group = 'group'+el as type_report;
   const groupW = 'groupByRangerDateWith'+el as type_report;
   return {
@@ -77,6 +81,7 @@ export interface getReportProductbody {
   customerId?: string[],
   supplierId?: string[],
   salerId?: string[],
+  salesChannelId?: string[],
 
   rangerTime?: string[],
   rangerType?: keyof typeof FILTER_BY,

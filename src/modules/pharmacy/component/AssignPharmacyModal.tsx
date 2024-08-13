@@ -19,8 +19,8 @@ export default function AssignPharmacyModal({initDataSource,setForm,id}:propsTyp
     return (
         <>
         <Form.Item name={'pharmacies'} hidden/>
-        <Form.Item labelCol={{span : 10}} label="Nhà thuốc đảm nhiệm">
-        <Button onClick={onOpen}>Xem danh sách nhà thuốc đảm nhiệm</Button>
+        <Form.Item labelCol={{span : 10}} label="Khách hàng B2B đảm nhiệm">
+        <Button onClick={onOpen}>Xem danh sách khách hàng B2B đảm nhiệm</Button>
         </Form.Item>
         <ModalAnt destroyOnClose width={1000} footer={null} open={open} onCancel={onClose}>
         <AssignPharmacyModalChildren id={id} setForm={setForm} initDataSource={initDataSource}/>

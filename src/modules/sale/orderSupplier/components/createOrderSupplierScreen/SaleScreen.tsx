@@ -67,7 +67,8 @@ try {
         break;
     
       default:
-        break;
+        onCreateOrderSupplier(submitData);
+        break
   }
   
 } catch (error : any) {
@@ -112,7 +113,7 @@ try {
         pair : 0
       }}
     >
-      <Row gutter={16}>
+      <Row gutter={8}>
         <Col span={16}>
           <ProductSelectedTable />
         </Col>

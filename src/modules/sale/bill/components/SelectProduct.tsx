@@ -1,13 +1,13 @@
-import { GiftFilled, GiftTwoTone, SearchOutlined, StopOutlined } from '@ant-design/icons';
+import { GiftTwoTone } from '@ant-design/icons';
 import { AutoComplete, Badge, Empty, Tag, Typography } from 'antd';
-import { compact, debounce, get } from 'lodash';
+import { debounce, get } from 'lodash';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { v4 } from 'uuid';
 import TableAnt from '~/components/Antd/TableAnt';
-import { useGetCollaborator } from '~/modules/collaborator/collaborator.hook';
+import { useGetCollaborator_redux } from '~/modules/collaborator/collaborator.hook';
 import ProductModule from '~/modules/product';
 import useNotificationStore from '~/store/NotificationContext';
-import { formatter } from '~/utils/helpers';
+import { formatNumberThreeComma, formatter } from '~/utils/helpers';
 import { DiscountOtherType, ItemSearchProduct } from '../bill.modal';
 import { getCumulativeDiscount, selectProductSearchBill } from '../bill.service';
 import ImageProduct from './ImageProduct';
@@ -20,7 +20,7 @@ type propsType = {
 export default function SelectProduct({dataCurrent,onChangeBill,warehouseId}:propsType) : React.JSX.Element {
   
   const {onNotify} = useNotificationStore();
-  const [partner] = useGetCollaborator(get(dataCurrent,'pharmacyId'));
+  const [partner] = useGetCollaborator_redux();
   
   const [dataSearch,setDataSearch] = useState([]);
   const [loading,setLoading] = useState(false);
@@ -62,14 +62,14 @@ export default function SelectProduct({dataCurrent,onChangeBill,warehouseId}:pro
       const debounceFetcher = debounce(fetchOptions, 300);
       const onSelect = async(data:any) => {
           try {
-
-            let productInPartner = get(partner, 'products', [])?.find((p: any) => get(p, 'productId') === get(data, '_id'));
-            productInPartner = undefined;
-            // Logic pending because not using
-            const discountOther : DiscountOtherType[] = productInPartner ? [{
+            const typeDiscountPartner = get(partner, ["salesChannel","discount"], "DIRECT_DISCOUNT") as "DIRECT_DISCOUNT" | "INDIRECT_DISCOUNT";
+            let isGet = typeDiscountPartner==='INDIRECT_DISCOUNT';
+            
+            const productInPartner = get(partner,'products',[])?.find((p:any) => get(p,'productId') === get(data,'_id'))
+            const discountOther : DiscountOtherType[] = ( isGet && productInPartner) ? [{
               typeDiscount : get(productInPartner,'discount.discountType'),
               value : get(productInPartner,'discount.value'),
-              name : 'Chiết khấu từ cộng tác viên'
+              name : 'Chiết khấu từ khách hàng B2C'
             }] : []
             inputEl.current.blur();
           const quotation : any = selectProductSearchBill({
@@ -107,7 +107,7 @@ export default function SelectProduct({dataCurrent,onChangeBill,warehouseId}:pro
         notFoundContent={<div><Empty /></div>}
         style={{width : 300}}
         popupMatchSelectWidth={600}
-        // placeholder={!get(dataCurrent,'pharmacyId') ? <Typography.Text strong style={{color : 'white'}}><StopOutlined/> Vui lòng Chọn nhà thuốc trước</Typography.Text> :<span><SearchOutlined /> Thêm sản phẩm vào đơn</span>}
+        // placeholder={!get(dataCurrent,'pharmacyId') ? <Typography.Text strong style={{color : 'white'}}><StopOutlined/> Vui lòng Chọn khách hàng B2B trước</Typography.Text> :<span><SearchOutlined /> Thêm sản phẩm vào đơn</span>}
         dropdownRender={() => {
           return (
             <TableAnt
@@ -166,6 +166,15 @@ export default function SelectProduct({dataCurrent,onChangeBill,warehouseId}:pro
                       </Badge> : null}
                       </Typography.Text>
                   },
+                },
+                {
+                  title: 'Tồn kho',
+                  dataIndex: 'stock',
+                  key: 'stock',
+                  align: 'center',
+                  render(value) {
+                    return <Typography.Text>{formatNumberThreeComma(value)}</Typography.Text>;
+                  }
                 },
               ]}
               onRow={record => {

@@ -14,7 +14,7 @@ import { ColumnsType } from "antd/es/table";
 import SelectSearch from "~/components/common/SelectSearch/SelectSearch";
 import TableAnt from "~/components/Antd/TableAnt";
 import { userSliceAction } from "../redux/reducer";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import POLICIES, { CORE_ACTION, GROUP_POLICY } from "~/modules/policy/policy.auth";
 import { DEFAULT_BRANCH_ID, } from "~/constants/defaultValue";
 import { useGetUserGroups, } from "~/modules/userGroup/userGroup.hook";
@@ -126,6 +126,9 @@ const UserEmployee = ({ currentTab }: UserProps) => {
       title: "Tên nhân viên",
       dataIndex: "fullName",
       key: "fullName",
+      render : (value,rc) => <Link className="link_" to={`/user-detail/${rc?._id}`}>
+      {value}
+    </Link>
     },
     {
       title: "Tên người dùng",

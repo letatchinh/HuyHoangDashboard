@@ -37,10 +37,10 @@ interface IProps {
 export default function EmployeeForm(props: IProps) {
   const [form] = Form.useForm();
   const { id, handleCloseModal,  handleUpdate,handleCreate, isSubmitLoading} = props;
-  const [imageUrl, setImageUrl] = useState<string>();
+  const [imageUrl, setImageUrl] = useState<any>();
 
   const [statusAccount, setStatusAccount] = useState('INACTIVE');
-  useResetState(employeeSliceAction.resetAction);
+  // useResetState(employeeSliceAction.resetAction);
   //address
   const [cityCode, setCityCode] = useState(null);
   const [districtCode, setDistrictCode] = useState(null);
@@ -71,6 +71,7 @@ export default function EmployeeForm(props: IProps) {
         }
       });
       form.resetFields();
+      setImageUrl(null)
     };
   }, [id, employee, form]);
 

@@ -65,9 +65,9 @@ function* getPharmacyDebt({ payload: query }: any): any {
   }
 }
 
-function* getHistoryPharmacy({ payload: id }: any): any {
+function* getHistoryPharmacy({ payload }: any): any {
   try {
-    const data = yield call(api.getHistoryById, id);
+    const data = yield call(api.getHistoryById, payload);
     yield put(pharmacySliceAction.getHistoryPharmacySuccess(data));
   } catch (error: any) {
     yield put(pharmacySliceAction.getHistoryPharmacyFailed(error));
