@@ -1,4 +1,4 @@
-import { Col, DatePicker, Divider, Flex, Row, Select, Spin, Typography } from 'antd';
+import { Button, Checkbox, Col, DatePicker, Divider, Flex, Row, Select, Spin, Typography } from 'antd';
 import Search from 'antd/es/input/Search';
 import { ColumnsType } from 'antd/lib/table/InternalTable';
 import dayjs from 'dayjs';
@@ -19,6 +19,12 @@ import {
   useUpdateReportShipParams,
 } from "../reportShip.hook";
 import { serviceViettelPost } from '~/modules/logistic/constants';
+import useCheckBoxExport from '~/modules/export/export.hook';
+import ExportExcelButton from '~/modules/export/component/index';
+import DropdownAction from '~/components/common/Layout/List/Header/DropdownAction';
+import WithPermission from '~/components/common/WithPermission';
+import POLICIES from '~/modules/policy/policy.auth';
+import { useMatchPolicy } from '~/modules/policy/policy.hook';
 const CLONE_PAYER_VI : any = PAYER_VI;
 const CLONE_transportUnit_VI : any = transportUnit_VI;
 type propsType = {
@@ -26,7 +32,8 @@ type propsType = {
 }
 export default function ReportShip(props:propsType) : React.JSX.Element {
     const [modeDate,setModeDate] = useState<"date"| "month" |"year">("date");
-
+    const [arrCheckBox, onChangeCheckBox] = useCheckBoxExport();
+    const canDownload = useMatchPolicy(POLICIES.DOWNLOAD_REPORTLOGISTIC);
     const [query] = useReportShipQueryParams();
     
     const [dataSource, isLoading] = useGetReportShips(query);
@@ -92,90 +99,165 @@ export default function ReportShip(props:propsType) : React.JSX.Element {
             align : 'center',
             render : (timestamp) => dayjs(timestamp)?.format("DD-MM-YYYY")
         },
-    ]
+    ];
+    if(canDownload){
+        columns.push(  {
+            title: "Lựa chọn",
+            key: "_id",
+            width: 80,
+            align: "center" as any,
+            render: (item: any, record: any) => {
+              const id = record._id;
+              return (
+                <Checkbox
+                  checked={arrCheckBox.includes(id)}
+                  onChange={(e) => onChangeCheckBox(e.target.checked, id)}
+                />
+              );
+            },
+          },)
+    }
     return (
-        <div>
-      <Breadcrumb title="Báo cáo phí vận chuyển" />
-      <Row style={{ marginBottom: 10 }} gutter={8}>
-        <Col span={6}>
-          <Search
-            placeholder="Nhập mã đơn hàng để tìm..."
-            allowClear
-            onSearch={(value) => onParamChange({keyword: value})}
-            enterButton
-          />
-        </Col>
-        <Col >
+      <div>
+        <Breadcrumb
+          title="Báo cáo phí vận chuyển"
+          right={
+            <DropdownAction
+              items={[
+                <WithPermission permission={POLICIES.DOWNLOAD_LOGISTIC}>
+                  <ExportExcelButton
+                    api="report-logistic"
+                    exportOption="report-logistic"
+                    query={query}
+                    fileName="Danh sách báo cáo phí vận chuyển"
+                    ids={arrCheckBox}
+                    useLayout="v2"
+                  />
+                </WithPermission>,
+              ]}
+            />
+          }
+        />
+        <Row style={{ marginBottom: 10 }} gutter={8}>
+          <Col span={6}>
+            <Search
+              placeholder="Nhập mã đơn hàng để tìm..."
+              allowClear
+              onSearch={(value) => onParamChange({ keyword: value })}
+              enterButton
+            />
+          </Col>
+          <Col>
             <Flex vertical gap={10}>
-                <Select
+              <Select
                 onChange={(value) => setModeDate(value)}
                 value={modeDate}
                 options={[
-                    {
-                        value : "date",
-                        label : "Ngày"
-                    },
-                    {
-                        value : "month",
-                        label : "Tháng"
-                    },
-                    {
-                        value : "year",
-                        label : "Năm"
-                    },
-                ]}/>
-                {modeDate === "date" && <DateForm value={{
-                    startDate : query?.startDate,
-                    endDate : query?.endDate,
-                }} onParamChange={onParamChange}/>}
-                {modeDate === "month" && <DatePicker onChange={onChangeDate} picker='month'/>}
-                {modeDate === "year" && <DatePicker onChange={onChangeDate} picker='year'/>}
-                
-                
+                  {
+                    value: "date",
+                    label: "Ngày",
+                  },
+                  {
+                    value: "month",
+                    label: "Tháng",
+                  },
+                  {
+                    value: "year",
+                    label: "Năm",
+                  },
+                ]}
+              />
+              {modeDate === "date" && (
+                <DateForm
+                  value={{
+                    startDate: query?.startDate,
+                    endDate: query?.endDate,
+                  }}
+                  onParamChange={onParamChange}
+                />
+              )}
+              {modeDate === "month" && (
+                <DatePicker onChange={onChangeDate} picker="month" />
+              )}
+              {modeDate === "year" && (
+                <DatePicker onChange={onChangeDate} picker="year" />
+              )}
             </Flex>
-        </Col>
-        <Divider type='vertical'/>
-        <Col>
-        <Flex gap={20} vertical>
-        <span>Đơn vị vận chuyển</span>
-        <Select value={query?.transportUnit} onChange={(value) => onParamChange({transportUnit : value})} placeholder="Đơn vị vận chuyển" options={transportUnit} allowClear style={{width : 170}}/>
-        </Flex>
-        </Col>
-        <Divider type='vertical'/>
-        <Col>
-        <Flex gap={20} vertical>
-        <span>Người trả</span>
-        <Select value={query?.payer} onChange={(value) => onParamChange({payer : value})} placeholder="Người trả" options={PAYER_OPTIONS} allowClear style={{width : 120}}/>
-        </Flex>
-        </Col>
-        <Divider type='vertical'/>
-        <Col>
-        <Flex gap={20} vertical>
-        <span>Dịch vụ</span>
-        <Select value={query?.serviceName} onChange={(value) => onParamChange({serviceName : value})} placeholder="Dịch vụ" options={serviceViettelPost.map(({label}) => ({label,value :label}))} allowClear style={{width : 250}}/>
-        </Flex>
-        </Col>
-      </Row>
-      <WhiteBox>
+          </Col>
+          <Divider type="vertical" />
+          <Col>
+            <Flex gap={20} vertical>
+              <span>Đơn vị vận chuyển</span>
+              <Select
+                value={query?.transportUnit}
+                onChange={(value) => onParamChange({ transportUnit: value })}
+                placeholder="Đơn vị vận chuyển"
+                options={transportUnit}
+                allowClear
+                style={{ width: 170 }}
+              />
+            </Flex>
+          </Col>
+          <Divider type="vertical" />
+          <Col>
+            <Flex gap={20} vertical>
+              <span>Người trả</span>
+              <Select
+                value={query?.payer}
+                onChange={(value) => onParamChange({ payer: value })}
+                placeholder="Người trả"
+                options={PAYER_OPTIONS}
+                allowClear
+                style={{ width: 120 }}
+              />
+            </Flex>
+          </Col>
+          <Divider type="vertical" />
+          <Col>
+            <Flex gap={20} vertical>
+              <span>Dịch vụ</span>
+              <Select
+                value={query?.serviceName}
+                onChange={(value) => onParamChange({ serviceName: value })}
+                placeholder="Dịch vụ"
+                options={serviceViettelPost.map(({ label }) => ({
+                  label,
+                  value: label,
+                }))}
+                allowClear
+                style={{ width: 250 }}
+              />
+            </Flex>
+          </Col>
+        </Row>
+        <WhiteBox>
           <TableAnt
-          title={() => <Typography.Text strong>Tổng phí vận chuyển: {isLoadingSummary ? <Spin spinning/> : (get(summary,'total',0))}</Typography.Text>}
-          dataSource={dataSource || []}
-          loading={isLoading}
-          columns={columns}
-          stickyTop
-          size="small"
-          pagination={{
-            ...paging,
-            onChange(page, pageSize) {
-              onParamChange({ page, limit: pageSize });
-            },
-            showSizeChanger: true,
-            showTotal: (total) => `Tổng cộng: ${total} `,
-            size: "small",
-          }}
-        />
-      </WhiteBox>
-      
-    </div>
-    )
+            title={() => (
+              <Typography.Text strong>
+                Tổng phí vận chuyển:{" "}
+                {isLoadingSummary ? (
+                  <Spin spinning />
+                ) : (
+                  formatter(get(summary, "total", 0))
+                )}
+              </Typography.Text>
+            )}
+            dataSource={dataSource || []}
+            loading={isLoading}
+            columns={columns}
+            stickyTop
+            size="small"
+            pagination={{
+              ...paging,
+              onChange(page, pageSize) {
+                onParamChange({ page, limit: pageSize });
+              },
+              showSizeChanger: true,
+              showTotal: (total) => `Tổng cộng: ${total} `,
+              size: "small",
+            }}
+          />
+        </WhiteBox>
+      </div>
+    );
 }

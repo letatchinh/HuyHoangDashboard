@@ -8,10 +8,11 @@ type propsType = {
 export default function DateForm({onParamChange,value}:propsType) : React.JSX.Element {
     const [form] = Form.useForm();
     const onValueChange = (value:any,values : {startDate : string,endDate : string}) => {
+        
         const newDate : any = Object.values(value)[0];
         const key = Object.keys(value)[0];
         onParamChange({
-            [key] : dayjs(newDate).format('YYYY-MM-DD')
+            [key] : newDate ? dayjs(newDate).format('YYYY-MM-DD') : null
         })
         
     };

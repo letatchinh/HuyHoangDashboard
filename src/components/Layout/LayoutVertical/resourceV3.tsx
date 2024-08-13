@@ -89,6 +89,9 @@ const permissionReport = [
   POLICIES.READ_REPORTREVENUEPERSONALPARTNER,
   POLICIES.READ_REPORTREVENUETEAMEMPLOYEE,
   POLICIES.READ_REPORTREVENUETEAMPARTNER,
+  POLICIES.READ_REPORTLOGISTIC,
+  POLICIES.READ_REPORTFEE,
+  
 ];
 
 export const resource: ItemType[] = [
@@ -364,13 +367,13 @@ export const resource: ItemType[] = [
         label: "Báo cáo Phí Vận chuyển",
         path: PATH_APP.report.ship,
         key: PATH_APP.report.ship,
-        permission: [POLICIES.READ_SHIPPINGCOST], //
+        permission: [POLICIES.READ_REPORTLOGISTIC], //
       },
       {
         label: "Báo cáo Phụ phí",
         path: PATH_APP.report.subFee,
         key: PATH_APP.report.subFee,
-        permission: [POLICIES.READ_SHIPPINGCOST], //
+        permission: [POLICIES.READ_REPORTFEE], //
       },
       {
         label: "Phiếu lương",

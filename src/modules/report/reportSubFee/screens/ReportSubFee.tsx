@@ -1,4 +1,4 @@
-import { Col, DatePicker, Flex, Row, Select, Spin, Typography } from 'antd';
+import { Checkbox, Col, DatePicker, Flex, Row, Select, Spin, Typography } from 'antd';
 import Search from 'antd/es/input/Search';
 import { ColumnsType } from 'antd/lib/table/InternalTable';
 import dayjs from 'dayjs';
@@ -7,7 +7,13 @@ import React, { useState } from 'react';
 import TableAnt from '~/components/Antd/TableAnt';
 import Breadcrumb from '~/components/common/Breadcrumb';
 import DateForm from '~/components/common/DateForm';
+import DropdownAction from '~/components/common/Layout/List/Header/DropdownAction';
 import WhiteBox from '~/components/common/WhiteBox';
+import WithPermission from '~/components/common/WithPermission';
+import ExportExcelButton from '~/modules/export/component/index';
+import useCheckBoxExport from '~/modules/export/export.hook';
+import POLICIES from '~/modules/policy/policy.auth';
+import { useMatchPolicy } from '~/modules/policy/policy.hook';
 import { PATH_APP } from '~/routes/allPath';
 import { formatter } from '~/utils/helpers';
 import { useGetReportSubFees, useGetReportSummarySubFees, useReportSubFeePaging, useReportSubFeeQueryParams, useUpdateReportSubFeeParams } from '../reportSubFee.hook';
@@ -16,18 +22,20 @@ type propsType = {
 }
 export default function ReportSubFee(props:propsType) : React.JSX.Element {
     const [modeDate,setModeDate] = useState<"date"| "month" |"year">("date");
-
+    const [arrCheckBox, onChangeCheckBox] = useCheckBoxExport();
     const [query] = useReportSubFeeQueryParams();
-    console.log(query,'query');
+    const canDownload = useMatchPolicy(POLICIES.DOWNLOAD_REPORTFEE);
     
     const [dataSource, isLoading] = useGetReportSubFees(query);
     const [summary, isLoadingSummary] = useGetReportSummarySubFees(query);
     const [ ,{ onParamChange }] = useUpdateReportSubFeeParams(query);
     const paging = useReportSubFeePaging();
     const onChangeDate = (date: any, dateString: string | string[]) => {
+      console.log(date,'date');
+      
         // Apply For Mode Month And year
-        const endDate = dayjs(date).endOf(modeDate).format("YYYY-MM-DD");
-        const startDate = dayjs(date).startOf(modeDate).format("YYYY-MM-DD");
+        const endDate = date ? dayjs(date).endOf(modeDate).format("YYYY-MM-DD") : null;
+        const startDate = date ? dayjs(date).startOf(modeDate).format("YYYY-MM-DD") : null;
         onParamChange({
             startDate,
             endDate,
@@ -61,10 +69,44 @@ export default function ReportSubFee(props:propsType) : React.JSX.Element {
             align : 'center',
             render : (timestamp) => dayjs(timestamp)?.format("DD-MM-YYYY")
         },
-    ]
+    ];
+    if(canDownload){
+        columns.push(  {
+            title: "Lựa chọn",
+            key: "_id",
+            width: 80,
+            align: "center" as any,
+            render: (item: any, record: any) => {
+              const id = record._id;
+              return (
+                <Checkbox
+                  checked={arrCheckBox.includes(id)}
+                  onChange={(e) => onChangeCheckBox(e.target.checked, id)}
+                />
+              );
+            },
+          },)
+    }
     return (
         <div>
-      <Breadcrumb title="Báo cáo phụ phí" />
+      <Breadcrumb title="Báo cáo phụ phí" 
+      right={
+        <DropdownAction
+          items={[
+            <WithPermission permission={POLICIES.DOWNLOAD_REPORTFEE}>
+              <ExportExcelButton
+                api="report-fee"
+                exportOption="report-fee"
+                query={query}
+                fileName="Danh sách báo cáo phí vận chuyển"
+                ids={arrCheckBox}
+                useLayout="v2"
+              />
+            </WithPermission>,
+          ]}
+        />
+      }
+      />
       <Row style={{ marginBottom: 10 }} gutter={8}>
         <Col span={6}>
           <Search
@@ -110,7 +152,7 @@ export default function ReportSubFee(props:propsType) : React.JSX.Element {
       </Row>
       <WhiteBox>
           <TableAnt
-          title={() => <Typography.Text strong>Tổng phụ phí: {isLoadingSummary ? <Spin spinning/> : (get(summary,'total',0))}</Typography.Text>}
+          title={() => <Typography.Text strong>Tổng phụ phí: {isLoadingSummary ? <Spin spinning/> : formatter(get(summary,'total',0))}</Typography.Text>}
           dataSource={dataSource || []}
           loading={isLoading}
           columns={columns}

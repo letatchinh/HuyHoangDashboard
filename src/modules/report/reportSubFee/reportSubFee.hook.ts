@@ -49,8 +49,8 @@ export const useReportSubFeeQueryParams = () => {
   const limit = query.get("limit") || 10;
   const page = query.get("page") || 1;
   const keyword = query.get("keyword");
-  const startDate = query.get("startDate") || dayjs().startOf('year').format("YYYY-MM-DD"); // default In Current Year
-  const endDate = query.get("endDate")|| dayjs().endOf('year').format("YYYY-MM-DD");// default In Current Year
+  const startDate = query.get("startDate")
+  const endDate = query.get("endDate")
   return useMemo(() => {
     const queryParams = {
       page,
