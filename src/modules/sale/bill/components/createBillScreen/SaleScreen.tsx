@@ -34,6 +34,7 @@ export default function SaleScreen(props: propsType): React.JSX.Element {
     totalCouponForItem,
     couponSelected,
     onVerifyCoupon,
+    mutateChangeQuotationItem,
   } = useCreateBillStore();
  const feeForm = Form.useWatch('fee',form);
   const { onNotify } = useNotificationStore();
@@ -177,6 +178,7 @@ export default function SaleScreen(props: propsType): React.JSX.Element {
   
                 setAddress(address);
                 mutateReValidate();
+                mutateChangeQuotationItem();
                 setPharmacyInfo(option);
                 }} id={get(bill, 'pharmacyId')} form={form} allowClear={false} showButtonAdd={true}/>
             <Divider/>

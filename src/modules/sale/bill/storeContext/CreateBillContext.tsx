@@ -29,7 +29,7 @@ import { getValueOfMath, getValueOfMathShip, getValueOfPercent } from "~/utils/h
 import { DEFAULT_DEBT_TYPE } from "../../quotation/constants";
 import { useCheckRefCollection, useGetDebtRule } from "../bill.hook";
 import { DebtType, DetailCoupon, FeeType, quotation } from "../bill.modal";
-import { reducerDiscountQuotationItems, setCouponToBillItem, validateCoupon } from "../bill.service";
+import { getPreviewCoupon, reducerDiscountQuotationItems, setCouponToBillItem, validateCoupon } from "../bill.service";
 import { defaultFee } from "../constants";
 import { useMatchPolicy } from "~/modules/policy/policy.hook";
 import POLICIES from "~/modules/policy/policy.auth";
@@ -120,6 +120,13 @@ export type GlobalCreateBill = {
   queryBillItem : QuerySearchCoupon;
   totalCouponForItem: number;
   onVerifyCoupon : () => void;
+  mutateChangeQuotationItem: () => void;
+  previewCouponBillItem?: {
+    [productId : string] : {
+      count : number
+    }
+  };
+  previewCouponBillItemLoading : boolean;
 };
 const CreateBill = createContext<GlobalCreateBill>({
   quotationItems: [],
@@ -183,6 +190,9 @@ const CreateBill = createContext<GlobalCreateBill>({
   queryBillItem : {target : "BILL_ITEM"},
   totalCouponForItem : 0,
   onVerifyCoupon: () => {},
+  mutateChangeQuotationItem: () => {},
+  previewCouponBillItem : {},
+  previewCouponBillItemLoading : false,
  });
 
 type CreateBillProviderProps = {
@@ -192,6 +202,7 @@ type CreateBillProviderProps = {
   verifyData: () => void;
   onRemoveTab: () => void;
   onOpenModalResult: (data: any) => void;
+  productAddNewly? : any,
 };
 
 export function CreateBillProvider({
@@ -201,11 +212,17 @@ export function CreateBillProvider({
   verifyData,
   onRemoveTab,
   onOpenModalResult,
+  productAddNewly,
 }: CreateBillProviderProps): JSX.Element {
+  const [quotationChanged,setQuotationChanged] = useState(1);
   const isInitFirst : any = useRef(false);
   QuotationModule.hook.useResetQuotation();
   const [countReValidate, setCountReValidate] = useState(1);
   const [quotationItems, setQuotationItems] = useState<DataItem[]>([]);
+  const [previewCouponBillItem,setPreviewCouponBillItem] = useState();
+  const [previewCouponBillItemLoading,setPreviewCouponBillItemLoading] = useState(false);
+  
+  const mutateChangeQuotationItem = useCallback(() => {setQuotationChanged(quotationChanged + 1)},[quotationChanged]);
   
   const [form] = Form.useForm();
   const [debt, isLoadingDebt] = useGetDebtRule();
@@ -231,6 +248,7 @@ export function CreateBillProvider({
   const canReadWarehouse = useMatchPolicy(POLICIES.READ_WAREHOUSELINK);
   // Controller Data
   const onSave = (row: DataItem) => {
+    mutateChangeQuotationItem();
     const newData: DataItem[] = [...quotationItems];
     const index = newData.findIndex((item) => row.key === item.key);
     const item = newData[index];
@@ -254,6 +272,7 @@ export function CreateBillProvider({
   };
 
   const onAdd = (row: Omit<DataItem, "key">) => {
+    mutateChangeQuotationItem();
     const newData = [...quotationItems, { ...row, key: v4() }];
     onChangeBill({
       quotationItems: newData,
@@ -276,6 +295,7 @@ export function CreateBillProvider({
 
   useEffect(() => {
     if (countReValidate > 1) {
+      
       verifyData();
     }
   }, [countReValidate]);
@@ -323,13 +343,13 @@ export function CreateBillProvider({
   };
 
   const fee = Form.useWatch("fee", form) || 0;
-  const totalLogisticFeeByPayer: number = useMemo(
-    () =>
-      bill?.dataTransportUnit?.payer === PAYER_OPTION.SYSTEM
-        ? 0
-        : bill?.dataTransportUnit?.totalFee ?? 0,
-    [bill?.dataTransportUnit, fee]
-  );
+  // const totalLogisticFeeByPayer: number = useMemo(
+  //   () =>
+  //     bill?.dataTransportUnit?.payer === PAYER_OPTION.SYSTEM
+  //       ? 0
+  //       : bill?.dataTransportUnit?.totalFee ?? 0,
+  //   [bill?.dataTransportUnit, fee]
+  // );
   const findLogisticInFee = useMemo(
     () => (fee || [])?.find((item: any) => item?.typeFee === "LOGISTIC")?.value,
     [bill?.dataTransportUnit, fee]
@@ -491,9 +511,9 @@ export function CreateBillProvider({
       ),
     [quotationItems]
   );
-  const totalWeight = useMemo(() => bill?.quotationItems?.length > 1 ? bill?.quotationItems?.reduce((sum: any, cur: any) => {
-    return sum?.variant?.weight + get(cur, "variant.weight", 0)
-  }) : get(bill?.quotationItems?.[0]?.variant, 'weight'), [bill]);
+  // const totalWeight = useMemo(() => bill?.quotationItems?.length > 1 ? bill?.quotationItems?.reduce((sum: any, cur: any) => {
+  //   return sum?.variant?.weight + get(cur, "variant.weight", 0)
+  // }) : get(bill?.quotationItems?.[0]?.variant, 'weight'), [bill]);
   // Initalize Data And Calculate Discount
 
   useEffect(() => {
@@ -653,6 +673,28 @@ export function CreateBillProvider({
         };   
     };
   }, [warehouseDefault, pharmacyInfo, partner, listWarehouse]);
+
+  useEffect(() => {
+    mutateChangeQuotationItem();
+  },[productAddNewly]);
+
+  useEffect(() => {
+    if(quotationChanged > 1){
+    // Handle Some Things If QuotationChanged
+      const fetchPreviewCoupon = async () => {
+        setPreviewCouponBillItemLoading(true);
+        const data = await getPreviewCoupon({
+          quotationItems,
+          customerApplyId : get(bill,'pharmacyId'),
+        });
+        setPreviewCouponBillItem(data);
+        setPreviewCouponBillItemLoading(false)
+      };
+      fetchPreviewCoupon();
+
+    }
+    
+  },[quotationChanged])
   return (
     <CreateBill.Provider
       value={{
@@ -712,6 +754,9 @@ export function CreateBillProvider({
         queryBillItem,
         totalCouponForItem,
         onVerifyCoupon,
+        mutateChangeQuotationItem,
+        previewCouponBillItem,
+        previewCouponBillItemLoading,
       }}
     >
       {children}
