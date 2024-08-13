@@ -225,7 +225,7 @@ export const useAction = ({ action }:UseActionProps) : (v:any) => void => {
     nullNotFetch?: boolean;
     conditionRun?: boolean;
   }
-  export const useFetchState = ({ api,required, query, useDocs = true, init = [], fieldGet,reFetch,nullNotFetch = false ,conditionRun = false} : FetchStateParams) : any => {
+  export const useFetchState = ({ api,required, query, useDocs = true, init = [], fieldGet,reFetch,nullNotFetch = false ,conditionRun = true} : FetchStateParams) : any => {
     const [data, setData] = useState(init);
     const [loading, setLoading] = useState(false);
     const req = useCallback(api, [api]);
@@ -259,7 +259,7 @@ export const useAction = ({ action }:UseActionProps) : (v:any) => void => {
         if(nullNotFetch){
           !!query && fetch();
         }else{
-          fetch()
+          // fetch()
         }
       }
     }, [fetch,nullNotFetch,query]);

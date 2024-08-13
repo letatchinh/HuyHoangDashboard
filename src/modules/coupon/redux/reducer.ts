@@ -3,7 +3,8 @@ import { InstanceModuleRedux } from "~/redux/instanceModuleRedux";
 import { initStateSlice } from "~/redux/models";
 interface cloneInitState extends initStateSlice {
   copySuccess? : any,
-  copyFailed? : any
+  copyFailed? : any,
+  getByIdCompleted? : any,
  // Add cloneInitState Type Here
 }
 class CouponClassExtend extends InstanceModuleRedux {
@@ -25,13 +26,28 @@ class CouponClassExtend extends InstanceModuleRedux {
         state.isSubmitLoading = false;
         state.copyFailed = payload;
        },
-      
+       getByIdRequest: (state:cloneInitState) => {
+        state.isGetByIdLoading = true;
+        state.getByIdFailed = null;
+        state.getByIdCompleted = false;
+      },
+       getByIdSuccess: (state:cloneInitState, { payload }:{payload?:any}) => {
+        state.isGetByIdLoading = false;
+        state.byId = payload;
+        state.getByIdCompleted = true;
+      },
+      getByIdFailed: (state:cloneInitState, { payload }:{payload:any}) => {
+        state.isGetByIdLoading = false;
+        state.getByIdFailed = payload;
+        state.getByIdCompleted = true;
+      },
       // Want Add more reducer Here...
     }
     this.cloneInitState = {
       ...this.initialState,
       copySuccess : null,
       copyFailed : null,
+      getByIdCompleted : false,
       // Want Add more State Here...
     }
   }

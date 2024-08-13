@@ -28,7 +28,7 @@ import {
   STATE,
   STATE_VI,
 } from "../constants";
-import { useCreateCoupon, useGetCoupon, useUpdateCoupon } from "../coupon.hook";
+import { useCouponGetByIdCompleted, useCreateCoupon, useGetCoupon, useUpdateCoupon } from "../coupon.hook";
 import { CouponBase } from "../coupon.modal";
 import CustomerApplyFormItem from "./CustomerApplyFormItem";
 import TargetFormItem from "./TargetFormItem";
@@ -43,16 +43,19 @@ export default function CouponForm({
 }: propsType): React.JSX.Element {
   const [form] = Form.useForm();
   const { onFinishFailed, ErrorComponent } = useFailedAnt();
-  const [coupon, loading]: [CouponBase, boolean, any] = useGetCoupon(id);
+  const [coupon, loading] = useGetCoupon(id);
+  const isGetByIdCompleted = useCouponGetByIdCompleted();
+  
   const [isSubmitLoading, create] = useCreateCoupon(onCancel);
   const [, update] = useUpdateCoupon(onCancel);
   const onFinish = (values: any) => {
-    console.log(values, "values");
     const {isFreeShip} = values;
     const submitData = {
       ...values,
       ...isFreeShip && {discount : null}
-    }
+    };
+    console.log(submitData,'submitData');
+    
     if (id) {
       update({
         _id: id,
@@ -209,7 +212,7 @@ export default function CouponForm({
           </Row>}
         </Form.Item>
           
-        <Form.Item shouldUpdate noStyle>
+        <Form.Item shouldUpdate={(p,n) => p?.isFreeShip !== n?.isFreeShip} noStyle>
           {({getFieldValue}) => getFieldValue('applyFor') === "SHIP" &&  <Row gutter={8}>
             <Col span={12}>
               <Form.Item
@@ -233,7 +236,7 @@ export default function CouponForm({
               </Form.Item>
             </Col>
             <Col span={12}>
-              <Form.Item shouldUpdate noStyle>
+              <Form.Item shouldUpdate={(p,n) => p?.applyFor !== n?.applyFor} noStyle>
                 {({getFieldValue}) => <Form.Item
                 rules={requireRules}
                 name={"applyFor"}
@@ -299,7 +302,7 @@ export default function CouponForm({
           <Form.Item label="Không áp dụng điều kiện" name={'disabledCondition'} valuePropName="checked">
             <Checkbox />
           </Form.Item>
-          <Form.Item shouldUpdate noStyle>
+          <Form.Item shouldUpdate={(p,n) => p?.conditions !== n?.conditions} noStyle>
           {({getFieldValue}) =>   {
             const isDisabled = !!getFieldValue('disabledCondition')
             return <Form.List name={"conditions"}>
@@ -383,8 +386,8 @@ export default function CouponForm({
 
           <TargetFormItem form={form} />
         </Tabs.TabPane>
-        <Tabs.TabPane forceRender key={"3"} tab="Những ai được dùng mã">
-          <CustomerApplyFormItem form={form} />
+        <Tabs.TabPane key={"3"} tab="Những ai được dùng mã">
+          {isGetByIdCompleted && <CustomerApplyFormItem form={form} />}
         </Tabs.TabPane>
       </Tabs>
 

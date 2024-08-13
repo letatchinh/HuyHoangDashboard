@@ -80,3 +80,12 @@ export const PROCESS_STATUS_VI_COLOR : any = {
   NEW: '#B3C8CF',
   CANCELED: '#ff4141',
 };
+
+export interface PropSearchPharmacy {
+  type? : "pharmacy" | "ctv" | null,
+  keyword? : string,
+  id? : any,
+  optionWith? : {
+    id : any[]
+  },
+}

@@ -1,6 +1,5 @@
 import { PlusOutlined } from "@ant-design/icons";
 import { Button, Flex, Popconfirm, Typography } from "antd";
-import Search from "antd/es/input/Search";
 import { ColumnsType } from "antd/lib/table/InternalTable";
 import dayjs from "dayjs";
 import { get } from "lodash";
@@ -12,7 +11,7 @@ import Breadcrumb from "~/components/common/Breadcrumb";
 import WithPermission from "~/components/common/WithPermission";
 import POLICIES from "~/modules/policy/policy.auth";
 import { useMatchPolicy } from "~/modules/policy/policy.hook";
-import { getTextOfDiscount, getTextOfDiscountShip, getValueOfMath } from "~/utils/helpers";
+import { getTextOfDiscountShip } from "~/utils/helpers";
 import CouponForm from "../components/CouponForm";
 import { STATE_VI } from "../constants";
 import {
@@ -21,7 +20,7 @@ import {
   useCouponQueryParams,
   useDeleteCoupon,
   useGetCoupons,
-  useUpdateCouponParams,
+  useUpdateCouponParams
 } from "../coupon.hook";
 type propsType = {};
 export default function Coupon(props: propsType): React.JSX.Element {

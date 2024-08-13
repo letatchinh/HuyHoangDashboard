@@ -1,10 +1,11 @@
 import { get, omit } from "lodash";
 import requester from "~/api/requester";
+import { PropSearchPharmacy } from "./pharmacy.modal";
 
 const pharmacy = {
     getAll: (query?: any) => requester.get(`api/v1/pharma-profile`, query),
     getAssign: (query?: any) => requester.get(`api/v1/search-pharmacy`, query),
-    search: (query?: any) => requester.post(`api/v1/pharma-profile-search`, query),
+    search: (query?: PropSearchPharmacy) => requester.post(`api/v1/pharma-profile-search`, query),
     getById: (id?: any) => requester.get(`api/v1/pharma-profile/${id}`),
     getHistoryById: ({id,...query} : any) => requester.get(`api/v1/history-bill-pharma-profile/${id}`,query),
     getHistoryUpdateById: (id?: any) => requester.get(`api/v1/history-pharma-profile/${id}`),

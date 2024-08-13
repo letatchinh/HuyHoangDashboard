@@ -1,13 +1,20 @@
 import { Alert, Button, Col, Flex, Form, Row, Select, Typography } from "antd";
 import React from "react";
+import DebounceSelectMultipleItem from "~/components/common/DebounceSelectMultiple/DebounceSelectMultipleItem";
+import { DebounceSelectMultipleProvider } from "~/components/common/DebounceSelectMultiple/DebounceSelectMultipleProvider";
 import SelectIdsCustomerApply from "./SelectIdsCustomerApply";
 type propsType = {
   form: any;
 };
 export default function CustomerApplyFormItem({ form }: propsType): React.JSX.Element {
   return (
-  <Form.Item shouldUpdate noStyle>
-    {({getFieldValue}) =>   <Form.Item labelCol={{ span: 24 }} label="Các khách hàng được phép dùng:">
+    <DebounceSelectMultipleProvider 
+      initValuePharmacy={form.getFieldValue('customerApplyIds')?.filter((item:any) => item?.refCollection === "pharma_profile")?.map((item:any) => item?.id)}
+      initValuePartner={form.getFieldValue('customerApplyIds')?.filter((item:any) => item?.refCollection === "partner")?.map((item:any) => item?.id)}
+    >
+  <Form.Item shouldUpdate={(p,n) => p?.customerApplyIds !== n?.customerApplyIds} noStyle>
+    {({getFieldValue}) =>   
+    <Form.Item labelCol={{ span: 24 }} label="Các khách hàng được phép dùng:">
       <Form.List name={"customerApplyIds"}>
         {(fields, { add, remove }) => (
           <>
@@ -40,9 +47,11 @@ export default function CustomerApplyFormItem({ form }: propsType): React.JSX.El
                     </Form.Item>
                   </Col>
                   <Col flex={1}>
-                  <Form.Item name={[index, "id"]}>
-                      <SelectIdsCustomerApply form={form} refCollection={refCollection} index={index} />
-                    </Form.Item>
+                  <Form.Item shouldUpdate>
+                    {() => <Form.Item name={[index, "id"]}>
+                      <DebounceSelectMultipleItem refCollection={refCollection} />
+                    </Form.Item>}
+                  </Form.Item>
                   </Col>
                   <Col span={2}>
                     <Button onClick={() => remove(index)} danger type="primary">
@@ -72,7 +81,9 @@ export default function CustomerApplyFormItem({ form }: propsType): React.JSX.El
           </>
         )}
       </Form.List>
-    </Form.Item>}
+    </Form.Item>
+      }
   </Form.Item>
+  </DebounceSelectMultipleProvider>
   );
 }
