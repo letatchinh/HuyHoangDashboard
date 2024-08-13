@@ -74,7 +74,7 @@ export default function ProductGroupDetail(): React.JSX.Element {
                   value={keyword}
                 />
               ),
-              querySearch : ['keyword']
+              querySearch: ["keyword"],
             }}
           />
         }
@@ -93,7 +93,9 @@ export default function ProductGroupDetail(): React.JSX.Element {
                 <Typography.Text type="secondary" style={{ fontSize: 14 }}>
                   <Badge
                     style={{ marginRight: 2 }}
-                    status={CLONE_STATUS_COLOR[get(productConfig, "status", "")]}
+                    status={
+                      CLONE_STATUS_COLOR[get(productConfig, "status", "")]
+                    }
                   />
                   {CLONE_STATUS_NAMES[get(productConfig, "status", "")]}
                 </Typography.Text>
@@ -102,7 +104,17 @@ export default function ProductGroupDetail(): React.JSX.Element {
           />
         }
         MainContent={<MainContentTab />}
-        List={<ListInDetailCommon fieldName="name" path="/productGroup" useGets={useGetlistProductConfig} usePaging={useProductConfigPaging} useQueryParams={useProductConfigQueryParams} useUpdateParams={useUpdateProductConfigParams} fieldCode='code'/>}
+        List={
+          <ListInDetailCommon
+            fieldName="name"
+            path="/productGroup"
+            useGets={useGetlistProductConfig}
+            usePaging={useProductConfigPaging}
+            query={query}
+            onParamChange={onParamChange}
+            fieldCode="code"
+          />
+        }
       />
       <ModalAnt
         title="Thêm mới nhóm sản phẩm"

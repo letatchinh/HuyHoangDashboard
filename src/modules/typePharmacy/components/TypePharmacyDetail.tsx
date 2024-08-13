@@ -102,8 +102,8 @@ export default function TypePharmacyDetail(
             path="/type-pharmacy"
             useGets={useGetTypePharmacies}
             usePaging={useTypePharmacyPaging}
-            useQueryParams={useTypePharmacyQueryParams}
-            useUpdateParams={useUpdateTypePharmacyParams}
+            query={query}
+            onParamChange={onParamChange}
           />
         }
       />
