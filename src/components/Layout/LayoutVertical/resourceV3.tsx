@@ -364,7 +364,7 @@ export const resource: ItemType[] = [
         permission: [POLICIES.READ_SHIPPINGCOST], //
       },
       {
-        label: "Báo cáo phí Vận chuyển",
+        label: "Báo cáo phí vận chuyển",
         path: PATH_APP.report.ship,
         key: PATH_APP.report.ship,
         permission: [POLICIES.READ_REPORTLOGISTIC], //
