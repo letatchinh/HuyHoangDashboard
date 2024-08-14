@@ -264,10 +264,10 @@ export const useInitialValues = (user: any) => {
 };
 
 export const unSubscribeToken = () => {
-  let tokenFcm = JSON.stringify(localStorage.getItem("tokenFcm"));
+  let tokenFcm = localStorage.getItem("tokenFcm");
   try {
-    tokenFcm && apis.unSubscribeToken(JSON.parse(tokenFcm))
-    localStorage.removeItem("tokenFcm")
+      tokenFcm && apis.unSubscribeToken(tokenFcm);
+      localStorage.removeItem("tokenFcm")
   } catch (error) {
     console.error(error)
   };
