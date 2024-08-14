@@ -364,13 +364,13 @@ export const resource: ItemType[] = [
         permission: [POLICIES.READ_SHIPPINGCOST], //
       },
       {
-        label: "Báo cáo Phí Vận chuyển",
+        label: "Báo cáo phí Vận chuyển",
         path: PATH_APP.report.ship,
         key: PATH_APP.report.ship,
         permission: [POLICIES.READ_REPORTLOGISTIC], //
       },
       {
-        label: "Báo cáo Phụ phí",
+        label: "Báo cáo phụ phí",
         path: PATH_APP.report.subFee,
         key: PATH_APP.report.subFee,
         permission: [POLICIES.READ_REPORTFEE], //

@@ -121,22 +121,18 @@ export default function ReportShip(props:propsType) : React.JSX.Element {
       <div>
         <Breadcrumb
           title="Báo cáo phí vận chuyển"
-          right={
-            <DropdownAction
-              items={[
-                <WithPermission permission={POLICIES.DOWNLOAD_LOGISTIC}>
-                  <ExportExcelButton
-                    api="report-logistic"
-                    exportOption="report-logistic"
-                    query={query}
-                    fileName="Danh sách báo cáo phí vận chuyển"
-                    ids={arrCheckBox}
-                    useLayout="v2"
-                  />
-                </WithPermission>,
-              ]}
-            />
-          }
+          {...canDownload && {right : <DropdownAction
+            items={[
+                <ExportExcelButton
+                  api="report-logistic"
+                  exportOption="report-logistic"
+                  query={query}
+                  fileName="Danh sách báo cáo phí vận chuyển"
+                  ids={arrCheckBox}
+                  useLayout="v2"
+                />
+            ]}
+          />}}
         />
         <Row style={{ marginBottom: 10 }} gutter={8}>
           <Col span={6}>

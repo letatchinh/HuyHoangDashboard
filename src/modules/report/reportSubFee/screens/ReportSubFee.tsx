@@ -90,22 +90,18 @@ export default function ReportSubFee(props:propsType) : React.JSX.Element {
     return (
         <div>
       <Breadcrumb title="Báo cáo phụ phí" 
-      right={
-        <DropdownAction
-          items={[
-            <WithPermission permission={POLICIES.DOWNLOAD_REPORTFEE}>
-              <ExportExcelButton
-                api="report-fee"
-                exportOption="report-fee"
-                query={query}
-                fileName="Danh sách báo cáo phí vận chuyển"
-                ids={arrCheckBox}
-                useLayout="v2"
-              />
-            </WithPermission>,
-          ]}
-        />
-      }
+      {...canDownload && {right : <DropdownAction
+        items={[
+            <ExportExcelButton
+              api="report-fee"
+              exportOption="report-fee"
+              query={query}
+              fileName="Danh sách báo cáo phí vận chuyển"
+              ids={arrCheckBox}
+              useLayout="v2"
+            />
+        ]}
+      />}}
       />
       <Row style={{ marginBottom: 10 }} gutter={8}>
         <Col span={6}>
