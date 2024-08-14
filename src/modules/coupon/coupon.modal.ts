@@ -53,6 +53,11 @@ export interface CouponBase {
     slugName?: string,
     disabledCondition? : boolean,
     isFreeShip?:boolean,
+    allowAllApply?:{
+      b2b : boolean,
+      b2c : boolean,
+      all : boolean,
+    },
 
 
 };

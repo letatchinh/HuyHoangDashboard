@@ -29,6 +29,7 @@ import {
 import { useCouponGetByIdCompleted, useCreateCoupon, useGetCoupon, useUpdateCoupon } from "../coupon.hook";
 import CustomerApplyFormItem from "./CustomerApplyFormItem";
 import TargetFormItem from "./TargetFormItem";
+import { detailCustomerApplyFor } from "../coupon.modal";
 const CLONE_defaultConditions: any = defaultConditions;
 type propsType = {
   onCancel: (p?: any) => void;
@@ -41,7 +42,8 @@ export default function CouponForm({
   const [form] = Form.useForm();
   const { onFinishFailed, ErrorComponent } = useFailedAnt();
   const targetIds = Form.useWatch('targetIds',form);
-  const customerApplyIds = Form.useWatch('customerApplyIds',form);
+  const customerApplyIds : detailCustomerApplyFor[] = Form.useWatch('customerApplyIds',form);
+  const allowAllApply : detailCustomerApplyFor[] = Form.useWatch('allowAllApply',form);
   const [coupon, loading] = useGetCoupon(id);
   const isGetByIdCompleted = useCouponGetByIdCompleted();
   
@@ -104,6 +106,29 @@ export default function CouponForm({
           discount: null
         })
       }
+    };
+
+    if(keyChange === 'allowAllApply'){
+      if(!!valueChange?.all){
+        form.setFieldsValue({
+          customerApplyIds : [],
+          allowAllApply : {
+            b2b : true,
+            b2c : true,
+            all : true,
+          }
+        });
+        
+      }else{
+        // Handle Remove All refCollection === "pharma_profile" From customerApplyIds
+        const removeB2b = customerApplyIds?.filter((item ) => valueChange?.b2b ? item?.refCollection !== "pharma_profile" : true);
+        // Handle Remove All refCollection === "pharma_profile" From removeB2b
+        const removeB2c = removeB2b?.filter((item ) => valueChange?.b2c ? item?.refCollection !== "partner" : true);
+        form.setFieldsValue({
+          customerApplyIds : removeB2c
+        })
+      }
+      
     };
   };
 
@@ -385,7 +410,7 @@ export default function CouponForm({
           <TargetFormItem targetIds={targetIds}/>
         </Tabs.TabPane>
         <Tabs.TabPane forceRender key={"3"} tab="Những ai được dùng mã">
-          {isGetByIdCompleted && <CustomerApplyFormItem customerApplyIds={customerApplyIds}/>}
+          {(isGetByIdCompleted || !id) && <CustomerApplyFormItem customerApplyIds={customerApplyIds} allowAllApply={allowAllApply}/>}
         </Tabs.TabPane>
       </Tabs>
 
