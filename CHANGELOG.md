@@ -1,3 +1,10 @@
+## [1.22.2](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/compare/v1.22.1...v1.22.2) (2024-08-14)
+
+
+### Bug Fixes
+
+* [#1964](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1964)  not request unSubscribeToken when token have't token ([40c8af9](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/40c8af9e4eec27d46426b0f370fae36ca882b7af))
+
 ## [1.22.1](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/compare/v1.22.0...v1.22.1) (2024-08-13)
 
 
