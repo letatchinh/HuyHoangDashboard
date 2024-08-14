@@ -13,6 +13,7 @@ import { useGetBill } from "../bill.hook";
 import LogisticForm from "~/modules/logistic/components/LogisticForm";
 import useNotificationStore from "~/store/NotificationContext";
 import SplitBillForm from "../components/SplitBill/SplitBillForm";
+import { METHOD_TYPE } from "~/modules/vouchers/constants";
 
 export type GlobalUpdateBill = {
     bill : any,
@@ -62,7 +63,6 @@ export function UpdateBillProvider({
     const [reFetch,setReFetch] = useState(false);
     const mutateBill = useCallback(() => setReFetch(!reFetch),[reFetch]);
   const [bill, isLoading] = useGetBill(id, reFetch);
-  console.log(bill,'bill')
     const {pharmacyId,totalPrice,codeSequence,_id,totalReceiptVoucherCompleted,remainAmount, remaining, pair, refCollection} = bill || {};
     const [isOpenForm, setIsOpenForm] = useState(false);
     const [isOpenFormPayment, setIsOpenFormPayment] = useState(false);
@@ -157,7 +157,7 @@ export function UpdateBillProvider({
             data : omit(bill,['bill','billItems','historyStatus']),
             type : 'BILL'
           }}
-          totalRevenueInVouchers={get(bill, 'totalReceiptVoucherWaiting',0)}
+          totalRevenueInVouchers={get(bill, 'totalReceiptVoucherWaiting', 0)}
         />
       </ModalAnt>
       <ModalAnt
@@ -175,8 +175,14 @@ export function UpdateBillProvider({
             debt: compareMoney,
             note: 'Chi cho khách hàng B2B vì thu dư',
             totalAmount: compareMoney,
+            method: {
+              type: METHOD_TYPE.BILL,
+              data: {
+                _id: bill?._id
+              }
+            }
           }}
-          onClose = {onCloseFormPayment}
+          onClose={onCloseFormPayment}
         />
       </ModalAnt>
       <ModalAnt
