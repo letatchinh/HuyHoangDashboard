@@ -55,7 +55,7 @@ type Bill = {
   dataTransportUnit?: ValueApplyBill;
   deliveryAddress?: string;
   warehouseId?: number;
-  totalPrice: number;
+  totalRoot: number;
 };
 
 type DiscountDetail = {
@@ -70,9 +70,9 @@ export type GlobalCreateBill = {
   onRemove: (productId: string) => void;
   form: any;
   onValueChange: (newValue: any, allValues: any) => void;
-  totalPrice: number;
+  totalRoot: number;
   totalQuantity: number;
-  totalPriceAfterDiscount: number;
+  bill_totalPrice: number;
   totalAmount: number;
   totalDiscount: number;
   totalDiscountOther: number;
@@ -135,9 +135,9 @@ const CreateBill = createContext<GlobalCreateBill>({
   onRemove: () => {},
   form: null,
   onValueChange: () => {},
-  totalPrice: 0,
+  totalRoot: 0,
   totalQuantity: 0,
-  totalPriceAfterDiscount: 0,
+  bill_totalPrice: 0,
   totalAmount: 0,
   totalDiscount: 0,
   totalDiscountOther: 0,
@@ -364,7 +364,7 @@ export function CreateBillProvider({
     [quotationItems]
   ); // Tổng giá trị gốc đơn hàng 
 
-  const totalPrice = useMemo(
+  const totalRoot = useMemo(
     () =>
       quotationItems?.reduce(
         (sum: number, cur: any) =>
@@ -427,20 +427,20 @@ export function CreateBillProvider({
   },[couponSelected,findLogisticInFee]);
   // ------End Calculate discount Coupon-------
 
-
+  const pair = Form.useWatch('pair',form);
   const totalFee = useMemo(
     () =>
       (fee || [])?.reduce(
         (sum: number, cur: FeeType) =>
           sum +
           (cur?.typeValue === "PERCENT"
-            ? getValueOfPercent(totalPrice, cur?.value)
+            ? getValueOfPercent(totalRoot, cur?.value)
             : cur?.value),
         0
       ),
-    [fee, totalPrice]
+    [fee, totalRoot]
   );
-  const totalPriceAfterDiscount = useMemo(
+  const bill_totalPrice = useMemo(
     () =>
       (totalAmount + (totalFee - findLogisticInFee) - totalDiscountCouponBill - totalCouponForItem) || 0, // Not count fee logistic
     [quotationItems, totalFee,totalDiscountCouponBill,findLogisticInFee , totalCouponForItem]
@@ -531,7 +531,7 @@ export function CreateBillProvider({
         get(bill, "debtType") ||
         get(initDebt, "key"),
       pharmacyId: get(bill, "pharmacyId"),
-      pair: get(bill, "pair", 0),
+      pair: pair || 0,
       fee: get(bill, "fee", defaultFee),
       deliveryAddress: get(bill, "deliveryAddress"),
     });
@@ -544,7 +544,7 @@ export function CreateBillProvider({
       
       setQuotationItems(newQuotationItems);
     }
-  }, [bill, debt, form, totalPrice,couponSelected]);
+  }, [bill, debt, form, totalRoot,couponSelected]);
 
   // Verify coupon
   const onVerifyCoupon = async() => {
@@ -694,7 +694,16 @@ export function CreateBillProvider({
 
     }
     
-  },[quotationChanged])
+  },[quotationChanged]);
+
+  useEffect(() => {
+    console.log(bill?.dataTransportUnit,'bill?.dataTransportUnit');
+    if(bill?.dataTransportUnit?.payer === "SYSTEM"){
+      onChangeCoupleSelect({
+        ship : []
+      })
+    }
+  },[bill?.dataTransportUnit])
   return (
     <CreateBill.Provider
       value={{
@@ -704,9 +713,9 @@ export function CreateBillProvider({
         onRemove,
         form,
         onValueChange,
-        totalPrice,
+        totalRoot,
         totalQuantity,
-        totalPriceAfterDiscount,
+        bill_totalPrice,
         totalDiscount,
         totalDiscountFromProduct,
         totalDiscountFromSupplier,

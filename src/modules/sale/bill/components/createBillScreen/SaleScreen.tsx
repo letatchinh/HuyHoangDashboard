@@ -20,7 +20,7 @@ export default function SaleScreen(props: propsType): React.JSX.Element {
     form,
     onValueChange,
     quotationItems,
-    totalPriceAfterDiscount,
+    bill_totalPrice,
     onRemoveTab,
     bill,
     onOpenModalResult,
@@ -37,6 +37,7 @@ export default function SaleScreen(props: propsType): React.JSX.Element {
     mutateChangeQuotationItem,
   } = useCreateBillStore();
  const feeForm = Form.useWatch('fee',form);
+ 
   const { onNotify } = useNotificationStore();
   const callBackAfterSuccess = (newData: DataResultType) => {
     onRemoveTab();
@@ -54,7 +55,7 @@ export default function SaleScreen(props: propsType): React.JSX.Element {
         return onNotify?.warning("Vui lòng chọn thuốc!");
       }
 
-      if (totalPriceAfterDiscount < 0) {
+      if (bill_totalPrice < 0) {
         return onNotify?.warning("Số tiền không hợp lệ");
       }
       
@@ -67,7 +68,7 @@ export default function SaleScreen(props: propsType): React.JSX.Element {
         QuotationModule.service.convertDataQuotation({
           quotationItems: quotationItems,
           data: values,
-          totalPriceAfterDiscount,
+          bill_totalPrice,
           _id: get(bill, "dataUpdateQuotation.id"),
           totalAmount,
           dataTransportUnit: get(bill, 'dataTransportUnit'),
@@ -198,7 +199,7 @@ export default function SaleScreen(props: propsType): React.JSX.Element {
               <Col style={{height : '100%',display : 'flex' , alignItems : 'end'}} span={14}>
                 <Button
                   block
-                  disabled={!quotationItems?.length || !totalAmount  || !totalPriceAfterDiscount}
+                  disabled={!quotationItems?.length || !totalAmount  || !bill_totalPrice}
                   className="form-create-bill--payment__actions__btnPayment"
                   type="primary"
                   loading={isSubmitLoading}
