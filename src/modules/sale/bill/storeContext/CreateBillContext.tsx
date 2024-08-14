@@ -311,21 +311,6 @@ export function CreateBillProvider({
         mutateReValidate();
         break;
 
-      case "fee":
-        // const newFee = values[key]?.map((item:FeeType) => item?.typeValue === 'PERCENT' && item?.value > 100 ? {...item,value : 100} : item);
-        const newFee = values[key];
-        setFormAndLocalStorage({
-          fee: newFee,
-        });
-
-        break;
-
-      case "deliveryAddress":
-        setFormAndLocalStorage({
-          [key]: values[key],
-        });
-        break;
-
       case "debtType":
         if (values[key] === "COD") {
           onChangeBill({
@@ -338,6 +323,9 @@ export function CreateBillProvider({
         break;
 
       default:
+        setFormAndLocalStorage({
+          [key]: values[key],
+        });
         break;
     }
   };
@@ -531,7 +519,7 @@ export function CreateBillProvider({
         get(bill, "debtType") ||
         get(initDebt, "key"),
       pharmacyId: get(bill, "pharmacyId"),
-      pair: pair || 0,
+      pair: get(bill,'pair',0) || 0,
       fee: get(bill, "fee", defaultFee),
       deliveryAddress: get(bill, "deliveryAddress"),
     });
@@ -697,8 +685,8 @@ export function CreateBillProvider({
   },[quotationChanged]);
 
   useEffect(() => {
-    console.log(bill?.dataTransportUnit,'bill?.dataTransportUnit');
     if(bill?.dataTransportUnit?.payer === "SYSTEM"){
+      // Handle remove coupon Ship 
       onChangeCoupleSelect({
         ship : []
       })
