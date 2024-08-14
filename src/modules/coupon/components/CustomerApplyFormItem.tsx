@@ -1,18 +1,25 @@
 import { Alert, Button, Col, Flex, Form, Row, Select } from "antd";
-import React from "react";
+import React, { useMemo } from "react";
 import DebounceSelectMultipleItemCustomer from "~/components/common/DebounceSelectMultiple/DebounceSelectMultipleItemCustomer";
 import { DebounceSelectMultipleProvider } from "~/components/common/DebounceSelectMultiple/DebounceSelectMultipleProvider";
 import { requireRulesCustom } from "~/constants/defaultValue";
 type propsType = {
-  form: any;
+  customerApplyIds: any;
 };
-export default function CustomerApplyFormItem({ form }: propsType): React.JSX.Element {
+export default function CustomerApplyFormItem({customerApplyIds }: propsType): React.JSX.Element {
+  const valuesPharmacy = useMemo(() => customerApplyIds
+  ?.filter((item : any) => item?.refCollection === "pharma_profile")
+  ?.map((item: any) => item?.id),[customerApplyIds]);
+
+  const valuesPartner = useMemo(() => customerApplyIds
+  ?.filter((item : any) => item?.refCollection === "partner")
+  ?.map((item: any) => item?.id),[customerApplyIds]);
   return (
     <DebounceSelectMultipleProvider 
       usePharmacy
       usePartner
-      initValuePharmacy={form.getFieldValue('customerApplyIds')?.filter((item:any) => item?.refCollection === "pharma_profile")?.map((item:any) => item?.id)}
-      initValuePartner={form.getFieldValue('customerApplyIds')?.filter((item:any) => item?.refCollection === "partner")?.map((item:any) => item?.id)}
+      valuesPharmacy={valuesPharmacy}
+      valuesPartner={valuesPartner}
     >
   <Form.Item shouldUpdate={(p,n) => p?.customerApplyIds !== n?.customerApplyIds} noStyle>
     {({getFieldValue}) =>   
@@ -22,7 +29,7 @@ export default function CustomerApplyFormItem({ form }: propsType): React.JSX.El
           <>
           {!getFieldValue('customerApplyIds')?.length && <Alert showIcon style={{textAlign : 'center',marginBottom : 8}} message="Tất cả các khách hàng để được phép dùng nếu chưa thêm ai vào" type="info" />}
             {fields.map((field, index) => {
-              const refCollection = form.getFieldValue([
+              const refCollection = getFieldValue([
                 "customerApplyIds",
                 index,
                 "refCollection",

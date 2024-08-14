@@ -522,7 +522,6 @@ export function CreateBillProvider({
         get(bill, "quotationItems", []),
         couponSelected
       );
-      console.log(newQuotationItems,'newQuotationItems');
       
       setQuotationItems(newQuotationItems);
     }

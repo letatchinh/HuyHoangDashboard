@@ -1,20 +1,24 @@
 import { Alert, Button, Col, Flex, Form, Row, Select } from "antd";
-import React from "react";
+import React, { useMemo } from "react";
 import { DebounceSelectMultipleProvider } from "~/components/common/DebounceSelectMultiple/DebounceSelectMultipleProvider";
 import SelectIds from "./SelectIds";
 type propsType = {
-  form: any;
+  targetIds: any;
 };
-export default function TargetFormItem({ form }: propsType): React.JSX.Element {
-  console.log(form.getFieldValue('targetIds'),'form');
+export default function TargetFormItem({ targetIds }: propsType): React.JSX.Element {
+  const valuesProduct = useMemo(() => targetIds
+  ?.filter((item : any) => item?.refCollection === "product")
+  ?.map((item: any) => item?.id),[targetIds]);
+
+  const valuesProductGroup = useMemo(() => targetIds
+  ?.filter((item : any) => item?.refCollection === "product_group")
+  ?.map((item: any) => item?.id),[targetIds]);
+
   
   return (
     <DebounceSelectMultipleProvider
-      initValueProduct={form
-        .getFieldValue("targetIds")
-        ?.filter((item : any) => item?.refCollection === "product")
-        ?.map((item: any) => item?.id)
-        ?.join(",")}
+      valuesProduct={valuesProduct}
+      valuesProductGroup={valuesProductGroup}
       useProduct
       useProductGroup
     >
@@ -37,7 +41,7 @@ export default function TargetFormItem({ form }: propsType): React.JSX.Element {
                     />
                   )}
                   {fields.map((field, index) => {
-                    const refCollection = form.getFieldValue([
+                    const refCollection = getFieldValue([
                       "targetIds",
                       index,
                       "refCollection",

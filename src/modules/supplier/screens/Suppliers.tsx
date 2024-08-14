@@ -67,7 +67,6 @@ export default function Supplier(): React.JSX.Element {
 
   //Download
   const canDownload = useMatchPolicy(POLICIES.DOWNLOAD_SUPPLIER);
-  console.log(canDownload,'canDownload');
   
   const [arrCheckBox, onChangeCheckBox] = useCheckBoxExport();
 

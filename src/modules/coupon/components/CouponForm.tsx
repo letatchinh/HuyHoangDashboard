@@ -1,5 +1,4 @@
 import {
-  Alert,
   Button,
   Checkbox,
   Col,
@@ -10,26 +9,24 @@ import {
   Radio,
   Row,
   Switch,
-  Tabs,
+  Tabs
 } from "antd";
 import TextArea from "antd/lib/input/TextArea";
 import dayjs from "dayjs";
 import { get } from "lodash";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import InputNumberAnt from "~/components/Antd/InputNumberAnt";
 import BaseBorderBox from "~/components/common/BaseBorderBox/index";
 import Loading from "~/components/common/Loading/index";
 import { requireRules, requireRulesCustom } from "~/constants/defaultValue";
 import { useFailedAnt } from "~/utils/hook";
-import { ErrorAntBase } from "~/utils/Modal";
 import {
   defaultConditions,
   DEFAULT_COUPON,
   STATE,
-  STATE_VI,
+  STATE_VI
 } from "../constants";
 import { useCouponGetByIdCompleted, useCreateCoupon, useGetCoupon, useUpdateCoupon } from "../coupon.hook";
-import { CouponBase } from "../coupon.modal";
 import CustomerApplyFormItem from "./CustomerApplyFormItem";
 import TargetFormItem from "./TargetFormItem";
 const CLONE_defaultConditions: any = defaultConditions;
@@ -43,6 +40,8 @@ export default function CouponForm({
 }: propsType): React.JSX.Element {
   const [form] = Form.useForm();
   const { onFinishFailed, ErrorComponent } = useFailedAnt();
+  const targetIds = Form.useWatch('targetIds',form);
+  const customerApplyIds = Form.useWatch('customerApplyIds',form);
   const [coupon, loading] = useGetCoupon(id);
   const isGetByIdCompleted = useCouponGetByIdCompleted();
   
@@ -84,28 +83,28 @@ export default function CouponForm({
           },
         });
       }
-    }
+    };
     if(keyChange === 'target'){
       if(valueChange === 'BILL_ITEM'){
         form.setFieldsValue({
           applyFor: "BILL"
         })
       }
-    }
+    };
     if(keyChange === 'applyFor'){
       if(valueChange === 'BILL'){
         form.setFieldsValue({
           isFreeShip: false
         })
       }
-    }
+    };
     if(keyChange === 'isFreeShip'){
       if(valueChange){
         form.setFieldsValue({
           discount: null
         })
       }
-    }
+    };
   };
 
   useEffect(() => {
@@ -383,10 +382,10 @@ export default function CouponForm({
             </Col>
           </Row>
 
-          <TargetFormItem form={form} />
+          <TargetFormItem targetIds={targetIds}/>
         </Tabs.TabPane>
-        <Tabs.TabPane key={"3"} tab="Những ai được dùng mã">
-          {isGetByIdCompleted && <CustomerApplyFormItem form={form} />}
+        <Tabs.TabPane forceRender key={"3"} tab="Những ai được dùng mã">
+          {isGetByIdCompleted && <CustomerApplyFormItem customerApplyIds={customerApplyIds}/>}
         </Tabs.TabPane>
       </Tabs>
 

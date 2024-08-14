@@ -1,6 +1,6 @@
 import { Flex, Select, Spin } from 'antd';
 import { SelectProps } from 'antd/es/select/index';
-import { debounce, get, unionBy } from 'lodash';
+import { debounce } from 'lodash';
 import React, { useEffect, useState } from 'react';
 import pharmacyModule from "~/modules/pharmacy";
 import { DSM_getOptions } from './DebounceSelectMultiple.service';
@@ -44,9 +44,14 @@ export default function DebounceSelectMultipleItemCustomer({refCollection,...pro
     };
     const debounceFetcher = debounce(fetcher,500);
     
+    const dataSourceDisabled = dataSource?.map((item) => ({
+      ...item,
+      disabled: DSM_setting.values[refCollection]?.includes(item?.value)  && item?.value !== props.value,
+    }));
+
     return (
         <Select 
-        options={dataSource}
+        options={dataSourceDisabled}
         allowClear
         showSearch
         {...loading && {dropdownRender : () => <Flex justify={'center'} align="center" style={{width : '100%',height : 200}}>

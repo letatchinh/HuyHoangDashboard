@@ -42,10 +42,15 @@ export default function DebounceSelectMultipleItemProduct(props : SelectProps) :
         }
     };
     const debounceFetcher = debounce(fetcher,500);
-    
+
+    const dataSourceDisabled = dataSource?.map((item) => ({
+        ...item,
+        disabled: DSM_setting.values[refCollection]?.includes(item?.value)  && item?.value !== props.value,
+      }));
+
     return (
         <Select 
-        options={dataSource}
+        options={dataSourceDisabled}
         allowClear
         showSearch
         {...loading && {dropdownRender : () => <Flex justify={'center'} align="center" style={{width : '100%',height : 200}}>

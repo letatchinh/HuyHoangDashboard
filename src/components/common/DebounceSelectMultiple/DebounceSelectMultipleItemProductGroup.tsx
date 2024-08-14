@@ -1,4 +1,4 @@
-import { Flex, Select, Spin } from 'antd';
+import { Select } from 'antd';
 import { SelectProps } from 'antd/lib/index';
 import React, { useEffect, useState } from 'react';
 import { filterOptionSlug } from '~/utils/helpers';
@@ -14,10 +14,14 @@ export default function DebounceSelectMultipleItemProductGroup(props : SelectPro
         setDataSource(DSM_setting.dataSource[refCollection]);
     },[DSM_setting]);
 
-    
+    const dataSourceDisabled = dataSource?.map((item) => ({
+        ...item,
+        disabled: DSM_setting.values[refCollection]?.includes(item?.value) && item?.value !== props.value,
+      }));
+      
     return (
         <Select 
-        options={dataSource}
+        options={dataSourceDisabled}
         allowClear
         showSearch
         filterOption={filterOptionSlug}
