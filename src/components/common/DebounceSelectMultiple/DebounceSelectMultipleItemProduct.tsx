@@ -26,12 +26,10 @@ export default function DebounceSelectMultipleItemProduct(props : SelectProps) :
                 return;
             };
             setLoading(true);
-            const dataFetcher = await ProductModule.api.getAll({
+            const dataFetcher = await ProductModule.api.getOptions({
                 keyword,
-                limit: 20,
-                isSupplierMaster: true,
             });
-            const data = DSM_getOptionsProduct(get(dataFetcher,'docs',[]));
+            const data = DSM_getOptionsProduct(dataFetcher);
             // Search Will Set DataSource Search
             setDataSource(data);
             setLoading(false);

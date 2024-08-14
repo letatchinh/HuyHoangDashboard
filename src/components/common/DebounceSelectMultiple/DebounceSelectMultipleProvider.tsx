@@ -5,7 +5,7 @@ import { PropSearchPharmacyV2 } from "~/modules/pharmacy/pharmacy.modal";
 import ProductModule from "~/modules/product";
 import ProductGroupModule from "~/modules/productGroup";
 import { useFetchState } from "~/utils/hook";
-import { DSM_getOptions } from "./DebounceSelectMultiple.service";
+import { DSM_getOptions,DSM_getOptionsProduct } from "./DebounceSelectMultiple.service";
 // DSM = Debounce Select Multiple
 // interface Value
 export type GlobalDebounceSelectMultiple = {
@@ -85,6 +85,7 @@ export function DebounceSelectMultipleProvider({
     productGroup: false,
   });
   
+  // Query data
   const queryPharmacy : PropSearchPharmacyV2 | undefined = useMemo(
     () => valuesPharmacy && ({
       customerType : "pharma_profile",
@@ -109,21 +110,18 @@ export function DebounceSelectMultipleProvider({
   
   const queryProduct : any = useMemo(
     () => {
-      const query : any = {
-        keyword : "",
-        limit: 20,
-        isSupplierMaster: true,
-      }
-      if(valuesProduct){
-        query.idsInitOptions = valuesProduct?.join(',');
-      }
-      return query
+      return valuesProduct && ({
+        keyword: "",
+        ...valuesProduct && {optionWith : {
+          id : valuesProduct
+        }}
+      })
     },
     [valuesProduct]
   );
 
 
-
+  // Fetch data
   const [pharmacies, DSM_dataSourcePharmacyRootLoading] = useFetchState({
     api: pharmacyModule.api.searchV2,
     query : queryPharmacy,
@@ -138,11 +136,10 @@ export function DebounceSelectMultipleProvider({
   });
   
   const [products, DSM_dataSourceProductRootLoading] = useFetchState({
-    api: ProductModule.api.getAll,
+    api: ProductModule.api.getOptions,
     query : queryProduct,
     conditionRun : useProduct && !!valuesProduct && !dataIsReady.product,
     useDocs : false,
-    fieldGet : "options"
   });
 
   const [productsGroup, DSM_dataSourceProductGroupRootLoading] = useFetchState({
@@ -151,6 +148,7 @@ export function DebounceSelectMultipleProvider({
     useDocs : false,
   });
   
+  // Convert data
   const DSM_dataSourcePharmacyRoot : OptionProps[] = useMemo(
     () => DSM_getOptions(pharmacies),
     [pharmacies]
@@ -165,11 +163,13 @@ export function DebounceSelectMultipleProvider({
     () => DSM_getOptions(productsGroup),
     [productsGroup]
   );
+
   const DSM_dataSourceProductRoot : OptionProps[] = useMemo(
-    () => products,
+    () => DSM_getOptionsProduct(products),
     [products]
   );
 
+    // Export data
   const DSM_setting = useMemo(
     () => ({
       dataSource: {
@@ -207,6 +207,7 @@ export function DebounceSelectMultipleProvider({
     ]
   );
 
+  // Check If Data is available Will Set Data is Ready
   useEffect(() => {
     setDataIsReady({
       pharma_profile : !!DSM_dataSourcePharmacyRoot?.length,

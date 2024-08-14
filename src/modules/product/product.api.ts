@@ -14,6 +14,7 @@ const apis = {
     createBorrow: (data?: any) => requester.post('/api/v1/borrow-products/create', data),
     updateBorrow: (data?: any) => requester.put(`/api/v1/borrow-products/update/${get(data,'id')}`, omit(data, ['id'])),
     deleteBorrow: (_id?: any) => requester.delete(`/api/v1/borrow-products/delete/${_id}`),
+    getOptions: (payload?: any) => requester.post(`/api/v1/product-search-options`,payload),
     // confirmBorrow: (data?: any) => requester.post(`/api/v1/borrow-products/confirm/${data?._id}/${data?.status}`),
 
     getStock: (data?: any) => requester.post(`/api/v1/pms/check-stock`,data),
