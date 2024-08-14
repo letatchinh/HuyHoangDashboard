@@ -1,6 +1,6 @@
 import { Flex, Select, Spin } from 'antd';
 import { SelectProps } from 'antd/lib/index';
-import { debounce } from 'lodash';
+import { debounce, get } from 'lodash';
 import React, { useEffect, useState } from 'react';
 import ProductModule from "~/modules/product";
 import { DSM_getOptionsProduct } from './DebounceSelectMultiple.service';
@@ -31,7 +31,7 @@ export default function DebounceSelectMultipleItemProduct(props : SelectProps) :
                 limit: 20,
                 isSupplierMaster: true,
             });
-            const data = DSM_getOptionsProduct(dataFetcher);
+            const data = DSM_getOptionsProduct(get(dataFetcher,'docs',[]));
             // Search Will Set DataSource Search
             setDataSource(data);
             setLoading(false);
@@ -47,7 +47,7 @@ export default function DebounceSelectMultipleItemProduct(props : SelectProps) :
         ...item,
         disabled: DSM_setting.values[refCollection]?.includes(item?.value)  && item?.value !== props.value,
       }));
-
+      
     return (
         <Select 
         options={dataSourceDisabled}
