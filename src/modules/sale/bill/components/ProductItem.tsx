@@ -81,12 +81,12 @@ export default function ProductItem({
     },
     {
       title: "Thành tiền",
-      dataIndex: "totalPrice",
-      key: "totalPrice",
+      dataIndex: "totalRoot",
+      key: "totalRoot",
       align: "center",
-      render(totalPrice, record, index) {
+      render(totalRoot, record, index) {
         return (
-          <Typography.Text strong>{formatter(totalPrice)}</Typography.Text>
+          <Typography.Text strong>{formatter(totalRoot)}</Typography.Text>
         );
       },
     },
