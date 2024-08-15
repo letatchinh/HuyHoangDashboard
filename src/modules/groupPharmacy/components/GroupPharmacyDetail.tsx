@@ -102,6 +102,7 @@ export default function GroupPharmacyDetail(props: propsType): React.JSX.Element
               usePaging={useGroupPharmacyPaging}
               query={query}
               onParamChange={onParamChange}
+              moduleName="groupPharmacy"
             />
           }
         />

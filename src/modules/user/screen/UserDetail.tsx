@@ -102,6 +102,7 @@ export default function UserDetail(): React.JSX.Element {
             usePaging={useUserPaging}
             query={query}
             onParamChange={onParamChange}
+            moduleName="user"
           />
         }
       />

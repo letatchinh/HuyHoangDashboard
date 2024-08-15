@@ -117,6 +117,7 @@ export default function ProductUnitDetail(props: propsType): React.JSX.Element {
             usePaging={useProductUnitPaging}
             query={query}
             onParamChange={onParamChange}
+            moduleName="productUnit"
           />
         }
       />

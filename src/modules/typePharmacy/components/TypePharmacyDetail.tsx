@@ -104,6 +104,7 @@ export default function TypePharmacyDetail(
             usePaging={useTypePharmacyPaging}
             query={query}
             onParamChange={onParamChange}
+            moduleName="typePharmacy"
           />
         }
       />

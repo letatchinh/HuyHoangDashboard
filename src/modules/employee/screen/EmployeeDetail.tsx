@@ -127,6 +127,7 @@ export default function EmployeeDetail(): React.JSX.Element {
           usePaging={useEmployeePaging}
           query={query}
           onParamChange={onParamChange}
+          moduleName="employee"
         />}
       />
       <Modal

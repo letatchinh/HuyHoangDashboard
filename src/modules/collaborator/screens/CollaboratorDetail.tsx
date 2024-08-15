@@ -104,6 +104,7 @@ export default function CollaboratorDetail(): React.JSX.Element {
             query={query}
             onParamChange={onParamChange}
             fieldCode="partnerNumber"
+            moduleName="collaborator"
           />
         }
       />

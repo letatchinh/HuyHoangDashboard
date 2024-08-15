@@ -117,6 +117,7 @@ export default function PharmacyDetail_v2(): React.JSX.Element {
             usePaging={usePharmacyPaging}
             query={query}
             onParamChange={onParamChange}
+            moduleName="pharmacy"
           />
         }
       />
