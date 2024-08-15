@@ -112,6 +112,7 @@ const reportRevenuePersonalEmployee = 'reportRevenuePersonalEmployee';
 const reportRevenuePersonalPartner = 'reportRevenuePersonalPartner';
 const reportRevenueTeamEmployee = 'reportRevenueTeamEmployee';
 const reportRevenueTeamPartner = 'reportRevenueTeamPartner';
+const configWarehouse = 'configWarehouse';
 
 //------RESOURCES --------
 const RESOURCES = [
@@ -229,6 +230,7 @@ const RESOURCES = [
   reportRevenuePersonalPartner,
   reportRevenueTeamEmployee,
   reportRevenueTeamPartner,
+  configWarehouse
 ];
 
 //ACTIONS

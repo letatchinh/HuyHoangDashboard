@@ -95,7 +95,7 @@ export default function SelectDefaultWarehouse(
                     </BaseBorderBox>
                   );
                 })}
-                <WithPermission permission={POLICIES.UPDATE_WAREHOUSELINK}>
+                <WithPermission permission={POLICIES.UPDATE_CONFIGWAREHOUSE}>
                 <Form.Item>
                   <Row>
                     <Button
@@ -115,7 +115,7 @@ export default function SelectDefaultWarehouse(
               </div>
             )}
           </Form.List>
-          <WithPermission permission={POLICIES.UPDATE_WAREHOUSELINK}>
+          <WithPermission permission={POLICIES.UPDATE_CONFIGWAREHOUSE}>
           <Row justify={"end"} className="mt-3">
             <Button loading={ isLoading || (warehouseDefault?.length > 0 && isLoadingSubmit)} type="primary" htmlType="submit">
               Cập nhật

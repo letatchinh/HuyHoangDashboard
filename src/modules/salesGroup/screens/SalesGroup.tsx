@@ -109,7 +109,7 @@ export default function SalesGroup() {
       }
       return itemData;
     }
-    return initial(data).map(loop);
+    return (data).map(loop);
   }, [data]);
   const onValuesChange = (value:any)=>{
     const key = Object.keys(value)[0];
