@@ -167,7 +167,7 @@ const UserEmployee = ({ currentTab }: UserProps) => {
       render: (status, record: any) => {
         return(
           <Switch
-          disabled={record?.adapter?.user?.isSuperAdmin}
+          disabled={!isCanUpdate || record?.adapter?.user?.isSuperAdmin}
           checked={status === "ACTIVE"}
           onChange={() =>
             updateUser({
