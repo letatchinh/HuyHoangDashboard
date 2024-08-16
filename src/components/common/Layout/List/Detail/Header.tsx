@@ -7,6 +7,7 @@ import {
 import { Button, Drawer, Dropdown, Flex, Popconfirm, Typography } from "antd";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import WithPermission from "~/components/common/WithPermission";
 import { COLOR, STATUS, STATUS_NAMES } from "~/constants/defaultValue";
 import { useQueryParams } from "~/utils/hook";
 import BtnAdd from "../Header/BtnAdd";
@@ -23,9 +24,10 @@ type PropsHeaderLeft = {
     querySearch? : string[]
   };
   onChangeStatus: (status: any) => void;
-  allowSearch? : boolean
+  allowSearch? : boolean;
+  PERMISSION_WRITE? : any;
 };
-const HeaderLeft = ({ onAdd, onChangeStatus,allowSearch = true,SearchProp,filterStatus = true }: PropsHeaderLeft) => {
+const HeaderLeft = ({ onAdd, onChangeStatus,allowSearch = true,SearchProp,filterStatus = true,PERMISSION_WRITE }: PropsHeaderLeft) => {
   const [isSearching,setIsSearching] = useState<any>(false);
   const query = useQueryParams();
   useEffect(() => {
@@ -65,7 +67,9 @@ const HeaderLeft = ({ onAdd, onChangeStatus,allowSearch = true,SearchProp,filter
         </Typography.Title>
       </Dropdown> : <div></div>}
       <Flex gap={10}>
-        <BtnAdd onClick={onAdd} />
+        <WithPermission permission={PERMISSION_WRITE}>
+          <BtnAdd onClick={onAdd} />
+        </WithPermission>
         {allowSearch && <SearchOutlined {...isSearching && {className : 'dot'}} onClick={SearchProp && SearchProp?.openSearch} />}
       </Flex>
 
@@ -92,27 +96,35 @@ type PropsHeaderRight = {
   onEditClick: () => void;
   onDeleteClick: () => void;
   path: string;
+  PERMISSION_UPDATE? : any;
+  PERMISSION_DELETE? : any;
 };
 const HeaderRight = ({
   name,
   onEditClick,
   onDeleteClick,
   path,
+  PERMISSION_UPDATE,
+  PERMISSION_DELETE,
 }: PropsHeaderRight) => {
   const navigate = useNavigate();
   return (
     <Flex justify={"space-between"} align="center">
       {name}
       <Flex gap={10}>
+        <WithPermission permission={PERMISSION_UPDATE}>
         <Button
           type="primary"
           ghost
           onClick={onEditClick}
           icon={<EditOutlined />}
         />
-        <Popconfirm title="Xác nhận xoá" onConfirm={onDeleteClick}>
-          <Button danger icon={<DeleteOutlined />} />
-        </Popconfirm>
+        </WithPermission>
+        <WithPermission permission={PERMISSION_DELETE}>
+          <Popconfirm title="Xác nhận xoá" onConfirm={onDeleteClick}>
+            <Button danger icon={<DeleteOutlined />} />
+          </Popconfirm>
+        </WithPermission>
         <Button
           onClick={() => navigate(path)}
           type="text"

@@ -185,7 +185,14 @@ class SupplierClassExtend extends InstanceModuleRedux {
         ...state,
         ...omit(this.cloneInitState, ["revenueSupplier", "totalRevenue", 'revenueId', 'productGroupRevenue']),  
       }),
-
+      updateSuccess: (state:cloneInitState, { payload }:{payload:any}) => {
+        state.isSubmitLoading = false;
+        const data = payload;
+        state.byId = data;
+        state.list = state.list?.map((item:any) => get(item,'_id') === get(data,'_id') ? data : item);
+        state.listSearch = state.listSearch?.map((item:any) => get(item,'_id') === get(data,'_id') ? data : item);
+        state.updateSuccess = data;
+      },
     };
     // Add More InitState
     this.cloneInitState = {

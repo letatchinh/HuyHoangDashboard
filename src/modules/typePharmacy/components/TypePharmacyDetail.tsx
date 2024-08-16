@@ -7,6 +7,7 @@ import Header from "~/components/common/Layout/List/Detail/Header";
 import Layout from "~/components/common/Layout/List/Detail/Layout";
 import ListInDetailCommon from "~/components/common/Layout/List/Detail/ListInDetailCommon";
 import { STATUS_COLOR, STATUS_NAMES } from "~/constants/defaultValue";
+import POLICIES from "~/modules/policy/policy.auth";
 import { PATH_APP } from "~/routes/allPath";
 import TypePharmacyForm from "../screens/TypePharmacyForm";
 import { useDeleteTypePharmacy, useGetTypePharmacies, useGetTypePharmacy, useGetTypePharmacy_onlyGet, useTypePharmacyPaging, useTypePharmacyQueryParams, useUpdateTypePharmacy, useUpdateTypePharmacyParams } from "../typePharmacy.hook";
@@ -54,6 +55,7 @@ export default function TypePharmacyDetail(
       <Layout
         HeaderLeft={
           <Header.HeaderLeft
+            PERMISSION_WRITE={POLICIES.WRITE_CUSTOMERGROUP}
             onChangeStatus={(status) => onParamChange({ status })}
             onAdd={() => onOpenForm()}
             SearchProp={{
@@ -75,6 +77,8 @@ export default function TypePharmacyDetail(
         }
         HeaderRight={
           <Header.HeaderRight
+            PERMISSION_UPDATE={POLICIES.UPDATE_CUSTOMERGROUP}
+            PERMISSION_DELETE={POLICIES.DELETE_CUSTOMERGROUP}
             path={PATH_APP.typePharmacy.root}
             onDeleteClick={() => handleDelete(typePharmacyId)}
             onEditClick={() => onOpenForm(typePharmacyId)}
