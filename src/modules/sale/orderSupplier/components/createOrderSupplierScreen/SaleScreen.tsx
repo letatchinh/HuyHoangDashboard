@@ -81,11 +81,11 @@ try {
     switch (get(bill,'typeTab')) {
       case 'createOrderSupplier':
         return "Tạo đơn hàng (F1)"
-    
       default: 
         return "Tạo đơn hàng (F1)"
     }
-  },[bill]);
+  }, [bill]);
+  console.log(textSubmit,'textSubmit')
   useEffect(() => {
     const handleKeyPress = (event : any) => {
       // Check if the pressed key is F1
