@@ -8,6 +8,7 @@ import Layout from "~/components/common/Layout/List/Detail/Layout";
 import ListInDetailCommon from "~/components/common/Layout/List/Detail/ListInDetailCommon";
 import { STATUS_COLOR, STATUS_NAMES } from "~/constants/defaultValue";
 import CollaboratorProduct from "~/modules/collaborator/components/CollaboratorProduct";
+import POLICIES from "~/modules/policy/policy.auth";
 import { PATH_APP } from "~/routes/allPath";
 import EmployeeForm from "../components/EmployeeForm";
 import MainContentTab from "../components/MainContentTab";
@@ -76,6 +77,7 @@ export default function EmployeeDetail(): React.JSX.Element {
       <Layout
         HeaderLeft={
           <Header.HeaderLeft
+            PERMISSION_WRITE={POLICIES.WRITE_EMPLOYEE}
             onChangeStatus={(status) => onParamChange({ status })}
             onAdd={() => onOpenForm()}
             SearchProp={{
@@ -97,6 +99,8 @@ export default function EmployeeDetail(): React.JSX.Element {
         }
         HeaderRight={
           <Header.HeaderRight
+            PERMISSION_DELETE={POLICIES.DELETE_EMPLOYEE}
+            PERMISSION_UPDATE={POLICIES.UPDATE_EMPLOYEE}
             path={PATH_APP.employee.root}
             onDeleteClick={() => handleDelete(employeeId)}
             onEditClick={() => onOpenForm(employeeId)}
