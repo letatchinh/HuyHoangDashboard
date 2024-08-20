@@ -40,8 +40,8 @@ export const GroupPharmacyForm = ({ onClose, id, handleUpdate,setDestroy, query,
   useResetGroupPharmacyAction();
 
   useEffect(() => {
+    form.resetFields();
     if (!id) {
-      form.resetFields();
     } else {
       const initSaleChannel = convertInitGroupPharmacy(initSalesChannel);
       form.setFieldsValue(initSaleChannel);

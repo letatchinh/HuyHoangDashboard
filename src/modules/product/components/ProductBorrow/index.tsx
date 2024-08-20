@@ -151,7 +151,7 @@ export default function ProductBorrow(props: propsType): React.JSX.Element {
   ], [list]);
   return (
     <ProductBorrowContextProvider>
-      <Breadcrumb title={'Quản lý mượn sản phẩm'}/>
+      <Breadcrumb title={'Quản lý mượn sản phẩm mượn'}/>
       <Row justify={"space-between"} className='row__search'>
         <Col span={12}>
           <Row gutter={12}>
