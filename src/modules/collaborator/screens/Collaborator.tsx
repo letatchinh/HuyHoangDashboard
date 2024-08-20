@@ -365,7 +365,7 @@ export default function Collaborator({
             <Space
               style={{
                 // marginBottom: 20,
-                marginLeft:  20,
+                marginLeft: 20,
                 display: "flex",
                 justifyContent: "flex-end",
               }}
@@ -394,15 +394,15 @@ export default function Collaborator({
         </Row>
         <Col>
           <Row gutter={16}>
-            <WithPermission permission={POLICIES.WRITE_PHARMAPROFILE}>
+            <WithPermission permission={POLICIES.WRITE_PARTNER}>
               <Col>
                 <BtnAdd onClick={() => handleOpenModal()} />
               </Col>
             </WithPermission>
-            <Col>
-              <DropdownAction
-                items={[
-                  <WithPermission permission={POLICIES.DOWNLOAD_EMPLOYEE}>
+            <WithPermission permission={POLICIES.DOWNLOAD_PARTNER}>
+              <Col>
+                <DropdownAction
+                  items={[
                     <ExportExcelButton
                       api="partner"
                       exportOption="partner"
@@ -410,11 +410,11 @@ export default function Collaborator({
                       fileName="Danh sách cộng tác viên"
                       ids={arrCheckBox}
                       useLayout="v2"
-                    />
-                  </WithPermission>,
-                ]}
-              />
-            </Col>
+                    />,
+                  ]}
+                />
+              </Col>
+            </WithPermission>
           </Row>
         </Col>
       </Row>
@@ -422,7 +422,7 @@ export default function Collaborator({
       <WithOrPermission permission={[POLICIES.UPDATE_PARTNER]}>
         <Row justify={"space-between"}>
           <Col span={12}>
-            <Space style={{ marginBottom: 20}}>
+            <Space style={{ marginBottom: 20 }}>
               <Typography style={{ fontSize: 14, marginRight: 20 }}>
                 Phân loại trạng thái theo :
               </Typography>
