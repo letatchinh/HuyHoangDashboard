@@ -38,6 +38,9 @@ const permissionOfSetup = [
   POLICIES.READ_CUSTOMERDIVISION,
   POLICIES.READ_WAREHOUSELINK,
   POLICIES.READ_CONFIGREPORTSALARYAUTO,
+  POLICIES.READ_SALESCHANNEL,
+  POLICIES.READ_CUSTOMERGROUP,
+  POLICIES.READ_CUSTOMER,
 ];
 const permissionPharma = [
   POLICIES.READ_PHARMAPROFILE,
@@ -193,13 +196,6 @@ export const resource: ItemType[] = [
             path: PATH_APP.benefitConfiguration.root,
             key: PATH_APP.benefitConfiguration.root,
             permission: [POLICIES.READ_CONFIGBENEFIT], //
-          },
-          {
-            label: "Kênh bán hàng",
-            icon: <i className="fa-solid fa-cart-shopping"></i>,
-            path: PATH_APP.saleChannel.root,
-            key: PATH_APP.saleChannel.root,
-            permission: [POLICIES.READ_SALESCHANNEL],
           },
           // {
           //   label: "Cấu hình thời gian tự động",
