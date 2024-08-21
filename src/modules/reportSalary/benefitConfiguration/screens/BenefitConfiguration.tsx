@@ -26,9 +26,10 @@ export default function BenefitConfiguration(
   const onCreateBenefitTDV = (typeBenefit: TypeBenefit) => {
     setActive(typeBenefit);
   };
-  const {profile, user} = useGetProfile();
+  const {profile, user,role} = useGetProfile();
+  
   const filterGroupType: any = useMemo(() => {
-    if (user?.isSuperAdmin) {
+    if (user?.isSuperAdmin || role === "staff") {
       return GROUP_TYPE_BENEFIT_EMPLOYEE_LEVEL
     } else {
       if (profile?.employeeLevel === EMPLOYEE_LEVEL.ASM) {

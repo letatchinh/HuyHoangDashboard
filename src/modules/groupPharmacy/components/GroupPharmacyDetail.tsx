@@ -7,6 +7,7 @@ import Header from "~/components/common/Layout/List/Detail/Header";
 import Layout from "~/components/common/Layout/List/Detail/Layout";
 import ListInDetailCommon from "~/components/common/Layout/List/Detail/ListInDetailCommon";
 import { STATUS_COLOR, STATUS_NAMES } from "~/constants/defaultValue";
+import POLICIES from "~/modules/policy/policy.auth";
 import { PATH_APP } from "~/routes/allPath";
 import { useDeleteGroupPharmacy, useGetGroupPharmacy, useGetGroupPharmacy_onlyGet, useGetGroupsPharmacy, useGroupPharmacyPaging, useGroupPharmacyQueryParams, useUpdateGroupPharmacy, useUpdateGroupPharmacyParams } from "../groupPharmacy.hook";
 import { GroupPharmacyForm } from "../screens/GroupPharmacyForm";
@@ -52,6 +53,7 @@ export default function GroupPharmacyDetail(props: propsType): React.JSX.Element
         <Layout
           HeaderLeft={
             <Header.HeaderLeft
+              PERMISSION_WRITE={POLICIES.WRITE_CUSTOMER}
               onChangeStatus={(status) => onParamChange({ status })}
               onAdd={() => onOpenForm()}
               SearchProp={{
@@ -73,6 +75,8 @@ export default function GroupPharmacyDetail(props: propsType): React.JSX.Element
           }
           HeaderRight={
             <Header.HeaderRight
+              PERMISSION_UPDATE={POLICIES.UPDATE_CUSTOMER}
+              PERMISSION_DELETE={POLICIES.DELETE_CUSTOMER}
               path={PATH_APP.groupPharmacy.root}
               onDeleteClick={() => handleDelete(groupPharmacyId)}
               onEditClick={() => onOpenForm(groupPharmacyId)}
@@ -102,6 +106,7 @@ export default function GroupPharmacyDetail(props: propsType): React.JSX.Element
               usePaging={useGroupPharmacyPaging}
               query={query}
               onParamChange={onParamChange}
+              moduleName="groupPharmacy"
             />
           }
         />

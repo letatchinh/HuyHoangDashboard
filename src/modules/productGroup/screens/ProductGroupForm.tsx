@@ -27,7 +27,7 @@ const ProductConfigForm: React.FC<Partial<Props>> = ({ id,setId, callBack, updat
     callBack && callBack();
     setDestroy && setDestroy(true)
   });
-  const [productConfigById, isLoading] : any = readOnly ? hookGetData.readOnly() : hookGetData.notReadOnly(id)
+  const [productConfigById, isLoading] : any = readOnly ? hookGetData.readOnly() : hookGetData.notReadOnly(id);
   const [form] = Form.useForm();
   useResetAction();
   useEffect(() => {

@@ -1,13 +1,14 @@
 import { Badge, Flex, Input, Typography } from "antd";
-import Search from "antd/lib/input/Search";
 import { get } from "lodash";
 import React, { useCallback, useState } from "react";
 import { useParams } from "react-router-dom";
 import ModalAnt from "~/components/Antd/ModalAnt";
 import Header from "~/components/common/Layout/List/Detail/Header";
 import Layout from "~/components/common/Layout/List/Detail/Layout";
+import ListInDetailCommon from "~/components/common/Layout/List/Detail/ListInDetailCommon";
 import { STATUS_COLOR, STATUS_NAMES } from "~/constants/defaultValue";
 import { PATH_APP } from "~/routes/allPath";
+import MainContentTab from "../components/MainContentTab";
 import {
   useDeleteProductConfig,
   useGetlistProductConfig,
@@ -16,11 +17,9 @@ import {
   useProductConfigPaging,
   useProductConfigQueryParams,
   useUpdateProductConfig,
-  useUpdateProductConfigParams,
+  useUpdateProductConfigParams
 } from "../productGroup.hook";
-import MainContentTab from "../components/MainContentTab";
 import ProductConfigForm from "../screens/ProductGroupForm";
-import ListInDetailCommon from "~/components/common/Layout/List/Detail/ListInDetailCommon";
 const CLONE_STATUS_NAMES: any = STATUS_NAMES;
 const CLONE_STATUS_COLOR: any = STATUS_COLOR;
 export default function ProductGroupDetail(): React.JSX.Element {
@@ -113,11 +112,12 @@ export default function ProductGroupDetail(): React.JSX.Element {
             query={query}
             onParamChange={onParamChange}
             fieldCode="code"
+            moduleName="productGroup"
           />
         }
       />
       <ModalAnt
-        title="Thêm mới nhóm sản phẩm"
+        // title="Thêm mới nhóm sản phẩm"
         open={isOpenForm}
         onCancel={onCloseForm}
         footer={[]}

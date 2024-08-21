@@ -103,6 +103,7 @@ export default function SaleChannelDetail(props: propsType): React.JSX.Element {
             usePaging={useSaleChannelPaging}
             query={query}
             onParamChange={onParamChange}
+            moduleName="saleChannel"
           />
         }
       />

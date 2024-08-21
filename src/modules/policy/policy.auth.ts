@@ -112,6 +112,7 @@ const reportRevenuePersonalEmployee = 'reportRevenuePersonalEmployee';
 const reportRevenuePersonalPartner = 'reportRevenuePersonalPartner';
 const reportRevenueTeamEmployee = 'reportRevenueTeamEmployee';
 const reportRevenueTeamPartner = 'reportRevenueTeamPartner';
+const configWarehouse = 'configWarehouse';
 const historyPharmacyProfile = 'historyPharmacyProfile';
 
 const reportLogistic = 'reportLogistic';
@@ -233,6 +234,7 @@ const RESOURCES = [
   reportRevenuePersonalPartner,
   reportRevenueTeamEmployee,
   reportRevenueTeamPartner,
+  configWarehouse,
   historyPharmacyProfile,
   reportLogistic,
   reportFee,

@@ -111,11 +111,12 @@ export default function ManufacturerDetail(): React.JSX.Element {
             usePaging={useManufacturerPaging}
             query={query}
             onParamChange={onParamChange}
+            moduleName="manufacturer"
           />
         }
       />
       <ModalAnt
-        title="Thêm mới hãng sản xuất"
+        // title="Thêm mới hãng sản xuất"
         open={isOpenForm}
         onCancel={onCloseForm}
         footer={[]}

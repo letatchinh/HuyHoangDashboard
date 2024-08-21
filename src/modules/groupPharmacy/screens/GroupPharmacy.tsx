@@ -59,6 +59,7 @@ export default function GroupPharmacy(props: propsType): React.JSX.Element {
   const paging = useGroupPharmacyPaging();
   const canWriteVoucher = useMatchPolicy(POLICIES.WRITE_CUSTOMER);
   const canDownload = useMatchPolicy(POLICIES.DOWNLOAD_CUSTOMER);
+  const canUpdate = useMatchPolicy(POLICIES.UPDATE_CUSTOMER);
   const [arrCheckBox, onChangeCheckBox] = useCheckBoxExport();
 
   const onOpenForm = useCallback(
@@ -75,11 +76,12 @@ export default function GroupPharmacy(props: propsType): React.JSX.Element {
   const columns: ColumnsType = useMemo(
     () => [
       {
-        title: "Mã nhóm khách hàng",
+        title: "Mã",
         dataIndex: "code",
         key: "code",
-        width: 120,
+        width: 50,
         fixed: 'left',
+        align : 'center',
         render: (text: string, record: any) => <Link className='link_' to={PATH_APP.groupPharmacy.root + "/" + record?._id}>{text}</Link>
       },
       // {
@@ -127,8 +129,8 @@ export default function GroupPharmacy(props: propsType): React.JSX.Element {
         align: "center",
         render: (status, record) => {
           return (
-            <WithPermission permission={POLICIES.UPDATE_CUSTOMER}>
               <Switch
+                disabled={!canUpdate}
                 checked={status === "ACTIVE"}
                 onChange={(value) =>
                   onChangeStatus(
@@ -139,7 +141,6 @@ export default function GroupPharmacy(props: propsType): React.JSX.Element {
                   )
                 }
               />
-            </WithPermission>
           );
         },
       },

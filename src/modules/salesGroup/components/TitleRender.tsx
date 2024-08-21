@@ -1,7 +1,9 @@
 import { Button, ConfigProvider, Flex, Modal, Select } from "antd";
 import { get, omit } from "lodash";
 import { useMemo, useState } from "react";
+import WithPermission from "~/components/common/WithPermission";
 import { EMPLOYEE_LEVEL_VI } from "~/modules/employee/constants";
+import POLICIES from "~/modules/policy/policy.auth";
 import { RULE_SALES_GROUP } from "../constants";
 import useSalesGroupStore from "../salesGroupContext";
 import Action from "./Action";
@@ -134,7 +136,8 @@ export default function TitleRender(item: any) {
                 Xem chỉ tiêu
               </Button>
 
-              <Button
+            <WithPermission permission={POLICIES.UPDATE_SALESGROUP}>
+            <Button
                 style={{width:'100%', backgroundColor: '#7BC9FF'}}
                 type="primary"
                 size="small"
@@ -147,6 +150,7 @@ export default function TitleRender(item: any) {
               >
                 Nhập quy đổi
               </Button>
+            </WithPermission>
             </ConfigProvider>
           </Flex>
 

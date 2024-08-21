@@ -69,7 +69,7 @@ export default function CronSalary() {
                   min={1}
                 />
               </FormItem>
-              <WithOrPermission permission={[POLICIES.WRITE_CONFIGREPORTSALARYAUTO,POLICIES.UPDATE_CONFIGREPORTSALARYAUTO]}>
+              <WithOrPermission permission={[POLICIES.UPDATE_CONFIGREPORTSALARYAUTO]}>
               <Button style={{width : 150}} loading={isSubmitLoading} htmlType="submit" type="primary">
               Cập nhật
               </Button>

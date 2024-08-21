@@ -7,6 +7,7 @@ import Header from "~/components/common/Layout/List/Detail/Header";
 import Layout from "~/components/common/Layout/List/Detail/Layout";
 import ListInDetailCommon from "~/components/common/Layout/List/Detail/ListInDetailCommon";
 import { STATUS_COLOR, STATUS_NAMES } from "~/constants/defaultValue";
+import POLICIES from "~/modules/policy/policy.auth";
 import { PATH_APP } from "~/routes/allPath";
 import MainContentTab from "../component/MainContentTab";
 import {
@@ -65,6 +66,7 @@ export default function PharmacyDetail_v2(): React.JSX.Element {
       <Layout
         HeaderLeft={
           <Header.HeaderLeft
+            PERMISSION_WRITE={POLICIES.WRITE_PHARMAPROFILE}
             onChangeStatus={(status) => onParamChange({ status })}
             onAdd={() => onOpenForm()}
             SearchProp={{
@@ -86,6 +88,8 @@ export default function PharmacyDetail_v2(): React.JSX.Element {
         }
         HeaderRight={
           <Header.HeaderRight
+            PERMISSION_UPDATE={POLICIES.UPDATE_PHARMAPROFILE}
+            PERMISSION_DELETE={POLICIES.DELETE_PHARMAPROFILE}
             path={PATH_APP.pharmacy.root}
             onDeleteClick={() => deletePharmacy(pharmacyId)}
             onEditClick={() => onOpenForm(pharmacyId)}
@@ -117,6 +121,7 @@ export default function PharmacyDetail_v2(): React.JSX.Element {
             usePaging={usePharmacyPaging}
             query={query}
             onParamChange={onParamChange}
+            moduleName="pharmacy"
           />
         }
       />

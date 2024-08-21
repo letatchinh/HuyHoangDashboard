@@ -80,6 +80,7 @@ export default function SelectDefaultWarehouse(
                 {fields.map(({ name, key }: any, index) => {
                   return (
                     <BaseBorderBox title={`Khu vực ${index + 1}`} key={key}>
+                      <WithPermission permission={POLICIES.UPDATE_CONFIGWAREHOUSE}>
                       <Row className="mb-1" justify={"end"}>
                         <Button
                           type="primary"
@@ -90,12 +91,13 @@ export default function SelectDefaultWarehouse(
                           Xoá
                         </Button>
                       </Row>
+                      </WithPermission>
                       <SelectArea form={form} index={index} name={name} isLoading={isLoading} />
                       <SelectWarehouse options={options || []} index={index} name={name}  isLoading={isLoading} isLoadingWarehouse={isLoadingWarehouse}/>
                     </BaseBorderBox>
                   );
                 })}
-                <WithPermission permission={POLICIES.UPDATE_WAREHOUSELINK}>
+                <WithPermission permission={POLICIES.UPDATE_CONFIGWAREHOUSE}>
                 <Form.Item>
                   <Row>
                     <Button
@@ -115,7 +117,7 @@ export default function SelectDefaultWarehouse(
               </div>
             )}
           </Form.List>
-          <WithPermission permission={POLICIES.UPDATE_WAREHOUSELINK}>
+          <WithPermission permission={POLICIES.UPDATE_CONFIGWAREHOUSE}>
           <Row justify={"end"} className="mt-3">
             <Button loading={ isLoading || (warehouseDefault?.length > 0 && isLoadingSubmit)} type="primary" htmlType="submit">
               Cập nhật

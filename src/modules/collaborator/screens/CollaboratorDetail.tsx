@@ -7,6 +7,7 @@ import Header from "~/components/common/Layout/List/Detail/Header";
 import Layout from "~/components/common/Layout/List/Detail/Layout";
 import ListInDetailCommon from "~/components/common/Layout/List/Detail/ListInDetailCommon";
 import { STATUS_COLOR, STATUS_NAMES } from "~/constants/defaultValue";
+import POLICIES from "~/modules/policy/policy.auth";
 import { PATH_APP } from "~/routes/allPath";
 import {
   useCollaboratorPaging, useCollaboratorQueryParams, useDeleteCollaborator,
@@ -54,6 +55,7 @@ export default function CollaboratorDetail(): React.JSX.Element {
       <Layout
         HeaderLeft={
           <Header.HeaderLeft
+            PERMISSION_WRITE={POLICIES.WRITE_PARTNER}
             onChangeStatus={(status) => onParamChange({ status })}
             onAdd={() => onOpenForm()}
             SearchProp={{
@@ -73,6 +75,8 @@ export default function CollaboratorDetail(): React.JSX.Element {
         }
         HeaderRight={
           <Header.HeaderRight
+            PERMISSION_UPDATE={POLICIES.UPDATE_PARTNER}
+            PERMISSION_DELETE={POLICIES.DELETE_PARTNER}
             path={PATH_APP.collaborator.root}
             onDeleteClick={() => deleteCollaborator(collaboratorId)}
             onEditClick={() => onOpenForm(collaboratorId)}
@@ -104,6 +108,7 @@ export default function CollaboratorDetail(): React.JSX.Element {
             query={query}
             onParamChange={onParamChange}
             fieldCode="partnerNumber"
+            moduleName="collaborator"
           />
         }
       />

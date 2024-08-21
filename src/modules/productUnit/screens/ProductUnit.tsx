@@ -103,6 +103,7 @@ export default function ProductUnit(props: propsType): React.JSX.Element {
       key: "status",
       render: (_, record) => (
         <Switch
+          disabled={!canUpdate}
           checked={record?.status === "ACTIVE"}
           onChange={(value: any) => {
             if (!canUpdate)

@@ -109,6 +109,7 @@ export default function RankingDetail(): React.JSX.Element {
             usePaging={useRankingPaging}
             query={query}
             onParamChange={onParamChange}
+            moduleName="ranking"
           />
         }
       />

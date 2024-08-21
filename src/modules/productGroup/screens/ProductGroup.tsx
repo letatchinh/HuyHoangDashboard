@@ -51,7 +51,7 @@ export default function ProductConfig() {
   const canDelete = useMatchPolicy(POLICIES.DELETE_PRODUCTGROUP);
 
   //Download
-  const canDownload = useMatchPolicy(POLICIES.DOWNLOAD_UNIT);
+  const canDownload = useMatchPolicy(POLICIES.DOWNLOAD_PRODUCTGROUP);
   const [arrCheckBox, onChangeCheckBox] = useCheckBoxExport();
 
   interface DataType {

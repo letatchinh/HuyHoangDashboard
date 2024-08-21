@@ -240,7 +240,7 @@ export const resource: ItemType[] = [
             icon: <i className ="fa-solid fa-warehouse"></i>,
             path:  PATH_APP.warehouse.setting,
             key: PATH_APP.warehouse.setting,
-            permission: [POLICIES.READ_WAREHOUSELINK],//
+            permission: [POLICIES.READ_CONFIGWAREHOUSE],//
           },
           {
             label: "Thời gian báo cáo lương",
