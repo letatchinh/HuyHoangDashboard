@@ -1,6 +1,6 @@
 {
   "name": "world-pharma-vn",
-  "version": "1.22.2",
+  "version": "1.23.0",
   "private": true,
   "engines": {
     "node": ">=20.0.0",

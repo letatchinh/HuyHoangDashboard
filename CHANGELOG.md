@@ -1,3 +1,23 @@
+# [1.23.0](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/compare/v1.22.2...v1.23.0) (2024-08-21)
+
+
+### Bug Fixes
+
+* [#1942](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1942) pagination report overview ([19e8b3f](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/19e8b3f29c936b9449146c5f6013730dcd3872ba))
+* [#1961](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1961) ([e02e124](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/e02e1246d77ad1865ce0d62c2e3167d63469d274))
+* [#1961](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1961) Phí vận chuyển do công Trả thì không áp dụng được mã FreeShip , Change Field TotalPrice Bill ([0f1d430](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/0f1d4303a5454d5b901702b0a6d0edf82653b870))
+* add permission group customer ([b841f10](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/b841f10e34ca30467498a0bd081de599f926bf9a))
+* Chinh tả ([d7fa851](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/d7fa85178831282b1078fc8e0dc0f6ed734f529f))
+* pair ([1ad5fde](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/1ad5fde2781fee241bf561ab039b7c87e899909d))
+* Remove Btn when have not permission ([08833cc](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/08833ccfc6a12c584db34274f87c3c6053df95f8))
+
+
+### Features
+
+* [#1939](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1939) ([a97ee73](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/a97ee7397be891393f31a25b7649423b1cd0fcf9))
+* [#1939](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1939) FE_Report Phí ship và phụ phí ([3fbdea4](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/3fbdea4a6239e1203b2e80003e2a0aad3246d755))
+* [#1961](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1961) FE_Update Coupon ([68972ba](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/68972ba31266a286c2584bbf5ca6d3afbe6e1f45))
+
 ## [1.22.2](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/compare/v1.22.1...v1.22.2) (2024-08-14)
 
 
