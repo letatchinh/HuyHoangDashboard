@@ -1,27 +1,28 @@
 import { Badge, Flex, Input, Modal, Tabs, Typography } from "antd";
+import { get } from "lodash";
 import React, { useCallback, useState } from "react";
-import ModalAnt from "~/components/Antd/ModalAnt";
+import { useDispatch } from "react-redux";
+import { useParams } from "react-router-dom";
 import Header from "~/components/common/Layout/List/Detail/Header";
 import Layout from "~/components/common/Layout/List/Detail/Layout";
+import ListInDetailCommon from "~/components/common/Layout/List/Detail/ListInDetailCommon";
 import { STATUS_COLOR, STATUS_NAMES } from "~/constants/defaultValue";
-import EmployeeForm from "../components/EmployeeForm";
 import CollaboratorProduct from "~/modules/collaborator/components/CollaboratorProduct";
 import { PATH_APP } from "~/routes/allPath";
+import EmployeeForm from "../components/EmployeeForm";
 import MainContentTab from "../components/MainContentTab";
-import ListInDetail from "../components/ListInDetail";
-import { useParams } from "react-router-dom";
+import apis from "../employee.api";
 import {
   useDeleteEmployee,
+  useEmployeePaging,
   useEmployeeQueryParams,
   useGetEmployee,
   useGetEmployeeId_onlyGet,
+  useGetEmployees,
   useUpdateEmployee,
-  useUpdateEmployeeParams,
+  useUpdateEmployeeParams
 } from "../employee.hook";
-import { get } from "lodash";
 import { employeeSliceAction } from "../redux/reducer";
-import { useDispatch } from "react-redux";
-import apis from "../employee.api";
 
 const CLONE_STATUS_NAMES: any = STATUS_NAMES;
 const CLONE_STATUS_COLOR: any = STATUS_COLOR;
@@ -29,7 +30,7 @@ const CLONE_STATUS_COLOR: any = STATUS_COLOR;
 export default function EmployeeDetail(): React.JSX.Element {
   const { id: employeeId }: any = useParams();
   const [id, setId] = useState<any>();
-  const [query] = useEmployeeQueryParams();
+  const [query] = useEmployeeQueryParams(20);
   const [employee]: any = useGetEmployeeId_onlyGet();
   const [keyword, { setKeyword, onParamChange }] = useUpdateEmployeeParams(query);
   const [isOpenForm, setIsOpenForm] = useState(false);
@@ -118,7 +119,15 @@ export default function EmployeeDetail(): React.JSX.Element {
           />
         }
         MainContent={<MainContentTab />}
-        List={<ListInDetail />}
+        List={<ListInDetailCommon
+          fieldName="fullName"
+          fieldCode="employeeNumber"
+          path={'/employee-detail'}
+          useGets={useGetEmployees}
+          usePaging={useEmployeePaging}
+          query={query}
+          onParamChange={onParamChange}
+        />}
       />
       <Modal
         open={isOpenForm}

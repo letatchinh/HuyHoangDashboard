@@ -1,6 +1,6 @@
 import { CloseCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import { Col, ConfigProvider, Row, Space, Tabs, TabsProps } from "antd";
-import { concat, forIn, get, unset } from "lodash";
+import { concat, forIn, get, omit } from "lodash";
 import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { v4 } from "uuid";
@@ -11,6 +11,7 @@ import logo from '~/assets/images/logo.png';
 import ModalAnt from "~/components/Antd/ModalAnt";
 import { useUserPolicy } from "~/modules/policy/policy.hook";
 import { ValueApplyBill } from "~/modules/logistic/components/LogisticForm";
+import { onRemoveLocalStorage } from "~/modules/sale/bill/bill.service";
 
 export const KEY_DATA_PHARMACY = "bill-pharmacy";
 export const KEY_PRIORITY = "key-priority"; // Tab Will Use this key and Remove then (If Have)
@@ -68,6 +69,7 @@ const CreateBillPage = (): React.JSX.Element => {
   const [dataResult,setDataResult] = useState<DataResultType | null>();
   const [openModalResult,setOpenModalResult] = useState(false);
 
+  const [productAddNewly,setProductAddNewly] = useState(); // To resolve Control QuotationItem in CreateBillProvider
   const onOpenModalResult = useCallback((dataRs:DataResultType) => {    
     setOpenModalResult(true);
     setDataResult(dataRs);
@@ -103,10 +105,8 @@ const CreateBillPage = (): React.JSX.Element => {
   };
 
   const onRemoveDataSource = (key: any) => {
-    let newDataSource = { ...dataSource };
-    if (newDataSource.hasOwnProperty(key)) {
-      unset(newDataSource, key);
-    }
+    const newDataSource = omit(dataSource,[key]);
+    onRemoveLocalStorage(key);
     if (Object.keys(newDataSource).length === 0) {
       initDatSource();
     } else {
@@ -138,7 +138,7 @@ const CreateBillPage = (): React.JSX.Element => {
           key: newId,
         },
       ]);
-      onAddDataSource(newId);
+      // onAddDataSource(newId);
       setActiveKey(newId);
     } else {
       setTabs(newPanes);
@@ -294,8 +294,12 @@ const CreateBillPage = (): React.JSX.Element => {
             </div>
                   <SelectProduct
                   dataCurrent={dataSource?.[activeKey]}
-                  onChangeBill={(newData: any) =>
-                    onChangeBill(activeKey, newData)
+                  onChangeBill={(newData: any) =>{
+                    onChangeBill(activeKey, newData);
+                    setProductAddNewly(newData);
+                  }
+                    
+
                   }
                     warehouseId =  {get(dataSource, activeKey)?.warehouseId}
                 />
@@ -339,6 +343,7 @@ const CreateBillPage = (): React.JSX.Element => {
                   }
                   onRemoveTab={() => onRemoveTab(get(tab, "key"))}
                   onOpenModalResult={onOpenModalResult}
+                  productAddNewly={productAddNewly}
                 >
                   <Bill.page.create />
                 </BillModule.storeProvider.CreateBillProvider>

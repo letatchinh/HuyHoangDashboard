@@ -34,9 +34,9 @@ export const Layout = ({
 );
 export default function TotalBillInDevice(props: propsType): React.JSX.Element {
   const {
-    totalPrice,
+    totalRoot,
     totalQuantity,
-    totalPriceAfterDiscount,
+    bill_totalPrice,
     totalDiscount,
     totalDiscountFromProduct,
     totalDiscountFromSupplier,
@@ -48,7 +48,7 @@ export default function TotalBillInDevice(props: propsType): React.JSX.Element {
   return (
     <Flex vertical gap={"small"}>
       <Layout label={"Số lượng mặt hàng"}>{formatter(totalQuantity)}</Layout>
-      <Layout label={"Tổng tiền"}>{formatter(totalPrice)}</Layout>
+      <Layout label={"Tổng tiền"}>{formatter(totalRoot)}</Layout>
       {totalDiscountFromProduct?.["DISCOUNT.CORE"] ? (
         <Layout label={"Tổng chiết khấu cứng từ mặt hàng"}>
           <Typography.Text type="warning">
@@ -127,7 +127,7 @@ export default function TotalBillInDevice(props: propsType): React.JSX.Element {
       />
       <Layout isLarge={true} label={"Tổng tiền phải trả"}>
         <Typography.Text style={{ fontSize: 18, fontWeight: 600 }}>
-          {formatter(totalPriceAfterDiscount)}
+          {formatter(bill_totalPrice)}
         </Typography.Text>
       </Layout>
     </Flex>

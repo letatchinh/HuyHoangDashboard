@@ -1,6 +1,6 @@
 import { Checkbox, Typography } from "antd";
 import { get, range } from "lodash";
-import React, { useCallback } from "react";
+import React, { useCallback, useMemo } from "react";
 import freeProduct from "~/assets/images/coupon/freeProduct.png";
 import freeShip from "~/assets/images/coupon/freeShip.png";
 import useCreateBillStore from "~/modules/sale/bill/storeContext/CreateBillContext";
@@ -18,7 +18,7 @@ type propsType = {
 };
 export default function Coupon({ coupon,onAdd,onRemove ,isChecked,target,readOnly = false }: propsType): React.JSX.Element {
     const {queryBillItem} = useCreateBillStore();
-  const { applyFor, discount, startDate, endDate, conditionsTrue,name } = coupon;
+  const { applyFor, discount, startDate, endDate, conditionsTrue,name,giftCode } = coupon;
   const onActionAdd = () => {
     if(readOnly) return;
     if(target === "BILL"){
@@ -26,7 +26,9 @@ export default function Coupon({ coupon,onAdd,onRemove ,isChecked,target,readOnl
     }else{
       onAdd && onAdd({...coupon,couponAtVariantId : queryBillItem?.variantId})
     }
-  }
+  };
+
+  const convertName = useMemo(() => conditionsTrue?.map((item) => `${defaultConditions[item.key].vi}${item?.value ? " " : ""}${formatter(get(item,['value',item.key,'value'],''))}`),[conditionsTrue])
   
   return (
     <div className="coupon">
@@ -42,13 +44,13 @@ export default function Coupon({ coupon,onAdd,onRemove ,isChecked,target,readOnl
       </div>
       <div className="coupon--middle">
         <Typography.Text type="secondary">
-            {name}
+            ({giftCode}) {name}
         </Typography.Text>
         <span className="coupon--middle__discountValue">
           {coupon?.isFreeShip ? "Miễn phí vận chuyển  " :`Giảm ${getTextOfDiscount(discount?.value, discount?.type)} ${discount?.maxDiscount ? `Giảm tối đa ${formatter(discount?.maxDiscount || 0)}` : ""}`}
         </span>
         <span className="coupon--middle__condition">
-            {conditionsTrue?.map((item) => `${defaultConditions[item.key].vi} ${formatter(get(item,['value',item.key,'value'],''))}, `)}
+            {convertName?.join(', ')}
         </span>
         
         <ShowDate endDate={endDate} startDate={startDate} />

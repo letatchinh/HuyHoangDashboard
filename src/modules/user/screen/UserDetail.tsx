@@ -1,24 +1,20 @@
 import { Badge, Flex, Input, Typography } from "antd";
-import Search from "antd/lib/input/Search";
 import { get } from "lodash";
 import React, { useCallback, useState } from "react";
 import { useParams } from "react-router-dom";
 import ModalAnt from "~/components/Antd/ModalAnt";
 import Header from "~/components/common/Layout/List/Detail/Header";
 import Layout from "~/components/common/Layout/List/Detail/Layout";
+import ListInDetailCommon from "~/components/common/Layout/List/Detail/ListInDetailCommon";
 import { STATUS_COLOR, STATUS_NAMES } from "~/constants/defaultValue";
 import { PATH_APP } from "~/routes/allPath";
+import MainContentTab from "../components/MainContentTab";
+import UserForm from "../components/UserForm";
 import {
   useDeleteUser,
-  useGetUser,
-  useGetUser_onlyGet,
-  useUserQueryParams,
-  useUpdateUser,
-  useUpdateUserParams,
+  useGetUser, useGetUsers, useGetUser_onlyGet, useUpdateUser,
+  useUpdateUserParams, useUserPaging, useUserQueryParams
 } from "../user.hook";
-import UserForm from "../components/UserForm";
-import ListInDetail from "../components/ListInDetail";
-import MainContentTab from "../components/MainContentTab";
 const CLONE_STATUS_NAMES: any = STATUS_NAMES;
 const CLONE_STATUS_COLOR: any = STATUS_COLOR;
 export default function UserDetail(): React.JSX.Element {
@@ -98,7 +94,16 @@ export default function UserDetail(): React.JSX.Element {
           />
         }
         MainContent={<MainContentTab />}
-        List={<ListInDetail />}
+        List={
+          <ListInDetailCommon
+            fieldName="fullName"
+            path={PATH_APP.user.root}
+            useGets={useGetUsers}
+            usePaging={useUserPaging}
+            query={query}
+            onParamChange={onParamChange}
+          />
+        }
       />
       <ModalAnt
         width={1100}

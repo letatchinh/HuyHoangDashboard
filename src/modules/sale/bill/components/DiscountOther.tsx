@@ -1,8 +1,8 @@
 import { DeleteOutlined, EditOutlined, PlusOutlined } from "@ant-design/icons";
-import { Button, Col, Flex, Popconfirm, Popover, Row, Tag, Typography } from "antd";
+import { Badge, Button, Col, Flex, Popconfirm, Popover, Row, Tag, Typography } from "antd";
 import { get } from "lodash";
 import React from "react";
-import { formatter, getTextOfDiscount } from "~/utils/helpers";
+import { formatter } from "~/utils/helpers";
 import { DiscountOtherType } from "../bill.modal";
 import DiscountOtherForm from "./DiscountOtherForm";
 import useCreateBillStore from "../storeContext/CreateBillContext";
@@ -15,6 +15,7 @@ type propsType = {
   totalDiscountOther: number;
   productId : string;
   variantId : string;
+  productGroupId? : string;
   couponsInItem : CouponInSelect[]
 };
 export default function DiscountOther({
@@ -25,10 +26,11 @@ export default function DiscountOther({
   totalDiscountOther,
   productId,
   variantId,
+  productGroupId,
   couponsInItem,
 }: propsType): React.JSX.Element {
   
-  const {onOpenCouponBillItem} = useCreateBillStore();
+  const {onOpenCouponBillItem,previewCouponBillItem,previewCouponBillItemLoading} = useCreateBillStore();
   return (
     <div>
       <div className="d-flex flex-column" style={{width : 'max-content'}}>
@@ -40,9 +42,11 @@ export default function DiscountOther({
           Thêm Chiết khấu
         </Button>
       </Popover>
-        <Button onClick={() => onOpenCouponBillItem(productId,variantId)} size="small" className="mb-1" icon={<PlusOutlined />} type="primary" ghost>
+      <Badge size="small" count={previewCouponBillItemLoading ? "..." : get(previewCouponBillItem,[productId,'count'],0)}>
+      <Button onClick={() => onOpenCouponBillItem(productId,variantId,productGroupId)} size="small" className="mb-1" icon={<PlusOutlined />} type="primary" ghost>
           Thêm mã giảm giá
         </Button>
+      </Badge>
       </div>
       {dataSource?.map((item: DiscountOtherType, index: number) => (
         <Row align={"middle"} key={index}>

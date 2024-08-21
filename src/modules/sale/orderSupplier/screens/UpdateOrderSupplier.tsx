@@ -65,7 +65,6 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
     status,
     historyStatus,
     orderSupplierItems,
-    pair,
     totalPrice,
     totalPair,
     paymentAmount,
@@ -93,11 +92,11 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
   const [isSubmitCreate, onCreateOrderInWarehouse] = useCreateOrderInWarehouse(() => {
     dispatch(orderSupplierActions.resetActionInById());
   });
-  console.log(isSubmitCreate,'isSubmitCreate')
-  const onCloseCancel = useCallback(() => {
+  const onCloseCancel = () => {
+    console.log(11111)
     setOpenCancel(false);
     setCancelNote("");
-  }, []);
+  };
 
   const [isSubmitLoading, updateBill] = useUpdateOrderSupplier(() => {
     onCloseCancel();

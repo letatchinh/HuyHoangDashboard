@@ -100,8 +100,8 @@ export default function GroupPharmacyDetail(props: propsType): React.JSX.Element
               path="/group-pharmacy"
               useGets={useGetGroupsPharmacy}
               usePaging={useGroupPharmacyPaging}
-              useQueryParams={useGroupPharmacyQueryParams}
-              useUpdateParams={useUpdateGroupPharmacyParams}
+              query={query}
+              onParamChange={onParamChange}
             />
           }
         />

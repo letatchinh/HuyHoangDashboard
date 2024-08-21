@@ -68,6 +68,8 @@ export interface quotation  {
     totalDiscountCoupon? : number,
     totalDiscountSummary ? : number,
     totalRoot?:number,
+    billItem_totalAmount? : number,
+    productGroupId? : string,
 }
 export interface FeeType  {
     typeFee : 'SUB_FEE' | 'LOGISTIC',
@@ -155,3 +157,16 @@ export type propsConfirmStatusBill = {
     bill?: any;
     note?: string;
 };
+
+export interface PreviewCoupon {
+  products: {
+    [productId: string]: {
+      quantity: number;
+      total: number;
+      productGroupId: string;
+    };
+  };
+  customerApplyId: {
+    id: string;
+  };
+}

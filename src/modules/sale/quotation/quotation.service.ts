@@ -5,7 +5,7 @@ import { DEFAULT_DEBT_TYPE } from "./constants";
 type paramsConvertDataQuotation = {
     data : FormFieldCreateBill,
     quotationItems : quotation[],
-    totalPriceAfterDiscount : number,
+    bill_totalPrice : number,
     totalAmount : number,
     _id?: string,
     dataTransportUnit?: any,
@@ -16,7 +16,7 @@ type paramsConvertDataQuotation = {
     totalCouponForBill? : number,
     totalCouponForItem? : number,
   }
-  export const convertDataQuotation = ({data,quotationItems,totalPriceAfterDiscount,_id,totalAmount,dataTransportUnit,warehouseId,noteBillSplit,totalCouponForBill,totalCouponForShip,totalCouponForItem,coupons}:paramsConvertDataQuotation) : PayloadCreateBill => {
+  export const convertDataQuotation = ({data,quotationItems,bill_totalPrice,_id,totalAmount,dataTransportUnit,warehouseId,noteBillSplit,totalCouponForBill,totalCouponForShip,totalCouponForItem,coupons}:paramsConvertDataQuotation) : PayloadCreateBill => {
       const quotationItemsSubmit : Omit<quotation,'variant' | 'variants'>[] = quotationItems?.map((quotation : quotation) => ({
           ...pick(quotation,[
             'cumulativeDiscount',
@@ -34,6 +34,8 @@ type paramsConvertDataQuotation = {
             'totalDiscountCoupon',
             'totalDiscountSummary',
             'totalRoot',
+            'billItem_totalAmount',
+            'productGroupId',
           ]),
         }));
         // Todo : Verify Data When Send to sever (Not implemented)
@@ -43,7 +45,7 @@ type paramsConvertDataQuotation = {
           quotationItems: quotationItemsSubmit,
           pair: data?.pair || 0,
           debtType: data?.debtType || DEFAULT_DEBT_TYPE,
-          totalPrice: totalPriceAfterDiscount,
+          totalPrice: bill_totalPrice,
           totalAmount,
           ...(_id && { _id }),
           dataTransportUnit,

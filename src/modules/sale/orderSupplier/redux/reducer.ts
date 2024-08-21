@@ -135,6 +135,12 @@ class OrderSupplierClassExtend extends InstanceModuleRedux {
         //   ...state.byId,
         //   status: payload?.status
         // };
+      },
+      updateSuccess: (state:cloneInitState, { payload }:{payload:any}) => {
+        state.isSubmitLoading = false;
+        state.byId = payload?.data;
+        state.list = state.list?.map((item:any) => get(item,'_id') === get(payload,'data._id') ? payload?.data : item);
+        state.updateSuccess = payload;
       }
     };
 

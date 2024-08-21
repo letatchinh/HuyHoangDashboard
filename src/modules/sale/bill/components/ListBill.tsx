@@ -336,27 +336,26 @@ export default function ListBill({ status }: propsType): React.JSX.Element {
       },
       {
         title: "Khách đã trả",
-        dataIndex: "pair",
-        key: "pair",
-        width: 150,
+        dataIndex: "customerPair",
+        key: "customerPair",
         align: "center",
-        render(pair, record, index) {
+        width: 180,
+        render(customerPair, record, index) {
           return (
             <Typography.Text>
-              {formatter(pair + get(record, "totalReceiptVoucherCompleted"))}
+              {formatter(customerPair)}
             </Typography.Text>
           );
         },
       },      
       {
         title: "Khách phải trả",
-        dataIndex: "pair",
-        key: "pair",
-        width: 150,
+        dataIndex: "customerPay",
+        key: "customerPay",
         align: "center",
-        render(pair, record, index) {
-          const remainAmount = CalculateBillMethod.remainAmount(record);
-          return <Typography.Text>{formatter(remainAmount)}</Typography.Text>;
+        width: 180,
+        render(customerPay, record, index) {
+          return <Typography.Text>{formatter(customerPay)}</Typography.Text>;
         },
       },
       {

@@ -1,6 +1,9 @@
 import { put, call, takeLatest } from 'redux-saga/effects';
 import api from '../receiptVoucher.api'; 
+import apiBill from '~/modules/sale/bill/bill.api'
 import { receiptVoucherSliceAction } from './reducer';
+import { omit } from 'lodash';
+import { billSliceAction } from '~/modules/sale/bill/redux/reducer';
 
 function* getListReceiptVoucher({payload:query} : any) : any {
   try {
@@ -55,10 +58,15 @@ function* deleteReceiptVoucher({payload : id} : any) : any {
   }
 };
 
-function* confirmReceiptVoucher({payload} : any) : any {
+function* confirmReceiptVoucher({ payload }: any): any {
   try {
-    const data = yield call(api.confirm,payload);
+    const data = yield call(api.confirm,omit(payload,['isRefetchBill']));
     yield put(receiptVoucherSliceAction.confirmReceiptVoucherSuccess(data));
+    if (payload?.isRefetchBill && data?.data?.status === 'APPROVED') {
+      const id = payload?.isRefetchBill?.id
+      const res = yield call(apiBill.getById,id);
+      yield put(billSliceAction.getByIdSuccess(res));
+    };
   } catch (error:any) {
     yield put(receiptVoucherSliceAction.confirmReceiptVoucherFailed(error));
   }

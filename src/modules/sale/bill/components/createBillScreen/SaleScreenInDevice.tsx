@@ -10,7 +10,7 @@ import useCreateBillStore from "../../storeContext/CreateBillContext";
 import SelectPharmacyInDevice from "../SelectPharmacyInDevice";
 type propsType = {};
 export default function SaleScreenInDevice(props: propsType): React.JSX.Element {
- const {form,onValueChange,quotationItems,totalPriceAfterDiscount,verifyData,onRemoveTab,bill,onOpenModalResult,totalAmount} = useCreateBillStore();
+ const {form,onValueChange,quotationItems,bill_totalPrice,verifyData,onRemoveTab,bill,onOpenModalResult,totalAmount} = useCreateBillStore();
  const {onNotify} = useNotificationStore();
  const callBackAfterSuccess = (newData : DataResultType) => {
   onRemoveTab();
@@ -25,13 +25,13 @@ try {
     return onNotify?.warning("Vui lòng chọn thuốc!")
   }
   
-  if(totalPriceAfterDiscount < 0){
+  if(bill_totalPrice < 0){
     return onNotify?.warning("Số tiền không hợp lệ")
   }
   const submitData : PayloadCreateBill = QuotationModule.service.convertDataQuotation({
     quotationItems : quotationItems,
     data : values,
-    totalPriceAfterDiscount,
+    bill_totalPrice,
     _id : get(bill,'dataUpdateQuotation.id'),
     totalAmount,
     

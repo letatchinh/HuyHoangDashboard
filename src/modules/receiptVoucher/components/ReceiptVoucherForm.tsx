@@ -86,7 +86,8 @@ type propsType = {
   dataAccountingDefault?: DataAccounting[],
   billId?:any,
   method? : methodType,
-  initData? : InitData
+  initData? : InitData,
+  isRefetchBill?:any
 };
 
 export default function ReceiptVoucher(props: propsType): React.JSX.Element {
@@ -191,7 +192,6 @@ export default function ReceiptVoucher(props: propsType): React.JSX.Element {
       );
       setDataAccounting(initReceiptVoucher?.accountingDetails);
     }
-    console.log(initReceiptVoucher,'initReceiptVoucher')
     form.setFieldsValue({
       ...initData
     })
@@ -270,7 +270,7 @@ export default function ReceiptVoucher(props: propsType): React.JSX.Element {
             handleConfirm({ id: id, status: WH_VOUCHER_STATUS.CONFIRMED });
             break;
           case WH_VOUCHER_STATUS.APPROVED:
-            handleConfirm({ id: id, status: WH_VOUCHER_STATUS.APPROVED });
+            handleConfirm({ id: id, status: WH_VOUCHER_STATUS.APPROVED,  isRefetchBill: props?.isRefetchBill});
             break;
           case WH_VOUCHER_STATUS.REJECT:
             handleConfirm({ id: id, status: WH_VOUCHER_STATUS.REJECT });

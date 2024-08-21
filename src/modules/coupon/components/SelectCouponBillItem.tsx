@@ -4,7 +4,7 @@ import useCreateBillStore from '~/modules/sale/bill/storeContext/CreateBillConte
 import { CouponInSelect } from '../coupon.modal';
 import Coupon from './Coupon';
 import { LoadingOutlined } from '@ant-design/icons';
-import { get, uniqBy } from 'lodash';
+import { get } from 'lodash';
 
 type propsType = {
 

@@ -13,6 +13,7 @@ import { useGetBill } from "../bill.hook";
 import LogisticForm from "~/modules/logistic/components/LogisticForm";
 import useNotificationStore from "~/store/NotificationContext";
 import SplitBillForm from "../components/SplitBill/SplitBillForm";
+import { METHOD_TYPE } from "~/modules/vouchers/constants";
 
 export type GlobalUpdateBill = {
     bill : any,
@@ -61,7 +62,7 @@ export function UpdateBillProvider({
     const { id } = useParams();
     const [reFetch,setReFetch] = useState(false);
     const mutateBill = useCallback(() => setReFetch(!reFetch),[reFetch]);
-    const [bill, isLoading] = useGetBill(id, reFetch);
+  const [bill, isLoading] = useGetBill(id, reFetch);
     const {pharmacyId,totalPrice,codeSequence,_id,totalReceiptVoucherCompleted,remainAmount, remaining, pair, refCollection} = bill || {};
     const [isOpenForm, setIsOpenForm] = useState(false);
     const [isOpenFormPayment, setIsOpenFormPayment] = useState(false);
@@ -76,7 +77,7 @@ export function UpdateBillProvider({
       };
       return 0;
     }, [bill]);
-  const compareMoney = useMemo(() => (pair || 0) - (totalPrice), [bill, totalReceiptVoucherCompleted]);
+  const compareMoney = useMemo(() => totalReceiptVoucherCompleted - (totalPrice), [bill, totalReceiptVoucherCompleted]);
   const maxMoneyCanReceipt = useMemo(() => {
     if (bill && totalReceiptVoucherCompleted > 0) {
       return Number(bill?.totalAmount) - Number(totalRevenueInVouchers) > 0 ? Number(bill?.totalAmount) - Number(totalRevenueInVouchers) : 0
@@ -111,7 +112,6 @@ export function UpdateBillProvider({
   const onCloseFormLogistic = () => {
     setLogisticOpen(false);
   };
-
   return (
     <UpdateBill.Provider
       value={{
@@ -157,7 +157,7 @@ export function UpdateBillProvider({
             data : omit(bill,['bill','billItems','historyStatus']),
             type : 'BILL'
           }}
-          totalRevenueInVouchers={totalRevenueInVouchers}
+          totalRevenueInVouchers={get(bill, 'totalReceiptVoucherWaiting', 0)}
         />
       </ModalAnt>
       <ModalAnt
@@ -171,11 +171,18 @@ export function UpdateBillProvider({
         <PaymentVoucherFormPharmacy
           initData={{
             pharmacyId: pharmacyId,
-            refCollection: REF_COLLECTION.PHARMA_PROFILE,
+            refCollection: bill?.refCollection,
             debt: compareMoney,
             note: 'Chi cho khách hàng B2B vì thu dư',
             totalAmount: compareMoney,
+            method: {
+              type: METHOD_TYPE.BILL,
+              data: {
+                _id: bill?._id
+              }
+            }
           }}
+          onClose={onCloseFormPayment}
         />
       </ModalAnt>
       <ModalAnt

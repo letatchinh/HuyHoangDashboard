@@ -19,7 +19,7 @@ type propsType = {};
 export default function ProductSelectedTable(
   props: propsType
 ): React.JSX.Element {
-  const { quotationItems, onSave,onRemove,bill } = useCreateBillStore();  
+  const { quotationItems, onSave,onRemove,bill,previewCouponBillItem } = useCreateBillStore();  
   const [selectRowKey,setSelectRowKey] = useState<any[]>([]);
   const onSelect = (newVariantId : string,data : any) => {
     const variant = get(data,'variants',[])?.find((item : any) => get(item,'_id') === newVariantId);
@@ -201,6 +201,7 @@ export default function ProductSelectedTable(
               })}
               productId={record?.productId}
               variantId={record?.variantId}
+              productGroupId={record?.productGroupId}
               couponsInItem={get(record,'couponsInItem',[])}
               />
               <ExpandRowDiscount data={get(record, "cumulativeDiscount")} />
@@ -212,7 +213,7 @@ export default function ProductSelectedTable(
           expanded ? (
             <UpCircleTwoTone onClick={(e: any) => onChangeRowKey(record?.productId)} />
           ) : (
-            <Badge size="small" count={get(record, "cumulativeDiscount", []).length}>
+            <Badge size="small" dot={!!get(record, "cumulativeDiscount", []).length || get(previewCouponBillItem,[record?.productId,'count'],0) > 0}>
               <GiftTwoTone style={{fontSize : 24}} onClick={(e: any) => onChangeRowKey(record?.productId)} />
             </Badge>
           ),

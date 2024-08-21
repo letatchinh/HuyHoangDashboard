@@ -23,8 +23,11 @@ export default function ReportOverviewComponent(
   const { typeMatch, typeAreaMatch, titleName, displayMode } = props;
   const [isOpenForm, setIsOpenForm] = useState(false);
   const [id, setId] = useState<any>(null);
-  const [pagination, setPagination] = useState({ page: 1, limit: 10 });
-  const [current, setCurrent] = useState(1);
+  const [pagination, setPaging] = useState({
+    current: 1,
+    pageSize: 10,
+  });
+
   const query = useMemo(
     () => ({ typeMatch, typeAreaMatch }),
     [typeMatch, typeAreaMatch]
@@ -56,17 +59,13 @@ export default function ReportOverviewComponent(
     setIsOpenForm(false);
   };
 
-  const onPagingChangeLocal = (current : any) => {
-    setCurrent(current);
-  };
-
   const columns: ColumnsType = [
     {
       title: "STT",
       key: "index",
       width: 50,
       render: (text, record, index) => {
-        return (+pagination.page - 1) * pagination.limit + index + 1;
+        return (+pagination.current - 1) * pagination.pageSize + index + 1;
       }
     },
     {
@@ -171,17 +170,20 @@ export default function ReportOverviewComponent(
           dataSource={
             (displayMode === "PERCENT" ? percentageData : dataReport) || []
           }
-          onChange={onPagingChangeLocal}
+          // onChange={onPagingChangeLocal}
           loading={isLoading}
           rowKey={(rc) => rc?._id}
           columns={columns}
           size="small"
           pagination={{
-            current,
+            ...pagination,
+            onChange: (current: number, pageSize: number) => {
+              setPaging({
+                current,
+                pageSize,
+              });
+            },
             showTotal: (total) => `Tổng cộng: ${total} `,
-            onChange: (page) => {
-              setPagination({ ...pagination, page: page });
-            }
           }}
           stickyTop
         />

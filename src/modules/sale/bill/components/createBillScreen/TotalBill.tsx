@@ -1,5 +1,5 @@
 import { EditOutlined, InfoCircleFilled } from "@ant-design/icons";
-import { Button, Flex, Form, Radio, Tag, Tooltip, Typography } from "antd";
+import { Button, Flex, Form, Popconfirm, Radio, Tag, Tooltip, Typography } from "antd";
 import { get } from "lodash";
 import React, { CSSProperties, useCallback, useEffect, useState } from "react";
 import InputNumberAnt from "~/components/Antd/InputNumberAnt";
@@ -51,9 +51,9 @@ export const Layout = ({
 );
 export default function TotalBill(props: propsType): React.JSX.Element {
   const {
-    totalPrice,
+    totalRoot,
     totalQuantity,
-    totalPriceAfterDiscount,
+    bill_totalPrice,
     totalDiscount,
     totalDiscountFromProduct,
     totalDiscountFromSupplier,
@@ -81,7 +81,7 @@ export default function TotalBill(props: propsType): React.JSX.Element {
   const onOpenCouponSelected = useCallback(() => setOpenCouponSelected(true), []);
   const onCloseCouponSelected = useCallback(() => setOpenCouponSelected(false), []);
   const debtType = Form.useWatch("debtType", form);
-  const pair = Form.useWatch("pair", form) || 0;
+  const pair = Form.useWatch("pair", form);
   // const fee = Form.useWatch("fee", form);
   const onChangeAddress = useCallback(
     (values: any) => {
@@ -114,7 +114,7 @@ export default function TotalBill(props: propsType): React.JSX.Element {
       (i: FeeType) => i?.typeFee === "SUB_FEE"
     );
     const valueExchange = getValueOfMath(
-      totalPrice,
+      totalRoot,
       get(feePartner, "value"),
       get(feePartner, "typeValue")
     );
@@ -122,7 +122,7 @@ export default function TotalBill(props: propsType): React.JSX.Element {
       ...feePartner,
       valueExchange,
     });
-  }, [partner, totalPrice]);
+  }, [partner, totalRoot]);
   useEffect(() => {
     if (bill?.fee) {
       form.setFieldsValue({
@@ -134,7 +134,7 @@ export default function TotalBill(props: propsType): React.JSX.Element {
     <Flex vertical gap={"small"}>
     <Flex className="billValue" vertical gap={"small"}>
     <Layout label={"Số lượng mặt hàng"}>{formatter(totalQuantity)}</Layout>
-      <Layout label={"Tổng tiền"}>{formatter(totalPrice)}</Layout>
+      <Layout label={"Tổng tiền"}>{formatter(totalRoot)}</Layout>
       <Layout label={"Giảm giá"}>-{formatter(totalDiscountCouponBill)}</Layout>
       <Layout label={"Giảm giá mặt hàng"}>-{formatter(totalCouponForItem)}</Layout>
       <Layout label={"Giảm giá phí ship"}>-{formatter(totalDiscountCouponShip)}</Layout>
@@ -204,7 +204,7 @@ export default function TotalBill(props: propsType): React.JSX.Element {
             rules={[
               {
                 validator(_, value) {
-                  if (value <= totalAmount) {
+                  if (value <= bill_totalPrice) {
                     return Promise.resolve();
                   }
                   return Promise.reject(new Error("Số tiền không hợp lệ!"));
@@ -216,7 +216,7 @@ export default function TotalBill(props: propsType): React.JSX.Element {
               addonAfter={"VNĐ"}
               style={{ width: 200 }}
               min={0}
-              max={totalAmount}
+              max={bill_totalPrice}
             />
           </Form.Item>
         </Layout>
@@ -379,11 +379,22 @@ export default function TotalBill(props: propsType): React.JSX.Element {
           <span>
             <i className="fa-solid fa-location-dot"></i> Kho xuất hàng
             <WithPermission permission={POLICIES.UPDATE_WAREHOUSELINK}>
-            {bill?.warehouseId && (
-              <EditOutlined
-                onClick={onOpenModalSelectWarehouse}
-                style={{ color: "#5AB2FF" }}
-              />
+              {bill?.warehouseId && (
+                bill?.quotationItems?.length > 0 ?
+                <Popconfirm
+                  title={'Hành động này sẽ yêu cầu bạn phải kiểm tra lại tồn kho của sản phẩm, bạn có chắc chắn muốn thay đổi?'}
+                  onConfirm={onOpenModalSelectWarehouse}
+                  cancelText={'Huỷ'}
+                  okText={'Xác nhận'}
+                >
+                  <EditOutlined
+                    style={{ color: "#5AB2FF" }}
+                  />
+                  </Popconfirm>
+                  :   <EditOutlined
+                  onClick={onOpenModalSelectWarehouse}
+                  style={{ color: "#5AB2FF" }}
+                />
             )}
             </WithPermission>
           </span>
@@ -418,7 +429,7 @@ export default function TotalBill(props: propsType): React.JSX.Element {
       />
       <Layout isLarge={true} label={"Tổng tiền phải trả"}>
         <Typography.Text style={{ fontSize: 18, fontWeight: 600 }}>
-          {formatter(totalPriceAfterDiscount - pair)}
+          {formatter(bill_totalPrice - (pair || 0))}
         </Typography.Text>
       </Layout>
       <ModalAnt

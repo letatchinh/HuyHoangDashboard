@@ -9,7 +9,8 @@ import {
   Radio,
   Row,
   Switch,
-  Tabs
+  Tabs,
+  TreeSelect
 } from "antd";
 import TextArea from "antd/lib/input/TextArea";
 import dayjs from "dayjs";
@@ -19,6 +20,8 @@ import InputNumberAnt from "~/components/Antd/InputNumberAnt";
 import BaseBorderBox from "~/components/common/BaseBorderBox/index";
 import Loading from "~/components/common/Loading/index";
 import { requireRules, requireRulesCustom } from "~/constants/defaultValue";
+import GeoTreeSelect from "~/modules/geo/components/GeoTreeSelect";
+import { RELATIVE_POSITION } from "~/modules/geo/constants";
 import { useFailedAnt } from "~/utils/hook";
 import {
   defaultConditions,
@@ -53,7 +56,7 @@ export default function CouponForm({
     const {isFreeShip} = values;
     const submitData = {
       ...values,
-      ...isFreeShip && {discount : null}
+      ...isFreeShip && {discount : null},
     };
     
     if (id) {
@@ -128,7 +131,14 @@ export default function CouponForm({
           customerApplyIds : removeB2c
         })
       }
+    }
       
+    if(keyChange === 'managementArea'){
+      if(valueChange){
+        form.setFieldsValue({
+          managementArea : valueChange?.map((item:any) => item?.value ? item.value : item) // Verify that the Object Or String
+        })
+      }
     };
   };
 
@@ -303,6 +313,23 @@ export default function CouponForm({
 
           <Form.Item labelCol={{ span: 4 }} name={"description"} label="Mô tả">
             <TextArea />
+          </Form.Item>
+
+          <Form.Item labelCol={{ span: 4 }} name={"managementArea"} label="Vùng áp dụng">
+                <GeoTreeSelect
+                  autoClearSearchValue
+                  labelInValue={true}
+                  listItemHeight={200}
+                  multiple={true}
+                  showCheckedStrategy={TreeSelect.SHOW_ALL}
+                  showEnabledValuesOnly={true}
+                  showSearch={true}
+                  size="large"
+                  treeCheckStrictly={true}
+                  treeCheckable={true}
+                  treeDefaultExpandedKeys={['1', '2', '3']}
+                  checkablePositions={[RELATIVE_POSITION.IS_CHILD, RELATIVE_POSITION.IS_EQUAL]}
+                />
           </Form.Item>
           </BaseBorderBox>
 

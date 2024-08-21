@@ -7,6 +7,9 @@ type propsType = {
   billId?: any,
   defaultActiveTabKey?: string,
   isNotSentTime?: boolean
+  isRefetchBill?: {
+    id: string
+  };
 };
 interface VoucherContextProps {
   billId?: any,
@@ -17,7 +20,7 @@ const VoucherContext = createContext<VoucherContextProps>({
 })
 export const useVoucherInOrderStore = (): VoucherContextProps => useContext(VoucherContext);
 
-export default function VoucherInOrder({ billId,defaultActiveTabKey, isNotSentTime}: propsType): React.JSX.Element {
+export default function VoucherInOrder({ billId,defaultActiveTabKey, isNotSentTime,isRefetchBill}: propsType): React.JSX.Element {
   const [activeTab, setActiveTab] = useState('1');
   const onChange = (activeTab: any) => {
     setActiveTab(activeTab);
@@ -34,7 +37,7 @@ export default function VoucherInOrder({ billId,defaultActiveTabKey, isNotSentTi
     }}>
         <Tabs onChange={onChange} activeKey={activeTab}>
         <TabPane tab="Phiếu thu" key="1">
-          <ReceiptInOrder />
+          <ReceiptInOrder isRefetchBill={isRefetchBill} />
         </TabPane>
         <TabPane tab = "Phiếu chi" key = "2">
           <PaymentInOrder />
