@@ -157,3 +157,16 @@ export type propsConfirmStatusBill = {
     bill?: any;
     note?: string;
 };
+
+export interface PreviewCoupon {
+  products: {
+    [productId: string]: {
+      quantity: number;
+      total: number;
+      productGroupId: string;
+    };
+  };
+  customerApplyId: {
+    id: string;
+  };
+}

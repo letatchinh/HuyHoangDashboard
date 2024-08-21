@@ -2,7 +2,7 @@ import { Breadcrumb as BreadcrumbAntd, Col, Row } from 'antd';
 import React, { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 
-const Breadcrumb = ({ title, linkTo }: { title: any, linkTo?: string }) => {
+const Breadcrumb = ({ title, linkTo,right }: { title: any, linkTo?: string,right? : any }) => {
     const items : {title : any}[]= useMemo(() => [
         {
           title: <Link className="text-decoration-none" to={'/'}>Trang chủ</Link>,
@@ -20,6 +20,7 @@ const Breadcrumb = ({ title, linkTo }: { title: any, linkTo?: string }) => {
             <ol className="breadcrumb m-0">
                 {/* <BreadcrumbAntd 
                 items={items}/> */}
+                {right && right}
             </ol>
           </div>
         </div>

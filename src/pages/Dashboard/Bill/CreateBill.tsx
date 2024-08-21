@@ -69,6 +69,7 @@ const CreateBillPage = (): React.JSX.Element => {
   const [dataResult,setDataResult] = useState<DataResultType | null>();
   const [openModalResult,setOpenModalResult] = useState(false);
 
+  const [productAddNewly,setProductAddNewly] = useState(); // To resolve Control QuotationItem in CreateBillProvider
   const onOpenModalResult = useCallback((dataRs:DataResultType) => {    
     setOpenModalResult(true);
     setDataResult(dataRs);
@@ -293,8 +294,12 @@ const CreateBillPage = (): React.JSX.Element => {
             </div>
                   <SelectProduct
                   dataCurrent={dataSource?.[activeKey]}
-                  onChangeBill={(newData: any) =>
-                    onChangeBill(activeKey, newData)
+                  onChangeBill={(newData: any) =>{
+                    onChangeBill(activeKey, newData);
+                    setProductAddNewly(newData);
+                  }
+                    
+
                   }
                     warehouseId =  {get(dataSource, activeKey)?.warehouseId}
                 />
@@ -338,6 +343,7 @@ const CreateBillPage = (): React.JSX.Element => {
                   }
                   onRemoveTab={() => onRemoveTab(get(tab, "key"))}
                   onOpenModalResult={onOpenModalResult}
+                  productAddNewly={productAddNewly}
                 >
                   <Bill.page.create />
                 </BillModule.storeProvider.CreateBillProvider>
