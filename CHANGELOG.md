@@ -1,3 +1,37 @@
+# [1.24.0](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/compare/v1.23.0...v1.24.0) (2024-08-21)
+
+
+### Bug Fixes
+
+* [#1954](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1954) ([233fdd5](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/233fdd5a1c709fb5884af5e9a4c3ad5a01898ad0))
+* [#1954](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1954) ([cf53e3d](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/cf53e3dec0713b79b8034ba408f73f1a42b974da))
+* [#1969](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1969) change value ([8f0c9bb](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/8f0c9bb8ec9465851786501025812a8f4d01117c))
+* [#1969](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1969) handle refcollection when create voucher ([d486c65](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/d486c65b4bd753764764a809487516accec83cd1))
+* [#1974](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1974) count totalPrice after count totalDiscountSummary ([20c2e90](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/20c2e9074f6a5b3cd03c60f79e181c878c7870d6))
+* [#1974](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1974) reload bill Id ([fc14d00](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/fc14d00131ce2aba3d50eb066064d3e48815bb69))
+* [#1981](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1981) ([fca0f95](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/fca0f9503628a141dbcab51e03b82f6983af28e8))
+* [#1981](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1981) ([d4bea6c](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/d4bea6c74440e32acf92b9c0b61c5fa51e87d1fb))
+* [#1981](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1981) ([fa099ee](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/fa099ee785552f1f2fd408634c23ab3a17d702e2))
+* [#1981](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1981) disabled active/inactive unit , user ([bb8d37a](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/bb8d37a81c1fadbe77f13324e3702d67b90d54e1))
+* add permission ([32f58e4](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/32f58e4c0762f48e86b4b9b6c1b1f3623afddbc5))
+* add permission ([693ecb3](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/693ecb3f70e09fcd2a6487e796369b21c92e71ec))
+* add permission action create bill ([b0c6719](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/b0c6719854c5c7fdc5ef2c6d23da97214c51a0ec))
+* change Api Search Product ([f112459](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/f1124597c7e708b1badee1acbc88d4ec7b808366))
+* get Docs ([513ad2a](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/513ad2a23f11618cc36ce726dcf403e0dc62d1d4))
+* permission Collbalator ([1931d42](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/1931d428ea52b147331fee21580cc2b7aa5220a6))
+* permission Detail Employee ([b8cca93](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/b8cca935f8be06562df9a37b3082b170b6674141))
+* permission Detail Pharmacy ([80b03c2](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/80b03c2b2d8e0035148bcbdf5ca8eca7bfcdeba5))
+* permission download ([3d39673](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/3d3967339bdcb9f3395125c34d5d86390d6d1d52))
+* Replace Api V2 Search ([90ed8af](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/90ed8afa875bac5579bb7670a27e7bc0943dab5e))
+* reset Form GroupPharmacy ([bc746df](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/bc746dfab8495d115462df65c6f26a55eb42457f))
+* update permission ([506d8f7](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/506d8f7b2033981fc85432035d83e05642dd6d10))
+
+
+### Features
+
+* [#1954](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1954) ([f34d1fc](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/f34d1fcefbc2f3940bf830e7994d5b4e35a9750d))
+* [#1954](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/issues/1954) hêm option cho chọn all loại khách hàng (b2b/b2c) ([a7dc2cb](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/commit/a7dc2cb1ab0da6310e5f175d6c4fdc4ef111fddb))
+
 # [1.23.0](https://gitlab.com/worldtech-ltd/worldpharma-dashboard/compare/v1.22.2...v1.23.0) (2024-08-21)
 
 
