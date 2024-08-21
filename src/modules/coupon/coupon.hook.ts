@@ -39,9 +39,12 @@ const {
   pagingSelector,
 } = getSelectors(MODULE);
 
-const copySuccessSelector = getSelector('copySuccess')
-const copyFailedSelector = getSelector('copyFailed')
+const copySuccessSelector = getSelector('copySuccess');
+const copyFailedSelector = getSelector('copyFailed');
+const getByIdCompletedSelector = getSelector('getByIdCompleted');
+
 export const useCouponPaging = () => useSelector(pagingSelector);
+export const useCouponGetByIdCompleted = () => useSelector(getByIdCompletedSelector);
 
 export const useGetCoupons = (param:any) => {
   return useFetchByParam({

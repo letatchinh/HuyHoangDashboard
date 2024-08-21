@@ -1,14 +1,16 @@
+import { SelectProps } from 'antd/lib/index';
 import React from 'react';
+import DebounceSelectMultipleItemProduct from '~/components/common/DebounceSelectMultiple/DebounceSelectMultipleItemProduct';
+import DebounceSelectMultipleItemProductGroup from '~/components/common/DebounceSelectMultiple/DebounceSelectMultipleItemProductGroup';
 import SelectDebounceProduct from '~/modules/product/components/SelectDebounceProduct';
 import SelectProductGroup from '~/modules/product/components/SelectProductGroup';
-type propsType = {
+interface propsType extends SelectProps {
     refCollection : 'product' | 'product_group',
     index : number,
-    form : any
 };
-export default function SelectIds({refCollection,index,form}:propsType) : React.JSX.Element {
+export default function SelectIds({refCollection,index,...props}:propsType) : React.JSX.Element {
 
-    if(refCollection === 'product_group') return <SelectProductGroup fieldName={[index,'id']} showLabel={false} allowCreate={false} isLoading={false}/>
-    if(refCollection === 'product') return <SelectDebounceProduct fieldName={[index,'id']} value={form.getFieldValue(['targetIds',index,'id'])}/>
+    if(refCollection === 'product_group') return <DebounceSelectMultipleItemProductGroup {...props}/>
+    if(refCollection === 'product') return <DebounceSelectMultipleItemProduct {...props}/>
     return <></>
 }

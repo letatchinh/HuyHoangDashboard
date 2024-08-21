@@ -29,10 +29,10 @@ import {
   STATE,
   STATE_VI
 } from "../constants";
-import { useCreateCoupon, useGetCoupon, useUpdateCoupon } from "../coupon.hook";
-import { CouponBase } from "../coupon.modal";
+import { useCouponGetByIdCompleted, useCreateCoupon, useGetCoupon, useUpdateCoupon } from "../coupon.hook";
 import CustomerApplyFormItem from "./CustomerApplyFormItem";
 import TargetFormItem from "./TargetFormItem";
+import { detailCustomerApplyFor } from "../coupon.modal";
 const CLONE_defaultConditions: any = defaultConditions;
 type propsType = {
   onCancel: (p?: any) => void;
@@ -44,7 +44,12 @@ export default function CouponForm({
 }: propsType): React.JSX.Element {
   const [form] = Form.useForm();
   const { onFinishFailed, ErrorComponent } = useFailedAnt();
-  const [coupon, loading]: [CouponBase, boolean, any] = useGetCoupon(id);
+  const targetIds = Form.useWatch('targetIds',form);
+  const customerApplyIds : detailCustomerApplyFor[] = Form.useWatch('customerApplyIds',form);
+  const allowAllApply : detailCustomerApplyFor[] = Form.useWatch('allowAllApply',form);
+  const [coupon, loading] = useGetCoupon(id);
+  const isGetByIdCompleted = useCouponGetByIdCompleted();
+  
   const [isSubmitLoading, create] = useCreateCoupon(onCancel);
   const [, update] = useUpdateCoupon(onCancel);
   const onFinish = (values: any) => {
@@ -83,14 +88,14 @@ export default function CouponForm({
           },
         });
       }
-    }
+    };
     if(keyChange === 'target'){
       if(valueChange === 'BILL_ITEM'){
         form.setFieldsValue({
           applyFor: "BILL"
         })
       }
-    }
+    };
     if(keyChange === 'applyFor'){
       if(valueChange === 'BILL'){
         form.setFieldsValue({
@@ -105,6 +110,29 @@ export default function CouponForm({
         })
       }
     };
+
+    if(keyChange === 'allowAllApply'){
+      if(!!valueChange?.all){
+        form.setFieldsValue({
+          customerApplyIds : [],
+          allowAllApply : {
+            b2b : true,
+            b2c : true,
+            all : true,
+          }
+        });
+        
+      }else{
+        // Handle Remove All refCollection === "pharma_profile" From customerApplyIds
+        const removeB2b = customerApplyIds?.filter((item ) => valueChange?.b2b ? item?.refCollection !== "pharma_profile" : true);
+        // Handle Remove All refCollection === "pharma_profile" From removeB2b
+        const removeB2c = removeB2b?.filter((item ) => valueChange?.b2c ? item?.refCollection !== "partner" : true);
+        form.setFieldsValue({
+          customerApplyIds : removeB2c
+        })
+      }
+    }
+      
     if(keyChange === 'managementArea'){
       if(valueChange){
         form.setFieldsValue({
@@ -326,7 +354,7 @@ export default function CouponForm({
           </Form.Item>
           <Form.Item shouldUpdate noStyle>
           {({getFieldValue}) =>   {
-            const isDisabled = !!getFieldValue('disabledCondition')
+            const isDisabled = !!getFieldValue('disabledCondition');
             return <Form.List name={"conditions"}>
             {(fields, {}) => (
               <>
@@ -406,10 +434,10 @@ export default function CouponForm({
             </Col>
           </Row>
 
-          <TargetFormItem form={form} />
+          <TargetFormItem targetIds={targetIds}/>
         </Tabs.TabPane>
         <Tabs.TabPane forceRender key={"3"} tab="Những ai được dùng mã">
-          <CustomerApplyFormItem form={form} />
+          {(isGetByIdCompleted || !id) && <CustomerApplyFormItem customerApplyIds={customerApplyIds} allowAllApply={allowAllApply}/>}
         </Tabs.TabPane>
       </Tabs>
 

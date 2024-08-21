@@ -65,5 +65,10 @@ export const DEFAULT_COUPON = {
     },
     applyFor: "BILL",
     target: "BILL",
-    disabledCondition : true
+    disabledCondition : true,
+    allowAllApply : {
+      all : true,
+      b2b : true,
+      b2c : true,
+    }
   }
