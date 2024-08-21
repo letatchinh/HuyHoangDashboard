@@ -70,7 +70,6 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
     codeSequence,
     createdAt,
     status,
-    pair,
     createBy,
     note,
     totalAmount,

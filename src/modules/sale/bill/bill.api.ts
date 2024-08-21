@@ -1,6 +1,6 @@
 import { get, omit } from "lodash";
 import requester from "~/api/requester";
-import { PayloadUpdateBill } from "./bill.modal";
+import { PayloadUpdateBill, PreviewCoupon } from "./bill.modal";
 
 const apis = {
     getAll: (query?: any) => requester.get(`/api/v1/bill`, query),
@@ -17,5 +17,6 @@ const apis = {
     updateApplyLogisticUnit: (data: any) => requester.put(`/api/v1/bill-transport-unit/${data?.id}`, omit(data, ["id"])),
     updateStatusBill: (data: any) => requester.put(`/api/v1/bill-status/${data?.billId}`, omit(data, ["billId"])),
     splitBill: (data?: any) => requester.post(`/api/v1/bill-split`, data),
+    getPreviewCoupon : (payload : PreviewCoupon) => requester.post(`/api/v1/coupon-preview`, payload),
 }
 export default apis;
