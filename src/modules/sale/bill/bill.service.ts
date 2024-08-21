@@ -515,3 +515,38 @@ export const validateCoupon = async (payload : VerifyCoupon,setCoupon : (p?:any)
     console.log(error,'error');
   }
 }
+
+export const getPreviewCoupon = async ({
+  quotationItems,
+  customerApplyId,
+}: {
+  quotationItems: quotation[];
+  customerApplyId: string;
+}) => { 
+  try {
+      const productsObj: {
+        [productId: string]: {
+          quantity: number;
+          total: number;
+          productGroupId: any;
+        };
+      } = {};
+      quotationItems?.forEach((item) => {
+        productsObj[item?.productId] = {
+          productGroupId: item?.productGroupId,
+          quantity: item?.quantity,
+          total: item?.billItem_totalAmount || 0,
+        };
+      });
+      const query = {
+        products: productsObj,
+        customerApplyId: {
+          id: customerApplyId,
+        },
+      }
+    const data = await apis.getPreviewCoupon(query);
+    return data
+  } catch (error) {
+    console.log(error,'error');
+  }
+}

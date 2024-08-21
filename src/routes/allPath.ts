@@ -118,6 +118,8 @@ export const PATH_APP = {
     report: {
       supplier: path(ROOTS.app, '/report/supplier'),
       employee: path(ROOTS.app, '/report/employee'),
+      ship: path(ROOTS.app, '/report/ship'),
+      subFee: path(ROOTS.app, '/report/subFee'),
     },
   
     botNotification : {

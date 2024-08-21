@@ -67,9 +67,11 @@ import TypePharmacyDetail from "~/modules/typePharmacy/components/TypePharmacyDe
 import GroupPharmacyDetail from "~/modules/groupPharmacy/components/GroupPharmacyDetail";
 import Inventory from "~/pages/Dashboard/Warehouse/Inventory";
 import Coupon from "~/modules/coupon/screens/Coupon";
+import ReportShipPage from "~/pages/Dashboard/ReportShip";
+import ReportSubFeePage from "~/pages/Dashboard/ReportSubFee";
 export const mainRoutes :PathRouteProps[] = [
   { path: PATH_APP.main.root, Component: Homepage },
-
+  
   // Supplier
   { path: PATH_APP.supplier.root, Component: Supplier },
 
@@ -169,9 +171,11 @@ export const mainRoutes :PathRouteProps[] = [
   { path: PATH_APP.baseSalary.root, Component: BaseSalaryPage },
   // Cấu hình Hoa hồng
   { path: PATH_APP.benefitConfiguration.root, Component: BenefitConfigurationPage },
-  // Báo cáo nhân viên
+  // Báo cáo
   { path: PATH_APP.report.employee, Component: ReportEmployeePage },
   { path: PATH_APP.report.supplier, Component: ReportSupplierPage },
+  { path: PATH_APP.report.ship, Component: ReportShipPage },
+  { path: PATH_APP.report.subFee, Component: ReportSubFeePage },
   
   // Configuration Cron Time
   // { path: PATH_APP.configurationCronTime.root, Component: ConfigurationCronTime},

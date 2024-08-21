@@ -38,6 +38,9 @@ const permissionOfSetup = [
   POLICIES.READ_CUSTOMERDIVISION,
   POLICIES.READ_WAREHOUSELINK,
   POLICIES.READ_CONFIGREPORTSALARYAUTO,
+  POLICIES.READ_SALESCHANNEL,
+  POLICIES.READ_CUSTOMERGROUP,
+  POLICIES.READ_CUSTOMER,
 ];
 const permissionPharma = [
   POLICIES.READ_PHARMAPROFILE,
@@ -89,6 +92,9 @@ const permissionReport = [
   POLICIES.READ_REPORTREVENUEPERSONALPARTNER,
   POLICIES.READ_REPORTREVENUETEAMEMPLOYEE,
   POLICIES.READ_REPORTREVENUETEAMPARTNER,
+  POLICIES.READ_REPORTLOGISTIC,
+  POLICIES.READ_REPORTFEE,
+  
 ];
 
 export const resource: ItemType[] = [
@@ -193,13 +199,6 @@ export const resource: ItemType[] = [
             path: PATH_APP.benefitConfiguration.root,
             key: PATH_APP.benefitConfiguration.root,
             permission: [POLICIES.READ_CONFIGBENEFIT], //
-          },
-          {
-            label: "Kênh bán hàng",
-            icon: <i className="fa-solid fa-cart-shopping"></i>,
-            path: PATH_APP.saleChannel.root,
-            key: PATH_APP.saleChannel.root,
-            permission: [POLICIES.READ_SALESCHANNEL],
           },
           // {
           //   label: "Cấu hình thời gian tự động",
@@ -359,6 +358,18 @@ export const resource: ItemType[] = [
         path: PATH_APP.costManagement.root,
         key: PATH_APP.costManagement.root,
         permission: [POLICIES.READ_SHIPPINGCOST], //
+      },
+      {
+        label: "Báo cáo phí vận chuyển",
+        path: PATH_APP.report.ship,
+        key: PATH_APP.report.ship,
+        permission: [POLICIES.READ_REPORTLOGISTIC], //
+      },
+      {
+        label: "Báo cáo phụ phí",
+        path: PATH_APP.report.subFee,
+        key: PATH_APP.report.subFee,
+        permission: [POLICIES.READ_REPORTFEE], //
       },
       {
         label: "Phiếu lương",

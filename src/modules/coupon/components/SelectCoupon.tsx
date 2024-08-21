@@ -10,7 +10,7 @@ type propsType = {
 
 }
 export default function SelectCoupon(props:propsType) : React.JSX.Element {
-    const {coupons,onChangeCoupleSelect,loadingGetCoupon,couponSelected,onCloseCoupon} = useCreateBillStore();
+    const {coupons,onChangeCoupleSelect,loadingGetCoupon,couponSelected,onCloseCoupon,bill} = useCreateBillStore();
     
     const [selected,setSelected] = useState<CouponInSelect[]>([]);
     
@@ -78,10 +78,10 @@ export default function SelectCoupon(props:propsType) : React.JSX.Element {
             <Alert message={<span>Bạn đã chọn {<Typography.Text type='success' strong>{selected?.length}</Typography.Text>} mã giảm giá</span>} type="success" showIcon />
             <Flex justify={'space-between'}>
               {loadingGetCoupon ? <LoadingOutlined /> : <>
-                <div>
+                {bill?.dataTransportUnit?.payer !== "SYSTEM" && <div>
                 <SectionListDiscount {...PropsSection} data={couponByType.couponFreeShipSingle} title="Mã Miễn Phí Vận Chuyển không kết hợp"/>
                 <SectionListDiscount {...PropsSection} data={couponByType.couponFreeShipMulti} title="Mã Miễn Phí Vận Chuyển kết hợp"/>
-            </div>
+                </div>}
             <div>
                 <SectionListDiscount {...PropsSection} data={couponByType.couponBillSingle} title="Mã giảm giá đơn hàng không kết hợp"/>
                 <SectionListDiscount {...PropsSection} data={couponByType.couponBillMulti} title="Mã giảm giá đơn hàng kết hợp"/>

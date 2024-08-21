@@ -18,6 +18,7 @@ export default function MainContentTab(props:propsType) : React.JSX.Element {
     const { id: pharmacyId }: any = useParams();
     const canReadDebt = useMatchPolicy(POLICIES.READ_DEBTPHARMACY);
     const canReadHistory = useMatchPolicy(POLICIES.READ_HISTORYBILLPHARMA);
+    const canReadHistoryPharmacyProfile= useMatchPolicy(POLICIES.READ_HISTORYPHARMAPROFILE);
     const canReadAccumulate = useMatchPolicy(POLICIES.READ_ACCUMULATEPHARMAPROFILE);
   
     const [activeTab, setActiveTab] = useState("1");
@@ -40,9 +41,9 @@ export default function MainContentTab(props:propsType) : React.JSX.Element {
         {canReadHistory &&  <TabPane tab="Lịch sử đơn hàng" key="2">
             <HistoryPharmacy pharmacyId={pharmacyId} />
           </TabPane>}
-          <TabPane tab="Lịch sử chỉnh sửa" key="3">
+        {canReadHistoryPharmacyProfile &&  <TabPane tab="Lịch sử chỉnh sửa" key="3">
             <HistoryUpdate id={pharmacyId}/>
-          </TabPane>
+          </TabPane>}
         { canReadDebt && <TabPane tab="Công nợ" key="4">
             <DebtPharmacy pharmacyId={pharmacyId} />
           </TabPane>}

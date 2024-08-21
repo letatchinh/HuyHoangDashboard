@@ -70,7 +70,6 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
     codeSequence,
     createdAt,
     status,
-    pair,
     createBy,
     note,
     totalAmount,
@@ -338,6 +337,9 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
           billId={id}
           defaultActiveTabKey="1"
           isNotSentTime
+          isRefetchBill={{
+            id: bill?._id
+            }}
         />
       </Modal>
     </div>

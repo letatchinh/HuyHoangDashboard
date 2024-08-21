@@ -9,9 +9,11 @@ import { useVoucherInOrderStore } from '~/modules/vouchers/components/VoucherInO
 import { formatNumberThreeComma } from '~/utils/helpers';
 
 type propsType = {
-
+  isRefetchBill?: {
+    id: string
+  };
 }
-export default function ReceiptInOrder(props: propsType): React.JSX.Element {
+export default function ReceiptInOrder({isRefetchBill}: propsType): React.JSX.Element {
   const { billId , isNotSentTime} = useVoucherInOrderStore();
   const [query, onTableChange] = useReceiptVoucherByBillIdQueryParams(billId, isNotSentTime);
   const [data, isLoading] = useGetReceiptVoucherByBillId(query);
@@ -109,6 +111,7 @@ export default function ReceiptInOrder(props: propsType): React.JSX.Element {
           id={id}
           onClose={onClose}
           refCollection={refCollection}
+          isRefetchBill = {isRefetchBill}
         />
       </Modal>
     </>
