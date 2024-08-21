@@ -88,6 +88,12 @@ export function SplitBillProvider({
       0
     );
   
+  const totalDiscountSummary = (billItems: any[]) =>
+    billItems?.reduce(
+      (sum: number, cur: any) => sum + get(cur, "totalDiscountSummary", 0),
+      0
+    );
+  
   function processBill(bills: any, totalReceiptVoucherCompleted: number) {
     // Nếu totalReceiptVoucherCompleted <= 0, trả về mảng bills ban đầu
     if (totalReceiptVoucherCompleted <= 0) {
@@ -144,16 +150,11 @@ export function SplitBillProvider({
   useEffect(() => {
     const newData = listBill?.map((item: any[]) => ({
       billItems: item,
-      totalPrice: totalPrice(item),
-      totalQuantity: totalQuantity(item),
+      totalPrice: Math.max(totalPrice(item) - totalDiscountSummary(item),0),
+      totalQuantity: totalQuantity(item) ,
       pair: bill?.pair || 0,
     }));
-    let newBills = processBill(newData,bill?.totalReceiptVoucherCompleted);
-    // console.log(newBills,'newBills')
-    // newBills = newBills.map((item: any) => ({
-    //   ...item,
-    //   remaining: (+item?.totalPrice) - (+item?.totalReceiptVoucherCompleted) || 0,
-    // }));
+    let newBills = processBill(newData, bill?.totalReceiptVoucherCompleted);
     setData(newBills);
   }, [listBill]);
   

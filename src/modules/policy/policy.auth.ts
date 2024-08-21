@@ -112,6 +112,7 @@ const reportRevenuePersonalEmployee = 'reportRevenuePersonalEmployee';
 const reportRevenuePersonalPartner = 'reportRevenuePersonalPartner';
 const reportRevenueTeamEmployee = 'reportRevenueTeamEmployee';
 const reportRevenueTeamPartner = 'reportRevenueTeamPartner';
+const historyPharmacyProfile = 'historyPharmacyProfile';
 
 const reportLogistic = 'reportLogistic';
 const reportFee = 'reportFee';
@@ -232,6 +233,7 @@ const RESOURCES = [
   reportRevenuePersonalPartner,
   reportRevenueTeamEmployee,
   reportRevenueTeamPartner,
+  historyPharmacyProfile,
   reportLogistic,
   reportFee,
 ];
@@ -374,7 +376,8 @@ const RESOURCE = (): ResourceType => {
   ];
 
   const PHARMA_PROFILE: string[]= [
-    pharmaProfile
+    pharmaProfile,
+    historyPharmacyProfile
   ];
 
   const PARTNER: string[] = [

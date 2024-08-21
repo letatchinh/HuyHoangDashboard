@@ -337,6 +337,9 @@ export default function UpdateBill(props: propsType): React.JSX.Element {
           billId={id}
           defaultActiveTabKey="1"
           isNotSentTime
+          isRefetchBill={{
+            id: bill?._id
+            }}
         />
       </Modal>
     </div>

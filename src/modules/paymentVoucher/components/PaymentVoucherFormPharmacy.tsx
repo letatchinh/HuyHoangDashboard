@@ -164,7 +164,7 @@ import "./form.scss";
           ...omit(values, ["code", "pharmacyAddress", "pharmacy"]),
           accountingDate: dayjs(accountingDate).format("YYYY-MM-DD"),
           dateOfIssue: dayjs(dateOfIssue).format("YYYY-MM-DD"),
-          refCollection: refCollection ? REF_COLLECTION[refCollection] : null,
+          refCollection: refCollection ? REF_COLLECTION[refCollection?.toUpperCase()] : null,
           accountingDetails: accountingDetails,
           totalAmount:sumBy([...accountingDetails],(item) => get(item,'amountOfMoney',0)),
           method,

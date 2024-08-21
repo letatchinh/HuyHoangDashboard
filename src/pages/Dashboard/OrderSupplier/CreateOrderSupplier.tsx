@@ -10,6 +10,7 @@ import ModalAnt from "~/components/Antd/ModalAnt";
 import OrderSupplierModule from '~/modules/sale/orderSupplier';
 import { FormFieldCreateOrderSupplier, orderSupplier } from "~/modules/sale/orderSupplier/orderSupplier.modal";
 import SelectProduct from "~/modules/sale/orderSupplier/components/SelectProduct";
+import { useUserPolicy } from "~/modules/policy/policy.hook";
 export const KEY_DATA_ORDER_SUPPLIER = "order-supplier";
 export const KEY_PRIORITY = "key-priority-order-supplier"; // Tab Will Use this key and Remove then (If Have)
 export interface ItemDataSource extends FormFieldCreateOrderSupplier  {
@@ -52,7 +53,7 @@ const Label = ({ label, onRemove }: { label?: any; onRemove: () => void }) => (
 
 const CreateOrderSupplier = (): React.JSX.Element => {
   const navigate = useNavigate();
-  
+  useUserPolicy(); // Get Policy
   
   const [tabs, setTabs] = useState<TabsProps["items"]>();
   const [activeKey, setActiveKey]: any = useState();
