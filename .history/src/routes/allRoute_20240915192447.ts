@@ -10,4 +10,7 @@ export const mainRoutes :PathRouteProps[] = [
   { path: '/', Component: Homepage },
 ]
 
+export const authRoutes : PathRouteProps[] = [
+    { path: '/login', Component: Auth.page.login },
+  ];
 

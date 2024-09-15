@@ -1,0 +1,93 @@
+import { PathRouteProps, Route, Routes, useNavigate } from "react-router-dom";
+import { setAxiosCompanyId, setAxiosToken, setupAxios } from "./api/requester";
+
+import { authRoutes, mainRoutes } from "./routes/allRoute";
+import ProtectRoute from "./routes/middleware/ProtectRoute";
+import AuthModule from "~/modules/auth";
+import { PATH_APP } from "./routes/allPath";
+import CreateBillPage from "./pages/Dashboard/Bill/CreateBill";
+import packageJson from "../package.json";
+import CreateOrderSupplier from "./pages/Dashboard/OrderSupplier/CreateOrderSupplier";
+import CreateBillPageInDevice from "./pages/Dashboard/Bill/CreateBill_InDevice";
+import { DeviceDetector } from "./utils/helpers";
+import NotFoundPage from "./pages/Auth/NotFoundPage";
+// import { onMessageListener } from "./modules/notification/firebase";
+import DashboardRouter from "./routes/middleware/DashboardRouter";
+
+function App(): React.JSX.Element {
+  const width = window.innerWidth;
+  const token = AuthModule.hook.useToken();
+  setupAxios();
+  setAxiosToken(token);
+
+  setAxiosCompanyId("99999"); // Fix Me , Just Init Project
+  
+  const device = DeviceDetector();
+  
+  return (
+    <>
+      <Routes>
+        {authRoutes.map((route: PathRouteProps) => (
+          <Route key={route.path} {...route} />
+        ))}
+
+        <Route path="/" element={<DashboardRouter />}>
+          <Route path='' element={<ProtectRoute/>} >
+            {mainRoutes.map((route: PathRouteProps) => (
+              <Route key={route.path} {...route} />
+            ))}
+          </Route>
+          
+          <Route
+            key={PATH_APP.bill.create}
+            path={PATH_APP.bill.create}
+            Component={() =>  device?.isMobile !== true ? <CreateBillPage/> :  <CreateBillPageInDevice />}
+          />
+          <Route
+            key={PATH_APP.bill.createEmployee}
+            path={PATH_APP.bill.createEmployee}
+            Component={() =>  device?.isMobile !== true ? <CreateBillPage/> :  <CreateBillPageInDevice />}
+          />
+          <Route
+            key={PATH_APP.bill.createPharmacy}
+            path={PATH_APP.bill.createPharmacy}
+            Component={() =>  device?.isMobile !== true ? <CreateBillPage/> :  <CreateBillPageInDevice />}
+          />
+          <Route
+            key={PATH_APP.bill.createCollaborator}
+            path={PATH_APP.bill.createCollaborator}
+            Component={() =>  device?.isMobile !== true ? <CreateBillPage/> :  <CreateBillPageInDevice />}
+          />
+          <Route
+            key={PATH_APP.orderSupplier.create}
+            path={PATH_APP.orderSupplier.create}
+            Component={() =>  <CreateOrderSupplier />}
+          />
+        </Route>
+        <Route path='*' element={<NotFoundPage />} />
+      </Routes>
+      <div
+        style={{
+          position: "fixed",
+          bottom: 0,
+          left: 0,
+          width: "max-content",
+          pointerEvents : 'none'
+        }}
+      >
+        <p
+          style={{
+            textAlign: "right",
+            marginLeft: "16px",
+            color: "rgba(233, 233, 233, 0.2)",
+            pointerEvents : 'none'
+          }}
+        >
+          Version: {packageJson.version}
+        </p>
+      </div>
+    </>
+  );
+}
+
+export default App;

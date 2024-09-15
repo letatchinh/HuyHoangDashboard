@@ -1,6 +1,7 @@
+import Auth from "~/modules/auth";
 import { PathRouteProps } from 'react-router-dom';
 import { PATH_APP } from "./allPath";
-import Homepage from "~/pages/Homepage/index";
+import Homepage from "~/pages/Dashboard/Homepage";
 
 export const mainRoutes :PathRouteProps[] = [
   { path: PATH_APP.main.root, Component: Homepage },
@@ -10,4 +11,7 @@ export const mainRoutes :PathRouteProps[] = [
   { path: '/', Component: Homepage },
 ]
 
+export const authRoutes : PathRouteProps[] = [
+    { path: '/login', Component: Auth.page.login },
+  ];
 

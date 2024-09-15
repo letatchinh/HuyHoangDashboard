@@ -347,6 +347,9 @@ export const getValueOfPercent = (value: number, percent: number) => value * per
 export const getTextOfDiscount = (value?: number, typeValue?: "PERCENT" | "VALUE") => typeValue === 'PERCENT' ? `${value}%` : formatter(value);
 export const getTextOfDiscountShip = (isFreeShip?:boolean,value?: number, typeValue?: "PERCENT" | "VALUE") => isFreeShip ? "Miễn phí Ship" : getTextOfDiscount(value,typeValue);
 
+type typePoly= keyof PoliciesType;
+type ActionPolicy = keyof typeof CORE_ACTION
+type KeyPolicy = 'QUOTATION' | 'BILL';
 
 
 export const convertFiles = (files: any[]) => {

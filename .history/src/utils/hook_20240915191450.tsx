@@ -6,6 +6,8 @@ import { ModuleRedux } from '~/redux/models';
 import { RootState } from '~/redux/store';
 import useNotificationStore from '~/store/NotificationContext';
 import { StringToSlug } from './helpers';
+import { useAdapter } from '~/modules/auth/auth.hook';
+import { ADAPTER_KEY } from '~/modules/auth/constants';
 import { ErrorAntBase } from './Modal';
 import { Alert } from 'antd';
 
@@ -309,6 +311,13 @@ export const useAction = ({ action }:UseActionProps) : (v:any) => void => {
     });
     updateResources(resultSearch);
   };
+
+  export const useIsAdapterSystem = () => {
+    const adapter = useAdapter();
+    const isAdapterSystem = useMemo(() => adapter === ADAPTER_KEY.STAFF, [adapter]);
+    return !!isAdapterSystem; // return true if adapter is system
+  };
+  
   
   export const useFailedAnt = () => {
     const [errors,setErrors] = useState<ErrorAntBase[]>([]);

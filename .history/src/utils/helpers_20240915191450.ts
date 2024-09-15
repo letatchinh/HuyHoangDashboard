@@ -5,6 +5,10 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { REF_COLLECTION, STATUS } from "~/constants/defaultValue";
 
 import subvn from "~/core/subvn";
+import POLICIES, { CORE_ACTION } from "~/modules/policy/policy.auth";
+import { PoliciesType, policyType } from "~/modules/policy/policy.modal";
+import { useAdapter } from "~/modules/auth/auth.hook";
+import { ADAPTER_KEY } from "~/modules/auth/constants";
 import { PATH_APP } from "~/routes/allPath";
 import relativeTime from "dayjs/plugin/relativeTime";
 import localeEn from "dayjs/locale/vi"; // With a custom alias for the locale object
@@ -347,13 +351,65 @@ export const getValueOfPercent = (value: number, percent: number) => value * per
 export const getTextOfDiscount = (value?: number, typeValue?: "PERCENT" | "VALUE") => typeValue === 'PERCENT' ? `${value}%` : formatter(value);
 export const getTextOfDiscountShip = (isFreeShip?:boolean,value?: number, typeValue?: "PERCENT" | "VALUE") => isFreeShip ? "Miễn phí Ship" : getTextOfDiscount(value,typeValue);
 
+type typePoly= keyof PoliciesType;
+type ActionPolicy = keyof typeof CORE_ACTION
+type KeyPolicy = 'QUOTATION' | 'BILL';
 
+export const permissionConvert = (query:any)=>(action: ActionPolicy, key: KeyPolicy)  => {
+  const per =  (k:KeyPolicy)=>(pr:any)=> action.concat('_').concat(k) .concat(pr) as typePoly ;
+  const _ = ['PARTNER', 'EMPLOYEE', 'PHARMACY']
+  if (!get(query, 'refCollection')) {
+    return POLICIES[ per(key)('')] as [string,policyType] 
+  };
+  const objEntry = _.map((e) => [REF_COLLECTION[e], per(key)(e)])
+  let objj = Object.fromEntries(objEntry) as {
+    [key in keyof typeof query ]: typePoly
+  } 
+  return POLICIES[ objj[ get(query,'refCollection') as any ] ]as [string,policyType] 
+};
 
 export const convertFiles = (files: any[]) => {
   return files?.map((item: any) => ({
     fileName: item?.name,
     url: item?.response?.url
   }));
+};
+export const useIsAdapterSystem = () => {
+  const adapter = useAdapter();
+  const isAdapterSystem = useMemo(() => adapter === ADAPTER_KEY.STAFF, [adapter]);
+  return !!isAdapterSystem; // return true if adapter is system
+};
+
+type keyRefCollection = 'quotation' | 'bill';
+export const checkRefCollection = (key: keyRefCollection,pathname: string) => {
+  let refCollection = '';
+  if (pathname === PATH_APP[key].root) {
+    return 
+  };
+  if (pathname === PATH_APP[key].employee) {
+    return refCollection = REF_COLLECTION.EMPLOYEE
+  };
+  if (pathname === PATH_APP[key].collaborator) {
+    return refCollection = REF_COLLECTION.PARTNER
+  };
+  if (pathname === PATH_APP[key].pharmacy) {
+    return refCollection = REF_COLLECTION.PHARMACY
+  };
+};
+export const CheckPermission: any = (pathname: string) => {
+   const newPathname = pathname.replace(/\/[0-9a-fA-F]+$/, '');
+  if (newPathname === PATH_APP.bill.root) {
+    return 'bill'
+  };
+  if (newPathname === PATH_APP.bill.employee) {
+    return 'billEmployee'
+  };
+  if (newPathname === PATH_APP.bill.collaborator) {
+    return 'billPartner'
+  };
+  if (newPathname === PATH_APP.bill.pharmacy) {
+    return 'billPharmacy'
+  };
 };
 
 export const daysAgo = (postDate: any) => { 

@@ -14,6 +14,7 @@ import { NotificationProvider } from "./store/NotificationContext";
 import vi_VN from 'antd/lib/locale/vi_VN';
 import 'dayjs/locale/vi';// Import the Vietnamese locale
 import { ConfigProviderProps } from "antd/es/config-provider/index";
+import '~/modules/notification/firebase'
 type Locale = ConfigProviderProps['locale'];
 
 const root = ReactDOM.createRoot(
@@ -28,7 +29,7 @@ root.render(
     <Provider store={store}>
       <BrowserRouter>
         {/* Config Provider Of Antd */}
-        <ConfigProvider theme={theme} locale={customLocale}>
+        <ConfigProvider theme={theme} renderEmpty={() => <EmptyData />} locale={customLocale}>
           {/* Toast Notification Of Antd */}
           <NotificationProvider>
             <App />

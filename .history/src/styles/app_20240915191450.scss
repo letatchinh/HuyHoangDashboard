@@ -1,0 +1,44 @@
+@import "abstract/variables";
+@import "abstract/base";
+@import "abstract/custom";
+
+// Module
+@import "~/modules/auth/auth.style.scss";
+@import "~/modules/homepage/homepage.style.scss";
+@import "~/modules/product/product.style.scss";
+@import "~/components/Layout/LayoutVertical/index.scss";
+@import "~/modules/configDiscount/configDiscount.style.scss";
+@import "~/modules/sale/bill/bill.style.scss";
+@import "../modules//employee/employee.style.scss";
+@import "../modules/user/user.style.scss";
+@import "../modules/userGroup/userGroup.style.scss";
+@import "../modules/workList/workList.style.scss";
+@import "../modules/workSprint/workSprint.style.scss";
+@import "../modules/workTask/workTask.style.scss";
+@import "~/modules/supplier/supplier.style.scss";
+@import "~/modules/reportSalary/benefitConfiguration/benefitConfiguration.style.scss";
+@import "~/modules/report/reportEmployee/reportEmployee.style.scss";
+@import "~/modules/salesGroup/salesGroup.style.scss";
+@import "../modules/pharmacy/pharmacy.style.scss";
+@import "~/modules/collaborator/collaborator.style.scss";
+@import "../modules/reportSalaryPartner/reportSalaryPartner.style.scss";
+@import "~/modules/requestGroup/requestGroup.style.scss";
+@import "~/modules/coupon/coupon.style.scss";
+
+
+@import "../modules/configurationCronTime/configurationCronTime.style.scss";
+// Component
+@import "~/components/Layout/LayoutVertical/index.scss";
+@import "component/whiteBox";
+@import "component/columnAction";
+@import "component/page";
+@import "component/table";
+@import "~/components/common/Layout/index.scss";
+
+//Antd
+@import 'antd/modal.scss';
+@import 'antd/input.scss';
+@import 'antd/List.scss';
+@import 'antd/tabs.scss';
+@import 'antd/drawer.scss';
+@import "component/columnAction.scss";
