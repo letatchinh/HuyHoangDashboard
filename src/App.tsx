@@ -2,8 +2,8 @@ import { PathRouteProps, Route, Routes } from "react-router-dom";
 import { setupAxios } from "./api/requester";
 
 import packageJson from "../package.json";
-import Homepage from "./pages/Homepage/index";
 import { mainRoutes } from "./routes/allRoute";
+import ProtectRoute from "./routes/middleware/ProtectRoute";
 
 function App(): React.JSX.Element {
   setupAxios();
@@ -11,12 +11,13 @@ function App(): React.JSX.Element {
   return (
     <>
       <Routes>
-        <Route path="/" element={<Homepage />}>
-        {mainRoutes.map((route: PathRouteProps) => (
+        <Route path='' element={<ProtectRoute/>} >
+            {mainRoutes.map((route: PathRouteProps) => (
               <Route key={route.path} {...route} />
             ))}
+          </Route>
           
-        </Route>
+          
       </Routes>
       <div
         style={{

@@ -2,6 +2,8 @@
 @import "abstract/base";
 @import "abstract/custom";
 
+// Component
+@import "~/components/Layout/LayoutVertical/index.scss";
 
 //Antd
 @import 'antd/modal.scss';

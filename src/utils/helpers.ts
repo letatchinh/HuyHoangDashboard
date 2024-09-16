@@ -2,7 +2,7 @@ import { TablePaginationConfig } from "antd";
 import dayjs from "dayjs";
 import { forIn, get, groupBy, keys,flattenDeep,compact,uniq } from "lodash";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { REF_COLLECTION, STATUS } from "~/constants/defaultValue";
+import { STATUS } from "~/constants/defaultValue";
 
 import subvn from "~/core/subvn";
 import { PATH_APP } from "~/routes/allPath";

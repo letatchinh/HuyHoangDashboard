@@ -13,5 +13,11 @@ export const PATH_APP = {
   main: {
     root: path(ROOTS.app, "/dashboard"),
   },
+  course: {
+    root: path(ROOTS.app, "/course"),
+  },
+  user: {
+    root: path(ROOTS.app, "/user"),
+  },
   
 };
