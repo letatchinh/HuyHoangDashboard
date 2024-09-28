@@ -1,23 +1,31 @@
 import { PathRouteProps, Route, Routes } from "react-router-dom";
-import { setupAxios } from "./api/requester";
+import { setAxiosToken, setupAxios } from "./api/requester";
 
 import packageJson from "../package.json";
-import { mainRoutes } from "./routes/allRoute";
+import { authRoutes, mainRoutes } from "./routes/allRoute";
 import ProtectRoute from "./routes/middleware/ProtectRoute";
+import AuthModule from "~/modules/auth";
+import DashboardRouter from "./routes/middleware/DashboardRouter";
 
 function App(): React.JSX.Element {
   setupAxios();
+  const token = AuthModule.hook.useToken();
+  setupAxios();
+  setAxiosToken(token);
   
-  return (
+   return (
     <>
       <Routes>
-        <Route path='' element={<ProtectRoute/>} >
+        {authRoutes.map((route: PathRouteProps) => (
+          <Route key={route.path} {...route} />
+        ))}
+         <Route path="/" element={<DashboardRouter/>}>
+          <Route path="" element={<ProtectRoute />}>
             {mainRoutes.map((route: PathRouteProps) => (
               <Route key={route.path} {...route} />
             ))}
           </Route>
-          
-          
+        </Route>
       </Routes>
       <div
         style={{
@@ -25,7 +33,7 @@ function App(): React.JSX.Element {
           bottom: 0,
           left: 0,
           width: "max-content",
-          pointerEvents : 'none'
+          pointerEvents: "none",
         }}
       >
         <p
@@ -33,7 +41,7 @@ function App(): React.JSX.Element {
             textAlign: "right",
             marginLeft: "16px",
             color: "rgba(233, 233, 233, 0.2)",
-            pointerEvents : 'none'
+            pointerEvents: "none",
           }}
         >
           Version: {packageJson.version}
