@@ -1,0 +1,7 @@
+.custom-table{
+    &.row-cursor-pointer {
+        .ant-table-row {
+            cursor: pointer;
+        }
+    }
+}

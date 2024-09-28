@@ -15,6 +15,8 @@ export const PATH_APP = {
   },
   course: {
     root: path(ROOTS.app, "/course"),
+    create: path(ROOTS.app, "/course-create"),
+    update: path(ROOTS.app, "/course-update/:id"),
   },
   user: {
     root: path(ROOTS.app, "/user"),

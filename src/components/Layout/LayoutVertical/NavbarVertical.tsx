@@ -1,9 +1,7 @@
-import { AppstoreOutlined, UserOutlined } from "@ant-design/icons";
-import { ConfigProvider, Menu, MenuProps } from "antd";
+import { MenuProps } from "antd";
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 // import { resource } from './resourceV2';
-import NavbarItem from "./NavbarItem";
 import { ItemTypeNavbar, resource } from "./resource";
 
 /**
@@ -39,6 +37,8 @@ function loopRenderNav(element: (typeof resource)[number]) {
   return getItem(render);
 };
 const NavbarVertical: React.FC = () => {
+  const location = useLocation();
+  
   const navigate = useNavigate();
   const onGo = (path? : string) => {
     console.log(path,'path');
@@ -57,7 +57,7 @@ const NavbarVertical: React.FC = () => {
           <div
             key={item.key}
             onClick={() => onGo(item?.path)}
-            className="layoutVertical--content__navbar__list__item"
+            className={`layoutVertical--content__navbar__list__item ${location.pathname === item?.path ? 'active' : ''}`}
           >
             <span className="layoutVertical--content__navbar__list__item__icon">
               {item?.icon && item?.icon}

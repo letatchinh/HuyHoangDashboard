@@ -20,3 +20,29 @@ declare module 'sub-vn' {
 };
 
 
+interface WithTimeStamp {
+  updatedAt: Date;
+  createdAt: Date;
+}
+
+interface WithId<D = any> {
+  _id: D & string;
+}
+
+interface AggregatePaginateResult<T> {
+  docs: T[];
+  totalDocs: number;
+  limit: number;
+  page?: number | undefined;
+  totalPages: number;
+  nextPage?: number | null | undefined;
+  prevPage?: number | null | undefined;
+  pagingCounter: number;
+  hasPrevPage: boolean;
+  hasNextPage: boolean;
+  meta?: any;
+}
+
+interface WithStatus {
+  status : "ACTIVE" | "INACTIVE"
+}

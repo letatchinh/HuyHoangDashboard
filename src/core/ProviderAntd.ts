@@ -1,6 +1,7 @@
 import { ThemeConfig } from "antd";
 
 export const theme : ThemeConfig = {
+  
     components : {
       Menu : {
         darkItemBg : '#1C2842',
@@ -9,5 +10,8 @@ export const theme : ThemeConfig = {
         iconSize : 16,
         fontSize : 16,
       },
+      Button : {
+        colorPrimary : '#38a7ff'
+      }
     },
   }

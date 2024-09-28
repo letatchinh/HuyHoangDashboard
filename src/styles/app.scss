@@ -4,6 +4,8 @@
 
 // Component
 @import "~/components/Layout/LayoutVertical/index.scss";
+@import "component/whiteBox.scss";
+@import "component/formUpdate.scss";
 
 //Antd
 @import 'antd/modal.scss';
@@ -11,3 +13,8 @@
 @import 'antd/List.scss';
 @import 'antd/tabs.scss';
 @import 'antd/drawer.scss';
+@import 'antd/table.scss';
+
+// Module
+
+@import '~/modules/scheduleItem/scheduleItem.style.scss'

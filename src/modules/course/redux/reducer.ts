@@ -11,6 +11,10 @@ class CourseClassExtend extends InstanceModuleRedux {
     super('course');
     this.cloneReducer = {
       ...this.initReducer,
+      getListSuccess: (state:initStateSlice , { payload }: any) => {
+        state.isLoading = false;
+        state.list = payload;
+      },
       // Want Add more reducer Here...
     }
     this.cloneInitState = {

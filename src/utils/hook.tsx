@@ -162,9 +162,10 @@ export const useAction = ({ action }:UseActionProps) : (v:any) => void => {
       };
     }, [dispatch, resetAction]);
   };
+  export const getSelector = (key : string,moduleName : ModuleRedux) => (state:RootState) => get(state,[moduleName,key]);
 
   export const getSelectors = (moduleName:ModuleRedux) => {
-    const getSelector = (key : string) => (state:RootState) => state[moduleName][key];
+    const getSelector = (key : string) => (state:RootState) => get(state,[moduleName,key]);
   
     return {
       loadingSelector: getSelector('isLoading'),

@@ -3,10 +3,8 @@ import { devConfig } from "~/config";
 import { getOptions } from "~/utils/helpers";
 
 
-const DEPLOY_URL = 'config.REACT_APP_BASE_URL';
-export const LOCAL_URL = 'https://pharma-dashboard.congtyso.com';
 
-export const BASE_URL = process.env.NODE_ENV === 'development' ? LOCAL_URL : DEPLOY_URL
+export const BASE_URL = "http://14.225.217.10:8099/";
 export const DEFAULT_UPLOAD_ACTION = `${BASE_URL}/api/v1/file`;
 export const MAX_UPLOAD_FILE_SIZE_IN_MB = 1;
 
@@ -53,13 +51,16 @@ export const COMPONENT_MODES = {
   CREATE: 'CREATE'
 };
 
-export const REF_COLLECTION_UPPER : any= {
-  // BILL: 'BILL',
-  // BILLITEM: 'BILLITEM',
-  PHARMA_PROFILE: 'PHARMA_PROFILE',
-  PHARMACY: 'PHARMA_PROFILE',
-  SUPPLIER: 'SUPPLIER',
-  PARTNER: 'PARTNER',
-  EMPLOYEE: 'EMPLOYEE',
-};
 
+export const requireRules: any = [
+  {
+      required : true,
+      message : "Vui lòng nhập!"
+  }
+];
+export const requireRulesCustom = (mess ? : string) => [
+  {
+      required : true,
+      message : mess ?? "Vui lòng nhập!"
+  }
+]

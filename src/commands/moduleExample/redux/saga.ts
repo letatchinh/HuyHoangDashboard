@@ -6,7 +6,6 @@ function* getListModuleExample({payload:query} : any) : any {
   try {
     const data = yield call(api.getAll,query);
     yield put(moduleExampleActions.getListSuccess(data));
-    yield put(moduleExampleActions.clearAction());
   } catch (error:any) {
     yield put(moduleExampleActions.getListFailed(error));
   }

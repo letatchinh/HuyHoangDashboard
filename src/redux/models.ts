@@ -22,18 +22,18 @@ export type initStateSlice<T=any> = {
     submitSuccess?: any;
     submitFailed?: any;
   
-    isSubmitLoading?: boolean;
+    isSubmitLoading?: any;
   
     byId?: any;
     isGetByIdLoading?: boolean;
     getByIdFailed?: any;
   };
 
-  const moduleRedux ={
-    }as const
     
-    
-  export type ModuleRedux = keyof typeof moduleRedux;
+  export type ModuleRedux = 
+  "course"
+  | "schedule"
+  | "scheduleItem"
 
   export interface voidReducer {
     getListRequest : (state:any,payload?:any) => any;

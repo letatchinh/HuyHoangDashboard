@@ -1,0 +1,17 @@
+.course-item{
+    padding-top: 10px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid lightgrey;
+    display: flex;
+    gap: 10px;
+    & svg {
+      width: 15px;
+      color: $gray-600;
+    }
+    &--time{
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+  }
