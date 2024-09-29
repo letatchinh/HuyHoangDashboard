@@ -134,6 +134,13 @@ export default function StaffGroups(props: propsType): React.JSX.Element {
 
   const columns : ColumnsType = [
     {
+      title: "Chức năng",
+      dataIndex: "content",
+      key: "content",
+      align: "left",
+      width: 200,
+    },
+    {
       title: "Đọc",
       dataIndex: "read",
       key: "read",
@@ -260,8 +267,8 @@ export default function StaffGroups(props: propsType): React.JSX.Element {
             )}
           </div>
           <Input.Search
-            style={{marginBottom:10}}
-            placeholder="tên quyền"
+            style={{margin: "10px 0", width: "50%"}}
+            placeholder="Tìm kiếm chức năng"
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
               onSearchPermissions(e.target.value, permission, setDataShow)
             }
@@ -281,6 +288,9 @@ export default function StaffGroups(props: propsType): React.JSX.Element {
             }}
             style={{
               marginBottom: 10,
+            }}
+            scroll={{
+              x: 700,
             }}
           />
         </Col>

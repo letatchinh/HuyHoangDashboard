@@ -173,7 +173,7 @@ export const useResourceColumns = (renderPermission: any) => {
 export const onSearchPermissions = (keyword: string = '', resource: any[] = [], updateResources: (data: any) => void) => {
   if (isNil(keyword) || keyword === '') return updateResources(resource);
   const resultSearch = resource?.filter(item => {
-    return StringToSlug(get(item, 'name', '')?.toLowerCase())?.includes(StringToSlug(keyword?.trim()?.toLowerCase()));
+    return StringToSlug(get(item, 'content', '')?.toLowerCase())?.includes(StringToSlug(keyword?.trim()?.toLowerCase()));
   });
   updateResources(resultSearch);
 };
