@@ -39,4 +39,5 @@ export interface permissionResources {
   roleId: string;
   resource:  string,
   action: string,
+  isAssigned?: boolean
 };

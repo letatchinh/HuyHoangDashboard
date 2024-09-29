@@ -138,9 +138,8 @@ export const useUpdateStaffGroupsParams = (
         ...param,
       })
     ).toString();
-console.log(searchString,'searchString')
     // Navigate
-    navigate(`${pathname}?${searchString}`);
+    // navigate(`${pathname}?${searchString}`);
   };
 
   return [keyword, { setKeyword, onParamChange }];
