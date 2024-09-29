@@ -15,9 +15,15 @@ import {
 import { PlusOutlined } from "@ant-design/icons";
 import StaffForm from "../components/StaffForm";
 import ColumnsActions from "../components/ColumnsActions";
+import { useDispatch } from "react-redux";
+import { staffActions } from "../redux/reducer";
 type propsType = {};
 export default function StaffManagement(props: propsType): React.JSX.Element {
   useResetStaffAction();
+  const dispatch = useDispatch();
+  const resetAction = () => {
+    return dispatch(staffActions.resetAction());
+  };
   const [queryParams] = useStaffQueryParams();
   const [keyword, { setKeyword, onParamChange }] =
     useUpdateStaffParams(queryParams);
@@ -25,6 +31,7 @@ export default function StaffManagement(props: propsType): React.JSX.Element {
 
   const callback = () => {
     onCloseModal();
+    resetAction();
   };
   const [, updateStaff] = useUpdateStaff(() => {callback()});
   const [, deleteStaff] = useDeleteStaff(() => {callback()});

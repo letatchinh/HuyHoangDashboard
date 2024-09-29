@@ -4,6 +4,7 @@ import {
   Checkbox,
   Col,
   Flex,
+  Input,
   Menu,
   Modal,
   Popconfirm,
@@ -25,6 +26,7 @@ import {
 import useNotificationStore from "~/store/NotificationContext";
 import StaffGroupsForm from "../components/StaffGroupsForm";
 import {
+  onSearchPermissions,
   useCreateStaffGroup,
   useDeleteStaffGroup,
   useGetStaffGroups,
@@ -34,6 +36,7 @@ import {
   useUpdateStaffGroup,
   useUpdateStaffGroupsParams,
 } from "../staffGroups.hook";
+import Search from "antd/es/transfer/search";
 type propsType = {};
 const styleButton = {
   alignContent: "center",
@@ -55,10 +58,10 @@ export default function StaffGroups(props: propsType): React.JSX.Element {
   const { pathname } = useLocation();
   const [reFetch, setReFetch] = useState(false);
   const refRight = useRef<any>();
-  const [dataShow, setDataShow] = useState(null);
+  const [dataShow, setDataShow] = useState<any>(null);
   const { onNotify } = useNotificationStore();
   const [groupId, setGroupId] = useState<any>(null);
-  const [resources, isResourcesLoading] = useResources();
+  // const [resources, isResourcesLoading] = useResources();
   const [groups, isLoadingGroup] = useGetStaffGroups();
   const [query] = useStaffGroupsQueryParams();
   const [keyword, { setKeyword, onParamChange }] = useUpdateStaffGroupsParams(query);
@@ -66,7 +69,7 @@ export default function StaffGroups(props: propsType): React.JSX.Element {
   const [permission, isLoadingPermission] = useGetPermissionByStaffGroup(param);
   useEffect(() => {
     if (groups) {
-      const headItem = (head(groups)as any)?.id;
+      const headItem = (head(groups)as any)?._id || groups[0]?.id;
       onParamChange({
         groupId: headItem,
       });
@@ -229,13 +232,20 @@ export default function StaffGroups(props: propsType): React.JSX.Element {
               </Flex>
             )}
           </div>
+          <Input.Search
+            style={{marginBottom:10}}
+            placeholder="tên quyền"
+            // onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            //   onSearchPermissions(e.target.value, resources, setDataShow)
+            // }
+          />
           <Table
             sticky={{
               offsetHeader: 0,
               getContainer: () => refRight.current as any,
             }}
             columns={columns}
-            dataSource={dataShow ?? resources}
+            dataSource={(dataShow || [])}
             className="employee-group__table"
             pagination={{
               showSizeChanger: true,

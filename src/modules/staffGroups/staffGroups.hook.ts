@@ -1,9 +1,9 @@
 
-import { get } from "lodash";
+import { get, isNil } from "lodash";
 import { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
-import { clearQuerySearch, getExistProp } from "~/utils/helpers";
+import { clearQuerySearch, getExistProp, StringToSlug } from "~/utils/helpers";
 import {
     getSelectors,
     useFailed, useFetch, useFetchByParam,
@@ -169,4 +169,12 @@ export const useResourceColumns = (renderPermission: any) => {
     },
     ...actionColumns
   ];
+};
+
+export const onSearchPermissions = (keyword: string = '', resource: any[] = [], updateResources: (data: any) => void) => {
+  if (isNil(keyword) || keyword === '') return updateResources(resource);
+  const resultSearch = resource?.filter(item => {
+    return StringToSlug(get(item, 'name', '')?.toLowerCase())?.includes(StringToSlug(keyword?.trim()?.toLowerCase()));
+  });
+  updateResources(resultSearch);
 };

@@ -11,6 +11,6 @@ const apis = {
     getByStaffGroup: (id?: any) => requester.delete(`/api/policy-resource/${id}`),
     
     getByUserLoginResource: () => requester.get(`/api/user-resource`),
-    getResources: (query?: any) => requester.get(`/api/v2/resource-permission`, query),
+    getResources: (query?: any) => requester.get(`/api/resource-permission`, query),
 }
 export default apis;

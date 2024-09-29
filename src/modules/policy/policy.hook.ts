@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { useSelector } from "react-redux";
 import { policyType } from "./policy.modal";
-import { getSelectors, useFetchByParam, useSubmit } from "~/utils/hook";
+import { getSelectors, useFetch, useFetchByParam, useSubmit } from "~/utils/hook";
 import { policyActions } from "./redux/reducer";
 const MODULE  = "policy";
 const MODULE_VI  = "Người dùng";
@@ -88,12 +88,11 @@ export const useMatchOrPolicy = (requiredPermission: [string,policyType][]) => {
 };
 
 export const useResources = () => {
-  return useFetchByParam({
+  return useFetch({
     action: policyActions.getResourcesRequest,
     loadingSelector: isGetResourcesLoading,
     dataSelector: resourcesSelector,
     failedSelector: getResourcesFailedSelector,
-    // param: {},
   });
 };
 // export const useUserPolicy = () => {

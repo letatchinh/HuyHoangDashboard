@@ -5,6 +5,7 @@ import AddressFormSection from "~/components/common/AddressFormSection";
 import UploadImage from "~/components/common/Upload/UploadImage";
 import { useGetStaff } from "../staff.hook";
 import { omit } from "lodash";
+import { useGetStaffGroups } from "~/modules/staffGroups/staffGroups.hook";
 type propsType = {
   id?: string | null;
   onClose: any;
@@ -23,14 +24,16 @@ export default function StaffForm({
 }: propsType): React.JSX.Element {
   const [form] = Form.useForm();
   const [staff, isLoading] = useGetStaff(id);
-  const [imageUrl, setImageUrl] = useState<string>('');
-  const [statusAccount, setStatusAccount] = useState('ACTIVE');
-
-  const [cityCode, setCityCode] = useState<string>('');
-  const [districtCode, setDistrictCode] = useState<string>('');
-  const [wardCode, setWardCode] = useState<string>('');
+  const [imageUrl, setImageUrl] = useState<string>("");
+  const [statusAccount, setStatusAccount] = useState<"ACTIVE" | "INACTIVE">(
+    id ? 'INACTIVE' : "ACTIVE"
+  );
+  const [groups, isLoadingGroup] = useGetStaffGroups();
+  const [cityCode, setCityCode] = useState<string>("");
+  const [districtCode, setDistrictCode] = useState<string>("");
+  const [wardCode, setWardCode] = useState<string>("");
   useEffect(() => {
-    if(id) {
+    if (id) {
       form.setFieldsValue(staff);
       setImageUrl(staff?.avatar);
       setCityCode(staff?.address?.cityId);
@@ -38,34 +41,34 @@ export default function StaffForm({
       setWardCode(staff?.address?.wardId);
     } else {
       form.resetFields();
-    };
+    }
   }, [staff, id]);
   const onFinish = (values: any) => {
     try {
       const user = {
         ...values,
         avatar: imageUrl,
-        idNumber: values?.idNumber || '',
+        idNumber: values?.idNumber || "",
       };
       if (id) {
         const data: object = {
           ...user,
-          id: id
+          id: id,
         };
-        if (statusAccount === 'ACTIVE') {
-          onUpdate({...data});
+        if (statusAccount === "ACTIVE") {
+          onUpdate({ ...data });
         } else {
           onUpdate({
-            ...omit(data,['userName', 'password', 'confirmPassword']),
+            ...omit(data, ["userName", "password", "confirmPassword"]),
           });
-        };
+        }
       } else {
-        onCreate({...omit(user, ['userId','updateAccount'])});
-      };
+        onCreate({ ...omit(user, ["userId", "updateAccount"]) });
+      }
       onClose();
     } catch (error) {
-      console.log(error)
-    };
+      console.log(error);
+    }
   };
   const onValuesChange = ({ address }: any) => {};
 
@@ -126,13 +129,14 @@ export default function StaffForm({
         </Col>
       </Row>
       <AddressFormSection
-          isLoading={isLoading}
-          form={form}
-          setCityCode={setCityCode}
-          setDistrictCode={setDistrictCode}
-          cityCode={cityCode}
-          districtCode={districtCode}
-        />
+        isLoading={isLoading}
+        form={form}
+        setCityCode={setCityCode}
+        setDistrictCode={setDistrictCode}
+        cityCode={cityCode}
+        districtCode={districtCode}
+        required={false}
+      />
       <Row
         gutter={48}
         align="middle"
@@ -159,7 +163,7 @@ export default function StaffForm({
           </Row>
         </Col>
         <Col span={12}>
-          {/* <FormItem
+          <FormItem
             label="Nhóm người dùng"
             name="groups"
             // rules={[
@@ -169,33 +173,29 @@ export default function StaffForm({
             //   },
             // ]}
           >
-            {isLoading ? <Skeleton.Input active /> : (
-                <Select
-                  mode="multiple"
-                  allowClear
-                >
-                  {
-                      groups?.map(({ _id, name }: any) => (
-                        <Select.Option value={_id} key={_id}>
-                          {name}
-                        </Select.Option>
-                      ))
-                  }
-                </Select>
-                  )}
-          </FormItem> */}
-          <FormItem
-            hidden
-            label="Nhóm người dùng"
-            name="userId"
-          ></FormItem>
+            {isLoading ? (
+              <Skeleton.Input active />
+            ) : (
+              <Select mode="multiple" allowClear>
+                {groups?.map(({ _id, name }: any) => (
+                  <Select.Option value={_id} key={_id}>
+                    {name}
+                  </Select.Option>
+                ))}
+              </Select>
+            )}
+          </FormItem>
+          <FormItem hidden label="Nhóm người dùng" name="userId"></FormItem>
         </Col>
       </Row>
-      {<Account
-          isLoading={isLoading} required={id ? false : true}
+      {
+        <Account
+          isLoading={isLoading}
+          required={statusAccount === "ACTIVE" ? true : false}
           setStatusAccount={setStatusAccount}
           statusAccount={statusAccount}
-        />}
+        />
+      }
       {
         <Row
           style={{ width: "50%", margin: " 0 auto" }}

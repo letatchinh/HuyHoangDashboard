@@ -17,6 +17,7 @@ interface AddressFormSectionProps {
   span?: number;
   allowPhoneNumber?: boolean;
   allowEmail?: boolean;
+  required?: boolean;
 }
 const FormItemProp : FormItemProps = {
   labelAlign : 'left',
@@ -32,6 +33,7 @@ const AddressFormSection = (props: AddressFormSectionProps) => {
     setDistrictCode,
     allowPhoneNumber = true,
     allowEmail = true,
+    required = true
   } = props;
   const cityId = Form.useWatch(["address","cityId"], form);
   const districtId = Form.useWatch(["address","districtId"], form);
@@ -53,7 +55,7 @@ const AddressFormSection = (props: AddressFormSectionProps) => {
             name={["address", "cityId"]}
             rules={[
               {
-                required: true,
+                required: required,
                 message: "Xin vui lòng chọn Thành Phố/Tỉnh!",
               },
             ]}
@@ -100,7 +102,7 @@ const AddressFormSection = (props: AddressFormSectionProps) => {
                 name={["address", "districtId"]}
                 rules={[
                   {
-                    required: true,
+                    required: required,
                     message: "Xin vui lòng chọn Quận/Huyện!",
                   },
                 ]}
@@ -150,7 +152,7 @@ const AddressFormSection = (props: AddressFormSectionProps) => {
                 name={["address", "wardId"]}
                 rules={[
                   {
-                    required: true,
+                    required: required,
                     message: "Xin vui lòng chọn Phường/Xã!",
                   },
                 ]}
@@ -181,7 +183,7 @@ const AddressFormSection = (props: AddressFormSectionProps) => {
             name={["address", "street"]}
             rules={[
               {
-                required: true,
+                required: required,
                 message: "Xin vui lòng nhập tên đường",
               },
             ]}
@@ -200,6 +202,7 @@ const AddressFormSection = (props: AddressFormSectionProps) => {
               name="email"
               rules={[
                 {
+                  required: true,
                   type: "email",
                   message: "Email bạn nhập không đúng định dạng!",
                 },

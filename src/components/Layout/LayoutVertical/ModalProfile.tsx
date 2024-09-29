@@ -34,7 +34,7 @@ const FormItemProp : FormItemProps = {
    const [profile, isLoading]: any = useGetProfileStaff();
   const [logo, setLogo] = useState<string | undefined>();
    const [isLoadingAvatar, setIsLoadingAvatar] = useState(false);
-  const [statusAccount,setStatusAccount] = useState('INACTIVE');
+  const [statusAccount,setStatusAccount] = useState<'ACTIVE'|'INACTIVE'>('INACTIVE');
   const id = useMemo(() => profile?.user?._id, [profile?.user?._id]);
 
   const [cityCode, setCityCode] = useState<string | undefined>();
