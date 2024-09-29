@@ -7,11 +7,14 @@ const ROOTS = {
   auth: "/",
   app: "",
 };
+export const AUTH = {
+  login: path(ROOTS.app, "/login"),
+};
 export const PATH_APP = {
   root: ROOTS.app,
 
   main: {
-    root: path(ROOTS.app, "/dashboard"),
+    root: path(ROOTS.app, "/"),
   },
   course: {
     root: path(ROOTS.app, "/course"),
@@ -25,6 +28,11 @@ export const PATH_APP = {
   },
   user: {
     root: path(ROOTS.app, "/user"),
+  },
+
+  staff: {
+    root: path(ROOTS.app, "/staff"),
+    staffGroup: path(ROOTS.app, "/staff-group"),
   },
   
 };

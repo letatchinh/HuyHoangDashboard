@@ -362,4 +362,11 @@ export const daysAgo = (postDate: any) => {
   return(fromNowOn)
 };
 
-export const NoZero = (input:number = 0) => Math.max(0, input)
+export const NoZero = (input: number = 0) => Math.max(0, input)
+
+
+export const isMatchPolicy = (policies: any, requiredPermission: any) => {
+  if(!policies || Object.keys(policies).length === 0) return false;
+  return  Boolean(policies?.[requiredPermission?.[0]]?.includes(requiredPermission[1]))
+};
+

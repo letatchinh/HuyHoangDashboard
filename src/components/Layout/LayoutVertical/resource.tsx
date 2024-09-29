@@ -1,4 +1,4 @@
-import { AppstoreOutlined, UserOutlined } from "@ant-design/icons";
+import { AppstoreOutlined, UsergroupAddOutlined, UserOutlined } from "@ant-design/icons";
 import React from "react";
 import { PATH_APP } from "~/routes/allPath";
 
@@ -30,5 +30,11 @@ export const resource: ItemTypeNavbar[] = [
     key: "account",
     icon : <UserOutlined />,
     path : PATH_APP.user.root
+  },
+  {
+    label: "Người dùng",
+    key: "staff",
+    icon : <UsergroupAddOutlined />,
+    path : PATH_APP.staff.root
   },
 ];

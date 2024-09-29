@@ -45,7 +45,6 @@ const NavbarVertical: React.FC = () => {
     
     if(path){
       console.log(path,'path');
-      
       navigate(path);
     }
   }
