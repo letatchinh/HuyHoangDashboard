@@ -21,6 +21,11 @@ export const PATH_APP = {
     create: path(ROOTS.app, "/course-create"),
     update: path(ROOTS.app, "/course-update/:id"),
   },
+  courseGroup: {
+    root: path(ROOTS.app, "/courseGroup"),
+    create: path(ROOTS.app, "/courseGroup-create"),
+    update: path(ROOTS.app, "/courseGroup-update/:id"),
+  },
   user: {
     root: path(ROOTS.app, "/user"),
   },

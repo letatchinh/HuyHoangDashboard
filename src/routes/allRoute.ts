@@ -6,6 +6,8 @@ import CourseForm from '~/modules/course/components/CourseForm';
 import CourseUpdateForm from '~/modules/course/components/CourseUpdateForm';
 import Login from '~/modules/auth/screens/Login';
 import StaffPage from '~/pages/Staff';
+import CourseGroup from "~/pages/CourseGroup";
+import CourseGroupForm from '~/modules/courseGroup/components/CourseGroupForm';
 
 export const mainRoutes :PathRouteProps[] = [
   { path: PATH_APP.main.root, Component: Homepage },
@@ -13,6 +15,10 @@ export const mainRoutes :PathRouteProps[] = [
   { path: PATH_APP.course.create, Component: CourseForm },
   { path: PATH_APP.course.update, Component: CourseUpdateForm },
   { path: PATH_APP.staff.root, Component: StaffPage },
+  
+  { path: PATH_APP.courseGroup.root, Component: CourseGroup },
+  { path: PATH_APP.courseGroup.create, Component: CourseGroupForm },
+  { path: PATH_APP.courseGroup.update, Component: CourseGroupForm },
   
   
 

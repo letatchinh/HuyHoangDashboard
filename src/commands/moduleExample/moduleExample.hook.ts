@@ -1,6 +1,7 @@
 // Please UnComment To use
 
 import { get } from "lodash";
+// import { useResetState } from "~/utils/hook";
 // import { useEffect, useMemo, useState } from "react";
 // import { useSelector } from "react-redux";
 // import { useLocation, useNavigate } from "react-router-dom";
@@ -142,3 +143,4 @@ import { get } from "lodash";
 
 //   return [keyword, { setKeyword, onParamChange }];
 // };
+// export const useResetModuleExample = () => useResetState(moduleExampleActions.reset)

@@ -107,7 +107,7 @@ export class InstanceModuleRedux{
     },
     updateSuccess: (state:initStateSlice, { payload }:{payload:any}) => {
       state.isSubmitLoading = false;
-      const data = get(payload,'data');
+      const data = payload;
       state.byId = data;
       state.list = state.list?.map((item:any) => get(item,'_id') === get(data,'_id') ? data : item);
       state.listSearch = state.listSearch?.map((item:any) => get(item,'_id') === get(data,'_id') ? data : item);
