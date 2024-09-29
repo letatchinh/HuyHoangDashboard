@@ -39,7 +39,7 @@ export type initStateSlice<T=any> = {
     | "staff"
     | "policy"
     | "staffGroups"
-
+  | "courseGroup"
   export interface voidReducer {
     getListRequest : (state:any,payload?:any) => any;
     getListSuccess:(state:any,payload?:any)=>any;

@@ -8,6 +8,8 @@ import CourseGroup from "~/pages/CourseGroup";
 import CourseGroupForm from '~/modules/courseGroup/components/CourseGroupForm';
 import Login from '~/modules/auth/screens/Login';
 import StaffPage from '~/pages/Staff';
+import CourseGroup from "~/pages/CourseGroup";
+import CourseGroupForm from '~/modules/courseGroup/components/CourseGroupForm';
 
 export const mainRoutes :PathRouteProps[] = [
   { path: PATH_APP.main.root, Component: Homepage },
