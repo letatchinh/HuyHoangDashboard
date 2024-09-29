@@ -35,7 +35,7 @@ export default function StaffManagement(props: propsType): React.JSX.Element {
   };
   const [, updateStaff] = useUpdateStaff(() => {callback()});
   const [, deleteStaff] = useDeleteStaff(() => {callback()});
-  const [, createStaff] = useCreateStaff(() => {callback()});
+  const [, createStaff] = useCreateStaff(() => {resetAction()});
 
   const [modal, contextHolder] = Modal.useModal();
   const refModalNow = useRef<any>();

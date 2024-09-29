@@ -7,7 +7,6 @@ import auth from '~/modules/auth';
 import staff from '~/modules/staff';
 import policy from '~/modules/policy';
 import staffGroups from '~/modules/staffGroups';
-import courseGroup from '~/modules/courseGroup';
 
 export default function* rootSaga() {
   yield all([

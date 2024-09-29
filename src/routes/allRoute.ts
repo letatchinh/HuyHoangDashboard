@@ -4,8 +4,6 @@ import Homepage from "~/pages/Homepage";
 import Course from "~/pages/Course";
 import CourseForm from '~/modules/course/components/CourseForm';
 import CourseUpdateForm from '~/modules/course/components/CourseUpdateForm';
-import CourseGroup from "~/pages/CourseGroup";
-import CourseGroupForm from '~/modules/courseGroup/components/CourseGroupForm';
 import Login from '~/modules/auth/screens/Login';
 import StaffPage from '~/pages/Staff';
 import CourseGroup from "~/pages/CourseGroup";

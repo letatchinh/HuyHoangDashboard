@@ -55,7 +55,15 @@ class PolicyClassExtend extends InstanceModuleRedux {
         state.getResourcesFailed = payload;
       },
       updateResourceRedux: (state: cloneInitState, { payload }: any) => {
-        state.resources = state.resources;
+        state.byId = state.byId.map((item: any) => {
+          if (item.key === payload.resource) {
+            return {
+              ...item,
+              [payload.action]: payload.isAssigned
+            }
+          }
+          return item
+        })
       },
     }
     this.cloneInitState = {

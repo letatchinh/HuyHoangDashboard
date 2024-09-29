@@ -39,8 +39,11 @@ export default function Staff(props: propsType): React.JSX.Element {
     };
     useEffect(() => {
       setActiveTab(activeKey);
-      navigate('/staff') // clear search query
     }, [activeKey]);
+  
+  useEffect(() => {
+    navigate('/staff') // clear search query
+    }, [activeTab]);
   
   return  items?.length ? <Tabs activeKey= {activeTab} items={newItems as any} onChange={onChange} /> : <div>Không quyền</div>
 }

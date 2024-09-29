@@ -66,12 +66,12 @@ function* getResources({ payload: query }: any): any {
 
 function* updateGroupPermission({ payload }: any) {
   try {
-    const { isAssgined, companyId, groupId, ...rest } = payload;
-    const request = isAssgined
+    const { isAssigned, ...rest } = payload;
+    const request = isAssigned
       ? api.createPermission
       : api.deletePermission;
 
-    yield call(request, { ...rest, groupId });
+    yield call(request, { ...rest });
     yield put(policyActions.updateSuccess);
   } catch (error) {
     yield put(policyActions.updateFailed(error));

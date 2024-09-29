@@ -15,13 +15,11 @@ import {
 import { get, head } from "lodash";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
-import { useLocation, useParams } from "react-router-dom";
 import WithOrPermission from "~/components/common/WithOrPermission";
 import POLICIES from "~/modules/policy/policy.auth";
-import { useGetPermissionByStaffGroup, useResources, useUpdatePolicy } from "~/modules/policy/policy.hook";
+import { useGetPermissionByStaffGroup, useUpdatePolicy, useUpdateResourceRedux } from "~/modules/policy/policy.hook";
 import {
-  onPermissionChangeProps,
-  PermissionProps,
+  permissionResources,
 } from "~/modules/policy/policy.modal";
 import useNotificationStore from "~/store/NotificationContext";
 import StaffGroupsForm from "../components/StaffGroupsForm";
@@ -31,42 +29,32 @@ import {
   useDeleteStaffGroup,
   useGetStaffGroups,
   useResetStaffGroupsAction,
-  useResourceColumns,
   useStaffGroupsQueryParams,
   useUpdateStaffGroup,
   useUpdateStaffGroupsParams,
 } from "../staffGroups.hook";
 import Search from "antd/es/transfer/search";
+import { ColumnsType } from "antd/es/table";
 type propsType = {};
 const styleButton = {
   alignContent: "center",
   display: "flex",
   alignItems: "center",
 };
-const Permission = ({ isActive, onChange, disabled }: PermissionProps) => {
-  return (
-    <Checkbox
-      checked={isActive}
-      onChange={onChange}
-      disabled={disabled}
-    ></Checkbox>
-  );
-};
 
 export default function StaffGroups(props: propsType): React.JSX.Element {
   useResetStaffGroupsAction();
-  const { pathname } = useLocation();
   const [reFetch, setReFetch] = useState(false);
   const refRight = useRef<any>();
   const [dataShow, setDataShow] = useState<any>(null);
   const { onNotify } = useNotificationStore();
   const [groupId, setGroupId] = useState<any>(null);
-  // const [resources, isResourcesLoading] = useResources();
   const [groups, isLoadingGroup] = useGetStaffGroups();
   const [query] = useStaffGroupsQueryParams();
   const [keyword, { setKeyword, onParamChange }] = useUpdateStaffGroupsParams(query);
   const param = useMemo(() => groupId, [groupId]);
-  const [permission, isLoadingPermission] = useGetPermissionByStaffGroup(param);
+  const [permission] = useGetPermissionByStaffGroup(param);
+  const [,updateResourceRedux] = useUpdateResourceRedux()
   useEffect(() => {
     if (groups) {
       const headItem = (head(groups)as any)?._id || groups[0]?.id;
@@ -87,39 +75,28 @@ export default function StaffGroups(props: propsType): React.JSX.Element {
   //     return dispatch(userGroupSliceAction.getByIdRequest(param));
   //   };
 
-  const onPermisionChange = ({
-    isAssign,
-    resource,
-    action,
-  }: onPermissionChangeProps) => {
-    try {
-      if (!canUpdate) return;
-      // updateGroup({ isAssign, resource, action }); // update Group in store redux
-      handleUpdatePolicy({ isAssign, resource, action, groupId });
-    } catch (error) {
-      onNotify?.error(get(error, "message", "Some error"));
-    }
-  };
-  const renderPermission = (key: string) => (action: any, rc: any) => {
-    const resourceKey = rc?.key;
-    const admin = groups?.policies?.[resourceKey]?.includes("admin");
-    // const notAccess = !get(permissionAccessed,resourceKey,[])?.includes(key);
-
+  const onChangePermission = (isActive: boolean, action: string, resource: string) => {
+    const handleUpdatePolicyColumns = (e: any) => {
+      const isChecked = e.target.checked;
+      try {
+        if (!canUpdate) return;
+        const submitData: permissionResources = {
+          resource,
+          action,
+          roleId: param,
+          isAssigned: isChecked,
+        };
+        updateResourceRedux(submitData); // update Group in store redux
+        handleUpdatePolicy(submitData);
+      } catch (error) {
+        console.log(error,'error')
+        onNotify?.error(get(error, "message", "Some error"));
+      };
+    };
     return (
-      <Permission
-        isActive={groups?.policies?.[resourceKey]?.includes(key)}
-        onChange={(event: any) => {
-          onPermisionChange({
-            isAssign: event.target.checked,
-            resource: resourceKey,
-            action: key,
-          });
-        }}
-        disabled={(!canUpdate || admin) && key !== "admin"}
-      />
-    );
+      <Checkbox checked={isActive} onChange={handleUpdatePolicyColumns}/>
+    )
   };
-
   //Handle action create and update
 
   const callback = () => {
@@ -130,6 +107,7 @@ export default function StaffGroups(props: propsType): React.JSX.Element {
 
   const [modal, contextHolder] = Modal.useModal();
   const refModalNow = useRef<any>();
+
   const onCloseModal = () => {
     refModalNow.current.destroy();
   };
@@ -152,7 +130,56 @@ export default function StaffGroups(props: propsType): React.JSX.Element {
       title: "",
     });
   };
-  const columns = useResourceColumns(renderPermission);
+
+
+  const columns : ColumnsType = [
+    {
+      title: "Đọc",
+      dataIndex: "read",
+      key: "read",
+      align: "center",
+      render: (value: boolean, record: any)=>{
+        return onChangePermission(value, "read", record?.key);
+      }
+    },
+    {
+      title: "Thêm mới",
+      dataIndex: "write",
+      key: "write",
+      align: "center",
+      render: (value: boolean, record: any)=>{
+        return  onChangePermission(value, "write", record?.key);
+      }
+    },
+    {
+      title: "Chỉnh sửa",
+      dataIndex: "update",
+      key: "update",
+      align: "center",
+      render: (value: boolean, record: any)=>{
+        return  onChangePermission(value, "update", record?.key);
+      }
+    },
+    {
+      title: "Xoá",
+      dataIndex: "delete",
+      key: "delete",
+      align: "center",
+      render: (value: boolean, record: any)=>{
+        return  onChangePermission(value, "delete", record?.key);
+      }
+    },
+    {
+      title: "Quản trị",
+      dataIndex: "admin",
+      key: "admin",
+      align: "center",
+      render: (value: boolean, record: any)=>{
+        return  onChangePermission(value, "admin", record?.key);
+      }
+    },
+  ];
+
   return (
     <>
       {contextHolder}
@@ -235,9 +262,9 @@ export default function StaffGroups(props: propsType): React.JSX.Element {
           <Input.Search
             style={{marginBottom:10}}
             placeholder="tên quyền"
-            // onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            //   onSearchPermissions(e.target.value, resources, setDataShow)
-            // }
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              onSearchPermissions(e.target.value, permission, setDataShow)
+            }
           />
           <Table
             sticky={{
@@ -245,7 +272,7 @@ export default function StaffGroups(props: propsType): React.JSX.Element {
               getContainer: () => refRight.current as any,
             }}
             columns={columns}
-            dataSource={(dataShow || [])}
+            dataSource={(dataShow || permission || [])}
             className="employee-group__table"
             pagination={{
               showSizeChanger: true,

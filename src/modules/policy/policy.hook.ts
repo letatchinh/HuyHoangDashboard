@@ -87,12 +87,11 @@ export const useMatchOrPolicy = (requiredPermission: [string,policyType][]) => {
   return isMatch;
 };
 
-export const useResources = () => {
-  return useFetch({
-    action: policyActions.getResourcesRequest,
-    loadingSelector: isGetResourcesLoading,
-    dataSelector: resourcesSelector,
-    failedSelector: getResourcesFailedSelector,
+
+export const useUpdateResourceRedux = () => {
+  return useSubmit({
+    action: policyActions.updateResourceRedux,
+    loadingSelector: isSubmitLoadingSelector,
   });
 };
 // export const useUserPolicy = () => {
