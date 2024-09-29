@@ -6,9 +6,10 @@ import WhiteBox from '../WhiteBox';
 type propsType = {
     title : string,
     id ? : any;
-    loading? : boolean
+    loading? : boolean,
+    isShowBtn? : boolean
 }
-export default function FormUpdateHeader({title,id,loading}:propsType) : React.JSX.Element {
+export default function FormUpdateHeader({title,id,loading,isShowBtn = true}:propsType) : React.JSX.Element {
     const navigate = useNavigate();
 
     return (
@@ -22,14 +23,14 @@ export default function FormUpdateHeader({title,id,loading}:propsType) : React.J
             </Button>
             <h4>{id ? "Cập nhật" : "Tạo mới"} {title}</h4>
           </Flex>
-          <Button
+          {isShowBtn && <Button
             style={{ paddingInline: 40 }}
             htmlType="submit"
             type="primary"
             loading={loading}
           >
             {id ? "Cập nhật" : "Tạo mới"}
-          </Button>
+          </Button>}
         </Flex>
         </WhiteBox>
     )

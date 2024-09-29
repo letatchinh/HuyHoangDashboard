@@ -1,7 +1,7 @@
 import { Button, Flex } from "antd";
 import React from "react";
 type propsType = {
-  id?: string;
+  id?: any;
   loading : boolean;
 };
 export default function BtnSubmit({ id,loading }: propsType): React.JSX.Element {

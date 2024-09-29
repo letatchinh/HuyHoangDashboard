@@ -45,7 +45,7 @@ class ScheduleClassExtend extends InstanceModuleRedux {
         state.isSubmitLoading = false;
         const data = payload;
         state.byId = data;
-        state.list = state.listByCourseId?.map((item:any) => get(item,'_id') === get(data,'_id') ? data : item);
+        state.listByCourseId = state.listByCourseId?.map((item:any) => get(item,'_id') === get(data,'_id') ? data : item);
         state.listSearch = state.listSearch?.map((item:any) => get(item,'_id') === get(data,'_id') ? data : item);
         state.updateSuccess = data;
       },
