@@ -1,144 +1,105 @@
-// Please UnComment To use
+import { useMemo } from "react";
+import { useSelector } from "react-redux";
+import { policyType } from "./policy.modal";
+import { getSelectors, useFetchByParam, useSubmit } from "~/utils/hook";
+import { policyActions } from "./redux/reducer";
+const MODULE  = "policy";
+const MODULE_VI  = "Người dùng";
 
-import { get } from "lodash";
-// import { useEffect, useMemo, useState } from "react";
-// import { useSelector } from "react-redux";
-// import { useLocation, useNavigate } from "react-router-dom";
-// import { clearQuerySearch, getExistProp } from "~/utils/helpers";
-// import {
-//     getSelectors,
-//     useFailed, useFetchByParam,
-//     useQueryParams,
-//     useSubmit,
-//     useSuccess
-// } from "~/utils/hook";
-// import { policyActions } from "./redux/reducer";
-// const MODULE = "policy";
-// const MODULE_VI = "";
+const {
+  loadingSelector,
+  listSelector,
+  getListFailedSelector,
+  getByIdLoadingSelector,
+  getByIdSelector,
+  getByIdFailedSelector,
+  deleteSuccessSelector,
+  deleteFailedSelector,
+  isSubmitLoadingSelector,
+  createSuccessSelector,
+  createFailedSelector,
+  updateSuccessSelector,
+  updateFailedSelector,
+  pagingSelector,
+} = getSelectors(MODULE);
 
-// const {
-//   loadingSelector,
-//   listSelector,
-//   getListFailedSelector,
-//   getByIdLoadingSelector,
-//   getByIdSelector,
-//   getByIdFailedSelector,
-//   deleteSuccessSelector,
-//   deleteFailedSelector,
-//   isSubmitLoadingSelector,
-//   createSuccessSelector,
-//   createFailedSelector,
-//   updateSuccessSelector,
-//   updateFailedSelector,
-//   pagingSelector,
-// } = getSelectors(MODULE);
+const getSelectorAuth = (key: string) => (state: any) => state.auth[key];
+const profileSelector = getSelectorAuth('profile');
+const isGetResourcesLoading = getSelectorAuth('isGetResourcesLoading');
+const resourcesSelector = getSelectorAuth('resources');
+const getResourcesFailedSelector = getSelectorAuth('getResourcesFailed');
 
-// export const usePolicyPaging = () => useSelector(pagingSelector);
+export const useGetPolicies = (params: any) => {
+  return useFetchByParam({
+    action: policyActions.getListRequest,
+    loadingSelector: loadingSelector,
+    dataSelector: listSelector,
+    failedSelector: getListFailedSelector,
+    param: params,
+  });
+};
 
-// export const useGetPolicys = (param:any) => {
-//   return useFetchByParam({
-//     action: policyActions.getListRequest,
-//     loadingSelector: loadingSelector,
-//     dataSelector: listSelector,
-//     failedSelector: getListFailedSelector,
-//     param
+export const useGetPermissionByStaffGroup = (params: any) => {
+  return useFetchByParam({
+    action: policyActions.getByIdRequest,
+    loadingSelector: isSubmitLoadingSelector,
+    dataSelector: getByIdSelector,
+    failedSelector: getByIdFailedSelector,
+    param: params,
+  });
+};
+
+export const useUpdatePolicy = () => {
+  return useSubmit({
+    action: policyActions.updateResourcesRequest,
+    loadingSelector: isSubmitLoadingSelector,
+  });
+};
+
+export const isMatchPolicy = (policies: any, requiredPermission: any) => {
+  if(!policies || Object.keys(policies).length === 0) return false;
+  return  Boolean(policies?.[requiredPermission?.[0]]?.includes(requiredPermission[1]))
+};
+
+export const useMatchPolicy = (requiredPermission : [string, policyType]) => {
+  const policies = useSelector(listSelector);
+  const profile = useSelector(profileSelector);
+  const isMatch = useMemo(() => {
+    if (!requiredPermission ||profile?.user?.isSuperAdmin) return true;
+    return isMatchPolicy(policies, requiredPermission);
+
+  }, [requiredPermission, policies]);
+  return isMatch;
+};
+export const useMatchOrPolicy = (requiredPermission: [string,policyType][]) => {
+  const policies = useSelector(listSelector);
+  const profile = useSelector(profileSelector);
+  const isMatch = useMemo(() => {
+    if (!requiredPermission || profile?.user?.isSuperAdmin) return true;
+
+    for (const permissionItem of requiredPermission) {
+        if (isMatchPolicy(policies, permissionItem)) {
+          return true;
+        }
+    }
+    return false
+  }, [requiredPermission, policies]);
+  return isMatch;
+};
+
+export const useResources = () => {
+  return useFetchByParam({
+    action: policyActions.getResourcesRequest,
+    loadingSelector: isGetResourcesLoading,
+    dataSelector: resourcesSelector,
+    failedSelector: getResourcesFailedSelector,
+    // param: {},
+  });
+};
+// export const useUserPolicy = () => {
+//   const [isLoading, handleGetPolicy] = useSubmit({
+//     loadingSelector: isGetPolicyLoadingSelector,
+//     action: userSliceAction.getPolicyRequest,
 //   });
-// };
-// export const useGetPolicy = (id: any) => {
-//   return useFetchByParam({
-//     action: policyActions.getByIdRequest,
-//     loadingSelector: getByIdLoadingSelector,
-//     dataSelector: getByIdSelector,
-//     failedSelector: getByIdFailedSelector,
-//     param: id,
-//   });
-// };
 
-// export const useCreatePolicy = (callback?: any) => {
-//   useSuccess(
-//     createSuccessSelector,
-//     `Tạo mới ${MODULE_VI} thành công`,
-//     callback
-//   );
-//   useFailed(createFailedSelector);
-
-//   return useSubmit({
-//     action: policyActions.createRequest,
-//     loadingSelector: isSubmitLoadingSelector,
-//   });
-// };
-
-// export const useUpdatePolicy = (callback?: any) => {
-//   useSuccess(
-//     updateSuccessSelector,
-//     `Cập nhật ${MODULE_VI} thành công`,
-//     callback
-//   );
-//   useFailed(updateFailedSelector);
-
-//   return useSubmit({
-//     action: policyActions.updateRequest,
-//     loadingSelector: isSubmitLoadingSelector,
-//   });
-// };
-
-// export const useDeletePolicy = (callback?: any) => {
-//   useSuccess(deleteSuccessSelector, `Xoá ${MODULE_VI} thành công`, callback);
-//   useFailed(deleteFailedSelector);
-
-//   return useSubmit({
-//     action: policyActions.deleteRequest,
-//     loadingSelector: isSubmitLoadingSelector,
-//   });
-// };
-
-// export const usePolicyQueryParams = () => {
-//   const query = useQueryParams();
-//   const limit = query.get("limit") || 10;
-//   const page = query.get("page") || 1;
-//   const keyword = query.get("keyword");
-//   const createSuccess = useSelector(createSuccessSelector);
-//   const deleteSuccess = useSelector(deleteSuccessSelector);
-//   return useMemo(() => {
-//     const queryParams = {
-//       page,
-//       limit,
-//       keyword,
-//     };
-//     return [queryParams];
-//     //eslint-disable-next-line
-//   }, [page, limit, keyword, createSuccess, deleteSuccess]);
-// };
-
-// export const useUpdatePolicyParams = (
-//   query: any,
-//   listOptionSearch?: any[]
-// ) => {
-//   const navigate = useNavigate();
-//   const { pathname } = useLocation();
-//   const [keyword, setKeyword] = useState(get(query, "keyword"));
-//   useEffect(() => {
-//     setKeyword(get(query, "keyword"));
-//   }, [query]);
-//   const onParamChange = (param: any) => {
-//     // Clear Search Query when change Params
-//     clearQuerySearch(listOptionSearch, query, param);
-
-//     if (!param.page) {
-//       query.page = 1;
-//     };
-
-//     // Convert Query and Params to Search Url Param
-//     const searchString = new URLSearchParams(
-//       getExistProp({
-//         ...query,
-//         ...param,
-//       })
-//     ).toString();
-
-//     // Navigate
-//     navigate(`${pathname}?${searchString}`);
-//   };
-
-//   return [keyword, { setKeyword, onParamChange }];
-// };
+  // const policies = useSelector(listSelector);

@@ -8,6 +8,8 @@ import schedule from '~/modules/schedule';
 import scheduleItem from '~/modules/scheduleItem';
 import auth from '~/modules/auth';
 import staff from '~/modules/staff';
+import policy from '~/modules/policy';
+import staffGroups from '~/modules/staffGroups';
 
 const authPersistConfig = {
     key: 'auth',
@@ -28,5 +30,7 @@ const rootReducer = combineReducers({
   schedule: schedule.redux.reducer,
   scheduleItem: scheduleItem.redux.reducer,
   staff: staff.redux.reducer,
+  policy: policy.redux.reducer,
+  staffGroups: staffGroups.redux.reducer,
 });
 export default rootReducer

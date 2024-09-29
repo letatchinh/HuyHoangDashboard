@@ -66,7 +66,6 @@ export const useFetch = (props: UseFetchProps): [any, boolean] => {
   const dispatch = useDispatch();
   const data = useSelector(dataSelector);
   const isLoading = useSelector(loadingSelector);
-
   useEffect(() => {
     dispatch(action());
   }, [dispatch, action, payload]);

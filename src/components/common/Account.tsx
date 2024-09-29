@@ -31,7 +31,7 @@ const Account = ({ isLoading, required, statusAccount, setStatusAccount }: Props
       <Row gutter={48} align="middle" justify="space-between">
         <Col span={24}>
           <Form.Item
-            name="username"
+            name="userName"
             labelAlign='left'
             label={<Tooltip
               placement='topLeft'

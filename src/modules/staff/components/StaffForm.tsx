@@ -56,7 +56,7 @@ export default function StaffForm({
           onUpdate({...data});
         } else {
           onUpdate({
-            ...omit(data,['username', 'password', 'confirmPassword']),
+            ...omit(data,['userName', 'password', 'confirmPassword']),
           });
         };
       } else {

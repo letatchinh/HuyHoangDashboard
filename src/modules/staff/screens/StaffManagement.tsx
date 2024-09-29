@@ -5,15 +5,16 @@ import TableAnt from "~/components/common/Antd/TableAnt";
 import { Button, Modal, Row, Spin, Switch } from "antd";
 import {
   useCreateStaff,
+  useDeleteStaff,
   useGetStaffs,
   useResetStaffAction,
   useStaffQueryParams,
   useUpdateStaff,
   useUpdateStaffParams,
 } from "../staff.hook";
-import ColumnsActions from "./ColumnsActions";
-import StaffForm from "./StaffForm";
 import { PlusOutlined } from "@ant-design/icons";
+import StaffForm from "../components/StaffForm";
+import ColumnsActions from "../components/ColumnsActions";
 type propsType = {};
 export default function StaffManagement(props: propsType): React.JSX.Element {
   useResetStaffAction();
@@ -21,9 +22,13 @@ export default function StaffManagement(props: propsType): React.JSX.Element {
   const [keyword, { setKeyword, onParamChange }] =
     useUpdateStaffParams(queryParams);
   const [data, isLoading] = useGetStaffs(queryParams);
-  const [, updateStaff] = useUpdateStaff(() => {});
-  const [, deleteStaff] = useUpdateStaff(() => { });
-  const [, createStaff] = useCreateStaff(() => {});
+
+  const callback = () => {
+    onCloseModal();
+  };
+  const [, updateStaff] = useUpdateStaff(() => {callback()});
+  const [, deleteStaff] = useDeleteStaff(() => {callback()});
+  const [, createStaff] = useCreateStaff(() => {callback()});
 
   const [modal, contextHolder] = Modal.useModal();
   const refModalNow = useRef<any>();

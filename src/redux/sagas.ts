@@ -4,6 +4,8 @@ import schedule from '~/modules/schedule';
 import scheduleItem from '~/modules/scheduleItem';
 import auth from '~/modules/auth';
 import staff from '~/modules/staff';
+import policy from '~/modules/policy';
+import staffGroups from '~/modules/staffGroups';
 
 export default function* rootSaga() {
   yield all([
@@ -12,5 +14,7 @@ export default function* rootSaga() {
     scheduleItem.redux.saga(),
     auth.redux.saga(),
     staff.redux.saga(),
+    policy.redux.saga(),
+    staffGroups.redux.saga(),
   ]);
 };

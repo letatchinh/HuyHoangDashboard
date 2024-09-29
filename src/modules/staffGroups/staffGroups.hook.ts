@@ -6,15 +6,15 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { clearQuerySearch, getExistProp } from "~/utils/helpers";
 import {
     getSelectors,
-    useFailed, useFetchByParam,
+    useFailed, useFetch, useFetchByParam,
     useQueryParams,
     useResetState,
     useSubmit,
     useSuccess
 } from "~/utils/hook";
-import { staffActions } from "./redux/reducer";
-const MODULE = "staff";
-const MODULE_VI = "nhân viên";
+import { staffGroupsActions } from "./redux/reducer";
+const MODULE = "staffGroups";
+const MODULE_VI = "";
 
 const {
   loadingSelector,
@@ -33,20 +33,21 @@ const {
   pagingSelector,
 } = getSelectors(MODULE);
 
-export const useStaffPaging = () => useSelector(pagingSelector);
+export const useStaffGroupsPaging = () => useSelector(pagingSelector);
+const getSelectorPolicy = (key : string) => (state:any) => state.policy[key];
+const actionsSelector = getSelectorPolicy('actions');
 
-export const useGetStaffs = (param:any) => {
-  return useFetchByParam({
-    action: staffActions.getListRequest,
+export const useGetStaffGroups = (param?:any) => {
+  return useFetch({
+    action: staffGroupsActions.getListRequest,
     loadingSelector: loadingSelector,
     dataSelector: listSelector,
     failedSelector: getListFailedSelector,
-    param
   });
 };
-export const useGetStaff = (id: any) => {
+export const useGetStaffGroup = (id: any) => {
   return useFetchByParam({
-    action: staffActions.getByIdRequest,
+    action: staffGroupsActions.getByIdRequest,
     loadingSelector: getByIdLoadingSelector,
     dataSelector: getByIdSelector,
     failedSelector: getByIdFailedSelector,
@@ -54,7 +55,7 @@ export const useGetStaff = (id: any) => {
   });
 };
 
-export const useCreateStaff = (callback?: any) => {
+export const useCreateStaffGroup = (callback?: any) => {
   useSuccess(
     createSuccessSelector,
     `Tạo mới ${MODULE_VI} thành công`,
@@ -63,19 +64,12 @@ export const useCreateStaff = (callback?: any) => {
   useFailed(createFailedSelector);
 
   return useSubmit({
-    action: staffActions.createRequest,
+    action: staffGroupsActions.createRequest,
     loadingSelector: isSubmitLoadingSelector,
   });
 };
 
-export const useGetProfileStaff = (callback?: any) => {
-  return useSubmit({
-    action: staffActions.createRequest,
-    loadingSelector: isSubmitLoadingSelector,
-  });
-};
-
-export const useUpdateStaff = (callback?: any) => {
+export const useUpdateStaffGroup = (callback?: any) => {
   useSuccess(
     updateSuccessSelector,
     `Cập nhật ${MODULE_VI} thành công`,
@@ -84,26 +78,27 @@ export const useUpdateStaff = (callback?: any) => {
   useFailed(updateFailedSelector);
 
   return useSubmit({
-    action: staffActions.updateRequest,
+    action: staffGroupsActions.updateRequest,
     loadingSelector: isSubmitLoadingSelector,
   });
 };
 
-export const useDeleteStaff = (callback?: any) => {
+export const useDeleteStaffGroup = (callback?: any) => {
   useSuccess(deleteSuccessSelector, `Xoá ${MODULE_VI} thành công`, callback);
   useFailed(deleteFailedSelector);
 
   return useSubmit({
-    action: staffActions.deleteRequest,
+    action: staffGroupsActions.deleteRequest,
     loadingSelector: isSubmitLoadingSelector,
   });
 };
 
-export const useStaffQueryParams = () => {
+export const useStaffGroupsQueryParams = () => {
   const query = useQueryParams();
   const limit = query.get("limit") || 10;
   const page = query.get("page") || 1;
   const keyword = query.get("keyword");
+  const groupId = query.get("groupId");
   const createSuccess = useSelector(createSuccessSelector);
   const deleteSuccess = useSelector(deleteSuccessSelector);
   return useMemo(() => {
@@ -111,13 +106,14 @@ export const useStaffQueryParams = () => {
       page,
       limit,
       keyword,
+      groupId
     };
     return [queryParams];
     //eslint-disable-next-line
-  }, [page, limit, keyword, createSuccess, deleteSuccess]);
+  }, [page, limit, keyword, createSuccess, deleteSuccess, groupId]);
 };
 
-export const useUpdateStaffParams = (
+export const useUpdateStaffGroupsParams = (
   query: any,
   listOptionSearch?: any[]
 ) => {
@@ -142,15 +138,35 @@ export const useUpdateStaffParams = (
         ...param,
       })
     ).toString();
-
+console.log(searchString,'searchString')
     // Navigate
     navigate(`${pathname}?${searchString}`);
   };
 
   return [keyword, { setKeyword, onParamChange }];
 };
-export const useResetStaffAction = () => {
-  return useResetState(staffActions.resetAction);
+
+export const useResetStaffGroupsAction = () => {
+  return useResetState(staffGroupsActions.resetAction);
 };
 
-// STAFF GROUP
+export const useResourceColumns = (renderPermission: any) => {
+  const actions = useSelector(actionsSelector);
+  const actionColumns = (actions || [])?.map(({ name, key }: any, index: number) => ({
+    title: name,
+    dataIndex: 'key',
+    key: key,
+    width : '10%',
+    align: 'center',
+    render: renderPermission(key)
+  }));
+  return [
+    {
+      title: 'Chức năng',
+      dataIndex: 'name',
+      key: 'resource',
+      width : 'auto',
+    },
+    ...actionColumns
+  ];
+};
