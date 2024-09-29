@@ -1,4 +1,4 @@
-import { put, call, takeLatest } from 'redux-saga/effects';
+import { put, call, takeLatest, delay } from 'redux-saga/effects';
 import api from '../schedule.api'; 
 import { scheduleActions } from './reducer';
 
@@ -34,6 +34,8 @@ function* createSchedule({payload} : any) : any {
   try {
     const data = yield call(api.create,payload);
     yield put(scheduleActions.createSuccess(data));
+    yield delay(300);
+    yield put(scheduleActions.resetAction());
   } catch (error:any) {
     yield put(scheduleActions.createFailed(error));
   }
@@ -43,6 +45,8 @@ function* updateSchedule({payload} : any) : any {
   try {
     const data = yield call(api.update,payload);
     yield put(scheduleActions.updateSuccess(data));
+    yield delay(300);
+    yield put(scheduleActions.resetAction());
   } catch (error:any) {
     yield put(scheduleActions.updateFailed(error));
   }
@@ -51,6 +55,8 @@ function* deleteSchedule({payload : id} : any) : any {
   try {
     const data = yield call(api.delete,id);
     yield put(scheduleActions.deleteSuccess(data));
+    yield delay(300);
+    yield put(scheduleActions.resetAction());
   } catch (error:any) {
     yield put(scheduleActions.deleteFailed(error));
   }

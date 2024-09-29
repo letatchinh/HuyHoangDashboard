@@ -1,6 +1,7 @@
 import { SettingOutlined } from "@ant-design/icons";
 import { Button, Flex, Image, Typography } from "antd";
 import { ColumnsType } from "antd/es/table";
+import dayjs from "dayjs";
 import React, { useCallback, useState } from "react";
 import { Link } from "react-router-dom";
 import ModalAnt from "~/components/common/Antd/ModalAnt";
@@ -8,6 +9,7 @@ import SearchAnt from "~/components/common/Antd/SearchAnt";
 import TableAnt from "~/components/common/Antd/TableAnt";
 import Breadcrumb from "~/components/common/Breadcrumb";
 import BtnAdd from "~/components/common/BtnAdd";
+import ImageCustom from "~/components/common/Upload/ImageCustom";
 import WhiteBox from "~/components/common/WhiteBox";
 import { formatter } from "~/utils/helpers";
 import CourseForm from "../components/CourseForm";
@@ -18,20 +20,11 @@ import {
 } from "../course.hook";
 type propsType = {};
 export default function Course(props: propsType): React.JSX.Element {
-  const [open, setOpen] = useState(false);
 
   const [query] = useCourseQueryParams();
   const [keyword, { setKeyword, onParamChange }] = useUpdateCourseParams(query);
   const [dataSource, isLoading] = useGetCourses(query);
-  console.log(dataSource,'dataSource');
-  
 
-  const onOpen = useCallback(() => {
-    setOpen(true);
-  }, []);
-  const onCancel = useCallback(() => {
-    setOpen(false);
-  }, []);
 
   const columns: ColumnsType = [
     {
@@ -46,25 +39,34 @@ export default function Course(props: propsType): React.JSX.Element {
       key: "name",
       align: "center",
     },
-    // {
-    //   title: "Giá",
-    //   dataIndex: "price",
-    //   key: "price",
-    //   align: "center",
-    //   render: (value: any) => (
-    //     <span>
-    //       <Typography.Text strong>{formatter(value)}</Typography.Text> VNĐ
-    //     </span>
-    //   ),
-    // },
-    // {
-    //   title: "Ảnh",
-    //   dataIndex: "image",
-    //   key: "image",
-    //   align: "center",
-    //   width: 170,
-    //   render: (value: any) => <Image style={{ height: 80 }} src={value} />,
-    // },
+    {
+      title: "Giá",
+      dataIndex: "price",
+      key: "price",
+      align: "center",
+      render: (value: any) => (
+        <span>
+          <Typography.Text strong>{formatter(value || 0)}</Typography.Text> VNĐ
+        </span>
+      ),
+    },
+    {
+      title: "Ngày tạo",
+      dataIndex: "createdAt",
+      key: "createdAt",
+      align: "center",
+      render: (value: any) => (
+          <Typography.Text type="secondary" strong>{dayjs(value).format("DD-MM-YYYY")}</Typography.Text>
+      ),
+    },
+    {
+      title: "Ảnh",
+      dataIndex: "image",
+      key: "image",
+      align: "center",
+      width: 170,
+      render: (value: any) => value && <ImageCustom style={{ height: 80 }} src={value} />,
+    },
     {
       title: "Thao tác",
       dataIndex: "_id",
@@ -81,7 +83,9 @@ export default function Course(props: propsType): React.JSX.Element {
       <Breadcrumb title={"Danh sách khoá học"} />
       <Flex style={{ marginBottom: 8 }} justify={"space-between"}>
         <SearchAnt onParamChange={onParamChange} />
-        <BtnAdd onClick={() => onOpen()}>Thêm mới</BtnAdd>
+        <Link to={'/course-create'}>
+        <BtnAdd>Thêm mới</BtnAdd>
+        </Link>
       </Flex>
       <WhiteBox>
       <TableAnt
@@ -96,16 +100,7 @@ export default function Course(props: propsType): React.JSX.Element {
         loading={isLoading}
       />
       </WhiteBox>
-      <ModalAnt
-        width={1000}
-        title={"Thêm mới Khoá học"}
-        open={open}
-        onCancel={onCancel}
-        destroyOnClose
-        footer={null}
-      >
-        <CourseForm />
-      </ModalAnt>
+    
     </div>
   );
 }

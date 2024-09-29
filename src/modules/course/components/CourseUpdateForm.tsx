@@ -3,6 +3,7 @@ import { Button, Col, Form, Input, InputNumber, Row } from "antd";
 import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import InputNumberAnt from "~/components/common/Antd/InputNumberAnt";
+import BtnSubmit from "~/components/common/BtnSubmit";
 import FormUpdateHeader from "~/components/common/FormUpdate/FormUpdateHeader";
 import WhiteBox from "~/components/common/WhiteBox";
 import { requireRules } from "~/constants/defaultValue";
@@ -15,7 +16,7 @@ type propsType = {};
 export default function CourseUpdateForm(props: propsType): React.JSX.Element {
   const { id } = useParams();
   const [data, loading] = useGetCourse(id);
-  const [, onUpdate] = useUpdateCourse();
+  const [isSubmitLoading, onUpdate] = useUpdateCourse();
 
   const [form] = Form.useForm();
   const onFinish = (values: any) => {
@@ -34,9 +35,10 @@ export default function CourseUpdateForm(props: propsType): React.JSX.Element {
         labelAlign="left"
         form={form}
       >
-        <FormUpdateHeader id={id} title="Cập nhật khoá học" />
+        <FormUpdateHeader isShowBtn={false} id={id} title="Khoá học" />
         <WhiteBox title="Thông tin khoá học">
           <CourseFormItemSection />
+          <BtnSubmit id={id} loading={isSubmitLoading}/>
         </WhiteBox>
 
         <WhiteBox title="Lộ trình học">

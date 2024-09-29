@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { get } from "lodash";
 import { InstanceModuleRedux } from "~/redux/instanceModuleRedux";
 import { initStateSlice } from "~/redux/models";
 interface cloneInitState extends initStateSlice {

@@ -1,19 +1,20 @@
 import { PlusOutlined } from "@ant-design/icons";
-import { Button, Flex, Form, Input } from "antd";
+import { Button, Flex, Form, Input, Modal } from "antd";
 import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import Loading from "~/components/common/Loading/index";
 import { useCreateSchedule, useGetSchedule, useUpdateSchedule } from "../schedule.hook";
 type propsType = {
     action : "CREATE" | "UPDATE",
-    id ? : any
+    id ? : any,
+    onCancel? : () => void
 };
-export default function ScheduleAdd({action,id}: propsType): React.JSX.Element {
+export default function ScheduleAdd({action,id,onCancel}: propsType): React.JSX.Element {
   const [form] = Form.useForm();
   const {id : courseId} = useParams();
-  const [submitLoading,onCreate] = useCreateSchedule();
+  const [submitLoading,onCreate] = useCreateSchedule(onCancel && onCancel);
   const [data,loading] = useGetSchedule(id);
-  const [,onUpdate] = useUpdateSchedule();
+  const [,onUpdate] = useUpdateSchedule(onCancel && onCancel);
   const onFinish = (values: any) => {
     
     
@@ -44,7 +45,6 @@ export default function ScheduleAdd({action,id}: propsType): React.JSX.Element {
   },[id,action,data])
   return (
     <Form style={{ marginTop: 5 }} form={form} onFinish={onFinish}>
-        {loading && <Loading />}
       <Flex>
         <Form.Item style={{ width: "100%" }} name={"name"}>
           <Input placeholder="Tên lộ trình" />
