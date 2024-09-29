@@ -3,6 +3,7 @@ import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 // import { resource } from './resourceV2';
 import { ItemTypeNavbar, resource } from "./resource";
+import { useGetPolicies } from "~/modules/policy/policy.hook";
 
 /**
  *
@@ -38,7 +39,7 @@ function loopRenderNav(element: (typeof resource)[number]) {
 };
 const NavbarVertical: React.FC = () => {
   const location = useLocation();
-  
+  const [policy] = useGetPolicies();
   const navigate = useNavigate();
   const onGo = (path? : string) => {
     console.log(path,'path');

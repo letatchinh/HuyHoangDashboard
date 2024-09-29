@@ -54,6 +54,15 @@ export const useGetStaffGroup = (id: any) => {
     param: id,
   });
 };
+export const useGetRoleByUser = (query: any) => {
+  return useFetchByParam({
+    action: staffGroupsActions.getRoleByUserRequest,
+    loadingSelector: getByIdLoadingSelector,
+    dataSelector: getByIdSelector,
+    failedSelector: getByIdFailedSelector,
+    param: query,
+  });
+};
 
 export const useCreateStaffGroup = (callback?: any) => {
   useSuccess(

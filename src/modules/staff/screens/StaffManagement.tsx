@@ -17,6 +17,7 @@ import StaffForm from "../components/StaffForm";
 import ColumnsActions from "../components/ColumnsActions";
 import { useDispatch } from "react-redux";
 import { staffActions } from "../redux/reducer";
+import AddStaffGroup from "../components/AddStaffGroup";
 type propsType = {};
 export default function StaffManagement(props: propsType): React.JSX.Element {
   useResetStaffAction();
@@ -42,15 +43,15 @@ export default function StaffManagement(props: propsType): React.JSX.Element {
   const onCloseModal = () => {
     refModalNow.current.destroy();
   };
-  const onOpenModal = (id?: string | null) => {
+  const onOpenModal = (id?: string | null, isUpdate: boolean = true ) => {
     refModalNow.current = modal.info({
-      content: <StaffForm onClose={onCloseModal} id={id} onCreate={createStaff} onUpdate={updateStaff} />,
+      content: isUpdate ? <StaffForm onClose={onCloseModal} id={id} onCreate={createStaff} onUpdate={updateStaff} /> : <AddStaffGroup id={id} />,
       onCancel: onCloseModal,
       footer: null,
       closable: true,
       maskClosable: true,
-      width: "90vw",
-      title: "",
+      width:  isUpdate ? "90vw" : "30rem",
+      title: isUpdate ? 'Cập nhật nhân viên' : 'Cập nhật nhóm quyền nhân viên',
     });
   };
 
@@ -60,24 +61,32 @@ export default function StaffManagement(props: propsType): React.JSX.Element {
       dataIndex: "fullName",
       key: "fullName",
       align: "left",
+      render: (fullName: any, record: any) => {
+        return (
+          <Button type="link" onClick={() => onOpenModal(record?._id)}>{fullName}</Button>
+        );
+      }
     },
     {
       title: "Số điện thoại",
       dataIndex: "phoneNumber",
       key: "phoneNumber",
       align: "left",
+      width: 150,
     },
     {
       title: "Email",
       dataIndex: "email",
       key: "email",
       align: "left",
+      width: 150,
     },
     {
       title: "Trạng thái",
       dataIndex: "status",
       key: "status",
       align: "center",
+      width: 100,
       render: (status: any, record: any) => {
         return (
           <Switch
@@ -97,8 +106,8 @@ export default function StaffManagement(props: propsType): React.JSX.Element {
     {
       title: "Thao tác",
       key: "action",
-      width: "110px",
       align: "center",
+      width: 150,
       render: (record: any) => {
         return (
           <ColumnsActions

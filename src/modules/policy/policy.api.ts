@@ -3,7 +3,7 @@ import requester from "~/api/requester";
 import { permissionResources } from "./policy.modal";
 
 const apis = {
-    getAll: (query?: any) => requester.get(`/api/policy`, query),
+    getAll: () => requester.get(`/api/user-policy`),
     getById: (id?: any) => requester.get(`/api/resource-by-role/${id}`),
     update: (data?: any) => requester.put(`/api/policy/${get(data,'id')}`, data),
     deletePermission: (body?: permissionResources) => requester.delete(`/api/policy-resource/${body?.roleId}`, omit(body, 'roleId')),

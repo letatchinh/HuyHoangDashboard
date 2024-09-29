@@ -2,7 +2,10 @@ import { createSlice } from "@reduxjs/toolkit";
 import { InstanceModuleRedux } from "~/redux/instanceModuleRedux";
 import { initStateSlice } from "~/redux/models";
 interface cloneInitState extends initStateSlice {
- // Add cloneInitState Type Here
+  // Add cloneInitState Type Here
+  isLoadingRoleUser?: boolean;
+  byIdRoleUser?: any;
+  getByIdRoleUserFailed?: any;
 }
 class StaffGroupsClassExtend extends InstanceModuleRedux {
   cloneReducer;
@@ -12,10 +15,29 @@ class StaffGroupsClassExtend extends InstanceModuleRedux {
     this.cloneReducer = {
       ...this.initReducer,
       // Want Add more reducer Here...
+
+      getRoleByUserRequest: (state: cloneInitState, { payload }: any) => {
+        state.isLoadingRoleUser = true;
+        state.getByIdRoleUserFailed = null;
+      },
+
+      getRoleByUserSuccess: (state:cloneInitState , { payload }: any) => {
+        state.isLoadingRoleUser = false;
+        state.byIdRoleUser = payload;
+      },
+      getRoleByUserFailed: (state:cloneInitState , { payload }: any) => {
+        state.isLoadingRoleUser = false;
+        state.getByIdRoleUserFailed = payload;
+      },
     }
     this.cloneInitState = {
       ...this.initialState,
       // Want Add more State Here...
+
+      isLoadingRoleUser: false,
+      byIdRoleUser: null,
+      getByIdRoleUserFailed: null,
+
     }
   }
   createSlice() {

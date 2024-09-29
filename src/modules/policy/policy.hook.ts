@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { useSelector } from "react-redux";
 import { policyType } from "./policy.modal";
 import { getSelectors, useFetch, useFetchByParam, useSubmit } from "~/utils/hook";
@@ -29,13 +29,12 @@ const isGetResourcesLoading = getSelectorAuth('isGetResourcesLoading');
 const resourcesSelector = getSelectorAuth('resources');
 const getResourcesFailedSelector = getSelectorAuth('getResourcesFailed');
 
-export const useGetPolicies = (params: any) => {
-  return useFetchByParam({
+export const useGetPolicies = () => {
+  return useFetch({
     action: policyActions.getListRequest,
     loadingSelector: loadingSelector,
     dataSelector: listSelector,
     failedSelector: getListFailedSelector,
-    param: params,
   });
 };
 
@@ -97,7 +96,19 @@ export const useUpdateResourceRedux = () => {
 // export const useUserPolicy = () => {
 //   const [isLoading, handleGetPolicy] = useSubmit({
 //     loadingSelector: isGetPolicyLoadingSelector,
-//     action: userSliceAction.getPolicyRequest,
+//     action: policyActions.getPolicyRequest,
 //   });
 
-  // const policies = useSelector(listSelector);
+//   const policies = useSelector(policySelector);
+
+//   useEffect(() => {
+//     if (!Object.keys(policies || {}).length && !isLoading) {
+//       handleGetPolicy(DEFAULT_BRANCH_ID);
+//     }
+//     //eslint-disable-next-line
+//   }, [handleGetPolicy]);
+
+//   useFailed(getPolicyFailedSelector);
+
+//   return [isLoading, handleGetPolicy, policies];
+// };

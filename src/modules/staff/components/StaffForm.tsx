@@ -1,11 +1,10 @@
 import { Button, Col, Form, Input, Row, Select, Skeleton } from "antd";
+import { omit } from "lodash";
 import React, { useEffect, useState } from "react";
 import Account from "~/components/common/Account";
 import AddressFormSection from "~/components/common/AddressFormSection";
 import UploadImage from "~/components/common/Upload/UploadImage";
 import { useGetStaff } from "../staff.hook";
-import { omit } from "lodash";
-import { useGetStaffGroups } from "~/modules/staffGroups/staffGroups.hook";
 type propsType = {
   id?: string | null;
   onClose: any;
@@ -28,7 +27,6 @@ export default function StaffForm({
   const [statusAccount, setStatusAccount] = useState<"ACTIVE" | "INACTIVE">(
     id ? 'INACTIVE' : "ACTIVE"
   );
-  const [groups, isLoadingGroup] = useGetStaffGroups();
   const [cityCode, setCityCode] = useState<string>("");
   const [districtCode, setDistrictCode] = useState<string>("");
   const [wardCode, setWardCode] = useState<string>("");
@@ -162,7 +160,7 @@ export default function StaffForm({
             </Col>
           </Row>
         </Col>
-        <Col span={12}>
+        {/* <Col span={12}>
           <FormItem
             label="Nhóm người dùng"
             name="groups"
@@ -186,7 +184,7 @@ export default function StaffForm({
             )}
           </FormItem>
           <FormItem hidden label="Nhóm người dùng" name="userId"></FormItem>
-        </Col>
+        </Col> */}
       </Row>
       {
         <Account

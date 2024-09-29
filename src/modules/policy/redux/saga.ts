@@ -2,9 +2,9 @@ import { put, call, takeLatest } from 'redux-saga/effects';
 import api from '../policy.api'; 
 import { policyActions } from './reducer';
 
-function* getListPolicy({payload:query} : any) : any {
+function* getListPolicy() : any {
   try {
-    const data = yield call(api.getAll,query);
+    const data = yield call(api.getAll);
     yield put(policyActions.getListSuccess(data));
   } catch (error:any) {
     yield put(policyActions.getListFailed(error));
