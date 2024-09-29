@@ -34,7 +34,8 @@ export type initStateSlice<T=any> = {
   "course"
   | "schedule"
   | "scheduleItem"
-  | "auth"
+    | "auth"
+    | "staff";
 
   export interface voidReducer {
     getListRequest : (state:any,payload?:any) => any;

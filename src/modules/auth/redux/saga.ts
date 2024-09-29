@@ -4,7 +4,7 @@ import { authActions } from './reducer';
 
 function* login({ payload: user }: any) {
   try {
-    const { token } = yield call(api.login, user);
+    const { token, userId } = yield call(api.login, user);
     yield put(authActions.loginSuccess({token})); 
   } catch (error: any) {
     yield put(authActions.loginFailed(error));
@@ -13,9 +13,7 @@ function* login({ payload: user }: any) {
 
 function* loginSuccess({ payload }: any) {
   try {
-    console.log(1)
     yield put(authActions.getProfileRequest());
-    console.log(2)
   } catch (error: any) {
     yield put(authActions.loginFailed(error));
   }

@@ -42,30 +42,6 @@ const profileSelector = getSelector("profile");
 const getProfileFailedSelector = getSelector("getProfileFailed");
 const isGetProfileLoadingFailedSelector = getSelector("isGetProfileLoadingFailed");
 
-// export const useUpdateAuth = (callback?: any) => {
-//   useSuccess(
-//     updateSuccessSelector,
-//     `Cập nhật ${MODULE_VI} thành công`,
-//     callback
-//   );
-//   useFailed(updateFailedSelector);
-
-//   return useSubmit({
-//     action: authActions.updateRequest,
-//     loadingSelector: isSubmitLoadingSelector,
-//   });
-// };
-
-// export const useDeleteAuth = (callback?: any) => {
-//   useSuccess(deleteSuccessSelector, `Xoá ${MODULE_VI} thành công`, callback);
-//   useFailed(deleteFailedSelector);
-
-//   return useSubmit({
-//     action: authActions.deleteRequest,
-//     loadingSelector: isSubmitLoadingSelector,
-//   });
-// };
-
 export const useToken = () => {
   const token = useSelector(tokenSelector);
   return token

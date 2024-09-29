@@ -1,0 +1,21 @@
+.ant-upload-picture-card-wrapper.avatar-uploader {
+
+  span.ant-upload {
+    position: relative;
+  };
+  .ant-upload{
+    border-radius: 0!important;
+  }
+};
+
+.avatar-uploader-w-100{
+  & .ant-upload-select{
+    width: 100%!important;
+  }
+};
+
+.avatar-uploader{
+  & .ant-upload{
+    border-radius: 0!important;
+  }
+}

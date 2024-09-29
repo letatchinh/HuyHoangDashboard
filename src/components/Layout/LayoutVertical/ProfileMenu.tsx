@@ -4,9 +4,10 @@ import { get } from "lodash";
 import React, { useEffect, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-// import ModalProfile from "~/components/common/TopBarDropDown/ModalProfile";
 import { useGetProfile, useLogout } from "~/modules/auth/auth.hook";
 import { authActions } from "~/modules/auth/redux/reducer";
+import ModalProfile from "./ModalProfile";
+import { useUpdateStaff } from "~/modules/staff/staff.hook";
 // import { userSliceAction } from "~/modules/user/redux/reducer";
 // import { useUpdateProfile } from "~/modules/user/user.hook";
 type propsType = {};
@@ -27,9 +28,9 @@ export default function ProfileMenu(props: propsType): React.JSX.Element {
   const [,onLogout] = useLogout(()=>navigator('/login',{replace:true}));
   const profile = useGetProfile();
   const dispatch = useDispatch();
-  useEffect(() => {;
-    dispatch(authActions.getProfileRequest());
-  }, []);
+  // useEffect(() => {;
+  //   dispatch(authActions.getProfileRequest());
+  // }, []);
 
   // const resetStateUpdateProfile = () => dispatch(userSliceAction.reset());
 
@@ -39,10 +40,10 @@ export default function ProfileMenu(props: propsType): React.JSX.Element {
     // resetStateUpdateProfile();
   };
   
-  // const [isLoadingSubmit, handleUpdateProfile] = useUpdateProfile(() => {
-  //   onClose();
-  //   dispatch(authActions.getProfileRequest());
-  // });
+  const [isLoadingSubmit, handleUpdateProfile] = useUpdateStaff(() => {
+    onClose();
+    dispatch(authActions.getProfileRequest());
+  });
 
   const items: any[] = useMemo(() => [
     {
@@ -73,7 +74,7 @@ export default function ProfileMenu(props: propsType): React.JSX.Element {
         <CaretDownOutlined />
       </div>
     </Dropdown>
-      {/* <Modal
+      <Modal
         open={isOpen}
         onOk={() => setIsOpen(false)}
         onCancel={() => setIsOpen(false)}
@@ -84,7 +85,7 @@ export default function ProfileMenu(props: propsType): React.JSX.Element {
         zIndex={9999}
       >
         <ModalProfile handleUpdateProfile = {handleUpdateProfile} onCloseForm={() => setIsOpen(false)} isLoadingSubmit = {isLoadingSubmit} />
-      </Modal> */}
+      </Modal>
     </>
   );
 }

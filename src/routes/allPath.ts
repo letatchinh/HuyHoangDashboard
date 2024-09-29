@@ -24,5 +24,10 @@ export const PATH_APP = {
   user: {
     root: path(ROOTS.app, "/user"),
   },
+
+  staff: {
+    root: path(ROOTS.app, "/staff"),
+    staffGroup: path(ROOTS.app, "/staff-group"),
+  },
   
 };

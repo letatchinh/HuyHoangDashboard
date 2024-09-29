@@ -14,8 +14,11 @@
 @import 'antd/tabs.scss';
 @import 'antd/drawer.scss';
 @import 'antd/table.scss';
-
+@import "component/columnAction.scss";
 // Module
 
 @import '~/modules/scheduleItem/scheduleItem.style.scss';
-@import '~/modules/auth/auth.style.scss'
+@import '~/modules/auth/auth.style.scss';
+@import '~/modules/staff/staff.style.scss';
+
+
