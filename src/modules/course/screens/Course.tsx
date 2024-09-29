@@ -8,6 +8,7 @@ import SearchAnt from "~/components/common/Antd/SearchAnt";
 import TableAnt from "~/components/common/Antd/TableAnt";
 import Breadcrumb from "~/components/common/Breadcrumb";
 import BtnAdd from "~/components/common/BtnAdd";
+import WhiteBox from "~/components/common/WhiteBox";
 import { formatter } from "~/utils/helpers";
 import CourseForm from "../components/CourseForm";
 import {
@@ -15,22 +16,6 @@ import {
   useGetCourses,
   useUpdateCourseParams
 } from "../course.hook";
-const dataSource = [
-  {
-    name: "Khoá học 1",
-    price: 100000,
-    image:
-      "https://file.edubit.vn/storage/26bbe8e62bc5b8856e4a6609723e9d93938845a4/4-1.png",
-    metaKeyword: "Meta Keywork",
-  },
-  {
-    name: "Khoá học 2",
-    price: 500000,
-    image:
-      "https://file.edubit.vn/storage/26bbe8e62bc5b8856e4a6609723e9d93938845a4/4-1.png",
-    metaKeyword: "Meta Keywork",
-  },
-];
 type propsType = {};
 export default function Course(props: propsType): React.JSX.Element {
   const [open, setOpen] = useState(false);
@@ -98,6 +83,7 @@ export default function Course(props: propsType): React.JSX.Element {
         <SearchAnt onParamChange={onParamChange} />
         <BtnAdd onClick={() => onOpen()}>Thêm mới</BtnAdd>
       </Flex>
+      <WhiteBox>
       <TableAnt
         columns={columns}
         dataSource={dataSource}
@@ -109,6 +95,7 @@ export default function Course(props: propsType): React.JSX.Element {
         
         loading={isLoading}
       />
+      </WhiteBox>
       <ModalAnt
         width={1000}
         title={"Thêm mới Khoá học"}

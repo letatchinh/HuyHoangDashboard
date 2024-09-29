@@ -14,6 +14,12 @@ export type ItemTypeNavbar = {
 
 export const resource: ItemTypeNavbar[] = [
   {
+    label: "Nhóm khoá học",
+    key: "courseGroup",
+    icon : <AppstoreOutlined />,
+    path : PATH_APP.courseGroup.root
+  },
+  {
     label: "Khoá học",
     key: "course",
     icon : <AppstoreOutlined />,
