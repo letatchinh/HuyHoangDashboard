@@ -2,6 +2,7 @@ import { SettingOutlined } from "@ant-design/icons";
 import { Button, Flex, Image, Typography } from "antd";
 import { ColumnsType } from "antd/es/table";
 import dayjs from "dayjs";
+import { get } from "lodash";
 import React, { useCallback, useState } from "react";
 import { Link } from "react-router-dom";
 import ModalAnt from "~/components/common/Antd/ModalAnt";
@@ -60,12 +61,12 @@ export default function Course(props: propsType): React.JSX.Element {
       ),
     },
     {
-      title: "Ảnh",
-      dataIndex: "image",
-      key: "image",
+      title: "Người tạo",
+      dataIndex: "createdBy",
+      key: "createdBy",
       align: "center",
       width: 170,
-      render: (value: any) => value && <ImageCustom style={{ height: 80 }} src={value} />,
+      render: (createdBy: any) => get(createdBy,'fullName',''),
     },
     {
       title: "Thao tác",
