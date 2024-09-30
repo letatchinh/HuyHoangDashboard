@@ -68,13 +68,6 @@ export const useCreateStaff = (callback?: any) => {
   });
 };
 
-export const useGetProfileStaff = (callback?: any) => {
-  return useSubmit({
-    action: staffActions.createRequest,
-    loadingSelector: isSubmitLoadingSelector,
-  });
-};
-
 export const useUpdateStaff = (callback?: any) => {
   useSuccess(
     updateSuccessSelector,

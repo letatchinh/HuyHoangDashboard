@@ -8,8 +8,6 @@ import { useGetProfile, useLogout } from "~/modules/auth/auth.hook";
 import { authActions } from "~/modules/auth/redux/reducer";
 import ModalProfile from "./ModalProfile";
 import { useUpdateStaff } from "~/modules/staff/staff.hook";
-// import { userSliceAction } from "~/modules/user/redux/reducer";
-// import { useUpdateProfile } from "~/modules/user/user.hook";
 type propsType = {};
 type LayoutItemProps = {
   icon: React.JSX.Element,
@@ -28,9 +26,9 @@ export default function ProfileMenu(props: propsType): React.JSX.Element {
   const [,onLogout] = useLogout(()=>navigator('/login',{replace:true}));
   const profile = useGetProfile();
   const dispatch = useDispatch();
-  // useEffect(() => {;
-  //   dispatch(authActions.getProfileRequest());
-  // }, []);
+  useEffect(() => {;
+    dispatch(authActions.getProfileRequest());
+  }, []);
 
   // const resetStateUpdateProfile = () => dispatch(userSliceAction.reset());
 

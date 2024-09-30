@@ -42,7 +42,6 @@ const NavbarVertical: React.FC = () => {
   const [policy] = useGetPolicies();
   const navigate = useNavigate();
   const onGo = (path? : string) => {
-    console.log(path,'path');
     
     if(path){
       console.log(path,'path');

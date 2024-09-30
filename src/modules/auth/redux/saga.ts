@@ -19,9 +19,9 @@ function* loginSuccess({ payload }: any) {
   }
 }
 
-function* getProfile({ payload: id }: any): any {
+function* getProfile(): any {
   try {
-    const profile = yield call(api.getProfile, id);
+    const profile = yield call(api.getProfile);
     yield put(authActions.getProfileSuccess(profile));
   } catch (error: any) {
     yield put(authActions.getProfileFailed(error));

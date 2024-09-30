@@ -7,7 +7,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { clearQuerySearch, getExistProp } from "~/utils/helpers";
 import {
     getSelectors,
-    useFailed, useFetchByParam,
+    useFailed, useFetch, useFetchByParam,
     useQueryParams,
     useSubmit,
     useSuccess
@@ -70,13 +70,11 @@ export function useLogout (callback:()=>void = ()=>{}) : [boolean, () => void] {
 };
 
 export const useProfile = () => {
-  const token = useSelector(tokenSelector);    
-  return useFetchByParam({
+  return useFetch({
       action : authActions.getProfileRequest,
       dataSelector : profileSelector,
       failedSelector : getProfileFailedSelector,
       loadingSelector : isGetProfileLoadingFailedSelector,
-      param : token,
   })
 }
 
