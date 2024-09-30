@@ -1,4 +1,4 @@
-import { PathRouteProps, Route, Routes } from "react-router-dom";
+import { PathRouteProps, Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import { setAxiosToken, setupAxios } from "./api/requester";
 
 import packageJson from "../package.json";
@@ -6,12 +6,21 @@ import { authRoutes, mainRoutes } from "./routes/allRoute";
 import ProtectRoute from "./routes/middleware/ProtectRoute";
 import AuthModule from "~/modules/auth";
 import DashboardRouter from "./routes/middleware/DashboardRouter";
+import { useEffect, useMemo } from "react";
+import { AUTH, PATH_APP } from "./routes/allPath";
 
 function App(): React.JSX.Element {
   setupAxios();
   const token = AuthModule.hook.useToken();
   setupAxios();
   setAxiosToken(token);
+
+  const {pathname} = useLocation();
+  const navigate = useNavigate();
+  const refPersist =useMemo(()=>JSON.parse(localStorage.getItem('persist:auth')??JSON.stringify({'token':'null'})),[pathname]);
+  useEffect(() => {
+      if (pathname !== AUTH.login && !refPersist?.token) navigate(AUTH.login);
+  }, [token, navigate, refPersist, pathname]);
   
    return (
     <>

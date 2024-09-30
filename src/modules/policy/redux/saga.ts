@@ -8,8 +8,11 @@ function* getListPolicy() : any {
     yield put(policyActions.getListSuccess(data));
   } catch (error:any) {
     yield put(policyActions.getListFailed(error));
+    if (error?.response?.data?.type === "403") { 
+      window.location.href = '/login';
+    };
   }
-}
+};
 
 function* getByUserLoginResource() : any {
   try {

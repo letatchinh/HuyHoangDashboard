@@ -25,12 +25,12 @@ export const resource: ItemTypeNavbar[] = [
     icon : <AppstoreOutlined />,
     path : PATH_APP.course.root
   },
-  {
-    label: "Tài khoản",
-    key: "account",
-    icon : <UserOutlined />,
-    path : PATH_APP.user.root
-  },
+  // {
+  //   label: "Tài khoản",
+  //   key: "account",
+  //   icon : <UserOutlined />,
+  //   path : PATH_APP.user.root
+  // },
   {
     label: "Người dùng",
     key: "staff",

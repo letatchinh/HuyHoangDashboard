@@ -24,7 +24,8 @@ export default function Login() {
     } else {
       if (pathname !== AUTH.login) navigate(AUTH.login);
     };
-  }, [token, navigate,refPersist,pathname]);
+  }, [token, navigate, refPersist, pathname]);
+  
   const onFinish = (values: any) => {
     onLogin(omit(values, ["remember"]));
   };
