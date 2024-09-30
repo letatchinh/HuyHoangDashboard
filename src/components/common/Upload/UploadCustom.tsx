@@ -76,7 +76,7 @@ const UploadCustom = ({resource,typeComponent,onHandleChange,value,...props}:Pro
         accept={acceptList[typeComponent]}
         showUploadList={false}
         action = {`${DEFAULT_UPLOAD_ACTION}?folder=${resource ?? DEFAULT_RESOURCE}/${typeComponent}`}
-        beforeUpload={beforeUpload}
+        // beforeUpload={beforeUpload}
         {...props}
         onChange={handleChange}
       >
