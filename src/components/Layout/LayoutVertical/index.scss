@@ -8,7 +8,7 @@
     &__row {
       padding-right: 10px;
       padding-left: 10px;
-      height: $height-header;
+      height: calc(#{$height-header} - 1px);
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -41,7 +41,7 @@
       &__list{
         display: flex;
         flex-direction: column;
-        padding: 20px 16px;
+        padding: 20px 8px;
         &__item{
           display: flex;
           gap: 12px;

@@ -1,4 +1,8 @@
-import { AppstoreOutlined, UsergroupAddOutlined, UserOutlined } from "@ant-design/icons";
+import {
+  AppstoreOutlined,
+  DiffOutlined,
+  UsergroupAddOutlined
+} from "@ant-design/icons";
 import React from "react";
 import { PATH_APP } from "~/routes/allPath";
 
@@ -11,19 +15,18 @@ export type ItemTypeNavbar = {
   permission?: any;
 };
 
-
 export const resource: ItemTypeNavbar[] = [
   {
     label: "Nhóm khoá học",
     key: "courseGroup",
-    icon : <AppstoreOutlined />,
-    path : PATH_APP.courseGroup.root
+    icon: <AppstoreOutlined />,
+    path: PATH_APP.courseGroup.root,
   },
   {
     label: "Khoá học",
     key: "course",
-    icon : <AppstoreOutlined />,
-    path : PATH_APP.course.root
+    icon: <DiffOutlined />,
+    path: PATH_APP.course.root,
   },
   // {
   //   label: "Tài khoản",
@@ -34,7 +37,7 @@ export const resource: ItemTypeNavbar[] = [
   {
     label: "Người dùng",
     key: "staff",
-    icon : <UsergroupAddOutlined />,
-    path : PATH_APP.staff.root
+    icon: <UsergroupAddOutlined />,
+    path: PATH_APP.staff.root,
   },
 ];

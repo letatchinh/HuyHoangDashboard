@@ -6,6 +6,7 @@ import SearchAnt from "~/components/common/Antd/SearchAnt";
 import TableAnt from "~/components/common/Antd/TableAnt";
 import Breadcrumb from "~/components/common/Breadcrumb";
 import BtnAdd from "~/components/common/BtnAdd";
+import WhiteBox from "~/components/common/WhiteBox";
 import {
   useCourseGroupQueryParams,
   useDeleteCourseGroup,
@@ -28,7 +29,7 @@ export default function CourseGroup(props: propsType): React.JSX.Element {
       width: 80,
     },
     {
-      title: "Tên",
+      title: "Tên nhóm khoá học",
       dataIndex: "name",
       key: "name",
       align: "center",
@@ -43,7 +44,7 @@ export default function CourseGroup(props: propsType): React.JSX.Element {
         <Flex justify={"space-between"}>
           <Link to={`/courseGroup-update/${_id}`}>
             <Button size="small" type="primary">
-                Cập nhật
+              Cập nhật
             </Button>
           </Link>
           <Popconfirm title="Xác nhận xoá" onConfirm={() => onDelete(_id)}>
@@ -65,20 +66,23 @@ export default function CourseGroup(props: propsType): React.JSX.Element {
       <Breadcrumb title={"Danh sách nhóm khoá học"} />
       <Flex style={{ marginBottom: 8 }} justify={"space-between"}>
         <SearchAnt onParamChange={onParamChange} />
-        <Link to={'/courseGroup-create'}>
+        <Link to={"/courseGroup-create"}>
           <BtnAdd>Thêm mới</BtnAdd>
         </Link>
       </Flex>
-      <TableAnt
-        columns={columns}
-        dataSource={dataSource}
-        stickyTop
-        pagination={{
-          showSizeChanger: true,
-          showTotal: (total) => `Tổng cộng: ${total} `,
-        }}
-        loading={isLoading}
-      />
+      <WhiteBox>
+        <TableAnt
+          columns={columns}
+          dataSource={dataSource}
+          scroll={{ x: 1000 }}
+          stickyTop
+          pagination={{
+            showSizeChanger: true,
+            showTotal: (total) => `Tổng cộng: ${total} `,
+          }}
+          loading={isLoading}
+        />
+      </WhiteBox>
     </div>
   );
 }

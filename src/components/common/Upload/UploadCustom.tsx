@@ -80,7 +80,7 @@ const UploadCustom = ({resource,typeComponent,onHandleChange,value,...props}:Pro
         {...props}
         onChange={handleChange}
       >
-        {typeComponent === 'image' && (dataSource ? <ImageCustom src={dataSource} /> : uploadButton)}
+        {typeComponent === 'image' && (dataSource ? <ImageCustom preview={false} src={dataSource} /> : uploadButton)}
         {typeComponent === 'video' && (dataSource ? <VideoCustom src={dataSource} /> : uploadButton)}
         {typeComponent === 'document' && uploadButton}
       </Upload>

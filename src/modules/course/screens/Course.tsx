@@ -1,5 +1,5 @@
-import { SettingOutlined } from "@ant-design/icons";
-import { Button, Flex, Image, Typography } from "antd";
+import { DeleteOutlined, SettingOutlined } from "@ant-design/icons";
+import { Button, Flex, Image, Popconfirm, Typography } from "antd";
 import { ColumnsType } from "antd/es/table";
 import dayjs from "dayjs";
 import { get } from "lodash";
@@ -16,16 +16,16 @@ import { formatter } from "~/utils/helpers";
 import CourseForm from "../components/CourseForm";
 import {
   useCourseQueryParams,
+  useDeleteCourse,
   useGetCourses,
-  useUpdateCourseParams
+  useUpdateCourseParams,
 } from "../course.hook";
 type propsType = {};
 export default function Course(props: propsType): React.JSX.Element {
-
   const [query] = useCourseQueryParams();
   const [keyword, { setKeyword, onParamChange }] = useUpdateCourseParams(query);
   const [dataSource, isLoading] = useGetCourses(query);
-
+  const [isSubmitLoading, onDelete] = useDeleteCourse();
 
   const columns: ColumnsType = [
     {
@@ -39,6 +39,7 @@ export default function Course(props: propsType): React.JSX.Element {
       dataIndex: "name",
       key: "name",
       align: "center",
+
     },
     {
       title: "Giá",
@@ -57,7 +58,9 @@ export default function Course(props: propsType): React.JSX.Element {
       key: "createdAt",
       align: "center",
       render: (value: any) => (
-          <Typography.Text type="secondary" strong>{dayjs(value).format("DD-MM-YYYY")}</Typography.Text>
+        <Typography.Text type="secondary" strong>
+          {dayjs(value).format("DD-MM-YYYY")}
+        </Typography.Text>
       ),
     },
     {
@@ -66,17 +69,33 @@ export default function Course(props: propsType): React.JSX.Element {
       key: "createdBy",
       align: "center",
       width: 170,
-      render: (createdBy: any) => get(createdBy,'fullName',''),
+      render: (createdBy: any) => get(createdBy, "fullName", ""),
     },
     {
       title: "Thao tác",
       dataIndex: "_id",
       key: "_id",
       align: "center",
-      width: 170,
-      render: (_id: any) => <Link to={'/course-update/'+_id}>
-        <Button type="primary" size="small" icon={<SettingOutlined />}>Thiết lập</Button>
-      </Link>,
+      width: 180,
+      render: (_id: any) => (
+        <Flex justify={"center"} align="center" gap={5}>
+          <Link to={"/course-update/" + _id}>
+            <Button type="primary" size="small" icon={<SettingOutlined />}>
+              Thiết lập
+            </Button>
+          </Link>
+          <Popconfirm title="Xác nhận xoá" onConfirm={() => onDelete(_id)}>
+            <Button
+              type="primary"
+              size="small"
+              icon={<DeleteOutlined />}
+              danger
+            >
+              Xoá
+            </Button>
+          </Popconfirm>
+        </Flex>
+      ),
     },
   ];
   return (
@@ -84,24 +103,23 @@ export default function Course(props: propsType): React.JSX.Element {
       <Breadcrumb title={"Danh sách khoá học"} />
       <Flex style={{ marginBottom: 8 }} justify={"space-between"}>
         <SearchAnt onParamChange={onParamChange} />
-        <Link to={'/course-create'}>
-        <BtnAdd>Thêm mới</BtnAdd>
+        <Link to={"/course-create"}>
+          <BtnAdd>Thêm mới</BtnAdd>
         </Link>
       </Flex>
       <WhiteBox>
-      <TableAnt
-        columns={columns}
-        dataSource={dataSource}
-        stickyTop
-        pagination={{
-          showSizeChanger: true,
-          showTotal: (total) => `Tổng cộng: ${total} `,
-        }}
-        
-        loading={isLoading}
-      />
+        <TableAnt
+          scroll={{x : 1000}}
+          columns={columns}
+          dataSource={dataSource}
+          stickyTop
+          pagination={{
+            showSizeChanger: true,
+            showTotal: (total) => `Tổng cộng: ${total} `,
+          }}
+          loading={isLoading}
+        />
       </WhiteBox>
-    
     </div>
   );
 }
