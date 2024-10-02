@@ -27,7 +27,7 @@ export default function ColumnsActions({
         okText="Xoá"
         cancelText="Huỷ"
       >
-        <p>Xóa</p>
+        <p style={{ color: "red" }}>Xóa</p>
       </Popconfirm>{" "}
       </WithOrPermission>
     </div>

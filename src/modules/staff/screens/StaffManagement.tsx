@@ -120,6 +120,7 @@ export default function StaffManagement(props: propsType): React.JSX.Element {
       width: 100,
       render: (status: any, record: any) => {
         return (
+          !record?.isSuper ?
           <Switch
             // disabled={!isCanUpdate || record?.adapter?.user?.isSuperAdmin}
             checked={status === "ACTIVE"}
@@ -130,7 +131,8 @@ export default function StaffManagement(props: propsType): React.JSX.Element {
                 userId: record?.adapter?.userId,
               })
             }
-          />
+            />
+            : <></>
         );
       },
     },
@@ -141,13 +143,15 @@ export default function StaffManagement(props: propsType): React.JSX.Element {
       width: 150,
       render: (record: any) => {
         return (
+          !record?.isSuper ?
           <ColumnsActions
             {...record}
             delete={deleteStaff}
             // shouldShowDevider={shouldShowDevider}
             onOpenForm={onOpenModal}
             adapter={record?.adapter}
-          />
+            />
+          : <></>
         );
       },
     },
@@ -160,7 +164,7 @@ export default function StaffManagement(props: propsType): React.JSX.Element {
       ) : (
         <>
           <Row style={{ width: "100%", position: "relative" }} align={"middle"}>
-            <Button icon={<PlusOutlined />} onClick={() => onOpenModal(null)}>
+            <Button icon={<PlusOutlined />} onClick={() => onOpenModal(null)} type="primary">
               Thêm mới
             </Button>
           </Row>
