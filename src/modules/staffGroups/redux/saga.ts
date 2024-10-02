@@ -32,6 +32,7 @@ function* createStaffGroups({payload} : any) : any {
   try {
     const data = yield call(api.create,payload);
     yield put(staffGroupsActions.createSuccess(data));
+    yield put(staffGroupsActions.getListRequest());
   } catch (error:any) {
     yield put(staffGroupsActions.createFailed(error));
   }
@@ -49,6 +50,7 @@ function* deleteStaffGroups({payload : id} : any) : any {
   try {
     const data = yield call(api.delete,id);
     yield put(staffGroupsActions.deleteSuccess(data));
+    yield put(staffGroupsActions.getListRequest());
   } catch (error:any) {
     yield put(staffGroupsActions.deleteFailed(error));
   }

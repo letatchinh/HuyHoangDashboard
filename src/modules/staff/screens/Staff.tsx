@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo } from "react";
-import { Tabs } from "antd";
+import { ConfigProvider, Tabs } from "antd";
 import type { TabsProps } from "antd";
 import { head, omit } from "lodash";
 import path from "path";
@@ -18,32 +18,57 @@ export default function Staff(props: propsType): React.JSX.Element {
     {
       key: "/staff",
       label: "Nhân viên",
-      children: <StaffManagement/>,
+      children: <StaffManagement />,
       permission: true,
     },
     {
       key: "/staff-group",
       label: "Nhóm quyền",
-      children: <StaffGroups/>,
+      children: <StaffGroups />,
       permission: true,
     },
   ];
-    const newItems = useMemo(() => items?.filter((item: any) => item?.permission) ,[items]);
-    const activeKey = useMemo(() => (head(newItems) as any)?.key, [newItems]);
-    const [activeTab, setActiveTab] = React.useState(activeKey);
-    const location = useLocation();
-    const navigate = useNavigate();
-  
-    const onChange = (key: string) => {
-      setActiveTab(key);
-    };
-    useEffect(() => {
-      setActiveTab(activeKey);
-    }, [activeKey]);
-  
+  const newItems = useMemo(
+    () => items?.filter((item: any) => item?.permission),
+    [items]
+  );
+  const activeKey = useMemo(() => (head(newItems) as any)?.key, [newItems]);
+  const [activeTab, setActiveTab] = React.useState(activeKey);
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const onChange = (key: string) => {
+    setActiveTab(key);
+  };
   useEffect(() => {
-    navigate('/staff') // clear search query
-    }, [activeTab]);
-  
-  return  items?.length ? <Tabs activeKey= {activeTab} items={newItems as any} onChange={onChange} /> : <div>Không quyền</div>
+    setActiveTab(activeKey);
+  }, [activeKey]);
+
+  useEffect(() => {
+    navigate("/staff"); // clear search query
+  }, [activeTab]);
+
+  return items?.length ? (
+    <ConfigProvider
+      theme={{
+        components: {
+          Tabs: {
+            /* here is your component tokens */
+          },
+        },
+        token: {
+        }
+      }}
+    >
+      <Tabs
+        type="editable-card"
+        activeKey={activeTab}
+        items={newItems as any}
+        onChange={onChange}
+        hideAdd
+      />
+    </ConfigProvider>
+  ) : (
+    <div>Không quyền</div>
+  );
 }

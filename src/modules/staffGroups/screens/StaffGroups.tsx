@@ -35,6 +35,7 @@ import {
 } from "../staffGroups.hook";
 import Search from "antd/es/transfer/search";
 import { ColumnsType } from "antd/es/table";
+import { staffGroupsActions } from "../redux/reducer";
 type propsType = {};
 const styleButton = {
   alignContent: "center",
@@ -54,7 +55,12 @@ export default function StaffGroups(props: propsType): React.JSX.Element {
   const [keyword, { setKeyword, onParamChange }] = useUpdateStaffGroupsParams(query);
   const param = useMemo(() => groupId, [groupId]);
   const [permission] = useGetPermissionByStaffGroup(param);
-  const [,updateResourceRedux] = useUpdateResourceRedux()
+  const [, updateResourceRedux] = useUpdateResourceRedux()
+  const dispatch = useDispatch();
+  const     resetAction = () => {
+    return dispatch(staffGroupsActions.resetAction());
+  };
+  
   useEffect(() => {
     if (groups) {
       const headItem = (head(groups)as any)?._id || groups[0]?.id;
@@ -67,13 +73,10 @@ export default function StaffGroups(props: propsType): React.JSX.Element {
 
 
   const [, handleUpdatePolicy] = useUpdatePolicy();
-  const [, deleteGroup] = useDeleteStaffGroup();
+  const [, deleteGroup] = useDeleteStaffGroup(    resetAction);
   const canUpdate = true;
 
-  const dispatch = useDispatch();
-  //   const reFetchGroup = () => {
-  //     return dispatch(userGroupSliceAction.getByIdRequest(param));
-  //   };
+
 
   const onChangePermission = (isActive: boolean, action: string, resource: string) => {
     const handleUpdatePolicyColumns = (e: any) => {
@@ -101,6 +104,7 @@ export default function StaffGroups(props: propsType): React.JSX.Element {
 
   const callback = () => {
     onCloseModal();
+        resetAction();
   };
   const [, handleUpdate] = useUpdateStaffGroup(callback);
   const [isSubmitLoading, handleCreate] = useCreateStaffGroup(callback);

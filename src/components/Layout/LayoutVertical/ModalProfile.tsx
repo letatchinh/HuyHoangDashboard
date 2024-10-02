@@ -22,7 +22,7 @@ import Account from "~/components/common/Account";
 import AddressFormSection from "~/components/common/AddressFormSection";
 import BaseBorderBox from "~/components/common/BaseBorderBox";
 import UploadImage from "~/components/common/Upload/UploadImage";
-import { useProfile } from "~/modules/auth/auth.hook";
+import { useGetProfile } from "~/modules/auth/auth.hook";
 
 const { Option } = Select;
 
@@ -40,7 +40,7 @@ const ModalProfile: React.FC<ModalProfileProps> = ({
   isLoadingSubmit,
 }) => {
   const [form] = Form.useForm();
-  const [profile, isLoading]: any = useProfile();
+  const profile = useGetProfile();
   const [logo, setLogo] = useState<string | undefined>();
   const [isLoadingAvatar, setIsLoadingAvatar] = useState(false);
   const [statusAccount, setStatusAccount] = useState<"ACTIVE" | "INACTIVE">(
@@ -50,8 +50,6 @@ const ModalProfile: React.FC<ModalProfileProps> = ({
 
   const [cityCode, setCityCode] = useState<string | undefined>();
   const [districtCode, setDistrictCode] = useState<string | undefined>();
-  // const initUserProfile = useInitUserProfile(profile);
-  const initUserProfile = profile;
   const onValuesChange = async ({ address, fullName, ...rest }: any) => {
     const shouldResetDistrictAndWards = address && address.cityId;
     if (shouldResetDistrictAndWards) {
@@ -76,7 +74,7 @@ const ModalProfile: React.FC<ModalProfileProps> = ({
     const user = {
       ...rest,
       avatar: logo,
-      userId: profile?.userId,
+      id: profile?._id,
     };
     if (statusAccount === "INACTIVE") {
       unset(user, "password");
@@ -97,16 +95,14 @@ const ModalProfile: React.FC<ModalProfileProps> = ({
 
   useEffect(() => {
     form.resetFields();
-    const { avatar, address, profile, user } = initUserProfile;
-    if (initUserProfile) {
-      console.log(profile,'profile')
+    if (profile) {
       const newData = {
         address: { ...profile?.address },
         email: profile?.email,
         fullName: profile?.fullName,
         phoneNumber: profile?.phoneNumber,
         gender: profile?.gender,
-        username: user?.username,
+        username: profile?.user?.username,
         baseSalary: profile?.baseSalary,
         employeeLevel: profile?.employeeLevel,
       };
@@ -116,15 +112,15 @@ const ModalProfile: React.FC<ModalProfileProps> = ({
       setLogo(profile?.avatar);
     }
 
-    if (avatar) {
-      setLogo(avatar);
+    if (profile?.avatar) {
+      setLogo(profile?.avatar);
     }
 
-    if (address) {
-      setCityCode(address.cityId);
-      setDistrictCode(address.districtId);
+    if (profile?.address) {
+      setCityCode(profile?.address.cityId);
+      setDistrictCode(profile?.address.districtId);
     }
-  }, [initUserProfile, form]);
+  }, [profile, form]);
 
   const render = (component: any) => {
     return isLoadingSubmit ? <Spin /> : component;
@@ -175,7 +171,6 @@ const ModalProfile: React.FC<ModalProfileProps> = ({
             onValuesChange={onValuesChange}
             autoComplete="off"
             onFinish={onFinish}
-            initialValues={initUserProfile}
           >
             {
               <BaseBorderBox
@@ -204,7 +199,7 @@ const ModalProfile: React.FC<ModalProfileProps> = ({
 
                 <AddressFormSection
                   span={24}
-                  isLoading={isLoadingSubmit || isLoading}
+                  isLoading={isLoadingSubmit}
                   form={form}
                   cityCode={cityCode}
                   setCityCode={setCityCode}

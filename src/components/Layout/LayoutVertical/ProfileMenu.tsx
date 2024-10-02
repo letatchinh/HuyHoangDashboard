@@ -30,12 +30,9 @@ export default function ProfileMenu(props: propsType): React.JSX.Element {
     dispatch(authActions.getProfileRequest());
   }, []);
 
-  // const resetStateUpdateProfile = () => dispatch(userSliceAction.reset());
-
   const [isOpen, setIsOpen] = useState(false);
   const onClose = () => {
     setIsOpen(false);
-    // resetStateUpdateProfile();
   };
   
   const [isLoadingSubmit, handleUpdateProfile] = useUpdateStaff(() => {
@@ -57,7 +54,7 @@ export default function ProfileMenu(props: propsType): React.JSX.Element {
       key: "1",
       onClick: () => onLogout(),
     },
-  ],[]);
+  ], []);
   return (
     <>
     <Dropdown
@@ -67,8 +64,8 @@ export default function ProfileMenu(props: propsType): React.JSX.Element {
       trigger={["click"]}
     >
       <div className="profileBtn d-flex gap-1 align-items-center">
-        {get(profile,'profile.avatar') ?<Avatar style={{backgroundColor : '#fff'}} src={get(profile,'profile.avatar',defaultAvatar)}></Avatar> : <UserOutlined />}
-        <Typography.Text>{get(profile,'profile.fullName','')}</Typography.Text>
+        {get(profile,'avatar') ?<Avatar style={{backgroundColor : '#fff'}} src={get(profile,'avatar',defaultAvatar)}></Avatar> : <UserOutlined />}
+        <Typography.Text>{get(profile,'fullName','')}</Typography.Text>
         <CaretDownOutlined />
       </div>
     </Dropdown>
