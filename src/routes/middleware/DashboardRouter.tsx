@@ -18,6 +18,7 @@ export default function DashboardRouter(props: propsType): React.JSX.Element {
         refLogin.current = true;
         try {
           // await apis.auth.validationToken();
+          refLogin.current = true
         } catch (error) {
           dispatch(authActions.logoutRequest({callbackSubmit:()=>navigate(AUTH.login)}))
         }

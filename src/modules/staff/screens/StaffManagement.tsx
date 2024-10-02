@@ -18,12 +18,20 @@ import ColumnsActions from "../components/ColumnsActions";
 import { useDispatch } from "react-redux";
 import { staffActions } from "../redux/reducer";
 import AddStaffGroup from "../components/AddStaffGroup";
+import {
+  useRemoveRoleByUser,
+  useUpdateRoleByUser,
+} from "~/modules/staffGroups/staffGroups.hook";
+import { staffGroupsActions } from "~/modules/staffGroups/redux/reducer";
 type propsType = {};
 export default function StaffManagement(props: propsType): React.JSX.Element {
   useResetStaffAction();
   const dispatch = useDispatch();
   const resetAction = () => {
     return dispatch(staffActions.resetAction());
+  };
+  const resetActionRole = () => {
+    return dispatch(staffGroupsActions.resetActionUpdateRole());
   };
   const [queryParams] = useStaffQueryParams();
   const [keyword, { setKeyword, onParamChange }] =
@@ -34,24 +42,49 @@ export default function StaffManagement(props: propsType): React.JSX.Element {
     onCloseModal();
     resetAction();
   };
-  const [, updateStaff] = useUpdateStaff(() => {resetAction()});
-  const [, deleteStaff] = useDeleteStaff(() => {callback()});
-  const [, createStaff] = useCreateStaff(() => {resetAction()});
+  const [, updateStaff] = useUpdateStaff(() => {
+    resetAction();
+  });
+  const [, deleteStaff] = useDeleteStaff(() => {
+    callback();
+  });
+  const [, createStaff] = useCreateStaff(() => {
+    resetAction();
+  });
+
+  //Update staff group
+  const [isLoadingSubmitRole, updateRole] =
+    useUpdateRoleByUser(resetActionRole);
+  const [, removeRole] = useRemoveRoleByUser(resetActionRole);
 
   const [modal, contextHolder] = Modal.useModal();
   const refModalNow = useRef<any>();
   const onCloseModal = () => {
     refModalNow.current.destroy();
   };
-  const onOpenModal = (id?: string | null, isUpdate: boolean = true ) => {
+  const onOpenModal = (id?: string | null, isUpdate: boolean = true) => {
     refModalNow.current = modal.info({
-      content: isUpdate ? <StaffForm onClose={onCloseModal} id={id} onCreate={createStaff} onUpdate={updateStaff} /> : <AddStaffGroup id={id} />,
+      content: isUpdate ? (
+        <StaffForm
+          onClose={onCloseModal}
+          id={id}
+          onCreate={createStaff}
+          onUpdate={updateStaff}
+        />
+      ) : (
+        <AddStaffGroup
+          id={id}
+          handleAdd={updateRole}
+          handleRemove={removeRole}
+          isLoadingSubmit={isLoadingSubmitRole}
+        />
+      ),
       onCancel: onCloseModal,
       footer: null,
       closable: true,
       maskClosable: true,
-      width:  isUpdate ? "90vw" : "30rem",
-      title: isUpdate ? 'Cập nhật nhân viên' : 'Cập nhật nhóm quyền nhân viên',
+      width: isUpdate ? "90vw" : "40rem",
+      title: isUpdate ? "Cập nhật nhân viên" : "Cập nhật nhóm quyền nhân viên",
     });
   };
 
@@ -63,9 +96,11 @@ export default function StaffManagement(props: propsType): React.JSX.Element {
       align: "left",
       render: (fullName: any, record: any) => {
         return (
-          <Button type="link" onClick={() => onOpenModal(record?._id)}>{fullName}</Button>
+          <Button type="link" onClick={() => onOpenModal(record?._id)}>
+            {fullName}
+          </Button>
         );
-      }
+      },
     },
     {
       title: "Số điện thoại",
@@ -128,8 +163,10 @@ export default function StaffManagement(props: propsType): React.JSX.Element {
         <Spin />
       ) : (
         <>
-            <Row style={{ width: "100%", position: 'relative'}} align={"middle"}>
-              <Button icon ={<PlusOutlined/>} onClick={() => onOpenModal(null)}>Thêm mới</Button>
+          <Row style={{ width: "100%", position: "relative" }} align={"middle"}>
+            <Button icon={<PlusOutlined />} onClick={() => onOpenModal(null)}>
+              Thêm mới
+            </Button>
           </Row>
           <TableAnt dataSource={data} columns={columns} loading={isLoading} />
         </>

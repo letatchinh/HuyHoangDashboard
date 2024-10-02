@@ -9,5 +9,7 @@ const apis = {
     delete: (id?: any) => requester.delete(`/api/role/${id}`),
 
     getRoleByUser: (query: any) => requester.get(`/api/roles-for-user`, query),
+    updateRoleByUser: (query: any) => requester.post(`/api/assign-user-to-role`, query),
+    removeRoleByUser: (query: any) => requester.post(`/api/remove-user-to-role`, query),
 }
 export default apis;

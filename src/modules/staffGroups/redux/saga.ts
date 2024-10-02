@@ -21,9 +21,9 @@ function* getByIdStaffGroups({payload:id} : any) : any {
 }
 function* getRoleByUser({ payload: query }: any): any {
   try {
-    const data = yield call(api.getRoleByUser,query);
+    const data = yield call(api.getRoleByUser, query);
     yield put(staffGroupsActions.getRoleByUserSuccess(data));
-  } catch (error:any) {
+  } catch (error: any) {
     yield put(staffGroupsActions.getRoleByUserFailed(error));
   }
 }
@@ -54,6 +54,23 @@ function* deleteStaffGroups({payload : id} : any) : any {
   }
 }
 
+function* updateRoleByUser({payload} : any) : any {
+  try {
+    const data = yield call(api.updateRoleByUser,payload);
+    yield put(staffGroupsActions.updateRoleUserSuccess(data));
+  } catch (error:any) {
+    yield put(staffGroupsActions.updateRoleUserFailed(error));
+  }
+}
+function* removeRoleByUser({payload : id} : any) : any {
+  try {
+    const data = yield call(api.removeRoleByUser,id);
+    yield put(staffGroupsActions.removeRoleUserSuccess(data));
+  } catch (error:any) {
+    yield put(staffGroupsActions.removeRoleUserFailed(error));
+  }
+}
+
 
 export default function* staffGroupsSaga() {
   yield takeLatest(staffGroupsActions.getListRequest, getListStaffGroups);
@@ -62,4 +79,6 @@ export default function* staffGroupsSaga() {
   yield takeLatest(staffGroupsActions.createRequest, createStaffGroups);
   yield takeLatest(staffGroupsActions.updateRequest, updateStaffGroups);
   yield takeLatest(staffGroupsActions.deleteRequest, deleteStaffGroups);
+  yield takeLatest(staffGroupsActions.updateRoleUserRequest, updateRoleByUser);
+  yield takeLatest(staffGroupsActions.removeRoleUserRequest, removeRoleByUser);
 }
