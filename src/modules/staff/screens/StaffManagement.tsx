@@ -38,15 +38,11 @@ export default function StaffManagement(props: propsType): React.JSX.Element {
     useUpdateStaffParams(queryParams);
   const [data, isLoading] = useGetStaffs(queryParams);
 
-  const callback = () => {
-    onCloseModal();
-    resetAction();
-  };
   const [, updateStaff] = useUpdateStaff(() => {
     resetAction();
   });
   const [, deleteStaff] = useDeleteStaff(() => {
-    callback();
+    resetAction();
   });
   const [, createStaff] = useCreateStaff(() => {
     resetAction();
@@ -168,7 +164,7 @@ export default function StaffManagement(props: propsType): React.JSX.Element {
               Thêm mới
             </Button>
           </Row>
-          <TableAnt dataSource={data} columns={columns} loading={isLoading} />
+          <TableAnt dataSource={data} columns={columns} loading={isLoading} scroll={{ x: 1000 }} />
         </>
       )}
     </>
