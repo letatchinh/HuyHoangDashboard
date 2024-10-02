@@ -1,4 +1,3 @@
-
 import { get, isNil } from "lodash";
 import { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
@@ -14,7 +13,7 @@ import {
 } from "~/utils/hook";
 import { staffGroupsActions } from "./redux/reducer";
 const MODULE = "staffGroups";
-const MODULE_VI = "";
+const MODULE_VI = "nhóm quyền";
 
 const {
   loadingSelector,
@@ -34,8 +33,19 @@ const {
 } = getSelectors(MODULE);
 
 export const useStaffGroupsPaging = () => useSelector(pagingSelector);
+const getSelector = (key: string) => (state: any) => state.staffGroups[key];
+
 const getSelectorPolicy = (key : string) => (state:any) => state.policy[key];
 const actionsSelector = getSelectorPolicy('actions');
+
+const getByIdRoleForUserSuccessSelector = getSelector('byIdRoleUser');
+const getByIdRoleForUserFailedSelector = getSelector('getByIdRoleUserFailed');
+const getByIdRoleForUserLoadingSelector = getSelector('isLoadingRoleUser');
+const updateRoleByUserSuccess = getSelector('updateRoleUserSuccess');
+const updateRoleByUserFailed = getSelector('updateRoleUserFailed');
+
+const removeRoleByUserSuccess = getSelector('removeRoleUserSuccess');
+const removeRoleByUserFailed = getSelector('removeRoleUserFailed');
 
 export const useGetStaffGroups = (param?:any) => {
   return useFetch({
@@ -54,13 +64,13 @@ export const useGetStaffGroup = (id: any) => {
     param: id,
   });
 };
-export const useGetRoleByUser = (query: any) => {
+export const useGetRoleByUser = (id: any) => {
   return useFetchByParam({
     action: staffGroupsActions.getRoleByUserRequest,
-    loadingSelector: getByIdLoadingSelector,
-    dataSelector: getByIdSelector,
-    failedSelector: getByIdFailedSelector,
-    param: query,
+    loadingSelector: getByIdRoleForUserLoadingSelector,
+    dataSelector: getByIdRoleForUserSuccessSelector,
+    failedSelector: getByIdRoleForUserFailedSelector,
+    param: id,
   });
 };
 
@@ -185,4 +195,28 @@ export const onSearchPermissions = (keyword: string = '', resource: any[] = [], 
     return StringToSlug(get(item, 'content', '')?.toLowerCase())?.includes(StringToSlug(keyword?.trim()?.toLowerCase()));
   });
   updateResources(resultSearch);
+};
+
+export const useUpdateRoleByUser = (callback?: any) => {
+  useSuccess(
+    updateRoleByUserSuccess,
+    `Cập nhật ${MODULE_VI} thành công`,
+    callback
+  );
+  useFailed(updateRoleByUserFailed);
+
+  return useSubmit({
+    action: staffGroupsActions.updateRoleUserRequest,
+    loadingSelector: getByIdRoleForUserLoadingSelector,
+  });
+};
+
+export const useRemoveRoleByUser = (callback?: any) => {
+  useSuccess(removeRoleByUserSuccess, `Xoá ${MODULE_VI} thành công`, callback);
+  useFailed(removeRoleByUserFailed);
+
+  return useSubmit({
+    action: staffGroupsActions.removeRoleUserRequest,
+    loadingSelector: getByIdRoleForUserLoadingSelector,
+  });
 };

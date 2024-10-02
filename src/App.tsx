@@ -20,7 +20,7 @@ function App(): React.JSX.Element {
   const refPersist =useMemo(()=>JSON.parse(localStorage.getItem('persist:auth')??JSON.stringify({'token':'null'})),[pathname]);
   useEffect(() => {
       if (pathname !== AUTH.login && !refPersist?.token) navigate(AUTH.login);
-  }, [token, navigate, refPersist, pathname]);
+  },[navigate, refPersist, pathname]);
   
    return (
     <>

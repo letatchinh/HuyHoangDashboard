@@ -81,7 +81,6 @@ export const useUpdateStaff = (callback?: any) => {
     loadingSelector: isSubmitLoadingSelector,
   });
 };
-
 export const useDeleteStaff = (callback?: any) => {
   useSuccess(deleteSuccessSelector, `Xoá ${MODULE_VI} thành công`, callback);
   useFailed(deleteFailedSelector);
@@ -145,5 +144,3 @@ export const useUpdateStaffParams = (
 export const useResetStaffAction = () => {
   return useResetState(staffActions.resetAction);
 };
-
-// STAFF GROUP
