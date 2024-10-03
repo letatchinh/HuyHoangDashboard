@@ -6,8 +6,8 @@ type propsType = {
 export default function VideoCustom({src}:propsType) : React.JSX.Element {
   
     return (
-        <div>
-            <video autoPlay width="100%" controls>
+        <div style={{height : '100%'}}>
+            <video height="100%" autoPlay width="100%" controls >
               <source src={`${BASE_URL}api/image?pathFile=${src}`} type="video/mp4" />
               Your browser does not support the video tag.
             </video>

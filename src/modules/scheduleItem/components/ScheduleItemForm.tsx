@@ -36,22 +36,21 @@ export default function ScheduleItemForm({
     }
   };
   useEffect(() => {
-    console.log(dataItemUpdate,'dataItemUpdate');
     
     if (dataItemUpdate) {
       form.setFieldsValue({ ...dataItemUpdate });
     }
   }, [dataItemUpdate]);
 
-  const onValuesChange = (valueChange : any) => {
-    const value : any = Object.values(valueChange)[0];
+  const onValuesChange = (valueChange: any) => {
+    const value: any = Object.values(valueChange)[0];
     const key = Object.keys(valueChange)[0];
-    if(key === 'contentType'){
-        form.setFieldsValue({
-            contentSrc : ""
-        })
+    if (key === "contentType") {
+      form.setFieldsValue({
+        contentSrc: "",
+      });
     }
-  }
+  };
   return (
     <Form
       form={form}
@@ -74,20 +73,44 @@ export default function ScheduleItemForm({
         />
       </Form.Item>
       <Form.Item shouldUpdate noStyle>
-        {({ getFieldValue,setFieldsValue }) =>
-         <Form.Item name={"contentSrc"} label="Tài liệu">
-            { getFieldValue("contentType") === "html" ? (
-            <Editors />
-          ) : (
-              <UploadCustom
-                className="fullWidthUpload"
-                typeComponent={getFieldValue("contentType")}
-                resource="scheduleItem"
-                onHandleChange={(url) => setFieldsValue({contentSrc : url})}
-                value={getFieldValue('contentSrc')}
-              />
-          )}
-         </Form.Item>
+        {
+          ({ getFieldValue, setFieldsValue }) => (
+            <>
+              <Form.Item hidden={getFieldValue('contentType') !== "html"} name={["contentSrc", "html"]} label="Tài liệu">
+                <Editors />
+              </Form.Item>
+              <Form.Item hidden={getFieldValue('contentType') !== "document"} name={["contentSrc", "document"]} label="Tài liệu">
+                <UploadCustom
+                  className="fullWidthUpload"
+                  typeComponent={"document"}
+                  resource="scheduleItem"
+                  onHandleChange={(url) =>
+                    setFieldsValue({
+                      ...getFieldValue("contentSrc"),
+                      document: url,
+                    })
+                  }
+                  customPath={`/schedule/${scheduleId}`}
+                  value={getFieldValue(["contentSrc", "document"])}
+                />
+              </Form.Item>
+              <Form.Item hidden={getFieldValue('contentType') !== "video"}  name={["contentSrc", "video"]} label="Tài liệu">
+                <UploadCustom
+                  className="fullWidthUpload"
+                  typeComponent={"video"}
+                  resource="scheduleItem"
+                  onHandleChange={(url) =>
+                    setFieldsValue({
+                      ...getFieldValue("contentSrc"),
+                      video: url,
+                    })
+                  }
+                  customPath={`/${scheduleId}`}
+                  value={getFieldValue(["contentSrc", "video"])}
+                />
+              </Form.Item>
+            </>
+          )
         }
       </Form.Item>
       <BtnSubmit loading={isSubmitLoading} id={dataItemUpdate} />
