@@ -17,7 +17,7 @@ interface PropsType extends UploadProps {
     value? : string
 }
 const acceptList = {
-  document : '.doc,.docx,.xml,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+  document : '.doc,.docx,.xml,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,.pdf',
   image : '.png,.webp',
   video : '.mp4,.mov'
 }

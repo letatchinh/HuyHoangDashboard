@@ -1,3 +1,4 @@
+import '~/core/pdfPreviewSetup';
 import { PathRouteProps, Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import { setAxiosToken, setupAxios } from "./api/requester";
 

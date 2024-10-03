@@ -20,9 +20,9 @@ export default function Login() {
   const refPersist =useMemo(()=>JSON.parse(localStorage.getItem('persist:auth')??JSON.stringify({'token':'null'})),[pathname]);
   useEffect(() => {
     if (token) {
-        navigate(PATH_APP.main.root);
+        // navigate(PATH_APP.main.root);
     } else {
-      if (pathname !== AUTH.login) navigate(AUTH.login);
+      // if (pathname !== AUTH.login) navigate(AUTH.login);
     };
   }, [token, navigate, refPersist, pathname]);
   

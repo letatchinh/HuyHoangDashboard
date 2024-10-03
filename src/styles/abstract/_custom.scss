@@ -60,3 +60,9 @@
     justify-content: center;
     align-items: center;
 }
+
+.custom-pdf{
+    & canvas{
+        margin: 0 auto;
+    }
+}

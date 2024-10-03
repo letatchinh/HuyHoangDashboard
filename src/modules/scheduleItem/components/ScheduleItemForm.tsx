@@ -1,6 +1,7 @@
 import { Form, Input, Radio } from "antd";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import BtnSubmit from "~/components/common/BtnSubmit";
+import PdfPreview from "~/components/common/PdfPreview";
 import UploadCustom from "~/components/common/Upload/UploadCustom";
 import Editors from "~/utils/Editors";
 import {
@@ -18,6 +19,7 @@ export default function ScheduleItemForm({
   onCancel,
   scheduleId,
 }: propsType): React.JSX.Element {
+  const [document,setDocument] = useState<any>();
   const [form] = Form.useForm();
   const [isSubmitLoading, onCreate] = useCreateScheduleItem(onCancel);
   const [, onUpdate] = useUpdateScheduleItem(onCancel);
@@ -45,12 +47,9 @@ export default function ScheduleItemForm({
   const onValuesChange = (valueChange: any) => {
     const value: any = Object.values(valueChange)[0];
     const key = Object.keys(valueChange)[0];
-    if (key === "contentType") {
-      form.setFieldsValue({
-        contentSrc: "",
-      });
-    }
+    
   };
+  
   return (
     <Form
       form={form}
@@ -79,21 +78,26 @@ export default function ScheduleItemForm({
               <Form.Item hidden={getFieldValue('contentType') !== "html"} name={["contentSrc", "html"]} label="Tài liệu">
                 <Editors />
               </Form.Item>
-              <Form.Item hidden={getFieldValue('contentType') !== "document"} name={["contentSrc", "document"]} label="Tài liệu">
+              <Form.Item help="only Pdf" hidden={getFieldValue('contentType') !== "document"} name={["contentSrc", "document"]} label="Tài liệu">
                 <UploadCustom
+                  accept=".pdf"
                   className="fullWidthUpload"
                   typeComponent={"document"}
                   resource="scheduleItem"
                   onHandleChange={(url) =>
-                    setFieldsValue({
-                      ...getFieldValue("contentSrc"),
-                      document: url,
-                    })
+                    {
+                      form.setFieldsValue({
+                        ...getFieldValue("contentSrc"),
+                        document: url,
+                      });
+                      setDocument(url)
+                    }
                   }
                   customPath={`/schedule/${scheduleId}`}
-                  value={getFieldValue(["contentSrc", "document"])}
                 />
               </Form.Item>
+              {getFieldValue('contentType') === "document" && <PdfPreview src={document}/>}
+
               <Form.Item hidden={getFieldValue('contentType') !== "video"}  name={["contentSrc", "video"]} label="Tài liệu">
                 <UploadCustom
                   className="fullWidthUpload"
@@ -106,7 +110,6 @@ export default function ScheduleItemForm({
                     })
                   }
                   customPath={`/${scheduleId}`}
-                  value={getFieldValue(["contentSrc", "video"])}
                 />
               </Form.Item>
             </>
