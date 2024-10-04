@@ -3,6 +3,7 @@ import React, { useEffect } from "react";
 import BtnSubmit from "~/components/common/BtnSubmit";
 import PdfPreview from "~/components/common/PdfPreview";
 import UploadCustom from "~/components/common/Upload/UploadCustom";
+import { requireRules } from "~/constants/defaultValue";
 import Editors from "~/utils/Editors";
 import {
   useCreateScheduleItem,
@@ -60,7 +61,7 @@ export default function ScheduleItemForm({
       initialValues={{ contentType: "document" }}
       onValuesChange={onValuesChange}
     >
-      <Form.Item name={"name"} label="Tiêu đề">
+      <Form.Item name={"name"} label="Tiêu đề" rules={requireRules}>
         <Input />
       </Form.Item>
       <Form.Item name={"contentType"} label="Loại tài liệu">
