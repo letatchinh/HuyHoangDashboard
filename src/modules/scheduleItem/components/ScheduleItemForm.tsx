@@ -41,6 +41,7 @@ export default function ScheduleItemForm({
     
     if (dataItemUpdate) {
       form.setFieldsValue({ ...dataItemUpdate });
+      setDocument(dataItemUpdate?.contentSrc?.document)
     }
   }, [dataItemUpdate]);
 

@@ -7,6 +7,7 @@ type PropsType = {
     src : string;
 }
 export default function PdfPreview({src} : PropsType) {
+  console.log(`${BASE_URL}api/image?pathFile=${src}`,'src');
   
   const [numPages, setNumPages] = useState<number>();
   const [pageNumber, setPageNumber] = useState<number>(1);
