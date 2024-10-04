@@ -151,6 +151,7 @@ const ModalProfile: React.FC<ModalProfileProps> = ({
             onChange={handleChange}
             isShowImg={false}
             setIsLoading={setIsLoadingAvatar}
+            resource="user"
           >
             {render(
               <Button

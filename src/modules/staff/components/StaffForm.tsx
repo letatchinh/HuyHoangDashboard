@@ -120,6 +120,7 @@ export default function StaffForm({
         </Col>
         <Col span={12} className="employee-form__upload-logo">
           <UploadImage
+            resource="user"
             imgUrl={""}
             // onChange={handleChange}
           />

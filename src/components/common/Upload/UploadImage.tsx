@@ -26,11 +26,11 @@ interface UploadImageProps {
   isShowImg?: boolean
   setIsLoading?: any;
   isLoading?: boolean;
-  resource?: 'pharma';
+  resource : ResourceUpload,
   allowList?:boolean;
+  customPath? : string;
 };
 
-const DEFAULT_RESOURCE: string = 'pharma';
 const MAX_IMAGES = 5;
 const UploadImage: React.FC<UploadImageProps> = ({
   index,
@@ -38,7 +38,8 @@ const UploadImage: React.FC<UploadImageProps> = ({
   imgUrl,
   title,
   resource,
-  action = `${DEFAULT_UPLOAD_ACTION}/${resource ?? DEFAULT_RESOURCE}`,
+  customPath,
+  action = `${DEFAULT_UPLOAD_ACTION}?folder=${resource}/image/${customPath && customPath}`,
   // children,
   disabled = false,
   className,

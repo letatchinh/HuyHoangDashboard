@@ -46,3 +46,5 @@ interface AggregatePaginateResult<T> {
 interface WithStatus {
   status : "ACTIVE" | "INACTIVE"
 }
+
+type ResourceUpload = 'course' | 'unknown' |'scheduleItem' | 'user'
