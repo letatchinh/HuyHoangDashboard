@@ -76,7 +76,7 @@ const UploadCustom = ({resource = DEFAULT_RESOURCE,typeComponent,onHandleChange,
         listType="picture-card"
         accept={acceptList[typeComponent]}
         showUploadList={false}
-        action = {`${DEFAULT_UPLOAD_ACTION}?folder=${resource}/${typeComponent}${customPath && customPath}`}
+        action = {`${DEFAULT_UPLOAD_ACTION}?folder=${resource}/${typeComponent}${customPath ? customPath : ""}`}
         // beforeUpload={beforeUpload}
         {...props}
         onChange={handleChange}

@@ -39,7 +39,7 @@ const UploadImage: React.FC<UploadImageProps> = ({
   title,
   resource,
   customPath,
-  action = `${DEFAULT_UPLOAD_ACTION}?folder=${resource}/image/${customPath && customPath}`,
+  action = `${DEFAULT_UPLOAD_ACTION}?folder=${resource}/image/${customPath ? customPath : ""}`,
   // children,
   disabled = false,
   className,
