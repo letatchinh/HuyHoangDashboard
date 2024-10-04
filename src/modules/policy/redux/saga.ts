@@ -10,9 +10,9 @@ function* getListPolicy() : any {
     yield put(policyActions.getListFailed(error));
     if (error?.response?.data?.type === "403") { 
       window.location.href = '/login';
-      localStorage.remove('token');
+      localStorage.remove('persist:auth');
     };
-  }
+  };
 };
 
 function* getByUserLoginResource() : any {
