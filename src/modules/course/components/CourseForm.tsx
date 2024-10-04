@@ -32,7 +32,7 @@ export default function CourseForm(): React.JSX.Element {
     >
       <FormUpdateHeader title="khoá học" isShowBtn={false}/>
       <WhiteBox>
-      <CourseFormItemSection />
+      <CourseFormItemSection/>
       <BtnSubmit id={id} loading={isSubmitLoading} />
       </WhiteBox>
     </Form>

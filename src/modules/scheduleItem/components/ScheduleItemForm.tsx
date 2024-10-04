@@ -58,7 +58,14 @@ export default function ScheduleItemForm({
       onFinish={onFinish}
       labelCol={{ span: 4 }}
       labelAlign="left"
-      initialValues={{ contentType: "document" }}
+      initialValues={{
+        contentType: "document",
+        contentSrc: {
+          document: "",
+          video: "",
+          html: "",
+        },
+      }}
       onValuesChange={onValuesChange}
     >
       <Form.Item name={"name"} label="Tiêu đề" rules={requireRules}>

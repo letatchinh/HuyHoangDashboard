@@ -5,9 +5,11 @@ import UploadCustom from "~/components/common/Upload/UploadCustom";
 import { requireRules } from "~/constants/defaultValue";
 import CourseGroupSelect from "~/modules/courseGroup/components/CourseGroupSelect";
 import Editors from "~/utils/Editors";
-type propsType = {};
+type propsType = {
+  id? : string;
+};
 export default function CourseFormItemSection(
-  props: propsType
+  {id}: propsType
 ): React.JSX.Element {
   return (
     <>
@@ -33,7 +35,7 @@ export default function CourseFormItemSection(
         <Editors />
       </Form.Item>
 
-      <Form.Item shouldUpdate noStyle>
+      {id && <Form.Item shouldUpdate noStyle>
         {({ getFieldValue,setFieldsValue }) =>
          <Form.Item name={"image"} label="Ảnh bìa">
           <UploadCustom
@@ -42,10 +44,11 @@ export default function CourseFormItemSection(
                 resource="course"
                 onHandleChange={(url) => setFieldsValue({image : url})}
                 value={getFieldValue('image')}
+                customPath={`/${id}`}
               />
          </Form.Item>
         }
-      </Form.Item>
+      </Form.Item>}
     </>
   );
 }

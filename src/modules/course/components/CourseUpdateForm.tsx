@@ -37,7 +37,7 @@ export default function CourseUpdateForm(props: propsType): React.JSX.Element {
       >
         <FormUpdateHeader isShowBtn={false} id={id} title="Khoá học" />
         <WhiteBox title="Thông tin khoá học">
-          <CourseFormItemSection />
+          <CourseFormItemSection id={id}/>
           <BtnSubmit id={id} loading={isSubmitLoading}/>
         </WhiteBox>
 
