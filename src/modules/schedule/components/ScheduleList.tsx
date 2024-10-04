@@ -54,13 +54,14 @@ export default function ScheduleList(props: propsType): React.JSX.Element {
             />
             <Popconfirm
               onConfirm={() => onDelete(item?._id)}
-              title="Xác nhận xoá"
+              title="Xác nhận xoá2"
+              
             >
               <Button
+              onClick={(e) => e.stopPropagation()}
               size="small"
               type="text"
-              onClick={(e) => e.stopPropagation()}
-              icon={<DeleteOutlined onClick={(e) => e.stopPropagation()} />}
+              icon={<DeleteOutlined />}
               />
             </Popconfirm>
           </Flex>
