@@ -1,5 +1,6 @@
-import { Form, Input, Radio } from "antd";
+import { Divider, Form, Input, Radio } from "antd";
 import React, { useEffect } from "react";
+import { useParams } from "react-router-dom";
 import BtnSubmit from "~/components/common/BtnSubmit";
 import PdfPreview from "~/components/common/PdfPreview";
 import UploadCustom from "~/components/common/Upload/UploadCustom";
@@ -20,6 +21,8 @@ export default function ScheduleItemForm({
   onCancel,
   scheduleId,
 }: propsType): React.JSX.Element {
+  const { id: courseId } = useParams();
+
   const [form] = Form.useForm();
   const [isSubmitLoading, onCreate] = useCreateScheduleItem(onCancel);
   const [, onUpdate] = useUpdateScheduleItem(onCancel);
@@ -51,6 +54,7 @@ export default function ScheduleItemForm({
 
   const contentType = Form.useWatch("contentType", form);
   const contentSrc = Form.useWatch("contentSrc", form);
+  const contentSrcOfficial = Form.useWatch("contentSrcOfficial", form);
 
   return (
     <Form
@@ -61,6 +65,11 @@ export default function ScheduleItemForm({
       initialValues={{
         contentType: "document",
         contentSrc: {
+          document: "",
+          video: "",
+          html: "",
+        },
+        contentSrcOfficial: {
           document: "",
           video: "",
           html: "",
@@ -83,7 +92,7 @@ export default function ScheduleItemForm({
       <Form.Item
         hidden={contentType !== "html"}
         name={["contentSrc", "html"]}
-        label="Tài liệu"
+        label="Tài liệu bản xem trước"
       >
         <Editors />
       </Form.Item>
@@ -91,13 +100,12 @@ export default function ScheduleItemForm({
         help="only Pdf"
         hidden={contentType !== "document"}
         name={["contentSrc", "document"]}
-        label="Tài liệu"
+        label="Tài liệu bản xem trước"
       >
         <UploadCustom
           accept=".pdf"
           className="fullWidthUpload"
           typeComponent={"document"}
-          resource="scheduleItem"
           onHandleChange={(url) => {
             form.setFieldsValue({
               contentSrc: {
@@ -106,7 +114,8 @@ export default function ScheduleItemForm({
               },
             });
           }}
-          customPath={`/schedule/${scheduleId}`}
+          resource="course"
+          customPath={`/${courseId}/${scheduleId}/${dataItemUpdate?._id}/contentSrc`}
         />
       </Form.Item>
       {contentType === "document" && <PdfPreview src={contentSrc?.document} />}
@@ -114,12 +123,11 @@ export default function ScheduleItemForm({
       <Form.Item
         hidden={contentType !== "video"}
         name={["contentSrc", "video"]}
-        label="Tài liệu"
+        label="Tài liệu bản xem trước"
       >
         <UploadCustom
           className="fullWidthUpload"
           typeComponent={"video"}
-          resource="scheduleItem"
           onHandleChange={(url) =>
             form.setFieldsValue({
               contentSrc: {
@@ -128,7 +136,60 @@ export default function ScheduleItemForm({
               },
             })
           }
-          customPath={`/${scheduleId}`}
+          resource="course"
+          customPath={`/${courseId}/${scheduleId}/${dataItemUpdate?._id}/contentSrc`}
+        />
+      </Form.Item>
+      <Divider />
+
+      <Form.Item
+        hidden={contentType !== "html"}
+        name={["contentSrcOfficial", "html"]}
+        label="Tài liệu bản chính thức"
+      >
+        <Editors />
+      </Form.Item>
+      <Form.Item
+        help="only Pdf"
+        hidden={contentType !== "document"}
+        name={["contentSrcOfficial", "document"]}
+        label="Tài liệu bản chính thức"
+      >
+        <UploadCustom
+          accept=".pdf"
+          className="fullWidthUpload"
+          typeComponent={"document"}
+          onHandleChange={(url) => {
+            form.setFieldsValue({
+              contentSrcOfficial: {
+                ...contentSrcOfficial,
+                document: url,
+              },
+            });
+          }}
+          resource="course"
+          customPath={`/${courseId}/${scheduleId}/${dataItemUpdate?._id}/contentSrcOfficial`}
+        />
+      </Form.Item>
+      {contentType === "document" && <PdfPreview src={contentSrcOfficial?.document} />}
+      <Form.Item
+        hidden={contentType !== "video"}
+        name={["contentSrcOfficial", "video"]}
+        label="Tài liệu bản chính thức"
+      >
+        <UploadCustom
+          className="fullWidthUpload"
+          typeComponent={"video"}
+          onHandleChange={(url) =>
+            form.setFieldsValue({
+              contentSrcOfficial: {
+                ...contentSrcOfficial,
+                video: url,
+              },
+            })
+          }
+          resource="course"
+          customPath={`/${courseId}/${scheduleId}/${dataItemUpdate?._id}/contentSrcOfficial`}
         />
       </Form.Item>
       <BtnSubmit loading={isSubmitLoading} id={dataItemUpdate} />

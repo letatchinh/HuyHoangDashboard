@@ -7,10 +7,9 @@ import FileCustom from '../File/FileCustom';
 import VideoCustom from '../VideoCustom/index';
 import ImageCustom from './ImageCustom';
 const DEFAULT_UPLOAD_ACTION = `${BASE_URL}api/upload`;
-const DEFAULT_RESOURCE = "unknown";
 type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
 interface PropsType extends UploadProps {
-    resource : 'course' | 'unknown' |'scheduleItem',
+    resource : ResourceUpload,
     typeComponent : 'video' | 'image' | 'document',
     customPath? : string,
     onHandleChange : (url : string) => void,
@@ -39,7 +38,7 @@ const beforeUpload = (file: FileType) => {
   return isLt2M;
 };
 
-const UploadCustom = ({resource = DEFAULT_RESOURCE,typeComponent,onHandleChange,value,customPath,...props}:PropsType) => {
+const UploadCustom = ({resource,typeComponent,onHandleChange,value,customPath,...props}:PropsType) => {
   
   const [loading, setLoading] = useState(false);
   const [dataSource, setDataSource] = useState<string>();
@@ -76,7 +75,7 @@ const UploadCustom = ({resource = DEFAULT_RESOURCE,typeComponent,onHandleChange,
         listType="picture-card"
         accept={acceptList[typeComponent]}
         showUploadList={false}
-        action = {`${DEFAULT_UPLOAD_ACTION}?folder=${resource}/${typeComponent}${customPath ? customPath : ""}`}
+        action = {`${DEFAULT_UPLOAD_ACTION}?folder=${resource}${customPath ? customPath : ""}/${typeComponent}`}
         // beforeUpload={beforeUpload}
         {...props}
         onChange={handleChange}

@@ -47,4 +47,4 @@ interface WithStatus {
   status : "ACTIVE" | "INACTIVE"
 }
 
-type ResourceUpload = 'course' | 'unknown' |'scheduleItem' | 'user'
+type ResourceUpload = 'course' | 'user'

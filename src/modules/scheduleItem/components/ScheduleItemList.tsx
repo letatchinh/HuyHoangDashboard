@@ -77,7 +77,7 @@ export default function ScheduleItemList({
         destroyOnClose
         onCancel={onClose}
         footer={null}
-        width={800}
+        width={1000}
       >
         <ScheduleItemForm
           scheduleId={scheduleId}
