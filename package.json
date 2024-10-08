@@ -9,6 +9,7 @@
   "dependencies": {
     "@ant-design/charts": "^2.0.3",
     "@ant-design/icons": "5.2.6",
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@ckeditor/ckeditor5-react": "6.0.0",
     "@reduxjs/toolkit": "2.0.1",
     "@testing-library/jest-dom": "5.17.0",
