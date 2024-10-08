@@ -105,7 +105,7 @@ export default function TeacherForm(): React.JSX.Element {
             )}
           </FormItem>
         </Col>
-        <Col span={12} className="employee-form__upload-logo">
+        {id && <Col span={12} className="employee-form__upload-logo">
           <Form.Item shouldUpdate noStyle>
             {({ getFieldValue }) => (
               <Form.Item name={'avatar'}>
@@ -121,7 +121,7 @@ export default function TeacherForm(): React.JSX.Element {
               </Form.Item>
             )}
           </Form.Item>
-        </Col>
+        </Col>}
       </Row>
     </WhiteBox>
     <WhiteBox>
@@ -159,7 +159,7 @@ export default function TeacherForm(): React.JSX.Element {
       </Row>
     </WhiteBox>
 
-    <WhiteBox>
+  {id &&  <WhiteBox>
     <Form.Item shouldUpdate noStyle>
             {({ getFieldValue }) => (
               <Form.Item name={'portfolio'} label="Portfolio">
@@ -175,7 +175,7 @@ export default function TeacherForm(): React.JSX.Element {
               </Form.Item>
             )}
           </Form.Item>
-    </WhiteBox>
+    </WhiteBox>}
 
     <WhiteBox>
     <Account
