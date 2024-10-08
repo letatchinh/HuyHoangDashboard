@@ -29,10 +29,15 @@ export const PATH_APP = {
   user: {
     root: path(ROOTS.app, "/user"),
   },
-
+  
   staff: {
     root: path(ROOTS.app, "/staff"),
     staffGroup: path(ROOTS.app, "/staff-group"),
   },
   
+  teacher: {
+    root: path(ROOTS.app, "/teacher"),
+    create: path(ROOTS.app, "/teacher-create"),
+    update: path(ROOTS.app, "/teacher-update/:id"),
+  },
 };

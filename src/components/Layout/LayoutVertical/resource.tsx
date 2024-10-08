@@ -40,4 +40,10 @@ export const resource: ItemTypeNavbar[] = [
     icon: <UsergroupAddOutlined />,
     path: PATH_APP.staff.root,
   },
+  {
+    label: "Giảng viên",
+    key: "teacher",
+    icon: <UsergroupAddOutlined />,
+    path: PATH_APP.teacher.root,
+  },
 ];

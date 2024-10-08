@@ -1,39 +1,33 @@
-import { Button, Col, Form, Input, Row, Select, Skeleton } from "antd";
+import { Button, Col, Flex, Form, Input, Row, Select, Skeleton } from "antd";
 import { omit } from "lodash";
 import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import Account from "~/components/common/Account";
 import AddressFormSection from "~/components/common/AddressFormSection";
 import UploadCustom from "~/components/common/Upload/UploadCustom";
-import UploadImage from "~/components/common/Upload/UploadImage";
-import { useGetStaff } from "../staff.hook";
-type propsType = {
-  id?: string | null;
-  onClose: any;
-  onCreate: any;
-  onUpdate: any;
-};
+import WhiteBox from "~/components/common/WhiteBox";
+import { useCreateTeacher, useGetTeacher, useResetTeacher, useUpdateTeacher } from "../teacher.hook";
 
 const { Option } = Select;
 const FormItem = Form.Item;
 
-export default function StaffForm({
-  id,
-  onClose,
-  onCreate,
-  onUpdate,
-}: propsType): React.JSX.Element {
+export default function TeacherForm(): React.JSX.Element {
+  const {id} = useParams();
   const [form] = Form.useForm();
-  const [staff, isLoading] = useGetStaff(id);
+  const [teacher, isLoading] = useGetTeacher(id);
+  const [isSubmitLoading,onCreate] = useCreateTeacher(() => form.resetFields());
+  const [,onUpdate] = useUpdateTeacher();
   const [statusAccount, setStatusAccount] = useState<"ACTIVE" | "INACTIVE">(
     id ? "INACTIVE" : "ACTIVE"
   );
   useEffect(() => {
     if (id) {
-      form.setFieldsValue(staff);
+      form.setFieldsValue(teacher);
     } else {
       form.resetFields();
     }
-  }, [staff, id]);
+  }, [teacher, id]);
+  useResetTeacher();
   const onFinish = (values: any) => {
     try {
       const user = {
@@ -55,7 +49,6 @@ export default function StaffForm({
       } else {
         onCreate({ ...omit(user, ["userId", "updateAccount"]) });
       }
-      onClose();
     } catch (error) {
       console.log(error);
     }
@@ -74,7 +67,9 @@ export default function StaffForm({
       labelCol={{ sm: 24, md: 24, lg: 8, xl: 8 }}
       wrapperCol={{ sm: 24, md: 24, lg: 16, xl: 16 }}
     >
-      <Row
+      <h4>{id ? "Cập nhật" : "Tạo mới" + " giảng viên"}</h4>
+    <WhiteBox>
+    <Row
         gutter={48}
         align="middle"
         justify="space-between"
@@ -84,10 +79,10 @@ export default function StaffForm({
           <Row gutter={36}>
             <Col span={24}>
               <FormItem
-                label="Họ và tên nhân viên"
+                label="Họ và tên"
                 name="fullName"
                 rules={[
-                  { required: true, message: "Xin mời nhập tên nhân viên!" },
+                  { required: true, message: "Xin mời nhập tên!" },
                 ]}
               >
                 {isLoading ? <Skeleton.Input active /> : <Input />}
@@ -121,18 +116,21 @@ export default function StaffForm({
                 onHandleChange={(url) => form.setFieldsValue({ avatar: url })}
                 value={getFieldValue("avatar")}
                 customPath={`/${id}`}
+                placeholder="Avatar"
               />
               </Form.Item>
             )}
           </Form.Item>
         </Col>
       </Row>
-      <AddressFormSection
+    </WhiteBox>
+    <WhiteBox>
+    <AddressFormSection
         isLoading={isLoading}
         form={form}
         required={false}
       />
-      <Row
+        <Row
         gutter={48}
         align="middle"
         justify="space-between"
@@ -157,53 +155,41 @@ export default function StaffForm({
             </Col>
           </Row>
         </Col>
-        {/* <Col span={12}>
-          <FormItem
-            label="Nhóm người dùng"
-            name="groups"
-            // rules={[
-            //   {
-            //     required: false,
-            //     message: "Xin vui lòng chọn nhóm người dùng!",
-            //   },
-            // ]}
-          >
-            {isLoading ? (
-              <Skeleton.Input active />
-            ) : (
-              <Select mode="multiple" allowClear>
-                {groups?.map(({ _id, name }: any) => (
-                  <Select.Option value={_id} key={_id}>
-                    {name}
-                  </Select.Option>
-                ))}
-              </Select>
-            )}
-          </FormItem>
-          <FormItem hidden label="Nhóm người dùng" name="userId"></FormItem>
-        </Col> */}
+        
       </Row>
-      <Account
+    </WhiteBox>
+
+    <WhiteBox>
+    <Form.Item shouldUpdate noStyle>
+            {({ getFieldValue }) => (
+              <Form.Item name={'portfolio'} label="Portfolio">
+                <UploadCustom
+                className="fullWidthUpload"
+                typeComponent={"image"}
+                resource="user"
+                onHandleChange={(url) => form.setFieldsValue({ portfolio: url })}
+                value={getFieldValue("portfolio")}
+                customPath={`/${id}`}
+                placeholder="Portfolio"
+              />
+              </Form.Item>
+            )}
+          </Form.Item>
+    </WhiteBox>
+
+    <WhiteBox>
+    <Account
         isLoading={isLoading}
-        required={statusAccount === "ACTIVE" ? true : false}
+        required={false}
         setStatusAccount={setStatusAccount}
         statusAccount={statusAccount}
       />
-      <Row
-        style={{ width: "50%", margin: " 0 auto" }}
-        gutter={10}
-        align="middle"
-        justify={"center"}
-      >
-        <Col>
-          <Button onClick={onClose}>Huỷ</Button>
-        </Col>
-        <Col>
-          <Button type="primary" htmlType="submit">
+    </WhiteBox>
+      <Flex style={{marginTop : 10}} justify={'center'}>
+      <Button loading={isSubmitLoading} type="primary" htmlType="submit">
             {id ? "Cập nhật" : "Tạo mới"}
           </Button>
-        </Col>
-      </Row>
+      </Flex>
     </Form>
   );
 }

@@ -11,6 +11,7 @@ import auth from '~/modules/auth';
 import staff from '~/modules/staff';
 import policy from '~/modules/policy';
 import staffGroups from '~/modules/staffGroups';
+import teacher from '~/modules/teacher';
 
 const authPersistConfig = {
     key: 'auth',
@@ -34,5 +35,6 @@ const rootReducer = combineReducers({
   policy: policy.redux.reducer,
   staffGroups: staffGroups.redux.reducer,
   courseGroup: courseGroup.redux.reducer,
+  teacher: teacher.redux.reducer,
 });
 export default rootReducer

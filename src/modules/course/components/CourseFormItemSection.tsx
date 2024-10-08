@@ -4,6 +4,7 @@ import InputNumberAnt from "~/components/common/Antd/InputNumberAnt";
 import UploadCustom from "~/components/common/Upload/UploadCustom";
 import { requireRules } from "~/constants/defaultValue";
 import CourseGroupSelect from "~/modules/courseGroup/components/CourseGroupSelect";
+import TeacherSelect from "~/modules/teacher/components/TeacherSelect";
 import Editors from "~/utils/Editors";
 type propsType = {
   id? : string;
@@ -49,6 +50,9 @@ export default function CourseFormItemSection(
          </Form.Item>
         }
       </Form.Item>}
+      <Form.Item name={'teacherId'} label="Giảng viên">
+        <TeacherSelect style={{width : 200}} popupMatchSelectWidth={false}/>
+      </Form.Item>
     </>
   );
 }

@@ -202,10 +202,6 @@ const ModalProfile: React.FC<ModalProfileProps> = ({
                   span={24}
                   isLoading={isLoadingSubmit}
                   form={form}
-                  cityCode={cityCode}
-                  setCityCode={setCityCode}
-                  districtCode={districtCode}
-                  setDistrictCode={setDistrictCode}
                 />
               </BaseBorderBox>
             }

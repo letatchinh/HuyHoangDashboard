@@ -66,3 +66,15 @@
         margin: 0 auto;
     }
 }
+
+.uploadCustom--btnRemove{
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    border-radius: 0!important;
+    display: none!important;
+}
+.uploadCustom:hover .uploadCustom--btnRemove{
+    display: block!important;
+}

@@ -32,7 +32,7 @@ export default function Course(props: propsType): React.JSX.Element {
       title: "STT",
       render: (q, e, i) => ++i,
       align: "center",
-      width: 80,
+      width: 50,
     },
     {
       title: "Tên khoá học",
@@ -46,6 +46,7 @@ export default function Course(props: propsType): React.JSX.Element {
       dataIndex: "price",
       key: "price",
       align: "center",
+      width : 130,
       render: (value: any) => (
         <span>
           <Typography.Text strong>{formatter(value || 0)}</Typography.Text> VNĐ
@@ -57,6 +58,7 @@ export default function Course(props: propsType): React.JSX.Element {
       dataIndex: "createdAt",
       key: "createdAt",
       align: "center",
+      width : 120,
       render: (value: any) => (
         <Typography.Text type="secondary" strong>
           {dayjs(value).format("DD-MM-YYYY")}
@@ -109,7 +111,7 @@ export default function Course(props: propsType): React.JSX.Element {
       </Flex>
       <WhiteBox>
         <TableAnt
-          scroll={{x : 1000}}
+          scroll={{x : 800}}
           columns={columns}
           dataSource={dataSource}
           stickyTop

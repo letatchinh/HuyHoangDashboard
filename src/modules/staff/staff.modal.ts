@@ -10,4 +10,5 @@ export interface UserInterface {
   status: 'ACTIVE' | "INACTIVE";
   searchText?: Array<Lowercase<string>>;
   deletedAt?: Date;
+  _id : string
 };

@@ -10,10 +10,6 @@ const { Option } = Select;
 interface AddressFormSectionProps {
   isLoading?: boolean;
   form: any; // Replace 'any' with the actual type of your form
-  cityCode?: string | null;
-  setCityCode?: any;
-  districtCode?: string | null;
-  setDistrictCode?: any;
   span?: number;
   allowPhoneNumber?: boolean;
   allowEmail?: boolean;
@@ -27,10 +23,6 @@ const AddressFormSection = (props: AddressFormSectionProps) => {
   const {
     isLoading,
     form,
-    cityCode,
-    setCityCode,
-    districtCode,
-    setDistrictCode,
     allowPhoneNumber = true,
     allowEmail = true,
     required = true
@@ -39,12 +31,11 @@ const AddressFormSection = (props: AddressFormSectionProps) => {
   const districtId = Form.useWatch(["address","districtId"], form);
 
   const cities = subvn.getProvinces();
-  const [_cityCode, _setCityCode] = useState(cityCode); 
-  const newCityCode = useMemo(() => cityCode ?? cityId, [cityCode, _cityCode,cityId]);
+  const newCityCode = useMemo(() => cityId, [cityId]);
   
   const districts = subvn.getDistrictsByProvinceCode(newCityCode as string);
   
-  const wards = subvn.getWardsByDistrictCode(districtCode ?? districtId as string);
+  const wards = subvn.getWardsByDistrictCode( districtId as string);
   return (
     <>
       <Row gutter={48} align="middle" justify="space-between">
@@ -65,7 +56,6 @@ const AddressFormSection = (props: AddressFormSectionProps) => {
             ) : (
               <Select
                   onChange={(e) => {
-                    setCityCode && setCityCode(e);
                     form && form.setFieldsValue && form.setFieldsValue({
                       address : {
                         districtId : null,
@@ -113,7 +103,6 @@ const AddressFormSection = (props: AddressFormSectionProps) => {
                   <Select
                     disabled={!form.getFieldValue(["address", "cityId"])}
                     onChange={(value) => {
-                      setDistrictCode && setDistrictCode(value);
                       form && form.setFieldsValue && form.setFieldsValue({
                         address : {
                           wardId : null
