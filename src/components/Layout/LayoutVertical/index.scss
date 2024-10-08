@@ -27,6 +27,11 @@
       }
     }
   }
+  &--body{
+    max-width: $max-width-content;
+    margin: 0 auto;
+    box-shadow: $default-box-shadow;
+  }
   &--content {
     // background-color: $color-bg-grey;
     display: flex;

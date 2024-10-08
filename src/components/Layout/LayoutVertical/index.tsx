@@ -30,7 +30,7 @@ export default function LayoutVertical({
           </div>
         </div>
       </header>
-      <Flex>
+      <Flex className="layoutVertical--body">
       <NavbarVertical />
       <div className="layoutVertical--content__mainContent">{children}</div>
       </Flex>
