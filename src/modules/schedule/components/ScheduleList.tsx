@@ -8,6 +8,7 @@ import ScheduleItemList from "~/modules/scheduleItem/components/ScheduleItemList
 import { useDeleteSchedule, useGetSchedulesByCourseId } from "../schedule.hook";
 import { ScheduleBase } from "../schedule.modal";
 import ScheduleAdd from "./ScheduleAdd";
+import CollapseSchedule from "./CollapseSchedule";
 type propsType = {};
 
 export default function ScheduleList(props: propsType): React.JSX.Element {
@@ -75,7 +76,7 @@ export default function ScheduleList(props: propsType): React.JSX.Element {
       {loading ? (
         <Loading />
       ) : (
-        <Collapse items={dataSource} defaultActiveKey={["1"]} />
+        <CollapseSchedule items={dataSource} defaultActiveKey={["1"]} />
       )}
       <ModalAnt
         title={"Cập nhật lộ trình học"}

@@ -1,7 +1,5 @@
-import Staff from '~/modules/staff'
+import { StaffScreen } from "~/modules/staff";
 
 export default function StaffPage() {
-  return (
-    <Staff.page.index />
-  )
+  return <StaffScreen />;
 }

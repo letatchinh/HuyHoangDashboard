@@ -1,7 +1,5 @@
-import Teacher from '~/modules/teacher'
+import { TeacherScreen } from "~/modules/teacher";
 
 export default function TeacherPage() {
-  return (
-    <Teacher.page.index />
-  )
+  return <TeacherScreen />;
 }

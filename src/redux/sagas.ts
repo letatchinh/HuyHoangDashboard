@@ -1,25 +1,24 @@
 import { all } from 'redux-saga/effects';
-import course from '~/modules/course';
-import schedule from '~/modules/schedule';
-import scheduleItem from '~/modules/scheduleItem';
-import courseGroup from '~/modules/courseGroup';
-import auth from '~/modules/auth';
-import staff from '~/modules/staff';
-import policy from '~/modules/policy';
-import staffGroups from '~/modules/staffGroups';
-import teacher from '~/modules/teacher';
+import * as course from '~/modules/course';
+import * as courseGroup from '~/modules/courseGroup';
+import * as policy from '~/modules/policy';
+import * as schedule from '~/modules/schedule';
+import * as scheduleItem from '~/modules/scheduleItem';
+import * as auth from '~/modules/auth';
+import * as staff from '~/modules/staff';
+import * as staffGroups from '~/modules/staffGroups';
+import * as teacher from '~/modules/teacher';
 
 export default function* rootSaga() {
   yield all([
-    course.redux.saga(),
-    schedule.redux.saga(),
-    scheduleItem.redux.saga(),
-    courseGroup.redux.saga(),
-    auth.redux.saga(),
-    staff.redux.saga(),
-    policy.redux.saga(),
-    staffGroups.redux.saga(),
-    courseGroup.redux.saga(),
-    teacher.redux.saga(),
+    course.saga(),
+    schedule.saga(),
+    scheduleItem.saga(),
+    staff.saga(),
+    policy.saga(),
+    courseGroup.saga(),
+    auth.saga(),
+    staffGroups.saga(),
+    teacher.saga(),
   ]);
 };

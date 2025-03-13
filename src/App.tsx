@@ -5,14 +5,14 @@ import { setAxiosToken, setupAxios } from "./api/requester";
 import packageJson from "../package.json";
 import { authRoutes, mainRoutes } from "./routes/allRoute";
 import ProtectRoute from "./routes/middleware/ProtectRoute";
-import AuthModule from "~/modules/auth";
 import DashboardRouter from "./routes/middleware/DashboardRouter";
 import { useEffect, useMemo } from "react";
 import { AUTH, PATH_APP } from "./routes/allPath";
+import { useToken } from './modules/auth';
 
 function App(): React.JSX.Element {
   setupAxios();
-  const token = AuthModule.hook.useToken();
+  const token = useToken();
   setupAxios();
   setAxiosToken(token);
 

@@ -1,5 +1,2 @@
-const components = {
-
-};
-
-export default components;
+export { default as CourseGroupForm } from './CourseGroupForm'
+export { default as CourseGroupSelect } from './CourseGroupSelect'

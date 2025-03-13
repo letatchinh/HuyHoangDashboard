@@ -1,40 +1,22 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { InstanceModuleRedux } from "~/redux/instanceModuleRedux";
-import { initStateSlice } from "~/redux/models";
-interface cloneInitState extends initStateSlice {
- // Add cloneInitState Type Here
-}
-class CourseGroupClassExtend extends InstanceModuleRedux {
-  cloneReducer;
-  cloneInitState : cloneInitState;
-  constructor() {
-    super('courseGroup');
-    this.cloneReducer = {
-      ...this.initReducer,
-      getListSuccess: (state:initStateSlice , { payload }: any) => {
-        state.isLoading = false;
-        state.list = payload;
-      },
-      // Want Add more reducer Here...
-    }
-    this.cloneInitState = {
-      ...this.initialState,
-      // Want Add more State Here...
-    }
-  }
-  createSlice() {
-    return createSlice({
-      name: this.module,
-      initialState: this.cloneInitState,
-      reducers:  this.cloneReducer,
-    });
-  }
+import { InitState, InstanceModuleRedux } from "~/redux/instanceModuleRedux";
+interface cloneInitState extends InitState {
   
 }
 
-const newSlice = new CourseGroupClassExtend();
-const data = newSlice.createSlice();
-
+const data = createSlice({
+  name: 'courseGroup',
+  initialState: {
+    ...InstanceModuleRedux.initialState
+  },
+  reducers: {
+    ...InstanceModuleRedux.initReducer,
+    getListSuccess: (state: cloneInitState, { payload }: any) => {
+      state.isLoading = false;
+      state.list = payload;
+    },
+  }
+})
 
 export const courseGroupActions = data.actions;
-export default data.reducer;
+export default data.reducer

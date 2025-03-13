@@ -1,19 +1,16 @@
 import { DeleteOutlined, SettingOutlined } from "@ant-design/icons";
-import { Button, Flex, Image, Popconfirm, Typography } from "antd";
+import { Button, Flex, Popconfirm, Typography } from "antd";
 import { ColumnsType } from "antd/es/table";
 import dayjs from "dayjs";
 import { get } from "lodash";
-import React, { useCallback, useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
-import ModalAnt from "~/components/common/Antd/ModalAnt";
 import SearchAnt from "~/components/common/Antd/SearchAnt";
 import TableAnt from "~/components/common/Antd/TableAnt";
 import Breadcrumb from "~/components/common/Breadcrumb";
 import BtnAdd from "~/components/common/BtnAdd";
-import ImageCustom from "~/components/common/Upload/ImageCustom";
 import WhiteBox from "~/components/common/WhiteBox";
 import { formatter } from "~/utils/helpers";
-import CourseForm from "../components/CourseForm";
 import {
   useCourseQueryParams,
   useDeleteCourse,
@@ -38,7 +35,6 @@ export default function Course(props: propsType): React.JSX.Element {
       title: "Tên khoá học",
       dataIndex: "name",
       key: "name",
-      align: "center",
 
     },
     {

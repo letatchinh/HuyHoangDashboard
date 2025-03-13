@@ -1,0 +1,1 @@
+export { default as CourseGroupScreen } from './CourseGroup';

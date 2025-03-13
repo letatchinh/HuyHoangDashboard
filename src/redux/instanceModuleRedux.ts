@@ -1,41 +1,39 @@
-import { createSlice as createSliceRedux } from "@reduxjs/toolkit";
 import { get, omit } from "lodash";
 import { getPaging } from "~/utils/helpers";
 import { initStateSlice } from "./models";
 
 export interface voidReducer {
-  getListRequest : (state:initStateSlice) => void;
-  getListSuccess:(state?:initStateSlice,payload?:any)=>void;
-  getListFailed:(state:initStateSlice,payload?:any)=>void;
-  getByIdRequest : (state:initStateSlice) => void;
-  getByIdSuccess:(state:initStateSlice,payload?:any)=>void;
-  getByIdFailed:(state:initStateSlice,payload?:any)=>void;
-  createRequest:(state:initStateSlice,payload?:any)=>void;
-  createSuccess:(state:initStateSlice,payload?:any)=>void;
-  createFailed:(state:initStateSlice,payload?:any)=>void;
-  updateRequest:(state:initStateSlice,payload?:any)=>void;
-  updateSuccess:(state:initStateSlice,payload?:any)=>void;
-  updateFailed:(state:initStateSlice,payload?:any)=>void;
-  deleteRequest:(state:initStateSlice,payload?:any)=>void;
-  deleteSuccess:(state:initStateSlice,payload?:any)=>void;
-  deleteFailed:(state:initStateSlice,payload?:any)=>void;
-  getRequest:(state:initStateSlice,payload?:any)=>void;
-  getSuccess:(state:initStateSlice,payload?:any)=>void;
-  getFailed:(state:initStateSlice,payload?:any)=>void;
-  onSearch:(state:initStateSlice,payload?:any)=>void;
-  resetAction:(state:initStateSlice,payload?:any)=>void;
+  getListRequest: (state: initStateSlice) => void;
+  getListSuccess: (state?: initStateSlice, payload?: any) => void;
+  getListFailed: (state: initStateSlice, payload?: any) => void;
+  getByIdRequest: (state: initStateSlice) => void;
+  getByIdSuccess: (state: initStateSlice, payload?: any) => void;
+  getByIdFailed: (state: initStateSlice, payload?: any) => void;
+  createRequest: (state: initStateSlice, payload?: any) => void;
+  createSuccess: (state: initStateSlice, payload?: any) => void;
+  createFailed: (state: initStateSlice, payload?: any) => void;
+  updateRequest: (state: initStateSlice, payload?: any) => void;
+  updateSuccess: (state: initStateSlice, payload?: any) => void;
+  updateFailed: (state: initStateSlice, payload?: any) => void;
+  deleteRequest: (state: initStateSlice, payload?: any) => void;
+  deleteSuccess: (state: initStateSlice, payload?: any) => void;
+  deleteFailed: (state: initStateSlice, payload?: any) => void;
+  getRequest: (state: initStateSlice, payload?: any) => void;
+  getSuccess: (state: initStateSlice, payload?: any) => void;
+  getFailed: (state: initStateSlice, payload?: any) => void;
+  onSearch: (state: initStateSlice, payload?: any) => void;
+  resetAction: (state: initStateSlice, payload?: any) => void;
   reset: () => void;
 }
 
-export class InstanceModuleRedux{
-  module: string;
-  initialState: initStateSlice = {
+export class InstanceModuleRedux {
+  static initialState: initStateSlice = {
     isLoading: false,
     list: [],
     listSearch: [],
     getListFailed: null,
 
-    paging : null,
+    paging: null,
 
     createSuccess: null,
     createFailed: null,
@@ -55,101 +53,101 @@ export class InstanceModuleRedux{
     isGetByIdLoading: false,
     getByIdFailed: null,
   };
-  public initReducer = {
+  static initReducer = {
 
     // Get List
-    getListRequest: (state:initStateSlice) => {
+    getListRequest: (state: initStateSlice) => {
       state.isLoading = true;
       state.getListFailed = null;
     },
-    getListSuccess: (state:initStateSlice , { payload }: any) => {
+    getListSuccess: (state: initStateSlice, { payload }: any) => {
       state.isLoading = false;
       state.list = get(payload, "docs", []);
       state.paging = getPaging(payload);
     },
-    getListFailed: (state:initStateSlice, { payload }:{payload:any}) => {
+    getListFailed: (state: initStateSlice, { payload }: { payload: any }) => {
       state.isLoading = false;
       state.getListFailed = payload;
-      
+
     },
 
     // Get By Id
-    getByIdRequest: (state:initStateSlice) => {
+    getByIdRequest: (state: initStateSlice) => {
       state.isGetByIdLoading = true;
       state.getByIdFailed = null;
     },
-    getByIdSuccess: (state:initStateSlice, { payload }:{payload?:any}) => {
+    getByIdSuccess: (state: initStateSlice, { payload }: { payload?: any }) => {
       state.isGetByIdLoading = false;
       state.byId = payload;
     },
-    getByIdFailed: (state:initStateSlice, { payload }:{payload:any}) => {
+    getByIdFailed: (state: initStateSlice, { payload }: { payload: any }) => {
       state.isGetByIdLoading = false;
       state.getByIdFailed = payload;
     },
     // Create
-    createRequest: (state:initStateSlice) => {
+    createRequest: (state: initStateSlice) => {
       state.isSubmitLoading = true;
       state.createFailed = null;
     },
-    createSuccess: (state:initStateSlice, { payload }:{payload:any}) => {
+    createSuccess: (state: initStateSlice, { payload }: { payload: any }) => {
       state.isSubmitLoading = false;
       state.createSuccess = payload;
     },
-    createFailed: (state:initStateSlice, { payload }:{payload:any}) => {
+    createFailed: (state: initStateSlice, { payload }: { payload: any }) => {
       state.isSubmitLoading = false;
       state.createFailed = payload;
     },
 
     // Update
-    updateRequest: (state: initStateSlice, { payload }:{payload:any}) => {
+    updateRequest: (state: initStateSlice, { payload }: { payload: any }) => {
       state.isSubmitLoading = true;
       state.updateFailed = null;
     },
-    updateSuccess: (state:initStateSlice, { payload }:{payload:any}) => {
+    updateSuccess: (state: initStateSlice, { payload }: { payload: any }) => {
       state.isSubmitLoading = false;
       const data = payload;
       state.byId = data;
-      state.list = state.list?.map((item:any) => get(item,'_id') === get(data,'_id') ? data : item);
-      state.listSearch = state.listSearch?.map((item:any) => get(item,'_id') === get(data,'_id') ? data : item);
+      state.list = state.list?.map((item: any) => get(item, '_id') === get(data, '_id') ? data : item);
+      state.listSearch = state.listSearch?.map((item: any) => get(item, '_id') === get(data, '_id') ? data : item);
       state.updateSuccess = data;
     },
-    updateFailed: (state:initStateSlice, { payload }:{payload:any}) => {
+    updateFailed: (state: initStateSlice, { payload }: { payload: any }) => {
       state.isSubmitLoading = false;
       state.updateFailed = payload;
     },
 
     // delete
-    deleteRequest: (state:initStateSlice) => {
+    deleteRequest: (state: initStateSlice) => {
       state.isSubmitLoading = true;
       state.deleteFailed = null;
     },
-    deleteSuccess: (state:initStateSlice, { payload }:{payload:any}) => {
+    deleteSuccess: (state: initStateSlice, { payload }: { payload: any }) => {
       state.isSubmitLoading = false;
       state.deleteSuccess = payload;
     },
-    deleteFailed: (state:initStateSlice, { payload }:{payload:any}) => {
+    deleteFailed: (state: initStateSlice, { payload }: { payload: any }) => {
       state.isSubmitLoading = false;
       state.deleteFailed = payload;
     },
 
     // Get By ID
-    getRequest: (state:initStateSlice) => {
+    getRequest: (state: initStateSlice) => {
       state.isGetByIdLoading = true;
       state.getByIdFailed = null;
     },
-    getSuccess: (state:initStateSlice, { payload }:{payload:any}) => {
+    getSuccess: (state: initStateSlice, { payload }: { payload: any }) => {
       state.isGetByIdLoading = false;
       state.byId = payload;
     },
-    getFailed: (state:initStateSlice, { payload }:{payload:any}) => {
+    getFailed: (state: initStateSlice, { payload }: { payload: any }) => {
       state.isGetByIdLoading = false;
       state.getByIdFailed = payload;
     },
 
-    onSearch (state:any, { payload }:any) {
+    onSearch(state: any, { payload }: any) {
       state.listSearch = payload;
     },
-    clearAction: (state : initStateSlice) => {
+    clearAction: (state: initStateSlice) => {
       state.getByIdFailed = null;
       state.getListFailed = null;
       state.createSuccess = null;
@@ -162,23 +160,17 @@ export class InstanceModuleRedux{
       state.submitFailed = null;
     },
     // Reset the state
-    reset: () => this.initialState,
+    reset: (state) => {
+      state = InstanceModuleRedux.initialState
+    },
     // Reset the state Action
-    resetAction: (state:initStateSlice) => ({
-      ...state,
-      ...omit(this.initialState, ["list",'paging','byId']),
-    }),
-};
-
-  constructor(module: string) {
-    this.module = module;
-  }
-
- createSlice() {
-    return createSliceRedux({
-      name: this.module,
-      initialState: this.initialState,
-      reducers: this.initReducer,
-    });
-  }
+    resetAction: (state: initStateSlice) => {
+      state={
+        ...state,
+        ...omit(InstanceModuleRedux.initialState, ["list", 'paging', 'byId']),
+      }
+    },
+  };
 }
+
+export type InitState = typeof InstanceModuleRedux.initialState

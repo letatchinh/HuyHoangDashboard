@@ -1,7 +1,5 @@
-import Login from '~/modules/auth'
+import { LoginScreen } from "~/modules/auth";
 
 export default function LoginPage() {
-  return (
-    <Login.page.login />
-  )
+  return <LoginScreen />;
 }

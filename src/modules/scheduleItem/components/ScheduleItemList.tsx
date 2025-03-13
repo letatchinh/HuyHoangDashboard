@@ -6,7 +6,7 @@ import {
 } from "@ant-design/icons";
 import { Button, Flex, Popconfirm } from "antd";
 import React, { useCallback, useState } from "react";
-import { ReactComponent as PlayIcon } from "~/assets/icons/Play.svg";
+import playIcon from "~/assets/icons/Play.svg";
 import ModalAnt from "~/components/common/Antd/ModalAnt";
 import { useDeleteScheduleItem } from "../scheduleItem.hook";
 import { ScheduleItemBase } from "../scheduleItem.modal";
@@ -34,14 +34,16 @@ export default function ScheduleItemList({
 
   return (
     <>
-      {dataSource?.map((item) => (
+      {dataSource?.map((item,i) => (
         <Flex
+          key={i}
           style={{ borderBottom: "1px solid lightgrey" }}
           align={"center"}
           justify={"space-between"}
+          className="course-item-wrapper"
         >
           <div className="course-item">
-            {item.contentType === "video" ? <i /> : <FileDoneOutlined />}
+            {item.contentType === "video" ? <div style={{width:16,height:16}}><img src={playIcon} /></div> : <FileDoneOutlined />}
             <span className="course-item--title">{item.name}</span>
             {/* {item.contentType === 'video' && <span className='course-item--time'><ClockIcon /> {item.time}</span>} */}
           </div>

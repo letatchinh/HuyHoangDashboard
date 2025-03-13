@@ -1,0 +1,1 @@
+export { default as TeacherScreen } from './Teacher'

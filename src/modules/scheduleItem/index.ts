@@ -3,9 +3,9 @@ import scheduleItemApi from "./scheduleItem.api";
 import * as scheduleItemHook from "./scheduleItem.hook";
 import * as scheduleItemService from "./scheduleItem.service";
 import * as scheduleItemModels from "./scheduleItem.modal";
-import reducer from "./redux/reducer";
-import saga from "./redux/saga";
-import components from "./components";
+
+export * from "./redux";
+export * from "./components";
 
 const moduleExport = {
     page : {
@@ -15,7 +15,5 @@ const moduleExport = {
     hook : scheduleItemHook,
     service : scheduleItemService,
     model : scheduleItemModels,
-    redux : {reducer,saga},
-    components,
 };
 export default moduleExport;

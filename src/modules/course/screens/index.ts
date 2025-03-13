@@ -1,0 +1,1 @@
+export { default as CourseScreen } from './Course'

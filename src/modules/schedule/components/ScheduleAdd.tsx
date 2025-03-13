@@ -1,8 +1,7 @@
 import { PlusOutlined } from "@ant-design/icons";
-import { Button, Flex, Form, Input, Modal } from "antd";
+import { Button, Flex, Form, Input } from "antd";
 import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
-import Loading from "~/components/common/Loading/index";
 import { requireRules } from "~/constants/defaultValue";
 import { useCreateSchedule, useGetSchedule, useUpdateSchedule } from "../schedule.hook";
 type propsType = {
@@ -46,7 +45,7 @@ export default function ScheduleAdd({action,id,onCancel}: propsType): React.JSX.
   },[id,action,data])
   return (
     <Form style={{ marginTop: 5 }} form={form} onFinish={onFinish}>
-      <Flex>
+      <Flex gap={10}>
         <Form.Item style={{ width: "100%" }} name={"name"} rules={requireRules}>
           <Input placeholder="Tên lộ trình" />
         </Form.Item>

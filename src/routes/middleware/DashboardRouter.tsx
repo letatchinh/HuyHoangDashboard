@@ -1,14 +1,13 @@
 import React from "react";
 import { Outlet, useNavigate } from "react-router-dom";
-import AuthModule from "~/modules/auth";
+import { useToken } from "~/modules/auth";
 import { AUTH, PATH_APP } from "../allPath";
 import { useEffect, useRef } from "react";
 import { useDispatch } from "react-redux";
 import { authActions } from "../../modules/auth/redux/reducer";
-import apis from "~/api";
 type propsType = {};
 export default function DashboardRouter(props: propsType): React.JSX.Element {
-  const token = AuthModule.hook.useToken();
+  const token = useToken();
   let refLogin = useRef(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();

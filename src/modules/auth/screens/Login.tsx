@@ -3,18 +3,17 @@ import { omit } from "lodash";
 import { useEffect, useMemo } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import WhiteBox from "~/components/common/WhiteBox";
-import AuthModule from "~/modules/auth";
 import { AUTH, PATH_APP } from "~/routes/allPath";
-import { useLogin } from "../auth.hook";
+import { useLogin, useToken } from "../auth.hook";
 
 type FieldType = {
   userName: string;
-  password: string;
+  password: string;  
 };
 export default function Login() {
   const {pathname} = useLocation();
   const [isLoading, onLogin] = useLogin();
-  const token = AuthModule.hook.useToken();
+  const token = useToken();
   // const adapter = AuthModule.hook.useAdapter();
   const navigate = useNavigate();
   const refPersist =useMemo(()=>JSON.parse(localStorage.getItem('persist:auth')??JSON.stringify({'token':'null'})),[pathname]);

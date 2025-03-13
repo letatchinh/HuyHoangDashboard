@@ -1,40 +1,24 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { InstanceModuleRedux } from "~/redux/instanceModuleRedux";
-import { initStateSlice } from "~/redux/models";
-interface cloneInitState extends initStateSlice {
- // Add cloneInitState Type Here
+import { InitState, InstanceModuleRedux } from "~/redux/instanceModuleRedux";
+interface cloneInitState extends InitState {
+
 }
-class CourseClassExtend extends InstanceModuleRedux {
-  cloneReducer;
-  cloneInitState : cloneInitState;
-  constructor() {
-    super('course');
-    this.cloneReducer = {
-      ...this.initReducer,
-      getListSuccess: (state:initStateSlice , { payload }: any) => {
-        state.isLoading = false;
-        state.list = payload;
-      },
-      // Want Add more reducer Here...
-    }
-    this.cloneInitState = {
-      ...this.initialState,
-      // Want Add more State Here...
-    }
+const data = createSlice({
+  name: 'course',
+  initialState: {
+    ...InstanceModuleRedux.initialState
+  },
+  reducers: {
+    ...InstanceModuleRedux.initReducer,
+    getListSuccess: (state: cloneInitState, { payload }: any) => {
+      state.isLoading = false;
+      state.list = payload;
+    },
   }
-  createSlice() {
-    return createSlice({
-      name: this.module,
-      initialState: this.cloneInitState,
-      reducers:  this.cloneReducer,
-    });
-  }
-  
-}
+})
 
-const newSlice = new CourseClassExtend();
-const data = newSlice.createSlice();
+export const courseActions = data.actions
+export default data.reducer
 
 
-export const courseActions = data.actions;
-export default data.reducer;
+

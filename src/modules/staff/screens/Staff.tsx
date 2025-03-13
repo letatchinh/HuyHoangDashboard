@@ -2,7 +2,6 @@ import React, { useEffect, useMemo } from "react";
 import { ConfigProvider, Tabs } from "antd";
 import type { TabsProps } from "antd";
 import { head, omit } from "lodash";
-import path from "path";
 import StaffManagement from "./StaffManagement";
 import StaffGroups from "~/modules/staffGroups/screens/StaffGroups";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -14,7 +13,7 @@ interface TabPaneProps extends TabsProps {
   children: React.ReactNode;
 }
 export default function Staff(props: propsType): React.JSX.Element {
-  const items: any["items"] = [
+  const items: any["items"] = useMemo(()=>[
     {
       key: "/staff",
       label: "Nhân viên",
@@ -27,14 +26,13 @@ export default function Staff(props: propsType): React.JSX.Element {
       children: <StaffGroups />,
       permission: true,
     },
-  ];
+  ],[]);
   const newItems = useMemo(
     () => items?.filter((item: any) => item?.permission),
     [items]
   );
   const activeKey = useMemo(() => (head(newItems) as any)?.key, [newItems]);
   const [activeTab, setActiveTab] = React.useState(activeKey);
-  const location = useLocation();
   const navigate = useNavigate();
 
   const onChange = (key: string) => {
@@ -53,7 +51,6 @@ export default function Staff(props: propsType): React.JSX.Element {
       theme={{
         components: {
           Tabs: {
-            /* here is your component tokens */
           },
         },
         token: {
@@ -61,11 +58,10 @@ export default function Staff(props: propsType): React.JSX.Element {
       }}
     >
       <Tabs
-        type="editable-card"
+        type="card"  
         activeKey={activeTab}
         items={newItems as any}
         onChange={onChange}
-        hideAdd
       />
     </ConfigProvider>
   ) : (

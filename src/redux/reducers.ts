@@ -3,38 +3,38 @@ import { persistReducer } from 'redux-persist';
 
 import { combineReducers } from "@reduxjs/toolkit";
 import localStorage from 'redux-persist/es/storage';
-import course from '~/modules/course';
-import schedule from '~/modules/schedule';
-import scheduleItem from '~/modules/scheduleItem';
-import courseGroup from '~/modules/courseGroup';
-import auth from '~/modules/auth';
-import staff from '~/modules/staff';
-import policy from '~/modules/policy';
-import staffGroups from '~/modules/staffGroups';
-import teacher from '~/modules/teacher';
+import * as course from '~/modules/course';
+import * as courseGroup from '~/modules/courseGroup';
+import * as policy from '~/modules/policy';
+import * as schedule from '~/modules/schedule';
+import * as scheduleItem from '~/modules/scheduleItem';
+import * as staff from '~/modules/staff';
+import * as auth from '~/modules/auth';
+import * as staffGroups from '~/modules/staffGroups';
+import * as teacher from '~/modules/teacher';
 
 const authPersistConfig = {
-    key: 'auth',
-    storage: localStorage,
-    blacklist: [
-        'loginFailed',
-        'isLoading',
-        'isGetProfileLoading',
-        'getProfileFailed',
-        'updateProfileSuccess',
-        'updateProfileFailed',
-        'isUpdateProfileLoading',
-      ]
-  };
+  key: 'auth',
+  storage: localStorage,
+  blacklist: [
+    'loginFailed',
+    'isLoading',
+    'isGetProfileLoading',
+    'getProfileFailed',
+    'updateProfileSuccess',
+    'updateProfileFailed',
+    'isUpdateProfileLoading',
+  ]
+};
 const rootReducer = combineReducers({
-  auth: persistReducer(authPersistConfig, auth.redux.reducer),
-  course: course.redux.reducer,
-  schedule: schedule.redux.reducer,
-  scheduleItem: scheduleItem.redux.reducer,
-  staff: staff.redux.reducer,
-  policy: policy.redux.reducer,
-  staffGroups: staffGroups.redux.reducer,
-  courseGroup: courseGroup.redux.reducer,
-  teacher: teacher.redux.reducer,
+  auth: persistReducer(authPersistConfig, auth.reducer),
+  course: course.reducer,
+  schedule: schedule.reducer,
+  scheduleItem: scheduleItem.reducer,
+  staff: staff.reducer,
+  policy: policy.reducer,
+  staffGroups: staffGroups.reducer,
+  courseGroup: courseGroup.reducer,
+  teacher: teacher.reducer,
 });
 export default rootReducer
