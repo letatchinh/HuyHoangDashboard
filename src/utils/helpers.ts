@@ -323,8 +323,6 @@ export const DeviceDetector = () => {
 };
 
 //
-var utc = require('dayjs/plugin/utc')
-dayjs.extend(utc)
 
 export const vietnamMoment = (v: any, formatTime?: any) => {
   if (v) {

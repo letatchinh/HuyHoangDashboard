@@ -1,7 +1,7 @@
 
 import { persistReducer } from 'redux-persist';
 
-import { combineReducers } from "redux";
+import { combineReducers } from "@reduxjs/toolkit";
 import localStorage from 'redux-persist/es/storage';
 import course from '~/modules/course';
 import schedule from '~/modules/schedule';

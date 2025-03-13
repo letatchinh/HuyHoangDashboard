@@ -41,7 +41,7 @@ export default function ScheduleItemList({
           justify={"space-between"}
         >
           <div className="course-item">
-            {item.contentType === "video" ? <PlayIcon /> : <FileDoneOutlined />}
+            {item.contentType === "video" ? <i /> : <FileDoneOutlined />}
             <span className="course-item--title">{item.name}</span>
             {/* {item.contentType === 'video' && <span className='course-item--time'><ClockIcon /> {item.time}</span>} */}
           </div>
