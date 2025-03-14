@@ -12,6 +12,7 @@ import * as staff from '~/modules/staff';
 import * as auth from '~/modules/auth';
 import * as staffGroups from '~/modules/staffGroups';
 import * as teacher from '~/modules/teacher';
+import * as test from '~/modules/test';
 
 const authPersistConfig = {
   key: 'auth',
@@ -36,5 +37,6 @@ const rootReducer = combineReducers({
   staffGroups: staffGroups.reducer,
   courseGroup: courseGroup.reducer,
   teacher: teacher.reducer,
+  test: test.reducer,
 });
 export default rootReducer

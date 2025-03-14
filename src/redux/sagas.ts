@@ -8,6 +8,7 @@ import * as auth from '~/modules/auth';
 import * as staff from '~/modules/staff';
 import * as staffGroups from '~/modules/staffGroups';
 import * as teacher from '~/modules/teacher';
+import * as test from '~/modules/test';
 
 export default function* rootSaga() {
   yield all([
@@ -20,5 +21,6 @@ export default function* rootSaga() {
     auth.saga(),
     staffGroups.saga(),
     teacher.saga(),
+    test.saga(),
   ]);
 };

@@ -186,6 +186,7 @@ export const useAction = ({ action }:UseActionProps) : (v:any) => void => {
       updateSuccessSelector: getSelector('updateSuccess'),
       updateFailedSelector: getSelector('updateFailed'),
       pagingSelector: getSelector('paging'),
+      getSelector
     };
   };
   

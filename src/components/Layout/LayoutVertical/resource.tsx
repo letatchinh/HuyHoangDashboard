@@ -43,7 +43,13 @@ export const resource: ItemTypeNavbar[] = [
   {
     label: "Giảng viên",
     key: "teacher",
-    icon: <UsergroupAddOutlined />,
+    icon: <i className="uil uil-briefcase"></i>,
     path: PATH_APP.teacher.root,
+  },
+  {
+    label: "Thi thử",
+    key: "test",
+    icon: <i className="uil uil-book-reader"></i>,
+    path: PATH_APP.test.root,
   },
 ];

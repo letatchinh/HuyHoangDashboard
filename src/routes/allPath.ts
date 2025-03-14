@@ -40,4 +40,7 @@ export const PATH_APP = {
     create: path(ROOTS.app, "/teacher-create"),
     update: path(ROOTS.app, "/teacher-update/:id"),
   },
+  test: {
+    root: path(ROOTS.app, "/test"),
+  },
 };
