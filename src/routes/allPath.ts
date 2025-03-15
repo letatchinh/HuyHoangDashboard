@@ -42,5 +42,7 @@ export const PATH_APP = {
   },
   test: {
     root: path(ROOTS.app, "/test"),
+    create: path(ROOTS.app, "/test/create"),
+    detail: path(ROOTS.app, "/test/:id"),
   },
 };

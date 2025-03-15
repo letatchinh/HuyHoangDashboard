@@ -1,23 +1,25 @@
 import React from "react";
 import { Context } from "../context";
 import { SearchTestList, TableTestList } from "../components";
+import Breadcrumb from "~/components/common/Breadcrumb";
 
 
 const { Container , useContainer} = Context;
 type propsType = {};
-function TestList(props: propsType): React.JSX.Element {
+function TestList_(props: propsType): React.JSX.Element {
    
   return <>
+    <Breadcrumb title={'Bộ đề thi thử'}/>
     <TableTestList />
   </>;
 }
 
 
 
-export default function () {
+export default function TestList() {
   return (
     <Container>
-      <TestList />
+      <TestList_ />
     </Container>
   );
 }

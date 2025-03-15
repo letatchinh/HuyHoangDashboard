@@ -1,4 +1,5 @@
-export const BASE_URL = "http://14.225.217.10:8099/";
+const URL_DEV = 'http://14.225.217.10:8099/'
+export const BASE_URL = import.meta.env.VITE_APP_BASE_URL ?? URL_DEV;
 export const DEFAULT_UPLOAD_ACTION = `${BASE_URL}/api/v1/file`;
 export const MAX_UPLOAD_FILE_SIZE_IN_MB = 1;
 

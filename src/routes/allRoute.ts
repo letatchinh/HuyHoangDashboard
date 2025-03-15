@@ -9,7 +9,7 @@ import StaffPage from '~/pages/Staff';
 import { CourseGroupForm, CourseGroupScreen } from '~/modules/courseGroup';
 import Teacher from "~/pages/Teacher";
 import TeacherForm from '~/modules/teacher/components/TeacherForm';
-import { TestList } from '~/modules/test';
+import { TestList, TestCreate, TestDetail } from '~/modules/test';
 
 export const mainRoutes :PathRouteProps[] = [
   { path: PATH_APP.main.root, Component: Homepage },
@@ -26,6 +26,8 @@ export const mainRoutes :PathRouteProps[] = [
   { path: PATH_APP.teacher.create, Component: TeacherForm },
   { path: PATH_APP.teacher.update, Component: TeacherForm },
   { path: PATH_APP.test.root, Component: TestList },
+  { path: PATH_APP.test.create, Component: TestCreate },
+  { path: PATH_APP.test.detail, Component: TestDetail },
   
   
 
