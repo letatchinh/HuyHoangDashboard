@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { CSSProperties, PropsWithChildren, useState } from "react";
 import { FormItem } from "./FormTest";
-import { get } from "lodash";
+import { defaultTo, get } from "lodash";
 import {
   Button,
   Card,
@@ -18,6 +18,7 @@ import { Context } from "../context";
 import ImgDescrpition from "./ImgDescrpition";
 import Asker from "./Asker";
 import SelectFolderQuestion from "./SelectFolderQuestion";
+import AudioDescription from "./AudioDescription";
 type propsType = {
   name: number;
   key: number;
@@ -32,11 +33,13 @@ export default function QuestionTest({
   form,
   index,
 }: propsType): React.JSX.Element {
+
+    const pathTo=(...fields)=>[ROOT_FIELD, name, ...fields]
   return (
     <FormItem
       shouldUpdate={(acc, re) =>
-        get(acc, [ROOT_FIELD, name, "status"]) !==
-        get(re, [ROOT_FIELD, name, "status"])
+        get(acc, pathTo( "status")) !==
+        get(re,  pathTo( "status"))
       }
       noStyle
     >
@@ -51,11 +54,11 @@ export default function QuestionTest({
               minHeight: "unset",
             },
           }}
-          hidden={getFieldValue([ROOT_FIELD, name, "status"]) === "REMOVE"}
+          hidden={getFieldValue( pathTo( "status")) === "REMOVE"}
           key={key}
-          title={<Title name={name} form={form} index={index} />}
+          title={<Title name={name} form={form} index={index} pathTo={pathTo} />}
         >
-          <Content name={name}/>
+          <Content name={name} pathTo={pathTo}/>
         </Card>
       )}
     </FormItem>
@@ -64,24 +67,29 @@ export default function QuestionTest({
 
 const Content = ({
     name,
+    pathTo
 }) => {
 
   return (
     <Flex vertical gap={10}>
-        <SelectFolderQuestion name={name}/>
+      <SelectFolderQuestion name={name}/>
       <Asker name={name}/>
-      <ImgDescrpition name={name} />
+      <AudioDescription name={name}/>
+      <ImgDescrpition pathTo={pathTo} name={name} />
 
     </Flex>
   );
 };
 
-const Title = ({ form, name, index }) => {
+const Title = ({ form, name, index, pathTo }) => {
   return (
     <Flex gap={8}>
-      <FormItem name={[name, "no"]} noStyle initialValue={index+1}>
-        <InputNumber style={{ width: 80, textAlign: "center" }} min={1} />
-      </FormItem>
+        <Flex align="center" gap={8}>
+            <strong>Câu: </strong>
+            <FormItem name={[name, "no"]} noStyle initialValue={index+1}>
+                <InputNumber style={{ width: 70, textAlign: "center" }} min={1} variant="underlined" />
+            </FormItem>
+        </Flex>
       <FormItem name={[name, "name"]} noStyle>
         <Input />
       </FormItem>
@@ -90,7 +98,7 @@ const Title = ({ form, name, index }) => {
       </FormItem>
       <Button
         onClick={() =>
-          form.setFieldValue([ROOT_FIELD, name, "status"], "REMOVE")
+          form.setFieldValue(pathTo( "status"), "REMOVE")
         }
         icon={<DeleteFilled />}
         danger
@@ -99,3 +107,7 @@ const Title = ({ form, name, index }) => {
     </Flex>
   );
 };
+
+export const LabelStrong=(props:PropsWithChildren<{style?:CSSProperties}>)=>{
+  return <strong style={{width: 64,...defaultTo(props.style,{})}}>{props.children}</strong>
+}

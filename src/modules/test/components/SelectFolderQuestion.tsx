@@ -2,6 +2,7 @@ import { Flex, Select } from 'antd';
 import { filter, uniqBy } from 'lodash';
 import React, { createContext, PropsWithChildren, useContext, useState } from 'react';
 import { FormItem } from './FormTest';
+import { LabelStrong } from './QuestionTest';
 type propsType = {
     name:number
 }
@@ -33,7 +34,7 @@ export default function SelectFolderQuestion({name}:propsType) : React.JSX.Eleme
     const { options, setOption } = useContext(ContextFolderQuestion);
     return (
         <Flex align='center' gap={10}>
-            <strong>Mục:</strong>
+            <LabelStrong>Mục:</LabelStrong>
             <FormItem name={[name,'tag']}>
                 <Select
                     defaultValue={options.at(-1).value}

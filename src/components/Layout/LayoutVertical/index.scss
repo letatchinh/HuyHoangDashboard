@@ -101,6 +101,7 @@
       max-height: calc(100vh - #{$height-header});
       overflow-y: auto;
       position: relative;
+      scroll-behavior: smooth;
     }
 
   }

@@ -15,7 +15,7 @@ import StatusTestLine from "./StatusTestLine";
 import dayjs from "dayjs";
 import WhiteBox from "~/components/common/WhiteBox";
 import { PlusSquareOutlined } from "@ant-design/icons";
-import QuestionTest from "./QuestionTest";
+import QuestionTest, { ROOT_FIELD } from "./QuestionTest";
 import { FolderQuestion } from "./SelectFolderQuestion";
 type propsType = {};
 export default function FormTest(props: propsType): React.JSX.Element {
@@ -101,7 +101,23 @@ export default function FormTest(props: propsType): React.JSX.Element {
                   })}
 
                   <Button
-                    onClick={() => add({ name: "value", }) }
+                  style={{
+                    position:'sticky',
+                    bottom:0
+                  }}
+                    onClick={() => {
+                      setTimeout(()=>{
+                        form.scrollToField([ROOT_FIELD, fields.length, 'name'], {
+                          behavior: 'smooth',
+                          inline: 'center',
+                          block:'center',
+                          scrollMode:'always',
+                          focus:true,
+                        })
+
+                      },50)
+                      add({ name: "Câu hỏi", }) 
+                    }}
                     type="primary"
                     icon={<PlusSquareOutlined />}
                   >
@@ -140,9 +156,7 @@ export const FormItem = (props: GetProps<typeof Form.Item>) => {
         layout: "vertical",
         ...props,
       }}
-    >
-      {props.children}
-    </Form.Item>
+    />
   );
 };
 const FormStyle = (props: GetProps<typeof Form>) => {
